@@ -16,4 +16,9 @@ namespace :db do
     Poll.find_each(&:calculate_tsvector)
     Legislation::Process.find_each(&:calculate_tsvector)
   end
+
+  desc "Loads demo content from db/demo_seeds.rb"
+  task demo_seed: :environment  do
+    load Rails.root.join("db", "demo_seeds.rb")
+  end
 end

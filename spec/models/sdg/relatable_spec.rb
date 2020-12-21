@@ -170,4 +170,23 @@ describe SDG::Relatable do
       expect(relatable.class.by_target(target.code)).to be_empty
     end
   end
+
+  describe ".pending" do
+    let!(:relatable) { create(:proposal) }
+
+    it "returns records not revised yet" do
+      create(:sdg_revision, relatable: create(:proposal)).relatable
+
+      expect(relatable.class.pending).to match_array [relatable]
+    end
+  end
+
+  describe ".revised" do
+    let!(:relatable) { create(:proposal) }
+    let!(:revised_relatable) { create(:sdg_revision, relatable: create(:proposal)).relatable }
+
+    it "returns records already revised" do
+      expect(relatable.class.revised).to match_array [revised_relatable]
+    end
+  end
 end

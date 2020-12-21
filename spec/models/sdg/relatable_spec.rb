@@ -117,6 +117,18 @@ describe SDG::Relatable do
     end
   end
 
+  describe "#sdg_revision" do
+    it "returns nil when relatable is not revised" do
+      expect(relatable.sdg_revision).to be_blank
+    end
+
+    it "returns the revision when relatable is revised" do
+      revision = create(:sdg_revision, relatable: relatable)
+
+      expect(relatable.sdg_revision).to eq(revision)
+    end
+  end
+
   describe ".by_goal" do
     it "returns everything if no code is provided" do
       expect(relatable.class.by_goal("")).to eq [relatable]

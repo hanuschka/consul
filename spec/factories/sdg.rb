@@ -14,4 +14,13 @@ FactoryBot.define do
 
     target { SDG::Target[code.rpartition(".").first] }
   end
+
+  factory :sdg_revision, class: "SDG::Revision" do
+    SDG::Related::RELATABLE_TYPES.map { |relatable_type| relatable_type.downcase.gsub("::", "_") }
+    .each do |relatable|
+      trait :"#{relatable}_revision" do
+        association :relatable, factory: relatable
+      end
+    end
+  end
 end

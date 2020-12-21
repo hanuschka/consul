@@ -27,3 +27,8 @@ en:
         title: "New local target"
       update:
         notice: "Local target updated successfully"
+    relations:
+      revision_status:
+        all: "All"
+        pending: "Pending"
+        revised: "Marked as revised"

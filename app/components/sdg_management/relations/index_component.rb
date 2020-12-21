@@ -1,10 +1,11 @@
 class SDGManagement::Relations::IndexComponent < ApplicationComponent
   include Header
 
-  attr_reader :records
+  attr_reader :records, :current_filter
 
-  def initialize(records)
+  def initialize(records, current_filter:)
     @records = records
+    @current_filter = current_filter
   end
 
   private

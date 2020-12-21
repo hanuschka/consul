@@ -27,3 +27,8 @@ es:
         title: "Nueva meta localizada"
       update:
         notice: "Meta localizada asctualizada correctamente"
+    relations:
+      revision_status:
+        all: "Todos"
+        pending: "Pendientes"
+        revised: "Marcados como revisados"

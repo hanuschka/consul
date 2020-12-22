@@ -131,42 +131,141 @@ describe "SDG Relations", :js do
     end
 
     describe "search" do
-      scenario "search by terms" do
-        create(:poll, name: "Internet speech freedom")
-        create(:poll, name: "SDG interest")
+      describe "on 'pending' tab" do
+        scenario "search by terms" do
+          create(:poll, name: "Internet speech freedom")
+          create(:poll, name: "SDG interest")
 
-        visit sdg_management_polls_path
+          visit sdg_management_polls_path
 
-        fill_in "search", with: "speech"
-        click_button "Search"
+          fill_in "search", with: "speech"
+          click_button "Search"
 
-        expect(page).to have_content "Internet speech freedom"
-        expect(page).not_to have_content "SDG interest"
+          expect(page).to have_content "Internet speech freedom"
+          expect(page).not_to have_content "SDG interest"
+          expect(page).to have_link "Pending", class: "is-active"
+        end
+
+        scenario "goal filter" do
+          create(:budget_investment, title: "School", sdg_goals: [SDG::Goal[4]])
+          create(:budget_investment, title: "Hospital", sdg_goals: [SDG::Goal[3]])
+
+          visit sdg_management_budget_investments_path
+          select "4. Quality Education", from: "goal_code"
+          click_button "Search"
+
+          expect(page).to have_content "School"
+          expect(page).not_to have_content "Hospital"
+          expect(page).to have_link "Pending", class: "is-active"
+        end
+
+        scenario "target filter" do
+          create(:budget_investment, title: "School", sdg_targets: [SDG::Target[4.1]])
+          create(:budget_investment, title: "Preschool", sdg_targets: [SDG::Target[4.2]])
+
+          visit sdg_management_budget_investments_path
+          select "4.1", from: "target_code"
+          click_button "Search"
+
+          expect(page).to have_content "School"
+          expect(page).not_to have_content "Preschool"
+          expect(page).to have_link "Pending", class: "is-active"
+        end
       end
 
-      scenario "goal filter" do
-        create(:budget_investment, title: "School", sdg_goals: [SDG::Goal[4]])
-        create(:budget_investment, title: "Hospital", sdg_goals: [SDG::Goal[3]])
+      describe "on 'all' tab" do
+        scenario "search by terms" do
+          create(:proposal, title: "Internet speech freedom")
+          create(:sdg_revision, relatable: create(:proposal, title: "speech revised"))
 
-        visit sdg_management_budget_investments_path
-        select "4. Quality Education", from: "goal_code"
-        click_button "Search"
+          visit sdg_management_proposals_path(filter: "all")
+          fill_in "search", with: "speech"
+          click_button "Search"
 
-        expect(page).to have_content "School"
-        expect(page).not_to have_content "Hospital"
+          expect(page).to have_content "Internet speech freedom"
+          expect(page).to have_content "speech revised"
+          expect(page).to have_link "All", class: "is-active"
+        end
+
+        scenario "goal filter" do
+          create(:debate, title: "School", sdg_goals: [SDG::Goal[4]])
+          create(:debate, title: "Hospital", sdg_goals: [SDG::Goal[3]])
+          create(:sdg_revision, relatable: create(:debate, title: "University", sdg_goals: [SDG::Goal[4]]))
+
+          visit sdg_management_debates_path(filter: "all")
+          select "4. Quality Education", from: "goal_code"
+          click_button "Search"
+
+          expect(page).to have_content "School"
+          expect(page).to have_content "University"
+          expect(page).not_to have_content "Hospital"
+          expect(page).to have_link "All", class: "is-active"
+        end
+
+        scenario "target filter" do
+          create(:legislation_process, title: "No economic violence", sdg_targets: [SDG::Target[5.1]])
+          create(:legislation_process, title: "Regulation", sdg_targets: [SDG::Target["5.C"]])
+          process = create(:legislation_process, title: "No discrimination at work",
+            sdg_targets: [SDG::Target[5.1]])
+          create(:sdg_revision, relatable: process)
+
+          visit sdg_management_legislation_processes_path(filter: "all")
+          select "5.1", from: "target_code"
+          click_button "Search"
+
+          expect(page).to have_content "No economic violence"
+          expect(page).to have_content "No discrimination at work"
+          expect(page).not_to have_content "Regulation"
+          expect(page).to have_link "All", class: "is-active"
+        end
       end
-    end
 
-    scenario "target filter" do
-      create(:budget_investment, title: "School", sdg_targets: [SDG::Target[4.1]])
-      create(:budget_investment, title: "Preschool", sdg_targets: [SDG::Target[4.2]])
+      describe "on 'review' tab" do
+        scenario "search by terms" do
+          create(:proposal, title: "Internet speech freedom")
+          create(:sdg_revision, relatable: create(:proposal, title: "speech revised"))
 
-      visit sdg_management_budget_investments_path
-      select "4.1", from: "target_code"
-      click_button "Search"
+          visit sdg_management_proposals_path(filter: "revised")
+          fill_in "search", with: "speech"
+          click_button "Search"
 
-      expect(page).to have_content "School"
-      expect(page).not_to have_content "Preschool"
+          expect(page).not_to have_content "Internet speech freedom"
+          expect(page).to have_content "speech revised"
+          expect(page).to have_link "Marked as revised", class: "is-active"
+        end
+
+        scenario "goal filter" do
+          create(:debate, title: "School", sdg_goals: [SDG::Goal[4]])
+          create(:debate, title: "Hospital", sdg_goals: [SDG::Goal[3]])
+          create(:sdg_revision, relatable: create(:debate, title: "University", sdg_goals: [SDG::Goal[4]]))
+
+          visit sdg_management_debates_path(filter: "revised")
+          select "4. Quality Education", from: "goal_code"
+          click_button "Search"
+
+          expect(page).not_to have_content "School"
+          expect(page).to have_content "University"
+          expect(page).not_to have_content "Hospital"
+          expect(page).to have_link "Marked as revised", class: "is-active"
+        end
+
+        scenario "target filter" do
+          create(:legislation_process, title: "No economic violence", sdg_targets: [SDG::Target[5.1]])
+          create(:legislation_process, title: "Regulation", sdg_targets: [SDG::Target["5.C"]])
+          process = create(:legislation_process, title: "No discrimination at work",
+            sdg_targets: [SDG::Target[5.1]])
+          create(:sdg_revision, relatable: process)
+
+          visit sdg_management_legislation_processes_path(filter: "revised")
+          select "5.1", from: "target_code"
+          click_button "Search"
+
+          expect(page).not_to have_content "No economic violence"
+          expect(page).to have_content "No discrimination at work"
+          expect(page).not_to have_content "Regulation"
+          expect(page).to have_link "Marked as revised", class: "is-active"
+        end
+      end
     end
   end
 

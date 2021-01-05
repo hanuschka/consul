@@ -22,6 +22,10 @@ class SDGManagement::RelationsController < SDGManagement::BaseController
   def update
     @record.sdg_target_list = params[@record.class.table_name.singularize][:sdg_target_list]
 
+    if @record.sdg_revision.blank? && @record.create_sdg_revision
+      flash[:notice] = t("sdg_management.relations.update.notice", relatable: relatable_class.model_name.human)
+    end
+
     redirect_to action: :index
   end
 

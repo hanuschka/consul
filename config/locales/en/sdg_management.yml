@@ -32,3 +32,5 @@ en:
         all: "All"
         pending: "Pending"
         revised: "Marked as revised"
+      update:
+        notice: "%{relatable} marked as revised"

@@ -32,3 +32,5 @@ es:
         all: "Todos"
         pending: "Pendientes"
         revised: "Marcados como revisados"
+      update:
+        notice: "%{relatable} marcado como revisado"

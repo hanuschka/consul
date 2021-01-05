@@ -270,15 +270,36 @@ describe "SDG Relations", :js do
   end
 
   describe "Edit" do
-    scenario "allows changing the targets" do
+    scenario "allows changing the targets and marks the resource as revised" do
       process = create(:legislation_process, title: "SDG process")
       process.sdg_targets = [SDG::Target["3.3"]]
 
       visit sdg_management_edit_legislation_process_path(process)
-      fill_in "Targets", with: "1.2, 2.1"
+      fill_in "Targets", with: "1.2, 2.1", fill_options: { clear: :backspace }
       click_button "Update Process"
 
+      expect(page).to have_content "Process marked as revised"
+
+      click_link "Marked as revised"
+
       within("tr", text: "SDG process") do
+        expect(page).to have_css "td", exact_text: "1.2, 2.1"
+      end
+    end
+
+    scenario "does not show the revision notice when resource was already revised" do
+      debate = create(:sdg_revision, relatable: create(:debate, title: "SDG debate")).relatable
+      debate.sdg_targets = [SDG::Target["3.3"]]
+
+      visit sdg_management_edit_debate_path(debate, filter: "revised")
+      fill_in "Targets", with: "1.2, 2.1", fill_options: { clear: :backspace }
+      click_button "Update Debate"
+
+      expect(page).not_to have_content "Debate marked as revised"
+
+      click_link "Marked as revised"
+
+      within("tr", text: "SDG debate") do
         expect(page).to have_css "td", exact_text: "1.2, 2.1"
       end
     end

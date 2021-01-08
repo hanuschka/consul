@@ -1,0 +1,15 @@
+.poll {
+  ul{
+    margin-bottom: 0;
+  }
+  &.with-image {
+    @include breakpoint(medium) {
+      padding: 0 $line-height / 2 0 0;
+    }
+    img {
+      height: 100%;
+      max-width: none;
+      position: absolute;
+    }
+  }
+}

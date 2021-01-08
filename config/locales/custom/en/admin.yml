@@ -1,0 +1,13 @@
+en:
+  admin:
+    actions:
+      update: Update
+    debates:
+      update:
+        notice: Debate updated
+    proposals:
+      index:
+        tags: Topics
+    tags:
+      index:
+        scope: Subcategory

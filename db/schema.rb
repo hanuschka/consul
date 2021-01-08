@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200908084257) do
+ActiveRecord::Schema.define(version: 20201206220940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1403,6 +1403,7 @@ ActiveRecord::Schema.define(version: 20200908084257) do
     t.integer "budget_investments_count", default: 0
     t.integer "legislation_proposals_count", default: 0
     t.integer "legislation_processes_count", default: 0
+    t.integer "polls_count", default: 0
     t.index ["debates_count"], name: "index_tags_on_debates_count"
     t.index ["legislation_processes_count"], name: "index_tags_on_legislation_processes_count"
     t.index ["legislation_proposals_count"], name: "index_tags_on_legislation_proposals_count"

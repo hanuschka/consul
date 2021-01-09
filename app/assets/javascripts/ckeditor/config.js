@@ -7,6 +7,7 @@ CKEDITOR.editorConfig = function( config )
 {
   config.extraPlugins = 'widget,lineutils,mjAccordion';
   
+  
   config.filebrowserImageBrowseLinkUrl = "/ckeditor/pictures";
   config.filebrowserImageBrowseUrl = "/ckeditor/pictures";
   config.filebrowserImageUploadUrl = "/ckeditor/pictures?";

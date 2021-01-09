@@ -1,15 +1,7 @@
-//= require custom/mjAccordion.js
-//= require turbolinks
-
-
-var mj;
-mj = function() {
-  $(".mj_accordion").mjAccordion()
-};
-
-$(function() {
-  
-  $(document).ready(mj);
-  $(document).on('turbolinks:load', mj);
-});
+// Overrides and adds customized javascripts in this file
+// Read more on documentation:
+// * English: https://github.com/consul/consul/blob/master/CUSTOMIZE_EN.md#javascript
+// * Spanish: https://github.com/consul/consul/blob/master/CUSTOMIZE_ES.md#javascript
+//
+//
 

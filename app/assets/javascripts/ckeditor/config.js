@@ -5,7 +5,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 CKEDITOR.editorConfig = function( config )
 {
-  config.extraPlugins = 'widget,lineutils,mjAccordion';
+  config.extraPlugins = 'widget,lineutils';
   config.filebrowserImageBrowseLinkUrl = "/ckeditor/pictures";
   config.filebrowserImageBrowseUrl = "/ckeditor/pictures";
   config.filebrowserImageUploadUrl = "/ckeditor/pictures?";

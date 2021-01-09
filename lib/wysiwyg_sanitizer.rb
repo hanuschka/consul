@@ -4,7 +4,7 @@ class WYSIWYGSanitizer
   end
 
   def allowed_attributes
-    %w[href class id target onclick]
+    %w[href class id target onclick cke_widget_wrapper cke_widget_block cke_widget_MJAccordion cke_widget_wrapper_mj_accordion]
   end
 
   def sanitize(html)

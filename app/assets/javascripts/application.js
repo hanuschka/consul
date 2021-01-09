@@ -180,3 +180,15 @@ var destroy_non_idempotent_modules = function() {
 
 $(document).on("turbolinks:load", initialize_modules);
 $(document).on("turbolinks:before-cache", destroy_non_idempotent_modules);
+
+
+var mj;
+mj = function() {
+  $(".mj_accordion").mjAccordion()
+};
+
+$(function() {
+  
+  $(document).ready(mj);
+  $(document).on('turbolinks:load', mj);
+});

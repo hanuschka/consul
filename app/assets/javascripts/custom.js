@@ -12,3 +12,4 @@ $(function() {
   $(document).ready(mj);
   $(document).on('page:load', mj);
 });
+

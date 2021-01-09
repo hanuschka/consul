@@ -1,6 +1,6 @@
 class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
   def allowed_tags
-    super + %w[img table caption thead tbody tr th td div iframe]
+    super + %w[img table caption thead tbody tr th td iframe]
   end
 
   def allowed_attributes

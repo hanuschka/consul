@@ -9,13 +9,13 @@
       });
     },
     submitOnChange: function() {
-      $("body").on("change", ".js-submit-on-change", function() {
+      $(".js-submit-on-change").off("change").on("change", function() {
         $(this).closest("form").submit();
         return false;
       });
     },
     toggleLink: function() {
-      $("body").on("click", ".js-toggle-link", function() {
+      $(".js-toggle-link").off("click").on("click", function() {
         var toggle_txt;
         $($(this).data("toggle-selector")).toggle("down");
         if ($(this).data("toggle-text") !== undefined) {

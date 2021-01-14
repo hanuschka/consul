@@ -49,6 +49,11 @@ class ProposalsController < ApplicationController
 
   def created; end
 
+    
+  def all_proposal_map_locations
+    MapLocation.where(proposal_id: Proposal.not_archived.published.pluck(:id)).map(&:json_data)
+  end
+
   def index_customization
     discard_draft
     discard_archived

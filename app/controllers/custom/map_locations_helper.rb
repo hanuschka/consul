@@ -1,27 +1,6 @@
+require_dependency Rails.root.join("app", "helpers", "map_locations_helper").to_s
+
 module MapLocationsHelper
-    def map_location_available?(map_location)
-      map_location.present? && map_location.available?
-    end
-  
-    def map_location_latitude(map_location)
-      map_location.present? && map_location.latitude.present? ? map_location.latitude : Setting["map.latitude"]
-    end
-  
-    def map_location_longitude(map_location)
-      map_location.present? && map_location.longitude.present? ? map_location.longitude : Setting["map.longitude"]
-    end
-  
-    def map_location_zoom(map_location)
-      map_location.present? && map_location.zoom.present? ? map_location.zoom : Setting["map.zoom"]
-    end
-  
-    def map_location_input_id(prefix, attribute)
-      "#{prefix}_map_location_attributes_#{attribute}"
-    end
-  
-    def map_location_remove_marker_link_id(map_location)
-      "remove-marker-link-#{dom_id(map_location)}"
-    end
   
     def render_map(map_location, parent_class, editable, remove_marker_label, investments_coordinates = nil)
       map_location = MapLocation.new if map_location.nil?
@@ -31,17 +10,6 @@ module MapLocationsHelper
                         data: prepare_map_settings(map_location, editable, parent_class, investments_coordinates)
       map += map_location_remove_marker(map_location, remove_marker_label) if editable
       map
-    end
-  
-    def map_location_remove_marker(map_location, text)
-      content_tag :div, class: "margin-bottom" do
-        content_tag :a,
-                    id: map_location_remove_marker_link_id(map_location),
-                    href: "#",
-                    class: "js-location-map-remove-marker location-map-remove-marker" do
-          text
-        end
-      end
     end
   
     private

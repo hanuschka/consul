@@ -1,0 +1,5 @@
+de:
+  settings:
+    features:
+      elasticsearch: "Elasticsearch"
+      elasticsearch_description: "Elasticsearch ist die führende verteilte, RESTful, Open-Source-Such- und Analyse-Engine, die auf Geschwindigkeit, horizontale Skalierbarkeit, Zuverlässigkeit und einfache Verwaltung ausgelegt ist."

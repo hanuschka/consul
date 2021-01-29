@@ -1,6 +1,6 @@
 <%= render "shared/globalize_locales", resource: @debate %>
 
-<%= translatable_form_for(@debate) do |f| %>
+<%= translatable_form_for(@debate, html: {class: "debate-form"}) do |f| %>
 
   <%= render "shared/errors", resource: @debate %>
 
@@ -25,19 +25,70 @@
 
     <%= f.invisible_captcha :subtitle %>
 
+    <%tags = !params[:tags].blank? ? params[:tags]&.map{|t| Tag.find_by(name: t)} : @debate.tags %>
+
+    <%tag_list_o = @debate.new_record? && @debate.errors.empty? ? tags : @debate.tags%>
+    <%tag_list = @debate.new_record? && @debate.errors.empty? ? tags.map(&:name).join(",") : @debate.tag_list.to_s%>
+    <%categories = tag_list_o.select { |t| t.kind == 'category' }%>
+    <%subcategories = tag_list_o.select { |t| t.kind == 'subcategory' }%>
+
     <div class="small-12 column">
-      <%=f.hidden_field :tag_list, value: Tag.find_by(name: params[:tags])&.name%>
+      <%if Debate::MANAGE_CATEGORIES & Debate::TAGS_CLOUD > 0%>
+        <div id="category_tags" class="tags">
+          <%= f.label :category_tag_list, t("proposals.form.tag_category_label") %>
+          <% @categories.each do |tag| %>
+            <a class="js-add-tag-link category-tag"><%= tag.name %></a>
+          <% end %>
+        </div>
+      <%end%>
+      <%if Debate::MANAGE_CATEGORIES & Debate::TAGS_CUSTOM > 0%>
+        <%= f.text_field :tag_list_categories, value: categories.map{|c| c.name}.join(","),
+          label: t("debates.form.tags_categories"),
+          placeholder: t("debates.form.tags_placeholder"),
+          data: { js_url: suggest_tags_path },
+          class: "js-tag-list tag-autocomplete list-categories" %>
+      <%elsif (Debate::MANAGE_CATEGORIES | 3) > 0%>
+        <%=f.hidden_field :tag_list_categories, value: categories.map(&:name).join(","), class: "js-tag-list list-categories"%>
+      <%end%>
     </div>
     <div class="small-12 column">
-      <% if @debate.new_record? %>
-        <%= f.check_box :terms_of_service,
-          title: t("form.accept_terms_title"),
-          label: t("form.accept_terms",
-                   policy: link_to(t("form.policy"), "/privacy", target: "blank"),
-                   conditions: link_to(t("form.conditions"), "/conditions", target: "blank")
-                  ) %>
-      <% end %>
+      <%if Debate::MANAGE_SUBCATEGORIES & Debate::TAGS_CLOUD > 0%>
+        <%@subcategories = Tag.subcategory.order(:name) %>
+        <br>
+        <div id="category_tags" class="tags">
+          <%= f.label :category_tag_list, t("proposals.form.tag_subcategory_label") %>
+          <% @subcategories.each do |tag| %>
+            <a class="js-add-tag-link subcategory-tag"><%= tag.name %></a>
+          <% end %>
+        </div>
+      <%end%>
+      <%if Debate::MANAGE_SUBCATEGORIES & Debate::TAGS_CUSTOM > 0%>
+        <%= f.text_field :tag_list_subcategories, value: subcategories.map{|c| c.name}.join(","),
+          label: t("debates.form.tags_subcategories"),
+          placeholder: t("debates.form.tags_placeholder"),
+          data: { js_url: suggest_tags_path },
+          class: "js-tag-list tag-autocomplete list-subcategories" %>
+      <%elsif (Debate::MANAGE_SUBCATEGORIES | 3) > 0%>
+        <%=f.hidden_field :tag_list_subcategories, value: subcategories.map(&:name).join(","), class: "js-tag-list list-subcategories"%>
+      <%end%>
     </div>
+    <%if Debate::MANAGE_SUBCATEGORIES | Debate::MANAGE_CATEGORIES == 1%>
+      <div class="small-12 column">
+        <%=f.hidden_field :tag_list, value: tags.map(&:name).join(",")%>
+      </div>
+    <%end%>
+
+
+<div class="small-12 column">
+  <% if @debate.new_record? %>
+    <%= f.check_box :terms_of_service,
+      title: t("form.accept_terms_title"),
+      label: t("form.accept_terms",
+               policy: link_to(t("form.policy"), "/privacy", target: "blank"),
+               conditions: link_to(t("form.conditions"), "/conditions", target: "blank")
+              ) %>
+          <% end %>
+</div>
 
     <div class="actions small-12 column">
       <%= f.submit(class: "button", value: t("debates.#{action_name}.form.submit_button")) %>

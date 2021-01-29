@@ -3,7 +3,14 @@
   <div class="small-12 medium-9 column">
     <%= back_link_to %>
 
-    <h1><%= t("proposals.new.start_new_in", category: Tag.find_by(name: params[:tags])&.name) %></h1>
+    <h1>
+      <%if (Proposal::MANAGE_CATEGORIES | Proposal::MANAGE_SUBCATEGORIES) & Proposal::TAGS_PREDEFINED > 0 %>
+        <%= t("proposals.new.start_new_in", category: Tag.find_by(name: params[:tags])&.name) %>
+      <%else%>
+        <%= t("proposals.new.start_new") %>
+      <%end%>
+    </h1>
+
     <div data-alert class="callout primary">
       <%= link_to help_path(anchor: "proposals"), title: t("shared.target_blank"), target: "_blank" do %>
         <%= t("proposals.new.more_info") %>

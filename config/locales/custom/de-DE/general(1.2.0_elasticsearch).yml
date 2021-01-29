@@ -1,0 +1,34 @@
+de:
+  search:
+    go_to_discusstion: "open discussion..."
+    search_form:
+      placeholder: "Suchen..."
+      button: "Suche"
+    tabs:
+      all: "Alle Ergebnisse %{doc_count}"
+      debate: "Diskussionen %{doc_count}"
+      proposal: "Vorschläge %{doc_count}"
+      poll: "Abstimmungen %{doc_count}"
+      budget_investment: "Budgets %{doc_count}"
+      legislation_proposal: "Beteiligungsverfahren %{doc_count}"
+      comment: "Kommentare %{doc_count}"
+      site_customization_page: "Seiten %{doc_count}"
+    result_tag:
+      de: "d"
+      pr: "v"
+      po: "a"
+      bu: "b"
+      le: "l"
+      co: "k"
+      si: "s"
+  debates:
+    new:
+      start_new_in: Eine Diskussion in %{category} starten
+  proposals:
+    new:
+      start_new_in: Einen neuen Vorschlag in %{category} erstellen
+  shared:
+    tags_cloud:
+      subcategories: "Unterkategorien"
+  alerts:
+    select_one_category: "Bitte wählen Sie eine Kategorie aus, um eine %{model} zu erstellen"

@@ -2,8 +2,13 @@
 
   <div class="small-12 medium-9 column">
     <%= back_link_to debates_path %>
-
-    <h1><%= t("debates.new.start_new_in", category: Tag.find_by(name: params[:tags])&.name) %></h1>
+    <h1>
+      <%if (Debate::MANAGE_CATEGORIES | Debate::MANAGE_SUBCATEGORIES) & Debate::TAGS_PREDEFINED > 0 %>
+        <%= t("debates.new.start_new_in", category: Tag.find_by(name: params[:tags])&.name) %>
+      <%else%>
+        <%= t("debates.new.start_new") %>
+      <%end%>
+    </h1>
     <div data-alert class="callout primary">
       <%= sanitize(t("debates.new.info",
       info_link: link_to(t("debates.new.info_link"), new_proposal_path))) %>

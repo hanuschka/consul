@@ -1,0 +1,13 @@
+de:
+  admin:
+    actions:
+      update: Update
+    debates:
+      update:
+        notice: Diskussion aktualisieren
+    proposals:
+      index:
+        tags: Kategorien
+    tags:
+      index:
+        scope: Unterkategorien

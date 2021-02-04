@@ -1,10 +1,28 @@
 // brand_color
-$brand:             #003D90;
-$dark:               darken($brand, 10%);
+$brand:                     #004a83;
+$dark:                        darken($brand, 10%);
 // fonts
-$body-font-family: 'DM Sans Regular', 'DM Sans Bold', 'PT Serif Web Regular', sans-serif !important;
-$header-font-family: 'DM Sans Regular', 'DM Sans Bold', 'PT Serif Web Regular', sans-serif !important;
+$body-font-family: 'DMSans-Regular', 'DMSans', 'PT_Serif_Web-Regular', sans-serif !important;
+$header-font-family: 'DM Sans Regular', 'DMSans', 'PT_Serif_Web-Regular', sans-serif !important;
 $base-font-size:      16px;
+    // Regular 
+    @font-face {
+      font-family: "DMSans-Regular";
+      src: font-url("custom/DMSans-Regular.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
+      font-weight: 100;
+      font-style: normal; }
+    // Bold 
+    @font-face {
+      font-family: "DMSans-Bold";
+      src: font-url("custom/DMSans-Bold.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
+      font-weight: 100;
+      font-style: bold; }
+    // Fallback
+    @font-face {
+      font-family: "PT_Serif_Web-Regular";
+      src: font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf"), font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf");
+      font-weight: 100;
+      font-style: normal; }
 // custom_settings
 $light:              lighten($brand, 70%);
 $welcomebgcolor:     $white;

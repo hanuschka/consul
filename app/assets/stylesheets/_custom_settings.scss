@@ -44,3 +44,5 @@ $dropdownbackground:          $white;
 $dropdowntextcolor:           $black;
 $dropdownbordercolor:         darken($dropdownbackground, 5%);
 $dropdownwidth:               300px;
+$tagsbackgroundcolor:         lighten($brand, 65%);
+$tagstextcolor:               $brand;

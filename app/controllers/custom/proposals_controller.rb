@@ -2,6 +2,8 @@ require_dependency Rails.root.join("app", "controllers", "proposals_controller")
 
 class ProposalsController
 
+  include ProposalsHelper
+
   before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data]
   before_action :process_tags, only: [:create, :update]
 
@@ -13,6 +15,7 @@ class ProposalsController
     load_featured
     remove_archived_from_order_links
     take_only_by_tag_names
+    @proposals_coordinates = all_proposal_map_locations
   end
 
   private

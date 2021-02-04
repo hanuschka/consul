@@ -23,15 +23,24 @@ $base-font-size:      16px;
       src: font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf"), font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf");
       font-weight: 100;
       font-style: normal; }
+$base-font-size:      16px;
 // custom_settings
-$light:              lighten($brand, 70%);
-$welcomebgcolor:     $white;
-$welcomespan:        $brand;
-$welcomeheadline:    $brand;
-$welcomelead:        $brand;
-$welcomebuttonbg:    $brand;
-$welcomebuttontext:  $white;
-$welcometitle:       $brand;
-$dropdownbackground: $white;
-$dropdownmaincolor:  $black;
-$dropdownflyoutbackground: $white;
+$light:                       lighten($brand, 70%);
+$welcomebgcolor:              $white;
+$welcomebgposition:           top;
+$welcometextpositionsmall:    rem-calc(15);
+$welcometextpositionmedium:   rem-calc(20);     
+$welcometextpositionlarge:    rem-calc(25);          
+// text_center / line 30 & 34
+// <div class="small-12 medium-6 column <%= "medium-9 small-centered text-center" unless header.image.present? %>">
+// <div class="small-12 medium-6 large-4 <%= "small-centered text-center" unless header.image.present? %>">      
+$welcomespan:                 $brand;
+$welcomeheadline:             $brand;
+$welcomelead:                 $brand;
+$welcomebuttonbg:             $brand;
+$welcomebuttontext:           $white;
+$welcometitle:                $brand;
+$dropdownbackground:          $white;
+$dropdowntextcolor:           $black;
+$dropdownbordercolor:         darken($dropdownbackground, 5%);
+$dropdownwidth:               300px;

@@ -1,0 +1,64 @@
+// setup_project
+// Dropdown
+.main-nav,
+.drop-nav {
+  background: $dropdownbackground;
+}
+.main-nav {
+  float: left;
+}
+  .main-nav > li {
+    float: left;
+  }
+  .main-nav li:first-child {
+    border-left: none;
+  }
+  .main-nav a {
+    color: $dropdowntextcolor;
+    display: block;
+    text-decoration: none;
+  }
+.drop,
+.flyout {
+  position: relative;
+  z-index: 1000;
+}
+.drop-nav,
+.flyout-nav {
+  position: absolute;
+  display: none;
+  padding-left: 25px;
+  z-index: 1000;
+}
+// width of the list items
+.drop-nav li {
+  border-bottom: 1px solid $dropdownbordercolor;
+  width: $dropdownwidth;
+}
+.drop:hover > .drop-nav,
+.flyout:hover > .flyout-nav {
+  display: block;
+}
+.flyout-nav {
+  left: 100%;
+  top: 0;
+}
+.flyout:hover a,
+.flyout-nav {
+  background: $dropdownbackground;
+}
+.subnavigation {
+  background: $dropdownbackground;
+}
+#alert {
+  z-index: 1000;
+  position: absolute;
+}
+#notice {
+  z-index: 1000;
+  position: absolute;
+}
+.dropdown {
+  z-index: 3000;
+  position: relative;
+}

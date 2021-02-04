@@ -1,4 +1,21 @@
 de:
+  debates:
+    form:
+      tags_categories: "Eigene Kategorie(n) hinzufügen"
+      tags_subcategories: "Eigene Unterkategorie(n) hinzufügen"
+    new:
+      start_new_in: Starten Sie eine Diskussion in %{category}
   proposals:
+    form:
+      tag_category_label: "Kategorien"
+      tag_subcategory_label: "Unterkategorien"
+    new:
+      start_new_in: Erstellen Sie einen Vorschlag in %{category}
+      help: Wie funktionieren Vorschläge?
     proposal:
       reason_for_supports_necessary: ""
+  shared:
+    tags_cloud:
+      subcategories: "Unterkategorien"
+  alerts:
+    select_one_category: "Bitte wählen Sie zunächst eine Kategorie"

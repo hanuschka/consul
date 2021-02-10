@@ -1,0 +1,72 @@
+.container {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 800px;
+}
+
+.heading-image {
+  width: 10em;
+  margin: 0 auto;
+}
+
+.intro h1 {
+  color: #F83F37;
+}
+
+section {
+  padding-top: 3em;
+}
+
+section.green, 
+section.green button:before,
+section.green button:after {
+  background-color: #4ECEA1;
+}
+
+section.red,
+section.red button:before,
+section.red button:after {
+  background-color: #F83F37;
+}
+
+section.purple,
+section.purple button:before,
+section.purple button:after {
+  background-color: #28283C;
+}
+
+.green, .red, .purple {
+  color: white;
+}
+
+button {
+  padding: 1em 2em;
+  margin: 3em 0;
+  position: relative;
+}
+
+button.red {
+  background-color: #F83F37;
+}
+
+button.green {
+  background-color: #4ECEA1;
+}
+
+button:before,
+button:after {
+  content: '';
+  position: absolute;
+  background-color: #fff;
+  display: block;
+  width: 2em;
+  height: 4.5em;
+  transform: rotate(15deg);
+  right: -1em;
+  top: -.75em;
+  margin-left: -.55em;
+}
+
+button:before {
+  left: -1em;
+}

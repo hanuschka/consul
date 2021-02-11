@@ -1,17 +1,69 @@
 <%= render "shared/canonical", href: root_url %>
 <%= render "shared/social_media_meta_tags", social_url: root_url %>
 <%= render "layouts/common_head", default_title: setting["org_name"] %>
-
-<div id="navigation_bar" class="subnavigation expanded">
-  <div class="row">
-    <div class="hide-for-small-only">
-      <%= render "shared/subnavigation" %>
-    </div>
-    <div class="small-12 medium-3 column">
-      <%= yield :header_addon %>
-    </div>
-  </div>
-</div>
+<%= render "layouts/meta_tags" %>
 
 <main>
+  <div class='heading-image'>
+    <%= image_tag 'custom/header.png' %>
+  </div>
+
+  <div class='container'>
+    <div id="navigation_bar" class="subnavigation expanded">
+      <div class="row">
+        <div class="hide-for-small-only">
+          <%= render "shared/subnavigation" %>
+        </div>
+        <div class="small-12 medium-3 column">
+          <%= yield :header_addon %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- <video></video> -->
+
+  <%= image_tag 'custom/video-placeholder.jpg' %>
+
+  <section class='intro'>
+    <div class='container'>
+      <h1>Die Zukunft braucht Deine Ideen</h1>
+      <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea taki-mata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+    </div>
+  </section>
+
+  <section class='green'>
+    <div class='container'>
+      <h1>Tausche dich aus</h1>
+      <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tem-por invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadips-cing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+      <button type="button" class='red'>diskutiere mit</button>
+    </div>
+  </section>
+
+  <section class='red'>
+    <div class='container'>
+      <h1>Zeige deine Ideen</h1>
+      <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea taki-mata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+      <button type="button" class='green'>mach Vorschläge</button>
+    </div>
+  </section>
+
+  <section class='purple'>
+    <div class='container'>
+      <h1>Erhalte Feedback</h1>
+      <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea taki-mata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+      <button type="button" class='red'>zu den Umfragen</button>
+    </div>
+  </section>
+
+  <section class='questions'>
+    <div class='container'>
+      <h1>Noch Fragen?</h1>
+      <p>Lorem ipsum dolor sit amet, consetetur sa-dipscing elitr, sed diam nonumy eirmod tem-por invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua.</p>
+      <button type="button" class='red'>hier findest du Antworten</button>
+    </div>
+  </section>
 </main>
+<div class="footer">
+  <%= render "custom/layouts/footer" %>
+</div>

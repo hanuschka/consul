@@ -1444,6 +1444,12 @@ de:
         topic: Tag
         help: "Wenn ein*e Benutzer*in einen Vorschlag erstellt, werden die folgenden Tags als Standard-Tags vorgeschlagen."
         scope: Unterkategorien
+      logic:
+        category: Kategorie
+        subcategory: Unterkategorie
+        predefined: Festgelegt
+        cloud: Tag cloud
+        custom: Benutzerdefiniert  
     users:
       columns:
         id: ID

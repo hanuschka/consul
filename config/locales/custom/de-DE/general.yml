@@ -339,7 +339,7 @@ de:
       proposal_responsible_name_note: "(Einzelperson oder Vertreter/in eines Kollektivs; wird nicht öffentlich angezeigt)"
       proposal_summary_note: "(maximal 200 Zeichen)"
       proposal_video_url_note: Füge einen YouTube oder Vimeo Link hinzu
-      tag_category_label: "Tags"
+      tag_category_label: "Kategorien"
       tag_subcategory_label: "Unterkategorien"
       tags_instructions: "Diesen Vorschlag markieren. Sie können aus vorgeschlagenen Tags wählen, oder Ihre eigenen hinzufügen"
       tags_label: Verschlagwortung
@@ -749,10 +749,11 @@ de:
         message: "Sie sehen %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
     tags_cloud:
-      tags: Beliebte Tags
       districts: "Bereiche"
       districts_list: "Liste der Bereiche"
       categories: "Tags"
+      subcategories: "Unterkategorien"
+      tags: Tags von Nutzern
     target_blank: " (Link öffnet im neuen Fenster)"
     you_are_in: "Sie befinden sich in"
     unflag: Markierung aufheben
@@ -991,3 +992,5 @@ de:
       le: "l"
       co: "k"
       si: "s"
+  alerts:
+    select_one_category: "Bitte wählen Sie zunächst eine Kategorie"

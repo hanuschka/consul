@@ -7,6 +7,7 @@ module Abilities
 
       can :comment_as_moderator, [Debate, Comment, Proposal, Budget::Investment, Poll::Question,
                                   Legislation::Question, Legislation::Annotation, Legislation::Proposal, Topic]
+      can :manage, [Debate, Proposal]
     end
   end
 end

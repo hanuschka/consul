@@ -1,5 +1,48 @@
-// Overrides and adds customized foundation settings in this file
-// Read more on documentation:
-// * English: https://github.com/consul/consul/blob/master/CUSTOMIZE_EN.md#css
-// * Spanish: https://github.com/consul/consul/blob/master/CUSTOMIZE_ES.md#css
-//
+// brand_color
+$brand:                     #004a83;
+$dark:                        darken($brand, 10%);
+// fonts
+$body-font-family: 'DMSans-Regular', 'DMSans', 'PT_Serif_Web-Regular', sans-serif !important;
+$header-font-family: 'DM Sans Regular', 'DMSans', 'PT_Serif_Web-Regular', sans-serif !important;
+$base-font-size:      16px;
+    // Regular 
+    @font-face {
+      font-family: "DMSans-Regular";
+      src: font-url("custom/DMSans-Regular.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
+      font-weight: 100;
+      font-style: normal; }
+    // Bold 
+    @font-face {
+      font-family: "DMSans-Bold";
+      src: font-url("custom/DMSans-Bold.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
+      font-weight: 100;
+      font-style: bold; }
+    // Fallback
+    @font-face {
+      font-family: "PT_Serif_Web-Regular";
+      src: font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf"), font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf");
+      font-weight: 100;
+      font-style: normal; }
+$base-font-size:      16px;
+// custom_settings
+$light:                       lighten($brand, 70%);
+$welcomebgcolor:              $white;
+$welcomebgposition:           top;
+$welcometextpositionsmall:    rem-calc(15);
+$welcometextpositionmedium:   rem-calc(20);     
+$welcometextpositionlarge:    rem-calc(25);          
+// text_center / line 30 & 34
+// <div class="small-12 medium-6 column <%= "medium-9 small-centered text-center" unless header.image.present? %>">
+// <div class="small-12 medium-6 large-4 <%= "small-centered text-center" unless header.image.present? %>">      
+$welcomespan:                 $brand;
+$welcomeheadline:             $brand;
+$welcomelead:                 $brand;
+$welcomebuttonbg:             $brand;
+$welcomebuttontext:           $white;
+$welcometitle:                $brand;
+$dropdownbackground:          $white;
+$dropdowntextcolor:           $black;
+$dropdownbordercolor:         darken($dropdownbackground, 5%);
+$dropdownwidth:               300px;
+$tagsbackgroundcolor:         lighten($brand, 65%);
+$tagstextcolor:               $brand;

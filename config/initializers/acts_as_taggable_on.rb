@@ -27,6 +27,7 @@ module ActsAsTaggableOn
 
   Tag.class_eval do
     scope :category, -> { where(kind: "category") }
+    scope :subcategory, -> { where(kind: "subcategory") }
 
     def category?
       kind == "category"

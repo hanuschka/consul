@@ -8,12 +8,12 @@ namespace :moderation do
     end
   end
 
-  resources :debates, only: :index do
+  resources :debates, only: [:index, :update, :show] do
     put :hide, on: :member
     put :moderate, on: :collection
   end
 
-  resources :proposals, only: :index do
+  resources :proposals, only: [:index, :update, :show] do
     put :hide, on: :member
     put :moderate, on: :collection
   end

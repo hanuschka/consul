@@ -1,0 +1,19 @@
+en:
+  admin:
+    actions:
+      update: Update
+    debates:
+      update:
+        notice: Debate updated
+    proposals:
+      index:
+        tags: Category
+    tags:
+      index:
+        scope: Subcategory
+      logic:
+        category: Category
+        subcategory: Subcategory
+        custom: Custom
+        predefined: Predefined
+        cloud: Tag cloud

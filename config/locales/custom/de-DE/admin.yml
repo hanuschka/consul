@@ -1,0 +1,19 @@
+de:
+  admin:
+    actions:
+      update: Update
+    debates:
+      update:
+        notice: Diskussion aktualisieren
+    proposals:
+      index:
+        tags: Kategorien
+    tags:
+      index:
+        scope: Unterkategorien
+      logic:
+        category: Kategorie
+        subcategory: Unterkategorie
+        predefined: Festgelegt
+        cloud: Tag cloud
+        custom: Benutzerdefiniert

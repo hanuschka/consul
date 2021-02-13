@@ -19,13 +19,18 @@ class DebatesController < ApplicationController
   end
 
   def process_tags
+    if params[:debate][:tags]
+      params[:tags] = params[:debate][:tags].split(',')
+      params[:debate].delete(:tags)
+    end
     params[:debate][:tag_list_custom].split(",").each do |t|
       next if t.strip.blank?
       Tag.find_or_create_by name: t.strip
     end
     params[:debate][:tag_list] ||= ""
     params[:debate][:tag_list] += ((params[:debate][:tag_list_predefined] || "").split(",") + (params[:debate][:tag_list_custom] || "").split(",")).join(",")
-    params[:debate][:tag_list_predefined], params[:debate][:tag_list_custom] = nil, nil
+    params[:debate].delete(:tag_list_predefined)
+    params[:debate].delete(:tag_list_custom)
   end
 
   def take_only_by_tag_names

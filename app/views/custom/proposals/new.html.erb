@@ -4,8 +4,8 @@
     <%= back_link_to %>
 
     <h1>
-      <%if c_tag = params[:tags]&.any? || @proposal.tags.where(kind: :category).first%>
-        <%= t("proposals.new.start_new_in", category: c_tag&.name) %>
+      <%if params[:tags]&.any?%>
+        <%= t("proposals.new.start_new_in", category: Tag.find_by(name: params[:tags])&.name) %>
       <%else%>
         <%= t("proposals.new.start_new") %>
       <%end%>

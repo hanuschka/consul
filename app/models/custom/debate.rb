@@ -9,4 +9,11 @@ class Debate
   TAGS_PREDEFINED = 0b001
   TAGS_CLOUD      = 0b010
   TAGS_CUSTOM     = 0b100
+
+  def self.category_predefined?
+    MANAGE_CATEGORIES & TAGS_PREDEFINED > 0
+  end
+  def self.subcategory_predefined?
+    MANAGE_SUBCATEGORIES & TAGS_PREDEFINED > 0
+  end
 end

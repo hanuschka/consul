@@ -17,13 +17,19 @@ class ProposalsController
 
   private
     def process_tags
+      if params[:proposal][:tags]
+        params[:tags] = params[:proposal][:tags].split(',')
+        params[:proposal].delete(:tags)
+      end
+
       params[:proposal][:tag_list_custom].split(",").each do |t|
         next if t.strip.blank?
         Tag.find_or_create_by name: t.strip
       end
       params[:proposal][:tag_list] ||= ""
       params[:proposal][:tag_list] += ((params[:proposal][:tag_list_predefined] || "").split(",") + (params[:proposal][:tag_list_custom] || "").split(",")).join(",")
-      params[:proposal][:tag_list_predefined], params[:proposal][:tag_list_custom] = nil, nil
+      params[:proposal].delete(:tag_list_predefined)
+      params[:proposal].delete(:tag_list_custom)
     end
 
     def take_only_by_tag_names

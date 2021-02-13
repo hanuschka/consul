@@ -84,6 +84,10 @@
     <%categories_logic = Proposal::MANAGE_CATEGORIES if categories_logic == 0 %>
     <%subcategories_logic = Proposal::MANAGE_SUBCATEGORIES if subcategories_logic == 0%>
 
+    <%if !params[:tags].blank?%>
+      <%=f.hidden_field :tags, value: params[:tags].join(',') %>
+    <%end%>
+
     <div class="small-12 column">
       <%if categories_logic & Proposal::TAGS_CLOUD > 0%>
         <div id="category_tags" class="tags">

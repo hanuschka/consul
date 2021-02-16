@@ -1,50 +1,100 @@
-<% content_for :body_class, "home-page" %>
-
-<% content_for :canonical do %>
-  <%= render "shared/canonical", href: root_url %>
-<% end %>
-
-<% if has_banners? %>
-  <%= render "shared/banner" %>
-<% end %>
-
-<% provide :social_media_meta_tags do %>
-  <%= render "shared/social_media_meta_tags",
-              social_url: root_url %>
-<% end %>
-
-<%= render "header", header: @header %>
+<%= render "shared/canonical", href: root_url %>
+<%= render "shared/social_media_meta_tags", social_url: root_url %>
+<%= render "layouts/common_head", default_title: setting["org_name"] %>
+<%= render "layouts/meta_tags" %>
 
 <main>
-  <%= render "feeds" %>
+  <div class='heading-image'>
+    <%= image_tag 'custom/header.png' %>
+  </div>
 
-  <div class="row">
-    <div class="small-12 medium-9 column">
-      <% page = SiteCustomization::Page.find_by slug: "indexdt" %>
-      <% if page %>
-        <h4 class="welcometitle"><%= page.title %></h4>
-        <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(page.content) %>
-      <% end %>
+
+  <div class='menu-wrapper'>
+    <div class='container'>
+      <div id="navigation_bar" class="subnavigation expanded">
+        <div class="row">
+          <div class="hide-for-small-only">
+            <%= render "shared/subnavigation" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- <video></video> -->
+
+  <div class='video-placeholder'>
+    <div class='play-button'>
     </div>
   </div>
 
-  <div class="row">
-    <% if @cards.any? %>
-      <div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
-        <%= render "cards" %>
+  <section class='intro'>
+    <div class='container'>
+      <div class='intro-content'>
+        <h1>Die Zukunft braucht Deine Ideen</h1>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea taki-mata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
       </div>
-    <% end %>
+    </div>
+  </section>
 
-    <% if feed_processes_enabled? %>
-      <div class="small-12 large-4 column">
-        <%= render "processes" %>
+  <section>
+    <div class='container green'>
+      <div class='content-image'>
+        <%= image_tag 'custom/discutieren.png' %>
       </div>
-    <% end %>
-  </div>
+      <div class='content'>
+        <h1>Tausche dich aus</h1>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tem-por invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadips-cing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+        <button type="button" class='red'>diskutiere mit</button>
+      </div>
+    </div>
+  </section>
 
-  <% if feature?("user.recommendations") && (@recommended_debates.present? || @recommended_proposals.present?) %>
-    <%= render "recommended",
-                recommended_debates: @recommended_debates,
-                recommended_proposals: @recommended_proposals %>
-  <% end %>
+
+  <section>
+    <div class='container red'>
+      <div class='content-image'>
+        <%= image_tag 'custom/vorschlaege.png' %>
+      </div>
+      <div class='content'>
+        <h1>Zeige deine Ideen</h1>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea taki-mata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+        <button type="button" class='green'>mach Vorschläge</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class='container purple'>
+      <div class='content-image'>
+        <%= image_tag 'custom/umfragen.png' %>
+      </div>
+      <div class='content'>
+        <h1>Erhalte Feedback</h1>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea taki-mata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+        <button type="button" class='red'>zu den Umfragen</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class='container questions'>
+      <div class='intro-content'>
+        <h1>Noch Fragen?</h1>
+        <div class=questions-content>
+          <p>Lorem ipsum dolor sit amet, consetetur sa-dipscing elitr, sed diam nonumy eirmod tem-por invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua.</p>
+          <button type="button" class='red'>hier findest du Antworten</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
+<div class="footer">
+  <%= render "custom/layouts/footer" %>
+  <div class='footer-logo'>
+    <div class='footer-logo-note'>
+      Initiiert von
+    </div>
+    <%= image_tag 'aufstehen_logo.png'  %>
+  </div>
+</div>

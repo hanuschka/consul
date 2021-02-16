@@ -1,57 +1,224 @@
-.container {
-  margin: 0 auto;
-  width: 80%;
-  max-width: 800px;
+@font-face {
+  font-family: 'MyriadPro It';
+  src: url('MyriadPro-It.ttf');
 }
+
+@font-face {
+  font-family: 'MyriadPro BoldIt';
+  src: url('MyriadPro-BoldIt.ttf')
+}
+
+.container {
+  width: 80%;
+  margin-right: 5rem;
+  margin-left: auto;
+}
+
+p {
+  font-size: 1.25em;
+  line-height: 2;
+}
+
+
+// Header
 
 .heading-image {
-  width: 10em;
+  width: 35em;
+  margin: 0 auto;
+  margin-top: 5em;
+  margin-bottom: 2em;
+}
+
+// Menu
+
+.menu-wrapper,
+.menu-wrapper .subnavigation {
+  background-color: #F82302;
+  color: #fff;
+}
+
+.subnavigation ul a {
+  font-family: 'MyriadPro BoldIt';
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.subnavigation ul a:hover {
+  color: #fff;
+}
+
+.subnavigation ul.drop-nav a {
+  color: #000;
+  font-size: 1rem;
+}
+
+.column {
+  float: none;
   margin: 0 auto;
 }
 
-.intro h1 {
+.subnavigation .column>ul {
+  display: flex;
+  justify-content: center;
+}
+
+.subnavigation .column>ul li:last-child {
+  margin: 0;
+}
+
+
+
+// Video
+
+.play-button {
+  width: 0;
+  height: 0;
+  margin: 0 auto;
+  border-left: 100px solid white;
+
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+  transform: translate(50%);
+  cursor: pointer;
+}
+
+.video-placeholder {
+  background: rgba(0, 0, 0, 0.3) url('custom/video-placeholder.jpg') no-repeat 90% 50%;
+  background-blend-mode: darken;
+  margin: auto;
+  height: 670px;
+  width: 100%;
+  padding-top: 300px;
+}
+
+
+// Text blocks
+
+.intro h1,
+.questions h1 {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
   color: #F83F37;
+  text-align: center;
 }
 
-section {
-  padding-top: 3em;
+.questions-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-section.green, 
-section.green button:before,
-section.green button:after {
-  background-color: #4ECEA1;
+.questions-content button {
+  margin: 1em 2em;
 }
 
-section.red,
-section.red button:before,
-section.red button:after {
-  background-color: #F83F37;
+.content-image {
+  position: absolute;
+  left: -7em;
+  top: 1em;
 }
 
-section.purple,
-section.purple button:before,
-section.purple button:after {
+
+section h1 {
+  font-family: 'MyriadPro BoldIt' !important;
+  font-size: 3.5em;
+  padding-top: 1.5em;
+  padding-bottom: .75em;
+  line-height: normal;
+}
+
+section .container {
+  position: relative;
+  padding-bottom: 3em;
+}
+
+section .content {
+  margin-left: 12em;
+  margin-right: 2em;
+}
+
+section .container.green:before, 
+section .container.red:before,
+section .container.purple:before, 
+section .container.questions:before {
+  content: '';
+  position: absolute;
+  background-color: #fff;
+  display: block;
+  width: 35em;
+  height: 50em;
+  transform: rotate(45deg);
+  transform-origin: top left;
+  z-index: -1;
+}
+
+section .container.green:after, 
+section .container.red:after,
+section .container.purple:after {
+  content: '';
+  position: absolute;
+  background-color: #fff;
+  display: block;
+  bottom: -5em;
+  right: -2em;
+  width: 7em;
+  height: 12em;
+  transform: rotate(45deg);
+}
+
+section .green, 
+section .container.green:before, 
+section .green button:before,
+section .green button:after, 
+button.green {
+  background-color: #36CDA0;
+}
+
+section .red,
+section .container.red:before, 
+section .red button:before,
+section .red button:after, 
+button.red {
+  background-color: #F82302;
+}
+
+section .purple,
+section .container.purple:before, 
+section .purple button:before,
+section .purple button:after {
   background-color: #28283C;
+}
+
+section .questions,
+section .container.questions:before, 
+section .questions button:before,
+section .questions button:after {
+  background-color: #fff;
+}
+
+section .container.questions:before {
+  height: 25em;  
 }
 
 .green, .red, .purple {
   color: white;
 }
 
+.green .content p, 
+.red .content p  {
+  color: black;
+}
+
 button {
-  padding: 1em 2em;
-  margin: 3em 0;
+  padding: .5em 2em;
+  margin: 2em 0;
   position: relative;
+  white-space: nowrap;
+  font-family: 'MyriadPro BoldIt';
+  font-size: 2em;
 }
 
-button.red {
-  background-color: #F83F37;
-}
-
-button.green {
-  background-color: #4ECEA1;
-}
 
 button:before,
 button:after {
@@ -62,7 +229,7 @@ button:after {
   width: 2em;
   height: 4.5em;
   transform: rotate(15deg);
-  right: -1em;
+  right: -1.5em;
   top: -.75em;
   margin-left: -.55em;
 }
@@ -70,3 +237,34 @@ button:after {
 button:before {
   left: -1em;
 }
+
+
+// Footer
+
+.footer-sections.small-12.large-8.column {
+  display: none;
+}
+
+.footer {
+  border-top: 1px solid #99A0BB;
+  background: #fff;
+  position: relative;
+}
+
+.footer-logo {
+  position: absolute;
+  top: 3rem;
+  right: 5rem;
+}
+
+footer .column {
+  float: left;
+}
+
+footer .row {
+  margin-right: 5rem;
+  margin-left: 5rem;
+  max-width: none;
+}
+
+

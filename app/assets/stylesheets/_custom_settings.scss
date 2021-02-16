@@ -1,20 +1,20 @@
 // brand_color
-$brand:             #fb2905;
-$dark:              #ff4008;
+$brand:                     #003d90;
+$dark:                        darken($brand, 0%);
 // fonts
-$body-font-family: 'DMSans-Regular', 'DMSans', 'PT_Serif_Web-Regular', sans-serif !important;
-$header-font-family: 'DM Sans Regular', 'DMSans', 'PT_Serif_Web-Regular', sans-serif !important;
+$body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
+$header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
 $base-font-size:      16px;
     // Regular 
     @font-face {
-      font-family: "DMSans-Regular";
-      src: font-url("custom/DMSans-Regular.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
+      font-family: "sourcesanspro-regular-webfont";
+      src: font-url("sourcesanspro-regular-webfont.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
       font-weight: 100;
       font-style: normal; }
     // Bold 
     @font-face {
-      font-family: "DMSans-Bold";
-      src: font-url("custom/DMSans-Bold.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
+      font-family: "sourcesanspro-bold-webfont";
+      src: font-url("sourcesanspro-bold-webfont.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
       font-weight: 100;
       font-style: bold; }
     // Fallback
@@ -40,8 +40,8 @@ $welcomelead:                 $brand;
 $welcomebuttonbg:             $brand;
 $welcomebuttontext:           $white;
 $welcometitle:                $brand;
-$dropdownbackground:          $white;
-$dropdowntextcolor:           $black;
+$dropdownbackground:          #d0003a;
+$dropdowntextcolor:           $white;
 $dropdownbordercolor:         darken($dropdownbackground, 5%);
 $dropdownwidth:               300px;
 $tagsbackgroundcolor:         lighten($brand, 65%);

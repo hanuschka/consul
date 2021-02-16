@@ -91,6 +91,7 @@ en:
       show_link: View debate
     form:
       debate_title: Debate title
+      tags_custom: "Custom user tags"
       tags_instructions: Tag this debate.
       tags_placeholder: "Enter the tags you would like to use, separated by commas (',')"
     index:

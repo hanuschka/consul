@@ -31,11 +31,55 @@
             as: :tag,
             html: { id: "edit_tag_#{tag.id}" }) do |f| %>
 
-            <div class="small-6 column">
+            <div class="small-8 column">
               <%=f.text_field :name, {label: ""}%>
+                <div class='row'>
+                  <div class='small-6 column'>
+                    <b><%=t("admin.tags.logic.category")%></b>
+                    <div>
+                      <%=check_box_tag "tag[category_code][]", 1, (tag.custom_logic_category_code & 1) > 0, id: "category_code_#{tag.id}_1" %>
+                      <%=label_tag "category_code_#{tag.id}_1" do %>
+                        <span class="checkbox"><%=t("admin.tags.logic.predefined")%></span>
+                      <%end%>
+                    </div>
+                    <div>
+                      <%=check_box_tag "tag[category_code][]", 2, (tag.custom_logic_category_code & 2) > 0, id: "category_code_#{tag.id}_2" %>
+                      <%=label_tag "category_code_#{tag.id}_2" do %>
+                        <span class="checkbox"><%=t("admin.tags.logic.cloud")%></span>
+                      <%end%>
+                    </div>
+                    <div>
+                      <%=check_box_tag "tag[category_code][]", 4, (tag.custom_logic_category_code & 4) > 0, id: "category_code_#{tag.id}_4" %>
+                      <%=label_tag "category_code_#{tag.id}_4" do %>
+                        <span class="checkbox"><%=t("admin.tags.logic.custom")%></span>
+                      <%end%>
+                    </div>
+                  </div>
+                  <div class='small-6 column'>
+                    <b><%=t("admin.tags.logic.subcategory")%></b>
+                    <div>
+                      <%=check_box_tag "tag[subcategory_code][]", 1, (tag.custom_logic_subcategory_code & 1) > 0, id: "subcategory_code_#{tag.id}_1" %>
+                      <%=label_tag "subcategory_code_#{tag.id}_1" do %>
+                        <span class="checkbox"><%=t("admin.tags.logic.predefined")%></span>
+                      <%end%>
+                    </div>
+                    <div>
+                      <%=check_box_tag "tag[subcategory_code][]", 2, (tag.custom_logic_subcategory_code & 2) > 0, id: "subcategory_code_#{tag.id}_2" %>
+                      <%=label_tag "subcategory_code_#{tag.id}_2" do %>
+                        <span class="checkbox"><%=t("admin.tags.logic.cloud")%></span>
+                      <%end%>
+                    </div>
+                    <div>
+                      <%=check_box_tag "tag[subcategory_code][]", 4, (tag.custom_logic_subcategory_code & 4) > 0, id: "subcategory_code_#{tag.id}_4" %>
+                      <%=label_tag "subcategory_code_#{tag.id}_4" do %>
+                        <span class="checkbox"><%=t("admin.tags.logic.custom")%></span>
+                      <%end%>
+                    </div>
+                  </div>
+                </div>
             </div>
 
-            <div class="small-6 column">
+            <div class="small-4 column">
               <label>&nbsp;</label>
               <%= f.submit(t("admin.actions.update"), class: "button success") %>
             </div>

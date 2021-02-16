@@ -4,3 +4,4 @@ class AddTagsLogicForTags < ActiveRecord::Migration[5.1]
     add_column :tags, :custom_logic_subcategory_code, :integer, default: 0
   end
 end
+

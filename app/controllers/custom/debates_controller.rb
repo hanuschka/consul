@@ -23,7 +23,7 @@ class DebatesController < ApplicationController
       params[:tags] = params[:debate][:tags].split(',')
       params[:debate].delete(:tags)
     end
-    params[:debate][:tag_list_custom].split(",").each do |t|
+    params[:debate][:tag_list_custom]&.split(",")&.each do |t|
       next if t.strip.blank?
       Tag.find_or_create_by name: t.strip
     end

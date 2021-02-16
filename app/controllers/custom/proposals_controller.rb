@@ -25,7 +25,7 @@ class ProposalsController
         params[:proposal].delete(:tags)
       end
 
-      params[:proposal][:tag_list_custom].split(",").each do |t|
+      params[:proposal][:tag_list_custom]&.split(",")&.each do |t|
         next if t.strip.blank?
         Tag.find_or_create_by name: t.strip
       end

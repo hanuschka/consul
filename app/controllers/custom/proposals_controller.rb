@@ -20,17 +20,19 @@ class ProposalsController
 
   private
     def process_tags
-      params[:proposal][:tag_list_categories].split(",").each do |t|
-        next if t.strip.blank?
-        Tag.find_or_create_by name: t.strip, kind: :category
+      if params[:proposal][:tags]
+        params[:tags] = params[:proposal][:tags].split(',')
+        params[:proposal].delete(:tags)
       end
-      params[:proposal][:tag_list_subcategories].split(",").each do |t|
+
+      params[:proposal][:tag_list_custom].split(",").each do |t|
         next if t.strip.blank?
-        Tag.find_or_create_by name: t.strip, kind: :subcategory
+        Tag.find_or_create_by name: t.strip
       end
       params[:proposal][:tag_list] ||= ""
-      params[:proposal][:tag_list] += ((params[:proposal][:tag_list_categories] || "").split(",") + (params[:proposal][:tag_list_subcategories] || "").split(",")).join(",")
-      params[:proposal][:tag_list_categories], params[:proposal][:tag_list_subcategories] = nil, nil
+      params[:proposal][:tag_list] += ((params[:proposal][:tag_list_predefined] || "").split(",") + (params[:proposal][:tag_list_custom] || "").split(",")).join(",")
+      params[:proposal].delete(:tag_list_predefined)
+      params[:proposal].delete(:tag_list_custom)
     end
 
     def take_only_by_tag_names
@@ -40,3 +42,4 @@ class ProposalsController
       end
     end
 end
+

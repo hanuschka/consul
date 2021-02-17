@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'MyriadPro It';
-  src: url('MyriadPro-It.ttf');
+  src: font-url('MyriadPro-It.ttf');
 }
 
 @font-face {
   font-family: 'MyriadPro BoldIt';
-  src: url('MyriadPro-BoldIt.ttf')
+  src: font-url('MyriadPro-BoldIt.ttf')
 }
 
 section p {
@@ -81,7 +81,7 @@ header {
 }
 
 .video-placeholder {
-  background: rgba(0, 0, 0, 0.3) url('custom/video-placeholder.jpg') no-repeat 90% 50%;
+  background: rgba(0, 0, 0, 0.3) url('video-placeholder.jpg') no-repeat 90% 50%;
   background-blend-mode: darken;
   margin: auto;
   height: 670px;

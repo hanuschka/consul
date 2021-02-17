@@ -81,7 +81,7 @@ header {
 }
 
 .video-placeholder {
-  background: rgba(0, 0, 0, 0.3) url('video-placeholder.jpg') no-repeat 90% 50%;
+  background: rgba(0, 0, 0, 0.3) url(asset_path('video-placeholder.jpg')) no-repeat 90% 50%;
   background-blend-mode: darken;
   margin: auto;
   height: 670px;

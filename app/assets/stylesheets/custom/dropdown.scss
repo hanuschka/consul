@@ -27,9 +27,14 @@
 .flyout-nav {
   position: absolute;
   display: none;
-  padding-left: 25px;
   z-index: 2000;
 }
+
+.drop-nav li a,
+.flyout-nav li a {
+  padding-left: 20px;
+}
+
 // width of the list items
 .drop-nav li {
   border-bottom: 1px solid $dropdownbordercolor;
@@ -39,10 +44,30 @@
 .flyout:hover > .flyout-nav {
   display: block;
 }
+
+.flyout:hover > .flyout-nav-right {
+  display: block;
+}
+
 .flyout-nav {
   left: 100%;
   top: 0;
 }
+
+.flyout-nav-right {
+  left: -225px;
+  top: 0;
+  position: absolute;
+  display: none;
+  width: 225px;
+}
+
+
+.flyout-nav-right li {
+  width: 225px;
+}
+
+
 .flyout:hover a,
 .flyout-nav {
   background: $dropdownbackground;

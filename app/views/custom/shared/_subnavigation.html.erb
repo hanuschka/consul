@@ -1,5 +1,5 @@
-<div class="small-12 medium-9 column">
-  <ul>
+<div class="column center-menu">
+  <ul class='main-menu-items'>
     <%= raw content_block("subnavigation_left", I18n.locale) %>
     <!--
     <% if feature?(:debates) %>
@@ -57,5 +57,13 @@
     <% end %>
     -->
     <%= raw content_block("subnavigation_right", I18n.locale) %>
+    <li class='drop'>
+      <%= link_to 'Konto', '#' %>
+      <ul class="drop-nav">
+        <%= render "shared/admin_login_items" %>
+        <%= render "layouts/notification_item" %>
+        <%= render "devise/menu/login_items" %>
+      </ul>
+    </li>
   </ul>
 </div>

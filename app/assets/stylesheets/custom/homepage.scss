@@ -8,13 +8,7 @@
   src: url('MyriadPro-BoldIt.ttf')
 }
 
-.container {
-  width: 80%;
-  margin-right: 5rem;
-  margin-left: auto;
-}
-
-p {
+section p {
   font-size: 1.25em;
   line-height: 2;
 }
@@ -22,48 +16,47 @@ p {
 
 // Header
 
-.heading-image {
-  width: 35em;
-  margin: 0 auto;
-  margin-top: 5em;
-  margin-bottom: 2em;
+header {
+  background: $white;
+  border-bottom: none;
 }
+
+.heading-image {
+  width: 80%;
+  max-width: 35em;
+  margin: 0 auto;
+  margin-top: 3em;
+  margin-bottom: 1em;
+}
+
+
 
 // Menu
 
-.menu-wrapper,
-.menu-wrapper .subnavigation {
-  background-color: #F82302;
-  color: #fff;
+.subnavigation a {
+  color: $white;
+  font-family: 'MyriadPro BoldIt'
 }
 
-.subnavigation ul a {
-  font-family: 'MyriadPro BoldIt';
-  color: #fff;
-  font-size: 1.5rem;
+.center-menu {
+  width: 100% !important;
 }
 
-.subnavigation ul a:hover {
-  color: #fff;
-}
-
-.subnavigation ul.drop-nav a {
-  color: #000;
-  font-size: 1rem;
-}
-
-.column {
-  float: none;
-  margin: 0 auto;
-}
-
-.subnavigation .column>ul {
+.center-menu .main-menu-items {
   display: flex;
   justify-content: center;
+  font-size: 1.25em;
 }
 
-.subnavigation .column>ul li:last-child {
-  margin: 0;
+.main-menu-items .drop-nav,
+.main-menu-items .flyout-nav {
+  font-size: initial;
+}
+
+// Help header
+
+.help-header .input-group {
+  margin-bottom: none;
 }
 
 
@@ -78,8 +71,13 @@ p {
 
   border-top: 50px solid transparent;
   border-bottom: 50px solid transparent;
-  transform: translate(50%);
+  transform: translate(0);
   cursor: pointer;
+}
+
+
+.video-container {
+  margin-top: -1.5rem;
 }
 
 .video-placeholder {
@@ -94,29 +92,22 @@ p {
 
 // Text blocks
 
-.intro h1,
-.questions h1 {
+.intro,
+.questions,
+section .content {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.intro h1,
+.questions h1 {
   color: #F83F37;
   text-align: center;
 }
 
-.questions-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.questions-content button {
-  margin: 1em 2em;
-}
-
 .content-image {
-  position: absolute;
-  left: -7em;
-  top: 1em;
+  display: none;
 }
 
 
@@ -133,38 +124,9 @@ section .container {
   padding-bottom: 3em;
 }
 
-section .content {
-  margin-left: 12em;
-  margin-right: 2em;
-}
-
-section .container.green:before, 
-section .container.red:before,
-section .container.purple:before, 
-section .container.questions:before {
-  content: '';
-  position: absolute;
-  background-color: #fff;
+section .questions-content button {
+  margin: 2em auto;
   display: block;
-  width: 35em;
-  height: 50em;
-  transform: rotate(45deg);
-  transform-origin: top left;
-  z-index: -1;
-}
-
-section .container.green:after, 
-section .container.red:after,
-section .container.purple:after {
-  content: '';
-  position: absolute;
-  background-color: #fff;
-  display: block;
-  bottom: -5em;
-  right: -2em;
-  width: 7em;
-  height: 12em;
-  transform: rotate(45deg);
 }
 
 section .green, 
@@ -197,10 +159,6 @@ section .questions button:after {
   background-color: #fff;
 }
 
-section .container.questions:before {
-  height: 25em;  
-}
-
 .green, .red, .purple {
   color: white;
 }
@@ -210,18 +168,17 @@ section .container.questions:before {
   color: black;
 }
 
-button {
+section button {
   padding: .5em 2em;
   margin: 2em 0;
   position: relative;
-  white-space: nowrap;
   font-family: 'MyriadPro BoldIt';
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 
-button:before,
-button:after {
+section button:before,
+section button:after {
   content: '';
   position: absolute;
   background-color: #fff;
@@ -252,9 +209,11 @@ button:before {
 }
 
 .footer-logo {
-  position: absolute;
-  top: 3rem;
-  right: 5rem;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 1em;
+  padding-right: 0.625rem;
+  padding-left: 0.625rem;
 }
 
 footer .column {
@@ -262,9 +221,155 @@ footer .column {
 }
 
 footer .row {
-  margin-right: 5rem;
-  margin-left: 5rem;
-  max-width: none;
+  margin-right: auto;
+  margin-left: auto;
+  width: 80%;
 }
 
 
+// Media queries
+
+@media (min-width: 640px) {
+
+  section button {
+    padding: .5em 2em;
+    margin: 2em 0;
+    font-size: 2em;
+    white-space: nowrap;
+  }
+
+  .footer-logo {
+    padding-right: 0.9375rem;
+    padding-left: 0.9375rem;
+  }
+
+}
+
+
+@media (min-width: 900px) {
+
+  section .container.green:before, 
+  section .container.red:before,
+  section .container.purple:before, 
+  section .container.questions:before {
+    content: '';
+    position: absolute;
+    background-color: #fff;
+    display: block;
+    width: 35em;
+    height: 52em;
+    transform: rotate(45deg);
+    transform-origin: top left;
+    z-index: -1;
+  }
+
+  section .container.green:before  {
+    background-color: #36CDA0;
+  }
+
+  section .container.red:before {
+    background-color: #F82302;
+  }
+
+  section .container.purple:before {
+    background-color: #28283C;
+  }
+
+  section .container.questions:before { 
+    background-color: #fff;
+  }
+
+  section .container.questions:before {
+    height: 25em;  
+  }
+
+  section .container.green:after, 
+  section .container.red:after,
+  section .container.purple:after {
+    content: '';
+    position: absolute;
+    background-color: #fff;
+    display: block;
+    bottom: -5em;
+    right: -2em;
+    width: 7em;
+    height: 12em;
+    transform: rotate(45deg);
+  }
+ 
+}
+
+@media (min-width: 1050px) {
+  section .container.green:before, 
+  section .container.red:before,
+  section .container.purple:before {
+    width: 37em;
+    height: 55em;
+  }
+
+  .content-image {
+    display: block;
+    position: absolute;
+    left: -7em;
+    top: 1em;
+  }
+
+  section .content {
+    margin-left: 12em;
+    margin-right: 4em;
+  }
+
+  .intro,
+  .questions,
+  section .content {
+    width: initial;
+  }
+
+
+
+  section .container {
+    margin-left: 12em;
+    margin-right: 4em;
+  }
+
+  .footer-logo {
+    position: absolute;
+    top: 3rem;
+    right: 5rem;
+    width: initial;
+    margin-top: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+}
+
+
+@media (min-width: 1350px) {
+
+  section .questions-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  section .questions-content button {
+    margin: 1em 2em;
+  }
+
+}
+
+
+
+@media (min-width: 1600px) {
+
+  section .container.green:before, 
+  section .container.red:before,
+  section .container.purple:before {
+    height: 60em;
+  }
+
+  section .container.questions:before {
+    height: 50em;
+  }
+}

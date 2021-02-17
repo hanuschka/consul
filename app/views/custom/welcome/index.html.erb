@@ -1,31 +1,19 @@
 <%= render "shared/canonical", href: root_url %>
 <%= render "shared/social_media_meta_tags", social_url: root_url %>
-<%= render "layouts/common_head", default_title: setting["org_name"] %>
 <%= render "layouts/meta_tags" %>
+<%= render "layouts/common_head", default_title: setting["org_name"] %>
+<%= render "layouts/header" %>
+  
+
 
 <main>
-  <div class='heading-image'>
-    <%= image_tag 'custom/header.png' %>
-  </div>
-
-
-  <div class='menu-wrapper'>
-    <div class='container'>
-      <div id="navigation_bar" class="subnavigation expanded">
-        <div class="row">
-          <div class="hide-for-small-only">
-            <%= render "shared/subnavigation" %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
   <!-- <video></video> -->
 
-  <div class='video-placeholder'>
-    <div class='play-button'>
-    </div>
+  <div class='video-container'>
+		<div class='video-placeholder'>
+			<div class='play-button'>
+			</div>
+		</div>
   </div>
 
   <section class='intro'>
@@ -40,7 +28,7 @@
   <section>
     <div class='container green'>
       <div class='content-image'>
-        <%= image_tag 'custom/discutieren.png' %>
+        <%= image_tag(asset_path('custom/discutieren.png')) %>
       </div>
       <div class='content'>
         <h1>Tausche dich aus</h1>
@@ -54,7 +42,7 @@
   <section>
     <div class='container red'>
       <div class='content-image'>
-        <%= image_tag 'custom/vorschlaege.png' %>
+        <%= image_tag(asset_path('custom/vorschlaege.png')) %>
       </div>
       <div class='content'>
         <h1>Zeige deine Ideen</h1>
@@ -67,7 +55,7 @@
   <section>
     <div class='container purple'>
       <div class='content-image'>
-        <%= image_tag 'custom/umfragen.png' %>
+        <%= image_tag(asset_path('custom/umfragen.png')) %>
       </div>
       <div class='content'>
         <h1>Erhalte Feedback</h1>

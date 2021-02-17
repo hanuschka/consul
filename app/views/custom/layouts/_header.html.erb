@@ -14,7 +14,17 @@
 
   <div class="row">
     <div class="top-bar">
-    <h2 class="top-h1">Bürgerbeteiligung Bamberg</h2>
+
+      <span data-responsive-toggle="responsive-menu" data-hide-for="medium" class="float-right">
+        <span class="menu-icon dark" data-toggle></span>
+        <%= t("application.menu") %>
+      </span>
+
+      <div class="top-bar-title">
+        <%= link_to root_path, accesskey: "0" do %>
+          <%= image_tag(image_path_for("logo_header.png"), class: "float-left", alt: t("layouts.header.logo")) %>
+        <% end %>
+      </div>
 
       <div id="responsive-menu">
         <div class="top-bar-right">
@@ -34,21 +44,6 @@
           </div>
         </div>
       </div>
-
-      <span data-responsive-toggle="responsive-menu" data-hide-for="medium" class="float-right">
-        <span class="menu-icon dark" data-toggle></span>
-        <%= t("application.menu") %>
-      </span>
-
-      <div class="top-bar-title">
-        <%= link_to root_path, accesskey: "0" do %>
-          <%= image_tag(image_path_for("logo_header.png"), class: "float-left", alt: t("layouts.header.logo")) %>
-        <% end %>
-      </div>
-
-
-
-
     </div>
   </div>
 

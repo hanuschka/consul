@@ -38,20 +38,35 @@ header {
   font-family: 'MyriadPro BoldIt'
 }
 
-.center-menu {
-  width: 100% !important;
-}
-
-.center-menu .main-menu-items {
-  display: flex;
-  justify-content: center;
-  font-size: 1.25em;
-}
-
 .main-menu-items .drop-nav,
 .main-menu-items .flyout-nav {
   font-size: initial;
 }
+
+#responsive-menu .center-menu {
+  margin-top: 10px;
+}
+
+#responsive-menu .subnavigation  .main-menu-items li {
+}
+
+.top-bar .float-right {
+  margin-top: 10px;
+}
+
+.top-bar {
+  display: block;
+}
+
+.top-bar {
+  height: 48px;
+}
+
+ul.flyout-nav li, 
+ul.flyout-nav-right li {
+  padding-left: 1em;
+}
+
 
 // Help header
 
@@ -222,6 +237,39 @@ footer .row {
 // Media queries
 
 @media (min-width: 640px) {
+
+  .top-bar {
+    height: 0;
+  }
+
+  .center-menu {
+    width: 100% !important;
+  }
+
+  .center-menu .main-menu-items {
+    display: flex;
+    justify-content: center;
+    font-size: 1.25em;
+  }
+
+  .drop-nav,
+  .flyout-nav {
+    position: absolute;
+    display: none;
+    z-index: 2000;
+  }
+
+  ul.flyout-nav li {
+    padding-left: 0;
+  }
+
+  .flyout-nav-right {
+    left: -225px;
+    top: 0;
+    position: absolute;
+    display: none;
+    width: 225px;
+  }
 
   section button {
     padding: .5em 2em;

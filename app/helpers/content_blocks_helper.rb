@@ -8,4 +8,8 @@ module ContentBlocksHelper
     end
     options
   end
+
+  def render_custom_block(key)
+    raw SiteCustomization::ContentBlock.custom_block_for(key, I18n.locale)
+  end
 end

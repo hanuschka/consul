@@ -1,0 +1,27 @@
+<%= form_for [:admin, @content_block], html: { class: "edit_page" } do |f| %>
+
+  <%= render "shared/errors", resource: @content_block %>
+  <%if @content_block.custom?%>
+    <div class="small-12 medium-6 column">
+      <%=t("admin.site_customization.content_blocks.content_block.key") %>
+      <strong><%=@content_block.key%></strong>
+    </div>
+    <%=f.hidden_field :name%>
+    <%=f.hidden_field :locale%>
+  <%else%>
+    <div class="small-12 medium-6 column">
+      <%= f.select :name, options_for_select(valid_blocks, @selected_content_block) %>
+    </div>
+    <div class="small-12 medium-6 column">
+      <%= f.select :locale, I18n.available_locales %>
+    </div>
+  <%end%>
+
+  <div class="small-12 column">
+    <%= f.text_area :body, rows: 10, class: @content_block.custom? ? "html-area admin" : "" %>
+    <div class="small-12 medium-6 large-3">
+      <%= f.submit class: "button success expanded" %>
+    </div>
+  </div>
+
+<% end %>

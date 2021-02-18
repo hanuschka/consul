@@ -1489,6 +1489,7 @@ en:
         content_block:
           body: Body
           name: Name
+          key: Key
           names:
             top_links: Top Links
             footer: Footer

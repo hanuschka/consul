@@ -246,7 +246,7 @@ footer .row {
 }
 
 
-@media (min-width: 900px) {
+@media (min-width: 1050px) {
 
   section .container.green:before, 
   section .container.red:before,
@@ -290,16 +290,14 @@ footer .row {
     position: absolute;
     background-color: #fff;
     display: block;
-    bottom: -5em;
-    right: -2em;
-    width: 7em;
-    height: 12em;
-    transform: rotate(45deg);
+    bottom: 0;
+    right: 0;
+    width: 10em;
+    height: 5em;
+    transform: rotate(-45deg);
+    transform-origin: top right;
   }
- 
-}
 
-@media (min-width: 1050px) {
   section .container.green:before, 
   section .container.red:before,
   section .container.purple:before {

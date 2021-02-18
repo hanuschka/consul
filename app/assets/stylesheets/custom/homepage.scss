@@ -13,6 +13,10 @@ section p {
   line-height: 2;
 }
 
+main {
+  overflow: hidden;
+  margin-top: -1.5em;
+}
 
 // Header
 
@@ -113,6 +117,10 @@ section .content {
 .questions h1 {
   color: #F83F37;
   text-align: center;
+}
+
+.intro-content {
+  padding-right: 4em;
 }
 
 .content-image {
@@ -369,7 +377,6 @@ footer .row {
 
   section .container {
     margin-left: 12em;
-    margin-right: 4em;
   }
 
 }

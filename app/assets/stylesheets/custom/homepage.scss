@@ -208,14 +208,6 @@ button:before {
   position: relative;
 }
 
-.footer-logo {
-  width: 80%;
-  margin: 0 auto;
-  margin-top: 1em;
-  padding-right: 0.625rem;
-  padding-left: 0.625rem;
-}
-
 footer .column {
   float: left;
 }
@@ -239,8 +231,16 @@ footer .row {
   }
 
   .footer-logo {
-    padding-right: 0.9375rem;
-    padding-left: 0.9375rem;
+    float: left;
+    margin: 2em 0;
+  }
+}
+
+@media (min-width: 1024px) {
+
+  .footer-logo {
+    float: right;
+    margin-top: 3em;
   }
 
 }
@@ -328,16 +328,6 @@ footer .row {
   section .container {
     margin-left: 12em;
     margin-right: 4em;
-  }
-
-  .footer-logo {
-    position: absolute;
-    top: 3rem;
-    right: 5rem;
-    width: initial;
-    margin-top: 0;
-    padding-right: 0;
-    padding-left: 0;
   }
 
 }

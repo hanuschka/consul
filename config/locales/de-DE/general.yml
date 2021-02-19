@@ -1,4 +1,8 @@
 de:
+  custom:
+    comments:
+      reply_form:
+        leave_comment: 'Schreiben Sie eine Antwort'
   account:
     show:
       change_credentials_link: Meine Anmeldeinformationen ändern

@@ -112,7 +112,7 @@
             <% end %>
 
             <% if allow_comments %>
-              <%= render "comments/form", { commentable: comment.commentable,
+              <%= render "comments/reply_form", { commentable: comment.commentable,
                                            parent_id: comment.id,
                                            toggeable: true,
                                            valuation: valuation } %>

@@ -29,7 +29,7 @@ namespace :admin do
     end
   end
 
-  resources :debates, only: [:index, :show]
+  resources :debates, only: [:index, :show, :update]
 
   resources :proposals, only: [:index, :show, :update] do
     member { patch :toggle_selection }
@@ -44,7 +44,7 @@ namespace :admin do
     end
   end
 
-  resources :proposal_notifications, only: :index do
+  resources :hidden_proposal_notifications, only: :index do
     member do
       put :restore
       put :confirm_hide
@@ -252,4 +252,48 @@ namespace :admin do
   namespace :local_census_records do
     resources :imports, only: [:new, :create, :show]
   end
+end
+
+resolve "Milestone" do |milestone|
+  [*resource_hierarchy_for(milestone.milestoneable), milestone]
+end
+
+resolve "ProgressBar" do |progress_bar|
+  [*resource_hierarchy_for(progress_bar.progressable), progress_bar]
+end
+
+resolve "Audit" do |audit|
+  [*resource_hierarchy_for(audit.associated || audit.auditable), audit]
+end
+
+resolve "Budget::Group" do |group, options|
+  [group.budget, :group, options.merge(id: group)]
+end
+
+resolve "Budget::Heading" do |heading, options|
+  [heading.budget, :group, :heading, options.merge(group_id: heading.group, id: heading)]
+end
+
+resolve "Budget::Phase" do |phase, options|
+  [phase.budget, :phase, options.merge(id: phase)]
+end
+
+resolve "Poll::Booth" do |booth, options|
+  [:booth, options.merge(id: booth)]
+end
+
+resolve "Poll::BoothAssignment" do |assignment, options|
+  [assignment.poll, :booth_assignment, options.merge(id: assignment)]
+end
+
+resolve "Poll::Shift" do |shift, options|
+  [:booth, :shift, options.merge(booth_id: shift.booth, id: shift)]
+end
+
+resolve "Poll::Officer" do |officer, options|
+  [:officer, options.merge(id: officer)]
+end
+
+resolve "Poll::Question::Answer::Video" do |video, options|
+  [:video, options.merge(id: video)]
 end

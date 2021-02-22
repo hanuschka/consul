@@ -1,3 +1,3 @@
 SocialShareButton.configure do |config|
-  config.allow_sites = %w[whatsapp facebook twitter telegram email signal]
+  config.allow_sites = %w[facebook twitter telegram email]
 end

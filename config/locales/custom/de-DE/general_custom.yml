@@ -3,3 +3,10 @@ de:
     comments:
       reply_form:
         leave_comment: 'Schreiben Sie eine Antwort'
+    devise_views:
+      users:
+        registrations:
+          new:
+            username_label: Benutzer*innen Klarname
+            username_note: Bitte geben Sie hier Ihren Klarnamen ein
+            username_placeholder: Benutzer*innen Klarname

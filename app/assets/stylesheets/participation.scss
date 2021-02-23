@@ -1120,9 +1120,11 @@
 
   .share-supported {
 
+    .ssb-whatsapp,
     .ssb-twitter,
     .ssb-facebook,
-    [class^="ssb-icon ssb-google"] {
+    .ssb-telegram,
+    .ssb-email {
       background: none;
       color: $text;
       height: rem-calc(33) !important;

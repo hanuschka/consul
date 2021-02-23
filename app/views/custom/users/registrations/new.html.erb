@@ -45,6 +45,14 @@
                                 target: "_blank")
                 ) %>
 
+      <%= f.check_box :plz_consent,
+        title: t("custom.devise_views.users.registrations.new.plz_consent_title"),
+        label: t("custom.devise_views.users.registrations.new.plz_consent_label",
+                 plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/conditions",
+                                title: t("shared.target_blank"),
+                                target: "_blank")
+                ) %>
+
       <div class="small-12 medium-6 small-centered">
         <%= f.submit t("devise_views.users.registrations.new.submit"), class: "button expanded" %>
       </div>

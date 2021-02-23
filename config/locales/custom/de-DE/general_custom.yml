@@ -10,3 +10,6 @@ de:
             username_label: Benutzer*innen Klarname
             username_note: Bitte geben Sie hier Ihren Klarnamen ein
             username_placeholder: Benutzer*innen Klarname
+            plz_consent_title: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional)
+            plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent}
+            plz_consent_link: Allgemeine Nutzungsbedingungen

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210223152846) do
+ActiveRecord::Schema.define(version: 20210223163357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1488,6 +1488,7 @@ ActiveRecord::Schema.define(version: 20210223152846) do
     t.boolean "recommended_debates", default: true
     t.boolean "recommended_proposals", default: true
     t.string "plz"
+    t.boolean "plz_consent"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["geozone_id"], name: "index_users_on_geozone_id"

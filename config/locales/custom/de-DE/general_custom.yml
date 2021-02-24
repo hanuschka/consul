@@ -15,5 +15,5 @@ de:
             plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent}
             plz_consent_link: Allgemeine Nutzungsbedingungen
 
-            plz_label: PLZ
-            plz_placeholder: Postleitzahl
+            plz_label: Postleitzahl
+            plz_placeholder: PLZ

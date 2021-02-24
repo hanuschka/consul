@@ -53,6 +53,10 @@
                                 target: "_blank")
                 ) %>
 
+      <%= f.text_field :plz,  autofocus: true,
+                              placeholder: t("custom.devise_views.users.registrations.new.plz_placeholder"),
+                              label: t("custom.devise_views.users.registrations.new.plz_label") %>
+
       <div class="small-12 medium-6 small-centered">
         <%= f.submit t("devise_views.users.registrations.new.submit"), class: "button expanded" %>
       </div>

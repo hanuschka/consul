@@ -5,10 +5,18 @@
         <% if can?(:results, @poll) %>
           <% if results_menu? %>
             <li class="is-active">
-              <h2><%= t("custom.polls.show.results_menu") %></h2>
+              <% if @poll.expired? %>
+                <h2><%= t("polls.show.results_menu") %></h2>
+              <% else %>
+                <h2><%= t("custom.polls.show.results_menu") %></h2>
+              <% end %>
             </li>
           <% else %>
-            <li><%= link_to t("custom.polls.show.results_menu"), results_poll_path(id: @poll.slug || @poll.id) %></li>
+            <% if @poll.expired? %>
+              <li><%= link_to t("polls.show.results_menu"), results_poll_path(id: @poll.slug || @poll.id) %></li>
+            <% else %>
+              <li><%= link_to t("custom.polls.show.results_menu"), results_poll_path(id: @poll.slug || @poll.id) %></li>
+            <% end %>
           <% end %>
         <% end %>
 

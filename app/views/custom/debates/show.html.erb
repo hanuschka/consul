@@ -1,3 +1,4 @@
+<%= content_for :body_class, "debates-show" %>
 <% provide :title do %><%= @debate.title %><% end %>
   <% content_for :canonical do %>
     <%= render "shared/canonical", href: debate_url(@debate) %>

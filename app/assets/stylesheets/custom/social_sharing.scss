@@ -1,0 +1,174 @@
+.ssb-whatsapp {
+  background: #25D366;
+  background-image: none !important;
+  color: #fff;
+  height: $line-height * 2 !important;
+  position: relative;
+  width: $line-height * 2 !important;
+
+  &::before {
+    content: "P";
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 50%;
+    line-height: $line-height * 2;
+    margin-left: rem-calc(-11);
+    position: absolute;
+    top: 0;
+  }
+
+  &:hover,
+  &:focus {
+    background: #fff;
+    color: #075E54;
+  }
+}
+
+.ssb-instagram {
+  background: radial-gradient(circle farthest-corner at 35% 90%, #fec564, transparent 50%), radial-gradient(circle farthest-corner at 0 140%, #fec564, transparent 50%), radial-gradient(ellipse farthest-corner at 0 -25%, #5258cf, transparent 50%), radial-gradient(ellipse farthest-corner at 20% -50%, #5258cf, transparent 50%), radial-gradient(ellipse farthest-corner at 100% 0, #893dc2, transparent 50%), radial-gradient(ellipse farthest-corner at 60% -20%, #893dc2, transparent 50%), radial-gradient(ellipse farthest-corner at 100% 100%, #d9317a, transparent), linear-gradient(#6559ca, #bc318f 30%, #e33f5f 50%, #f77638 70%, #fec66d 100%);
+  background-size: cover !important;
+  color: #fff;
+  height: $line-height * 2 !important;
+  position: relative;
+  width: $line-height * 2 !important;
+
+  &::before {
+    content: "2";
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 50%;
+    line-height: $line-height * 2;
+    margin-left: rem-calc(-11);
+    position: absolute;
+    top: 0;
+  }
+
+  &:hover,
+  &:focus {
+    background: #fff;
+    color: #CD2E87;
+  }
+}
+
+.ssb-linkedin {
+  background: #25D366;
+  background-image: none !important;
+  color: #fff;
+  height: $line-height * 2 !important;
+  position: relative;
+  width: $line-height * 2 !important;
+
+  &::before {
+    content: url(linkedin-icon.svg);
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 50%;
+    line-height: $line-height * 2;
+    margin-left: rem-calc(-11);
+    position: absolute;
+    top: 3px;
+    width: 50%;
+    height: 50%;
+  }
+
+  &:hover,
+  &:focus {
+    background: #fff;
+    color: #075E54;
+  }
+}
+
+.ssb-signal {
+  background: #3A76F0;
+  background-image: none !important;
+  color: #fff;
+  height: $line-height * 2 !important;
+  position: relative;
+  width: $line-height * 2 !important;
+
+  &::before {
+    content: url(signal-icon.svg);
+    position: absolute;
+    padding: 0.875rem;
+  }
+
+  &:hover,
+  &:focus {
+    background: #9DBBF8;
+    color: #075E54;
+  }
+}
+
+.ssb-email {
+  background: red;
+  background-image: none !important;
+  color: #fff;
+  height: $line-height * 2 !important;
+  position: relative;
+  width: $line-height * 2 !important;
+
+  &::before {
+    content: "L";
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 50%;
+    line-height: $line-height * 2;
+    margin-left: rem-calc(-11);
+    position: absolute;
+    top: 0;
+  }
+
+  &:hover,
+  &:focus {
+    background: #fff;
+    color: red;
+  }
+}
+
+.share-supported {
+  text-align: left;
+
+  .social-share-button {
+    display: inline;
+  }
+
+  .ssb-whatsapp, 
+  .ssb-twitter, 
+  .ssb-facebook, 
+  .ssb-telegram,
+  .ssb-email {
+    width: $line-height * 1.4 !important;
+  }
+}
+
+
+
+.featured-proposals {
+
+  .share-supported {
+
+    .ssb-whatsapp,
+    .ssb-twitter,
+    .ssb-facebook,
+    .ssb-telegram,
+    .ssb-email {
+      background: none;
+      color: $text;
+      height: rem-calc(33) !important;
+
+
+      &::before {
+        font-size: rem-calc(18);
+        line-height: rem-calc(33);
+      }
+    }
+  }
+}
+
+@include breakpoint(medium) {
+
+  .button.button-telegram,
+  .ssb-telegram {
+    display: inline-block !important;
+  }
+}

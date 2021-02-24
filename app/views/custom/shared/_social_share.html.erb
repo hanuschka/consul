@@ -8,7 +8,6 @@
   <p class="sidebar-title"><%= share_title %></p>
 <% end %>
 <div class="social-share-full">
-
   <div class='social-share-button'>
 		<%= link_to "whatsapp://send?text=#{ mobile_url } #{ url }", class: 'ssb-icon ssb-whatsapp'  do %>
       <span class="show-for-sr">whatsapp</span>
@@ -20,6 +19,5 @@
                               desc: description,
                               "data-twitter-title": local_assigns[:mobile],
                               "data-telegram-title": local_assigns[:mobile]) %>
-
 
 </div>

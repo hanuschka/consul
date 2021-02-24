@@ -3,3 +3,14 @@ de:
     account:
       show:
         plz_settings: Aufstehen Anmeldung
+    devise_views:
+      users:
+        registrations:
+          new:
+            plz_consent_title: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional)
+            plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent}
+            plz_consent_link: Allgemeine Nutzungsbedingungen
+
+            plz_label: Postleitzahl
+            plz_placeholder: PLZ
+

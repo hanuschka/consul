@@ -85,19 +85,21 @@
             <% end %>
           <% end %>
 
-          <h2><%= t("custom.account.show.plz_settings") %></h2>
-					<%= f.check_box :plz_consent,
-						title: t("custom.devise_views.users.registrations.new.plz_consent_title"),
-						label: t("custom.devise_views.users.registrations.new.plz_consent_label",
-										 plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/conditions",
-																		title: t("shared.target_blank"),
-																		target: "_blank")
-										) %>
+          <div class='plz-consent'>
+            <h2><%= t("custom.account.show.plz_settings") %></h2>
+            <%= f.check_box :plz_consent,
+              title: t("custom.devise_views.users.registrations.new.plz_consent_title"),
+              label: t("custom.devise_views.users.registrations.new.plz_consent_label",
+                       plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/conditions",
+                                      title: t("shared.target_blank"),
+                                      target: "_blank")
+                      ) %>
 
-					<%= f.text_field :plz,  autofocus: true, disabled: true,
-																	placeholder: t("custom.devise_views.users.registrations.new.plz_placeholder"),
-																	label: t("custom.devise_views.users.registrations.new.plz_label") %>
+            <%= f.text_field :plz,  autofocus: true, disabled: true,
+                                    placeholder: t("custom.devise_views.users.registrations.new.plz_placeholder"),
+                                    label: t("custom.devise_views.users.registrations.new.plz_label") %>
 
+          </div>
 
           <%= f.submit t("account.show.save_changes_submit"), class: "button margin-top" %>
         </div>

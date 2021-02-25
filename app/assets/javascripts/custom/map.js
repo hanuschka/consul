@@ -75,15 +75,16 @@
         $(zoomInputSelector).val("");
       };
       openMarkerPopup = function(e) {
-		var route = (process == "proposals" ? "/proposals/" + marker.options.id + "/json_data" : "/investments/" + marker.options.id + "/json_data");     
-		marker = e.target;
-	      $.ajax(route, {
-		  type: "GET",
-		  dataType: "json",
-		  success: function(data) {
-		    e.target.bindPopup(getPopupContent(data)).openPopup();
-		  }
-		});
+
+        var route = (process == "proposals" ? "/proposals/" + e.target.options.id + "/json_data" : "/investments/" + e.target.options.id + "/json_data");
+        marker = e.target;
+          $.ajax(route, {
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+            e.target.bindPopup(getPopupContent(data)).openPopup();
+          }
+        });
       };
       getPopupContent = function(data) {
 	      if(process == "proposals") {

@@ -7,3 +7,6 @@ de:
     comments:
       reply_form:
         leave_comment: 'Schreiben Sie eine Antwort'
+    images:
+      form:
+        image_name: 'Name des Titelbildes'

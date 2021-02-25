@@ -13,18 +13,19 @@
                       js_suggest: ".js-suggest",
                       js_url: suggest_debates_path } %>
       </div>
+
+      <% if feature?(:allow_images) %>
+        <div class="images small-12 column">
+          <%= render "images/nested_image", imageable: @debate, f: f %>
+        </div>
+      <% end %>
+
       <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
       <div class="small-12 column">
         <%= translations_form.text_area :description,
               maxlength: Debate.description_max_length,
               class: "html-area" %>
-      </div>
-    <% end %>
-
-    <% if feature?(:allow_images) %>
-      <div class="images small-12 column">
-        <%= render "images/nested_image", imageable: @debate, f: f %>
       </div>
     <% end %>
 

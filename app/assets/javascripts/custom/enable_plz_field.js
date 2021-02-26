@@ -1,7 +1,7 @@
 document.addEventListener('turbolinks:load', function() { 
 
-  var plzCheckBox = document.getElementById('user_plz_consent')
-  var plzField = document.getElementById('user_plz')
+  var plzCheckBox = document.querySelector('input[id$="_plz_consent"]')
+  var plzField = document.querySelector('input[id$="_plz"]')
 
   if ( plzCheckBox ) {
     plzCheckBox.addEventListener('change', function() {

@@ -1,0 +1,13 @@
+.comment-list .comment-body {
+  background: AliceBlue;
+}
+
+.comment-list,
+.comment-list .comment-list {
+  border-left: 2px solid lightgray;
+  padding-left: 2rem;
+}
+
+.comment-body .comment-user.is-admin {
+  background: #F7EED0;
+}

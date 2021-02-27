@@ -23,13 +23,23 @@ module ActsAsTaggableOn
     def decrement_tag_custom_counter
       tag.decrement_custom_counter_for(taggable_type)
     end
+
   end
 
   Tag.class_eval do
     scope :category, -> { where(kind: "category") }
     scope :subcategory, -> { where(kind: "subcategory") }
+    scope :project, -> { where(kind: "project") }
+
+    def self.general_project
+      find_or_create_by kind: "category", name: "General"
+    end
 
     def category?
+      kind == "category"
+    end
+
+    def project?
       kind == "category"
     end
 

@@ -4,7 +4,7 @@ class Admin::TagsController < Admin::BaseController
   respond_to :html, :js
 
   def index
-    @tags = Tag.where(kind: ['category', 'subcategory']).order("kind ASC, name ASC").page(params[:page])
+    @tags = Tag.where(kind: ['category', 'subcategory', 'project']).order("kind ASC, name ASC").page(params[:page])
     @tag  = Tag.category.new
   end
 
@@ -45,6 +45,6 @@ class Admin::TagsController < Admin::BaseController
     end
 
     def find_tag
-      @tag = Tag.where(kind: ['category', 'subcategory']).find(params[:id])
+      @tag = Tag.where(kind: ['category', 'subcategory', 'project']).find(params[:id])
     end
 end

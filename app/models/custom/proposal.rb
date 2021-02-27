@@ -13,4 +13,8 @@ class Proposal < ApplicationRecord
   def self.subcategory_predefined?
     MANAGE_SUBCATEGORIES & TAGS_PREDEFINED > 0
   end
+
+  def project_name
+    tags.project.first&.name
+  end
 end

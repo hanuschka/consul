@@ -1,10 +1,24 @@
 <div class="sidebar-divider"></div>
+<h2 class="sidebar-title"><%= t("shared.tags_cloud.projects") %></h2>
+<br>
+
+<ul id="categories" class="no-bullet categories">
+  <%tag_names = Tag.project%>
+  <%tag_names.each do |project| %>
+    <li class="inline-block">
+      <%tag_selected = params[:tags] && params[:tags].split(',').include?(project.name)%>
+      <%css_class = { class: "is-active" } if tag_selected %>
+      <%= link_to project.name, send("#{model.pluralize}_path", tags: project.name, filter: params[:filter]), css_class || {} %>
+    </li>
+  <% end %>
+</ul>
+<div class="sidebar-divider"></div>
 <h2 class="sidebar-title"><%= t("shared.tags_cloud.categories") %></h2>
 <br>
 
 <ul id="categories" class="no-bullet categories">
   <%tag_names = @categories.map &:name%>
-  <%selected_categories = []%>
+  <%selected_categories = [Tag.general_project.name]%>
   <% @categories.each do |category| %>
     <li class="inline-block">
       <%tag_selected = params[:tags] && params[:tags].split(',').include?(category.name)%>
@@ -13,6 +27,7 @@
       <%tags = params[:tags] ? params[:tags].split(',') : []%>
       <%tags.delete_if do |t| !tag_names.include?(t) && !tag_selected end%>
       <%tag_selected ? tags.delete(category.name) : tags << category.name%>
+      <%tags << Tag.general_project.name%>
       <%= link_to category.name, send("#{model.pluralize}_path", tags: tags.join(","), filter: params[:filter]), css_class || {} %>
     </li>
   <% end %>
@@ -32,6 +47,7 @@
         <%css_class = { class: "is-active" } if tag_selected %>
         <%tags = params[:tags] ? params[:tags].split(',') : []%>
         <%tag_selected ? tags.delete(category.name) : tags << category.name%>
+        <%tags << Tag.general_project.name%>
       <%= link_to category.name, send("#{model.pluralize}_path", tags: tags.join(","), filter: params[:filter]), css_class || {} %>
       </li>
     <% end %>

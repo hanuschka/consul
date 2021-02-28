@@ -34,6 +34,7 @@
 
             <div class="small-9 column">
               <%=f.text_field :name, {label: ""}%>
+                <%if ['category', 'subcategory'].include?(tag.kind)%>
                 <div class='row'>
                   <div class='small-4 column'>
                     <b><%=t("admin.tags.logic.category")%></b>
@@ -74,6 +75,7 @@
                     </div>
                   </div>
                 </div>
+              <%end%>
             </div>
 
             <div class="small-3 column">

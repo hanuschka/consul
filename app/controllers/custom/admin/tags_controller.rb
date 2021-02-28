@@ -18,7 +18,7 @@ class Admin::TagsController < Admin::BaseController
 
   def create
     kind = tag_params[:kind] ? tag_params[:kind] : 'category'
-    Tag.find_or_create_by!(name: tag_params["name"]).update!(kind: kind)
+    Tag.find_or_create_by!(name: tag_params["name"], custom_logic_category_code: Tag.manage_categories, custom_logic_subcategory_code: Tag.manage_subcategories).update!(kind: kind)
 
     redirect_to admin_tags_path
   end

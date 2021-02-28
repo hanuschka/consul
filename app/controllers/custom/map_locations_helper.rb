@@ -1,6 +1,6 @@
 require_dependency Rails.root.join("app", "helpers", "map_locations_helper").to_s
 
-module MapLocationsHelper  
+module MapLocationsHelper
     def render_map(map_location, parent_class, editable, remove_marker_label, investments_coordinates = nil)
       map_location = MapLocation.new if map_location.nil?
       map = content_tag :div, "",
@@ -10,9 +10,9 @@ module MapLocationsHelper
       map += map_location_remove_marker(map_location, remove_marker_label) if editable
       map
     end
-  
+
     private
-  
+
       def prepare_map_settings(map_location, editable, parent_class, process_coordinates = nil)
         options = {
         parent_class: parent_class,

@@ -67,6 +67,12 @@ module ActsAsTaggableOn
       MANAGE_SUBCATEGORIES & TAGS_PREDEFINED > 0
     end
 
+    def self.sync_tag_config
+      where(kind: ['category', 'subcategory']).each do |tag|
+        tag.update_attributes(custom_logic_category_code: MANAGE_CATEGORIES, custom_logic_subcategory_code: MANAGE_SUBCATEGORIES);
+      end
+    end
+
     def self.general_project
       find_or_create_by kind: "category", name: "General"
     end

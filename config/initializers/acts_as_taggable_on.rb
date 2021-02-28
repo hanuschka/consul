@@ -31,8 +31,8 @@ module ActsAsTaggableOn
     scope :subcategory, -> { where(kind: "subcategory") }
     scope :project, -> { where(kind: "project") }
 
-    MANAGE_CATEGORIES    = 0b110
-    MANAGE_SUBCATEGORIES = 0b010
+    MANAGE_CATEGORIES    = 0b111
+    MANAGE_SUBCATEGORIES = 0b011
 
     TAGS_PREDEFINED = 0b001
     TAGS_CLOUD      = 0b010

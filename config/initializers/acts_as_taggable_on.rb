@@ -90,7 +90,7 @@ module ActsAsTaggableOn
     end
 
     def project?
-      kind == "category"
+      kind == "project"
     end
 
     include Graphqlable

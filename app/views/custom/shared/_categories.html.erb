@@ -8,7 +8,7 @@
     <li class="inline-block">
       <%tag_selected = params[:tags] && params[:tags].split(',').include?(project.name)%>
       <%css_class = { class: "is-active" } if tag_selected %>
-      <%= link_to project.name, send("#{model.pluralize}_path", tags: project.name, filter: params[:filter]), css_class || {} %>
+      <%= link_to project.tag_name, send("#{model.pluralize}_path", tags: project.name, filter: params[:filter]), css_class || {} %>
     </li>
   <% end %>
 </ul>
@@ -18,7 +18,7 @@
 
 <ul id="categories" class="no-bullet categories">
   <%tag_names = @categories.map &:name%>
-  <%selected_categories = [Tag.general_project.name]%>
+  <%selected_categories = [@project_tag.name]%>
   <% @categories.each do |category| %>
     <li class="inline-block">
       <%tag_selected = params[:tags] && params[:tags].split(',').include?(category.name)%>
@@ -27,7 +27,6 @@
       <%tags = params[:tags] ? params[:tags].split(',') : []%>
       <%tags.delete_if do |t| !tag_names.include?(t) && !tag_selected end%>
       <%tag_selected ? tags.delete(category.name) : tags << category.name%>
-      <%tags << Tag.general_project.name%>
       <%= link_to category.name, send("#{model.pluralize}_path", tags: tags.join(","), filter: params[:filter]), css_class || {} %>
     </li>
   <% end %>
@@ -43,11 +42,10 @@
     <% @subcategories.each do |category| %>
       <li class="inline-block">
         <%tag_selected = params[:tags] && params[:tags].split(',').include?(category.name)%>
-    <%subcategories_selected ||= tag_selected%>
+        <%subcategories_selected ||= tag_selected%>
         <%css_class = { class: "is-active" } if tag_selected %>
         <%tags = params[:tags] ? params[:tags].split(',') : []%>
         <%tag_selected ? tags.delete(category.name) : tags << category.name%>
-        <%tags << Tag.general_project.name%>
       <%= link_to category.name, send("#{model.pluralize}_path", tags: tags.join(","), filter: params[:filter]), css_class || {} %>
       </li>
     <% end %>

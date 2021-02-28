@@ -35,9 +35,10 @@
                 <%= t("proposals.index.filter_topic", count: @proposals.size, topic: @tag_filter) %>
               </p>
             <% elsif params[:retired].present? %>
-              <h2><%= t("proposals.index.retired_proposals") %></h2>
+              <h2><%= t("proposals.index.retired_proposals", project: @general_project.name) %></h2>
             <% elsif params[:selected].present? %>
-              <h2><%= t("proposals.index.selected_proposals") %></h2>
+              <h2><%= t("proposals.index.selected_proposals", project: @general_project.name ) %></h2>
+      general: "General"
             <% end %>
           </div>
         </div>

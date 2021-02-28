@@ -35,6 +35,14 @@ module ActsAsTaggableOn
       find_or_create_by kind: "category", name: "General"
     end
 
+    def tag_name
+      if attributes["name"] == 'General'
+        I18n.t("tag_names.general")
+      else
+        name
+      end
+    end
+
     def category?
       kind == "category"
     end

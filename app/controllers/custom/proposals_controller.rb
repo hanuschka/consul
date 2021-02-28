@@ -12,6 +12,7 @@ class ProposalsController
     @project_tag = @selected_tags&.map {|tt| tt&.kind == 'project' ? tt : nil}.compact.first
     @projects = ActsAsTaggableOn::Tag.project
     unless @project_tag
+      @project_tag = ActsAsTaggableOn::Tag.general_project
       url_tags = params[:tags]&.split(",") || []
       url_tags << ActsAsTaggableOn::Tag.general_project.name
       prms = params.to_unsafe_h
@@ -48,6 +49,7 @@ class ProposalsController
     def take_only_by_tag_names
       if params[:tags].present?
         @resources = @resources.tagged_with(params[:tags].split(","), all: true)
+        @categories = @resources.tag_counts.category
         @subcategories = @resources.tag_counts.subcategory
       end
     end

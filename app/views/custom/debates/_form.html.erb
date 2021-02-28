@@ -44,7 +44,7 @@
       <%categories_logic |= t.custom_logic_category_code%>
       <%subcategories_logic |= t.custom_logic_subcategory_code%>
     <%end%>
-    <%categories_logic = Tag.mamage_categories if categories_logic == 0 %>
+    <%categories_logic = Tag.manage_categories if categories_logic == 0 %>
     <%subcategories_logic = Tag.manage_subcategories if subcategories_logic == 0%>
 
     <%if !params[:tags].blank?%>

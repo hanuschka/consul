@@ -10,6 +10,12 @@ module ContentBlocksHelper
   end
 
   def render_custom_block(key)
-    raw SiteCustomization::ContentBlock.custom_block_for(key, I18n.locale)
+    block = SiteCustomization::ContentBlock.custom_block_for(key, I18n.locale)
+    if current_user.administrator?
+      edit_link = link_to t("admin.action.edit"), edit_admin_site_customization_content_block_path(block, return_to: request.path )
+    end
+    res = block&.body
+    res << edit_link ? "<br>#{edit_link}" : ""
+    raw res
   end
 end

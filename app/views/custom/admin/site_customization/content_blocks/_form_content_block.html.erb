@@ -7,6 +7,7 @@
       <strong><%=@content_block.key%></strong>
     </div>
     <%=f.hidden_field :name%>
+    <%=hidden_field_tag :return_to, params[:return_to]%>
     <%=f.hidden_field :locale%>
   <%else%>
     <div class="small-12 medium-6 column">

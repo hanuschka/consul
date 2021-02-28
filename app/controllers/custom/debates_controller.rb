@@ -7,6 +7,7 @@ class DebatesController < ApplicationController
   before_action :process_tags, only: [:create, :update]
 
   def index_customization
+    ensure_project_tag
     @featured_debates = @debates.featured
     take_only_by_tag_names
   end
@@ -36,6 +37,7 @@ class DebatesController < ApplicationController
   def take_only_by_tag_names
     if params[:tags].present?
       @resources = @resources.tagged_with(params[:tags].split(","), all: true, any: :true)
+      @categories = @resources.tag_counts.category
       @subcategories = @resources.tag_counts.subcategory
     end
   end

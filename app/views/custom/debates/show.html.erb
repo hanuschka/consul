@@ -11,25 +11,30 @@
                 twitter_image_url: (@debate.image.present? ? @debate.image_url(:thumb) : nil),
                 og_image_url: (@debate.image.present? ? @debate.image_url(:thumb) : nil) %>
   <% end %>
-  
+
   <% cache [locale_and_user_status(@debate), @debate, @debate.author, Flag.flagged?(current_user, @debate), @debate_votes] do %>
     <div class="debate-show">
       <div id="<%= dom_id(@debate) %>" class="row">
         <div class="small-12 medium-9 column">
-          <%= back_link_to %>
-  
+          <%= back_link_to debates_path(tags: @debate.project_name) %>
+
           <h1><%= @debate.title %></h1>
           <% if @debate.conflictive? %>
             <div data-alert class="callout alert margin-top">
               <strong><%= t("debates.show.flag") %></strong>
             </div>
           <% end %>
-  
+
           <div class="debate-info">
             <%= render "/shared/author_info", resource: @debate %>
-  
+
             <span class="bullet">&nbsp;&bull;&nbsp;</span>
             <%= l @debate.created_at.to_date %>
+            <%project = @debate.tags.project.first%>
+            <% if project%>
+              <span class="bullet">&nbsp;&bull;&nbsp;</span>
+              <%=project.tag_name %>
+            <%end%>
             <span class="bullet">&nbsp;&bull;&nbsp;</span>
             <span class="icon-comments"></span>&nbsp;
             <%= link_to t("debates.show.comments", count: @debate.comments_count), "#comments" %>
@@ -38,21 +43,21 @@
               <%= render "shared/flag_actions", flaggable: @debate %>
             </span>
           </div>
-  
+
           <%= render_image(@debate.image, :large, true) if @debate.image.present? %>
-  
-  
+
+
           <%= auto_link_already_sanitized_html wysiwyg(@debate.description) %>
-  
+
           <%= render "shared/tags", taggable: @debate %>
-  
+
           <%= render "relationable/related_content", relationable: @debate %>
-  
+
           <div class="js-moderator-debate-actions margin">
             <%= render "actions", debate: @debate %>
           </div>
         </div>
-  
+
         <aside class="small-12 medium-3 column">
           <% if current_user && @debate.editable_by?(current_user) %>
             <div class="sidebar-divider"></div>
@@ -62,7 +67,7 @@
               <%= t("debates.show.edit_debate_link") %>
             <% end %>
           <% end %>
-  
+
           <div class="sidebar-divider"></div>
           <h2><%= t("votes.supports") %></h2>
           <div id="<%= dom_id(@debate) %>_votes">
@@ -79,5 +84,5 @@
       </div>
     </div>
   <% end %>
-  
+
   <%= render "comments" %>

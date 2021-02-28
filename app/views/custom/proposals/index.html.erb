@@ -35,10 +35,9 @@
                 <%= t("proposals.index.filter_topic", count: @proposals.size, topic: @tag_filter) %>
               </p>
             <% elsif params[:retired].present? %>
-              <h2><%= t("proposals.index.retired_proposals", project: @general_project.name) %></h2>
+              <h2><%= t("proposals.index.retired_proposals") %></h2>
             <% elsif params[:selected].present? %>
-              <h2><%= t("proposals.index.selected_proposals", project: @general_project.name ) %></h2>
-      general: "General"
+              <h2><%= t("proposals.index.selected_proposals") %></h2>
             <% end %>
           </div>
         </div>
@@ -54,12 +53,12 @@
 
     <%tags = []%>
 
-    <%tag_categories = @selected_tags&.map {|tt| tt&.kind == 'category' && (tt.custom_logic_category_code & Proposal::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
-    <%can_create = Proposal.category_predefined? && tag_categories&.length > 0  || !Proposal.category_predefined?%>
+    <%tag_categories = @selected_tags&.map {|tt| tt&.kind == 'category' && (tt.custom_logic_category_code & Tag.tags_predefined > 0) ? tt : nil}&.compact %>
+    <%can_create = Tag.category_predefined? && tag_categories&.length > 0  || !Tag.category_predefined?%>
     <%tags += tag_categories%>
 
-    <%tag_subcategories = @selected_tags&.map {|tt| tt&.kind == 'subcategory' && (tt.custom_logic_subcategory_code & Proposal::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
-    <%can_create = can_create && ((Proposal.subcategory_predefined? && tag_subcategories&.length > 0) || !Proposal.subcategory_predefined? )%>
+    <%tag_subcategories = @selected_tags&.map {|tt| tt&.kind == 'subcategory' && (tt.custom_logic_subcategory_code & Tag.tags_predefined > 0) ? tt : nil}&.compact %>
+    <%can_create = can_create && ((Tag.subcategory_predefined? && tag_subcategories&.length > 0) || !Tag.subcategory_predefined? )%>
     <%tags += tag_subcategories%>
     <%tags += [@project_tag]%>
 

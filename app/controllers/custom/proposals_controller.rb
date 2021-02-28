@@ -8,17 +8,7 @@ class ProposalsController
   before_action :process_tags, only: [:create, :update]
 
   def index_customization
-    @selected_tags = params[:tags]&.split(",")&.map {|tt| t2 = Tag.find_by(name: tt)}&.compact || []
-    @project_tag = @selected_tags&.map {|tt| tt&.kind == 'project' ? tt : nil}.compact.first
-    @projects = ActsAsTaggableOn::Tag.project
-    unless @project_tag
-      @project_tag = ActsAsTaggableOn::Tag.general_project
-      url_tags = params[:tags]&.split(",") || []
-      url_tags << ActsAsTaggableOn::Tag.general_project.name
-      prms = params.to_unsafe_h
-      prms[:tags] = url_tags.join(",")
-      redirect_to(prms) and return
-    end
+    ensure_project_tag
     discard_draft
     discard_archived
     load_retired

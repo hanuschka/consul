@@ -9,6 +9,7 @@ class PollsController < ApplicationController
   helper_method :resource_model, :resource_name
 
   def index
+    ensure_project_tag
     @tag_cloud = tag_cloud
     if !params[:tags].blank?
       @polls = @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).tagged_with(params[:tags].split(","), all: true).page(params[:page])
@@ -33,6 +34,7 @@ class PollsController < ApplicationController
     def take_only_by_tag_names
       if params[:tags].present?
         @resources = @resources.tagged_with(params[:tags].split(","), all: true, any: :true)
+        @categories = @resources.tag_counts.category
         @subcategories = @resources.tag_counts.subcategory
       end
     end

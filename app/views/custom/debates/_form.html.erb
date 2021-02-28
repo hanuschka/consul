@@ -44,15 +44,15 @@
       <%categories_logic |= t.custom_logic_category_code%>
       <%subcategories_logic |= t.custom_logic_subcategory_code%>
     <%end%>
-    <%categories_logic = Debate::MANAGE_CATEGORIES if categories_logic == 0 %>
-    <%subcategories_logic = Debate::MANAGE_SUBCATEGORIES if subcategories_logic == 0%>
+    <%categories_logic = Tag::MANAGE_CATEGORIES if categories_logic == 0 %>
+    <%subcategories_logic = Tag::MANAGE_SUBCATEGORIES if subcategories_logic == 0%>
 
     <%if !params[:tags].blank?%>
       <%=f.hidden_field :tags, value: params[:tags].join(',') %>
     <%end%>
 
     <div class="small-12 column">
-      <%if categories_logic & Debate::TAGS_CLOUD > 0%>
+      <%if categories_logic & Tag::TAGS_CLOUD > 0%>
         <div id="category_tags" class="tags">
           <%= f.label :category_tag_list, t("proposals.form.tag_category_label") %>
           <% @categories.each do |tag| %>
@@ -64,7 +64,7 @@
     </div>
     <div class="small-12 column">
       <%@subcategories = Tag.subcategory.order(:name) %>
-      <%if (subcategories_logic & Debate::TAGS_CLOUD > 0) && @subcategories.count > 0 %>
+      <%if (subcategories_logic & Tag::TAGS_CLOUD > 0) && @subcategories.count > 0 %>
         <br>
         <div id="category_tags" class="tags">
           <%= f.label :category_tag_list, t("proposals.form.tag_subcategory_label") %>
@@ -73,7 +73,7 @@
           <% end %>
         </div>
       <%end%>
-      <%if (categories_logic | subcategories_logic) & Debate::TAGS_CUSTOM > 0%>
+      <%if (categories_logic | subcategories_logic) & Tag::TAGS_CUSTOM > 0%>
         <br>
         <%= f.text_field :tag_list_custom, value: @debate.tags.where(kind: nil).map{|c| c.name}.join(","),
           label: t("debates.form.tags_custom"),
@@ -83,7 +83,7 @@
       <%end%>
     </div>
 
-    <%=f.hidden_field :tag_list_predefined, value: tags.reject{|t| !['category', 'subcategory'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined"%>
+    <%=f.hidden_field :tag_list_predefined, value: tags.reject{|t| !['category', 'subcategory', 'project'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined"%>
 
 
 <div class="small-12 column">

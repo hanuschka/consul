@@ -31,6 +31,42 @@ module ActsAsTaggableOn
     scope :subcategory, -> { where(kind: "subcategory") }
     scope :project, -> { where(kind: "project") }
 
+    MANAGE_CATEGORIES    = 0b010
+    MANAGE_SUBCATEGORIES = 0b010
+
+    TAGS_PREDEFINED = 0b001
+    TAGS_CLOUD      = 0b010
+    TAGS_CUSTOM     = 0b100
+
+    def self.manage_categories
+      MANAGE_CATEGORIES
+    end
+
+    def self.manage_subcategories
+      MANAGE_SUBCATEGORIES
+    end
+
+    def self.tags_predefined
+      TAGS_PREDEFINED
+    end
+
+    def self.tags_cloud
+      TAGS_CLOUD
+    end
+
+    def self.tags_custom
+      TAGS_CUSTOM
+    end
+
+
+    def self.category_predefined?
+      MANAGE_CATEGORIES & TAGS_PREDEFINED > 0
+    end
+
+    def self.subcategory_predefined?
+      MANAGE_SUBCATEGORIES & TAGS_PREDEFINED > 0
+    end
+
     def self.general_project
       find_or_create_by kind: "category", name: "General"
     end

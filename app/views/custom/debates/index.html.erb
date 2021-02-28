@@ -39,11 +39,11 @@
 
     <%tags = []%>
 
-    <%tag_categories = @selected_tags&.map {|tt| tt&.kind == 'category' && (tt.custom_logic_category_code & Tag::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
+    <%tag_categories = @selected_tags&.map {|tt| tt&.kind == 'category' && (tt.custom_logic_category_code & Tag.tags_predefined > 0) ? tt : nil}&.compact %>
     <%can_create = Debate.category_predefined? && tag_categories&.length > 0  || !Debate.category_predefined?%>
     <%tags += tag_categories%>
 
-    <%tag_subcategories = @selected_tags&.map {|tt| tt&.kind == 'subcategory' && (tt.custom_logic_subcategory_code & Tag::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
+    <%tag_subcategories = @selected_tags&.map {|tt| tt&.kind == 'subcategory' && (tt.custom_logic_subcategory_code & Tag.tags_predefined > 0) ? tt : nil}&.compact %>
     <%can_create = can_create && ((Debate.subcategory_predefined? && tag_subcategories&.length > 0) || !Debate.subcategory_predefined? )%>
     <%tags += tag_subcategories%>
     <%tags += [@project_tag]%>

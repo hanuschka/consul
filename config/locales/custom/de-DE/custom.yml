@@ -10,3 +10,5 @@ de:
     images:
       form:
         image_name: 'Name des Titelbildes'
+  tag_names:
+    general: 'General'

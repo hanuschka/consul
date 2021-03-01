@@ -5,7 +5,7 @@ class Admin::TagsController < Admin::BaseController
 
   def index
     @tags = Tag.where(kind: ['category', 'subcategory', 'project']).order("kind ASC, name ASC").page(params[:page])
-    @tag  = Tag.category.new
+    @tag  = Tag.project.new
   end
 
   def update

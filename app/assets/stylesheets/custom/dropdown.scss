@@ -1,5 +1,11 @@
 // setup_project
 // Dropdown
+
+
+.subnavigation a.is-active {
+  color: #fff;
+}
+
 .main-nav,
 .drop-nav {
   background: $dropdownbackground;

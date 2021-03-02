@@ -1331,7 +1331,8 @@ ActiveRecord::Schema.define(version: 20210223163357) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name", "locale"], name: "index_site_customization_content_blocks_on_name_and_locale", unique: true
+    t.string "key"
+    t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
   end
 
   create_table "site_customization_images", id: :serial, force: :cascade do |t|

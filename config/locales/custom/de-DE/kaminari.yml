@@ -11,7 +11,7 @@ de:
         display_entries:
           zero: "%{entry_name} kann nicht gefunden werden"
           one: Es gibt <strong>1 %{entry_name}</strong>
-          other: Es gibt <strong>%{count}%{entry_name}</strong>
+          other: Es gibt <strong>%{count} %{entry_name}</strong>
   views:
     pagination:
       current: Sie sind auf der Seite

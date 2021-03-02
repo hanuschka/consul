@@ -136,7 +136,8 @@
   .ssb-twitter, 
   .ssb-facebook, 
   .ssb-telegram,
-  .ssb-email {
+  .ssb-email,
+  .ssb-linkedin {
     width: $line-height * 1.4 !important;
   }
 }
@@ -151,7 +152,8 @@
     .ssb-twitter,
     .ssb-facebook,
     .ssb-telegram,
-    .ssb-email {
+    .ssb-email,
+    .ssb-linkedin {
       background: none;
       color: $text;
       height: rem-calc(33) !important;
@@ -160,6 +162,14 @@
       &::before {
         font-size: rem-calc(18);
         line-height: rem-calc(33);
+      }
+    }
+
+    .ssb-linkedin {
+      &::before {
+        content: url(linkedin-icon-black.svg);
+        top: 1px;
+        margin-left: -0.65rem;
       }
     }
   }

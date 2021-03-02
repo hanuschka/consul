@@ -994,4 +994,4 @@ de:
       co: "k"
       si: "s"
   alerts:
-    select_one_category: "Bitte wählen Sie zunächst eine Kategorie"
+    select_one_category: "Bitte wählen Sie nur eine Kategorie"

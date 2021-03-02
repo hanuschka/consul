@@ -2,7 +2,7 @@
 <h2 class="sidebar-title"><%= t("shared.tags_cloud.projects") %></h2>
 <br>
 
-<ul id="categories" class="no-bullet categories">
+<ul id="projects" class="no-bullet categories">
   <%tag_names = Tag.project%>
   <%tag_names.each do |project| %>
     <li class="inline-block">
@@ -38,7 +38,7 @@
 
 </h2>
   <br>
-  <ul id="categories" class="no-bullet categories">
+  <ul id="subcategories" class="no-bullet categories">
   <%subcategories_selected = false%>
     <% @subcategories.each do |category| %>
       <li class="inline-block">

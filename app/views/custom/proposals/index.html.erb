@@ -53,12 +53,11 @@
 
     <%tags = []%>
 
-    <%tag_categories = @selected_tags&.map {|tt| tt&.kind == 'category' && (tt.custom_logic_category_code & Tag.tags_predefined > 0) ? tt : nil}&.compact %>
-    <%can_create = Tag.category_predefined? && tag_categories&.length > 0  || !Tag.category_predefined?%>
+    <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' } %>
+    <%can_create = tag_categories.count == 1 %>
     <%tags += tag_categories%>
 
-    <%tag_subcategories = @selected_tags&.map {|tt| tt&.kind == 'subcategory' && (tt.custom_logic_subcategory_code & Tag.tags_predefined > 0) ? tt : nil}&.compact %>
-    <%can_create = can_create && ((Tag.subcategory_predefined? && tag_subcategories&.length > 0) || !Tag.subcategory_predefined? )%>
+    <%tag_subcategories = @selected_tags&.select{ |tag| tag.kind == 'subcategory' } %>
     <%tags += tag_subcategories%>
     <%tags += [@project_tag]%>
 

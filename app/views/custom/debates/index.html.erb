@@ -39,11 +39,11 @@
 
     <%tags = []%>
 
-    <%tag_categories = @selected_tags.select{ |tag| tag.kind == 'category' }   %>
+    <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' }   %>
     <%can_create = tag_categories.count == 1  %>
     <%tags += tag_categories%>
 
-    <%tag_subcategories = @selected_tags.select{ |tag| tag&.kind == 'subcategory' } %>
+    <%tag_subcategories = @selected_tags&.select{ |tag| tag&.kind == 'subcategory' } %>
     <%tags += tag_subcategories%>
     <%tags += [@project_tag]%>
 

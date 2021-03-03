@@ -41,7 +41,7 @@ class Admin::TagsController < Admin::BaseController
       else
         params[:tag][:custom_logic_subcategory_code] = 0
       end
-      params.require(:tag).permit(:name, :kind, :custom_logic_category_code, :custom_logic_subcategory_code)
+      params.require(:tag).permit(:name, :kind, :custom_logic_category_code, :custom_logic_subcategory_code, :custom_logic_category_cloud, :custom_logic_subcategory_cloud, :custom_logic_usertags_cloud)
     end
 
     def find_tag

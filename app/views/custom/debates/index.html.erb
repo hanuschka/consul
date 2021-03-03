@@ -44,7 +44,6 @@
     <%tags += tag_categories%>
 
     <%tag_subcategories = @selected_tags.select{ |tag| tag&.kind == 'subcategory' } %>
-    <% #can_create = can_create && ( tag_subcategories.count == 1 )%>
     <%tags += tag_subcategories%>
     <%tags += [@project_tag]%>
 

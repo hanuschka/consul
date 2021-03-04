@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210303092642) do
+ActiveRecord::Schema.define(version: 20210304152230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1190,6 +1190,14 @@ ActiveRecord::Schema.define(version: 20210303092642) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projekts", force: :cascade do |t|
+    t.string "name"
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_projekts_on_parent_id"
+  end
+
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -1650,6 +1658,7 @@ ActiveRecord::Schema.define(version: 20210303092642) do
   add_foreign_key "poll_recounts", "poll_officer_assignments", column: "officer_assignment_id"
   add_foreign_key "poll_voters", "polls"
   add_foreign_key "polls", "budgets"
+  add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"

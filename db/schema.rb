@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210304152230) do
+ActiveRecord::Schema.define(version: 20210304161617) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -362,6 +362,12 @@ ActiveRecord::Schema.define(version: 20210304152230) do
     t.string "voting_style", default: "knapsack"
   end
 
+  create_table "budgets_projekts", id: false, force: :cascade do |t|
+    t.bigint "budget_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "budget_id"], name: "index_budgets_projekts_on_projekt_id_and_budget_id", unique: true
+  end
+
   create_table "campaigns", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "track_id"
@@ -510,6 +516,12 @@ ActiveRecord::Schema.define(version: 20210304152230) do
     t.index ["hidden_at"], name: "index_debates_on_hidden_at"
     t.index ["hot_score"], name: "index_debates_on_hot_score"
     t.index ["tsv"], name: "index_debates_on_tsv", using: :gin
+  end
+
+  create_table "debates_projekts", id: false, force: :cascade do |t|
+    t.bigint "debate_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "debate_id"], name: "index_debates_projekts_on_projekt_id_and_debate_id", unique: true
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -1171,6 +1183,12 @@ ActiveRecord::Schema.define(version: 20210304152230) do
     t.index ["starts_at", "ends_at"], name: "index_polls_on_starts_at_and_ends_at"
   end
 
+  create_table "polls_projekts", id: false, force: :cascade do |t|
+    t.bigint "poll_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "poll_id"], name: "index_polls_projekts_on_projekt_id_and_poll_id", unique: true
+  end
+
   create_table "progress_bar_translations", id: :serial, force: :cascade do |t|
     t.integer "progress_bar_id", null: false
     t.string "locale", null: false
@@ -1196,6 +1214,12 @@ ActiveRecord::Schema.define(version: 20210304152230) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
+  end
+
+  create_table "projekts_proposals", id: false, force: :cascade do |t|
+    t.bigint "proposal_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "proposal_id"], name: "index_projekts_proposals_on_projekt_id_and_proposal_id", unique: true
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|

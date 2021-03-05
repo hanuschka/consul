@@ -18,3 +18,18 @@ de:
             plz_consent_link: Allgemeine Nutzungsbedingungen
             plz_label: Postleitzahl
             plz_placeholder: PLZ
+    debates:
+      index:
+        section_header:
+          title: Tausche dich aus
+          icon_alt: Tausche dich aus
+    proposals:
+      index:
+        section_header:
+          title: Zeige deine Ideen
+          icon_alt: Zeige deine Ideen
+    polls:
+      index:
+        section_header:
+          title: Stimme ab
+          icon_alt: Stimme ab

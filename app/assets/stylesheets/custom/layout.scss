@@ -1,3 +1,33 @@
+@font-face {
+  font-family: 'MyriadPro It';
+  src: font-url('MyriadPro-It.ttf');
+}
+
+@font-face {
+  font-family: 'MyriadPro BoldIt';
+  src: font-url('MyriadPro-BoldIt.ttf')
+}
+
+@font-face {
+  font-family: 'MyriadPro';
+  src: font-url('MyriadPro-Regular.ttf')
+}
+
+body {
+  font-family: 'MyriadPro' !important;
+}
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+  font-family: 'MyriadPro BoldIt' !important;
+}
+
+
+
+.section-icon {
+  width: 40px;
+}
+
+
 .ssb-linkedin{
   background: #0e76a8;
   background-image: none !important;

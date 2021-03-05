@@ -43,7 +43,7 @@
         </div>
       </div>
     <% else %>
-      <%= render "shared/section_header", i18n_namespace: "proposals.index.section_header", image: "proposals" %>
+      <%= render "shared/section_header", i18n_namespace: "custom.proposals.index.section_header", icon: "zeige" %>
     <% end %>
     <% if show_recommended_proposals? %>
       <%= render "shared/recommended_index", recommended: @recommended_proposals,

@@ -11,8 +11,8 @@
       <%= f.hidden_field :locale, value: I18n.locale %>
 
       <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
-                                   placeholder: t("devise_views.users.registrations.new.username_label"),
-                                   label: t("devise_views.users.registrations.new.username_label"),
+                                   placeholder: t("custom.devise_views.users.registrations.new.username_placeholder"),
+                                   label: t("custom.devise_views.users.registrations.new.username_label"),
                                    hint: t("devise_views.users.registrations.new.username_note") %>
 
       <%= f.invisible_captcha :address %>

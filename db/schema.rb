@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210304161617) do
+ActiveRecord::Schema.define(version: 20210305171805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1398,6 +1398,8 @@ ActiveRecord::Schema.define(version: 20210304161617) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "locale"
+    t.bigint "projekt_id"
+    t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
 
   create_table "stats_versions", id: :serial, force: :cascade do |t|
@@ -1523,6 +1525,8 @@ ActiveRecord::Schema.define(version: 20210304161617) do
     t.boolean "public_interests", default: false
     t.boolean "recommended_debates", default: true
     t.boolean "recommended_proposals", default: true
+    t.string "plz"
+    t.boolean "plz_consent"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["geozone_id"], name: "index_users_on_geozone_id"
@@ -1686,6 +1690,7 @@ ActiveRecord::Schema.define(version: 20210304161617) do
   add_foreign_key "proposals", "communities"
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"
+  add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "users", "geozones"
   add_foreign_key "valuators", "users"
 end

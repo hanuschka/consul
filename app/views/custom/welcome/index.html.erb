@@ -43,7 +43,9 @@
         <p>
         In diesem Bereich könnt ihr die <strong>Themen diskutieren</strong>, die euch bewegen. Ihr könnt in bereits laufende <strong>Threads/Diskussionen</strong> einsteigen und kommentieren oder selbst neue starten über den Button auf der rechten Seite. <strong>Zustimmung oder Ablehnung</strong> zeigt ihr mit den Like- und Dislike-Buttons. <strong>Verpflichtend</strong> sind hier nur ein sachlicher Ton und die <strong>Einordnung in einen der vorgegebenen Themenbereiche bzw. eine der Kategorien</strong>, wenn ihr einen eigenen Thread erstellt. 
         </p>
-        <button type="button" class='red'>diskutiere mit</button>
+        <%= link_to debates_path do %>
+          <button type="button" class='red'>diskutiere mit</button>
+        <% end %>
       </div>
     </div>
   </section>
@@ -60,7 +62,9 @@
         Hier könnt ihr konkrete Forderungen eingeben und diskutieren. <strong><u>Achtung!</u> Pro Person sind nur drei Forderungen möglich!</strong> Wägt also sorgfältig ab, welche Vorschläge ihr in welcher Formulierung einreicht. Jede Forderung kann mit ergänzendem Material unterfüttert und in den Kommentaren weiter besprochen werden. <strong><u>Wichtig:</u></strong> Wenn ihr eine Forderung <strong>unterstützt</strong>, tut dies durch Drücken des „Unterstützung“-Buttons kund. Die <strong>X Forderungen</strong>, die a) <strong>nicht dem Gründungsaufruf widersprechen</strong> und b) zum Stichtag Y die <strong>höchste Zustimmung</strong> haben, werden in die große <strong>Abstimmung</strong> ab xx.xx.2021 übernommen.<br> 
         <strong>Verpflichtend</strong> sind auch hier nur ein sachlicher Ton und die <strong>Einordnung in einen der vorgegebenen Themenbereiche bzw. eine der Kategorien</strong>.  
         </p>
-        <button type="button" class='green'>mach Vorschläge</button>
+        <%= link_to proposals_path do %>
+          <button type="button" class='green'>mach Vorschläge</button>
+        <% end %>
       </div>
     </div>
   </section>
@@ -78,15 +82,14 @@
 
         <p>
           Ab ((wann??)) treten wir in die entscheidende Phase ein. Die X Forderungen, die die größte Unterstützung erhalten haben, werden zur Abstimmung gestellt. Ihr könnt sie selbstverständlich weiter kommentieren.<br>
-          Bitte <strong>gebt nun bei jeder Forderung an:</strong> <br>
-          a) Zustimmung: ob ihr dafür seid oder nicht oder ob sie euch egal ist bzw. ihr keine Meinung habt <br>
-          b) Relevanz: wie wichtig euch diese Forderung auf einer Skala von 1 (unwichtig) bis 5 (sehr wichtig) ist. 
         </p>
 
         <p>
         Die <strong>21 Forderungen, die am Ende die größte Zustimmung und Wichtigkeit für euch haben, werden unseren Bürgertagswahl-2021-Katalog</strong> bilden. Diesen Katalog werden wir bis zur Wahl im September auf allen öffentlichen Kanälen präsentieren, allen Politikern zuschicken, Veranstaltungen und Aktionen dazu machen und damit zeigen: Es geht nur <i>mit</i> uns, nicht <i>gegen</i> uns! Und hinter uns stehen viele!  
         </p>
-        <button type="button" class='red'>zu den Umfragen</button>
+        <%= link_to polls_path do %>
+          <button type="button" class='red'>zu den Umfragen</button>
+        <% end %>
       </div>
     </div>
   </section>
@@ -97,7 +100,9 @@
         <h1>Noch Fragen?</h1>
         <div class=questions-content>
           <p>Lorem ipsum dolor sit amet, consetetur sa-dipscing elitr, sed diam nonumy eirmod tem-por invidunt ut labore et dolore magna ali-quyam erat, sed diam voluptua.</p>
-          <button type="button" class='red'>hier findest du Antworten</button>
+          <%= link_to '/faq' do %>
+            <button type="button" class='red'>hier findest du Antworten</button>
+          <% end %>
         </div>
       </div>
     </div>

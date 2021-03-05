@@ -38,15 +38,14 @@
     <% end %>
 
     <%tags = []%>
-    <%selected_tags = params[:tags]&.split(",")&.map {|tt| t2 = Tag.find_by(name: tt)}&.compact || []%>
 
-    <%tag_categories = selected_tags&.map {|tt| tt&.kind == 'category' && (tt.custom_logic_category_code & Debate::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
-    <%can_create = Debate.category_predefined? && tag_categories&.length > 0  || !Debate.category_predefined?%>
+    <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' }   %>
+    <%can_create = tag_categories.count == 1  %>
     <%tags += tag_categories%>
 
-    <%tag_subcategories = selected_tags&.map {|tt| tt&.kind == 'subcategory' && (tt.custom_logic_subcategory_code & Debate::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
-    <%can_create = can_create && ((Debate.subcategory_predefined? && tag_subcategories&.length > 0) || !Debate.subcategory_predefined? )%>
+    <%tag_subcategories = @selected_tags&.select{ |tag| tag&.kind == 'subcategory' } %>
     <%tags += tag_subcategories%>
+    <%tags += [@project_tag]%>
 
     <div class="row">
       <div id="debates" class="debates-list small-12 medium-9 column">

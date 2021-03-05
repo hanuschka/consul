@@ -8,15 +8,12 @@
   <p class="sidebar-title"><%= share_title %></p>
 <% end %>
 <div class="social-share-full">
-
-  <a href="whatsapp://send?text=<%= mobile_url %><%= url %>"
-     class="show-for-small-only2" data-action="share/whatsapp/share">
-     <span class="icon-whatsapp whatsapp"></span>
-     <span class="show-for-sr"><%= t("social.whatsapp") %></span>
-  </a>
-
+  <div class='social-share-button'>
+		<%= link_to "whatsapp://send?text=#{ mobile_url } #{ url }", class: 'ssb-icon ssb-whatsapp'  do %>
+      <span class="show-for-sr">whatsapp</span>
+    <% end %>
+  </div>
   <%= social_share_button_tag("#{title} #{setting["twitter_hashtag"]} #{setting["twitter_handle"]}",
-                              allow_sites: %w(facebook twitter telegram linkedin),
                               url: local_assigns[:url],
                               image: local_assigns.fetch(:image_url, ""),
                               desc: description,

@@ -1439,17 +1439,20 @@ de:
       create: Tag erstellen
       destroy: Tag löschen
       index:
-        add_tag: Neuen Tag für Vorschläge hinzufügen
-        title: Tags der Vorschläge
+        add_tag: Neue Tags hinzufügen 
+        title: Tags
         topic: Tag
-        help: "Wenn ein*e Benutzer*in einen Vorschlag erstellt, werden die folgenden Tags als Standard-Tags vorgeschlagen."
-        scope: Unterkategorien
+        help: Tags können als Projekt, Kategorie oder Unterkategorie angelegt werden.
+        scope: Art
+        settings: Einstellungen
       logic:
+        project: Projekt
         category: Kategorie
         subcategory: Unterkategorie
         predefined: Festgelegt
-        cloud: Tag cloud
-        custom: Benutzerdefiniert  
+        cloud_category: Tag Cloud für Kategorie
+        cloud_subcategory: Tag Cloud für Unterkategorie
+        custom_tags: Nutzer Tags
     users:
       columns:
         id: ID

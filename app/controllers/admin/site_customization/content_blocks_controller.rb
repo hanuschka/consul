@@ -53,7 +53,8 @@ class Admin::SiteCustomization::ContentBlocksController < Admin::SiteCustomizati
       end
     elsif @content_block.update(content_block_params)
       notice = t("admin.site_customization.content_blocks.update.notice")
-      redirect_to admin_site_customization_content_blocks_path, notice: notice
+      return_to = params[:return_to]
+      redirect_to return_to ? return_to : admin_site_customization_content_blocks_path, notice: notice
     else
       flash.now[:error] = t("admin.site_customization.content_blocks.update.error")
       render :edit
@@ -103,6 +104,7 @@ class Admin::SiteCustomization::ContentBlocksController < Admin::SiteCustomizati
       if @content_block.save
         heading_content_block.destroy!
         notice = t("admin.site_customization.content_blocks.update.notice")
+
         redirect_to admin_site_customization_content_blocks_path, notice: notice
       else
         flash.now[:error] = t("admin.site_customization.content_blocks.update.error")

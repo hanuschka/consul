@@ -1,5 +1,10 @@
 de:
+  tag_names:
+    general: 'General'
   custom:
+    images:
+      form:
+        image_name: 'Name des Titelbildes'
     account:
       show:
         plz_settings: Aufstehen Anmeldung
@@ -32,3 +37,6 @@ de:
         section_header:
           title: Stimme ab
           icon_alt: Stimme ab
+      show:
+        results_menu: Zwischenergebnisse für Admins
+        info_menu: Abstimmung

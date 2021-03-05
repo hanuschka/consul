@@ -1,4 +1,8 @@
 en:
+  activerecord:
+    attributes:
+      tag:
+        name: "Type the name of the tag"
   admin:
     actions:
       update: Update
@@ -12,8 +16,27 @@ en:
       index:
         scope: Subcategory
       logic:
+        project: Project
         category: Category
         subcategory: Subcategory
         custom: Custom
         predefined: Predefined
         cloud: Tag cloud
+    menu:
+      proposals_topics: Predefined tags
+    tags:
+      create: Create tag
+      destroy: Delete tag
+      index:
+        add_tag: Add new tags
+        help: Tags can be created as a project, category or subcategory
+        topic: Tag
+        scope: Type
+        settings: Settings
+      logic:
+        project: Project
+        category: Category
+        subcategory: Subcategory
+        cloud_category: Tag cloud for category
+        cloud_subcategory: Tag cloud for subcategory
+        custom_tags: User tags

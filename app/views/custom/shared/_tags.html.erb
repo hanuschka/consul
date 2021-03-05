@@ -1,12 +1,12 @@
 <%- limit ||= nil %>
-
+<%- project = taggable.tags.project.first&.name%>
 <% if taggable.tags.category.any? %>
   <ul id="tags_<%= dom_id(taggable) %>" class="no-bullet tags">
     <% taggable.tags.category.each do |tag| %>
       <%-selected = params[:tags]&.split(",")&.include?(tag.name)%>
       <li class="inline-block">
         <%= link_to sanitize(tag.name),
-          taggables_path(taggable.class.name.underscore, tag.name), class: selected ? "selected" : "" %></li>
+          taggables_path(taggable.class.name.underscore, [tag.name, project].compact.join(",")), class: selected ? "selected" : "" %></li>
     <% end %>
 
   </ul>
@@ -16,7 +16,7 @@
       <%-selected = params[:tags]&.split(",")&.include?(tag.name)%>
         <li class="inline-block">
           <%= link_to sanitize(tag.name),
-            taggables_path(taggable.class.name.underscore, tag.name), class: selected ? "selected" : "" %></li>
+            taggables_path(taggable.class.name.underscore, [tag.name, project].compact.join(",")), class: selected ? "selected" : "" %></li>
       <% end %>
 
     </ul>

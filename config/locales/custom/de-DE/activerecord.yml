@@ -227,7 +227,7 @@ de:
         title: "Titel"
       debate/translation:
         title: "Titel der Diskussion"
-        description: "Initialer Diskussionenbeitrag"
+        description: "Diskussionenbeitrag"
       proposal:
         author: "Autor"
         title: "Titel"

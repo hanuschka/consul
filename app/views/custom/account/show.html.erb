@@ -90,7 +90,7 @@
             <%= f.check_box :plz_consent,
               title: t("custom.devise_views.users.registrations.new.plz_consent_title"),
               label: t("custom.devise_views.users.registrations.new.plz_consent_label",
-                       plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "https://aktiv.aufstehen.de/mitmachen/",
+                       plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/nutzungsbedingungen",
                                       title: t("shared.target_blank"),
                                       target: "_blank")
                       ) %>
@@ -130,9 +130,6 @@
             </li>
           </ul>
 
-          <p>
-            <span><%= t("account.show.user_permission_verify_info") %></span>
-          </p>
           <p>
             <%= t("account.show.user_permission_verify") %>
           </p>

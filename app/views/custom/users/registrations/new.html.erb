@@ -1,15 +1,8 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
 <h2><%= t("devise_views.users.registrations.new.title") %></h2>
 
-<%= render "devise/omniauth_form", action: "sign_up" %>
-
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "shared/errors", resource: resource %>
-
-  <p>
-    <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
-        signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
-  </p>
 
   <div class="row">
     <div class="small-12 column">
@@ -20,7 +13,7 @@
       <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
                                    placeholder: t("custom.devise_views.users.registrations.new.username_placeholder"),
                                    label: t("custom.devise_views.users.registrations.new.username_label"),
-                                   hint: t("custom.devise_views.users.registrations.new.username_note") %>
+                                   hint: t("devise_views.users.registrations.new.username_note") %>
 
       <%= f.invisible_captcha :address %>
 
@@ -49,12 +42,12 @@
         <%= f.check_box :plz_consent,
           title: t("custom.devise_views.users.registrations.new.plz_consent_title"),
           label: t("custom.devise_views.users.registrations.new.plz_consent_label",
-                   plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "https://aktiv.aufstehen.de/mitmachen/",
+                   plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/nutzungsbedingungen",
                                   title: t("shared.target_blank"),
                                   target: "_blank")
                   ) %>
 
-        <%= f.text_field :plz,  autofocus: true, disabled: true,
+              <%= f.text_field :plz,  autofocus: true, disabled: (params[:user].present? && params[:user][:plz_consent] == "1" ? false : true ),
                                 placeholder: t("custom.devise_views.users.registrations.new.plz_placeholder"),
                                 label: t("custom.devise_views.users.registrations.new.plz_label") %>
 

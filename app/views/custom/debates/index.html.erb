@@ -28,7 +28,7 @@
         </div>
       </div>
     <% else %>
-      <%= render "shared/section_header", i18n_namespace: "debates.index.section_header", image: "debates" %>
+      <%= render "shared/section_header", i18n_namespace: "custom.debates.index.section_header", icon: "tausche" %>
     <% end %>
 
     <% if feature?("user.recommendations") && @recommended_debates.present? %>
@@ -38,26 +38,19 @@
     <% end %>
 
     <%tags = []%>
-    <%selected_tags = params[:tags]&.split(",")&.map {|tt| t2 = Tag.find_by(name: tt)}&.compact || []%>
 
-    <%tag_categories = selected_tags&.map {|tt| tt&.kind == 'category' && (tt.custom_logic_category_code & Debate::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
-    <%can_create = Debate.category_predefined? && tag_categories&.length > 0  || !Debate.category_predefined?%>
+    <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' }   %>
+    <%can_create = true  %>
     <%tags += tag_categories%>
 
-    <%tag_subcategories = selected_tags&.map {|tt| tt&.kind == 'subcategory' && (tt.custom_logic_subcategory_code & Debate::TAGS_PREDEFINED > 0) ? tt : nil}&.compact %>
-    <%can_create = can_create && ((Debate.subcategory_predefined? && tag_subcategories&.length > 0) || !Debate.subcategory_predefined? )%>
+    <%tag_subcategories = @selected_tags&.select{ |tag| tag&.kind == 'subcategory' } %>
     <%tags += tag_subcategories%>
+    <%tags += [@project_tag]%>
 
     <div class="row">
       <div id="debates" class="debates-list small-12 medium-9 column">
+        <%=render_custom_block 'debates_welcome' %>
 
-        <p>
-          <small><i>Auf der ersten Seite findet ihr die Übersicht über alle Diskussionen. Über Aufklappmenüs und die Kategorienbuttons auf der rechten Seite ruft ihr sie sortiert nach Themenfeldern auf. So erreicht ihr auch alle Forderungen und Abstimmungen zu dem jeweiligen Themenbereich bzw. der jeweiligen Kategorie. Wenn ihr eine Übersicht über alle Forderungen oder Abstimmungen sucht, klickt oben auf der Menüleiste auf „Forderungen“ oder „Abstimmungen“. </i></small>
-        </p>
-
-        <p>
-          Viel Spaß beim Diskutieren! 
-        </p>
         <%= render "shared/banner" %>
 
         <% unless @search_terms || !has_featured? %>

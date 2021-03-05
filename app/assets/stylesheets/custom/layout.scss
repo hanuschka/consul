@@ -1,3 +1,78 @@
+@font-face {
+  font-family: 'MyriadPro It';
+  src: font-url('MyriadPro-It.ttf');
+}
+
+@font-face {
+  font-family: 'MyriadPro BoldIt';
+  src: font-url('MyriadPro-BoldIt.ttf')
+}
+
+@font-face {
+  font-family: 'MyriadPro';
+  src: font-url('MyriadPro-Regular.ttf')
+}
+
+body {
+  font-family: 'MyriadPro' !important;
+}
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+  font-family: 'MyriadPro BoldIt' !important;
+}
+
+
+.button:not(.hollow):not([title='Suche']) {
+  position: relative;
+
+  &::before,
+  &::after  {
+    content: '';
+    position: absolute;
+    display: block;
+    width: .8em;
+    height: 3em;
+    background-color: white;
+    outline: 1px solid white;
+    transform: rotate(10deg);
+  }
+
+  &::before {
+    left: -0.8em;
+    bottom: 0;
+    transform-origin: left bottom;
+  }
+
+  &::after {
+    right: -0.8em;
+    top: 0;
+    transform-origin: right top;
+  }
+}
+
+.featured-proposals {
+  .button.expanded {
+    &::before,
+    &::after  {
+      background-color: #ffdc5c;
+      outline: 1px solid #ffdc5c;
+    }
+  }
+}
+
+.button:hover, .button:focus {
+  background-color: #36CDA0;
+  color: #fefefe;
+}
+
+
+
+
+.section-icon {
+  width: 40px;
+}
+
+
 .ssb-linkedin{
   background: #0e76a8;
   background-image: none !important;

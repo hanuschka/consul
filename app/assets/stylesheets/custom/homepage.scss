@@ -1,13 +1,3 @@
-@font-face {
-  font-family: 'MyriadPro It';
-  src: font-url('MyriadPro-It.ttf');
-}
-
-@font-face {
-  font-family: 'MyriadPro BoldIt';
-  src: font-url('MyriadPro-BoldIt.ttf')
-}
-
 section p {
   font-size: 1.25em;
   line-height: 2;
@@ -186,11 +176,16 @@ section .questions button:after {
 section button {
   padding: .5em 2em;
   margin: 2em 0;
+  margin-left: -0.4em;
   position: relative;
   font-family: 'MyriadPro BoldIt';
   font-size: 1.5em;
+  cursor: pointer;
 }
 
+section button:focus {
+  outline: none;
+}
 
 section button:before,
 section button:after {
@@ -200,10 +195,11 @@ section button:after {
   display: block;
   width: 2em;
   height: 4.5em;
-  transform: rotate(15deg);
+  transform: rotate(10deg);
   right: -1.5em;
   top: -.75em;
   margin-left: -.55em;
+  cursor: initial;
 }
 
 button:before {
@@ -369,6 +365,10 @@ footer .row {
   .questions,
   section .content {
     width: initial;
+  }
+  
+  .intro-content a:hover {
+    text-decoration: none;
   }
 
 

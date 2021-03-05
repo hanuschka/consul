@@ -8,6 +8,7 @@ class ProposalsController
   before_action :process_tags, only: [:create, :update]
 
   def index_customization
+    ensure_project_tag
     discard_draft
     discard_archived
     load_retired
@@ -38,6 +39,8 @@ class ProposalsController
     def take_only_by_tag_names
       if params[:tags].present?
         @resources = @resources.tagged_with(params[:tags].split(","), all: true)
+        @categories = @resources.tag_counts.category
+        @categories = Tag.category
         @subcategories = @resources.tag_counts.subcategory
       end
     end

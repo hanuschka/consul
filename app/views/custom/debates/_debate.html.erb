@@ -18,6 +18,11 @@
               <%= link_to t("debates.debate.comments", count: debate.comments_count), debate_path(debate, anchor: "comments") %>
               <span class="bullet">&nbsp;&bull;&nbsp;</span>
               <%= l debate.created_at.to_date %>
+              <%project = debate.tags.project.first%>
+              <% if project%>
+                <span class="bullet">&nbsp;&bull;&nbsp;</span>
+                <%=project.tag_name %>
+              <%end%>
 
               <% if debate.author.hidden? || debate.author.erased? %>
                 <span class="bullet">&nbsp;&bull;&nbsp;</span>

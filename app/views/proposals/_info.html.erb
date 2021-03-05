@@ -4,6 +4,11 @@
   <span class="bullet">&nbsp;&bull;&nbsp;</span>
   <%= l @proposal.created_at.to_date %>
 
+  <%project = @proposal.tags.project.first%>
+  <% if project%>
+    <span class="bullet">&nbsp;&bull;&nbsp;</span>
+    <%=project.tag_name %>
+  <%end%>
   <% unless @proposal.selected? %>
     <span class="bullet">&nbsp;&bull;&nbsp;</span>
     <span class="icon-comments"></span>&nbsp;

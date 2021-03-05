@@ -28,6 +28,12 @@
               <span class="bullet">&nbsp;&bull;&nbsp;</span>
               <%= l proposal.created_at.to_date %>
 
+              <%project = proposal.tags.project.first%>
+              <% if project%>
+                <span class="bullet">&nbsp;&bull;&nbsp;</span>
+                <%=project.tag_name %>
+              <%end%>
+
               <% if proposal.author.hidden? || proposal.author.erased? %>
                 <span class="bullet">&nbsp;&bull;&nbsp;</span>
                 <span class="author">

@@ -2,10 +2,11 @@
 <p><%= t("admin.tags.index.help") %></p>
 
 <%= form_for(@tag, url: admin_tags_path, as: :tag) do |f| %>
-  <div class="small-12 medium-6">
+  <div class="small-12 medium-6 admin-tags-form">
     <%= f.text_field :name %>
-    <%= f.radio_button :kind, "category", label: "Category", selected: "selected" %>
-    <%= f.radio_button :kind, "subcategory", label: "Subcategory" %>
+    <%= f.radio_button :kind, "project", label: tag_kind_name('project') %>
+    <%= f.radio_button :kind, "category", label: tag_kind_name('category') %>
+    <%= f.radio_button :kind, "subcategory", label: tag_kind_name('subcategory') %>
 
   </div>
 
@@ -14,81 +15,52 @@
 <% end %>
 
 <hr>
-<h3 class="margin"><%= t("admin.tags.index.title") %>: <%= page_entries_info @tags %></h3>
+<h3 class="margin"><%= page_entries_info @tags, entry_name: tag_count_label(@tags) %></h3>
 
 <table>
   <thead>
-    <th scope="col" class="small-6"><%= t("admin.tags.index.topic") %></th>
-    <th scope="col" class="small-3"><%= t("admin.tags.index.scope") %></th>
+    <th scope="col" class="small-3"><%= t("admin.tags.index.topic") %></th>
+    <th scope="col"><%= t("admin.tags.index.scope") %></th>
+    <th scope="col" class="small-3"><%= t("admin.tags.index.settings") %></th>
     <th scope="col"><%= t("admin.actions.actions") %></th>
   </thead>
   <tbody>
   <% @tags.each do |tag| %>
     <tr>
-      <td>
         <%= form_for(tag,
             url: admin_tag_path(tag),
             as: :tag,
             html: { id: "edit_tag_#{tag.id}" }) do |f| %>
 
-            <div class="small-9 column">
-              <%=f.text_field :name, {label: ""}%>
-                <div class='row'>
-                  <div class='small-4 column'>
-                    <b><%=t("admin.tags.logic.category")%></b>
-                    <div>
-                      <%=check_box_tag "tag[category_code][]", 1, (tag.custom_logic_category_code & 1) > 0, id: "category_code_#{tag.id}_1" %>
-                      <%=label_tag "category_code_#{tag.id}_1" do %>
-                        <span class="checkbox"><%=t("admin.tags.logic.predefined")%></span>
-                      <%end%>
-                    </div>
-                    <div>
-                      <%=check_box_tag "tag[category_code][]", 2, (tag.custom_logic_category_code & 2) > 0, id: "category_code_#{tag.id}_2" %>
-                      <%=label_tag "category_code_#{tag.id}_2" do %>
-                        <span class="checkbox"><%=t("admin.tags.logic.cloud")%></span>
-                      <%end%>
-                    </div>
-                  </div>
-                  <div class='small-4 column'>
-                    <b><%=t("admin.tags.logic.subcategory")%></b>
-                    <div>
-                      <%=check_box_tag "tag[subcategory_code][]", 1, (tag.custom_logic_subcategory_code & 1) > 0, id: "subcategory_code_#{tag.id}_1" %>
-                      <%=label_tag "subcategory_code_#{tag.id}_1" do %>
-                        <span class="checkbox"><%=t("admin.tags.logic.predefined")%></span>
-                      <%end%>
-                    </div>
-                    <div>
-                      <%=check_box_tag "tag[subcategory_code][]", 2, (tag.custom_logic_subcategory_code & 2) > 0, id: "subcategory_code_#{tag.id}_2" %>
-                      <%=label_tag "subcategory_code_#{tag.id}_2" do %>
-                        <span class="checkbox"><%=t("admin.tags.logic.cloud")%></span>
-                      <%end%>
-                    </div>
-                  </div>
-                  <div class='small-4 column'>
-                    <div>
-                      <%=check_box_tag "tag[category_code][]", 4, (tag.custom_logic_category_code & 4) > 0, id: "category_code_#{tag.id}_4" %>
-                      <%=label_tag "category_code_#{tag.id}_4" do %>
-                        <span class="checkbox"><%=t("admin.tags.logic.custom")%></span>
-                      <%end%>
-                    </div>
-                  </div>
-                </div>
+        <td class='small-3 tag-name-field'>
+            <%=f.text_field :name %>
+        </td>
+
+        <td>
+          <%=tag_kind_name(tag.kind)%>
+        </td>
+
+        <td>
+          <%if tag.kind == 'category' %>
+            <div>
+              <%=f.check_box :custom_logic_category_cloud, label: t("admin.tags.logic.cloud_category"), id: "custom_logic_category_cloud_#{tag.id}" %>
             </div>
 
-            <div class="small-3 column">
-              <label>&nbsp;</label>
-              <%= f.submit(t("admin.actions.update"), class: "button success") %>
+            <div>
+              <%=f.check_box :custom_logic_subcategory_cloud, label: t("admin.tags.logic.cloud_subcategory"), id: "custom_logic_subcategory_cloud_#{tag.id}" %>
             </div>
 
-            <!--strong><%= tag.name %></strong-->
-        <% end %>
-      </td>
-      <td>
-        <%=tag.kind%>
-      </td>
-      <td id="tag_<%= tag.id %>">
-        <%= link_to t("admin.tags.destroy"), admin_tag_path(tag), method: :delete, class: "button hollow alert" %>
-      </td>
+            <div>
+              <%=f.check_box :custom_logic_usertags_cloud, label: t("admin.tags.logic.custom_tags"), id: "custom_logic_usertags_cloud_#{tag.id}" %>
+            </div>
+          <%end%>
+        </td>
+
+        <td class='small-3' id="tag_<%= tag.id %>">
+            <%= f.submit(t("admin.actions.update"), class: "button success") %>
+          <%= link_to t("admin.tags.destroy"), admin_tag_path(tag), method: :delete, class: "button hollow alert" %>
+        </td>
+      <% end %>
     </tr>
   <% end %>
   </tbody>

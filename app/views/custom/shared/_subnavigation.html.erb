@@ -58,7 +58,7 @@
     -->
     <%= raw content_block("subnavigation_right", I18n.locale) %>
     <li class='drop'>
-      <%= link_to 'Konto', '#' %>
+      <%= link_to 'Konto', account_path %>
       <ul class="drop-nav">
         <%= render "shared/admin_login_items" %>
         <%= render "layouts/notification_item" %>

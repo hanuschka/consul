@@ -1439,6 +1439,8 @@ en:
         add_tag: Add a new proposal topic
         title: Proposal topics
         topic: Topic
+        category: Category
+        project: Project
         help: "When a user creates a proposal, the following topics are suggested as default tags."
     users:
       columns:
@@ -1489,6 +1491,7 @@ en:
         content_block:
           body: Body
           name: Name
+          key: Key
           names:
             top_links: Top Links
             footer: Footer

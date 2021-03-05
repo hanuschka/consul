@@ -22,7 +22,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 }
 
 
-.button:not(.hollow):not([title='Suche']) {
+.button:not(.hollow):not([title='Suche']):not([data-toggle="view_mode"]) {
   position: relative;
 
   &::before,
@@ -54,8 +54,8 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
   .button.expanded {
     &::before,
     &::after  {
-      background-color: #ffdc5c;
-      outline: 1px solid #ffdc5c;
+      background-color: #ffdc5c !important;
+      outline: 1px solid #ffdc5c !important;
     }
   }
 }

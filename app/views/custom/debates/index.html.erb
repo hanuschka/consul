@@ -28,7 +28,7 @@
         </div>
       </div>
     <% else %>
-      <%= render "shared/section_header", i18n_namespace: "debates.index.section_header", image: "debates" %>
+      <%= render "shared/section_header", i18n_namespace: "custom.debates.index.section_header", icon: "tausche" %>
     <% end %>
 
     <% if feature?("user.recommendations") && @recommended_debates.present? %>
@@ -50,6 +50,13 @@
     <div class="row">
       <div id="debates" class="debates-list small-12 medium-9 column">
 
+        <p>
+          <small><i>Auf der ersten Seite findet ihr die Übersicht über alle Diskussionen. Über Aufklappmenüs und die Kategorienbuttons auf der rechten Seite ruft ihr sie sortiert nach Themenfeldern auf. So erreicht ihr auch alle Forderungen und Abstimmungen zu dem jeweiligen Themenbereich bzw. der jeweiligen Kategorie. Wenn ihr eine Übersicht über alle Forderungen oder Abstimmungen sucht, klickt oben auf der Menüleiste auf „Forderungen“ oder „Abstimmungen“. </i></small>
+        </p>
+
+        <p>
+          Viel Spaß beim Diskutieren! 
+        </p>
         <%= render "shared/banner" %>
 
         <% unless @search_terms || !has_featured? %>

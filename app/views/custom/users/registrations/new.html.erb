@@ -1,15 +1,8 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
 <h2><%= t("devise_views.users.registrations.new.title") %></h2>
 
-<%= render "devise/omniauth_form", action: "sign_up" %>
-
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "shared/errors", resource: resource %>
-
-  <p>
-    <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
-        signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
-  </p>
 
   <div class="row">
     <div class="small-12 column">
@@ -18,9 +11,9 @@
       <%= f.hidden_field :locale, value: I18n.locale %>
 
       <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
-                                   placeholder: t("custom.devise_views.users.registrations.new.username_placeholder"),
-                                   label: t("custom.devise_views.users.registrations.new.username_label"),
-                                   hint: t("custom.devise_views.users.registrations.new.username_note") %>
+                                   placeholder: t("devise_views.users.registrations.new.username_label"),
+                                   label: t("devise_views.users.registrations.new.username_label"),
+                                   hint: t("devise_views.users.registrations.new.username_note") %>
 
       <%= f.invisible_captcha :address %>
 

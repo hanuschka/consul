@@ -1,8 +1,8 @@
-<div class="sidebar-divider"></div>
-<h2 class="sidebar-title"><%= t("shared.tags_cloud.projects") %></h2>
-<br>
+<div class="sidebar-divider" style='display:none'></div>
+<h2 class="sidebar-title" style='display:none'><%= t("shared.tags_cloud.projects") %></h2>
+<br style='display:none'>
 
-<ul id="projects" class="no-bullet categories">
+<ul id="projects" class="no-bullet categories", style="display:none">
   <%tag_names = Tag.project%>
   <%tag_names.each do |project| %>
     <li class="inline-block">

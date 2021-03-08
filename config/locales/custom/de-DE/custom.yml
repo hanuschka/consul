@@ -2,6 +2,8 @@ de:
   tag_names:
     general: 'General'
   custom:
+    alerts:
+      only_3_proposals: 'Jede Nutzer darf pro Themenfeld nur drei %{models} erstellen!'
     images:
       form:
         image_name: 'Name des Titelbildes'

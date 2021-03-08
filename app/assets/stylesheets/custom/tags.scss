@@ -40,6 +40,10 @@
 }
 
 
-  .tag-name-field [type='text'] {
-    width: 90%;
-  }
+.tag-name-field [type='text'] {
+  width: 90%;
+}
+
+a.selected {
+  background: #ececec !important;
+}

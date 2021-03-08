@@ -2,6 +2,8 @@ de:
   tag_names:
     general: 'General'
   custom:
+    alerts:
+      only_3_proposals: 'Pro Person sind nur drei %{models} möglich!'
     images:
       form:
         image_name: 'Name des Titelbildes'

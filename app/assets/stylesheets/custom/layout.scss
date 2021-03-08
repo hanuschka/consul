@@ -60,6 +60,27 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
   }
 }
 
+.jumbo.light {
+  .button {
+    &::before,
+    &::after  {
+      background-color: #ecf0f1 !important;
+      outline: 1px solid #ecf0f1 !important;
+    }
+  }
+}
+
+.resource-card {
+  .button {
+    &::before,
+    &::after  {
+      background-color: #d1f5eb !important;
+      outline: 1px solid #d1f5eb !important;
+    }
+  }
+}
+
+
 .button:hover, .button:focus {
   background-color: #36CDA0;
   color: #fefefe;

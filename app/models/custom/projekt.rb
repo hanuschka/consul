@@ -7,7 +7,7 @@ class Projekt < ApplicationRecord
   has_and_belongs_to_many :proposals
   has_and_belongs_to_many :budgets
 
-  has_one :page, class_name: "SiteCustomization::Page"
+  has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
 
   after_create :create_corresponding_page
 

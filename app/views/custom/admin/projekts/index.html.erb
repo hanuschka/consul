@@ -1,0 +1,54 @@
+<h2><%= t("custom.admin.projekts.index.name_plural") %></h2>
+<p><%= t("custom.admin.projekts.index.description") %></p>
+
+<%= form_for(@projekt, url: admin_projekts_path, as: :projekt) do |f| %>
+  <div class="small-12 medium-6 admin-projekts-form">
+    <%= f.text_field :name %>
+  </div>
+
+  <%= f.submit(t("custom.admin.projekts.index.create"), class: "button success") %>
+<% end %>
+
+<hr>
+
+<table>
+  <thead>
+    <th scope="col" class="small-3"><%= t("custom.admin.projekts.index.name") %></th>
+    <th scope="col" class="small-3"><%= t("custom.admin.projekts.index.parent") %></th>
+    <th scope="col"><%= t("admin.actions.actions") %></th>
+  </thead>
+  <tbody>
+  <% @projekts.each do |projekt| %>
+    <tr>
+      <%= form_for(projekt,
+            url: admin_projekt_path(projekt),
+            as: :projekt,
+            html: { id: "edit_projekt_#{projekt.id}" }) do |f| %>
+
+        <td class='small-3 projekt-text-field'>
+          <%= f.text_field :name, 
+                           id: "project_name_#{projekt.id}", 
+                           label: t('custom.admin.projekts.index.name_singular') %>
+          <%= link_to t("custom.admin.projekts.index.page_link"), edit_admin_site_customization_page_path(projekt.page), class: 'projekt-link' %>
+        </td>
+
+        <td class='small-3 projekt-text-field '>
+          <% projekts = @projekts.to_a %>
+          <% projekts.delete(projekt) %>
+          <%= f.select :parent_id, projekts.pluck(:name, :id), 
+                       { include_blank: true, label: t('custom.admin.projekts.index.parent') }, 
+                       { id: "project_parent_#{projekt.id}"} %>
+        </td>
+
+
+        <td class='small-3' id="projekt_<%= projekt.id %>">
+          <%= f.submit(t("admin.actions.update"), class: "button success") %>
+          <%= link_to t("custom.admin.projekts.destroy"), admin_projekt_path(projekt), method: :delete, class: "button hollow alert" %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @projekts %>

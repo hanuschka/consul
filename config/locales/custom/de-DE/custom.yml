@@ -1,5 +1,17 @@
 de:
   custom:
+    admin:
+      menu:
+        projekts: Projekte
+      projekts:
+        index:
+          name_plural: Projekte
+          name_singular: Projekt
+          create: Projekt erstellen
+          parent: Parent projekt
+          page: Seite
+          page_link: Projekt Seite
+        destroy: Projekt löschen
     polls:
       show:
         results_menu: Zwischenergebnisse für Admins

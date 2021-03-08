@@ -1,0 +1,15 @@
+.projekt-text-field {
+  position: relative;
+
+  [type='text'],
+  select {
+    width: 90%;
+  }
+  
+}
+
+.projekt-link {
+  position: absolute;
+  top: 5.5em;
+  font-size: 0.85em;
+}

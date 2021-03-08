@@ -2,6 +2,10 @@ de:
   tag_names:
     general: 'General'
   custom:
+    shared:
+      tags_cloud:
+        districts: Aktionsgruppen 
+        districts_list: Liste der Aktionsgruppen
     alerts:
       only_3_proposals: 'Jede Nutzer darf pro Themenfeld nur drei %{models} erstellen!'
     images:

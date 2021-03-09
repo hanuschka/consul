@@ -1,0 +1,9 @@
+<% if current_page.projekt.parent.present? %>
+  <%= render partial: 'breadcrumbs', locals: { current_page: current_page.projekt.parent.page } %>
+  <% if current_page.projekt.parent.page.status == 'published' %>
+    <%= link_to current_page.projekt.parent.name, current_page.projekt.parent.page.url  %>
+  <% else %>
+    <%= current_page.projekt.parent.name %>
+  <% end %>
+  <%= " > " %>
+<% end %>

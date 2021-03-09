@@ -1,0 +1,11 @@
+<% if current_page.projekt.children.any? %>
+  <ul>
+    <% current_page.projekt.children.each do |child_projekt| %>
+      <% if child_projekt.page.status == 'published' %>
+        <li>
+          <%= link_to child_projekt.name, child_projekt.page.url %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>

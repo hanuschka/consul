@@ -2,7 +2,7 @@ class Admin::ProjektsController < Admin::BaseController
   before_action :find_projekt, only: [:update, :destroy]
 
   def index
-    @projekts = Projekt.all.page(params[:page])
+    @projekts = Projekt.top_level.page(params[:page])
     @projekt = Projekt.new
   end
 
@@ -15,7 +15,8 @@ class Admin::ProjektsController < Admin::BaseController
   end
 
   def create
-    Projekt.find_or_create_by!(name: projekt_params["name"])
+    projekt = Projekt.find_or_create_by!(name: projekt_params["name"])
+    projekt.update_attributes(projekt_params)
     redirect_to admin_projekts_path
   end
 

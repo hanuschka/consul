@@ -11,6 +11,8 @@ class Projekt < ApplicationRecord
 
   after_create :create_corresponding_page
 
+  scope :top_level, -> { where(parent: nil) }
+
   private
 
   def create_corresponding_page

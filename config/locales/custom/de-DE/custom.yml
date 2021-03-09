@@ -10,7 +10,9 @@ de:
           create: Projekt erstellen
           parent: Parent projekt
           page: Seite
-          page_link: Projekt Seite
+          edit_page: Seite bearbeiten
+          page_link: Seite öffnen 
+
         destroy: Projekt löschen
     polls:
       show:

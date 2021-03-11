@@ -1,0 +1,12 @@
+<% level ||= 1 %>
+<ul class="projekt-tags-<%=level%>">
+  <% projekts.each do |projekt| %>
+    <li>
+      <span class="checkmark">
+      <%= projekt.name  %>
+    </li>
+    <% if projekt.children.any? %>
+      <%= render partial: "shared/projekts", locals: { projekts: projekt.children, level: level + 1 }  %>
+    <% end %>
+  <% end %>
+</ul>

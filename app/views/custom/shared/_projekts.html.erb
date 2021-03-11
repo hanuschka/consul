@@ -1,0 +1,73 @@
+<div class="projekt-tags-column">
+  <div class="projekt-group"  >
+    <%= f.collection_check_boxes :projekt_ids, projekts, :id, :name do |cb| %>
+      <% cb.label do  %>
+        <%= cb.check_box %>
+        <%= cb.text %>
+        <span class="checkmark"></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+
+<div class="projekt-tags-column">
+  <% projekts.each do |projekt| %>
+    <% if projekt.children.any? %>
+      <div class="projekt-group" data-parent=<%= projekt.id %> >
+        <%= f.collection_check_boxes :projekt_ids, projekt.children, :id, :name do |cb| %>
+          <% cb.label do  %>
+            <%= cb.check_box %>
+            <%= cb.text %>
+            <span class="checkmark"></span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+
+<div class="projekt-tags-column">
+  <% projekts.each do |projekt| %>
+    <% if projekt.children.any? %>
+      <% projekt.children.each do |projekt| %>
+        <% if projekt.children.any? %>
+          <div class="projekt-group" data-parent=<%= projekt.id %> >
+            <%= f.collection_check_boxes :projekt_ids, projekt.children, :id, :name do |cb| %>
+              <% cb.label do  %>
+                <%= cb.check_box %>
+                <%= cb.text %>
+                <span class="checkmark"></span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="projekt-tags-column">
+  <% projekts.each do |projekt| %>
+    <% if projekt.children.any? %>
+      <% projekt.children.each do |projekt| %>
+        <% if projekt.children.any? %>
+          <% projekt.children.each do |projekt| %>
+            <% if projekt.children.any? %>
+              <div class="projekt-group" data-parent=<%= projekt.id %> >
+                <%= f.collection_check_boxes :projekt_ids, projekt.children, :id, :name do |cb| %>
+                  <% cb.label do  %>
+                    <%= cb.check_box %>
+                    <%= cb.text %>
+                    <span class="checkmark"></span>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

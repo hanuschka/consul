@@ -66,6 +66,17 @@
       </div>
     <% end %>
 
+
+    <div class="small-12 column">
+      <div id="projekt-tags">
+        <%= label_tag 'Projekte'  %>
+        <div id="projekt-tags-selector">
+        <%= render partial: "shared/projekts", locals: { f: f, projekts: @projekts }  %>
+        </div>
+      </div>
+    </div>
+
+
     <%tags = params[:tags].present? ? params[:tags]&.map{|t| Tag.find_by(name: t)} : @proposal.tags %>
 
     <%tag_list_o = @proposal.new_record? && @proposal.errors.empty? ? tags : @proposal.tag_list&.map{|t| Tag.find_by(name: t)} %>

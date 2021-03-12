@@ -68,12 +68,7 @@
 
 
     <div class="small-12 column">
-      <div id="projekt-tags">
-        <%= label_tag 'Projekte'  %>
-        <div id="projekt-tags-selector">
-        <%= render partial: "shared/projekts", locals: { f: f, projekts: @projekts }  %>
-        </div>
-      </div>
+      <%= render partial: "shared/projekts", locals: { f: f, projekts: @projekts }  %>
     </div>
 
 

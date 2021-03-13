@@ -91,6 +91,63 @@
 
     // Functions for selectors in sidebar
 
+    toggleProjektChildrenInSidebarFilter: function(filterArrow) {
+        var $correspondingUlContainer = $(filterArrow).parent().next()
+
+        if ( $correspondingUlContainer.hasClass('children-visible') ) {
+
+          $correspondingUlContainer.removeClass('children-visible');
+          $correspondingUlContainer.find('li').each( function() {
+            $(this).hide();
+          })
+
+          $(filterArrow).css('transform', 'rotate(45deg)')
+          $(filterArrow).css('background', '#fff')
+          $(filterArrow).css('top', '7px')
+
+        } else {
+
+          $correspondingUlContainer.addClass('children-visible');
+          $correspondingUlContainer.children('li').each( function() {
+            $(this).show();
+          })
+
+          $(filterArrow).css('transform', 'rotate(225deg)')
+          $(filterArrow).css('background', '#fff')
+          $(filterArrow).css('top', '10px')
+        }
+    },
+
+    requestNewFilterResults: function($checkbox) {
+
+      var url = new URL(window.location.href);
+      var selectedProjektIds;
+
+      if (url.searchParams.get('projekts')) {
+        selectedProjektIds = url.searchParams.get('projekts').split(',');
+      } else {
+        selectedProjektIds = [];
+      }
+
+      if ( $checkbox.is(':checked') ) {
+        selectedProjektIds.push($checkbox.val());
+      } else {
+        var index = selectedProjektIds.indexOf($checkbox.val());
+        if (index > -1) {
+          selectedProjektIds.splice(index, 1);
+        }
+      }
+
+      var uniqueProjektIds = selectedProjektIds.filter((v, i, a) => a.indexOf(v) === i);
+
+      if ( uniqueProjektIds.length > 0) {
+        url.searchParams.set('projekts', uniqueProjektIds.join(','))
+      }  else {
+        url.searchParams.delete('projekts')
+      }
+
+      window.location.href = url
+    },
 
     // Initializer
  
@@ -122,70 +179,23 @@
       });
 
       $("body").on("click", ".js-deselect-projekt", function() {
-
         var projektId = this.id.split('-').pop()
         var $correspondingLabel = $(`[data-projekt-id="${projektId}"]`)
+        var $checkbox = $correspondingLabel.find('input')
 
+        $checkbox.prop( "checked", false);
         App.Projekts.hideCheckmark($correspondingLabel);
         App.Projekts.removeCheckboxChip(projektId);
       });
 
       $("body").on("click", ".js-filter-projekt", function() {
-        var url = new URL(window.location.href);
-        var selectedProjektIds
+        var $checkbox = $(this);
 
-        if (url.searchParams.get('projekts')) {
-          selectedProjektIds = url.searchParams.get('projekts').split(',');
-        } else {
-          selectedProjektIds = [];
-        }
-
-        if ( $(this).is(':checked') ) {
-          selectedProjektIds.push(this.value);
-        } else {
-          var index = selectedProjektIds.indexOf(this.value);
-          if (index > -1) {
-            selectedProjektIds.splice(index, 1);
-          }
-        }
-
-        var uniqueProjektIds = selectedProjektIds.filter((v, i, a) => a.indexOf(v) === i);
-
-        if ( uniqueProjektIds.length > 0) {
-          url.searchParams.set('projekts', uniqueProjektIds.join(','))
-        }  else {
-          url.searchParams.delete('projekts')
-        }
-
-        window.location.href = url
+        App.Projekts.requestNewFilterResults($checkbox);
       });
 
       $("body").on("click", ".js-show-children-projekts-in-filter", function() {
-        var $correspondingUlContainer = $(this).parent().next()
-
-        if ( $correspondingUlContainer.hasClass('children-visible') ) {
-
-          $correspondingUlContainer.removeClass('children-visible');
-          $correspondingUlContainer.find('li').each( function() {
-            $(this).hide();
-          })
-
-          $(this).css('transform', 'rotate(45deg)')
-          $(this).css('background', '#fff')
-          $(this).css('top', '7px')
-
-        } else {
-
-          $correspondingUlContainer.addClass('children-visible');
-          $correspondingUlContainer.children('li').each( function() {
-            $(this).show();
-          })
-
-          $(this).css('transform', 'rotate(225deg)')
-          $(this).css('background', '#fff')
-          $(this).css('top', '10px')
-        }
-
+        App.Projekts.toggleProjektChildrenInSidebarFilter(this);
       });
     }
   };

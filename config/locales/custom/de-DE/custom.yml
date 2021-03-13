@@ -14,6 +14,12 @@ de:
           page_link: Seite öffnen 
 
         destroy: Projekt löschen
+    projekts:
+      new:
+        first_level: 'First level'
+        second_level: 'Second level'
+        third_level: 'Third level'
+        fourth_level: 'Fourth level'
     polls:
       show:
         results_menu: Zwischenergebnisse für Admins

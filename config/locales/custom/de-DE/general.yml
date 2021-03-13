@@ -407,7 +407,7 @@ de:
       recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
       recommendations_title: Empfehlungen zum Erstellen eines Vorschlags
       start_new: Neuen Vorschlag erstellen
-      start_new_in: Erstellen Sie einen Vorschlag in %{category}
+      start_new_in: Erstellen Sie einen Vorschlag
       help: Wie funktionieren Vorschläge?
     notice:
       retired: Vorschlag im Ruhezustand

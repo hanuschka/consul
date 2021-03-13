@@ -30,11 +30,10 @@ form select {
 
 #projekt-tags-selector {
 
-  display: flex;
-
-  .projekt-tags-column {
-    flex: 1;
-  }
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 1em;
+  row-gap: 1em;
 
   .projekt-tags-column:not(:first-child) {
     .projekt-group {
@@ -172,9 +171,95 @@ form select {
 		transform: rotate(-45deg);
 	}
 
+}
 
+#filter-projekts {
 
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding-left: 1.2em;
+  }
 
+  ul ul li {
+    display: none;
+  }
 
+  li.show-projekt {
+    display: flex;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  label {
+    cursor: pointer;
+    position: relative;
+    color: #878787;
+    margin-right: 2em;
+  }
+
+  .projekt-arrow {
+    position: absolute;
+		width: 8px;
+		height: 8px;
+    right: 5px;
+    top: 10px;
+		border: 1.5px solid #C6C6C6;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+    cursor: pointer;
+  }
+
+	input[type='checkbox'] {
+	  position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+
+  .checkmark {
+    position: absolute;
+    top: 5px;
+    left: -19px;
+    height: 14px;
+    width: 14px;
+    border: 1.5px solid #C6C6C6;
+    border-radius: 2px;
+  }
+
+	input:checked ~ .checkmark:before {
+		display: block;
+	}
+
+	input:checked ~ .checkmark {
+    background: #06408E;
+    border: 1.5px solid #06408E;
+	}
+
+	.label-selected {
+    color: #06408E;
+    border-color: #06408E;
+	}
+
+	.checkmark:before {
+		content: "";
+		position: absolute;
+		display: none;
+		left: 4px;
+		top: 1px;
+		width: 4px;
+		height: 7px;
+		border: 1.5px solid #fff;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+	}
 
 }
+
+

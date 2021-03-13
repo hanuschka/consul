@@ -13,6 +13,17 @@ class Projekt < ApplicationRecord
 
   scope :top_level, -> { where(parent: nil) }
 
+  def all_children_ids(all_children_ids = [])
+    if self.children.any?
+      self.children.each do |child|
+        all_children_ids.push(child.id)
+        child.all_children_ids(all_children_ids)
+      end
+    end
+
+    all_children_ids
+  end
+
   private
 
   def create_corresponding_page

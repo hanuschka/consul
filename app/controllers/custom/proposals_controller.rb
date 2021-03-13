@@ -16,6 +16,7 @@ class ProposalsController
     load_featured
     remove_archived_from_order_links
     take_only_by_tag_names
+    take_by_projekts
     @proposals_coordinates = all_proposal_map_locations
   end
 
@@ -39,9 +40,13 @@ class ProposalsController
     def take_only_by_tag_names
       if params[:tags].present?
         @resources = @resources.tagged_with(params[:tags].split(","), all: true)
-        @categories = @resources.tag_counts.category
-        @categories = Tag.category
         @subcategories = @resources.tag_counts.subcategory
+      end
+    end
+
+    def take_by_projekts
+      if params[:projekts].present?
+        @resources = @resources.joins(:projekts).where(projekts: { id: [params[:projekts].split(',')] } )
       end
     end
 

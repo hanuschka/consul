@@ -54,7 +54,7 @@
     <%tags = []%>
 
     <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' } %>
-    <%can_create = tag_categories.count == 1 %>
+    <%can_create = true %>
     <%tags += tag_categories%>
 
     <%tag_subcategories = @selected_tags&.select{ |tag| tag.kind == 'subcategory' } %>
@@ -144,6 +144,7 @@
             <%= link_to t("proposals.index.selected_proposals_link"), proposals_path(selected: "all") %>
           </p>
           <% if params[:retired].blank? %>
+					  <%= render "shared/projekts_sidebar" %>
             <%= render "shared/categories", model: "proposal" %>
             <%= render "shared/tag_cloud", taggable: "proposal" %>
             <%= render "geozones" %>

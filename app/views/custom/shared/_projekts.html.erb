@@ -8,6 +8,8 @@
   <div id="projekt-tags-selector">
 
     <div class="projekt-tags-column">
+      <h6><%= t('custom.projekts.new.first_level') %></h6>
+
       <div class="projekt-group"  >
         <%= f.collection_check_boxes :projekt_ids, projekts, :id, :name do |cb| %>
           <% cb.object.children.any? ? arrow = 'show-arrow' : arrow = ''  %>
@@ -23,6 +25,8 @@
 
 
     <div class="projekt-tags-column">
+      <h6><%= t('custom.projekts.new.second_level') %></h6>
+
       <% projekts.each do |projekt| %>
         <% if projekt.children.any? %>
           <div class="projekt-group js-show-children-projekts" data-parent=<%= projekt.id %> >
@@ -42,6 +46,8 @@
 
 
     <div class="projekt-tags-column">
+      <h6><%= t('custom.projekts.new.third_level') %></h6>
+
       <% projekts.each do |projekt| %>
         <% if projekt.children.any? %>
           <% projekt.children.each do |projekt| %>
@@ -64,6 +70,8 @@
     </div>
 
     <div class="projekt-tags-column">
+      <h6><%= t('custom.projekts.new.forth_level') %></h6>
+
       <% projekts.each do |projekt| %>
         <% if projekt.children.any? %>
           <% projekt.children.each do |projekt| %>

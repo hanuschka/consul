@@ -1,40 +1,23 @@
 require "open-uri"
+require 'net/http'
 class SMSApi
-  attr_accessor :client
-
-  def initialize
-    @client = Savon.client(wsdl: url)
-  end
-
-  def url
-    return "" unless end_point_available?
-
-    open(Rails.application.secrets.sms_end_point).base_uri.to_s
-  end
-
-  def authorization
-    Base64.encode64("#{Rails.application.secrets.sms_username}:#{Rails.application.secrets.sms_password}")
-  end
 
   def sms_deliver(phone, code)
     return stubbed_response unless end_point_available?
+    message = "Your verification code: #{code}"
+    params = {'receiver' => phone, 'msg' => message, 'sender' => 'SMSInfo', 'msgtype' => 't'}
+    params['id'] = Rails.application.secrets.sms_username
+    params['pw'] = Rails.application.secrets.sms_password
 
-    response = client.call(:enviar_sms_simples, message: request(phone, code))
-    success?(response)
-  end
+    prm = URI.encode_www_form params
 
-  def request(phone, code)
-    { autorizacion:  authorization,
-      destinatarios: { destinatario: phone },
-      texto_mensaje: "Clave para verificarte: #{code}. Gobierno Abierto",
-      solicita_notificacion: "All" }
-  end
-
-  def success?(response)
-    response.body[:respuesta_sms][:respuesta_servicio_externo][:texto_respuesta] == "Success"
+    url = URI.parse(Rails.application.secrets.sms_end_point + "?" + prm)
+    resp = Net::HTTP.get(url)
+    resp.to_s == "OK"
   end
 
   def end_point_available?
+    return !Rails.application.secrets.sms_password.blank?
     Rails.env.staging? || Rails.env.preproduction? || Rails.env.production?
   end
 

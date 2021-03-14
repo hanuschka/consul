@@ -1,5 +1,16 @@
 <%- limit ||= nil %>
 <%- project = taggable.tags.project.first&.name%>
+
+<% if taggable.projekts.any? %>
+  <div class="taggable_projekts">
+    <% taggable.projekts.each do |projekt| %>
+      <div class="projekt-chip">
+        <%= link_to sanitize(projekt.name), (taggables_path(taggable.class.name.underscore, '') + "&projekts=#{projekt.id}" ) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
 <% if taggable.tags.category.any? %>
   <ul id="tags_<%= dom_id(taggable) %>" class="no-bullet tags">
     <% taggable.tags.category.each do |tag| %>

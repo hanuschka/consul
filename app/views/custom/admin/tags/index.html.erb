@@ -4,10 +4,8 @@
 <%= form_for(@tag, url: admin_tags_path, as: :tag) do |f| %>
   <div class="small-12 medium-6 admin-tags-form">
     <%= f.text_field :name %>
-    <%= f.radio_button :kind, "project", label: tag_kind_name('project') %>
     <%= f.radio_button :kind, "category", label: tag_kind_name('category') %>
     <%= f.radio_button :kind, "subcategory", label: tag_kind_name('subcategory') %>
-
   </div>
 
 

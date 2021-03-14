@@ -1,5 +1,4 @@
 <%- limit ||= nil %>
-<%- project = taggable.tags.project.first&.name%>
 
 <% if taggable.projekts.any? %>
   <div class="taggable_projekts">
@@ -17,7 +16,7 @@
       <%-selected = params[:tags]&.split(",")&.include?(tag.name)%>
       <li class="inline-block">
         <%= link_to sanitize(tag.name),
-          taggables_path(taggable.class.name.underscore, [tag.name, project].compact.join(",")), class: selected ? "selected" : "" %></li>
+          taggables_path(taggable.class.name.underscore, tag.name), class: selected ? "selected" : "" %></li>
     <% end %>
 
   </ul>
@@ -27,7 +26,7 @@
       <%-selected = params[:tags]&.split(",")&.include?(tag.name)%>
         <li class="inline-block">
           <%= link_to sanitize(tag.name),
-            taggables_path(taggable.class.name.underscore, [tag.name, project].compact.join(",")), class: selected ? "selected" : "" %></li>
+            taggables_path(taggable.class.name.underscore, tag.name), class: selected ? "selected" : "" %></li>
       <% end %>
 
     </ul>

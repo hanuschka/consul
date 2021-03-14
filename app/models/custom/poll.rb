@@ -4,8 +4,4 @@ class Poll < ApplicationRecord
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
 
   has_and_belongs_to_many :projekts
-
-  def project_name
-    tags.project.first&.name
-  end
 end

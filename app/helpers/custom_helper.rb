@@ -2,8 +2,6 @@ module CustomHelper
   def tag_kind_name(kind)
     if kind == 'category'
       t('admin.tags.logic.category')
-    elsif kind == 'project'
-      t('admin.tags.logic.project')
     elsif kind == 'subcategory'
       t('admin.tags.logic.subcategory')
     end

@@ -9,7 +9,6 @@ class PollsController < ApplicationController
   helper_method :resource_model, :resource_name
 
   def index
-    ensure_project_tag
     @tag_cloud = tag_cloud
     if !params[:tags].blank?
       @polls = @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).tagged_with(params[:tags].split(","), all: true).page(params[:page])

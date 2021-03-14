@@ -1,25 +1,9 @@
 <div class="sidebar-divider"></div>
-<h2 class="sidebar-title"><%= t("shared.tags_cloud.projects") %></h2>
-<br>
-
-<ul id="projects" class="no-bullet categories">
-  <%tag_names = Tag.project%>
-  <%tag_names.each do |project| %>
-    <li class="inline-block">
-      <%tag_selected = params[:tags] && params[:tags].split(',').include?(project.name)%>
-      <%css_class = { class: "is-active" } if tag_selected %>
-      <%= link_to project.tag_name, send("#{model.pluralize}_path", tags: project.name, filter: params[:filter]), css_class || {} %>
-    </li>
-  <% end %>
-</ul>
-<div class="sidebar-divider"></div>
 <h2 class="sidebar-title"><%= t("shared.tags_cloud.categories") %></h2>
 <br>
 
 <ul id="categories" class="no-bullet categories">
   <%tag_names = @categories.map &:name%>
-  <%tag_names << @project_tag.name%>
-  <%selected_categories = [@project_tag.name]%>
   <% @categories.each do |category| %>
     <li class="inline-block">
       <%tag_selected = params[:tags] && params[:tags].split(',').include?(category.name)%>
@@ -34,9 +18,7 @@
 </ul>
 <%if @subcategories&.any?%>
   <div class="sidebar-divider"></div>
-  <h2 class="sidebar-title"><%= t("shared.tags_cloud.subcategories") %>
-
-</h2>
+  <h2 class="sidebar-title"><%= t("shared.tags_cloud.subcategories") %></h2>
   <br>
   <ul id="subcategories" class="no-bullet categories">
   <%subcategories_selected = false%>

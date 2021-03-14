@@ -77,11 +77,11 @@
 
     addCheckboxChip: function($label) {
       var projektId = 'projekt-chip-' + $label.data()['projektId']
-      var projectName = $label.text()
+      var projektName = $label.text()
 
       var chipToAdd = '<div class="projekt-chip">'
 
-      chipToAdd += projectName
+      chipToAdd += projektName
       chipToAdd += `<span id=${projektId} class="js-deselect-projekt close"></span>`
       chipToAdd += '</div>'
 

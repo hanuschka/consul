@@ -6,7 +6,7 @@
 
     <td class='small-3 projekt-text-field'>
       <%= f.text_field :name, 
-                       id: "project_name_#{projekt.id}", 
+                       id: "projekt_name_#{projekt.id}", 
                        label: t('custom.admin.projekts.index.name_singular') %>
       <div class='projekt-link'>               
         <%= link_to t("custom.admin.projekts.index.edit_page"), edit_admin_site_customization_page_path(projekt.page) %>
@@ -21,7 +21,7 @@
       <% projekts.delete(projekt) %>
       <%= f.select :parent_id, projekts.pluck(:name, :id), 
                    { include_blank: true, label: t('custom.admin.projekts.index.parent') }, 
-                   { id: "project_parent_#{projekt.id}"} %>
+                   { id: "projekt_parent_#{projekt.id}"} %>
     </td>
 
 

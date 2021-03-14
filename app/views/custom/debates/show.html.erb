@@ -16,7 +16,7 @@
     <div class="debate-show">
       <div id="<%= dom_id(@debate) %>" class="row">
         <div class="small-12 medium-9 column">
-          <%= back_link_to debates_path(tags: @debate.project_name) %>
+          <%= back_link_to debates_path %>
 
           <h1><%= @debate.title %></h1>
           <% if @debate.conflictive? %>
@@ -30,11 +30,6 @@
 
             <span class="bullet">&nbsp;&bull;&nbsp;</span>
             <%= l @debate.created_at.to_date %>
-            <%project = @debate.tags.project.first%>
-            <% if project%>
-              <span class="bullet">&nbsp;&bull;&nbsp;</span>
-              <%=project.tag_name %>
-            <%end%>
             <span class="bullet">&nbsp;&bull;&nbsp;</span>
             <span class="icon-comments"></span>&nbsp;
             <%= link_to t("debates.show.comments", count: @debate.comments_count), "#comments" %>

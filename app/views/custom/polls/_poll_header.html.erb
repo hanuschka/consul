@@ -2,7 +2,7 @@
   <div class="row">
     <div class="small-12 medium-9 column padding">
       <% if @poll.related.nil? %>
-        <%= back_link_to polls_path(tags: @poll.project_name), t("polls.show.back") %>
+        <%= back_link_to polls_path, t("polls.show.back") %>
       <% else %>
         <%= link_to t("polls.poll_header.back_to_proposal"), [@poll.related] %>
       <% end %>

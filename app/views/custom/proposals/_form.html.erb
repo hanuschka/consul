@@ -121,7 +121,7 @@
       <%end%>
     </div>
 
-      <%=f.hidden_field :tag_list_predefined, value: tags.reject{|t| !['category', 'subcategory', 'project'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined"%>
+      <%=f.hidden_field :tag_list_predefined, value: tags.reject{|t| !['category', 'subcategory'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined"%>
 
     <% if current_user.unverified? %>
       <div class="small-12 column">

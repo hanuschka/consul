@@ -749,7 +749,7 @@ de:
         message: "Sie sehen %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
     tags_cloud:
-      projects: Projekte
+      projekts: Projekte
       districts: "Bereiche"
       districts_list: "Liste der Bereiche"
       categories: Kategorien

@@ -7,7 +7,6 @@ class DebatesController < ApplicationController
   before_action :process_tags, only: [:create, :update]
 
   def index_customization
-    ensure_project_tag
     @featured_debates = @debates.featured
     take_only_by_tag_names
   end

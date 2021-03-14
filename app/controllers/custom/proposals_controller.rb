@@ -8,7 +8,6 @@ class ProposalsController
   before_action :process_tags, only: [:create, :update]
 
   def index_customization
-    ensure_project_tag
     discard_draft
     discard_archived
     load_retired

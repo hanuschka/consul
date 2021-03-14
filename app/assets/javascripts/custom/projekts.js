@@ -118,10 +118,12 @@
         }
     },
 
-    requestNewFilterResults: function($checkbox) {
+    formNewFilterProjektsRequest: function($checkbox) {
 
       var url = new URL(window.location.href);
       var selectedProjektIds;
+      var $label = $checkbox.parent()
+      var $filterArrow = $label.siblings('.projekt-arrow').first()
 
       if (url.searchParams.get('projekts')) {
         selectedProjektIds = url.searchParams.get('projekts').split(',');
@@ -131,11 +133,16 @@
 
       if ( $checkbox.is(':checked') ) {
         selectedProjektIds.push($checkbox.val());
+        $label.css('color', '#06408E')
+        $filterArrow.css('border-color', '#06408E')
+
       } else {
         var index = selectedProjektIds.indexOf($checkbox.val());
         if (index > -1) {
           selectedProjektIds.splice(index, 1);
         }
+        $label.css('color', '#878787')
+        $filterArrow.css('border-color', '#C6C6C6')
       }
 
       var uniqueProjektIds = selectedProjektIds.filter((v, i, a) => a.indexOf(v) === i);
@@ -146,7 +153,7 @@
         url.searchParams.delete('projekts')
       }
 
-      window.location.href = url
+      window.history.pushState('', '', url)
     },
 
     // Initializer
@@ -188,14 +195,19 @@
         App.Projekts.removeCheckboxChip(projektId);
       });
 
-      $("body").on("click", ".js-filter-projekt", function() {
-        var $checkbox = $(this);
-
-        App.Projekts.requestNewFilterResults($checkbox);
-      });
-
       $("body").on("click", ".js-show-children-projekts-in-filter", function() {
         App.Projekts.toggleProjektChildrenInSidebarFilter(this);
+      });
+
+      $("body").on("click", ".js-filter-projekt", function() {
+        var $checkbox = $(this);
+        App.Projekts.formNewFilterProjektsRequest($checkbox);
+      });
+
+      $("body").on("click", ".js-apply-projekts-filter", function(event) {
+        event.preventDefault();
+        var url = new URL(window.location.href);
+        window.location.href = url;
       });
     }
   };

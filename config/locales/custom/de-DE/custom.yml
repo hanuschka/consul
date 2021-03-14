@@ -20,6 +20,9 @@ de:
         second_level: 'Second level'
         third_level: 'Third level'
         fourth_level: 'Fourth level'
+      sidebar_filter:
+        filter_button: 'Projekte filtern'
+
     polls:
       show:
         results_menu: Zwischenergebnisse für Admins

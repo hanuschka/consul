@@ -22,7 +22,7 @@ form select {
   margin-bottom: 1rem;
 }
 
-// Form pages
+// Index and new
 
 #projekt-tags {
   margin: 1em 0;
@@ -267,4 +267,20 @@ form select {
 
 }
 
+.filter-projekts-button {
+  display: inline-block;
+  background: #06408E;
+  color: #fefefe;
+  padding: 0.5em;
+  text-decoration: none;
+  border-radius: 2px;
+  margin-top: 1em;
+}
 
+.filter-projekts-button:hover,
+.filter-projekts-button:focus {
+  color: #fff;
+  background: #14679e;
+  text-decoration:none;
+  cursor:pointer;
+}

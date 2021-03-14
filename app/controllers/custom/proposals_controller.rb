@@ -46,7 +46,7 @@ class ProposalsController
 
     def take_by_projekts
       if params[:projekts].present?
-        @resources = @resources.joins(:projekts).where(projekts: { id: [params[:projekts].split(',')] } )
+        @resources = @resources.joins(:projekts).where(projekts: { id: [params[:projekts].split(',')] } ).distinct
       end
     end
 

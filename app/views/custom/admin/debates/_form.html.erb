@@ -6,17 +6,8 @@
         <%= f.check_box "tag", {class: "tag_checkbox", label: t.name, value: t.name, id: "tag_#{t.id}", checked: @debate.tag_list.include?(t.name) } %>
       <%end%>
     </div>
-    <div class="small-6 column">
-      <h4><%= t("admin.tags.index.scope") %></h4>
-      <%Tag.subcategory.order("name ASC").in_groups(2, false).each do |g|%>
-        <div class="small-4 column">
-          <%g.each_with_index do |t, i|%>
-            <%= f.check_box "tag", {class: "tag_checkbox", label: t.name, value: t.name, id: "tag_#{t.id}", checked: @debate.tag_list.include?(t.name) } %>
-          <%end%>
-        </div>
-      <%end%>
-    </div>
   </div>
+
   <%=f.hidden_field :tag_list%>
 
   <%= f.submit t("admin.actions.update"), class: "button success" %>

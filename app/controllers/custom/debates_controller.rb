@@ -38,7 +38,6 @@ class DebatesController < ApplicationController
       @resources = @resources.tagged_with(params[:tags].split(","), all: true, any: :true)
       @categories = @resources.tag_counts.category
       @categories = Tag.category
-      @subcategories = @resources.tag_counts.subcategory
     end
   end
 end

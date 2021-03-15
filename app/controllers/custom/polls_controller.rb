@@ -10,9 +10,8 @@ class PollsController < ApplicationController
 
   def index
     @tag_cloud = tag_cloud
-    if !params[:tags].blank?
+    if params[:tags].present?
       @polls = @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).tagged_with(params[:tags].split(","), all: true).page(params[:page])
-        @subcategories = @polls.tag_counts.subcategory
     else
       @polls = Kaminari.paginate_array(
         @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).sort_for_list
@@ -34,7 +33,6 @@ class PollsController < ApplicationController
       if params[:tags].present?
         @resources = @resources.tagged_with(params[:tags].split(","), all: true, any: :true)
         @categories = @resources.tag_counts.category
-        @subcategories = @resources.tag_counts.subcategory
       end
     end
 end

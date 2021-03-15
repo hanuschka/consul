@@ -4,6 +4,7 @@
 
 <ul id="categories" class="no-bullet categories">
   <%tag_names = @categories.map &:name%>
+  <%selected_categories = []%>
   <% @categories.each do |category| %>
     <li class="inline-block">
       <%tag_selected = params[:tags] && params[:tags].split(',').include?(category.name)%>

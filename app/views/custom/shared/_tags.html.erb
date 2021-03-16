@@ -20,15 +20,4 @@
     <% end %>
 
   </ul>
-  <% if taggable.tags.subcategory.any? %>
-    <ul id="stags_<%= dom_id(taggable) %>" class="no-bullet tags">
-      <% taggable.tags.subcategory.each do |tag| %>
-      <%-selected = params[:tags]&.split(",")&.include?(tag.name)%>
-        <li class="inline-block">
-          <%= link_to sanitize(tag.name),
-            taggables_path(taggable.class.name.underscore, tag.name), class: selected ? "selected" : "" %></li>
-      <% end %>
-
-    </ul>
-  <%end%>
 <% end %>

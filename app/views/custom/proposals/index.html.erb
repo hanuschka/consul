@@ -52,13 +52,9 @@
     <% end %>
 
     <%tags = []%>
-
     <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' } %>
     <%can_create = true %>
     <%tags += tag_categories if tag_categories %>
-
-    <%tag_subcategories = @selected_tags&.select{ |tag| tag.kind == 'subcategory' } %>
-    <%tags += tag_subcategories if tag_subcategories %>
 
     <div class="row">
       <% if feature?(:map) %>

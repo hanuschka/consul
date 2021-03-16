@@ -1,5 +1,9 @@
 // Admin pages
 
+span.icon-projekts::before {
+  content: "\f126";
+}
+
 .projekt-text-field {
   position: relative;
 

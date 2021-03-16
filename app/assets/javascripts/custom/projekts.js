@@ -270,7 +270,7 @@
         App.Projekts.formNewFilterProjektsRequest($checkbox);
         var $parentProjekt = $(this).closest('li');
 
-        if ( $parentProjekt.next().prop("tagName")  === 'UL' ) {
+        if ( $parentProjekt.next().prop("tagName")  === 'UL' && $checkbox.is(':checked')  ) {
           var $childrentCheckboxes = $parentProjekt.next().find('.js-filter-projekt');
 
           $childrentCheckboxes.each( function() {

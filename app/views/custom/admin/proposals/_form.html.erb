@@ -3,7 +3,15 @@
   <%= render "shared/errors", resource: @proposal %>
 
   <div class="row">
-    <div class="small-3 column">
+    <div class="small-12 column">
+      <%= render partial: "shared/projekts", locals: { f: f, model: @proposal }  %>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="small-12 column">
       <h4><%= t("admin.tags.index.topic") %></h4>
       <%Tag.category.order("name ASC").each_with_index do |t, i|%>
         <%= f.check_box "tag", {class: "tag_checkbox", label: t.name, value: t.name, id: "tag_#{t.id}", checked: @proposal.tag_list.include?(t.name) } %>
@@ -14,6 +22,7 @@
   <%=f.hidden_field :tag_list%>
 
   <hr>
+
   <%= f.check_box :selected %>
 
   <%= f.submit t("admin.proposals.form.update"), class: "button success" %>

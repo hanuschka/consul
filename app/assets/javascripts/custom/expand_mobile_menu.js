@@ -1,0 +1,39 @@
+var toggleSubMenu = function(element) {
+
+  var $menuElement = $(element).parent()
+  var $arrow = $(element)
+
+  if ( subMenuOpened($menuElement) ) {
+    $menuElement.children('ul:hidden').css('display', 'block') 
+    $arrow.css('transform', 'rotate(90deg)')
+  } else {
+    $menuElement.children('ul').css('display', 'none') 
+    $arrow.css('transform', 'rotate(0deg)')
+  }
+}
+
+var subMenuOpened = function(element) {
+  if ( element.children('ul:hidden').length != 0 ) {
+    return true
+  } else {
+    return false
+  }
+}
+
+
+$(document).on("turbolinks:load",function(){
+  $('#responsive-menu li.drop, #responsive-menu li.flyout').each( function() {
+
+    //Add toggle arrow
+    var toggleArrow  = document.createElement('div')
+    $(toggleArrow).addClass('filter-toggle-arrow')
+    toggleArrow.addEventListener('click', function(event) {
+      toggleSubMenu(event.target);
+    })
+    this.prepend(toggleArrow)
+
+    //Hide internal submenus
+    $(this).children('ul').first().css('display', 'none')
+
+  } )
+})

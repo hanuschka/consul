@@ -112,6 +112,7 @@
 //= require budget_edit_associations
 //= require datepicker
 //= require projekts
+//= require expand_mobile_menu
 
 var initialize_modules = function() {
   "use strict";

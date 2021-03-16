@@ -1,4 +1,6 @@
 de:
+  tag_names:
+    general: 'General'
   custom:
     admin:
       menu:
@@ -24,14 +26,41 @@ de:
         filter_button: 'Projekte filtern'
 
     polls:
-      show:
-        results_menu: Zwischenergebnisse für Admins
-        info_menu: Abstimmung
-    comments:
-      reply_form:
-        leave_comment: 'Schreiben Sie eine Antwort'
     images:
       form:
         image_name: 'Name des Titelbildes'
-  tag_names:
-    general: 'General'
+    account:
+      show:
+        plz_settings: Aufstehen Anmeldung
+    comments:
+      reply_form:
+        leave_comment: 'Schreiben Sie eine Antwort'
+    devise_views:
+      users:
+        registrations:
+          new:
+            username_label: Benutzername
+            username_placeholder: Bitte verwenden Sie Ihren Klarnamen
+            plz_consent_title: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional)
+            plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent}
+            plz_consent_link: Allgemeine Nutzungsbedingungen
+            plz_label: Postleitzahl
+            plz_placeholder: PLZ
+    debates:
+      index:
+        section_header:
+          title: Tausche dich aus
+          icon_alt: Tausche dich aus
+    proposals:
+      index:
+        section_header:
+          title: Zeige deine Ideen
+          icon_alt: Zeige deine Ideen
+    polls:
+      index:
+        section_header:
+          title: Stimme ab
+          icon_alt: Stimme ab
+      show:
+        results_menu: Zwischenergebnisse für Admins
+        info_menu: Abstimmung

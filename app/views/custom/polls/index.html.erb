@@ -8,7 +8,7 @@
   
   <%= render_custom_partial "social_meta_tags" %>
   
-  <%= render "shared/section_header", i18n_namespace: "polls.index.section_header", image: "polls" %>
+  <%= render "shared/section_header", i18n_namespace: "custom.polls.index.section_header", icon: "stimme" %>
   
     <div class="row">
       <div class="small-12 medium-9 column">
@@ -53,6 +53,23 @@
       </div>
       </div>
       <div class="small-12 medium-3 column">
+        <p>
+        <strong><i>Achtung!</i> An der Abstimmung kann nur teilnehmen, wer<br>  
+        1) sich als Unterstützer von Aufstehen angemeldet (über den Button auf der rechten Seite oder im Nutzerkonto) und<br>  
+        2) das SMS-Verifikationsverfahren abgeschlossen hat. </strong>
+        </p>
+
+        <p>
+        Wenn euer Abstimmungsbutton noch grau und damit inaktiv ist, dann solltet ihr diese beiden Schritte schnell nachholen! 
+        </p>
+
+        <p>
+        <small><i>Auf der ersten Seite findet ihr die Übersicht über alle Forderungen. Über die Aufklappmenüs und die Kategorienbuttons auf der rechten Seite ruft ihr sie sortiert nach Themenfeldern auf.</i></small>
+        </p>
+
+        <p>
+        Und jetzt stimmt alle ab – eure Stimme zählt! 
+        </p>
         <aside class="margin-bottom">
           <%= render "shared/projekts_sidebar" %>
           <%= render "shared/categories", model: "poll" %>

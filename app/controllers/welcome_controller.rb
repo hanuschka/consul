@@ -8,13 +8,7 @@ class WelcomeController < ApplicationController
   layout "devise", only: [:welcome, :verification]
 
   def index
-    @header = Widget::Card.header.first
-    @feeds = Widget::Feed.active
-    @cards = Widget::Card.body
-    @banners = Banner.in_section("homepage").with_active
-    @remote_translations = detect_remote_translations(@feeds,
-                                                      @recommended_debates,
-                                                      @recommended_proposals)
+    render layout: false
   end
 
   def welcome

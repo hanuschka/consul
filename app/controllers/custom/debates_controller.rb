@@ -38,8 +38,6 @@ class DebatesController < ApplicationController
   def take_only_by_tag_names
     if params[:tags].present?
       @resources = @resources.tagged_with(params[:tags].split(","), all: true, any: :true)
-      @categories = @resources.tag_counts.category
-      @categories = Tag.category
     end
   end
 

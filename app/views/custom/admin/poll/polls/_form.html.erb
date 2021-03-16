@@ -66,6 +66,12 @@
   <%=f.hidden_field :tag_list%>
 
   <div class="row">
+    <div class="small-12 column">
+      <%= render partial: "shared/projekts", locals: { f: f, model: @poll }  %>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="clear">
       <div class="small-12 medium-4 large-2 column">
         <%= f.submit t("admin.polls.#{admin_submit_action(@poll)}.submit_button"),

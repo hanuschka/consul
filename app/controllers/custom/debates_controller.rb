@@ -9,12 +9,14 @@ class DebatesController < ApplicationController
   def index_customization
     @featured_debates = @debates.featured
     take_only_by_tag_names
+    take_by_projekts
   end
 
   private
 
   def debate_params
-    attributes = [:tag_list, :terms_of_service, image_attributes: image_attributes]
+    attributes = [:tag_list, :terms_of_service, { projekt_ids: [] },
+                  image_attributes: image_attributes]
     params.require(:debate).permit(attributes, translation_params(Debate))
   end
 
@@ -38,6 +40,12 @@ class DebatesController < ApplicationController
       @resources = @resources.tagged_with(params[:tags].split(","), all: true, any: :true)
       @categories = @resources.tag_counts.category
       @categories = Tag.category
+    end
+  end
+
+  def take_by_projekts
+    if params[:projekts].present?
+      @resources = @resources.joins(:projekts).where(projekts: { id: [params[:projekts].split(',')] } ).distinct
     end
   end
 end

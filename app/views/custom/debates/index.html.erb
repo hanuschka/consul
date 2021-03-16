@@ -100,6 +100,7 @@
         <aside class="margin-bottom">
 
           <%= link_to t("debates.index.start_debate"), new_debate_path(tags: tags.any? ? tags.map{|t| t.name} : nil), class: "button expanded", onclick: can_create ? "return true" : "alert('#{t("alerts.select_one_category", model: t("activerecord.models.debate.one"))}'); return false;" , disabled: !can_create %>
+          <%= render "shared/projekts_sidebar" %>
           <%= render "shared/categories", model: "debate" %>
           <%= render "shared/tag_cloud", taggable: "debate" %>
         </aside>

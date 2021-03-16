@@ -31,6 +31,10 @@
 
     <%= f.invisible_captcha :subtitle %>
 
+    <div class="small-12 column">
+      <%= render partial: "shared/projekts", locals: { f: f, model: @debate }  %>
+    </div>
+
     <%tags = params[:tags].present? ? params[:tags]&.map{|t| Tag.find_by(name: t)} : @debate.tags %>
 
     <%tag_list_o = @debate.new_record? && @debate.errors.empty? ? tags : @debate.tag_list&.map{|t| Tag.find_by(name: t)} %>

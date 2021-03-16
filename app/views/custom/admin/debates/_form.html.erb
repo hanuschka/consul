@@ -1,4 +1,13 @@
 <%= form_for [:admin, @debate] do |f| %>
+
+  <div class="row">
+    <div class="small-12 column">
+      <%= render partial: "shared/projekts", locals: { f: f, model: @debate }  %>
+    </div>
+  </div>
+
+  <hr>
+
   <div class="row">
     <div class="small-3 column">
       <h4><%= t("admin.tags.index.topic") %></h4>

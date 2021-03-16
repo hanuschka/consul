@@ -156,6 +156,72 @@
       window.history.pushState('', '', url)
     },
 
+    // Functions for filtering by combination of projects, categories, and user tags
+
+    modifyFilterParams: function(clickedLink) {
+      var currentPageUrl = new URL(window.location.href);
+      var currentProjektIds;
+      var currentTags;
+
+      if (currentPageUrl.searchParams.get('projekts')) {
+        currentProjektIds = currentPageUrl.searchParams.get('projekts').split(',');
+      } else {
+        currentProjektIds = [];
+      }
+
+      if (currentPageUrl.searchParams.get('tags')) {
+        currentTags = currentPageUrl.searchParams.get('tags').split(',');
+      } else {
+        currentTags = [];
+      }
+
+      var clickedUrl = new URL(clickedLink);
+      var newProjektId;
+      var newTag;
+
+      if (clickedUrl.searchParams.get('projekts')) {
+        newProjektId = clickedUrl.searchParams.get('projekts').split(',')[0];
+
+        if (currentProjektIds.includes(newProjektId)) {
+          var index = currentProjektIds.indexOf(newProjektId);
+          if (index > -1) {
+            currentProjektIds.splice(index, 1);
+          }
+          currentPageUrl.searchParams.set('projekts', currentProjektIds.join(','))
+          window.history.pushState('', '', currentPageUrl)
+          window.location.href = currentPageUrl;
+        } else {
+          currentProjektIds.push(newProjektId)
+          currentProjektIds = currentProjektIds.filter( element => element !== '' )
+          currentPageUrl.searchParams.set('projekts', currentProjektIds.join(','))
+          window.history.pushState('', '', currentPageUrl)
+          window.location.href = currentPageUrl.href;
+        }
+      }
+
+
+      if (clickedUrl.searchParams.get('tags')) {
+        newTag = clickedUrl.searchParams.get('tags').split(',')[0];
+
+        if (currentTags.includes(newTag)) {
+          var index = currentTags.indexOf(newTag);
+          if (index > -1) {
+            currentTags.splice(index, 1);
+          }
+          currentPageUrl.searchParams.set('tags', currentTags.join(','))
+          window.history.pushState('', '', currentPageUrl)
+          window.location.href = currentPageUrl;
+        } else {
+          currentTags.push(newTag)
+          currentPageUrl.searchParams.set('tags', currentTags.join(','))
+          window.history.pushState('', '', currentPageUrl)
+          window.location.href = currentPageUrl.href;
+        }
+      }
+
+    },
+
+
     // Initializer
  
     initialize: function() {
@@ -219,6 +285,13 @@
         var url = new URL(window.location.href);
         window.location.href = url;
       });
+
+      $("body").on("click", ".js-projekt-tag-filter-link", function(event) {
+        event.preventDefault()
+        var clickedLink = this.href
+        App.Projekts.modifyFilterParams(clickedLink);
+      });
+
     }
   };
 }).call(this);

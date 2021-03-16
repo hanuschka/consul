@@ -129,12 +129,22 @@ form select {
 .projekt-chip {
   display: inline-block;
   font-size: 0.875em;
-  color: #06408E;
-  background: #ECF2FB;
-  border-radius: 2px;
+  background: #ececec;
+  color: #222;
   padding: 5px 1em;
-  margin-right: .5em;
   margin-bottom: .5em;
+
+  a {
+    color: #222;
+  }
+
+  &.filtered-projekt {
+    background: #06408E;
+
+    a {
+      color: #fff;
+    }
+  }
 }
 
 #projekt-tags {
@@ -146,7 +156,7 @@ form select {
   .projekt-chip {
     padding-right: 2.25em;
     position: relative;
-    margin-right: .7em;
+    margin-right: .5em;
   }
 
 	.close {

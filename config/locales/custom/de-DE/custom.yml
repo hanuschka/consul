@@ -4,16 +4,24 @@ de:
       menu:
         projekts: Projekte
       projekts:
+        tabs:
+          configuration: Konfigurationseinstellungen
+          functionality: Funktionen
         index:
           name_plural: Projekte
           name_singular: Projekt
+          add_projekt: Neues Projekt hinzufügen
+          position: Position
+          enter_name: Geben Sie den Namen des Projektes an
+          choose_parent: Verknüpfen Sie dieses Projekt mit einem übergeordnetem Projekt
           create: Projekt erstellen
-          parent: Parent projekt
+          projekt_list: Projektliste
+          parent: Übergeordnetes Projekt
+          name: Projektname
           page: Seite
           edit_page: Seite bearbeiten
           page_link: Seite öffnen 
-
-        destroy: Projekt löschen
+        destroy: Löschen
     projekts:
       new:
         first_level: 'Erste Projektebene'

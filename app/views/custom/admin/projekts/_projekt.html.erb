@@ -4,6 +4,18 @@
         as: :projekt,
         html: { id: "edit_projekt_#{projekt.id}" }) do |f| %>
 
+    <td class='projekt-order'>
+      <div class='arrow-up'></div>
+    </td>
+
+    <td class='small-3 projekt-text-field '>
+      <% projekts = Projekt.all.to_a %>
+      <% projekts.delete(projekt) %>
+      <%= f.select :parent_id, projekts.pluck(:name, :id),
+                   { include_blank: true, label: t('custom.admin.projekts.index.parent') },
+                   { id: "projekt_parent_#{projekt.id}"} %>
+    </td>
+
     <td class='small-3 projekt-text-field'>
       <%= f.text_field :name, 
                        id: "projekt_name_#{projekt.id}", 
@@ -14,14 +26,6 @@
         <%= "(#{page_status})" %>
         <%= link_to t("custom.admin.projekts.index.page_link"), projekt.page.url if page_status == 'published' %>
       </div>
-    </td>
-
-    <td class='small-3 projekt-text-field '>
-      <% projekts = Projekt.all.to_a %>
-      <% projekts.delete(projekt) %>
-      <%= f.select :parent_id, projekts.pluck(:name, :id), 
-                   { include_blank: true, label: t('custom.admin.projekts.index.parent') }, 
-                   { id: "projekt_parent_#{projekt.id}"} %>
     </td>
 
 

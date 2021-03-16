@@ -5,6 +5,13 @@
 
   <div id="projekt-chips">
 
+    <% model.projekts.each do |projekt| %>
+      <div class='projekt-chip'>
+        <%= projekt.name %>
+        <span id=<%= "projekt-chip-#{projekt.id}" %> class="js-deselect-projekt close"> </span>
+      </div>
+    <% end %>
+
   </div>
 
   <div id="projekt-tags-selector">

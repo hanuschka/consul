@@ -16,10 +16,10 @@ de:
         destroy: Projekt löschen
     projekts:
       new:
-        first_level: 'First level'
-        second_level: 'Second level'
-        third_level: 'Third level'
-        fourth_level: 'Fourth level'
+        first_level: 'Erste Projektebene'
+        second_level: 'Zweite Projektebene'
+        third_level: 'Dritte Projektebene'
+        fourth_level: 'Vierte Projektebene'
       sidebar_filter:
         filter_button: 'Projekte filtern'
 

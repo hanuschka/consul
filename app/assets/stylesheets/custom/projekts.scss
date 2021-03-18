@@ -26,7 +26,37 @@ form select {
   margin-bottom: 1rem;
 }
 
-// Index and new
+tr.projekt-row td {
+  vertical-align: top;
+}
+
+td.projekt-level {
+}
+
+td.projekt-order {
+
+  position: relative;
+
+  a {
+    color: $black;
+  }
+
+  .projekt-order-arrow-controls {
+    position: absolute;
+		top: 40px;
+		left: 12px;
+  }
+
+  .order-number {
+    margin-left: 1em;
+  }
+}
+
+.projekt-action-buttons {
+  margin-top: 23px;
+}
+
+// Index and new views
 
 #projekt-tags {
   margin: 1em 0;

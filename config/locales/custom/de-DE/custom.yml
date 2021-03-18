@@ -11,6 +11,7 @@ de:
           name_plural: Projekte
           name_singular: Projekt
           add_projekt: Neues Projekt hinzufügen
+          level: Ebene
           position: Position
           enter_name: Geben Sie den Namen des Projektes an
           choose_parent: Verknüpfen Sie dieses Projekt mit einem übergeordnetem Projekt

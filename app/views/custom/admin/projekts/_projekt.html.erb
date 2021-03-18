@@ -1,11 +1,39 @@
-<tr>
+<% projekt_level ||= 1 %>
+
+<tr class='projekt-row'>
   <%= form_for(projekt,
         url: admin_projekt_path(projekt),
         as: :projekt,
         html: { id: "edit_projekt_#{projekt.id}" }) do |f| %>
 
+    <td class='projekt-level'>
+      <div class='projekt-level-title'>
+        <%= label_tag t('custom.admin.projekts.index.level') %>
+      </div>
+      <h2 class='projekt-level-number'>
+        <%= projekt_level %>
+      </h2>
+    </td>
+
     <td class='projekt-order'>
-      <div class='arrow-up'></div>
+      <div class='projekt-order-title'>
+        <%= label_tag t('custom.admin.projekts.index.position') %>
+      </div>
+      <h2 class='order-number'>
+        <%= projekt.order_number %>
+      </h2>
+      <div class='projekt-order-arrow-controls'>
+        <div class='projekt-order-arrow-up'>
+          <%= link_to order_up_admin_projekt_path(projekt.id) do %>
+            <%= svg_tag "arrow-up-solid", height: 15 %>
+          <% end %>
+        </div>
+        <div class='projekt-order-arrow-up'>
+          <%= link_to order_down_admin_projekt_path(projekt.id) do %>
+            <%= svg_tag "arrow-down-solid", height: 15 %>
+          <% end %>
+        </div>
+      </div>
     </td>
 
     <td class='small-3 projekt-text-field '>
@@ -30,14 +58,16 @@
 
 
     <td class='small-3' id="projekt_<%= projekt.id %>">
-      <%= f.submit(t("admin.actions.update"), class: "button success") %>
-      <%= link_to t("custom.admin.projekts.destroy"), admin_projekt_path(projekt), method: :delete, class: "button hollow alert" %>
+      <div class='projekt-action-buttons'>
+        <%= f.submit(t("admin.actions.update"), class: "button success") %>
+        <%= link_to t("custom.admin.projekts.destroy"), admin_projekt_path(projekt), method: :delete, class: "button hollow alert" %>
+     </div>
     </td>
   <% end %>
 </tr>
 
 <% if projekt.children.any? %>
-  <% projekt.children.each do |child_projekt| %>
-    <%= render partial: "projekt", locals: { projekt: child_projekt } %> 
+  <% projekt.children.order(order_number: :asc).each do |child_projekt| %>
+    <%= render partial: "projekt", locals: { projekt: child_projekt, projekt_level: projekt_level + 1 } %> 
   <% end %>
 <% end %>

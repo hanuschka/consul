@@ -6,6 +6,10 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt = Projekt.new
   end
 
+  def edit
+    @projekt = Projekt.find(params[:id])
+  end
+
   def update
     if @projekt.update_attributes(projekt_params)
       @projekt.update_order

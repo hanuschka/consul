@@ -56,6 +56,10 @@ td.projekt-order {
   margin-top: 23px;
 }
 
+.admin table a ~ a {
+  margin-left: 0 !important;
+}
+
 // Index and new views
 
 #projekt-tags {

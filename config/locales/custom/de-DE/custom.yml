@@ -22,6 +22,7 @@ de:
           page: Seite
           edit_page: Seite bearbeiten
           page_link: Seite öffnen 
+        edit: Editieren
         destroy: Löschen
     projekts:
       new:

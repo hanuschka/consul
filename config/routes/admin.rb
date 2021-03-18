@@ -6,6 +6,7 @@ namespace :admin do
     member do
       get :order_up
       get :order_down
+      get :edit
     end
   end
 

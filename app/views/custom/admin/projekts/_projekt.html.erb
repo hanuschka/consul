@@ -47,24 +47,24 @@
       <%= f.text_field :name, 
                        id: "projekt_name_#{projekt.id}", 
                        label: t('custom.admin.projekts.index.name_singular') %>
-      <div class='projekt-link'>               
-        <%= link_to t("custom.admin.projekts.index.edit_page"), edit_admin_site_customization_page_path(projekt.page) %>
-        <% page_status = projekt.page.status %>
-        <%= "(#{page_status})" %>
-        <%= link_to t("custom.admin.projekts.index.page_link"), projekt.page.url if page_status == 'published' %>
-      </div>
     </td>
 
 
     <td class='small-3' id="projekt_<%= projekt.id %>">
       <div class='projekt-action-buttons'>
-        <%= link_to t("custom.admin.projekts.edit_projekt"), edit_admin_projekt_path(projekt.id), class: 'button hollow' %>
+        <% if projekt.in?(@projekts) %>
+          <%= link_to t("custom.admin.projekts.edit_projekt"), edit_admin_projekt_path(projekt.id), class: 'button hollow' %>
+        <% end %>
         <%= f.submit(t("admin.actions.update"), class: "button success") %>
         <%= link_to t("custom.admin.projekts.destroy"), admin_projekt_path(projekt), method: :delete, class: "button hollow alert" %>
      </div>
     </td>
   <% end %>
 </tr>
+
+<% if projekt.in?(@projekts) %>
+  <%= render partial: 'projekt_details', locals: { projekt: projekt } %>
+<% end %>
 
 <% if projekt.children.any? %>
   <% projekt.children.order(order_number: :asc).each do |child_projekt| %>

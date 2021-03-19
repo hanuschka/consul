@@ -2,7 +2,7 @@ class Admin::ProjektsController < Admin::BaseController
   before_action :find_projekt, only: [:update, :destroy]
 
   def index
-    @projekts = Projekt.top_level.page(params[:page])
+    @projekts = Projekt.top_level
     @projekt = Projekt.new
     @projekts_settings = Setting.all.group_by(&:type)['projekts']
   end

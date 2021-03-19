@@ -11,13 +11,33 @@ span.icon-projekts::before {
   select {
     width: 90%;
   }
-  
 }
 
-.projekt-link {
-  position: absolute;
-  top: 5.5em;
-  font-size: 0.85em;
+table.projekts {
+  
+  tr:nth-child(even),
+  tr:hover {
+    background: none;
+  }
+
+  tr.projekt-row {
+    border-bottom: none;
+  }
+
+  tr.projekt-details {
+    border-top: none;
+  }
+}
+
+.projekt-link,
+.projekt-dates {
+  font-size: 0.875em;
+}
+
+.projekt-dates {
+  display: grid;
+  grid-template-columns: 250px 300px;
+  margin-bottom: 2em;
 }
 
 form select {
@@ -54,11 +74,16 @@ td.projekt-order {
 
 .projekt-action-buttons {
   margin-top: 23px;
+  display: flex;
+  justify-content: flex-end;
+
+  a, 
+  input {
+    margin-right: 0.75em !important;
+    margin-left: 0 !important;
+  }
 }
 
-.admin table a ~ a {
-  margin-left: 0 !important;
-}
 
 table.edit-projekt {
 

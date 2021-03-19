@@ -12,7 +12,7 @@ class AddDurationToProjekts < ActiveRecord::Migration[5.1]
     add_column :projekts, :voting_phase,             :boolean
     add_column :projekts, :voting_phase_start,       :date
     add_column :projekts, :voting_phase_end,         :date
-    add_column :projekts, :show_in_menu,             :boolean
-    add_column :projekts, :show_in_sidebar,          :boolean
+    add_column :projekts, :show_in_menu,             :boolean,     default: true
+    add_column :projekts, :show_in_sidebar,          :boolean,     default: true
   end
 end

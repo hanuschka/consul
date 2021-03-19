@@ -1226,8 +1226,8 @@ ActiveRecord::Schema.define(version: 20210319081657) do
     t.boolean "voting_phase"
     t.date "voting_phase_start"
     t.date "voting_phase_end"
-    t.boolean "show_in_menu"
-    t.boolean "show_in_sidebar"
+    t.boolean "show_in_menu", default: true
+    t.boolean "show_in_sidebar", default: true
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 

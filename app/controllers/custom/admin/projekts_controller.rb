@@ -4,6 +4,7 @@ class Admin::ProjektsController < Admin::BaseController
   def index
     @projekts = Projekt.top_level.page(params[:page])
     @projekt = Projekt.new
+    @projekts_settings = Setting.all.group_by(&:type)['projekts']
   end
 
   def edit
@@ -52,11 +53,11 @@ class Admin::ProjektsController < Admin::BaseController
 
   private
 
-    def projekt_params
-      params.require(:projekt).permit(:name, :parent_id, :total_duration, :total_duration_start, :total_duration_end, :debate_phase, :debate_phase_start, :debate_phase_end, :proposal_phase, :proposal_phase_start, :proposal_phase_end, :voting_phase, :voting_phase_start, :voting_phase_end, :show_in_menu, :show_in_sidebar)
-    end
+	def projekt_params
+		params.require(:projekt).permit(:name, :parent_id, :total_duration, :total_duration_start, :total_duration_end, :debate_phase, :debate_phase_start, :debate_phase_end, :proposal_phase, :proposal_phase_start, :proposal_phase_end, :voting_phase, :voting_phase_start, :voting_phase_end, :show_in_menu, :show_in_sidebar)
+	end
 
-    def find_projekt
-      @projekt = Projekt.find(params[:id])
-    end
+	def find_projekt
+		@projekt = Projekt.find(params[:id])
+	end
 end

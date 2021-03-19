@@ -1,12 +1,25 @@
 de:
   custom:
+    settings:
+      projekts:
+        connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Projekten
+        connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
+        predefined: Projektvorauswahl treffen
+        predefined_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
+        show:
+          navigation: Archivierte Projekte in Navigation anzeigen
+          navigation_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
+          sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
+          sidebar_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
+
+
     admin:
       menu:
         projekts: Projekte
       projekts:
         tabs:
           configuration: Konfigurationseinstellungen
-          functionality: Funktionen
+          settings: Funktionen
         index:
           name_plural: Projekte
           name_singular: Projekt

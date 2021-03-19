@@ -5,7 +5,7 @@
   </div>
 
   <div class='small-12 medium-7'>
-    <% projekts = Projekt.all.to_a %>
+    <% projekts = Projekt.all %>
     <%= f.select :parent_id, projekts.pluck(:name, :id), 
                  { include_blank: true, label: t('custom.admin.projekts.index.choose_parent') } %>
   </div>

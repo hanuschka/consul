@@ -37,8 +37,7 @@
     </td>
 
     <td class='small-3 projekt-text-field '>
-      <% projekts = Projekt.all.to_a %>
-      <% projekts.delete(projekt) %>
+      <% projekts = Projekt.all.reject { |p| p.id.in?(projekt.all_children_ids) || p.id == projekt.id } %>
       <%= f.select :parent_id, projekts.pluck(:name, :id),
                    { include_blank: true, label: t('custom.admin.projekts.index.parent') },
                    { id: "projekt_parent_#{projekt.id}"} %>
@@ -59,7 +58,7 @@
 
     <td class='small-3' id="projekt_<%= projekt.id %>">
       <div class='projekt-action-buttons'>
-        <%= link_to t("custom.admin.projekts.edit"), edit_admin_projekt_path(projekt.id), class: 'button hollow' %>
+        <%= link_to t("custom.admin.projekts.edit_projekt"), edit_admin_projekt_path(projekt.id), class: 'button hollow' %>
         <%= f.submit(t("admin.actions.update"), class: "button success") %>
         <%= link_to t("custom.admin.projekts.destroy"), admin_projekt_path(projekt), method: :delete, class: "button hollow alert" %>
      </div>

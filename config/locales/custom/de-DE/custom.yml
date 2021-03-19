@@ -22,8 +22,23 @@ de:
           page: Seite
           edit_page: Seite bearbeiten
           page_link: Seite öffnen 
-        edit: Editieren
+        edit_projekt: Editieren
         destroy: Löschen
+        edit:
+          phase_name: Phase
+          beginning: Anfangsdatum
+          ending: Enddatum
+          actions: Aktionen
+          activate: Aktiviert
+          projekt_duration: Gesamtdauer des Projekts
+          debate_phase: Diskussionsphase
+          proposal_phase: Vorschlagsphase
+          voting_phase: Abstimmungsphase
+          navigation_label: Navigation
+          show_in_menu: Projekt in Navigation anzeigen
+          show_in_sidebar: Projekt in Projektseitenliste anzeigen
+          update: Projekteinstellungen aktualisieren
+
     projekts:
       new:
         first_level: 'Erste Projektebene'

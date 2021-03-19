@@ -60,6 +60,14 @@ td.projekt-order {
   margin-left: 0 !important;
 }
 
+table.edit-projekt {
+
+  input[type='date'] {
+    width: 90%;
+  }
+}
+
+
 // Index and new views
 
 #projekt-tags {

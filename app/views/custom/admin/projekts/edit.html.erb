@@ -1,50 +1,82 @@
 <h2><%= @projekt.name %>  </h2>
 <%= form_for(@projekt, url: admin_projekt_path, as: :projekt) do |f| %>
-  <div class='small-12 medium-7'>
-    <%= f.text_field :name, {label: t("custom.admin.projekts.index.enter_name") } %>
-  </div>
 
-  <div class='small-12 medium-7'>
-    <% projekts = Projekt.all.to_a %>
-    <%= f.select :parent_id, projekts.pluck(:name, :id), 
-                 { include_blank: true, label: t('custom.admin.projekts.index.choose_parent') } %>
-  </div>
+  <h2><%= t('custom.admin.projekts.index.projekt_list') %>  </h2>
+  <table class='edit-projekt'>
+    <thead>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.phase_name") %></th>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.beginning") %></th>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.ending") %></th>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.actions") %></th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <%= t("custom.admin.projekts.edit.projekt_duration") %>
+        </td>
+        <td>
+          <%= f.date_field :total_duration_start %>
+        </td>
+        <td>
+          <%= f.date_field :total_duration_end %>
+        </td>
+        <td>
+          <%= f.check_box :total_duration, { label: t("custom.admin.projekts.edit.activate") }  %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= t("custom.admin.projekts.edit.debate_phase") %>
+        </td>
+        <td>
+          <%= f.date_field :debate_phase_start %>
+        </td>
+        <td>
+          <%= f.date_field :debate_phase_end %>
+        </td>
+        <td>
+          <%= f.check_box :debate_phase, { label: t("custom.admin.projekts.edit.activate") } %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= t("custom.admin.projekts.edit.proposal_phase") %>
+        </td>
+        <td>
+          <%= f.date_field :proposal_phase_start %>
+        </td>
+        <td>
+          <%= f.date_field :proposal_phase_end %>
+        </td>
+        <td>
+          <%= f.check_box :proposal_phase, { label: t("custom.admin.projekts.edit.activate") }  %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= t("custom.admin.projekts.edit.voting_phase") %>
+        </td>
+        <td>
+          <%= f.date_field :voting_phase_start %>
+        </td>
+        <td>
+          <%= f.date_field :voting_phase_end %>
+        </td>
+        <td>
+          <%= f.check_box :voting_phase, { label: t("custom.admin.projekts.edit.activate") }  %>
+        </td>
+      </tr>
 
-<hr>
+    </tbody>
+  </table>
 
-<h2><%= t('custom.admin.projekts.index.projekt_list') %>  </h2>
-<table>
-  <thead>
-    <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.phase_name") %></th>
-    <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.beginning") %></th>
-    <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.ending") %></th>
-    <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.actions") %></th>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <%= t("custom.admin.projekts.edit.projekt_duration") %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= t("custom.admin.projekts.edit.debate_phase") %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= t("custom.admin.projekts.edit.proposal_phase") %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= t("custom.admin.projekts.edit.voting_phase") %>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <fieldset class='projekt-navigation-settings'>
+    <legend><%= t("custom.admin.projekts.edit.navigation_label") %></legend>
+    <%= f.check_box :show_in_menu, { label: t("custom.admin.projekts.edit.show_in_menu") } %>
+    <%= f.check_box :show_in_sidebar, { label: t("custom.admin.projekts.edit.show_in_sidebar") } %>
+  </fieldset>
 
   <div>
-    <%= f.submit(t("custom.admin.projekts.index.create"), class: "button success") %>
+    <%= f.submit(t("custom.admin.projekts.edit.update"), class: "button success") %>
   </div>
 <% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210317154619) do
+ActiveRecord::Schema.define(version: 20210319081657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1214,6 +1214,20 @@ ActiveRecord::Schema.define(version: 20210317154619) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "order_number"
+    t.boolean "total_duration"
+    t.date "total_duration_start"
+    t.date "total_duration_end"
+    t.boolean "debate_phase"
+    t.date "debate_phase_start"
+    t.date "debate_phase_end"
+    t.boolean "proposal_phase"
+    t.date "proposal_phase_start"
+    t.date "proposal_phase_end"
+    t.boolean "voting_phase"
+    t.date "voting_phase_start"
+    t.date "voting_phase_end"
+    t.boolean "show_in_menu"
+    t.boolean "show_in_sidebar"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 

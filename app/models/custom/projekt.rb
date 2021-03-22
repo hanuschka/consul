@@ -16,6 +16,7 @@ class Projekt < ApplicationRecord
 
   scope :top_level, -> { where(parent: nil) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
+  scope :for_sidebar, -> { top_level.where( show_in_sidebar: true )  }
 
   def all_children_ids(all_children_ids = [])
     if self.children.any?

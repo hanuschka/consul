@@ -206,26 +206,23 @@ button:before {
 
 // Footer
 
-.footer-sections.small-12.large-8.column {
-  display: none;
-}
-
 .footer {
   border-top: 1px solid #99A0BB;
   background: #fff;
   position: relative;
-}
+  min-height: initial;
 
-footer .column {
-  float: left;
-}
+  .subfooter-links {
+    text-align: center;
+  }
 
-footer .row {
-  margin-right: auto;
-  margin-left: auto;
-  width: 80%;
-}
+  .ribbon {
+    margin-top: 2.5em;
+    height: 2.5em;
+    background: $brand;
+  }
 
+}
 
 // Media queries
 
@@ -273,17 +270,11 @@ footer .row {
 
   .footer-logo {
     float: left;
-    margin: 2em 0;
+
+    img {
+      width: 80%;
+    }
   }
-}
-
-@media (min-width: 1024px) {
-
-  .footer-logo {
-    float: right;
-    margin-top: 3em;
-  }
-
 }
 
 

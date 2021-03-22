@@ -48,3 +48,7 @@ de:
         info_menu: Abstimmung
     related_content:
       title: Verwandte Inhalte in der Plattform
+    layouts:
+      footer:
+        copyright: "Aufstehen %{year}"
+        impressum: Impressum

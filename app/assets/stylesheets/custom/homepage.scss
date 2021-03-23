@@ -28,6 +28,10 @@ header {
   font-family: 'MyriadPro BoldIt'
 }
 
+.subnavigation a:hover {
+  color: $azure;
+}
+
 .main-menu-items .drop-nav,
 .main-menu-items .flyout-nav {
   font-size: initial;

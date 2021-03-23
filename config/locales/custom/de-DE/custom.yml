@@ -28,6 +28,9 @@ de:
             plz_consent_link: Allgemeine Nutzungsbedingungen
             plz_label: Postleitzahl
             plz_placeholder: PLZ
+      mailer:      
+        confirmation_instructions:
+          plz_welcome: 'Welcome to PLZ'
     debates:
       index:
         section_header:

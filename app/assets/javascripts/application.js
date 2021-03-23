@@ -165,6 +165,7 @@ var initialize_modules = function() {
   }
   App.BudgetEditAssociations.initialize();
   App.Datepicker.initialize();
+  App.PlzField.initialize();
 };
 
 var destroy_non_idempotent_modules = function() {

@@ -45,7 +45,8 @@
                    plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/nutzungsbedingungen",
                                   title: t("shared.target_blank"),
                                   target: "_blank")
-                  ) %>
+                  ),
+          class: "js-toggle-plz-field" %>
 
               <%= f.text_field :plz,  autofocus: true, disabled: (params[:user].present? && params[:user][:plz_consent] == "1" ? false : true ),
                                 placeholder: t("custom.devise_views.users.registrations.new.plz_placeholder"),

@@ -100,7 +100,7 @@ section .content {
 
 .intro h1,
 .questions h1 {
-  color: #F83F37;
+  color: $brand;
   text-align: center;
 }
 
@@ -136,7 +136,7 @@ section .container.green:before,
 section .green button:before,
 section .green button:after, 
 button.green {
-  background-color: #36CDA0;
+  background-color: $azure;
 }
 
 section .red,
@@ -144,14 +144,14 @@ section .container.red:before,
 section .red button:before,
 section .red button:after, 
 button.red {
-  background-color: #F82302;
+  background-color: $brand;
 }
 
 section .purple,
 section .container.purple:before, 
 section .purple button:before,
 section .purple button:after {
-  background-color: #28283C;
+  background-color: $purple;
 }
 
 section .questions,
@@ -296,19 +296,19 @@ button:before {
   }
 
   section .container.green:before  {
-    background-color: #36CDA0;
+    background-color: $azure;
   }
 
   section .container.red:before {
-    background-color: #F82302;
+    background-color: $brand;
   }
 
   section .container.purple:before {
-    background-color: #28283C;
+    background-color: $purple;
   }
 
   section .container.questions:before { 
-    background-color: #fff;
+    background-color: $white;
   }
 
   section .container.questions:before {

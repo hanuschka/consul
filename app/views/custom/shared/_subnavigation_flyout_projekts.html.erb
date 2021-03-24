@@ -27,7 +27,7 @@
 
       </div>
       
-      <%= render partial: 'shared/subnavigation_flyout_projekts', locals: { projekts: projekt.children } if projekt.children.any? %>
+      <%= render partial: 'shared/subnavigation_flyout_projekts', locals: { projekts: projekt.children.with_order_number } if projekt.children.any? %>
     </li>
   <% end %>
 </ul>

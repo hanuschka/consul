@@ -12,7 +12,7 @@
           <%= prepare_projekt_name(active_projekt) %>
         </div>
 
-        <%= render partial: 'shared/subnavigation_flyout_projekts', locals: { projekts: active_projekt.children } if active_projekt.children.any? %>
+        <%= render partial: 'shared/subnavigation_flyout_projekts', locals: { projekts: active_projekt.children.with_order_number } if active_projekt.children.any? %>
 
       </li>
     <% end %>

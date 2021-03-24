@@ -915,7 +915,7 @@ de:
       user_permission_debates: An Diskussionen teilnehmen
       user_permission_info: Mit Deinem Konto kannst Du...
       user_permission_proposal: Neue Vorschläge erstellen
-      user_permission_support_proposal: Vorschläge unterstützen:
+      user_permission_support_proposal: "Vorschläge unterstützen:"
       user_permission_verify: "Damit Du alle Funktionen nutzen kannst, musst Du Dein Konto verifizieren."
       user_permission_verify_info: ": Nur für Benutzer im Melderegister."
       user_permission_verify_my_account: Mein Konto verifizieren

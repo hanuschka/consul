@@ -1,26 +1,27 @@
 <td style="padding-bottom: 20px; padding-left: 10px;">
 
   <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
-    <%= t("devise_views.mailer.confirmation_instructions.title") %>
+    <%= t("devise_views.mailer.confirmation_instructions.title", name:@resource.name) %>
   </h1>
-
-  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("devise_views.mailer.confirmation_instructions.welcome") %> <strong><%= @email %></strong>
-  </p>
-
-  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("devise_views.mailer.confirmation_instructions.text") %>
-  </p>
-
-  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= link_to t("devise_views.mailer.confirmation_instructions.confirm_link"), confirmation_url(@resource, confirmation_token: @token), style: "color: #2895F1; text-decoration:none;" %>
-  </p>
 
   <% if @resource.plz_consent %>
     <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
       <%= t("custom.devise_views.mailer.confirmation_instructions.plz_welcome") %>
     </p>
+  <% else %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("devise_views.mailer.confirmation_instructions.text") %>
+    </p>
   <% end %>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= link_to t("devise_views.mailer.confirmation_instructions.confirm_link"), confirmation_url(@resource, confirmation_token: @token), style: "color: #2895F1; text-decoration:none;" %>
+    <%= t("devise_views.mailer.confirmation_instructions.los_gehen") %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("devise_views.mailer.confirmation_instructions.summary") %>
+  </p>
 </td>
 
 

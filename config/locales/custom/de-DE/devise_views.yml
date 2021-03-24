@@ -14,10 +14,12 @@ de:
         title: Mein Konto bestätigen
     mailer:
       confirmation_instructions:
-        confirm_link: Mein Konto bestätigen
-        text: "Bestätige Deine E-Mail-Adresse mithilfe des folgenden Links:"
-        title: Willkommen
+        confirm_link: Anmeldung bestätigen
+        los_gehen: "und schon kann es losgehen!"
+        text: "wir freuen uns, dass Du Dich auf unserer Plattform anmelden möchtest! Bitte bestätige Deine E-Mail-Adresse mithilfe des folgenden Links:"
+        title: "Herzlich willkommen, %{name}"
         welcome: Willkommen
+        summary: Wir freuen uns auf Deine Ideen!
       reset_password_instructions:
         change_link: Mein Passwort ändern
         hello: Hallo

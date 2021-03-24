@@ -6,7 +6,7 @@ de:
         connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
         predefined: Projektvorauswahl treffen
         predefined_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
-        show:
+        show_archived:
           navigation: Archivierte Projekte in Navigation anzeigen
           navigation_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
           sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
@@ -47,9 +47,7 @@ de:
           debate_phase: Diskussionsphase
           proposal_phase: Vorschlagsphase
           voting_phase: Abstimmungsphase
-          navigation_label: Navigation
-          show_in_menu: Projekt in Navigation anzeigen
-          show_in_sidebar: Projekt in Projektseitenliste anzeigen
+          voting_manage: Umfragen verwalten
           update: Projekteinstellungen aktualisieren
 
     projekts:
@@ -59,7 +57,13 @@ de:
         third_level: 'Dritte Projektebene'
         fourth_level: 'Vierte Projektebene'
       sidebar_filter:
-        filter_button: 'Projekte filtern'
+        title: 'Projekte'
+        title_active: 'Aktive Projekte'
+        title_archived: 'Abgelaufene Projekte'
+        filter_active: 'Projekte filtern'
+        filter_archived: 'Projekte filtern'
+      errors:
+        presence: 'Bitte wählen Sie ein Projekt'
 
     polls:
       show:

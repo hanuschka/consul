@@ -124,8 +124,8 @@ class Setting < ApplicationRecord
         "remote_census.response.valid": "",
         "projekts.connected_resources": false,
         "projekts.predefined": false,
-        "projekts.show.navigation": true,
-        "projekts.show.sidebar": true
+        "projekts.show_archived.navigation": true,
+        "projekts.show_archived.sidebar": true
       }
     end
 

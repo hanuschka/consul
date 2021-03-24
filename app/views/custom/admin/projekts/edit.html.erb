@@ -21,7 +21,7 @@
           <%= f.date_field :total_duration_end %>
         </td>
         <td>
-          <%= f.check_box :total_duration, { label: t("custom.admin.projekts.edit.activate") }  %>
+          <%= f.check_box :total_duration_active, { label: t("custom.admin.projekts.edit.activate") }  %>
         </td>
       </tr>
       <tr>
@@ -35,7 +35,7 @@
           <%= f.date_field :debate_phase_end %>
         </td>
         <td>
-          <%= f.check_box :debate_phase, { label: t("custom.admin.projekts.edit.activate") } %>
+          <%= f.check_box :debate_phase_active, { label: t("custom.admin.projekts.edit.activate") } %>
         </td>
       </tr>
       <tr>
@@ -49,32 +49,19 @@
           <%= f.date_field :proposal_phase_end %>
         </td>
         <td>
-          <%= f.check_box :proposal_phase, { label: t("custom.admin.projekts.edit.activate") }  %>
+          <%= f.check_box :proposal_phase_active, { label: t("custom.admin.projekts.edit.activate") }  %>
         </td>
       </tr>
       <tr>
         <td>
           <%= t("custom.admin.projekts.edit.voting_phase") %>
         </td>
-        <td>
-          <%= f.date_field :voting_phase_start %>
-        </td>
-        <td>
-          <%= f.date_field :voting_phase_end %>
-        </td>
-        <td>
-          <%= f.check_box :voting_phase, { label: t("custom.admin.projekts.edit.activate") }  %>
+        <td colspan='3'>
+          <%= link_to t("custom.admin.projekts.edit.voting_manage"), admin_polls_path  %>
         </td>
       </tr>
-
     </tbody>
   </table>
-
-  <fieldset class='projekt-navigation-settings'>
-    <legend><%= t("custom.admin.projekts.edit.navigation_label") %></legend>
-    <%= f.check_box :show_in_menu, { label: t("custom.admin.projekts.edit.show_in_menu") } %>
-    <%= f.check_box :show_in_sidebar, { label: t("custom.admin.projekts.edit.show_in_sidebar") } %>
-  </fieldset>
 
   <div>
     <%= f.submit(t("custom.admin.projekts.edit.update"), class: "button success") %>

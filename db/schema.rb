@@ -1214,20 +1214,15 @@ ActiveRecord::Schema.define(version: 20210319081657) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "order_number"
-    t.boolean "total_duration"
+    t.boolean "total_duration_active"
     t.date "total_duration_start"
     t.date "total_duration_end"
-    t.boolean "debate_phase"
+    t.boolean "debate_phase_active"
     t.date "debate_phase_start"
     t.date "debate_phase_end"
-    t.boolean "proposal_phase"
+    t.boolean "proposal_phase_active"
     t.date "proposal_phase_start"
     t.date "proposal_phase_end"
-    t.boolean "voting_phase"
-    t.date "voting_phase_start"
-    t.date "voting_phase_end"
-    t.boolean "show_in_menu", default: true
-    t.boolean "show_in_sidebar", default: true
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 

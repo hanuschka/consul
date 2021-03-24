@@ -18,7 +18,10 @@ module ProjektsHelper
   def debate_phase_active?(projekt)
     top_parent = projekt.top_parent
 
-    if top_parent.debate_phase_active && top_parent.debate_phase_start < Date.today && top_parent.debate_phase_end > Date.today
+    return false unless ( top_parent.debate_phase_start || top_parent.total_duration_start )
+    return false unless ( top_parent.debate_phase_end || top_parent.total_duration_end )
+
+    if top_parent.debate_phase_active && (top_parent.debate_phase_start || top_parent.total_duration_start) < Date.today && (top_parent.debate_phase_end || top_parent.total_duration_end ) > Date.today
 			return true
     else
 			return false
@@ -28,7 +31,10 @@ module ProjektsHelper
   def proposal_phase_active?(projekt)
     top_parent = projekt.top_parent
 
-    if top_parent.proposal_phase_active && top_parent.proposal_phase_start < Date.today && top_parent.proposal_phase_end > Date.today
+    return false unless ( top_parent.proposal_phase_start || top_parent.total_duration_start )
+    return false unless ( top_parent.proposal_phase_end || top_parent.total_duration_end )
+
+    if top_parent.proposal_phase_active && (top_parent.proposal_phase_start || top_parent.total_duration_start) < Date.today && (top_parent.proposal_phase_end || top_parent.total_duration_end ) > Date.today
 			return true
     else
 			return false

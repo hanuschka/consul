@@ -35,6 +35,6 @@ class Admin::ProposalsController < Admin::BaseController
     end
 
     def proposal_params
-      params.require(:proposal).permit(:selected, :tag_list)
+      params.require(:proposal).permit(:selected, :tag_list, { projekt_ids: [] } )
     end
 end

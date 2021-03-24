@@ -16,7 +16,7 @@
     <div class="debate-show">
       <div id="<%= dom_id(@debate) %>" class="row">
         <div class="small-12 medium-9 column">
-          <%= back_link_to debates_path(tags: @debate.project_name) %>
+          <%= back_link_to debates_path %>
 
           <h1><%= @debate.title %></h1>
           <% if @debate.conflictive? %>

@@ -4,12 +4,7 @@
 <%= form_for(@tag, url: admin_tags_path, as: :tag) do |f| %>
   <div class="small-12 medium-6 admin-tags-form">
     <%= f.text_field :name %>
-    <%= f.radio_button :kind, "project", label: tag_kind_name('project') %>
-    <%= f.radio_button :kind, "category", label: tag_kind_name('category') %>
-    <%= f.radio_button :kind, "subcategory", label: tag_kind_name('subcategory') %>
-
   </div>
-
 
   <%= f.submit(t("admin.tags.create"), class: "button success") %>
 <% end %>
@@ -21,7 +16,6 @@
   <thead>
     <th scope="col" class="small-3"><%= t("admin.tags.index.topic") %></th>
     <th scope="col"><%= t("admin.tags.index.scope") %></th>
-    <th scope="col" class="small-3"><%= t("admin.tags.index.settings") %></th>
     <th scope="col"><%= t("admin.actions.actions") %></th>
   </thead>
   <tbody>
@@ -40,23 +34,7 @@
           <%=tag_kind_name(tag.kind)%>
         </td>
 
-        <td>
-          <%if tag.kind == 'category' %>
-            <div>
-              <%=f.check_box :custom_logic_category_cloud, label: t("admin.tags.logic.cloud_category"), id: "custom_logic_category_cloud_#{tag.id}" %>
-            </div>
-
-            <div>
-              <%=f.check_box :custom_logic_subcategory_cloud, label: t("admin.tags.logic.cloud_subcategory"), id: "custom_logic_subcategory_cloud_#{tag.id}" %>
-            </div>
-
-            <div>
-              <%=f.check_box :custom_logic_usertags_cloud, label: t("admin.tags.logic.custom_tags"), id: "custom_logic_usertags_cloud_#{tag.id}" %>
-            </div>
-          <%end%>
-        </td>
-
-        <td class='small-3' id="tag_<%= tag.id %>">
+        <td class='small-6' id="tag_<%= tag.id %>">
             <%= f.submit(t("admin.actions.update"), class: "button success") %>
           <%= link_to t("admin.tags.destroy"), admin_tag_path(tag), method: :delete, class: "button hollow alert" %>
         </td>

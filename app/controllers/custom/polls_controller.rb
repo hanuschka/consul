@@ -9,16 +9,15 @@ class PollsController < ApplicationController
   helper_method :resource_model, :resource_name
 
   def index
-    ensure_project_tag
     @tag_cloud = tag_cloud
-    if !params[:tags].blank?
-      @polls = @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).tagged_with(params[:tags].split(","), all: true).page(params[:page])
-        @subcategories = @polls.tag_counts.subcategory
-    else
-      @polls = Kaminari.paginate_array(
-        @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).sort_for_list
-      ).page(params[:page])
-    end
+
+    @polls = @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones)
+    take_only_by_tag_names
+    take_by_projekts
+
+    @polls = Kaminari.paginate_array(
+      @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).sort_for_list
+    ).page(params[:page])
   end
 
   private
@@ -31,11 +30,15 @@ class PollsController < ApplicationController
       Poll
     end
 
-    def take_only_by_tag_names
-      if params[:tags].present?
-        @resources = @resources.tagged_with(params[:tags].split(","), all: true, any: :true)
-        @categories = @resources.tag_counts.category
-        @subcategories = @resources.tag_counts.subcategory
-      end
+  def take_only_by_tag_names
+    if params[:tags].present?
+      @polls = @polls.tagged_with(params[:tags].split(","), all: true, any: :true)
     end
+  end
+
+  def take_by_projekts
+    if params[:projekts].present?
+      @polls = @polls.joins(:projekts).where(projekts: { id: [params[:projekts].split(',')] } ).distinct
+    end
+  end
 end

@@ -1,0 +1,13 @@
+<h1><%= t("custom.admin.projekts.index.name_plural") %></h1>
+
+<div class="tabs-content" data-tabs-content="projekts-tabs">
+  <%= render "filter_subnav" %>
+
+  <div class="tabs-panel is-active" id="tab-projekt-configuration">
+    <%= render "projekt_configuration_tab" %>
+  </div>
+
+  <div class="tabs-panel" id="tab-projekts-settings">
+    <%= render "projekts_settings_tab" %>
+  </div>
+</div>

@@ -37,17 +37,17 @@ de:
       deleted: Dieser Kommentar wurde gelöscht
       moderator: Moderator
       responses:
-        zero: Keine Rückmeldungen
+        zero: Keine Antworten
         one: 1 Antwort
         other: "%{count} Antworten"
       responses_show:
-        zero: Keine Rückmeldungen
-        one: "1 Rückmeldung (Anzeigen)"
-        other: "%{count} Rückmeldungen (Anzeigen)"
+        zero: Keine Antworten
+        one: "1 Antwort (Anzeigen)"
+        other: "%{count} Antworten (Anzeigen)"
       responses_collapse:
-        zero: Keine Rückmeldungen
-        one: "1 Antwort (Kollaps)"
-        other: "%{count} Antworten (Kollaps)"
+        zero: Keine Antworten
+        one: "1 Antwort (Einklappen)"
+        other: "%{count} Antworten (Einklappen)"
       user_deleted: Benutzer gelöscht
       votes:
         zero: Unentschieden
@@ -411,7 +411,7 @@ de:
       recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht, ebenso diejenigen, die die Diskussionen absichtlich sabotieren.
       recommendations_title: Empfehlungen zum Erstellen eines Vorschlags
       start_new: Neuen Vorschlag erstellen
-      start_new_in: Erstelle einen Vorschlag in %{category}
+      start_new_in: Erstelle einen Vorschlag
       help: Wie funktionieren Vorschläge?
     notice:
       retired: Vorschlag im Ruhezustand
@@ -753,10 +753,11 @@ de:
         message: "Du siehst %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
     tags_cloud:
-      tags: Beliebte Tags
+      projekts: Projekte
       districts: "Bereiche"
       districts_list: "Liste der Bereiche"
-      categories: "Tags"
+      categories: Tags
+      tags: Tags von Nutzern
     target_blank: " (Link öffnet im neuen Fenster)"
     you_are_in: "Du befindest sich in"
     unflag: Markierung aufheben
@@ -995,3 +996,5 @@ de:
       le: "l"
       co: "k"
       si: "s"
+  alerts:
+    select_one_category: "Bitte wählen Sie nur eine Kategorie"

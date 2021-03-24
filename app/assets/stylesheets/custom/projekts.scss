@@ -1,0 +1,372 @@
+// Admin pages
+
+span.icon-projekts::before {
+  content: "\f126";
+}
+
+.projekt-text-field {
+  position: relative;
+
+  [type='text'],
+  select {
+    width: 90%;
+  }
+}
+
+table.projekts {
+  
+  tr:nth-child(even),
+  tr:hover {
+    background: none;
+  }
+
+  tr.projekt-row {
+    border-bottom: none;
+  }
+
+  tr.projekt-details {
+    border-top: none;
+  }
+}
+
+.projekt-link,
+.projekt-dates {
+  font-size: 0.875em;
+}
+
+.projekt-dates {
+  display: grid;
+  grid-template-columns: 250px 300px;
+  margin-bottom: 2em;
+}
+
+form select {
+  background: #f8f8f8;
+  height: 3rem;
+  margin-bottom: 1rem;
+}
+
+tr.projekt-row td {
+  vertical-align: top;
+}
+
+td.projekt-level {
+}
+
+td.projekt-order {
+
+  position: relative;
+
+  a {
+    color: $black;
+  }
+
+  .projekt-order-arrow-controls {
+    position: absolute;
+		top: 40px;
+		left: 12px;
+  }
+
+  .order-number {
+    margin-left: 1em;
+  }
+}
+
+.projekt-action-buttons {
+  margin-top: 23px;
+  display: flex;
+  justify-content: flex-end;
+
+  a, 
+  input {
+    margin-right: 0.75em !important;
+    margin-left: 0 !important;
+  }
+}
+
+
+table.edit-projekt {
+
+  input[type='date'] {
+    width: 90%;
+  }
+}
+
+
+// Index and new views
+
+#projekt-tags {
+  margin: 1em 0;
+}
+
+#projekt-tags-selector {
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 1em;
+  row-gap: 1em;
+
+  .projekt-tags-column:not(:first-child) {
+    .projekt-group {
+      display: none;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #878787;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 19px;
+    left: 12px;
+    height: 14px;
+    width: 14px;
+    border: 1.5px solid #C6C6C6;
+    border-radius: 2px;
+  }
+
+	input:checked ~ .checkmark-before {
+		display: block;
+	}
+
+	input:checked ~ .checkmark {
+    background: #06408E;
+    border: 1.5px solid #06408E;
+	}
+
+	.checkmark-before {
+		content: "";
+		position: absolute;
+		display: none;
+		left: 17px;
+		top: 21px;
+		width: 4px;
+		height: 7px;
+		border: 1.5px solid #fff;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+	}
+
+	label {
+		display: block;
+		margin-bottom: 0;
+		position: relative;
+		cursor: pointer;
+		user-select: none;
+
+    font-size: 1em;
+    font-weight: initial;
+    line-height: 1.5rem;
+
+		padding-top: 1em;
+    padding-bottom: 1em;
+		padding-left: 2.2em;
+
+    color: #878787;
+    font-weight: 500;
+    font-size: 0.875em;
+    padding-right: 20%;
+
+    border-left: 1px solid #ECF2FB;
+	}
+
+  label.show-arrow:after {
+    content: '';
+    position: absolute;
+    right: 18px;
+    top: 41%;
+    width: 7px;
+    height: 7px;
+    border: 1.5px solid #C6C6C6;
+		border-width: 0 2px 2px 0;
+		transform: rotate(-45deg);
+  }
+
+	input[type='checkbox'] {
+	  position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+
+}
+
+
+.projekt-chip {
+  display: inline-block;
+  font-size: 0.875em;
+  background: #ececec;
+  color: #222;
+  padding: 5px 1em;
+  margin-bottom: .5em;
+
+  a {
+    color: #222;
+  }
+
+  &.filtered-projekt {
+    background: #06408E;
+
+    a {
+      color: #fff;
+    }
+  }
+}
+
+#projekt-tags {
+
+  #projekt-chips {
+    margin: 1em 0;
+  }
+
+  .projekt-chip {
+    padding-right: 2.25em;
+    position: relative;
+    margin-right: .5em;
+  }
+
+	.close {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		width: 14px;
+		height: 14px;
+    transform: translate(-50%, -50%);
+		cursor: pointer;
+	}
+	.close:hover {
+		opacity: 1;
+	}
+	.close:before, .close:after {
+		position: absolute;
+		left: 40%;
+		content: '';
+		height: 14px;
+		width: 1px;
+		background-color: #06408E;
+	}
+	.close:before {
+		transform: rotate(45deg);
+	}
+	.close:after {
+		transform: rotate(-45deg);
+	}
+
+}
+
+#filter-projekts {
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding-left: 1.2em;
+  }
+
+  ul ul li {
+    display: none;
+  }
+
+  li.show-projekt {
+    display: flex;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  label {
+    cursor: pointer;
+    position: relative;
+    color: #878787;
+    margin-right: 2em;
+  }
+
+  .projekt-arrow {
+    position: absolute;
+		width: 8px;
+		height: 8px;
+    right: 5px;
+    top: 10px;
+		border: 1.5px solid #C6C6C6;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+    cursor: pointer;
+  }
+
+	input[type='checkbox'] {
+	  position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+
+  .checkmark {
+    position: absolute;
+    top: 5px;
+    left: -19px;
+    height: 14px;
+    width: 14px;
+    border: 1.5px solid #C6C6C6;
+    border-radius: 2px;
+  }
+
+	input:checked ~ .checkmark:before {
+		display: block;
+	}
+
+	input:checked ~ .checkmark {
+    background: #06408E;
+    border: 1.5px solid #06408E;
+	}
+
+	.label-selected {
+    color: #06408E;
+    border-color: #06408E;
+	}
+
+	.checkmark:before {
+		content: "";
+		position: absolute;
+		display: none;
+		left: 4px;
+		top: 1px;
+		width: 4px;
+		height: 7px;
+		border: 1.5px solid #fff;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+	}
+
+}
+
+.filter-projekts-button {
+  display: inline-block;
+  background: #06408E;
+  color: #fefefe;
+  padding: 0.5em;
+  text-decoration: none;
+  border-radius: 2px;
+  margin-top: 1em;
+}
+
+.filter-projekts-button:hover,
+.filter-projekts-button:focus {
+  color: #fff;
+  background: #14679e;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.sidebar-projekt-group-name {
+  margin: .5em 0;
+  font-size: 0.875em;
+}

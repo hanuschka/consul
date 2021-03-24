@@ -30,15 +30,10 @@
 
 .admin-tags-form {
   #tag_kind_category,
-  #tag_kind_subcategory {
-    margin-left: 0.5rem;
-  }
-
   [type='radio'] + label {
     margin-left: 0.25rem;
   }
 }
-
 
 .tag-name-field [type='text'] {
   width: 90%;

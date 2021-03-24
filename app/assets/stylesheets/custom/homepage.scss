@@ -23,7 +23,12 @@ header {
 
 // Menu
 
-.subnavigation a {
+.subnavigation {
+  background: $brand;
+}
+
+.subnavigation a,
+.projekt-name {
   color: $white;
   font-family: 'MyriadPro BoldIt'
 }

@@ -52,23 +52,9 @@
     <% end %>
 
     <%tags = []%>
-
     <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' } %>
-    <%can_create = tag_categories.size == 1 ? true : false %>
-    <%tags += tag_categories%>
-
-    <%tag_subcategories = @selected_tags&.select{ |tag| tag.kind == 'subcategory' } %>
-    <%tags += tag_subcategories%>
-    <%tags += [@project_tag]%>
-
-    <% cannot_create_message = "alert('#{t('alerts.select_one_category', model: t("activerecord.models.proposal.one"))}'); return false;" %>
-
-    <% user_proposals_in_selected_categories = Proposal.tagged_with(tag_categories).where(author: current_user).count  %>
-
-    <% if tag_categories.size == 1 && user_proposals_in_selected_categories >= 3 %>
-      <% can_create = false %>
-      <% cannot_create_message = "alert('#{t("custom.alerts.only_3_proposals", models: t("activerecord.models.proposal.other"))}'); return false;" %>
-    <% end %>
+    <%can_create = true %>
+    <%tags += tag_categories if tag_categories %>
 
     <div class="row">
       <% if feature?(:map) %>
@@ -84,6 +70,7 @@
         <% if has_banners? %>
           <%= render "shared/banner" %>
         <% end %>
+        <%=render_custom_block 'proposals_welcome' %>
 
         <% if show_featured_proposals? %>
           <div id="featured-proposals" class="row featured-proposals">
@@ -147,6 +134,7 @@
             onclick: can_create ? "return true" : cannot_create_message,
             disabled: !can_create %>
           <% if params[:retired].blank? %>
+					  <%= render "shared/projekts_sidebar" %>
             <%= render "shared/categories", model: "proposal" %>
             <%= render "geozones" %>
           <% end %>

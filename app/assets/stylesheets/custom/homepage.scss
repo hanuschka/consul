@@ -21,13 +21,15 @@ header {
   margin: 3em auto;
 }
 
-
-
 // Menu
 
 .subnavigation a {
   color: $white;
   font-family: 'MyriadPro BoldIt'
+}
+
+.subnavigation a:hover {
+  color: $azure;
 }
 
 .main-menu-items .drop-nav,
@@ -59,7 +61,6 @@ header {
 .help-header .input-group {
   margin-bottom: none;
 }
-
 
 
 // Video
@@ -103,7 +104,7 @@ section .content {
 
 .intro h1,
 .questions h1 {
-  color: #F83F37;
+  color: $brand;
   text-align: center;
 }
 
@@ -139,7 +140,7 @@ section .container.green:before,
 section .green button:before,
 section .green button:after, 
 button.green {
-  background-color: #36CDA0;
+  background-color: $azure;
 }
 
 section .red,
@@ -147,14 +148,14 @@ section .container.red:before,
 section .red button:before,
 section .red button:after, 
 button.red {
-  background-color: #F82302;
+  background-color: $brand;
 }
 
 section .purple,
 section .container.purple:before, 
 section .purple button:before,
 section .purple button:after {
-  background-color: #28283C;
+  background-color: $purple;
 }
 
 section .questions,
@@ -209,26 +210,23 @@ button:before {
 
 // Footer
 
-.footer-sections.small-12.large-8.column {
-  display: none;
-}
-
 .footer {
   border-top: 1px solid #99A0BB;
   background: #fff;
   position: relative;
-}
+  min-height: initial;
 
-footer .column {
-  float: left;
-}
+  .subfooter-links {
+    text-align: center;
+  }
 
-footer .row {
-  margin-right: auto;
-  margin-left: auto;
-  width: 80%;
-}
+  .ribbon {
+    margin-top: 2.5em;
+    height: 2.5em;
+    background: $brand;
+  }
 
+}
 
 // Media queries
 
@@ -276,17 +274,11 @@ footer .row {
 
   .footer-logo {
     float: left;
-    margin: 2em 0;
+
+    img {
+      width: 80%;
+    }
   }
-}
-
-@media (min-width: 1024px) {
-
-  .footer-logo {
-    float: right;
-    margin-top: 3em;
-  }
-
 }
 
 
@@ -300,31 +292,32 @@ footer .row {
     position: absolute;
     background-color: #fff;
     display: block;
-    width: 35em;
-    height: 52em;
+    width: 45em;
+    height: 75em;
     transform: rotate(45deg);
     transform-origin: top left;
     z-index: -1;
   }
 
   section .container.green:before  {
-    background-color: #36CDA0;
+    background-color: $azure;
   }
 
   section .container.red:before {
-    background-color: #F82302;
+    background-color: $brand;
   }
 
   section .container.purple:before {
-    background-color: #28283C;
+    background-color: $purple;
   }
 
   section .container.questions:before { 
-    background-color: #fff;
+    background-color: $white;
   }
 
   section .container.questions:before {
-    height: 25em;  
+    height: 60em;
+    width: 15em;
   }
 
   section .container.green:after, 
@@ -336,24 +329,18 @@ footer .row {
     display: block;
     bottom: 0;
     right: 0;
-    width: 10em;
+    width: 7em;
     height: 5em;
     transform: rotate(-45deg);
     transform-origin: top right;
-  }
-
-  section .container.green:before, 
-  section .container.red:before,
-  section .container.purple:before {
-    width: 37em;
-    height: 55em;
   }
 
   .content-image {
     display: block;
     position: absolute;
     left: -7em;
-    top: 1em;
+    top: 3em;
+    width: 18em;
   }
 
   section .content {
@@ -401,7 +388,7 @@ footer .row {
   section .container.green:before, 
   section .container.red:before,
   section .container.purple:before {
-    height: 60em;
+    height: 90em;
   }
 
   section .container.questions:before {

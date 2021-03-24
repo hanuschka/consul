@@ -31,6 +31,7 @@ class AccountController < ApplicationController
                       :official_position_badge, :recommended_debates, :recommended_proposals,
                       :plz_consent, :plz ]
                    end
+      params[:account][:plz] = "" if params[:account][:plz].blank?
       params.require(:account).permit(*attributes)
     end
 end

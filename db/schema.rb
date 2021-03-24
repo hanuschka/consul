@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210304161617) do
+ActiveRecord::Schema.define(version: 20210324143725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1213,6 +1213,16 @@ ActiveRecord::Schema.define(version: 20210304161617) do
     t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "order_number"
+    t.boolean "total_duration_active"
+    t.date "total_duration_start"
+    t.date "total_duration_end"
+    t.boolean "debate_phase_active"
+    t.date "debate_phase_start"
+    t.date "debate_phase_end"
+    t.boolean "proposal_phase_active"
+    t.date "proposal_phase_start"
+    t.date "proposal_phase_end"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 
@@ -1398,6 +1408,8 @@ ActiveRecord::Schema.define(version: 20210304161617) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "locale"
+    t.bigint "projekt_id"
+    t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
 
   create_table "stats_versions", id: :serial, force: :cascade do |t|
@@ -1513,7 +1525,7 @@ ActiveRecord::Schema.define(version: 20210304161617) do
     t.datetime "date_of_birth"
     t.boolean "email_on_proposal_notification", default: true
     t.boolean "email_digest", default: true
-    t.boolean "email_on_direct_message", default: true
+    t.boolean "email_on_direct_message", default: false
     t.boolean "official_position_badge", default: false
     t.datetime "password_changed_at", default: "2015-01-01 01:01:01", null: false
     t.boolean "created_from_signature", default: false
@@ -1688,6 +1700,7 @@ ActiveRecord::Schema.define(version: 20210304161617) do
   add_foreign_key "proposals", "communities"
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"
+  add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "users", "geozones"
   add_foreign_key "valuators", "users"
 end

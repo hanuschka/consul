@@ -58,9 +58,6 @@
               <%= f.check_box :email_digest %>
             </div>
 
-            <div>
-              <%= f.check_box :email_on_direct_message %>
-            </div>
           <% end %>
 
           <% if @account.official_level == 1 %>
@@ -93,9 +90,10 @@
                        plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/nutzungsbedingungen",
                                       title: t("shared.target_blank"),
                                       target: "_blank")
-                      ) %>
+                      ),
+              class: 'js-toggle-plz-field' %>
 
-            <%= f.text_field :plz,  autofocus: true, disabled: !@account.plz_consent,
+            <%= f.text_field :plz,  autofocus: true, disabled: @account.plz_consent.blank?,
                                     placeholder: t("custom.devise_views.users.registrations.new.plz_placeholder"),
                                     label: t("custom.devise_views.users.registrations.new.plz_label") %>
 

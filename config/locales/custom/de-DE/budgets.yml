@@ -4,11 +4,11 @@ de:
       show:
         title: Ihre Abstimmung
         amount_available:
-          knapsack: "Sie haben noch <span>%{count}</span> zu investieren."
+          knapsack: "Du hast noch <span>%{count}</span> zu investieren."
           approval:
-            zero: "Sie können immer noch <span>%{count}</span> Stimmen abgeben."
-            one: "Sie können immer noch <span>%{count}</span> Stimme abgeben."
-            other: "Sie können immer noch <span>%{count}</span> Stimmen abgeben."
+            zero: "Du kannst immer noch <span>%{count}</span> Stimmen abgeben."
+            one: "Du kannst immer noch <span>%{count}</span> Stimme abgeben."
+            other: "Du kannst immer noch <span>%{count}</span> Stimmen abgeben."
         amount_spent:
           knapsack: "Ausgegebener Betrag <span>%{count}</span>"
           approval:
@@ -18,30 +18,30 @@ de:
         amount_limit:
           knapsack: "%{count}"
           approval:
-            one: "Sie können über <span>1</span> Projekt abstimmen"
-            other: "Sie können über bis zu <span>%{count}</span> Projekte abstimmen"
-        no_balloted_group_yet: "Sie haben in dieser Gruppe noch nicht abgestimmt. Stimmen Sie jetzt ab!"
+            one: "Du kannst über <span>1</span> Projekt abstimmen"
+            other: "Du kannst über bis zu <span>%{count}</span> Projekte abstimmen"
+        no_balloted_group_yet: "Du hast in dieser Gruppe noch nicht abgestimmt. Stimme jetzt ab!"
         remove: Stimme entfernen
         voted:
-          one: "Sie haben für <span>one</span> Investitionsvorschläge gestimmt."
-          other: "Sie haben für <span>%{count}</span> Investitionsvorschläge gestimmt."
-        voted_info: "Ihre Stimme ist bestätigt!"
-        voted_info_2: "Aber Sie können Ihre Stimme jederzeit ändern, bis diese Phase abgeschlossen ist."
-        zero: Sie haben noch über keinen Investitionsvorschlag abgestimmt.
+          one: "Du hast für <span>one</span> Investitionsvorschläge gestimmt."
+          other: "Du hast für <span>%{count}</span> Investitionsvorschläge gestimmt."
+        voted_info: "Deine Stimme ist bestätigt!"
+        voted_info_2: "Aber Du kannst Deine Stimme jederzeit ändern, bis diese Phase abgeschlossen ist."
+        zero: Du hast noch über keinen Investitionsvorschlag abgestimmt.
       reasons_for_not_balloting:
-        not_logged_in: Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können.
-        not_verified: Nur verifizierte Benutzer*innen können über einen Investitionsvorschlag abstimmen; %{verify_account}.
+        not_logged_in: Du müssen Dich %{signin} oder %{signup}, um fortfahren zu können.
+        not_verified: Nur verifizierte Benutzer können über einen Investitionsvorschlag abstimmen; %{verify_account}.
         organization: Organisationen ist es nicht erlaubt abzustimmen
         not_selected: Für nicht durchführbare Ausgabevorschläge kann nicht abgestimmt werden
-        not_enough_money: "Sie haben bereits das gesamte verfügbare Budget zugewiesen.<br><small>Bitte denken Sie daran, dass Sie dies %{change_ballot} jederzeit</small>ändern können"
+        not_enough_money: "Du hast bereits das gesamte verfügbare Budget zugewiesen.<br><small>Bitte denke daran, dass Du dies %{change_ballot} jederzeit</small>ändern können"
         no_ballots_allowed: Die Auswahlphase ist abgeschlossen
-        different_heading_assigned: "Sie haben bereits für eine andere Rubrik gestimmt: %{heading_link}"
-        not_enough_available_votes: "Sie haben die maximal zulässige Anzahl von Stimmen erreicht"
-        change_ballot: Ändern Sie Ihre Wahl
-        casted_offline: Sie haben schon offline abgestimmt
+        different_heading_assigned: "Du hast bereits für eine andere Rubrik gestimmt: %{heading_link}"
+        not_enough_available_votes: "Du hast die maximal zulässige Anzahl von Stimmen erreicht"
+        change_ballot: Ändere Deine Wahl
+        casted_offline: Du hast schon offline abgestimmt
     groups:
       show:
-        title: Wählen Sie eine Option
+        title: Wähle eine Option
         unfeasible_title: Nicht durchführbare Investitionsvorschläge
         unfeasible: Nicht durchführbare Investitionen anzeigen
         unselected_title: Investitionsvorschläge, die nicht für die Abstimmungsphase ausgewählt wurden
@@ -74,22 +74,22 @@ de:
       see_results: Ergebnisse anzeigen
       section_footer:
         title: Hilfe zu Budgets
-        description: Durch Budgets können Nutzer*innen entscheiden, an welche Projekte ein bestimmter Teil des Budgets geht.
+        description: Durch Budgets können Benutzer entscheiden, an welche Projekte ein bestimmter Teil des Budgets geht.
       milestones: Meilensteine
     investments:
       form:
         tag_category_label: "Tags"
-        tags_instructions: "Markieren Sie den Vorschlag. Sie können einen Tag auswählen oder selbst erstellen"
+        tags_instructions: "Markiere den Vorschlag. Du kannst einen Tag auswählen oder selbst erstellen"
         tags_label: Verschlagwortung
-        tags_placeholder: "Klicken Sie auf einen oder mehrere vorgeschlagene(n) Tag(s) oder geben Sie eigene Tags komma-getrennt ein."
+        tags_placeholder: "Klicke auf einen oder mehrere vorgeschlagene(n) Tag(s) oder gib eigene Tags mit Komma getrennt ein."
         map_location: "Kartenposition"
-        map_location_instructions: "Navigieren Sie auf der Karte zum Standort und setzen Sie die Markierung."
-        map_remove_marker: "Entfernen Sie die Kartenmarkierung"
+        map_location_instructions: "Navigiere auf der Karte zum Standort und setze die Markierung."
+        map_remove_marker: "Entferne die Kartenmarkierung"
         map_skip_checkbox: "Dieser Investitionsvorschlag hat keinen konkreten Standort oder ich kenne ihn nicht."
       index:
         title: Budgets
         unfeasible: Undurchführbare Investitionsvorschläge
-        unfeasible_text: "Der Investitionsvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, innerhalb des Limits des Budgetss) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Investitionsvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
+        unfeasible_text: "Der Investitionsvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, innerhalb des Limits des Budgetss) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Investitionsvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste zusammen mit einem Bericht zur Undurchführbarkeit."
         by_heading: "Investitionsvorschläge im Bereich: %{heading}"
         search_form:
           button: Suche
@@ -102,22 +102,22 @@ de:
           my_ballot: Meine Stimmen
           voted_info:
             knapsack:
-              one: "<strong>Sie stimmten für einen Vorschlag mit Kosten von %{amount_spent}</strong>"
-              other: "<strong>Sie stimmten für %{count} mit einem Kostenaufwand von %{amount_spent}</strong>"
+              one: "<strong>Du stimmten für einen Vorschlag mit Kosten von %{amount_spent}</strong>"
+              other: "<strong>Du hast für %{count} mit einem Kostenaufwand von %{amount_spent}</strong> abgestimmt"
             approval:
-              one: "<strong>Sie haben über einen Vorschlag abgestimmt</strong>"
-              other: "<strong>Sie haben über %{count} Vorschläge abgestimmt.</strong>"
+              one: "<strong>Du hast über einen Vorschlag abgestimmt</strong>"
+              other: "<strong>Du hast über %{count} Vorschläge abgestimmt.</strong>"
           change_vote_info:
-            knapsack: "Sie können jederzeit %{link} bis zum Ende dieser Phase. Es besteht keine Notwendigkeit, das gesamte verfügbare Budget auszugeben"
-            approval: "Sie können jederzeit %{link} bis zum Ende dieser Phase."
+            knapsack: "Du kannst jederzeit %{link} bis zum Ende dieser Phase. Es besteht keine Notwendigkeit, das gesamte verfügbare Budget auszugeben"
+            approval: "Du kannst jederzeit %{link} bis zum Ende dieser Phase."
           change_vote_link: "Ihre Stimme ändern"
-          different_heading_assigned: "Sie haben bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
-          change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme unter %{check_ballot} entfernen und von vorne beginnen."
+          different_heading_assigned: "Du hast bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
+          change_ballot: "Wenn Du Deine Meinung änderst, kannst Du Deine Stimme unter %{check_ballot} entfernen und von vorne beginnen."
           check_ballot_link: "Überprüfung meiner Abstimmung"
-          zero: Sie haben für keinen Investitionsvorschlag in dieser Gruppe abgestimmt.
-          verified_only: "Um ein neuen Investitionsvorschlag zu erstellen %{verify}."
+          zero: Du hast für keinen Investitionsvorschlag in dieser Gruppe abgestimmt.
+          verified_only: "Um einen neuen Investitionsvorschlag zu erstellen %{verify}."
           create: "Einen Investitionsvorschlag erstellen"
-          not_logged_in: "Um einen neuen Investitionsvorschlag erstellen zu können, müssen Sie %{sign_in} oder %{sign_up}."
+          not_logged_in: "Um einen neuen Investitionsvorschlag erstellen zu können, müssen Du %{sign_in} oder %{sign_up}."
           by_feasibility: Nach Durchführbarkeit
           feasible: Durchführbare Projekte
           unfeasible: Nicht durchführbare Projekte
@@ -126,7 +126,7 @@ de:
           confidence_score: Am besten bewertet
           price: Nach Preis
       share:
-        message: "Ich habe einen Investitionsvorschlag %{title} in %{handle} erstellt. Erstellen Sie auch einen Investitionsvorschlag!"
+        message: "Ich habe einen Investitionsvorschlag %{title} in %{handle} erstellt. Erstelle auch einen Investitionsvorschlag!"
       show:
         author_deleted: Benutzer gelöscht
         price_explanation: Preiserklärung
@@ -150,30 +150,30 @@ de:
       wrong_price_format: Nur ganze Zahlen
       investment:
         add: Stimme
-        already_added: Sie haben diesen Investitionsvorschlag bereits hinzugefügt
-        already_supported: Sie haben diesen Investitionsvorschlag bereits unterstützt. Jetzt teilen!
-        support_title: Unterstützen Sie dieses Projekt
+        already_added: Du hast diesen Investitionsvorschlag bereits hinzugefügt
+        already_supported: Du hast diesen Investitionsvorschlag bereits unterstützt. Jetzt teilen!
+        support_title: Unterstütze dieses Projekt
         confirm_group:
-          one: "Sie können nur Investitionsvorschläge im %{count} Gebiet unterstützen. Wenn Sie fortfahren, können Sie ihren WahlGebiet nicht ändern. Sind Sie sicher?"
-          other: "Sie können nur Investitionsvorschläge im %{count} Gebiet unterstützen. Wenn sie fortfahren, können sie ihren WahlGebiet nicht ändern. Sind sie sicher?"
+          one: "Du kannst nur Investitionsvorschläge im %{count} Gebiet unterstützen. Wenn Du fortfahren, kannst Du das Wahlgebiet nicht ändern. Bist Du sicher?"
+          other: "Du kannst nur Investitionsvorschläge im %{count} Gebiet unterstützen. Wenn Du fortfahren, kannst Du das Wahlgebiet nicht ändern. Sind Du sicher?"
         supports:
           zero: Keine Unterstützung
-          one: 1 Unterstützer*in
-          other: "%{count} Unterstützer*innen"
+          one: 1 Unterstützer
+          other: "%{count} Unterstützer"
         give_support: Unterstützung
       header:
         check_ballot: Meine Abstimmung überprüfen
-        different_heading_assigned: "Sie haben bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
-        change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme in %{check_ballot} zurückziehen und von vorne beginnen."
+        different_heading_assigned: "Du hast bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
+        change_ballot: "Wenn Du Deine Meinung änderst, kannst Du Deine Stimme in %{check_ballot} zurückziehen und von vorne beginnen."
         check_ballot_link: "Meine Abstimmungen überprüfen"
         price: "Dieser Bereich verfügt über ein Budget von"
     progress_bar:
-      assigned: "Sie haben zugeordnet: "
+      assigned: "Du hast zugeordnet: "
       available: "VerfügbareBudgetmittel: "
       votes:
-        zero: "Sie haben <strong>0</strong> von <strong>%{limit}</strong> Projekten ausgewählt"
-        one: "Sie haben <strong>1</strong> Projekt von <strong>%{limit}</strong> Projekten ausgewählt"
-        other: "Sie haben <strong>%{count}</strong> Projekte von <strong>%{limit}</strong> Projekten ausgewählt"
+        zero: "Du hast <strong>0</strong> von <strong>%{limit}</strong> Projekten ausgewählt"
+        one: "Du hast <strong>1</strong> Projekt von <strong>%{limit}</strong> Projekten ausgewählt"
+        other: "Du hast <strong>%{count}</strong> Projekte von <strong>%{limit}</strong> Projekten ausgewählt"
     show:
       group: Gruppe
       phase: Aktuelle Phase
@@ -191,7 +191,7 @@ de:
       hide_discarded_link: Verworfene ausblenden
       show_all_link: Alle anzeigen
       price: Preis
-      amount_available: VerfügbareBudgetmittel
+      amount_available: Verfügbare Budgetmittel
       accepted: "Genehmigter Investitionsvorschlag: "
       discarded: "Verworfener Investitionsvorschlag: "
       incompatibles: Unvereinbar

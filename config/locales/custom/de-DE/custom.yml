@@ -24,10 +24,13 @@ de:
             username_label: Benutzername
             username_placeholder: Bitte verwenden Sie Ihren Klarnamen
             plz_consent_title: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional)
-            plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent}
+            plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent} (freiwillige Angabe, damit wir Dir regionale Mailings zusenden können)
             plz_consent_link: Allgemeine Nutzungsbedingungen
             plz_label: Postleitzahl
             plz_placeholder: PLZ
+      mailer:      
+        confirmation_instructions:
+          plz_welcome: 'wir freuen uns, dass Du Dich auf unserer Plattform anmelden und von uns per E-Mail kontaktiert werden möchtest! Bitte bestätige Deine E-Mail-Adresse mithilfe des folgenden Links:'
     debates:
       index:
         section_header:
@@ -46,3 +49,9 @@ de:
       show:
         results_menu: Zwischenergebnisse für Admins
         info_menu: Abstimmung
+    related_content:
+      title: Verwandte Inhalte in der Plattform
+    layouts:
+      footer:
+        copyright: "Aufstehen %{year}"
+        impressum: Impressum

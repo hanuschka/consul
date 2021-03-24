@@ -1,46 +1,46 @@
 de:
   verification:
     alert:
-      lock: Sie haben die maximale Anzahl an Versuchen erreicht. Bitte versuchen Sie es später erneut.
+      lock: Du hast die maximale Anzahl an Versuchen erreicht. Bitte versuche es später erneut.
     back: Zurück zu meinem Konto
     email:
       create:
         alert:
-          failure: Beim Versenden einer E-Mail an Ihr Benutzerkonto ist ein Problem aufgetreten
+          failure: Beim Versenden einer E-Mail an Dein Benutzerkonto ist ein Problem aufgetreten
         flash:
-          success: "Wir haben einen Bestätigungslink an Sie geschickt: %{email}"
+          success: "Wir haben einen Bestätigungslink an Dich geschickt: %{email}"
       show:
         alert:
           failure: Der Bestätigungscode ist falsch
         flash:
-          success: Sie sind ein/e verifizierte/r Benutzer/in
+          success: Du bist ein verifizierter Benutzer
     letter:
       alert:
-        unconfirmed_code: Sie haben den Bestätigungscode noch nicht eingegeben
+        unconfirmed_code: Du hast den Bestätigungscode noch nicht eingegeben
       create:
         flash:
-          success: Danke, dass Sie Ihren <b>Hochsicherheitscode (nur für die finale Abstimmung erforderlich) </b> angefordert haben. Vor der Abstimmung erhalten Sie einen Brief mit der Anweisung, Ihr Konto zu bestätigen. Heben Sie den Brief gut auf, um sich persönlich in einem der Bürger Ämter verifizieren zu können.
+          success: Danke, dass Du Deinen <b>Hochsicherheitscode (nur für die finale Abstimmung erforderlich) </b> angefordert hast. Vor der Abstimmung erhältst Du einen Brief mit der Anweisung, Dein Konto zu bestätigen. Hebe den Brief gut auf, um Dich persönlich in einem der Bürgerämter verifizieren zu können.
       edit:
         see_all: Vorschläge anzeigen
         title: Brief angefordert
       errors:
         incorrect_code: Der Bestätigungscode ist falsch
       new:
-        explanation: "Um an der finalen Abstimmungen teilzunehmen, können Sie:"
+        explanation: "Um an der finalen Abstimmung teilzunehmen, kannst Du:"
         go_to_index: Vorschläge anzeigen
-        office: Verify in any Citizen Support Offices
-        send_letter: Schicken Sie mir einen Brief mit dem Code
+        office: In jedem Bürgeramt verifizieren
+        send_letter: Schickt mir einen Brief mit dem Code
         title: Glückwunsch!
-        user_permission_info: Mit Ihrem Konto können Sie...
+        user_permission_info: Mit Deinem Konto kannst Du...
       update:
         flash:
-          success: Code bestätigt. Ihr Benutzerkonto ist nun verifiziert
+          success: Code bestätigt. Dein Benutzerkonto ist nun verifiziert
     redirect_notices:
-      already_verified: Ihr Benutzerkonto ist bereits verifiziert
-      email_already_sent: Wir haben bereits eine E-Mail mit einem Bestätigungslink verschickt. Falls Sie noch keine E-Mail erhalten haben, können Sie hier einen neuen Code anfordern
+      already_verified: Dein Benutzerkonto ist bereits verifiziert
+      email_already_sent: Wir haben bereits eine E-Mail mit einem Bestätigungslink verschickt. Falls Du noch keine E-Mail erhalten hast, kannst Du hier einen neuen Code anfordern
     residence:
       alert:
-        unconfirmed_residency: Sie haben noch nicht Ihren Wohnsitz bestätigt
+        unconfirmed_residency: Du hast Deinen Wohnsitz noch nicht bestätigt
       create:
         flash:
           success: Wohnsitz bestätigt
@@ -54,27 +54,27 @@ de:
           passport: Pass
           residence_card: Aufenthaltsbescheinigung
           spanish_id: Personalausweis
-        error_not_allowed_age: Sie erfüllen nicht das erforderliche Alter um teilnehmenzu können
-        error_not_allowed_postal_code: Für die Verifizierung müssen Sie registriert sein.
-        error_verifying_census: Wir waren nicht in der Lage, Ihre Angaben zu verifizieren. Bitte bestätigen Sie, dass Ihre Angaben korrekt sind.
-        form_errors: haben die Überprüfung Ihres Wohnsitzes verhindert
-        postal_code_note: Um Ihr Benutzerkonto zu verifizieren, müssen Sie registriert sein
+        error_not_allowed_age: Du erfüllst nicht das erforderliche Alter, um teilnehmen zu können
+        error_not_allowed_postal_code: Für die Verifizierung musst Du registriert sein.
+        error_verifying_census: Wir waren nicht in der Lage, Deine Angaben zu verifizieren. Bitte bestätige, dass Deine Angaben korrekt sind.
+        form_errors: haben die Überprüfung Deines Wohnsitzes verhindert
+        postal_code_note: Um Dein Benutzerkonto zu verifizieren, musst Du registriert sein
         terms: Allgemeine Nutzungsbedingungen
         title: Wohnsitz bestätigen
         verify_residence: Wohnsitz bestätigen
     sms:
       create:
         flash:
-          success: Geben Sie den Bestätigungscode ein, den Sie per SMS erhalten haben
+          success: Gib den Bestätigungscode ein, den Du per SMS erhalten hast
       edit:
         resend_sms_link: Hier klicken, um erneut zu senden
-        resend_sms_text: Haben Sie keine Nachricht mit einem Bestätigungscode erhalten?
+        resend_sms_text: Hast Du keine Nachricht mit einem Bestätigungscode erhalten?
         submit_button: Senden
         title: Sicherheitscode bestätigen
       new:
-        phone: Geben Sie Ihre Handynummer ein, um den Code zu erhalten
+        phone: Gib Deine Handynummer ein, um den Code zu erhalten
         phone_format: "<strong>-<em>(Beispiel: 612345678 oder +34612345678)</em></strong>"
-        phone_note: Wir verwenden Ihre Telefonnummer ausschließlich dafür Ihnen einen Code zu schicken, niemals um Sie zu kontaktieren.
+        phone_note: Wir verwenden Deine Telefonnummer ausschließlich dafür, Dir einen Code zu schicken, niemals um Dich zu kontaktieren.
         phone_placeholder: "Beispiel: 612345678 oder +34612345678"
         submit_button: Senden
         title: Bestätigungscode senden
@@ -82,23 +82,23 @@ de:
         error: Falscher Bestätigungscode
         flash:
           level_three:
-            success: Code bestätigt. Ihr Benutzerkonto ist nun verifiziert
+            success: Code bestätigt. Dein Benutzerkonto ist nun verifiziert.
           level_two:
             success: Korrekter Code
     step_1: Wohnsitz
     step_2: Bestätigungscode
     step_3: Abschließende Überprüfung
     user_permission_debates: An Diskussion teilnehmen
-    user_permission_info: Durch die Verifizierung Ihrer Daten, können Sie...
+    user_permission_info: Durch die Verifizierung Deiner Daten kannst Du...
     user_permission_proposal: Neue Vorschläge erstellen
-    user_permission_support_proposal: Vorschläge unterstützen*
-    user_permission_votes: An finaler Abstimmung teilnehmen*
+    user_permission_support_proposal: Vorschläge unterstützen
+    user_permission_votes: An finaler Abstimmung teilnehmen
     verified_user:
       form:
         submit_button: Code senden
       show:
         email_title: E-Mails
-        explanation: Das Verzeichnis enthält derzeit folgende Details; bitte wählen Sie eine Methode, um Ihren Bestätigungscode zu erhalten.
+        explanation: Das Verzeichnis enthält derzeit folgende Details; bitte wähle eine Methode, um Deinen Bestätigungscode zu erhalten.
         phone_title: Telefonnummern
         title: Verfügbare Informationen
         use_another_phone: Anderes Telefon verwenden

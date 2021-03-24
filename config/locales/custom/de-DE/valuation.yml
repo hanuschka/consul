@@ -35,7 +35,7 @@ de:
       show:
         back: Zurück
         title: Investitionsprojekt
-        info: Autor info
+        info: Autoreninfo
         by: Gesendet von
         sent: Gesendet um
         heading: Rubrik
@@ -52,14 +52,14 @@ de:
         duration: Zeitrahmen
         responsibles: Verantwortliche
         assigned_admin: Zugewiesener Admin
-        assigned_valuators: Zugewiesene Gutachter*innen
+        assigned_valuators: Zugewiesene Gutachter
         preview: Investitionsvorschau
       edit:
         dossier: Bericht
         price: "Preis (%{currency})"
         price_first_year: "Kosten im ersten Jahr (%{currency}) <small>(optional, nicht öffentliche Daten)</small>"
         feasibility: Durchführbarkeit
-        valuation_finished_alert: "Sind Sie sicher, dass Sie diesen Bericht als erledigt markieren möchten? Hiernach können Sie keine Änderungen mehr vornehmen."
+        valuation_finished_alert: "Bist Du sicher, dass Du diesen Bericht als erledigt markieren möchtest? Hiernach kannst Du keine Änderungen mehr vornehmen."
         not_feasible_alert: "Der Autor des Projekts erhält sofort eine E-Mail mit einem Bericht zur Undurchführbarkeit."
         save: Änderungen speichern
       notice:

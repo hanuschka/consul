@@ -1190,6 +1190,30 @@ ActiveRecord::Schema.define(version: 20210303092642) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projekts", force: :cascade do |t|
+    t.string "name"
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "order_number"
+    t.boolean "total_duration_active"
+    t.date "total_duration_start"
+    t.date "total_duration_end"
+    t.boolean "debate_phase_active"
+    t.date "debate_phase_start"
+    t.date "debate_phase_end"
+    t.boolean "proposal_phase_active"
+    t.date "proposal_phase_start"
+    t.date "proposal_phase_end"
+    t.index ["parent_id"], name: "index_projekts_on_parent_id"
+  end
+
+  create_table "projekts_proposals", id: false, force: :cascade do |t|
+    t.bigint "proposal_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "proposal_id"], name: "index_projekts_proposals_on_projekt_id_and_proposal_id", unique: true
+  end
+
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -1366,6 +1390,8 @@ ActiveRecord::Schema.define(version: 20210303092642) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "locale"
+    t.bigint "projekt_id"
+    t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
 
   create_table "stats_versions", id: :serial, force: :cascade do |t|
@@ -1481,7 +1507,7 @@ ActiveRecord::Schema.define(version: 20210303092642) do
     t.datetime "date_of_birth"
     t.boolean "email_on_proposal_notification", default: true
     t.boolean "email_digest", default: true
-    t.boolean "email_on_direct_message", default: true
+    t.boolean "email_on_direct_message", default: false
     t.boolean "official_position_badge", default: false
     t.datetime "password_changed_at", default: "2015-01-01 01:01:01", null: false
     t.boolean "created_from_signature", default: false
@@ -1655,6 +1681,7 @@ ActiveRecord::Schema.define(version: 20210303092642) do
   add_foreign_key "proposals", "communities"
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"
+  add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "users", "geozones"
   add_foreign_key "valuators", "users"
 end

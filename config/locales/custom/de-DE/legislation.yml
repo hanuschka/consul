@@ -13,7 +13,7 @@ de:
         cancel: Abbrechen
         publish_comment: Kommentar veröffentlichen
       form:
-        phase_not_open: Diese Phase ist noch nicht geöffnet
+        phase_not_open: Diese Phase ist noch nicht eröffnet
       index:
         title: Kommentare
         comments_about: Kommentare über
@@ -30,7 +30,7 @@ de:
       changes:
         title: Änderungen
         seeing_changelog_version: Änderungszusammenfassung
-        see_text: Siehe Text-Entwurf
+        see_text: Siehe Textentwurf
       show:
         loading_comments: Kommentare werden geladen
         seeing_version: Sie sehen den Entwurf
@@ -70,7 +70,7 @@ de:
           title: Hilfe zu Beteiligungsverfahren
           description: Beteiligen Sie sich bei der Erstellung eines kollaborativ erarbeiteten Dokumentes. Der Beteiligungsprozess ist in verschiedenen Phasen unterteilt, die nacheinander oder parallel laufen können.
       phase_not_open:
-        not_open: Diese Phase ist noch nicht geöffnet
+        not_open: Diese Phase ist noch nicht eröffnet
       phase_empty:
         empty: Keine Veröffentlichung bisher
       process:
@@ -105,7 +105,7 @@ de:
         share: Teilen
         title: kollaboratives Beteiligungsverfahren
       participation:
-        phase_not_open: Diese Phase ist nicht geöffnet
+        phase_not_open: Diese Phase ist nicht eröffnet
         organizations: Organisationen dürfen sich nicht an der Diskussion beteiligen
         unauthenticated: Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können.
         verified_only: 'Nur verifizierte Benutzer können teilnehmen: %{verify_account}.'
@@ -144,6 +144,6 @@ de:
         zero: "Keine Kommentare"
         one: "%{count} Kommentar"
         other: "Top Kommentare"
-      most_voted_comments: "Häufigst abgestimmte Kommentare"
+      most_voted_comments: "Am meisten abgestimmte Kommentare"
       no_allegation: "Es gibt keine Kommentare"
       process_empty: "Dieser Prozess hatte keine Beteiligungsphasen"

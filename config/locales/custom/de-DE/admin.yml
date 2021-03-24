@@ -4,10 +4,10 @@ de:
       title: Verwaltung
     actions:
       actions: Aktionen
-      confirm: Sind Sie sich sicher?
+      confirm: Bist Du Dir sicher?
       confirm_hide: Moderation bestätigen
       hide: Ausblenden
-      hide_author: Verfasser*in verbergen
+      hide_author: Verfasser verbergen
       restore: Wiederherstellen
       mark_featured: Hervorgehoben
       unmark_featured: Markierung aufheben
@@ -16,7 +16,7 @@ de:
       update: Update
       delete: Löschen
     officing_booth:
-      title: "Sie verlassen den Raum, der sich in %{booth} befindet. Wenn dies nicht korrekt ist, fahren Sie nicht fort und rufen Sie die Hilfe-Rufnummer an. Vielen Dank."
+      title: "Du verlässt den Raum, der sich in %{booth} befindet. Wenn dies nicht korrekt ist, fahre nicht fort und rufe die Hilfe-Rufnummer an. Vielen Dank."
     banners:
       index:
         title: Banner
@@ -57,11 +57,11 @@ de:
           on_comments: Kommentare
           on_debates: Diskussionen
           on_proposals: Vorschläge
-          on_users: Benutzer*innen
+          on_users: Benutzer
           on_system_emails: E-Mails vom System
-        title: Moderator*innenaktivität
+        title: Moderatorenaktivität
         type: Typ
-        no_activity: Hier sind keine Moderator*innen aktiv.
+        no_activity: Hier sind keine Moderatoren aktiv.
     budgets:
       index:
         title: Budgets
@@ -98,23 +98,23 @@ de:
         administrators:
           zero: "Wähle Adminstratoren"
           one: "1 Administrator ausgewählt"
-          other: "%{count} Administrator ausgewählt"
+          other: "%{count} Administratoren ausgewählt"
         valuators:
-          zero: "Den Gutachter*innen wählen"
-          one: "1 Gutachter*in ausgewählt"
-          other: "%{count} Gutachter*in ausgewählt"
-        empty_administrators: "Keine Administrator*innen vorhanden"
-        empty_valuators: "Keine Gutachter*innen vorhanden"
+          zero: "Den Gutachter wählen"
+          one: "1 Gutachter ausgewählt"
+          other: "%{count} Gutachter ausgewählt"
+        empty_administrators: "Keine Administrator:innen vorhanden"
+        empty_valuators: "Keine Gutachter vorhanden"
       destroy:
         success_notice: Budget erfolgreich gelöscht
         unable_notice: Ein Budget mit zugehörigen Investitionsvorschlägen kann nicht gelöscht werden
-        unable_notice_polls: Sie können kein Budget löschen, das eine zugehörige Abstimmung hat
+        unable_notice_polls: Du kannst kein Budget löschen, das eine zugehörige Abstimmung hat
       new:
         title: Neuer Budget
       winners:
         calculate: Bestbewertete Vorschläge ermitteln
-        calculated: Die bestbewerteten Vorschläge werden ermittelt. Dies kann einen Moment dauern.
-        recalculate: Bestbewertete Vorschläge neu ermitteln
+        calculated: Die meistbewerteten Vorschläge werden ermittelt. Dies kann einen Moment dauern.
+        recalculate: Meistbewertete Vorschläge neu ermitteln
     budget_groups:
       name: "Name"
       headings_name: "Rubriken"
@@ -151,10 +151,10 @@ de:
         success_notice: "Rubrik erfolgreich gelöscht"
         unable_notice: "Eine Rubrik mit zugehörigen Investitionsvorschlägen kann nicht gelöscht werden"
       form:
-        max_ballot_lines_info: 'Maximum number of projects a user can vote on this heading during the "Voting projects" phase. Only for budgets using approval voting.'
-        population_info: "Dieses Feld wird nur für statistische Zwecke verwendet, mit dem Ziel, den Prozentsatz der Stimmen in jeder Rubrik anzuzeigen. Dieses Feld ist optional; Sie können es daher leer lassen, wenn es nicht zutrifft."
+        max_ballot_lines_info: 'Maximale Zahl der Projekte, für die ein Benutzer unter diesem Titel in der Projektabstimmungsphase stimmen kann. Nur für Budgets, die per Abstimmung bewilligt werden.'
+        population_info: "Dieses Feld wird nur für statistische Zwecke verwendet, mit dem Ziel, den Prozentsatz der Stimmen in jeder Rubrik anzuzeigen. Dieses Feld ist optional; Du kannst es daher leer lassen, wenn es nicht zutrifft."
         coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Investitionsvorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
-        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, können Sie benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Investitionsvorschlagsseite für diese Rubrik angezeigt."
+        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, kannst Du benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Investitionsvorschlagsseite für diese Rubrik angezeigt."
         create: "Neue Rubrik erstellen"
         edit: "Rubrik bearbeiten"
         submit: "Rubrik speichern"
@@ -162,30 +162,30 @@ de:
         back: "Zurück zu Gruppen"
     budget_phases:
       edit:
-        summary_help_text: Dieser Text informiert die Benutzer*innen über die jeweilige Phase. Um den Text anzuzeigen, auch wenn die Phase nicht aktiv ist, klicken sie das untenstehende Kästchen an
+        summary_help_text: Dieser Text informiert die Benutzer über die jeweilige Phase. Um den Text anzuzeigen, auch wenn die Phase nicht aktiv ist, klicke das untenstehende Kästchen an
         description_help_text: Dieser Text erscheint in der Kopfzeile, wenn die Phase aktiv ist
         enabled_help_text: Diese Phase wird öffentlich in der Zeitleiste der Phasen des Budget angezeigt und ist auch für andere Zwecke aktiv
         save_changes: Änderungen speichern
     budget_investments:
       index:
         heading_filter_all: Alle Überschriften
-        administrator_filter_all: Alle Administrator*innen
-        valuator_filter_all: Alle Gutachter*innen
+        administrator_filter_all: Alle Administratoren
+        valuator_filter_all: Alle Gutachter
         tags_filter_all: Alle Tags
         advanced_filters: Erweiterte Filter
         placeholder: Suche Projekte
         filters:
           all: Alle
-          without_admin: Ohne zugewiesene*n Administrator*in
-          without_valuator: Ohne zugewiesene*n Gutachter*in
+          without_admin: Ohne zugewiesenen Administrator
+          without_valuator: Ohne zugewiesenen Gutachter
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
           feasible: Durchführbar
           selected: Ausgewählt
           undecided: Offen
           unfeasible: Undurchführbar
-          min_total_supports: Minimum Unterstützer*innen
-          max_total_supports: Maximum Unterstützer*innen
+          min_total_supports: Minimum Unterstützer
+          max_total_supports: Maximum Unterstützer
           winners: Bestbewertete Vorschläge
           one_filter: "Verwendete Filter: <b><em>%{filter}</em></b>"
           two_filters: "Verwendete Filter: <b><em>%{filter},%{advanced_filters}</em></b>"
@@ -195,9 +195,9 @@ de:
         no_budget_investments: "Keine Investitionsprojekte vorhanden."
         title: Investitionsvorschläge
         columns: Spalten
-        assigned_admin: Zugewiesene*r Administrator*in
-        no_admin_assigned: Kein*e Administrator*in zugewiesen
-        no_valuators_assigned: Kein*e Gutachter*in*in zugewiesen
+        assigned_admin: Zugewiesene:r Administrator
+        no_admin_assigned: Kein Administrator zugewiesen
+        no_valuators_assigned: Kein Gutachter zugewiesen
         feasibility:
           feasible: "Durchführbar"
           unfeasible: "Undurchführbar"
@@ -209,14 +209,14 @@ de:
           title: Titel
           supports: Unterstützung
           admin: Administrator
-          valuator: Gutachter*in
+          valuator: Gutachter
           valuation_group: Bewertungsgruppe
           geozone: Bezug der Vorschläge
           feasibility: Durchführbarkeit
           valuation_finished: Bewertung fertig?
           selected: Status
-          visible_to_valuators: Gutachter*innen zeigen
-          author_username: Benutzer*innenname des/der Verfasser*in
+          visible_to_valuators: Gutachter zeigen
+          author_username: Benutzername des Verfassers
           incompatible: Inkompatibel
           price: Preis
           author: Autor
@@ -224,8 +224,8 @@ de:
         see_results: "Ergebnisse anzeigen"
         milestone_tags_filter_all: "Status aller Investitionsvorschläge"
       show:
-        assigned_admin: Zugewiesene*r Administrator*in
-        assigned_valuators: Zugewiesene Gutachter*innen
+        assigned_admin: Zugewiesener Administrator
+        assigned_valuators: Zugewiesene Gutachter
         classification: Klassifizierung
         info: "%{budget_name} - Gruppe: %{group_name} - Investitionsvorschlag %{id}"
         edit: Bearbeiten
@@ -245,20 +245,20 @@ de:
         selection:
           title: Auswahl
         winner:
-          title: Bestbewerteter Vorschlag
+          title: Meistbewerteter Vorschlag
           "true": "Ja"
           "false": "Nein"
-        valuator_groups: "Gutachtungsgruppen"
+        valuator_groups: "Gutachtergruppen"
         preview: Investitionsvorschau
       edit:
         classification: Klassifizierung
         compatibility: Kompatibilität
         selection: Auswahl
-        assigned_valuators: Gutachter*innen
+        assigned_valuators: Gutachter
         select_heading: Rubrik auswählen
         submit_button: Aktualisieren
-        user_tags: Tags, die von Benutzer*innen zugewiesen wurden
-        tags_placeholder: "Geben Sie die gewünschten Tags durch Kommas (,) getrennt ein"
+        user_tags: Tags, die von Benutzern zugewiesen wurden
+        tags_placeholder: "Gib die gewünschten Tags durch Kommas (,) getrennt ein"
         undefined: Undefiniert
       search_unfeasible: Suche undurchführbar
     milestones:
@@ -360,7 +360,7 @@ de:
         description: Willkommen auf dem Admin-Panel für %{org}.
       actions:
         index:
-          description: "Wenn Benutzer Vorschläge erstellen, können sie auf ein Dashboard ihres Vorschlags zugreifen, in dem Sie Ressourcen und Empfehlungen vorschlagen können, um Unterstützung für ihre Idee zu erhalten."
+          description: "Wenn Benutzer Vorschläge erstellen, können sie auf ein Dashboard ihres Vorschlags zugreifen, in dem sie Ressourcen und Empfehlungen vorschlagen können, um Unterstützung für ihre Idee zu erhalten."
           create: Ressource oder Aktion erstellen
           edit: Bearbeiten
           delete: Löschen
@@ -390,7 +390,7 @@ de:
           success: Aktion erfolgreich gelöscht
         form:
           submit_button: Speichern
-          help_text: Geben Sie 0 ein, damit dieser Wert nicht berücksichtigt wird
+          help_text: Gib 0 ein, damit dieser Wert nicht berücksichtigt wird
           published_proposal_help_text: Markieren, um die Aktion nur für veröffentlichte Vorschläge anzulegen
       administrator_tasks:
         index:
@@ -452,14 +452,14 @@ de:
           all: Alle
           with_confirmed_hide: Bestätigt
           without_confirmed_hide: Ausstehend
-        title: Verborgene Benutzer*innen
-        user: Benutzer*in
-        no_hidden_users: Keine verborgenen Benutzer*innen vorhanden.
+        title: Verborgene Benutzer
+        user: Benutzer
+        no_hidden_users: Keine verborgenen Benutzer vorhanden.
       show:
         email: "E-Mail:"
         hidden_at: "Verborgen am:"
         registered_at: "Registriert am:"
-        title: Aktivität des/der Benutzer*in (%{user})
+        title: Aktivität des Benutzers (%{user})
     hidden_budget_investments:
       index:
         filter: Filter
@@ -487,15 +487,15 @@ de:
           process: Gesamtdauer des Beteiligungsverfahren
           debate_phase: Phase Offene-Fragen
           draft_phase: Entwurfsphase
-          draft_phase_description: Wenn diese Phase aktiv ist, wird dieses Beteiligungsverfahren nicht in der Liste aller Verfahren angezeigt. Lassen Sie sich eine Vorschau des Verfahrens anzeigen und erstellen Sie Inhalte vor dem Start.
+          draft_phase_description: Wenn diese Phase aktiv ist, wird dieses Beteiligungsverfahren nicht in der Liste aller Verfahren angezeigt. Lass Dir eine Vorschau des Verfahrens anzeigen und erstelle Inhalte vor dem Start.
           allegations_phase: Ausarbeitungsphase
           proposals_phase: Vorschlagsphase
-          use_markdown: Verwenden Sie Markdown, um den Text zu formationen
+          use_markdown: Verwende Markdown, um den Text zu formationen
           title_placeholder: Titel des Beteiligungsverfahrens
           summary_placeholder: Kurze Zusammenfassung der Beschreibung
-          description_placeholder: Fügen Sie eine Beschreibung des Beteiligungsverfahrens hinzu
-          additional_info_placeholder: Fügen Sie zusätzliche Informationen hinzu, die Sie für nützlich halten
-          homepage_description: Hier können Sie den Inhalt des Beteiligungsverfahrens erläutern
+          description_placeholder: Füge eine Beschreibung des Beteiligungsverfahrens hinzu
+          additional_info_placeholder: Füge zusätzliche Informationen hinzu, die Du für nützlich hältst
+          homepage_description: Hier kannst Du den Inhalt des Beteiligungsverfahrens erläutern
           banner_title: Farben Header
         index:
           create: Neues Beteiligungsverfahren
@@ -532,7 +532,7 @@ de:
           milestones: Meilensteine
       homepage:
         edit:
-          title: Konfigurieren Sie Ihre Homepage
+          title: Konfiguriere Deine Homepage
       proposals:
         index:
           title: Vorschläge
@@ -542,8 +542,8 @@ de:
           supports: Unterstützung
         form:
         custom_categories: Tags
-        custom_categories_description: Vordefinierte Tags, die Benutzer*innen bei der Erstellung eines Vorschlags auswählen können.
-        custom_categories_placeholder: Geben Sie die gewünschten Tags ein, getrennt durch Kommas (',') und mit Anführungszeichen ("")
+        custom_categories_description: Vordefinierte Tags, die Benutzer bei der Erstellung eines Vorschlags auswählen können.
+        custom_categories_placeholder: Gib die gewünschten Tags ein, getrennt durch Kommas (',') und mit Anführungszeichen ("")
       draft_versions:
         create:
           notice: 'Entwurf erfolgreich erstellt. <a href="%{link}">Anzeigen</a>'
@@ -556,21 +556,21 @@ de:
         edit:
           back: Zurück
           submit_button: Änderungen speichern
-          warning: Sie haben den Text bearbeitet. Bitte klicken Sie nun auf speichern, um die Änderungen dauerhaft zu sichern.
-          markdown_changes_message: "Sie haben den Text bearbeitet, ohne ihn zu speichern. Bestätigen Sie, die Seite zu verlassen?"       
+          warning: Du hast den Text bearbeitet. Bitte klicke nun auf speichern, um die Änderungen dauerhaft zu sichern.
+          markdown_changes_message: "Du hast den Text bearbeitet, ohne ihn zu speichern. Bestätige, die Seite zu verlassen?"       
         form:
           title: 'Bearbeiten des <span class="strong">-%{draft_version_title}-</span> Beteiligungsverfahrens <span class="strong">%{process_title}</span>'
           launch_text_editor: Textbearbeitung öffnen
           close_text_editor: Textbearbeitung schließen
-          use_markdown: Verwenden Sie Markdown, um den Text zu formatieren
+          use_markdown: Verwende Markdown, um den Text zu formatieren
           hints:
             final_version: Diese Version wird als Endergebnis dieses Beteiligungsverfahrens veröffenlicht. Kommentare sind daher in dieser Fassung nicht erlaubt.
             status:
-              draft: Als Admin können Sie eine Vorschau anzeigen lassen, die niemand sonst sehen kann
+              draft: Als Admin kannst Du eine Vorschau anzeigen lassen, die niemand sonst sehen kann
               published: Für alle sichtbar
           title_placeholder: Titel der Entwurfsfassung
-          changelog_placeholder: Beschreiben Sie alle relevanten Änderungen der vorherigen Version
-          body_placeholder: Schreiben Sie einen Entwurfstext
+          changelog_placeholder: Beschreibe alle relevanten Änderungen der vorherigen Version
+          body_placeholder: Schreibe einen Entwurfstext
         index:
           title: Entwurfsfassungen
           create: Version erstellen
@@ -625,17 +625,17 @@ de:
           title: Folgen
     managers:
       index:
-        title: Verwalter*innen
+        title: Verwalter:innen
         name: Name
         email: E-Mail
-        no_managers: Keine Verwalter*innen vorhanden.
+        no_managers: Keine Verwalter vorhanden.
       manager:
         add: Hinzufügen
         delete: Löschen
       search:
-        title: "Verwalter*innen: Benutzer*innensuche"
+        title: "Verwalter: Benutzersuche"
     menu:
-      activity: Aktivität der Moderator*innen
+      activity: Aktivität der Moderatoren
       admin: Admin-Menü
       banner: Banner verwalten
       proposals: Vorschläge
@@ -647,22 +647,22 @@ de:
       hidden_proposals: Verborgene Vorschläge
       hidden_budget_investments: Verborgene Investitionsvorschläge
       hidden_proposal_notifications: Verborgene Benachrichtigungen
-      hidden_users: Verborgene Benutzer*innen
-      administrators: Administrator*innen
-      managers: Verwalter*innen
-      moderators: Moderator*innen
+      hidden_users: Verborgene Benutzer
+      administrators: Administratoren
+      managers: Verwalter
+      moderators: Moderatoren
       messaging_users: Nachrichten
       newsletters: Newsletter
       admin_notifications: Benachrichtigungen
-      system_emails: E-mails vom System
+      system_emails: E-Mails vom System
       emails_download: E-Mails herunterladen
-      valuators: Gutachter*innen
-      poll_officers: Wahlhelfer*in
+      valuators: Gutachter
+      poll_officers: Wahlhelfer
       polls: Abstimmungen
       poll_booths: Standort der Wahlkabinen
       poll_booth_assignments: Zuordnung der Abstimmungen zu Wahlkabinen
       poll_shifts: Arbeitsschichten verwalten
-      officials: Offizielle(r) Vertreter*innen
+      officials: Offizielle Vertreter
       organizations: Organisationen
       settings: Globale Einstellungen
       stats: Statistiken
@@ -673,7 +673,7 @@ de:
         pages: Meine Seiten
         images: Bilder
         content_blocks: Benutzerspezifische Inhaltsdatenblöcke
-        information_texts: Benutzer*definierte Informationstexte
+        information_texts: Benutzerdefinierte Informationstexte
         information_texts_menu:
           basic: "Grundlegende Anpassung"
           debates: "Diskussionen"
@@ -694,7 +694,7 @@ de:
       title_site_customization: Seiteninhalt
       title_booths: Wahlkabinen
       legislation: Beteiligungsverfahren
-      users: Benutzer*innen
+      users: Benutzer
       dashboard: Vorschläge Dashboard
       administrator_tasks: Beantragte Ressourcen
       dashboard_actions: Ressourcen und Aktionen
@@ -703,43 +703,43 @@ de:
       local_census_records: Verwaltung des lokalen Registers
     administrators:
       index:
-        title: Administrator*innen
+        title: Administrator
         name: Name
         email: E-Mail
         description: Beschreibung
-        id: Administrator ID
-        no_administrators: Keine Administrator*innen vorhanden.
+        id: Administrator-ID
+        no_administrators: Keine Administrator:innen vorhanden.
       administrator:
         add: Hinzufügen
         delete: Löschen
-        restricted_removal: "Entschuldigung, Sie können sich nicht von der Liste entfernen"
+        restricted_removal: "Entschuldigung, Du kannst Dich nicht von der Liste entfernen"
       search:
-        title: "Administrator*innen: Benutzer*innensuche"
+        title: "Administratoren: Benutzersuche"
       form:
         edit_title: "Administrator bearbeiten"
-        updated: "Administrator Update erfolgreich"
+        updated: "Administrator-Update erfolgreich"
     moderators:
       index:
-        title: Moderator*innen
+        title: Moderatoren
         name: Name
         email: E-Mail
-        no_moderators: Keine Moderator*innen vorhanden.
+        no_moderators: Keine Moderatoren vorhanden.
       moderator:
         add: Hinzufügen
         delete: Löschen
       search:
-        title: "Moderator*innen: Benutzer*innensuche"
+        title: "Moderatoren: Benutzersuche"
     segment_recipient:
-      all_users: Alle Benutzer*innen
-      administrators: Administrator*innen
+      all_users: Alle Benutzer
+      administrators: Administratoren
       all_proposal_authors: Vorschlag Autoren (inklusive archiviert und zurückgezogen)
-      proposal_authors: Antragsteller*innen
-      investment_authors: Antragsteller*innen im aktuellen Budget
-      feasible_and_undecided_investment_authors: "Antragsteller*innen im aktuellen Budget, welches nicht [valuation finished unfesasble] erfüllt"
-      selected_investment_authors: Antragsteller*innen ausgewählter Vorschläge im aktuellen Budget
-      winner_investment_authors: Antragsteller*innen der ausgewählten Vorschläge im aktuellen Budget
-      not_supported_on_current_budget: Benutzer*innen, die keine Vorschläge im aktuellen Budget unterstützt haben
-      invalid_recipients_segment: "Das Empfänger*innnensegment ist ungültig"
+      proposal_authors: Antragsteller
+      investment_authors: Antragsteller im aktuellen Budget
+      feasible_and_undecided_investment_authors: "Antragsteller im aktuellen Budget, welches nicht [valuation finished unfesasble] erfüllt"
+      selected_investment_authors: Antragsteller ausgewählter Vorschläge im aktuellen Budget
+      winner_investment_authors: Antragsteller der ausgewählten Vorschläge im aktuellen Budget
+      not_supported_on_current_budget: Benutzer, die keine Vorschläge im aktuellen Budget unterstützt haben
+      invalid_recipients_segment: "Das Empfängersegment ist ungültig"
     newsletters:
       create_success: Newsletter erfolgreich erstellt
       update_success: Newsletter erfolgreich aktualisiert
@@ -749,7 +749,7 @@ de:
         title: Newsletter
         new_newsletter: Neuer Newsletter
         subject: Betreff
-        segment_recipient: Empfänger*innen
+        segment_recipient: Empfänger
         sent: Gesendet
         actions: Aktionen
         draft: Entwurf
@@ -759,24 +759,24 @@ de:
         empty_newsletters: Keine Newsletter zum Anzeigen vorhanden
       new:
         title: Neuer Newsletter
-        header_footer_help_text: "Die Kopf- und Fußzeile ist für alle E-Mails gleich, Sie können sie ändern unter <code>app/views/layouts/mailer_header</code> and <code>app/views/layouts/mailer_footer</code>.<br>\nSie können das Bilder der Kopfzeile ersetzen unter %{link}."
-        image_link: "benutzerdefinierte Bilder"
+        header_footer_help_text: "Die Kopf- und Fußzeile ist für alle E-Mails gleich, Du kannst sie ändern unter <code>app/views/layouts/mailer_header</code> and <code>app/views/layouts/mailer_footer</code>.<br>\nDu kannst das Bild der Kopfzeile ersetzen unter %{link}."
+        image_link: "Benutzerdefinierte Bilder"
       edit:
         title: Newsletter bearbeiten
       show:
         title: Newsletter-Vorschau
         send: Senden
-        affected_users: (%{n} betroffene Benutzer*innen)
+        affected_users: (%{n} betroffene Benutzer)
         sent_emails:
           one: 1 E-Mail gesendet
           other: "%{count} E-Mails gesendet"
         sent_at: Gesendet um
         subject: Betreff
-        segment_recipient: Empfänger*innen
+        segment_recipient: Empfänger
         from: E-Mail-Adresse, die als Absender des Newsletters angezeigt wird
         body: Inhalt der E-Mail
-        body_help_text: So sieht die E-Mail für Benutzer*innen aus
-        send_alert: Sind Sie sicher, dass Sie diesen Newsletter an %{n} Benutzer*innen senden möchten?
+        body_help_text: So sieht die E-Mail für Benutzer aus
+        send_alert: Bist Du sicher, dass Du diesen Newsletter an %{n} Benutzer senden möchten?
     admin_notifications:
       create_success: Benachrichtigung erfolgreich erstellt
       update_success: Benachrichtigung erfolgreich aktualisiert
@@ -786,7 +786,7 @@ de:
         section_title: Benachrichtigungen
         new_notification: Neue Benachrichtigung
         title: Titel
-        segment_recipient: Empfänger*innen
+        segment_recipient: Empfänger
         sent: Gesendet
         actions: Aktionen
         draft: Entwurf
@@ -804,16 +804,16 @@ de:
       show:
         section_title: Vorschau der Benachrichtigung
         send: Benachrichtigung senden
-        will_get_notified: (%{n} Benutzer*innen werden benachrichtigt)
-        got_notified: (%{n} Benutzer*innen wurden benachrichtigt)
+        will_get_notified: (%{n} Benutzer werden benachrichtigt)
+        got_notified: (%{n} Benutzer wurden benachrichtigt)
         sent_at: Gesendet um
         title: Titel
         body: Text
         link: Link
-        segment_recipient: Empfänger*innen
-        preview_guide: "So wird die Benachrichtigung für Benutzer*innen angezeigt:"
-        sent_guide: "So wird die Benachrichtigung für Benutzer*innen angezeigt:"
-        send_alert: Sind Sie sicher, dass Sie diese Benachrichtigung an %{n} Benutzer*innen senden möchten?
+        segment_recipient: Empfänger
+        preview_guide: "So wird die Benachrichtigung für Benutzer angezeigt:"
+        sent_guide: "So wird die Benachrichtigung für Benutzer angezeigt:"
+        send_alert: Bist Du sicher, dass Du diese Benachrichtigung an %{n} Benutzer senden möchtest?
     system_emails:
       preview_pending:
         action: Vorschau ausstehend
@@ -823,9 +823,9 @@ de:
         send_pending: Ausstehendes senden
         send_pending_notification: Ausstehende Benachrichtigungen erfolgreich gesendet
       proposal_notification_digest:
-        title: "Zusammenfassende Benachrichtigun zu einem Vorschlag"
-        description: "Sammelt alle Benachrichtigungen über Vorschläge für eine*n Benutzer*in in einer Nachricht, um mehrfache E-Mails zu vermeiden."
-        preview_detail: "Benutzer*innen erhalten nur Benachrichtigungen zu Vorschlägen, denen sie folgen"
+        title: "Zusammenfassende Benachrichtigung zu einem Vorschlag"
+        description: "Sammelt alle Benachrichtigungen über Vorschläge für einen Benutzer in einer Nachricht, um mehrfache E-Mails zu vermeiden."
+        preview_detail: "Benutzer erhalten nur Benachrichtigungen zu Vorschlägen, denen sie folgen"
       budget_investment_created:
         title: "Budget angelegt"
         description: "Wird gesendet, wenn ein Benutzer einen Vorschlag für den Budget anlegt."
@@ -845,28 +845,28 @@ de:
         title: "Antworten"
         description: "Wird an den Autor des Kommentars gesendet, wenn er eine Antwort erhält."
       direct_message_for_receiver:
-        title: "Privater Nachrichten Empfänger"
-        description: "Wird an privaten Nachrichten Empfänger gesendet."
+        title: "Empfänger privater Nachrichten"
+        description: "Wird an Empfänger privater Nachrichten gesendet."
       direct_message_for_sender:
-        title: "Privater Nachrichten Sender"
-        description: "Wird an privaten Nachrichten Sender gesendet."
+        title: "Sender privater Nachrichten"
+        description: "Wird an Sender privater Nachrichten gesendet."
       email_verification:
         title: "E-Mail Überprüfung"
         description: "Wird an einen neuen Benutzer gesendet zur Verifizierung seines Accounts."
       user_invite:
-        title: "Benutzter Einladung"
+        title: "Benutzer-Einladung"
         description: "Wird an die eingeladene Person gesendet."
       evaluation_comment:
-        title: "Neuer Bewertungs-Kommentar"
-        description: "Versand an Administratoren und Gutachter im Zusammenhang mit kommentierten Investitions-Vorschlägen"
-      edit_info: "Sie können diese E-Mail bearbeiten"
+        title: "Neuer Bewertungskommentar"
+        description: "Versand an Administrator:innen und Gutachter im Zusammenhang mit kommentierten Investitionsvorschlägen"
+      edit_info: "Du kannst diese E-Mail bearbeiten"
       message_title: "Titel der Nachricht"
       message_body: "Dies ist ein Muster für den Inhalt der Nachricht."
       alert:
-        no_investments: "Es sind keine Budgets-Vorschläge angelegt. Einige Beispieldaten werden benötigt, um eine Vorschau der E-Mail zu erhalten."
+        no_investments: "Es sind keine Budgetvorschläge angelegt. Einige Beispieldaten werden benötigt, um eine Vorschau der E-Mail zu erhalten."
         no_comments: "Es wurden keine Kommentare erstellt. Einige Beispieldaten werden benötigt, um eine Vorschau der E-Mail zu erhalten."
         no_replies: "Es wurden keine Antworten erstellt. Einige Beispieldaten werden benötigt, um eine Vorschau der E-Mail zu erhalten."
-        no_evaluation_comments: "Es wurden keine Bewertungs-Kommentare erstellt. Einige Beispieldaten werden benötigt, um eine Vorschau der E-Mail zu erhalten."
+        no_evaluation_comments: "Es wurden keine Bewertungskommentare erstellt. Einige Beispieldaten werden benötigt, um eine Vorschau der E-Mail zu erhalten."
     emails_download:
       index:
         title: E-Mails herunterladen
@@ -875,26 +875,26 @@ de:
         download_emails_button: Email-Liste herunterladen
     valuators:
       index:
-        title: Gutachter*innen
+        title: Gutachter
         name: Name
         email: E-Mail
         description: Beschreibung
         no_description: Ohne Beschreibung
-        no_valuators: Keine Gutachter*innen vorhanden.
-        valuator_groups: "Gutachtungsgruppen"
+        no_valuators: Keine Gutachter vorhanden.
+        valuator_groups: "Gutachtergruppen"
         group: "Gruppe"
         no_group: "Ohne Gruppe"
         abilities: "Möglichkeiten"
         can_comment: "Kann kommentieren"
         can_edit_dossier: "Kann Dossier bearbeiten"
       valuator:
-        add: Als Gutachter*in hinzufügen
+        add: Als Gutachter hinzufügen
         delete: Löschen
       search:
-        title: "Gutachter*innen: Benutzer*innensuche"
+        title: "Gutachter: Benutzersuche"
       form:
-        edit_title: "Gutachter*innen: Gutachter*in bearbeiten"
-        updated: "Gutachter*in erfolgreich aktualisiert"
+        edit_title: "Gutachter: Gutachter bearbeiten"
+        updated: "Gutachter erfolgreich aktualisiert"
       show:
         description: "Beschreibung"
         email: "E-Mail"
@@ -905,42 +905,42 @@ de:
         no_abilities: "Ohne Möglichkeiten"
     valuator_groups:
       index:
-        title: "Gutachtungsgruppen"
-        new: "Gutachtungsgruppe erstellen"
+        title: "Gutachtergruppen"
+        new: "Gutachtergruppe erstellen"
         name: "Name"
         members: "Mitglieder"
-        no_groups: "Keine Gutachtungsgruppen vorhanden"
+        no_groups: "Keine Gutachtergruppen vorhanden"
       show:
-        title: "Gutachtungsgruppe: %{group}"
-        no_valuators: "Es gibt keine Gutachter*innen, die dieser Gruppe zugeordnet sind"
+        title: "Gutachtergruppe: %{group}"
+        no_valuators: "Es gibt keine Gutachter, die dieser Gruppe zugeordnet sind"
       form:
-        new: "Gutachtungsgruppe erstellen"
-        edit: "Gutachtungsgruppe speichern"
+        new: "Gutachtergruppe erstellen"
+        edit: "Gutachtergruppe speichern"
     poll_officers:
       index:
-        title: Wahlhelfer*in
+        title: Wahlhelfer
       officer:
         add: Hinzufügen
         delete: Amt löschen
         name: Name
         email: E-Mail
-        entry_name: Wahlhelfer*in
+        entry_name: Wahlhelfer
       search:
-        email_placeholder: Benutzer*in via E-Mail suchen
+        email_placeholder: Benutzer via E-Mail suchen
         search: Suche
         user_not_found: Benutzer wurde nicht gefunden
-        help: "Um Wahlhelfer*innen hinzuzufügen oder zu entfernen, verwenden Sie das untenstehende Suchformular."
+        help: "Um Wahlhelfer hinzuzufügen oder zu entfernen, verwende das untenstehende Suchformular."
     poll_officer_assignments:
       index:
-        officers_title: "Liste der zugewiesenen offiziellen Vertreter*innen"
-        no_officers: "Es gibt keine offiziellen Vertreter*innen für diese Wahlurne"
+        officers_title: "Liste der zugewiesenen offiziellen Vertreter"
+        no_officers: "Es gibt keine offiziellen Vertreter für diese Wahlurne"
         table_name: "Name"
         table_email: "E-Mail"
       by_officer:
         date: "Datum"
         booth: "Wahlkabine"
-        assignments: "Wechsel der offiziellen Vertreter*innen in dieser Abstimmung"
-        no_assignments: "In dieser Abstimmung gibt es keinen Schichtwechsel des/der Wahlhelfer*in."
+        assignments: "Wechsel der offiziellen Vertreter in dieser Abstimmung"
+        no_assignments: "In dieser Abstimmung gibt es keinen Schichtwechsel des Wahlhelfers."
     poll_shifts:
       new:
         add_shift: "Arbeitsschicht hinzufügen"
@@ -950,11 +950,11 @@ de:
         edit_shifts: Arbeitsschicht zuordnen
         new_shift: "Neue Arbeitsschicht"
         no_shifts: "Dieser Wahlkabine wurden keine Arbeitsschichten zugeordnet"
-        officer: "Offizielle(r) Vertreter*in"
+        officer: "Offizieller Vertreter"
         remove_shift: "Entfernen"
         search_officer_button: Suche
-        search_officer_placeholder: Suche nach offizielle(m) Vertreter*in
-        search_officer_text: Suche nach offizielle(m) Vertreter*in, um neue Arbeitsschicht zuzuordnen
+        search_officer_placeholder: Suche nach offiziellem Vertreter
+        search_officer_text: Suche nach offiziellem Vertreter, um neue Arbeitsschicht zuzuordnen
         select_date: "Tag auswählen"
         no_voting_days: "Abstimmungsphase beendet"
         select_task: "Aufgabe auswählen"
@@ -962,8 +962,8 @@ de:
         table_email: "E-Mail"
         table_name: "Name"
       flash:
-        create: "Arbeitsschicht für offizielle(m) Vertreter*in hinzugefügt"
-        destroy: "Arbeitsschicht für offizielle(m) Vertreter*in entfernt"
+        create: "Arbeitsschicht für offiziellen Vertreter hinzugefügt"
+        destroy: "Arbeitsschicht für offiziellen Vertreter entfernt"
         unable_to_destroy: "Schichten, denen Ergebnisse oder Nachzählungen zugeordnet sind, können nicht gelöscht werden"
         date_missing: "Es muss ein Datum gewählt werden"
       vote_collection: Stimmen einsammeln
@@ -981,22 +981,22 @@ de:
           unassign: Zuweisung der Wahlkabine aufheben
     poll_booth_assignments:
       alert:
-        shifts: "Dieser Wahlkabine sind bereits Arbeitsschichten zugeordnet. Wenn Sie die Zuweisung entfernen, werden die Arbeitsschichten gelöscht. Wollen Sie dennoch fortfahren?"
+        shifts: "Dieser Wahlkabine sind bereits Arbeitsschichten zugeordnet. Wenn Du die Zuweisung entfernst, werden die Arbeitsschichten gelöscht. Willst Du dennoch fortfahren?"
       show:
         location: "Standort"
-        officers: "Offizielle(r) Vertreter*innen"
-        officers_list: "Liste der offiziellen Vertreter*innen für diese Wahlurne"
-        no_officers: "Es gibt keine offiziellen Vertreter*innen für diese Wahlurne"
+        officers: "Offizieller Vertreter"
+        officers_list: "Liste der offiziellen Vertreter für diese Wahlurne"
+        no_officers: "Es gibt keine offiziellen Vertreter für diese Wahlurne"
         recounts: "Nachzählungen"
         recounts_list: "Liste der Nachzählungen für diese Wahlurne"
         results: "Ergebnisse"
         date: "Datum"
-        count_final: "Endgültige Nachzählung (durch offizielle(r) Vertreter*in)"
+        count_final: "Endgültige Nachzählung (durch offiziellen Vertreter)"
         count_by_system: "Stimmen (automatisch)"
         total_system: Gesamtanzahl der Stimmen (automatisch)
       index:
         booths_title: "Liste der zugewiesenen Wahlurnen"
-        no_booths: "Dieser Abstimmung sind keine Wahlhelfer*innen zugeordnet."
+        no_booths: "Dieser Abstimmung sind keine Wahlhelfer zugeordnet."
         table_name: "Name"
         table_location: "Lage"
     active_polls:
@@ -1004,7 +1004,7 @@ de:
         title: "Übersichtsseite editieren"
       form:
         description:
-          help_text: "Dieser Text wird in der Kopfzeile der Abstimmung-Seite angezeigt. Es kann verwendet werden, um einen Kontext zu den offenen Abstimmungen hinzuzufügen."
+          help_text: "Dieser Text wird in der Kopfzeile der Abstimmungsseite angezeigt. Es kann verwendet werden, um einen Kontext zu den offenen Abstimmungen hinzuzufügen."
     polls:
       index:
         title: "Liste der Abstimmungen"
@@ -1024,7 +1024,7 @@ de:
       show:
         questions_tab: Fragen
         booths_tab: Wahlkabinen
-        officers_tab: Offizielle(r) Vertreter*innen
+        officers_tab: Offizielle Vertreter
         recounts_tab: Nachzählung
         results_tab: Ergebnisse
         no_questions: "Dieser Abstimmung sind keine Fragen zugeordnet."
@@ -1038,7 +1038,7 @@ de:
       destroy:
         alert: "Diese Aktion entfernt die Abstimmung und alle damit verbundenen Fragen."
         success_notice: "Abstimmung erfolgreich gelöscht"
-        unable_notice: "Sie können keine Abstimmung löschen, für die schon abgestimmt wurde"
+        unable_notice: "Du kannst keine Abstimmung löschen, für die schon abgestimmt wurde"
     questions:
       index:
         title: "Fragen"
@@ -1106,11 +1106,11 @@ de:
       index:
         title: "Nachzählungen"
         no_recounts: "Es gibt nichts nachzuzählen"
-        all_booths_total: "Kumulative Summe aus allen Wahl-Kabinen:"
+        all_booths_total: "Kumulative Summe aus allen Wahlkabinen:"
         total_final: "Finale Berichte"
         total_system: "Stimmen (automatisch)"
         table_booth_name: "Wahlkabine"
-        table_total_recount: "Gesamte Nachzählung (durch offizielle(n) Vertreter*in)"
+        table_total_recount: "Gesamte Nachzählung (durch offiziellen Vertreter)"
         table_system_count: "Stimmen (automatisch)"
     results:
       index:
@@ -1148,29 +1148,29 @@ de:
         edit: "Wahlkabine bearbeiten"
     officials:
       edit:
-        destroy: Status "Offizielle(r) Vertreter*in" entfernen
-        title: "Offizielle(r) Vertreter*innen: Benutzer*in bearbeiten"
+        destroy: Status "Offizieller Vertreter" entfernen
+        title: "Offizieller Vertreter: Benutzer bearbeiten"
       flash:
-        official_destroyed: "Daten gespeichert: Der/Die Benutzer*in ist nicht länger ein/e Beamte/r"
-        official_updated: Details des/r Beamten* gespeichert
+        official_destroyed: "Daten gespeichert: Der Benutzer ist nicht länger ein Beamter"
+        official_updated: "Details des Beamten: gespeichert"
       index:
         title: Öffentliche Ämter
-        help: Interventionen von Benutzerkonten, die als Offizielle gekennzeichnet sind, werden hervorgehoben. Sie können die Bezeichnung definieren, die neben den Benutzernamen dieser Konten erscheint, von der wichtigsten (Ebene 1) bis zur niedrigsten (Ebene 5).
-        no_officials: Keine offizielle Vertreter*innen vorhanden.
+        help: Interventionen von Benutzerkonten, die als Offizielle gekennzeichnet sind, werden hervorgehoben. Du kannst die Bezeichnung definieren, die neben den Benutzernamen dieser Konten erscheint, von der wichtigsten (Ebene 1) bis zur niedrigsten (Ebene 5).
+        no_officials: Keine offiziellen Vertreter vorhanden.
         name: Name
         official_position: Öffentliches Amt
         official_level: Stufe
-      level_0: Kein/e Offizielle(r) Vertreter*in
+      level_0: Kein offizieller Vertreter
       level_1: Stufe 1
       level_2: Stufe 2
       level_3: Stufe 3
       level_4: Stufe 4
       level_5: Stufe 5
       search:
-        edit_official: Offizielle(n) Vertreter*in bearbeiten
-        make_official: Offizielle(n) Vertreter*in erstellen
-        title: "Offizielle(r) Vertreter*innen: Benutzer*innensuche"
-        no_results: Keine offizielle Vertreter*innen gefunden.
+        edit_official: Offiziellen Vertreter bearbeiten
+        make_official: Offiziellen Vertreter erstellen
+        title: "Offizielle Vertreter: Benutzersuche"
+        no_results: Keine offiziellen Vertreter gefunden.
     organizations:
       index:
         filter: Filter
@@ -1185,7 +1185,7 @@ de:
         name: Name
         email: E-Mail
         phone_number: Telefon
-        responsible_name: Verantwortliche*r
+        responsible_name: Verantwortlicher
         status: Status
         no_organizations: Keine Organisationen vorhanden.
         reject: Ablehnen
@@ -1210,7 +1210,7 @@ de:
         no_proposals: Keine Vorschläge vorhanden.
         tags: Kategorien
       show:
-        create_question: Fügen Sie diesen Vorschlag zu einer Abstimmung hinzu, über die abgestimmt werden soll
+        create_question: Füge diesen Vorschlag zu einer Abstimmung hinzu, über die abgestimmt werden soll
       form:
         update: Update Vorschlag
       update:
@@ -1250,17 +1250,17 @@ de:
           disable: "Deaktivieren"
         map:
           title: Kartenkonfiguration
-          help: Hier können Sie festlegen, wie die Karte den Benutzer*innen angezeigt wird. Bewegen Sie den Marker oder klicken Sie auf einen beliebigen Teil der Karte, passen Sie den Zoom an und klicken Sie auf die Schaltfläche "Aktualisieren".
+          help: Hier kannst Du festlegen, wie die Karte den Benutzern angezeigt wird. Bewege den Marker oder klicke auf einen beliebigen Teil der Karte, passe den Zoom an und klicke auf die Schaltfläche "Aktualisieren".
           flash:
             update: Kartenkonfiguration erfolgreich aktualisiert.
           form:
             submit: Aktualisieren
-          how_to_enable: 'Um die Karte den Benutzern anzuzeigen, müssen Sie "Vorschläge und Budget Geolokalisierung" auf der Registerkarte "Funktionen" aktivieren.'
+          how_to_enable: 'Um die Karte den Benutzern anzuzeigen, musst Du "Vorschläge und Budget Geolokalisierung" auf der Registerkarte "Funktionen" aktivieren.'
         dashboard:
           title: Vorschläge Dashboard
         remote_census:
           title: Register Konfiguration entfernen
-          how_to_enable: 'Um die Fernzählung (SOAP) zu konfigurieren, müssen Sie "Verbindung zur Fernzählung (SOAP) konfigurieren" auf der Registerkarte "Funktionen" aktivieren.'
+          how_to_enable: 'Um die Fernzählung (SOAP) zu konfigurieren, musst Du "Verbindung zur Fernzählung (SOAP) konfigurieren" auf der Registerkarte "Funktionen" aktivieren.'
       remote_census_general_name: Allgemeine Informationen
       remote_census_request_name: Anfrage Daten
       remote_census_response_name: Antwort Daten
@@ -1278,7 +1278,7 @@ de:
         placeholder: Suche Wahlkabine nach Name
       poll_officers_search:
         button: Suche
-        placeholder: Suche Offizielle(r) Vertreter*innen
+        placeholder: Suche offizielle Vertreter
       poll_questions_search:
         button: Suche
         placeholder: Suche Fragen
@@ -1290,7 +1290,7 @@ de:
         placeholder: Suche Diskussionen per Titel oder Beschreibung
       user_search:
         button: Suche
-        placeholder: Suche Benutzer*in nach Name oder E-Mail
+        placeholder: Suche Benutzer nach Name oder E-Mail
       search_results: "Ergebnisse anzeigen"
       no_search_results: "Keine Ergebnisse gefunden."
       actions: Aktionen
@@ -1298,7 +1298,7 @@ de:
       description: Beschreibung
       image: Bild
       show_image: Bild anzeigen
-      moderated_content: "Überprüfen Sie den von den Moderator*innen moderierten Inhalt und bestätigen Sie, ob die Moderation korrekt ausgeführt wurde."
+      moderated_content: "Überprüfe den von den Moderatoren moderierten Inhalt und bestätige, ob die Moderation korrekt ausgeführt wurde."
       view: Anzeigen
       proposal: Vorschlag
       author: Autor
@@ -1307,7 +1307,7 @@ de:
       delete: Löschen
       color_help: Hexadezimales Format
       show_results_and_stats: "Ergebnisse und Statistiken anzeigen"
-      results_and_stats_reminder: "Durch das Markieren dieses Kontrollkästchens werden die Resultate und/oder Statistiken dieser Abstimmung öffentlich abrufbar und für alle Benutzer*innen sichtbar."
+      results_and_stats_reminder: "Durch das Markieren dieses Kontrollkästchens werden die Resultate und/oder Statistiken dieser Abstimmung öffentlich abrufbar und für alle Benutzer sichtbar."
     geozones:
       index:
         title: Bereiche
@@ -1331,7 +1331,7 @@ de:
         creating: Gebiet anlegen
       delete:
         success: Gebiet erfolgreich gelöscht
-        error: Dieser Gebiet kann nicht gelöscht werden, da ihm bereits Elemente zugeordnet sind
+        error: Dieses Gebiet kann nicht gelöscht werden, da ihm bereits Elemente zugeordnet sind
     signature_sheets:
       author: Autor
       created_at: Erstellungsdatum
@@ -1342,10 +1342,10 @@ de:
         new: Neue Unterschriftenbögen
       new:
         title: Neue Unterschriftenbögen
-        document_numbers_note: "Geben Sie die Nummern durch Kommas (,) getrennt ein"
+        document_numbers_note: "Gib die Nummern durch Kommas (,) getrennt ein"
         submit: Unterschriftenbogen erstellen
         text_help:
-          required_fields_note: "Um einen Benutzer zu verifizieren, benötigt Ihre Anwendung: Dokumentnummer"
+          required_fields_note: "Um einen Benutzer zu verifizieren, benötigt Deine Anwendung: Dokumentnummer"
           date_of_birth_note: ", Geburtstag (tt/mm/yyyy)"
           postal_code_note: " und Postleitzahl"
           required_fields_structure_note: "Die Pflichtfelder für jeden Benutzer müssen durch Kommas und jeder Benutzer durch Strichpunkt getrennt sein."
@@ -1366,7 +1366,7 @@ de:
           zero: "Es gibt keine Wahlstimmen aus den verifizierten Unterschriften."
           one: "Es gibt %{count} Wahlstimmen aus den verifizierten Unterschriften."
           other: "Es gibt %{count} Wahlstimmen aus den verifizierten Unterschriften."
-        loading: "Es gibt immer noch Unterschriften, die vom Melderegister überprüft werden. Bitte aktualisieren Sie die Seite in Kürze"
+        loading: "Es gibt immer noch Unterschriften, die vom Melderegister überprüft werden. Bitte aktualisiere die Seite in Kürze"
     stats:
       show:
         stats_title: Statistiken
@@ -1379,12 +1379,12 @@ de:
           proposals: Vorschläge
           budgets: Offene Haushalte
           budget_investments: Investitionsvorschläge
-          unverified_users: Nicht verifizierte Benutzer*innen
-          user_level_three: Benutzer*innen auf Stufe 3
-          user_level_two: Benutzer*innen auf Stufe 2
-          users: Benutzer*innen gesamt
-          verified_users: Verifizierte Benutzer*innen
-          verified_users_who_didnt_vote_proposals: Verifizierte Benutzer*innen, die nicht für Vorschläge abgestimmt haben
+          unverified_users: Nicht verifizierte Benutzer
+          user_level_three: Benutzer auf Stufe 3
+          user_level_two: Benutzer auf Stufe 2
+          users: Benutzer gesamt
+          verified_users: Verifizierte Benutzer
+          verified_users_who_didnt_vote_proposals: Verifizierte Benutzer, die nicht für Vorschläge abgestimmt haben
           visits: Besuche
           votes: Gesamtbewertung
         budgets_title: Partizipative Haushaltsplanung
@@ -1396,7 +1396,7 @@ de:
       graph:
         debate_created: Diskussionen
         visit: Besuche
-        level_2_user: Benutzer*innen auf Stufe 2
+        level_2_user: Benutzer auf Stufe 2
         proposal_created: Vorschläge
       budgets:
         no_data_before_balloting_phase: "Es gibt keine Daten, die vor der Abstimmungsphase angezeigt werden können."
@@ -1406,19 +1406,19 @@ de:
       budget_balloting:
         title: "Finale Abstimmung Statistiken"
         vote_count: Stimmen
-        participant_count: Teilnehmer*innen
+        participant_count: Teilnehmer
         votes_per_heading: Stimmen pro Vorschlag
-        participants_per_district: Teilnehmer*innen pro Gebiet
+        participants_per_district: Teilnehmer pro Gebiet
       budget_supporting:
         title: "Unterstützungsphase Statistiken"
         headings: Rubriken
         users: Benutzer
         vote_count: Stimmen
-        participant_count: Teilnehmer*innen
+        participant_count: Teilnehmer
       direct_messages:
         title: Direktnachrichten
         total: Gesamt
-        users_who_have_sent_message: Benutzer*innen, die eine persönliche Nachricht versendet haben
+        users_who_have_sent_message: Benutzer, die eine persönliche Nachricht versendet haben
       proposal_notifications:
         title: Benachrichtigungen zu einem Vorschlag
         total: Gesamt
@@ -1427,32 +1427,23 @@ de:
       polls:
         title: Abstimmungsstatistik
         all: Abstimmungen
-        web_participants: Online-Teilnehmer*innen
-        total_participants: Gesamtanzahl Teilnehmer*innen
+        web_participants: Online-Teilnehmer
+        total_participants: Gesamtanzahl Teilnehmer
         poll_questions: "Fragen der Abstimmung: %{poll}"
         table:
           poll_name: Abstimmung
           question_name: Frage
-          origin_web: Online-Teilnehmer*innen
-          origin_total: Gesamtanzahl Teilnehmer*innen
+          origin_web: Online-Teilnehmer
+          origin_total: Gesamtanzahl Teilnehmer
     tags:
       create: Tag erstellen
       destroy: Tag löschen
       index:
-        add_tag: Neue Tags hinzufügen 
-        title: Tags
+        add_tag: Neuen Tag für Vorschläge hinzufügen
+        title: Tags der Vorschläge
         topic: Tag
-        help: Tags können als Projekt, Kategorie oder Unterkategorie angelegt werden.
-        scope: Art
-        settings: Einstellungen
-      logic:
-        project: Projekt
-        category: Kategorie
-        subcategory: Unterkategorie
-        predefined: Festgelegt
-        cloud_category: Tag Cloud für Kategorie
-        cloud_subcategory: Tag Cloud für Unterkategorie
-        custom_tags: Nutzer Tags
+        help: "Wenn ein:e Benutzer einen Vorschlag erstellt, werden die folgenden Tags als Standard-Tags vorgeschlagen."
+        scope: Unterkategorien
     users:
       columns:
         id: ID
@@ -1463,14 +1454,14 @@ de:
         roles: Rollen
         verification_level: Überprüfungsstatus
       index:
-        title: Benutzer*in
-        no_users: Keine Benutzer*innen vorhanden.
+        title: Benutzer
+        no_users: Keine Benutzer vorhanden.
         filter: Filter
         filters:
           active: Aktiv
           erased: Gelöscht
       search:
-        placeholder: Suche Benutzer*in nach E-Mail, Name oder Ausweis
+        placeholder: Suche Benutzer nach E-Mail, Name oder Ausweis
         search: Suche
     verifications:
       index:
@@ -1480,7 +1471,7 @@ de:
     site_customization:
       content_blocks:
         information: Informationen zu Inhaltsblöcken
-        about: "Sie können HTML-Inhaltsblöcke erstellen, die in die Kopf- oder Fußzeile von CONSUL eingefügt werden."
+        about: "Du können HTML-Inhaltsblöcke erstellen, die in die Kopf- oder Fußzeile von CONSUL eingefügt werden."
         html_format: "Ein Inhaltsblock ist eine Gruppe von Links und muss diesem Format folgen:"
         no_blocks: "Keine Inhaltsblöcke vorhanden."
         create:
@@ -1505,8 +1496,8 @@ de:
           names:
             top_links: Top Links
             footer: Fußzeile
-            subnavigation_left: Haupt Navigation Links
-            subnavigation_right: Haupt Navigation Rechts
+            subnavigation_left: Hauptnavigation Links
+            subnavigation_right: Hauptnavigation Rechts
       images:
         index:
           title: Bilder
@@ -1535,10 +1526,10 @@ de:
         index:
           create: Neue Seite erstellen
           delete: Seite löschen
-          title: Benutzer*definierte Seiten
+          title: Benutzerdefinierte Seiten
           see_page: Seite anzeigen
         new:
-          title: Neue benutzer*definierte Seite erstellen
+          title: Neue benutzerdefinierte Seite erstellen
           slug_help: "Text zur Identifizierung dieser Seite auf der URL, z.B. <code>https://consulproject.org/page-slug</code>"
         page:
           created_at: Erstellt

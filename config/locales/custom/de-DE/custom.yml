@@ -8,11 +8,9 @@ de:
         predefined_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
         show_archived:
           navigation: Archivierte Projekte in Navigation anzeigen
-          navigation_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
+          navigation_description: Zeigt archivierte Projekte in der Navigationsleiste wenn aktiviert
           sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
-          sidebar_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
-
-
+          sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
     admin:
       menu:
         projekts: Projekte
@@ -49,7 +47,6 @@ de:
           voting_phase: Abstimmungsphase
           voting_manage: Umfragen verwalten
           update: Projekteinstellungen aktualisieren
-
     projekts:
       new:
         first_level: 'Erste Projektebene'
@@ -60,11 +57,9 @@ de:
         title: 'Projekte'
         title_active: 'Aktive Projekte'
         title_archived: 'Abgelaufene Projekte'
-        filter_active: 'Projekte filtern'
-        filter_archived: 'Projekte filtern'
+        filter_button: 'Projekte filtern'
       errors:
         presence: 'Bitte wählen Sie ein Projekt'
-
     polls:
       show:
         results_menu: Zwischenergebnisse für Admins

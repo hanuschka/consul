@@ -10,7 +10,6 @@ namespace :admin do
     end
   end
 
-
   resources :organizations, only: :index do
     get :search, on: :collection
     member do

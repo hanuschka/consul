@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210305171805) do
+ActiveRecord::Schema.define(version: 20210319081657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1213,6 +1213,16 @@ ActiveRecord::Schema.define(version: 20210305171805) do
     t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "order_number"
+    t.boolean "total_duration_active"
+    t.date "total_duration_start"
+    t.date "total_duration_end"
+    t.boolean "debate_phase_active"
+    t.date "debate_phase_start"
+    t.date "debate_phase_end"
+    t.boolean "proposal_phase_active"
+    t.date "proposal_phase_start"
+    t.date "proposal_phase_end"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 

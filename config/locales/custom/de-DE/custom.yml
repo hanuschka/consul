@@ -102,10 +102,10 @@ de:
           update: Projekteinstellungen aktualisieren
     projekts:
       new:
-        first_level: 'Erste Projektebene'
-        second_level: 'Zweite Projektebene'
-        third_level: 'Dritte Projektebene'
-        fourth_level: 'Vierte Projektebene'
+        first_level: 'Kategorie'
+        second_level: 'Zweite Kategorie-Ebene'
+        third_level: 'Dritte Kategorie-Ebene'
+        fourth_level: 'Vierte Kategorie-Ebene'
       sidebar_filter:
         title: 'Kategorien'
         title_active: 'Aktive Kategorien'

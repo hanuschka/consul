@@ -134,8 +134,8 @@ table.edit-projekt {
 	}
 
 	input:checked ~ .checkmark {
-    background: #06408E;
-    border: 1.5px solid #06408E;
+    background: #00cda0;
+    border: 1.5px solid #00cda0;
 	}
 
 	.checkmark-before {
@@ -210,7 +210,7 @@ table.edit-projekt {
   }
 
   &.filtered-projekt {
-    background: #06408E;
+    background: #00cda0;
 
     a {
       color: #fff;
@@ -248,7 +248,7 @@ table.edit-projekt {
 		content: '';
 		height: 14px;
 		width: 1px;
-		background-color: #06408E;
+		background-color: #00cda0;
 	}
 	.close:before {
 		transform: rotate(45deg);
@@ -324,13 +324,13 @@ table.edit-projekt {
 	}
 
 	input:checked ~ .checkmark {
-    background: #06408E;
-    border: 1.5px solid #06408E;
+    background: #00cda0;
+    border: 1.5px solid #00cda0;
 	}
 
 	.label-selected {
-    color: #06408E;
-    border-color: #06408E;
+    color: #00cda0;
+    border-color: #00cda0;
 	}
 
 	.checkmark:before {
@@ -350,7 +350,7 @@ table.edit-projekt {
 
 .filter-projekts-button {
   display: inline-block;
-  background: #06408E;
+  background: #00cda0;
   color: #fefefe;
   padding: 0.5em;
   text-decoration: none;
@@ -361,7 +361,7 @@ table.edit-projekt {
 .filter-projekts-button:hover,
 .filter-projekts-button:focus {
   color: #fff;
-  background: #14679e;
+  background: lighten(#00cda0, 10%);
   text-decoration:none;
   cursor:pointer;
 }

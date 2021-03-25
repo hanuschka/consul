@@ -135,7 +135,9 @@
             disabled: !can_create %>
           <% if params[:retired].blank? %>
 					  <%= render "shared/projekts_sidebar" %>
-            <%= render "shared/categories", model: "proposal" %>
+            <% if tags.any? %>
+              <%= render "shared/categories", model: "proposal" %>
+            <% end %>
             <%= render "geozones" %>
           <% end %>
           <%= render "retired" %>

@@ -1,6 +1,115 @@
 // setup_project
 // Dropdown
 
+// setup_project
+// Dropdown
+
+
+.subnavigation a.is-active {
+  color: #fff;
+}
+
+.main-nav,
+.drop-nav {
+  background: $dropdownbackground;
+}
+.main-nav {
+  float: left;
+}
+  .main-nav > li {
+    float: left;
+  }
+  .main-nav li:first-child {
+    border-left: none;
+  }
+  .main-nav a {
+    color: $dropdowntextcolor;
+    display: block;
+    text-decoration: none;
+  }
+.drop,
+.flyout {
+  position: relative;
+  z-index: 1000;
+}
+
+.drop-nav li a,
+.flyout-nav li a {
+  padding-left: 20px;
+}
+
+// width of the list items
+.drop-nav li {
+  border-bottom: 1px solid $dropdownbordercolor;
+  width: $dropdownwidth;
+}
+.drop:hover > .drop-nav,
+.flyout:hover > .flyout-nav {
+  display: block;
+}
+
+.flyout:hover > .flyout-nav-right {
+  display: block;
+}
+
+.flyout-nav {
+  left: 100%;
+  top: 0;
+}
+
+.flyout-nav-right li {
+  width: 225px;
+}
+
+
+.flyout:hover a,
+.flyout-nav {
+  background: $dropdownbackground;
+}
+.subnavigation {
+  background: $dropdownbackground;
+}
+#alert {
+  z-index: 3000;
+  position: absolute;
+}
+#notice {
+  z-index: 3000;
+  position: absolute;
+}
+.dropdown {
+  z-index: 3000;
+  position: relative;
+}
+
+.filter-toggle-arrow {
+  position: absolute;
+  right: 10px;
+  top: 18px;
+
+  width: 0;
+  height: 0;
+  margin: 0 auto;
+  border-left: 7px solid $white;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  cursor: pointer;
+}
+
+#responsive-menu ul {
+  padding-right: 0;
+}
+
+#responsive-menu .drop-nav li {
+  width: 100%
+}
+
+#responsive-menu .subnavigation a {
+  width: 70%;
+}
+
+
+
 #navigation_bar {
 
   li.nav-element-projekt:hover > ul.flyout-projekts {

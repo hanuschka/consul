@@ -34,23 +34,23 @@ de:
         one: "Tag"
         other: "Tags"
       user:
-        one: "Benutzer*in"
-        other: "Benutzer*innen"
+        one: "Benutzer"
+        other: "Benutzer"
       moderator:
-        one: "Moderator*in"
-        other: "Moderator*innen"
+        one: "Moderator"
+        other: "Moderatoren"
       administrator:
-        one: "Administrator*in"
-        other: "Administrator*innen"
+        one: "Administrator"
+        other: "Administratoren"
       valuator:
-        one: "Gutachter*in"
-        other: "Gutachter*innen"
+        one: "Gutachter"
+        other: "Gutachteren"
       valuator_group:
-        one: "Gutachtungsgruppe"
-        other: "Gutachtungsgruppen"
+        one: "Gutachterinnengruppe"
+        other: "Gutachterinnengruppen"
       manager:
-        one: "Verwalter*in"
-        other: "Verwalter*innen"
+        one: "Verwalter"
+        other: "Verwalter"
       newsletter:
         one: "Newsletter"
         other: "Newsletter"
@@ -64,8 +64,8 @@ de:
         one: "Wahlkabine"
         other: "Wahlkabinen"
       poll/officer:
-        one: "Offizielle(r) Vertreter*in"
-        other: "Offizielle(r) Vertreter*innen"
+        one: "Offizieller Vertreter"
+        other: "Offizielle Vertreter"
       poll/ballot_sheet:
         one: Stimmzettel
         other: Stimmzettel
@@ -151,9 +151,9 @@ de:
         title: "Titel"
         description: "Beschreibung"
         external_url: "Link zur weiteren Dokumentation"
-        administrator_id: "Administrator*in"
+        administrator_id: "Administrator"
         location: "Standort (optional)"
-        organization_name: "Wenn Sie einen Vorschlag im Namen einer Gruppe, Organisation oder mehreren Personen einreichen, nennen Sie bitte dessen/deren Name/n"
+        organization_name: "Wenn Du einen Vorschlag im Namen einer Gruppe, Organisation oder mehreren Personen einreichst, nenne bitte dessen/deren Name/n"
         image: "Beschreibendes Bild zum Investitionsvorschlag"
         image_title: "Bildtitel"
         duration: "Zeitrahmen"
@@ -196,7 +196,7 @@ de:
         primary: "Primär"
         secondary: "Sekundär"
       budget/group:
-        max_votable_headings: "Maximale Anzahl von Rubriken, in der ein*e Benutzer*in abstimmen kann"
+        max_votable_headings: "Maximale Anzahl von Rubriken, in der ein Benutzer abstimmen kann"
       budget/group/translation:
         name: "Name der Gruppe"
       budget/heading:
@@ -218,7 +218,7 @@ de:
         summary: "Zusammenfassung"
       comment:
         body: "Kommentar"
-        user: "Benutzer*in"
+        user: "Benutzer"
       debate:
         author: "Autor"
         description: "Beitrag"
@@ -244,32 +244,32 @@ de:
         summary: "Zusammenfassung Vorschlag"
         retired_explanation: "Erläuterung"
       user:
-        login: "E-Mail oder Benutzer*innenname"
+        login: "E-Mail oder Benutzername"
         email: "E-Mail"
-        username: "Benutzer*innenname"
+        username: "Benutzername"
         password_confirmation: "Bestätigen Sie das Passwort "
         password: "Passwort"
         current_password: "Aktuelles Passwort"
-        email_digest: "Benachrichtigungen mit Zusammenfassung über Vorschlag erhalten"
-        email_on_comment: "Benachrichtigung per Mail, wenn meine Vorschläge oder Diskussionen kommentiert werden"
-        email_on_comment_reply: "Benachrichtigen Sie mich per E-Mail, wenn jemand auf meine Kommentare antwortet"
+        email_digest: "Ich möchte eine Zusammenfassung der Reaktionen auf meinen Vorschlag bekommen (Kommentare, Unterstützung usw.)"
+        email_on_comment: "Ich möchte per Mail benachrichtigt werden, wenn meine Vorschläge oder Diskussionen kommentiert werden"
+        email_on_comment_reply: "Ich möchte per E-Mail benachrichtigt werden, wenn jemand auf meine Kommentare antwortet"
         email_on_direct_message: "E-Mails über direkte Nachrichten empfangen"
-        newsletter: "Per E-Mail Webseite relevante Informationen erhalten"
-        official_position: "Offizielle(r) Vertreter*in"
+        newsletter: "Ich möchte über alle wichtigen Ereignisse auf der Plattform informiert werden"
+        official_position: "Offizielle Vertretung"
         official_position_badge: "Kennzeichen des Benutzertyps anzeigen"
         official_level: "Amtsebene"
         phone_number: "Telefonnummer"
-        public_activity: "Meine Liste an Aktivitäten öffentlich zugänglich machen"
-        public_interests: "Die Bezeichnungen der Elemente denen ich folge öffentlich zugänglich halten"
-        recommended_debates: "Diskussionen-Empfehlungen anzeigen"
-        recommended_proposals: "Antrags-Empfehlungen anzeigen"
+        public_activity: "Meine Aktivitätenliste öffentlich zugänglich machen"
+        public_interests: "Die Bezeichnungen der Beiträge, denen ich folge, öffentlich zugänglich halten"
+        recommended_debates: "Diskussionsempfehlungen anzeigen"
+        recommended_proposals: "Vorschlagssempfehlungen anzeigen"
         redeemable_code: "Bestätigungscode per Post (optional)"
       direct_message:
         title: "Titel"
         body: "Nachricht"
       organization:
         name: "Name der Organisation"
-        responsible_name: "Der/die* Gruppenverantwortliche"
+        responsible_name: "Der Gruppenverantwortliche"
       poll:
         name: "Name"
         starts_at: "Anfangsdatum"
@@ -415,12 +415,12 @@ de:
         title: Titel
         url: Externes Video
       newsletter:
-        segment_recipient: Empfänger*innen
+        segment_recipient: Empfänger
         subject: Betreff
         from: "Von"
         body: Inhalt der E-Mail
       admin_notification:
-        segment_recipient: Empfänger*innen
+        segment_recipient: Empfänger
         title: Titel
         link: Link
         body: Text
@@ -446,10 +446,10 @@ de:
         short_description: Kurze Beschreibung
         description: Beschreibung
         link: Externer Link
-        request_to_administrators: Aufnahme einer Schaltfläche um die Entscheidung von Administratoren anzufordern
-        day_offset: Wie viele Tage nach der Erstellung des Vorschlags möchten Sie, dass er aktiviert wird?
+        request_to_administrators: Aufnahme einer Schaltfläche, um die Entscheidung von Administratoren anzufordern
+        day_offset: Wie viele Tage nach der Erstellung des Vorschlags möchtest Du, dass er aktiviert wird?
         required_supports: Wie viel Unterstützung muss der Vorschlag erhalten, um aktiviert zu werden?
-        order: Sie können die Position eingeben, an der diese Aktion dem Benutzer in der Liste der Aktionen angezeigt wird
+        order: Du kannst die Position eingeben, an der diese Aktion dem Benutzer in der Liste der Aktionen angezeigt wird
         active: Aktiv
         action_type: Typ
         action_type_proposed_action: "Vorgeschlagene Aktion"
@@ -463,7 +463,7 @@ de:
         url: Link
       valuator:
         description: Beschreibung
-        valuator_group_id: Gutachtungsgruppe
+        valuator_group_id: Gutachtergruppe
         can_comment: Kann Kommentare abgeben
         can_edit_dossier: Kann Dossiers bearbeiten
       valuator_group:
@@ -478,7 +478,7 @@ de:
         user:
           attributes:
             email:
-              password_already_set: "Diese*r Benutzer*in hat bereits ein Passwort"
+              password_already_set: "Dieser Benutzer hat bereits ein Passwort"
         debate:
           attributes:
             tag_list:
@@ -486,7 +486,7 @@ de:
         direct_message:
           attributes:
             max_per_day:
-              invalid: "Sie haben die maximale Anzahl an persönlichen Nachrichten pro Tag erreicht"
+              invalid: "Du hast die maximale Anzahl an persönlichen Nachrichten pro Tag erreicht"
         image:
           attributes:
             attachment:
@@ -495,19 +495,19 @@ de:
         newsletter:
           attributes:
             segment_recipient:
-              invalid: "Das Empfänger*innensegment ist ungültig"
+              invalid: "Das Empfängersegment ist ungültig"
         admin_notification:
           attributes:
             segment_recipient:
-              invalid: "Das Benutzer*innensegment ist ungültig"
+              invalid: "Das Benutzersegment ist ungültig"
         map_location:
           attributes:
             map:
-              invalid: Der Kartenstandort darf nicht leer sein. Platzieren Sie einen Marker oder aktivieren Sie das Kontrollkästchen, wenn eine Standorterkennung nicht möglich ist
+              invalid: Der Kartenstandort darf nicht leer sein. Platziere einen Marker oder aktiviere das Kontrollkästchen, wenn eine Standorterkennung nicht möglich ist
         poll/voter:
           attributes:
             document_number:
-              not_in_census: "Dieses Dokument scheint nicht im Melderegister auf"
+              not_in_census: "Dieses Dokument scheint nicht im Melderegister vorzuliegen"
             user_id:
               has_voted: "Benutzer hat schon abgestimmt"
         legislation/process:
@@ -535,7 +535,7 @@ de:
         proposal_notification:
           attributes:
             minimum_interval:
-              invalid: "Sie müssen mindestens %{interval} Tage zwischen Benachrichtigungen warten"
+              invalid: "Du musst mindestens %{interval} Tage zwischen Benachrichtigungen warten"
         signature:
           attributes:
             document_number:

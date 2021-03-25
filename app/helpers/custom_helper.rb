@@ -2,10 +2,6 @@ module CustomHelper
   def tag_kind_name(kind)
     if kind == 'category'
       t('admin.tags.logic.category')
-    elsif kind == 'project'
-      t('admin.tags.logic.project')
-    elsif kind == 'subcategory'
-      t('admin.tags.logic.subcategory')
     end
   end
 
@@ -14,5 +10,15 @@ module CustomHelper
     label = label.pluralize if tags.count > 1
     label = label.downcase unless locale == :de
     label
+  end
+
+  def svg_tag(icon_name, options={})
+    file = File.read(Rails.root.join('app', 'assets', 'images', 'custom', "#{icon_name}.svg"))
+    doc = Nokogiri::HTML::DocumentFragment.parse file
+    svg = doc.at_css 'svg'
+
+    options.each {|attr, value| svg[attr.to_s] = value}
+
+    doc.to_html.html_safe
   end
 end

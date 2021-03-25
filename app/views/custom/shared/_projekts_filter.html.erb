@@ -1,0 +1,28 @@
+<% params[:projekts] ||= '' %>
+
+<ul>
+  <% projekts.each do |projekt| %>
+    <% projekt_and_nested_projekts_ids = projekt.all_children_ids.push(projekt.id) %>
+    <% selected_projekts = params[:projekts].split(',')  %>
+    <% (selected_projekts & projekt_and_nested_projekts_ids.map(&:to_s)).any? ? toggle_projekt = 'show-projekt' : toggle_projekt = ''  %>
+    <% projekt.id.to_s.in?(selected_projekts) ? label_class = 'label-selected' : label_class = 'label_regular' %>
+
+    <li class=<%= toggle_projekt %>>
+      <%= label_tag projekt.name, class: label_class do %>
+        <%= check_box_tag projekt.name, projekt.id, projekt.id.to_s.in?(params[:projekts].split(',')), { class: 'js-filter-projekt' }  %>
+        <%= projekt.name %>
+        <span class="checkmark"></span>
+      <% end %>
+
+      <% if projekt.all_children_ids.any? %>
+        <div class='projekt-arrow js-show-children-projekts-in-filter' <%= label_class %> >
+        </div>
+      <% end %>
+    </li>
+
+    <% if projekt.children.any? %>
+      <%= render partial: "shared/projekts_filter", locals: { projekts: projekt.children } %>
+    <% end %>
+
+  <% end %>
+</ul>

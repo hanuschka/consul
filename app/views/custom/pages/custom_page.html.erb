@@ -1,0 +1,41 @@
+<%= content_for :body_class, "custom-page" %>
+<% provide :title do %><%= @custom_page.title %><% end %>
+
+<div class="row margin-top">
+
+  <div class="small-12 medium-9 column">
+
+
+    <% if @custom_page.projekt.present? %>
+      <%= render partial: 'breadcrumbs', locals: { current_page: @custom_page } %>
+      <div class='breadcrumbs-item'>
+        <%= @custom_page.projekt.name %>
+      </div >
+    <% end %>
+
+    <h1><%= @custom_page.title %></h1>
+    <% if @custom_page.subtitle.present? %>
+      <h2><%= @custom_page.subtitle %></h2>
+    <% end %>
+
+    <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>
+
+    <% if @custom_page.projekt.present? && @custom_page.projekt.children.any? %>
+      <%= render partial: 'child_projekts', locals: { current_page: @custom_page }  %>
+    <% end %>
+
+  </div>
+
+  <% if @custom_page.print_content_flag %>
+    <div class="small-12 medium-3 column">
+      <%= render "/shared/print" %>
+    </div>
+  <% end %>
+
+  <% if @cards.any? %>
+    <div class="small-12 column">
+      <%= render "shared/cards" %>
+    </div>
+  <% end %>
+
+</div>

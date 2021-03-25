@@ -4,8 +4,8 @@ class Admin::TagsController < Admin::BaseController
   respond_to :html, :js
 
   def index
-    @tags = Tag.where(kind: ['category', 'subcategory', 'project']).order("kind ASC, name ASC").page(params[:page])
-    @tag  = Tag.project.new
+    @tags = Tag.where(kind: 'category').order("kind ASC, name ASC").page(params[:page])
+    @tag  = Tag.category.new
   end
 
   def update
@@ -17,8 +17,8 @@ class Admin::TagsController < Admin::BaseController
   end
 
   def create
-    kind = tag_params[:kind] ? tag_params[:kind] : 'category'
-    Tag.find_or_create_by!(name: tag_params["name"], custom_logic_category_code: Tag.manage_categories, custom_logic_subcategory_code: Tag.manage_subcategories).update!(kind: kind)
+    kind = 'category'
+    Tag.find_or_create_by!(name: tag_params["name"]).update!(kind: kind)
 
     redirect_to admin_tags_path
   end
@@ -30,21 +30,11 @@ class Admin::TagsController < Admin::BaseController
 
   private
 
-    def tag_params
-      if params[:tag][:category_code]
-        params[:tag][:custom_logic_category_code] = params[:tag][:category_code].reduce(0){|sum, i| sum += i.to_i}
-      else
-        params[:tag][:custom_logic_category_code] = 0
-      end
-      if params[:tag][:subcategory_code]
-        params[:tag][:custom_logic_subcategory_code] = params[:tag][:subcategory_code].reduce(0){|sum, i| sum += i.to_i}
-      else
-        params[:tag][:custom_logic_subcategory_code] = 0
-      end
-      params.require(:tag).permit(:name, :kind, :custom_logic_category_code, :custom_logic_subcategory_code, :custom_logic_category_cloud, :custom_logic_subcategory_cloud, :custom_logic_usertags_cloud)
-    end
+  def tag_params
+    params.require(:tag).permit(:name)
+  end
 
-    def find_tag
-      @tag = Tag.where(kind: ['category', 'subcategory', 'project']).find(params[:id])
-    end
+  def find_tag
+    @tag = Tag.where(kind: 'category').find(params[:id])
+  end
 end

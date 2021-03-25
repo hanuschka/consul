@@ -8,7 +8,6 @@ class ProposalsController
   before_action :process_tags, only: [:create, :update]
 
   def index_customization
-    ensure_project_tag
     discard_draft
     discard_archived
     load_retired
@@ -16,6 +15,7 @@ class ProposalsController
     load_featured
     remove_archived_from_order_links
     take_only_by_tag_names
+    take_by_projekts
     @proposals_coordinates = all_proposal_map_locations
   end
 
@@ -39,10 +39,23 @@ class ProposalsController
     def take_only_by_tag_names
       if params[:tags].present?
         @resources = @resources.tagged_with(params[:tags].split(","), all: true)
-        @categories = @resources.tag_counts.category
-        @categories = Tag.category
-        @subcategories = @resources.tag_counts.subcategory
       end
     end
-end
 
+    def take_by_projekts
+      if params[:projekts].present?
+        @resources = @resources.joins(:projekts).where(projekts: { id: [params[:projekts].split(',')] } ).distinct
+      end
+    end
+
+    def proposal_params
+      attributes = [:video_url, :responsible_name, :tag_list,
+                    :terms_of_service, :geozone_id, :skip_map, { projekt_ids: [] },
+                    image_attributes: image_attributes,
+                    documents_attributes: [:id, :title, :attachment, :cached_attachment,
+                                           :user_id, :_destroy],
+                    map_location_attributes: [:latitude, :longitude, :zoom]]
+      translations_attributes = translation_params(Proposal, except: :retired_explanation)
+      params.require(:proposal).permit(attributes, translations_attributes)
+    end
+end

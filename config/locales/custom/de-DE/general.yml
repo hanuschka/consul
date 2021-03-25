@@ -9,20 +9,20 @@ de:
       organization_responsible_name_placeholder: Vertreter der Organisation/des Kollektivs
       personal: Persönliche Daten
       phone_number_label: Telefonnummer
-      public_interests_my_title_list: Tags der Themen, denen Sie folgen
+      public_interests_my_title_list: Tags der Themen, denen Du folgen
       public_interests_user_title_list: Kennzeichnungen der Elemente denen dieser Benutzer folgt
       save_changes_submit: Änderungen speichern
       recommendations: Empfehlungen
       title: Mein Benutzerkonto
       user_permission_debates: An Diskussion teilnehmen
-      user_permission_info: Mit Ihrem Konto können Sie...
+      user_permission_info: Mit Deinem Konto kannst Du...
       user_permission_proposal: Neuen Vorschlag erstellen
       user_permission_support_proposal: Vorschläge unterstützen
       user_permission_title: Teilnahme
-      user_permission_verify: Damit Sie alle Funktionen nutzen können, müssen Sie ihr Konto verifizieren.
-      user_permission_verify_info: "* Nur für in der Volkszählung registrierte Nutzer."
+      user_permission_verify: Damit Du alle Funktionen nutzen kannst, musst Du Dein Konto verifizieren.
+      user_permission_verify_info: ": Nur für in der Volkszählung registrierte Benutzer."
       user_permission_votes: An finaler Abstimmung teilnehmen
-      username_label: Benutzer*innenname
+      username_label: Benutzername
       verified_account: Konto verifiziert
       verify_my_account: Mein Konto verifizieren
   application:
@@ -32,10 +32,10 @@ de:
     comments_closed: Kommentare sind geschlossen
     verified_only: Zur Teilnahme %{verify_account}
     comment:
-      admin: Administrator*in
-      author: Verfasser*in
+      admin: Administrator
+      author: Verfasser
       deleted: Dieser Kommentar wurde gelöscht
-      moderator: Moderator*in
+      moderator: Moderator
       responses:
         zero: Keine Antworten
         one: 1 Antwort
@@ -50,18 +50,18 @@ de:
         other: "%{count} Antworten (Einklappen)"
       user_deleted: Benutzer gelöscht
       votes:
-        zero: Keine Bewertungen
+        zero: Unentschieden
         one: 1 Stimme
         other: "%{count} Stimmen"
     form:
       comment_as_admin: Als Administrator kommentieren
       comment_as_moderator: Als Moderator kommentieren
-      leave_comment: Schreiben Sie einen Kommentar
+      leave_comment: Schreibe einen Kommentar
     orders:
-      most_voted: Am besten bewertet
+      most_voted: Am meisten bewertet
       newest: Neueste zuerst
       oldest: Älteste zuerst
-      most_commented: meist kommentiert
+      most_commented: Am meisten kommentiert
     select_order: Sortieren nach
     show:
       return_to_commentable: "Zurück zu"
@@ -74,14 +74,14 @@ de:
   debates:
     create:
       form:
-        submit_button: Starten Sie eine Diskussion
+        submit_button: Starte eine Diskussion
     debate:
       comments:
         zero: Keine Kommentare
         one: 1 Kommentar
         other: "%{count} Kommentare"
       votes:
-        zero: Keine Bewertung
+        zero: Unentschieden
         one: 1 Stimme
         other: "%{count} Stimmen"
     edit:
@@ -92,25 +92,25 @@ de:
     form:
       debate_title: Titel der Diskussion
       tags_instructions: Diskussion markieren.
-      tags_placeholder: "Trennen Sie die Tags mit einem Komma (',')"
+      tags_placeholder: "Trenne die Tags mit einem Komma (',')"
       tags_categories: "Eigene Kategorie(n) hinzufügen"
       tags_subcategories: "Eigene Unterkategorie(n) hinzufügen"
     index:
       featured_debates: Hervorgehoben
       orders:
-        confidence_score: Am besten bewertet
-        created_at: Neuste
+        confidence_score: Am meisten bewertet
+        created_at: Neueste
         hot_score: Aktivste
         most_commented: Am meisten kommentiert
         relevance: Relevanz
         recommendations: Empfehlungen
       recommendations:
-        without_results: Es gibt keine Diskussionen, die Ihren Interessen entsprechen
-        without_interests: Folgen Sie Vorschlägen, sodass wir Ihnen Empfehlungen geben können
-        disable: "Empfehlungen für Diskussionen werden nicht mehr angezeigt, wenn sie diese ablehnen. Sie können auf der 'Mein Benutzerkonto'-Seite wieder aktiviert werden"
+        without_results: Es gibt keine Diskussionen, die Deinen Interessen entsprechen
+        without_interests: Folge Vorschlägen, sodass wir Dir Empfehlungen geben können
+        disable: "Empfehlungen für Diskussionen werden nicht mehr angezeigt, wenn Du diese ablehnst. Sie können auf der 'Mein Benutzerkonto'-Seite wieder aktiviert werden"
         actions:
           success: "Empfehlungen für Diskussionen sind jetzt für dieses Konto deaktiviert"
-          error: "Ein Fehler ist aufgetreten. Bitte gehen Sie zur 'Ihr Benutzerkonto'-Seite um Diskussionen-Empfehlungen manuell abzuschalten"
+          error: "Ein Fehler ist aufgetreten. Bitte gehe zur 'Ihr Benutzerkonto'-Seite, um Diskussionsempfehlungen manuell abzuschalten"
       search_form:
         button: Suche
         placeholder: Suche Diskussionen...
@@ -119,32 +119,33 @@ de:
         one: " enthält den Begriff <strong>'%{search_term}'</strong>"
         other: " enthält den Begriff <strong>'%{search_term}'</strong>"
       select_order: Sortieren nach
-      start_debate: Starten Sie eine Diskussion
+      start_debate: Starte eine Diskussion
       title: Diskussionen
       section_header:
         icon_alt: Diskussionen-Symbol
         title: Diskussionen
-        help: Hilfe zu Diskussionen
+        help: Erläuterung zur Sortierung
       section_footer:
-        title: Hilfe zu Diskussionen
-        description: Teilen Sie ihre Meinung mit anderen in einer Diskussion über Themen, die Sie interessieren.
-        help_text_1: "Der Raum für Diskussionen richtet sich an alle, die ihr Anliegen darlegen können und sich mit anderen Menschen austauschen wollen."
-        help_text_2: 'Um eine Diskussion zu eröffnen, müssen Sie sich auf %{org} registrieren. Benutzer*innen können auch offene Diskussionen kommentieren und sie über "Ich stimme zu" oder "Ich stimme nicht zu" Buttons bewerten.'
+        title: Erläuterung zur Sortierung
+        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem 'heißen' Zeitraum von 31 Tagen."
+        help_text_1: "Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ."
+        help_text_2: "Neueste: nach Einstellungsdatum."
+        help_text_3: 'Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)'
     new:
       form:
         submit_button: Eine Diskussion starten
-      info: Wenn Sie einen Vorschlag veröffentlichen möchten, sind Sie hier falsch, gehen Sie zu %{info_link}.
+      info: Wenn Du einen Vorschlag veröffentlichen möchtest, bist Du hier falsch, gehe zu %{info_link}.
       info_link: Neuen Vorschlag erstellen
       more_info: Weitere Informationen
-      recommendation_four: Genießen Sie diesen Ort und die Stimmen, die ihn füllen. Er gehört auch Ihnen.
-      recommendation_one: Verwenden Sie bitte nicht ausschließlich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als schreien. Und niemand möchte gerne angeschrien werden.
-      recommendation_three: Kritik ist sehr willkommen. Denn dies ist ein Raum für unterschiedliche Betrachtungen. Aber wir empfehlen Ihnen, sich an sprachlicher Eleganz und Intelligenz zu halten. Die Welt ist ein besserer Ort mit diesen Tugenden.
-      recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
+      recommendation_four: Teile hier Deine Ideen mit anderen.
+      recommendation_one: Verwende bitte nicht ausschließlich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien - und niemand möchte gerne angeschrien werden.
+      recommendation_three: Konstruktive Kritik ist sehr willkommen. Denn dies ist ein Raum für unterschiedliche Meinungen. Wir bitten Dich jedoch um einen sachlichen und respektvollen Ton.
+      recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht, ebenso diejenigen, die die Diskussionen absichtlich sabotieren.
       recommendations_title: Empfehlungen für die Erstellung einer Diskussion
       start_new: Eine Diskussion starten
-      start_new_in: Starten Sie eine Diskussion in %{category}
+      start_new_in: Starten Du eine Diskussion in %{category}
     show:
-      author_deleted: Benutzer*in gelöscht
+      author_deleted: Benutzer gelöscht
       comments:
         zero: Keine Kommentare
         one: 1 Kommentar
@@ -159,7 +160,7 @@ de:
         submit_button: Änderungen speichern
   errors:
     messages:
-      user_not_found: Benutzer*in wurde nicht gefunden
+      user_not_found: Benutzer wurde nicht gefunden
       invalid_date_range: "Ungültiger Datenbereich"
   form:
     accept_terms: Ich stimme der %{policy} und den %{conditions} zu
@@ -169,7 +170,7 @@ de:
     direct_message: Private Nachricht
     error: Fehler
     errors: Fehler
-    not_saved: "verhinderte das Speichern dieser %{resource}. <br>Bitte überprüfen Sie die gekennzeichneten Felder, um herauszufinden wie diese korrigiert werden können:"
+    not_saved: "verhinderte das Speichern dieser %{resource}. <br>Bitte überprüfe die gekennzeichneten Felder, um herauszufinden, wie diese korrigiert werden können:"
     policy: Datenschutzbestimmungen
     banner: Banner
     proposal: Vorschlag
@@ -199,8 +200,8 @@ de:
     application:
       chrome: Google Chrome
       firefox: Firefox
-      ie: Wir haben festgestellt, dass Sie Internet Explorer verwenden. Für eine verbesserte Anwendung empfehlen wir %{firefox} oder %{chrome}.
-      ie_title: Diese Website ist für Ihren Browser nicht optimiert
+      ie: Wir haben festgestellt, dass Du Internet Explorer verwendest. Für eine verbesserte Anwendung empfehlen wir %{firefox} oder %{chrome}.
+      ie_title: Diese Website ist für Deinen Browser nicht optimiert
     dashboard:
       proposal_header:
         published: Veröffentlicht
@@ -208,7 +209,7 @@ de:
         retired: Zurückgezogen
       proposal_totals:
         active_resources: Aktive Ressourcen
-        community: Teilnehmer Ihrer Community
+        community: Teilnehmer:innen Ihrer Community
         show_proposal: Vorschlag anzeigen
         preview_proposal: Vorschau Vorschlag
         current_goal: Aktuelles Ziel
@@ -217,16 +218,16 @@ de:
           one: Eine Unterstützung
           other: "Unterstützungen"
     footer:
-      accessibility: Barrierefreiheit
+      accessibility: Impressum
       conditions: Allgemeine Nutzungsbedingungen
       consul: CONSUL Anwendung
       consul_url: https://github.com/consul/consul
-      contact_us: Für technische Unterstützung geben Sie ein
-      copyright: CONSUL, %{year}
+      contact_us: Für technische Unterstützung geben Du ein
+      copyright: Aufstehen, %{year}
       description: Die Plattform basiert auf %{consul}, einer %{open_source}.
       open_source: Open-Source Software
       open_source_url: http://www.gnu.org/licenses/agpl-3.0.html
-      participation_text: Gestalten Sie die Stadt, in der Sie leben möchten.
+      participation_text: Gestalte die Stadt, in der Du leben möchtest.
       participation_title: Teilnahme
       privacy: Datenschutzbestimmungen
     header:
@@ -240,7 +241,7 @@ de:
       management: Verwaltung
       moderation: Moderation
       valuation: Bewertung
-      officing: Wahlhelfer
+      officing: Wahlhelfer:in
       help: Hilfe
       my_account_link: Mein Konto
       my_activity_link: Meine Aktivität
@@ -250,13 +251,13 @@ de:
       budgets: Budgets
       notification_item:
         new_notifications:
-          one: Sie haben eine neue Benachrichtigung
-          other: Sie haben %{count} neue Benachrichtigungen
+          one: Du hast eine neue Benachrichtigung
+          other: Du hast %{count} neue Benachrichtigungen
         notifications: Benachrichtigungen
-        no_notifications: "Sie haben keine neuen Benachrichtigungen"
+        no_notifications: "Du hast keine neuen Benachrichtigungen"
   notifications:
     index:
-      empty_notifications: Sie haben keine neuen Benachrichtigungen.
+      empty_notifications: Du hast keine neuen Benachrichtigungen.
       mark_all_as_read: Alles als gelesen markieren
       read: Gelesen
       title: Benachrichtigungen
@@ -267,17 +268,17 @@ de:
           one: Neuer Kommentar zu
           other: Es gibt %{count} neue Kommentare zu
         proposal_notification:
-          one: Sie haben eine neue Benachrichtigung zu
-          other: Sie haben %{count} neue Benachrichtigungen zu
+          one: Du hast eine neue Benachrichtigung zu
+          other: Du hast %{count} neue Benachrichtigungen zu
         replies_to:
-          one: Jemand hat auf Ihren Kommentar zu geantwortet
-          other: Es gibt %{count} neue Antworten auf Ihren Kommentar zu
+          one: Jemand hat auf Deinen Kommentar zu geantwortet
+          other: Es gibt %{count} neue Antworten auf Deinen Kommentar zu
       mark_as_read: Als gelesen markieren
       mark_as_unread: Als ungelesen markieren
       notifiable_hidden: Diese Ressource ist nicht mehr verfügbar.
   map:
     title: "Bereiche"
-    proposal_for_district: "Starten Sie einen Vorschlag für Ihren Gebiet"
+    proposal_for_district: "Starte einen Vorschlag für Dein Gebiet"
     start_proposal: Vorschlag erstellen
   omniauth:
     facebook:
@@ -286,7 +287,7 @@ de:
       name: Facebook
     finish_signup:
       title: "Weitere Details"
-      username_warning: "Aufgrund einer Änderung in der Art und Weise, wie wir mit sozialen Netzwerken umgehen, ist es möglich, dass Ihr Benutzername nun als 'bereits in Verwendung' erscheint. Wenn dies der Fall ist, wählen Sie bitte einen anderen Benutzernamen."
+      username_warning: "Aufgrund einer Änderung in der Art und Weise, wie wir mit sozialen Netzwerken umgehen, ist es möglich, dass Dein Benutzername nun als 'Bereits in Verwendung' erscheint. Wenn dies der Fall ist, wähle bitte einen anderen Benutzernamen."
     google_oauth2:
       sign_in: Anmelden mit Google
       sign_up: Registrierung mit Google
@@ -302,22 +303,22 @@ de:
     info:
       sign_in: "Anmelden mit:"
       sign_up: "Registrierung mit:"
-    or_fill: "Oder füllen Sie das folgende Formular aus:"
+    or_fill: "Oder fülle das folgende Formular aus:"
   proposals:
     create:
       form:
         submit_button: Vorschlag erstellen
     created:
-      title: Herzlichen Glückwunsch! Sie haben den ersten Schritt gemacht.
-      motivation: "Es ist wichtig, den Start der Kampagne vorzubereiten, damit Ihr Vorschlag erfolgreich ist. Die ersten Tage sind entscheidend."
-      motivation_2: "<strong>Wenn Sie Empfehlungen zur Vorbereitung der Veröffentlichung wünschen, belassen Sie Ihren Vorschlag als Entwurf und wir werden Sie begleiten.</strong>"
-      publish: Nein, ich möchte den Vorschlag veröffentlichen
-      dashboard: Ja, ich möchte Hilfe und werde später veröffentlichen
-      preview_title: So wird Ihr Vorschlag aussehen, wenn Sie ihn veröffentlichen
+      title: Herzlichen Glückwunsch! Du hast den ersten Schritt gemacht.
+      motivation: "Es ist wichtig, viel Unterstützung zu sammeln, damit Dein Vorschlag erfolgreich ist. Überzeuge die anderen durch gute Argumente!"
+      motivation_2: "<strong>Wenn Du noch Fragen zur Vorbereitung der Veröffentlichung hast, speichere Deinen Vorschlag als Entwurf und wir werden Dir gerne weiterhelfen.</strong>"
+      publish: Jetzt veröffentlichen
+      dashboard: Später veröffentlichen, ich habe noch Fragen
+      preview_title: So wird Dein Vorschlag aussehen, wenn Du ihn veröffentlichst
     share:
-      improve_it: Verbessern Sie ihre Kampagne und erhalten Sie stärkere Unterstützung.
+      improve_it: Gewinne mehr Unterstützung für Deinen Vorschlag
       dashboard: Weitere Informationen anzeigen
-      message: "Ich habe den Vorschlag unterstützt %{title} in %{handle}. Wenn Sie interessiert sind, unterstützen Sie es auch!"
+      message: "Ich habe den Vorschlag unterstützt %{title} in %{handle}. Wenn Du interessiert bist, unterstütze ihn auch!"
     edit:
       editing: Vorschlag bearbeiten
       form:
@@ -325,9 +326,9 @@ de:
       show_link: Vorschlag anzeigen
     retire_form:
       title: Vorschlag zurückziehen
-      warning: "Wenn Sie den Vorschlag zurückziehen, würde er weiterhin Unterstützung akzeptieren, wird jedoch von der Hauptliste entfernt und eine Nachricht wird sichtbar für alle Nutzer, die besagt, dass der Autor des Vorschlages denkt, er sollte nicht mehr unterstützt werden"
+      warning: "Wenn Du den Vorschlag zurückziehst, kann er weiterhin unterstützt werden, wird jedoch von der Hauptliste entfernt und allen Benutzern mitgeteilt, dass der Autor des Vorschlages keine weitere Unterstützung möchte"
       retired_reason_blank: Option auswählen
-      retired_explanation_placeholder: Erläutern Sie kurz, warum der Vorschlag nicht weiter unterstützt werden sollte
+      retired_explanation_placeholder: Erläutere kurz, warum der Vorschlag nicht weiter unterstützt werden sollte
       submit_button: Vorschlag zurückziehen
     retire_options:
       duplicated: Dupliziert
@@ -336,35 +337,35 @@ de:
       done: Fertig
       other: Andere
     form:
-      proposal_responsible_name_note: "(Einzelperson oder Vertreter/in eines Kollektivs; wird nicht öffentlich angezeigt)"
+      proposal_responsible_name_note: "(Einzelperson oder Vertreter:in eines Kollektivs; wird nicht öffentlich angezeigt)"
       proposal_summary_note: "(maximal 200 Zeichen)"
-      proposal_video_url_note: Füge einen YouTube oder Vimeo Link hinzu
-      tag_category_label: "Kategorien"
+      proposal_video_url_note: Füge einen YouTube- oder Vimeo-Link hinzu
+      tag_category_label: "Tags"
       tag_subcategory_label: "Unterkategorien"
-      tags_instructions: "Diesen Vorschlag markieren. Sie können aus vorgeschlagenen Tags wählen, oder Ihre eigenen hinzufügen"
+      tags_instructions: "Diesen Vorschlag markieren. Du kannst aus vorgeschlagenen Tags wählen oder Deine eigenen hinzufügen"
       tags_label: Verschlagwortung
-      tags_placeholder: "Klicken Sie auf einen oder mehrere vorgeschlagene(n) Tag(s) oder geben Sie eigene Tags komma-getrennt ein."
+      tags_placeholder: "Klicke auf einen oder mehrere vorgeschlagene(n) Tag(s) oder gib eigene Tags mit Komma getrennt ein."
       map_location: "Kartenposition"
-      map_location_instructions: "Navigieren Sie auf der Karte zum Standort und setzen Sie die Markierung."
-      map_remove_marker: "Entfernen Sie die Kartenmarkierung"
+      map_location_instructions: "Navigiere auf der Karte zum Standort und setze die Markierung."
+      map_remove_marker: "Entferne die Kartenmarkierung"
       map_skip_checkbox: "Dieser Vorschlag hat keinen konkreten Ort oder ich kenne ihn nicht."
     index:
       featured_proposals: Hervorgehoben
       orders:
-        confidence_score: Am besten bewertet
-        created_at: Neuste
+        confidence_score: Am meisten bewertet
+        created_at: Neueste
         hot_score: Aktivste
         most_commented: Am meisten kommentiert
         relevance: Relevanz
         archival_date: Archiviert
         recommendations: Empfehlungen
       recommendations:
-        without_results: Es gibt keine Vorschläge, die Ihren Interessen entsprechen
-        without_interests: Folgen Sie Vorschlägen, sodass wir Ihnen Empfehlungen geben können
-        disable: "Antrags-Empfehlungen werden nicht mehr angezeigt, wenn sie diese ablehnen. Sie können auf der 'Mein Benutzerkonto'-Seite wieder aktiviert werden"
+        without_results: Es gibt keine Vorschläge, die Deinen Interessen entsprechen
+        without_interests: Folge Vorschlägen, so dass wir Dir Empfehlungen geben können
+        disable: "Antragsempfehlungen werden nicht mehr angezeigt, wenn Du diese ablehnst. Sie können auf der 'Mein Benutzerkonto'-Seite wieder aktiviert werden"
         actions:
-          success: "Antrags-Empfehlungen sind jetzt für dieses Benutzerkonto deaktiviert"
-          error: "Ein Fehler ist aufgetreten. Bitte gehen Sie zur 'Ihr Benutzerkonto'-Seite um Antrags-Empfehlungen manuell abzuschalten"
+          success: "Antragsempfehlungen sind jetzt für dieses Benutzerkonto deaktiviert"
+          error: "Ein Fehler ist aufgetreten. Bitte gehe zur 'Mein Benutzerkonto'-Seite, um Antragsempfehlungen manuell abzuschalten"
       retired_proposals: Vorschläge im Ruhezustand
       retired_proposals_link: "Vom Autor zurückgezogene Vorschläge"
       selected_proposals: Ausgewählte Vorschläge
@@ -386,7 +387,7 @@ de:
         one: " enthält den Begriff <strong>'%{search_term}'</strong>"
         other: " enthält den Begriff <strong>'%{search_term}'</strong>"
       select_order: Sortieren nach
-      select_order_long: "Sie sehen Vorschläge nach:"
+      select_order_long: "Du siehst Vorschläge nach:"
       start_proposal: Vorschlag erstellen
       title: Vorschläge
       top: Tops der Woche
@@ -394,31 +395,34 @@ de:
       section_header:
         icon_alt: Vorschläge-Symbol
         title: Vorschläge
-        help: Hilfe zu Vorschlägen
+        help: Erläuterung zur Sortierung
       section_footer:
-        title: Hilfe zu Vorschlägen
-        description: Vorschläge können, abhängig vom eingestellten Verifizierungsverfahren, von jedem Benutzer eingebracht werden. Sie bieten eine einfache Möglichkeit eigenen Ideen oder Verbesserungsvorschläge einzubringen und für deren Unterstützung zu werben.
+        title: Erläuterung zur SOrtierung
+        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem 'heißen' Zeitraum von 31 Tagen."
+        help_text_1: "Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ."
+        help_text_2: "Neueste: nach Einstellungsdatum."
+        help_text_3: "Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
     new:
       form:
         submit_button: Vorschlag erstellen
       more_info: Wie funktionieren die Vorschläge?
-      recommendation_one: Verwenden Sie bitte nicht ausschließlich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien und niemand möchte angeschrien werden.
-      recommendation_three: Genießen Sie diesen Ort und die Stimmen, die ihn füllen. Er gehört auch Ihnen.
-      recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
+      recommendation_one: Verwende bitte nicht ausschließlich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien - und niemand möchte gerne angeschrien werden.
+      recommendation_three: Konstruktive Kritik ist sehr willkommen. Denn dies ist ein Raum für unterschiedliche Meinungen. Wir bitten Dich jedoch um einen sachlichen und respektvollen Ton.
+      recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht, ebenso diejenigen, die die Diskussionen absichtlich sabotieren.
       recommendations_title: Empfehlungen zum Erstellen eines Vorschlags
       start_new: Neuen Vorschlag erstellen
-      start_new_in: Erstellen Sie einen Vorschlag in %{category}
+      start_new_in: Erstelle einen Vorschlag
       help: Wie funktionieren Vorschläge?
     notice:
       retired: Vorschlag im Ruhezustand
       published: Der Vorschlag wurde veröffentlicht
     proposal:
-      created: "Sie haben einen Vorschlag erstellt!"
+      created: "Du hast einen Vorschlag erstellt!"
       share:
-        guide: "Nun können Sie ihren Vorschlag teilen, damit andere ihn unterstützen."
-        edit: "Bevor Sie ihren Text teilen, können Sie ihn beliebig bearbeiten. "
+        guide: "Nun kannst Du Deinen Vorschlag teilen, damit andere ihn unterstützen."
+        edit: "Bevor Du Deinen Text teilst, kannst Du ihn beliebig bearbeiten. "
         view_proposal: Nicht jetzt. Gehe zu meinem Vorschlag
-      already_supported: Sie haben diesen Vorschlag bereits unterstützt. Teilen Sie ihn!
+      already_supported: Du hast diesen Vorschlag bereits unterstützt. Teile ihn!
       comments:
         zero: Keine Kommentare
         one: 1 Kommentar
@@ -426,21 +430,21 @@ de:
       support: Unterstützung
       support_title: Vorschlag unterstützen
       supports:
-        zero: Keine Unterstützer*innen
-        one: 1 Unterstützer/in
-        other: "%{count} Unterstützer/innen"
+        zero: Keine Unterstützer:innen
+        one: 1 Unterstützer:in
+        other: "%{count} Unterstützer:innen"
       votes:
-        zero: Keine Bewertung
+        zero: Unentschieden
         one: 1 Stimme
         other: "%{count} Stimmen"
       supports_necessary: "%{number} Unterstützungen benötigt"
       reason_for_supports_necessary: ""
       total_percent: 100 %
-      archived: "Dieser Vorschlag wurde archiviert und nicht mehr unterstützt werden."
+      archived: "Dieser Vorschlag wurde archiviert und kann nicht mehr unterstützt werden."
       successful: "Dieser Vorschlag hat die erforderliche Unterstützung erreicht."
       selected: "Ausgewählter Vorschlag"
     show:
-      author_deleted: Benutzer*in gelöscht
+      author_deleted: Benutzer gelöscht
       code: "Antrags-Code:"
       comments:
         zero: Keine Kommentare
@@ -451,8 +455,8 @@ de:
       flag: Dieser Vorschlag wurde von verschiedenen Benutzern als unangebracht gemeldet.
       notifications_tab: Benachrichtigungen
       milestones_tab: Meilensteine
-      retired_warning: "Der/Die Autor/in ist der Ansicht, dass dieser Vorschlag nicht mehr Unterstützung erhalten soll."
-      retired_warning_link_to_explanation: Lesen Sie die Erläuterung, bevor Sie abstimmen.
+      retired_warning: "Der Autor ist der Ansicht, dass dieser Vorschlag keine Unterstützung mehr erhalten soll."
+      retired_warning_link_to_explanation: Lies die Erläuterung, bevor Du abstimmst.
       retired: Vorschlag vom Autor zurückgezogen
       share: Teilen
       no_notifications: "Dieser Vorschlag enthält keine Benachrichtigungen."
@@ -465,7 +469,7 @@ de:
         submit_button: Änderungen speichern
   dashboard:
     menu:
-      my_proposal: Mein Vorschlag bearbeiten
+      my_proposal: Meinen Vorschlag bearbeiten
       progress: Fortschritte
       resources: Ressourcen
       community: Community
@@ -473,12 +477,12 @@ de:
       mailing: E-Mail
       poster: Poster
       recommended_actions: Empfohlene Aktionen
-      messages: Nachricht an Benutzer*innen
+      messages: Nachricht an Benutzer
       related_content: Verwandte Inhalte
     form:
       request: Anfrage
     create_request:
-      success: Die Anfrage wurde erfolgreich versendet. Wir werden Sie so bald wie möglich dazu kontaktieren.
+      success: Die Anfrage wurde erfolgreich versendet. Wir werden Dich so bald wie möglich dazu kontaktieren.
       archived: Dieser Vorschlag ist archiviert, daher sind keine Anfragen möglich.
     progress:
       title: Grafik
@@ -522,30 +526,30 @@ de:
       hide_course: Verlauf verbergen
     goal:
       target_supports:
-        one: Bekommen Sie %{count} Unterstützung für Ihren Vorschlag
-        other: Bekommen Sie %{count} Unterstützung für Ihren Vorschlag
+        one: Bekomme %{count} Unterstützung für Deinen Vorschlag
+        other: Bekomme %{count} Unterstützung für Deinen Vorschlag
       days:
         one: "%{count} Tag"
         other: "%{count} Tage"
       locked_resource: Ressource gesperrt
       ideal_time: Ideale Zeit
     community:
-      access_community: Treten Sie der Community bei
+      access_community: Tritt der Community bei
       latest_activity: "Letzte Aktivitäten in der Community: %{at}"
-      participants: Teilnehmer*innen
+      participants: Teilnehmer:innen
       debates: Diskussionen
       comments: Kommentare
       latest_comments: Letzte Nachrichten
     messages:
-      send_notification: Sende Nachricht zu den Unterstützer*innen des Vorschlags
+      send_notification: Sende Nachricht zu die Unterstützer:innen des Vorschlags
       previous_notifications: Siehe vorherige Benachrichtigungen
     polls:
       index:
         title: Abstimmungen
         create: Abstimmung erstellen
         count:
-          one: Sie haben %{count} Abstimmung erstellt.
-          other: Sie haben %{count} Abstimmungen erstellt.
+          one: Du hast %{count} Abstimmung erstellt.
+          other: Du hast %{count} Abstimmungen erstellt.
         links: Links
         additiontal_information: Weitere Informationen
       new:
@@ -559,11 +563,11 @@ de:
           other: "%{count} Antworten"
         view_results: Ergebnisse anzeigen
         edit_poll: Abstimmung bearbeiten
-        show_results_help: Wenn Sie dieses Kontrollkästchen aktivieren, sind die Ergebnisse öffentlich und können von allen Benutzern gesehen werden
+        show_results_help: Wenn Du dieses Kontrollkästchen aktivierst, sind die Ergebnisse öffentlich und können von allen Benutzern gesehen werden
         delete: Abstimmung löschen
         alert_notice: Diese Aktion entfernt die Abstimmung und alle damit verbundenen Fragen.
         success_notice: Abstimmung erfolgreich gelöscht
-        unable_notice: Sie können keine Abstimmung löschen, die Antworten erhalten hat
+        unable_notice: Du kannst keine Abstimmung löschen, die Antworten erhalten hat
       form:
         name: Titel Abstimmung
         add_question: Frage hinzufügen
@@ -577,12 +581,12 @@ de:
         title: Poster Vorschau
         poster_title: "Schaue nicht weiter,"
         poster_subtitle: "unterstütze mich! ;)"
-        intro_text: "<strong> Ich beteilige mich mit meinem eigenen Vorschlag an %{org}</strong>, und nur wenn Sie dem beitreten, kann ich die notwendige Unterstützung erreichen, damit wir die Stadt so gestalten, wie wir sie alle wollen."
+        intro_text: "<strong> Ich beteilige mich mit meinem eigenen Vorschlag an %{org}</strong>, und nur wenn Du dem beitrittst, kann ich die notwendige Unterstützung erreichen, damit wir das Land so gestalten, wie wir es alle wollen."
         proposal_code: "Code des Vorschlags: %{code}"
         support: Unterstütze meinen Vorschlag
-        footer: "<strong>Besuche %{link} und unterstütze diesen Vorschlag.</strong> Wir müssen viele sein. Entscheiden Sie sich auch dafür. Ich danke Ihnen!"
+        footer: "<strong>Besuche %{link} und unterstütze diesen Vorschlag.</strong> Wir müssen viele sein. Entscheide Du Dich auch dafür. Vielen Dank!"
       new:
-        title: Poster von deinem Vorschlag
+        title: Poster von Deinem Vorschlag
       options:
         preview: Vorschau
         download: Download
@@ -598,13 +602,13 @@ de:
         sent: Die E-Mail wurde gesendet
     mailer:
       forward:
-        subtitle: "Wenn Sie mich unterstützen, <br>werden wir es erreichen."
-        support_button: Unterstützen Sie diesen Vorschlag
+        subtitle: "Wenn Du mich unterstützt, <br>werden wir es schaffen."
+        support_button: Unterstütze diesen Vorschlag
         share_in: Teilen in
         hi: "Hallo!"
-        introduction: Ich schreibe Ihnen, da ich an %{org} teilnehme, der Plattform, auf der wir entscheiden können, welche Stadt wir wollen. Dafür habe ich meinen eigenen Vorschlag erstellt und jetzt werde ich Ihre Unterstützung brauchen! Keine Sorge, es ist sehr einfach.
-        support: "Sie müssen nur auf die Schaltfläche klicken, die unter \"Diesen Vorschlag unterstützen\" angezeigt wird. Sie können sich dort informieren, bevor Sie ihn bewerben. Nur die Vorschläge, die die notwendige Unterstützung erreichen, werden vom Stadtrat ausgeführt. Sie können mir helfen, dies zu erreichen!"
-        share: "Sie würden mir einen großen Gefallen tun, wenn Sie meinen Vorschlag mit Ihren Freunden, Familie und Kontakten teilen - das wäre perfekt!"
+        introduction: Ich schreibe Dir, da ich an %{org} teilnehme, der Plattform, auf der wir entscheiden können, welches Land wir wollen. Dafür habe ich meinen eigenen Vorschlag erstellt und jetzt werde ich Deine Unterstützung brauchen! Keine Sorge, es ist sehr einfach.
+        support: "Du musst nur auf die Schaltfläche klicken, die unter \"Diesen Vorschlag unterstützen\" angezeigt wird. Du kannst Dich dort informieren, bevor Du ihn bewirbst. Nur die Vorschläge, die die notwendige Unterstützung erreichen, werden in die Endabstimmung übernommen. Du kannst mir helfen, dies zu erreichen!"
+        share: "Du würdest mir einen großen Gefallen tun, wenn Du meinen Vorschlag mit Deinen Freund:inneen, Familie und Kontakten teilst - das wäre toll!"
   polls:
     all: "Alle"
     no_dates: "kein Datum zugewiesen"
@@ -619,29 +623,29 @@ de:
       participate_button_expired: "Abstimmung beendet"
       no_geozone_restricted: "Ganze Stadt"
       geozone_restricted: "Bereiche"
-      geozone_info: "Können BürgerInnen an folgender Volkszählung teilnehmen: "
-      already_answer: "Sie haben bereits an dieser Abstimmung teilgenommen"
-      not_logged_in: "Sie müssen sich anmelden oder registrieren, um teilnehmen zu können"
-      unverified: "Sie müssen ihr Konto bestätigen, um teilnehmen zu können"
-      cant_answer: "Diese Abstimmung ist nicht in ihrem Gebiet verfügbar"
+      geozone_info: "Können Bürger:nnen an folgender Volkszählung teilnehmen: "
+      already_answer: "Du hast bereits an dieser Abstimmung teilgenommen"
+      not_logged_in: "Du musst sich anmelden oder registrieren, um teilnehmen zu können"
+      unverified: "Du musst Dein Konto bestätigen, um teilnehmen zu können"
+      cant_answer: "Diese Abstimmung ist nicht in Deinem Gebiet verfügbar"
       section_header:
         icon_alt: Wahlsymbol
         title: Abstimmung
         help: Hilfe zur Abstimmung
       section_footer:
         title: Hilfe zur Abstimmung
-        description: BürgerAbstimmungen sind ein partizipatorischer Mechanismus, mit dem Bürger mit Wahlrecht direkte Entscheidungen treffen können
+        description: Bürgerabstimmungen sind ein Mitbestimmungsverfahren, mit dem Bürger:innen mit Wahlrecht selbst mitentscheiden können
       no_polls: "Keine offenen Abstimmungen."
     show:
-      already_voted_in_booth: "Sie haben bereits in einer physischen Wahlkabine teilgenommen. Sie können nicht nochmal teilnehmen."
-      already_voted_in_web: "Sie haben bereits an der Abstimmung teilgenommen. Falls Sie erneut abstimmen, wird Ihre Wahl überschrieben."
+      already_voted_in_booth: "Du hast bereits in einer physischen Wahlkabine teilgenommen. Du kannst nicht nochmal teilnehmen."
+      already_voted_in_web: "Du hast bereits an der Abstimmung teilgenommen. Falls Du erneut abstimmst, wird Deine Wahl überschrieben."
       back: Zurück zu Abstimmungen
-      cant_answer_not_logged_in: "Sie müssen %{signin} oder %{signup}, um teilzunehmen."
+      cant_answer_not_logged_in: "Du musst %{signin} oder %{signup}, um teilzunehmen."
       comments_tab: Kommentare
-      cant_answer_verify: "Sie müssen %{verify_link}, um zu antworten."
-      verify_link: "Verifizieren Sie Ihr Benutzerkonto"
+      cant_answer_verify: "Du musst %{verify_link}, um zu antworten."
+      verify_link: "Verifiziere Dein Benutzerkonto"
       cant_answer_expired: "Diese Abstimmung wurde beendet."
-      cant_answer_wrong_geozone: "Diese Frage ist nicht in ihrem Gebiet verfügbar."
+      cant_answer_wrong_geozone: "Diese Frage ist nicht in Deinem Gebiet verfügbar."
       more_info_title: "Weitere Informationen"
       documents: Dokumente
       zoom_plus: Bild vergrößern
@@ -669,12 +673,12 @@ de:
   poll_questions:
     show:
       vote_answer: "Für %{answer} abstimmen"
-      voted: "Sie haben für %{answer} abgestimmt"
+      voted: "Du hast für %{answer} abgestimmt"
   proposal_notifications:
     new:
       title: "Nachricht senden"
       submit_button: "Nachricht senden"
-      info_about_receivers: "Diese Nachricht wird an <strong>%{count} BenutzerInnen </strong> geschickt und wird auf der %{proposal_page}.<br> angezeigt. Die Nachricht wird nicht sofort verschickt, sondern BenutzerInnen bekommen regelmäßig eine E-Mail mit allen Benachrichtigen zu den Vorschlägen."
+      info_about_receivers: "Diese Nachricht wird an <strong>%{count} Benutzer </strong> geschickt und wird auf der %{proposal_page}.<br> angezeigt. Die Nachricht wird nicht sofort verschickt, sondern Benutzer bekommen regelmäßig eine E-Mail mit allen Benachrichtigen zu den Vorschlägen."
       proposal_page: "die Vorschlagsseite"
     show:
       back: "Zurück zu meiner Aktivität"
@@ -686,11 +690,11 @@ de:
     "no": "Nein"
     search_results: "Suchergebnisse"
     advanced_search:
-      author_type: "Nach Autoren-Typ"
+      author_type: "Nach Autorentyp"
       author_type_blank: "Tag auswählen"
       date: "Nach Datum"
       date_placeholder: "TT/MM/JJJJ"
-      date_range_blank: "Wählen Sie ein Datum"
+      date_range_blank: "Wählen Du ein Datum"
       date_1: "Letzte 24 Stunden"
       date_2: "Letzte Woche"
       date_3: "Vergangenen Monat"
@@ -703,7 +707,7 @@ de:
       title: "Erweiterte Suche"
       to: "An"
     author_info:
-      author_deleted: Benutzer*in gelöscht
+      author_deleted: Benutzer gelöscht
       email_deleted: E-Mail gelöscht
     back: Zurück
     check: Auswählen
@@ -717,14 +721,14 @@ de:
     followable:
       budget_investment:
         create:
-          notice: "Sie folgen nun diesem Investitionsprojekt! <br> Wir werden Sie bei Änderungen benachrichtigen, sodass Sie immer auf dem Laufenden sind."
+          notice: "Du folgst nun diesem Investitionsprojekt! <br> Wir werden Dich bei Änderungen benachrichtigen, sodass Du immer auf dem Laufenden bist."
         destroy:
-          notice: "Sie haben aufgehört diesem Investitionsprojekt zu folgen! <br> Sie werden nicht länger Benachrichtigungen zu diesem Projekt erhalten."
+          notice: "Du hast aufgehört diesem Investitionsprojekt zu folgen! <br> Du wirst nicht länger Benachrichtigungen zu diesem Projekt erhalten."
       proposal:
         create:
-          notice: "Jetzt folgen Sie diesem Vorschlag! <br> Wir werden Sie über Änderungen benachrichtigen sobald diese erscheinen, sodass Sie auf dem neusten Stand sind."
+          notice: "Jetzt folgst Du diesem Vorschlag! <br> Wir werden Dich über Änderungen benachrichtigen sobald diese erscheinen, sodass Du auf dem neusten Stand bist."
         destroy:
-          notice: "Sie haben aufgehört diesem Vorschlag zu folgen! <br> Sie werden nicht länger Benachrichtigungen zu diesem Vorschlag erhalten."
+          notice: "Du hast aufgehört diesem Vorschlag zu folgen! <br> Du wirst nicht länger Benachrichtigungen zu diesem Vorschlag erhalten."
     print:
       print_button: Diese Info drucken
     search: Suche
@@ -732,35 +736,34 @@ de:
     suggest:
       debate:
         found:
-          one: "Es gibt eine Diskussion mit dem Begriff '%{query}', Sie können daran teilnehmen, anstatt eine neue zu eröffnen."
-          other: "Es gibt Diskussionen mit dem Begriff '%{query}', Sie können an diesen teilnehmen, anstatt eine neue zu eröffnen."
-        message: "Sie sehen %{limit} %{count} Diskussionen mit dem Begriff \"%{query}\""
+          one: "Es gibt eine Diskussion mit dem Begriff '%{query}', Du kannst daran teilnehmen, anstatt eine neue zu eröffnen."
+          other: "Es gibt Diskussionen mit dem Begriff '%{query}', Du kannst an diesen teilnehmen, anstatt eine neue zu eröffnen."
+        message: "Du siehst %{limit} %{count} Diskussionen mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
       budget_investment:
         found:
-          one: "Es gibt eine Investition mit dem Begriff '%{query}', Sie können daran teilnehmen, anstatt ein neues zu eröffnen."
-          other: "Es gibt Investitionen mit dem Begriff '%{query}', Sie können an diesen teilnehmen, anstatt ein neues zu eröffnen."
-        message: "Sie sehen %{limit} %{count} Investitionen mit dem Begriff \"%{query}\""
+          one: "Es gibt eine Investition mit dem Begriff '%{query}', Du kannst daran teilnehmen, anstatt ein neues zu eröffnen."
+          other: "Es gibt Investitionen mit dem Begriff '%{query}', Du kannst an diesen teilnehmen, anstatt ein neues zu eröffnen."
+        message: "Du siehst %{limit} %{count} Investitionen mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
       proposal:
         found:
-          one: "Es gibt einen Vorschlag mit dem Begriff '%{query}', Sie können an diesem mitwirken, anstatt einen neuen zu erstellen"
-          other: "Es gibt Vorschläge mit dem Begriff '%{query}', Sie können an diesen mitwirken, anstatt einen neuen zu erstellen"
-        message: "Sie sehen %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
+          one: "Es gibt einen Vorschlag mit dem Begriff '%{query}', Du kannst an diesem mitwirken, anstatt einen neuen zu erstellen"
+          other: "Es gibt Vorschläge mit dem Begriff '%{query}', Du kannst an diesen mitwirken, anstatt einen neuen zu erstellen"
+        message: "Du siehst %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
     tags_cloud:
-      projects: Projects
+      projekts: Projekte
       districts: "Bereiche"
       districts_list: "Liste der Bereiche"
-      categories: Themenfelder
-      subcategories: "Unterkategorien"
+      categories: Tags
       tags: Tags von Nutzern
     target_blank: " (Link öffnet im neuen Fenster)"
-    you_are_in: "Sie befinden sich in"
+    you_are_in: "Du befindest sich in"
     unflag: Markierung aufheben
     unfollow_entity: "Nicht länger folgen %{entity}"
     outline:
-      searcher: Suchende*r
+      searcher: Suchende:r
     go_to_page: "Gehe zur Seite von "
     share: Teilen
     orbit:
@@ -800,18 +803,18 @@ de:
       debate_votes: Bewertungen der Diskussionen
       comment_votes: Bewertungen der Kommentare
       votes: Gesamtstimmen
-      verified_users: Verifizierte Benutzer*innen
-      unverified_users: Nicht verifizierte Benutzer*innen
+      verified_users: Verifizierte Benutzer
+      unverified_users: Nicht verifizierte Benutzer
   unauthorized:
-    default: Sie sind nicht berechtigt, auf diese Seite zuzugreifen.
+    default: Du bist nicht berechtigt, auf diese Seite zuzugreifen.
     manage:
-      all: "Sie sind nicht berechtigt die Aktion '%{action}' %{subject} auszuführen."
+      all: "Du bist nicht berechtigt, die Aktion '%{action}' %{subject} auszuführen."
   users:
-    login_to_comment: "Sie müssen sich %{signin} oder %{signup}, um einen Kommentar zu hinterlassen."
-    login_to_continue: "Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können."
+    login_to_comment: "Du musst Dich %{signin} oder %{signup}, um einen Kommentar zu hinterlassen."
+    login_to_continue: "Du musst Dich %{signin} oder %{signup}, um fortfahren zu können."
     signin: "anmelden"
     signup: "registrieren"
-    verify_account: "verifizieren Sie Ihr Konto"
+    verify_account: "verifiziere Dein Konto"
     direct_messages:
       new:
         direct_messages_bloqued: "Der Benutzer hat entschieden, keine direkten Nachrichten zu erhalten"
@@ -848,10 +851,10 @@ de:
           one: 1 folge ich 
           other: "%{count} folge ich"
       no_activity: Benutzer hat keine öffentliche Aktivität
-      no_private_messages: "Der Benutzer akzeptiert keine privaten Nachrichten."
-      private_activity: Dieser Benutzer hat beschlossen die Aktivitätsliste geheim zu halten.
+      no_private_messages: "Benutzer akzeptiert keine privaten Nachrichten."
+      private_activity: Diese:r Benutzer hat beschlossen, die Aktivitätsliste geheim zu halten.
       send_private_message: "Private Nachricht senden"
-      delete_alert: "Sind Sie sicher, dass Sie Ihr Investitionsprojekt löschen wollen? Diese Aktion kann nicht widerrufen werden!"
+      delete_alert: "Sind Du sicher, dass Du Dein Investitionsprojekt löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!"
     proposals:
       retired: "Vorschlag im Ruhezustand"
       draft: Entwurf
@@ -862,20 +865,20 @@ de:
   votes:
     agree: Ich stimme zu
     anonymous: Zu viele anonyme Stimmen, um die Wahl anzuerkennen %{verify_account}.
-    comment_unauthenticated: Sie müssen sich %{signin} oder %{signup}, um abzustimmen.
+    comment_unauthenticated: Du musst Dich %{signin} oder %{signup}, um abzustimmen.
     disagree: Ich stimme nicht zu
     organizations: Organisationen ist es nicht erlaubt abzustimmen
-    supports: Unterstützer*innen
+    supports: Unterstützer:innen
     verified_only: 'Nur verifizierte Benutzer können Vorschläge bewerten: %{verify_account}.'
     budget_investments:
-      not_logged_in: Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können.
+      not_logged_in: Du musst Dich %{signin} oder %{signup}, um fortfahren zu können.
       not_verified: Nur verifizierte Benutzer können über ein Investitionsprojekt abstimmen; %{verify_account}.
       organization: Organisationen ist es nicht erlaubt abzustimmen
       unfeasible: Undurchführbare Investitionsprojekte können nicht unterstützt werden
       not_voting_allowed: Die Abstimmungsphase ist beendet
       different_heading_assigned:
-        one: "Sie können nur Investitionsprojekte in %{count} Bereich unterstützen. Sie haben bereits Investitionen in %{supported_headings} unterstützt."
-        other: "Sie können nur Investitionsprojekte in %{count} Bereichen unterstützen. Sie haben bereits Investitionen in %{supported_headings} unterstützt."
+        one: "Du kannst nur Investitionsprojekte in %{count} Bereich unterstützen. Du hast bereits Investitionen in %{supported_headings} unterstützt."
+        other: "Du kannst nur Investitionsprojekte in %{count} Bereichen unterstützen. Du hast bereits Investitionen in %{supported_headings} unterstützt."
   welcome:
     feed:
       most_active:
@@ -890,8 +893,8 @@ de:
     cards:
       title: Hervorgehoben
     recommended:
-      title: Empfehlungen, die Sie vielleicht interessieren
-      help: "Diese Empfehlungen werden durch die Schlagwörter der Diskussionen und Vorschläge, denen Sie folgen, generiert."
+      title: Empfehlungen, die Dich vielleicht interessieren
+      help: "Diese Empfehlungen werden durch die Schlagwörter der Diskussionen und Vorschläge, denen Du folgst, generiert."
       debates:
         title: Empfohlene Diskussionen
         btn_text_link: Alle empfohlenen Diskussionen
@@ -904,33 +907,33 @@ de:
     verification:
       i_dont_have_an_account: Ich habe kein Konto
       i_have_an_account: Ich habe bereits ein Konto
-      question: Haben Sie bereits in Konto bei %{org_name}?
+      question: Hast Du bereits ein Konto bei %{org_name}?
       title: Konto Verifizierung
     welcome:
       go_to_index: Vorschläge und Diskussionen anzeigen
       start_using_consul: Gehe zum Index
       title: Teilnehmen
       user_permission_debates: An Diskussionen teilnehmen
-      user_permission_info: Mit Ihrem Konto können Sie...
+      user_permission_info: Mit Deinem Konto kannst Du...
       user_permission_proposal: Neue Vorschläge erstellen
-      user_permission_support_proposal: Vorschläge unterstützen*
-      user_permission_verify: "Damit Sie alle Funktionen nutzen können, müssen Sie ihr Konto verifizieren."
-      user_permission_verify_info: "* Nur für Benutzer*innen im Melderegister."
+      user_permission_support_proposal: "Vorschläge unterstützen:"
+      user_permission_verify: "Damit Du alle Funktionen nutzen kannst, musst Du Dein Konto verifizieren."
+      user_permission_verify_info: ": Nur für Benutzer im Melderegister."
       user_permission_verify_my_account: Mein Konto verifizieren
       user_permission_votes: An finaler Abstimmung teilnehmen
   invisible_captcha:
-    sentence_for_humans: "Wenn Sie ein Mensch sind, ignorieren Sie dieses Feld"
+    sentence_for_humans: "Wenn Du ein Mensch bist, ignoriere dieses Feld"
     timestamp_error_message: "Entschuldigung, das war zu schnell! Bitte erneut senden."
   related_content:
     title: "Verwandte Inhalte"
     add: "Verwandte Inhalte hinzufügen"
     label: "Link zu verwandten Inhalten"
     placeholder: "%{url}"
-    help: "Sie können Links von %{models} innerhalb des %{org} hinzufügen."
+    help: "Du können Links von %{models} innerhalb des %{org} hinzufügen."
     submit: "Hinzufügen"
-    error: "Ungültiger Link. Starten Sie mit %{url}."
-    error_itself: "Ungültiger Link. Sie können einen Inhalt nicht auf sich selbst beziehen."
-    success: "Sie haben einen neuen verwandten Inhalt hinzugefügt"
+    error: "Ungültiger Link. Starte mit %{url}."
+    error_itself: "Ungültiger Link. Du kannst einen Inhalt nicht auf sich selbst beziehen."
+    success: "Du hast einen neuen verwandten Inhalt hinzugefügt"
     is_related: "Ist der Inhalt verknüpft?"
     score_positive: "Ja"
     score_negative: "Nein"
@@ -943,8 +946,8 @@ de:
       title: Verwaltung
   annotator:
     help:
-      alt: Wählen Sie den Text, den Sie kommentieren möchten und drücken Sie den Button mit dem Stift.
-      text: Um dieses Dokument zu kommentieren, müssen Sie %{sign_in} oder %{sign_up}. Dann wählen Sie den Text aus, den Sie kommentieren möchten und klicken auf den Button mit dem Stift.
+      alt: Wähle den Text, den Du kommentieren möchtest und drücke den Button mit dem Stift.
+      text: Um dieses Dokument zu kommentieren, musst Du %{sign_in} oder %{sign_up}. Dann wähle den Text aus, den Du kommentieren möchtest und klicke auf den Button mit dem Stift.
       title: Wie kann ich dieses Dokument kommentieren?
   links:
     form:
@@ -952,7 +955,7 @@ de:
       cancel_button: Abbrechen
     nested_links:
       title: Links
-      note: Fügen Sie Links hinzu, die von Interesse sind
+      note: Füge Links hinzu, die von Interesse sind
       add_new_link: Neuen Link hinzufügen
     link_fields:
       label_placeholder: Titel Link
@@ -966,8 +969,8 @@ de:
     poll:
       take_part: Nimm Teil von %{from} bis %{to}
   remote_translations:
-    text: Der Inhalt dieser Seite ist in Ihrer Sprache nicht verfügbar
-    all_remote_translations_enqueued_text: Nach einer zeitnahen Aktualisierung der Seite können Sie den gesamten Inhalt in Ihrer Sprache sehen.
+    text: Der Inhalt dieser Seite ist in Deiner Sprache nicht verfügbar
+    all_remote_translations_enqueued_text: Nach einer zeitnahen Aktualisierung der Seite kannst Du den gesamten Inhalt in Deiner Sprache sehen.
     create:
       enqueue_remote_translation: Übersetzungen wurden korrekt angefordert.
     button: Seite übersetzen

@@ -3,7 +3,7 @@ de:
     comments:
       index:
         block_authors: Autoren blockieren
-        confirm: Sind Sie sich sicher?
+        confirm: Bist Du Dir sicher?
         filter: Filter
         filters:
           all: Alle
@@ -25,7 +25,7 @@ de:
     debates:
       index:
         block_authors: Autoren blockieren
-        confirm: Sind Sie sich sicher?
+        confirm: Bist Du Dir sicher?
         filter: Filter
         filters:
           all: Alle
@@ -48,12 +48,12 @@ de:
       flagged_debates: Diskussionen
       flagged_investments: Haushaltsinvestitionen
       proposals: Vorschläge
-      proposal_notifications: Antrags-Benachrichtigungen
+      proposal_notifications: Antragsbenachrichtigungen
       users: Benutzer blockieren
     proposals:
       index:
         block_authors: Autoren blockieren
-        confirm: Sind Sie sich sicher?
+        confirm: Bist Du Dir sicher?
         filter: Filter
         filters:
           all: Alle
@@ -72,7 +72,7 @@ de:
     budget_investments:
       index:
         block_authors: Autoren blockieren
-        confirm: Sind Sie sich sicher?
+        confirm: Bist Du Dir sicher?
         filter: Filter
         filters:
           all: Alle
@@ -91,7 +91,7 @@ de:
     proposal_notifications:
       index:
         block_authors: Autoren blockieren
-        confirm: Sind Sie sich sicher?
+        confirm: Bist Du Dir sicher?
         filter: Filter
         filters:
           all: Alle

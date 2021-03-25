@@ -41,11 +41,7 @@
 
     <%tag_categories = @selected_tags&.select{ |tag| tag.kind == 'category' }   %>
     <%can_create = true  %>
-    <%tags += tag_categories%>
-
-    <%tag_subcategories = @selected_tags&.select{ |tag| tag&.kind == 'subcategory' } %>
-    <%tags += tag_subcategories%>
-    <%tags += [@project_tag]%>
+    <%tags += tag_categories if tag_categories %>
 
     <div class="row">
       <div id="debates" class="debates-list small-12 medium-9 column">
@@ -105,8 +101,8 @@
         <aside class="margin-bottom">
 
           <%= link_to t("debates.index.start_debate"), new_debate_path(tags: tags.any? ? tags.map{|t| t.name} : nil), class: "button expanded", onclick: can_create ? "return true" : "alert('#{t("alerts.select_one_category", model: t("activerecord.models.debate.one"))}'); return false;" , disabled: !can_create %>
+          <%= render "shared/projekts_sidebar" %>
           <%= render "shared/categories", model: "debate" %>
-          <%= render "shared/tag_cloud", taggable: "debate" %>
         </aside>
       </div>
 

@@ -55,34 +55,34 @@ de:
         impressum: Impressum
     settings:
       projekts:
-        connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Projekten
-        connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
-        predefined: Projektvorauswahl treffen
-        predefined_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
+        connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Kategorien
+        connected_resources_description: Diskussionen & Vorschläge können ohne Kategoriezuordnung nicht erstellt werden
+        predefined: Kategorievorauswahl treffen
+        predefined_description: Die gefilterten Kategorien beim Erstellen von Diskussionen & Vorschlägen vorauswählen
         show_archived:
-          navigation: Archivierte Projekte in Navigation anzeigen
-          navigation_description: Zeigt archivierte Projekte in der Navigationsleiste wenn aktiviert
-          sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
-          sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
+          navigation: Archivierte Kategorien in Navigation anzeigen
+          navigation_description: Zeigt archivierte Kategorien in der Navigationsleiste wenn aktiviert
+          sidebar: Archivierte Kategorien in Kategorieseitenleiste  anzeigen
+          sidebar_description: Zeigt archivierte Kategorien in der Kategorieseitenleiste wenn aktiviert
     admin:
       menu:
-        projekts: Projekte
+        projekts: Kategorien
       projekts:
         tabs:
           configuration: Konfigurationseinstellungen
           settings: Funktionen
         index:
-          name_plural: Projekte
-          name_singular: Projekt
-          add_projekt: Neues Projekt hinzufügen
+          name_plural: Kategorien
+          name_singular: Kategorie
+          add_projekt: Neues Kategorien hinzufügen
           level: Ebene
           position: Position
-          enter_name: Geben Sie den Namen des Projektes an
-          choose_parent: Verknüpfen Sie dieses Projekt mit einem übergeordnetem Projekt
-          create: Projekt erstellen
-          projekt_list: Projektliste
-          parent: Übergeordnetes Projekt
-          name: Projektname
+          enter_name: Gebe den Namen der Kategorie an
+          choose_parent: Verknüpfe diese Kategorie mit einer übergeordneten Kategorie
+          create: Kategorie erstellen
+          projekt_list: Kategorieliste
+          parent: Übergeordnete Kategorie
+          name: Kategorie-Name
           page: Seite
           edit_page: Seite bearbeiten
           page_link: Seite öffnen 
@@ -94,12 +94,12 @@ de:
           ending: Enddatum
           actions: Aktionen
           activate: Aktiviert
-          projekt_duration: Gesamtdauer des Projekts
+          projekt_duration: Gesamtdauer der Kategorie
           debate_phase: Diskussionsphase
           proposal_phase: Vorschlagsphase
           voting_phase: Abstimmungsphase
           voting_manage: Umfragen verwalten
-          update: Projekteinstellungen aktualisieren
+          update: Kategorieeinstellungen aktualisieren
     projekts:
       new:
         first_level: 'Kategorie'

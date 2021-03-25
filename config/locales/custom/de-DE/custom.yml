@@ -107,12 +107,12 @@ de:
         third_level: 'Dritte Projektebene'
         fourth_level: 'Vierte Projektebene'
       sidebar_filter:
-        title: 'Projekte'
-        title_active: 'Aktive Projekte'
-        title_archived: 'Abgelaufene Projekte'
-        filter_button: 'Projekte filtern'
+        title: 'Kategorien'
+        title_active: 'Aktive Kategorien'
+        title_archived: 'Abgelaufene Kategorien'
+        filter_button: 'Kategorien filtern'
       errors:
-        presence: 'Bitte wählen Sie ein Projekt'
+        presence: 'Bitte wähle mindestens eine Kategorie'
     polls:
       show:
         results_menu: Zwischenergebnisse für Admins

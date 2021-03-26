@@ -1525,7 +1525,7 @@ ActiveRecord::Schema.define(version: 20210325191844) do
     t.datetime "date_of_birth"
     t.boolean "email_on_proposal_notification", default: true
     t.boolean "email_digest", default: true
-    t.boolean "email_on_direct_message", default: true
+    t.boolean "email_on_direct_message", default: false
     t.boolean "official_position_badge", default: false
     t.datetime "password_changed_at", default: "2015-01-01 01:01:01", null: false
     t.boolean "created_from_signature", default: false

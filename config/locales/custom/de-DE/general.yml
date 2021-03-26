@@ -801,7 +801,7 @@ de:
   unauthorized:
     default: Du bist nicht berechtigt, auf diese Seite zuzugreifen.
     manage:
-      all: "Du bist nicht berechtigt, die Aktion '%{action}' %{subject} auszuführen."
+      all: "Du bist nicht berechtigt, die Aktion auszuführen."
   users:
     login_to_comment: "Du musst Dich %{signin} oder %{signup}, um einen Kommentar zu hinterlassen."
     login_to_continue: "Du musst Dich %{signin} oder %{signup}, um fortfahren zu können."

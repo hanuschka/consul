@@ -147,7 +147,7 @@
         $filterArrow.css('border-color', '#C6C6C6')
       }
 
-      var uniqueProjektIds = selectedProjektIds.filter( function(v, i, a) { a.indexOf(v) === i } );
+      var uniqueProjektIds = selectedProjektIds;
 
       if ( uniqueProjektIds.length > 0) {
         url.searchParams.set('projekts', uniqueProjektIds.join(','))

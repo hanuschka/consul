@@ -132,5 +132,10 @@ class Setting < ApplicationRecord
     def reset_defaults
       defaults.each { |name, value| self[name] = value }
     end
+
+    def init_tags_setting
+      self["feature.enable_categories"] = true
+      self["feature.enable_custom_tags"] = true
+    end
   end
 end

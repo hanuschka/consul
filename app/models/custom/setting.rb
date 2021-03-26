@@ -125,7 +125,8 @@ class Setting < ApplicationRecord
         "projekts.connected_resources": false,
         "projekts.predefined": false,
         "projekts.show_archived.navigation": true,
-        "projekts.show_archived.sidebar": true
+        "projekts.show_archived.sidebar": true,
+        "max_active_proposals_per_user": 100
       }
     end
 

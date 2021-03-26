@@ -19,6 +19,14 @@ class ProposalsController
     @proposals_coordinates = all_proposal_map_locations
   end
 
+  def new
+    redirect_to proposals_path if proposal_limit_exceeded?(current_user) 
+    @resource = resource_model.new
+    set_geozone
+    set_resource_instance
+    @projekts = Projekt.top_level
+  end
+
   private
     def process_tags
       if params[:proposal][:tags]
@@ -57,5 +65,9 @@ class ProposalsController
                     map_location_attributes: [:latitude, :longitude, :zoom]]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
+    end
+
+    def proposal_limit_exceeded?(user)
+      user.proposals.count >= Setting['max_active_proposals_per_user'].to_i
     end
 end

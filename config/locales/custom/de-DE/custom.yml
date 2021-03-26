@@ -1,4 +1,6 @@
 de:
+  settings:
+    max_active_proposals_per_user_description: Number of proposals description
   custom:
     shared:
       tags_cloud:
@@ -39,6 +41,7 @@ de:
         section_header:
           title: Zeige deine Ideen
           icon_alt: Zeige deine Ideen
+        max_number_reached: "Du hast die maximale Anzahl (%{max_number}) an Vorschlägen pro Nutzer erreicht. Bevor du einen weiteren Vorschlag erstellen kannst, musst du einen aktiven Vorschlag zurückziehen."
     polls:
       index:
         section_header:

@@ -128,10 +128,16 @@
       </div>
       <div class="small-12 medium-3 column">
         <aside class="margin-bottom">
-          <%= link_to t("proposals.index.start_proposal"), new_proposal_path(tags: tags.any? ? tags.map{|t| t.name} : nil),
-            class: "button expanded",
-            onclick: can_create ? "return true" : cannot_create_message,
-            disabled: !can_create %>
+          <% unless proposal_limit_exceeded?(current_user) %>
+            <%= link_to t("proposals.index.start_proposal"), new_proposal_path(tags: tags.any? ? tags.map{|t| t.name} : nil),
+              class: "button expanded",
+              onclick: can_create ? "return true" : cannot_create_message,
+              disabled: !can_create %>
+          <% else %>
+            <div class='max-proposals-exceeded'>
+              <%= t('custom.proposals.index.max_number_reached', max_number: Setting['max_active_proposals_per_user']) %>
+            </div>
+          <%end%>
           <% if params[:retired].blank? %>
 					  <%= render "shared/projekts_sidebar" %>
             <%= render "shared/categories", model: "proposal" %>

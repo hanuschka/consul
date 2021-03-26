@@ -127,7 +127,7 @@ de:
         help: Erläuterung zur Sortierung
       section_footer:
         title: Erläuterung zur Sortierung
-        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem betrachteten Zeitraum von 31 Tagen. <br> Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ. <br> Neueste: nach Einstellungsdatum. <br> Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
+        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem betrachteten Zeitraum von 31 Tagen. Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ. Neueste: nach Einstellungsdatum. Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
     new:
       form:
         submit_button: Eine Diskussion starten
@@ -395,7 +395,7 @@ de:
         help: Erläuterung zur Sortierung
       section_footer:
         title: Erläuterung zur Sortierung
-        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem betrachteten Zeitraum von 31 Tagen. <br> Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ. <br> Neueste: nach Einstellungsdatum. <br> Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
+        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem betrachteten Zeitraum von 31 Tagen. Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ. Neueste: nach Einstellungsdatum. Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
     new:
       form:
         submit_button: Vorschlag erstellen

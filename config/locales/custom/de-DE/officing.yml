@@ -4,16 +4,16 @@ de:
       title: Abstimmung
     dashboard:
       index:
-        title: Vorsitzende/r der Abstimmung
-        info: Hier können Sie Benutzerdokumente überprüfen und Abstimmungsergebnisse speichern
-        no_shifts: Sie haben heute keinen Amtswechsel.
+        title: Vorsitzender der Abstimmung
+        info: Hier kannst Du Benutzerdokumente überprüfen und Abstimmungsergebnisse speichern
+        no_shifts: Du hast heute keinen Amtswechsel.
     menu:
       voters: Dokument bestätigen
       total_recounts: Komplette Nachzählungen und Ergebnisse
     polls:
       final:
         title: Auflistung über abgeschlossene Abstimmungen
-        no_polls: Sie führen keine Nachzählungen in einer aktiven Abstimmung durch
+        no_polls: Du führst keine Nachzählungen in einer aktiven Abstimmung durch
         select_poll: Abstimmung auswählen
         add_results: Ergebnisse hinzufügen
     poll_budgets:
@@ -37,7 +37,7 @@ de:
         data: CSV Daten
     booth:
       new:
-        title: "Wähle deine Wahlkabine"
+        title: "Wähle Deine Wahlkabine"
     results:
       flash:
         create: "Ergebnisse speichern"
@@ -66,7 +66,7 @@ de:
     residence:
       flash:
         create: "Dokument mit Volkszählung überprüft"
-        not_allowed: "Sie haben heute keine Amtswechsel"
+        not_allowed: "Du hast heute keine Amtswechsel"
       new:
         title: Dokument überprüfen
         document_number: "Dokumentennummer (einschließlich Buchstaben)"
@@ -79,7 +79,7 @@ de:
         table_poll: Abstimmung
         table_status: Status Abstimmung
         table_actions: Aktionen
-        not_to_vote: Die Person hat beschlossen, zu diesem Zeitpunkt nicht zu stimmen
+        not_to_vote: Die Person hat beschlossen, zu diesem Zeitpunkt nicht abzustimmen
       show:
         can_vote: Kann abstimmen
         cannot_vote: Die Person kann nicht abstimmen, da sie nicht in dem Gebiet registriert ist, in dem die Abstimmung stattfindet.

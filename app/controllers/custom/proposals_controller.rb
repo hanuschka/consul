@@ -59,4 +59,3 @@ class ProposalsController
       params.require(:proposal).permit(attributes, translations_attributes)
     end
 end
-

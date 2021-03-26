@@ -30,11 +30,11 @@ class Admin::TagsController < Admin::BaseController
 
   private
 
-    def tag_params
-      params.require(:tag).permit(:name)
-    end
+  def tag_params
+    params.require(:tag).permit(:name)
+  end
 
-    def find_tag
-      @tag = Tag.where(kind: 'category').find(params[:id])
-    end
+  def find_tag
+    @tag = Tag.where(kind: 'category').find(params[:id])
+  end
 end

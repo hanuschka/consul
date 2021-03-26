@@ -12,7 +12,7 @@ CKEDITOR.editorConfig = function( config )
   config.filebrowserUploadMethod = "form";
 
   config.allowedContent = true;
-  config.format_tags = "p;h2;h3";
+  config.format_tags = "p;h2;h3;h4;h5";
 
   config.removePlugins = "balloonpanel,balloontoolbar,copyformatting,scayt,wsc";
 

@@ -1,67 +1,106 @@
 // setup_project
 // Dropdown
 
-#navigation_bar {
 
-  li.nav-element-projekt:hover > ul.flyout-projekts {
+.subnavigation a.is-active {
+  color: #fff;
+}
+
+.main-nav,
+.drop-nav {
+  background: $dropdownbackground;
+}
+.main-nav {
+  float: left;
+}
+  .main-nav > li {
+    float: left;
+  }
+  .main-nav li:first-child {
+    border-left: none;
+  }
+  .main-nav a {
+    color: $dropdowntextcolor;
     display: block;
+    text-decoration: none;
   }
+.drop,
+.flyout {
+  position: relative;
+  z-index: 1000;
+}
 
-  ul.flyout-projekts {
-    left: 100%;
-    top: -1px;
-    display: none;
-    position: absolute;
-  }
+.drop-nav li a,
+.flyout-nav li a {
+  padding-left: 20px;
+}
 
-  li.static-projekt > ul.flyout-projekts {
-    left: 0;
-    top: 100%;
-  }
+// width of the list items
+.drop-nav li {
+  border-bottom: 1px solid $dropdownbordercolor;
+  width: $dropdownwidth;
+}
+.drop:hover > .drop-nav,
+.flyout:hover > .flyout-nav {
+  display: block;
+}
 
-  li {
-    position: relative;
-    z-index: 1;
-  }
+.flyout:hover > .flyout-nav-right {
+  display: block;
+}
 
-  li.flyout-projekt {
-    width: 300px;
-    background: #ececec;
-    padding-left: 1em;
-    border-top: 1px solid $brand;
-    border-bottom: 1px solid $brand;
-    display: flex;
-    justify-content: space-between;
-  }
+.flyout-nav {
+  left: 100%;
+  top: 0;
+}
 
-  li.flyout-projekt ~ li.flyout-projekt {
-    border-top: none;
-  }
+.flyout-nav-right li {
+  width: 225px;
+}
 
-  .projekt-name {
-    color: #222;
-    font-weight: bold;
-    position: relative;
-    line-height: 3rem;
-  }
 
-  li.flyout-projekt > .projekt-name {
-    width: 67%;
-  }
+.flyout:hover a,
+.flyout-nav {
+  background: $dropdownbackground;
+}
+.subnavigation {
+  background: $dropdownbackground;
+}
+#alert {
+  z-index: 3000;
+  position: absolute;
+}
+#notice {
+  z-index: 3000;
+  position: absolute;
+}
+.dropdown {
+  z-index: 3000;
+  position: relative;
+}
 
-  .projekt-modules-icons {
-    padding-top: 15px;
-    padding-right: 1em;
-    display: flex;
-    justify-content: flex-end;
+.filter-toggle-arrow {
+  position: absolute;
+  right: 10px;
+  top: 18px;
 
-    .module-icon-link {
-      display: inline-block;
-      line-height: initial;
-    }
+  width: 0;
+  height: 0;
+  margin: 0 auto;
+  border-left: 7px solid $white;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  cursor: pointer;
+}
 
-    .module-icon {
-      width: 20px;
-    }
-  }
+#responsive-menu ul {
+  padding-right: 0;
+}
+
+#responsive-menu .drop-nav li {
+  width: 100%
+}
+
+#responsive-menu .subnavigation a {
+  width: 70%;
 }

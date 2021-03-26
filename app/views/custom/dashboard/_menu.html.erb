@@ -1,0 +1,34 @@
+<ul id="proposal_dashboard_menu" class="no-bullet">
+  <li class="section-title <%= "is-active" if my_proposal_menu_active? %>">
+    <span class="icon-proposals"></span>
+    <%= link_to proposal_dashboard_path(proposal.to_param) do %>
+      <strong><%= t("dashboard.menu.my_proposal") %></strong>
+    <% end %>
+  </li>
+
+  <% if proposed_actions.any? %>
+    <li class="section-title <%= "is-active" if recommended_actions_menu_active? %>">
+      <span class="icon-checkmark-circle"></span>
+      <%= link_to recommended_actions_proposal_dashboard_path(proposal.to_param) do %>
+        <strong><%= t("dashboard.menu.recommended_actions") %></strong>
+      <% end %>
+      <% if new_resources_since_last_login?(proposed_actions, @new_actions_since_last_login) %>
+        <span class="label"><%= t("dashboard.progress.new_action") %></span>
+      <% end %>
+    </li>
+  <% end %>
+
+  <li class="section-title <%= "is-active" if community_menu_active? %>">
+    <span class="icon-organizations"></span>
+    <%= link_to community_proposal_dashboard_path(proposal) do %>
+      <strong><%= t("dashboard.menu.community") %></strong>
+    <% end %>
+  </li>
+
+  <li class="section-title <%= "is-active" if related_content_menu_active? %>">
+    <span class="icon-comments"></span>
+    <%= link_to related_content_proposal_dashboard_path(proposal) do %>
+      <strong><%= t("dashboard.menu.related_content") %></strong>
+    <% end %>
+  </li>
+</ul>

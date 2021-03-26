@@ -46,11 +46,6 @@
       </div>
     <% end %>
 
-    <div class="small-12 medium-6 column">
-      <%= f.select :geozone_id, geozone_select_options,
-        include_blank: t("geozones.none") %>
-    </div>
-
     <% if feature?(:map) %>
       <div class="small-12 column">
 
@@ -65,7 +60,6 @@
 
       </div>
     <% end %>
-
 
     <div class="small-12 column">
       <%= render partial: "shared/projekts", locals: { f: f, model: @proposal }  %>
@@ -97,7 +91,6 @@
           class: "tag-autocomplete list-categories" %>
       </div>
     <%end%>
-
 
     <% if current_user.unverified? %>
       <div class="small-12 column">

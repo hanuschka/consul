@@ -14,7 +14,7 @@ de:
           other: Insgesamt <strong>%{count} %{entry_name}</strong>
   views:
     pagination:
-      current: Sie sind auf der Seite
+      current: Du bist auf der Seite
       first: Erste
       last: Letzte
       next: Nächste

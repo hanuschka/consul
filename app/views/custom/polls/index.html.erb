@@ -8,10 +8,12 @@
   
   <%= render_custom_partial "social_meta_tags" %>
   
-  <%= render "shared/section_header", i18n_namespace: "polls.index.section_header", image: "polls" %>
+  <%= render "shared/section_header", i18n_namespace: "custom.polls.index.section_header", icon: "stimme" %>
   
     <div class="row">
       <div class="small-12 medium-9 column">
+
+      <%=render_custom_block 'polls_welcome' %>
       <% if show_polls_description? %>
         <div class="polls-description">
           <%= auto_link_already_sanitized_html wysiwyg(@active_poll.description) %>
@@ -53,10 +55,10 @@
       </div>
       </div>
       <div class="small-12 medium-3 column">
+        <%=render_custom_block 'polls_sidebar' %>
         <aside class="margin-bottom">
           <%= render "shared/projekts_sidebar" %>
           <%= render "shared/categories", model: "poll" %>
-          <%= render "shared/tag_cloud", taggable: "poll" %>
         </aside>
     </div>
   </div>

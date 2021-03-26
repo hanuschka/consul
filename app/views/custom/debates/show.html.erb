@@ -30,6 +30,11 @@
 
             <span class="bullet">&nbsp;&bull;&nbsp;</span>
             <%= l @debate.created_at.to_date %>
+            <%project = @debate.tags.project.first%>
+            <% if project%>
+              <span class="bullet">&nbsp;&bull;&nbsp;</span>
+              <%=project.tag_name %>
+            <%end%>
             <span class="bullet">&nbsp;&bull;&nbsp;</span>
             <span class="icon-comments"></span>&nbsp;
             <%= link_to t("debates.show.comments", count: @debate.comments_count), "#comments" %>

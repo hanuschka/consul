@@ -1,6 +1,8 @@
 // brand_color
-$brand:                     #004a83;
-$dark:                        darken($brand, 10%);
+$brand:                     #ff2300;
+$dark:                      darken($brand, 10%);
+$azure:                     #00cda0;
+$purple:                    #28283c;
 // fonts
 $body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
 $header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
@@ -40,8 +42,8 @@ $welcomelead:                 $brand;
 $welcomebuttonbg:             $brand;
 $welcomebuttontext:           $white;
 $welcometitle:                $brand;
-$dropdownbackground:          $white;
-$dropdowntextcolor:           $black;
+$dropdownbackground:          $brand;
+$dropdowntextcolor:           $white;
 $dropdownbordercolor:         darken($dropdownbackground, 5%);
 $dropdownwidth:               300px;
 $tagsbackgroundcolor:         lighten($brand, 65%);

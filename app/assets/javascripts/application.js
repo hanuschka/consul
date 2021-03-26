@@ -111,6 +111,7 @@
 //= require columns_selector
 //= require budget_edit_associations
 //= require datepicker
+//= require expand_mobile_menu
 //= require projekts
 
 var initialize_modules = function() {
@@ -166,6 +167,7 @@ var initialize_modules = function() {
   }
   App.BudgetEditAssociations.initialize();
   App.Datepicker.initialize();
+  App.PlzField.initialize();
 };
 
 var destroy_non_idempotent_modules = function() {

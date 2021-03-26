@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 30 30">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clip-stimme);
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #4d4d4d;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-stimme">
+      <rect width="30" height="30"/>
+    </clipPath>
+  </defs>
+  <g id="stimme" class="cls-1">
+    <g id="Gruppe_81" data-name="Gruppe 81" transform="translate(-11596.974 833)">
+      <path id="Pfad_215" data-name="Pfad 215" class="cls-2" d="M467,147.968V143.9a.9.9,0,1,1,1.806,0v6.323c0,.574.619.61,1.066.113a15.4,15.4,0,0,1,1.1-1.477,1.023,1.023,0,0,1,1.508,0c.307.452,0,.98-.56,1.9s-.646,1.215-1.084,1.987a6.137,6.137,0,0,1-2.01,2.226,1.106,1.106,0,0,0-.474,1.125v.9" transform="translate(11150.599 -961)"/>
+      <path id="Pfad_216" data-name="Pfad 216" class="cls-2" d="M463,147.323V141.9a.9.9,0,0,1,1.806,0v.9" transform="translate(11152.792 -959.903)"/>
+      <path id="Pfad_217" data-name="Pfad 217" class="cls-2" d="M459,148.871V143.9a.9.9,0,1,1,1.806,0" transform="translate(11154.985 -961)"/>
+      <path id="Pfad_218" data-name="Pfad 218" class="cls-2" d="M456.792,147.9a.9.9,0,1,0-1.806,0v5.419a8.58,8.58,0,0,0,.813,4.123c.176.42.542.845.542,1.3v.452" transform="translate(11157.193 -963.194)"/>
+      <path id="Pfad_219" data-name="Pfad 219" class="cls-2" d="M440,133.968V129.9a.9.9,0,0,1,1.806,0v6.323c0,.574.619.61,1.066.113a15.4,15.4,0,0,1,1.1-1.477,1.023,1.023,0,0,1,1.508,0c.307.452,0,.98-.56,1.9s-.646,1.215-1.084,1.987a6.138,6.138,0,0,1-2.01,2.226,1.106,1.106,0,0,0-.474,1.125v7.226" transform="translate(11165.405 -953.323)"/>
+      <path id="Pfad_220" data-name="Pfad 220" class="cls-2" d="M436,133.323V127.9a.9.9,0,1,1,1.806,0v.9" transform="translate(11167.599 -952.226)"/>
+      <path id="Pfad_221" data-name="Pfad 221" class="cls-2" d="M432,134.871V129.9a.9.9,0,0,1,1.806,0" transform="translate(11169.792 -953.323)"/>
+      <path id="Pfad_222" data-name="Pfad 222" class="cls-2" d="M429.792,133.9a.9.9,0,1,0-1.806,0v5.419a8.581,8.581,0,0,0,.813,4.123c.176.42.542.845.542,1.3v6.774" transform="translate(11172 -955.516)"/>
+      <path id="Pfad_223" data-name="Pfad 223" class="cls-2" d="M461,118.968V114.9a.9.9,0,0,1,1.806,0v6.323c0,.574.619.61,1.066.113a15.4,15.4,0,0,1,1.1-1.477,1.006,1.006,0,0,1,1.508,0c.307.452,0,.98-.56,1.9s-.646,1.215-1.084,1.987a7.711,7.711,0,0,1-.957,1.355" transform="translate(11153.889 -945.097)"/>
+      <path id="Pfad_224" data-name="Pfad 224" class="cls-2" d="M457,118.323V112.9a.9.9,0,0,1,1.806,0v.9" transform="translate(11156.082 -944)"/>
+      <path id="Pfad_225" data-name="Pfad 225" class="cls-2" d="M453,119.871V114.9a.9.9,0,0,1,1.806,0" transform="translate(11158.275 -945.097)"/>
+      <path id="Pfad_226" data-name="Pfad 226" class="cls-2" d="M450.8,118.9a.9.9,0,0,0-1.806,0v5.419a10.521,10.521,0,0,0,.2,2.353" transform="translate(11160.474 -947.29)"/>
+    </g>
+  </g>
+</svg>

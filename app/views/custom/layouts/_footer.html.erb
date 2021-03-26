@@ -1,0 +1,37 @@
+<footer>
+  <div class="row">
+    <div class="small-6 medium-3 column">
+      <div class='footer-logo'>
+        <div class='footer-logo-note'>
+          Initiiert von
+        </div>
+        <%= link_to 'https://aufstehen.de/web/' do %>
+          <%= image_tag 'aufstehen_logo.png'  %>
+        <% end %>
+      </div>
+    </div>
+    <div class="small-6 medium-3 column">
+      <%=render_custom_block 'footer_block_2' %>
+    </div>
+    <div class="small-6 medium-3 column">
+      <%=render_custom_block 'footer_block_3' %>
+    </div>
+    <div class="small-6 medium-3 column">
+      <%=render_custom_block 'footer_block_4' %>
+    </div>
+  </div>
+
+  <div class="subfooter row">
+    <div class='subfooter-links'>
+      <%= t("custom.layouts.footer.copyright", year: Time.current.year) %>&nbsp;|
+      <ul class="no-bullet inline-block">
+        <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy") %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions") %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class='ribbon'>
+  </div>
+</footer>

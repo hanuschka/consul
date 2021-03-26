@@ -40,7 +40,6 @@
         <% end %>
 
         <%= render "proposals/info", proposal: @proposal %>
-        <%= render "shared/geozone", geozonable: @proposal %>
 
         <% unless @proposal.selected? %>
           <%= render "relationable/related_content", relationable: @proposal %>
@@ -101,6 +100,5 @@
     </div>
 
     <%= render "proposals/notifications" %>
-    <%= render "milestones/milestones", milestoneable: @proposal %>
   </div>
 <% end %>

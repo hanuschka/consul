@@ -1,35 +1,88 @@
 de:
   custom:
+    shared:
+      tags_cloud:
+        districts: Aktionsgruppen 
+        districts_list: Liste der Aktionsgruppen
+    alerts:
+      only_3_proposals: 'Jede Nutzer darf pro Themenfeld nur drei %{models} erstellen!'
+    images:
+      form:
+        image_name: 'Name des Titelbildes'
+    account:
+      show:
+        plz_settings: Aufstehen Anmeldung
+    comments:
+      reply_form:
+        leave_comment: 'Schreibe eine Antwort'
+    devise_views:
+      users:
+        registrations:
+          new:
+            username_label: Benutzername
+            username_placeholder: Bitte verwende einen Klarnamen
+            plz_consent_title: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional)
+            plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent} (freiwillige Angabe, damit wir Dir regionale Mailings zusenden können)
+            plz_consent_link: Allgemeine Nutzungsbedingungen
+            plz_label: Postleitzahl
+            plz_placeholder: PLZ
+      mailer:      
+        confirmation_instructions:
+          plz_welcome: 'wir freuen uns, dass Du Dich auf unserer Plattform anmelden und von uns per E-Mail kontaktiert werden möchtest! Bitte bestätige Deine E-Mail-Adresse mithilfe des folgenden Links:'
+    debates:
+      index:
+        section_header:
+          title: Tausche dich aus
+          icon_alt: Tausche dich aus
+    proposals:
+      index:
+        section_header:
+          title: Zeige deine Ideen
+          icon_alt: Zeige deine Ideen
+    polls:
+      index:
+        section_header:
+          title: Stimme ab
+          icon_alt: Stimme ab
+      show:
+        results_menu: Zwischenergebnisse für Admins
+        info_menu: Abstimmung
+    related_content:
+      title: Verwandte Inhalte in der Plattform
+    layouts:
+      footer:
+        copyright: "Aufstehen %{year}"
+        impressum: Impressum
     settings:
       projekts:
-        connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Projekten
-        connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
-        predefined: Projektvorauswahl treffen
-        predefined_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
+        connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Kategorien
+        connected_resources_description: Diskussionen & Vorschläge können ohne Kategoriezuordnung nicht erstellt werden
+        predefined: Kategorievorauswahl treffen
+        predefined_description: Die gefilterten Kategorien beim Erstellen von Diskussionen & Vorschlägen vorauswählen
         show_archived:
-          navigation: Archivierte Projekte in Navigation anzeigen
-          navigation_description: Zeigt archivierte Projekte in der Navigationsleiste wenn aktiviert
-          sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
-          sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
+          navigation: Archivierte Kategorien in Navigation anzeigen
+          navigation_description: Zeigt archivierte Kategorien in der Navigationsleiste wenn aktiviert
+          sidebar: Archivierte Kategorien in Seitenleiste anzeigen
+          sidebar_description: Zeigt archivierte Kategorien in der Seitenleiste wenn aktiviert
     admin:
       menu:
-        projekts: Projekte
+        projekts: Kategorien
       projekts:
         tabs:
           configuration: Konfigurationseinstellungen
           settings: Funktionen
         index:
-          name_plural: Projekte
-          name_singular: Projekt
-          add_projekt: Neues Projekt hinzufügen
+          name_plural: Kategorien
+          name_singular: Kategorie
+          add_projekt: Neue Kategorie hinzufügen
           level: Ebene
           position: Position
-          enter_name: Geben Sie den Namen des Projektes an
-          choose_parent: Verknüpfen Sie dieses Projekt mit einem übergeordnetem Projekt
-          create: Projekt erstellen
-          projekt_list: Projektliste
-          parent: Übergeordnetes Projekt
-          name: Projektname
+          enter_name: Geben den Namen der Kategorie an
+          choose_parent: Verknüpfe die Kategorie mit einer übergeordneten Kategorie
+          create: Kategorie erstellen
+          projekt_list: Kategorieliste
+          parent: Übergeordnete Kategorie
+          name: Kategoriename
           page: Seite
           edit_page: Seite bearbeiten
           page_link: Seite öffnen 
@@ -41,38 +94,32 @@ de:
           ending: Enddatum
           actions: Aktionen
           activate: Aktiviert
-          projekt_duration: Gesamtdauer des Projekts
+          projekt_duration: Gesamtdauer der Kategorie
           debate_phase: Diskussionsphase
           proposal_phase: Vorschlagsphase
           voting_phase: Abstimmungsphase
           voting_manage: Umfragen verwalten
-          show_in_navigation_checkbox: Projekt in Navigation anzeigen
+          show_in_navigation_checkbox: Kategorie in Navigation anzeigen
           show_in_navigation:
             yes: Ja
             no: Nein 
-          update: Projekteinstellungen aktualisieren
+          update: Kategorie-Einstellungen aktualisieren
     projekts:
       new:
-        first_level: 'Erste Projektebene'
-        second_level: 'Zweite Projektebene'
-        third_level: 'Dritte Projektebene'
-        fourth_level: 'Vierte Projektebene'
+        first_level: 'Erste Kategorie-Ebene'
+        second_level: 'Zweite Kategorie-Ebene'
+        third_level: 'Dritte Kategorie-Ebene'
+        fourth_level: 'Vierte Kategorie-Ebene'
       sidebar_filter:
-        title: 'Projekte'
-        title_active: 'Aktive Projekte'
-        title_archived: 'Abgelaufene Projekte'
-        filter_button: 'Projekte filtern'
+        title: 'Kategorien'
+        title_active: 'Aktive Kategorien'
+        title_archived: 'Abgelaufene Kategorien'
+        filter_button: 'Kategorien filtern'
       errors:
-        presence: 'Bitte wählen Sie ein Projekt'
-    polls:
-      show:
-        results_menu: Zwischenergebnisse für Admins
-        info_menu: Abstimmung
+        presence: 'Bitte wähle mindestens eine Kategorie'
     comments:
       reply_form:
-        leave_comment: 'Schreiben Sie eine Antwort'
+        leave_comment: 'Schreibe eine Antwort'
     images:
       form:
         image_name: 'Name des Titelbildes'
-  tag_names:
-    general: 'General'

@@ -29,6 +29,13 @@
         <%= "#{projekt.proposal_phase_start} - #{projekt.proposal_phase_end}" %>
       </div>
 
+      <div>
+        <%= t("custom.admin.projekts.edit.show_in_navigation_checkbox") %>
+      </div>
+      <div>
+        <%= projekt.show_in_navigation ? t("custom.admin.projekts.edit.show_in_navigation")[true] : t("custom.admin.projekts.edit.show_in_navigation")[false] %>
+      </div>
+
     </div>
   </td>
 </tr>

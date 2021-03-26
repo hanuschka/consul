@@ -63,6 +63,10 @@
     </tbody>
   </table>
 
+  <div class='projekt-options'>
+    <%= f.check_box :show_in_navigation, { label: t('custom.admin.projekts.edit.show_in_navigation_checkbox') } %>
+  </div>
+
   <div>
     <%= f.submit(t("custom.admin.projekts.edit.update"), class: "button success") %>
   </div>

@@ -2,7 +2,7 @@
   <ul>
     <%= raw content_block("subnavigation_left", I18n.locale) %>
 
-    <% active_projekts = Projekt.top_level_active %>
+    <% active_projekts = Projekt.top_level_active.where(show_in_navigation: true) %>
     <% archived_projekts = Projekt.top_level_archived %>
 
     <% active_projekts.each do |active_projekt| %>

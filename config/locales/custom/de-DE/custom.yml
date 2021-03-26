@@ -46,6 +46,10 @@ de:
           proposal_phase: Vorschlagsphase
           voting_phase: Abstimmungsphase
           voting_manage: Umfragen verwalten
+          show_in_navigation_checkbox: Projekt in Navigation anzeigen
+          show_in_navigation:
+            yes: Ja
+            no: Nein 
           update: Projekteinstellungen aktualisieren
     projekts:
       new:

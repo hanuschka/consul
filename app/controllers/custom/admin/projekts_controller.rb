@@ -54,7 +54,7 @@ class Admin::ProjektsController < Admin::BaseController
   private
 
 	def projekt_params
-		params.require(:projekt).permit(:name, :parent_id, :total_duration_active, :total_duration_start, :total_duration_end, :debate_phase_active, :debate_phase_start, :debate_phase_end, :proposal_phase_active, :proposal_phase_start, :proposal_phase_end )
+    params.require(:projekt).permit(:name, :parent_id, :total_duration_active, :total_duration_start, :total_duration_end, :debate_phase_active, :debate_phase_start, :debate_phase_end, :proposal_phase_active, :proposal_phase_start, :proposal_phase_end, :show_in_navigation )
 	end
 
 	def find_projekt

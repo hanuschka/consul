@@ -37,17 +37,17 @@ de:
       deleted: Dieser Kommentar wurde gelöscht
       moderator: Moderator
       responses:
-        zero: Keine Antworten
+        zero: Keine Rückmeldungen
         one: 1 Antwort
         other: "%{count} Antworten"
       responses_show:
-        zero: Keine Antworten
-        one: "1 Antwort (Anzeigen)"
-        other: "%{count} Antworten (Anzeigen)"
+        zero: Keine Rückmeldungen
+        one: "1 Rückmeldung (Anzeigen)"
+        other: "%{count} Rückmeldungen (Anzeigen)"
       responses_collapse:
-        zero: Keine Antworten
-        one: "1 Antwort (Einklappen)"
-        other: "%{count} Antworten (Einklappen)"
+        zero: Keine Rückmeldungen
+        one: "1 Antwort (Kollaps)"
+        other: "%{count} Antworten (Kollaps)"
       user_deleted: Benutzer gelöscht
       votes:
         zero: Unentschieden
@@ -94,6 +94,7 @@ de:
       tags_instructions: Diskussion markieren.
       tags_placeholder: "Trenne die Tags mit einem Komma (',')"
       tags_categories: "Eigene Kategorie(n) hinzufügen"
+      tags_subcategories: "Eigene Unterkategorie(n) hinzufügen"
     index:
       featured_debates: Hervorgehoben
       orders:
@@ -126,10 +127,7 @@ de:
         help: Erläuterung zur Sortierung
       section_footer:
         title: Erläuterung zur Sortierung
-        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem 'heißen' Zeitraum von 31 Tagen."
-        help_text_1: "Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ."
-        help_text_2: "Neueste: nach Einstellungsdatum."
-        help_text_3: 'Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)'
+        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem betrachteten Zeitraum von 31 Tagen. Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ. Neueste: nach Einstellungsdatum. Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
     new:
       form:
         submit_button: Eine Diskussion starten
@@ -340,6 +338,7 @@ de:
       proposal_summary_note: "(maximal 200 Zeichen)"
       proposal_video_url_note: Füge einen YouTube- oder Vimeo-Link hinzu
       tag_category_label: "Tags"
+      tag_subcategory_label: "Unterkategorien"
       tags_instructions: "Diesen Vorschlag markieren. Du kannst aus vorgeschlagenen Tags wählen oder Deine eigenen hinzufügen"
       tags_label: Verschlagwortung
       tags_placeholder: "Klicke auf einen oder mehrere vorgeschlagene(n) Tag(s) oder gib eigene Tags mit Komma getrennt ein."
@@ -395,11 +394,8 @@ de:
         title: Vorschläge
         help: Erläuterung zur Sortierung
       section_footer:
-        title: Erläuterung zur SOrtierung
-        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem 'heißen' Zeitraum von 31 Tagen."
-        help_text_1: "Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ."
-        help_text_2: "Neueste: nach Einstellungsdatum."
-        help_text_3: "Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
+        title: Erläuterung zur Sortierung
+        description: "Aktivste: Hier wird ein 'Score' erstellt anhand von allen (positiven wie negativen) Stimmen, dem Alter des Beitrags und dem betrachteten Zeitraum von 31 Tagen. Am meisten bewertet: Der Beitrag mit den meisten Bewertungen, egal ob positiv oder negativ. Neueste: nach Einstellungsdatum. Empfehlungen: Benutzerverhalten, gelernt über die Zeit (u.a. Welche Vorschläge hat die Person sonst noch unterstützt? Bei welchen Autoren hat sie Interaktionen gezeigt, z.B. Kommentare, Antworten?)"
     new:
       form:
         submit_button: Vorschlag erstellen
@@ -409,7 +405,7 @@ de:
       recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht, ebenso diejenigen, die die Diskussionen absichtlich sabotieren.
       recommendations_title: Empfehlungen zum Erstellen eines Vorschlags
       start_new: Neuen Vorschlag erstellen
-      start_new_in: Erstelle einen Vorschlag
+      start_new_in: Erstelle einen Vorschlag in %{category}
       help: Wie funktionieren Vorschläge?
     notice:
       retired: Vorschlag im Ruhezustand
@@ -428,9 +424,9 @@ de:
       support: Unterstützung
       support_title: Vorschlag unterstützen
       supports:
-        zero: Keine Unterstützer:innen
-        one: 1 Unterstützer:in
-        other: "%{count} Unterstützer:innen"
+        zero: Keine Unterstützer
+        one: 1 Unterstützer
+        other: "%{count} Unterstützer"
       votes:
         zero: Unentschieden
         one: 1 Stimme
@@ -539,7 +535,7 @@ de:
       comments: Kommentare
       latest_comments: Letzte Nachrichten
     messages:
-      send_notification: Sende Nachricht zu die Unterstützer:innen des Vorschlags
+      send_notification: Sende Nachricht zu die Unterstützer des Vorschlags
       previous_notifications: Siehe vorherige Benachrichtigungen
     polls:
       index:
@@ -629,10 +625,10 @@ de:
       section_header:
         icon_alt: Wahlsymbol
         title: Abstimmung
-        help: Hilfe zur Abstimmung
+        help: Erläuterung zur Abstimmung
       section_footer:
-        title: Hilfe zur Abstimmung
-        description: Bürgerabstimmungen sind ein Mitbestimmungsverfahren, mit dem Bürger:innen mit Wahlrecht selbst mitentscheiden können
+        title: Erläuterung zur Abstimmung
+        description: Bei der Abstimmung kannst Du den Grad Deiner Zustimmung ausdrücken und die Forderungen nach Relevanz gewichten.
       no_polls: "Keine offenen Abstimmungen."
     show:
       already_voted_in_booth: "Du hast bereits in einer physischen Wahlkabine teilgenommen. Du kannst nicht nochmal teilnehmen."
@@ -751,11 +747,10 @@ de:
         message: "Du siehst %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
     tags_cloud:
-      projekts: Projekte
+      tags: Beliebte Tags
       districts: "Bereiche"
       districts_list: "Liste der Bereiche"
-      categories: Tags
-      tags: Tags von Nutzern
+      categories: "Tags"
     target_blank: " (Link öffnet im neuen Fenster)"
     you_are_in: "Du befindest sich in"
     unflag: Markierung aufheben
@@ -806,7 +801,7 @@ de:
   unauthorized:
     default: Du bist nicht berechtigt, auf diese Seite zuzugreifen.
     manage:
-      all: "Du bist nicht berechtigt, die Aktion '%{action}' %{subject} auszuführen."
+      all: "Du bist nicht berechtigt, die Aktion auszuführen."
   users:
     login_to_comment: "Du musst Dich %{signin} oder %{signup}, um einen Kommentar zu hinterlassen."
     login_to_continue: "Du musst Dich %{signin} oder %{signup}, um fortfahren zu können."
@@ -866,7 +861,7 @@ de:
     comment_unauthenticated: Du musst Dich %{signin} oder %{signup}, um abzustimmen.
     disagree: Ich stimme nicht zu
     organizations: Organisationen ist es nicht erlaubt abzustimmen
-    supports: Unterstützer:innen
+    supports: Unterstützer
     verified_only: 'Nur verifizierte Benutzer können Vorschläge bewerten: %{verify_account}.'
     budget_investments:
       not_logged_in: Du musst Dich %{signin} oder %{signup}, um fortfahren zu können.
@@ -994,5 +989,3 @@ de:
       le: "l"
       co: "k"
       si: "s"
-  alerts:
-    select_one_category: "Bitte wählen Sie nur eine Kategorie"

@@ -33,7 +33,7 @@
       <%= f.check_box :terms_of_service,
         title: t("devise_views.users.registrations.new.terms_title"),
         label: t("devise_views.users.registrations.new.terms",
-                 terms: link_to(t("devise_views.users.registrations.new.terms_link"), "/conditions",
+                 terms: link_to(t("devise_views.users.registrations.new.terms_link"), "/nutzungsbedingungen1",
                                 title: t("shared.target_blank"),
                                 target: "_blank")
                 ) %>
@@ -42,7 +42,7 @@
         <%= f.check_box :plz_consent,
           title: t("custom.devise_views.users.registrations.new.plz_consent_title"),
           label: t("custom.devise_views.users.registrations.new.plz_consent_label",
-                   plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/nutzungsbedingungen",
+                   plz_consent: link_to(t("custom.devise_views.users.registrations.new.plz_consent_link"), "/nutzungsbedingungen2",
                                   title: t("shared.target_blank"),
                                   target: "_blank")
                   ),

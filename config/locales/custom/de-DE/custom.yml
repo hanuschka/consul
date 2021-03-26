@@ -23,8 +23,8 @@ de:
           new:
             username_label: Benutzername
             username_placeholder: Bitte verwende einen Klarnamen
-            plz_consent_title: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional)
-            plz_consent_label: Zustimmung zur Anmeldung als Unterstützer bei Aufstehen (optional) %{plz_consent} (freiwillige Angabe, damit wir Dir regionale Mailings zusenden können)
+            plz_consent_title: Ja, ich möchte von Aufstehen per Mail kontaktiert werden (optional)
+            plz_consent_label: Ja, ich möchte von Aufstehen per Mail kontaktiert werden (optional) %{plz_consent} (freiwillige Angabe, damit wir Dir regionale Mailings zusenden können)
             plz_consent_link: Allgemeine Nutzungsbedingungen
             plz_label: Postleitzahl
             plz_placeholder: PLZ

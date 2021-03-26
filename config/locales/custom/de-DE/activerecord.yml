@@ -240,8 +240,8 @@ de:
         video_url: "Externes Video URL"
       proposal/translation:
         title: "Titel des Vorschlages"
-        description: "Vorschlagstext"
-        summary: "Zusammenfassung Vorschlag"
+        description: "Begründung"
+        summary: "Vorschlagstext"
         retired_explanation: "Erläuterung"
       user:
         login: "E-Mail oder Benutzername"

@@ -3,6 +3,14 @@
 
 #navigation_bar {
 
+  &.subnavigation {
+    background: #d0003a;
+
+    a {
+      color: $white;
+    }
+  }
+
   li.nav-element-projekt:hover > ul.flyout-projekts {
     display: block;
   }
@@ -26,7 +34,7 @@
 
   li.flyout-projekt {
     width: 300px;
-    background: #ececec;
+    background: #d0003a;
     padding-left: 1em;
     border-top: 1px solid $brand;
     border-bottom: 1px solid $brand;
@@ -39,7 +47,7 @@
   }
 
   .projekt-name {
-    color: #222;
+    color: $white;
     font-weight: bold;
     position: relative;
     line-height: 3rem;

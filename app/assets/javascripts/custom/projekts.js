@@ -74,6 +74,7 @@
     removeCheckboxChip: function(projektId) {
       var projektChipId = "#projekt-chip-" + projektId
       var $projektChip = $(projektChipId).parent();
+
       $projektChip.remove();
     },
 
@@ -257,6 +258,7 @@
         var projektId = this.id.split('-').pop()
         var correspoindLabelIdentifierString = "[data-projekt-id=\"" + projektId + "\"]"
         var $correspondingLabel = $(correspoindLabelIdentifierString)
+
         var $checkbox = $correspondingLabel.find('input')
 
         $checkbox.prop( "checked", false);

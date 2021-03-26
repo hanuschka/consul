@@ -42,6 +42,8 @@ de:
           title: Zeige deine Ideen
           icon_alt: Zeige deine Ideen
         max_number_reached: "Du hast die maximale Anzahl (%{max_number}) an Vorschlägen pro Nutzer erreicht. Bevor du einen weiteren Vorschlag erstellen kannst, musst du einen aktiven Vorschlag zurückziehen."
+      proposal:
+        unsupport: Zurückziehen
     polls:
       index:
         section_header:

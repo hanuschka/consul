@@ -27,6 +27,13 @@ class ProposalsController
     @projekts = Projekt.top_level
   end
 
+  def unvote
+    @follow = Follow.find_by(user: current_user, followable: @proposal)
+    @follow.destroy if @follow
+    @proposal.unvote_by(current_user)
+    set_proposal_votes(@proposal)
+  end
+
   private
     def process_tags
       if params[:proposal][:tags]
@@ -68,6 +75,6 @@ class ProposalsController
     end
 
     def proposal_limit_exceeded?(user)
-      user.proposals.count >= Setting['max_active_proposals_per_user'].to_i
+      user.proposals.where(retired_at: nil).count >= Setting['max_active_proposals_per_user'].to_i
     end
 end

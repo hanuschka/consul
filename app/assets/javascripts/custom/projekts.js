@@ -6,7 +6,8 @@
 
     toggleChildProjekts: function($label) {
       var projektId = $label.data()['projektId']
-      var $childrenProjektsGroup = $("[data-parent=\"" + projektId + "\"]")
+      var dataParentIdentifierString = "[data-parent=\"" + projektId + "\"]"
+      var $childrenProjektsGroup = $( dataParentIdentifierString )
 
       if ( $childrenProjektsGroup.is(":hidden") ) {
         App.Projekts.resetSelectedChildren($label);
@@ -71,7 +72,8 @@
     },
 
     removeCheckboxChip: function(projektId) {
-      var $projektChip = $("#projekt-chip-" + projektId).parent();
+      var projektChipId = "#projekt-chip-" + projektId
+      var $projektChip = $(projektChipId).parent();
       $projektChip.remove();
     },
 
@@ -253,7 +255,8 @@
 
       $("body").on("click", ".js-deselect-projekt", function() {
         var projektId = this.id.split('-').pop()
-        var $correspondingLabel = $("[data-projekt-id=\"" + projektId + "\"]")
+        var correspoindLabelIdentifierString = "[data-projekt-id=\"" + projektId + "\"]"
+        var $correspondingLabel = $(correspoindLabelIdentifierString)
         var $checkbox = $correspondingLabel.find('input')
 
         $checkbox.prop( "checked", false);

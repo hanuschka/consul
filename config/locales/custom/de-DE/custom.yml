@@ -24,10 +24,10 @@ de:
             username_label: Benutzername
             username_placeholder: Bitte verwende einen Klarnamen
             plz_consent_title: Ja, ich möchte von Aufstehen per Mail kontaktiert werden (optional)
-            plz_consent_label: Ja, ich möchte von Aufstehen per Mail kontaktiert werden (optional) %{plz_consent} (freiwillige Angabe, damit wir Dir regionale Mailings zusenden können)
-            plz_consent_link: Allgemeine Nutzungsbedingungen
+            plz_consent_label: Ja, ich möchte von Aufstehen per Mail kontaktiert werden (optional) %{plz_consent} 
+            plz_consent_link: Allgemeine Nutzungsbedingungen 
             plz_label: Postleitzahl
-            plz_placeholder: PLZ
+            plz_placeholder: PLZ - freiwillige Angabe, damit wir Dir regionale Mailings zusenden können
       mailer:      
         confirmation_instructions:
           plz_welcome: 'wir freuen uns, dass Du Dich auf unserer Plattform anmelden und von uns per E-Mail kontaktiert werden möchtest! Bitte bestätige Deine E-Mail-Adresse mithilfe des folgenden Links:'

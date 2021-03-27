@@ -14,73 +14,68 @@
   <%= render "shared/canonical", href: proposal_url(@proposal) %>
 <% end %>
 
-<% cache [locale_and_user_status(@proposal),
-          @proposal.author,
-          Flag.flagged?(current_user, @proposal),
-          @proposal_votes] do %>
-  <div class="proposal-show">
-    <div id="<%= dom_id(@proposal) %>" class="row">
-      <div class="small-12 medium-9 column">
-        <%= back_link_to proposals_path unless preview %>
+<div class="proposal-show">
+  <div id="<%= dom_id(@proposal) %>" class="row">
+    <div class="small-12 medium-9 column">
+      <%= back_link_to proposals_path unless preview %>
 
-        <h1><%= @proposal.title %></h1>
-        <% if @proposal.retired? %>
-          <div data-alert class="callout alert margin-top proposal-retired">
-            <strong>
-              <%= t("proposals.show.retired_warning") %><br>
-              <%= link_to t("proposals.show.retired_warning_link_to_explanation"),
-                          "#retired_explanation" %>
-            </strong>
-          </div>
-        <% elsif @proposal.conflictive? %>
-          <div data-alert class="callout alert margin-top">
-            <strong><%= t("proposals.show.flag") %></strong>
-          </div>
-        <% end %>
-
-        <%= render "proposals/info", proposal: @proposal %>
-
-        <% unless @proposal.selected? %>
-          <%= render "relationable/related_content", relationable: @proposal %>
-        <% end %>
-
-        <div class="js-moderator-proposal-actions margin">
-          <%= render "proposals/actions", proposal: @proposal %>
+      <h1><%= @proposal.title %></h1>
+      <% if @proposal.retired? %>
+        <div data-alert class="callout alert margin-top proposal-retired">
+          <strong>
+            <%= t("proposals.show.retired_warning") %><br>
+            <%= link_to t("proposals.show.retired_warning_link_to_explanation"),
+                        "#retired_explanation" %>
+          </strong>
         </div>
-      </div>
-
-      <% unless preview %>
-        <aside class="small-12 medium-3 column">
-          <% if can?(:dashboard, @proposal) %>
-            <div class="sidebar-divider"></div>
-            <h2><%= t("proposals.show.author") %></h2>
-            <div class="show-actions-menu">
-              <%= link_to progress_proposal_dashboard_path(@proposal),
-                          class: "button hollow expanded",
-                          id: "proposal-dashboard-#{@proposal.id}" do %>
-                <span class="icon-edit"></span>
-                <%= t("proposals.show.dashboard_proposal_link") %>
-              <% end %>
-            </div>
-          <% end %>
-
-          <%= render "proposals/support_status", proposal: @proposal %>
-
-          <%= render "proposals/social_share", proposal: @proposal, share_title: t("proposals.show.share") %>
-
-          <% if current_user %>
-            <div class="sidebar-divider"></div>
-            <p class="sidebar-title"><%= t("shared.follow") %></p>
-
-            <%= render "follows/follow_button", follow: find_or_build_follow(current_user, @proposal) %>
-          <% end %>
-
-          <%= render "communities/access_button", community: @proposal.community %>
-        </aside>
+      <% elsif @proposal.conflictive? %>
+        <div data-alert class="callout alert margin-top">
+          <strong><%= t("proposals.show.flag") %></strong>
+        </div>
       <% end %>
+
+      <%= render "proposals/info", proposal: @proposal %>
+
+      <% unless @proposal.selected? %>
+        <%= render "relationable/related_content", relationable: @proposal %>
+      <% end %>
+
+      <div class="js-moderator-proposal-actions margin">
+        <%= render "proposals/actions", proposal: @proposal %>
+      </div>
     </div>
+
+    <% unless preview %>
+      <aside class="small-12 medium-3 column">
+        <% if can?(:dashboard, @proposal) %>
+          <div class="sidebar-divider"></div>
+          <h2><%= t("proposals.show.author") %></h2>
+          <div class="show-actions-menu">
+            <%= link_to progress_proposal_dashboard_path(@proposal),
+                        class: "button hollow expanded",
+                        id: "proposal-dashboard-#{@proposal.id}" do %>
+              <span class="icon-edit"></span>
+              <%= t("proposals.show.dashboard_proposal_link") %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%= render "proposals/support_status", proposal: @proposal %>
+
+        <%= render "proposals/social_share", proposal: @proposal, share_title: t("proposals.show.share") %>
+
+        <% if current_user %>
+          <div class="sidebar-divider"></div>
+          <p class="sidebar-title"><%= t("shared.follow") %></p>
+
+          <%= render "follows/follow_button", follow: find_or_build_follow(current_user, @proposal) %>
+        <% end %>
+
+        <%= render "communities/access_button", community: @proposal.community %>
+      </aside>
+    <% end %>
   </div>
-<% end %>
+</div>
 
 <% unless preview %>
   <div class="additional-content">

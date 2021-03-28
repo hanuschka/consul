@@ -25,7 +25,7 @@ de:
             username_placeholder: Bitte verwende einen Klarnamen
             plz_consent_title: Ja, ich möchte von Aufstehen per Mail kontaktiert werden (optional)
             plz_consent_label: Ja, ich möchte von Aufstehen per Mail kontaktiert werden (optional) %{plz_consent} 
-            plz_consent_link: Allgemeine Nutzungsbedingungen 
+            plz_consent_link: Datenverarbeitungsinformation 
             plz_label: Postleitzahl
             plz_placeholder: PLZ - freiwillige Angabe, damit wir Dir regionale Mailings zusenden können
       mailer:      

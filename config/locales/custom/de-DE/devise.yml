@@ -23,7 +23,7 @@ de:
       unconfirmed: "Um fortzufahren, bestätige bitte den Verifizierungslink, den wir Dir per E-Mail gesendet haben"
     mailer:
       confirmation_instructions:
-        subject: "Anleitung zur Bestätigung"
+        subject: "Bitte bestätige Deine Registrierung"
       reset_password_instructions:
         subject: "Anleitung zum Zurücksetzen Deines Passworts"
       unlock_instructions:

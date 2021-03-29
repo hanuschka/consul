@@ -11,8 +11,8 @@
           title: t("proposals.proposal.support_title"), method: "post", remote: true do %>
         <%= t("custom.proposals.proposal.unsupport") %>
       <% end %>
-    <% elsif user_signed_in? && proposal.votable_by?(current_user) %>
-      <%= link_to vote_url,
+    <% elsif user_signed_in? %>
+      <%= link_to vote_proposal_url(proposal, value: "yes"),
           class: "button button-support small expanded",
           title: t("proposals.proposal.support_title"), method: "post", remote: true do %>
         <%= t("proposals.proposal.support") %>

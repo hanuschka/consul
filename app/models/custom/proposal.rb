@@ -10,4 +10,16 @@ class Proposal < ApplicationRecord
   def require_a_projekt?
     Setting["projekts.connected_resources"].present? ? true : false
   end
+
+  def register_vote(user, vote_value)
+    if !archived?
+      vote_by(voter: user, vote: vote_value)
+    end
+  end
+
+  protected
+
+  def set_responsible_name
+      self.responsible_name = author.name + '_verified'
+  end
 end

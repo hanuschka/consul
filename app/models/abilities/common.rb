@@ -13,6 +13,10 @@ module Abilities
       end
 
       can :read, Proposal
+      can :vote, Proposal, &:published?
+      can :unvote, Proposal, &:published?
+      can :vote_featured, Proposal
+
       can :update, Proposal do |proposal|
         proposal.editable_by?(user)
       end
@@ -85,10 +89,6 @@ module Abilities
       end
 
       if user.level_two_or_three_verified?
-        can :vote, Proposal, &:published?
-        can :unvote, Proposal, &:published?
-        can :vote_featured, Proposal
-
         can :vote, Legislation::Proposal
         can :vote_featured, Legislation::Proposal
         can :create, Legislation::Answer

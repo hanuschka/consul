@@ -117,10 +117,6 @@ section .content {
   text-align: center;
 }
 
-.intro-content {
-  padding-right: 4em;
-}
-
 .content-image {
   display: none;
 }
@@ -241,11 +237,11 @@ button:before {
 
 @media (min-width: 640px) {
 
-.video-container {
-  iframe {
-    height: 550px;
+  .video-container {
+    iframe {
+      height: 550px;
+    }
   }
-}
 
   .top-bar {
     height: 0;
@@ -278,6 +274,10 @@ button:before {
     position: absolute;
     display: none;
     width: 225px;
+  }
+
+  .intro-content {
+    padding-right: 4em;
   }
 
   section button {

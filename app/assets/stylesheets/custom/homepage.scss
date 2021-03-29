@@ -85,6 +85,10 @@ header {
 
 .video-container {
   margin-top: -1.5rem;
+
+  iframe {
+    height: 315px;
+  }
 }
 
 .video-placeholder {
@@ -237,6 +241,12 @@ button:before {
 
 @media (min-width: 640px) {
 
+.video-container {
+  iframe {
+    height: 550px;
+  }
+}
+
   .top-bar {
     height: 0;
   }
@@ -288,6 +298,12 @@ button:before {
 
 
 @media (min-width: 1050px) {
+
+  .video-container {
+    iframe {
+      height: 620px;
+    }
+  }
 
   section .container.green:before, 
   section .container.red:before,

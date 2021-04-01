@@ -113,25 +113,25 @@
             <li><span class="icon-check"></span>&nbsp;<%= t("account.show.user_permission_support_proposal") %></li>
             <li>
               <% if current_user.level_three_verified? %>
-                <span class="icon-check"></span>
+                <span class="icon-x"></span>
               <% else %>
                 <span class="icon-x"></span>
               <% end %>
               <%= t("account.show.user_permission_votes") %>
             </li>
           </ul>
-
+          <!--
           <p>
-            <%= t("account.show.user_permission_verify") %>
+            <% t("account.show.user_permission_verify") %>
           </p>
-
-          <% unless @account.organization? %>
+          -->      
+          <% unless @account.organization? && false %>
             <div>
               <span class="verify-account">
                 <% if current_user.level_three_verified? %>
                   <p class="already-verified">
-                    <span class="icon-check"></span>
-                    <%= t("account.show.verified_account") %>
+                    <!-- <span class="icon-check"></span> -->
+                    <% t("account.show.verified_account") %>
                   </p>
                 <% elsif current_user.level_two_verified? %>
                   <%= link_to t("account.show.finish_verification"), verification_path, class: "button success" %>

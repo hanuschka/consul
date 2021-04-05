@@ -1,0 +1,37 @@
+de:
+  custom:
+    settings:
+      extended_feature:
+        enable_categories: Tags aktivieren
+        enable_categories_description: Aktivieren Sie die Auswahl vordefinierter Tags
+        enable_custom_tags: Nutzer-Tags aktivieren
+        enable_custom_tags_description: Aktivieren Sie die Eingabe individueller Nutzer-Tags
+        enable_proposal_support_withdrawal: Aktivieren Sie die Rücknahme der Angebotsunterstützung
+        enable_proposal_support_withdrawal_description: Aktivieren Sie die Rücknahme der Angebotsunterstützung beschreibung
+        elasticsearch: "Elasticsearch"
+        elasticsearch_description: "Elasticsearch ist die führende verteilte, RESTful, Open-Source-Such- und Analyse-Engine, die auf Geschwindigkeit, horizontale Skalierbarkeit, Zuverlässigkeit und einfache Verwaltung ausgelegt ist."
+        map_above_proposals: Show map above proposals
+        map_above_proposals_description: Show map above proposals description
+        extended_editor_for_admins: Show extended editor for admins
+        extended_editor_for_admins_description: Show extended editor for admins description
+        extended_editor_for_users: Show extended editor for users
+        extended_editor_for_users_description: Show extended editor for users description
+        intro_text_for_debates: Einleitungstext für Diskussionen
+        intro_text_for_debates_description: Aktievieren Sie einen individuellen Einleitungstext oberhalb der Diskussionsübersicht
+        intro_text_for_proposals: Einleitungstext für Vorschläge
+        intro_text_for_proposals_description: Aktievieren Sie einen individuellen Einleitungstext oberhalb der Vorschlagsübersicht
+        intro_text_for_polls: Einleitungstext für Abstimmungen
+        intro_text_for_polls_description: Aktievieren Sie einen individuellen Einleitungstext oberhalb der Abstimmungsübersicht
+      extended_option:
+        max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Benutzer
+        max_active_proposals_per_user_description: Maximale Anzahl aktiver Vorschläge pro Benutzer beschreibung
+      projekts:
+        connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Projekten
+        connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
+        predefined: Projektvorauswahl treffen
+        predefined_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
+        show_archived:
+          navigation: Archivierte Projekte in Navigation anzeigen
+          navigation_description: Zeigt archivierte Projekte in der Navigationsleiste wenn aktiviert
+          sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
+          sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert

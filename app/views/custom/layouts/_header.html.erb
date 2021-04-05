@@ -26,8 +26,6 @@
         <div class="top-bar-right">
           <ul class="menu" data-responsive-menu="medium-dropdown">
             <%= render "shared/admin_login_items" %>
-            <%= render "layouts/notification_item" %>
-            <%= render "devise/menu/login_items" %>
           </ul>
 
           <div class="show-for-small-only">
@@ -56,7 +54,11 @@
         <%= render "shared/subnavigation" %>
       </div>
       <div class="small-12 medium-3 column">
-        <%= yield :header_addon %>
+        <%if extended_feature?("elasticsearch")%>
+          <%= render "shared/elasticsearch_form" %>
+        <%else%>
+          <%= yield :header_addon %>
+        <%end%>
       </div>
     </div>
   </div>

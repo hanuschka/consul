@@ -28,3 +28,24 @@
     display: inline-block !important;	
   }	
 }
+
+// elastic
+
+.tags span {
+  background: #ececec;
+  border-radius: rem-calc(6);
+  color: $text;
+  display: inline-block;
+  font-size: $small-font-size;
+  margin-bottom: $line-height / 3;
+  padding: $line-height / 4 $line-height / 3;
+  text-decoration: none;
+
+  &:hover {
+    background: #e0e0e0;
+  }
+  &.selected{
+    background: #e7f2fc;
+    color: #004a83;
+  }
+}

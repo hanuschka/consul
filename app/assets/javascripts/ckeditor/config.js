@@ -5,7 +5,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 CKEDITOR.editorConfig = function( config )
 {
-
+  config.extraPlugins = 'widget,lineutils,mjAccordion';
   config.filebrowserImageBrowseLinkUrl = "/ckeditor/pictures";
   config.filebrowserImageBrowseUrl = "/ckeditor/pictures";
   config.filebrowserImageUploadUrl = "/ckeditor/pictures?";
@@ -19,6 +19,9 @@ CKEDITOR.editorConfig = function( config )
 
   config.removePlugins = "balloonpanel,balloontoolbar,copyformatting,scayt,wsc";
 
+  config.mjAccordion_managePopupTitle = true;
+  config.mjAccordion_managePopupContent = true;
+  config.mj_variables_allow_html = false;
 
   // Rails CSRF token
   config.filebrowserParams = function(){
@@ -101,9 +104,14 @@ CKEDITOR.editorConfig = function( config )
     { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike", "RemoveFormat" ] }
   ];
 
-  config.toolbar_admin = config.toolbar_mini.concat([
-    { name: "insert", items: [ "Image", "Table" ] }
-  ]);
+  config.toolbar_extended = [
+    { name: "paragraph", groups: [ "list", "indent", "blocks", "align", "bidi" ], items: [ "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote", "CreateDiv", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" ] },
+    { name: "links", items: [ "Link", "Unlink", "Anchor" ] },
+    { name: "styles", items: [ "Styles", "Format", "Font", "FontSize", "Styles" ] },
+    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-", "RemoveFormat" ] },
+    { name: "colors", items: [ "TextColor", "BGColor" ] },
+    { name: "insert", items: [ "Image", "Table", "MJAccordion", "Source", "HorizontalRule", "SpecialChar" ] },
+  ];
 
   config.toolbar = "mini";
 };

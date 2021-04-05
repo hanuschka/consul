@@ -147,7 +147,7 @@
         $filterArrow.css('border-color', '#C6C6C6')
       }
 
-      var uniqueProjektIds = selectedProjektIds;
+      var uniqueProjektIds = selectedProjektIds.filter( function(v, i, a) { return  a.indexOf(v) === i } );
 
       if ( uniqueProjektIds.length > 0) {
         url.searchParams.set('projekts', uniqueProjektIds.join(','))
@@ -194,7 +194,7 @@
           window.location.href = currentPageUrl;
         } else {
           currentProjektIds.push(newProjektId)
-          currentProjektIds = currentProjektIds.filter( function(element) { element !== '' } )
+          currentProjektIds = currentProjektIds.filter( function(element) { return element !== '' } )
           currentPageUrl.searchParams.set('projekts', currentProjektIds.join(','))
           window.history.pushState('', '', currentPageUrl)
           window.location.href = currentPageUrl.href;

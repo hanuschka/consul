@@ -1,0 +1,39 @@
+<div class="search-result">
+  <% hightlights = result.inner_hits.first&.last&.hits&.hits&.first&.highlight&.to_hash%>
+  <% result_data = result.inner_hits.first.last.hits.hits.first._source.to_hash%>
+  <div class="search-result-type">
+    <div class="search-result-type-icon <%=result["model_name"]%>">
+      <%=t("search.result_tag.#{result.model_name[0..1]}")%>
+    </div>
+  </div>
+
+  <div class="search-result-content">
+    <%if (hightlights && hightlights["locales.title"]) || result_data["title"]%>
+      <div class='search-result-title'>
+
+        <%=link_to search_result_link(result) do%>
+          <%if hightlights && hightlights["locales.title"]%>
+            <%=raw hightlights["locales.title"].first%>
+          <%elsif result_data["title"]%>
+            <%=result_data["title"]%>
+          <%else%>
+            go to discussion
+          <%end%>
+        <%end%>
+      </div>
+    <%end%>
+    <div class='search-result-body debate'>
+      <div class='search-result-date'>
+        <%=link_to_if result.model_name == 'comment', I18n.l(Time.parse(result.created_at), format: :long), search_result_link(result)%>
+      </div>
+      <%if hightlights && hightlights["locales.description"]%>
+        <%=raw sanitize_search(hightlights["locales.description"].first)%>
+      <%else%>
+        <%=raw sanitize_search(result_data["description"])%>
+      <%end%>
+      <%if result.model_name == 'comment' %>
+        <%=link_to t("search.go_to_discusstion"), search_result_link(result)%>
+      <%end%>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+#navigation_bar,
+#navigation_bar li.flyout-item {
+  background: $violetred;
+}
+
+
+@media screen and (min-width: 40em) {
+   ul.nav-items {
+     display: flex;
+     justify-content: flex-end;
+   }
+
+  .subnavigation ul li {
+    margin-right: 0;
+    margin-left: 1.25rem;
+  }
+
+  .subnavigation a,
+  .flyout-item-name {
+    color: #fff !important;
+  }
+
+  #navigation_bar li.nav-element.top-level-item > ul.nav-flyout-block {
+    left: -1.25rem;
+  }
+
+  #navigation_bar ul.nav-flyout-block {
+    left: calc(100% - 1.25rem);
+  }
+
+  #navigation_bar li.nav-element.top-level-item:last-child > ul.nav-flyout-block {
+    right: 0 !important;
+    left: auto !important;
+  }
+}

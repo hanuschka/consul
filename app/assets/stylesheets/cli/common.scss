@@ -1,0 +1,11 @@
+.card a:hover:not(.see-all) {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.card a {
+  color: #fff;
+  background: $brand;
+  font-size: 22pt;
+  text-decoration: none;
+}

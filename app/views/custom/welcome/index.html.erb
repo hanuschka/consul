@@ -19,13 +19,7 @@
   <%= render "feeds" %>
 
   <div class="row">
-    <div class="small-12 medium-9 column">
-      <% page = SiteCustomization::Page.find_by slug: "indexdt" %>
-      <% if page %>
-        <h4 class="welcometitle"><%= page.title %></h4>
-        <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(page.content) %>
-      <% end %>
-    </div>
+    <%=render_custom_block 'home_page_1' %>
   </div>
 
   <div class="row">

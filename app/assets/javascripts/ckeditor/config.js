@@ -12,9 +12,13 @@ CKEDITOR.editorConfig = function( config )
   config.filebrowserUploadMethod = "form";
 
   config.allowedContent = true;
-  config.format_tags = "p;h2;h3";
+  config.format_tags = "p;h1;h2;h3;h4;h5;h6";
+
+  config.stylesSet = 'columns';
+  config.enterMode = CKEDITOR.ENTER_BR;
 
   config.removePlugins = "balloonpanel,balloontoolbar,copyformatting,scayt,wsc";
+
 
   // Rails CSRF token
   config.filebrowserParams = function(){
@@ -93,8 +97,8 @@ CKEDITOR.editorConfig = function( config )
   config.toolbar_mini = [
     { name: "paragraph", groups: [ "list" ], items: [ "NumberedList", "BulletedList" ] },
     { name: "links", items: [ "Link", "Unlink" ] },
-    { name: "styles", items: [ "Format" ] },
-    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike" ] }
+    { name: "styles", items: [ "Format", "Styles" ] },
+    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike", "RemoveFormat" ] }
   ];
 
   config.toolbar_admin = config.toolbar_mini.concat([

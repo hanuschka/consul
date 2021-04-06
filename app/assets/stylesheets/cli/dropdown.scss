@@ -3,6 +3,29 @@
   background: $violetred;
 }
 
+.top-bar .menu > li a {
+  color: $brand;
+  text-decoration: none;
+}
+
+.dropdown.menu > li.is-active > a {
+  color: $brand !important;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.menu-icon.dark:hover::after,
+.menu-icon.dark::after {
+  background: $brand;
+  box-shadow:0 7px 0 $brand, 0 14px 0 $brand;
+}
+
+.subnavigation, 
+.subnavigation a {
+  color: $brand;
+  text-decoration: none;
+}
+
 
 @media screen and (min-width: 40em) {
    ul.nav-items {
@@ -31,5 +54,12 @@
   #navigation_bar li.nav-element.top-level-item:last-child > ul.nav-flyout-block {
     right: 0 !important;
     left: auto !important;
+  }
+}
+
+
+@media screen and (max-width: 39.9375em) {
+  .top-bar-title {
+    display: none;
   }
 }

@@ -25,7 +25,6 @@ Rails.application.routes.draw do
   draw :user
   draw :valuation
   draw :verification
-  draw :search
 
   root "welcome#index"
   get "/welcome", to: "welcome#welcome"

@@ -1,3 +1,15 @@
+.home-page .jumbo {
+  height: 170px;
+
+  @media only screen and (min-width: 768px) and (max-width: 1279px) {
+    height: 285px;
+  }
+
+  @media only screen and (min-width: 1280px) and (max-width: 1900px) {
+    height: 375px;
+  }
+}
+
 .intro {
   margin-top: 5em;
 }

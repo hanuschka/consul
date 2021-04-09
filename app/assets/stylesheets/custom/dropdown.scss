@@ -23,7 +23,6 @@
 
   li {
     position: relative;
-    z-index: 1;
   }
 
   li.flyout-item {
@@ -34,6 +33,7 @@
     border-bottom: 1px solid $brand;
     display: flex;
     justify-content: space-between;
+    z-index: 7;
   }
 
   li.flyout-item ~ li.flyout-item {

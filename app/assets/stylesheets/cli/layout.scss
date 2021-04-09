@@ -9,7 +9,8 @@
     max-width: 50%;
   }
 
-  .home-page header > .row {
-    max-width: 65%;
+  .home-page header > .row, 
+  .home-page #navigation_bar > .row {
+    max-width: 75rem;
   }
 }

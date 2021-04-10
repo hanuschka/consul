@@ -1,3 +1,25 @@
+// Styling tiles for proposals, debates and polls
+
+.debates-index,
+.proposals-index {
+  .panel {
+    background: #e7f2fc;
+  }
+}
+
+.polls-index {
+  .poll {
+    background: #e7f2fc;
+
+    .image-container {
+      background: #e7f2fc;
+    }
+  }
+}
+
+
+// Styling cards
+
 .card a:hover:not(.see-all) {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;

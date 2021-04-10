@@ -1,0 +1,8 @@
+.proposal .supports .button-support {
+  background: $violetred;
+}
+
+.proposal .supports .button-support:hover,
+.proposal .supports .button-support:active {
+  background: lighten($violetred, 20%)
+}

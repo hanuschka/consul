@@ -177,6 +177,10 @@
         currentTags = [];
       }
 
+      if (currentPageUrl.searchParams.get('page')) {
+        currentPageUrl.searchParams.delete('page');
+      }
+
       var clickedUrl = new URL(clickedLink);
       var newProjektId;
       var newTag;
@@ -286,6 +290,11 @@
       $("body").on("click", ".js-apply-projekts-filter", function(event) {
         event.preventDefault();
         var url = new URL(window.location.href);
+
+        if (url.searchParams.get('page')) {
+          url.searchParams.delete('page');
+        }
+
         window.location.href = url;
       });
 

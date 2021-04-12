@@ -133,14 +133,17 @@ class Setting < ApplicationRecord
         "extended_feature.enable_categories": nil,
         "extended_feature.enable_custom_tags": nil,
         "extended_feature.enable_proposal_support_withdrawal": nil,
-        "extended_feature.elasticsearch": false,
         "extended_feature.map_above_proposals": false,
         "extended_feature.extended_editor_for_admins": false,
         "extended_feature.extended_editor_for_users": false,
+        "extended_feature.intermediate_poll_results_for_admins": false,
+        "extended_feature.hide_comment_replies_by_default": false,
+        # "extended_feature.elasticsearch": false,
         "extended_feature.intro_text_for_debates": false,
         "extended_feature.intro_text_for_proposals": false,
         "extended_feature.intro_text_for_polls": false,
-        "extended_option.max_active_proposals_per_user": 100
+        "extended_option.max_active_proposals_per_user": 100,
+        "extended_option.description_max_length": 6000
       }
     end
 

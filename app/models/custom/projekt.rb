@@ -66,7 +66,6 @@ class Projekt < ApplicationRecord
 
   def create_corresponding_page
     page_title = self.name
-    last_page_id = SiteCustomization::Page.last.id
     clean_slug = self.name.downcase.gsub(/[^a-z0-9\s]/, '').gsub(/\s+/, '-')
     pages_with_similar_slugs = SiteCustomization::Page.where("slug ~ ?", "^#{clean_slug}(-[0-9]+$|$)").order(id: :asc)
 

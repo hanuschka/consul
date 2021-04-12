@@ -26,6 +26,8 @@ de:
         intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
         hide_comment_replies_by_default: Antworten auf Kommentare standardmäßig einklappen
         hide_comment_replies_by_default_description: Aktivieren Sie das standardmäßige Einklappen von Kommentaren, um Übersichtlichkeit zu schaffen
+        link_out_warning: Warnung für Linkouts
+        link_out_warning_description: Aktivieren Sie ein Popup, in dem der Nutzer bevor eines Linkouts zu einer externen Webseite gewarnt wird.
       extended_option:
         max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Benutzer
         max_active_proposals_per_user_description: Maximale Anzahl aktiver Vorschläge pro Benutzer beschreibung

@@ -18,13 +18,14 @@ module ProjektsHelper
   def prepare_projekt_modules_links(projekt)
 
     module_links = []
+    top_parent = projekt.top_parent
 
-    if debate_phase_active?(projekt)
+    if top_parent.debate_phase_active
       link = link_to t('custom.menu.debates'), (debates_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}"), class: 'projekt-module-link'
       module_links.push(link)
     end
 
-    if proposal_phase_active?(projekt)
+    if top_parent.proposal_phase_active
       link = link_to t('custom.menu.proposals'), (proposals_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}"), class: 'projekt-module-link'
       module_links.push(link)
     end

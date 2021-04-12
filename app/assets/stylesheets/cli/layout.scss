@@ -6,11 +6,12 @@
 
 @media screen and (min-width: 64em) {
   .home-page .row {
-    max-width: 50%;
+    max-width: 60%;
   }
 
   .home-page header > .row, 
-  .home-page #navigation_bar > .row {
+  .home-page #navigation_bar > .row,
+  .home-page footer > .row {
     max-width: 75rem;
   }
 }

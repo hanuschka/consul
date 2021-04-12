@@ -4,36 +4,39 @@
   <% end %>
 
   <div class="row">
-    <div class="top-bar">
+    <div class='column'>
 
-      <h2>Bürgerbeteiligung der Stadt Bamberg</h2>
+      <div class="top-bar">
 
-      <span data-responsive-toggle="responsive-menu" data-hide-for="medium" class="float-right">
-        <span class="menu-icon dark" data-toggle></span>
-      </span>
+        <h2 class='header-title'>Bürgerbeteiligung der Stadt Bamberg</h2>
 
-      <div id="responsive-menu">
-        <div class="top-bar-right">
-          <div class="show-for-small-only">
-            <div class="subnavigation row">
+        <span data-responsive-toggle="responsive-menu" data-hide-for="medium" class="float-right">
+          <span class="menu-icon dark" data-toggle></span>
+        </span>
 
-              <h2 class='city-name'>Bürgerbeteiligung der Stadt Bamberg</h2>
+        <div class="top-bar-title">
+          <%= link_to root_path, accesskey: "0" do %>
+            <%= image_tag(image_path_for("logo_header.jpg"), class: "float-left", alt: t("layouts.header.logo")) %>
+          <% end %>
+        </div>
 
-              <%= render "shared/subnavigation" %>
-              <div class="small-12 column">
-                <%= render "shared/top_links" %>
+        <div id="responsive-menu">
+          <div class="top-bar-right">
+            <div class="show-for-small-only">
+              <div class="subnavigation row">
+
+                <h2 class='city-name'>Bürgerbeteiligung der Stadt Bamberg</h2>
+
+                <%= render "shared/subnavigation" %>
+                <div class="small-12 column">
+                  <%= render "shared/top_links" %>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="top-bar-title">
-        <%= link_to root_path, accesskey: "0" do %>
-          <%= image_tag(image_path_for("logo_header.jpg"), class: "float-left", alt: t("layouts.header.logo")) %>
-        <% end %>
       </div>
-
     </div>
   </div>
 

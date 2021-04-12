@@ -9,7 +9,8 @@
 
   .subnavigation.row {
     position: absolute;
-    width: calc(100% + 2px);
+    width: calc(100% + 10px);
+    left: 0;
   }
 
   .hamburger-menu {
@@ -156,8 +157,13 @@
 
 @media screen and (min-width: 40em) {
 
-   #navigation_bar {
+   #navigation_bar.subnavigation {
      background-color: $top-level-menu-background-color;
+     
+     .top-level-item > a,
+     .top-level-item > .flyout-item-name > a {
+       line-height: 2rem;
+     }
    }
 
   .subnavigation ul.main-menu {
@@ -212,7 +218,7 @@
 
   // Styling flyout items
 
-  .main-menu {
+  .subnavigation ul.main-menu {
 
     li.nav-element:hover > ul.nav-flyout-block {
       display: block;
@@ -243,12 +249,13 @@
 
     li.flyout-item {
       width: 300px;
-      padding: 1em;
+      padding: 0 1em;
       margin-right: 0;
       border-bottom: 1px solid $flyout-item-divider-color;
       z-index: 7;
       background: $flyout-item-bg-color;
-      padding-bottom: calc(1rem - 1px);
+      padding-top: .5rem;
+      padding-bottom: calc(.5rem - 1px);
 
       &:first-child {
         border-top: none;
@@ -277,14 +284,13 @@
 
   // Styling projekts in navigation items
 
-  .main-menu {
+  .subnavigation ul.main-menu {
 
     .projekt-modules-links {
       display: block;
       font-size: 11px;
       line-height: initial;
       color: $flyout-item-projekt-modules-links-color;
-      margin-top: 0.25rem;
 
       a.projekt-module-link {
         display: inline;

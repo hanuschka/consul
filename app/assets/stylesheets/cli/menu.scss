@@ -1,0 +1,55 @@
+.top-bar .menu > li a {
+  text-decoration: none;
+}
+
+.dropdown.menu > li.is-active > a {
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.menu-icon.dark:hover::after,
+.menu-icon.dark::after {
+  background: $brand;
+  box-shadow:0 7px 0 $brand, 0 14px 0 $brand;
+}
+
+.subnavigation, 
+.subnavigation a {
+  text-decoration: none;
+}
+
+.subnavigation a.home-items-icon {
+  display: none;
+}
+
+@media screen and (min-width: 40em) {
+  .account-admin-items .account-icon,
+  .account-admin-items .admin-icon {
+    top: -11px;
+  }
+
+  .account-admin-items li.nav-element.top-level-item > ul.nav-flyout-block {
+    top: 32px !important;
+  }
+
+  #responsive-menu {
+    display: none !important;
+  }
+
+  .subnavigation a.home-items-icon {
+    display: block;
+    width: 17px;
+  }
+
+  .home-icon {
+    top: -14px;
+    right: 0;
+    position: absolute;
+  }
+
+  .account-admin-items {
+    display: flex;
+    justify-content: space-between;
+    width: 55px;
+  }
+}

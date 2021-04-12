@@ -8,3 +8,21 @@ header h2 {
   color: $brand;
 }
 
+.header-title {
+  display: none;
+}
+
+@media screen and (min-width: 40em) {
+  .top-bar-title {
+    margin-right: 0;
+  }
+
+  .header-title {
+    display: block;
+  }
+}
+
+h2.city-name {
+  color: $responsive-menu-text-color;
+  flex-grow: 1;
+}

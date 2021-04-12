@@ -161,7 +161,8 @@
      background-color: $top-level-menu-background-color;
      
      .top-level-item > a,
-     .top-level-item > .flyout-item-name > a {
+     .top-level-item > .flyout-item-name > a,
+     .top-level-item > .flyout-item-name {
        line-height: 2rem;
      }
    }

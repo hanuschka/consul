@@ -1,6 +1,8 @@
 class SearchController < ApplicationController
   before_action :authenticate_user!, except: [:index]
   skip_authorization_check
+  load_and_authorize_resource
+
   def index
     search_params = {}
     search_params[:q] = params[:q]

@@ -1,57 +1,19 @@
 .home-page .jumbo {
   height: 170px;
 
-  @media only screen and (min-width: 768px) and (max-width: 1279px) {
+  @media only screen and (min-width: 40em) {
     height: 285px;
   }
 
-  @media only screen and (min-width: 1280px) and (max-width: 1900px) {
+  @media only screen and (min-width: 64em) {
     height: 375px;
   }
-}
 
-.intro {
-  margin-top: 5em;
+  @media only screen and (min-width: 75em) {
+    height: 415px;
+  }
 }
 
 .cards {
   margin-bottom: 3em;
-}
-
-.azure-wrapper {
-  background: $azure;
-  padding: 4em 0;
-	margin-bottom: 3.5em;
-
-  img {
-    width: 50% !important;
-    margin-left: 0.5em;
-  }
-}
-
-.violet-borders {
-  margin: 4em 0;
-  border-top: 1em solid $violetred;
-  border-bottom: 1em solid $violetred;
-  padding: 1em 0;
-  margin-bottom: 10em;
-
-  img {
-    width: 30% !important;
-    margin-right: 0.5em;
-    margin-bottom: 1em;
-  }
-}
-
-a.green-button {
-  background: $green;
-	display: block;
-	padding: 0.2em 1em;
-	font-size: 1.125em;
-	color: #fff;
-	text-decoration: none;
-	font-weight: 900;
-	text-align: center;
-	margin: 0 auto;
-	max-width: 108px;
 }

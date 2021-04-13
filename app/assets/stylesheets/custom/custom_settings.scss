@@ -1,8 +1,6 @@
 // colors 
 
-$violetred:                     #ce003e;
-$azure:                         #41D0E6;
-$green:                         #227501;
+$green:                         #8DBF42;
 
 
 // fonts
@@ -16,9 +14,9 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 // Menu variables
 
 $top-level-menu-item-text-color:                  $white;
-$top-level-menu-background-color:                 $violetred;
+$top-level-menu-background-color:                 $green;
 
-$flyout-item-text-color:                          $brand;
+$flyout-item-text-color:                          $black;
 $flyout-item-bg-color:                            $white;
 
 $flyout-block-border-color:                       #DCDCDC;
@@ -28,4 +26,4 @@ $flyout-item-projekt-modules-links-color:         $brand;
 $flyout-item-line-height:                         1.5rem;
 
 $responsive-menu-text-color:                      $white;
-$responsive-menu-background-color:                $violetred;
+$responsive-menu-background-color:                $green;

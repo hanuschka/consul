@@ -1,12 +1,16 @@
 .home-page .jumbo {
   height: 170px;
 
-  @media only screen and (min-width: 768px) and (max-width: 1279px) {
+  @media only screen and (min-width: 40em) {
     height: 285px;
   }
 
-  @media only screen and (min-width: 1280px) and (max-width: 1900px) {
+  @media only screen and (min-width: 64em) {
     height: 375px;
+  }
+
+  @media only screen and (min-width: 75em) {
+    height: 415px;
   }
 }
 

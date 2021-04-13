@@ -38,7 +38,7 @@
 
   .subnavigation a.home-items-icon {
     display: block;
-    width: 17px;
+    width: 19px;
   }
 
   .home-icon {
@@ -51,5 +51,10 @@
     display: flex;
     justify-content: space-between;
     width: 55px;
+
+    .account-items-icon,
+    .admin-items-icon {
+      width: 19px;
+    }
   }
 }

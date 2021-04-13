@@ -26,6 +26,17 @@
 
 // styling mobile menu
 
+ #responsive-menu .subnavigation {
+   #search_form {
+     .input-group-button button,
+     .input-group-button,
+     input {
+       height: 2rem !important;
+       line-height: 2rem !important;
+     }
+   }
+ }
+
 .subnavigation ul.main-menu {
   margin-left: 1em;
   padding-bottom: 1em;
@@ -163,7 +174,18 @@
      .top-level-item > a,
      .top-level-item > .flyout-item-name > a,
      .top-level-item > .flyout-item-name {
-       line-height: 2rem;
+       line-height: 2.75rem;
+     }
+
+     #search_form {
+       margin-right: 2em;
+
+       .input-group-button button,
+       .input-group-button,
+       input {
+         height: 2rem !important;
+         line-height: 2rem !important;
+       }
      }
    }
 

@@ -9,7 +9,7 @@
 <% end %>
 
 <div id='filter-projekts'>
-  <%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_active } %>
+  <%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_active, aggregations: aggregations } %>
 </div>
 
 
@@ -20,7 +20,7 @@
   </div>
 
   <div id='filter-projekts'>
-    <%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_archived } %>
+    <%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_archived, aggregations: aggregations } %>
   </div>
 <% end %>
 

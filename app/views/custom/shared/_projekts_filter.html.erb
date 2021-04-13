@@ -11,6 +11,7 @@
       <%= label_tag projekt.name, class: label_class do %>
         <%= check_box_tag projekt.name, projekt.id, projekt.id.to_s.in?(params[:projekts].split(',')), { class: 'js-filter-projekt' }  %>
         <%= projekt.name %>
+        <%= "(#{aggregations[projekt.id]})" if aggregations[projekt.id].present?  %>
         <span class="checkmark"></span>
       <% end %>
 
@@ -21,7 +22,7 @@
     </li>
 
     <% if projekt.children.any? %>
-      <%= render partial: "shared/projekts_filter", locals: { projekts: projekt.children.with_order_number } %>
+      <%= render partial: "shared/projekts_filter", locals: { projekts: projekt.children.with_order_number, aggregations: aggregations } %>
     <% end %>
 
   <% end %>

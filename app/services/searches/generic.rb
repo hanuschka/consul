@@ -22,11 +22,17 @@ module Searches
         aggs: {
           tags: {
             terms: { field: "tags" }
+          },
+          projekts: {
+            terms: { field: "projekts" }
           }
         }
       }} : {
         tags: {
           terms: { field: "tags" }
+        },
+        projekts: {
+          terms: { field: "projekts" }
         }
        }
 
@@ -122,6 +128,10 @@ module Searches
 
       if @params[:tag] && !['site_customization_page', 'budget_investment', 'comment', 'poll'].include?(@params[:section])
         terms.push(term: { tags: @params[:tag] })
+      end
+
+      if @params[:projekts] 
+        terms.push(terms: { projekts: @params[:projekts] })
       end
       terms
     end

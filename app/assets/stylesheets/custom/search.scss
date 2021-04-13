@@ -1,7 +1,8 @@
 // Update styles of standard search form
 
 #proposals,
-#debates {
+#debates,
+.top-links {
   #search_form {
 
     float: right;
@@ -30,6 +31,87 @@
 			height: 2.25rem;
 			line-height: 2.25rem;
 			padding-top: 0;
+    }
+  }
+}
+
+// Elastic search
+
+.top-links {
+  #search_form {
+    margin: .5rem 0 .5rem 1rem;
+
+    input,
+    .input-group-button button {
+      height: 1.75rem !important;
+      line-height: 1.75rem;
+    }
+  }
+}
+
+// Elastic search
+
+.search-modules {
+  flex-wrap: wrap;
+
+  li {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.search-result {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
+  .search-result-type-icon{
+    font-size: 1.1em;
+    background-color: #004a83;
+    color: #fff;
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    margin-right: 10px;
+    line-height: 25px;
+    text-align: center;
+    margin-top: 5px;
+  }
+
+  .search-result-title{
+    font-size: 1.5rem;
+    .hlt1{
+      font-style: normal;
+      font-weight: 600;
+    }
+  }
+  .search-result-body{
+    p{
+      margin-bottom: 0;
+    }
+    .hlt1{
+      font-style: normal;
+      font-weight: 600;
+      background-color: #ff0!important;
+    }
+  }
+}
+.big-search-label{
+  width: 50%;
+}
+.search-modules{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+
+  li{
+    display: block;
+    justify-content: flex-start;
+    margin-right: 20px;
+    &.selected{
+      font-weight: 600;
     }
   }
 }

@@ -12,10 +12,17 @@ header h2 {
   display: none;
 }
 
+.top-bar .top-bar-title a img {
+	width: 90px;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+
 @media screen and (min-width: 40em) {
   .top-bar-title {
     margin-right: 0;
-  }
+    margin-left: 2rem;
+    }
 
   .header-title {
     display: block;

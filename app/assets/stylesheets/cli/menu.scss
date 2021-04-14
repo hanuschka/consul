@@ -1,3 +1,9 @@
+@media screen and (min-width: 40em) {
+  .subnavigation ul.main-menu {
+    min-height: 44px;
+  }
+}
+
 .top-bar .menu > li a {
   text-decoration: none;
 }
@@ -42,9 +48,10 @@
   }
 
   .home-icon {
-    top: -14px;
+    top: -5px;
     right: 0;
     position: absolute;
+    padding-bottom: 14px;
   }
 
   .account-admin-items {

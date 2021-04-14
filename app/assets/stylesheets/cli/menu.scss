@@ -29,6 +29,10 @@
 }
 
 @media screen and (min-width: 40em) {
+  #responsive-menu {
+    display: none !important;
+  }
+
   .account-admin-items .account-icon,
   .account-admin-items .admin-icon {
     top: -5px;
@@ -38,12 +42,8 @@
     top: 44px !important;
   }
 
-  #responsive-menu {
-    display: none !important;
-  }
-
   .subnavigation a.home-items-icon {
-    display: block;
+    display: inline-block;
     width: 19px;
   }
 
@@ -51,6 +51,11 @@
     top: -5px;
     right: 0;
     position: absolute;
+  }
+
+  .content-items {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .account-admin-items {

@@ -48,16 +48,18 @@
   }
 
   .home-icon {
-    top: -5px;
+    top: -14px;
     right: 0;
     position: absolute;
-    padding-bottom: 14px;
   }
 
   .account-admin-items {
     display: flex;
     justify-content: space-between;
-    width: 55px;
+
+    .top-level-item {
+      padding-left: 1.5em;
+    }
 
     .account-items-icon,
     .admin-items-icon {

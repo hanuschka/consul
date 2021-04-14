@@ -16,7 +16,6 @@
       <%= label_tag projekt.name, class: label_class do %>
         <%= check_box_tag projekt.name, projekt.id, projekt.id.to_s.in?(params[:projekts].split(',')), { class: 'js-filter-projekt' }  %>
         <%= projekt.name %>
-        <% byebug %>
         <%= "(#{aggregations[projekt.id]})" if aggregations[projekt.id].present?  %>
         <span class="checkmark"></span>
       <% end %>

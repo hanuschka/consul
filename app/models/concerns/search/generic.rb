@@ -20,6 +20,7 @@ module Search::Generic
         indexes :published
         indexes :geozone, type: "keyword"
         indexes :tags, type: "keyword"
+        indexes :projekts, type: "integer"
         indexes :model_name, type: "keyword"
         indexes :coordinates, type: "geo_point"
         indexes :commentable_type, type: "keyword"
@@ -47,11 +48,14 @@ module Search::Generic
       } : {}
       budget = self.kind_of?(Budget::Investment) ? {budget_id: budget_id} : {}
       legislation = self.kind_of?(Legislation::Proposal) ? {process_id: legislation_process_id} : {}
+      projekt_ids = self.respond_to?(:projekts) ? { projekts: self&.projekts&.pluck(:id) } : nil
+      projekt_ids ||= (self.kind_of?(Comment) && commentable.respond_to?(:projekts)) ? { projekts: commentable&.projekts&.pluck(:id) } : nil
+      projekt_ids ||= self.kind_of?(SiteCustomization::Page) ? { projekts: [ self.projekt_id ] } : {}
 
       as_json(
         only: %i[id updated_at created_at]
       ).merge({
-        published: try(:hidden_at).nil? || try(:published?) ? true : false,
+        published: ( respond_to?(:hidden_at) && hidden_at.nil? ) || try(:published?) ? true : false,
         geozone: try(:geozone)&.name,
         tags: try(:tags)&.category&.map(&:name),
         locales: locales,
@@ -63,6 +67,8 @@ module Search::Generic
         budget
       ).merge(
         legislation
+      ).merge(
+        projekt_ids
       )
     end
 

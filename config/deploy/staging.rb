@@ -1,3 +1,3 @@
-set :branch, ENV["branch"] || :cli_bam
+set :branch, ENV["branch"] || :cli_wit
 
 server deploysecret(:server), user: deploysecret(:user), roles: %w[web app db importer cron background]

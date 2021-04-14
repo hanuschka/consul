@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
-
 class ApplicationController < ActionController::Base
+  http_basic_authenticate_with name: Rails.application.secrets.basic_auth_login, password: Rails.application.secrets.basic_auth_password
 
   private
 

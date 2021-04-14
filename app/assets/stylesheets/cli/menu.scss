@@ -23,6 +23,10 @@
 }
 
 @media screen and (min-width: 40em) {
+  #responsive-menu {
+    display: none !important;
+  }
+
   .account-admin-items .account-icon,
   .account-admin-items .admin-icon {
     top: -11px;
@@ -32,25 +36,29 @@
     top: 32px !important;
   }
 
-  #responsive-menu {
-    display: none !important;
-  }
-
   .subnavigation a.home-items-icon {
-    display: block;
+    display: inline-block;
     width: 19px;
   }
 
   .home-icon {
-    top: -14px;
+    top: -11px;
     right: 0;
     position: absolute;
+  }
+
+ .content-items {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .account-admin-items {
     display: flex;
     justify-content: space-between;
-    width: 55px;
+
+    .top-level-item {
+      padding-left: 1.5em;
+    }
 
     .account-items-icon,
     .admin-items-icon {

@@ -5,9 +5,7 @@
 <div class='projekt-phase'>
   <%= t("custom.projekt.page.sidebar.phases.projekt_duration") %>
   <br>
-  <% if projekt.total_duration_start || projekt.total_duration_end %>
-    <%= format_date_range(projekt.total_duration_start, projekt.total_duration_end) %>
-  <% end %>
+  <%= format_date_range(projekt.total_duration_start, projekt.total_duration_end) %>
 </div>
 
 <% if debate_phase_active?(projekt) %>

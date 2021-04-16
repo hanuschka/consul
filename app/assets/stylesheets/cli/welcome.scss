@@ -22,30 +22,32 @@
   }
 }
 
-.home-page a.cta-button {
-	background: $brand;
-	color: white;
-	padding: 0.5rem 1rem;
-	border-radius: 3px;
-	display: block;
-	margin: 0 auto;
-	width: fit-content;
-  margin-top: 5rem;
-}
+.home-page {
+  a.cta-button {
+    background: $brand;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+    margin-top: 5rem;
+  }
 
-.jumbo {
-  margin-top: -26px;
-}
+  .jumbo {
+    margin-top: -26px;
+  }
 
-.intro-block,
-.discuss-block,
-.propose-block,
-.vote-block {
-	padding: 5rem 0;
-}
+  .intro-block,
+  .discuss-block,
+  .propose-block,
+  .vote-block {
+    padding: 5rem 0;
+  }
 
-.discuss-block,
-.vote-block,
-.push {
-  background: lighten($brand, 70%);
+  .discuss-block,
+  .vote-block,
+  .push {
+    background: lighten($brand, 70%);
+  }
 }

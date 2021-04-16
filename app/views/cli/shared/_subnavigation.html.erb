@@ -6,6 +6,12 @@
       <%= raw content_block("subnavigation_right", I18n.locale) %>
     </div>
 
+    <% if extended_feature?("elasticsearch") %>
+      <div class='search-box hide-for-small-only'>
+        <%= render "shared/elasticsearch_form" %>
+      </div>
+    <% end %>
+
     <div class="account-admin-items">
       <%= render partial: 'shared/subnavigation_konto' %>
       <%= render partial: 'shared/subnavigation_admin' %>

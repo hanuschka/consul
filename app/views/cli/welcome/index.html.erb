@@ -1,0 +1,50 @@
+<% content_for :body_class, "home-page" %>
+
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: root_url %>
+<% end %>
+
+<% if has_banners? %>
+  <%= render "shared/banner" %>
+<% end %>
+
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: root_url %>
+<% end %>
+
+<%= render "header", header: @header %>
+
+<main>
+  <div class="intro-block">
+    <div class='row'>
+			<div class="small-12 column">
+				<%= render_custom_block 'home_page_1' %>
+			</div>
+    </div>
+  </div>
+  <div class="discuss-block">
+    <div class='row'>
+			<div class="small-12 column">
+				<%= render_custom_block 'home_page_2' %>
+				<%= link_to t('cli.welcome.discuss_button'), root_path, class: 'cta-button' %>
+			</div>
+    </div>
+  </div>
+  <div class="propose-block">
+    <div class='row'>
+			<div class="small-12 column">
+				<%= render_custom_block 'home_page_3' %>
+				<%= link_to t('cli.welcome.propose_button'), root_path, class: 'cta-button' %>
+			</div>
+    </div>
+  </div>
+  <div class="vote-block">
+    <div class='row'>
+			<div class="small-12 column">
+				<%= render_custom_block 'home_page_4' %>
+				<%= link_to t('cli.welcome.vote_button'), root_path, class: 'cta-button' %>
+			</div>
+    </div>
+  </div>
+</main>

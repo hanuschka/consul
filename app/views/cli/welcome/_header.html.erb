@@ -1,0 +1,19 @@
+<% if header.present? %>
+  <%header_large = Widget::Card.header.find_by title: "header_large" %>
+  <%header_medium = Widget::Card.header.find_by title: "header_medium" %>
+  <%header_small = Widget::Card.header.find_by title: "header_small" %>
+  <style>
+    <%if header_large%>
+      .home-page .jumbo{
+        background-image: url("<%=header_large.image.attachment.url%>");
+        background-size: cover;
+        background-position: center 65%;
+      }
+    <%end%>
+  </style>
+  <div class="jumbo highlight">
+    <div class="row">
+    </div>
+  </div>
+  <div class="background-header"></div>
+<% end %>

@@ -1,0 +1,27 @@
+// Sidebar
+
+.projekt-phase {
+  margin-bottom: 1em;
+  font-size: 0.875em;
+}
+
+.link-icon {
+
+  &:before {
+    content: "\f35d";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+  }
+}
+
+ul.projekt-navigator {
+  margin-left: 1rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: $brand;
+}
+
+li.current-projekt,
+li.current-projekt a {
+  font-weight: bold;
+}

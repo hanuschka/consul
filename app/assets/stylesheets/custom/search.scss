@@ -125,10 +125,14 @@
 
 // Popup search form
 
+#navigation_bar {
+  position: relative;
+}
+
 .elasticSearchModal {
   display: none;
   position: absolute;
-  top: 30%;
+  top: 130px;
   margin: auto;
   width: 380px;
   left: 0;

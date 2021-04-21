@@ -58,6 +58,7 @@
     display: inline;
   }
 
+  .search-icon,
   .account-icon,
   .admin-icon {
     position: absolute;
@@ -180,17 +181,6 @@
      .top-level-item > .flyout-item-name {
        line-height: 2.75rem;
      }
-
-     #search_form {
-       margin-right: 2em;
-
-       .input-group-button button,
-       .input-group-button,
-       input {
-         height: 2rem !important;
-         line-height: 2rem !important;
-       }
-     }
    }
 
   .subnavigation a.home-items-icon {
@@ -226,13 +216,11 @@
   }
 
   .account-admin-items {
-    display: flex;
-    justify-content: space-between;
-
     .top-level-item {
-      padding-left: 1.5em;
+      padding-left: 1em;
     }
 
+    .search-items-icon,
     .account-items-icon,
     .admin-items-icon {
       width: 22px;
@@ -241,6 +229,12 @@
     .account-items-link,
     .admin-items-link {
       display: none;
+    }
+
+    .search-icon {
+      top: -5px;
+      right: 0;
+      padding-bottom: 14px;
     }
 
     .admin-icon {

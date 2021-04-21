@@ -115,6 +115,7 @@
 //= require projekts
 //= require responsive_menu
 //= require click_out_warning
+//= require elastic_search_modal
 
 var initialize_modules = function() {
   "use strict";
@@ -171,6 +172,7 @@ var initialize_modules = function() {
   App.BudgetEditAssociations.initialize();
   App.Datepicker.initialize();
   App.ClickOutWarning.initialize();
+  App.ElasticSearchModal.initialize();
 };
 
 var destroy_non_idempotent_modules = function() {

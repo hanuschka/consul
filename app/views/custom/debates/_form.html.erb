@@ -14,7 +14,7 @@
                       js_url: suggest_debates_path } %>
       </div>
 
-      <% if feature?(:allow_images) %>
+      <% if extended_feature?(:head_image_for_debates) %>
         <div class="images small-12 column">
           <%= render "images/nested_image", imageable: @debate, f: f %>
         </div>

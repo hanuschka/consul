@@ -97,7 +97,7 @@ de:
     index:
       featured_debates: Hervorgehoben
       orders:
-        confidence_score: Am besten bewertet
+        confidence_score: Am meisten bewertet
         created_at: Neuste
         hot_score: Aktivste
         most_commented: Am meisten kommentiert

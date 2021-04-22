@@ -2,3 +2,13 @@
   width: 300px;
   margin: 2rem auto;
 }
+
+.top-bar {
+  background: #fff !important;
+}
+
+.menu-icon.dark:hover::after, .menu-icon.dark::after {
+  background: $black;
+  -webkit-box-shadow: 0 7px 0 $black, 0 14px 0 $black;
+  box-shadow: 0 7px 0 $black, 0 14px 0 $black;
+}

@@ -24,25 +24,14 @@
     flex-grow: 0;
   }
 
-  .account-admin-items .top-level-item {
-    margin-left: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 1.25rem;
-  }
-
-  .main-menu .account-admin-items li.nav-element.top-level-item > ul.nav-flyout-block {
-    right: auto;
-    left: 0;
+  .account-admin-items .top-level-item > li {
+    height: 100%;
   }
 
   .subnavigation ul.main-menu li.nav-element.top-level-item > .projekt-name > a,
   .subnavigation ul.main-menu li.nav-element.top-level-item > .projekt-name,
   .subnavigation ul.main-menu li.nav-element.top-level-item > a {
     color: $white;
-  }
-
-  .search-box {
-    margin-right: 1.25rem;
   }
 
 }

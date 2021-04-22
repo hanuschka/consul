@@ -1,5 +1,4 @@
 .top-bar-title {
-  width: 300px;
   margin: 2rem auto;
 }
 
@@ -11,4 +10,8 @@
   background: $black;
   -webkit-box-shadow: 0 7px 0 $black, 0 14px 0 $black;
   box-shadow: 0 7px 0 $black, 0 14px 0 $black;
+}
+
+.top-bar .top-bar-title a img {
+  height: 4rem;
 }

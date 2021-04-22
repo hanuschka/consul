@@ -80,7 +80,7 @@ module ProjektsHelper
     elsif !start_date && end_date
       "bis #{format_date(end_date)}"
     else
-      'Offen'
+      'Ohne zeitliche Beschränkung'
     end
   end
 

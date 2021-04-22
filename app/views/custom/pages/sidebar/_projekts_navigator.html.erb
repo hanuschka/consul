@@ -1,9 +1,5 @@
-<% if projekt.top_parent.children.any? %>
+<div class="sidebar-divider"></div>
 
-  <div class="sidebar-divider"></div>
+<h2 class="sidebar-title"><%= t("custom.projekt.page.sidebar.navigator.title") %></h2>
 
-  <h2 class="sidebar-title"><%= t("custom.projekt.page.sidebar.navigator.title") %></h2>
-
-  <%= render partial: 'pages/sidebar/projekt_list', locals: { projekts: [projekt.top_parent], current_projekt: projekt } %>
-
-<% end %>
+<%= render partial: 'pages/sidebar/projekt_list', locals: { projekts: Projekt.top_level.with_order_number, current_projekt: projekt } %>

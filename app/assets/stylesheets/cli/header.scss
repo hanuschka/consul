@@ -13,5 +13,9 @@
 }
 
 .top-bar .top-bar-title a img {
-  height: 4rem;
+  height: 4rem !important;
+
+  @media screen and (min-width: 40em) {
+    height: 9.125rem !important;
+  }
 }

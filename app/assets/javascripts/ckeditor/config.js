@@ -94,7 +94,8 @@ CKEDITOR.editorConfig = function( config )
     { name: "paragraph", groups: [ "list" ], items: [ "NumberedList", "BulletedList" ] },
     { name: "links", items: [ "Link", "Unlink" ] },
     { name: "styles", items: [ "Format" ] },
-    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike" ] }
+    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike" ] },
+    { name: "insert", items: ['Iframe' ] },
   ];
 
   config.toolbar_admin = config.toolbar_mini.concat([

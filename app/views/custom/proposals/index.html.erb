@@ -57,7 +57,6 @@
     <div class="row">
       <% if extended_feature?(:map_above_proposals) %>
         <div class="map inline">
-          <h3><%= t("proposals.index.map") %></h3>
           <%= render_map(nil, "proposals", false, nil, @proposals_coordinates) %>
         </div>
         <div class="no-bullet margin-top">

@@ -1,6 +1,6 @@
 <% if show_admin_menu?(current_user) %>
   <li class="flyout">
-    <%= link_to t("layouts.header.administration_menu"), "#", rel: "nofollow" %>
+    <%= link_to t("layouts.header.administration_menu"), admin_root_path, rel: "nofollow" %>
     <ul class="flyout-nav-right" data-submenu>
       <% if current_user.administrator? %>
         <li>

@@ -63,6 +63,18 @@
 
         <%= render "shared/order_links", i18n_namespace: "debates.index" %>
 
+        <div class='row'>
+          <div class='small-12 medium-9 column'>
+            <%= link_to t('debates.index.section_header.help'), '#sorting_help' %>
+          </div>
+          <div class='small-12 medium-3 column'>
+            <div class='float-right'>
+              <%= @debates.except(:limit, :offset).count %>
+              <%= t('activerecord.models.debate', count: @debates.except(:limit, :offset).count) %>
+            </div>
+          </div>
+        </div>
+
         <div class="show-for-small-only">
 
 
@@ -84,7 +96,7 @@
         <%= paginate @debates %>
 
         <% unless @search_terms || @advanced_search_terms %>
-          <div id="section_help" class="margin" data-magellan-target="section_help">
+          <div id="sorting_help" class="margin" data-magellan-target="section_help">
             <%=render_custom_block 'debates_help' %>
           </div>
         <% end %>

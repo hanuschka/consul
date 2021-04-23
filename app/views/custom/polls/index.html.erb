@@ -23,21 +23,19 @@
       <%= render "shared/filter_subnav", i18n_namespace: "polls.index" %>
   
       <% if @polls.any? %>
-        <% polls_by_geozone_restriction = @polls.group_by(&:geozone_restricted) %>
-  
-        <% if polls_by_geozone_restriction[false].present? %>
-          <h3 class="section-title-divider">
-            <span><%= t("polls.index.no_geozone_restricted") %></span>
-          </h3>
-          <%= render "poll_group", poll_group: polls_by_geozone_restriction[false] %>
-        <% end %>
-  
-        <% if polls_by_geozone_restriction[true].present? %>
-          <h3 class="section-title-divider">
-            <span><%= t("polls.index.geozone_restricted") %></span>
-          </h3>
-          <%= render "poll_group", poll_group: polls_by_geozone_restriction[true] %>
-        <% end %>
+        <div class='row'>
+          <div class='small-12 medium-9 column'>
+            <%= link_to t('polls.index.section_header.help'), '#sorting_help' %>
+          </div>
+          <div class='small-12 medium-3 column'>
+            <div class='float-right'>
+              <%= @all_polls.count %>
+              <%= t('activerecord.models.poll', count: @all_polls.count) %>
+            </div>
+          </div>
+        </div>
+
+        <%= render "poll_group", poll_group: @polls %>
   
         <%= paginate @polls %>
       <% else %>
@@ -46,7 +44,7 @@
         </div>
       <% end %>
   
-      <div id="section_help" class="margin" data-magellan-target="section_help">
+      <div id="sorting_help" class="margin" data-magellan-target="section_help">
         <%=render_custom_block 'polls_help' %>
         <%= render_custom_partial "footer" %>
       </div>

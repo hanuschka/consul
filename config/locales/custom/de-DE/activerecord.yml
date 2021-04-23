@@ -28,6 +28,7 @@ de:
         one: "Kommentar"
         other: "Kommentare"
       debate:
+        zero: "Diskussionen"
         one: "Diskussion"
         other: "Diskussionen"
       tag:
@@ -70,6 +71,7 @@ de:
         one: Stimmzettel
         other: Stimmzettel
       proposal:
+        zero: "Vorschläge"
         one: "Vorschlag"
         other: "Vorschläge"
       site_customization/page:
@@ -112,6 +114,7 @@ de:
         one: "Thema"
         other: "Inhalte"
       poll:
+        zero: "Abstimmungen"
         one: "Abstimmung"
         other: "Abstimmungen"
       proposal_notification:

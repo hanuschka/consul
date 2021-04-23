@@ -96,6 +96,19 @@
         <% end %>
         <% unless params[:selected].present? %>
           <%= render "shared/order_links", i18n_namespace: "proposals.index" %>
+
+          <div class='row'>
+            <div class='small-12 medium-9 column'>
+              <%= link_to t('proposals.index.section_header.help'), '#sorting_help' %>
+            </div>
+            <div class='small-12 medium-3 column'>
+              <div class='float-right'>
+                <%= @proposals.except(:limit, :offset).count %>
+                <%= t('activerecord.models.proposal', count: @proposals.except(:limit, :offset).count) %>
+              </div>
+            </div>
+          </div>
+
         <% end %>
           <div class="show-for-small-only">
           <%= link_to t("proposals.index.start_proposal"), new_proposal_path(tags: tags.any? ? tags.map{|t| t.name} : nil),
@@ -117,7 +130,9 @@
           <% end %>
           <%= paginate @proposals %>
           <% unless @search_terms || @advanced_search_terms || @tag_filter %>
-            <%=render_custom_block 'proposals_help' %>
+            <div id='sorting_help'>
+              <%=render_custom_block 'proposals_help' %>
+            </div>
           <% end %>
         </div>
       </div>

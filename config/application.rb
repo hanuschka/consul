@@ -81,6 +81,7 @@ module Consul
 
 
 
+    config.assets.paths << Rails.root.join("app", "assets", "javascripts", "ckeditor", "plugins", "mjAccordion")
     config.assets.precompile += %w( ckeditor.html )
 
 

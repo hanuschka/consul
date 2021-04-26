@@ -4,7 +4,7 @@ class WYSIWYGSanitizer
   end
 
   def allowed_attributes
-    %w[href style class id target onclick width height]
+    %w[href style class id target onclick width height src]
   end
 
   def sanitize(html)

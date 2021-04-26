@@ -45,6 +45,7 @@
 //= require turbolinks_anchors
 //= require ckeditor/loader
 //= require ckeditor/config.js
+//= require ckeditor/plugins/mjAccordion/ckeditor.html
 //= require_directory ./ckeditor
 //= require social-share-button
 //= require initial

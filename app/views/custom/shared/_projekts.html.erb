@@ -1,8 +1,4 @@
-<% if current_user && current_user.administrator? %>
-  <% projekts = Projekt.top_level.with_order_number %>
-<% else %>
-  <% projekts = Projekt.top_level_active %>
-<% end %>
+<% projekts = Projekt.top_level_active %>
 
 <div id="projekt-tags">
   <%= label_tag 'Projekte'  %>

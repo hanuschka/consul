@@ -82,8 +82,6 @@ module Consul
 
 
     config.assets.precompile = ['*.js', '*.css', '*.html']
-    config.assets.paths << Rails.root.join("app", "assets", "javascripts", "ckeditor", "plugins", "mjAccordion")
-    config.assets.precompile += %w( ckeditor.html )
 
 
 

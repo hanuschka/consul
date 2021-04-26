@@ -11,6 +11,8 @@ CKEDITOR.editorConfig = function( config )
   config.filebrowserImageUploadUrl = "/ckeditor/pictures?";
   config.filebrowserUploadMethod = "form";
 
+  config.extraPlugins = 'iframe';
+
   config.allowedContent = true;
   config.format_tags = "p;h2;h3;h4;h5";
 

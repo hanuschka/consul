@@ -39,6 +39,7 @@ de:
           configuration: Konfigurationseinstellungen
           settings: Funktionen
         index:
+          info: Info
           name_plural: Projekte
           name_singular: Projekt
           add_projekt: Neues Projekt hinzufügen
@@ -69,11 +70,21 @@ de:
           proposal_phase: Vorschlagsphase
           voting_phase: Abstimmungsphase
           voting_manage: Abstimmungen verwalten
+          geozone_restricted: Nur verifizierte Nutzer
           show_in_navigation_checkbox: Projekt in Navigation anzeigen
           show_in_navigation:
             yes: Ja
             no: Nein 
           update: Projekteinstellungen aktualisieren
+          projekt_status: Projektstatus
+          projekt_activated: Projekt active
+          projekt_active: 
+            yes: Ja
+            no: Nein
+          projekt_page: Projektseite
+          projekt_phases: Projektphasen
+          projekt_phase_limitation: Beschränkung
+
     projekts:
       new:
         first_level: 'Erste Projektebene'

@@ -69,7 +69,7 @@
     <% end %>
 
     <div class="small-12 column">
-      <%= render partial: "shared/projekts", locals: { f: f, model: @proposal }  %>
+      <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @proposal }  %>
     </div>
 
     <%if extended_feature?("enable_categories") %>

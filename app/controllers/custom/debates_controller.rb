@@ -16,7 +16,7 @@ class DebatesController < ApplicationController
   private
 
   def debate_params
-    attributes = [:tag_list, :terms_of_service, { projekt_ids: [] },
+    attributes = [:tag_list, :terms_of_service, :projekt_id,
                   image_attributes: image_attributes]
     params.require(:debate).permit(attributes, translation_params(Debate))
   end
@@ -44,7 +44,7 @@ class DebatesController < ApplicationController
 
   def take_by_projekts
     if params[:projekts].present?
-      @resources = @resources.joins(:projekts).where(projekts: { id: [params[:projekts].split(',')] } ).distinct
+      @resources = @resources.where(projekt_id: params[:projekts].split(',')).distinct
     end
   end
 end

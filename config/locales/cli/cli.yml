@@ -2,3 +2,9 @@ de:
   cli:
     home:
       button: Button
+    devise_views:
+      users:
+        registrations:
+          new:
+            terms: "Mit der Registrierung akzeptieren Sie die %{terms} und %{privacy}"
+            privacy_link: "Datenschutzbestimmung"

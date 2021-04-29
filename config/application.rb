@@ -80,14 +80,6 @@ module Consul
     config.assets.paths << Rails.root.join("vendor", "assets", "fonts")
 
 
-
-    config.assets.precompile = ['*.js', '*.css', '*.html']
-
-
-
-
-
-
     # Add lib to the autoload path
     config.autoload_paths << Rails.root.join("lib")
     config.time_zone = "Madrid"

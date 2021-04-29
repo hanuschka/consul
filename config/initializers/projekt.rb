@@ -1,1 +1,0 @@
-Projekt.ensure_projekt_phases

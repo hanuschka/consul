@@ -16,25 +16,19 @@
         <h2><%= @custom_page.subtitle %></h2>
       <% end %>
 
-      <div class="row">
-        <div class="small-12 medium-9 column">
-          <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>
+      <% if @custom_page.projekt.present? %>
+        <div class="row">
+          <div class="small-12 medium-9 column">
+            <%= render 'custom_page_content' %>
+          </div>
 
-          <% if @custom_page.print_content_flag %>
-            <%= render "/shared/print" %>
-          <% end %>
-
-          <% if @cards.any? %>
-            <%= render "shared/cards" %>
-          <% end %>
-        </div>
-
-        <% if @custom_page.projekt.present? %>
           <div class="small-12 medium-3 column">
             <%= render partial: 'pages/sidebar/projekts_sidebar', locals: { projekt: @custom_page.projekt } %>
           </div>
-        <% end %>
-      </div>
+        </div>
+      <% else %>
+        <%= render 'custom_page_content' %>
+      <% end %>
 
     </div>
   </div>

@@ -1,5 +1,24 @@
 de:
   custom:
+    layouts:
+      footer:
+        impressum: Impressum
+        description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
+        demokratie: demokratie.today
+        demokratie_url: "https://www.demokratie.today/"
+    account:
+      settings:
+        public_activity: Meine Aktivität veröffentlichen
+        public_interests: Vorschläge, denen ich folge, veröffentlichen
+
+        email_on_comment: Benachrichtigung erhalten, bei Kommentare zu meinen Aktivitäten
+        email_on_comment_reply: Benachrichtigung erhalten, bei Antworten auf meine Kommentare
+        newsletter: Benachrichtigung erhalten, bei wichtigen System-Infos zur Plattform
+        email_digest: Erhalten Sie eine Zusammenfassung Benachrichtigungen zu Vorschlägen
+        email_on_direct_message: Private Nachrichten per Mail zulassen
+
+      show:
+        user_permission_votes: An Abstimmungen teilnehmen
     menu:
       archived: Abgelaufene Projekte
       account: Konto
@@ -20,6 +39,7 @@ de:
           configuration: Konfigurationseinstellungen
           settings: Funktionen
         index:
+          info: Info
           name_plural: Projekte
           name_singular: Projekt
           add_projekt: Neues Projekt hinzufügen
@@ -50,11 +70,21 @@ de:
           proposal_phase: Vorschlagsphase
           voting_phase: Abstimmungsphase
           voting_manage: Abstimmungen verwalten
+          geozone_restricted: Nur verifizierte Nutzer
           show_in_navigation_checkbox: Projekt in Navigation anzeigen
           show_in_navigation:
             yes: Ja
             no: Nein 
           update: Projekteinstellungen aktualisieren
+          projekt_status: Projektstatus
+          projekt_activated: Projekt active
+          projekt_active: 
+            yes: Ja
+            no: Nein
+          projekt_page: Projektseite
+          projekt_phases: Projektphasen
+          projekt_phase_limitation: Beschränkung
+
     projekts:
       new:
         first_level: 'Erste Projektebene'
@@ -69,6 +99,9 @@ de:
       errors:
         presence: 'Bitte wählen Sie ein Projekt'
     proposals:
+      form:
+        tags_custom: Nutzer-Tags
+        tags_placeholder: Trennen Sie die Tags mit einem Komma (',')
       index:
         max_number_reached: "Du hast die maximale Anzahl (%{max_number}) an Vorschlägen pro Nutzer erreicht. Bevor du einen weiteren Vorschlag erstellen kannst, musst du einen aktiven Vorschlag zurückziehen."
         projekts: Projekte
@@ -81,6 +114,8 @@ de:
         results_menu: Zwischenergebnisse für Admins
         info_menu: Abstimmung
     debates:
+      form:
+        tags_custom: Nutzer-Tags
       index:
         projekts: Projekte
     comments:

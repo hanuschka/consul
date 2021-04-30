@@ -6,7 +6,7 @@
       </h1>
 
       <p class="info">
-        <%= sanitize(t("layouts.footer.description",
+        <%= sanitize(t("cli.layouts.footer.description",
           open_source: link_to(t("layouts.footer.open_source"), t("layouts.footer.open_source_url"), target: "blank", rel: "nofollow"),
           consul:  link_to(t("layouts.footer.consul"), t("layouts.footer.consul_url"), target: "blank", rel: "nofollow"))) %>
       </p>
@@ -27,7 +27,8 @@
       <ul class="no-bullet inline-block">
         <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy") %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %></li>
+        <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %></li>
       </ul>
     </div>
 

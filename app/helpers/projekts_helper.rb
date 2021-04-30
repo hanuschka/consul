@@ -100,8 +100,34 @@ module ProjektsHelper
       selected_projekt_id = nil
     end
 
-    (selected_projekt_id == current_projekt_id) && (can?(:select, @projekt_phase) || current_user.administrator) ?  'checked' : ''
+    (selected_projekt_id == current_projekt_id) && (can?(:select, @projekt_phase) || (current_user.administrator  && controller.controller_name == 'polls')) ?  'checked' : ''
+  end
 
+  def highlight_projekt_in_selector?(current_projekt)
+    resource = @debate || @proposal
+
+    if resource && resource.projekt.present?
+      selected_projekt_id = resource.projekt.id
+    elsif params[:projekt].present?
+      selected_projekt_id = params[:projekt].to_i
+    else
+      selected_projekt_id = nil
+    end
+
+    if selected_projekt_id && selected_projekt = Projekt.find_by(id: selected_projekt_id)
+      case resource.class.name
+      when "Debate"
+        phase_name = 'debate_phase'
+        selected_projekt_projekt_phase = selected_projekt.send(phase_name)
+      when "Proposal"
+        phase_name = 'proposal_phase'
+        selected_projekt_projekt_phase = selected_projekt.send(phase_name)
+      end
+    end
+
+    if selected_projekt_projekt_phase && ( can?(:select, selected_projekt_projekt_phase) || (current_user.administrator && controller.controller_name == 'polls'))
+      current_projekt.all_children_ids.push(current_projekt.id).include?(selected_projekt_id) ? 'highlighted' : '' 
+    end
   end
 
   def show_projekt_group_in_selector?(projekts)

@@ -1,3 +1,21 @@
+.home-page .jumbo {
+  margin-top: rem-calc(-25);
+  height: 170px;
+
+  @media only screen and (min-width: 40em) {
+    height: 285px;
+  }
+
+  @media only screen and (min-width: 64em) {
+    height: 375px;
+  }
+
+  @media only screen and (min-width: 75em) {
+    height: 415px;
+  }
+}
+
+
 @media screen and (min-width: 40em) {
   .home-page .row {
     max-width: 35rem;
@@ -32,10 +50,6 @@
     margin: 0 auto;
     width: fit-content;
     margin-top: 5rem;
-  }
-
-  .jumbo {
-    margin-top: -25px;
   }
 
   .intro-block,

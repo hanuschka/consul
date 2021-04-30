@@ -26,7 +26,7 @@
       <% end %>
 
       <% unless projekt.debate_phase.start_date && projekt.debate_phase.start_date > Date.today  %>
-        <%= link_to debates_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}" do %>
+        <%= link_to debates_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'projekt-phase-link' do %>
           <%= t("custom.projekt.page.sidebar.phases.debate_phase_link") %>
         <% end %>
         <br>
@@ -60,7 +60,7 @@
       <% end %>
 
       <% unless projekt.proposal_phase.start_date && projekt.proposal_phase.start_date > Date.today  %>
-        <%= link_to proposals_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}" do %>
+        <%= link_to proposals_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'projekt-phase-link' do %>
           <%= t("custom.projekt.page.sidebar.phases.proposal_phase_link") %>
         <% end %>
         <br>

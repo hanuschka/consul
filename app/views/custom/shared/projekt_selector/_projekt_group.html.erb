@@ -13,7 +13,7 @@
 
 
     <% rb.object.children.any? ? arrow = 'show-arrow' : arrow = ''  %>
-    <% rb.label(class: "js-show-children-projekts #{arrow} #{disabled_class}", data: {projekt_id: rb.object.id} ) do  %>
+    <% rb.label(class: "js-show-children-projekts #{arrow} #{disabled_class} #{highlight_projekt_in_selector?(rb.object)}", data: {projekt_id: rb.object.id} ) do  %>
 
       <%= rb.radio_button(disabled: disable_radio_button, checked: check_radio_button?(rb.object.id)) %>
       <%= rb.text %>

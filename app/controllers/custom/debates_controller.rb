@@ -13,6 +13,15 @@ class DebatesController < ApplicationController
     @selected_tags = all_selected_tags
   end
 
+  def show
+    super
+
+    @projekt = @debate.projekt
+
+    @related_contents = Kaminari.paginate_array(@debate.relationed_contents).page(params[:page]).per(5)
+    redirect_to debate_path(@debate), status: :moved_permanently if request.path != debate_path(@debate)
+  end
+
   private
 
   def debate_params

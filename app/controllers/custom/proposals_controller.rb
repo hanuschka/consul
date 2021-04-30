@@ -28,6 +28,19 @@ class ProposalsController
     @projekts = Projekt.top_level
   end
 
+  def show
+    super
+    @projekt = @proposal.projekt
+    @notifications = @proposal.notifications
+    @notifications = @proposal.notifications.not_moderated
+    @related_contents = Kaminari.paginate_array(@proposal.relationed_contents)
+                                .page(params[:page]).per(5)
+
+    if request.path != proposal_path(@proposal)
+      redirect_to proposal_path(@proposal), status: :moved_permanently
+    end
+  end
+
   def unvote
     @follow = Follow.find_by(user: current_user, followable: @proposal)
     @follow.destroy if @follow

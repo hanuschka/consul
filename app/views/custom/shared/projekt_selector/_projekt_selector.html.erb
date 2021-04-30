@@ -1,7 +1,6 @@
 <% projekts = Projekt.top_level_active %>
 
 <div id="projekt-tags" class="margin-top margin-bottom">
-  <%= label_tag 'Projekte'  %>
 
   <% if model.errors.full_messages.any? { |error| error.include? 'Projekt' } %>
     <br>

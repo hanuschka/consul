@@ -1,5 +1,5 @@
 <% comments_allowed = true %>
-% valuation = local_assigns.fetch(:valuation, false) %>
+<% valuation = local_assigns.fetch(:valuation, false) %>
 <% cache [locale_and_user_status(comment), comment, commentable_cache_key(comment.commentable), comment.author] do %>
   <div id="<%= dom_id(comment) %>" class="comment small-12">
     <div class="comment-body">

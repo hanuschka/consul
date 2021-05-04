@@ -21,7 +21,7 @@
 							<li><%= t('custom.comments.restricted.geo_limitation', geozones: @projekt.debate_phase.geozones.names.join(', ')) %></li>
             <% end %>
 
-            <% if @projekt.debate_phase.active && @projekt.debate_phase.end_date && @projekt.debate_phase.end_date < Date.today %>
+            <% if @projekt.debate_phase.active && @projekt.debate_phase.expired? %>
 							<li><%= t('custom.comments.restricted.debate_phase_expired')%></li>
             <% end %>
 

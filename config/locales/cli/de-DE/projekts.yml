@@ -2,4 +2,5 @@ de:
   custom:
     projekts:
       sidebar_filter:
-        title: Themen
+        title: Themenfelder
+        filter_button: Themenfelder filtern

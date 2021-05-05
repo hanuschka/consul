@@ -42,6 +42,8 @@ de:
         gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"
         quorum_for_proposals: Quorum für Vorschläge
         quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
+        projekt_page_sharing: Social Sharing for Projekt Pages
+        projekt_page_sharing_description: Social Sharing for Projekt Pages Description
       extended_option:
         max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Benutzer
         max_active_proposals_per_user_description: Legen Sie die maximale Anzahl an aktiven Vorschlägen pro Nutzer fest

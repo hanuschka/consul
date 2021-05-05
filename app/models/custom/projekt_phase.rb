@@ -20,4 +20,8 @@ class ProjektPhase < ApplicationRecord
 
 
   end
+
+  def expired?
+    end_date && end_date < Date.today
+  end
 end

@@ -513,3 +513,10 @@ table.edit-projekt {
 .projekt-options {
   margin: 2em 0;
 }
+
+span.projekt-backlink:before {
+  content: "\f126";
+  font-weight: bold;
+  font-family: 'Font Awesome 5 Free';
+  opacity: 0.9;
+}

@@ -1,6 +1,8 @@
 de:
   custom:
     pages:
+      social_share:
+        share: Teilen
       impressum:
         title: Impressum
     users:

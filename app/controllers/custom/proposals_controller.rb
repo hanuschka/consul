@@ -4,7 +4,6 @@ class ProposalsController
 
   include ProposalsHelper
 
-  before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data]
   before_action :process_tags, only: [:create, :update]
 
   def index_customization

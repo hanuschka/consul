@@ -40,6 +40,15 @@
               <span class="js-flag-actions">
                 <%= render "shared/flag_actions", flaggable: @debate %>
               </span>
+
+              <% if @debate.projekt && @debate.projekt.page.published? %>
+                <span class='projekt-backlink'>
+                </span>
+                <%= link_to @debate.projekt.page.title, @debate.projekt.page.url %>
+              <% end %>
+
+
+
             </div>
 
             <%= render_image(@debate.image, :large, true) if @debate.image.present? %>

@@ -52,6 +52,8 @@ de:
       projekts:
         connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Projekten
         connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
+        projekt_page_sharing: Teilen-Funktion für Projekte
+        projekt_page_sharing_description: Aktivieren Sie die Teilen-Funktion für Projektübersichtsseiten
         predefined: Projektvorauswahl treffen
         predefined_description: Die gefilterten Projekte beim Erstellen von Diskussionen & Vorschlägen vorauswählen
         show_archived:

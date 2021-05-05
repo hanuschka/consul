@@ -127,7 +127,7 @@ class Setting < ApplicationRecord
         "remote_census.response.surname": "",
         "remote_census.response.valid": "",
         "projekts.connected_resources": false,
-        "projekts.predefined": false,
+        "projekts.projekt_page_sharing": false,
         "projekts.show_archived.navigation": true,
         "projekts.show_archived.sidebar": true,
         "extended_feature.gdpr_conformity": false,

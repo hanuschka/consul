@@ -57,7 +57,7 @@
                   <br/>
                   <span class='projekt-backlink'>
                   </span>
-                  <%= prepare_projekt_name(proposal.projekt) %>
+                  <%= link_to proposal.projekt.page.title, proposal.projekt.page.url %>
               <% end %>
             </p>
 

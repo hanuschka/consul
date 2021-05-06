@@ -101,6 +101,19 @@
         <% end %>
         <% unless params[:selected].present? %>
           <%= render "shared/order_links", i18n_namespace: "proposals.index" %>
+
+          <div class='row'>
+            <div class='small-12 medium-9 column small'>
+              <%= link_to t('proposals.index.section_header.help'), '#section_help' %>
+            </div>
+            <div class='small-12 medium-3 column small'>
+              <div class='float-right'>
+                <%= @proposals.except(:limit, :offset).count %>
+                <%= t('activerecord.models.proposal', count: @proposals.except(:limit, :offset).count) %>
+              </div>
+            </div>
+          </div>
+
         <% end %>
           <div class="show-for-small-only">
             <% if current_user && proposal_limit_exceeded?(current_user) %>
@@ -129,10 +142,7 @@
           <%= paginate @proposals %>
           <% unless @search_terms || @advanced_search_terms || @tag_filter %>
             <div id="section_help" class="margin" data-magellan-target="section_help">
-              <p class="lead">
-                <strong><%= t("proposals.index.section_footer.title") %></strong>
-              </p>
-              <p><%= t("proposals.index.section_footer.description") %></p>
+              <%=render_custom_block 'proposals_help' %>
             </div>
           <% end %>
         </div>

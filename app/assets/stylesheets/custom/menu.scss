@@ -47,6 +47,10 @@
 }
 
 .account-admin-items {
+  li#notifications {
+    margin-right: 0;
+  }
+
   a {
     display: inline-block;
   }
@@ -193,7 +197,7 @@
   }
 
   .home-icon {
-    top: -5px;
+    top: -6px;
     right: 0;
     position: absolute;
   }
@@ -230,6 +234,10 @@
       width: 22px;
     }
 
+    .icon-no-notification::before {
+      font-size: 21px;
+    }
+
     .account-items-link,
     .admin-items-link {
       display: none;
@@ -242,13 +250,13 @@
     }
 
     .admin-icon {
-      top: -5px;
+      top: -6px;
       right: 0;
       padding-bottom: 14px;
     }
 
     .account-icon {
-      top: -5px;
+      top: -6px;
       right: 0;
       padding-bottom: 14px;
     }

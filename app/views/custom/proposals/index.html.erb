@@ -107,10 +107,12 @@
               <%= link_to t('proposals.index.section_header.help'), '#section_help' %>
             </div>
             <div class='small-12 medium-3 column small'>
-              <div class='float-right'>
-                <%= @proposals.except(:limit, :offset).count %>
-                <%= t('activerecord.models.proposal', count: @proposals.except(:limit, :offset).count) %>
-              </div>
+              <% if extended_feature?('show_number_of_entries_in_modules') %>
+                <div class='float-right'>
+                  <%= @proposals.except(:limit, :offset).count %>
+                  <%= t('activerecord.models.proposal', count: @proposals.except(:limit, :offset).count) %>
+                </div>
+              <% end %>
             </div>
           </div>
 
@@ -142,7 +144,14 @@
           <%= paginate @proposals %>
           <% unless @search_terms || @advanced_search_terms || @tag_filter %>
             <div id="section_help" class="margin" data-magellan-target="section_help">
-              <%=render_custom_block 'proposals_help' %>
+              <% if extended_feature?('custom_help_text_in_modules') %>
+                <%=render_custom_block 'proposals_help' %>
+              <% else %>
+                <p class="lead">
+                  <strong><%= t("proposals.index.section_footer.title") %></strong>
+                </p>
+                <p><%= t("proposals.index.section_footer.description") %></p>
+              <% end %>
             </div>
           <% end %>
         </div>

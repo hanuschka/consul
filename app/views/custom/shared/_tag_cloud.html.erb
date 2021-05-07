@@ -1,6 +1,6 @@
 <%if @tag_cloud.tags.any? && extended_feature?("enable_custom_tags") %>
   <div class="sidebar-divider"></div>
-  <h2 class="sidebar-title"><%= t("shared.tags_cloud.tags") %></h2>
+  <h2 class="sidebar-title projekt-tag-chip-tag projekt-tag-chip-icon"><%= t("shared.tags_cloud.tags") %></h2>
   <br>
   <ul class="no-bullet categories">
     <% selected_tags = params[:tags] ? params[:tags].split(',') : [] %>

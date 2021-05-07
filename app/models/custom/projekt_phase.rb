@@ -1,5 +1,5 @@
 class ProjektPhase < ApplicationRecord
-  belongs_to :projekt
+  belongs_to :projekt, optional: true
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozones, through: :projekt_phase_geozones
 
@@ -19,5 +19,9 @@ class ProjektPhase < ApplicationRecord
              ((self.end_date >= Date.today if self.end_date) || self.end_date.blank? )
 
 
+  end
+
+  def expired?
+    end_date && end_date < Date.today
   end
 end

@@ -55,7 +55,7 @@
 
               <% if proposal.projekt && proposal.projekt.page.published? %>
                   <br/>
-                  <span class='projekt-backlink'>
+                  <span class='projekt-backlink'>&nbsp;
                   </span>
                   <%= link_to proposal.projekt.page.title, proposal.projekt.page.url %>
               <% end %>
@@ -63,7 +63,6 @@
 
             <div class="proposal-description">
               <p><%= proposal.summary %></p>
-              <div class="truncate"></div>
             </div>
             <%= render "shared/tags", taggable: proposal, limit: 5 %>
           <% end %>

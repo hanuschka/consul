@@ -8,5 +8,10 @@
   %>
 <% end %>
 
-<%= render partial: 'pages/sidebar/projekt_phases', locals: { projekt: projekt } %>
-<%= render partial: 'pages/sidebar/projekts_navigator', locals: { projekt: projekt } %>
+<% if Setting["projekts.show_phases_in_projekt_page_sidebar"].present? %>
+  <%= render partial: 'pages/sidebar/projekt_phases', locals: { projekt: projekt } %>
+<% end %>
+
+<% if Setting["projekts.show_navigator_in_projekts_page_sidebar"].present? %>
+  <%= render partial: 'pages/sidebar/projekts_navigator', locals: { projekt: projekt } %>
+<% end %>

@@ -39,6 +39,10 @@
 }
 
 .account-admin-items {
+  li#notifications {
+    margin-right: 0;
+  }
+
   a {
     display: inline-block;
   }
@@ -179,7 +183,7 @@
   }
 
   .home-icon {
-    top: -5px;
+    top: -6px;
     right: 0;
     position: absolute;
   }
@@ -217,6 +221,10 @@
       width: 22px;
     }
 
+    .icon-no-notification::before {
+      font-size: 22px;
+    }
+
     .account-items-link,
     .admin-items-link {
       display: none;
@@ -229,13 +237,13 @@
     }
 
     .admin-icon {
-      top: -5px;
+      top: -6px;
       right: 0;
       padding-bottom: 14px;
     }
 
     .account-icon {
-      top: -5px;
+      top: -6px;
       right: 0;
       padding-bottom: 14px;
     }
@@ -346,6 +354,29 @@
       }
     }
 
+  }
+
+
+  // Styling notification 
+
+  .account-admin-items {
+    li#notifications {
+      margin-right: 0;
+      margin-left: 1.5rem;
+      width: 22px;
+      line-height: normal;
+
+      a.notifications {
+        position: absolute;
+        color: #fff;
+        line-height: initial;
+        top: -6px;
+
+        .icon-notification::before {
+          font-size: 21px;
+        }
+      }
+    }
   }
 
 }

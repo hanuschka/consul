@@ -4,7 +4,7 @@ de:
       users:
         registrations:
           new:
-            username_note: Eine Registrierung mit Ihrem Klarnamen (Vorname und Familienname) ist Voraussetzung für die Teilnahme an der Beteiligungsplattform. Ihr Name wird neben den Beiträgen angezeigt.
+            username_note: Eine Anmeldung mit Ihrem Klarnamen (Vorname und Familienname) ist Voraussetzung für die Teilnahme an der Beteiligungsplattform. Wir behalten uns vor, erkennbare Fake-Profile von Abstimmungen, der Teilnahme an Diskussionen sowie von der Möglichkeit Vorschläge einzubringen, auszuschließen, bzw. zu entfernen.
     pages:
       social_share:
         share: Teilen

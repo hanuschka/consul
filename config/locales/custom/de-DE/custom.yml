@@ -1,5 +1,10 @@
 de:
   custom:
+    devise_views:
+      users:
+        registrations:
+          new:
+            username_note: Eine Registrierung mit Ihrem Klarnamen (Vorname und Familienname) ist Voraussetzung für die Teilnahme an der Beteiligungsplattform. Ihr Name wird neben den Beiträgen angezeigt.
     pages:
       social_share:
         share: Teilen

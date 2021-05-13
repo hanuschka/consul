@@ -1,0 +1,7 @@
+<li class=''>
+  <%= label_tag "geozone_#{geozone.id}", class: 'label_class' do %>
+    <%= radio_button_tag :geozone, geozone.id, selected_geozone == geozone.id, { class: 'js-filter-geozone' }  %>
+    <%= geozone.name %>
+    <span class="checkmark"></span>
+  <% end %>
+</li>

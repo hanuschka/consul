@@ -85,6 +85,7 @@
         <%= render "shared/projekts_sidebar" %>
         <%= render "shared/categories", taggable: "poll" %>
         <%= render "shared/tag_cloud", taggable: "poll" %>
+        <%= render SDG::Goals::TagCloudComponent.new("Poll") %>
       </aside>
     </div>
   </div>

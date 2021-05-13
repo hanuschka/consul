@@ -15,6 +15,7 @@ class ProposalsController
     remove_archived_from_order_links
     take_only_by_tag_names
     take_by_projekts
+    take_by_sdgs
     @proposals_coordinates = all_proposal_map_locations
     @selected_tags = all_selected_tags
   end
@@ -76,9 +77,20 @@ class ProposalsController
       end
     end
 
+    def take_by_sdgs
+      if params[:sdg_targets].present?
+        @resources = @resources.joins(:sdg_global_targets).where(sdg_targets: { code: params[:sdg_targets].split(',')[0] }).distinct
+        return
+      end
+
+      if params[:sdg_goals].present?
+        @resources = @resources.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') }).distinct
+      end
+    end
+
     def proposal_params
       attributes = [:video_url, :responsible_name, :tag_list,
-                    :terms_of_service, :geozone_id, :skip_map, :projekt_id,
+                    :terms_of_service, :geozone_id, :skip_map, :projekt_id, :related_sdg_list,
                     image_attributes: image_attributes,
                     documents_attributes: [:id, :title, :attachment, :cached_attachment,
                                            :user_id, :_destroy],

@@ -1,5 +1,13 @@
 de:
   custom:
+    sdg:
+      goals:
+        filter:
+          heading: UN-Nachhaltigkeitsziele
+      targets:
+        label: "Filter für Unterziele (%{more_link})"
+        more_link_text: Mehr Info
+        select: Unterziel auswählen
     pages:
       social_share:
         share: Teilen
@@ -113,6 +121,14 @@ de:
       errors:
         presence: 'Bitte wählen Sie ein Projekt'
       backlink: Zur Projektübersicht
+    geozones:
+      sidebar_filter:
+        all_users: Alle Nutzer der Platform
+        all_verified: Alle Bürger der Stadt
+        limited_by_geozone: Beschränkt auf folgende Gebiete
+        show_more: Mehr anzeigen
+        title: Gebiete
+        filter_button: Gebiete filtern
     proposals:
       form:
         tags_custom: Nutzer-Tags

@@ -1,0 +1,48 @@
+<% selected_geozone = params[:geozone] ||= '' %>
+
+<div class="sidebar-divider"></div>
+
+<h2 class="sidebar-title projekt-tag-chip-geozones projekt-tag-chip-icon"><%= t("custom.geozones.sidebar_filter.title") %></h2>
+
+<div id='filter-geozones'>
+
+  <ul>
+    <li class=''>
+      <%= label_tag 'geozone_all_users', class: 'label_class' do %>
+        <%= radio_button_tag :geozone, 'all_users', selected_geozone == 'all_users', { class: 'js-filter-geozone' }  %>
+        <%= t('custom.geozones.sidebar_filter.all_users') %>
+        <span class="checkmark"></span>
+      <% end %>
+    </li>
+
+    <li class=''>
+      <%= label_tag 'geozone_all_citizens', class: 'label_class' do %>
+        <%= radio_button_tag :geozone, 'all_citizens', selected_geozone == 'all_citizens', { class: 'js-filter-geozone' }  %>
+        <%= t('custom.geozones.sidebar_filter.all_verified') %>
+        <span class="checkmark"></span>
+      <% end %>
+    </li>
+
+    <li class=''>
+      <%= label_tag 'geozone_limited', class: 'label_class' do %>
+        <%= radio_button_tag :geozone, 'limited', selected_geozone == 'limited', { class: 'js-filter-geozone' }  %>
+        <%= t('custom.geozones.sidebar_filter.limited_by_geozone') %>
+        <span class="checkmark"></span>
+      <% end %>
+    </li>
+
+    <ul>
+      <% @geozones.each do |geozone| %>
+        <%= render partial: "shared/sidebar_filter/geozones_sidebar_option", locals: { geozone: geozone, selected_geozone: selected_geozone } %>
+      <% end  %>
+    </ul>
+  </ul>
+
+  <div class="sidebar-filter-group">
+    <div class='js-apply-geozone-filter sidebar-filter-button' >
+      <%= t('custom.geozones.sidebar_filter.filter_button') %>
+    </div>
+    <div class='js-reset-geozone-filter sidebar-reset-filter-button' >
+    </div>
+  </div>
+</div>

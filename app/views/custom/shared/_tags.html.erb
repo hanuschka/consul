@@ -1,6 +1,7 @@
-<%- limit ||= nil %>
+<% limit ||= nil %>
 <% tag_filter_class = controller.action_name == 'index' ? 'js-projekt-tag-filter-link' : ''  %>
 
+<%= render SDG::TagListComponent.new(taggable, limit: limit) %>
 
 <% if taggable.projekt.present? %>
   <% params[:projekts].present? ? active_projekt_ids = params[:projekts].split(',') : active_projekt_ids = [] %>

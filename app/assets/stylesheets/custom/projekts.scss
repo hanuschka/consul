@@ -424,6 +424,67 @@ table.edit-projekt {
 
 }
 
+#filter-geozones {
+
+  ul {
+    list-style-type: none;
+    margin-bottom: 0;
+  }
+
+  label {
+    cursor: pointer;
+    position: relative;
+    color: #878787;
+    margin-right: 2em;
+  }
+
+  input[type='radio'] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 5px;
+    left: -19px;
+    height: 14px;
+    width: 14px;
+    border: 1.5px solid #C6C6C6;
+    border-radius: 2px;
+  }
+
+  input:checked ~ .checkmark:before {
+    display: block;
+  }
+
+  input:checked ~ .checkmark {
+    background: #06408E;
+    border: 1.5px solid #06408E;
+  }
+
+  .label-selected {
+    color: #06408E;
+    border-color: #06408E;
+  }
+
+  .checkmark:before {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 4px;
+    top: 1px;
+    width: 4px;
+    height: 7px;
+    border: 1.5px solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+}
+
 .sidebar-projekt-group-name {
   margin: .5em 0;
   font-size: 0.875em;

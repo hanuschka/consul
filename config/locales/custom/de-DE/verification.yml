@@ -73,9 +73,9 @@ de:
         title: Sicherheitscode bestätigen
       new:
         phone: Gib Deine Handynummer ein, um den Code zu erhalten
-        phone_format: "<strong>-<em>(Beispiel: 612345678 oder +34612345678)</em></strong>"
+        phone_format: "<strong><em>(Beispiel: 0049 176 123456 oder +49 176 123456)</em></strong>"
         phone_note: Wir verwenden Deine Telefonnummer ausschließlich dafür, Dir einen Code zu schicken, niemals um Dich zu kontaktieren.
-        phone_placeholder: "Beispiel: 612345678 oder +34612345678"
+        phone_placeholder: "Beispiel: 0049 176 123456 oder +49 176 123456"
         submit_button: Senden
         title: Bestätigungscode senden
       update:

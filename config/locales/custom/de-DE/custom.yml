@@ -2,6 +2,10 @@ de:
   settings:
     max_active_proposals_per_user_description: Number of proposals description
   custom:
+    verification:
+      letter:
+        new:
+          go_to_index: Abstimmungen anzeigen
     shared:
       tags_cloud:
         districts: Aktionsgruppen 

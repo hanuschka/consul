@@ -90,13 +90,14 @@
         <div class="row">
           <div class="small-12 column">
             <%= render "view_mode" %>
-            <%= yield :header_addon %>
+            <% unless extended_feature?("elasticsearch") || params[:retired].present? || params[:selected].present? %>
+                <%= yield :header_addon %>
+                <div class='clear'>
+                  <%= render Shared::AdvancedSearchComponent.new %>
+                </div>
+            <% end %>
           </div>
         </div>
-      <% end %>
-
-      <% unless params[:retired].present? || params[:selected].present? %>
-        <%= render Shared::AdvancedSearchComponent.new %>
       <% end %>
 
       <% unless params[:selected].present? %>
@@ -116,16 +117,6 @@
             <% end %>
           </div>
         </div>
-        <% unless params[:selected].present? %>
-          <div class="row">
-            <div class="small-12 column">
-              <%= render "view_mode" %>
-              <% unless extended_feature?("elasticsearch")%>
-                <%= yield :header_addon %>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
       <% end %>
 
       <div class="show-for-small-only margin-top">
@@ -138,26 +129,6 @@
             class: "button expanded",
             onclick: can_create ? "return true" : "alert('#{t("alerts.select_one_category", model: t("activerecord.models.proposal.one"))}'); return false;",
             disabled: !can_create %>
-        <% end %>
-        <% unless params[:retired].present? || params[:selected].present? || extended_feature?("elasticsearch") %>
-          <%= render Shared::AdvancedSearchComponent.new %> 
-        <% end %>
-        <% unless params[:selected].present? %>
-          <%= render "shared/order_links", i18n_namespace: "proposals.index" %>
-
-          <div class='row'>
-            <div class='small-12 medium-9 column small'>
-              <%= link_to t('proposals.index.section_header.help'), '#section_help' %>
-            </div>
-            <div class='small-12 medium-3 column small'>
-              <% if extended_feature?('show_number_of_entries_in_modules') %>
-                <div class='float-right'>
-                  <%= @proposals.except(:limit, :offset).count %>
-                  <%= t('activerecord.models.proposal', count: @proposals.except(:limit, :offset).count) %>
-                </div>
-              <% end %>
-            </div>
-          </div>
         <% end %>
       </div>
 

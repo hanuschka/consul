@@ -9,6 +9,12 @@ class WelcomeController < ApplicationController
 
   def index
     render layout: false
+    @header = Widget::Card.header.first
+    @feeds = Widget::Feed.active
+    @cards = Widget::Card.body
+    @remote_translations = detect_remote_translations(@feeds,
+                                                      @recommended_debates,
+                                                      @recommended_proposals)
   end
 
   def welcome

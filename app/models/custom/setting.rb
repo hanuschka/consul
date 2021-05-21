@@ -37,6 +37,7 @@ class Setting < ApplicationRecord
         "feature.remote_census": nil,
         "feature.valuation_comment_notification": true,
         "feature.graphql_api": true,
+        "feature.sdg": false,
         "homepage.widgets.feeds.debates": true,
         "homepage.widgets.feeds.processes": true,
         "homepage.widgets.feeds.proposals": true,
@@ -126,7 +127,12 @@ class Setting < ApplicationRecord
         "projekts.predefined": false,
         "projekts.show_archived.navigation": true,
         "projekts.show_archived.sidebar": true,
-        "max_active_proposals_per_user": 100
+        "max_active_proposals_per_user": 100,
+        "sdg.process.debates": true,
+        "sdg.process.proposals": true,
+        "sdg.process.polls": true,
+        "sdg.process.budgets": true,
+        "sdg.process.legislation": true
       }
     end
 

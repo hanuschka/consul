@@ -140,6 +140,10 @@ class Setting < ApplicationRecord
       defaults.each { |name, value| self[name] = value }
     end
 
+    def create_missing
+      defaults.each { |key, value| self[key] = value unless Setting.find_by(key: key).present? }
+    end
+
     def init_tags_setting
       self["feature.enable_categories"] = true
       self["feature.enable_custom_tags"] = true

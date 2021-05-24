@@ -27,14 +27,29 @@
 // styling mobile menu
 
 #responsive-menu .subnavigation {
- #search_form {
-   .input-group-button button,
-   .input-group-button,
-   input {
-     height: 2rem !important;
-     line-height: 2rem !important;
-   }
- }
+  #search_form {
+    .input-group-button button,
+    .input-group-button,
+    input {
+      height: 2rem !important;
+      line-height: 2rem !important;
+    }
+  }
+}
+
+ul.main-menu a:focus {
+  outline: none;
+}
+
+span.icon-circle {
+  color: yellow;
+  position: absolute;
+  font-size: 0.5em;
+}
+
+span.icon-notification,
+span.icon-no-notification {
+  font-size: 19px;
 }
 
 .subnavigation a.home-items-icon {
@@ -378,6 +393,19 @@
 
       a.notifications {
         position: absolute;
+      }
+
+      span.icon-notification {
+          position: absolute;
+          font-size: 1.5rem;
+      }
+
+      span.icon-circle {
+        position: absolute;
+        color: yellow;
+        z-index: 1;
+        font-size: 0.75em;
+        top: 5px;
       }
     }
   }

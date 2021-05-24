@@ -15,7 +15,9 @@
     </div>
 
     <div class="account-admin-items">
-      <%= render partial: 'shared/subnavigation_search' %>
+      <% if extended_feature?("elasticsearch") %>
+        <%= render partial: 'shared/subnavigation_search' %>
+      <% end %>
       <%= render "layouts/notification_item" %>
       <%= render partial: 'shared/subnavigation_konto' %>
       <%= render partial: 'shared/subnavigation_admin' %>

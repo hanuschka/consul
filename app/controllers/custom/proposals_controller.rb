@@ -7,6 +7,13 @@ class ProposalsController
   before_action :process_tags, only: [:create, :update]
 
   def index_customization
+    @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
+    @filtered_target = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
+
+    @geozones = Geozone.all
+    @selected_geozone_restriction = params[:geozone_restriction] || ''
+    @selected_geozones = (params[:geozones] || '').split(',').map(&:to_i)
+
     discard_draft
     discard_archived
     load_retired
@@ -15,6 +22,8 @@ class ProposalsController
     remove_archived_from_order_links
     take_only_by_tag_names
     take_by_projekts
+    take_by_sdgs
+    take_by_geozones
     @proposals_coordinates = all_proposal_map_locations
     @selected_tags = all_selected_tags
   end
@@ -47,6 +56,10 @@ class ProposalsController
     set_proposal_votes(@proposal)
   end
 
+  def created
+    @resource_name = 'proposal'
+  end
+
   private
     def process_tags
       if params[:proposal][:tags]
@@ -76,9 +89,39 @@ class ProposalsController
       end
     end
 
+    def take_by_sdgs
+      if params[:sdg_targets].present?
+        @resources = @resources.joins(:sdg_global_targets).where(sdg_targets: { code: params[:sdg_targets].split(',')[0] }).distinct
+        return
+      end
+
+      if params[:sdg_goals].present?
+        @resources = @resources.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') }).distinct
+      end
+    end
+
+    def take_by_geozones
+      case @selected_geozone_restriction
+      when 'all_resources'
+        @resources
+      when 'no_restriction'
+        query_string = "projekt_phases.geozone_restricted = ? OR proposals.projekt_id IS NULL"
+        @resources = @resources.left_outer_joins(:proposal_phase).where(query_string,  @selected_geozone_restriction )
+      when 'only_citizens'
+        @resources = @resources.joins(:proposal_phase).where(projekt_phases: { geozone_restricted: @selected_geozone_restriction }).distinct
+      when 'only_geozones'
+        @resources = @resources.joins(:proposal_phase).where(projekt_phases: { geozone_restricted: @selected_geozone_restriction }).distinct
+        if @selected_geozones.present?
+          @resources = @resources.joins(:geozones).where(geozones: { id: @selected_geozones }).distinct
+        else
+          @resources = @resources.joins(:geozones).where.not(geozones: { id: nil }).distinct
+        end
+      end
+    end
+
     def proposal_params
       attributes = [:video_url, :responsible_name, :tag_list,
-                    :terms_of_service, :geozone_id, :skip_map, :projekt_id,
+                    :terms_of_service, :geozone_id, :skip_map, :projekt_id, :related_sdg_list,
                     image_attributes: image_attributes,
                     documents_attributes: [:id, :title, :attachment, :cached_attachment,
                                            :user_id, :_destroy],

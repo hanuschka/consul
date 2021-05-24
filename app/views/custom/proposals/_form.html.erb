@@ -9,9 +9,7 @@
       <div class="small-12 column">
         <%= translations_form.text_field :title,
               maxlength: Proposal.title_max_length,
-              data: { js_suggest_result: "js_suggest_result",
-                      js_suggest: ".js-suggest",
-                      js_url: suggest_proposals_path } %>
+              data: suggest_data(@proposal) %>
       </div>
       <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
@@ -82,7 +80,7 @@
     </div>
 
     <%if extended_feature?("enable_categories") %>
-      <div class="small-12 column">
+      <div class="small-12 column margin-bottom">
         <%if @categories.any? %>
           <div id="category_tags" class="tags">
             <%= f.label :category_tag_list, t("proposals.form.tag_category_label") %>
@@ -96,7 +94,7 @@
     <%end%>
 
     <%if extended_feature?("enable_custom_tags") %>
-      <div class="small-12 column">
+      <div class="small-12 column margin-bottom">
         <%= f.text_field :tag_list_custom, value: @proposal.tags.where(kind: nil).map{|c| c.name}.join(","),
           label: t("custom.proposals.form.tags_custom"),
           placeholder: t("custom.proposals.form.tags_placeholder"),
@@ -111,6 +109,8 @@
           hint: t("proposals.form.proposal_responsible_name_note") %>
       </div>
     <% end %>
+
+    <%= render SDG::RelatedListSelectorComponent.new(f) %>
 
     <div class="small-12 column">
       <% if @proposal.new_record? %>

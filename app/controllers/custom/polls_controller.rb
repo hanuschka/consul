@@ -9,11 +9,21 @@ class PollsController < ApplicationController
   helper_method :resource_model, :resource_name
 
   def index
+    @resource_name = 'poll'
     @tag_cloud = tag_cloud
+
+    @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
+    @filtered_target = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
+
+    @geozones = Geozone.all
+    @selected_geozone_restriction = params[:geozone_restriction] || ''
+    @selected_geozones = (params[:geozones] || '').split(',').map(&:to_i)
 
     @polls = @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones)
     take_only_by_tag_names
     take_by_projekts
+    take_by_sdgs
+    take_by_geozones
 
     @all_polls = @polls
 
@@ -41,6 +51,34 @@ class PollsController < ApplicationController
   def take_by_projekts
     if params[:projekts].present?
       @polls = @polls.where(projekt_id: params[:projekts].split(',') ).distinct
+    end
+  end
+
+  def take_by_sdgs
+    if params[:sdg_targets].present?
+      @polls = @polls.joins(:sdg_global_targets).where(sdg_targets: { code: params[:sdg_targets].split(',')[0] }).distinct
+      return
+    end
+
+    if params[:sdg_goals].present?
+      @polls = @polls.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') }).distinct
+    end
+  end
+
+  def take_by_geozones
+    case @selected_geozone_restriction
+    when 'all_resources'
+      @polls
+    when 'no_restriction'
+      @polls = @polls.left_outer_joins(:geozones_polls).where("geozone_restricted = ? AND geozones_polls.geozone_id IS NULL", false).distinct
+    when 'only_citizens'
+      @polls = @polls.left_outer_joins(:geozones_polls).where("polls.geozone_restricted = ? AND geozones_polls.geozone_id IS NULL", true)
+    when 'only_geozones'
+      if @selected_geozones.present?
+        @polls = @polls.left_outer_joins(:geozones_polls).where("polls.geozone_restricted = ? AND geozones_polls.geozone_id IN (?)", true, @selected_geozones)
+      else
+        @polls = @polls.left_outer_joins(:geozones_polls).where("polls.geozone_restricted = ? AND geozones_polls.geozone_id IS NOT NULL", true)
+      end
     end
   end
 end

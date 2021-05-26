@@ -13,17 +13,30 @@
 
 <main>
   <%= render "header", header: @header %>
-  <%= render "feeds" %>
 
-  <div class="row">
-    <div class="small-12 medium-9 column">
-      <% page = SiteCustomization::Page.find_by slug: "indexdt" %>
-      <% if page %>
-        <h4 class="welcometitle"><%= page.title %></h4>
-        <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(page.content) %>
-      <% end %>
+  <div class='bg-regular'>
+    <div class="row">
+      <div class="column small-12 medium-6">
+        <%=render_custom_block 'home_block_2' %>
+      </div>
+      <div class="column small-12 medium-6">
+        <%=render_custom_block 'home_block_3' %>
+      </div>
     </div>
   </div>
+
+  <div class='bg-green'>
+    <div class="row">
+      <div class="column small-12 medium-6">
+        <%=render_custom_block 'home_block_1' %>
+      </div>
+      <div class="column small-12 medium-6">
+        <%=render_custom_block 'home_block_4' %>
+      </div>
+    </div>
+  </div>
+
+  <%= render "feeds" %>
 
   <div class="row">
     <% if @cards.any? %>

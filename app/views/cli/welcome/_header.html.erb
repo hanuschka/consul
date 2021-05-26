@@ -1,0 +1,29 @@
+<% if header.present? %>
+  <%header_large = Widget::Card.header.find_by title: "header_large" %>
+  <style>
+    <%if header_large%>
+      .home-page .jumbo{
+        background-image: linear-gradient(90deg, 
+                            rgba(34, 34, 34, 0.75) 35%, 
+                            rgba(34, 34, 34, 0.65) 50%,
+                            rgba(34, 34, 34, 0.0)),
+                          url("<%=header_large.image.attachment.url%>");
+        background-size: cover;
+        background-position: center 25%;
+      }
+    <%end%>
+  </style>
+  <div class="jumbo highlight">
+    <div class="row">
+			<div class="column">
+        <div class='jumbo-message'>
+					<h1>Mitmachen Kirchheim</h1>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu</p>
+          <%= link_to 'Lorem ipsum', '#', class: 'button' %>
+
+				</div>
+			</div>
+    </div>
+  </div>
+  <div class="background-header"></div>
+<% end %>

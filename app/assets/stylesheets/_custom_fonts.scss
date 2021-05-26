@@ -11,6 +11,11 @@
   src: font-url("custom/MyriadPro-BoldIt.ttf") format("ttf"), font-url("custom/MyriadPro-BoldIt.ttf") format("ttf");
   font-weight: 100;
   font-style: bold; }
+@font-face {
+  font-family: "MyriadPro-Bold";
+  src: font-url("custom/MyriadPro-Bold.ttf") format("ttf");
+  font-style: bold;
+}
 // PT Serif Web Regular
 @font-face {
   font-family: "PT Serif Web Regular";

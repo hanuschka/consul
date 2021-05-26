@@ -1,0 +1,20 @@
+.footer, footer {
+  background: #473f41;
+}
+
+footer {
+
+  p, div {
+    color: $white !important;
+    font-family: "Quicksand";
+    font-size: 13px !important;
+  }
+
+  a {
+    color: $white !important;
+  }
+
+  .subfooter.row {
+    margin-top: 1rem;
+  }
+}

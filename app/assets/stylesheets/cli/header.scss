@@ -1,0 +1,50 @@
+body > header,
+.wrapper > header,
+.top-bar {
+  background-color: $white;
+  color: #222;
+}
+
+h2.header-title {
+  font-family: 'DroidSans-Bold' !important;
+  line-height: 1em;
+  text-transform: uppercase;
+  font-size: 28px;
+  color: $dark;
+  margin-bottom: 1em;
+  margin-top: 1em;
+
+  span {
+    font-family: 'DroidSans' !important;
+    font-weight: 100;
+  }
+}
+
+.header-title {
+  display: none;
+}
+
+.top-bar-title {
+	margin-left: auto;
+	margin-right: 0;
+  min-height: 112px;
+}
+
+.top-bar-title img {
+	margin-top: 1.5em !important;
+}
+
+@media screen and (min-width: 40em) {
+  .top-bar-title {
+    margin-right: 0;
+  }
+
+  .header-title {
+    display: block;
+  }
+}
+
+h2.city-name {
+  color: $responsive-menu-text-color;
+  flex-grow: 1;
+}

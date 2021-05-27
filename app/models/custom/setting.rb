@@ -157,6 +157,8 @@ class Setting < ApplicationRecord
         "extended_feature.show_selected_proposals_in_proposal_sidebar": true,
         "extended_feature.show_geozones_in_proposal_sidebar": true,
         "extended_feature.show_suggested_proposals_in_proposal_sidebar": true,
+        "extended_feature.enable_proposal_notifications_tab": true,
+        "extended_feature.enable_proposal_milestones_tab": true,
         "extended_feature.intro_text_for_polls": false,
         "extended_feature.intermediate_poll_results_for_admins": false,
         "extended_feature.hide_comment_replies_by_default": false,

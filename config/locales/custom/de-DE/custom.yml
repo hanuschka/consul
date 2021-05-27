@@ -143,6 +143,8 @@ de:
         publish: 'Vorschlag jetzt veröffentlichen'
 
       index:
+        show_larger_map: Mehr anzeigen
+        show_smaller_map: Weniger anzeigen
         max_number_reached: "Du hast die maximale Anzahl (%{max_number}) an Vorschlägen pro Nutzer erreicht. Bevor du einen weiteren Vorschlag erstellen kannst, musst du einen aktiven Vorschlag zurückziehen."
         projekts: Projekte
       proposal:

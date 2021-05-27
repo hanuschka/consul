@@ -48,6 +48,11 @@ de:
         show_number_of_entries_in_modules_description: Zeigt die Anzahl der Diskussionsbeiträge, Vorschläge und Abstimmungen an
         show_geozone_filter_in_sidebar: Filter nach Gebieten
         show_geozone_filter_in_sidebar_description: Aktivieren Sie Gebietsfilter in der rechten Seitenleiste für Diskussionen, Vorschläge und Abstimmungen
+        enable_proposal_notifications_tab: Benachrichtigungen des Autors zu Vorschlägen
+        enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
+        enable_proposal_milestones_tab: Meilensteine in Vorschlägen
+        enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
+
 
 
       extended_option:

@@ -121,6 +121,7 @@
 //= require iframe_filter
 //= require sdg_custom
 //= require geozones
+//= require expand_proposals_map
 //= require_tree ./sdg
 //= require_tree ./sdg_management
 
@@ -185,6 +186,7 @@ var initialize_modules = function() {
   App.SDGManagementRelationSearch.initialize();
   App.SDGCustom.initialize();
   App.Geozones.initialize();
+  App.ExpandProposalsMap.initialize();
 };
 
 var destroy_non_idempotent_modules = function() {

@@ -19,7 +19,7 @@
   }
 
   &.filtered-projekt {
-    background: #06408E;
+    background: $brand;
 
     a {
       color: #fff;
@@ -57,7 +57,7 @@
 
 .sdg-tag-icon:before{
   content: '';
-  background-image: image-url("custom/sdg_logo.png");
+  background-image: image-url("custom/sdg_logo.svg");
   width: 16px;
   height: 16px;
   display: inline-block;

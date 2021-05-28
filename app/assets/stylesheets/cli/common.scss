@@ -3,3 +3,21 @@
 .jumbo {
   margin-top: -26px;
 }
+
+
+// Styling sidebar
+
+.sidebar-filter-group .sidebar-filter-button {
+  background: #d9dec7;
+}
+
+aside {
+  a.button.expanded {
+    background: $brand;
+
+    &:hover {
+      background: $brand;
+      opacity: .5;
+    }
+  }
+}

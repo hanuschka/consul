@@ -4,7 +4,7 @@ class SMSApi
 
   def sms_deliver(phone, code)
     return stubbed_response unless end_point_available?
-    message = "Dein Verifizierungscode für deinepolitik.aufstehen.de: #{code}"
+    message = "Hallo, bitte gib jetzt diesen Verifizierungs-Code für die Anmeldung zur Abstimmung ein: #{code}. Deine Stimme zählt!"
     params = {'receiver' => phone, 'msg' => message, 'sender' => 'SMSInfo', 'msgtype' => 't'}
     params['id'] = Rails.application.secrets.sms_username
     params['pw'] = Rails.application.secrets.sms_password

@@ -1,0 +1,45 @@
+<%= form_for(@projekt, url: admin_projekt_path, as: :projekt) do |f| %>
+  <%= hidden_field_tag :tab, '#tab-projekt-phases' %>
+  <table class='edit-projekt'>
+    <thead>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.projekt_phases_tab.phase_name") %></th>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.projekt_phases_tab.beginning") %></th>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.projekt_phases_tab.ending") %></th>
+      <th scope="col" class="small-3"><%= t("custom.admin.projekts.edit.projekt_phases_tab.actions") %></th>
+    </thead>
+    <tbody>
+
+      <tr class= <%= 'fieldset-disabled' unless @projekt.top_level?  %>>
+        <td>
+          <%= t("custom.admin.projekts.edit.projekt_phases_tab.projekt_duration") %>
+        </td>
+        <td>
+          <%= f.date_field :total_duration_start, disabled: (true unless @projekt.top_level?), label: t("custom.admin.projekts.edit.projekt_phases_tab.start_date")  %>
+        </td>
+        <td>
+          <%= f.date_field :total_duration_end, disabled: (true unless @projekt.top_level?), label: t("custom.admin.projekts.edit.projekt_phases_tab.end_date")  %>
+        </td>
+        <td>
+          <%= f.check_box :total_duration_active, { label: t("custom.admin.projekts.edit.projekt_phases_tab.activate"), disabled: (true unless @projekt.top_level?) }  %>
+        </td>
+      </tr>
+
+      <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: { f: f, projekt_phase: @projekt.debate_phase, phase_name: 'debate_phase' } %>
+
+      <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: { f: f, projekt_phase: @projekt.proposal_phase, phase_name: 'proposal_phase' } %>
+
+      <tr>
+        <td>
+          <%= t("custom.admin.projekts.edit.projekt_phases_tab.voting_phase") %>
+        </td>
+        <td colspan='3'>
+          <%= link_to t("custom.admin.projekts.edit.projekt_phases_tab.voting_manage"), admin_polls_path  %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <%= f.submit(t("custom.admin.projekts.edit.update"), class: "button success") %>
+  </div>
+<% end %>

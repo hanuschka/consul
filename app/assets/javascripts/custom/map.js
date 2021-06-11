@@ -103,6 +103,9 @@
       };
       mapCenterLatLng = new L.LatLng(mapCenterLatitude, mapCenterLongitude);
       map = L.map(element.id).setView(mapCenterLatLng, zoom);
+
+      App.Map.maps.push(map);
+
       L.tileLayer(mapTilesProvider, {
         attribution: mapAttribution
       }).addTo(map);

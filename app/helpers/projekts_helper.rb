@@ -47,6 +47,14 @@ module ProjektsHelper
       ((projekt.send(phase_name).end_date >= Date.today if projekt.send(phase_name).end_date) || projekt.send(phase_name).end_date.blank? )
   end
 
+  def projekt_phase_not_started_yet?(projekt, phase_name)
+    projekt.send(phase_name).start_date > Date.today if projekt.send(phase_name).start_date
+  end
+
+  def projekt_phase_expired?(projekt, phase_name)
+    projekt.send(phase_name).end_date < Date.today if projekt.send(phase_name).end_date
+  end
+
   def projekt_phase_show_in_navigation?(projekt, phase_name)
     projekt.send(phase_name).active &&
       ((projekt.send(phase_name).start_date <= Date.today if projekt.send(phase_name).start_date) || projekt.send(phase_name).start_date.blank? )

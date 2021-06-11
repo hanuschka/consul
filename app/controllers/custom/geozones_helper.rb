@@ -5,7 +5,7 @@ module GeozonesHelper
   def prepare_geo_restriction_tag(taggable, resource_name, tag_filter_class)
     geozone_restriction = params[:geozone_restriction]
     selected_geozones = (params[:geozones] || []).split(',')
-    geo_restriction_name = taggable.send("#{@resource_name}_phase").geozone_restricted
+    geo_restriction_name = taggable.send("#{resource_name}_phase").geozone_restricted
 
     tag_name = t("custom.geozones.sidebar_filter.#{geo_restriction_name}" )
     url_params_string = "&geozone_restriction=#{geo_restriction_name}"

@@ -121,7 +121,7 @@ class ProposalsController
 
     def proposal_params
       attributes = [:video_url, :responsible_name, :tag_list,
-                    :terms_of_service, :geozone_id, :skip_map, :projekt_id, :related_sdg_list,
+                    :terms_of_service, :geozone_id, :projekt_id, :related_sdg_list,
                     image_attributes: image_attributes,
                     documents_attributes: [:id, :title, :attachment, :cached_attachment,
                                            :user_id, :_destroy],

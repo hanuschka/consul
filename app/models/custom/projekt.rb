@@ -1,4 +1,9 @@
 class Projekt < ApplicationRecord
+  include Milestoneable
+  acts_as_paranoid column: :hidden_at
+  include ActsAsParanoidAliases
+  include Mappable
+
   has_many :children, class_name: 'Projekt', foreign_key: 'parent_id'
   belongs_to :parent, class_name: 'Projekt', optional: true
 
@@ -11,11 +16,17 @@ class Projekt < ApplicationRecord
   has_many :projekt_phases, dependent: :destroy
   has_one :debate_phase, class_name: 'ProjektPhase::DebatePhase'
   has_one :proposal_phase, class_name: 'ProjektPhase::ProposalPhase'
-  has_many :geozones, through: :projekt_phase
+  has_many :geozones, through: :projekt_phases
 
-  accepts_nested_attributes_for :debate_phase, :proposal_phase
+  has_many :projekt_settings, dependent: :destroy
+  has_many :projekt_notifications, dependent: :destroy
 
-  after_create :create_corresponding_page, :set_order, :create_projekt_phases
+  has_many :comments, as: :commentable, inverse_of: :commentable
+  belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
+
+  accepts_nested_attributes_for :debate_phase, :proposal_phase, :projekt_notifications
+
+  after_create :create_corresponding_page, :set_order, :create_projekt_phases, :create_default_settings, :create_map_location
   after_destroy :ensure_order_integrity
 
   scope :top_level, -> { where(parent: nil) }
@@ -70,6 +81,14 @@ class Projekt < ApplicationRecord
     unless siblings.with_order_number.pluck(:order_number).first == 1 && siblings.with_order_number.pluck(:order_number).each_cons(2).all? { |a, b| b == a + 1 }
       update(order_number: nil)
       set_order
+    end
+  end
+
+  def create_default_settings
+    ProjektSetting.defaults.each do |name, value|
+      unless ProjektSetting.find_by(key: name, projekt_id: self.id)
+        ProjektSetting.create(key: name, value: value, projekt_id: self.id)
+      end
     end
   end
 
@@ -142,6 +161,17 @@ class Projekt < ApplicationRecord
         projekt.update(order_number: new_order)
         new_order += 1
       end
+    end
+  end
+
+  def create_map_location
+    unless map_location.present?
+      MapLocation.create(
+        latitude: Setting['map.latitude'],
+        longitude: Setting['map.longitude'],
+        zoom: Setting['map.zoom'],
+        projekt_id: self.id
+      )
     end
   end
 end

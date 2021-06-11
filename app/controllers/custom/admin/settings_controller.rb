@@ -17,10 +17,17 @@ class Admin::SettingsController < Admin::BaseController
     @sdg_settings = all_settings["sdg"]
   end
 
+  def update_map
+    Setting["map.latitude"] = params[:latitude].to_f
+    Setting["map.longitude"] = params[:longitude].to_f
+    Setting["map.zoom"] = params[:zoom].to_i
+    redirect_to request_referer, notice: t("admin.settings.index.map.flash.update")
+  end
+
   private
     def request_referer
-      return request.referer + "#tab-projekts-settings" if request.referer.include?('admin/projekts')
-      return request.referer + params[:setting][:tab] if params[:setting][:tab]
+      return request.referer + params[:setting][:tab] if params[:setting] && params[:setting][:tab]
+      return request.referer + params[:tab] if params[:tab]
 
       request.referer
     end

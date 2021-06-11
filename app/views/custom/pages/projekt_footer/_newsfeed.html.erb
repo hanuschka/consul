@@ -1,0 +1,27 @@
+<% rss_id = ProjektSetting.find_by(projekt: projekt, key: "projekt_newsfeed.id").value %>
+<% rss_type = ProjektSetting.find_by(projekt: projekt, key: "projekt_newsfeed.type").value %>
+
+
+
+<div class="tabs-panel" id="tab-newsfeed">
+  <div class="row">
+    <div class="column">
+      <div id='newsfeed-placeholder' data-rss-id=<%= rss_id %> data-rss-type=<%= rss_type %>>
+        <% if rss_type == 'wall' %>
+          <rssapp-wall id='ot3BtcoF1yPEAt6Y'></rssapp-wall>
+        <% elsif rss_type == 'list'%>
+          <rssapp-list id='ot3BtcoF1yPEAt6Y'></rssapp-list>
+        <% elsif rss_type == 'feed'%>
+          <rssapp-feed id='ot3BtcoF1yPEAt6Y'></rssapp-feed>
+        <% elsif rss_type == 'carousel'%>
+          <rssapp-carousel id='ot3BtcoF1yPEAt6Y'></rssapp-carousel>
+        <% elsif rss_type == 'ticker'%>
+          <rssapp-ticker id='ot3BtcoF1yPEAt6Y'></rssapp-ticker>
+        <% elsif rss_type == 'magazine'%>
+          <rssapp-magazine id='ot3BtcoF1yPEAt6Y'></rssapp-magazine>
+        <% end %>
+        <script src="https://widget.rss.app/v1/<%= rss_type %>.js" type="text/javascript" async></script>
+      </div>
+    </div>
+  </div>
+</div>

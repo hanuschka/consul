@@ -6,6 +6,7 @@ class Proposal < ApplicationRecord
   has_many :geozones, through: :proposal_phase
 
   validates :projekt_id, presence: true, if: :require_a_projekt?
+  validate :description_sanitized
 
   def require_a_projekt?
     Setting["projekts.connected_resources"].present? ? true : false
@@ -25,5 +26,11 @@ class Proposal < ApplicationRecord
         projekt.blank? ||
         proposal_phase && !proposal_phase.expired?
       )
+  end
+
+  def description_sanitized
+    sanitized_description = ActionController::Base.helpers.strip_tags(description)
+    errors.add(:description, :too_long, message: 'too long text') if
+      sanitized_description.length > Setting[ "extended_option.description_max_length"].to_i
   end
 end

@@ -1,5 +1,6 @@
 <% limit ||= nil %>
 <% tag_filter_class = controller.action_name == 'index' ? 'js-projekt-tag-filter-link' : ''  %>
+<% resource_name = (@resource_name || taggable.class.name.downcase) %>
 
 <%= render SDG::TagListComponent.new(taggable, limit: limit) %>
 
@@ -13,9 +14,9 @@
     </div>
   <% end %>
 
-  <% if taggable.projekt.present? && @resource_name != 'poll' && taggable.projekt.send("#{@resource_name}_phase").present?%>
-    <%= prepare_geo_restriction_tag(taggable, @resource_name, tag_filter_class) %>
-  <% elsif @resource_name == 'poll' %>
+  <% if taggable.projekt.present? && resource_name != 'poll' && taggable.projekt.send("#{resource_name}_phase").present?%>
+    <%= prepare_geo_restriction_tag(taggable, resource_name, tag_filter_class) %>
+  <% elsif resource_name == 'poll' %>
     <%= prepare_geo_restriction_tag_for_polls(taggable, tag_filter_class) %>
   <% else %>
     <% active_projekt_class = params[:geozone_restriction] == 'no_restriction' ? 'filtered-projekt' : ''%>

@@ -48,8 +48,8 @@
   <% end %>
 
   <% if projekt_feature?(projekt, 'footer.show_newsfeed_in_projekt_footer') &&
-        ProjektSetting.find_by(projekt_id: 1, key: "projekt_newsfeed.id").value.present? &&
-        ProjektSetting.find_by(projekt_id: 1, key: "projekt_newsfeed.type").value.present? %>
+        ProjektSetting.find_by(projekt: projekt, key: "projekt_newsfeed.id").value.present? &&
+        ProjektSetting.find_by(projekt: projekt, key: "projekt_newsfeed.type").value.present? %>
     <li class="tabs-title" id='js-reload-newsfeed'>
       <%= link_to "#tab-newsfeed" do %>
         <h3>

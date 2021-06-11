@@ -63,9 +63,10 @@
         <%= render "milestones/milestones", milestoneable: @custom_page.projekt %>
       <% end %>
 
+      <% byebug %>
       <% if projekt_feature?(@custom_page.projekt, 'footer.show_newsfeed_in_projekt_footer') &&
-            ProjektSetting.find_by(projekt_id: 1, key: "projekt_newsfeed.id").value.present? &&
-            ProjektSetting.find_by(projekt_id: 1, key: "projekt_newsfeed.type").value.present? %>
+            ProjektSetting.find_by(projekt: @custom_page.projekt, key: "projekt_newsfeed.id").value.present? &&
+            ProjektSetting.find_by(projekt: @custom_page.projekt, key: "projekt_newsfeed.type").value.present? %>
         <%= render partial: "pages/projekt_footer/newsfeed", locals: { projekt: @custom_page.projekt } %>
       <% end %>
     </div>

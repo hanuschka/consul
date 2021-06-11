@@ -70,6 +70,9 @@ de:
 
       menu:
         projekts: Projekte
+      progress_bars:
+        index:
+          progress_bar: Fortschrittsbalken
       projekts:
         tabs:
           configuration: Konfigurationseinstellungen
@@ -77,6 +80,7 @@ de:
           map_settings: Standard-Kartenkonfiguration
           geozones: Geozonen verwalten
         index:
+          page_name: Globale Projekt-Einstellungen
           info: Info
           name_plural: Projekte
           name_singular: Projekt
@@ -97,7 +101,9 @@ de:
         destroy: Löschen
         edit:
           projekt_phases_tab:
-            name: Projektphasen
+            name: Projektseite & -phasen
+            page_block_title: Projektseite
+            phases_block_title: Projektphasen
             phase_name: Phase
             beginning: Anfangsdatum
             ending: Enddatum
@@ -116,7 +122,7 @@ de:
             sidebar_settings: Seitenleiste
             footer_settings: Fußzeile
           projekt_map_tab:
-            name: Kartenkonfiguration
+            name: Ind. Kartenkonfiguration
           projekt_notifications_tab:
             name: Benachrichtigungen
             page_title: Nachricht senden
@@ -125,7 +131,7 @@ de:
             notification_body: Nachricht
             button: Nachricht senden
           projekt_milestones_tab:
-            name: Meilensteine
+            name: Fortschritt & Meilensteine
           projekt_news_tab:
             name: News-Feed
           show_in_navigation_checkbox: Projekt in Navigation anzeigen
@@ -134,7 +140,7 @@ de:
             no: Nein 
           update: Projekteinstellungen aktualisieren
           projekt_status: Projektstatus
-          projekt_activated: Projekt active
+          projekt_activated: Projekt aktiv
           projekt_active: 
             yes: Ja
             no: Nein
@@ -157,6 +163,12 @@ de:
       errors:
         presence: 'Bitte wählen Sie ein Projekt'
       backlink: Zur Projektübersicht
+      selector:
+        connected_resources:
+          debate_title: Zuordnung der Diskussion zu einem Projekt
+          debate_description: Bitte ordnen Sie Ihre Diskussion einem der nachfolgenden Projekte oder Unterprojekte zu. Dies dient dazu, dass die Diskussionen in der Diskussionsübersicht besser auffindbar sind.
+          proposal_title: Zuordnung des Vorschlags zu einem Projekt
+          proposal_description: Bitte ordnen Sie Ihren Vorschlag einem der nachfolgenden Projekte oder Unterprojekte zu. Dies dient dazu, dass die Vorschläge in der Vorschlagsübersicht besser auffindbar sind.
     geozones:
       sidebar_filter:
         all_resources: "Alle %{resource_name}"

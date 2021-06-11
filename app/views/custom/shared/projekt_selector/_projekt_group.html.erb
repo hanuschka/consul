@@ -22,10 +22,8 @@
         <div class='projekt-phase-details js-show-children-projekts'>
           <%= get_projekt_phase_duration(rb.object.send(phase_name)) %>
 
-          <% if Setting["feature.user.skip_verification"].blank? %>
-            <br>
-            <%= get_projekt_phase_limitations(rb.object.send(phase_name)) %>
-          <% end %>
+          <br>
+          <%= get_projekt_phase_limitations(rb.object.send(phase_name)) %>
         </div>
       <% elsif phase_name %>
         <div class='projekt-phase-details'>

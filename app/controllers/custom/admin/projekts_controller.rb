@@ -12,6 +12,10 @@ class Admin::ProjektsController < Admin::BaseController
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
   end
 
+  def show
+    redirect_to edit_admin_projekt_path
+  end
+
   def edit
     @projekt = Projekt.find(params[:id])
 

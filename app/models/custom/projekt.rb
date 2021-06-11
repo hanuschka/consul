@@ -21,7 +21,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_settings, dependent: :destroy
   has_many :projekt_notifications, dependent: :destroy
 
-  has_many :comments, as: :commentable, inverse_of: :commentable
+  has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
   accepts_nested_attributes_for :debate_phase, :proposal_phase, :projekt_notifications
@@ -97,6 +97,10 @@ class Projekt < ApplicationRecord
       projekt.debate_phase = ProjektPhase::DebatePhase.create unless projekt.debate_phase
       projekt.proposal_phase = ProjektPhase::ProposalPhase.create unless projekt.proposal_phase
     end
+  end
+
+  def title
+    name
   end
 
   private

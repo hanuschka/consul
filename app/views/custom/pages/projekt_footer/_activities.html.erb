@@ -1,21 +1,23 @@
 <div class="tabs-panel is-active" id="tab-activities">
 
 
-  <div class="row">
-    <div class="column">
-      <div class="map inline" id='projekt-map'>
-        <%= render_map(projekt.map_location, "proposals", false, nil, @proposals_coordinates) %>
-      </div>
+  <% if feature?(:map) %>
+    <div class="row">
+      <div class="column">
+        <div class="map inline" id='projekt-map'>
+          <%= render_map(projekt.map_location, "proposals", false, nil, @proposals_coordinates) %>
+        </div>
 
-      <div class='expand-proposals-overview-map small js-expand-proposals-overview-map'>
-        <%= t('custom.proposals.index.show_larger_map') %>
+        <div class='expand-proposals-overview-map small js-expand-proposals-overview-map'>
+          <%= t('custom.proposals.index.show_larger_map') %>
+        </div>
+        <div class="clear"></div>
       </div>
-      <div class="clear"></div>
     </div>
-  </div>
 
-  <div class="no-bullet margin-top">
-  </div>
+    <div class="no-bullet margin-top">
+    </div>
+  <% end %>
 
 
   <div class="most-active-resources row">

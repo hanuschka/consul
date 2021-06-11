@@ -2,7 +2,7 @@ namespace :admin do
   root to: "dashboard#index"
 
   # custom routes
-  resources :projekts, only: [:index, :create, :update, :destroy] do
+  resources :projekts, only: [:index, :show, :create, :update, :destroy] do
     resources :projekt_settings, only: [:update]
     resources :projekt_notifications, only: [:create, :update, :destroy]
     resources :milestones, controller: "projekt_milestones"

@@ -28,6 +28,9 @@ class PagesController < ApplicationController
 
       @cards = @custom_page.cards
       render action: :custom_page
+    elsif @custom_page.present?
+      @cards = @custom_page.cards
+      render action: :custom_page
     else
       render action: params[:id]
     end

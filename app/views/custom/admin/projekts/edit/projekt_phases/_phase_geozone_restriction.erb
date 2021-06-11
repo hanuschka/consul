@@ -1,5 +1,8 @@
 <div class='projekt-phase-geozone-restriction-selector'>
-  <%= phase_form.radio_button :geozone_restricted, 'no_restriction', label: t('custom.geozones.sidebar_filter.no_restriction' ) %>
+
+  <%= phase_form.radio_button :geozone_restricted, 'no_restriction',
+                             label: t('custom.geozones.sidebar_filter.no_restriction' ),
+                             checked: ( @projekt.send(phase_name).geozone_restricted.blank? || @projekt.send(phase_name).geozone_restricted == 'no_restriction' ) %>
   <br>
 
   <%= phase_form.radio_button :geozone_restricted, 'only_citizens', label: t('custom.geozones.sidebar_filter.only_citizens') %>

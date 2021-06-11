@@ -85,12 +85,15 @@ module ProjektsHelper
     end
   end
 
-  def get_projekt_phase_limitations(phase)
-    if phase
-      return phase.geozones.names.join(', ') if phase.geozones.any? && phase.geozone_restricted
-      return 'Nur Bürger der Stadt' if phase.geozone_restricted
+  def get_projekt_phase_limitations(projekt_phase)
+    restriction_name = projekt_phase.geozone_restricted
+    geozones = projekt_phase.geozones
+
+    if geozones.exists? && restriction_name == 'only_geozones'
+      return geozones.pluck(:name).join(', ')
     end
-    ''
+
+    t("custom.geozones.sidebar_filter.#{restriction_name}" )
   end
 
   def related_polls(projekt, timestamp = Date.current.beginning_of_day)

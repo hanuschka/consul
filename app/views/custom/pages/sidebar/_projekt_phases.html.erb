@@ -20,10 +20,8 @@
       <%= get_projekt_phase_duration(projekt.debate_phase) %>
       <br>
 
-      <% if Setting["feature.user.skip_verification"].blank? %>
-        <%= get_projekt_phase_limitations(projekt.debate_phase) %>
-        <br>
-      <% end %>
+      <%= get_projekt_phase_limitations(projekt.debate_phase) %>
+      <br>
 
       <% if @most_active_debates.exists? %>
         <%= link_to debates_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'projekt-phase-link' do %>
@@ -54,10 +52,8 @@
       <%= get_projekt_phase_duration(projekt.proposal_phase) %>
       <br>
 
-      <% if Setting["feature.user.skip_verification"].blank? %>
-        <%= get_projekt_phase_limitations(projekt.proposal_phase) %>
-        <br>
-      <% end %>
+      <%= get_projekt_phase_limitations(projekt.proposal_phase) %>
+      <br>
 
       <% if @most_active_debates.exists? %>
         <%= link_to proposals_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'projekt-phase-link' do %>

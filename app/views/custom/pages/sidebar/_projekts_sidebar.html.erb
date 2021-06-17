@@ -8,6 +8,24 @@
   %>
 <% end %>
 
+<div class="sidebar-divider"></div>
+<h2 class="sidebar-title"><%= t("custom.projekt.page.sidebar.general.title") %></h2>
+
+<% if projekt.top_level? && projekt_feature?(projekt, "sidebar.show_total_duration_in_projekts_page_sidebar") %>
+  <div class='projekt-phase'>
+    <strong><%= t("custom.projekt.page.sidebar.general.projekt_duration") %></strong>
+    <br>
+    <%= format_date_range(projekt.total_duration_start, projekt.total_duration_end) %>
+  </div>
+<% end %>
+
+<div class='projekt-phase'>
+  <strong><%= t("custom.projekt.page.sidebar.general.affiliation") %></strong>
+  <br>
+  <%= get_projekt_affiliation_name(projekt) %>
+</div>
+
+
 <% if projekt_feature?(@custom_page.projekt, "sidebar.show_phases_in_projekt_page_sidebar") %>
   <%= render partial: 'pages/sidebar/projekt_phases', locals: { projekt: projekt } %>
 <% end %>

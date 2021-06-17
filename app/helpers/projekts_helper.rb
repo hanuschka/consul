@@ -90,10 +90,10 @@ module ProjektsHelper
     geozone_affiliations = projekt.geozone_affiliations
 
     if geozone_affiliations.exists? && affiliation_name == 'only_geozones'
-      return 'Gebietszuordnung: ' + geozone_affiliations.pluck(:name).join(', ')
+      return  geozone_affiliations.pluck(:name).join(', ')
     end
 
-    'Gebietszuordnung: ' + t("custom.geozones.projekt_selector.affiliations.#{affiliation_name}" )
+    t("custom.geozones.projekt_selector.affiliations.#{affiliation_name}" )
   end
 
   def get_projekt_phase_restriction_name(projekt_phase)

@@ -6,9 +6,13 @@ de:
         breadcrumbs:
           homepage: Startseite
         sidebar:
+          general:
+            title: Projektinformation
+            projekt_duration: Gesamtdauer
+            affiliation: Gebietszuordnung
+
           phases:
             title: Projektphasen
-            projekt_duration: Gesamtdauer
             debate_phase: Diskussionsphase
             debate_phase_link: Zu den aktuellen Diskussionen
             debate_phase_button: Starten Sie eine Diskussion

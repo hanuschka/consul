@@ -9,7 +9,7 @@
         }
       });
 
-      $("#edit-projekt-tabs").on("change.zf.tabs", function() {
+      $("#projekts-tabs, #edit-projekt-tabs").on("change.zf.tabs", function() {
         if ($("#tab-projekt-map:visible").length) {
           App.Map.destroy();
           App.Map.initialize();

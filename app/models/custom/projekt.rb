@@ -16,7 +16,8 @@ class Projekt < ApplicationRecord
   has_many :projekt_phases, dependent: :destroy
   has_one :debate_phase, class_name: 'ProjektPhase::DebatePhase'
   has_one :proposal_phase, class_name: 'ProjektPhase::ProposalPhase'
-  has_many :geozones, through: :projekt_phases
+  has_many :geozone_limitations, through: :projekt_phases
+  has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
 
   has_many :projekt_settings, dependent: :destroy
   has_many :projekt_notifications, dependent: :destroy
@@ -32,8 +33,14 @@ class Projekt < ApplicationRecord
   scope :top_level, -> { where(parent: nil) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
 
-  scope :top_level_active, -> { top_level.with_order_number.where( "total_duration_active = ? and (total_duration_end IS NULL OR total_duration_end >= ?)", true, Date.today) }
-  scope :top_level_archived, -> { top_level.with_order_number.where( "total_duration_active = ? and total_duration_end < ?", true, Date.today) }
+  scope :top_level_active, -> { top_level.with_order_number.where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).joins(:projekt_settings).where( projekt_settings: { key: 'projekt_feature.main.activate', value: 'active' }) }
+  scope :top_level_archived, -> { top_level.with_order_number.where( "total_duration_end < ?", Date.today).joins(:projekt_settings).where( projekt_settings: { key: 'projekt_feature.main.activate', value: '' }) }
+
+  scope :top_level_active_top_menu, -> { top_level.with_order_number.
+                                         where("total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
+                                         joins('INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                         joins('INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
+                                         where("a.key": "projekt_feature.main.activate", "a.value": "active", "b.key": "projekt_feature.general.show_in_navigation", "b.value": "active").distinct }
 
   def all_children_ids(all_children_ids = [])
     if self.children.any?

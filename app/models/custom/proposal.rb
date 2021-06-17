@@ -3,7 +3,8 @@ class Proposal < ApplicationRecord
 
   belongs_to :projekt, optional: true
   has_one :proposal_phase, through: :projekt
-  has_many :geozones, through: :proposal_phase
+  has_many :geozone_restrictions, through: :proposal_phase
+  has_many :geozone_affiliations, through: :projekt
 
   validates :projekt_id, presence: true, if: :require_a_projekt?
   validate :description_sanitized

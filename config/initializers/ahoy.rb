@@ -15,6 +15,3 @@ Ahoy.server_side_visits = :when_needed
 
 # better user agent parsing
 Ahoy.user_agent_parser = :device_detector
-
-Ahoy.mask_ips = true
-Ahoy.cookies = false

@@ -27,6 +27,15 @@ class PagesController < ApplicationController
       @latest_polls = Poll.where(projekt: @custom_page.projekt).current.order(created_at: :asc).limit(3)
 
       @cards = @custom_page.cards
+
+      @geozones = Geozone.all
+
+      @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
+      @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+
+      @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
+      @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+
       render action: :custom_page
     elsif @custom_page.present?
       @cards = @custom_page.cards

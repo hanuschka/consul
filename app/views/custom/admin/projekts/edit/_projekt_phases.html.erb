@@ -1,3 +1,7 @@
+<h2><%= t("custom.admin.projekts.edit.projekt_phases_tab.main_block_title") %></h2>
+<%= render partial: "admin/projekts/edit/projekt_phases/settings_table", locals: { features: @projekt_features_main } %>
+
+
 <h2><%= t("custom.admin.projekts.edit.projekt_phases_tab.page_block_title") %></h2>
 <table class="cms-page-list">
   <thead>
@@ -51,7 +55,7 @@
     </thead>
     <tbody>
 
-      <tr class= <%= 'fieldset-disabled' unless @projekt.top_level?  %>>
+      <tr class= "<%= 'fieldset-disabled' unless @projekt.top_level? %> projekt_phase_settings" >
         <td>
           <%= t("custom.admin.projekts.edit.projekt_phases_tab.projekt_duration") %>
         </td>
@@ -62,7 +66,13 @@
           <%= f.date_field :total_duration_end, disabled: (true unless @projekt.top_level?), label: t("custom.admin.projekts.edit.projekt_phases_tab.end_date")  %>
         </td>
         <td>
-          <%= f.check_box :total_duration_active, { label: t("custom.admin.projekts.edit.projekt_phases_tab.activate"), disabled: (true unless @projekt.top_level?) }  %>
+        </td>
+      </tr>
+
+      <tr class="projekt_phase_geozones">
+        <td></td>
+        <td colspan="3">
+          <%= render partial: 'custom/admin/projekts/edit/projekt_phases/phase_geozone_affiliation', locals: { f: f } %>
         </td>
       </tr>
 

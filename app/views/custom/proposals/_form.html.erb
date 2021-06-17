@@ -56,8 +56,12 @@
       </div>
     -->
 
+    <div class="small-12 column margin-top">
+      <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @proposal }  %>
+    </div>
+
     <% if feature?(:map) %>
-      <div class="small-12 column">
+      <div class="small-12 column" id='map-for-new-proposal'>
 
         <%= render "map_locations/form_fields",
                    form:     f,
@@ -70,10 +74,6 @@
 
       </div>
     <% end %>
-
-    <div class="small-12 column margin-top">
-      <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @proposal }  %>
-    </div>
 
     <%if extended_feature?("enable_categories") %>
       <div class="small-12 column margin-bottom">

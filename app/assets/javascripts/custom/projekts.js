@@ -87,7 +87,9 @@
       var currentPageUrl = new URL(window.location.href);
       var currentProjektIds;
       var currentGeoZoneRestriction;
-      var currentGeoZoneIds;
+      var currentRestrictedGeoZoneIds;
+      var currentGeoZoneAffiliation;
+      var currentAffiliatedGeoZoneIds;
       var currentTags;
 
       if (currentPageUrl.searchParams.get('projekts')) {
@@ -102,10 +104,22 @@
         currentGeoZoneRestriction = '';
       }
 
-      if (currentPageUrl.searchParams.get('geozones')) {
-        currentGeoZoneIds = currentPageUrl.searchParams.get('geozones').split(',');
+      if (currentPageUrl.searchParams.get('restricted_geozones')) {
+        currentRestrictedGeoZoneIds = currentPageUrl.searchParams.get('restricted_geozones').split(',');
       } else {
-        currentGeoZoneIds = [];
+        currentRestrictedGeoZoneIds = [];
+      }
+
+      if (currentPageUrl.searchParams.get('geozone_affiliation')) {
+        currentGeoZoneAffiliation = currentPageUrl.searchParams.get('geozone_affiliation');
+      } else {
+        currentGeoZoneAffiliation = '';
+      }
+
+      if (currentPageUrl.searchParams.get('affiliated_geozones')) {
+        currentAffiliatedGeoZoneIds = currentPageUrl.searchParams.get('affiliated_geozones').split(',');
+      } else {
+        currentAffiliatedGeoZoneIds = [];
       }
 
       if (currentPageUrl.searchParams.get('tags')) {
@@ -121,7 +135,9 @@
       var clickedUrl = new URL(clickedLink);
       var newProjektId;
       var newGeoZoneRestriction;
-      var newGeoZoneId;
+      var newRestrictedGeoZoneId;
+      var newGeoZoneAffiliation;
+      var newAffiliatedGeoZoneId;
       var newTag;
 
       if (clickedUrl.searchParams.get('projekts')) {
@@ -150,21 +166,48 @@
         }
       }
 
-      if (clickedUrl.searchParams.get('geozones')) {
-        newGeoZoneId = clickedUrl.searchParams.get('geozones').split(',')[0];
+      if (clickedUrl.searchParams.get('restricted_geozones')) {
+        newRestrictedGeoZoneId = clickedUrl.searchParams.get('restricted_geozones').split(',')[0];
 
-        if (currentGeoZoneIds.includes(newGeoZoneId)) {
-          var index = currentGeoZoneIds.indexOf(newGeoZoneId);
+        if (currentRestrictedGeoZoneIds.includes(newRestrictedGeoZoneId)) {
+          var index = currentRestrictedGeoZoneIds.indexOf(newRestrictedGeoZoneId);
           if (index > -1) {
-            currentGeoZoneIds.splice(index, 1);
+            currentRestrictedGeoZoneIds.splice(index, 1);
           }
-          currentPageUrl.searchParams.set('geozones', currentGeoZoneIds.join(','))
+          currentPageUrl.searchParams.set('restricted_geozones', currentRestrictedGeoZoneIds.join(','))
           currentPageUrl.searchParams.set('geozone_restriction', 'only_geozones')
         } else {
-          currentGeoZoneIds.push(newGeoZoneId)
-          currentGeoZoneIds = currentGeoZoneIds.filter( function(element) { return element !== '' } )
-          currentPageUrl.searchParams.set('geozones', currentGeoZoneIds.join(','))
+          currentRestrictedGeoZoneIds.push(newRestrictedGeoZoneId)
+          currentRestrictedGeoZoneIds = currentRestrictedGeoZoneIds.filter( function(element) { return element !== '' } )
+          currentPageUrl.searchParams.set('restricted_geozones', currentRestrictedGeoZoneIds.join(','))
           currentPageUrl.searchParams.set('geozone_restriction', 'only_geozones')
+        }
+      }
+
+      if (clickedUrl.searchParams.get('geozone_affiliation')) {
+        newGeoZoneAffiliation = clickedUrl.searchParams.get('geozone_affiliation');
+
+        if (currentGeoZoneAffiliation == newGeoZoneAffiliation) {
+          currentPageUrl.searchParams.set('geozone_affiliation', '')
+        } else {
+          currentPageUrl.searchParams.set('geozone_affiliation', newGeoZoneAffiliation)
+        }
+      }
+      if (clickedUrl.searchParams.get('affiliated_geozones')) {
+        newAffiliatedGeoZoneId = clickedUrl.searchParams.get('affiliated_geozones').split(',')[0];
+
+        if (currentAffiliatedGeoZoneIds.includes(newAffiliatedGeoZoneId)) {
+          var index = currentAffiliatedGeoZoneIds.indexOf(newAffiliatedGeoZoneId);
+          if (index > -1) {
+            currentAffiliatedGeoZoneIds.splice(index, 1);
+          }
+          currentPageUrl.searchParams.set('affiliated_geozones', currentAffiliatedGeoZoneIds.join(','))
+          currentPageUrl.searchParams.set('geozone_affiliation', 'only_geozones')
+        } else {
+          currentAffiliatedGeoZoneIds.push(newAffiliatedGeoZoneId)
+          currentAffiliatedGeoZoneIds = currentAffiliatedGeoZoneIds.filter( function(element) { return element !== '' } )
+          currentPageUrl.searchParams.set('affiliated_geozones', currentAffiliatedGeoZoneIds.join(','))
+          currentPageUrl.searchParams.set('geozone_affiliation', 'only_geozones')
         }
       }
 
@@ -186,6 +229,20 @@
 
       window.history.pushState('', '', currentPageUrl)
       window.location.href = currentPageUrl.href;
+
+    },
+
+    replaceProjektMapOnProposalCreation: function($label, $radioButton) {
+
+      var defaultLat = $("#projekt-tags-selector").attr('data-default-map-latitude')
+      var defaultLng = $("#projekt-tags-selector").attr('data-default-map-longitude')
+      var defaultZoom = $("#projekt-tags-selector").attr('data-default-map-zoom')
+
+      if ($radioButton.is(':checked')) {
+        App.Map.maps[0].setView([$label.attr('data-latitude'), $label.attr('data-longitude')], $label.attr('data-zoom'))
+      } else {
+        App.Map.maps[0].setView([defaultLat, defaultLng], defaultZoom)
+      }
 
     },
 
@@ -217,11 +274,11 @@
         var $radioButton = $label.find(":radio").first()
         App.Projekts.highlightLabel($label);
 
-        if ( $radioButton.is(":checked") ) {
-          $radioButton.prop( "checked", false);
-        } else {
-          $radioButton.prop( "checked", true );
-        }
+        $radioButton.prop( "checked", !$radioButton.prop( "checked") );
+
+        $label.toggleClass('selected')
+
+        App.Projekts.replaceProjektMapOnProposalCreation($label, $radioButton)
       });
 
       $("body").on("click", ".js-filter-projekt", function() {

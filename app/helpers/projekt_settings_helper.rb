@@ -6,6 +6,7 @@ module ProjektSettingsHelper
 
   def disable_feature?(projekt, feature)
     return true if ( !@projekt.top_level? && ( feature.key == "projekt_feature.general.show_in_navigation" ))
+    return true if ( !@projekt.top_level? && ( feature.key == "projekt_feature.main.activate" ))
     false
   end
 

@@ -192,8 +192,11 @@
 
         <% if params[:retired].blank? %>
           <%= render "shared/projekts_sidebar" %>
+          <%= render "shared/sidebar_filter/geozone_affiliations" %>
           <% if extended_feature?('show_geozone_filter_in_sidebar') %>
-            <%= render "shared/sidebar_filter/geozones_sidebar" %>
+          <% end %>
+          <% unless skip_user_verification? %>
+            <%= render "shared/sidebar_filter/geozone_restrictions" %>
           <% end %>
           <%= render "shared/categories", taggable: "proposal" %>
           <%= render "shared/tag_cloud", taggable: "proposal" %>

@@ -22,7 +22,7 @@ class ProjektSetting < ApplicationRecord
   end
 
   def projekt_feature_type
-    if %w[general sidebar footer].include? projekt_feature_prefix
+    if %w[main general sidebar footer].include? projekt_feature_prefix
       projekt_feature_prefix
     else
       "configuration"
@@ -33,8 +33,10 @@ class ProjektSetting < ApplicationRecord
 
     def defaults
       {
-        "projekt_feature.general.show_in_navigation": nil,
-        "projekt_feature.general.show_not_active_phases_in_projekts_page_sidebar": nil,
+        "projekt_feature.main.activate": '',
+
+        "projekt_feature.general.show_in_navigation": '',
+        "projekt_feature.general.show_not_active_phases_in_projekts_page_sidebar": '',
 
         "projekt_feature.sidebar.projekt_page_sharing": 'active',
         "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": 'active',
@@ -43,12 +45,12 @@ class ProjektSetting < ApplicationRecord
 
         "projekt_feature.footer.show_projekt_footer": 'active',
         "projekt_feature.footer.show_comments_in_projekt_footer": 'active',
-        "projekt_feature.footer.show_notifications_in_projekt_footer": nil,
-        "projekt_feature.footer.show_milestones_in_projekt_footer": nil,
-        "projekt_feature.footer.show_newsfeed_in_projekt_footer": nil,
+        "projekt_feature.footer.show_notifications_in_projekt_footer": '',
+        "projekt_feature.footer.show_milestones_in_projekt_footer": '',
+        "projekt_feature.footer.show_newsfeed_in_projekt_footer": '',
 
-        "projekt_newsfeed.id": nil,
-        "projekt_newsfeed.type": nil
+        "projekt_newsfeed.id": '',
+        "projekt_newsfeed.type": ''
       }
     end
 

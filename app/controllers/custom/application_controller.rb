@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_active_and_archived_projekts
-    @active_projekts = Projekt.top_level_active.joins(:projekt_settings).where("projekt_settings.key = 'projekt_feature.general.show_in_navigation' AND projekt_settings.value = 'active'").distinct
+    @active_projekts = Projekt.top_level_active_top_menu
     @archived_projekts = Projekt.top_level_archived
   end
 

@@ -1,4 +1,4 @@
-#filter-geozones {
+.geozone-filter {
 
   ul {
     list-style-type: none;
@@ -32,25 +32,25 @@
     top: 0;
   }
 
-  span.checkmark::before {
+  .checkmark::before {
      content: "\f111";
      font-family: 'Font Awesome 5 Free';
      font-weight: normal;
   }
 
-  input:checked ~ span.checkmark::before {
+  input:checked ~ .checkmark::before {
      content: "\f192";
   }
 
-  li + ul#geozones-list {
+  li + ul.geozones-list {
     display: none;
   }
 
-  li.label-selected + ul#geozones-list {
+  li.label-selected + ul.geozones-list {
     display: block;
   }
 
-  #geozones-list {
+  .geozones-list {
     .checkmark {
       position: absolute;
       top: 5px;
@@ -79,23 +79,9 @@
       border: 1.5px solid #06408E;
     }
 
-    .checkmark:before {
-      content: "";
-      position: absolute;
-      display: none;
-      left: 4px;
-      top: 1px;
-      width: 4px;
-      height: 7px;
-      border: 1.5px solid #fff;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
-
-
-
     input:checked ~ .checkmark:before {
       display: block;
+      content: '';
     }
   }
 

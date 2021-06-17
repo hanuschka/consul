@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_04_074939) do
+ActiveRecord::Schema.define(version: 2021_06_14_143732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -644,6 +644,12 @@ ActiveRecord::Schema.define(version: 2021_06_04_074939) do
     t.integer "poll_id"
     t.index ["geozone_id"], name: "index_geozones_polls_on_geozone_id"
     t.index ["poll_id"], name: "index_geozones_polls_on_poll_id"
+  end
+
+  create_table "geozones_projekts", id: false, force: :cascade do |t|
+    t.bigint "geozone_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "geozone_id"], name: "index_geozones_projekts_on_projekt_id_and_geozone_id", unique: true
   end
 
   create_table "i18n_content_translations", id: :serial, force: :cascade do |t|
@@ -1282,13 +1288,12 @@ ActiveRecord::Schema.define(version: 2021_06_04_074939) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "order_number"
-    t.boolean "total_duration_active"
     t.date "total_duration_start"
     t.date "total_duration_end"
-    t.boolean "show_in_navigation"
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
     t.integer "author_id"
+    t.string "geozone_affiliated"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 
@@ -1659,7 +1664,7 @@ ActiveRecord::Schema.define(version: 2021_06_04_074939) do
     t.datetime "date_of_birth"
     t.boolean "email_on_proposal_notification", default: true
     t.boolean "email_digest", default: true
-    t.boolean "email_on_direct_message", default: true
+    t.boolean "email_on_direct_message", default: false
     t.boolean "official_position_badge", default: false
     t.datetime "password_changed_at", default: "2015-01-01 01:01:01", null: false
     t.boolean "created_from_signature", default: false
@@ -1669,6 +1674,8 @@ ActiveRecord::Schema.define(version: 2021_06_04_074939) do
     t.boolean "public_interests", default: false
     t.boolean "recommended_debates", default: true
     t.boolean "recommended_proposals", default: true
+    t.string "plz"
+    t.boolean "plz_consent"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["geozone_id"], name: "index_users_on_geozone_id"

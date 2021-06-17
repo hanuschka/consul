@@ -16,7 +16,10 @@
       </small>
     <% end %>
 
-    <div id="projekt-tags-selector">
+    <div id="projekt-tags-selector"
+         data-default-map-latitude=<%= Setting["map.latitude"] %>
+         data-default-map-longitude=<%= Setting["map.longitude"] %>
+         data-default-map-zoom=<%= Setting["map.zoom"] %>    >
 
       <div class="projekt-tags-column">
         <% if projekts.any? { |projekt| projekt.children.any? } %>

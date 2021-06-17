@@ -50,7 +50,7 @@ de:
         email_on_comment: E-Mail-Benachrichtigung erhalten, bei Kommentare zu meinen Aktivitäten
         email_on_comment_reply: E-Mail-Benachrichtigung erhalten, bei Antworten auf meine Kommentare
         newsletter: E-Mail-Benachrichtigung erhalten, bei wichtigen System-Infos
-        email_digest: E-Mail-Benachrichtigung erhalten, bei wichtigen System-Infos
+        email_digest: Erhalten Sie eine Zusammenfassung der Benachrichtigungen zu Vorschlägen
         email_on_direct_message: Private Nachrichten per Mail zulassen
 
       show:
@@ -67,6 +67,10 @@ de:
           extended_settings: Erweiterte Einstellungen
           extended_features: Erweiterte Funktionen
           extended_options: Erweiterte Konfigurationseinstellungen
+          features:
+            activate:
+              enabled: Projekt aktiviert
+              disabled: Projekt deaktiviert
 
       menu:
         projekts: Projekte
@@ -101,7 +105,8 @@ de:
         destroy: Löschen
         edit:
           projekt_phases_tab:
-            name: Projektseite & -phasen
+            name: Projekteinstellungen
+            main_block_title: Projektstatus
             page_block_title: Projektseite
             phases_block_title: Projektphasen
             phase_name: Phase
@@ -118,7 +123,7 @@ de:
             voting_manage: Abstimmungen verwalten
           projekt_settings_tab:
             name: Projektfunktionen
-            general_settings: Allgemeine Einstellungen
+            general_settings: Allgemein
             sidebar_settings: Seitenleiste
             footer_settings: Fußzeile
           projekt_map_tab:
@@ -159,7 +164,7 @@ de:
         title: 'Projekte'
         title_active: 'Aktive Projekte'
         title_archived: 'Abgelaufene Projekte'
-        filter_button: 'Projekte filtern'
+        filter_button: Nach Projekte filtern
       errors:
         presence: 'Bitte wählen Sie ein Projekt'
       backlink: Zur Projektübersicht
@@ -171,13 +176,30 @@ de:
           proposal_description: Bitte ordnen Sie Ihren Vorschlag einem der nachfolgenden Projekte oder Unterprojekte zu. Dies dient dazu, dass die Vorschläge in der Vorschlagsübersicht besser auffindbar sind.
     geozones:
       sidebar_filter:
-        all_resources: "Alle %{resource_name}"
-        no_restriction: Ohne Gebietszuordnung
-        only_citizens: Ganze Stadt
-        only_geozones: Zuordnung zu Stadtteilen
-        show_more: Mehr anzeigen
-        title: Gebiete
-        filter_button: Gebiete filtern
+        affiliations:
+          title: Gebiete
+          all_resources: "Alle %{resource_name}"
+          no_affiliation: Keine Gebietszuordnung
+          entire_city: "Stadtweite %{resource_name}"
+          entire_city_short: "Stadtweit"
+          only_geozones: Zuordnung zu Stadtteil
+          filter_button: Nach Gebiete filtern
+        restrictions:
+          title: Partizipation
+          no_restriction: Alle Nutzer:innen der Plattform
+          only_citizens: Nur Bürger:innen der Stadt
+          only_geozones: Nur Bürger:innen des Stadtteils
+          show_more: Mehr anzeigen
+          filter_button: Nach Partizipation filtern
+      projekt_selector:
+        affiliations:
+          no_affiliation: Keine Gebietszuordnung
+          entire_city: "Stadtweit"
+          only_geozones: Zuordnung zu Stadtteil
+        restrictions:
+          no_restriction: Alle Nutzer:innen der Plattform
+          only_citizens: Nur Bürger:innen der Stadt
+          only_geozones: Nur Bürger:innen des Stadtteils
     proposals:
       form:
         tags_custom: Nutzer-Tags

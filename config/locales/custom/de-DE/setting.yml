@@ -80,6 +80,9 @@ de:
         show_module_links_in_flyout_menu_description: Zeigt die die Modul-Links unterhalb einzelner Dropdown-Einträge an
 
       projekt_feature:
+        main:
+          activate: Projekt aktivieren
+          activate_description: Aktivieren Sie das Projekt, sodass es in der Applikation sichtbar ist
         general:
           show_in_navigation: Projekt in Navigation anzeigen
           show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
@@ -101,7 +104,7 @@ de:
           show_comments_in_projekt_footer_description: Aktiviert die Kommentarfunktion in der Fußzeile eines Projekts
           show_notifications_in_projekt_footer: Benachrichtigungen
           show_notifications_in_projekt_footer_description: Aktiviert die Benachrichtigungsfunktion in der Fußzeile eines Projekts
-          show_milestones_in_projekt_footer: Milensteine
+          show_milestones_in_projekt_footer: Meilensteine
           show_milestones_in_projekt_footer_description: Aktiviert die Meilensteinfunktion in der Fußzeile eines Projekts
           show_newsfeed_in_projekt_footer: News-Feed
           show_newsfeed_in_projekt_footer_description: Aktiviert den News-Feed in der Fußzeile eines Projekts

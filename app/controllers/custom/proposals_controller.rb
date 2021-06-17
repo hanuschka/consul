@@ -39,6 +39,12 @@ class ProposalsController
     set_geozone
     set_resource_instance
     @projekts = Projekt.top_level
+
+    @selected_projekt = Projekt.find(params[:projekt]) if params[:projekt]
+  end
+
+  def edit
+    @selected_projekt = @proposal.projekt
   end
 
   def show
@@ -52,6 +58,9 @@ class ProposalsController
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently
     end
+
+    @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
   end
 
   def unvote

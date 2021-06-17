@@ -239,9 +239,15 @@
       var defaultZoom = $("#projekt-tags-selector").attr('data-default-map-zoom')
 
       if ($radioButton.is(':checked')) {
-        App.Map.maps[0].setView([$label.attr('data-latitude'), $label.attr('data-longitude')], $label.attr('data-zoom'))
+        if ($label.hasClass('hide-map')) {
+          $('#map-for-new-proposal').addClass('hide')
+        } else {
+          $('#map-for-new-proposal').removeClass('hide')
+          App.Map.maps[0].setView([$label.attr('data-latitude'), $label.attr('data-longitude')], $label.attr('data-zoom')).invalidateSize()
+        }
       } else {
-        App.Map.maps[0].setView([defaultLat, defaultLng], defaultZoom)
+        $('#map-for-new-proposal').removeClass('hide')
+        App.Map.maps[0].setView([defaultLat, defaultLng], defaultZoom).invalidateSize()
       }
 
     },

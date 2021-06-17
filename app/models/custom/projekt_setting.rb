@@ -37,6 +37,7 @@ class ProjektSetting < ApplicationRecord
 
         "projekt_feature.general.show_in_navigation": '',
         "projekt_feature.general.show_not_active_phases_in_projekts_page_sidebar": '',
+        "projekt_feature.general.show_map": 'active',
 
         "projekt_feature.sidebar.projekt_page_sharing": 'active',
         "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": 'active',

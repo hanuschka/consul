@@ -53,4 +53,9 @@ module ProposalsHelper
     return @proposal.errors[:description].join(', ') if @proposal.errors.any? && @proposal.errors[field].present?
     ""
   end
+
+  def show_map_in_form?(projekt)
+    return '' if projekt.nil?
+    return 'hide' unless projekt_feature?(@selected_projekt, "general.show_map")
+  end
 end

@@ -88,6 +88,8 @@ de:
           show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
           show_not_active_phases_in_projekts_page_sidebar: Nicht aktive Teilnahmephasen
           show_not_active_phases_in_projekts_page_sidebar_description: "Zeigt die Phasen \"Diskussionen\", \"Vorschläge\" und \"Abstimmungen\" an, auch wenn diese nicht aktiviert sind"
+          show_map: Karte einblenden
+          show_map_description: Zeigt die Karte sowie die Gebietszuordnung in der Applikation an
         sidebar:
           projekt_page_sharing: Teilen-Funktion
           projekt_page_sharing_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste der Projektseite

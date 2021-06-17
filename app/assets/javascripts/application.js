@@ -122,6 +122,7 @@
 //= require geozones
 //= require expand_proposals_map
 //= require gdpr_notice
+//= require map_refresh
 //= require_tree ./sdg
 //= require_tree ./sdg_management
 
@@ -187,6 +188,7 @@ var initialize_modules = function() {
   App.Geozones.initialize();
   App.ExpandProposalsMap.initialize();
   App.GDPRNotice.initialize();
+  App.MapRefresh.initialize();
 };
 
 var destroy_non_idempotent_modules = function() {

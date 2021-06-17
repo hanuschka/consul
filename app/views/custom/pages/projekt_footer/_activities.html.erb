@@ -1,23 +1,6 @@
 <div class="tabs-panel is-active" id="tab-activities">
 
 
-  <% if feature?(:map) %>
-    <div class="row">
-      <div class="column">
-        <div class="map inline" id='projekt-map'>
-          <%= render_map(projekt.map_location, "proposals", false, nil, @proposals_coordinates) %>
-        </div>
-
-        <div class='expand-proposals-overview-map small js-expand-proposals-overview-map'>
-          <%= t('custom.proposals.index.show_larger_map') %>
-        </div>
-        <div class="clear"></div>
-      </div>
-    </div>
-
-    <div class="no-bullet margin-top">
-    </div>
-  <% end %>
 
 
   <div class="most-active-resources row">
@@ -32,18 +15,18 @@
             data-deep-link-smudge-delay="500"
             data-tabs>
 
-          <% if show_projekt_phase_in_projekt_page?(projekt, 'proposal_phase') %>
-            <li class="tabs-title <%= active_tab_in_activity?(projekt, 'proposals') %>" id="projekt-most-active-proposals-tab">
-              <%= link_to "#tab-projekt-most-active-proposals" do %>
-                <%= t("custom.projekt.footer.show.most_active_proposals") %>
-              <% end %>
-            </li>
-          <% end %>
-
           <% if show_projekt_phase_in_projekt_page?(projekt, 'debate_phase') %>
             <li class="tabs-title <%= active_tab_in_activity?(projekt, 'debates') %>" id="projekt-most-active-debates-tab">
               <%= link_to "#tab-projekt-most-active-debates" do %>
                 <%= t("custom.projekt.footer.show.most_active_debates") %>
+              <% end %>
+            </li>
+          <% end %>
+
+          <% if show_projekt_phase_in_projekt_page?(projekt, 'proposal_phase') %>
+            <li class="tabs-title <%= active_tab_in_activity?(projekt, 'proposals') %>" id="projekt-most-active-proposals-tab">
+              <%= link_to "#tab-projekt-most-active-proposals" do %>
+                <%= t("custom.projekt.footer.show.most_active_proposals") %>
               <% end %>
             </li>
           <% end %>
@@ -60,6 +43,24 @@
 
         <div class="tabs-panel <%= active_tab_in_activity?(projekt, 'proposals') %>" id="tab-projekt-most-active-proposals">
           <% if projekt_phase_active?(projekt, 'proposal_phase') %>
+
+            <% if projekt_feature?(projekt, "general.show_map") %>
+              <div class="row">
+                <div class="column">
+                  <div class="map inline" id='projekt-map'>
+                    <%= render_map(projekt.map_location, "proposals", false, nil, @proposals_coordinates) %>
+                  </div>
+
+                  <div class='expand-proposals-overview-map small js-expand-proposals-overview-map'>
+                    <%= t('custom.proposals.index.show_larger_map') %>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </div>
+
+              <div class="no-bullet margin-top">
+              </div>
+            <% end %>
 
             <div class="row">
               <% if projekt_phase_selectable?(projekt, 'proposal_phase') %>

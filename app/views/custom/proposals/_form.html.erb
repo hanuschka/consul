@@ -61,7 +61,7 @@
     </div>
 
     <% if feature?(:map) %>
-      <div class="small-12 column" id='map-for-new-proposal'>
+      <div class="small-12 column <%= show_map_in_form?(@selected_projekt) %>" id='map-for-new-proposal'>
 
         <%= render "map_locations/form_fields",
                    form:     f,

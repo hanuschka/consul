@@ -113,6 +113,7 @@
         marker = createMarker(markerLatitude, markerLongitude);
       }
       if (editable) {
+        $('.js-select-projekt').on("click", removeMarker);
         $(removeMarkerSelector).on("click", removeMarker);
         map.on("zoomend", function() {
           if (marker) {

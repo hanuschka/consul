@@ -12,14 +12,14 @@
         <%= t("custom.admin.projekts.edit.projekt_activated") %>
       </div> 
       <div>
-        <%= t("custom.admin.projekts.edit.show_in_navigation")[projekt.total_duration_active] %>
+        <%= t("custom.admin.projekts.edit.show_in_navigation")[projekt_feature?(projekt, 'main.activate')] %>
       </div> 
 
       <div>
         <%= t("custom.admin.projekts.edit.show_in_navigation_checkbox") %>
       </div> 
       <div>
-        <%= t("custom.admin.projekts.edit.show_in_navigation")[projekt.show_in_navigation] %>
+        <%= t("custom.admin.projekts.edit.show_in_navigation")[projekt_feature?(projekt, 'general.show_in_navigation')] %>
       </div> 
 
 
@@ -71,7 +71,7 @@
           <%= t("custom.admin.projekts.edit.projekt_phase_limitation") %>
         </div>
         <div>
-          <%=  get_projekt_phase_limitations(projekt&.debate_phase) %>
+          <%=  get_projekt_phase_restriction_name(projekt&.debate_phase) %>
         </div>
       </div>
 
@@ -86,7 +86,7 @@
           <%= t("custom.admin.projekts.edit.projekt_phase_limitation") %>
         </div>
         <div>
-          <%=  get_projekt_phase_limitations(projekt&.debate_phase) %>
+          <%=  get_projekt_phase_restriction_name(projekt&.proposal_phase) %>
         </div>
       </div>
 

@@ -132,16 +132,18 @@ class Setting < ApplicationRecord
         "sdg.process.polls": true,
         "sdg.process.budgets": true,
         "sdg.process.legislation": true,
-        "projekts.connected_resources": false,
-        "projekts.projekt_page_sharing": false,
+        "projekts.connected_resources": true,
+        # "projekts.projekt_page_sharing": true,
         "projekts.show_archived.navigation": true,
         "projekts.show_archived.sidebar": true,
-        "projekts.show_phases_in_projekt_page_sidebar": true,
-        "projekts.show_total_duration_in_projekts_page_sidebar": true,
-        "projekts.show_not_active_phases_in_projekts_page_sidebar": true,
-        "projekts.show_navigator_in_projekts_page_sidebar": true,
+        # "projekts.show_phases_in_projekt_page_sidebar": true,
+        # "projekts.show_total_duration_in_projekts_page_sidebar": true,
+        # "projekts.show_not_active_phases_in_projekts_page_sidebar": true,
+        # "projekts.show_navigator_in_projekts_page_sidebar": true,
         "projekts.show_module_links_in_flyout_menu": true,
+        "projekts.show_map_fallback": true,
         "extended_feature.gdpr_conformity": false,
+        "extended_feature.show_cookie_banner": true,
         "extended_feature.link_out_warning": false,
         "extended_feature.two_click_iframe_solution": false,
         "extended_feature.extended_editor_for_admins": false,
@@ -167,7 +169,9 @@ class Setting < ApplicationRecord
         "extended_feature.show_geozone_filter_in_sidebar": false,
         "extended_feature.elasticsearch": false,
         "extended_option.max_active_proposals_per_user": 100,
-        "extended_option.description_max_length": 6000
+        "extended_option.description_max_length": 6000,
+        "extended_option.devise_timeout_min": 30,
+        "extended_option.devise_verification_token_validity_days": 3
       }
     end
 

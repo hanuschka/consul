@@ -214,35 +214,14 @@ div.projekt-phase-geozone-restriction-selector {
   input.proposal_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.proposal_phase {
     display: block;
   }
+
+  input#projekt_geozone_affiliated_only_geozones:checked ~ .projekt-phase-geozone-selector {
+    display: block;
+  }
 }
 
 
 // Index and new views
-
-
-.projekt-phase-button {
-  padding: 0.3rem 0.5rem;
-  display: inline-block;
-  background: $brand;
-  color: $white;
-  text-decoration: none !important;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  width: 190px;
-  text-align: center;
-  margin-top: 0.5em;
-
-  &:hover {
-    color: $white;
-  }
-
-  &:focus {
-    color: $white;
-    outline: none;
-  }
-}
-
-
 
 #projekt-tags {
   margin: 1em 0;
@@ -288,11 +267,24 @@ div.projekt-phase-geozone-restriction-selector {
   input:not(:checked) ~ .checkmark-wrapper > .checkmark {
     background: #fff;
     border: 1.5px solid #C6C6C6;
-  }
+	}
 
   input:checked ~ .checkmark-wrapper > .checkmark {
+    background: #fff;
+    border: 1.5px solid #06408E;
+  }
+
+  input:checked ~ .checkmark-wrapper > .checkmark::after {
     background: #06408E;
     border: 1.5px solid #06408E;
+    content: "";
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
   }
 
   label {
@@ -476,4 +468,76 @@ span.projekt-backlink:before {
   font-weight: normal;
   font-family: 'Font Awesome 5 Free';
   opacity: 0.9;
+}
+
+
+
+// Projekt notifications
+
+.admin .projekt-notification {
+  position: relative;
+
+  input[type='checkbox'] {
+    display: none;
+  }
+
+  .edit-projekt-notification-form {
+    display: none;
+  }
+
+  input:checked ~ .projekt-notification-content {
+    display: none;
+  }
+
+  input:checked ~ .edit-projekt-notification-form {
+    display: block;
+  }
+  
+  .edit-projekt-notification {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .edit-projekt-notification::before {
+    content: "\f044";
+    font-weight: normal;
+    font-family: 'Font Awesome 5 Free';
+    color: #004a83;
+  }
+
+  .delete-projekt-notification {
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .delete-projekt-notification::before {
+    content: "\f2ed";
+    font-weight: normal;
+    font-family: 'Font Awesome 5 Free';
+    color: #cc4b37;
+  }
+}
+
+// Projekt page footer
+
+.projekt-footer {
+  margin-top: 5em;
+}
+
+#tab-activities .most-active-resources {
+  .tabs-panel {
+    padding: 0;
+  }
+
+  .all-projekt-resources-link {
+    float: right;
+    color: #CE003E;
+    padding-top: 0.5rem;
+  }
 }

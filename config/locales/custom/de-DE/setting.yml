@@ -1,6 +1,9 @@
 de:
   custom:
     settings:
+      feature:
+        map: Karte standardmäßig einblenden
+        map_description: Zeigt die Standardkarte bei Projekten, die keine individuelle Karte festgelegt haben
       extended_feature:
         enable_categories: Tags
         enable_categories_description: Aktivieren Sie die Auswahl vordefinierter Tags
@@ -52,6 +55,8 @@ de:
         enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
         enable_proposal_milestones_tab: Meilensteine in Vorschlägen
         enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
+        show_cookie_banner: Cookies Banner anzeigen
+        show_cookie_banner_description: Aktivieren Sie den Cookie-Banner, um Nutzer:innen auf Tracking hinzuweisen
 
 
 
@@ -60,25 +65,59 @@ de:
         max_active_proposals_per_user_description: Legen Sie die maximale Anzahl an aktiven Vorschlägen pro Nutzer fest
         description_max_length: Maximale Zeichenanzahl für die Vorschlagsbeschreibung
         description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen
+        devise_timeout_min: Dauer von Nutzer-Sitzungen
+        devise_timeout_min_description: Legen Sie fest, wie lange ein Nutzer pro Sitzung eingeloggt bleiben soll in Minuten
+        devise_verification_token_validity_days: Gültigkeit des Verifikationslinks in Tagen
+        devise_verification_token_validity_days_description: Legen Sie fest, wie lange der Verifikationslink gültig ist
 
 
       projekts:
         connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Projekten
         connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
-        projekt_page_sharing: Teilen-Funktion in Projektseite
-        projekt_page_sharing_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste der Projektseite
         show_archived:
           navigation: Archivierte Projekte in Navigation anzeigen
           navigation_description: Zeigt archivierte Projekte in der Navigationsleiste wenn aktiviert
           sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
           sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
-        show_phases_in_projekt_page_sidebar: Projektphasen in Projektseite
-        show_phases_in_projekt_page_sidebar_description: Aktivieren Sie die Projektphasen in der rechten Seitenleiste der Projektseite
-        show_total_duration_in_projekts_page_sidebar: Gesamtdauer in Projektphasen
-        show_total_duration_in_projekts_page_sidebar_description: "Zeigt die Phase \"Gesamtdauer\" in den Projektphasen in der rechten Seitenleiste der Projektseite an"
-        show_not_active_phases_in_projekts_page_sidebar: Nicht aktive Teilnahmephasen
-        show_not_active_phases_in_projekts_page_sidebar_description: "Zeigt die Phasen \"Diskussionen\", \"Vorschläge\" und \"Abstimmungen an, auch wenn diese nicht aktiviert sind"
-        show_navigator_in_projekts_page_sidebar: Projektnavigation in Projektseite
-        show_navigator_in_projekts_page_sidebar_description: Zeigt die Projektnavigation in der rechten Seitenleiste der Projektseiten an
         show_module_links_in_flyout_menu: Modul-Links in den Dropdowns
         show_module_links_in_flyout_menu_description: Zeigt die die Modul-Links unterhalb einzelner Dropdown-Einträge an
+        show_map_fallback: Karte standardmäßig einblenden
+        show_map_fallback_description: Zeigt die Standardkarte bei Projekten, die keine individuelle Karte festgelegt haben
+
+      projekt_feature:
+        main:
+          activate: Projekt aktivieren
+          activate_description: Aktivieren Sie das Projekt, sodass es in der Applikation sichtbar ist
+        general:
+          show_in_navigation: Projekt in Navigation anzeigen
+          show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
+          show_not_active_phases_in_projekts_page_sidebar: Nicht aktive Teilnahmephasen
+          show_not_active_phases_in_projekts_page_sidebar_description: "Zeigt die Phasen \"Diskussionen\", \"Vorschläge\" und \"Abstimmungen\" an, auch wenn diese nicht aktiviert sind"
+          show_map: Karte einblenden
+          show_map_description: Zeigt die Karte sowie die Gebietszuordnung in der Applikation an
+        sidebar:
+          projekt_page_sharing: Teilen-Funktion
+          projekt_page_sharing_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste der Projektseite
+          show_phases_in_projekt_page_sidebar: Projektphasen
+          show_phases_in_projekt_page_sidebar_description: Aktivieren Sie die Projektphasen in der rechten Seitenleiste der Projektseite
+          show_total_duration_in_projekts_page_sidebar: Gesamtdauer des Projektes
+          show_total_duration_in_projekts_page_sidebar_description: "Zeigt die Phase \"Gesamtdauer\" in den Projektphasen in der rechten Seitenleiste der Projektseite an"
+          show_navigator_in_projekts_page_sidebar: Projektverzeichnis
+          show_navigator_in_projekts_page_sidebar_description: Zeigt die Projektverzeichnis in der rechten Seitenleiste der Projektseiten an
+        footer:
+          show_projekt_footer: Fußzeile aktivieren
+          show_projekt_footer_description: Aktiviert die Projektfußzeile mit dem Reiter \"Aktivität\"
+          show_comments_in_projekt_footer: Kommentare
+          show_comments_in_projekt_footer_description: Aktiviert die Kommentarfunktion in der Fußzeile eines Projekts
+          show_notifications_in_projekt_footer: Benachrichtigungen
+          show_notifications_in_projekt_footer_description: Aktiviert die Benachrichtigungsfunktion in der Fußzeile eines Projekts
+          show_milestones_in_projekt_footer: Meilensteine
+          show_milestones_in_projekt_footer_description: Aktiviert die Meilensteinfunktion in der Fußzeile eines Projekts
+          show_newsfeed_in_projekt_footer: News-Feed
+          show_newsfeed_in_projekt_footer_description: Aktiviert den News-Feed in der Fußzeile eines Projekts
+
+      projekt_newsfeed:
+        id: Newsfeed ID 
+        id_description:  
+        type: Newsfeed Type
+        type_description: 

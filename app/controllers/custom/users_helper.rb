@@ -14,4 +14,8 @@ module UsersHelper
      'regular'
    end
   end
+
+  def skip_user_verification?
+    Setting["feature.user.skip_verification"].present?
+  end
 end

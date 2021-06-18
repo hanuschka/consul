@@ -90,7 +90,7 @@ module ProjektsHelper
     geozone_affiliations = projekt.geozone_affiliations
 
     if geozone_affiliations.exists? && affiliation_name == 'only_geozones'
-      return  geozone_affiliations.pluck(:name).join(', ')
+      return geozone_affiliations.pluck(:name).join(', ')
     end
 
     t("custom.geozones.projekt_selector.affiliations.#{affiliation_name}" )
@@ -104,7 +104,7 @@ module ProjektsHelper
       return 'Partizipation: ' + geozone_restrictions.pluck(:name).join(', ')
     end
 
-    'Partizipation: ' + t("custom.geozones.sidebar_filter.restrictions.#{restriction_name}" )
+    t("custom.geozones.sidebar_filter.restrictions.#{restriction_name}" )
   end
 
   def related_polls(projekt, timestamp = Date.current.beginning_of_day)

@@ -19,11 +19,13 @@
   </div>
 <% end %>
 
-<div class='projekt-phase'>
-  <strong><%= t("custom.projekt.page.sidebar.general.affiliation") %></strong>
-  <br>
-  <%= get_projekt_affiliation_name(projekt) %>
-</div>
+<% if projekt_feature?(@custom_page.projekt, "general.show_map") %>
+  <div class='projekt-phase'>
+    <strong><%= t("custom.projekt.page.sidebar.general.affiliation") %></strong>
+    <br>
+    <%= get_projekt_affiliation_name(projekt) %>
+  </div>
+<% end %>
 
 
 <% if projekt_feature?(@custom_page.projekt, "sidebar.show_phases_in_projekt_page_sidebar") %>

@@ -24,11 +24,11 @@
           <%= get_projekt_phase_duration(rb.object.send(phase_name)) %>
 
           <br>
-          <%= 'Gebietszuordnung: ' + get_projekt_affiliation_name(rb.object) %>
+          <%= get_projekt_affiliation_name(rb.object) %>
  
           <% unless skip_user_verification? %>
             <br>
-            <%= 'Partizipation: ' + get_projekt_phase_restriction_name(rb.object.send(phase_name)) %>
+            <%= get_projekt_phase_restriction_name(rb.object.send(phase_name)) %>
           <% end %>
         </div>
       <% elsif phase_name %>

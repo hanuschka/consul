@@ -20,8 +20,8 @@ class Proposal < ApplicationRecord
       (
         Setting['feature.user.skip_verification'].present? ||
         projekt.blank? ||
-        proposal_phase && proposal_phase.geozones.blank? ||
-        (proposal_phase && proposal_phase.geozones.any? && proposal_phase.geozones.include?(user.geozone) )
+        proposal_phase && proposal_phase.geozone_restrictions.blank? ||
+        (proposal_phase && proposal_phase.geozone_restrictions.any? && proposal_phase.geozone_restrictions.include?(user.geozone) )
       ) &&
       (
         projekt.blank? ||

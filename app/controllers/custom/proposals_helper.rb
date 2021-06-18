@@ -55,7 +55,10 @@ module ProposalsHelper
   end
 
   def show_map_in_form?(projekt)
-    return '' if projekt.nil?
-    return 'hide' unless projekt_feature?(@selected_projekt, "general.show_map")
+    if @selected_projekt
+      projekt_feature?(@selected_projekt, "general.show_map") ? '' : 'hide'
+    else
+      Setting["projekts.show_map_fallback"] ? '' : 'hide'
+    end
   end
 end

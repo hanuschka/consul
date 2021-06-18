@@ -1,6 +1,9 @@
 de:
   custom:
     settings:
+      feature:
+        map: Karte standardmäßig einblenden
+        map_description: Zeigt die Standardkarte bei Projekten, die keine individuelle Karte festgelegt haben
       extended_feature:
         enable_categories: Tags
         enable_categories_description: Aktivieren Sie die Auswahl vordefinierter Tags
@@ -78,6 +81,8 @@ de:
           sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
         show_module_links_in_flyout_menu: Modul-Links in den Dropdowns
         show_module_links_in_flyout_menu_description: Zeigt die die Modul-Links unterhalb einzelner Dropdown-Einträge an
+        show_map_fallback: Karte standardmäßig einblenden
+        show_map_fallback_description: Zeigt die Standardkarte bei Projekten, die keine individuelle Karte festgelegt haben
 
       projekt_feature:
         main:

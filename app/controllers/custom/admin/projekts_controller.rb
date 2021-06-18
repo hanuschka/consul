@@ -8,6 +8,8 @@ class Admin::ProjektsController < Admin::BaseController
     @projekts = Projekt.top_level
     @projekt = Projekt.new
     @projekts_settings = Setting.all.group_by(&:type)['projekts']
+    # map_setting = Setting.find_by(key: 'feature.map')
+    # @projekts_settings.push(map_setting)
     @map_configuration_settings = Setting.all.group_by(&:type)['map']
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
   end

@@ -12,7 +12,7 @@
       <%= get_projekt_phase_duration(projekt.debate_phase) %>
       <br>
 
-      <% if projekt_feature?(projekt, "general.show_map") %>
+      <% unless skip_user_verification? %>
         <%= get_projekt_phase_restriction_name(projekt.debate_phase) %>
         <br>
       <% end %>
@@ -46,7 +46,7 @@
       <%= get_projekt_phase_duration(projekt.proposal_phase) %>
       <br>
 
-      <% if projekt_feature?(projekt, "general.show_map") %>
+      <% unless skip_user_verification? %>
         <%= get_projekt_phase_restriction_name(projekt.proposal_phase) %>
         <br>
       <% end %>

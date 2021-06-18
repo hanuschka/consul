@@ -141,6 +141,7 @@ class Setting < ApplicationRecord
         # "projekts.show_not_active_phases_in_projekts_page_sidebar": true,
         # "projekts.show_navigator_in_projekts_page_sidebar": true,
         "projekts.show_module_links_in_flyout_menu": true,
+        "projekts.show_map_fallback": true,
         "extended_feature.gdpr_conformity": false,
         "extended_feature.show_cookie_banner": true,
         "extended_feature.link_out_warning": false,

@@ -114,8 +114,8 @@
         <aside class="margin-bottom">
           <%= link_to t("debates.index.start_debate"), new_debate_path, class: "button expanded" %>
           <%= render "shared/projekts_sidebar" %>
-          <%= render "shared/sidebar_filter/geozone_affiliations" %>
           <% if extended_feature?('show_geozone_filter_in_sidebar') %>
+            <%= render "shared/sidebar_filter/geozone_affiliations" %>
           <% end %>
           <% unless skip_user_verification? %>
             <%= render "shared/sidebar_filter/geozone_restrictions" %>

@@ -21,8 +21,8 @@ class Debate
     (
       Setting['feature.user.skip_verification'].present? ||
       projekt.blank? ||
-      debate_phase && debate_phase.geozones.blank? ||
-      (debate_phase && debate_phase.geozones.any? && debate_phase.geozones.include?(user.geozone) )
+      debate_phase && debate_phase.geozone_restrictions.blank? ||
+      (debate_phase && debate_phase.geozone_restrictions.any? && debate_phase.geozone_restrictions.include?(user.geozone) )
     ) &&
     (
       projekt.blank? ||

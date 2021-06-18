@@ -2,17 +2,17 @@
 
 @font-face {
   font-family: "Quicksand";
-  src: url("custom/Quicksand.ttf");
+  src: font-url("custom/Quicksand.ttf");
 }
 
 @font-face {
   font-family: "DroidSans";
-  src: url("custom/DroidSans.ttf");
+  src: font-url("custom/DroidSans.ttf");
 }
 
 @font-face {
   font-family: "DroidSans-Bold";
-  src: url("custom/DroidSans-Bold.ttf");
+  src: font-url("custom/DroidSans-Bold.ttf");
 }
 
 h1, h2, h3, h4, h5, h6 {

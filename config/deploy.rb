@@ -47,7 +47,7 @@ namespace :deploy do
 
   after :published, "deploy:restart"
   before "deploy:restart", "puma:restart"
-  before "deploy:restart", "delayed_job:restart"
+  before "deploy:restart", "sudo systemctl status delayed_job2"
   before "deploy:restart", "puma:start"
 
   after :finished, "refresh_sitemap"

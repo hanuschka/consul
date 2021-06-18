@@ -113,7 +113,7 @@ task :restart_delayed_jobs do
   on roles(:app) do
     within release_path do
       with rails_env: fetch(:rails_env) do
-        execute "sudo systemctl status delayed_job2"
+        execute "sudo systemctl restart delayed_job2"
       end
     end
   end

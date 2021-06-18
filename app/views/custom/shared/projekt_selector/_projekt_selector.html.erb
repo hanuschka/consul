@@ -36,7 +36,7 @@
 
         <% projekts.each do |projekt| %>
           <% if projekt.children.any? %>
-            <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children, parent_projekt_id: projekt.id }  %>
+            <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children.with_order_number, parent_projekt_id: projekt.id }  %>
           <% end %>
         <% end %>
       </div>
@@ -50,7 +50,7 @@
           <% if projekt.children.any? %>
             <% projekt.children.each do |projekt| %>
               <% if projekt.children.any? %>
-                <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children, parent_projekt_id: projekt.id }  %>
+                <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children.with_order_number, parent_projekt_id: projekt.id }  %>
 
               <% end %>
             <% end %>

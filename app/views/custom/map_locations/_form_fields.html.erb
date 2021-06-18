@@ -1,7 +1,11 @@
 <%= form.label :map_location, label %>
 <p class="help-text" id="tag-list-help-text"><%= help %></p>
 
-<%= render_map(map_location, parent_class, editable = true, remove_marker_label, [map_location.json_data]) %>
+<% if @proposal.map_location.present? %>
+  <%= render_map(map_location, parent_class, editable = true, remove_marker_label, [ @proposal.map_location.json_data ] ) %>
+<% else %>
+  <%= render_map(map_location, parent_class, editable = true, remove_marker_label ) %>
+<% end %>
 
 <%= form.fields_for :map_location, map_location do |m_l_fields| %>
   <%= m_l_fields.hidden_field :id,

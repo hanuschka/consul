@@ -2,7 +2,7 @@ namespace :projekt_settings do
   desc "Ensure existence of projekt settings"
   task ensure_existence: :environment do
     ApplicationLogger.new.info "Making sure projekts have "
-    ProjektSetting.ensire_existence
+    ProjektSetting.ensure_existence
   end
 
   desc "Remove obsolete tasks"

@@ -116,10 +116,15 @@ class DebatesController < ApplicationController
       @resources = @resources.joins(:debate_phase).where(projekt_phases: { geozone_restricted: ['only_citizens', 'only_geozones'] }).distinct
     when 'only_geozones'
       @resources = @resources.joins(:debate_phase).where(projekt_phases: { geozone_restricted: 'only_geozones' }).distinct
+
       if @restricted_geozones.present?
-        @resources = @resources.joins(:geozone_restrictions).where(geozones: { id: @restricted_geozones }).distinct
-      else
-        @resources = @resources.joins(:geozone_restrictions).where.not(geozones: { id: nil }).distinct
+				sql_query = "
+					INNER JOIN projekts AS projekts_debates_join_for_restrictions ON projekts_debates_join_for_restrictions.hidden_at IS NULL AND projekts_debates_join_for_restrictions.id = debates.projekt_id
+					INNER JOIN projekt_phases AS debate_phases_debates_join_for_restrictions ON debate_phases_debates_join_for_restrictions.projekt_id = projekts_debates_join_for_restrictions.id AND debate_phases_debates_join_for_restrictions.type IN ('ProjektPhase::DebatePhase')
+					INNER JOIN projekt_phase_geozones ON projekt_phase_geozones.projekt_phase_id = debate_phases_debates_join_for_restrictions.id
+					INNER JOIN geozones AS geozone_restrictions ON geozone_restrictions.id = projekt_phase_geozones.geozone_id
+				"
+				@resources = @resources.joins(sql_query).where(geozone_restrictions: { id: @restricted_geozones }).distinct
       end
     end
   end

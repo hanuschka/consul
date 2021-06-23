@@ -9,7 +9,6 @@ span.replace-highlighted {
 
 .projekt-phase {
   margin-bottom: 1em;
-  font-size: 0.875em;
   line-height: 1.75;
 
 
@@ -57,6 +56,37 @@ li.projekt-navigator.current-projekt::before {
   font-weight: bold;
 }
 
+
+
+// Sidebar icons 
+
+span.time-icon,
+span.geo-restriction-icon,
+span.geo-affiliation-icon {
+  margin-left: 23px;
+  position: relative;
+}
+
+span.time-icon:before,
+span.geo-restriction-icon:before,
+span.geo-affiliation-icon:before {
+  font-weight: bold;
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  left: -23px;
+}
+
+span.time-icon:before {
+  content: "\f017";
+}
+
+span.geo-restriction-icon:before {
+  content: "\f4fc";
+}
+
+span.geo-affiliation-icon:before {
+  content: "\f279";
+}
 
 // Toggling projekt lists in page sidebar
 

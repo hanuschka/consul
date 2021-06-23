@@ -65,12 +65,18 @@ de:
       settings:
         index:
           extended_settings: Erweiterte Einstellungen
-          extended_features: Erweiterte Funktionen
           extended_options: Erweiterte Konfigurationseinstellungen
           features:
             activate:
               enabled: Projekt aktiviert
               disabled: Projekt deaktiviert
+          extended_features: 
+            general: Allgemeines & Features
+            gdpr: DSGVO
+            modulewide: Modulübergreifende Funktionen
+            debates: Diskussionen
+            proposals: Vorschläge
+            polls: Abstimmungen
 
       menu:
         projekts: Projekte
@@ -100,7 +106,14 @@ de:
           page: Seite
           edit_page: Seite bearbeiten
           page_link: Seite öffnen 
-          add_cards: Kacheln erstellen
+          add_cards: Kacheln erstellen/bearbeiten
+          projekt_information: Projektinformationen
+          projekt_duration: Gesamtdauer des Projekts
+          projekt_affiliation: Gebietszuordnung
+          debate_phase: Diskussionsphase
+          proposal_phase: Vorschlagsphase
+          voting_phase: Abstimmungsphase
+          projekt_phase_limitation: Partizipationsbeschränkung
         edit_projekt: Editieren
         destroy: Löschen
         edit:
@@ -108,7 +121,10 @@ de:
             name: Projekteinstellungen
             main_block_title: Projektstatus
             page_block_title: Projektseite
+            information_block_title: Projektinformationen
             phases_block_title: Projektphasen
+            affiliation: Gebietszuordnung
+            restriction: Partizipationsbeschränkung
             phase_name: Phase
             beginning: Anfangsdatum
             ending: Enddatum
@@ -116,7 +132,7 @@ de:
             start_date: Anfangsdatum
             end_date: Enddatum
             activate: Aktiviert
-            projekt_duration: Gesamtdauer des Projekts
+            projekt_duration: Projektinformationen
             debate_phase: Diskussionsphase
             proposal_phase: Vorschlagsphase
             voting_phase: Abstimmungsphase
@@ -126,6 +142,7 @@ de:
             general_settings: Allgemein
             sidebar_settings: Seitenleiste
             footer_settings: Fußzeile
+            select_an_element: auswählen
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_notifications_tab:
@@ -141,6 +158,8 @@ de:
             name: News-Feed
           show_in_navigation_checkbox: Projekt in Navigation anzeigen
           show_in_navigation:
+          show_footer: Projekt Fußzeile
+          setting_indicator:
             yes: Ja
             no: Nein 
           update: Projekteinstellungen aktualisieren
@@ -183,6 +202,7 @@ de:
           entire_city: "Stadtweite %{resource_name}"
           entire_city_short: "Stadtweit"
           only_geozones: Zuordnung zu Stadtteil
+          show_more: Mehr anzeigen
           filter_button: Nach Gebiete filtern
         restrictions:
           title: Partizipation

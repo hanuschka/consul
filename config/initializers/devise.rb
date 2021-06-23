@@ -117,7 +117,7 @@ Devise.setup do |config|
   # their account can't be confirmed with the token any more.
   # Default is nil, meaning there is no restriction on how long a user can take
   # before confirming their account.
-  config.confirm_within = Setting["extended_option.devise_verification_token_validity_days"].to_i.days
+  config.confirm_within = Setting["extended_option.gdpr.devise_verification_token_validity_days"].to_i.days
 
   # If true, requires any email changes to be confirmed (exactly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
@@ -155,7 +155,7 @@ Devise.setup do |config|
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
 
-  config.timeout_in = Setting["extended_option.devise_timeout_min"].to_i.minutes
+  config.timeout_in = Setting["extended_option.gdpr.devise_timeout_min"].to_i.minutes
 
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false

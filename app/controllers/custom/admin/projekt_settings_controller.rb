@@ -6,6 +6,13 @@ class Admin::ProjektSettingsController < Admin::BaseController
     redirect_to request_referer, notice: t("admin.settings.flash.updated")
   end
 
+  def update_default_projekt_footer_tab
+    default_tab_setting = ProjektSetting.find_by(id: params[:id])
+    default_tab_setting.update(projekt_settings_params)
+
+    redirect_to request_referer, notice: t("admin.settings.flash.updated")
+  end
+
   private
 
   def projekt_settings_params

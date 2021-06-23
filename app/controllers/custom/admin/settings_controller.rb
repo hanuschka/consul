@@ -5,8 +5,17 @@ class Admin::SettingsController < Admin::BaseController
     all_settings = Setting.all.group_by(&:type)
     @configuration_settings = all_settings["configuration"]
     @feature_settings = all_settings["feature"]
-    @extended_feature_settings = all_settings["extended_feature"]
-    @extended_option_settings = all_settings["extended_option"]
+
+    @extended_feature_general = all_settings["extended_feature.general"]
+    @extended_feature_gdpr = all_settings["extended_feature.gdpr"]
+    @extended_feature_modulewide = all_settings["extended_feature.modulewide"]
+    @extended_feature_debates = all_settings["extended_feature.debates"]
+    @extended_feature_proposals = all_settings["extended_feature.proposals"]
+    @extended_feature_polls = all_settings["extended_feature.polls"]
+
+    @extended_option_gdpr = all_settings["extended_option.gdpr"]
+    @extended_option_proposals = all_settings["extended_option.proposals"]
+
     @participation_processes_settings = all_settings["process"]
     @map_configuration_settings = all_settings["map"]
     @proposals_settings = all_settings["proposals"]

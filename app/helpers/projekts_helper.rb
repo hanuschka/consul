@@ -7,6 +7,10 @@ module ProjektsHelper
     Setting["projekts.show_archived.navigation"].present? ? true : false
   end
 
+  def show_affiliation_filter_in_sidebar?
+    Setting["projekts.show_affiliation_filter_in_index_sidebar"].present? ? true : false
+  end
+
   def prepare_projekt_name(projekt)
     if projekt.page.published?
       link_to projekt.name, projekt.page.url
@@ -101,7 +105,7 @@ module ProjektsHelper
     geozone_restrictions = projekt_phase.geozone_restrictions
 
     if geozone_restrictions.exists? && restriction_name == 'only_geozones'
-      return 'Partizipation: ' + geozone_restrictions.pluck(:name).join(', ')
+      return geozone_restrictions.pluck(:name).join(', ')
     end
 
     t("custom.geozones.sidebar_filter.restrictions.#{restriction_name}" )

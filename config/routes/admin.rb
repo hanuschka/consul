@@ -3,7 +3,11 @@ namespace :admin do
 
   # custom routes
   resources :projekts, only: [:index, :show, :create, :update, :destroy] do
-    resources :projekt_settings, only: [:update]
+    resources :projekt_settings, only: [:update] do
+      member do
+        patch :update_default_projekt_footer_tab
+      end
+    end
     resources :projekt_notifications, only: [:create, :update, :destroy]
     resources :milestones, controller: "projekt_milestones"
     resources :progress_bars, except: :show, controller: "projekt_progress_bars"

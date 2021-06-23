@@ -4,7 +4,7 @@
 
 <h2 class="sidebar-title projekt-tag-chip-geozone-affiliation projekt-tag-chip-icon"><%= t("custom.geozones.sidebar_filter.affiliations.title") %></h2>
 
-<div id='affiliation-filter' class='geozone-filter'>
+<div id='geozone_affiliation' class='geozone-filter'>
 
   <ul>
     <li <%= "class=label-selected" if @selected_geozone_affiliation == 'all_resources' %> >
@@ -31,11 +31,10 @@
       <% end %>
     </li>
 
-    <li <%= "class=label-selected" if @selected_geozone_affiliation == 'only_geozones' %> >
+    <li <%= "class=label-selected aria-expanded=true" if @selected_geozone_affiliation == 'only_geozones' %> >
       <%= label_tag 'geozone_affiliation_only_geozones', class: 'label_class toggle-geozones-list' do %>
-        <%= radio_button_tag :geozone_affiliation, 'only_geozones', @selected_geozone_affiliation == 'only_geozones', { class: 'js-filter-geozone-affiliation' }  %>
+        <%= radio_button_tag :geozone_affiliation, 'only_geozones', @selected_geozone_affiliation == 'only_geozones', { class: 'js-toggle-geozones' }  %>
         <%= t('custom.geozones.sidebar_filter.affiliations.only_geozones') %>
-        <span class="checkmark"></span>
       <% end %>
     </li>
 
@@ -44,7 +43,7 @@
         <%= render partial: "shared/sidebar_filter/geozones_sidebar_option", locals: { geozone: geozone, filter_block: 'affiliation', selected_geozones: @affiliated_geozones } %>
       <% end  %>
 
-      <% if @restricted_geozones.any? && @restricted_geozones.size != @geozones.size %>
+      <% if @affiliated_geozones.any? && @affiliated_geozones.size != @geozones.size %>
         <small <%= "class=hide" unless @affiliated_geozones.any?  %>>
           <%= link_to t('custom.geozones.sidebar_filter.affiliations.show_more'), '#', class: 'js-show-all-geozones'  %>
         </small>
@@ -52,12 +51,4 @@
 
     </ul>
   </ul>
-
-  <div class="sidebar-filter-group">
-    <div class='js-apply-geozone-filter sidebar-filter-button' >
-      <%= t('custom.geozones.sidebar_filter.affiliations.filter_button') %>
-    </div>
-    <div class='js-reset-affiliation-filter sidebar-reset-filter-button' >
-    </div>
-  </div>
 </div>

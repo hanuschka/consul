@@ -7,9 +7,13 @@ class Admin::ProjektsController < Admin::BaseController
   def index
     @projekts = Projekt.top_level
     @projekt = Projekt.new
+
     @projekts_settings = Setting.all.group_by(&:type)['projekts']
-    # map_setting = Setting.find_by(key: 'feature.map')
-    # @projekts_settings.push(map_setting)
+    map_setting = Setting.find_by(key: 'feature.map')
+    @projekts_settings.push(map_setting)
+    skip_user_verification_setting = Setting.find_by(key: 'feature.user.skip_verification')
+    @projekts_settings.push(skip_user_verification_setting)
+
     @map_configuration_settings = Setting.all.group_by(&:type)['map']
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
   end
@@ -40,6 +44,9 @@ class Admin::ProjektsController < Admin::BaseController
 
     @projekt_notification = ProjektNotification.new
     @projekt_notifications = ProjektNotification.where(projekt: @projekt).order(created_at: :desc)
+
+    @default_footer_tab_setting = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab')
+    @default_footer_tab_options = get_default_footer_tab_selection_options(@projekt)
   end
 
   def update
@@ -114,5 +121,16 @@ class Admin::ProjektsController < Admin::BaseController
 
   def load_geozones
     @geozones = Geozone.all.order(:name)
+  end
+
+  def get_default_footer_tab_selection_options(projekt)
+    projekt_footer_tab_keys = [
+      "projekt_feature.footer.show_activity_in_projekt_footer",
+      "projekt_feature.footer.show_comments_in_projekt_footer",
+      "projekt_feature.footer.show_notifications_in_projekt_footer",
+      "projekt_feature.footer.show_milestones_in_projekt_footer",
+      "projekt_feature.footer.show_newsfeed_in_projekt_footer"
+    ]
+    ProjektSetting.where(key: projekt_footer_tab_keys, value: 'active', projekt: projekt)
   end
 end

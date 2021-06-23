@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_14_143732) do
+ActiveRecord::Schema.define(version: 2021_06_22_130103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -928,6 +928,7 @@ ActiveRecord::Schema.define(version: 2021_06_14_143732) do
     t.integer "proposal_id"
     t.integer "investment_id"
     t.bigint "projekt_id"
+    t.string "pin_color"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
     t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"

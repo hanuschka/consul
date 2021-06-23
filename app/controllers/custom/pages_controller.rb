@@ -36,6 +36,9 @@ class PagesController < ApplicationController
       @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
       @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
+      @rss_id = ProjektSetting.find_by(projekt: @custom_page.projekt, key: "projekt_newsfeed.id").value
+      @rss_type = ProjektSetting.find_by(projekt: @custom_page.projekt, key: "projekt_newsfeed.type").value
+
       render action: :custom_page
     elsif @custom_page.present?
       @cards = @custom_page.cards

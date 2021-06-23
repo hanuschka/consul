@@ -9,11 +9,15 @@
     <br>
 
     <% if projekt_phase_active?(projekt, 'debate_phase') %>
-      <%= get_projekt_phase_duration(projekt.debate_phase) %>
+      <span class='time-icon'>
+        <%= get_projekt_phase_duration(projekt.debate_phase) %>
+      </span>
       <br>
 
       <% unless skip_user_verification? %>
-        <%= get_projekt_phase_restriction_name(projekt.debate_phase) %>
+        <span class='geo-restriction-icon'>
+          <%= get_projekt_phase_restriction_name(projekt.debate_phase) %>
+        </span>
         <br>
       <% end %>
 
@@ -43,11 +47,15 @@
     <br>
 
     <% if projekt_phase_active?(projekt, 'proposal_phase') %>
-      <%= get_projekt_phase_duration(projekt.proposal_phase) %>
+      <span class='time-icon'>
+        <%= get_projekt_phase_duration(projekt.proposal_phase) %>
+      </span>
       <br>
 
       <% unless skip_user_verification? %>
-        <%= get_projekt_phase_restriction_name(projekt.proposal_phase) %>
+        <span class='geo-restriction-icon'>
+          <%= get_projekt_phase_restriction_name(projekt.proposal_phase) %>
+        </span>
         <br>
       <% end %>
 
@@ -80,7 +88,7 @@
     <br>
 
     <%if related_polls(projekt).count > 0 %>
-      <%= link_to polls_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}" do %>
+      <%= link_to polls_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: "button expanded projekt-phase-button" do %>
         <%= t("custom.projekt.page.sidebar.phases.voting_phase_link") %>
       <% end %>
     <% end %>

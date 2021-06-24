@@ -18,6 +18,13 @@ aside {
     &:hover {
       background: $brand;
       opacity: .5;
+      color: $white;
     }
   }
+
+  .button.hollow {
+    border: 1px solid $brand;
+    color: $white;
+  }
 }
+

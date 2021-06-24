@@ -52,12 +52,12 @@
     </thead>
     <tbody>
 
-      <tr class= "<%= 'fieldset-disabled' unless @projekt.top_level? %> projekt_phase_settings" >
+      <tr class= "projekt_phase_settings" >
         <td>
-          <%= f.date_field :total_duration_start, disabled: (true unless @projekt.top_level?), label: false %>
+          <%= f.date_field :total_duration_start, label: false %>
         </td>
         <td>
-          <%= f.date_field :total_duration_end, disabled: (true unless @projekt.top_level?), label: false %>
+          <%= f.date_field :total_duration_end, label: false %>
         </td>
       </tr>
 

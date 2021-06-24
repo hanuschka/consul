@@ -80,7 +80,7 @@
 
 	.sidebar-filter-button {
 		flex-grow: 1;
-		background: #d4e5fb;
+		background: $secondary;
 		color: $brand;
 		border-radius: 3px;
     margin-right: 0.5rem;
@@ -91,7 +91,7 @@
 
 	.sidebar-filter-button:hover,
 	.sidebar-filter-button:focus {
-		color: #fff;
+		color: $white;
 		background: $brand;
 		text-decoration:none;
 		cursor:pointer;
@@ -158,4 +158,28 @@
   content: "\f3d1";
   font-weight: bold;
   font-family: "Font Awesome 5 Free";
+}
+
+// Overriding foundation
+.button:hover, .button:focus {
+  background-color: $secondary;
+  color: $brand
+}
+
+.callout.primary {
+  background-color: $secondary;
+  color: $black;
+}
+
+.additional-content .filter-subnav {
+  background: $secondary;
+}
+
+.comment-body .comment-user.is-author, .comment-body .comment-user.is-admin, .comment-body .comment-user.is-moderator, .notification-body .comment-user.is-author, .notification-body .comment-user.is-admin, .notification-body .comment-user.is-moderator {
+  background: $tertiary;
+}
+
+
+.comment-body .comment-user.level-1, .comment-body .comment-user.level-2, .comment-body .comment-user.level-3, .comment-body .comment-user.level-4, .comment-body .comment-user.level-5, .comment-body .comment-user.is-author, .comment-body .comment-user.is-admin, .comment-body .comment-user.is-moderator, .notification-body .comment-user.level-1, .notification-body .comment-user.level-2, .notification-body .comment-user.level-3, .notification-body .comment-user.level-4, .notification-body .comment-user.level-5, .notification-body .comment-user.is-author, .notification-body .comment-user.is-admin, .notification-body .comment-user.is-moderator {
+  background: $secondary;
 }

@@ -74,6 +74,7 @@ span.geo-affiliation-icon:before {
   font-family: "Font Awesome 5 Free";
   position: absolute;
   left: -23px;
+  color: $brand;
 }
 
 span.time-icon:before {
@@ -93,6 +94,11 @@ span.geo-affiliation-icon:before {
 li.projekt-navigator {
   position: relative;
   padding-right: 14px;
+  color: #878787;
+
+  a { 
+    color: $brand !important;
+  }
 
   &~ul.projekt-navigator {
     display: none;

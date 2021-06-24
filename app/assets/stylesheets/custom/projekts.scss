@@ -282,12 +282,12 @@ div.projekt-phase-geozone-restriction-selector {
 
   input:checked ~ .checkmark-wrapper > .checkmark {
     background: #fff;
-    border: 1.5px solid #06408E;
+    border: 1.5px solid $brand;
   }
 
   input:checked ~ .checkmark-wrapper > .checkmark::after {
-    background: #06408E;
-    border: 1.5px solid #06408E;
+    background: $brand;
+    border: 1.5px solid $brand;
     content: "";
     width: 8px;
     height: 8px;
@@ -318,7 +318,7 @@ div.projekt-phase-geozone-restriction-selector {
   }
 
   label.highlighted {
-    background: #ECF2FB;
+    background: $secondary;
   }
 
   label.show-arrow:after {

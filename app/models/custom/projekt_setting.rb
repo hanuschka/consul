@@ -40,8 +40,8 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.show_map": 'active',
 
         "projekt_feature.sidebar.projekt_page_sharing": 'active',
-        "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": 'active',
         "projekt_feature.sidebar.show_total_duration_in_projekts_page_sidebar": 'active',
+        "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": 'active',
         "projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar": true,
 
         "projekt_feature.footer.show_projekt_footer": 'active',

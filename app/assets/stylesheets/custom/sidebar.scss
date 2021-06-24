@@ -13,8 +13,8 @@
   }
 
   li.label-selected label {
-    color: #06408E;
-    border-color: #06408E;
+    color: $brand;
+    font-weight: bold;
   }
 
   input[type='checkbox'],

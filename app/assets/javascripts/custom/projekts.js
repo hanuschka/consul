@@ -21,6 +21,15 @@
       $label.closest('.projekt-tags-column').find('label').each( function() {
         $(this).removeClass('highlighted')
       })
+
+
+      $label.closest('.projekt-tags-column').nextAll('.projekt-tags-column').each( function() {
+        $(this).find('label').each(function() {
+          $(this).removeClass('highlighted')
+        })
+      })
+
+
       $label.addClass('highlighted')
     },
 
@@ -271,18 +280,18 @@
       });
 
       $("body").on("click", ".js-select-projekt", function() {
-        var $label = $(this).parent()
+        var $label = $(this).closest('label')
 
         if ( $label.hasClass('projekt-phase-disabled')) {
           return false;
         }
 
         var $radioButton = $label.find(":radio").first()
-        App.Projekts.highlightLabel($label);
 
         $radioButton.prop( "checked", !$radioButton.prop( "checked") );
 
         $label.toggleClass('selected')
+        App.Projekts.highlightLabel($label);
 
         App.Projekts.replaceProjektMapOnProposalCreation($label, $radioButton)
       });

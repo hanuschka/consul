@@ -2,7 +2,7 @@
 
 <h2 class="sidebar-title projekt-tag-chip-geozone-restriction projekt-tag-chip-icon"><%= t("custom.geozones.sidebar_filter.restrictions.title") %></h2>
 
-<div id='restriction-filter' class='geozone-filter'>
+<div id='geozone_restriction' class='geozone-filter'>
 
   <ul>
     <li <%= "class=label-selected" if @selected_geozone_restriction == 'no_restriction' || @selected_geozone_restriction == '' %> >
@@ -14,18 +14,17 @@
     </li>
 
     <li <%= "class=label-selected" if @selected_geozone_restriction == 'only_citizens' %> >
-      <%= label_tag 'geozone_restriction_only_citizens', class: 'label_class toggle-geozones-list' do %>
+      <%= label_tag 'geozone_restriction_only_citizens', class: 'label_class' do %>
         <%= radio_button_tag :geozone_restriction, 'only_citizens', @selected_geozone_restriction == 'only_citizens', { class: 'js-filter-geozone-restriction' }  %>
         <%= t('custom.geozones.sidebar_filter.restrictions.only_citizens') %>
         <span class="checkmark"></span>
       <% end %>
     </li>
 
-    <li <%= "class=label-selected" if @selected_geozone_restriction == 'only_geozones' %> >
+    <li <%= "class=label-selected aria-expanded=true" if @selected_geozone_restriction == 'only_geozones' %> >
       <%= label_tag 'geozone_restriction_only_geozones', class: 'label_class toggle-geozones-list' do %>
-        <%= radio_button_tag :geozone_restriction, 'only_geozones', @selected_geozone_restriction == 'only_geozones', { class: 'js-filter-geozone-restriction' }  %>
+        <%= radio_button_tag :geozone_restriction, 'only_geozones', @selected_geozone_restriction == 'only_geozones', { class: 'js-toggle-geozones' }  %>
         <%= t('custom.geozones.sidebar_filter.restrictions.only_geozones') %>
-        <span class="checkmark"></span>
       <% end %>
     </li>
 
@@ -42,12 +41,4 @@
 
     </ul>
   </ul>
-
-  <div class="sidebar-filter-group">
-    <div class='js-apply-geozone-filter sidebar-filter-button' >
-      <%= t('custom.geozones.sidebar_filter.restrictions.filter_button') %>
-    </div>
-    <div class='js-reset-restriction-filter sidebar-reset-filter-button' >
-    </div>
-  </div>
 </div>

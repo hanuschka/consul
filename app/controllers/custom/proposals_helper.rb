@@ -2,18 +2,8 @@ require_dependency Rails.root.join("app", "helpers", "proposals_helper").to_s
 
 module ProposalsHelper
 
-  def all_proposal_map_locations
-    proposals_for_map = Proposal.not_archived.published
-
-    if params[:tags].present?
-      proposals_for_map = proposals_for_map.tagged_with(params[:tags].split(","), all: true)
-    end
-
-    if params[:projekts].present?
-      proposals_for_map = proposals_for_map.where(projekt_id: params[:projekts].split(',')).distinct
-    end
-
-    ids = proposals_for_map.pluck(:id).uniq
+  def all_proposal_map_locations(proposals_for_map)
+    ids = proposals_for_map.pluck(:id, :hot_score).map{ |x| x.first }.uniq
 
     MapLocation.where(proposal_id: ids).map(&:json_data)
   end
@@ -31,7 +21,7 @@ module ProposalsHelper
   end
 
   def withdraw_proposal_support_on?
-    Setting["extended_feature.enable_proposal_support_withdrawal"]
+    Setting["extended_feature.proposals.enable_proposal_support_withdrawal"]
   end
 
   def filtered_projekt
@@ -58,7 +48,7 @@ module ProposalsHelper
     if @selected_projekt
       projekt_feature?(@selected_projekt, "general.show_map") ? '' : 'hide'
     else
-      Setting["projekts.show_map_fallback"] ? '' : 'hide'
+      feature?(:map) ? '' : 'hide'
     end
   end
 end

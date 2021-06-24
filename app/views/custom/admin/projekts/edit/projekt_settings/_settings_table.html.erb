@@ -43,5 +43,9 @@
         </td>
       </tr>
     <% end %>
+
+    <% if local_assigns[:table_name] %>
+      <%= render 'custom/admin/projekts/edit/projekt_settings/default_footer_tab' %>
+    <% end %>
   </tbody>
 </table>

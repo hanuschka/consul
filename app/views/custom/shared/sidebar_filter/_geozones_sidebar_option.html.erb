@@ -2,8 +2,8 @@
 <% selected_label_class = selected_geozones.include?(geozone.id) ? 'label-selected' : '' %>
 
 <li class="<%= "#{show_geozone} #{selected_label_class}" %>">
-  <%= label_tag "#{geozone.name}-#{filter_block}", class: 'label_class' do %>
-    <%= check_box_tag "#{geozone.name}-#{filter_block}", geozone.id, selected_geozones.include?(geozone.id), { class: 'js-filter-geozones' }  %>
+  <%= label_tag "geozone_#{filter_block}_#{geozone.id}", class: 'label_class' do %>
+    <%= radio_button_tag "geozone_#{filter_block}", geozone.id, selected_geozones.include?(geozone.id), { class: 'js-filter-geozones' }  %>
     <%= geozone.name %>
     <span class="checkmark"></span>
   <% end %>

@@ -94,6 +94,9 @@ task :add_new_settings do
     within release_path do
       with rails_env: fetch(:rails_env) do
         execute :rake, "settings:add_new_settings"
+        execute :rake, "settings:destroy_obsolete"
+        execute :rake, "projekt_settings:ensure_existence"
+        execute :rake, "projekt_settings:destroy_obsolete"
       end
     end
   end

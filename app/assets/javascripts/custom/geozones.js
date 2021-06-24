@@ -14,82 +14,28 @@
       var url = new URL(window.location.href);
       var selection = $('input[name="geozone_affiliation"]:checked').val();
       url.searchParams.set('geozone_affiliation', selection)
+      url.searchParams.delete('affiliated_geozones')
       window.history.pushState('', '', url)
+      window.location.href = url;
     },
 
     updateGeozoneRestrictionParam: function($label) {
       var url = new URL(window.location.href);
       var selection = $('input[name="geozone_restriction"]:checked').val();
       url.searchParams.set('geozone_restriction', selection)
+      url.searchParams.delete('restricted_geozones')
       window.history.pushState('', '', url)
+      window.location.href = url;
     },
 
-    updateGeozonesParams: function($checkbox) {
+    updateGeozonesParams: function($radiobutton) {
+      var geozone_filter = $radiobutton.closest("ul").attr('id')
+      var geozone_filter_type = $radiobutton.closest('.geozone-filter').attr('id')
       var url = new URL(window.location.href);
-      var selected_geozones = [];
-      var geozone_filter = $checkbox.closest("ul").attr('id')
-
-      $checkbox.closest("ul").find("input:checkbox:checked").each( function() {
-        selected_geozones.push($(this).val())
-      });
-
-      if (selected_geozones.length) {
-        url.searchParams.set(geozone_filter, selected_geozones.join(','))
-      } else {
-        url.searchParams.delete(geozone_filter)
-      };
-
+      url.searchParams.set(geozone_filter, $radiobutton.val());
+      url.searchParams.set(geozone_filter_type, 'only_geozones')
       window.history.pushState('', '', url);
-    },
-
-    resetGeozoneAffiliationFilter: function() {
-      var url = new URL(window.location.href);
-
-      $('#affiliation-filter input').each(
-        function() {
-          $(this).prop('checked', false);
-        }
-      )
-
-      $('#affiliation-filter li').each(
-        function() {
-          $(this).removeClass('label-selected');
-        }
-      )
-
-      url.searchParams.delete('affiliated-geozones');
-
-      url.searchParams.set('geozone_affiliation', 'no_affiliation');
-      $('#affiliation-filter li').first().addClass('label-selected');
-      $('#affiliation-filter li input[type="radio"]').first().prop("checked", true);
-
-      window.history.pushState('', '', url)
-      //window.location.href = url;
-    },
-
-    resetGeozoneRestrictionFilter: function() {
-      var url = new URL(window.location.href);
-
-      $('#restriction-filter input').each(
-        function() {
-          $(this).prop('checked', false);
-        }
-      )
-
-      $('#restriction-filter li').each(
-        function() {
-          $(this).removeClass('label-selected');
-        }
-      )
-
-      url.searchParams.delete('restricted-geozones');
-
-      url.searchParams.set('geozone_restriction', 'no_restriction');
-      $('#restriction-filter li').first().addClass('label-selected');
-      $('#restriction-filter li input[type="radio"]').first().prop("checked", true);
-
-      window.history.pushState('', '', url)
-      //window.location.href = url;
+      window.location.href = url;
     },
 
     initialize: function() {
@@ -106,15 +52,28 @@
         App.Geozones.updateGeozoneRestrictionParam($label);
       });
 
-      $("body").on("click", ".js-filter-geozones", function() {
-        var $checkbox = $(this)
-        App.Geozones.updateGeozonesParams($checkbox);
-        $checkbox.closest('li').toggleClass('label-selected')
-      });
+      $("body").on("click", ".js-toggle-geozones", function() {
+        event.preventDefault();
+        var $label = $(this).closest('label');
 
-      $("body").on("click", ".js-apply-geozone-filter", function() {
-        var url = new URL(window.location.href);
-        window.location.href = url;
+        var $wrapper = $label.closest('li');
+        if ($wrapper.attr("aria-expanded") != "true") {
+          $wrapper.attr("aria-expanded","true")
+        } else {
+          $wrapper.attr("aria-expanded","false")
+        }
+      })
+
+      $("body").on("click", ".js-filter-geozones", function() {
+        var $radiobutton = $(this)
+        var $label = $(this).closest('label');
+        App.Geozones.updateLabelStyle($label);
+
+        $label.closest('.geozone-filter').find('ul').first().children('li.label-selected').each( function() {
+          $(this).removeClass('label-selected');
+        })
+
+        App.Geozones.updateGeozonesParams($radiobutton);
       });
 
       $("body").on("click", ".js-show-all-geozones", function(event) {
@@ -124,15 +83,6 @@
         })
         $(this).addClass('hide');
       });
-
-      $("body").on("click", ".js-reset-affiliation-filter", function() {
-        App.Geozones.resetGeozoneAffiliationFilter();
-      });
-
-      $("body").on("click", ".js-reset-restriction-filter", function() {
-        App.Geozones.resetGeozoneRestrictionFilter();
-      });
-
     }
   };
 }).call(this);

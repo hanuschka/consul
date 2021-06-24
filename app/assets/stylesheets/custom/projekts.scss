@@ -459,13 +459,11 @@ div.projekt-phase-geozone-restriction-selector {
   }
 
   input:checked ~ .checkmark {
-    background: #06408E;
-    border: 1.5px solid #06408E;
+    background: #878787;
+    border: 1.5px solid #878787;
   }
 
   .label-selected {
-    color: #06408E;
-    border-color: #06408E;
   }
 
   .checkmark:before {

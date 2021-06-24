@@ -47,7 +47,7 @@ namespace :deploy do
 
   after :published, "deploy:restart"
   before "deploy:restart", "puma:restart"
-  before "deploy:restart", "custom_deploy:launch_delay_job"
+  before "deploy:restart", "restart_delayed_jobs"
   before "deploy:restart", "puma:start"
 
   after :finished, "refresh_sitemap"
@@ -107,6 +107,16 @@ task :execute_release_tasks do
     within release_path do
       with rails_env: fetch(:rails_env) do
         execute :rake, "consul:execute_release_tasks"
+      end
+    end
+  end
+end
+
+task :restart_delayed_jobs do
+  on roles(:app) do
+    within release_path do
+      with rails_env: fetch(:rails_env) do
+        execute "sudo systemctl restart delayed_job2"
       end
     end
   end

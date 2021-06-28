@@ -1,8 +1,14 @@
+<% accesskey = 0 %>
 <% @active_projekts.each do |active_projekt| %>
   <li class='nav-element top-level-item'>
 
     <div class='flyout-item-name projekt-name'>
-      <%= prepare_projekt_name(active_projekt) %>
+      <% accesskey += 1 %>
+      <% if accesskey < 9 %>
+        <%= prepare_projekt_name(active_projekt, accesskey) %>
+      <% else %>
+        <%= prepare_projekt_name(active_projekt) %>
+      <% end %>
     </div>
 
     <% if active_projekt.children.any? %>

@@ -135,7 +135,7 @@ class ProposalsController
     def take_by_geozone_restrictions
       case @selected_geozone_restriction
       when 'no_restriction'
-        @resources = @resources.joins(:proposal_phase).where( projekt_phases: { geozone_restricted: ['no_restriction', 'only_citizens', 'only_geozones'] } ).distinct
+        @resources = @resources.joins(:proposal_phase).distinct
       when 'only_citizens'
         @resources = @resources.joins(:proposal_phase).where(projekt_phases: { geozone_restricted: ['only_citizens', 'only_geozones'] }).distinct
       when 'only_geozones'

@@ -23,7 +23,7 @@
 
       <%= f.invisible_captcha :address %>
 
-      <%= f.email_field :email,     placeholder: t("devise_views.users.registrations.new.email_label") %>
+      <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label") %>
 
       <%= f.password_field :password, autocomplete: "off",
                            placeholder: t("devise_views.users.registrations.new.password_label") %>
@@ -38,6 +38,7 @@
 
       <%= f.check_box :terms_of_service,
         title: t("devise_views.users.registrations.new.terms_title"),
+
         label: t("cli.devise_views.users.registrations.new.terms",
                  terms: link_to(t("devise_views.users.registrations.new.terms_link"), "/conditions",
                                 title: t("shared.target_blank"),
@@ -45,9 +46,11 @@
                  privacy: link_to(t("cli.devise_views.users.registrations.new.privacy_link"), "/privacy",
                                 title: t("shared.target_blank"),
                                 target: "_blank")
-                ) %>
+                ),
+        class: 'checkbox-label' %>
 
-      <div class="small-12 medium-6 small-centered">
+
+      <div class="small-12 medium-6 small-centered margin-top">
         <%= f.submit t("devise_views.users.registrations.new.submit"), class: "button expanded" %>
       </div>
     </div>

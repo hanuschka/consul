@@ -11,8 +11,10 @@ module ProjektsHelper
     Setting["projekts.show_affiliation_filter_in_index_sidebar"].present? ? true : false
   end
 
-  def prepare_projekt_name(projekt)
-    if projekt.page.published?
+  def prepare_projekt_name(projekt, accesskey=nil)
+    if projekt.page.published? && accesskey
+      link_to projekt.name, projekt.page.url, accesskey: accesskey
+    elsif projekt.page.published?
       link_to projekt.name, projekt.page.url
     else
       projekt.name

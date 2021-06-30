@@ -6,6 +6,7 @@
 
   <% toggle_projekt = (selected_projekts & projekt_and_nested_projekts_ids.map(&:to_s)).any? ? true : false %>
   <% projekt.id.to_s.in?(selected_projekts) ? label_class = 'label-selected' : label_class = 'label_regular' %>
+  <% projekt_color = projekt&.map_location&.pin_color || '#00cae9' %>
 
   <ul>
     <li class='' aria-expanded=<%= toggle_projekt %> >
@@ -14,6 +15,7 @@
         <%= projekt.name %>
         <%= "(#{aggregations[projekt.id]})" if aggregations[projekt.id].present?  %>
         <span class="checkmark"></span>
+        <span class="color-code" style="background-color: <%= projekt_color %>" ></span>
       <% end %>
 
       <% if projekt.children.any? %>

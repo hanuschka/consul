@@ -3,7 +3,7 @@
   App.ExpandProposalsMap = {
 
     toggleMap: function() {
-      var mapDiv = $('#new_map_location')
+      var mapDiv = $('.map_location').first();
       var toggler = $(event.target)
 
       if ( mapDiv.attr("aria-expanded") == "true" ) {

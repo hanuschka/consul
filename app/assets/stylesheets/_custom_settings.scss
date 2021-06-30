@@ -1,19 +1,18 @@
-// brand_color
-$brand:                                           #004a83;
+// colors
+$brand:                                           #004078;
 $secondary:                                       lighten($brand, 70%);
-$tertiary:                                        lighten($brand, 50%);
-$dark:                                            darken($brand, 10%);
+$accent:                                          #90A422;
 
 
 // Menu variables
 
-$dark:                                            #222;
+$black:                                           #222;
 $white:                                           #fff;
 
 
-$top-level-menu-item-text-color:                  $dark;
+$top-level-menu-item-text-color:                  $black;
 $top-level-menu-background-color:                 $white;
-$flyout-item-text-color:                          $dark;
+$flyout-item-text-color:                          $black;
 $flyout-item-bg-color:                            $white;
 $flyout-block-border-color:                       #dee0e3;
 $flyout-item-divider-color:                       lighten($flyout-block-border-color, 5%);
@@ -23,7 +22,7 @@ $flyout-item-projekt-modules-links-color:         $flyout-item-text-color;
 $flyout-item-line-height:                         1.5rem;
 $flyout-item-projekt-min-height:                  60px;
 
-$responsive-menu-text-color:                      $dark;
+$responsive-menu-text-color:                      $black;
 $responsive-menu-background-color:                $white;
 
 $module-index-panel-background:                   lighten($brand, 70%);
@@ -50,25 +49,10 @@ $welcomespan:                 $brand;
 
 
 // fonts
-$body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
-$header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
+$body-font-family: 'Open Sans', sans-serif;
+$header-font-family: 'Open Sans', sans-serif;
 $base-font-size:      16px;
 
-// Regular 
-@font-face {
-  font-family: "sourcesanspro-regular-webfont";
-  src: font-url("sourcesanspro-regular-webfont.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
-  font-weight: 100;
-  font-style: normal; }
-// Bold 
-@font-face {
-  font-family: "sourcesanspro-bold-webfont";
-  src: font-url("sourcesanspro-bold-webfont.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
-  font-weight: 100;
-  font-style: bold; }
-// Fallback
-@font-face {
-  font-family: "PT_Serif_Web-Regular";
-  src: font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf"), font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf");
-  font-weight: 100;
-  font-style: normal; }
+h1, h2, h3 {
+  font-weight: bold; 
+}

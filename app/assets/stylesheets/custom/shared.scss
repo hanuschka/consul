@@ -188,3 +188,16 @@
 .comment-body .comment-user.level-1, .comment-body .comment-user.level-2, .comment-body .comment-user.level-3, .comment-body .comment-user.level-4, .comment-body .comment-user.level-5, .comment-body .comment-user.is-author, .comment-body .comment-user.is-admin, .comment-body .comment-user.is-moderator, .notification-body .comment-user.level-1, .notification-body .comment-user.level-2, .notification-body .comment-user.level-3, .notification-body .comment-user.level-4, .notification-body .comment-user.level-5, .notification-body .comment-user.is-author, .notification-body .comment-user.is-admin, .notification-body .comment-user.is-moderator {
   background: $secondary;
 }
+
+
+// Align checkbox and label
+
+input.checkbox-label {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+input.checkbox-label + span {
+  display: inline;
+  margin-bottom: 0.5rem;
+}

@@ -1,4 +1,11 @@
 de:
+  activerecord:
+    errors:
+      models:
+        proposal:
+          attributes:
+            description:
+              too_long: 'Begründung ist zu lang. Das Limit liegt bei %{limit} Zeichen'
   settings:
     max_active_proposals_per_user_description: Number of proposals description
   custom:

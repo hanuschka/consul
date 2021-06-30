@@ -28,10 +28,15 @@
       </div>
 
       <div class="small-12 column">
+        <%= translations_form.label :description, nil, class: label_error_class?(:description) %>
         <%= translations_form.text_area :description,
-                                        maxlength: Proposal.description_max_length,
-                                        class: "html-area" %>
+                                        class: "html-area",
+                                        label: false %>
+        <% if error_text(:description).present? %>
+          <small class='form-error is-visible'><%= error_text(:description) %></small>
+        <% end %>
       </div>
+
     <% end %>
 
     <%= f.invisible_captcha :subtitle %>

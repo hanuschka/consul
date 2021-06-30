@@ -2,7 +2,7 @@
 lock "~> 3.14.1"
 
 def deploysecret(key)
-  @deploy_secrets_yml ||= YAML.load_file("config/deploy-secrets-cli_auf.yml")[fetch(:stage).to_s]
+  @deploy_secrets_yml ||= YAML.load_file("config/deploy-secrets/deploy-secrets-cli_auf.yml")[fetch(:stage).to_s]
   @deploy_secrets_yml.fetch(key.to_s, "undefined")
 end
 

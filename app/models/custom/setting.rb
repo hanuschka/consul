@@ -3,7 +3,7 @@ require_dependency Rails.root.join("app", "models", "setting").to_s
 class Setting < ApplicationRecord
 
   def type
-    if %w[feature process proposals map html homepage uploads projekts].include? prefix
+    if %w[feature process proposals map html homepage uploads projekts sdg].include? prefix
       prefix
     elsif %w[remote_census].include? prefix
       key.rpartition(".").first
@@ -128,6 +128,7 @@ class Setting < ApplicationRecord
         "projekts.show_archived.navigation": true,
         "projekts.show_archived.sidebar": true,
         "max_active_proposals_per_user": 100,
+        "max_proposal_description_length": 6000,
         "sdg.process.debates": true,
         "sdg.process.proposals": true,
         "sdg.process.polls": true,

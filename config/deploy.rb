@@ -50,7 +50,7 @@ namespace :deploy do
   before "deploy:restart", "restart_delayed_jobs"
   before "deploy:restart", "puma:start"
 
-  # after :finished, "refresh_sitemap"
+  after :finished, "refresh_sitemap"
 
   desc "Deploys and runs the tasks needed to upgrade to a new release"
   task :upgrade do

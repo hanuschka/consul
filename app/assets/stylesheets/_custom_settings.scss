@@ -1,8 +1,7 @@
 // brand_color
 $brand:                                           #8DBF42;
 $secondary:                                       rgba(141, 191, 66, 0.05);
-$tertiary:                                        lighten($brand, 50%);
-$dark:                                            darken($brand, 10%);
+$accent:                                          lighten($brand, 50%);
 
 
 // Menu variables

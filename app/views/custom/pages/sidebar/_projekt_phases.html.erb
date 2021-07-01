@@ -64,7 +64,7 @@
         <% end %>
       <% end %>
 
-      <% if @most_active_debates.exists? %>
+      <% if @most_active_proposals.exists? %>
         <%= link_to proposals_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'projekt-phase-link' do %>
           <%= t("custom.projekt.page.sidebar.phases.proposal_phase_link") %>
         <% end %>

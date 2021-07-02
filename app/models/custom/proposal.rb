@@ -19,7 +19,7 @@ class Proposal < ApplicationRecord
   end
 
   def description_sanitized
-    sanitized_description = ActionController::Base.helpers.strip_tags(description).gsub("\n", '').gsub("\r", '')
+    sanitized_description = ActionController::Base.helpers.strip_tags(description).gsub("\n", '').gsub("\r", '').gsub(" ", '')
     errors.add(:description, :too_long, message: 'too long text', limit: Setting[ "max_proposal_description_length"]) if
       sanitized_description.length > Setting[ "max_proposal_description_length"].to_i
   end

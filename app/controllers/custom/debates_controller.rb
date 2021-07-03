@@ -75,18 +75,18 @@ class DebatesController < ApplicationController
 
   def take_by_projekts
     if params[:projekts].present?
-      @resources = @resources.where(projekt_id: params[:projekts].split(',')).distinct
+      @resources = @resources.where(projekt_id: params[:projekts].split(','))
     end
   end
 
   def take_by_sdgs
     if params[:sdg_targets].present?
-      @resources = @resources.joins(:sdg_global_targets).where(sdg_targets: { code: params[:sdg_targets].split(',')[0] }).distinct
+      @resources = @resources.joins(:sdg_global_targets).where(sdg_targets: { code: params[:sdg_targets].split(',')[0] })
       return
     end
 
     if params[:sdg_goals].present?
-      @resources = @resources.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') }).distinct
+      @resources = @resources.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') })
     end
   end
 
@@ -95,15 +95,15 @@ class DebatesController < ApplicationController
     when 'all_resources'
       @resources
     when 'no_affiliation'
-      @resources = @resources.joins(:projekt).where( projekts: { geozone_affiliated: 'no_affiliation' } ).distinct
+      @resources = @resources.joins(:projekt).where( projekts: { geozone_affiliated: 'no_affiliation' } )
     when 'entire_city'
-      @resources = @resources.joins(:projekt).where(projekts: { geozone_affiliated: 'entire_city' } ).distinct
+      @resources = @resources.joins(:projekt).where(projekts: { geozone_affiliated: 'entire_city' } )
     when 'only_geozones'
-      @resources = @resources.joins(:projekt).where(projekts: { geozone_affiliated: 'only_geozones' } ).distinct
+      @resources = @resources.joins(:projekt).where(projekts: { geozone_affiliated: 'only_geozones' } )
       if @affiliated_geozones.present?
-        @resources = @resources.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones }).distinct
+        @resources = @resources.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
       else
-        @resources = @resources.joins(:geozone_affiliations).where.not(geozones: { id: nil }).distinct
+        @resources = @resources.joins(:geozone_affiliations).where.not(geozones: { id: nil })
       end
     end
   end
@@ -111,11 +111,11 @@ class DebatesController < ApplicationController
   def take_by_geozone_restrictions
     case @selected_geozone_restriction
     when 'no_restriction'
-      @resources = @resources.joins(:debate_phase).distinct
+      @resources = @resources.joins(:debate_phase)
     when 'only_citizens'
-      @resources = @resources.joins(:debate_phase).where(projekt_phases: { geozone_restricted: ['only_citizens', 'only_geozones'] }).distinct
+      @resources = @resources.joins(:debate_phase).where(projekt_phases: { geozone_restricted: ['only_citizens', 'only_geozones'] })
     when 'only_geozones'
-      @resources = @resources.joins(:debate_phase).where(projekt_phases: { geozone_restricted: 'only_geozones' }).distinct
+      @resources = @resources.joins(:debate_phase).where(projekt_phases: { geozone_restricted: 'only_geozones' })
 
       if @restricted_geozones.present?
 				sql_query = "
@@ -124,7 +124,7 @@ class DebatesController < ApplicationController
 					INNER JOIN projekt_phase_geozones ON projekt_phase_geozones.projekt_phase_id = debate_phases_debates_join_for_restrictions.id
 					INNER JOIN geozones AS geozone_restrictions ON geozone_restrictions.id = projekt_phase_geozones.geozone_id
 				"
-				@resources = @resources.joins(sql_query).where(geozone_restrictions: { id: @restricted_geozones }).distinct
+				@resources = @resources.joins(sql_query).where(geozone_restrictions: { id: @restricted_geozones })
       end
     end
   end

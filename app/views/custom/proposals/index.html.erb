@@ -98,7 +98,7 @@
         <div class="row">
           <div class="small-12 column">
             <%= render "view_mode" %>
-            <% unless extended_feature?("elasticsearch") || params[:retired].present? || params[:selected].present? %>
+            <% unless extended_feature?("general.elasticsearch") || params[:retired].present? || params[:selected].present? %>
                 <%= yield :header_addon %>
                 <div class='clear'>
                   <%= render Shared::AdvancedSearchComponent.new %>

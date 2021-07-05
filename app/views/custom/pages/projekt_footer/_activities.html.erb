@@ -81,7 +81,7 @@
               <%= t("custom.projekt.footer.show.no_proposals") %>
             <% elsif @most_active_proposals.exists? %>
               <%= render partial: "proposals/proposal", collection: @most_active_proposals %>
-              <%= link_to proposals_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'all-projekt-resources-link' do %>
+              <%= link_to proposals_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'all-projekt-resources-link', data: { projekts: projekt.all_parent_ids.push(projekt.id), resources: 'proposals' } do %>
                 <%= t("custom.projekt.page.sidebar.phases.proposal_phase_link") %>
               <% end %>
             <% end %>
@@ -117,7 +117,7 @@
               <%= t("custom.projekt.footer.show.no_debates") %>
             <% elsif @most_active_debates.exists? %>
               <%= render partial: "debates/debate", collection: @most_active_debates %>
-              <%= link_to debates_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'all-projekt-resources-link' do %>
+              <%= link_to debates_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'all-projekt-resources-link', data: { projekts: projekt.all_parent_ids.push(projekt.id), resources: 'debates' } do %>
                 <%= t("custom.projekt.page.sidebar.phases.debate_phase_link") %>
               <% end %>
             <% end %>
@@ -132,7 +132,7 @@
 
           <% if @latest_polls.exists? %>
             <%= render partial: "polls/poll_group", locals: { poll_group: @latest_polls } %>
-            <%= link_to polls_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'all-projekt-resources-link' do %>
+            <%= link_to polls_path + "?projekts=#{projekt.all_children_ids.push(projekt.id).join(',')}", class: 'all-projekt-resources-link', data: { projekts: projekt.all_parent_ids.push(projekt.id), resources: 'polls' } do %>
               <%= t("custom.projekt.page.sidebar.phases.voting_phase_link") %>
             <% end %>
           <% else %>

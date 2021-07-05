@@ -7,8 +7,6 @@
 
   <div id='filter-projekts-all'>
 
-    <%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_active, aggregations: aggregations } %>
-
     <% if show_archived_projekts_in_sidebar? && Projekt.top_level_archived.any? %>
       <div class='sidebar-projekt-group-name'>
         <%= t("custom.projekts.sidebar_filter.title_active") %>
@@ -16,21 +14,18 @@
     <% end %>
 
     <div id='filter-projekts-active'>
-      <%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_archived, aggregations: aggregations } %>
+			<%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_active, aggregations: aggregations } %>
     </div>
 
-
     <% if show_archived_projekts_in_sidebar? && Projekt.top_level_archived.any? %>
-
-      <%= link_to t('custom.projekts.sidebar_filter.filter_button'), '#', class: 'js-apply-projekts-filter filter-projekts-button' %>
       <div class='sidebar-projekt-group-name'>
         <%= t("custom.projekts.sidebar_filter.title_archived") %>
       </div>
 
-      <div id='filter-projekts-archived'>
-        <%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_archived } %>
-      </div>
-    <% end %>
+			<div id='filter-projekts-archived'>
+				<%= render partial: "shared/projekts_filter", locals: { projekts: Projekt.top_level_archived, aggregations: aggregations } %>
+			</div>
+		<% end %>
 
     <div class="sidebar-filter-group">
       <div class='js-apply-projekts-filter sidebar-filter-button' >

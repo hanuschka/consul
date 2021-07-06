@@ -136,7 +136,7 @@ class Setting < ApplicationRecord
         "projekts.show_archived.navigation": true,
         "projekts.show_archived.sidebar": true,
         "projekts.show_module_links_in_flyout_menu": true,
-        # "extended_feature.general.elasticsearch": false,
+        "extended_feature.general.elasticsearch": false,
         "extended_feature.general.extended_editor_for_admins": false,
         "extended_feature.general.extended_editor_for_users": false,
         "extended_feature.gdpr.gdpr_conformity": false,

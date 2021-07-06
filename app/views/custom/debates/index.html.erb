@@ -54,13 +54,13 @@
         <div class="row">
           <div class="small-12 column">
             <%= render "view_mode" %>
-            <% unless extended_feature?("elasticsearch")%>
+            <% unless extended_feature?("general.elasticsearch")%>
               <%= yield :header_addon %>
             <% end %>
           </div>
         </div>
 
-        <% unless extended_feature?("elasticsearch") %>
+        <% unless extended_feature?("general.elasticsearch") %>
           <%= render Shared::AdvancedSearchComponent.new %>
         <% end %>
 

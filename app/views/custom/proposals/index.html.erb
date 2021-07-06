@@ -95,7 +95,7 @@
             </div>
           </div>
         <% end %>
-        <% unless params[:retired].present? || params[:selected].present? || extended_feature?("elasticsearch") %>
+        <% unless params[:retired].present? || params[:selected].present? || extended_feature?("general.elasticsearch") %>
           <%= render "shared/advanced_search",
                      search_path: proposals_path(page: 1) %>
         <% end %>

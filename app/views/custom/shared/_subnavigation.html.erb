@@ -1,7 +1,9 @@
 <div class="column">
   <ul class="main-menu">
     <div class="content-items">
-      <% if extended_feature?("elasticsearch") %>
+      <%= render partial: 'shared/subnavigation_home' %>
+
+      <% if extended_feature?("general.elasticsearch") %>
         <div class='search-box show-for-small-only'>
           <%= render "shared/elasticsearch_form" %>
         </div>
@@ -13,14 +15,17 @@
     </div>
 
     <div class="account-admin-items">
-      <%= render partial: 'shared/subnavigation_search' %>
+      <% if extended_feature?("general.elasticsearch") %>
+        <%= render partial: 'shared/subnavigation_search' %>
+      <% end %>
+      <%= render "layouts/notification_item" %>
       <%= render partial: 'shared/subnavigation_konto' %>
       <%= render partial: 'shared/subnavigation_admin' %>
     </div>
   </ul>
 </div>
 
-<% if extended_feature?("elasticsearch") %>
+<% if extended_feature?("general.elasticsearch") %>
   <div class='hide-for-small-only'>
     <div class='elasticSearchModal'>
       <div class='modal-search-box'>

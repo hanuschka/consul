@@ -7,7 +7,7 @@ module Abilities
       can [:read, :map, :summary, :share, :json_data], Proposal
       can :read, Comment
       can :read, Poll
-      if (user&.administrator? || user&.moderator?) && Setting["extended_feature.intermediate_poll_results_for_admins"]
+      if (user&.administrator? || user&.moderator?) && Setting["extended_feature.polls.intermediate_poll_results_for_admins"]
         can :results, Poll
         can :stats, Poll
       end
@@ -34,6 +34,8 @@ module Abilities
       if Setting['extended_feature.general.elasticsearch']
         can [:read], Search
       end
+      can [:read, :help], ::SDG::Goal
+      can :read, ::SDG::Phase
     end
   end
 end

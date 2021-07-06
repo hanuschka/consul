@@ -28,7 +28,7 @@
                   t("proposals.index.search_results", count: @proposals.size, search_term: @search_terms)
                 ) %>
               <% end %>
-            <p>
+            </p>
           <% elsif @tag_filter %>
             <h2><%= t("shared.search_results") %></h2>
             <p>
@@ -98,13 +98,14 @@
         <div class="row">
           <div class="small-12 column">
             <%= render "view_mode" %>
-            <%= yield :header_addon %>
+            <% unless extended_feature?("general.elasticsearch") || params[:retired].present? || params[:selected].present? %>
+                <%= yield :header_addon %>
+                <div class='clear'>
+                  <%= render Shared::AdvancedSearchComponent.new %>
+                </div>
+            <% end %>
           </div>
         </div>
-      <% end %>
-
-      <% unless params[:retired].present? || params[:selected].present? %>
-        <%= render Shared::AdvancedSearchComponent.new %>
       <% end %>
 
       <% unless params[:selected].present? %>

@@ -53,11 +53,15 @@
         <div class="row">
           <div class="small-12 column">
             <%= render "view_mode" %>
-            <%= yield :header_addon %>
+            <% unless extended_feature?("general.elasticsearch")%>
+              <%= yield :header_addon %>
+            <% end %>
           </div>
         </div>
 
-        <%= render Shared::AdvancedSearchComponent.new %>
+        <% unless extended_feature?("general.elasticsearch") %>
+          <%= render Shared::AdvancedSearchComponent.new %>
+        <% end %>
 
         <%= render "shared/order_links", i18n_namespace: "debates.index" %>
 

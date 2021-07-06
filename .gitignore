@@ -18,13 +18,19 @@
 
 /spec/examples.txt
 /config/database.yml
+/config/deploy-secrets/*
 /config/secrets.yml
 /config/deploy-secrets.yml
 /config/deploy-secrets-cli_auf.yml
+<<<<<<< HEAD
 /config/deploy-secrets-cli_demo.yml
 /config/deploy-secrets-cli_wit.yml
 /config/deploy-secrets-cli_kir.yml
 /config/deploy-secrets/*
+=======
+/config/deploy-secrets-cli_wit.yml
+/config/deploy-secrets-cli_demo.yml
+>>>>>>> d132d7935c794c73beea266bea3789ebab01447f
 /config/maintenance.yml
 
 /coverage

@@ -70,6 +70,7 @@ span.icon-no-notification {
     display: inline;
   }
 
+  .search-icon,
   .account-icon,
   .admin-icon {
     position: absolute;
@@ -225,9 +226,11 @@ span.icon-no-notification {
     justify-content: space-between;
 
     .top-level-item {
-      padding-left: 1.5em;
+      padding-left: 1em;
     }
 
+
+    .search-items-icon,
     .account-items-icon,
     .admin-items-icon {
       width: 22px;
@@ -240,6 +243,12 @@ span.icon-no-notification {
     .account-items-link,
     .admin-items-link {
       display: none;
+    }
+
+    .search-icon {
+      top: -5px;
+      right: 0;
+      padding-bottom: 14px;
     }
 
     .admin-icon {

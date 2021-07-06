@@ -5,7 +5,9 @@
 
   <div class="top-links">
     <div class="row">
-      <%= render "shared/locale_switcher" %>
+      <div class="hide-for-small-only">
+        <%= render "shared/locale_switcher" %>
+      </div>
       <div class="hide-for-small-only">
         <%= render "shared/top_links" %>
       </div>
@@ -30,14 +32,11 @@
 
       <div id="responsive-menu">
         <div class="top-bar-right">
-          <ul class="menu" data-responsive-menu="medium-dropdown">
-            <%= render "shared/admin_login_items" %>
-            <%= render "layouts/notification_item" %>
-            <%= render "devise/menu/login_items" %>
-          </ul>
-
           <div class="show-for-small-only">
             <div class="subnavigation row">
+
+              <h2 class='city-name'><%= Setting['org_name'] %></h2>
+
               <%= render "shared/subnavigation" %>
               <div class="small-12 column">
                 <%= render "shared/top_links" %>
@@ -53,9 +52,6 @@
     <div class="row">
       <div class="hide-for-small-only">
         <%= render "shared/subnavigation" %>
-      </div>
-      <div class="small-12 medium-3 column">
-        <%= yield :header_addon %>
       </div>
     </div>
   </div>

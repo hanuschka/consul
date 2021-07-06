@@ -1,0 +1,64 @@
+<% provide :title do %>
+  <%= t("shared.search_results") %>
+<% end %>
+
+<% content_for :header_addon do %>
+  <%= render "shared/search_form",
+    search_path: search_path(page: 1),
+    i18n_namespace: "debates.index.search_form" %>
+<% end %>
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: search_url %>
+<% end %>
+
+<main>
+<div class="highlight no-margin-top padding margin-bottom search-header">
+  <div class="row">
+    <div class="small-12 column">
+      <h2><%= t("custom.shared.search_results", search_term: params[:q]) %></h2>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div id="debates" class="debates-list small-12 medium-9 column">
+
+    <%= render Shared::BannerComponent.new("searchpage") %>
+
+    <%-searches = ['debate', 'proposal', 'voting', 'budget', 'legislation_process', 'comment', 'page']%>
+
+    <ul class='search-modules'>
+      <%-total_count = @results.aggregations.genres.buckets.map{|d| d.doc_count}.sum%>
+      <li class="<%if params[:section].blank?%>selected<%end%>"><%=link_to t("search.tabs.all", doc_count: total_count || 0), {section: nil, q: params[:q]}%></li>
+      <%@results.aggregations.genres.buckets.each do |aggr| %>
+        <li class="<%if params[:section] == aggr["key"]%>selected<%end%>"
+            ><%=link_to t("search.tabs.#{aggr["key"]}", doc_count: aggr&.doc_count || 0), {section: aggr["key"], q: params[:q], tag: params[:tag], projekts: params[:projekts] }%></li>
+      <%end%>
+
+    </ul>
+
+    <% if @results.any? || current_user.blank? %>
+      <%@results.each do |result|%>
+        <%= render "result", result: result %>
+      <%end%>
+    <% else %>
+       No results
+    <% end %>
+    <%= paginate @results, current_page: params[:page]&.to_i || 1, per_page: 10 %>
+
+  </div>
+
+  <div class="small-12 medium-3 column">
+
+    <aside class="margin-bottom">
+      <% projekts = @results.aggregations.selected_section ? @results.aggregations.selected_section.projekts : @results.aggregations.projekts %>
+      <%= render "shared/projekts_sidebar", aggregations: projekts.buckets.map{ |b| [ b['key'], b.doc_count] }.to_h %>
+
+      <%-categories =  @results.aggregations.selected_section ? @results.aggregations.selected_section.tags : @results.aggregations.tags%>
+      <%=render "categories", categories: categories%>
+    </aside>
+  </div>
+
+</div>
+</main>

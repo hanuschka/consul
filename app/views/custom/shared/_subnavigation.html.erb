@@ -2,15 +2,35 @@
   <ul class="main-menu">
     <div class="content-items">
       <%= render partial: 'shared/subnavigation_home' %>
+
+      <% if extended_feature?("general.elasticsearch") %>
+        <div class='search-box show-for-small-only'>
+          <%= render "shared/elasticsearch_form" %>
+        </div>
+      <% end %>
+
       <%= raw content_block("subnavigation_left", I18n.locale) %>
       <%= render partial: 'shared/subnavigation_projekts' %>
       <%= raw content_block("subnavigation_right", I18n.locale) %>
     </div>
 
     <div class="account-admin-items">
+      <% if extended_feature?("general.elasticsearch") %>
+        <%= render partial: 'shared/subnavigation_search' %>
+      <% end %>
       <%= render "layouts/notification_item" %>
       <%= render partial: 'shared/subnavigation_konto' %>
       <%= render partial: 'shared/subnavigation_admin' %>
     </div>
   </ul>
 </div>
+
+<% if extended_feature?("general.elasticsearch") %>
+  <div class='hide-for-small-only'>
+    <div class='elasticSearchModal'>
+      <div class='modal-search-box'>
+        <%= render "shared/elasticsearch_form" %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,4 @@
+de:
+  custom:
+    shared:
+      search_results: "Suchergebnisse für \"%{search_term}\""

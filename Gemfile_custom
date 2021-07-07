@@ -8,3 +8,5 @@
 group :development do
   gem 'pry', '~> 0.14.1'
 end
+
+gem 'nokogiri', '~> 1.6', '>= 1.6.8'

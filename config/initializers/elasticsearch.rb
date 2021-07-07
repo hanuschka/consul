@@ -1,5 +1,5 @@
 config = {
-  host: "localhost:9200",
+  host: "http://localhost:9200/",
   transport_options: {
     request: { timeout: 5 }
   }

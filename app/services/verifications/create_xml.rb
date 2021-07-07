@@ -5,7 +5,7 @@ module Verifications
         xml.request(id: user_id) {
           xml.vorname 'Stefan'
           xml.nachname 'Saule'
-          xml.geburtsdatum '28.09.67'
+          xml.geburtsdatum '28.09.1967'
           xml.plz 96050
           xml.panr 'N7JH8'
         }

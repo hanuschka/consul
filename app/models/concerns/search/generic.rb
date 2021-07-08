@@ -55,7 +55,7 @@ module Search::Generic
       as_json(
         only: %i[id updated_at created_at]
       ).merge({
-        published: ( respond_to?(:hidden_at) && hidden_at.nil? ) && try(:published?) ? true : false,
+        published: elastic_searchable?,
         geozone: try(:geozone)&.name,
         tags: try(:tags)&.category&.map(&:name),
         locales: locales,
@@ -92,5 +92,9 @@ module Search::Generic
             end
       res
     end
+  end
+
+  def elastic_searchable?
+    true
   end
 end

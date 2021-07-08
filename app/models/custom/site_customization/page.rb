@@ -17,4 +17,8 @@ class SiteCustomization::Page < ApplicationRecord
   def comments_count
     comments.count
   end
+
+  def elastic_searchable?
+    published?
+  end
 end

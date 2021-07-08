@@ -35,4 +35,8 @@ class Proposal < ApplicationRecord
     errors.add(:description, :too_long, message: 'too long text') if
       sanitized_description.length > Setting[ "extended_option.proposals.description_max_length"].to_i
   end
+
+  def elastic_searchable?
+    hidden_at.nil? && published?
+  end
 end

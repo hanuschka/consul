@@ -11,4 +11,8 @@ class SiteCustomization::Page < ApplicationRecord
   def published?
     status == 'published'
   end
+
+  def elastic_searchable?
+    published?
+  end
 end

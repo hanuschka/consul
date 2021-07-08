@@ -9,4 +9,8 @@ class Proposal < ApplicationRecord
   def require_a_projekt?
     Setting["projekts.connected_resources"].present? ? true : false
   end
+
+  def elastic_searchable?
+    hidden_at.nil? && published?
+  end
 end

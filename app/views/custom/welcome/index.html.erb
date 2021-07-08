@@ -13,6 +13,13 @@
 
 <main>
   <%= render "header", header: @header %>
+
+  <div class="row">
+    <div class="small-12 column">
+      <%= render_custom_block 'homepage_block_1' %>
+    </div>
+  </div>
+
   <%= render "feeds" %>
 
   <div class="row">

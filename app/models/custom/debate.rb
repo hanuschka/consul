@@ -33,5 +33,7 @@ class Debate
     #  user.voted_for?(self)
   end
 
-
+  def elastic_searchable?
+    hidden_at.nil?
+  end
 end

@@ -7,10 +7,12 @@
       <%= raw content_block("subnavigation_right", I18n.locale) %>
     </div>
 
-    <div class="account-admin-items">
-      <%= render "layouts/notification_item" %>
-      <%= render partial: 'shared/subnavigation_konto' %>
-      <%= render partial: 'shared/subnavigation_admin' %>
-    </div>
+    <% if user_signed_in? %>
+      <div class="account-admin-items">
+        <%= render "layouts/notification_item" %>
+        <%= render partial: 'shared/subnavigation_konto' %>
+        <%= render partial: 'shared/subnavigation_admin' %>
+      </div>
+    <% end %>
   </ul>
 </div>

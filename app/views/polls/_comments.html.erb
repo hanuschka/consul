@@ -7,7 +7,7 @@
         <%= render "comments/form", { commentable: @poll, parent_id: nil } %>
       <% else %>
         <br>
-        <%= render "shared/login_to_comment" %>
+        <%#= render "shared/login_to_comment" %>
       <% end %>
 
       <%= render "comments/comment_list", comments: @comment_tree.root_comments %>

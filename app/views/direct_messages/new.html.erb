@@ -9,7 +9,7 @@
     <% if not current_user %>
       <div class="callout primary">
         <p>
-          <%= sanitize(t("users.login_to_continue",
+          <%#= sanitize(t("users.login_to_continue",
             signin: link_to_signin, signup: link_to_signup)) %>
         </p>
       </div>

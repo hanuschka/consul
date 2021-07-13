@@ -1,0 +1,59 @@
+.typeform-wrapper {
+  background-color: rgb(239, 237, 237)
+}
+
+.jumbo {
+  margin-bottom: 0;
+}
+
+.welcome-hashtag {
+  color: $black;
+  margin-top: 50px;
+  display: inline-block;
+  font-style: italic;
+}
+
+.win-logos img,
+.partner-logos img {
+  margin: .75em .5rem;
+}
+
+.win-logos,
+.partner-logos {
+  padding-top: 5em;
+  padding-bottom: 5em;
+
+  h2 {
+    font-weight: normal;
+  }
+  
+  p {
+    margin: 0 auto;
+    margin-bottom: 40px;
+  }
+}
+
+.partner-logos {
+  background-color: #EFEDED;
+
+  h2 {
+    margin-bottom: 40px;
+  }
+}
+
+footer {
+  color: $white;
+
+  a, a:hover, a:active, a:focus {
+    color: $white;
+  }
+}
+
+.footer {
+  margin-top: 0;
+  background-color: #707070;
+
+  a, a:hover, a:active, a:focus {
+    color: $white;
+  }
+}

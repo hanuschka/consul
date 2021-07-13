@@ -1,0 +1,60 @@
+<% if header.present? %>
+  <%header_large = Widget::Card.header.find_by title: "header_large" %>
+  <style>
+    <%if header_large%>
+      .home-page .jumbo{
+        background-image: url("<%=header_large.image.attachment.url%>");
+        background-size: cover;
+        background-position: center 35%;
+      }
+    <%end%>
+  </style>
+
+  <div class="jumbo highlight">
+    <div class="row">
+      <div class="small-12 column <%= "medium-9 small" unless header.image.present? %>">
+        <span class='welcome-hashtag'><%= t('cli.welcome.hashtag') %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class='typeform-wrapper'>
+    <div class='row'>
+      <div class='column'>
+        <div class="typeform-widget"
+             data-url="https://form.typeform.com/to/VBrDRrvn?typeform-medium=embed-snippet"
+             style="width: 100%; height: 600px;">
+        </div>
+        <script> (function() { var qs,js,q,s,d=document, gi=d.getElementById, ce=d.createElement, gt=d.getElementsByTagName, id="typef_orm", b="https://embed.typeform.com/"; if(!gi.call(d,id)) { js=ce.call(d,"script"); js.id=id; js.src=b+"embed.js"; q=gt.call(d,"script")[0]; q.parentNode.insertBefore(js,q) } })() </script>
+      </div>
+    </div>
+  </div>
+
+  <div class='win-logos'>
+    <div class='row'>
+      <div class='small-12 column text-center'>
+         <h2><%= t('cli.welcome.win_title') %></h2>
+         <p class='small-12 medium-6'><%= t('cli.welcome.win_text') %></p>
+         <%= image_tag 'hugendubel_logo.png', width: '258' %>
+         <%= image_tag 'cafe_luitpold_logo.png', width: '73' %>
+         <%= image_tag 'skyline_park_logo.png', width: '171' %>
+         <%= image_tag 'cinemaxx_logo.png', width: '298' %>
+      </div>
+    </div>
+  </div>
+
+  <div class='partner-logos'>
+    <div class='row'>
+      <div class='small-12 column text-center'>
+         <h2><%= t('cli.welcome.partner_title') %></h2>
+         <%= image_tag 'wertebuendnis_bayern_logo.png', width: '120' %>
+         <%= image_tag 'akademie_phil_logo.png', width: '305' %>
+         <%= image_tag 'europaeische-akademie_logo.png', width: '90' %>
+         <%= image_tag 'rock_your_life_logo.png', width: '140' %>
+         <%= image_tag 'ekairos_logo.png', width: '175' %>
+         <%= image_tag 'mehr_demokratie_logo.png', width: '200' %>
+      </div>
+    </div>
+  </div>
+
+<% end %>

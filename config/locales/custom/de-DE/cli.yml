@@ -1,7 +1,7 @@
 de:
   cli:
     welcome:
-      hashtag: "#eurezeit: Eure Stimme wird gehört!"
+      hashtag: "<span class='hashtag-text'>#eurezeit</span>: Eure Stimme wird gehört!"
       win_title: "Gewinne Preise von:"
       win_text: Unter allen Teilnehmenden verlosen wir Kino- und Büchergutscheine, Leckereien, einen Besuch im Freizeitpark und vieles mehr – seid gespannt!
       partner_title: Partner

@@ -47,6 +47,11 @@ footer {
   a, a:hover, a:active, a:focus {
     color: $white;
   }
+  .social-share-full {
+    a, a:hover, a:active, a:focus {
+      color: initial;
+    }
+  }
 }
 
 .footer {
@@ -56,4 +61,8 @@ footer {
   a, a:hover, a:active, a:focus {
     color: $white;
   }
+}
+
+span.hashtag-text {
+  color: #212AE7;
 }

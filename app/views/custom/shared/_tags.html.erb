@@ -2,7 +2,7 @@
 
 <% params[:projekts].present? ? filtered_projekt_ids = params[:projekts].split(',') : filtered_projekt_ids = [] %>
 
-<% if taggable.projekts.any? %>
+<% if taggable.respond_to?(:projekts) && taggable.projekts.any? %>
   <div class="taggable_projekts">
     <% taggable.projekts.each do |projekt| %>
       <% projekt.id.to_s.in?(filtered_projekt_ids) ? filtered_projekt_class = 'filtered-projekt' : filtered_projekt_class = ''  %>

@@ -8,18 +8,22 @@
 
   .jumbo {
   
-    background-position: $welcomebgposition;
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-color: $welcomebgcolor;
+    background-position: center top;
 
 
 
     @media only screen and (max-width: 550px) {
-      height: 380px;
+      height: 220px;
+
+      .welcome-hashtag {
+        margin-top: 20px;
+      }
 
       span {
-        display: none;
+        font-size: rem-calc(25);
       }
 
       h1 {
@@ -43,10 +47,14 @@
     }
 
     @media only screen and (min-width: 550px) and (max-width: 639px) {
-      height: 380px;
+      height: 280px;
+
+      .welcome-hashtag {
+        margin-top: 30px;
+      }
 
       span {
-        display: none;
+        font-size: rem-calc(30);
       }
 
       h1 {
@@ -101,6 +109,7 @@
 
     @media only screen and (min-width: 768px) and (max-width: 1280px) {
       height: 380px;
+      background-position: center 35%;
       
       span {
         // color: $welcomespan;
@@ -130,7 +139,8 @@
     }
 
     @media only screen and (min-width: 1280px) and (max-width: 1900px) {
-      height: 590px;
+      height: 450px;
+      background-position: center 35%;
 
       span {
         // color: $welcomespan;
@@ -161,6 +171,7 @@
 
     @media only screen and (min-width: 1900px) {
       height: 600px;
+      background-position: center 35%;
 
       span {
         // color: $welcomespan;

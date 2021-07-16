@@ -36,4 +36,8 @@ class Debate
   def elastic_searchable?
     hidden_at.nil?
   end
+
+  def comments_allowed?(user)
+    projekt.present? ? debate_phase.selectable_by?(user) : false
+  end
 end

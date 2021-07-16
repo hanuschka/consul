@@ -19,4 +19,8 @@ class Poll < ApplicationRecord
   def elastic_searchable?
     published? && hidden_at.nil?
   end
+
+  def comments_allowed?(user)
+    answerable_by?(user)
+  end
 end

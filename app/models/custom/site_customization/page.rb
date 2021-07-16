@@ -21,4 +21,8 @@ class SiteCustomization::Page < ApplicationRecord
   def elastic_searchable?
     published?
   end
+
+  def full_url
+    Setting['url'].chomp('/') + "/#{slug}"
+  end
 end

@@ -17,7 +17,7 @@ namespace :admin do
       get :edit
       patch :quick_update
     end
-    put :update_map, to: "projekts#update_map"
+    patch :update_map, to: "projekts#update_map"
   end
 
   resources :organizations, only: :index do

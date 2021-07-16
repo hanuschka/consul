@@ -4,6 +4,7 @@
   <%= form_for(projekt,
         url: quick_update_admin_projekt_path(projekt),
         as: :projekt,
+        method: :patch,
         html: { id: "edit_projekt_#{projekt.id}" }) do |f| %>
 
     <td class='projekt-info'>

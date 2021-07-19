@@ -1,60 +1,39 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
-<h2><%= t("devise_views.users.registrations.new.title") %></h2>
 
-<%= render "devise/omniauth_form", action: "sign_up" %>
+<h2>Registrieren</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "shared/errors", resource: resource %>
+<p>
+  <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
+      signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
+</p>
 
-  <p>
-    <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
-        signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
-  </p>
-
-  <div class="row">
-    <div class="small-12 column">
-
-      <%= f.hidden_field :use_redeemable_code %>
-      <%= f.hidden_field :locale, value: I18n.locale %>
-
-      <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
-                                   placeholder: t("devise_views.users.registrations.new.username_label"),
-                                   hint: t("custom.devise_views.users.registrations.new.username_note") %>
-
-      <%= f.invisible_captcha :address %>
-
-      <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label") %>
-
-      <%= f.password_field :password, autocomplete: "off",
-                           placeholder: t("devise_views.users.registrations.new.password_label") %>
-
-      <%= f.password_field :password_confirmation, autocomplete: "off",
-                           label: t("devise_views.users.registrations.new.password_confirmation_label"),
-                           placeholder: t("devise_views.users.registrations.new.password_confirmation_label") %>
-
-      <% if resource.use_redeemable_code %>
-        <%= f.text_field :redeemable_code, placeholder: t("devise_views.users.registrations.new.redeemable_code") %>
-      <% end %>
-
-      <%= f.check_box :terms_of_service,
-        title: t("devise_views.users.registrations.new.terms_title"),
-
-        label: t("cli.devise_views.users.registrations.new.terms",
-                 terms: link_to(t("devise_views.users.registrations.new.terms_link"), "/conditions",
-                                title: t("shared.target_blank"),
-                                target: "_blank"),
-                 privacy: link_to(t("cli.devise_views.users.registrations.new.privacy_link"), "/privacy",
-                                title: t("shared.target_blank"),
-                                target: "_blank")
-                ),
-        class: 'checkbox-label' %>
+<h4>Information</h4>
+<p>Bitte melden Sie sich mit Ihrem richtigen Vornamen und Nachnamen (Klarnamen) an. Nur mit einer vollständigen Verifizierung können Sie aktiv mitdiskutieren, Ihre Vorschläge einbringen oder bei Abstimmungen mitmachen. Wenn Sie dies nicht möchten, können Sie sich aber weiterhin wie gewohnt auf der Webseite bewegen und informieren.</p>
 
 
-      <div class="small-12 medium-6 small-centered margin-top">
-        <%= f.submit t("devise_views.users.registrations.new.submit"), class: "button expanded" %>
-      </div>
-    </div>
-  </div>
-<% end %>
+<ol>
+  <li>
+    <h4>EMAIL-VERIFIKATION</h4>
+    <p>Im ersten Schritt müssen Sie ein Konto anlegen, indem Sie ihre E-Mail-Adresse sowie ein Passwort angeben. Die angegebene E-Mail-Adresse muss im Anschluss, mit Klick auf den zugeschickten Link für die Verifizierung, bestätigt werden.</p>
+  </li>
 
-<%= render "devise/shared/links" %>
+  <li>
+    <h4>EINWOHNERMELDE-ABGLEICH</h4>
+    <p>Mit Klick auf den Link werden Sie zur zweiten Verifizierungsstufe weitergeleitet. Dort müssen Sie Ihren Vor- und Nachnamen und weitere Informationen bereitstellen, die mit dem Einwohnermeldeamt abgeglichen werden. Beim Abgleich wird zwischen Bürger:innen der Stadt Bamberg und Bürger:innen aus anderen Gebieten Deutschlands unterschieden:</p>
+
+    <ul>
+      <li>Bamberger:innen werden automatisiert verifiziert und können direkt aktiv teilnehmen</li>
+      <li>Bürger:innen aus anderen Gebieten Deutschlands bekommen einen Code per Post und können nach Abschluss der Anmeldung teilnehmen</li>
+    </ul>
+  </li>
+
+  <li>
+    <h4>Abschluss der Verifizierung</h4>
+  </li>
+</ol>
+
+<div class="small-12 medium-6 small-centered margin-top">
+  <%= link_to t("devise_views.users.registrations.new.submit"), users_sign_up_personal_path, class: "button expanded" %>
+</div>
+
+

@@ -1,4 +1,8 @@
 de:
+  devise:
+    registrations:
+      user:
+        signed_up_but_unconfirmed: "Sie haben eine Nachricht mit einem Bestätigungslink erhalten. Klicken Sie bitte auf diesen Link, um Ihr Konto zu aktivieren."
   activerecord:
     errors:
       models:

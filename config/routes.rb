@@ -46,4 +46,15 @@ Rails.application.routes.draw do
 
   # Static pages
   resources :pages, path: "/", only: [:show]
+
+
+  # Customize devise
+  devise_scope :user do
+    get "users/sign_up/personal",           to: "users/registrations#personal"
+    get "users/sign_up/details",            to: "users/registrations#details"
+    get "users/sign_up/complete",           to: "users/registrations#complete"
+    patch "users/sign_up/update_details",   to: "users/registrations#update_details",  as: :update_user_details
+  end
+
+
 end

@@ -1,0 +1,67 @@
+<% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
+
+<h2><%= t('custom.sign_up.common.register') %></h2>
+
+<%= render 'sign_up_progress_bar' %>
+
+<h4><%= t('custom.sign_up.common.information') %></h4>
+<p class='info-details'><%= t('custom.sign_up.user_details.information_details') %></p>
+
+
+
+<%= form_for(@user, url: update_user_details_path(@user)) do |f| %>
+  <%= render "shared/errors", resource: @user %>
+
+  <div class="row">
+    <div class="small-12 medium-6 column">
+      <%= f.text_field :first_name, placeholder: t("custom.sign_up.user_details.first_name_placeholder")  %>
+    </div>
+
+    <div class="small-12 medium-6 column">
+      <%= f.text_field :last_name, placeholder: t("custom.sign_up.user_details.last_name_placeholder")  %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 column">
+      <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder")  %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="user-date-of-birth column small-12">
+      <%= f.date_select :date_of_birth,
+                        prompt: true,                   
+                        start_year: 1900, end_year: minimum_required_age.years.ago.year %>
+    </div>
+  </div>
+
+  <div class='user-document'>
+    <div class='user-document-type'>
+      <%= f.select :document_type, user_document_types, prompt: "" %>
+    </div>
+    <div class='user-document-number'>
+      <%= f.text_field :document_number, placeholder: t("custom.sign_up.user_details.document_number_placeholder"), label: false%>
+    </div>
+  </div>
+
+  <label><%= t('custom.sign_up.user_details.tips') %></label>
+
+  <div class='row margin-bottom'>
+    <div class='column small-12 medium-6'>
+      <p><%= t('custom.sign_up.user_details.card_help') %></p>
+      <%= image_tag 'card.jpeg' %>
+    </div>
+
+    <div class='column small-12 medium-6'>
+      <p><%= t('custom.sign_up.user_details.pass_help') %></p>
+      <%= image_tag 'pass.jpeg' %>
+    </div>
+  </div>
+
+  <div class="small-12 medium-6 small-centered margin-top margin-bottom-1">
+    <%= f.submit t("custom.sign_up.user_details.submit"), class: "button expanded" %>
+  </div>
+
+
+<% end %>

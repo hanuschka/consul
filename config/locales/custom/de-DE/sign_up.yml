@@ -1,0 +1,39 @@
+de:
+  custom:
+    sign_up:
+      common:
+        register: Registrieren
+        information: Information
+      progress_bar:
+        user_info: Email-Verifikation
+        user_details: Einwohnermelde-Abgleich
+        complete: Abschluss
+      new:
+        information_details: Bitte melden Sie sich mit Ihrem richtigen Vornamen und Nachnamen (Klarnamen) an. Nur mit einer vollständigen Verifizierung können Sie aktiv mitdiskutieren, Ihre Vorschläge einbringen oder bei Abstimmungen mitmachen. Wenn Sie dies nicht möchten, können Sie sich aber weiterhin wie gewohnt auf der Webseite bewegen und informieren.
+        bullet_1: Email-Verifikation
+        bullet_1_text: Im ersten Schritt müssen Sie ein Konto anlegen, indem Sie ihre E-Mail-Adresse sowie ein Passwort angeben. Die angegebene E-Mail-Adresse muss im Anschluss, mit Klick auf den zugeschickten Link für die Verifizierung, bestätigt werden.
+        bullet_2: Einwohnermelde-Abgleich
+        bullet_2_text: "Mit Klick auf den Link werden Sie zur zweiten Verifizierungsstufe weitergeleitet. Dort müssen Sie Ihren Vor- und Nachnamen und weitere Informationen bereitstellen, die mit dem Einwohnermeldeamt abgeglichen werden. Beim Abgleich wird zwischen Bürger:innen der Stadt Bamberg und Bürger:innen aus anderen Gebieten Deutschlands unterschieden:"
+        bullet_2_extra_html: "<ul><li>Bamberger:innen werden automatisiert verifiziert und können direkt aktiv teilnehmen</li><li>Bürger:innen aus anderen Gebieten Deutschlands bekommen einen Code per Post und können nach Abschluss der Anmeldung teilnehmen</li></ul>"
+        bullet_3: Abschluss der Verifizierung
+        submit: Registrierung starten
+      user_info:
+        information_details: Bitte geben Sie Ihre E-Mail-Adresse sowie ein sicheres Passwort an. Wir senden Ihnen eine Bestätigungsmail mit dem Verifizierungslink, der Ihr Konto bestätigt und zur nächsten Stufe weiterleitet.
+        submit: Per E-Mail registrieren
+      user_details:
+        information_details: Bitte geben Sie Ihren Vor- und Nachnamen und weitere persönliche Daten an. So wird sichergestellt, dass bei einzelnen Themen und Abstimmungen keine unbefugten Personen teilnehmen können. Die Verifizierung kann bis zu fünf Minuten dauern. Nach Abschluss der Verifizierung erhalten Sie von uns eine Email mit der Bestätigung Ihrer Anmeldung oder dem Hinweis auf etwaige Fehler.
+        first_name_placeholder: Vorname
+        last_name_placeholder: Nachname
+        plz_placeholder: Postleitzahl
+        document_number_placeholder: Letzten fünf Ziffern auf Dokument
+        card_name: Personalausweis
+        pass_name: Reisepass
+        tips: 'Hinweis:'
+        card_help: 'Letzte fünf Ziffern auf Personalausweis Rückseite:'
+        pass_help: 'Letzte fünf Ziffern auf Reisepass Vorderseite:'
+        submit: Einwohnermelde-Abgleich starten
+      complete:
+        welcome: Herzlichen Glückwunsch!
+        welcome_text: Sie haben beide Verifizierungsschritte durchlaufen. Wir werden Ihre Daten jetzt prüfen und Sie per E-Mail benachrichtigen, sobald Ihr Konto mit dem Einwohnermelderegister abgeglichen wurde. Dies kann einige Minuten dauern.
+        button: Zu bamberg-gestalten.de wechseln
+

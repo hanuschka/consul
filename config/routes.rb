@@ -50,10 +50,11 @@ Rails.application.routes.draw do
 
   # Customize devise
   devise_scope :user do
-    get "users/sign_up/personal",           to: "users/registrations#personal"
-    get "users/sign_up/details",            to: "users/registrations#details"
-    get "users/sign_up/complete",           to: "users/registrations#complete"
-    patch "users/sign_up/update_details",   to: "users/registrations#update_details",  as: :update_user_details
+    get    "users/sign_up/user_info",          to: "users/registrations#user_info",        as: :collect_user_info
+    post   "users/sign_up/user_info",          to: "users/registrations#create_user",      as: :create_user
+    get    "users/sign_up/user_details",       to: "users/registrations#user_details",     as: :collect_user_details
+    patch  "users/sign_up/user_details",       to: "users/registrations#update_details",   as: :update_user_details
+    get    "users/sign_up/complete",           to: "users/registrations#complete",         as: :complete_user_registration
   end
 
 

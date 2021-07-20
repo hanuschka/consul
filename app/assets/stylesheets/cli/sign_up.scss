@@ -1,0 +1,86 @@
+.auth-form {
+	padding-bottom: 4em;
+
+  p.info-details {
+    font-style: italic;
+  }
+
+  p, a, .checkbox, ul {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+
+}
+
+
+.user-date-of-birth {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  label {
+    flex-basis: 100%;
+  }
+
+  select {
+    flex-basis: 32%;
+  }
+}
+
+.user-document {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .user-document-type {
+    flex-basis: 32%;
+  }
+
+  .user-document-number {
+    flex-basis: 66%
+  }
+}
+
+.sign-up-progress-bar {
+  margin-top: 2em;
+  margin-bottom: 3em;
+
+  ol {
+    display: flex;
+    justify-content: space-evenly;
+    background-color: #F6F6F6;
+    margin-left: 0;
+  }
+
+  li {
+    display: inline-block;
+    flex-basis: 33.3%;
+		text-align: center;
+    text-transform: uppercase;
+		font-weight: bold;
+    background-color: #F6F6F6;
+    padding: 1px 5px;
+    
+
+    span {
+			display: inline-block;
+			background-color: #fff;
+			border-radius: 50%;
+			margin-right: 5px;
+			text-align: center;
+			width: 20px;
+			height: 20px;
+			font-size: 15px;
+      font-weight: bold;
+      color: $brand;
+      line-height: 1.5;
+    }
+  }
+
+  li.active {
+    background-color: $brand;
+    color: $white;
+  }
+  
+}

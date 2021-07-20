@@ -3,49 +3,51 @@ require_dependency Rails.root.join("app", "controllers", "users", "registrations
 class Users::RegistrationsController < Devise::RegistrationsController
   prepend_before_action :authenticate_scope!, only: [:edit, :update, :destroy, :finish_signup, :do_finish_signup, :details, :update_details, :complete]
 
-  def new
+  def user_info
+    @user = User.new
+    @user.use_redeemable_code = true if params[:use_redeemable_code].present?
   end
 
-  def personal
-    resource = build_resource
-    resource.use_redeemable_code = true if params[:use_redeemable_code].present?
-  end
+  def create_user
+    @user = User.new(create_user_params)
+    @user.username = Time.now.strftime("%Y%^b%d%H%M%S%L")
 
-  def create
-    build_resource(sign_up_params)
-    if resource.valid?
-      resource.save
-      if resource.persisted?
-        if resource.active_for_authentication?
-					set_flash_message! :notice, :signed_up_but_unconfirmed
-					redirect_to users_sign_up_success_path
-				else
-          set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
+    if @user.valid?
+      @user.save
+
+      if @user.persisted?
+        if @user.active_for_authentication?
+          set_flash_message! :notice, :signed_up_but_unconfirmed
+          redirect_to users_sign_up_success_path
+        else
+          set_flash_message! :notice, :"signed_up_but_#{@user.inactive_message}"
           expire_data_after_sign_in!
-          respond_with resource, location: after_inactive_sign_up_path_for(resource)
-				end
+          respond_with @user, location: after_inactive_sign_up_path_for(@user)
+        end
       else
-        clean_up_passwords resource
+        clean_up_passwords @user
         set_minimum_password_length
-        respond_with resource
+        respond_with @user
       end
+
     else
-      render :personal
+      render :user_info
     end
   end
 
-  def details
+  def user_details
     @user = current_user
   end
 
   def update_details
     @user = current_user
 
-    if @user.update(update_details_params)
-      redirect_to users_sign_up_complete_path
-		else
-      render :details
-		end
+    if @user.update(update_user_details_params)
+      Verifications::CreateXML.create_verification_request(current_user.id, update_user_details_params[:document_type], update_user_details_params[:document_number] )
+      redirect_to complete_user_registration_path
+    else
+      render :user_details
+    end
   end
   
   def complete
@@ -53,7 +55,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
-	def update_details_params
-		params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :document_number)
-	end
+  def create_user_params
+    params[:user].delete(:redeemable_code) if params[:user].present? && params[:user][:redeemable_code].blank?
+    params.require(:user).permit(:redeemable_code, :locale, :email, :password, :password_confirmation, :terms_of_service)
+  end
+
+  def update_user_details_params
+    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :document_number)
+  end
 end

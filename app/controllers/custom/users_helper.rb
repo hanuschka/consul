@@ -18,4 +18,9 @@ module UsersHelper
   def skip_user_verification?
     Setting["feature.user.skip_verification"].present?
   end
+
+  def user_document_types
+    [[t("custom.sign_up.user_details.card_name"), 'card'],
+     [t("custom.sign_up.user_details.pass_name"), 'pass']]
+  end
 end

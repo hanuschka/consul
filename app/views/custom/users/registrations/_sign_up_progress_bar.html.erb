@@ -1,0 +1,16 @@
+<div class="sign-up-progress-bar">
+  <ol>
+    <li <%= "class=active" if params[:action] == 'user_info' %>>
+      <span>1</span>
+      <%= t('custom.sign_up.progress_bar.user_info') %>
+    </li>
+    <li <%= "class=active" if params[:action] == 'user_details' %>>
+      <span>2</span>
+      <%= t('custom.sign_up.progress_bar.user_details') %>
+    </li>
+    <li <%= "class=active" if params[:action] == 'complete' %>>
+      <span>3</span>
+      <%= t('custom.sign_up.progress_bar.complete') %>
+    </li>
+  </ol>
+</div>

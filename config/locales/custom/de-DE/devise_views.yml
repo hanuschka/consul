@@ -14,8 +14,8 @@ de:
         title: Mein Konto bestätigen
     mailer:
       confirmation_instructions:
-        confirm_link: Mein Konto bestätigen
-        text: "Bestätigen Sie Ihre E-Mail-Adresse mithilfe des folgenden Links:"
+        confirm_link: E-Mail bestätigen und Verifizierung fortführen
+        text: "Bitte bestätigen Sie Ihre E-Mail-Adresse mit Klick auf den nachfolgenden Link."
         title: Willkommen
         welcome: Willkommen
       reset_password_instructions:

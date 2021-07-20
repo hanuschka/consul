@@ -1,39 +1,35 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
 
-<h2>Registrieren</h2>
+<h2><%= t('custom.sign_up.common.register') %></h2>
 
 <p>
   <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
       signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
 </p>
 
-<h4>Information</h4>
-<p>Bitte melden Sie sich mit Ihrem richtigen Vornamen und Nachnamen (Klarnamen) an. Nur mit einer vollständigen Verifizierung können Sie aktiv mitdiskutieren, Ihre Vorschläge einbringen oder bei Abstimmungen mitmachen. Wenn Sie dies nicht möchten, können Sie sich aber weiterhin wie gewohnt auf der Webseite bewegen und informieren.</p>
+<h4><%= t('custom.sign_up.common.information') %></h4>
+<p class='info-details'><%= t('custom.sign_up.new.information_details') %></p>
 
 
 <ol>
   <li>
-    <h4>EMAIL-VERIFIKATION</h4>
-    <p>Im ersten Schritt müssen Sie ein Konto anlegen, indem Sie ihre E-Mail-Adresse sowie ein Passwort angeben. Die angegebene E-Mail-Adresse muss im Anschluss, mit Klick auf den zugeschickten Link für die Verifizierung, bestätigt werden.</p>
+    <h4><%= t('custom.sign_up.new.bullet_1') %></h4>
+    <p><%= t('custom.sign_up.new.bullet_1_text') %></p>
   </li>
 
   <li>
-    <h4>EINWOHNERMELDE-ABGLEICH</h4>
-    <p>Mit Klick auf den Link werden Sie zur zweiten Verifizierungsstufe weitergeleitet. Dort müssen Sie Ihren Vor- und Nachnamen und weitere Informationen bereitstellen, die mit dem Einwohnermeldeamt abgeglichen werden. Beim Abgleich wird zwischen Bürger:innen der Stadt Bamberg und Bürger:innen aus anderen Gebieten Deutschlands unterschieden:</p>
-
-    <ul>
-      <li>Bamberger:innen werden automatisiert verifiziert und können direkt aktiv teilnehmen</li>
-      <li>Bürger:innen aus anderen Gebieten Deutschlands bekommen einen Code per Post und können nach Abschluss der Anmeldung teilnehmen</li>
-    </ul>
+    <h4><%= t('custom.sign_up.new.bullet_2') %></h4>
+    <p><%= t('custom.sign_up.new.bullet_2_text') %></p>
+    <%= t('custom.sign_up.new.bullet_2_extra_html') %>
   </li>
 
   <li>
-    <h4>Abschluss der Verifizierung</h4>
+    <h4><%= t('custom.sign_up.new.bullet_3') %></h4>
   </li>
 </ol>
 
-<div class="small-12 medium-6 small-centered margin-top">
-  <%= link_to t("devise_views.users.registrations.new.submit"), users_sign_up_personal_path, class: "button expanded" %>
+<div class="small-12 medium-6 small-centered margin-top-25">
+  <%= link_to t("custom.sign_up.new.submit"), collect_user_info_path, class: "button expanded" %>
 </div>
 
 

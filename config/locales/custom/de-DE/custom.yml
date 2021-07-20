@@ -4,6 +4,13 @@ de:
       user:
         signed_up_but_unconfirmed: "Sie haben eine Nachricht mit einem Bestätigungslink erhalten. Klicken Sie bitte auf diesen Link, um Ihr Konto zu aktivieren."
   activerecord:
+    attributes:
+      user:
+        first_name: Vorname
+        last_name: Nachname
+        plz: Postleitzahl
+        date_of_birth: Geburtsdatum
+        document_type: Dokumententyp
     errors:
       models:
         proposal:

@@ -1,24 +1,21 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
-<h2><%= t("devise_views.users.registrations.new.title") %></h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "shared/errors", resource: resource %>
+<h2><%= t('custom.sign_up.common.register') %></h2>
 
-  <p>
-    <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
-        signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
-  </p>
+<%= render 'sign_up_progress_bar' %>
+
+<h4><%= t('custom.sign_up.common.information') %></h4>
+<p class='info-details'><%= t('custom.sign_up.user_info.information_details') %></p>
+
+
+<%= form_for(@user, url: create_user_path) do |f| %>
+  <%= render "shared/errors", resource: @user %>
 
   <div class="row">
     <div class="small-12 column">
 
       <%= f.hidden_field :use_redeemable_code %>
       <%= f.hidden_field :locale, value: I18n.locale %>
-
-      <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
-                                   placeholder: t("devise_views.users.registrations.new.username_label"),
-                                   hint: t("custom.devise_views.users.registrations.new.username_note") %>
-
       <%= f.invisible_captcha :address %>
 
       <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label") %>
@@ -49,10 +46,8 @@
 
 
       <div class="small-12 medium-6 small-centered margin-top">
-        <%= f.submit t("devise_views.users.registrations.new.submit"), class: "button expanded" %>
+        <%= f.submit t("custom.sign_up.user_info.submit"), class: "button expanded" %>
       </div>
     </div>
   </div>
 <% end %>
-
-<%= render "devise/shared/links" %>

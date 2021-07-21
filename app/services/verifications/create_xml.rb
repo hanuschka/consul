@@ -18,8 +18,8 @@ module Verifications
 
       current_time = Time.now.to_time.strftime("%Y%m%d%H%M%S%L")
 
-      # file_path = '/home/deploy/consul/validation/'
-      file_path = '/home/mike/verifications/'
+      file_path = '/home/deploy/consul/validation/'
+      # file_path = '/home/mike/verifications/'
 
       filename = file_path + current_time + '_' + user_id.to_s + '_' + 'RQ'
 

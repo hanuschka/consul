@@ -127,6 +127,19 @@ class Mailer < ApplicationMailer
     mail(to: @email_to.email, subject: @email.subject) if @email.can_be_sent?
   end
 
+  def residence_confirmed(user)
+    @user = user
+    @email_to = user
+    mail(to: @email_to.email, subject: t('custom.sign_up.mailer.residence_confirmed.subject'))
+  end
+
+  def residence_not_confirmed(user, errors)
+    @user = user
+    @verification_errors = errors
+    @email_to = user
+    mail(to: @email_to.email, subject: t('custom.sign_up.mailer.residence_not_confirmed.subject'))
+  end
+
   private
 
     def with_user(user)

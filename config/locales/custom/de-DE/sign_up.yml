@@ -38,4 +38,16 @@ de:
         welcome: Herzlichen Glückwunsch!
         welcome_text: Sie haben beide Verifizierungsschritte durchlaufen. Wir werden Ihre Daten jetzt prüfen und Sie per E-Mail benachrichtigen, sobald Ihr Konto mit dem Einwohnermelderegister abgeglichen wurde. Dies kann einige Minuten dauern.
         button: Zu bamberg-gestalten.de wechseln
-
+      mailer:
+        residence_confirmed:
+          subject: Erfolgreich verifiziert auf bamberg-gestalten.de
+          welcome: Willkommen
+          greeting: Willkommen
+          text: "Herzliche willkommen auf der Plattform \"Bamberg gestalten!\""
+          url_anchor: www.bamberg-gestalten.de
+        residence_not_confirmed:
+          subject: Verifizierung auf bamberg-gestalten.de ist fehlgeschlagen
+          greeting: Hallo
+          text: "Ihre Verifizierung konnte nicht abgeschlossen werden. Folgende Daten haben keine Übereinstimmung mit dem Melderegister ergeben:"
+          url_cta: "Bitte versuchen Sie es erneut unter:"
+          url_anchor: www.bamberg-gestalten.de

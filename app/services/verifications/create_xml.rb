@@ -24,7 +24,7 @@ module Verifications
       filename = file_path + current_time + '_' + user_id.to_s + '_' + 'RQ'
 
       File.open("#{filename}.xml",'w') {|f| f.write builder.to_xml}
-      CheckUserVerificationRequestJob.perform_now(filename)
+      CheckUserVerificationRequestJob.perform_later(filename)
     end
   end
 end

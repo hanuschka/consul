@@ -24,4 +24,8 @@ class User < ApplicationRecord
     self.email_digest = false
     self.email_on_direct_message = false
   end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 end

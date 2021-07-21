@@ -1,21 +1,24 @@
 module Verifications
   class CheckXML
     def self.check_verification_request(responce)
-      success_responce = "/home/deploy/consul/validation/21070212202033_1234_AN.xml"
-      failed_responce = "/home/deploy/consul/validation/21070212302033_2345_AN.xml"
-      no_responce = "/home/deploy/consul/validation/21070212302033121_2345_AN.xml"
-
-      # success_responce = "/home/mike/verifications/21070212202033_1234_AN.xml"
-      # failed_responce = "/home/mike/verifications/21070212302033_2345_AN.xml"
-      # no_responce = "/home/mike/verifications/2107021230203312_2345_AN.xml"
-
       file = File.open(responce)
       doc = Nokogiri::XML(file)
-      response = doc.at_xpath('request').at_xpath('kombi').text
-      if response == "true"
-        User.first.touch
-      elsif response == 'false'
-        User.first.touch
+
+      user_id = doc.at_xpath('request')[:id]
+      user = User.find_by(id: user_id)
+      result = doc.at_xpath('request').at_xpath('kombi').text
+
+      if result == "true"
+        Mailer.residence_confirmed(user).deliver_later
+      elsif result == 'false'
+        errors = []
+        errors.push("Vorname") if doc.at_xpath('request').at_xpath('vorname').text == 'false'
+        errors.push("Nachname") if doc.at_xpath('request').at_xpath('nachname').text == 'false'
+        errors.push("PLZ") if doc.at_xpath('request').at_xpath('plz').text == 'false'
+        errors.push("Geburtsdatum") if doc.at_xpath('request').at_xpath('geburtsdatum').text == 'false'
+        errors.push("Personalausweis") if doc.at_xpath('request').at_xpath('panr').text == 'false'
+        errors.push("Reisepass") if doc.at_xpath('request').at_xpath('rpnr').text == 'false'
+        Mailer.residence_not_confirmed(user, errors).deliver_later
       end
       file.close if file
     end

@@ -21,9 +21,9 @@ module Verifications
       file_path = '/home/deploy/consul/validation/'
       # file_path = '/home/mike/verifications/'
 
-      filename = file_path + current_time + '_' + user_id.to_s + '_' + 'RQ'
+      filename = file_path + current_time + '_' + user_id.to_s + '_'
 
-      File.open("#{filename}.xml",'w') {|f| f.write builder.to_xml}
+      File.open("#{filename + "RQ"}.xml",'w') {|f| f.write builder.to_xml}
       CheckUserVerificationRequestJob.perform_later(filename)
     end
   end

@@ -42,7 +42,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update_details
     @user = current_user
 
-    if @user.update(update_user_details_params)
+    if @user.update(update_user_details_params.except(:document_number, :document_type))
       Verifications::CreateXML.create_verification_request(current_user.id, update_user_details_params[:document_type], update_user_details_params[:document_number] )
       redirect_to complete_user_registration_path
     else

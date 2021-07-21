@@ -3,6 +3,9 @@ de:
     registrations:
       user:
         signed_up_but_unconfirmed: "Sie haben eine Nachricht mit einem Bestätigungslink erhalten. Klicken Sie bitte auf diesen Link, um Ihr Konto zu aktivieren."
+    confirmations:
+      user:
+        email_confirmed: Ihre E-Mail wurde bestätigt
   activerecord:
     attributes:
       user:

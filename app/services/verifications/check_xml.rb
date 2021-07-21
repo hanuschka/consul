@@ -1,7 +1,11 @@
 module Verifications
   class CheckXML
     def self.check_verification_request(responce)
-      file = File.open(responce)
+      # 
+      # responce = "/home/mike/verifications/21070212202033_1_"
+      #
+
+      file = File.open(responce + "AN.xml")
       doc = Nokogiri::XML(file)
 
       user_id = doc.at_xpath('request')[:id]

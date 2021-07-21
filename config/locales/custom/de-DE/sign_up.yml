@@ -26,10 +26,12 @@ de:
         last_name_placeholder: Nachname
         plz_placeholder: Postleitzahl
         document_number_placeholder: Letzten fünf Ziffern auf Dokument
-        card_name: Personalausweis
-        pass_name: Reisepass
+        card_name: '1) Personalausweis'
+        pass_name: '2) Reisepass'
         tips: 'Hinweis:'
+        card_label: '1) Personalausweis Rückseite'
         card_help: 'Letzte fünf Ziffern auf Personalausweis Rückseite:'
+        pass_label: '2) Reisepass Vorderseite'
         pass_help: 'Letzte fünf Ziffern auf Reisepass Vorderseite:'
         submit: Einwohnermelde-Abgleich starten
       complete:

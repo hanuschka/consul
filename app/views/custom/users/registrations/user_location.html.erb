@@ -1,0 +1,28 @@
+<% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
+
+<h2><%= t('custom.sign_up.common.register') %></h2>
+
+<%= render 'sign_up_progress_bar' %>
+
+<h4><%= t('custom.sign_up.common.information') %></h4>
+<p class='info-details'><%= t('custom.sign_up.user_location.information_details') %></p>
+
+<%= form_for(@user, url: update_user_location_path) do |f| %>
+  <%= render "shared/errors", resource: @user %>
+
+  <div class="row">
+    <div class="small-12 column">
+      <div class='location-radio-button'>
+        <%= f.radio_button :location, 'citizen',
+            label: t('custom.sign_up.user_location.option.citizen') %>
+      </div>
+      <div class='location-radio-button'>
+        <%= f.radio_button :location, 'not_citizen',
+            label: t('custom.sign_up.user_location.option.not_citizen') %>
+      </div>
+      <div class="small-12 medium-6 small-centered margin-top">
+        <%= f.submit t("custom.sign_up.user_location.submit"), class: "button expanded" %>
+      </div>
+    </div>
+  </div>
+<% end %>

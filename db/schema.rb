@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_19_135756) do
+ActiveRecord::Schema.define(version: 2021_07_22_082146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1679,6 +1679,7 @@ ActiveRecord::Schema.define(version: 2021_07_19_135756) do
     t.string "first_name"
     t.string "last_name"
     t.string "plz"
+    t.string "location"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["geozone_id"], name: "index_users_on_geozone_id"

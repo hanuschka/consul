@@ -4,12 +4,16 @@
       <span>1</span>
       <%= t('custom.sign_up.progress_bar.user_info') %>
     </li>
-    <li <%= "class=active" if params[:action] == 'user_details' %>>
+    <li <%= "class=active" if params[:action] == 'user_location' %>>
       <span>2</span>
+      <%= t('custom.sign_up.progress_bar.user_location') %>
+    </li>
+    <li <%= "class=active" if params[:action] == 'user_details' %>>
+      <span>3</span>
       <%= t('custom.sign_up.progress_bar.user_details') %>
     </li>
     <li <%= "class=active" if params[:action] == 'complete' %>>
-      <span>3</span>
+      <span>4</span>
       <%= t('custom.sign_up.progress_bar.complete') %>
     </li>
   </ol>

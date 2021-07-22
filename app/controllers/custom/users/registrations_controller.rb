@@ -35,6 +35,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def user_location
+    @user = current_user
+  end
+
+  def update_location
+    @user = current_user
+    if params[:user] && params[:user][:location] && @user.update(location: params[:user][:location])
+      redirect_to collect_user_details_path
+    else
+      @user.errors.add(:location, :blank)
+      render :user_location
+    end
+  end
+
   def user_details
     @user = current_user
   end
@@ -42,8 +56,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update_details
     @user = current_user
 
-    if @user.update(update_user_details_params.except(:document_number, :document_type))
+    if @user.update(update_user_details_params.except(:document_number, :document_type)) && @user.citizen?
       Verifications::CreateXML.create_verification_request(current_user.id, update_user_details_params[:document_type], update_user_details_params[:document_number] )
+      redirect_to complete_user_registration_path
+    elsif @user.update(update_user_details_params.except(:document_number, :document_type))
+      Verifications::CreateXML.create_verification_letter(current_user.id)
       redirect_to complete_user_registration_path
     else
       render :user_details

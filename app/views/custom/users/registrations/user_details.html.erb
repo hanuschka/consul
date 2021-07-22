@@ -5,7 +5,12 @@
 <%= render 'sign_up_progress_bar' %>
 
 <h4><%= t('custom.sign_up.common.information') %></h4>
-<p class='info-details'><%= t('custom.sign_up.user_details.information_details') %></p>
+
+<% if @user.citizen? %>
+  <p class='info-details'><%= t('custom.sign_up.user_details.information_details.citizen') %></p>
+<% else %>
+  <p class='info-details'><%= t('custom.sign_up.user_details.information_details.not_citizen') %></p>
+<% end %>
 
 
 
@@ -36,34 +41,34 @@
     </div>
   </div>
 
-  <div class='user-document'>
-    <div class='user-document-type'>
-      <%= f.select :document_type, user_document_types, prompt: "" %>
-    </div>
-    <div class='user-document-number'>
-      <%= f.text_field :document_number, placeholder: t("custom.sign_up.user_details.document_number_placeholder"), label: false%>
-    </div>
-  </div>
-
-  <label><%= t('custom.sign_up.user_details.tips') %></label>
-
-  <div class='row margin-bottom'>
-    <div class='column small-12 medium-6'>
-      <label><%= t('custom.sign_up.user_details.card_label') %></label>
-      <p><%= t('custom.sign_up.user_details.card_help') %></p>
-      <%= image_tag 'card.jpg' %>
+  <% if @user.citizen? %>
+    <div class='user-document'>
+      <div class='user-document-type'>
+        <%= f.select :document_type, user_document_types, prompt: "" %>
+      </div>
+      <div class='user-document-number'>
+        <%= f.text_field :document_number, placeholder: t("custom.sign_up.user_details.document_number_placeholder"), label: false%>
+      </div>
     </div>
 
-    <div class='column small-12 medium-6'>
-      <label><%= t('custom.sign_up.user_details.pass_label') %></label>
-      <p><%= t('custom.sign_up.user_details.pass_help') %></p>
-      <%= image_tag 'pass.jpg' %>
+    <label><%= t('custom.sign_up.user_details.tips') %></label>
+
+    <div class='row margin-bottom'>
+      <div class='column small-12 medium-6'>
+        <label><%= t('custom.sign_up.user_details.card_label') %></label>
+        <p><%= t('custom.sign_up.user_details.card_help') %></p>
+        <%= image_tag 'card.jpg' %>
+      </div>
+
+      <div class='column small-12 medium-6'>
+        <label><%= t('custom.sign_up.user_details.pass_label') %></label>
+        <p><%= t('custom.sign_up.user_details.pass_help') %></p>
+        <%= image_tag 'pass.jpg' %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="small-12 medium-6 small-centered margin-top margin-bottom-1">
     <%= f.submit t("custom.sign_up.user_details.submit"), class: "button expanded" %>
   </div>
-
-
 <% end %>

@@ -20,7 +20,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
 
       if resource.class.class_name == "User"
         sign_in(resource)
-        redirect_to collect_user_details_path
+        redirect_to collect_user_location_path
       else
         respond_with_navigational(resource) { redirect_to after_confirmation_path_for(resource_name, resource) }
       end

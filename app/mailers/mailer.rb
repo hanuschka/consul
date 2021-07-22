@@ -140,6 +140,12 @@ class Mailer < ApplicationMailer
     mail(to: @email_to.email, subject: t('custom.sign_up.mailer.residence_not_confirmed.subject'))
   end
 
+  def residence_confirmation_code(user)
+    @user = user
+    @email_to = user
+    mail(to: @email_to.email, subject: t('custom.sign_up.mailer.residence_confirmation_code.subject'))
+  end
+
   private
 
     def with_user(user)

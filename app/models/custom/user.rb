@@ -34,4 +34,8 @@ class User < ApplicationRecord
   def citizen?
     location == 'citizen'
   end
+
+  def username
+    full_name
+  end
 end

@@ -37,7 +37,7 @@ module Verifications
           xml.strasse user.street_name
           xml.hausnummer user.house_number
           xml.stadt user.city_name
-          xml.letter_verification_code = user.bam_letter_verification_code
+          xml.letter_verification_code user.bam_letter_verification_code
         }
       end
 

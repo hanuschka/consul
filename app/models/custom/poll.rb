@@ -9,9 +9,10 @@ class Poll < ApplicationRecord
   has_many :geozone_affiliations, through: :projekt
 
   def answerable_by?(user)
-    user.present? &&
-      user.level_two_or_three_verified? &&
+    user &&
+      !user.organization? &&
+      user.level_three_verified? &&
       current? &&
-      (!geozone_restricted || geozone_ids.include?(user.geozone_id) || Setting['feature.user.skip_verification'])
+      (!geozone_restricted || geozone_ids.include?(user.geozone_id) || user.level_three_verified?)
   end
 end

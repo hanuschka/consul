@@ -15,14 +15,16 @@ class Debate
   end
 
   def votable_by?(user)
+    return true if user && user.verified_organization?
+
     user &&
     !user.organization? &&
-    user.level_two_or_three_verified? &&
+    user.level_three_verified? &&
     (
-      Setting['feature.user.skip_verification'].present? ||
       projekt.blank? ||
-      debate_phase && debate_phase.geozone_restrictions.blank? ||
-      (debate_phase && debate_phase.geozone_restrictions.any? && debate_phase.geozone_restrictions.include?(user.geozone) )
+      debate_phase && debate_phase.geozone_restricted == "no_restriction" ||
+      debate_phase && debate_phase.geozone_restricted == "only_citizens" ||
+      (debate_phase && debate_phase.geozone_restricted == "only_geozones" && debate_phase.geozone_restrictions.any? && debate_phase.geozone_restrictions.include?(user.geozone) )
     ) &&
     (
       projekt.blank? ||

@@ -2,7 +2,7 @@ module Verifications
   class CheckXML
     def self.check_verification_request(responce)
       # 
-      # responce = "/home/mike/verifications/21070212202033_1_"
+      responce = "/home/mike/verifications/21070212202033_1_"
       #
 
       file = File.open(responce + "AN.xml")
@@ -13,7 +13,8 @@ module Verifications
       result = doc.at_xpath('request').at_xpath('kombi').text
 
       if result == "true"
-        user.update(verified_at: Time.now)
+        geozone = Geozone.find_by(external_code: user.plz)
+        user.update(verified_at: Time.now, geozone: geozone)
         Mailer.residence_confirmed(user).deliver_later
       elsif result == 'false'
         errors = []

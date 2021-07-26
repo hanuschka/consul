@@ -38,4 +38,8 @@ class User < ApplicationRecord
   def username
     full_name
   end
+
+  def username_required?
+    false
+  end
 end

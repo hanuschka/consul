@@ -1,0 +1,25 @@
+<% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
+
+<h2><%= t('custom.sign_up.common.register') %></h2>
+
+<%= render 'sign_up_progress_bar' %>
+
+<h4><%= t('custom.sign_up.user_verification_code.title') %></h4>
+
+<p><%= t('custom.sign_up.user_verification_code.description') %></p>
+
+
+
+<%= form_for(@user, url: check_user_verification_code_path(@user)) do |f| %>
+  <%= render "shared/errors", resource: @user %>
+
+  <div class="row">
+    <div class="small-12 medium-6 column">
+      <%= f.text_field :bam_letter_verification_code, placeholder: t("custom.sign_up.user_verification_code.bam_letter_verification_code_placeholder"), value: nil  %>
+    </div>
+  </div>
+
+  <div class="small-12 medium-4 margin-top margin-bottom-1">
+    <%= f.submit t("custom.sign_up.user_verification_code.submit"), class: "button expanded" %>
+  </div>
+<% end %>

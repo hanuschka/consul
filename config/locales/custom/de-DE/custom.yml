@@ -14,12 +14,20 @@ de:
         plz: Postleitzahl
         date_of_birth: Geburtsdatum
         document_type: Dokumententyp
+        street_name: Straße
+        house_number: Hausnummer
+        city_name: Stadt
+        bam_letter_verification_code: Verifizierungscode
     errors:
       models:
         proposal:
           attributes:
             description:
               too_long: 'is too long'
+        user:
+          attributes:
+            bam_letter_verification_code:
+              not_valid: Verifizierungscode ungültig
   custom:
     devise_views:
       users:

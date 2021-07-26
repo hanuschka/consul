@@ -27,11 +27,33 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="small-12 column">
-      <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder")  %>
+  <% if @user.citizen? %>
+    <div class="row">
+      <div class="small-12 column">
+        <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder")  %>
+      </div>
     </div>
-  </div>
+  <% else %>
+    <div class="row">
+      <div class="small-12 medium-6 column">
+        <%= f.text_field :street_name, placeholder: t("custom.sign_up.user_details.street_name_placeholder")  %>
+      </div>
+
+      <div class="small-12 medium-6 column">
+        <%= f.text_field :house_number, placeholder: t("custom.sign_up.user_details.house_number_placeholder")  %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 medium-6 column">
+        <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder")  %>
+      </div>
+
+      <div class="small-12 medium-6 column">
+        <%= f.text_field :city_name, placeholder: t("custom.sign_up.user_details.city_name_placeholder")  %>
+      </div>
+    </div>
+  <% end %>
 
   <div class="row">
     <div class="user-date-of-birth column small-12">

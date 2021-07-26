@@ -13,6 +13,7 @@ module Verifications
       result = doc.at_xpath('request').at_xpath('kombi').text
 
       if result == "true"
+        user.update(verified_at: Time.now)
         Mailer.residence_confirmed(user).deliver_later
       elsif result == 'false'
         errors = []

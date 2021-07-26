@@ -1,0 +1,8 @@
+<% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
+
+<h2><%= t('custom.sign_up.common.register') %></h2>
+
+<%= render 'sign_up_progress_bar' %>
+
+<h4><%= t('custom.sign_up.complete_code.welcome') %></h4>
+<p class='info-details'><%= sanitize t('custom.sign_up.complete_code.welcome_text_html') %></p>

@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "controllers", "users", "registrations_controller").to_s
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  prepend_before_action :authenticate_scope!, only: [:edit, :update, :destroy, :finish_signup, :do_finish_signup, :details, :update_details, :complete]
+  prepend_before_action :authenticate_scope!, only: [:edit, :update, :destroy, :finish_signup, :do_finish_signup, :user_location, :update_location, :user_details, :update_details, :complete, :complete_code, :user_verification_code, :update_user_verification_code]
 
   def user_info
     @user = User.new
@@ -60,14 +60,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
       Verifications::CreateXML.create_verification_request(current_user.id, update_user_details_params[:document_type], update_user_details_params[:document_number] )
       redirect_to complete_user_registration_path
     elsif @user.update(update_user_details_params.except(:document_number, :document_type))
-      Verifications::CreateXML.create_verification_letter(current_user.id)
-      redirect_to complete_user_registration_path
+      current_user.update( bam_letter_verification_code: rand(11111111..99999999) ) unless current_user.bam_letter_verification_code.present?
+      Verifications::CreateXML.create_verification_letter(current_user)
+      redirect_to complete_user_registration_code_path
     else
       render :user_details
     end
   end
   
   def complete
+  end
+
+  def complete_code
+  end
+
+  def user_verification_code
+    @user = current_user
+  end
+
+  def check_user_verification_code
+    @user = current_user
+    if params[:user] &&
+        params[:user][:bam_letter_verification_code] &&
+        params[:user][:bam_letter_verification_code].to_i == @user.bam_letter_verification_code
+
+      current_user.update( verified_at: Time.now )
+      redirect_to root_path, notice: t('custom.sign_up.check_user_verification_code.user_verified')
+    else
+      @user.errors.add(:bam_letter_verification_code, :not_valid)
+      render :user_verification_code
+    end
   end
 
   private
@@ -78,6 +100,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_user_details_params
-    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :document_number)
+    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :document_number, :street_name, :house_number, :city_name)
   end
 end

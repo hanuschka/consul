@@ -36,6 +36,9 @@ de:
         first_name_placeholder: Vorname
         last_name_placeholder: Nachname
         plz_placeholder: Postleitzahl
+        street_name_placeholder: Straße
+        house_number_placeholder: Hausnummer
+        city_name_placeholder: Stadt
         document_number_placeholder: Letzten fünf Ziffern auf Dokument
         card_name: '1) Personalausweis'
         pass_name: '2) Reisepass'
@@ -45,6 +48,16 @@ de:
         pass_label: '2) Reisepass Vorderseite'
         pass_help: 'Letzte fünf Ziffern auf Reisepass Vorderseite:'
         submit: Einwohnermelde-Abgleich starten
+      complete_code:
+        welcome: Herzlichen Glückwunsch!
+        welcome_text_html: Sie haben beide Verifizierungsschritte durchlaufen. Wir werden Ihre Daten jetzt prüfen und Ihnen einen Verifizierungscode postalisch zuschicken. Sobald Sie den Code erhalten haben, bitte unter <a href="https://www.bamberg-gestalten.de/code">www.bamberg-gestalten.de/code</a> eingeben.
+      user_verification_code:
+        title: Verifizierungscode eingeben
+        description: Bitte geben Sie in das nachfolgende Feld Ihren Verifizierungscode ein.
+        bam_letter_verification_code_placeholder: Verifizierungscode
+        submit: Code verifizieren
+      check_user_verification_code:
+        user_verified: Ihr Konto wurde erfolgreich verifziert!
       complete:
         welcome: Herzlichen Glückwunsch!
         welcome_text: Sie haben beide Verifizierungsschritte durchlaufen. Wir werden Ihre Daten jetzt prüfen und Sie per E-Mail benachrichtigen, sobald Ihr Konto mit dem Einwohnermelderegister abgeglichen wurde. Dies kann einige Minuten dauern.
@@ -65,5 +78,5 @@ de:
         residence_confirmation_code:
           subject: Anleitung zur Bestätigung
           greeting: Hallo
-          text_html: vielen Dank für Ihre Verifizierung. Wir prüfen nun Ihre Daten und schicken Ihnen einen Code postalisch zu. Bitte melden Sie sich nach Erhalt des Codes unter <a href="https://www.bamberg-gestalten.de/">www.bamberg-gestalten.de</a> an und geben Sie dort den Code ein.
+          text_html: vielen Dank für Ihre Verifizierung. Wir prüfen nun Ihre Daten und schicken Ihnen einen Code postalisch zu. Bitte melden Sie sich nach Erhalt des Codes unter <a href="https://www.bamberg-gestalten.de/code">www.bamberg-gestalten.de/code</a> an und geben Sie dort den Code ein.
 

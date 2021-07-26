@@ -2,6 +2,8 @@ require_dependency Rails.root.join("app", "models", "user").to_s
 
 class User < ApplicationRecord
 
+  attr_accessor :street_name, :house_number, :city_name
+
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,

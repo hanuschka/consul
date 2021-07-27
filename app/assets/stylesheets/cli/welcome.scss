@@ -22,7 +22,11 @@
     }
 
     button.full-button {
-      background: blue;
+      background: rgb(1, 66, 172);
+
+      &:hover {
+        background: rgb(39, 94, 184)
+      }
     }
 
     button.hollow-button {

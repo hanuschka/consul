@@ -66,3 +66,19 @@ footer {
 span.hashtag-text {
   color: #212AE7;
 }
+
+.typeform-widget {
+  height: 843px;
+
+  @media only screen and (min-width: 450px) {
+    height: 775px;
+  }
+
+  @media only screen and (min-width: 635px) {
+    height: 850px;
+  }
+
+  @media only screen and (min-width: 1065px) {
+    height: 900px;
+  }
+}

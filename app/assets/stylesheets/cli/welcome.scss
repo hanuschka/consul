@@ -54,6 +54,10 @@
     @media only screen and (min-width: 1280px) {
       margin-top: 350px;
     }
+
+    @media only screen and (min-width: 1920px) {
+      display: none;
+    }
   }
 }
 
@@ -144,5 +148,13 @@ span.hashtag-text {
 
   @media only screen and (min-width: 635px) {
     height: 640px;
+  }
+
+  @media only screen and (min-width: 768px) {
+    height: 645px;
+  }
+
+  @media only screen and (min-width: 1068px) {
+    height: 690px;
   }
 }

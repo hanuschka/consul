@@ -2,7 +2,7 @@ module Verifications
   class CheckXML
     def self.check_verification_request(responce)
       # 
-      responce = "/home/mike/verifications/21070212202033_1_"
+      # responce = "/home/mike/verifications/21070212202033_1_"
       #
 
       file = File.open(responce + "AN.xml")

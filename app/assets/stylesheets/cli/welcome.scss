@@ -4,6 +4,46 @@
 
 .jumbo {
   margin-bottom: 0;
+
+  .buttons {
+    text-align: center;
+    display: none;
+
+    button {
+      padding: 0.75rem;
+      border-radius: 5px;
+      font-size: 1.5em;
+      font-weight: bold;
+
+      a, a:hover, a:focus {
+        color: $white;
+        text-decoration: none;
+      }
+    }
+
+    button.full-button {
+      background: blue;
+    }
+
+    button.hollow-button {
+      border: 1px solid $white;
+      padding: calc(0.75rem - 1px);
+      margin-left: 0.2em;
+    }
+
+    @media only screen and (min-width: 550px) {
+      display: block;
+      margin-top: 100px;
+    }
+
+    @media only screen and (min-width: 640px) {
+      margin-top: 170px;
+    }
+
+    @media only screen and (min-width: 1280px) {
+      margin-top: 210px;
+    }
+  }
 }
 
 .welcome-hashtag {
@@ -18,6 +58,7 @@
   margin: .75em .5rem;
 }
 
+.infomaterial,
 .win-logos,
 .partner-logos {
   padding-top: 5em;
@@ -33,11 +74,19 @@
   }
 }
 
-.partner-logos {
-  background-color: #EFEDED;
-
+.infomaterial {
   h2 {
-    margin-bottom: 40px;
+    margin-bottom: 1.5em;
+  }
+}
+
+.win-logos {
+  background-color: #EFEDED;
+}
+
+.partner-logos {
+  h2 {
+    margin-bottom: .5em;
   }
 }
 

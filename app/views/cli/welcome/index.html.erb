@@ -12,7 +12,7 @@
 <main>
   <%= render "header", header: @header %>
 
-  <div class='typeform-wrapper'>
+  <div id="survey" class='typeform-wrapper'>
     <div class='row'>
       <div class='column'>
         <div class="typeform-widget"
@@ -23,6 +23,17 @@
       </div>
     </div>
   </div>
+
+  <% if @cards.any? %>
+    <div id="infomaterial" class="infomaterial">
+      <div class="row">
+        <div class='small-12 column text-center'>
+          <h2><%= t("cli.welcome.cards_title") %></h2>
+          <%= render "cards" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
   <div class='win-logos'>
     <div class='row'>

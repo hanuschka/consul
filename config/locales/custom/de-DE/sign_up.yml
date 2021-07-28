@@ -5,7 +5,7 @@ de:
         register: Registrieren
         information: Information
       progress_bar:
-        user_info: Email-Verifikation
+        user_info: Email
         user_location: Wohnort
         user_details: Datenabgleich
         complete: Abschluss

@@ -150,6 +150,12 @@
                     <%= link_to t("account.show.finish_verification"), verification_path, class: "button success" %>
                   <% else %>
                     <%= link_to t("account.show.verify_my_account"), verification_path, class: "button success" %>
+
+                    <% if current_user.bam_letter_verification_code.present? && !current_user.citizen? %>
+                      <div>
+                        <%= link_to t("custom.account.show.enter_verification_code_button"), collect_user_verification_code_path, class: "button" %>
+                      </div>
+                    <% end %>
                   <% end %>
                 </span>
               </div>

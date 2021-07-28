@@ -84,6 +84,7 @@ de:
 
       show:
         user_permission_votes: An Abstimmungen teilnehmen
+        enter_verification_code_button: Code eingeben
     menu:
       archived: Abgelaufene Projekte
       account: Konto

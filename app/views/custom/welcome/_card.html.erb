@@ -1,6 +1,6 @@
 <div id="<%= dom_id(card) %>"
      class="card small-12 medium-<%= card.columns %> column margin-bottom end" data-equalizer-watch>
-  <%= link_to card.link_url do %>
+  <%= link_to card.link_url, target: "_blank" do %>
     <figure class="figure-card">
       <div class="gradient"></div>
       <% if card.image.present? %>

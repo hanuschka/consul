@@ -113,6 +113,8 @@ de:
           show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
           show_not_active_phases_in_projekts_page_sidebar: Nicht aktive Teilnahmephasen verbergen
           show_not_active_phases_in_projekts_page_sidebar_description: Verbirgt die Teilnahmephasen in der rechten Seitenleiste der Projektseite und in der Projektauswahl
+          only_info_page: Projekt als reine Informationsseite verwenden
+          only_info_page_description: Projekt wird weder im Projektfilter noch in der Projektauswahl angezeigt
           show_map: Karte einblenden
           show_map_description: Zeigt die Karte sowie die Gebietszuordnung in der Applikation an
         sidebar:

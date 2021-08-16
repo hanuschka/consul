@@ -34,8 +34,17 @@ class Projekt < ApplicationRecord
   scope :top_level, -> { where(parent: nil) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
 
-  scope :top_level_active, -> { top_level.with_order_number.where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).joins(:projekt_settings).where( projekt_settings: { key: 'projekt_feature.main.activate', value: 'active' }) }
-  scope :top_level_archived, -> { top_level.with_order_number.where( "total_duration_end < ?", Date.today).joins(:projekt_settings).where( projekt_settings: { key: 'projekt_feature.main.activate', value: 'active' }) }
+  scope :top_level_active, -> { top_level.with_order_number.
+                                where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
+                                joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
+                                where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
+
+  scope :top_level_archived, -> { top_level.with_order_number.
+                                  where( "total_duration_end < ?", Date.today).
+                                  joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                  joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
+                                  where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
 
   scope :top_level_active_top_menu, -> { top_level.with_order_number.
                                          where("total_duration_end IS NULL OR total_duration_end >= ?", Date.today).

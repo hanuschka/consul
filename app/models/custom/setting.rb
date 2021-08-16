@@ -136,6 +136,8 @@ class Setting < ApplicationRecord
         "projekts.show_archived.navigation": true,
         "projekts.show_archived.sidebar": true,
         "projekts.show_module_links_in_flyout_menu": true,
+        "projekts.second_level_projekts_in_active_filter": false,
+        "projekts.second_level_projekts_in_archived_filter": false,
         # "extended_feature.general.elasticsearch": false,
         "extended_feature.general.extended_editor_for_admins": false,
         "extended_feature.general.extended_editor_for_users": false,
@@ -166,6 +168,9 @@ class Setting < ApplicationRecord
         "extended_option.proposals.description_max_length": 6000,
         "extended_feature.polls.intro_text_for_polls": false,
         "extended_feature.polls.intermediate_poll_results_for_admins": false,
+        "extended_feature.polls.enable_comments": true,
+        "extended_feature.polls.additional_information": true,
+        "extended_feature.polls.additional_info_for_each_answer": false
       }
     end
 

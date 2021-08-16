@@ -48,7 +48,6 @@ Rails.application.routes.draw do
   # Static pages
   resources :pages, path: "/", only: [:show]
 
-
   # Customize devise
   devise_scope :user do
     get    "users/sign_up/user_info",              to: "users/registrations#user_info",                    as: :collect_user_info
@@ -63,5 +62,6 @@ Rails.application.routes.draw do
     patch  "users/sign_up/user_verification_code", to: "users/registrations#check_user_verification_code", as: :check_user_verification_code
   end
 
-
+  # Post open answers
+  patch "polls/questions/:id/answers/:answer_id/update_open_answer",   to: "polls/questions#update_open_answer", as: :update_open_answer
 end

@@ -1,20 +1,59 @@
 <div class="poll-question-answers">
   <% if can?(:answer, question) && !question.poll.voted_in_booth?(current_user) %>
     <% question.question_answers.each do |answer| %>
-      <% if @answers_by_question_id[question.id] == answer.title || question.poll.voted_in_booth?(current_user) %>
-        <span class="button answered"
-              title="<%= t("poll_questions.show.voted", answer: answer.title) %>">
-          <%= answer.title %>
-        </span>
-      <% else %>
-        <%= link_to answer.title,
-          answer_question_path(question, answer: answer.title, token: token),
-          method: :post,
-          remote: true,
-          title: t("poll_questions.show.vote_answer", answer: answer.title),
-          class: "button secondary hollow js-question-answer" %>
+      <div class='poll-answer-group <%= 'align-answers-top' if question.show_images? && extended_feature?("polls.additional_info_for_each_answer") %>'>
+
+        <% if extended_feature?("polls.additional_info_for_each_answer") && question.show_images? %>
+          <div class='poll-answer-thumbnail <%= 'poll-answer-more-info' if answer_with_description?(answer) %>'
+               <%= "data-open=model-question-#{answer.id}" if answer_with_description?(answer) %>>
+            <% if answer.images.any? %>
+              <%= image_tag answer.images.first.attachment.url %>
+            <% end %>
+          </div>
+        <% elsif extended_feature?('polls.additional_info_for_each_answer') && answer_with_description?(answer) %>
+          <div class='poll-answer-more-info-link' data-open='model-question-<%= answer.id %>'>
+            More info
+          </div>
+        <% end %>
+
+        <% if @answers_by_question_id[question.id].include?(answer.title) &&
+              (!voted_before_sign_in(question) ||
+               question.poll.voted_in_booth?(current_user)) %>
+          <% if question.multiple %>
+              <%= link_to answer.title,
+                          unanswer_question_path(question, answer: answer.title, token: token),
+                          method: :post,
+                          remote: true,
+                          title: t("poll_questions.show.vote_unanswer", answer: answer.title),
+                          class: "button take-back hollow js-question-answer" %>
+            <% else %>
+              <span class="button answered"
+                    title="<%= t("poll_questions.show.voted", answer: answer.title) %>">
+                <%= answer.title %>
+                <% open_answer = answer if answer.open_answer? %>
+              </span>
+          <% end %>
+        <% else %>
+          <%= link_to answer.title,
+            answer_question_path(question, answer: answer.title, token: token),
+            method: :post,
+            remote: true,
+            title: t("poll_questions.show.vote_answer", answer: answer.title),
+            class: "button secondary hollow js-question-answer" %>
+        <% end %>
+
+      </div>
+
+    <% end %>
+
+    <% if question.open_answer && @answers_by_question_id[question.id].include?(question.open_answer.title) %>
+      <% open_answer = question.open_answer %>
+      <%= form_for open_answer, url: update_open_answer_path(question, open_answer), method: :patch, remote: true do |f| %>
+        <%= f.text_area :open_answer_text %>
+        <%= f.submit t('custom.polls.questions.answers.save_open_answer'), class: "button open-answer" %>
       <% end %>
     <% end %>
+
   <% elsif !user_signed_in? %>
     <% question.question_answers.order(id: :desc).each do |answer| %>
       <%= link_to answer.title, new_user_session_path, class: "button secondary hollow" %>

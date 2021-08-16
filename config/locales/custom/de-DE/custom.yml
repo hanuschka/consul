@@ -28,7 +28,17 @@ de:
           attributes:
             bam_letter_verification_code:
               not_valid: Verifizierungscode ungültig
+    attributes:
+      poll/question/answer:
+        open_answer_text: Offene Antwort text
+      widget/card:
+        card_category: Kategorie
   custom:
+    welcome:
+      active_projekt_cards:
+        title: Aktive Beteiligungsprozesse
+      archived_projekt_cards:
+        title: Abgeschlossene Beteiligungsprozesse
     devise_views:
       users:
         registrations:
@@ -92,6 +102,16 @@ de:
       proposals: Vorschläge
       polls: Abstimmungen
     admin:
+      homepage:
+        active_projekts_title: Aktive Beteiligungsprozesse
+        archived_projekts_title: Abgeschlossene Beteiligungsprozesse
+      widget:
+        card:
+          category_options:
+            active_projekt: Aktiver Beteiligungsprozess
+            archived_projekt: Abgeschlossener Beteiligungsprozess
+
+
       settings:
         index:
           extended_settings: Erweiterte Einstellungen
@@ -107,6 +127,11 @@ de:
             debates: Diskussionen
             proposals: Vorschläge
             polls: Abstimmungen
+      polls:
+        questions:
+          show_images: Bilder für Antworten anzeigen
+          answers:
+            open_answer_html: Offene Antwort <small><em>(Nur eine erlaubt)</em></small>
 
       menu:
         projekts: Projekte
@@ -271,6 +296,9 @@ de:
       show:
         results_menu: Zwischenergebnisse für Admins
         info_menu: Abstimmung
+      questions:
+        answers:
+          save_open_answer: Antwort speichern
     debates:
       form:
         tags_custom: Nutzer-Tags

@@ -169,6 +169,8 @@ module ProjektsHelper
   end
 
   def show_projekt_group_in_selector?(projekts)
+    return true if projekts.first&.parent&.id.to_s == params[:projekt]
+
     resource = @debate || @proposal || @poll
 
     if resource && resource.projekt.present?

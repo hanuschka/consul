@@ -300,26 +300,82 @@
         !window.localStorage.getItem('debatesProjektFilterToggleIds') ||
         !window.localStorage.getItem('pollsProjektFilterToggleIds')
       ) {
-        var topProjekts = $('#filter-projekts-active > ul > li > label > input')
-        var topProjektIds = $.map(topProjekts, function(n) { return $(n).val() }).join(',')
+
+        var topActiveProjekts, topActiveProjektIds, topArchivedProjekts, topArchivedProjektIds
+
+        if ( document.querySelector("meta[name='expand-active-projekts']").getAttribute("content") === 'active' ) {
+          topActiveProjekts = $('#filter-projekts-active > ul > li > label > input')
+          topActiveProjektIds = $.map(topActiveProjekts, function(n) { return $(n).val() })
+        } else {
+          topActiveProjektIds = new Array()
+        }
+
+        if ( document.querySelector("meta[name='expand-archived-projekts']").getAttribute("content") === 'active' ) {
+          topArchivedProjekts = $('#filter-projekts-archived > ul > li > label > input')
+          topArchivedProjektIds = $.map(topArchivedProjekts, function(n) { return $(n).val() })
+        } else {
+          topArchivedProjektIds = new Array()
+        }
+
+        var topProjektIds = topActiveProjektIds.concat(topArchivedProjektIds).join(',')
       }
 
-      if (
-        !window.localStorage.getItem('proposalsProjektFilterToggleIds')
-      ) {
+      if ( topProjektIds && !window.localStorage.getItem('proposalsProjektFilterToggleIds') ) {
         window.localStorage.setItem('proposalsProjektFilterToggleIds', topProjektIds)
       }
 
-      if (
-        !window.localStorage.getItem('debatesProjektFilterToggleIds')
-      ) {
+      if ( topProjektIds && !window.localStorage.getItem('debatesProjektFilterToggleIds') ) {
         window.localStorage.setItem('debatesProjektFilterToggleIds', topProjektIds)
       }
 
-      if (
-        !window.localStorage.getItem('pollsProjektFilterToggleIds')
-      ) {
+      if ( topProjektIds && !window.localStorage.getItem('pollsProjektFilterToggleIds') ) {
         window.localStorage.setItem('pollsProjektFilterToggleIds', topProjektIds)
+      }
+    },
+
+    toggleProjektsInSidebarFilter: function() {
+      var resourceName;
+      if (window.location.href.includes('proposals')) {
+        resourceName = 'proposals' + 'ProjektFilterToggleIds'
+      } else if (window.location.href.includes('debates')) {
+        resourceName = 'debates' + 'ProjektFilterToggleIds'
+      } else if (window.location.href.includes('polls')) {
+        resourceName = 'polls' + 'ProjektFilterToggleIds'
+      }
+
+      $('#filter-projekts-all').find('li').each( function() {
+        var projektId = $(this).children('label').children('input').val()
+
+        if ( window.localStorage.getItem(resourceName) && window.localStorage.getItem(resourceName).split(',').includes(projektId) ) {
+          $(this).attr('aria-expanded', 'true')
+        }
+
+      });
+    },
+
+    updateSelectedParentProjekt: function() {
+      var selected_projekt_ids = $('#filter-projekts-active input:checked').map( function() {
+        return $(this).val()
+      }).get();
+
+      var current_url = $('.js-preselect-projekt:visible').first().attr('href').split('?')[0]
+      var $visibleButton = $('.js-preselect-projekt:visible').first()
+      if ( selected_projekt_ids.length > 0 ) {
+        $.ajax({
+          url: "/update_selected_parent_projekt",
+          method: "post",
+          data: { selected_projekts_ids: selected_projekt_ids },
+          success: function(result) {
+            if (result["selected_parent_projekt_id"] != null) {
+              var new_url = current_url + '?projekt=' + result["selected_parent_projekt_id"]
+              $visibleButton.attr('href', new_url)
+            } else {
+              $visibleButton.attr('href', current_url)
+            }
+          }
+        });
+      } else {
+        $visibleButton.attr('href', current_url)
       }
     },
 
@@ -379,6 +435,8 @@
             });
           }
         }
+
+        App.Projekts.updateSelectedParentProjekt();
       });
 
       $("body").on("click", ".js-apply-projekts-filter", function(event) {
@@ -439,25 +497,12 @@
       });
 
       App.Projekts.setDefaultToggleProjektsIds();
+      App.Projekts.toggleProjektsInSidebarFilter();
 
-      $('#filter-projekts-all').find('li').each( function() {
-        var resourceName;
-        if (window.location.href.includes('proposals')) {
-          resourceName = 'proposals' + 'ProjektFilterToggleIds'
-        } else if (window.location.href.includes('debates')) {
-          resourceName = 'debates' + 'ProjektFilterToggleIds'
-        } else if (window.location.href.includes('polls')) {
-          resourceName = 'polls' + 'ProjektFilterToggleIds'
-        }
-
-        var projektId = $(this).children('label').children('input').val()
-
-        if ( window.localStorage.getItem(resourceName) && window.localStorage.getItem(resourceName).split(',').includes(projektId) ) {
-          $(this).attr('aria-expanded', 'true')
-        }
-
+      $("body").on("click", ".js-quick-projekt-update", function(event) {
+        event.preventDefault();
+        $(this).closest('tr').find('form').submit()
       });
-
     }
   };
 }).call(this);

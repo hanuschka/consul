@@ -15,4 +15,8 @@ class Poll < ApplicationRecord
       current? &&
       (!geozone_restricted || geozone_ids.include?(user.geozone_id) || user.level_three_verified?)
   end
+
+  def comments_allowed?(user)
+    answerable_by?(user)
+  end
 end

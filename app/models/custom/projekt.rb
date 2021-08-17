@@ -35,22 +35,32 @@ class Projekt < ApplicationRecord
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
 
   scope :top_level_active, -> { top_level.with_order_number.
-                                where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
-                                joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
-                                where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
+                                           where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
+                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                           joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
+                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
 
   scope :top_level_archived, -> { top_level.with_order_number.
-                                  where( "total_duration_end < ?", Date.today).
-                                  joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                  joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
-                                  where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
+                                           where( "total_duration_end < ?", Date.today).
+                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                           joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
+                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
+
+  scope :top_level_active_projekt_for_page_sidebar, -> { top_level.with_order_number.
+                                           where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
+                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active' ).distinct }
+
+  scope :top_level_archived_projekt_for_page_sidebar, -> { top_level.with_order_number.
+                                           where( "total_duration_end < ?", Date.today).
+                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active' ).distinct }
 
   scope :top_level_active_top_menu, -> { top_level.with_order_number.
-                                         where("total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
-                                         joins('INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                         joins('INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
-                                         where("a.key": "projekt_feature.main.activate", "a.value": "active", "b.key": "projekt_feature.general.show_in_navigation", "b.value": "active").distinct }
+                                           where("total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
+                                           joins('INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                                           joins('INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
+                                           where("a.key": "projekt_feature.main.activate", "a.value": "active", "b.key": "projekt_feature.general.show_in_navigation", "b.value": "active").distinct }
 
   def level(counter = 1)
     return counter if self.parent.blank?

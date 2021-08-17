@@ -31,23 +31,26 @@
   }
 
   .poll-answer-more-info {
-    position: relative;
+    top: 5px;
+    right: 5px;
+    position: absolute;
     cursor: pointer;
     color: $brand;
+    background-color: white;
+    border-radius: 5px;
+    padding-right: 26px;
+    padding-left: 7px;
+    padding-top: 2px;
+    z-index: 1;
 
     &:after {
       position: absolute;
-      top: 5px;
-      right: 5px;
+      top: 3px;
+      right: 6px;
       content: "\f35d";
       font-family: "Font Awesome 5 Free";
       font-weight: bold;
-      color: $brand;
-      background-color: white;
-      border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      text-align: center;
+      font-size: 0.875em;
     }
   
   }

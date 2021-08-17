@@ -30,7 +30,7 @@ de:
               not_valid: Verifizierungscode ungültig
     attributes:
       poll/question/answer:
-        open_answer_text: Offene Antwort text
+        open_answer_text: Offene Antwort
       widget/card:
         card_category: Kategorie
   custom:
@@ -298,6 +298,7 @@ de:
         info_menu: Abstimmung
       questions:
         answers:
+          more_info: Mehr Infos
           save_open_answer: Antwort speichern
     debates:
       form:

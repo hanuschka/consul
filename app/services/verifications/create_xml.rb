@@ -23,7 +23,8 @@ module Verifications
 
       filename = file_path + current_time + '_' + user_id.to_s + '_'
 
-      File.open("#{filename + "RQ"}.xml",'w') {|f| f.write builder.to_xml}
+      File.open("#{filename}RQ.xml",'w') {|f| f.write builder.to_xml}
+      Rails.logger.info "File creted: #{filename}RQ.xml"
       CheckUserVerificationRequestJob.perform_later(filename)
     end
 
@@ -48,6 +49,7 @@ module Verifications
 
       filename = file_path + current_time + '_' + user.id.to_s
       File.open("#{filename}.xml",'w') {|f| f.write builder.to_xml}
+      Rails.logger.info "File creted: #{filename}.xml"
       Mailer.residence_confirmation_code(user).deliver_later
     end
   end

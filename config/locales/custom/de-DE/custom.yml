@@ -18,6 +18,10 @@ de:
         house_number: Hausnummer
         city_name: Stadt
         bam_letter_verification_code: Verifizierungscode
+      poll/question/answer:
+        open_answer_text: Offene Antwort
+      widget/card:
+        card_category: Kategorie
     errors:
       models:
         proposal:
@@ -28,11 +32,6 @@ de:
           attributes:
             bam_letter_verification_code:
               not_valid: Verifizierungscode ungültig
-    attributes:
-      poll/question/answer:
-        open_answer_text: Offene Antwort
-      widget/card:
-        card_category: Kategorie
   custom:
     welcome:
       active_projekt_cards:

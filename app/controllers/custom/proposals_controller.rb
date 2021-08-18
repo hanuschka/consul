@@ -83,6 +83,8 @@ class ProposalsController
 
   def created
     @resource_name = 'proposal'
+    @affiliated_geozones = []
+    @restricted_geozones = []
   end
 
   private

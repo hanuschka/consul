@@ -5,9 +5,9 @@ class ProjektPhase < ApplicationRecord
 
   def selectable_by?(user)
 
-    geozone_allowed = if geozone_restricted == "no_restriction" ||
-                         geozone_restricted == "only_citizens" ||
-                         ( geozone_restricted == "only_geozones" && geozone_restrictions.any? && geozone_restrictions.include?(user.geozone) )
+    geozone_allowed = geozone_restricted == "no_restriction" ||
+                      geozone_restricted == "only_citizens" ||
+                      ( geozone_restricted == "only_geozones" && geozone_restrictions.any? && geozone_restrictions.include?(user.geozone) )
 
     user &&
       user.level_three_verified? &&

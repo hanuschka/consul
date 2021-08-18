@@ -8,7 +8,7 @@ class ProjektPhase < ApplicationRecord
     geozone_allowed = geozone_restricted == "no_restriction" ||
                       geozone_restricted == "only_citizens" ||
                       ( geozone_restricted == "only_geozones" && geozone_restrictions.blank? ) ||
-                      ( geozone_restricted == "only_geozones" && geozone_restrictions.any? && geozone_restrictions.include?(user.geozone) )
+                      ( geozone_restricted == "only_geozones" && geozone_restrictions.any? && user.present? && geozone_restrictions.include?(user.geozone) )
 
     user &&
       user.level_three_verified? &&

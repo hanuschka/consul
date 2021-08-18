@@ -262,7 +262,7 @@ de:
           title: Partizipation
           no_restriction: Alle Nutzer:innen der Plattform
           only_citizens: Nur Bürger:innen der Stadt
-          only_geozones: Nur Bürger:innen des Stadtteils
+          only_geozones: Nur Bürger:innen aus Gebiet
           show_more: Mehr anzeigen
           filter_button: Nach Partizipation filtern
       projekt_selector:
@@ -273,7 +273,7 @@ de:
         restrictions:
           no_restriction: Alle Nutzer:innen der Plattform
           only_citizens: Nur Bürger:innen der Stadt
-          only_geozones: Nur Bürger:innen des Stadtteils
+          only_geozones: Nur Bürger:innen aus Gebiet
     proposals:
       form:
         tags_custom: Nutzer-Tags

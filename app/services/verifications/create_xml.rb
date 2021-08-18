@@ -1,6 +1,6 @@
 module Verifications
   class CreateXML
-    def self.create_verification_request(user_id, doc_type, doc_number)
+    def self.create_verification_request(user_id)
       user = User.find(user_id)
       builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
         xml.request(id: user_id) {
@@ -8,10 +8,10 @@ module Verifications
           xml.nachname user.last_name
           xml.geburtsdatum user.date_of_birth.strftime("%d.%m.%Y")
           xml.plz user.plz
-          if doc_type == 'card'
-            xml.panr doc_number
-          elsif doc_type == 'pass'
-            xml.rpnr doc_number
+          if user.document_type == 'card'
+            xml.panr user.document_number
+          elsif user.document_type == 'pass'
+            xml.rpnr user.document_number
           end
         }
       end

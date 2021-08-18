@@ -56,10 +56,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update_details
     @user = current_user
 
-    if @user.update(update_user_details_params.except(:document_number, :document_type)) && @user.citizen?
-      Verifications::CreateXML.create_verification_request(current_user.id, update_user_details_params[:document_type], update_user_details_params[:document_number] )
+    if @user.update(update_user_details_params) && @user.citizen?
+      Verifications::CreateXML.create_verification_request(current_user.id)
       redirect_to complete_user_registration_path
-    elsif @user.update(update_user_details_params.except(:document_number, :document_type))
+    elsif @user.update(update_user_details_params)
       current_user.update( bam_letter_verification_code: rand(11111111..99999999) ) unless current_user.bam_letter_verification_code.present?
       Verifications::CreateXML.create_verification_letter(current_user)
       redirect_to complete_user_registration_code_path

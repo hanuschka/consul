@@ -16,7 +16,7 @@ class Projekt < ApplicationRecord
   has_many :projekt_phases, dependent: :destroy
   has_one :debate_phase, class_name: 'ProjektPhase::DebatePhase'
   has_one :proposal_phase, class_name: 'ProjektPhase::ProposalPhase'
-  has_many :geozone_limitations, through: :projekt_phases
+  has_many :geozone_restrictions, through: :projekt_phases
   has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
   has_one :map_location, dependent: :destroy
 

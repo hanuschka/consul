@@ -641,7 +641,7 @@ de:
       cant_answer_verify: "Sie müssen %{verify_link}, um zu antworten."
       verify_link: "Verifizieren Sie Ihr Benutzerkonto"
       cant_answer_expired: "Diese Abstimmung wurde beendet."
-      cant_answer_wrong_geozone: "Diese Frage ist nicht in ihrem Gebiet verfügbar."
+      cant_answer_wrong_geozone: "Diese Abstimmung ist nicht in ihrem Gebiet verfügbar."
       more_info_title: "Weitere Informationen"
       documents: Dokumente
       zoom_plus: Bild vergrößern

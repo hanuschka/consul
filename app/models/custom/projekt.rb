@@ -38,13 +38,15 @@ class Projekt < ApplicationRecord
                                            where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
                                            joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
                                            joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
-                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
+                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).
+                                           select("DISTINCT ON (projekts.order_number) *") }
 
   scope :top_level_archived, -> { top_level.with_order_number.
                                            where( "total_duration_end < ?", Date.today).
                                            joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
                                            joins(' INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
-                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).distinct }
+                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active', 'b.key': 'projekt_feature.general.only_info_page', 'b.value': "" ).
+                                           select("DISTINCT ON (projekts.order_number) *") }
 
   scope :top_level_active_projekt_for_page_sidebar, -> { top_level.with_order_number.
                                            where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).

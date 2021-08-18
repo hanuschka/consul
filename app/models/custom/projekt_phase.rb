@@ -22,4 +22,10 @@ class ProjektPhase < ApplicationRecord
   def expired?
     end_date && end_date < Date.today
   end
+
+  def currently_active?
+    active &&
+      ((start_date <= Date.today if start_date) || start_date.blank? ) &&
+      ((end_date >= Date.today if end_date) || end_date.blank? )
+  end
 end

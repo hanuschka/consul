@@ -57,12 +57,6 @@ module ProjektsHelper
     projekt.send(phase_name).active
   end
 
-  def projekt_phase_selectable?(projekt, phase_name)
-    projekt.send(phase_name).active &&
-      ((projekt.send(phase_name).start_date <= Date.today if projekt.send(phase_name).start_date) || projekt.send(phase_name).start_date.blank? ) &&
-      ((projekt.send(phase_name).end_date >= Date.today if projekt.send(phase_name).end_date) || projekt.send(phase_name).end_date.blank? )
-  end
-
   def projekt_phase_not_started_yet?(projekt, phase_name)
     projekt.send(phase_name).start_date > Date.today if projekt.send(phase_name).start_date
   end

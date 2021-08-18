@@ -35,7 +35,7 @@ gem "jquery-rails", "~> 4.4.0"
 gem "jquery-ui-rails", "~> 6.0.1"
 gem "kaminari", "~> 1.2.1"
 # gem "newrelic_rpm", "~> 4.1.0.333"
-gem 'newrelic_rpm', '~> 5.0', '>= 5.0.0.342'
+gem 'newrelic_rpm', '~> 6.15'
 gem "omniauth", "~> 1.9.1"
 gem "omniauth-facebook", "~> 7.0.0"
 gem "omniauth-google-oauth2", "~> 0.8.0"

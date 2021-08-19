@@ -5,12 +5,20 @@
   </h1>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("custom.sign_up.mailer.residence_confirmed.greeting") %> <%= @user.full_name %>!
+    <%= t("custom.sign_up.mailer.residence_confirmed.greeting") %> <%= @user.full_name %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("custom.sign_up.mailer.residence_confirmed.text") %>
+    <%= t("custom.sign_up.mailer.residence_confirmed.text_html") %>
   </p>
+
+
+  <br>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.sign_up.mailer.residence_confirmed.signature_html") %>
+  </p>
+
 
   <br>
 

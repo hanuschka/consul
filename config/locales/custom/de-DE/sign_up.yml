@@ -65,9 +65,11 @@ de:
       mailer:
         residence_confirmed:
           subject: Erfolgreich verifiziert auf bamberg-gestalten.de
-          welcome: Willkommen
-          greeting: Willkommen
-          text: "Herzliche willkommen auf der Plattform \"Bamberg gestalten!\""
+          welcome: Herzlich Willkommen
+          greeting: Herzlich Willkommen
+          text_html: Sie haben nun die die Möglichkeit auf der Plattform <em><b>Bamberg-gestalten</b></em> aktiv an der Entwicklung Bambergs mitzuwirken. Wir freuen uns auf Ihre Meinungen und Vorschläge.
+          signature_html: Ihr Team der Bürgerbeteiligung<br>Stadt Bamberg<br>96047 Bamberg<br><a href='mailto:buergerbeteiligung@stadt.bamberg.de'>buergerbeteiligung@stadt.bamberg.de</a>
+
           url_anchor: www.bamberg-gestalten.de
         residence_not_confirmed:
           subject: Verifizierung auf bamberg-gestalten.de ist fehlgeschlagen

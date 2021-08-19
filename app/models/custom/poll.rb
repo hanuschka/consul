@@ -13,7 +13,7 @@ class Poll < ApplicationRecord
       !user.organization? &&
       user.level_three_verified? &&
       current? &&
-      (!geozone_restricted || (geozone_restricted && geozone_ids.blank?) || (geozone_restricted && geozone_ids.include?(user.geozone_id)))
+      (!geozone_restricted || ( geozone_restricted && geozone_ids.blank? && user.geozone.present? ) || (geozone_restricted && geozone_ids.include?(user.geozone_id)))
   end
 
   def comments_allowed?(user)

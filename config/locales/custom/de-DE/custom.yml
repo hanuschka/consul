@@ -126,6 +126,9 @@ de:
             debates: Diskussionen
             proposals: Vorschläge
             polls: Abstimmungen
+        geozones:
+          name: Name des Gebietes
+          plz: Postleitzahl
       polls:
         questions:
           show_images: Bilder für Antworten anzeigen

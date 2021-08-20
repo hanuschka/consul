@@ -1,3 +1,29 @@
+$primary-h: 215;
+$primary-s: 90%;
+$primary-l: 0%;
+
+$base: hsl($primary-h, $primary-s, $primary-l) !default;
+
+$black:    scale-color($base, $saturation: -04%, $lightness: +03%) !default;
+$gray-900: scale-color($base, $saturation: -11%, $lightness: +06%) !default;
+$gray-800: scale-color($base, $saturation: -23%, $lightness: +12%) !default;
+$gray-700: scale-color($base, $saturation: -36%, $lightness: +20%) !default;
+$gray-600: scale-color($base, $saturation: -47%, $lightness: +28%) !default;
+$gray-500: scale-color($base, $saturation: -57%, $lightness: +38%) !default;
+$gray-400: scale-color($base, $saturation: -65%, $lightness: +48%) !default;
+$gray-300: scale-color($base, $saturation: -64%, $lightness: +60%) !default;
+$gray-200: scale-color($base, $saturation: -61%, $lightness: +72%) !default;
+$gray-100: scale-color($base, $saturation: -58%, $lightness: +86%) !default;
+$white:    scale-color($base, $saturation: -58%, $lightness: +93%) !default;
+
+$red: hsl(355, 082%, 033%);
+$orange: hsl(020, 100%, 060%);
+$yellow: hsl(060, 100%, 075%);
+$green: hsl(085, 067%, 042%);
+$teal: hsl(190, 100%, 020%);
+$blue: hsl(215, 082%, 019%);
+
+
 // brand_color
 $brand:                                           #004a83;
 $secondary:                                       lighten($brand, 70%);
@@ -7,8 +33,8 @@ $dark:                                            darken($brand, 10%);
 
 // Menu variables
 
-$dark:                                            #222;
-$white:                                           #fff;
+// $dark:                                            #222;
+// $white:                                           #fff;
 
 
 $top-level-menu-item-text-color:                  $dark;

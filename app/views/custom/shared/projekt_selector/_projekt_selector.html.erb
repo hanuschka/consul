@@ -1,7 +1,7 @@
-<% projekts = Projekt.top_level_active %>
+<% projekts = Projekt.top_level_active.select{ |projekt| projekt.has_active_phase?(params[:controller]) || projekt.any_children_with_active_phase?(params[:controller]) } %>
 <% current_model_name = model.class.name.downcase %>
 
-<% if projekts.exists?  %>
+<% if projekts.any?  %>
 
   <% if current_model_name == 'debate' || current_model_name == 'proposal' %>
     <h5><%= t("custom.projekts.selector.connected_resources.#{current_model_name}_title") %></h5>
@@ -39,7 +39,7 @@
 
         <% projekts.each do |projekt| %>
           <% if projekt.children.any? %>
-            <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children.with_order_number, parent_projekt_id: projekt.id }  %>
+            <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children.with_order_number.select{ |projekt| projekt.has_active_phase?(params[:controller]) || projekt.any_children_with_active_phase?(params[:controller]) } , parent_projekt_id: projekt.id }  %>
           <% end %>
         <% end %>
       </div>
@@ -53,7 +53,7 @@
           <% if projekt.children.any? %>
             <% projekt.children.each do |projekt| %>
               <% if projekt.children.any? %>
-                <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children.with_order_number, parent_projekt_id: projekt.id }  %>
+                <%= render partial: 'shared/projekt_selector/projekt_group', locals: { f:f, projekts: projekt.children.with_order_number.select{ |projekt| projekt.has_active_phase?(params[:controller]) || projekt.any_children_with_active_phase?(params[:controller]) } , parent_projekt_id: projekt.id }  %>
 
               <% end %>
             <% end %>

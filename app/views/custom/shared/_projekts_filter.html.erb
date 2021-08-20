@@ -1,25 +1,34 @@
 <% projekts.each do |projekt| %>
-  <% label_class =  ( @selected_projekts_ids && projekt.id.to_s.in?(@selected_projekts_ids) ) ? 'label-selected' : 'label_regular' %>
-  <% checkbox_checked = @selected_projekts_ids && projekt.id.to_s.in?(@selected_projekts_ids)  %>
-  <% projekt_color = projekt&.map_location&.pin_color.present? ? projekt&.map_location&.pin_color : nil %>
 
-  <ul>
-    <li class=''>
-      <%= label_tag dom_id(projekt), class: label_class do %>
-        <%= check_box_tag dom_id(projekt), projekt.id, checkbox_checked, { class: 'js-filter-projekt' }  %>
-        <%= projekt.name %>
-        <span class="checkmark"></span>
-        <span class="color-code" <%= "style=background-color: #{projekt_color}" if projekt_color.present? %> ></span>
-      <% end %>
+  <% projekt_has_active_phase = projekt.has_active_phase?(params[:controller]) %>
+  <% projekt_has_any_children_with_active_phase = projekt.any_children_with_active_phase?(params[:controller]) %>
+
+
+  <% if projekt_has_active_phase || projekt_has_any_children_with_active_phase %>
+
+    <% label_class =  ( @selected_projekts_ids && projekt.id.to_s.in?(@selected_projekts_ids) ) ? 'label-selected' : 'label_regular' %>
+    <% checkbox_checked = @selected_projekts_ids && projekt.id.to_s.in?(@selected_projekts_ids)  %>
+    <% projekt_color = projekt&.map_location&.pin_color.present? ? projekt&.map_location&.pin_color : nil %>
+
+    <ul>
+      <li class=''>
+        <%= label_tag dom_id(projekt), class: label_class do %>
+          <%= check_box_tag dom_id(projekt), projekt.id, checkbox_checked, { class: 'js-filter-projekt' }  %>
+          <%= projekt.name %>
+          <span class="checkmark"></span>
+          <span class="color-code" <%= "style=background-color: #{projekt_color}" if projekt_color.present? %> ></span>
+        <% end %>
+
+        <% if projekt_has_any_children_with_active_phase %>
+          <span class='js-icon-toggle-child-projekts toggle-arrow'></span>
+        <% end %>
+      </li>
 
       <% if projekt.children.any? %>
-        <span class='js-icon-toggle-child-projekts toggle-arrow'></span>
+        <%= render partial: "shared/projekts_filter", locals: { projekts: projekt.children.with_order_number } %>
       <% end %>
-    </li>
 
-    <% if projekt.children.any? %>
-      <%= render partial: "shared/projekts_filter", locals: { projekts: projekt.children.with_order_number } %>
-    <% end %>
+    </ul>
+  <% end %>
 
-  </ul>
 <% end %>

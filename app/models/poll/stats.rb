@@ -104,7 +104,7 @@ class Poll::Stats
     end
 
     def voters
-      @voters ||= poll.voters.select(:user_id)
+      poll.voters.select(:user_id)
     end
 
     def recounts

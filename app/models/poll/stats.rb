@@ -39,6 +39,10 @@ class Poll::Stats
 
   def total_web_valid
     voters.where(origin: "web").count - total_web_white
+    Rails.logger.info "!!!!!!!!!!!!!!!!!!!  Inside of total_web_valid method"
+    Rails.logger.info "!!!!!!!!!!!!!!!!!!!  Current number of voters: #{voters.where(origin: "web").count}"
+    Rails.logger.info "!!!!!!!!!!!!!!!!!!!  Current number of total_web_white: #{total_web_white}"
+    voters.where(origin: "web").count - total_web_white
   end
 
   def total_web_white
@@ -104,7 +108,11 @@ class Poll::Stats
     end
 
     def voters
-      poll.voters.select(:user_id)
+      @voters ||= poll.voters.select(:user_id)
+      Rails.logger.info "####################  Inside of voters method"
+      Rails.logger.info "####################  Current poll id: #{poll.id}"
+      Rails.logger.info "####################  Current number of voters: #{@voters.count}"
+      @voters ||= poll.voters.select(:user_id)
     end
 
     def recounts

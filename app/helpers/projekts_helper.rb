@@ -176,7 +176,7 @@ module ProjektsHelper
     end
 
     if selected_projekt_id
-      (projekts.ids + projekts.map{ |projekt| projekt.all_children_ids }.flatten).include?(selected_projekt_id)
+      (projekts.pluck(:id) + projekts.map{ |projekt| projekt.all_children_ids }.flatten).include?(selected_projekt_id)
     end
   end
 end

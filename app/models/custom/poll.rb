@@ -19,4 +19,11 @@ class Poll < ApplicationRecord
   def comments_allowed?(user)
     answerable_by?(user)
   end
+
+  def find_or_create_stats_version
+    if !expired? && stats_version && stats_version.created_at.to_date != Date.today.to_date
+      stats_version.destroy
+    end
+    super
+  end
 end

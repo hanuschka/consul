@@ -56,7 +56,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update_details
     @user = current_user
 
-    if @user.update(update_user_details_params) && @user.citizen?
+    if update_user_details_params[:document_type].blank?
+      @user.errors.add :document_type, :blank, message: "cannot be blank"
+    end
+
+    if update_user_details_params[:document_number].blank?
+      @user.errors.add :document_number, :blank, message: "cannot be blank"
+    end
+
+    if @user.errors.any?
+      render :user_details
+    elsif @user.update(update_user_details_params) && @user.citizen?
       Verifications::CreateXML.create_verification_request(current_user.id)
       redirect_to complete_user_registration_path
     elsif @user.update(update_user_details_params)

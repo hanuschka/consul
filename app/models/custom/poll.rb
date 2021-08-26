@@ -26,4 +26,8 @@ class Poll < ApplicationRecord
     end
     super
   end
+
+  def safe_to_delete_answer?
+    voters.count == 0
+  end
 end

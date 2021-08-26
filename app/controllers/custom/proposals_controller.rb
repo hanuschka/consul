@@ -42,6 +42,9 @@ class ProposalsController
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
     @selected_tags = all_selected_tags
+
+    @top_level_active_projekts = Projekt.top_level_active
+    @top_level_archived_projekts = Projekt.top_level_archived
   end
 
   def new

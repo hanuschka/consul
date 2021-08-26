@@ -24,7 +24,7 @@
 		<div class="small-6 medium-6 column">
       <%= f.check_box :open_answer,
         label: t('custom.admin.polls.questions.answers.open_answer_html'),
-        disabled: ( true if @answer.question.present? && @answer.question.question_answers.pluck(:open_answer).count(true) >= 1 && !@answer.open_answer?)  %>
+        disabled: !can_answer_be_open?(@answer.question || @question) && !@answer.open_answer?  %>
 		</div>
 	</div>
 

@@ -8,4 +8,8 @@ module PollsHelper
   def answer_with_description?(answer)
     answer.description.present? || answer.images.any? || answer.documents.present? || answer.videos.present?
   end
+
+  def can_answer_be_open?(question)
+    question.question_answers.pluck(:open_answer).count(true) < 1
+  end
 end

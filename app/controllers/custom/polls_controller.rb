@@ -54,8 +54,8 @@ class PollsController < ApplicationController
       @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).sort_for_list
     ).page(params[:page])
 
-    @top_level_active_projekts = Projekt.top_level_active
-    @top_level_archived_projekts = Projekt.top_level_archived
+    @top_level_active_projekts = Projekt.top_level_active.select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.polls.any? } }
+    @top_level_archived_projekts = Projekt.top_level_archived.select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.polls.any? } }
   end
 
   def set_geo_limitations

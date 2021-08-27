@@ -100,7 +100,7 @@ class Projekt < ApplicationRecord
   end
 
   def count_resources(controller_name)
-    self.send(controller_name).count
+    self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).count }.reduce(:+)
   end
 
   def top_level?

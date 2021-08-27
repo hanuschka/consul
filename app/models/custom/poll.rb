@@ -13,10 +13,21 @@ class Poll < ApplicationRecord
       !user.organization? &&
       user.level_three_verified? &&
       current? &&
-      (!geozone_restricted || (geozone_restricted && geozone_ids.blank?) || (geozone_restricted && geozone_ids.include?(user.geozone_id)))
+      (!geozone_restricted || ( geozone_restricted && geozone_ids.blank? && user.geozone.present? ) || (geozone_restricted && geozone_ids.include?(user.geozone_id)))
   end
 
   def comments_allowed?(user)
     answerable_by?(user)
+  end
+
+  def find_or_create_stats_version
+    if !expired? && stats_version && stats_version.created_at.to_date != Date.today.to_date
+      stats_version.destroy
+    end
+    super
+  end
+
+  def safe_to_delete_answer?
+    voters.count == 0
   end
 end

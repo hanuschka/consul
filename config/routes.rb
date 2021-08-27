@@ -48,5 +48,5 @@ Rails.application.routes.draw do
   resources :pages, path: "/", only: [:show]
 
   # Post open answers
-  patch "polls/questions/:id/answers/:answer_id/update_open_answer",   to: "polls/questions#update_open_answer", as: :update_open_answer
+  post  "polls/questions/:id/answers/update_open_answer",   to: "polls/questions#update_open_answer", as: :update_open_answer
 end

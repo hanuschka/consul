@@ -17,7 +17,6 @@
               <span class="button answered"
                     title="<%= t("poll_questions.show.voted", answer: answer.title) %>">
                 <%= answer.title %>
-                <% open_answer = answer if answer.open_answer? %>
               </span>
           <% end %>
         <% else %>
@@ -33,11 +32,21 @@
 
     <% end %>
 
-    <% if question.open_answer && @answers_by_question_id[question.id].include?(question.open_answer.title) %>
-      <% open_answer = question.open_answer %>
-      <%= form_for open_answer, url: update_open_answer_path(question, open_answer), method: :patch, remote: true do |f| %>
+    <% if question.open_question_answer.present? && @answers_by_question_id[question.id].include?(question.open_question_answer.title) %>
+      <% open_answer = question.answers.find_or_initialize_by(author: current_user, answer: question.open_question_answer.title)  %>
+      <%= form_for open_answer, url: update_open_answer_path(question), method: :post, remote: true do |f| %>
         <%= f.text_area :open_answer_text %>
-        <%= f.submit t('custom.polls.questions.answers.save_open_answer'), class: "button open-answer" %>
+        <%= f.hidden_field :answer %>
+        <% if open_answer.open_answer_text.present? %>
+          <%= f.submit t('custom.polls.questions.answers.update_open_answer'), class: "button open-answer" %>
+          <% if @answer_updated %>
+            <div class='open-answer-saved-notice'>
+              <%= t('custom.admin.polls.questions.answers.notice.open_answer_saved')  %>
+            </div>
+          <% end %>
+        <% else %>
+          <%= f.submit t('custom.polls.questions.answers.save_open_answer'), class: "button open-answer" %>
+        <% end %>
       <% end %>
     <% end %>
 

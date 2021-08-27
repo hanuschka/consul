@@ -45,16 +45,6 @@ class Projekt < ApplicationRecord
                                            where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active' ).
                                            select('DISTINCT ON ("projekts"."order_number") "projekts".*') }
 
-  scope :top_level_active_projekt_for_page_sidebar, -> { top_level.with_order_number.
-                                           where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
-                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active' ).distinct }
-
-  scope :top_level_archived_projekt_for_page_sidebar, -> { top_level.with_order_number.
-                                           where( "total_duration_end < ?", Date.today).
-                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active' ).distinct }
-
   scope :top_level_active_top_menu, -> { top_level.with_order_number.
                                            where("total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
                                            joins('INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
@@ -86,27 +76,32 @@ class Projekt < ApplicationRecord
     all_children_ids
   end
 
+  def all_children_projekts(all_children_projekts = [])
+    if self.children.any?
+      self.children.each do |child|
+        all_children_projekts.push(child)
+        child.all_children_projekts(all_children_projekts)
+      end
+    end
+
+    all_children_projekts
+  end
+
   def has_active_phase?(controller_name)
     case controller_name
     when 'proposals'
-      proposal_phase.active?
+      proposal_phase.currently_active?
     when 'debates'
-      debate_phase.active?
+      debate_phase.currently_active?
     when 'polls'
       polls.any?
     end
   end
 
-  def any_children_with_active_phase?(controller_name)
-    return true if controller_name.include?('admin')
-    case controller_name
-    when 'proposals'
-      all_children_ids.any?{ |projekt_id| Projekt.find(projekt_id).proposal_phase.active? }
-    when 'debates'
-      all_children_ids.any?{ |projekt_id| Projekt.find(projekt_id).debate_phase.active? }
-    when 'polls'
-      all_children_ids.any?{ |projekt_id| Projekt.find(projekt_id).polls.any? }
-    end
+  def count_resources(controller_name)
+    return self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).published.count }.reduce(:+) if controller_name == 'proposals'
+    return self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).created_by_admin.not_budget.count }.reduce(:+) if controller_name == 'polls'
+    self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).count }.reduce(:+)
   end
 
   def top_level?

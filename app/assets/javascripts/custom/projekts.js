@@ -9,12 +9,26 @@
       var dataParentIdentifierString = "[data-parent=\"" + projektId + "\"]"
       var $childrenProjektsGroup = $( dataParentIdentifierString )
 
-      if ( $childrenProjektsGroup.is(":hidden") ) {
+      if ( $childrenProjektsGroup.is(":visible") ) {
         App.Projekts.hideCurrentlyVisibleChildProjekts($label);
-        $childrenProjektsGroup.show()
       } else {
         App.Projekts.hideCurrentlyVisibleChildProjekts($label);
+        $childrenProjektsGroup.show()
       }
+    },
+
+    toggleChildProjektsMobile: function($label) {
+      var projektId = $label.data()['projektId']
+      var $projektChildren = $('[data-parent=' + projektId + ']')
+
+      $projektChildren.toggle()
+
+      if ( $projektChildren.is(':hidden') ) {
+        $projektChildren.find('label').each( function() {
+          $(this).removeClass('highlighted')
+        })
+      }
+
     },
 
     highlightLabel: function($label) {
@@ -397,7 +411,17 @@
         return false;
       });
 
+      $("body").on("click", ".js-show-children-projekts-mobile", function(event) {
+        event.preventDefault();
+
+        var $label = $(this).closest('label')
+
+        App.Projekts.toggleChildProjektsMobile($label);
+        return false;
+      });
+
       $("body").on("click", ".js-select-projekt", function() {
+        event.preventDefault();
         var $label = $(this).closest('label')
 
         if ( $label.hasClass('projekt-phase-disabled')) {
@@ -408,8 +432,14 @@
 
         $radioButton.prop( "checked", !$radioButton.prop( "checked") );
 
-        $label.toggleClass('selected')
-        App.Projekts.highlightLabel($label);
+        // $label.toggleClass('selected')
+
+        if ( $(this).closest('#projekt-tags-selector-mobile').length ) {
+          $(this).closest('#projekt-tags-selector-mobile').find('label').removeClass('highlighted')
+          $label.addClass('highlighted')
+        } else {
+          App.Projekts.highlightLabel($label);
+        }
 
         App.Projekts.replaceProjektMapOnProposalCreation($label, $radioButton)
       });

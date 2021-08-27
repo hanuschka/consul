@@ -123,6 +123,7 @@
 //= require expand_proposals_map
 //= require gdpr_notice
 //= require map_refresh
+//= require polls_custom
 //= require_tree ./sdg
 //= require_tree ./sdg_management
 //= require elastic_search_modal
@@ -191,6 +192,7 @@ var initialize_modules = function() {
   App.GDPRNotice.initialize();
   App.MapRefresh.initialize();
   App.ElasticSearchModal.initialize();
+  App.PollsCustom.initialize();
 };
 
 var destroy_non_idempotent_modules = function() {

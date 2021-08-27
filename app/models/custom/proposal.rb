@@ -43,4 +43,10 @@ class Proposal < ApplicationRecord
   def elastic_searchable?
     hidden_at.nil? && published?
   end
+
+  protected
+
+    def set_responsible_name
+      self.responsible_name = 'unregistriered'
+    end
 end

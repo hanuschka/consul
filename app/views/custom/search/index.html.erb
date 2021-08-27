@@ -53,7 +53,7 @@
 
     <aside class="margin-bottom">
       <% projekts = @results.aggregations.selected_section ? @results.aggregations.selected_section.projekts : @results.aggregations.projekts %>
-      <%= render "shared/projekts_sidebar", aggregations: projekts.buckets.map{ |b| [ b['key'], b.doc_count] }.to_h %>
+      <%= render "shared/projekt_sidebar_filter/projekts_sidebar", aggregations: projekts.buckets.map{ |b| [ b['key'], b.doc_count] }.to_h %>
 
       <%-categories =  @results.aggregations.selected_section ? @results.aggregations.selected_section.tags : @results.aggregations.tags%>
       <%=render "categories", categories: categories%>

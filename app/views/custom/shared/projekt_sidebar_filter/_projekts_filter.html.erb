@@ -11,7 +11,7 @@
         <%= check_box_tag dom_id(projekt), projekt.id, checkbox_checked, { class: 'js-filter-projekt' }  %>
         <%= projekt.name %>
         <%= "(#{aggregations[projekt.id]})" if aggregations[projekt.id].present?  %>
-        <%= "(#{projekt.count_resources(params[:controller])})" %>
+        <%= "(#{projekt.count_resources(params[:controller])})" unless params[:controller] == 'search' %>
         <span class="checkmark"></span>
         <span class="color-code" <%= "style=background-color: #{projekt_color}" if projekt_color.present? %> ></span>
       <% end %>
@@ -22,7 +22,7 @@
     </li>
 
     <% if projekt.children.any? %>
-      <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: projekt.children.with_order_number, , aggregations: aggregations } %>
+      <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: projekt.children.with_order_number, aggregations: aggregations } %>
     <% end %>
 
   </ul>

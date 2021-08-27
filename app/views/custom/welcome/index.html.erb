@@ -13,17 +13,26 @@
 
 <main>
   <%= render "header", header: @header %>
-  <%= render "feeds" %>
+
+
+
+
 
   <div class="row">
-    <div class="small-12 medium-9 column">
-      <% page = SiteCustomization::Page.find_by slug: "indexdt" %>
-      <% if page %>
-        <h4 class="welcometitle"><%= page.title %></h4>
-        <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(page.content) %>
-      <% end %>
+    <div class="column medium-6 small-centered">
+      <div class=intro-text>
+        <h2>Deinen Ort bewegen!</h2>
+        <p>Diese digitale Beteiligung ist Teil eines Beteiligungsprozesses vor Ort in Deiner Kommune. Wähle Deine Kommune aus, registriere Dich und mach mit! Je mehr Menschen sich beteiligen, desto mehr Aussagekraft bekommen die Ergebnisse. Wir freuen uns auf Deine Beteiligung, viel Spaß beim Mitgestalten!</p>
+      </div>
+
+      <div class='communen'>
+        <h2 class='title'>Die LOSLAND-Kommunen</h2>
+      </div>
     </div>
   </div>
+
+
+
 
   <div class="row">
     <% if @cards.any? %>

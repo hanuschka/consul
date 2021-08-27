@@ -25,7 +25,7 @@ $blue: hsl(215, 082%, 019%);
 
 
 // brand_color
-$brand:                                           #004a83;
+$brand:                                           #0A3266;
 $secondary:                                       lighten($brand, 70%);
 $accent:                                          lighten($brand, 50%);
 $dark:                                            darken($brand, 10%);
@@ -37,13 +37,13 @@ $dark:                                            darken($brand, 10%);
 // $white:                                           #fff;
 
 
-$top-level-menu-item-text-color:                  $dark;
-$top-level-menu-background-color:                 $white;
-$flyout-item-text-color:                          $dark;
-$flyout-item-bg-color:                            $white;
-$flyout-block-border-color:                       #dee0e3;
-$flyout-item-divider-color:                       lighten($flyout-block-border-color, 5%);
-$flyout-item-projekt-modules-links-color:         $flyout-item-text-color;
+$top-level-menu-item-text-color:                  $white;
+$top-level-menu-background-color:                 $brand;
+$flyout-item-text-color:                          $white;
+$flyout-item-bg-color:                            $brand;
+$flyout-block-border-color:                       $white;
+$flyout-item-divider-color:                       $white;
+$flyout-item-projekt-modules-links-color:         $white;
 
 
 $flyout-item-line-height:                         1.5rem;
@@ -62,13 +62,13 @@ $tagsbackgroundcolor:         lighten($brand, 65%);
 $tagstextcolor:               $brand;
 $welcomebgposition:           top;
 $welcomebgcolor:              $white;
-$welcomeheadline:             $brand;
-$welcomelead:                 $brand;
+$welcomeheadline:             $white;
+$welcomelead:                 $white;
 $welcomebuttonbg:             $brand;
 $welcomebuttontext:           $white;
 $welcometitle:                $brand;
 $dropdownbackground:          $white;
-$dropdowntextcolor:           $black;
+$dropdowntextcolor:           $white;
 $welcometextpositionmedium:   rem-calc(20);
 $welcometextpositionlarge:    rem-calc(25); 
 $welcomespan:                 $brand;
@@ -76,25 +76,7 @@ $welcomespan:                 $brand;
 
 
 // fonts
-$body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
-$header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
-$base-font-size:      16px;
-
-// Regular 
-@font-face {
-  font-family: "sourcesanspro-regular-webfont";
-  src: font-url("sourcesanspro-regular-webfont.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
-  font-weight: 100;
-  font-style: normal; }
-// Bold 
-@font-face {
-  font-family: "sourcesanspro-bold-webfont";
-  src: font-url("sourcesanspro-bold-webfont.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
-  font-weight: 100;
-  font-style: bold; }
-// Fallback
-@font-face {
-  font-family: "PT_Serif_Web-Regular";
-  src: font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf"), font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf");
-  font-weight: 100;
-  font-style: normal; }
+@import "custom_fonts";
+$header-font-family: strawfordbold;
+$body-font-family: strawfordregular;
+$base-font-size: 16px;

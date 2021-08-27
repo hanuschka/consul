@@ -1,3 +1,11 @@
+.top-level-item > .nav-flyout-block {
+  opacity: 0.5;
+  z-index: 100;
+} 
+
+
+
+
 // Adapting header to mobile view
 
 @media screen and (max-width: 39.9375em) {
@@ -190,11 +198,11 @@ span.icon-no-notification {
 
   .subnavigation a.home-items-icon {
     display: inline-block;
-    width: 22px;
+    width: 20px;
   }
 
   .home-icon {
-    top: -6px;
+    top: -9px;
     right: 0;
     position: absolute;
   }
@@ -230,7 +238,11 @@ span.icon-no-notification {
 
     .account-items-icon,
     .admin-items-icon {
-      width: 22px;
+      width: 20px;
+    }
+
+    .icon-notification::before {
+      font-size: 22px;
     }
 
     .icon-no-notification::before {
@@ -243,15 +255,13 @@ span.icon-no-notification {
     }
 
     .admin-icon {
-      top: -6px;
+      top: -9px;
       right: 0;
-      padding-bottom: 14px;
     }
 
     .account-icon {
-      top: -6px;
+      top: -9px;
       right: 0;
-      padding-bottom: 14px;
     }
 
     .top-level-item {
@@ -267,12 +277,14 @@ span.icon-no-notification {
   //  Height of the top menu
   
   .top-level-item > .flyout-item-name,
-  .top-level-item > .flyout-item-name > .subnavigation a {
-    line-height: 3rem;
+  .top-level-item > .flyout-item-name > a,
+  .top-level-item > a.account-items-icon,
+  .account-admin-items  a.notifications {
+    line-height: 2.5rem;
   }
 
   ul.main-menu {
-    min-height: 3rem
+    min-height: 2.5rem
   }
 
 
@@ -290,17 +302,17 @@ span.icon-no-notification {
       top: -1px;
       display: none;
       position: absolute;
-      border: 1px solid $flyout-block-border-color;
+      border-top: 1px solid $flyout-block-border-color;
     }
 
     li.nav-element.top-level-item > ul.nav-flyout-block {
       left: 0;
       top: 100%;
-  }
+    }
 
     .account-admin-items li.nav-element.top-level-item > ul.nav-flyout-block {
       left: auto;
-      top: 3em;
+      top: 2.5em;
       right: 0;
     }
 

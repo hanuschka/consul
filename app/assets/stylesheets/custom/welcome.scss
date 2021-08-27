@@ -16,10 +16,22 @@
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-color: $welcomebgcolor;
+    position: relative;
+    z-index: 1;
+
+
+    .jumbo-message {
+      font-family: strawfordbold;
+      position: absolute;
+      bottom: 10%;
+      color: $white;
+      width: 90%
+    }
 
 
 
     @media only screen and (max-width: 550px) {
+      height: 550px;
       padding-top: 20px;
       padding-bottom: rem-calc(1);
 
@@ -31,7 +43,7 @@
         color: $welcomeheadline;
         font-size: rem-calc(35);
         font-weight: 700;
-        line-height: rem-calc(40);
+        line-height: 1.2;
       }
 
       .lead {
@@ -48,8 +60,13 @@
     }
 
     @media only screen and (min-width: 550px) and (max-width: 639px) {
+      height: 550px;
       padding-top: 20px;
       padding-bottom: rem-calc(1);
+
+      .jumbo-message {
+        width: 90%;
+      }
 
       span {
         display: none;
@@ -59,7 +76,7 @@
         color: $welcomeheadline;
         font-size: rem-calc(30);
         font-weight: 700;
-        line-height: rem-calc(30);
+        line-height: 1.2;
       }
 
       .lead {
@@ -77,8 +94,13 @@
     }
 
     @media only screen and (min-width: 640px) and (max-width: 768px) {
+      height: 550px;
       padding-top: 20px;
       padding-bottom: rem-calc(150);
+
+      .jumbo-message {
+        width: 90%;
+      }
 
       span {
         display: none;
@@ -88,7 +110,7 @@
         color: $welcomeheadline;
         font-size: rem-calc(30);
         font-weight: 700;
-        line-height: rem-calc(30);
+        line-height: 1.2;
       }
 
       .lead {
@@ -105,9 +127,13 @@
     }
 
     @media only screen and (min-width: 768px) and (max-width: 1280px) {
-      height: 380px;
-      background-position: $welcomebgposition;
+      height: 550px;
+      background-position: center 80%;
       padding-top: $welcometextpositionmedium;
+
+      .jumbo-message {
+        width: 75%;
+      }
       
       span {
         color: $welcomespan;
@@ -120,7 +146,7 @@
         color: $welcomeheadline;
         font-size: rem-calc(38);
         font-weight: 700;
-        line-height: rem-calc(30);
+        line-height: 1.2;
       }
 
       .lead {
@@ -137,9 +163,13 @@
     }
 
     @media only screen and (min-width: 1280px) and (max-width: 1900px) {
-      height: 500px;
-      background-position: $welcomebgposition;
+      height: 740px;
       padding-top: $welcometextpositionmedium;
+      background-position: center 65%;
+
+      .jumbo-message {
+        width: 40%;
+      }
 
       span {
         color: $welcomespan;
@@ -152,7 +182,7 @@
         color: $welcomeheadline;
         font-size: rem-calc(40);
         font-weight: 700;
-        line-height: rem-calc(40);
+        line-height: 1.2;
       }
 
       .lead {
@@ -169,9 +199,13 @@
     }
 
     @media only screen and (min-width: 1900px) {
-      height: 600px;
-      background-position: $welcomebgposition;
+      height: 800px;
       padding-top: $welcometextpositionlarge;
+      background-position: center 65%;
+
+      .jumbo-message {
+        width: 30%;
+      }
 
       span {
         color: $welcomespan;
@@ -184,7 +218,7 @@
         color: $welcomeheadline;
         font-size: rem-calc(40);
         font-weight: 700;
-        line-height: rem-calc(40);
+        line-height: 1.2;
       }
 
       .lead {

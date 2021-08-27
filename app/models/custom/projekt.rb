@@ -100,6 +100,8 @@ class Projekt < ApplicationRecord
   end
 
   def count_resources(controller_name)
+    return self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).published.count }.reduce(:+) if controller_name == 'proposals'
+    return self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).created_by_admin.not_budget.count }.reduce(:+) if controller_name == 'polls'
     self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).count }.reduce(:+)
   end
 

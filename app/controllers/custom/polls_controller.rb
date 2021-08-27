@@ -48,7 +48,7 @@ class PollsController < ApplicationController
       take_by_geozone_restrictions
     end
 
-    @all_polls = @polls
+    @all_polls = @polls.created_by_admin.not_budget
 
     @polls = Kaminari.paginate_array(
       @polls.created_by_admin.not_budget.send(@current_filter).includes(:geozones).sort_for_list

@@ -13,5 +13,8 @@ class SearchController < ApplicationController
 
     search_params[:locale] = I18n.locale.to_s
     @results = Searches::Generic.perform(search_params, params[:page]&.to_i)
+
+    @top_level_active_projekts = Projekt.top_level_active
+    @top_level_archived_projekts = Projekt.top_level_archived
   end
 end

@@ -2,6 +2,10 @@
 
 .home-page {
 
+  h3.title.card-title {
+    border-bottom: none;
+  }
+
   .background-header {
       display: none;
   }
@@ -122,5 +126,19 @@
         line-height: rem-calc(30);
       }
     }
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .welcometitle {
+    font-size: 25px;
+    color: $welcometitle;
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  .welcometitle {
+    font-size: 30px;
+    color: $welcometitle;
   }
 }

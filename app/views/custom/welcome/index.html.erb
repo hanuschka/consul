@@ -14,10 +14,6 @@
 <main>
   <%= render "header", header: @header %>
 
-
-
-
-
   <div class="row">
     <div class="column medium-6 small-centered">
       <div class=intro-text>
@@ -25,28 +21,14 @@
         <p>Diese digitale Beteiligung ist Teil eines Beteiligungsprozesses vor Ort in Deiner Kommune. Wähle Deine Kommune aus, registriere Dich und mach mit! Je mehr Menschen sich beteiligen, desto mehr Aussagekraft bekommen die Ergebnisse. Wir freuen uns auf Deine Beteiligung, viel Spaß beim Mitgestalten!</p>
       </div>
 
-      <div class='communen'>
-        <h2 class='title'>Die LOSLAND-Kommunen</h2>
-      </div>
+      <% if @cards.any? %>
+          <%= render partial: "cards", locals: { cards: @cards, section_title: t("cli.welcome.cards.title") } %>
+      <% end %>
     </div>
   </div>
 
 
 
-
-  <div class="row">
-    <% if @cards.any? %>
-      <div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
-        <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
-      </div>
-    <% end %>
-
-    <% if feed_processes_enabled? %>
-      <div class="small-12 large-4 column">
-        <%= render "processes" %>
-      </div>
-    <% end %>
-  </div>
 
   <% if @active_projekt_cards.any? %>
     <div class="row">

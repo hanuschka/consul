@@ -258,3 +258,28 @@
     color: $welcometitle;
   }
 }
+
+
+.home-page {
+  h3.card-title {
+    border-bottom: none;
+    margin-bottom: 1rem;
+  }
+
+  .card-homepage {
+    margin-top: 0.5rem;
+
+    a {
+      text-decoration: none;
+    }
+
+    h3 {
+      background: #8599B3;
+      color: $white;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-weight: normal;
+    }
+  }
+}

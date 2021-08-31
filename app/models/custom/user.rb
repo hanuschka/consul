@@ -13,6 +13,8 @@ class User < ApplicationRecord
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
 
+  validates :document_number, uniqueness: { scope: [:document_type, :erased_at] }, allow_nil: true
+
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?
   end

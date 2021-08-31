@@ -6,13 +6,13 @@ class Officing::Residence
   attr_accessor :user, :officer, :document_number, :document_type, :year_of_birth,
                 :date_of_birth, :postal_code
 
-  before_validation :retrieve_census_data
+  # before_validation :retrieve_census_data
 
   validates :document_number, presence: true
   validates :document_type, presence: true
-  validates :date_of_birth, presence: true, if: -> { Setting.force_presence_date_of_birth? }
-  validates :postal_code, presence: true, if: -> { Setting.force_presence_postal_code? }
-  validates :year_of_birth, presence: true, unless: -> { Setting.force_presence_date_of_birth? }
+  # validates :date_of_birth, presence: true, if: -> { Setting.force_presence_date_of_birth? }
+  # validates :postal_code, presence: true, if: -> { Setting.force_presence_postal_code? }
+  # validates :year_of_birth, presence: true, unless: -> { Setting.force_presence_date_of_birth? }
 
   validate :allowed_age
   validate :local_residence

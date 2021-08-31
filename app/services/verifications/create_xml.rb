@@ -24,8 +24,33 @@ module Verifications
       filename = file_path + current_time + '_' + user_id.to_s + '_'
 
       File.open("#{filename}RQ.xml",'w') {|f| f.write builder.to_xml}
-      Rails.logger.info "File creted: #{filename}RQ.xml"
       CheckUserVerificationRequestJob.perform_later(filename)
+    end
+
+    def self.create_verification_request_in_booth(residence)
+      builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+        xml.request {
+          xml.vorname residence.first_name
+          xml.nachname residence.last_name
+          xml.geburtsdatum residence.date_of_birth.strftime("%d.%m.%Y")
+          xml.plz residence.postal_code
+          if residence.document_type == 'card'
+            xml.panr residence.document_number
+          elsif residence.document_type == 'pass'
+            xml.rpnr residence.document_number
+          end
+        }
+      end
+
+      current_time = Time.now.to_time.strftime("%Y%m%d%H%M%S%L")
+
+      file_path = '/home/deploy/consul/validation/'
+      # file_path = '/home/mike/verifications/'
+
+      filename = file_path + current_time + '_poll_officer_' + residence.officer.id.to_s + '_'
+
+      File.open("#{filename}RQ.xml",'w') {|f| f.write builder.to_xml}
+      filename
     end
 
     def self.create_verification_letter(user)

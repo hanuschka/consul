@@ -56,12 +56,21 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update_details
     @user = current_user
 
-    if update_user_details_params[:document_type].blank?
-      @user.errors.add :document_type, :blank, message: "cannot be blank"
-    end
+    @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
+    @user.errors.add :first_name, :blank if update_user_details_params[:first_name].blank?
+    @user.errors.add :last_name, :blank if update_user_details_params[:last_name].blank?
+    @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(1i)'].blank?
+    @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(2i)'].blank?
+    @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(3i)'].blank?
+    @user.errors[:date_of_birth].uniq! if @user.errors[:date_of_birth].any?
 
-    if update_user_details_params[:document_number].blank?
-      @user.errors.add :document_number, :blank, message: "cannot be blank"
+    if @user.citizen?
+      @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
+      @user.errors.add :document_number, :blank if update_user_details_params[:document_number].blank?
+    else
+      @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
+      @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?
+      @user.errors.add :house_number, :blank if update_user_details_params[:house_number].blank?
     end
 
     if @user.errors.any?

@@ -8,17 +8,17 @@ class Officing::ResidenceController < Officing::BaseController
     responce = Verifications::CheckXML.check_verification_request_in_booth(verification_request)
 
     if responce[:result] == 'no_response'
-      flash.alert = "Please try again later"
+      flash.alert = t('cli.officing.residence.notifications.no_responce')
       render :new
     elsif responce[:result] == 'false'
-      flash.alert = "Please correct errors"
+      flash.alert = t('cli.officing.residence.notifications.verification_false')
       responce[:errors].each { |error_field| @residence.errors.add(error_field) }
       render :new
     elsif responce[:result] == 'true'
      if @residence.save
       redirect_to new_officing_voter_path(id: @residence.user.id), notice: t("officing.residence.flash.create")
      else
-      flash.alert = "Couldn't save"
+      flash.alert = t('cli.officing.residence.notifications.verification_false')
       render :new
      end
     end

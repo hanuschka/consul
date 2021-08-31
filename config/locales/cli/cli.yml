@@ -8,3 +8,9 @@ de:
           new:
             terms: "Mit der Registrierung akzeptieren Sie die %{terms} und %{privacy}"
             privacy_link: "Datenschutzbestimmung"
+    officing:
+      residence:
+        notifications:
+          no_responce: Bitte versuchen Sie es später noch einmal. Wir können Ihren Account im Moment nicht verifizieren
+          verified_false: Bitte korrigieren Sie den/die Fehler
+

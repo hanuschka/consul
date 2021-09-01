@@ -1,4 +1,8 @@
-<h2><%= t("officing.residence.new.title") %></h2>
+  <div class="row verification account">
+    <div class="small-12 medium-6 column">
+      <h2><%= t("officing.residence.new.title") %></h2>
+    </div>
+  </div>
 
 <%= form_for @residence, as: "residence", url: officing_residence_path do |f| %>
   <div class="row verification account">
@@ -48,26 +52,28 @@
 
 
 
-	<div class='row margin-bottom'> 
-
+  <div class='row margin-bottom'>
     <div class='column'>
-			<label><%= t('custom.sign_up.user_details.tips') %></label>
+      <label><%= t('custom.sign_up.user_details.tips') %></label>
     </div>
 
-		<div class='column small-12 medium-6'>
-			<label><%= t('custom.sign_up.user_details.card_label') %></label>
-			<p><%= t('custom.sign_up.user_details.card_help') %></p>
-			<%= image_tag 'card.jpg' %>     
-		</div>
+    <div class='column small-12 medium-6'>
+      <label><%= t('custom.sign_up.user_details.card_label') %></label>
+      <p><%= t('custom.sign_up.user_details.card_help') %></p>
+      <%= image_tag 'card.jpg' %>
+    </div>
 
-		<div class='column small-12 medium-6'>
-			<label><%= t('custom.sign_up.user_details.pass_label') %></label>
-			<p><%= t('custom.sign_up.user_details.pass_help') %></p>
-			<%= image_tag 'pass_new.png' %> 
-		</div>
-	</div>
+    <div class='column small-12 medium-6'>
+      <label><%= t('custom.sign_up.user_details.pass_label') %></label>
+      <p><%= t('custom.sign_up.user_details.pass_help') %></p>
+      <%= image_tag 'pass_new.png' %>
+    </div>
+  </div>
 
-  <div class="small-12 medium-6">
-    <input type="submit" value="<%= t("officing.residence.new.submit") %>" class="button expanded">
+
+  <div class='row margin-bottom'>
+    <div class="column small-12 medium-6">
+      <input type="submit" value="<%= t("officing.residence.new.submit") %>" class="button expanded">
+    </div>
   </div>
 <% end %>

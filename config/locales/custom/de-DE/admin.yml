@@ -16,7 +16,7 @@ de:
       update: Update
       delete: Löschen
     officing_booth:
-      title: "Sie verlassen den Raum, der sich in %{booth} befindet. Wenn dies nicht korrekt ist, fahren Sie nicht fort und rufen Sie die Hilfe-Rufnummer an. Vielen Dank."
+      title: "Sie sind Wahlhelfer in der Wahlkabine %{booth}. Wenn dies nicht korrekt ist, fahren Sie nicht fort und bitte rufen Sie das Bürgerbeteiligungsamt an. Vielen Dank."
     banners:
       index:
         title: Banner

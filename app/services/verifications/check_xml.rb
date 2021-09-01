@@ -16,7 +16,7 @@ module Verifications
         geozone = Geozone.find_by(external_code: user.plz)
         user.update(verified_at: Time.now, geozone: geozone)
         Mailer.residence_confirmed(user).deliver_later
-        user.take_votes_if_erased_document
+        user.take_votes_if_erased_document(user.document_number, user.document_type)
       elsif result == 'false'
         errors = []
         errors.push("Vorname") if doc.at_xpath('request').at_xpath('vorname').text == 'false'

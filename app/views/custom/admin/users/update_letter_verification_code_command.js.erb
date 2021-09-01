@@ -1,0 +1,3 @@
+$("#<%= dom_id(@user, :bam_code_date ) %>").html("<%= @user.bam_letter_verification_code_sent_at&.in_time_zone&.strftime("%Y-%m-%d").to_s %>");
+$("#<%= dom_id(@user, :bam_code_action ) %>").html("<%= j render("admin/users/code_actions", user: @user) %>");
+

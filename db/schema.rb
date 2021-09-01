@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_26_123714) do
+ActiveRecord::Schema.define(version: 2021_09_01_113941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1686,6 +1686,10 @@ ActiveRecord::Schema.define(version: 2021_08_26_123714) do
     t.string "plz"
     t.string "location"
     t.integer "bam_letter_verification_code"
+    t.string "street_name"
+    t.string "house_number"
+    t.string "city_name"
+    t.datetime "bam_letter_verification_code_sent_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["geozone_id"], name: "index_users_on_geozone_id"

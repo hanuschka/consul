@@ -13,4 +13,17 @@ de:
         notifications:
           no_responce: Bitte versuchen Sie es später noch einmal. Wir können Ihren Account im Moment nicht verifizieren
           verified_false: Bitte korrigieren Sie den/die Fehler
-
+    admin:
+      users:
+        columns:
+          first_name: Vorname
+          last_name: Nachname
+          street_name: Strasse
+          house_number: Hausnummer
+          post_code: PLZ
+          city_name: Stadt
+          bam_letter_verification_code: Code
+          bam_letter_verification_code_sent_date: Gesendet an
+        tooltips:
+          mark_code_as_sent: Code als gesendet markieren
+          mark_code_as_not_sent: Codeversand abbrechen

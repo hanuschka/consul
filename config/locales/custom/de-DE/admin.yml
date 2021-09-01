@@ -1469,6 +1469,7 @@ de:
         filters:
           active: Aktiv
           erased: Gelöscht
+          outside_bam: Code
       search:
         placeholder: Suche Benutzer*in nach E-Mail, Name oder Ausweis
         search: Suche

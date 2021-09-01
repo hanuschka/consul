@@ -111,6 +111,10 @@ module Abilities
 
       can :manage, LocalCensusRecord
       can [:create, :read], LocalCensusRecords::Import
+
+
+      can :send_letter_verification_code, User
+      can :cancel_letter_verification_code, User
     end
   end
 end

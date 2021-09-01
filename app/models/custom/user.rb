@@ -2,8 +2,6 @@ require_dependency Rails.root.join("app", "models", "user").to_s
 
 class User < ApplicationRecord
 
-  attr_accessor :street_name, :house_number, :city_name
-
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
@@ -14,6 +12,8 @@ class User < ApplicationRecord
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
 
   validates :document_number, uniqueness: { scope: [:document_type, :erased_at] }, allow_nil: true
+
+  scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil) }
 
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?

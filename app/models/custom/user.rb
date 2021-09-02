@@ -13,7 +13,7 @@ class User < ApplicationRecord
 
   validates :document_number, uniqueness: { scope: [:document_type, :erased_at] }, allow_nil: true
 
-  scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil) }
+  scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) }
 
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?

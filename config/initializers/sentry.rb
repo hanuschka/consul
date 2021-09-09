@@ -1,5 +1,5 @@
 Sentry.init do |config|
-  # config.dsn = 'https://ae87de89cb154acc9e4b3b77f35efb96@o994111.ingest.sentry.io/5952564'
+  config.dsn = 'https://d7ce28d5094a4c91851f66dadf8dd7ff@o994111.ingest.sentry.io/5952592'
   config.breadcrumbs_logger = [:active_support_logger]
 
   # To activate performance monitoring, set one of these options.

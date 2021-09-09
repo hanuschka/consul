@@ -26,11 +26,6 @@
 
 // styling mobile menu
 
-
-ul.main-menu a:focus {
-  outline: none;
-}
-
 span.icon-circle {
   color: yellow;
   position: absolute;
@@ -198,10 +193,16 @@ span.icon-no-notification {
   .subnavigation a.home-items-icon {
     display: inline-block;
     width: 22px;
+    display: inline-block;
+    height: 100%;
+
+    &:focus {
+      outline: $outline-focus;
+    }
   }
 
   .home-icon {
-    top: -6px;
+    top: 12px;
     right: 0;
     position: absolute;
   }
@@ -238,6 +239,7 @@ span.icon-no-notification {
     .account-items-icon,
     .admin-items-icon {
       width: 22px;
+      height: 100%;
     }
 
     .icon-no-notification::before {
@@ -250,13 +252,13 @@ span.icon-no-notification {
     }
 
     .admin-icon {
-      top: -6px;
+      top: 12px;
       right: 0;
       padding-bottom: 14px;
     }
 
     .account-icon {
-      top: -6px;
+      top: 12px;
       right: 0;
       padding-bottom: 14px;
     }
@@ -289,7 +291,13 @@ span.icon-no-notification {
   .subnavigation ul.main-menu {
 
     li.nav-element:hover > ul.nav-flyout-block {
-      display: block;
+      display: block !important;
+    }
+
+
+    li.nav-element:focus {
+      outline: $outline-focus;
+      z-index: 1000;
     }
 
     ul.nav-flyout-block {
@@ -378,12 +386,14 @@ span.icon-no-notification {
 
       a.notifications {
         position: absolute;
+        height: 100%;
+        width: 22px;
         line-height: 2rem;
       }
 
       span.icon-notification {
           position: absolute;
-          font-size: 1.5rem;
+          font-size: 19px;
       }
 
       span.icon-circle {

@@ -1,7 +1,7 @@
 <% if show_admin_menu?(current_user) %>
 
   <li class="nav-element top-level-item top-level-item js-access-top-level-menu js-prevent-key-scroll"
-      aria-label='<%= t('custom.links.menu.admin_icon') if placement == 'desktop' %>
+      aria-label='<%= t('custom.links.menu.admin_icon') if placement == 'desktop' %>'
       aria-expanded='false'
       <%= "aria-haspopup=true" if placement == 'desktop' %>
       <%= "tabindex=0" if placement == 'desktop' %>

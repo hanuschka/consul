@@ -192,9 +192,10 @@
         }
 
         if ( event.which === 13 && $(document.activeElement).hasClass('js-access-flyout-menu-item') ) { // click on link
-
-          if ( $(document.activeElement).find('.projekt-name-group > .flyout-item-name > a').length ) {
-            $(document.activeElement).find('.projekt-name-group > .flyout-item-name > a').first()[0].click()
+          if ( $(document.activeElement).children('.projekt-name-group').find('a[tabindex="-1"]').length ) {
+            $(document.activeElement).children('.projekt-name-group').find('a[tabindex="-1"]').first()[0].click()
+          } else if ( $(document.activeElement).children('a[tabindex="-1"]').length ) {
+            $(document.activeElement).children('a[tabindex="-1"]').first()[0].click()
           }
         }
 

@@ -18,7 +18,7 @@ de:
         house_number: Hausnummer
         city_name: Stadt
         bam_letter_verification_code: Verifizierungscode
-      poll/question/answer:
+      poll/answer:
         open_answer_text: Offene Antwort
       widget/card:
         card_category: Kategorie

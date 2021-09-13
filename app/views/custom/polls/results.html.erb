@@ -16,7 +16,7 @@
     </div>
 
     <div class="small-12 medium-9 column" data-equalizer-watch>
-      <%- @poll.questions.each do |question| %>
+      <%- @poll.questions.joins(:translations).order("poll_question_translations.title": :asc).each do |question| %>
         <% most_voted_answer_votes = question.most_voted_answer_votes %>
         <h3 id="<%= question.title.parameterize %>">
           <%= question.title %>

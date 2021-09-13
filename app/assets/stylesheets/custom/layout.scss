@@ -21,15 +21,10 @@ body>header, .wrapper>header, .top-bar {
 .top-bar {
   h2.header-title {
     line-height: 1em;
-    text-transform: uppercase;
-    font-size: 28px;
-    color: $dark;
+    font-size: 2.125rem;
     margin-bottom: 1em;
     margin-top: 1em;
-
-    span {
-      font-weight: 100;
-    }
+    color: #003d90;
   }
 }
 

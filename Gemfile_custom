@@ -9,3 +9,6 @@ gem 'elasticsearch-rails', github: 'elastic/elasticsearch-rails', branch: '6.x'
 group :development do
   gem 'pry', '~> 0.14.1'
 end
+
+gem "sentry-ruby"
+gem "sentry-rails"

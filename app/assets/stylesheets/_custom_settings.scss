@@ -10,10 +10,11 @@ $dark:                                            #222;
 $white:                                           #fff;
 
 
-$top-level-menu-item-text-color:                  $dark;
-$top-level-menu-background-color:                 $white;
-$flyout-item-text-color:                          $dark;
-$flyout-item-bg-color:                            $white;
+$top-level-menu-item-text-color:                  $white;
+$top-level-menu-background-color:                 $brand;
+$flyout-item-text-color:                          $white;
+$flyout-item-bg-color:                            $brand;
+
 $flyout-block-border-color:                       #dee0e3;
 $flyout-item-divider-color:                       lighten($flyout-block-border-color, 5%);
 $flyout-item-projekt-modules-links-color:         $flyout-item-text-color;
@@ -35,8 +36,8 @@ $tagsbackgroundcolor:         lighten($brand, 65%);
 $tagstextcolor:               $brand;
 $welcomebgposition:           top;
 $welcomebgcolor:              $white;
-$welcomeheadline:             $brand;
-$welcomelead:                 $brand;
+$welcomeheadline:             $white;
+$welcomelead:                 $white;
 $welcomebuttonbg:             $brand;
 $welcomebuttontext:           $white;
 $welcometitle:                $brand;

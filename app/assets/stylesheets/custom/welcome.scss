@@ -81,14 +81,13 @@
     }
 
     @media only screen and (min-width: 640px) {
+      h1 {
+        font-size: rem-calc(60);
+      }
     }
 
     @media only screen and (min-width: 768px) {
       min-height: 380px;
-      
-      h1 {
-        font-size: rem-calc(40);
-      }
     }
 
     @media only screen and (min-width: 1280px) {

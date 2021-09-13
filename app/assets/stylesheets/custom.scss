@@ -3,9 +3,7 @@
 // You can also create SCSS files in the app/assets/stylesheets/custom/
 // folder and they will be loaded automatically.
 
-@import "custom/*";
 @import "custom/**/*";
-@import "cli/*";
 @import "cli/**/*";
 
 textarea{

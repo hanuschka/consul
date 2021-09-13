@@ -2,6 +2,45 @@
 
 .home-page {
 
+  .card-homepage {
+    position: relative;
+
+    img {
+      position: relative;
+      z-index: -1;
+    }
+
+    h3 {
+      position: absolute;
+      bottom: 5px;
+      left: 25px;
+      color: $white;
+      text-decoration: none;
+      font-weight: normal;
+      margin-bottom: 0;
+      text-transform: uppercase;
+      font-size: 1rem;
+    }
+
+    a {
+      background: linear-gradient(to top, rgba(0,0,0,1) 0%,rgba(0,0,0,0.2) 40%);
+      display: inline-block;
+    }
+  }
+
+  h2.header-title {
+    line-height: 1em;
+    text-transform: uppercase;
+    font-size: 28px;
+    color: $dark;
+    margin-bottom: 1em;
+    margin-top: 1em; 
+
+		span {
+			font-weight: 100;
+		}
+  }
+
   h3.title.card-title {
     border-bottom: none;
   }
@@ -16,129 +55,48 @@
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-color: $welcomebgcolor;
+    position: relative;
+		min-height: 285px;
+ 
+    .jumbo-message {
+      // position: absolute;
+      // bottom: 10%;
+      // max-width: 40rem;
+    }
 
+		h1 {
+			font-size: rem-calc(40);
+			font-weight: 700;
+			line-height: rem-calc(40);
+		}
 
+    h1, p {
+      color: $white;
+    }
 
-    @media only screen and (max-width: 550px) {
+    @media only screen and (min-width: 550px) {
       h1 {
-        color: $welcomeheadline;
-        font-size: rem-calc(35);
-        font-weight: 700;
-        line-height: rem-calc(40);
-      }
-
-      .lead {
-        color: $welcomelead;
-        font-size: rem-calc(20);
-        font-weight: 700;
-        line-height: rem-calc(25);
-      }
-
-      .button {
-        background: $welcomebuttonbg;
-        color: $welcomebuttontext;
+        font-size: rem-calc(40);
       }
     }
 
-    @media only screen and (min-width: 550px) and (max-width: 639px) {
+    @media only screen and (min-width: 640px) {
+    }
+
+    @media only screen and (min-width: 768px) {
+      min-height: 380px;
+      
       h1 {
-        color: $welcomeheadline;
-      }
-
-      .lead {
-        color: $welcomelead;
-        font-size: rem-calc(20);
-        font-weight: 700;
-        line-height: rem-calc(30);
-      }
-
-      .button {
-        background: $welcomebuttonbg;
-        color: $welcomebuttontext;
+        font-size: rem-calc(40);
       }
     }
 
-    @media only screen and (min-width: 640px) and (max-width: 768px) {
-      h1 {
-        color: $welcomeheadline;
-      }
-
-      .lead {
-        color: $welcomelead;
-        font-size: rem-calc(20);
-        font-weight: 700;
-        line-height: rem-calc(30);
-      }
-
-      .button {
-        background: $welcomebuttonbg;
-        color: $welcomebuttontext;
-      }
-    }
-
-    @media only screen and (min-width: 768px) and (max-width: 1280px) {
-      h1 {
-        color: $welcomeheadline;
-        font-weight: 700;
-      }
-
-      .lead {
-        color: $welcomelead;
-        font-size: rem-calc(25);
-        font-weight: 700;
-        line-height: rem-calc(30);
-      }
-
-    }
-
-    @media only screen and (min-width: 1280px) and (max-width: 1900px) {
-      h1 {
-        color: $welcomeheadline;
-      }
-
-      .lead {
-        color: $welcomelead;
-        font-size: rem-calc(30);
-        font-weight: 700;
-        line-height: rem-calc(30);
-      }
-
-      .button {
-        background: $welcomebuttonbg;
-        color: $welcomebuttontext;
-      }
+    @media only screen and (min-width: 1280px) {
+      min-height: 500px;
     }
 
     @media only screen and (min-width: 1900px) {
-      span {
-        color: $welcomespan;
-        font-weight: 300;
-      }
-
-      h1 {
-        color: $welcomeheadline;
-      }
-
-      .lead {
-        color: $welcomelead;
-        font-size: rem-calc(30);
-        font-weight: 700;
-        line-height: rem-calc(30);
-      }
+      min-height: 600px;
     }
-  }
-}
-
-@media only screen and (max-width: 1280px) {
-  .welcometitle {
-    font-size: 25px;
-    color: $welcometitle;
-  }
-}
-
-@media only screen and (min-width: 1280px) {
-  .welcometitle {
-    font-size: 30px;
-    color: $welcometitle;
   }
 }

@@ -2,10 +2,10 @@
      class="card-homepage small-12 medium-<%= card.columns %> column margin-bottom end" data-equalizer-watch>
   <%= link_to card.link_url do %>
 
-      <% if card.image.present? %>
-        <%= image_tag(card.image_url(:large), alt: card.image.title) %>
-      <% end %>
+    <% if card.image.present? %>
+      <%= image_tag(card.image_url(:large), alt: card.image.title) %>
+    <% end %>
 
-      <h3><%= card.title %></h3>
+    <h3><%= card.title %></h3>
   <% end %>
 </div>

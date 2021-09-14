@@ -15,7 +15,7 @@
   <%= render "header", header: @header %>
 
   <div class="row">
-    <div class="column medium-6 small-centered">
+    <div class="column medium-8 small-centered">
       <div class=intro-text>
         <h2>Deinen Ort bewegen!</h2>
         <p>Diese digitale Beteiligung ist Teil eines Beteiligungsprozesses vor Ort in Deiner Kommune. Wähle Deine Kommune aus, registriere Dich und mach mit! Je mehr Menschen sich beteiligen, desto mehr Aussagekraft bekommen die Ergebnisse. Wir freuen uns auf Deine Beteiligung, viel Spaß beim Mitgestalten!</p>
@@ -27,12 +27,9 @@
     </div>
   </div>
 
-
-
-
   <% if @active_projekt_cards.any? %>
     <div class="row">
-      <div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
+      <div class="column medium-8 small-centered">
         <%= render partial: "cards", locals: { cards: @active_projekt_cards, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
       </div>
     </div>
@@ -40,12 +37,11 @@
 
   <% if @archived_projekt_cards.any? %>
     <div class="row">
-      <div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
+      <div class="column medium-8 small-centered">
         <%= render partial: "cards", locals: { cards: @archived_projekt_cards, section_title: t("custom.welcome.archived_projekt_cards.title")  } %>
       </div>
     </div>
   <% end %>
-
 
   <% if feature?("user.recommendations") && (@recommended_debates.present? || @recommended_proposals.present?) %>
     <%= render "recommended",

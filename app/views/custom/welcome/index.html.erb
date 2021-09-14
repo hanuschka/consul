@@ -25,6 +25,26 @@
     </div>
   </div>
 
+  <div class="row">
+		<div class="column small-centered">
+			<% if @cards.any? %>
+				<div class="row">
+					<div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
+						<%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
+					</div>
+				</div>
+			<% end %>
+
+			<% if feed_processes_enabled? %>
+				<div class="row">
+					<div class="small-12 large-4 column">
+						<%= render "processes" %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+  </div>
+
   <%= render "feeds" %>
 
   <div class="row">
@@ -50,27 +70,6 @@
       </div>
     </div>
   <% end %>
-
-  <div class="row">
-		<div class="column small-centered">
-			<% if @cards.any? %>
-				<div class="row">
-					<div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
-						<%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
-					</div>
-				</div>
-			<% end %>
-
-			<% if feed_processes_enabled? %>
-				<div class="row">
-					<div class="small-12 large-4 column">
-						<%= render "processes" %>
-					</div>
-				</div>
-			<% end %>
-		</div>
-  </div>
-
 
 
   <% if feature?("user.recommendations") && (@recommended_debates.present? || @recommended_proposals.present?) %>

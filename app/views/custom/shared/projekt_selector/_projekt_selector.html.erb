@@ -1,4 +1,4 @@
-<% projekts = Projekt.top_level_active.select{ |projekt| params[:controller].include?('polls') || projekt.has_active_phase?(params[:controller]) || projekt.all_children_projekts.any? { |projekt| projekt.has_active_phase?(params[:controller]) } }%>
+<% projekts ||= Projekt.top_level_active.select{ |projekt| params[:controller].include?('polls') || projekt.has_active_phase?(params[:controller]) || projekt.all_children_projekts.any? { |projekt| projekt.has_active_phase?(params[:controller]) } }%>
 <% current_model_name = model.class.name.downcase %>
 
 <% if projekts.any?  %>

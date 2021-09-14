@@ -3,11 +3,13 @@ require_dependency Rails.root.join("app", "controllers", "polls_controller").to_
 class PollsController < ApplicationController
 
   include CommentableActions
+  include ProjektControllerHelper
 
   before_action :load_categories, only: [:index]
   before_action :set_geo_limitations, only: [:show]
 
   helper_method :resource_model, :resource_name
+  has_filters %w[all current]
 
   def index
     @resource_name = 'poll'
@@ -17,17 +19,9 @@ class PollsController < ApplicationController
     @filtered_target = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
     if params[:projekts]
-      @selected_projekts_ids = params[:projekts].split(',')
-      selected_projekts = Projekt.where(id: @selected_projekts_ids)
-      highest_level_selected_projekts = selected_projekts.sort { |a, b| a.level <=> b.level }.group_by(&:level).first[1]
-
-      if highest_level_selected_projekts.size == 1
-        highest_level_selected_projekt = highest_level_selected_projekts.first
-      end
-
-      if highest_level_selected_projekt && (@selected_projekts_ids.map(&:to_i) - highest_level_selected_projekt.all_children_ids.push(highest_level_selected_projekt.id) )
-        @selected_parent_projekt = highest_level_selected_projekts.first
-      end
+      @selected_projekts_ids = params[:projekts].split(',').select{ |id| Projekt.find_by(id: id).present? }
+      selected_parent_projekt_id = get_highest_unique_parent_projekt_id(@selected_projekts_ids)
+      @selected_parent_projekt = Projekt.find_by(id: selected_parent_projekt_id)
     end
 
     @geozones = Geozone.all

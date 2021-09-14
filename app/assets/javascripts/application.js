@@ -123,6 +123,7 @@
 //= require expand_proposals_map
 //= require gdpr_notice
 //= require map_refresh
+//= require accessibility_fixes
 //= require polls_custom
 //= require_tree ./sdg
 //= require_tree ./sdg_management
@@ -193,6 +194,7 @@ var initialize_modules = function() {
   App.MapRefresh.initialize();
   App.ElasticSearchModal.initialize();
   App.PollsCustom.initialize();
+  App.AccessibilityFixes.initialize();
 };
 
 var destroy_non_idempotent_modules = function() {

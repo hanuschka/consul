@@ -26,7 +26,7 @@
             </small>
           <% end %>
         </h3>
-        <table id="question_<%= question.id %>_results_table">
+        <table id="question_<%= question.id %>_results_table" class='results-table'>
           <tbody>
             <%- question.question_answers.each do |answer| %>
               <tr>

@@ -13,7 +13,12 @@
 
 <main>
   <%= render "header", header: @header %>
-  <%= render "feeds" %>
+
+  <div class="row">
+    <div class="column medium-8 small-centered">
+      <%= render "feeds" %>
+		</div>
+	</div>
 
   <div class="row">
     <div class="column medium-8 small-centered">
@@ -22,22 +27,6 @@
       </div>
 		</div>
 	</div>
-
-  <% if @active_projekt_cards.any? %>
-    <div class="row">
-      <div class="column medium-8 small-centered">
-        <%= render partial: "cards", locals: { cards: @active_projekt_cards, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
-      </div>
-    </div>
-  <% end %>
-
-  <% if @archived_projekt_cards.any? %>
-    <div class="row">
-      <div class="column medium-8 small-centered">
-        <%= render partial: "cards", locals: { cards: @archived_projekt_cards, section_title: t("custom.welcome.archived_projekt_cards.title")  } %>
-      </div>
-    </div>
-  <% end %>
 
   <div class="row">
 		<div class="column medium-8 small-centered">
@@ -58,6 +47,22 @@
 			<% end %>
 		</div>
   </div>
+
+  <% if @active_projekt_cards.any? %>
+    <div class="row">
+      <div class="column medium-8 small-centered">
+        <%= render partial: "cards", locals: { cards: @active_projekt_cards, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @archived_projekt_cards.any? %>
+    <div class="row">
+      <div class="column medium-8 small-centered">
+        <%= render partial: "cards", locals: { cards: @archived_projekt_cards, section_title: t("custom.welcome.archived_projekt_cards.title")  } %>
+      </div>
+    </div>
+  <% end %>
 
 
 

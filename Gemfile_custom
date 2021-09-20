@@ -12,3 +12,7 @@ end
 gem 'nokogiri', '~> 1.6', '>= 1.6.8'
 gem "sentry-ruby"
 gem "sentry-rails"
+
+source "https://rails-assets.org" do
+  gem "rails-assets-leaflet.markercluster"
+end

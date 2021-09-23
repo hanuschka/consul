@@ -126,6 +126,10 @@ module Abilities
       can :select, ProjektPhase do |projekt_phase|
         projekt_phase.selectable_by?(user)
       end
+
+      if user.level_two_or_three_verified?
+        can :create, Budget::Investment
+      end
     end
   end
 end

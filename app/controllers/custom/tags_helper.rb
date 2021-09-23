@@ -10,7 +10,7 @@ module TagsHelper
     when "poll"
       polls_path(tags: tag_name, filter: params[:filter])
     when "budget/investment"
-      budget_investments_path(@budget, search: tag_name)
+      investments_path(tags: tag_name)
     when "legislation/proposal"
       legislation_process_proposals_path(@process, search: tag_name)
     else

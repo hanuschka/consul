@@ -2,7 +2,7 @@
 <% tag_filter_class = controller.action_name == 'index' ? 'js-projekt-tag-filter-link' : ''  %>
 <% resource_name = (@resource_name || taggable.class.name.downcase) %>
 
-<%= render SDG::TagListComponent.new(taggable, limit: limit) %>
+<% #- render SDG::TagListComponent.new(taggable, limit: limit) %>
 
 <div class='tag-list'>
 

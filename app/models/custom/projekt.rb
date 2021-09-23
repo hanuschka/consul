@@ -10,6 +10,8 @@ class Projekt < ApplicationRecord
   has_many :debates, dependent: :nullify
   has_many :proposals, dependent: :nullify
   has_many :polls, dependent: :nullify
+  has_many :budgets, dependent: :nullify
+  has_many :investment_proposals, through: :budgets, class_name: 'Budget::Investment', source: :investments
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
 

@@ -1,0 +1,122 @@
+<% provide :title do %><%= t("custom.investment_proposals.index.title") %><% end %>
+<% content_for :header_addon do %>
+  <%= render "shared/search_form",
+             search_path: investments_path(page: 1),
+             i18n_namespace: "budgets.investments.index.search_form" %>
+<% end %>
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: investments_url %>
+<% end %>
+
+<main>
+
+  <%-# unless params[:search].present? %>
+    <%- # render "/budgets/investments/header" %>
+  <%-# end %>
+
+  <% if params[:search].present? || params[:advanced_search].present? %>
+    <div class="highlight no-margin-top padding margin-bottom">
+      <div class="row">
+        <div class="small-12 column">
+          <h2><%= t("shared.search_results") %></h2>
+          <p>
+            <%= page_entries_info @investments %>
+            <%= sanitize(t("budgets.investments.index.search_results",
+                   count: @investments.size,
+                   search_term: params[:search])) %>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if feature?(:map) %>
+    <div class="map inline">
+      <% if @selected_parent_projekt %>
+        <%= render_map(@selected_parent_projekt.map_location, "budget_investments", false, nil, @investments_map_coordinates) %>
+      <% else %>
+        <%= render_map(nil, "budget_investments", false, nil, @investments_map_coordinates) %>
+      <% end %>
+    </div>
+    <div class='expand-proposals-overview-map small js-expand-proposals-overview-map'>
+      <%= t('custom.proposals.index.show_larger_map') %>
+    </div>
+    <div class="clear"></div>
+    <div class="no-bullet margin-top">
+    </div>
+  <%end%>
+
+  <div class="row">
+    <div id="budget-investments" class="budget-investments-list small-12 medium-9 column">
+
+      <% if @current_filter == "unfeasible" %>
+        <div class="small-12 margin-bottom">
+          <h2><%= t("budgets.investments.index.unfeasible") %></h2>
+          <div class="callout primary margin">
+            <%= t("budgets.investments.index.unfeasible_text") %>
+          </div>
+        </div>
+      <% elsif @heading.present? %>
+        <div class="row">
+          <div class="small-12 column">
+            <%= render "view_mode" %>
+          </div>
+        </div>
+      <% end %>
+
+      <%= render Shared::AdvancedSearchComponent.new %>
+
+      <% if unfeasible_or_unselected_filter %>
+        <ul class="no-bullet submenu">
+          <li class="inline-block">
+            <%= link_to current_path_with_query_params(order: "random", page: 1),
+                        class: "is-active" do %>
+              <h2><%= t("budgets.investments.index.orders.random") %></h2>
+            <% end %>
+          </li>
+        </ul>
+      <% else %>
+        <%- # render("shared/order_links", i18n_namespace: "budgets.investments.index") %>
+      <% end %>
+
+      <%- # render Shared::FilterSelectorComponent.new(i18n_namespace: "budgets.investments.index") %>
+
+      <% if investments_default_view? || true %>
+
+        <% @investments.each do |investment| %>
+          <%= render "/budgets/investments/investment",
+                     investment: investment,
+                     investment_ids: @investment_ids,
+                     investment_votes: @investment_votes,
+                     ballot: @ballot %>
+        <% end %>
+      <% else %>
+
+        <% @investments.each do |investment| %>
+          <%= render "/budgets/investments/investment_minimal",
+                     investment: investment %>
+        <% end %>
+      <% end %>
+
+      <%= paginate @investments %>
+    </div>
+
+    <div class="small-12 medium-3 column">
+      <aside class="margin-bottom">
+
+        <%= render "shared/projekt_sidebar_filter/projekts_sidebar" %>
+        <% if show_affiliation_filter_in_sidebar? %>
+          <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: (Budget::Investment.model_name.human count: :other) %>
+        <% end %>
+        <% unless skip_user_verification? %>
+          <%= render "shared/sidebar_filter/geozone_restrictions" %>
+        <% end %>
+        <%= render "shared/categories", taggable: "budget/investment" %>
+        <%= render "shared/tag_cloud", taggable: "budget/investment" %>
+        <%- # render SDG::Goals::TagCloudComponent.new("Budget::Investment") %>
+
+      </aside>
+    </div>
+
+  </div>
+</main>

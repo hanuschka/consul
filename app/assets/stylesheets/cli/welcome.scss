@@ -1,0 +1,31 @@
+.hero-wrapper {
+  position: relative;
+  height: 250px;
+  margin-top: -25px;
+  background-image: url(ush.jpg);
+  background-position: center;
+  background-size: cover;
+
+  @media screen and (min-width: 40em) {
+    background-image: none;
+    height: initial;
+  }
+
+  video {
+    width: 100%;
+    display: none;
+
+    @media screen and (min-width: 40em) {
+      display: block;
+    }
+  }
+
+  video::-webkit-media-controls-timeline,
+  video::-webkit-media-controls-current-time-display,
+  video::-webkit-media-controls-time-remaining-display,
+  video::-webkit-media-controls-volume-slider,
+  video::-webkit-media-controls-mute-button,
+  video::-webkit-media-controls-fullscreen-button {
+    display: none;
+  }
+}

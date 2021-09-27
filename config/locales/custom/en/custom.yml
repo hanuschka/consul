@@ -6,3 +6,10 @@ en:
         second_level: 'Second level'
         third_level: 'Third level'
         fourth_level: 'Fourth level'
+  activerecord:
+    errors:
+      models:
+        proposal:
+          attributes:
+            description:
+              too_long: 'is too long'

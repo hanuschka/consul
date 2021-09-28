@@ -1,3 +1,31 @@
+// Locale switcher
+
+body > header .locale.locale-custom,
+.wrapper > header .locale.locale-custom {
+  height: 2.5rem;
+  margin-left: 0;
+
+  &::after {
+    display: none;
+  }
+
+  .locale-form {
+
+    label {
+      color: $dark
+    }
+  
+    .locale-switcher {
+      margin-top: 0.5rem;
+
+      &:focus {
+        outline: 3px solid #ffbf47 !important
+      }
+    }
+  }
+}
+
+
 // Adapting header to mobile view
 
 @media screen and (max-width: 39.9375em) {
@@ -20,6 +48,11 @@
 
   .top-bar-title {
     margin: 0.5rem auto;
+  }
+
+  .subnavigation .account-admin-items a.account-items-icon,
+  .subnavigation .account-admin-items a.admin-items-icon {
+    display: none;
   }
 }
 
@@ -196,20 +229,27 @@ span.icon-no-notification {
 // Styling main menu layout in desktop
 
 @media screen and (min-width: 40em) {
+  .subnavigation ul.main-menu li.top-level-item > ul.nav-flyout-block {
+    border-top: none;
+  }
 
-   #responsive-menu {
-     display: none !important;
-   }
+  #responsive-menu {
+    display: none !important;
+  }
 
-   #navigation_bar.subnavigation {
-     background-color: $top-level-menu-background-color;
+  #navigation_bar.subnavigation {
+    background-color: $top-level-menu-background-color;
      
-     .top-level-item > a,
-     .top-level-item > .flyout-item-name > a,
-     .top-level-item > .flyout-item-name {
-       line-height: 2.75rem;
-     }
-   }
+    .top-level-item > a,
+    .top-level-item > .flyout-item-name > a,
+    .top-level-item > .flyout-item-name {
+      line-height: 2.75rem;
+    }
+  }
+
+  #navigation_bar {
+    background-color: $top-level-menu-background-color;
+  }
 
   .subnavigation a.home-items-icon {
     display: inline-block;
@@ -359,7 +399,7 @@ span.icon-no-notification {
       padding-bottom: calc(.5rem - 1px);
 
       &:first-child {
-        border-top: none;
+        border-top: 1px solid $flyout-item-divider-color;
       }
 
       &:last-child {

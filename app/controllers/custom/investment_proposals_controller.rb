@@ -72,15 +72,15 @@ class InvestmentProposalsController < ApplicationController
   def take_by_geozone_affiliations
     case @selected_geozone_affiliation
     when 'all_resources'
-      @resources
+      @investments
     when 'no_affiliation'
-      @resources = @resources.joins(:projekt).where( projekts: { geozone_affiliated: 'no_affiliation' } ).distinct
+      @investments = @investments.joins(:projekt).where( projekts: { geozone_affiliated: 'no_affiliation' } ).distinct
     when 'entire_city'
-      @resources = @resources.joins(:projekt).where(projekts: { geozone_affiliated: 'entire_city' } ).distinct
+      @investments = @investments.joins(:projekt).where( projekts: { geozone_affiliated: 'entire_city' } ).distinct
     when 'only_geozones'
-      @resources = @resources.joins(:projekt).where(projekts: { geozone_affiliated: 'only_geozones' } ).distinct
+      @investments = @investments.joins(:projekt).where( projekts: { geozone_affiliated: 'only_geozones' } ).distinct
       if @affiliated_geozones.present?
-        @resources = @resources.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones }).distinct
+        @investments = @investments.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones }).distinct
       else
         @resources = @resources.joins(:geozone_affiliations).where.not(geozones: { id: nil }).distinct
       end

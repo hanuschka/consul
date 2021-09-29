@@ -113,7 +113,7 @@
         <% end %>
         <%= render "shared/categories", taggable: "budget/investment" %>
         <%= render "shared/tag_cloud", taggable: "budget/investment" %>
-        <%- # render SDG::Goals::TagCloudComponent.new("Budget::Investment") %>
+        <%= render SDG::Goals::TagCloudComponent.new("Budget::Investment") %>
 
       </aside>
     </div>

@@ -55,6 +55,7 @@ de:
     layouts:
       footer:
         impressum: Impressum
+        netiquette: Netiquette
         description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
         demokratie: demokratie.today
         demokratie_url: "https://www.demokratie.today/"

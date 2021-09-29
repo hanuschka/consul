@@ -1,5 +1,8 @@
 // brand_color
-$brand:                                           #004a83;
+$fblue:                                           #004F9F;
+$fred:                                            #CD1719;
+
+$brand:                                           $fblue;
 $secondary:                                       lighten($brand, 70%);
 $accent:                                          lighten($brand, 50%);
 $dark:                                            darken($brand, 10%);
@@ -51,8 +54,8 @@ $welcomespan:                 $brand;
 
 
 // fonts
-$body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
-$header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
+$body-font-family: Calibri, sans-serif !important;
+$header-font-family: Calibri, sans-serif !important;
 $base-font-size:      16px;
 
 // Regular 

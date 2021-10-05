@@ -4,7 +4,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
-         :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
+         :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?

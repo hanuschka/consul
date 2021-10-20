@@ -1,0 +1,34 @@
+@font-face {
+  font-family: "MyriadPro";
+  src: font-url("MyriadPro-BoldIt.otf") format("opentype");
+	font-style: italic;
+	font-weight: bold;
+}
+
+@font-face {
+  font-family: "MyriadPro";
+  src: font-url("MyriadPro-It.otf") format("opentype");
+	font-style: italic;
+}
+
+@font-face {
+  font-family: "MyriadPro";
+  src: font-url("MyriadPro-Bold.otf") format("opentype");
+	font-weight: bold;
+}
+
+@font-face {
+  font-family: "MyriadPro";
+  src: font-url("MyriadPro-Regular.otf") format("opentype"),
+}
+
+@font-face {
+  font-family: "DMSerifDisplay";
+  src: font-url("DMSerifDisplay-Italic.ttf") format("truetype");
+	font-style: italic;
+}
+
+@font-face {
+  font-family: "DMSerifDisplay";
+  src: font-url("DMSerifDisplay-Regular.ttf") format("truetype");
+}

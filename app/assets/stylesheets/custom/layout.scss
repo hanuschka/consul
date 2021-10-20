@@ -3,15 +3,6 @@ main {
   padding-top: 25px;
 }
 
-.top-bar .top-bar-title a img {
-  max-width: 300px;
-  height: auto;
-}
-
-.top-bar-title {
-  margin-right: 0;
-}
-
 body>header, .wrapper>header, .top-bar {
   background-color: $white;
   color: $dark;
@@ -19,6 +10,12 @@ body>header, .wrapper>header, .top-bar {
 
 
 .top-bar {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  @media(min-width: 40em) {
+    align-items: flex-end;
+  }
+
   h2.header-title {
     line-height: 1em;
     text-transform: uppercase;
@@ -30,6 +27,37 @@ body>header, .wrapper>header, .top-bar {
     span {
       font-weight: 100;
     }
+  }
+
+  .top-bar-title {
+    margin-right: 0;
+    margin-bottom: 0;
+
+    a img {
+      max-width: 200px;
+      height: auto;
+
+      @media (min-width: 40em) {
+        max-width: 400px;
+      }
+    }
+  }
+
+  .account-buttons {
+  }
+
+  .sign-in-button,
+  .sign-up-button {
+    display: inline-block;
+    padding: 0.25rem 2em;
+    background-color: #ECE4E1;
+    color: $black;
+  }
+
+  .sign-up-button {
+    background-color: $black;
+    color: $white;
+    margin-left: 0.25rem;
   }
 }
 

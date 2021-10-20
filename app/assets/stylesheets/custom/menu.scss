@@ -326,7 +326,7 @@ span.icon-no-notification {
 
   // Styling flyout items
 
-  .main-menu {
+  .subnavigation ul.main-menu {
 
     li.nav-element:hover > ul.nav-flyout-block {
       display: block !important;
@@ -396,8 +396,7 @@ span.icon-no-notification {
 
   // Styling projekts in navigation items
 
-  .main-menu {
-
+  .subnavigation ul.main-menu {
     .projekt-modules-links {
       display: block;
       font-size: 11px;

@@ -1,8 +1,7 @@
 // brand_color
-$brand:                                           #004a83;
-$secondary:                                       lighten($brand, 70%);
+$brand:                                           #000000;
+$secondary:                                       #A1A1A1;
 $accent:                                          lighten($brand, 50%);
-$dark:                                            darken($brand, 10%);
 
 
 // Menu variables
@@ -13,12 +12,12 @@ $white:                                           #fff;
 
 $top-level-menu-item-text-color:                  $white;
 $top-level-menu-background-color:                 $brand;
-$flyout-item-text-color:                          $white;
-$flyout-item-bg-color:                            $brand;
+$flyout-item-text-color:                          $brand;
+$flyout-item-bg-color:                            $white;
 
-$flyout-block-border-color:                       #dee0e3;
-$flyout-item-divider-color:                       lighten($flyout-block-border-color, 5%);
-$flyout-item-projekt-modules-links-color:         $flyout-item-text-color;
+$flyout-block-border-color:                       $secondary;
+$flyout-item-divider-color:                       $secondary;
+$flyout-item-projekt-modules-links-color:         $brand;
 
 
 $flyout-item-line-height:                         1.5rem;
@@ -51,8 +50,8 @@ $welcomespan:                 $brand;
 
 
 // fonts
-$body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
-$header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
+$body-font-family: 'MyriadPro', Helvetica, Arial, sans-serif;
+$header-font-family: 'MyriadPro', Helvetica, Arial, sans-serif !important;
 $base-font-size:      16px;
 
 // Regular 

@@ -3,8 +3,6 @@
     <div class="column">
       <div class="top-bar">
 
-        <h2 class='header-title show-for-medium'><%= t('custom.layouts.header.title_html') %> <%= Setting['org_name'] %></h2>
-
         <span data-responsive-toggle="responsive-menu"
               data-hide-for="medium"
               class="hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll"
@@ -18,9 +16,16 @@
 
         <div class="top-bar-title">
           <%= link_to root_path do %>
-            <%= image_tag(image_path_for("logo_header.png"), class: "", alt: t("layouts.header.logo")) %>
+            <%= image_tag(image_path_for("logo_main.png"), class: "logo-main", alt: t("layouts.header.logo")) %>
           <% end %>
         </div>
+
+        <% unless current_user %>
+          <div class='account-buttons hide-for-small-only'>
+            <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
+            <%= link_to t('devise_views.menu.login_items.signup') , new_user_registration_path, class: 'sign-up-button', role: 'button'  %>
+          </div>
+        <% end %>
 
         <div id="responsive-menu">
           <div class="top-bar-right">

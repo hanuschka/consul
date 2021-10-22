@@ -55,8 +55,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update_details
     @user = current_user
+    @user.update(update_user_details_params)
 
     @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
+    @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/
     @user.errors.add :first_name, :blank if update_user_details_params[:first_name].blank?
     @user.errors.add :last_name, :blank if update_user_details_params[:last_name].blank?
     @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(1i)'].blank?
@@ -67,6 +69,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if @user.citizen?
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
       @user.errors.add :document_number, :blank if update_user_details_params[:document_number].blank?
+      @user.errors.add :document_number, :format unless update_user_details_params[:document_number] =~ /\A\d{5}\z/
     else
       @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
       @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?

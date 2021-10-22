@@ -2,6 +2,12 @@ de:
   activerecord:
     errors:
       models:
+        user:
+          attributes:
+            document_number:
+              format: muss 5 Ziffern enthalten
+            plz:
+              format: muss 5 Ziffern enthalten
         proposal:
           attributes:
             description:

@@ -11,9 +11,13 @@
   </style>
 
   <div class="jumbo highlight">
-    <%= link_to '#beta' do  %>
-      <%= image_tag 'badge.png', class: 'beta-badge', size: '100x100' %>
-    <% end %>
+    <div class="row">
+      <div class="column beta-badge-wrapper">
+        <%= link_to '#beta' do  %>
+          <%= image_tag 'badge.png', class: 'beta-badge', size: '100x100' %>
+        <% end %>
+      </div>
+    </div>
   </div>
 
   <div class="background-header"></div>

@@ -41,7 +41,7 @@
       <% if @cards.any? %>
         <div class="row">
           <div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
-            <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
+            <%= render partial: "cards", locals: { cards: @cards } %>
           </div>
         </div>
       <% end %>

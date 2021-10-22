@@ -1,12 +1,20 @@
 // Welcome page
 
-.beta-badge {
-  position: absolute;
-  right: 10%;
-  top: 5%
+.beta-badge-wrapper {
+  position: relative;
+
+  .beta-badge {
+    position: absolute;
+    right: 10%;
+    top: 5%
+  }
 }
 
 .home-page {
+
+  .cards-homepage {
+    margin-bottom: 3rem;
+  }
 
   .card-homepage {
     position: relative;
@@ -50,6 +58,7 @@
     background-color: $welcomebgcolor;
     position: relative;
 		height: 285px;
+    margin-bottom: 4rem;
  
     .jumbo-message {
       position: absolute;

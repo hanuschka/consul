@@ -8,12 +8,15 @@
       <%= raw content_block("subnavigation_right_mobile", I18n.locale) if placement == 'mobile' %>
     </div>
 
+    <% if user_signed_in? %>
+      <div class="account-admin-items">
+        <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
+        <%= render partial: "layouts/notification_item", locals: { placement: placement } %>
+        <%= render partial: 'shared/subnavigation_konto', locals: { placement: placement } %>
+        <%= render partial: 'shared/subnavigation_admin', locals: { placement: placement } %>
+        <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'mobile' %>
+      </div>
+    <% end  %>
     <div class="account-admin-items">
-      <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
-      <%= render partial: "layouts/notification_item", locals: { placement: placement } %>
-      <%= render partial: 'shared/subnavigation_konto', locals: { placement: placement } %>
-      <%= render partial: 'shared/subnavigation_admin', locals: { placement: placement } %>
-      <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'mobile' %>
-    </div>
   </ul>
 </div>

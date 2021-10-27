@@ -80,6 +80,11 @@ de:
           show_in_navigation: null
           show_in_navigation_checkbox: Projekt in Navigation anzeigen
           update: Projekteinstellungen aktualisieren
+          design:
+            icon: Icon
+            submit_button: Submit
+
+
         edit_projekt: Editieren
         index:
           add_cards: Kacheln erstellen/bearbeiten

@@ -2,18 +2,20 @@
 <% provide :title do %><%= @custom_page.title %><% end %>
 
 <style>
-  <%if @custom_page.image.present? %>
+  <% if @custom_page.image.present? %>
     .custom-page-banner {
       background-image: url("<%=@custom_page.image.attachment.url%>");
       background-size: cover;
       background-position: center center;
     }
-  <%end%>
+  <% end %>
 </style>
 
 <main>
-  <div class="custom-page-banner">
-  </div>
+  <% if @custom_page.image.present? %>
+    <div class="custom-page-banner">
+    </div>
+  <% end %>
   <div class="row">
     <div class="column">
       <% if @custom_page.projekt.present? %>

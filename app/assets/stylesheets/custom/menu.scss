@@ -1,4 +1,18 @@
-// Locale switcher
+// con-708, temporarily
+
+@media screen and (min-width: 40em) {
+  .subnavigation ul.main-menu li.nav-element.top-level-item:hover > ul.nav-flyout-block > li.nav-element:hover > ul.nav-flyout-block {
+    display: none !important;
+  }
+}
+
+#responsive-menu li.nav-element.top-level-item > ul.nav-flyout-block > li.nav-element.flyout-item.flyout-item-projekt > .projekt-name-group > .nav-toggle-arrow {
+  display: none;
+}
+
+
+
+
 
 body > header .locale.locale-custom,
 .wrapper > header .locale.locale-custom {

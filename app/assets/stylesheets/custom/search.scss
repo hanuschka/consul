@@ -137,7 +137,7 @@
   width: 380px;
   left: 0;
   right: 0;
-  z-index: 7;
+  z-index: 2002;
 
   #search_form input {
     width: 380px;
@@ -183,7 +183,7 @@ main.grayed-out {
     width: 100%;
     height: calc(100% + 336px);
     position: absolute;
-    z-index: 5;
+    z-index: 2001;
     top: 0;
   }
 }

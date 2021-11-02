@@ -2,6 +2,8 @@ require_dependency Rails.root.join("app", "models", "site_customization", "page"
 
 class SiteCustomization::Page < ApplicationRecord
   include Search::Generic
+  include Imageable
+
   belongs_to :projekt
 
   has_many :comments, through: :projekt

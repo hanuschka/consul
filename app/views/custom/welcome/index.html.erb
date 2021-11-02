@@ -16,12 +16,6 @@
 
   <div class="row">
     <div class="column medium-8 small-centered">
-      <%= render "feeds" %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="column medium-8 small-centered">
       <div class=intro-text>
         <%=render_custom_block 'homepage_block_1' %>
       </div>
@@ -64,7 +58,11 @@
     </div>
   </div>
 
-
+  <div class="row">
+    <div class="column medium-8 small-centered">
+      <%= render "feeds" %>
+    </div>
+  </div>
 
   <% if feature?("user.recommendations") && (@recommended_debates.present? || @recommended_proposals.present?) %>
     <%= render "recommended",

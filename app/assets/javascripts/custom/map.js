@@ -124,7 +124,13 @@
         }
       };
       mapCenterLatLng = new L.LatLng(mapCenterLatitude, mapCenterLongitude);
-      map = L.map(element.id).setView(mapCenterLatLng, zoom);
+
+
+      map = L.map(element.id, {
+        gestureHandling: true
+      }).setView(mapCenterLatLng, zoom);
+
+
 
       if ( !editable ) {
         map._layersMaxZoom = 19;
@@ -136,6 +142,20 @@
       L.tileLayer(mapTilesProvider, {
         attribution: mapAttribution
       }).addTo(map);
+
+
+      var search = new GeoSearch.GeoSearchControl({
+        provider: new GeoSearch.OpenStreetMapProvider(),
+        style: 'bar',
+        showMarker: false,
+      });
+
+      map.addControl(search);
+
+
+      L.control.locate().addTo(map);
+
+
       if (markerLatitude && markerLongitude && !addMarker) {
         marker = createMarker(markerLatitude, markerLongitude, markerColor, markerIconClass);
       }

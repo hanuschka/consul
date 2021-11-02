@@ -67,5 +67,8 @@ Rails.application.routes.draw do
 
   # Manageing bam verification code
   patch    "admin/users/:id/send_letter_verification_code",                  to: "admin/users#send_letter_verification_code",        as: :send_letter_verification_code
+
   patch    "admin/users/:id/cancel_letter_verification_code",                to: "admin/users#cancel_letter_verification_code",      as: :cancel_letter_verification_code
+  # Confirm poll participation
+  post "polls/:id/confirm_participation",                  to: "polls#confirm_participation",        as: :poll_confirm_participation
 end

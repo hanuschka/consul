@@ -35,17 +35,21 @@
 				</div>
 			<% end %>
 
-			<% if feed_processes_enabled? %>
-				<div class="row">
-					<div class="small-12 large-4 column">
-						<%= render "processes" %>
-					</div>
-				</div>
-			<% end %>
-		</div>
+      <% if feed_processes_enabled? %>
+        <div class="row">
+          <div class="small-12 large-4 column">
+            <%= render "processes" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 
-  <%= render "feeds" %>
+  <div class="row">
+    <div class="column medium-8 small-centered">
+      <%= render "feeds" %>
+    </div>
+  </div>
 
   <div class="row">
     <% if feed_processes_enabled? %>
@@ -70,7 +74,6 @@
       </div>
     </div>
   <% end %>
-
 
   <% if feature?("user.recommendations") && (@recommended_debates.present? || @recommended_proposals.present?) %>
     <%= render "recommended",

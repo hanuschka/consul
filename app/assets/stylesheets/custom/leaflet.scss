@@ -1,0 +1,21 @@
+// Search address plugin
+
+.leaflet-control-geosearch form input {
+  background: initial !important;
+  height: 26px !important;
+  margin-bottom: 0 !important;
+  box-shadow: none;
+
+  &:focus {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.leaflet-touch .leaflet-control-geosearch a.reset {
+  line-height: 26px !important;
+}
+
+.leaflet-control-geosearch a.reset {
+  height: 26px !important;
+}

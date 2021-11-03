@@ -221,7 +221,8 @@ span.icon-no-notification {
   }
 
   #navigation_bar {
-    background-color: $top-level-menu-background-color;
+    background: $top-level-menu-background-color radial-gradient(circle at 50% 50%, #194879 0%, #042548 100%);
+
   }
 
   .subnavigation a.home-items-icon {

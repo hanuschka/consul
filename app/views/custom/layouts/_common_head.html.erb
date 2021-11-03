@@ -11,3 +11,9 @@
 <%= csrf_meta_tags %>
 <%= favicon_link_tag "favicon.ico" %>
 <%= render "layouts/disable_animations_in_tests" if Rails.env.test? %>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.6.0/dist/geosearch.css" />
+<script src="https://unpkg.com/leaflet-geosearch@3.6.0/dist/geosearch.umd.js"></script>
+
+<link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
+<script src="//unpkg.com/leaflet-gesture-handling"></script>

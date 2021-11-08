@@ -1,10 +1,15 @@
 // Search address plugin
 
+.leaflet-geosearch-bar {
+  z-index: 6 !important;
+}
+
 .leaflet-control-geosearch form input {
   background: initial !important;
   height: 26px !important;
   margin-bottom: 0 !important;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
 
   &:focus {
     border: none;

@@ -148,6 +148,8 @@
         provider: new GeoSearch.OpenStreetMapProvider(),
         style: 'bar',
         showMarker: false,
+        searchLabel: 'Nach Adresse suchen',
+        notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
       });
 
       map.addControl(search);

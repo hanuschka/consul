@@ -10,9 +10,11 @@ CKEDITOR.editorConfig = function( config )
   config.filebrowserImageBrowseUrl = "/ckeditor/pictures";
   config.filebrowserImageUploadUrl = "/ckeditor/pictures?";
   config.filebrowserUploadMethod = "form";
+  CKEDITOR.dtd.$removeEmpty.span = 0;
+  CKEDITOR.dtd.$removeEmpty.i = 0;
 
   config.allowedContent = true;
-  config.format_tags = "p;h1;h2;h3;h4;h5;h6";
+  config.format_tags = "p;h2;h3;h4;h5;h6";
 
   config.stylesSet = 'columns';
   config.enterMode = CKEDITOR.ENTER_BR;
@@ -98,13 +100,22 @@ CKEDITOR.editorConfig = function( config )
   ];
 
   config.toolbar_mini = [
-    { name: "paragraph", groups: [ "list" ], items: [ "NumberedList", "BulletedList" ] },
+    { name: "paragraph", groups: [ "list", "indent", "blocks", "align", "bidi" ], items: [ "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" ] },
     { name: "links", items: [ "Link", "Unlink" ] },
     { name: "styles", items: [ "Format" ] },
-    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike" ] }
+    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-", "RemoveFormat" ] },
   ];
 
-  config.toolbar_extended = [
+  config.toolbar_extended_user = [
+    { name: "paragraph", groups: [ "list", "indent", "blocks", "align", "bidi" ], items: [ "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" ] },
+    { name: "links", items: [ "Link", "Unlink", "Anchor" ] },
+    { name: "styles", items: [ "Format", "Styles" ] },
+    { name: "basicstyles", groups: [ "basicstyles", "cleanup" ], items: [ "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-", "RemoveFormat" ] },
+    { name: "colors", items: [ "TextColor", "BGColor" ] },
+    { name: "insert", items: [ "Image", "Table", "MJAccordion", "HorizontalRule", "SpecialChar" ] },
+  ];
+
+  config.toolbar_extended_admin = [
     { name: "paragraph", groups: [ "list", "indent", "blocks", "align", "bidi" ], items: [ "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" ] },
     { name: "links", items: [ "Link", "Unlink", "Anchor" ] },
     { name: "styles", items: [ "Format", "Font", "FontSize", "Styles" ] },

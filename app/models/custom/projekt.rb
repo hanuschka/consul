@@ -30,26 +30,20 @@ class Projekt < ApplicationRecord
   after_create :create_corresponding_page, :set_order, :create_projekt_phases, :create_default_settings, :create_map_location
   after_destroy :ensure_projekt_order_integrity
 
-  scope :top_level, -> { where(parent: nil) }
+  scope :top_level, -> { where(parent: nil).with_order_number }
+
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
 
-  scope :top_level_active, -> { top_level.with_order_number.
-                                           where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
-                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active' ).
-                                           select('DISTINCT ON ("projekts"."order_number") "projekts".*') }
+  scope :active, -> { where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
+                      joins( :projekt_settings).
+                      where( projekt_settings: { key: 'projekt_feature.main.activate', value: 'active' } ) }
 
-  scope :top_level_archived, -> { top_level.with_order_number.
-                                           where( "total_duration_end < ?", Date.today).
-                                           joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                           where( 'a.key': 'projekt_feature.main.activate', 'a.value': 'active' ).
-                                           select('DISTINCT ON ("projekts"."order_number") "projekts".*') }
+  scope :archived, -> { where( "total_duration_end < ?", Date.today).
+                        joins( :projekt_settings ).
+                        where( projekt_settings: { key: 'projekt_feature.main.activate', value: 'active' } ) }
 
-  scope :top_level_active_top_menu, -> { top_level.with_order_number.
-                                           where("total_duration_end IS NULL OR total_duration_end >= ?", Date.today).
-                                           joins('INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
-                                           joins('INNER JOIN projekt_settings b ON projekts.id = b.projekt_id').
-                                           where("a.key": "projekt_feature.main.activate", "a.value": "active", "b.key": "projekt_feature.general.show_in_navigation", "b.value": "active").distinct }
+  scope :visible_in_menu, -> { joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
+                            where( 'a.key': 'projekt_feature.general.show_in_navigation', 'a.value': 'active' ) }
 
 
   def current?(timestamp = Date.current.beginning_of_day)
@@ -99,6 +93,25 @@ class Projekt < ApplicationRecord
     all_children_projekts
   end
 
+  def active_children
+    children.joins(:projekt_settings).where( projekt_settings: { key: 'projekt_feature.main.activate', value: 'active'  } )
+  end
+
+  def children_with_active_feature(projekt_feature_key)
+    children.joins(:projekt_settings).where( projekt_settings: { key: "projekt_feature.#{projekt_feature_key}", value: 'active'  } )
+  end
+
+  def all_active_children_projekts_in_tree(all_active_children_projekts = [])
+    if self.children_with_active_feature('main.activate').any?
+      self.children_with_active_feature('main.activate').each do |child|
+        all_active_children_projekts.push(child)
+        child.all_active_children_projekts_in_tree(all_active_children_projekts)
+      end
+    end
+
+    all_active_children_projekts
+  end
+
   def has_active_phase?(controller_name)
     case controller_name
     when 'proposals'
@@ -111,9 +124,9 @@ class Projekt < ApplicationRecord
   end
 
   def count_resources(controller_name)
-    return self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).published.count }.reduce(:+) if controller_name == 'proposals'
-    return self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).created_by_admin.not_budget.count }.reduce(:+) if controller_name == 'polls'
-    self.all_children_projekts.unshift(self).map{ |p| p.send(controller_name).count }.reduce(:+)
+    return self.all_active_children_projekts_in_tree.unshift(self).map{ |p| p.send(controller_name).published.count }.reduce(:+) if controller_name == 'proposals'
+    return self.all_active_children_projekts_in_tree.unshift(self).map{ |p| p.send(controller_name).created_by_admin.not_budget.count }.reduce(:+) if controller_name == 'polls'
+    self.all_active_children_projekts_in_tree.unshift(self).map{ |p| p.send(controller_name).count }.reduce(:+)
   end
 
   def top_level?

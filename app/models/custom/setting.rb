@@ -139,7 +139,7 @@ class Setting < ApplicationRecord
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
         # "extended_feature.general.elasticsearch": false,
-        "extended_feature.general.extended_editor_for_admins": false,
+        "extended_feature.general.extended_editor_for_admins": true,
         "extended_feature.general.extended_editor_for_users": false,
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.gdpr.gdpr_conformity": false,
@@ -150,28 +150,26 @@ class Setting < ApplicationRecord
         "extended_option.gdpr.devise_verification_token_validity_days": 3,
         "extended_feature.modulewide.enable_categories": false,
         "extended_feature.modulewide.enable_custom_tags": false,
-        "extended_feature.modulewide.show_number_of_entries_in_modules": false,
-        "extended_feature.modulewide.show_affiliation_filter_in_index_sidebar": true,
+        "extended_feature.modulewide.show_number_of_entries_in_modules": true,
+        "extended_feature.modulewide.show_affiliation_filter_in_index_sidebar": false,
         "extended_feature.modulewide.hide_comment_replies_by_default": false,
         "extended_feature.modulewide.custom_help_text_in_modules": false,
         "extended_feature.debates.intro_text_for_debates": false,
         "extended_feature.debates.head_image_for_debates": false,
         "extended_feature.proposals.intro_text_for_proposals": false,
-
-        "extended_feature.proposals.quorum_for_proposals": true,
-        "extended_feature.proposals.enable_proposal_support_withdrawal": false,
-        "extended_feature.proposals.show_selected_proposals_in_proposal_sidebar": true,
-
-        "extended_feature.proposals.show_suggested_proposals_in_proposal_sidebar": true,
-        "extended_feature.proposals.enable_proposal_notifications_tab": true,
-        "extended_feature.proposals.enable_proposal_milestones_tab": true,
+        "extended_feature.proposals.quorum_for_proposals": false,
+        "extended_feature.proposals.enable_proposal_support_withdrawal": true,
+        "extended_feature.proposals.show_selected_proposals_in_proposal_sidebar": false,
+        "extended_feature.proposals.show_suggested_proposals_in_proposal_sidebar": false,
+        "extended_feature.proposals.enable_proposal_notifications_tab": false,
+        "extended_feature.proposals.enable_proposal_milestones_tab": false,
         "extended_option.proposals.max_active_proposals_per_user": 100,
         "extended_option.proposals.description_max_length": 6000,
         "extended_feature.polls.intro_text_for_polls": false,
-        "extended_feature.polls.intermediate_poll_results_for_admins": false,
+        "extended_feature.polls.intermediate_poll_results_for_admins": true,
         "extended_feature.polls.enable_comments": true,
         "extended_feature.polls.additional_information": true,
-        "extended_feature.polls.additional_info_for_each_answer": false
+        "extended_feature.polls.additional_info_for_each_answer": true
       }
     end
 

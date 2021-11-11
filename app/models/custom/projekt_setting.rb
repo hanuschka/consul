@@ -5,6 +5,8 @@ class ProjektSetting < ApplicationRecord
 
   default_scope { order(id: :asc) }
 
+  after_update :sync_related_projekt_children_active_setting, if: Proc.new { |setting| setting.key == "projekt_feature.main.activate" }
+
   def prefix
     key.split(".").first
   end
@@ -82,6 +84,13 @@ class ProjektSetting < ApplicationRecord
 
   def short_name
     I18n.t("custom.settings.#{self.key}")
+  end
+
+  def sync_related_projekt_children_active_setting
+    projekt.all_children_projekts.map do |child_projekt|
+      child_projekt.projekt_settings.find_by( key: 'projekt_feature.main.activate' ).
+        update(value: self.value)
+    end
   end
 
 end

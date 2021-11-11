@@ -54,7 +54,6 @@
   <% end %>
 
   <%tags = @selected_tags&.select{ |tag| tag.kind == 'category' } %>
-  <%can_create = @top_level_active_projekts.blank? %>
 
   <% if feature?(:map) %>
     <div class="map inline">

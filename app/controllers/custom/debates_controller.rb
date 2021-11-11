@@ -60,6 +60,12 @@ class DebatesController < ApplicationController
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
   end
 
+  def vote
+    return head :bad_request if params[:value] == 'no'
+    @debate.register_vote(current_user, params[:value])
+    set_debate_votes(@debate)
+  end
+
   private
 
     def remove_where_projekt_not_active

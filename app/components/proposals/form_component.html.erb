@@ -13,9 +13,16 @@
       <div>
         <%= translations_form.text_field :title,
               maxlength: Proposal.title_max_length,
-              data: suggest_data(proposal) %>
+              data: suggest_data(proposal),
+              autocomplete: "off" %>
       </div>
       <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
+
+      <% if feature?(:allow_images) %>
+        <div class="images">
+          <%= render "images/nested_image", f: f %>
+        </div>
+      <% end %>
 
       <div>
         <%= translations_form.text_area :summary,
@@ -29,32 +36,6 @@
                                         class: "html-area" %>
       </div>
     <% end %>
-  </fieldset>
-
-  <%= f.invisible_captcha :subtitle %>
-
-  <fieldset>
-    <legend><%= t("shared.optional") %></legend>
-
-    <div>
-      <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note") %>
-    </div>
-
-    <% if feature?(:allow_images) %>
-      <div class="images">
-        <%= render "images/nested_image", f: f %>
-      </div>
-    <% end %>
-    <% if feature?(:allow_attached_documents) %>
-      <div class="documents">
-        <%= render "documents/nested_documents", f: f %>
-      </div>
-    <% end %>
-
-    <div>
-      <%= f.select :geozone_id, geozone_select_options,
-        include_blank: t("geozones.none") %>
-    </div>
 
     <% if feature?(:map) %>
       <div>
@@ -68,34 +49,49 @@
                    i18n_namespace: "proposals" %>
       </div>
     <% end %>
+  </fieldset>
+
+  <%= f.invisible_captcha :subtitle %>
+
+  <fieldset>
+    <legend><%= t("shared.optional") %></legend>
 
     <div>
-      <%= f.label :tag_list, t("proposals.form.tags_label") %>
-      <p class="help-text" id="tag-list-help-text"><%= t("proposals.form.tags_instructions") %></p>
-
-      <div id="category_tags" class="tags">
-        <%= f.label :category_tag_list, t("proposals.form.tag_category_label") %>
-        <% categories.each do |tag| %>
-          <a class="js-add-tag-link"><%= tag.name %></a>
-        <% end %>
-      </div>
-
-      <br>
-      <%= f.text_field :tag_list, value: proposal.tag_list.to_s,
-                        label: false,
-                        placeholder: t("proposals.form.tags_placeholder"),
-                        class: "js-tag-list tag-autocomplete",
-                        aria: { describedby: "tag-list-help-text" },
-                        data: { js_url: suggest_tags_path } %>
+      <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note") %>
     </div>
 
-    <% if current_user.unverified? %>
-      <div>
-        <%= f.text_field :responsible_name,
-          hint: t("proposals.form.proposal_responsible_name_note") %>
+    <% if feature?(:allow_attached_documents) %>
+      <div class="documents">
+        <%= render "documents/nested_documents", f: f %>
       </div>
     <% end %>
-    <%= render SDG::RelatedListSelectorComponent.new(f) %>
+
+    <div>
+
+      <%if extended_feature?("modulewide.enable_categories") && categories.any? %>
+        <div id="category_tags" class="tags">
+          <%= f.label :category_tag_list, t("proposals.form.tag_category_label") %>
+          <% categories.each do |tag| %>
+            <a class="js-add-tag-link"><%= tag.name %></a>
+          <% end %>
+        </div>
+        <br>
+      <%=f.hidden_field :tag_list_predefined, value: proposal.tags.reject{|t| !['category'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined"%>
+      <%end%>
+
+      <%if extended_feature?("modulewide.enable_custom_tags") %>
+        <%= f.text_field :tag_list_custom, value: proposal.tag_list.to_s,
+                          label: t("custom.proposals.form.tags_custom"),
+                          placeholder: t("custom.proposals.form.tags_placeholder"),
+                          class: "js-tag-list tag-autocomplete",
+                          aria: { describedby: "tag-list-help-text" },
+                          data: { js_url: suggest_tags_path } %>
+      <% end %>
+    </div>
+
+    <div class='row'>
+      <%= render SDG::RelatedListSelectorComponent.new(f) %>
+    </div>
   </fieldset>
 
   <div class="actions">

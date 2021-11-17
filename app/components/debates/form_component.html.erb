@@ -13,7 +13,8 @@
       <div>
         <%= translations_form.text_field :title,
               maxlength: Debate.title_max_length,
-              data: suggest_data(debate) %>
+              data: suggest_data(debate),
+              autocomplete: "off" %>
       </div>
       <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
@@ -31,14 +32,31 @@
     <legend><%= t("shared.optional") %></legend>
 
     <div>
-      <%= f.text_field :tag_list, value: debate.tag_list.to_s,
-                        hint: t("debates.form.tags_instructions"),
-                        placeholder: t("debates.form.tags_placeholder"),
-                        data: { js_url: suggest_tags_path },
-                        class: "tag-autocomplete" %>
+      <%if extended_feature?("modulewide.enable_categories") && categories.any? %>
+        <div id="category_tags" class="tags">
+          <%= f.label :category_tag_list, t("proposals.form.tag_category_label") %>
+          <% categories.each do |tag| %>
+            <a class="js-add-tag-link"><%= tag.name %></a>
+          <% end %>
+        </div>
+        <br>
+      <%=f.hidden_field :tag_list_predefined, value: debate.tags.reject{|t| !['category'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined"%>
+      <%end%>
+
+      <%if extended_feature?("modulewide.enable_custom_tags") %>
+        <%= f.text_field :tag_list_custom, value: debate.tags.where(kind: nil).map{|c| c.name}.join(","),
+                          label: t("custom.debates.form.tags_custom"),
+                          placeholder: t("debates.form.tags_placeholder"),
+                          class: "js-tag-list tag-autocomplete",
+                          aria: { describedby: "tag-list-help-text" },
+                          data: { js_url: suggest_tags_path } %>
+      <% end %>
     </div>
 
-    <%= render SDG::RelatedListSelectorComponent.new(f) %>
+    <div class='row margin-top'>
+      <br>
+      <%= render SDG::RelatedListSelectorComponent.new(f) %>
+    </div>
   </fieldset>
 
   <div class="actions">

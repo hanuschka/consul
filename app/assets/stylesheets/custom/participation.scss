@@ -26,3 +26,25 @@
     }
   }
 }
+
+
+// overrides for debates and proposals forms
+
+.proposal-new, .debate-new {
+  header {
+    margin-bottom: 5rem;
+  }
+
+  .required-fields {
+    margin-bottom: 4rem;
+  }
+
+  .actions label {
+    display: flex;
+    justify-content: center;
+
+    span {
+      text-align: left;
+    }
+  }
+}

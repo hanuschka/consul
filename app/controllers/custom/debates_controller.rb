@@ -4,7 +4,7 @@ class DebatesController < ApplicationController
   include ImageAttributes
   include ProjektControllerHelper
 
-  before_action :load_categories, only: [:index, :new, :create, :edit, :map, :summary]
+  before_action :load_categories, only: [:index, :create, :edit, :map, :summary]
   before_action :process_tags, only: [:create, :update]
   before_action :set_projets_for_selector, only: [:new, :edit, :create, :update]
 

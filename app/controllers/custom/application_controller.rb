@@ -27,4 +27,9 @@ class ApplicationController < ActionController::Base
     social_media_icon_twitter_path = SiteCustomization::Image.all.find_by(name: 'social_media_icon_twitter').image.url.split('?')[0]
     @social_media_icon_twitter_path = social_media_icon_twitter_path.include?('missing') ? nil : social_media_icon_twitter_path
   end
+
+  def set_projets_for_selector
+    @projekts = Projekt.top_level
+    @resource = @poll || resource_model.new
+  end
 end

@@ -1,6 +1,7 @@
 // brand_color
 $brand:                                           #000000;
 $secondary:                                       #e7e7e7;
+$brand-secondary:                                 darken($brand, 10%); 
 $accent:                                          lighten($brand, 50%);
 
 

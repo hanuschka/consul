@@ -60,6 +60,14 @@ class Image < ApplicationRecord
     end
   end
 
+  def self.max_file_size
+    Setting["uploads.images.max_size"].to_i
+  end
+
+  def self.humanized_accepted_content_types
+    Setting.accepted_content_types_for("images").join(", ")
+  end
+
   private
 
     def imageable_class

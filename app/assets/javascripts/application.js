@@ -115,6 +115,7 @@
 //= require budget_edit_associations
 //= require datepicker
 //= require projekts
+//= require projekt_selector
 //= require responsive_menu
 //= require click_out_warning
 //= require iframe_filter
@@ -138,6 +139,7 @@ var initialize_modules = function() {
   App.Comments.initialize();
   App.Users.initialize();
   App.Projekts.initialize();
+  App.ProjektSelector.initialize();
   App.ResponsiveMenu.initialize();
   App.Votes.initialize();
   App.AllowParticipation.initialize();

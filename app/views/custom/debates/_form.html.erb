@@ -5,12 +5,17 @@
   <%= render "shared/errors", resource: @debate %>
 
   <div class="row column">
+    <div class="small-12 column margin-top">
+      <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @debate }  %>
+    </div>
+
     <%= f.translatable_fields do |translations_form| %>
       <div class="small-12 column">
         <%= translations_form.text_field :title,
               maxlength: Debate.title_max_length,
               placeholder: t("debates.form.debate_title"),
-              data: suggest_data(@debate) %>
+              data: suggest_data(@debate),
+              autocomplete: "off" %>
       </div>
       <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
@@ -28,11 +33,6 @@
     <% end %>
 
     <%= f.invisible_captcha :subtitle %>
-
-    <div class="small-12 column">
-
-      <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @debate }  %>
-    </div>
 
     <%if extended_feature?("modulewide.enable_categories") %>
       <div class="small-12 column margin-bottom">

@@ -1,0 +1,31 @@
+<% projekt_phase = @resource.class.name == "Poll" ? nil : projekt.send("#{@resource.class.name.downcase}_phase") %>
+
+<div class='projekt js-select-projekt <%= 'vertical-align' unless projekt.has_active_phase?(controller_name) %>'
+     id=<%= dom_id(projekt) %>
+     data-projekt-id="<%= projekt.id %>"
+     <%= "data-projekt-selectable=true" if projekt.selectable?(controller_name, current_user) %>
+     <%= "data-projekt-selectable-children=true" if projekt.children.selectable(controller_name, current_user).any? %> 
+     <%= "data-latitude=#{projekt.map_location.latitude}" if projekt.map_location.latitude.present? %>
+     <%= "data-longitude=#{projekt.map_location.longitude}" if projekt.map_location.longitude.present? %>
+     <%= "data-zoom=#{projekt.map_location.zoom}" if projekt.map_location.zoom.present? %>
+     <%= "data-show-map=true" if feature?('map').present? && controller_name == 'proposals'  %> >
+
+  <div class='projekt-icon'>
+    <i class="fas fa-<%= projekt.icon || "circle" %>" style="color:<%= projekt.color %>"></i>
+  </div>
+ 
+  <div class='projekt-details'>
+    <div class='projekt-name'>
+      <%= projekt.page.title %>
+    </div>
+
+    <% if projekt_phase.present? && projekt.has_active_phase?(controller_name) %>
+      <div class='projekt-phase-duration'>
+        <%= get_projekt_phase_duration(projekt_phase) %>
+      </div>
+      <div class='projekt-phase-restriction'>
+        <%= get_projekt_phase_restriction_name(projekt_phase) %>
+      </div>
+    <% end %>
+  </div>
+</div>

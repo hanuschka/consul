@@ -6,6 +6,7 @@ class DebatesController < ApplicationController
 
   before_action :load_categories, only: [:index, :new, :create, :edit, :map, :summary]
   before_action :process_tags, only: [:create, :update]
+  before_action :set_projets_for_selector, only: [:new, :edit, :create, :update]
 
   def index_customization
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil

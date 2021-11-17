@@ -782,6 +782,8 @@ de:
         zero: "O verwendete Sprachen "
         one: "1 verwendete Sprachen"
         other: "%{count} verwendete Sprachen"
+    optional: Zusätzliche informationen
+    required: Pflichtfelder
   social:
     facebook: "%{org} Facebook"
     twitter: "%{org} Twitter"

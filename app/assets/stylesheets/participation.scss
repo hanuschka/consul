@@ -246,8 +246,8 @@
 // 02. New participation
 // ---------------------
 
-.debate-form,
-.proposal-form,
+.debate-new,
+.proposal-new,
 .budget-investment-form,
 .document-form,
 .topic-new,
@@ -282,24 +282,23 @@
   margin-top: $line-height;
 
   li {
-    font-size: $small-font-size;
+    @include has-fa-icon(check, solid);
     margin: $line-height / 2 0;
 
     &::before {
-      content: "l ";
-      font-family: "icons" !important;
+      margin-right: $font-icon-margin * 1.5;
     }
   }
 }
 
-.debate-form {
+.debate-new {
 
   .recommendations li::before {
     color: $debates;
   }
 }
 
-.proposal-form,
+.proposal-new,
 .document-form,
 .topic-form,
 .topic-new {
@@ -310,7 +309,7 @@
 }
 
 .budget-investment-new,
-.proposal-form,
+.proposal-new,
 .proposal-edit,
 .polls-form,
 .poll-question-form,

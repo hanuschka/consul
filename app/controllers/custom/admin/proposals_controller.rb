@@ -7,6 +7,7 @@ class Admin::ProposalsController < Admin::BaseController
   has_orders %w[created_at]
 
   before_action :load_proposal, except: :index
+  before_action :set_projets_for_selector, only: [:update, :show]
 
   def show
   end

@@ -6,6 +6,7 @@ class ProposalsController
   include ProjektControllerHelper
 
   before_action :process_tags, only: [:create, :update]
+  before_action :set_projets_for_selector, only: [:new, :edit, :create, :update]
 
   def index_customization
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
@@ -50,10 +51,8 @@ class ProposalsController
 
   def new
     redirect_to proposals_path if proposal_limit_exceeded?(current_user)
-    @resource = resource_model.new
     set_geozone
     set_resource_instance
-    @projekts = Projekt.top_level
 
     @selected_projekt = Projekt.find(params[:projekt]) if params[:projekt]
   end

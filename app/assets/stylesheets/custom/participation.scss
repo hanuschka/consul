@@ -31,6 +31,21 @@
 // overrides for debates and proposals forms
 
 .proposal-new, .debate-new {
+
+  ul.recommendations {
+    li {
+      position: relative;
+      padding-left: 22px;
+
+      &:before {
+        position: absolute;
+        top: 4px;
+        left: 1px;
+      }
+
+    }
+  }
+
   label:not([for$='_terms_of_service']),
   fieldset.nested-image > legend,
   fieldset.documents-list > legend {

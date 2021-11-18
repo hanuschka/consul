@@ -1,6 +1,6 @@
 <% projekt_phase = @resource.class.name == "Poll" ? nil : projekt.send("#{@resource.class.name.downcase}_phase") %>
 
-<div class='projekt js-select-projekt <%= 'vertical-align' unless projekt.has_active_phase?(controller_name) %>'
+<div class='projekt js-select-projekt <%= 'vertical-align' if (!projekt.has_active_phase?(controller_name) || projekt_feature?(projekt, "general.show_not_active_phases_in_projekts_page_sidebar")) %>'
      id=<%= dom_id(projekt) %>
      data-projekt-id="<%= projekt.id %>"
      <%= "data-projekt-selectable=true" if projekt.selectable?(controller_name, current_user) %>

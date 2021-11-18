@@ -31,20 +31,38 @@
 // overrides for debates and proposals forms
 
 .proposal-new, .debate-new {
+  label {
+    color: #227CB1;
+  }
+
   header {
     margin-bottom: 5rem;
   }
 
   .required-fields {
     margin-bottom: 4rem;
+
+    label[for^=proposal_translations_attributes],
+    label[for^=debate_translations_attributes] {
+      &:after {
+        content: '*';
+        margin-left: 0.15rem;
+      }
+    }
   }
 
-  .actions label {
-    display: flex;
-    justify-content: center;
+  .actions {
+    span.star-message {
+      display: block;
+      color: #227CB1;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
 
-    span {
-      text-align: left;
+    label {
+      span {
+        display: inline;
+      }
     }
   }
 }

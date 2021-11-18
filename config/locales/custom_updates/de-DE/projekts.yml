@@ -5,7 +5,7 @@ de:
       errors:
         presence: Bitte wählen Sie ein Projekt
       selector:
-        select_placeholder_mandatory_html: Wähle Projekt<br>(verpflichtend)
+        select_placeholder_mandatory_html: Wähle Projekt (verpflichtend)
         connected_resources:
           debate_description: Bitte ordnen Sie Ihre Diskussion einem der nachfolgenden Projekte oder Unterprojekte zu. Dies dient dazu, dass die Diskussionen in der Diskussionsübersicht besser auffindbar sind.
           debate_title: Zuordnung der Diskussion zu einem Projekt

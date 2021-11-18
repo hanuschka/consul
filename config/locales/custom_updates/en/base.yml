@@ -1,5 +1,9 @@
 en:
   custom:
+    shared:
+      form:
+        projekt_assignment: Project
+        star_message: All Fields marked with a (*) are required
     account:
       settings:
         email_digest: "Receive a summary of proposal notifications"

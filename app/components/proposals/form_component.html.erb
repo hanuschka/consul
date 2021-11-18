@@ -96,6 +96,8 @@
 
   <div class="actions">
     <% if proposal.new_record? %>
+      <span class='star-message'><%= t('custom.shared.form.star_message')  %></span>
+
       <div>
         <%= f.check_box :terms_of_service,
           title: t("form.accept_terms_title"),

@@ -58,9 +58,9 @@
       var indexOfProjektSelector = $('.projekt-selector').index($nextProejektSelector)
 
       if (indexOfProjektSelector == 1) {
-        $nextProejektSelector.find('.selected-projekt-placeholder').html("Wähle Kategorie<br>" + text)
+        $nextProejektSelector.find('.selected-projekt-placeholder').html("Wähle Kategorie " + text)
       } else if (indexOfProjektSelector == 2) {
-        $nextProejektSelector.find('.selected-projekt-placeholder').html("Wähle Unterkategorie<br>" + text)
+        $nextProejektSelector.find('.selected-projekt-placeholder').html("Wähle Unterkategorie " + text)
       }
     },
 

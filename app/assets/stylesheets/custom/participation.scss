@@ -31,7 +31,9 @@
 // overrides for debates and proposals forms
 
 .proposal-new, .debate-new {
-  label {
+  label:not([for$='_terms_of_service']),
+  fieldset.nested-image > legend,
+  fieldset.documents-list > legend {
     color: #227CB1;
   }
 
@@ -59,9 +61,14 @@
       margin-bottom: 1rem;
     }
 
-    label {
+    label[for$=_terms_of_service] {
       span {
         display: inline;
+      }
+
+      input[id$=_terms_of_service] {
+        margin-top: 8px;
+        margin-bottom: 0px;
       }
     }
   }

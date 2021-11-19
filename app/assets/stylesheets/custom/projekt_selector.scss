@@ -4,6 +4,7 @@
   .projekt-selector {
     margin-top: 1rem;
     position: relative;
+    cursor: pointer;
 
     &:not(:first-child) {
       visibility: hidden;

@@ -76,7 +76,7 @@ de:
   debates:
     create:
       form:
-        submit_button: Starten Sie eine Diskussion
+        submit_button: Starte eine Diskussion
     debate:
       comments:
         zero: Keine Kommentare
@@ -120,7 +120,7 @@ de:
         one: " enthält den Begriff <strong>'%{search_term}'</strong>"
         other: " enthält den Begriff <strong>'%{search_term}'</strong>"
       select_order: Sortieren nach
-      start_debate: Starten Sie eine Diskussion
+      start_debate: Starte eine Diskussion
       title: Diskussionen
       section_header:
         icon_alt: Diskussionen-Symbol
@@ -307,7 +307,7 @@ de:
   proposals:
     create:
       form:
-        submit_button: Vorschlag erstellen
+        submit_button: Idee erstellen
     created:
       title: Herzlichen Glückwunsch! Sie haben den ersten Schritt gemacht.
       motivation: "Es ist wichtig, den Start der Kampagne vorzubereiten, damit Ihr Vorschlag erfolgreich ist. Die ersten Tage sind entscheidend."
@@ -387,7 +387,7 @@ de:
         other: " enthält den Begriff <strong>'%{search_term}'</strong>"
       select_order: Sortieren nach
       select_order_long: "Sie sehen Vorschläge nach:"
-      start_proposal: Vorschlag erstellen
+      start_proposal: Idee erstellen
       title: Vorschläge
       top: Tops der Woche
       top_link_proposals: Die am meisten unterstützten Vorschläge nach Tags
@@ -400,7 +400,7 @@ de:
         description: Vorschläge können, abhängig vom eingestellten Verifizierungsverfahren, von jeder Benutzerin und jedem Benutzer eingebracht werden. Sie bieten eine einfache Möglichkeit, eigene Ideen oder Verbesserungsvorschläge einzubringen und für deren Unterstützung zu werben.
     new:
       form:
-        submit_button: Vorschlag erstellen
+        submit_button: Idee erstellen
       more_info: Wie funktionieren die Vorschläge?
       recommendation_one: Verwenden Sie bitte nicht ausschließlich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien und niemand möchte angeschrien werden.
       recommendation_three: Genießen Sie diesen Ort und die Stimmen, die ihn füllen. Er gehört auch Ihnen.

@@ -85,9 +85,29 @@
       }
     },
 
+    preselectProjekt: function(projektId) {
+      // get preselcted projekt id
+      var url = new URL(window.location.href);
+      var selectedProjektId = url.searchParams.get('projekt');
+
+      // get ordered array of parent projekts
+      var projektIdsToShow = [selectedProjektId]
+      var $selectedProjekt = $('#projekt_' + selectedProjektId)
+      while ( $selectedProjekt.data('parentId') ) {
+        projektIdsToShow.unshift( $selectedProjekt.data('parentId') )
+        $selectedProjekt = $('#projekt_' + $selectedProjekt.data('parentId'))
+      }
+
+      // show projekts staring with top parent
+      $.each(projektIdsToShow, function(index, projektId) {
+        console.log(projektId)
+        var $selectedProjekt = $('#projekt_' + projektId)
+        App.ProjektSelector.selectProjekt($selectedProjekt);
+        $selectedProjekt.closest('.projekt_group').hide();
+      });
+    },
 
     initialize: function() {
-
       $("body").on("click", ".js-toggle-projekt-group", function(event) {
         App.ProjektSelector.toggleProjektGroup(this);
       });
@@ -96,6 +116,7 @@
         App.ProjektSelector.selectProjekt($(this));
       });
 
+      App.ProjektSelector.preselectProjekt();
     }
   };
 }).call(this);

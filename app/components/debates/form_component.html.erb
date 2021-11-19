@@ -7,7 +7,7 @@
       <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @debate }  %>
     </div>
 
-    <legend class='margin-top'><%= t("shared.required") %></legend>
+    <legend class='margin-top'><%= t("custom.debates.form.required") %></legend>
     <%= render "shared/globalize_locales", resource: debate %>
     <%= f.translatable_fields do |translations_form| %>
       <div>
@@ -17,6 +17,12 @@
               autocomplete: "off" %>
       </div>
       <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
+
+      <% if extended_feature?("debates.head_image_for_debates") %>
+        <div class="images">
+          <%= render "images/nested_image", imageable: @debate, f: f %>
+        </div>
+      <% end %>
 
       <div>
         <%= translations_form.text_area :description,

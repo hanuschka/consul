@@ -30,8 +30,7 @@
 
 // overrides for debates and proposals forms
 
-.proposal-new, .debate-new {
-
+.proposal-new, .proposal-edit, .debate-new, .debate-edit {
   ul.recommendations {
     li {
       position: relative;
@@ -44,6 +43,13 @@
       }
 
     }
+  }
+
+  .document .attachment-errors > .js-image-attachment,
+  .document .attachment-errors > .js-document-attachment,
+  .image .attachment-errors > .js-image-attachment,
+  .image .attachment-errors > .js-document-attachment {
+    display: none;
   }
 
   label:not([for$='_terms_of_service']),
@@ -82,7 +88,7 @@
       }
 
       input[id$=_terms_of_service] {
-        margin-top: 8px;
+        margin-top: 6px;
         margin-bottom: 0px;
       }
     }

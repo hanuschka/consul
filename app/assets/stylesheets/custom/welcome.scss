@@ -6,7 +6,30 @@
   .beta-badge {
     position: absolute;
     right: -2%;
-    top: 5%
+    top: 210px;
+    width: 100px;
+
+    @media only screen and (min-width: 640px) {
+      top: 200px;
+      width: 120px;
+    }
+
+    @media only screen and (min-width: 768px) {
+      top: 295px;
+      right: 0;
+    }
+
+    @media only screen and (min-width: 1280px) {
+      top: 400px;
+      width: 150px;
+    }
+
+    @media only screen and (min-width: 1900px) {
+      top: 480px;
+      width: 190px;
+      right: -10%;
+    }
+
   }
 }
 
@@ -56,7 +79,7 @@
     background-repeat: no-repeat;
     background-color: $welcomebgcolor;
     position: relative;
-		height: 285px;
+    height: 285px;
     margin-bottom: 4rem;
  
     .jumbo-message {
@@ -65,11 +88,11 @@
       max-width: 40rem;
     }
 
-		h1 {
-			font-size: rem-calc(30);
-			font-weight: 700;
-			line-height: rem-calc(40);
-		}
+    h1 {
+      font-size: rem-calc(30);
+      font-weight: 700;
+      line-height: rem-calc(40);
+    }
 
     h1, p {
       color: $white;

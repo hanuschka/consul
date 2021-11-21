@@ -2,6 +2,18 @@
   <ul class="main-menu">
     <div class="content-items">
       <%= render partial: 'shared/subnavigation_home', locals: { placement: placement } %>
+
+      <% if placement == 'mobile'%>
+        <div class="account-admin-items">
+          <%= render partial: 'shared/subnavigation_konto', locals: { placement: placement } %>
+        </div>
+        <% if user_signed_in? %>
+          <div class="account-admin-items">
+            <%= render partial: 'shared/subnavigation_admin', locals: { placement: placement } %>
+          </div>
+        <% end  %>
+      <% end  %>
+
       <%= raw content_block("subnavigation_left", I18n.locale) %>
       <%= render partial: 'shared/subnavigation_projekts', locals: { placement: placement } %>
       <%= raw content_block("subnavigation_right_desktop", I18n.locale) if placement == 'desktop' %>
@@ -12,11 +24,14 @@
       <div class="account-admin-items">
         <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
         <%= render partial: "layouts/notification_item", locals: { placement: placement } %>
-        <%= render partial: 'shared/subnavigation_konto', locals: { placement: placement } %>
-        <%= render partial: 'shared/subnavigation_admin', locals: { placement: placement } %>
+
+        <% if placement == 'desktop' %>
+          <%= render partial: 'shared/subnavigation_konto', locals: { placement: placement } %>
+          <%= render partial: 'shared/subnavigation_admin', locals: { placement: placement } %>
+        <% end %>
+
         <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'mobile' %>
       </div>
     <% end  %>
-    <div class="account-admin-items">
   </ul>
 </div>

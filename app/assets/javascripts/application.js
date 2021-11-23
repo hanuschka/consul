@@ -139,7 +139,6 @@ var initialize_modules = function() {
   App.Comments.initialize();
   App.Users.initialize();
   App.Projekts.initialize();
-  App.ProjektSelector.initialize();
   App.ResponsiveMenu.initialize();
   App.Votes.initialize();
   App.AllowParticipation.initialize();
@@ -197,6 +196,9 @@ var initialize_modules = function() {
   App.MapRefresh.initialize();
   App.PollsCustom.initialize();
   App.AccessibilityFixes.initialize();
+  if ($("#projekt-selector-fields").length) {
+    App.ProjektSelector.initialize();
+  }
 };
 
 var destroy_non_idempotent_modules = function() {

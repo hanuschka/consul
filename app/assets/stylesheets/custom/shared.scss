@@ -5,6 +5,44 @@
   flex-wrap: wrap;
 }
 
+.tag-chip {
+  display: inline-block;
+  font-size: 0.875em;
+  background: #ececec;
+  color: #222;
+  padding: 5px 1em;
+  margin-bottom: .5em;
+  margin-right: .3em;
+
+  a {
+    color: #222;
+  }
+  
+  &.filtered {
+    background: $brand;
+
+    a {
+      color: $white;
+    }
+  }
+}
+
+%tag-chip-icon {
+  font-weight: bold;
+  font-family: "Font Awesome 5 Free";
+  color: inherit;
+  margin-right: 0.5em;
+}
+
+.tag-chip-icon-projekt:before {
+  content: "\f126";
+  @extend %tag-chip-icon;
+}
+
+
+
+
+// eventually replace projekt-tag-chip with tag-chip everywhere
 .projekt-tag-chip {
   display: inline-block;
   font-size: 0.875em;
@@ -141,7 +179,18 @@
 
 // Summary styling
 
-.debate-show blockquote, .proposal-show blockquote, .poll-question-show blockquote, .budget-investment-show blockquote, .polls-show blockquote, .debate-quiz blockquote, .budget-investment-show blockquote, .draft-panels blockquote, .debate-questions blockquote, .communities-show blockquote, .topic-show blockquote, .milestone-content blockquote {
+.debate-show blockquote,
+.proposal-show blockquote,
+.deficiency-report-show blockquote,
+.poll-question-show blockquote,
+.budget-investment-show blockquote,
+.polls-show blockquote, .debate-quiz blockquote,
+.budget-investment-show blockquote,
+.draft-panels blockquote,
+.debate-questions blockquote,
+.communities-show blockquote,
+.topic-show blockquote,
+.milestone-content blockquote {
   background-color: lighten($brand, 70%);
   font-size: 1.25em;
 	padding-top: 10px;

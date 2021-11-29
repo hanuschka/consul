@@ -1,0 +1,9 @@
+<div class='projekt-name'>
+  <i class="fas fa-<%= deficiency_report.category.icon || "circle" %>" ></i>
+  <%= link_to deficiency_report.title, deficiency_reports_path(dr_categories: deficiency_report.category.id) %>
+</div>
+
+<div class='show-for-large'>
+  <%= t('custom.deficiency_reports.index.deficiency_report.by') %>
+  <%= deficiency_report.author.name %>
+</div>

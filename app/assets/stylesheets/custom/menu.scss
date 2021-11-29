@@ -246,7 +246,7 @@ span.icon-no-notification {
   }
 
   .home-icon {
-    top: 9px;
+    top: 14px;
     right: 0;
     position: absolute;
   }
@@ -263,7 +263,6 @@ span.icon-no-notification {
     .projekt-name,
     li.nav-element a {
       color: $top-level-menu-item-text-color;
-      font-weight: bold;
     }
   }
 
@@ -296,13 +295,13 @@ span.icon-no-notification {
     }
 
     .admin-icon {
-      top: 9px;
+      top: 14px;
       right: 0;
       padding-bottom: 14px;
     }
 
     .account-icon {
-      top: 9px;
+      top: 14px;
       right: 0;
       padding-bottom: 14px;
     }
@@ -391,7 +390,6 @@ span.icon-no-notification {
       a,
       .projekt-name {
         color: $flyout-item-text-color;
-        font-weight: bold;
         line-height: $flyout-item-line-height;
       }
     }

@@ -40,6 +40,19 @@ Rails.application.routes.draw do
   resources :follows, only: [:create, :destroy]
   resources :remote_translations, only: [:create]
 
+  # Deficiency reports
+  resources :deficiency_reports, only: [:index, :show, :new, :create] do
+    member do
+      get     :json_data
+      post    :vote
+      patch   :update_status
+      patch   :update_category
+      patch   :update_officer
+      patch   :update_official_answer
+      patch   :approve_official_answer
+    end
+  end
+
   # More info pages
   get "help",             to: "pages#show", id: "help/index",             as: "help"
   get "help/how-to-use",  to: "pages#show", id: "help/how_to_use/index",  as: "how_to_use"

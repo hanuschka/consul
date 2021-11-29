@@ -1,0 +1,9 @@
+<div class='projekt-name'>
+  <i class="fas fa-<%= debate.projekt.icon || "circle" %>" ></i>
+  <%= link_to debate.projekt.name, debate.projekt %>
+</div>
+
+<div class='show-for-large'>
+  <%= t('custom.debates.index.debate.by') %>
+  <%= debate.author.name %>
+</div>

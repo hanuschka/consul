@@ -64,7 +64,9 @@
 
         <div class='row'>
           <div class='small-6 column small'>
-            <%= link_to t('debates.index.section_header.help'), '#section_help' %>
+            <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
+              <%= link_to t('debates.index.section_header.help'), '#section_help' %>
+            <% end %>
           </div>
           <div class='small-6 column small'>
             <% if extended_feature?('modulewide.show_number_of_entries_in_modules') %>
@@ -98,20 +100,11 @@
         <%= paginate @debates %>
 
         <% unless @search_terms || @advanced_search_terms %>
-          <div id="section_help" class="margin" data-magellan-target="section_help">
-            <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
+          <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
+            <div id="section_help" class="margin" data-magellan-target="section_help">
               <%=render_custom_block 'debates_help' %>
-            <% else %>
-              <p class="lead">
-                <strong><%= t("debates.index.section_footer.title") %></strong>
-              </p>
-              <p><%= t("debates.index.section_footer.description") %></p>
-              <p><%= t("debates.index.section_footer.help_text_1") %></p>
-              <p><%= sanitize(t("debates.index.section_footer.help_text_2",
-                        org: link_to(setting["org_name"], new_user_registration_path))) %></p>
-              </p>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
         <% end %>
       </div>
 

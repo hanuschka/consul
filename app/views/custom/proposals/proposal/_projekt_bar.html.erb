@@ -1,0 +1,9 @@
+<div class='projekt-name'>
+  <i class="fas fa-<%= proposal.projekt.icon || "circle" %>" ></i>
+  <%= link_to proposal.projekt.name, proposal.projekt %>
+</div>
+
+<div class='show-for-large'>
+  <%= t('custom.proposals.index.proposal.by') %>
+  <%= proposal.author.name %>
+</div>

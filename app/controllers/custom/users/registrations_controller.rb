@@ -69,7 +69,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if @user.citizen?
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
       @user.errors.add :document_number, :blank if update_user_details_params[:document_number].blank?
-      @user.errors.add :document_number, :format unless update_user_details_params[:document_number] =~ /\A\d{5}\z/
+      @user.errors.add :document_number, :length unless update_user_details_params[:document_number].length == 5
     else
       @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
       @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?

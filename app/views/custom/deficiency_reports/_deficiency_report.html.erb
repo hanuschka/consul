@@ -1,4 +1,4 @@
-<% cache [locale_and_user_status, deficiency_report, params[:dr_categories], params[:dr_status], params[:dr_officer]] do %>
+<% cache [locale_and_user_status, deficiency_report, deficiency_report.image, deficiency_report.author, deficiency_report.category, deficiency_report.officer, deficiency_report.status, params[:dr_categories], params[:dr_status], params[:dr_officer]] do %>
   <div id="<%= dom_id(deficiency_report) %>" class='row collapse resource-n deficiency-report margin-bottom' data-equalizer='main' data-equalize-on="medium">
 
     <div class='columns'>

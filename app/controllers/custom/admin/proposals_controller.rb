@@ -26,6 +26,11 @@ class Admin::ProposalsController < Admin::BaseController
     @proposal.save!
   end
 
+  def toggle_image
+    @proposal.image.toggle!(:concealed)
+    redirect_to admin_proposal_path(@proposal)
+  end
+
   private
 
     def resource_model

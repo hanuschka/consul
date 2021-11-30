@@ -22,6 +22,12 @@ class Admin::DebatesController < Admin::BaseController
     end
   end
 
+  def toggle_image
+    @debate.image.toggle!(:concealed)
+    redirect_to admin_debate_path(@debate)
+  end
+
+
   private
     def load_debate
       @debate = Debate.find(params[:id])

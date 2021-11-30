@@ -84,4 +84,8 @@ Rails.application.routes.draw do
   patch    "admin/users/:id/cancel_letter_verification_code",                to: "admin/users#cancel_letter_verification_code",      as: :cancel_letter_verification_code
   # Confirm poll participation
   post "polls/:id/confirm_participation",                  to: "polls#confirm_participation",        as: :poll_confirm_participation
+
+  # Toggle user generateg images
+  patch  "admin/proposals/:id/toggle_image",               to: "admin/proposals#toggle_image",       as: :admin_proposal_toggle_image
+  patch  "admin/debates/:id/toggle_image",                 to: "admin/debates#toggle_image",         as: :admin_debate_toggle_image
 end

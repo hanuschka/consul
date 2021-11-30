@@ -139,7 +139,8 @@
 
 
       map = L.map(element.id, {
-        gestureHandling: true
+        gestureHandling: true,
+        maxZoom: 18
       }).setView(mapCenterLatLng, zoom);
 
 

@@ -1,4 +1,4 @@
-<% cache [locale_and_user_status, debate, @debate_votes[debate.id], params[:tags], params[:projekts], params[:geozone_affiliation], params[:affiliated_geozones], params[:geozone_restriction], params[:restricted_geozones]] do %>
+<% cache [locale_and_user_status, debate, @debate_votes[debate.id], debate.projekt, params[:tags], params[:projekts], params[:geozone_affiliation], params[:affiliated_geozones], params[:geozone_restriction], params[:restricted_geozones]] do %>
   <div id="<%= dom_id(debate) %>" class='row collapse resource-n debate margin-bottom' data-equalizer='main' data-equalize-on="medium">
 
     <div class='columns'>
@@ -8,13 +8,13 @@
     </div>
 
     <div class='columns small-12 medium-3 large-2 image-container show-for-small-only'>
-      <% if debate.image.present? %>
+      <% if debate.image.present? && !debate.image.concealed? %>
         <%= image_tag debate.image_url(:large), alt: debate.image.title.unicode_normalize %>
       <% end %>
     </div>
 
     <div class='columns small-12 medium-3 large-2 image-container show-for-medium' data-equalizer-watch='main'>
-      <% if debate.image.present? %>
+      <% if debate.image.present? && !debate.image.concealed? %>
         <%= image_tag debate.image_url(:thumb_wider), alt: debate.image.title.unicode_normalize %>
       <% end %>
     </div>

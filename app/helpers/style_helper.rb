@@ -1,5 +1,6 @@
 module StyleHelper
   def pick_text_color(background_color)
+    return '#000000' if background_color.nil?
     return '#000000' unless background_color.match?(/\A#[\d, a-f, A-F]{6}\Z/)
 
     transformed_color = background_color.match(/^#(..)(..)(..)$/).captures.map do |n| 

@@ -134,7 +134,7 @@
             <%= t('custom.proposals.index.max_number_reached', max_number: Setting['extended_option.proposals.max_active_proposals_per_user']) %>
           </div>
         <% else %>
-          <% if @top_level_active_projekts.any? %>
+          <% if Projekt.top_level.selectable_in_selector(controller_name, current_user).any? %>
             <%= link_to t("proposals.index.start_proposal"), new_proposal_path(tags: tags.any? ? tags.map{|t| t.name} : nil, projekt: @selected_parent_projekt),
               class: "button expanded js-preselect-projekt" %>
           <% else %>
@@ -174,7 +174,7 @@
             <%= t('custom.proposals.index.max_number_reached', max_number: Setting['extended_option.proposals.max_active_proposals_per_user']) %>
           </div>
         <% else %>
-          <% if @top_level_active_projekts.any? %>
+          <% if Projekt.top_level.selectable_in_selector(controller_name, current_user).any? %>
             <%= link_to t("proposals.index.start_proposal"), new_proposal_path(tags: tags.any? ? tags.map{|t| t.name} : nil, projekt: @selected_parent_projekt),
               class: "button expanded js-preselect-projekt" %>
           <% else %>

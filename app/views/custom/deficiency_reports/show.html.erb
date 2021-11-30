@@ -19,7 +19,11 @@
       <div class="small-12 medium-9 column deficinecy-report-show-main-column">
         <% cache [locale_and_user_status(@deficiency_report),
                   @deficiency_report,
+                  @deficiency_report.image,
                   @deficiency_report.author,
+                  @deficiency_report.category,
+                  @deficiency_report.officer,
+                  @deficiency_report.status,
                   @deficiency_report_votes ] do %>
           <%= back_link_to deficiency_reports_path %>
 

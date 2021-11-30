@@ -45,12 +45,13 @@ class ProposalsController
     @proposals_coordinates = all_proposal_map_locations(@resources)
     @selected_tags = all_selected_tags
 
-    @top_level_active_projekts = Projekt.top_level.active.select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.has_active_phase?('proposals') || p.proposals.any? } }
-    @top_level_archived_projekts = Projekt.top_level.archived.select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.has_active_phase?('proposals') || p.proposals.any? } }
+    @top_level_active_projekts = Projekt.top_level.active.selectable_in_sidebar_active('proposals')
+    @top_level_archived_projekts = Projekt.top_level.archived.selectable_in_sidebar_archived('proposals')
   end
 
   def new
     redirect_to proposals_path if proposal_limit_exceeded?(current_user)
+    redirect_to proposals_path if Projekt.top_level.selectable_in_selector('proposals', current_user).empty?
     set_geozone
     set_resource_instance
 

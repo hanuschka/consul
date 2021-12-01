@@ -46,14 +46,17 @@ module GeozonesHelper
       active_class = (geo_affiliation_name == @selected_geozone_affiliation) ? 'filtered-projekt' : ''
       generate_tag_div(taggable, tag_name, tag_type, url_params_string, tag_filter_class, active_class)
     when 'only_geozones'
-      geo_tags = ''
+      geo_tag_links = []
       taggable.projekt.geozone_affiliations.each do |geozone|
         active_class = (@affiliated_geozones.any? && @affiliated_geozones.include?(geozone.id)) ? 'filtered-projekt' : ''
+        icon_class = geo_tag_links.empty? ? "projekt-tag-chip-icon projekt-tag-chip-geozone-#{tag_type}" : ""
         tag_name = geozone.name
         url_params_string = "&geozone_affiliation=#{geo_affiliation_name}&affiliated_geozones=#{geozone.id}"
-        geo_tags += generate_tag_div(taggable, tag_name, tag_type, url_params_string, tag_filter_class, active_class)
+        link_to_geozone = link_to(tag_name, (taggables_path(taggable.class.name.underscore, '') + url_params_string), class: "#{tag_filter_class} #{icon_class} #{active_class}").html_safe
+        geo_tag_links.push (link_to_geozone)
       end
-      geo_tags.html_safe
+
+      tag.div(safe_join(geo_tag_links, ', '), class: "projekt-tag-chip")
     end
   end
 
@@ -99,7 +102,7 @@ module GeozonesHelper
   end
 
   def generate_tag_div(taggable, tag_name, tag_type, url_params_string, tag_filter_class, active_class)
-    tag_link = link_to tag_name, (taggables_path(taggable.class.name.underscore, '') + url_params_string), class: "#{tag_filter_class} projekt-tag-chip-icon projekt-tag-chip-geozone-#{tag_type}"
-    tag.div(tag_link, class: "projekt-tag-chip #{active_class}")
+    tag_link = link_to tag_name, (taggables_path(taggable.class.name.underscore, '') + url_params_string), class: "#{tag_filter_class} projekt-tag-chip-icon projekt-tag-chip-geozone-#{tag_type} #{active_class}"
+    tag.div(tag_link, class: "projekt-tag-chip")
   end
 end

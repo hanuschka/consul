@@ -1,7 +1,6 @@
 <% proposal_phase = proposal.projekt.present? ? proposal.projekt.proposal_phase : nil %>
 
 <div class="supports text-center">
-  <%= render "proposals/supports", proposal: proposal %>
 
   <div class="in-favor">
     <% if user_signed_in? && proposal_phase && proposal_phase.expired? %>
@@ -25,7 +24,7 @@
       <%= link_to vote_url,
           class: "button button-support small expanded",
           title: t("proposals.proposal.support_title"), method: "post", remote: true do %>
-        <%= t("proposals.proposal.support") %>
+        <%= t("custom.proposals.proposal.support") %>
       <% end %>
 
     <% else %>
@@ -64,6 +63,8 @@
       </div>
     <% end %>
   <% end %>
+
+  <%= render "proposals/supports", proposal: proposal %>
 
   <% if voted_for?(@proposal_votes, proposal) && setting["twitter_handle"] %>
     <div class="share-supported">

@@ -34,7 +34,7 @@
       $('body').on('keyup', '.js-access-toggle-projekt-filter-checkbox', function(event) {
         if ( event.which === 32 || // space
              event.which === 13  ) { // enter
-          $(this).siblings('input.js-filter-projekt').trigger('click');
+          $(this).siblings('input').trigger('click');
         }
       })
 

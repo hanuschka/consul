@@ -3,6 +3,7 @@ class Projekt < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
   include Mappable
+  include ActiveModel::Dirty
 
   has_many :children, class_name: 'Projekt', foreign_key: 'parent_id'
   belongs_to :parent, class_name: 'Projekt', optional: true
@@ -28,7 +29,10 @@ class Projekt < ApplicationRecord
   accepts_nested_attributes_for :debate_phase, :proposal_phase, :projekt_notifications
 
   after_create :create_corresponding_page, :set_order, :create_projekt_phases, :create_default_settings, :create_map_location
+  around_update :update_page
   after_destroy :ensure_projekt_order_integrity
+
+  validates :color, format: { with: /\A#[\d, a-f, A-F]{6}\Z/ }
 
   scope :top_level, -> { where(parent: nil).with_order_number }
 
@@ -45,10 +49,19 @@ class Projekt < ApplicationRecord
   scope :visible_in_menu, -> { joins(' INNER JOIN projekt_settings a ON projekts.id = a.projekt_id').
                             where( 'a.key': 'projekt_feature.general.show_in_navigation', 'a.value': 'active' ) }
 
-  scope :selectable, ->(controller_name, current_user) { active.select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.selectable?(controller_name, current_user) } } }
+  scope :selectable_in_selector, ->(controller_name, current_user) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.selectable?(controller_name, current_user) } } }
+  scope :selectable_in_sidebar_active, ->(controller_name) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| ( p.active? && ( p.has_active_phase?('proposals') || p.proposals.any? ) ) } } }
+  scope :selectable_in_sidebar_archived, ->(controller_name) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.active? && p.proposals.any? } } }
+
+
+  def update_page
+    update_corresponding_page if self.name_changed?
+    yield
+  end
 
   def selectable?(controller_name, user)
     return true if controller_name == 'polls'
+    return false if user.nil?
 
     if controller_name == 'proposals'
       proposal_phase.selectable_by?(user)
@@ -102,6 +115,14 @@ class Projekt < ApplicationRecord
     end
 
     all_children_projekts
+  end
+
+  def active?
+    projekt_settings.find_by(key: 'projekt_feature.main.activate').value.present?
+  end
+
+  def archived?
+    active? && !total_duration_end.nil? && total_duration_end < Date.today
   end
 
   def active_children
@@ -199,6 +220,18 @@ class Projekt < ApplicationRecord
   private
 
   def create_corresponding_page
+    page = SiteCustomization::Page.new(title: self.name, slug: form_page_slug, projekt: self)
+
+    if page.save
+      self.page = page
+    end
+  end
+
+  def update_corresponding_page
+    page.update(title: name, slug: form_page_slug)
+  end
+
+  def form_page_slug
     page_title = self.name
     clean_slug = self.name.downcase.gsub('ä', 'ae').gsub('ö', 'oe').gsub('ü', 'ue').gsub('ß', 'ss').gsub(/[^a-z0-9\s]/, '').gsub(/\s+/, '-')
     pages_with_similar_slugs = SiteCustomization::Page.where("slug ~ ?", "^#{clean_slug}(-[0-9]+$|$)").order(id: :asc)
@@ -210,14 +243,11 @@ class Projekt < ApplicationRecord
     else
       page_slug = clean_slug
     end
-    page = SiteCustomization::Page.new(title: page_title, slug: page_slug, projekt: self)
-    
-    if page.save
-      self.page = page
-    end
   end
 
   def set_order
+    return unless order_number.blank?
+
     if self.siblings.with_order_number.any? && siblings.with_order_number.pluck(:order_number).first == 1 && siblings.with_order_number.pluck(:order_number).each_cons(2).all? { |a, b| b == a + 1 }
       ordered_siblings_count = self.siblings.with_order_number.last.order_number
       self.update(order_number: ordered_siblings_count + 1)

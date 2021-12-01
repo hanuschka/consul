@@ -6,7 +6,7 @@ class DebatesController < ApplicationController
 
   before_action :load_categories, only: [:index, :create, :edit, :map, :summary]
   before_action :process_tags, only: [:create, :update]
-  before_action :set_projets_for_selector, only: [:new, :edit, :create, :update]
+  before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
 
   def index_customization
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
@@ -40,8 +40,8 @@ class DebatesController < ApplicationController
 
     @selected_tags = all_selected_tags
 
-    @top_level_active_projekts = Projekt.top_level.active.select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.has_active_phase?('debates') || p.debates.any? } }
-    @top_level_archived_projekts = Projekt.top_level.archived.select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.has_active_phase?('debates') || p.debates.any? } }
+    @top_level_active_projekts = Projekt.top_level.active.selectable_in_sidebar_active('debates')
+    @top_level_archived_projekts = Projekt.top_level.archived.selectable_in_sidebar_archived('debates')
   end
 
   def show

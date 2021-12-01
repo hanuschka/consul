@@ -33,7 +33,7 @@
       <div>
         <%= translations_form.text_area :description,
                                         maxlength: Proposal.description_max_length,
-                                        class: "html-area" %>
+                                        class: "html-area #{helpers.ck_editor_class(current_user)}" %>
       </div>
     <% end %>
 

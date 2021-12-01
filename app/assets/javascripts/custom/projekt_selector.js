@@ -30,6 +30,10 @@
         $nextProejektSelector.css('visibility', 'visible')
         $nextProejektSelector.attr('data-target', '#group-for-' + projektId)
         $nextProejektSelector.children('.projekt_group').hide()
+      }
+
+      // conditionally toggle next group to select
+      if ( !$selectedProjekt.data('projektSelectable') ) {
         $('#group-for-' + projektId).show();
       }
 
@@ -45,7 +49,6 @@
         $selectedProjekt.closest('.projekt-selector').css('color', '#FFF')
         App.ProjektSelector.addNextProjektPlaceholder($nextProejektSelector, "(optional)")
         App.ProjektSelector.replaceProjektMapOnProposalCreation($selectedProjekt)
-
       } else {
         App.ProjektSelector.resetSelectedProjectStyles();
         $('[id$="projekt_id"]').val('')
@@ -87,8 +90,14 @@
 
     preselectProjekt: function(projektId) {
       // get preselcted projekt id
+      var selectedProjektId;
       var url = new URL(window.location.href);
-      var selectedProjektId = url.searchParams.get('projekt');
+      if (url.searchParams.get('projekt')) {
+        selectedProjektId = url.searchParams.get('projekt');
+      } else {
+        selectedProjektId = $('[id$="projekt_id"]').val();
+      }
+
 
       // get ordered array of parent projekts
       var projektIdsToShow = [selectedProjektId]
@@ -114,6 +123,12 @@
 
       $("body").on("click", ".js-select-projekt", function(event) {
         App.ProjektSelector.selectProjekt($(this));
+      });
+
+      $(".js-new-resource").on("click", function(event) {
+        if ( $(event.target).closest('.js-toggle-projekt-group').length == 0 ) {
+          $('.projekt_group').hide();
+        }
       });
 
       App.ProjektSelector.preselectProjekt();

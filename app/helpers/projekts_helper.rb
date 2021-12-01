@@ -74,9 +74,13 @@ module ProjektsHelper
     date.strftime("%d.%m.%Y")
   end
 
-  def format_date_range(start_date=nil, end_date=nil)
+  def format_date_range(start_date=nil, end_date=nil, options={})
+    options[:separator] ||= '-'
+    options[:separator] = ' ' + options[:separator] + ' '
+    options[:prefix].present? ? options[:prefix] = options[:prefix] + ' ' : options[:prefix] = ''
+
     if start_date && end_date
-      "#{format_date(start_date)} - #{format_date(end_date)}"
+      options[:prefix] + format_date(start_date) + options[:separator] + format_date(end_date)
     elsif start_date && !end_date
       "Start #{format_date(start_date)}"
     elsif !start_date && end_date

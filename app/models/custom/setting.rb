@@ -7,6 +7,8 @@ class Setting < ApplicationRecord
       prefix
     elsif %w[remote_census].include? prefix
       key.rpartition(".").first
+    elsif %w[deficiency_reports].include? prefix
+      key.rpartition(".").first
     elsif %w[extended_feature].include? prefix
       key.rpartition(".").first
     elsif %w[extended_option].include? prefix
@@ -27,7 +29,7 @@ class Setting < ApplicationRecord
         "feature.wordpress_login": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
-        "feature.user.recommendations": true,
+        "feature.user.recommendations": false,
         "feature.user.recommendations_on_debates": true,
         "feature.user.recommendations_on_proposals": true,
         "feature.user.skip_verification": "true",
@@ -42,8 +44,9 @@ class Setting < ApplicationRecord
         "feature.valuation_comment_notification": true,
         "feature.graphql_api": true,
         "feature.sdg": false, 
+        "homepage.widgets.feeds.polls": true,
         "homepage.widgets.feeds.debates": true,
-        "homepage.widgets.feeds.processes": true,
+        "homepage.widgets.feeds.processes": false,
         "homepage.widgets.feeds.proposals": true,
         # Code to be included at the top (inside <body>) of every page
         "html.per_page_code_body": "",
@@ -138,6 +141,11 @@ class Setting < ApplicationRecord
         "projekts.show_module_links_in_flyout_menu": true,
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
+        "deficiency_reports.show_in_main_menu": false,
+        "deficiency_reports.admins_must_assign_officer": false,
+        "deficiency_reports.admins_must_approved_officer_answer": false,
+        "deficiency_reports.allow_voting": false,
+        "deficiency_reports.enable_comments": true,
         # "extended_feature.general.elasticsearch": false,
         "extended_feature.general.extended_editor_for_admins": true,
         "extended_feature.general.extended_editor_for_users": false,

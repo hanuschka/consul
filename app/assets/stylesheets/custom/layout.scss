@@ -62,7 +62,16 @@ body>header, .wrapper>header, .top-bar {
 }
 
 
-.debate .panel, .proposal .panel, .investment-project .panel, .budget-investment .panel, .legislation .panel, .communities-show .panel, .process-summary .debate-summary, .process-summary .proposal-summary, .process-summary .annotation-summary {
+.debate .panel,
+.proposal .panel,
+.deficiency-report .panel,
+.investment-project .panel,
+.budget-investment .panel,
+.legislation .panel,
+.communities-show .panel,
+.process-summary .debate-summary,
+.process-summary .proposal-summary,
+.process-summary .annotation-summary {
   background-color: $module-index-panel-background;
 }
 

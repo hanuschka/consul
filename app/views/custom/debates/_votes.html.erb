@@ -43,7 +43,7 @@
   </div>
 
   <span class="total-votes">
-    <%= t("debates.debate.votes", count: debate.votes_score) %>
+    <%= t("debates.debate.votes", count: debate.votes_for.count) %>
   </span>
 
   <% unless debate.votable_by?(current_user) %>

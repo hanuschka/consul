@@ -1,4 +1,5 @@
-<% projekt_phase = @resource.class.name == "Poll" ? nil : projekt.send("#{@resource.class.name.downcase}_phase") %>
+<% resource = @proposal || @debate || @poll %>
+<% projekt_phase = resource.class.name == "Poll" ? nil : projekt.send("#{resource.class.name.downcase}_phase") %>
 <% vertical_align = !projekt.has_active_phase?(controller_name) || projekt_feature?(projekt, "general.hide_additional_info_in_projekt_selector") || controller_name == 'polls' %>
 
 <div class='projekt js-select-projekt <%= 'vertical-align' if vertical_align %>'

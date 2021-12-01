@@ -52,14 +52,15 @@ class ProposalsController
   def new
     redirect_to proposals_path if proposal_limit_exceeded?(current_user)
     redirect_to proposals_path if Projekt.top_level.selectable_in_selector('proposals', current_user).empty?
+
+    @resource = resource_model.new
     set_geozone
     set_resource_instance
-
     @selected_projekt = Projekt.find(params[:projekt]) if params[:projekt]
   end
 
   def edit
-    @selected_projekt = @proposal.projekt
+    @selected_projekt = @proposal.projekt.id
   end
 
   def show

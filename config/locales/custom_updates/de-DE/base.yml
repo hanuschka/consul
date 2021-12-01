@@ -106,8 +106,8 @@ de:
     votes:
       geo_restricted: Sie sind aufgrund von Gebiets- beschränkungen nicht berechtigt teilzunehmen.
       not_verified: Sie müssen sich %{verify_account}, um teilnehmen zu können
-      proposal_phase_expired: Die Phase ist bereits abgeschlossen. Diese Diskussion kann nicht mehr unterschtützt werden
-      debate_phase_expired: Die Phase ist bereits abgeschlossen. Diese Diskussion kann nicht mehr unterschtützt werden
+      proposal_phase_expired: Die Phase ist bereits abgeschlossen.
+      debate_phase_expired: Die Phase ist bereits abgeschlossen.
     welcome:
       current_polls: Laufende Abstimmungen
       user_entries: Neueste Beiträge

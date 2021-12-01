@@ -1,9 +1,0 @@
-<div class='tag-list'>
-  <% if taggable.category.present? %>
-    <% active_category_class = (params[:dr_categories] || []).split(',').include?(taggable.category.id.to_s) ? 'filtered' : '' %>
-    <div class="tag-chip <%= active_category_class %>">
-      <%= link_to taggable.category.name, '#', class: "tag-chip-icon-projekt js-update-dr-categories", data: { category_id: taggable.category.id } %></li>
-    </div>
-  <%end%>
-</div>
-

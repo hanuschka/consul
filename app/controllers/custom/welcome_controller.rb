@@ -15,12 +15,17 @@ class WelcomeController < ApplicationController
                                                       @recommended_debates,
                                                       @recommended_proposals)
 
+    @active_feeds = @feeds.pluck(:kind)
     @affiliated_geozones = []
 
-    @latest_polls = Poll.current.order(created_at: :asc).limit(3)
-    @latest_items = @feeds.collect{ |feed| feed.items.to_a }.flatten.sort_by(&:created_at).reverse
+    @latest_polls = @active_feeds.include?("polls") ? @feeds.first.polls : []
 
-    set_debate_votes(@latest_items.select{|item| item.class.name == 'Debate'})
-    set_proposal_votes(@latest_items.select{|item| item.class.name == 'Proposal'})
+    if @active_feeds.include?("debates") || @active_feeds.include?("proposals")
+      @latest_items = @feeds.collect{ |feed| feed.items.to_a }.flatten.reject{ |item| item.class.name == "Poll" }.sort_by(&:created_at).reverse
+      set_debate_votes(@latest_items.select{|item| item.class.name == 'Debate'})
+      set_proposal_votes(@latest_items.select{|item| item.class.name == 'Proposal'})
+    else
+      @latest_items = []
+    end
   end
 end

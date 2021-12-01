@@ -46,22 +46,16 @@
 .projekt-tag-chip {
   display: inline-block;
   font-size: 0.875em;
-  background: #ececec;
   color: #222;
-  padding: 5px 1em;
-  margin-bottom: .5em;
-  margin-right: .3em;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
 
   a {
-    color: #222;
+    color: $dark;
   }
 
-  &.filtered-projekt {
-    background: $brand;
-
-    a {
-      color: #fff;
-    }
+  a.filtered-projekt {
+    font-weight: bold;
   }
 }
 
@@ -69,7 +63,9 @@
   font-weight: bold;
   font-family: "Font Awesome 5 Free";
   color: inherit;
-  margin-right: 0.5em;
+  margin-right: 0.25em;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .projekt-tag-chip-projekt.projekt-tag-chip-icon:before {
@@ -85,7 +81,7 @@
 }
 
 .projekt-tag-chip-geozone-affiliation.projekt-tag-chip-icon:before {
-  content: "\f279";
+  content: "\f3c5";
 }
 
 .projekt-tag-chip-geozone-restriction.projekt-tag-chip-icon:before {

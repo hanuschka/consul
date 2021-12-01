@@ -264,6 +264,11 @@ span.icon-no-notification {
     li.nav-element a {
       color: $top-level-menu-item-text-color;
     }
+
+
+    .nav-flyout-block li.nav-element a {
+      color: $flyout-item-text-color;
+    }
   }
 
   .content-items {

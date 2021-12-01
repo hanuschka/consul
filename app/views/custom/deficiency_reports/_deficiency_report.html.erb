@@ -8,13 +8,13 @@
     </div>
 
     <div class='columns small-12 medium-3 large-2 image-container show-for-small-only'>
-      <% if deficiency_report.image.present? %>
+      <% if show_image_thumbnail?(deficiency_report) %>
         <%= image_tag deficiency_report.image_url(:large), alt: deficiency_report.image.title.unicode_normalize %>
       <% end %>
     </div>
 
-    <div class='columns small-12 medium-3 large-2 image-container show-for-medium' data-equalizer-watch='main'>
-      <% if deficiency_report.image.present? %>
+    <div class="columns small-12 medium-3 large-2 image-container show-for-medium <%= 'image-placeholder' unless show_image_thumbnail?(deficiency_report) %>" data-equalizer-watch='main'>
+      <% if show_image_thumbnail?(deficiency_report)  %>
         <%= image_tag deficiency_report.image_url(:thumb_wider), alt: deficiency_report.image.title.unicode_normalize %>
       <% end %>
     </div>
@@ -32,7 +32,6 @@
             <%= wysiwyg(deficiency_report.summary) %>
             <div class="truncate"></div>
           </div>
-          <%= render "deficiency_reports/tags", taggable: deficiency_report, limit: 5 %>
         </div>
         <div class='column small-12 medium-6 large-4 resource-participate table' data-equalizer-watch='details'>
           <div class='table-cell align-middle'>

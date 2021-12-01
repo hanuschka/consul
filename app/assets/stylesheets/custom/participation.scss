@@ -20,10 +20,14 @@
     position: relative;
   }
 
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
   .projekt-name {
-    a {
-      text-decoration: none;
-      color: inherit;
+    .fas {
+      padding-right: 2px;
     }
   }
 
@@ -146,6 +150,12 @@
   }
 }
 
+.resource-n.deficiency-report {
+  .resource-details {
+    padding-bottom: 2.35rem;
+  }
+}
+
 .resource-n.proposal {
   .supports-container {
     border-left: 0;
@@ -153,12 +163,16 @@
 
   .supports .supported {
     margin-top: 0;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
   }
 
   .total-supports {
     font-weight: normal;
     font-size: 0.8rem;
+  }
+
+  .supports .button-support {
+    margin-top: 0;
   }
 }
 
@@ -188,6 +202,26 @@
   vertical-align: top;
   width: rem-calc(48);
 }
+
+// Imageplaceholder
+
+.image-placeholder {
+  position: relative;
+
+  &:before {
+    position: absolute;
+    content: "\f03e";
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 400;
+    color: white;
+    left: 50%;
+    top: 50%;
+    font-size: 70px;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
 // setup_project
 // Polls
 .poll {

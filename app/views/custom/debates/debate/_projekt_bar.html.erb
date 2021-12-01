@@ -4,6 +4,8 @@
 </div>
 
 <div class='show-for-large'>
-  <%= t('custom.debates.index.debate.by') %>
-  <%= debate.author.name %>
+  <% unless debate.author.name.blank? %>
+    <%= t('custom.debates.index.debate.by') %>
+    <%= link_to debate.author.name, debate.author %>
+  <% end %>
 </div>

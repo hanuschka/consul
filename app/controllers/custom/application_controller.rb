@@ -34,6 +34,5 @@ class ApplicationController < ActionController::Base
 
   def set_projekts_for_selector
     @projekts = Projekt.top_level
-    @resource = @poll || resource_model.new
   end
 end

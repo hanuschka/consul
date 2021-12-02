@@ -10,7 +10,7 @@
       <%= render partial: 'shared/subnavigation_new_entry', locals: { placement: placement } %>
     </div>
 
-    <div class="account-admin-items">
+    <div class="account-admin-items clearfix">
       <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
       <%= render partial: "layouts/notification_item", locals: { placement: placement } %>
       <%= render partial: 'shared/subnavigation_konto', locals: { placement: placement } %>

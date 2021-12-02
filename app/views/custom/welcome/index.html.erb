@@ -15,7 +15,7 @@
   <%= render "header", header: @header %>
 
   <div class="row">
-    <div class="column medium-9 small-centered welcome-main custom-block">
+    <div class="column small-12 small-centered welcome-main custom-block">
       <div class=intro-text>
         <%=render_custom_block 'home_page_1' %>
       </div>
@@ -24,7 +24,7 @@
 
   <% if @latest_polls.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-bottom">
+      <div class="column small-12 small-centered margin-bottom">
         <h3 class='title card-title'><%= t('custom.welcome.current_polls') %></h3>
         <%= render partial: "polls/poll_group", locals: { poll_group: @latest_polls } %>
       </div>
@@ -33,7 +33,7 @@
 
   <% if @latest_items.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-top margin-bottom">
+      <div class="column small-12 small-centered margin-top margin-bottom">
         <h3 class='title card-title'><%= t('custom.welcome.user_entries') %></h3>
         <%= render "latest_items" %>
       </div>
@@ -41,7 +41,7 @@
   <% end %>
 
   <div class="row">
-    <div class="column medium-9 small-centered">
+    <div class="column small-12 small-centered">
       <% if @cards.any? %>
         <div class="row">
           <div class="small-12 column">
@@ -54,7 +54,7 @@
 
   <% if @active_projekt_cards.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered">
+      <div class="column small-12 small-centered">
         <%= render partial: "cards", locals: { cards: @active_projekt_cards, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
       </div>
     </div>
@@ -62,7 +62,7 @@
 
   <% if @archived_projekt_cards.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered">
+      <div class="column small-12 small-centered">
         <%= render partial: "cards", locals: { cards: @archived_projekt_cards, section_title: t("custom.welcome.archived_projekt_cards.title")  } %>
       </div>
     </div>

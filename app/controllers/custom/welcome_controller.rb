@@ -17,6 +17,7 @@ class WelcomeController < ApplicationController
 
     @active_feeds = @feeds.pluck(:kind)
     @affiliated_geozones = []
+    @restricted_geozones = []
 
     @latest_polls = @active_feeds.include?("polls") ? @feeds.first.polls : []
 

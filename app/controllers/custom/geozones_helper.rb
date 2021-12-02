@@ -87,7 +87,7 @@ module GeozonesHelper
       active_class = (geo_restriction_name == geozone_restriction) ? 'filtered-projekt' : ''
       generate_tag_div(taggable, tag_name, tag_type, url_params_string, tag_filter_class, active_class)
     when 'only_geozones'
-      geo_tags = []
+      geo_tag_links = []
       taggable.geozones.each do |geozone|
         active_class = (selected_geozones.any? && selected_geozones.include?(geozone.id.to_s)) ? 'filtered-projekt' : ''
         icon_class = geo_tag_links.empty? ? "projekt-tag-chip-icon projekt-tag-chip-geozone-#{tag_type}" : ""

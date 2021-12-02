@@ -60,6 +60,12 @@ class DeficiencyReportsController < ApplicationController
     end
   end
 
+  def destroy
+    @deficiency_report.destroy
+
+    redirect_to deficiency_reports_path
+  end
+
   def update_status
     if @deficiency_report.update(deficiency_report_status_id: deficiency_report_params[:deficiency_report_status_id])
       DeficiencyReportMailer.notify_author_about_status_change(@deficiency_report).deliver_later

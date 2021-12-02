@@ -38,6 +38,7 @@ en:
         submit_official_answer_button: Save reply
         approve_official_answer: Publish reply
         sidebar:
+          delete: Delete report
           vote: Support
           status: Status
           category: Categories

@@ -9,9 +9,6 @@
       </div>
 
     <% elsif voted_for?(@proposal_votes, proposal) %>
-      <div class="supported callout success">
-        <%= t("proposals.proposal.already_supported") %>
-      </div>
       <% if withdraw_proposal_support_on? %>
         <%= link_to unvote_proposal_url(proposal),
             class: "button button-support small expanded",

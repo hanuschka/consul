@@ -38,6 +38,7 @@ de:
         submit_official_answer_button: Antwort speichern
         approve_official_answer: Antwort freigeben
         sidebar:
+          delete: Mangel löschen
           vote: Unterstützer*innen
           status: Status
           category: Kategorien

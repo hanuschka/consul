@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   resources :remote_translations, only: [:create]
 
   # Deficiency reports
-  resources :deficiency_reports, only: [:index, :show, :new, :create] do
+  resources :deficiency_reports, only: [:index, :show, :new, :create, :destroy] do
     member do
       get     :json_data
       post    :vote
@@ -49,6 +49,8 @@ Rails.application.routes.draw do
       patch   :update_officer
       patch   :update_official_answer
       patch   :approve_official_answer
+      put     :flag
+      put     :unflag
     end
   end
 

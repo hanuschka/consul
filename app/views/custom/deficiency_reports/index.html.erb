@@ -123,7 +123,12 @@
 
         <%= render "deficiency_reports/sidebar/categories" %>
         <%= render "deficiency_reports/sidebar/statuses" %>
-        <%= render "deficiency_reports/sidebar/officer_filter" %>
+
+        <% if current_user &&
+            ( current_user.deficiency_report_officer? ||
+            current_user.administrator? ) %>
+          <%= render "deficiency_reports/sidebar/officer_filter" %>
+        <% end %>
 
       </aside>
     </div>

@@ -62,6 +62,16 @@
       </div>
 
       <aside class="small-12 medium-3 column">
+        <% if @deficiency_report.can_be_deleted_by?(current_user)  %>
+          <div class="show-actions-menu">
+            <%= link_to deficiency_report_path(@deficiency_report),
+                        class: "button hollow expanded",
+                        method: :delete do %>
+              <i class="fas fa-trash-alt"></i>
+              <%= t("custom.deficiency_reports.show.sidebar.delete") %>
+            <% end %>
+          </div>
+        <% end %>
 
         <% if deficiency_reports_feature?('allow_voting') %>
           <div class="sidebar-divider"></div>

@@ -38,9 +38,6 @@ module GeozonesHelper
     active_class = ''
 
     case geo_affiliation_name
-    when 'no_affiliation'
-      active_class = (geo_affiliation_name == @selected_geozone_affiliation) ? 'filtered-projekt' : ''
-      generate_tag_div(taggable, tag_name, tag_type, url_params_string, tag_filter_class, active_class)
     when 'entire_city'
       tag_name = t("custom.geozones.sidebar_filter.affiliations.entire_city_short")
       active_class = (geo_affiliation_name == @selected_geozone_affiliation) ? 'filtered-projekt' : ''

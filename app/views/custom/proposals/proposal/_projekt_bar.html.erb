@@ -9,3 +9,5 @@
     <%= link_to proposal.author.name, proposal.author %>
   <% end%>
 </div>
+
+<%= render partial: "proposals/proposal/participation_label", locals: { proposal: proposal } %>

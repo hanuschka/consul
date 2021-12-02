@@ -83,6 +83,10 @@
     width: 100%;
   }
 
+}
+
+.resource-n.poll-n,
+.resource-n.proposal {
   .icon-poll-answer {
     border-top: 0;
     border-bottom: 60px solid transparent;
@@ -138,6 +142,10 @@
   }
 }
 
+
+
+
+
 .resource-n.debate,
 .resource-n.deficiency-report {
   .votes {
@@ -159,11 +167,14 @@
 .resource-n.proposal {
   .supports-container {
     border-left: 0;
+
+    .participation-not-allowed {
+      padding: 0.1rem;
+    }
   }
 
   .supports .supported {
-    margin-top: 0;
-    margin-bottom: 1rem;
+    display: none;
   }
 
   .total-supports {

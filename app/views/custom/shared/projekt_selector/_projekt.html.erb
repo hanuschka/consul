@@ -2,8 +2,10 @@
 <% projekt_phase = resource.class.name == "Poll" ? nil : projekt.send("#{resource.class.name.downcase}_phase") %>
 <% vertical_align = !projekt.has_active_phase?(controller_name) || projekt_feature?(projekt, "general.hide_additional_info_in_projekt_selector") || controller_name == 'polls' %>
 
-<div class='projekt js-select-projekt <%= 'vertical-align' if vertical_align %>'
+<div class='projekt js-select-projekt js-prevent-key-scroll <%= 'vertical-align' if vertical_align %>'
      id=<%= dom_id(projekt) %>
+     tabindex="0"
+     aria-labeled-by=<%= "#{dom_id(projekt)}_name" %>
      data-projekt-id="<%= projekt.id %>"
      <%= "data-parent-id=#{projekt.parent.id}" if projekt.parent.present? %>
      <%= "data-projekt-selectable=true" if projekt.selectable?(controller_name, current_user) %>
@@ -18,7 +20,7 @@
   </div>
  
   <div class='projekt-details'>
-    <div class='projekt-name'>
+    <div class='projekt-name' id=<%= "#{dom_id(projekt)}_name" %> >
       <%= projekt.page.title %>
     </div>
 

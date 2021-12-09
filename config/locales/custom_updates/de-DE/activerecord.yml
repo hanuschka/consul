@@ -7,7 +7,7 @@ de:
         user:
           attributes:
             document_number:
-              length: muss genau 5 Zeichen lang sein
+              length: muss genau 4 Zeichen lang sein
             plz:
               format: muss 5 Ziffern enthalten
         proposal:

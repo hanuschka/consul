@@ -7,5 +7,5 @@ de:
       index:
         no_active_projekt: Aktuell kein Beteiligungsverfahren
         projekts: Projekte
-        debate:
-          by: von
+      show:
+        report_text: Sollte die Diskussion unangebrachten Inhalt enthalten oder Urhebberrecht verletzen, dann zögern Sie bitte nicht und melden Sie uns diese Diskussion. 

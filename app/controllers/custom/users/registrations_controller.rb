@@ -55,7 +55,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update_details
     @user = current_user
-    @user.update(update_user_details_params)
 
     @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
     @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/
@@ -68,8 +67,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if @user.citizen?
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
-      @user.errors.add :document_number, :blank if update_user_details_params[:document_number].blank?
-      @user.errors.add :document_number, :length unless update_user_details_params[:document_number].length == 5
+      @user.errors.add :document_number, :blank if params[:user][:document_number].blank?
+      @user.errors.add :document_number, :length unless params[:user][:document_number].length == 4
     else
       @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
       @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?
@@ -79,7 +78,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if @user.errors.any?
       render :user_details
     elsif @user.update(update_user_details_params) && @user.citizen?
-      Verifications::CreateXML.create_verification_request(current_user.id)
+      Verifications::CreateXML.create_verification_request(current_user.id, params[:user][:document_number])
       redirect_to complete_user_registration_path
     elsif @user.update(update_user_details_params)
       current_user.update( bam_letter_verification_code: rand(11111111..99999999) ) unless current_user.bam_letter_verification_code.present?
@@ -122,6 +121,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_user_details_params
-    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :document_number, :street_name, :house_number, :city_name)
+    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :street_name, :house_number, :city_name)
   end
 end

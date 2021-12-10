@@ -17,7 +17,7 @@ module Verifications
         document_number = (user.document_type == 'card') ? "ABCD_#{user.id}" : "DCBA_#{user.id}"
         user.update(verified_at: Time.now, geozone: geozone, document_number: document_number)
         Mailer.residence_confirmed(user).deliver_later
-        user.take_votes_if_erased_document(user.document_number, user.document_type)
+        user.take_votes_if_erased_document(user.first_name, user.last_name, user.date_of_birth, user.plz)
       elsif result == 'false'
         errors = []
         errors.push("Vorname") if doc.at_xpath('request').at_xpath('vorname').text == 'false'

@@ -55,4 +55,26 @@ class User < ApplicationRecord
   def deficiency_report_officer?
     deficiency_report_officer.present?
   end
+
+  def take_votes_if_erased_document(first_name, last_name, date_of_birth, plz)
+    birth_year = date_of_birth.year
+    birth_month = date_of_birth.month
+    birth_day = date_of_birth.day
+
+    erased_users_with_matching_birthday = User.erased.
+       where('extract(year  from date_of_birth) = ?', birth_year).
+       where('extract(month  from date_of_birth) = ?', birth_month).
+       where('extract(day  from date_of_birth) = ?', birth_day)
+
+    erased_user = erased_users_with_matching_birthday.find_by(
+                    first_name: first_name,
+                    last_name: last_name,
+                    plz: plz
+    )
+
+    if erased_user.present?
+      take_votes_from(erased_user)
+      erased_user.update!(document_number: nil, document_type: nil)
+    end
+  end
 end

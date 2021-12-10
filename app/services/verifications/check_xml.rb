@@ -14,12 +14,8 @@ module Verifications
 
       if result == "true"
         geozone = Geozone.find_by(external_code: user.plz)
-        user.update(verified_at: Time.now, geozone: geozone)
-        if user.document_type == 'card'
-          user.update(document_number: "ABCD_#{user.id}")
-        elsif user.document_type == 'pass'
-          user.update(document_number: "DCBA_#{user.id}")
-        end
+        document_number = (user.document_type == 'card') ? "ABCD_#{user.id}" : "DCBA_#{user.id}"
+        user.update(verified_at: Time.now, geozone: geozone, document_number: document_number)
         Mailer.residence_confirmed(user).deliver_later
         user.take_votes_if_erased_document(user.document_number, user.document_type)
       elsif result == 'false'

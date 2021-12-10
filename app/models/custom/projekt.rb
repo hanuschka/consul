@@ -29,6 +29,7 @@ class Projekt < ApplicationRecord
 
   accepts_nested_attributes_for :debate_phase, :proposal_phase, :projekt_notifications
 
+  before_validation :set_default_color
   after_create :create_corresponding_page, :set_order, :create_projekt_phases, :create_default_settings, :create_map_location
   around_update :update_page
   after_destroy :ensure_projekt_order_integrity
@@ -51,8 +52,8 @@ class Projekt < ApplicationRecord
                             where( 'a.key': 'projekt_feature.general.show_in_navigation', 'a.value': 'active' ) }
 
   scope :selectable_in_selector, ->(controller_name, current_user) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.selectable?(controller_name, current_user) } } }
-  scope :selectable_in_sidebar_active, ->(controller_name) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| ( p.active? && ( p.has_active_phase?('proposals') || p.proposals.any? ) ) } } }
-  scope :selectable_in_sidebar_archived, ->(controller_name) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.active? && p.proposals.any? } } }
+  scope :selectable_in_sidebar_active, ->(controller_name) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| ( p.active? && ( p.has_active_phase?(controller_name) || p.send(controller_name).any? ) ) } } }
+  scope :selectable_in_sidebar_archived, ->(controller_name) { select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.active? && p.send(controller_name).any? } } }
 
 
   def update_page
@@ -314,5 +315,9 @@ class Projekt < ApplicationRecord
         projekt_id: self.id
       )
     end
+  end
+
+  def set_default_color
+    self.color ||= "#004a83"
   end
 end

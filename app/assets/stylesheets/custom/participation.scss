@@ -1,25 +1,14 @@
 // Customization of resource partials for index
 
-.resource-n {
-  margin-bottom: 1rem;
-  border: 1px solid $border;
-  border-right: none;
-  background-color: #ffffff;
-
-  .resource-participate {
-    border-right: 1px solid $border;
-  }
-
-  .projekt-info {
-    display: flex;
-    justify-content: space-between;
-    color: white;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    font-size: 0.9rem;
-    position: relative;
-    overflow: visible !important;
-  }
+.projekt-bar {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  font-size: 0.9rem;
+  position: relative;
+  overflow: visible !important;
 
   a {
     text-decoration: none;
@@ -28,8 +17,19 @@
 
   .projekt-name {
     .fas {
-      padding-right: 2px;
+      padding-right: 5px;
     }
+  }
+}
+
+.resource-n {
+  margin-bottom: 1rem;
+  border: 1px solid $border;
+  border-right: none;
+  background-color: #ffffff;
+
+  .resource-participate {
+    border-right: 1px solid $border;
   }
 
   .resource-info {
@@ -318,3 +318,19 @@
     }
   }
 }
+
+.proposal-show,
+.debate-show,
+.deficiency-report-show {
+  .tag-list {
+    margin-top: 1rem;
+  }
+
+  blockquote {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+}
+
+
+

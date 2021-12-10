@@ -17,7 +17,7 @@ class Debate
   def votable_by?(user)
     return true if user && user.verified_organization?
 
-    user &&
+    user.present? &&
     !user.organization? &&
     user.level_three_verified? &&
     (
@@ -28,7 +28,7 @@ class Debate
     ) &&
     (
       projekt.blank? ||
-      debate_phase && !debate_phase.expired?
+      debate_phase.present? && debate_phase.currently_active?
     )
 
     #  user.voted_for?(self)

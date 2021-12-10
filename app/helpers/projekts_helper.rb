@@ -2,10 +2,10 @@ module ProjektsHelper
   def link_to_projekt_page(projekt)
     if projekt.page.published?
       content_tag(:i, '', class: "fas fa-#{projekt.icon || 'circle'}") +
-      link_to(projekt.page.title, projekt)
+        link_to(projekt.page.title, projekt.page.url)
     elsif projekt.parent.present? && projekt.parent.page.published?
       content_tag(:i, '', class: "fas fa-#{projekt.parent.icon || 'circle'}") +
-      link_to(projekt.parent.page.title, projekt.parent)
+        link_to(projekt.parent.page.title, projekt.parent.page.url)
     end
   end
 

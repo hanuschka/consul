@@ -1,7 +1,7 @@
 <% if show_flag_action?(resource) || show_unflag_action?(resource) %>
   <div class="sidebar-divider"></div>
   <h2><%= t("custom.shared.show.report_title") %></h2>
-  <p><%= t("custom.#{resource.class.name.downcase.pluralize}.show.report_text") %></p>
+  <p><%= t("custom.shared.show.report_text") %></p>
 <% end %>
 
 <% if show_flag_action?(resource) %>

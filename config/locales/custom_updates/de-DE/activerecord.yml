@@ -12,6 +12,8 @@ de:
               length: muss genau 4 Zeichen lang sein
             plz:
               format: muss 5 Ziffern enthalten
+            first_name:
+              uniqueness_check: Die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ muss eindeutig sein
         proposal:
           attributes:
             description:

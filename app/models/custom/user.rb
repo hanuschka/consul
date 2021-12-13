@@ -8,12 +8,13 @@ class User < ApplicationRecord
          authentication_keys: [:login]
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
+  around_save :reset_verification_status
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
 
-  validates :document_number, uniqueness: { scope: [:document_type, :erased_at] }, allow_nil: true
+  validate :user_must_be_unique
 
   scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) }
 
@@ -76,5 +77,21 @@ class User < ApplicationRecord
       take_votes_from(erased_user)
       erased_user.update!(document_number: nil, document_type: nil)
     end
+  end
+
+  def user_must_be_unique
+    return if first_name.nil? || last_name.nil? || date_of_birth.nil? || plz.nil?
+
+    user = User.find_by(first_name: first_name, last_name: last_name, date_of_birth: date_of_birth, plz: plz)
+    if user.present? && user!= self
+      errors.add(:first_name, :uniqueness_check)
+    end
+  end
+
+  def reset_verification_status
+    if first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?
+      update_column(:verified_at, nil)
+    end
+    yield
   end
 end

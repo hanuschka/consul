@@ -3,6 +3,26 @@ class Officing::ResidenceController < Officing::BaseController
 
   def create
     @residence = Officing::Residence.new(residence_params.merge(officer: current_user.poll_officer))
+
+    @residence.errors.add(:first_name, :uniqueness_check) if User.new().record_not_unique?(
+     residence_params[:first_name],
+     residence_params[:last_name],
+     residence_params['date_of_birth(1i)'],
+     residence_params['date_of_birth(2i)'],
+     residence_params['date_of_birth(3i)'],
+     residence_params[:plz]
+    )
+
+    @residence.errors.add :postal_code, :blank if residence_params[:postal_code].blank?
+    @residence.errors.add :postal_code, :format unless residence_params[:postal_code] =~ /\A\d{5}\z/
+    @residence.errors.add :document_type, :blank if residence_params[:document_type].blank?
+    @residence.errors.add :document_number, :blank if params[:residence][:document_number].blank?
+    @residence.errors.add :document_number, :length unless params[:residence][:document_number].length == 4
+
+    if @residence.errors.any?
+      render :new and return
+    end
+
     verification_request = Verifications::CreateXML.create_verification_request_in_booth(@residence)
     sleep 7
     responce = Verifications::CheckXML.check_verification_request_in_booth(verification_request)
@@ -27,7 +47,7 @@ class Officing::ResidenceController < Officing::BaseController
   private
 
     def residence_params
-      params.require(:residence).permit(:document_number, :document_type, :year_of_birth,
+      params.require(:residence).permit(:document_type, :year_of_birth,
                                         :date_of_birth, :postal_code, :first_name, :last_name)
     end
 end

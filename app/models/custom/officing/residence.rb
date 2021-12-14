@@ -6,18 +6,17 @@ class Officing::Residence
 
   validates :first_name, presence: true
   validates :last_name, presence: true
-	validates :postal_code, presence: true
+  validates :postal_code, presence: true
   validates :date_of_birth, presence: true
 
   def save
     return false unless valid?
 
     if user_exists?
-      self.user = find_user_by_document
+      self.user = find_user_by_combination_of_fields
       user.update!(verified_at: Time.current)
     else
       user_params = {
-        document_number:       document_number,
         document_type:         document_type,
         first_name:            first_name,
         last_name:             last_name,
@@ -33,6 +32,18 @@ class Officing::Residence
       }
       self.user = User.create!(user_params)
     end
+  end
+
+  def user_exists?
+    find_user_by_combination_of_fields.present?
+  end
+
+  def find_user_by_combination_of_fields
+    user = User.
+      where('extract(year  from date_of_birth) = ?', date_of_birth.year).
+      where('extract(month  from date_of_birth) = ?', date_of_birth.month).
+      where('extract(day  from date_of_birth) = ?', date_of_birth.day).
+      find_by(first_name: first_name, last_name: last_name, plz: postal_code)
   end
 
 
@@ -54,6 +65,6 @@ class Officing::Residence
 
   def local_residence
     return if errors.any?
-		true
-	end
+    true
+  end
 end

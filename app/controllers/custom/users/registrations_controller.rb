@@ -69,6 +69,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
       @user.errors.add :document_number, :blank if params[:user][:document_number].blank?
       @user.errors.add :document_number, :length unless params[:user][:document_number].length == 4
+      @user.errors.add(:first_name, :uniqueness_check) if @user.record_not_unique?(
+        update_user_details_params[:first_name],
+        update_user_details_params[:last_name],
+        update_user_details_params['date_of_birth(1i)'],
+        update_user_details_params['date_of_birth(2i)'],
+        update_user_details_params['date_of_birth(3i)'],
+        update_user_details_params[:plz]
+      )
     else
       @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
       @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?

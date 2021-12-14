@@ -8,7 +8,7 @@ class Officing::Residence
 
   # before_validation :retrieve_census_data
 
-  validates :document_number, presence: true
+  # validates :document_number, presence: true #replaced by combination of other fields
   validates :document_type, presence: true
   # validates :date_of_birth, presence: true, if: -> { Setting.force_presence_date_of_birth? }
   # validates :postal_code, presence: true, if: -> { Setting.force_presence_postal_code? }

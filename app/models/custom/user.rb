@@ -14,8 +14,6 @@ class User < ApplicationRecord
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
 
-  validate :user_must_be_unique
-
   scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) }
 
   def gdpr_conformity?
@@ -57,20 +55,20 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
-  def take_votes_if_erased_document(first_name, last_name, date_of_birth, plz)
-    birth_year = date_of_birth.year
-    birth_month = date_of_birth.month
-    birth_day = date_of_birth.day
+  def take_votes_if_erased_document(f_name, l_name, birth_date, postcode)
+    birth_year = birth_date.year
+    birth_month = birth_date.month
+    birth_day = birth_date.day
 
     erased_users_with_matching_birthday = User.erased.
-       where('extract(year  from date_of_birth) = ?', birth_year).
-       where('extract(month  from date_of_birth) = ?', birth_month).
-       where('extract(day  from date_of_birth) = ?', birth_day)
+      where('extract(year  from date_of_birth) = ?', birth_year).
+      where('extract(month  from date_of_birth) = ?', birth_month).
+      where('extract(day  from date_of_birth) = ?', birth_day)
 
     erased_user = erased_users_with_matching_birthday.find_by(
-                    first_name: first_name,
-                    last_name: last_name,
-                    plz: plz
+                    first_name: f_name,
+                    last_name: l_name,
+                    plz: postcode
     )
 
     if erased_user.present?
@@ -79,19 +77,21 @@ class User < ApplicationRecord
     end
   end
 
-  def user_must_be_unique
-    return if first_name.nil? || last_name.nil? || date_of_birth.nil? || plz.nil?
+  def record_not_unique?(f_name, l_name, birth_year, birth_month, birth_day, postcode)
+    user = User.active.
+      where('extract(year  from date_of_birth) = ?', birth_year).
+      where('extract(month  from date_of_birth) = ?', birth_month).
+      where('extract(day  from date_of_birth) = ?', birth_day).
+      find_by(first_name: f_name, last_name: l_name, plz: postcode)
 
-    user = User.find_by(first_name: first_name, last_name: last_name, date_of_birth: date_of_birth, plz: plz)
-    if user.present? && user!= self
-      errors.add(:first_name, :uniqueness_check)
-    end
+    user.present?
   end
 
   def reset_verification_status
-    if first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?
+    if (first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?) && persisted?
       update_column(:verified_at, nil)
     end
+
     yield
   end
 end

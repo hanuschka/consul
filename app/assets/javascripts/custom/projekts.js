@@ -294,7 +294,7 @@
       $('#filter-projekts-all').find('li').each( function() {
         var projektId = $(this).children('label').children('input').val()
 
-        if ( filteredProjektId && $(this).next().find('li[data-projekt-id=' + filteredProjektId + ']').length ) {
+        if ( filteredProjektId && $(this).siblings('ul').find('li[data-projekt-id=' + filteredProjektId + ']').length ) {
           $(this).attr('aria-expanded', 'true')
           $(this).children('.toggle-arrow').attr('aria-expanded', $(this).attr('aria-expanded'))
 

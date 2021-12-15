@@ -114,10 +114,12 @@ module Abilities
 
 
       #custom
-      can [:search, :create, :index, :destroy], ::DeficiencyReport::Officer
-      can [:index, :create, :edit, :update, :destroy], ::DeficiencyReport::Category
-      can [:index, :create, :edit, :update, :destroy], ::DeficiencyReport::Status
+      can [:manage], ::DeficiencyReport::Officer
+      can [:manage], ::DeficiencyReport::Category
+      can [:manage], ::DeficiencyReport::Status
       can [:manage], DeficiencyReport
+
+      can [:order_questions], Poll::Question
     end
   end
 end

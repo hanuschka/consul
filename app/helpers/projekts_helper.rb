@@ -1,11 +1,29 @@
 module ProjektsHelper
   def link_to_projekt_page(projekt)
+    content_tag = content_tag(:i, '', class: "fas fa-#{projekt.icon || 'circle'}")
+
     if projekt.page.published?
-      content_tag(:i, '', class: "fas fa-#{projekt.icon || 'circle'}") +
-      link_to(projekt.page.title, projekt)
+      link_tag = link_to(projekt.name, projekt.page.url)
     elsif projekt.parent.present? && projekt.parent.page.published?
-      content_tag(:i, '', class: "fas fa-#{projekt.parent.icon || 'circle'}") +
-      link_to(projekt.parent.page.title, projekt.parent)
+      link_tag = link_to(projekt.name, projekt.parent.page.url)
+    end
+
+    content_tag + link_tag
+  end
+
+  def projekt_bar_background_color(projekt)
+    if projekt.color.present?
+      projekt.color
+    else
+      '#FFFFFF'
+    end
+  end
+
+  def projekt_bar_text_color(projekt)
+    if projekt.color.present?
+      pick_text_color(projekt.color)
+    else
+      '#000000'
     end
   end
 

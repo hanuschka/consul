@@ -55,36 +55,14 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
-  def take_votes_if_erased_document(f_name, l_name, birth_date, postcode)
-    birth_year = birth_date.year
-    birth_month = birth_date.month
-    birth_day = birth_date.day
+  def take_votes_if_erased_exists(bam_unique_stamp)
 
-    erased_users_with_matching_birthday = User.erased.
-      where('extract(year  from date_of_birth) = ?', birth_year).
-      where('extract(month  from date_of_birth) = ?', birth_month).
-      where('extract(day  from date_of_birth) = ?', birth_day)
-
-    erased_user = erased_users_with_matching_birthday.find_by(
-                    first_name: f_name,
-                    last_name: l_name,
-                    plz: postcode
-    )
+    erased_user = User.erased.find_by(bam_unique_stamp: bam_unique_stamp)
 
     if erased_user.present?
       take_votes_from(erased_user)
-      erased_user.update!(document_number: nil, document_type: nil)
+      erased_user.update!(bam_unique_stamp: nil, document_number: nil, document_type: nil)
     end
-  end
-
-  def record_not_unique?(f_name, l_name, birth_year, birth_month, birth_day, postcode)
-    user = User.active.
-      where('extract(year  from date_of_birth) = ?', birth_year).
-      where('extract(month  from date_of_birth) = ?', birth_month).
-      where('extract(day  from date_of_birth) = ?', birth_day).
-      find_by(first_name: f_name, last_name: l_name, plz: postcode)
-
-    user.present?
   end
 
   def reset_verification_status

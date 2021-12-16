@@ -4,15 +4,9 @@ class Officing::ResidenceController < Officing::BaseController
   def create
     @residence = Officing::Residence.new(residence_params.merge(officer: current_user.poll_officer))
 
-    @residence.errors.add(:first_name, :uniqueness_check) if User.new().record_not_unique?(
-     residence_params[:first_name],
-     residence_params[:last_name],
-     residence_params['date_of_birth(1i)'],
-     residence_params['date_of_birth(2i)'],
-     residence_params['date_of_birth(3i)'],
-     residence_params[:plz]
-    )
-
+    @residence.errors.add :first_name, :blank if residence_params[:first_name].blank?
+    @residence.errors.add :last_name, :blank if residence_params[:last_name].blank?
+    @residence.errors.add :date_of_birth, :blank if residence_params['date_of_birth(1i)'].blank? || residence_params['date_of_birth(2i)'].blank? || residence_params['date_of_birth(3i)'].blank?
     @residence.errors.add :postal_code, :blank if residence_params[:postal_code].blank?
     @residence.errors.add :postal_code, :format unless residence_params[:postal_code] =~ /\A\d{5}\z/
     @residence.errors.add :document_type, :blank if residence_params[:document_type].blank?

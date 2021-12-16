@@ -9,7 +9,7 @@ de:
             postal_code:
               format: muss 5 Ziffern enthalten
             first_name:
-              uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ muss eindeutig sein
+              uniqueness_check: Benutzer mit der Kombination aus solche Vorname, Nachname, Geburtsdatum und PLZ existiert bereits
       
   activerecord:
     models:
@@ -25,15 +25,13 @@ de:
             plz:
               format: muss 5 Ziffern enthalten
             first_name:
-              uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ muss eindeutig sein
+              uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ wurde bereits verwendet
         officing/residence:
           attributes:
             document_number:
               length: muss genau 4 Zeichen lang sein
             plz:
               format: muss 5 Ziffern enthalten
-            first_name:
-              uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ muss eindeutig sein
         proposal:
           attributes:
             description:

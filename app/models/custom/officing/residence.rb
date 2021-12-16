@@ -2,7 +2,7 @@ require_dependency Rails.root.join("app", "models", "officing", "residence").to_
 
 class Officing::Residence
 
-  attr_accessor :first_name, :last_name
+  attr_accessor :first_name, :last_name, :bam_unique_stamp
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -12,8 +12,10 @@ class Officing::Residence
   def save
     return false unless valid?
 
-    if user_exists?
-      self.user = find_user_by_combination_of_fields
+    bam_unique_stamp = ::Calculations::User.bam_unique_stamp(first_name, last_name, date_of_birth.year, date_of_birth.month, date_of_birth.day, postal_code)
+
+    if User.find_by(bam_unique_stamp: bam_unique_stamp).present?
+      self.user = User.find_by(bam_unique_stamp: bam_unique_stamp)
       user.update!(verified_at: Time.current)
     else
       user_params = {
@@ -28,24 +30,12 @@ class Officing::Residence
         erased_at:             Time.current,
         password:              random_password,
         terms_of_service:      "1",
-        email:                 nil
+        email:                 nil,
+        bam_unique_stamp:      bam_unique_stamp
       }
       self.user = User.create!(user_params)
     end
   end
-
-  def user_exists?
-    find_user_by_combination_of_fields.present?
-  end
-
-  def find_user_by_combination_of_fields
-    user = User.
-      where('extract(year  from date_of_birth) = ?', date_of_birth.year).
-      where('extract(month  from date_of_birth) = ?', date_of_birth.month).
-      where('extract(day  from date_of_birth) = ?', date_of_birth.day).
-      find_by(first_name: first_name, last_name: last_name, plz: postal_code)
-  end
-
 
   def geozone
     Geozone.find_by(external_code: postal_code)

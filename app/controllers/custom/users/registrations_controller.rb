@@ -55,6 +55,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update_details
     @user = current_user
+    @user.update(update_user_details_params)
 
     @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
     @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/
@@ -69,7 +70,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
       @user.errors.add :document_number, :blank if params[:user][:document_number].blank?
       @user.errors.add :document_number, :length unless params[:user][:document_number].length == 4
-      @user.errors.add(:first_name, :uniqueness_check) if @user.record_not_unique?(
+
+      bam_unique_stamp = ::Calculations::User.bam_unique_stamp(
         update_user_details_params[:first_name],
         update_user_details_params[:last_name],
         update_user_details_params['date_of_birth(1i)'],
@@ -77,6 +79,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
         update_user_details_params['date_of_birth(3i)'],
         update_user_details_params[:plz]
       )
+      user_with_this_stamp = User.active.find_by(bam_unique_stamp: bam_unique_stamp)
+      @user.errors.add(:first_name, :uniqueness_check) if bam_unique_stamp.nil? || (user_with_this_stamp.present? && user_with_this_stamp != @user)
     else
       @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
       @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?

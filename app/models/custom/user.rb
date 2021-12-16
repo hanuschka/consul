@@ -66,8 +66,8 @@ class User < ApplicationRecord
   end
 
   def reset_verification_status
-    if (first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?) && persisted?
-      update_column(:verified_at, nil)
+    if (first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?) && verified_at.present? && bam_unique_stamp.present?
+      update_columns(verified_at: nil, bam_unique_stamp: nil)
     end
 
     yield

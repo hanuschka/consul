@@ -87,7 +87,7 @@ class DeficiencyReportsController < ApplicationController
 
   def update_official_answer
     @deficiency_report.update(deficiency_report_params)
-    redirect_to deficiency_report_path(@deficiency_report)
+    redirect_to deficiency_report_path(@deficiency_report), notice: t("custom.deficiency_reports.notifications.official_answer_updated")
   end
 
   def approve_official_answer

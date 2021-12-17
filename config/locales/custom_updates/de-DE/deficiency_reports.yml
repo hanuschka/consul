@@ -83,3 +83,5 @@ de:
           hi: Liebe/r Sachbearbeiter*in,
           p1: Ihnen wurde ein Mangel vom Admin zugewiesen.
           signature_html: Viele Grüße</br>Consul
+      notifications:
+        official_answer_updated: 'Antwort wurde erfolgreich gespeichert'

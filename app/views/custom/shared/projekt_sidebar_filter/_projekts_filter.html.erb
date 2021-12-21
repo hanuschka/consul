@@ -5,7 +5,7 @@
   <% elsif group == 'archived' && controller_name != 'search' %>
     <% preselected_children = projekt.children.selectable_in_sidebar_archived(controller_name) %>
   <% else controller_name == 'search' %>
-    <% preselected_children = projekt.children %>
+    <% preselected_children = projekt.active_children %>
   <% end %>
 
   <% label_class =  ( @selected_projekts_ids && projekt.id.to_s.in?(@selected_projekts_ids) ) ? 'label-selected' : 'label_regular' %>

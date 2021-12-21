@@ -1,4 +1,32 @@
 module ProjektsHelper
+  def link_to_projekt_page(projekt)
+    content_tag = content_tag(:i, '', class: "fas fa-#{projekt.icon || 'circle'}")
+
+    if projekt.page.published?
+      link_tag = link_to(projekt.name, projekt.page.url)
+    elsif projekt.parent.present? && projekt.parent.page.published?
+      link_tag = link_to(projekt.name, projekt.parent.page.url)
+    end
+
+    content_tag + link_tag
+  end
+
+  def projekt_bar_background_color(projekt)
+    if projekt.color.present?
+      projekt.color
+    else
+      '#FFFFFF'
+    end
+  end
+
+  def projekt_bar_text_color(projekt)
+    if projekt.color.present?
+      pick_text_color(projekt.color)
+    else
+      '#000000'
+    end
+  end
+
   def show_archived_projekts_in_sidebar?
     Setting["projekts.show_archived.sidebar"].present? ? true : false
   end
@@ -75,9 +103,13 @@ module ProjektsHelper
     date.strftime("%d.%m.%Y")
   end
 
-  def format_date_range(start_date=nil, end_date=nil)
+  def format_date_range(start_date=nil, end_date=nil, options={})
+    options[:separator] ||= '-'
+    options[:separator] = ' ' + options[:separator] + ' '
+    options[:prefix].present? ? options[:prefix] = options[:prefix] + ' ' : options[:prefix] = ''
+
     if start_date && end_date
-      "#{format_date(start_date)} - #{format_date(end_date)}"
+      options[:prefix] + format_date(start_date) + options[:separator] + format_date(end_date)
     elsif start_date && !end_date
       "Start #{format_date(start_date)}"
     elsif !start_date && end_date
@@ -123,64 +155,5 @@ module ProjektsHelper
 
   def related_polls(projekt, timestamp = Date.current.beginning_of_day)
     Poll.where(projekt_id: projekt.all_children_ids.push(projekt.id))
-  end
-
-  def check_radio_button?(current_projekt_id)
-    resource = @debate || @proposal || @poll
-    
-    if resource && resource.projekt.present?
-      selected_projekt_id = resource.projekt.id
-    elsif params[:projekt].present?
-      selected_projekt_id = params[:projekt].to_i
-    else
-      selected_projekt_id = nil
-    end
-
-    (selected_projekt_id == current_projekt_id) && (can?(:select, @projekt_phase) || (current_user.administrator  && controller.controller_name == 'polls')) ?  'checked' : ''
-  end
-
-  def highlight_projekt_in_selector?(current_projekt)
-    resource = @debate || @proposal
-
-    if resource && resource.projekt.present?
-      selected_projekt_id = resource.projekt.id
-    elsif params[:projekt].present?
-      selected_projekt_id = params[:projekt].to_i
-    else
-      selected_projekt_id = nil
-    end
-
-    if selected_projekt_id && selected_projekt = Projekt.find_by(id: selected_projekt_id)
-      case resource.class.name
-      when "Debate"
-        phase_name = 'debate_phase'
-        selected_projekt_projekt_phase = selected_projekt.send(phase_name)
-      when "Proposal"
-        phase_name = 'proposal_phase'
-        selected_projekt_projekt_phase = selected_projekt.send(phase_name)
-      end
-    end
-
-    if selected_projekt_projekt_phase && ( can?(:select, selected_projekt_projekt_phase) || (current_user.administrator && controller.controller_name == 'polls'))
-      current_projekt.all_children_ids.push(current_projekt.id).include?(selected_projekt_id) ? 'highlighted' : '' 
-    end
-  end
-
-  def show_projekt_group_in_selector?(projekts)
-    return true if projekts.first&.parent&.id.to_s == params[:projekt]
-
-    resource = @debate || @proposal || @poll
-
-    if resource && resource.projekt.present?
-      selected_projekt_id = resource.projekt.id
-    elsif params[:projekt].present?
-      selected_projekt_id = params[:projekt].to_i
-    else
-      selected_projekt_id = nil
-    end
-
-    if selected_projekt_id
-      (projekts.pluck(:id) + projekts.map{ |projekt| projekt.all_children_ids }.flatten).include?(selected_projekt_id)
-    end
   end
 end

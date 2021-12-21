@@ -115,6 +115,7 @@
 //= require budget_edit_associations
 //= require datepicker
 //= require projekts
+//= require projekt_selector
 //= require responsive_menu
 //= require click_out_warning
 //= require elastic_search_modal
@@ -126,6 +127,7 @@
 //= require map_refresh
 //= require accessibility_fixes
 //= require polls_custom
+//= require deficiency_reports
 //= require leaflet.markercluster
 //= require leaflet.locatecontrol
 //= require_tree ./sdg
@@ -196,7 +198,11 @@ var initialize_modules = function() {
   App.GDPRNotice.initialize();
   App.MapRefresh.initialize();
   App.PollsCustom.initialize();
+  App.DeficiencyReports.initialize();
   App.AccessibilityFixes.initialize();
+  if ($("#projekt-selector-fields").length) {
+    App.ProjektSelector.initialize();
+  }
 };
 
 var destroy_non_idempotent_modules = function() {

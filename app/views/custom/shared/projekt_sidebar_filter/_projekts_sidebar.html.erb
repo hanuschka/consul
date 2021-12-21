@@ -15,7 +15,7 @@
 
     <% if @top_level_active_projekts %>
       <div id='filter-projekts-active'>
-        <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: @top_level_active_projekts, aggregations: aggregations } %>
+        <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: @top_level_active_projekts, group: 'active', aggregations: aggregations } %>
       </div>
     <% end %>
 
@@ -27,7 +27,7 @@
       </div>
 
       <div id='filter-projekts-archived'>
-        <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: @top_level_archived_projekts, aggregations: aggregations } %>
+        <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: @top_level_archived_projekts, group: 'archived', aggregations: aggregations } %>
       </div>
     <% end %>
 

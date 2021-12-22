@@ -126,6 +126,8 @@ module Abilities
       can :select, ProjektPhase do |projekt_phase|
         projekt_phase.selectable_by?(user)
       end
+
+      can [:read, :json_data, :create, :vote], DeficiencyReport
     end
   end
 end

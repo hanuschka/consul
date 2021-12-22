@@ -1,5 +1,6 @@
 // brand_color
 $brand:                                           #818f45;
+$brand-secondary:                                 #002d50 !default;
 $secondary:                                       #e7e9b5;
 $accent:                                          lighten($brand, 50%);
 $dark:                                            #565a5c;
@@ -18,7 +19,6 @@ $flyout-item-bg-color:                            $olive;
 $flyout-block-border-color:                       $white;
 $flyout-item-divider-color:                       lighten($flyout-block-border-color, 5%);
 $flyout-item-projekt-modules-links-color:         $flyout-item-text-color;
-
 
 $flyout-item-line-height:                         1.5rem;
 $flyout-item-projekt-min-height:                  60px;

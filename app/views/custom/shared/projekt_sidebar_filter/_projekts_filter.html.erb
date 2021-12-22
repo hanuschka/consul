@@ -33,7 +33,7 @@
       <% end %>
     </li>
 
-    <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: projekt.children.with_order_number, aggregations: aggregations, parent_projekt: projekt, group: group } %>
+    <%= render partial: "shared/projekt_sidebar_filter/projekts_filter", locals: { projekts: preselected_children, aggregations: aggregations, parent_projekt: projekt, group: group } %>
 
   </ul>
 

@@ -1,3 +1,68 @@
+// Resource info on show
+
+.proposal-show .resource-info,
+.debate-show .resource-info,
+.polls-show .resource-info,
+.deficiency-report-show .resource-info {
+  padding-left: 23px;
+
+  .resource-info-author,
+  .resource-info-date,
+  .resource-info-comments,
+  .resource-info-notifications,
+  .resource-info-entry-code,
+  .resource-info-geo-affiliation,
+  .resource-info-geo-restriction {
+    position: relative;
+
+    &:before {
+      font-family: "Font Awesome 5 Free";
+      font-weight: bold;
+      font-size: .9rem;
+      position: absolute;
+      left: -23px;
+    }
+  }
+
+  .resource-info-author:before {
+    content: "\f2c1";
+  }
+
+  .resource-info-date:before {
+    content: "\f073";
+  }
+
+  .resource-info-comments:before {
+    content: "\f086";
+  }
+
+  .resource-info-entry-code:before {
+    content: "\f15b";
+  }
+
+  .resource-info-geo-affiliation:before {
+    content: "\f3c5";
+  }
+
+  .resource-info-geo-restriction:before {
+    content: "\f4fc";
+  }
+}
+
+
+// Related content
+
+.related-content {
+  border: none;
+  .related-content-list li {
+    padding: 0.25rem 0;
+
+    h3 {
+      margin-bottom: 0;
+    }
+  }
+}
+
 // Shared tags icons
 
 .tag-list {
@@ -5,7 +70,7 @@
   flex-wrap: wrap;
 }
 
-.projekt-tag-chip {
+.tag-chip {
   display: inline-block;
   font-size: 0.875em;
   background: #ececec;
@@ -17,13 +82,45 @@
   a {
     color: #222;
   }
-
-  &.filtered-projekt {
+  
+  &.filtered {
     background: $brand;
 
     a {
-      color: #fff;
+      color: $white;
     }
+  }
+}
+
+%tag-chip-icon {
+  font-weight: bold;
+  font-family: "Font Awesome 5 Free";
+  color: inherit;
+  margin-right: 0.5em;
+}
+
+.tag-chip-icon-projekt:before {
+  content: "\f126";
+  @extend %tag-chip-icon;
+}
+
+
+
+
+// eventually replace projekt-tag-chip with tag-chip everywhere
+.projekt-tag-chip {
+  display: inline-block;
+  font-size: 0.875em;
+  color: #222;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+
+  a {
+    color: $dark;
+  }
+
+  a.filtered-projekt {
+    font-weight: bold;
   }
 }
 
@@ -31,7 +128,9 @@
   font-weight: bold;
   font-family: "Font Awesome 5 Free";
   color: inherit;
-  margin-right: 0.5em;
+  margin-right: 0.25em;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .projekt-tag-chip-projekt.projekt-tag-chip-icon:before {
@@ -47,7 +146,7 @@
 }
 
 .projekt-tag-chip-geozone-affiliation.projekt-tag-chip-icon:before {
-  content: "\f279";
+  content: "\f3c5";
 }
 
 .projekt-tag-chip-geozone-restriction.projekt-tag-chip-icon:before {
@@ -141,7 +240,18 @@
 
 // Summary styling
 
-.debate-show blockquote, .proposal-show blockquote, .poll-question-show blockquote, .budget-investment-show blockquote, .polls-show blockquote, .debate-quiz blockquote, .budget-investment-show blockquote, .draft-panels blockquote, .debate-questions blockquote, .communities-show blockquote, .topic-show blockquote, .milestone-content blockquote {
+.debate-show blockquote,
+.proposal-show blockquote,
+.deficiency-report-show blockquote,
+.poll-question-show blockquote,
+.budget-investment-show blockquote,
+.polls-show blockquote, .debate-quiz blockquote,
+.budget-investment-show blockquote,
+.draft-panels blockquote,
+.debate-questions blockquote,
+.communities-show blockquote,
+.topic-show blockquote,
+.milestone-content blockquote {
   background-color: lighten($brand, 70%);
   font-size: 1.25em;
 	padding-top: 10px;

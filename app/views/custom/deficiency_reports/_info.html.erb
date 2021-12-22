@@ -1,0 +1,35 @@
+<% if feature?(:map) && map_location_available?(@deficiency_report.map_location) %>
+  <div class="margin-bottom">
+    <%= render_map(@deficiency_report.map_location, "deficiency_report", false, nil, MapLocation.where(deficiency_report_id: @deficiency_report.id).map(&:json_data)) %>
+  </div>
+<% end %>
+
+<blockquote><%= @deficiency_report.summary %></blockquote>
+
+<%= render_image(@deficiency_report.image, :large, true) if @deficiency_report.image.present? %>
+
+<%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.description) %>
+
+<% if @deficiency_report.video_url.present? %>
+  <div class="video-link">
+    <p>
+      <span class="icon-video"></span>&nbsp;
+      <strong><%= t("proposals.show.title_video_url") %></strong>
+    </p>
+    <br>
+    <div class="small-12 medium-7 small-centered">
+      <div class="flex-video">
+        <div id="js-embedded-video" data-video-code="<%= embedded_video_code(@deficiency_report) %>"></div>
+      </div>
+      <div class="text-center">
+        <%= sanitize_and_auto_link @deficiency_report.video_url %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if feature?(:allow_attached_documents) %>
+  <%= render "documents/documents",
+              documents: @deficiency_report.documents,
+              max_documents_allowed: Proposal.max_documents_allowed %>
+<% end %>

@@ -194,6 +194,7 @@ de:
     local_census_records/import: Import von Datensätzen aus dem lokalen Register
     site_customization/content_block: Inhaltsblöcke
     site_customization/page: Seite
+    deficiency_report: Mangelmeldung
   geozones:
     none: Alle Bereiche
   layouts:
@@ -418,7 +419,7 @@ de:
         guide: "Nun können Sie ihren Vorschlag teilen, damit andere ihn unterstützen."
         edit: "Bevor Sie ihren Text teilen, können Sie ihn beliebig bearbeiten. "
         view_proposal: Nicht jetzt. Gehe zu meinem Vorschlag
-      already_supported: Sie haben diesen Vorschlag bereits unterstützt. Teilen Sie ihn!
+      already_supported: Sie haben diesen Vorschlag bereits unterstützt.
       comments:
         zero: Keine Kommentare
         one: 1 Kommentar
@@ -710,10 +711,10 @@ de:
     check_all: Alle
     check_none: Keinen
     collective: Kollektiv
-    flag: Als unangemessen melden
+    flag: Melden
     follow: "Folgen"
-    following: "Folgen"
-    follow_entity: "Diesem Vorschlag folgen"
+    following: "Nicht länger folgen"
+    follow_entity: "Folgen"
     followable:
       budget_investment:
         create:
@@ -782,6 +783,8 @@ de:
         zero: "O verwendete Sprachen "
         one: "1 verwendete Sprachen"
         other: "%{count} verwendete Sprachen"
+    optional: Zusätzliche informationen
+    required: Pflichtfelder
   social:
     facebook: "%{org} Facebook"
     twitter: "%{org} Twitter"

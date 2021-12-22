@@ -16,7 +16,7 @@ class Debate
   end
 
   def votable_by?(user)
-    user &&
+    user.present? &&
     !user.organization? &&
     user.level_two_or_three_verified? &&
     (
@@ -27,7 +27,7 @@ class Debate
     ) &&
     (
       projekt.blank? ||
-      debate_phase && !debate_phase.expired?
+      debate_phase.present? && debate_phase.currently_active?
     )
 
     #  user.voted_for?(self)
@@ -39,5 +39,29 @@ class Debate
 
   def comments_allowed?(user)
     projekt.present? ? debate_phase.selectable_by?(user) : false
+  end
+
+  def register_vote(user, vote_value)
+    send("process_#{vote_value}_vote", user) if votable_by?(user)
+  end
+
+  def process_yes_vote(user)
+    if user.voted_up_for?(self)
+      unliked_by user
+      Debate.decrement_counter(:cached_anonymous_votes_total, id) if user.unverified?
+    else
+      liked_by user
+      Debate.increment_counter(:cached_anonymous_votes_total, id) if user.unverified?
+    end
+  end
+
+  def process_no_vote(user)
+    if user.voted_down_for?(self)
+      undisliked_by user
+      Debate.decrement_counter(:cached_anonymous_votes_total, id) if user.unverified?
+    else
+      disliked_by user
+      Debate.increment_counter(:cached_anonymous_votes_total, id) if user.unverified?
+    end
   end
 end

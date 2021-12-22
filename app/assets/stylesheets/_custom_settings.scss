@@ -1,22 +1,22 @@
 // brand_color
 $brand:                                           #2b3a5d;
+$brand-secondary:                                 #002d50 !default;
 $secondary:                                       #e6f2f9;
 $accent:                                          lighten($brand, 50%);
 $dark:                                            darken($brand, 10%);
 
 
 // Menu variables
-
 $dark:                                            #222;
 $white:                                           #fff;
 
 
 $top-level-menu-item-text-color:                  $white;
 $top-level-menu-background-color:                 $brand;
-$flyout-item-text-color:                          $white;
-$flyout-item-bg-color:                            $brand;
+$flyout-item-text-color:                          $dark;
+$flyout-item-bg-color:                            $white;
 
-$flyout-block-border-color:                       #dee0e3;
+$flyout-block-border-color:                       $border;
 $flyout-item-divider-color:                       lighten($flyout-block-border-color, 5%);
 $flyout-item-projekt-modules-links-color:         $flyout-item-text-color;
 

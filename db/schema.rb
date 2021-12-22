@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_04_161711) do
+ActiveRecord::Schema.define(version: 2021_12_14_155147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -774,6 +774,7 @@ ActiveRecord::Schema.define(version: 2021_11_04_161711) do
     t.bigint "attachment_file_size"
     t.datetime "attachment_updated_at"
     t.integer "user_id"
+    t.boolean "concealed", default: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end
@@ -1221,6 +1222,7 @@ ActiveRecord::Schema.define(version: 2021_11_04_161711) do
     t.string "video_url"
     t.boolean "show_images", default: false
     t.boolean "multiple", default: false
+    t.integer "given_order"
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"

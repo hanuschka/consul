@@ -26,6 +26,7 @@ $blue: hsl(215, 082%, 019%);
 
 // brand_color
 $brand:                                           #0A3266;
+$brand-secondary:                                 #002d50 !default;
 $secondary:                                       lighten($brand, 70%);
 $accent:                                          lighten($brand, 50%);
 $dark:                                            darken($brand, 10%);
@@ -44,7 +45,6 @@ $flyout-item-bg-color:                            $brand;
 $flyout-block-border-color:                       $white;
 $flyout-item-divider-color:                       $white;
 $flyout-item-projekt-modules-links-color:         $white;
-
 
 $flyout-item-line-height:                         1.5rem;
 $flyout-item-projekt-min-height:                  60px;

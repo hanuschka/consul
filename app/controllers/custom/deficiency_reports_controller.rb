@@ -33,6 +33,7 @@ class DeficiencyReportsController < ApplicationController
     filter_by_categories if @selected_categories_ids.present?
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
+    filter_by_approval_status if params[:approval_status].present?
 
     set_deficiency_report_votes(@deficiency_reports)
   end
@@ -139,6 +140,14 @@ class DeficiencyReportsController < ApplicationController
       @deficiency_reports = @deficiency_reports.joins(:officer).where(deficiency_report_officers: { user_id: current_user.id })
     else
       @deficiency_reports
+    end
+  end
+
+  def filter_by_approval_status
+    if params[:approval_status] == 'not_approved'
+      @deficiency_reports = @deficiency_reports.
+        where.not(official_answer: '').
+        where(official_answer_approved: false)
     end
   end
 

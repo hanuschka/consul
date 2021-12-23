@@ -17,6 +17,8 @@
 #   runner "AnotherModel.prune_old_records"
 # end
 
+env 'MAILTO', ''
+
 # Learn more: http://github.com/javan/whenever
 
 every 1.minute do

@@ -8,13 +8,19 @@ module Abilities
         dr_officer = user.deficiency_report_officer
 
         can [:update_official_answer], ::DeficiencyReport do |dr|
-          dr.officer == dr_officer &&
-            ( dr.official_answer_approved == false if Setting['deficiency_reports.admins_must_assign_officer'].present? )
+          if Setting['deficiency_reports.admins_must_assign_officer'].present?
+            dr.officer == dr_officer && dr.official_answer_approved == false
+          else
+            dr.officer == dr_officer
+          end
         end
 
         can [:update_status], ::DeficiencyReport do |dr|
-          dr.officer == dr_officer &&
-            ( dr.official_answer_approved == false if Setting['deficiency_reports.admins_must_assign_officer'].present? )
+          if Setting['deficiency_reports.admins_must_assign_officer'].present?
+            dr.officer == dr_officer && dr.official_answer_approved == false
+          else
+            dr.officer == dr_officer
+          end
         end
       end
     end

@@ -146,12 +146,22 @@ class Mailer < ApplicationMailer
     mail(to: @email_to.email, subject: t('custom.sign_up.mailer.residence_confirmation_code.subject'))
   end
 
+  def machine_learning_error(user)
+    @email_to = user.email
+
+    mail(to: @email_to, subject: t("mailers.machine_learning_error.subject"))
+  end
+
+  def machine_learning_success(user)
+    @email_to = user.email
+
+    mail(to: @email_to, subject: t("mailers.machine_learning_success.subject"))
+  end
+
   private
 
-    def with_user(user)
-      I18n.with_locale(user.locale) do
-        yield
-      end
+    def with_user(user, &block)
+      I18n.with_locale(user.locale, &block)
     end
 
     def prevent_delivery_to_users_without_email

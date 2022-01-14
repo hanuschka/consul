@@ -168,7 +168,7 @@
       map.addControl(search);
 
 
-      L.control.locate().addTo(map);
+      L.control.locate({icon: 'fa fa-map-marker'}).addTo(map);
 
 
       if (markerLatitude && markerLongitude && !addMarker) {

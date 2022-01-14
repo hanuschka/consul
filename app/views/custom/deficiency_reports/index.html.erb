@@ -35,7 +35,7 @@
   <% end %>
 
   <% if feature?(:map) %>
-    <div class="map inline">
+    <div class="map deficiency-reports-map">
       <%= render_map(nil, "deficiency-reports", false, nil, @deficiency_reports_coordinates) %>
     </div>
     <div class='expand-proposals-overview-map small js-expand-proposals-overview-map'>

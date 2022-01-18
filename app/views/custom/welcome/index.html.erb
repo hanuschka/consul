@@ -41,7 +41,7 @@
       <% if @cards.any? %>
         <div class="row">
           <div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
-            <%= render partial: "cards", locals: { cards: @cards } %>
+            <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
           </div>
         </div>
       <% end %>
@@ -65,10 +65,4 @@
       <%= render "feeds" %>
     </div>
   </div>
-
-  <% if feature?("user.recommendations") && (@recommended_debates.present? || @recommended_proposals.present?) %>
-    <%= render "recommended",
-                recommended_debates: @recommended_debates,
-                recommended_proposals: @recommended_proposals %>
-  <% end %>
 </main>

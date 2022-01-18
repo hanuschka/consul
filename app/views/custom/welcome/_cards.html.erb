@@ -1,4 +1,6 @@
-<div class="row cards-homepage" data-equalizer data-equalizer-on="medium">
+<h3 class="title card-title"><%= section_title %></h3>
+
+<div class="row">
   <% cards.each do |card| %>
     <%= render "card", card: card %>
   <% end %>

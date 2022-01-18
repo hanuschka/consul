@@ -1,5 +1,10 @@
-<li class="nav-element top-level-item hide-for-small-only">
+<li class="nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll hide-for-small-only"
+  <%= "aria-label='#{t('custom.links.menu.search_icon')}'" if placement == 'desktop' %>
+  <%= "tabindex=0" if placement == 'desktop' %>
+>
   <%= link_to '#', id: 'js-main-menu-search-button', class: 'search-items-icon' do %>
-    <%= svg_tag 'search-solid', class: "search-icon" %>
+    <span class="icon-search" aria-hidden="true"
+         title="<%= t("custom.layouts.header.search_link") %>">
+    </span>
   <% end %>
 </li>

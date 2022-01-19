@@ -133,9 +133,6 @@
       }
     }
 
-    @media only screen and (min-width: 640px) {
-    }
-
     @media only screen and (min-width: 768px) and (max-width: 1280px) {
       height: 450px;
       background-position: center 35%;
@@ -213,5 +210,14 @@
         color: $welcomebuttontext;
       }
     }
+  }
+}
+
+
+
+.jumbo, .typeform-wrapper, .win-logos {
+  @media only screen and (min-width: 75rem) {
+    margin-left: calc(-50vw + 37.5rem);
+    margin-right: calc(-50vw + 37.5rem);
   }
 }

@@ -13,7 +13,6 @@ main {
 }
 
 body>header, .wrapper>header, .top-bar {
-  background-color: $white;
   color: $dark;
 }
 
@@ -41,6 +40,10 @@ body>header, .wrapper>header, .top-bar {
     color: $dark;
   }
 
+  .sign-in-button {
+    border: 1px solid $brand;
+  }
+
   .sign-up-button {
     margin-right: 1rem;
     background-color: $brand;
@@ -49,6 +52,7 @@ body>header, .wrapper>header, .top-bar {
 }
 
 .top-bar {
+  justify-content: space-between !important;
   h2.header-title {
     line-height: 1em;
     text-transform: uppercase;

@@ -1,7 +1,7 @@
 body > header,
 .wrapper > header,
 .top-bar {
-  background-color: $white;
+  background-color: inherit;
   color: #222;
 }
 
@@ -41,6 +41,12 @@ h2.header-title {
 
   .header-title {
     display: block;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .top-bar-title {
+    margin-left: 5rem;
   }
 }
 

@@ -55,10 +55,20 @@
       position: absolute;
       bottom: 10%;
       color: $white;
-      width: 90%
+      width: 70%;
+      max-width: 40rem;
+      @include grid-column-gutter;
     }
 
+    @media only screen and (min-width: 75rem) {
+      margin-left: calc(-50vw + 37.5rem);
+      margin-right: calc(-50vw + 37.5rem);
 
+      .jumbo-message {
+        margin-left: calc(50vw - 37.5rem);
+        margin-right: calc(50vw - 37.5rem);
+      }
+    }
 
     @media only screen and (max-width: 550px) {
       height: 550px;
@@ -208,6 +218,10 @@
         background: $welcomebuttonbg;
         color: $welcomebuttontext;
       }
+    }
+
+    @media only screen and (min-width: 1280px) {
+      height: 500px;
     }
 
     @media only screen and (min-width: 1900px) {

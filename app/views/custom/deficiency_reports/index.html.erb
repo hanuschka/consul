@@ -51,7 +51,7 @@
 
       <%= render Shared::BannerComponent.new("deficiency_reports") %>
 
-      <% if extended_feature?("deficiency_reports.intro_text_for_deficiency_reports") %>
+      <% if deficiency_reports_feature?("intro_text") %>
         <%=render_custom_block 'deficiency_reports_welcome' %>
       <% end %>
 

@@ -1,7 +1,7 @@
 class DeficiencyReportMailer < ApplicationMailer
   def notify_administrators_about_new_deficiency_report(deficiency_report)
     @deficiency_report = deficiency_report
-    subject = t("custom.deficiency_reports.mailers.notify_administrators.subject")
+    subject = t("custom.deficiency_reports.mailers.notify_administrators_about_new_deficiency_report.subject")
 
     Administrator.all.each do |admin|
       with_user(admin.user) do

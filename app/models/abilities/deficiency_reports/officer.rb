@@ -26,6 +26,14 @@ module Abilities
             true
           end
         end
+
+        can [:update_officer], ::DeficiencyReport do |dr|
+          if Setting['deficiency_reports.admins_must_assign_officer'].present?
+            dr.officer == dr_officer
+          else
+            true
+          end
+        end
       end
     end
   end

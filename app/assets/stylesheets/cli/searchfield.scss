@@ -4,11 +4,3 @@
   // height: 1.25rem !important;
   // line-height: 1.25rem !important;
 }
-
-
-main.grayed-out {
-
-  &::before {
-    height: calc(100% + 425px);
-  }
-}

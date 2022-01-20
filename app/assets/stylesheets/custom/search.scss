@@ -181,11 +181,16 @@ main.grayed-out {
     content: "";
     background: $black;
     opacity: .7;
-    width: 100%;
-    height: calc(100% + 336px);
+    width: 100vw;
+    height: calc(100% + 400px);
+    overflow: hidden;
     position: absolute;
     z-index: 2001;
     top: 0;
+
+    @media screen and (min-width: 75em) {
+      left: calc(-50vw + 37.5rem);
+    }
   }
 }
 

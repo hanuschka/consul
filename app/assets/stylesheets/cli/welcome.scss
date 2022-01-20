@@ -18,3 +18,10 @@
 .cards {
   margin-bottom: 3em;
 }
+
+.home-page .card,
+.custom-page .card,
+.sdg-goal-show .card,
+.sdg-goals-index .card {
+  background-color: inherit;
+}

@@ -19,7 +19,7 @@ class DeficiencyReportsController < ApplicationController
     @deficiency_reports = DeficiencyReport.all.page(params[:page]).send("sort_by_#{@current_order}")
 
     @categories = DeficiencyReport::Category.all.order(created_at: :asc)
-    @statuses = DeficiencyReport::Status.all.order(created_at: :asc)
+    @statuses = DeficiencyReport::Status.all.order(given_order: :asc)
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
 

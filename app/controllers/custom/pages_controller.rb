@@ -54,6 +54,10 @@ class PagesController < ApplicationController
     head 404, content_type: "text/html"
   end
 
+  def internet_explorer
+    render layout: false
+  end
+
   private
 
   def resource_model

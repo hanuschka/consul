@@ -3,7 +3,7 @@ require_dependency Rails.root.join("app", "controllers", "application_controller
 
 class ApplicationController < ActionController::Base
 
-  before_action :set_top_level_active_and_archived_projekts_for_menu, :set_default_social_media_images
+  before_action :set_top_level_active_and_archived_projekts_for_menu, :set_default_social_media_images, :detect_ie
 
   private
 
@@ -34,5 +34,15 @@ class ApplicationController < ActionController::Base
 
   def set_projekts_for_selector
     @projekts = Projekt.top_level
+  end
+
+  def detect_ie
+    user_agent = request.env['HTTP_USER_AGENT'].downcase
+
+    return if action_name == 'internet_explorer'
+
+    if ( user_agent =~ /msie/ || user_agent =~ /trident/ ) 
+      redirect_to internet_explorer_path
+    end
   end
 end

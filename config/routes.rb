@@ -56,9 +56,12 @@ Rails.application.routes.draw do
   end
 
   # More info pages
-  get "help",             to: "pages#show", id: "help/index",             as: "help"
-  get "help/how-to-use",  to: "pages#show", id: "help/how_to_use/index",  as: "how_to_use"
-  get "help/faq",         to: "pages#show", id: "faq",                    as: "faq"
+  get "help",                                              to: "pages#show", id: "help/index",             as: "help"
+  get "help/how-to-use",                                   to: "pages#show", id: "help/how_to_use/index",  as: "how_to_use"
+  get "help/faq",                                          to: "pages#show", id: "faq",                    as: "faq"
+
+  # For intercepted internet explorer
+  get "internet_explorer",                                 to: "pages#internet_explorer",                  as: "internet_explorer"
 
   # Static pages
   resources :pages, path: "/", only: [:show]
@@ -87,7 +90,7 @@ Rails.application.routes.draw do
   # Confirm poll participation
   post "polls/:id/confirm_participation",                  to: "polls#confirm_participation",        as: :poll_confirm_participation
 
-  # Toggle user generateg images
+  # Toggle user generated images
   patch  "admin/proposals/:id/toggle_image",               to: "admin/proposals#toggle_image",       as: :admin_proposal_toggle_image
   patch  "admin/debates/:id/toggle_image",                 to: "admin/debates#toggle_image",         as: :admin_debate_toggle_image
 

@@ -9,7 +9,7 @@ de:
         notification_icon: Benachrichtigungen
         projekt_name_label: "Projekt Name: %{projekt_name} "
         archived_projekts_label: Archivierte Projekte
-        deficiency_reports: Mängelmelder
+        deficiency_reports: Ihr Anliegen
         new_entry_label: Beitrag erstellen
         new_entry: + Beitrag erstellen
         new_entries:

@@ -14,8 +14,8 @@ de:
   activerecord:
     models:
       deficiency_report:
-        one: Mangelmeldung
-        other: Mängelmeldungen
+        one: Anliegen
+        other: Anliegen
     errors:
       models:
         user:

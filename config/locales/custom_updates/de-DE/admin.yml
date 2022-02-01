@@ -12,20 +12,20 @@ de:
         archived_projekts_title: Abgeschlossene Beteiligungsprozesse
       menu:
         projekts: Projekte
-        deficiency_reports_title: Mängelmelder
+        deficiency_reports_title: Ihr Anliegen
         deficiency_reports:
           officers: Sachbearbeiter*in
-          reports: Mängel zuweisen
+          reports: Anliegen zuweisen
           categories: Kategorien festlegen
           statuses: Status definieren
           settings: Funktionen
       deficiency_reports:
         index:
-          title: Mängel zuweisen
-          no_deficiency_reports: Keine Mängelmeldungen
-          entry_name: Mangel
+          title: Anliegen zuweisen
+          no_deficiency_reports: Keine Anliegen
+          entry_name: Anliegen
         deficiency_report:
-          title: Gemeldeter Mangel
+          title: Gemeldetes Anliegen
           category: Kategorie
           status: Status
           officer: Sachbearbeiter*in
@@ -47,14 +47,14 @@ de:
             color: Farbe
             name: Name
           new:
-            creating: Neue Mangelkategorie erstellen
+            creating: Neue Anliegenkategorie erstellen
           edit:
-            editing: Mangelkategorie bearbeiten
+            editing: Anliegenkategorie bearbeiten
           form:
             color_placeholder: "HEX Code mit #"
             submit_button: Speichern
           destroy:
-            cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Mangel zugewiesen ist.
+            cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Anliegen zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.
         statuses:
           index:
@@ -65,14 +65,14 @@ de:
             color: Farbe
             title: Name
           new:
-            creating: Neue Mangelstatus erstellen
+            creating: Neuen Anliegenstatus erstellen
           edit:
-            editing: Mangelstatus bearbeiten
+            editing: Anliegenstatus bearbeiten
           form:
             color_placeholder: "HEX Code mit #"
             submit_button: Speichern
           destroy:
-            cannot_be_destroyed: Sie können diesen Status nicht löschen, da er mindestens einem Mangel zugewiesen ist.
+            cannot_be_destroyed: Sie können diesen Status nicht löschen, da er mindestens einem Anliegen zugewiesen ist.
             destroyed_successfully: Der Status wurde erfolgreich gelöscht.
         settings:
           index:

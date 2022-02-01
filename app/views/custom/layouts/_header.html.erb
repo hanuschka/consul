@@ -14,7 +14,7 @@
       <span class="menu-icon dark" data-toggle></span>
     </span>
 
-    <div class='header-right-group'>
+    <div class='header-right-group not-print'>
       <div class="top-bar-title">
         <%= link_to root_path do %>
           <%= image_tag(image_path_for("logo_header.jpg"), class: "", alt: t("layouts.header.logo")) %>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div id="responsive-menu">
+    <div id="responsive-menu" class='not-print'>
       <div class="top-bar-right">
         <div class="show-for-small-only">
           <div class="subnavigation">
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <div id="navigation_bar" class="subnavigation expanded">
+  <div id="navigation_bar" class="subnavigation expanded not-print">
     <div class="hide-for-small-only">
       <%= render partial: "shared/subnavigation", locals: { placement: 'desktop' } %>
     </div>

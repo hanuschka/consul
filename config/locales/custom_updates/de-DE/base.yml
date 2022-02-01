@@ -93,6 +93,7 @@ de:
         notification_item:
           no_notifications: Keine Benachrichtigungen
         title_html: "Öffentlichkeitsbeteiligung<br><span>in der Stadt"
+        logo_alt: Stadt Logo
       footer:
         demokratie: demokratie.today
         demokratie_url: https://www.demokratie.today/

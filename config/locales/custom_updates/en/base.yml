@@ -93,6 +93,7 @@ en:
         notification_item:
           no_notifications: No notifications
         title_html: "Public Participation<br><span>in the city of"
+        logo_alt: City logo
       footer:
         demokratie: demokratie.today
         demokratie_url: https://www.demokratie.today/

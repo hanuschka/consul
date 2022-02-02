@@ -27,7 +27,7 @@ module Verifications
       CheckUserVerificationRequestJob.perform_later(filename)
     end
 
-    def self.create_verification_request_in_booth(residence)
+    def self.create_verification_request_in_booth(residence, document_number)
       builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
         xml.request {
           xml.vorname residence.first_name
@@ -35,9 +35,9 @@ module Verifications
           xml.geburtsdatum residence.date_of_birth.strftime("%d.%m.%Y")
           xml.plz residence.postal_code
           if residence.document_type == 'card'
-            xml.panr residence.document_number
+            xml.panr document_number
           elsif residence.document_type == 'pass'
-            xml.rpnr residence.document_number
+            xml.rpnr document_number
           end
         }
       end

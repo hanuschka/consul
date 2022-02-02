@@ -17,7 +17,7 @@ class Officing::ResidenceController < Officing::BaseController
       render :new and return
     end
 
-    verification_request = Verifications::CreateXML.create_verification_request_in_booth(@residence)
+    verification_request = Verifications::CreateXML.create_verification_request_in_booth(@residence, params[:residence][:document_number])
     sleep 7
     responce = Verifications::CheckXML.check_verification_request_in_booth(verification_request)
 

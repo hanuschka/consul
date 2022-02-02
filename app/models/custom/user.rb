@@ -8,7 +8,7 @@ class User < ApplicationRecord
          authentication_keys: [:login]
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
-  around_save :reset_verification_status
+  around_update :reset_verification_status
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author

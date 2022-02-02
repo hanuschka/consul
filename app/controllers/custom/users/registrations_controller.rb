@@ -89,7 +89,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if @user.errors.any?
       render :user_details
-    elsif @user.update(update_user_details_params) && @user.citizen?
+    elsif @user.citizen? && @user.update(update_user_details_params)
       Verifications::CreateXML.create_verification_request(current_user.id, params[:user][:document_number])
       redirect_to complete_user_registration_path
     elsif @user.update(update_user_details_params)

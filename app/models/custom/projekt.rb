@@ -62,15 +62,33 @@ class Projekt < ApplicationRecord
 
   class << self
     def selectable_in_selector(controller_name, current_user)
-      select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.selectable?(controller_name, current_user) } }
+      projekts = []
+
+      all.each do |projekt|
+        projekts.push(projekt) if projekt.all_children_projekts.unshift(projekt).any? { |p| p.selectable?(controller_name, current_user) }
+      end
+
+      projekts
     end
 
     def selectable_in_sidebar_current(controller_name)
-      select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.current? && ( p.send(controller_name).any? || p.has_active_phase?(controller_name) ) } }
+      projekts = []
+
+      all.each do |projekt|
+        projekts.push(projekt) if projekt.all_children_projekts.unshift(projekt).any? { |p| p.current? && ( p.send(controller_name).any? || p.has_active_phase?(controller_name) ) }
+      end
+
+      projekts
     end
 
     def selectable_in_sidebar_expired(controller_name)
-      select{ |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.expired? && p.send(controller_name).any? } }
+      projekts = []
+
+      all.each do |projekt|
+        projekts.push(projekt) if projekt.all_children_projekts.unshift(projekt).any? { |p| p.expired? && p.send(controller_name).any? }
+      end
+
+      projekts
     end
   end
 

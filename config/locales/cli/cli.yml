@@ -1,4 +1,9 @@
 de:
+  admin:
+    users:
+      index:
+        filters:
+          outside_bam: Codes
   cli:
     home:
       button: Button

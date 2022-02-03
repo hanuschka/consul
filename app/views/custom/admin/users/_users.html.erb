@@ -30,7 +30,7 @@
     </thead>
     <tbody>
       <% @users.each do |user| %>
-        <tr>
+        <tr class='justify-center'>
           <% if @current_filter == "erased" %>
             <td><%= link_to user.id, user_path(user), target: "_blank" %></td>
             <td><%= user.erase_reason %></td>

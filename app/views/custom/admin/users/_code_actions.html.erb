@@ -1,5 +1,5 @@
 <% if user.bam_letter_verification_code_sent_at.present? %>
-  <%= render Admin::TableActionsComponent.new(actions: []) do |actions| %>
+  <%= render Admin::TableActionsComponent.new(user, actions: []) do |actions| %>
     <%= actions.link_to t('cli.admin.users.tooltips.mark_code_as_not_sent'),
                         cancel_letter_verification_code_path(user),
                         method: :patch,
@@ -7,7 +7,7 @@
                         class: "destroy-officer-link" %>
   <% end %>
 <% else %>
-  <%= render Admin::TableActionsComponent.new(actions: []) do |actions| %>
+  <%= render Admin::TableActionsComponent.new(user, actions: []) do |actions| %>
     <%= actions.link_to t("cli.admin.users.tooltips.mark_code_as_sent"),
                         send_letter_verification_code_path(user),
                         method: :patch,

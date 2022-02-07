@@ -13,3 +13,6 @@ de:
     account:
       settings:
         custom_newsletter: E-Mail-Benachrichtigungen über Consul, Bürgerbeteiligung und Demokratieentwicklung.
+    links:
+      menu:
+        custom_newsletter: Newsletter

@@ -19,6 +19,7 @@
   </div>
 
   <div class="account-admin-items">
+    <%= render partial: 'shared/subnavigation_custom_newsletter', locals: { placement: placement } %>
     <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
     <% if extended_feature?("general.elasticsearch") %>
       <%= render partial: 'shared/subnavigation_search', locals: { placement: placement } %>

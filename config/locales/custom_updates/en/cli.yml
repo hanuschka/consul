@@ -1,0 +1,15 @@
+de:
+  custom:
+    devise_views:
+      users:
+        registrations:
+          new:
+            custom_newsletter_title: Yes, I would like to be informed about Consul, citizen participation, and demokracy development.
+            custom_newsletter_label: Yes, I would like to be informed about Consul, citizen participation, and demokracy development.
+    admin:
+      users:
+        columns:
+          custom_newsletter: Newsletter
+    account:
+      settings:
+        custom_newsletter: Email newsletter about Consul, citizen participation, and demokracy development.

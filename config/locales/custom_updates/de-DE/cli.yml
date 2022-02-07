@@ -10,3 +10,6 @@ de:
       users:
         columns:
           custom_newsletter: Newsletter
+    account:
+      settings:
+        custom_newsletter: E-Mail-Benachrichtigungen über Consul, Bürgerbeteiligung und Demokratieentwicklung.

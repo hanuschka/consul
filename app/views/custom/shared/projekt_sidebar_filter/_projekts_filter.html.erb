@@ -1,11 +1,11 @@
 <% projekts.each do |projekt| %>
 
   <% if group == 'active' && controller_name != 'search' %>
-    <% preselected_children = projekt.children.selectable_in_sidebar_active(controller_name) %>
+    <% preselected_children = projekt.children.selectable_in_sidebar_current(controller_name) %>
   <% elsif group == 'archived' && controller_name != 'search' %>
-    <% preselected_children = projekt.children.selectable_in_sidebar_archived(controller_name) %>
+    <% preselected_children = projekt.children.selectable_in_sidebar_expired(controller_name) %>
   <% else controller_name == 'search' %>
-    <% preselected_children = projekt.active_children %>
+    <% preselected_children = projekt.activated_children %>
   <% end %>
 
   <% label_class =  ( @selected_projekts_ids && projekt.id.to_s.in?(@selected_projekts_ids) ) ? 'label-selected' : 'label_regular' %>
@@ -18,7 +18,7 @@
         <i class="projekt-filter-icon fas fa-<%= projekt.icon || "circle" %>" <%= "style=color:#{projekt.color}" if projekt.color.present? %> ></i>
         <span aria-label="<%= t('custom.links.projekts_filter.projekt_name', projekt_name: projekt.page.title ) %>" ><%= projekt.page.title %></span>
         <%= "(#{aggregations[projekt.id]})" if aggregations[projekt.id].present?  %>
-        <% resource_count = projekt.count_resources(params[:controller]) unless params[:controller] == 'search' %>
+        <% resource_count = @all_resources.where(projekt: projekt.selectable_tree_ids(params[:controller], group)).count unless params[:controller] == 'search' %>
         <span aria-label="<%= t('custom.links.projekts_filter.resource_count', resource_count: resource_count) %>"> <%= "(#{resource_count})" unless params[:controller] == 'search' %> </span>
         <span class="checkmark focusable js-prevent-key-scroll js-access-toggle-projekt-filter-checkbox" tabindex="0"></span>
       <% end %>

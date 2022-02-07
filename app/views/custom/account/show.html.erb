@@ -62,6 +62,10 @@
               <div>
                 <%= f.check_box :email_on_direct_message, {label: t('custom.account.settings.email_on_direct_message')} %>
               </div>
+
+              <div>
+                <%= f.check_box :custom_newsletter, {label: t('custom.devise_views.users.registrations.new.custom_newsletter_label')} %>
+              </div>
             <% end %>
 
             <% if @account.official_level == 1 %>

@@ -1,0 +1,12 @@
+de:
+  custom:
+    devise_views:
+      users:
+        registrations:
+          new:
+            custom_newsletter_title: Ja, ich möchte weiter über Consul, Bürgerbeteiligung und Demokratieentwicklung informiert werden.
+            custom_newsletter_label: Ja, ich möchte weiter über Consul, Bürgerbeteiligung und Demokratieentwicklung informiert werden.
+    admin:
+      users:
+        columns:
+          custom_newsletter: Newsletter

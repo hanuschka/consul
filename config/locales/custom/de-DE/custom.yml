@@ -12,6 +12,11 @@ de:
       widget/card:
         card_category: Kategorie
   custom:
+    sidebar_filter:
+      my_posts:
+        title: 'Meine Beiträge'
+        all: 'Alle'
+        my_posts: 'Meine Beiträge'
     welcome:
       active_projekt_cards:
         title: Aktive Beteiligungsprozesse
@@ -100,7 +105,7 @@ de:
             activate:
               enabled: Projekt aktiviert
               disabled: Projekt deaktiviert
-          extended_features: 
+          extended_features:
             general: Allgemeines & Features
             gdpr: DSGVO
             modulewide: Modulübergreifende Funktionen
@@ -149,7 +154,7 @@ de:
           name: Projektname
           page: Seite
           edit_page: Seite bearbeiten
-          page_link: Seite öffnen 
+          page_link: Seite öffnen
           add_cards: Kacheln erstellen/bearbeiten
           projekt_information: Projektinformationen
           projekt_duration: Gesamtdauer des Projekts
@@ -205,11 +210,11 @@ de:
           show_footer: Projekt Fußzeile
           setting_indicator:
             yes: Ja
-            no: Nein 
+            no: Nein
           update: Projekteinstellungen aktualisieren
           projekt_status: Projektstatus
           projekt_activated: Projekt aktiv
-          projekt_active: 
+          projekt_active:
             yes: Ja
             no: Nein
           projekt_page: Projektseite
@@ -315,3 +320,4 @@ de:
         image_name: 'Name des Titelbildes'
   tag_names:
     general: 'General'
+

@@ -125,6 +125,7 @@
 //= require map_refresh
 //= require accessibility_fixes
 //= require polls_custom
+//= require radio_button_filter
 //= require deficiency_reports
 //= require leaflet.markercluster
 //= require leaflet.locatecontrol
@@ -199,8 +200,10 @@ var initialize_modules = function() {
   App.MapRefresh.initialize();
   App.ElasticSearchModal.initialize();
   App.PollsCustom.initialize();
+  App.RadioButtonFilter.initialize();
   App.DeficiencyReports.initialize();
   App.AccessibilityFixes.initialize();
+
   if ($("#projekt-selector-fields").length) {
     App.ProjektSelector.initialize();
   }

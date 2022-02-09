@@ -43,7 +43,7 @@ class Setting < ApplicationRecord
         "feature.remote_census": nil,
         "feature.valuation_comment_notification": true,
         "feature.graphql_api": true,
-        "feature.sdg": false, 
+        "feature.sdg": false,
         "feature.machine_learning": false,
         "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.polls": true,
@@ -195,7 +195,10 @@ class Setting < ApplicationRecord
         "extended_feature.polls.enable_comments": true,
         "extended_feature.polls.additional_information": true,
         "extended_feature.polls.additional_info_for_each_answer": true,
-        "extended_feature.polls.enable_projekt_filter": true
+        "extended_feature.polls.enable_projekt_filter": true,
+        "extended_feature.proposals.enable_my_posts_filter": true,
+        "extended_feature.debates.enable_my_posts_filter": true,
+        "extended_feature.deficiency_reports.enable_my_posts_filter": true
       }
     end
 

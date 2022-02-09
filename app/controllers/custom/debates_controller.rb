@@ -164,7 +164,7 @@ class DebatesController < ApplicationController
 
   def take_by_my_posts
     if params[:my_posts_filter] == 'true'
-      @resources = @resources.by_author(current_user.id)
+      @resources = @resources.by_author(current_user&.id)
     end
   end
 end

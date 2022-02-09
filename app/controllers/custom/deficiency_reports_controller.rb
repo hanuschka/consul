@@ -113,7 +113,7 @@ class DeficiencyReportsController < ApplicationController
   def filter_by_my_posts
     return unless params[:my_posts_filter] == 'true'
 
-    @deficiency_reports = @deficiency_reports.by_author(current_user.id)
+    @deficiency_reports = @deficiency_reports.by_author(current_user&.id)
   end
 
   def load_categories

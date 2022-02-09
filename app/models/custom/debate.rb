@@ -13,6 +13,8 @@ class Debate
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
   scope :by_author, -> (user_id) {
+    return if user_id.nil?
+
     where(author_id: user_id)
   }
 

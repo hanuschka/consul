@@ -42,6 +42,7 @@ class ProposalsController
       take_by_geozone_affiliations
       take_by_geozone_restrictions
       take_with_activated_projekt_only
+      take_by_my_posts
     end
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
@@ -185,6 +186,12 @@ class ProposalsController
           "
           @resources = @resources.joins(sql_query).where(geozone_restrictions: { id: @restricted_geozones })
         end
+      end
+    end
+
+    def take_by_my_posts
+      if params[:my_posts_filter] == 'true'
+        @resources = @resources.by_author(current_user&.id)
       end
     end
 

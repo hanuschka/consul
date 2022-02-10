@@ -11,6 +11,11 @@ class Debate
   validates :projekt_id, presence: true, if: :require_a_projekt?
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
+  scope :by_author, -> (user_id) {
+    return if user_id.nil?
+
+    where(author_id: user_id)
+  }
 
   alias_attribute :projekt_phase, :debate_phase
 

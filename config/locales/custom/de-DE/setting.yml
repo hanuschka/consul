@@ -60,12 +60,15 @@ de:
           show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Diskussionen
           enable_projekt_filter: Projektfilter anzeigen
           enable_projekt_filter_description: Zeigt den Projektfilter in der Diskussionsübersichtseite
+          enable_my_posts_filter: Meine Beiträge
+          enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+
         proposals:
           intro_text_for_proposals: Einleitungstext für Vorschläge
           intro_text_for_proposals_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Vorschlagsübersicht
           quorum_for_proposals: Quorum für Vorschläge
           quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
-          enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen 
+          enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen
           enable_proposal_support_withdrawal_description: Aktivieren Sie die Rücknahme der Vorschlagsunterstützung
           show_selected_proposals_in_proposal_sidebar: Ausgewählte Vorschläge
           show_selected_proposals_in_proposal_sidebar_description: "Aktivieren Sie \"Ausgewählte Vorschläge\", um Vorschläge hervorzuheben"
@@ -85,13 +88,15 @@ de:
           enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
           enable_projekt_filter: Projektfilter anzeigen
           enable_projekt_filter_description: Zeigt den Projektfilter in der Vorschlagsübersichtseite
+          enable_my_posts_filter: Meine Beiträge
+          enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Vorschlagsübersichtseite
         polls:
           intro_text_for_polls: Einleitungstext für Abstimmungen
           intro_text_for_polls_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Abstimmungsübersicht
           intermediate_poll_results_for_admins: Zwischenergebnisse von Abstimmungen für Admins
           intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
           enable_comments: Kommentare
-          enable_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul 
+          enable_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
           additional_information: Erweiterte Informationen
           additional_information_description: Aktivieren Sie "Erweiterete Informationen" für das Abstimmungsmodul
           additional_info_for_each_answer: Zusätzliche Informationen je Antwort
@@ -175,12 +180,14 @@ de:
         enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
         intro_text: Einleitungstext für den Mängelmelder
         intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
+        enable_my_posts_filter: Meine Beiträge
+        enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
 
       projekt_newsfeed:
-        id: Newsfeed ID 
-        id_description:  
+        id: Newsfeed ID
+        id_description:
         type: Newsfeed Type
-        type_description: 
+        type_description:
 
       projekt_custom_feature:
         default_footer_tab: Standard-Element

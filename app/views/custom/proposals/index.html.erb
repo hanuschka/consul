@@ -109,6 +109,9 @@
           <% unless skip_user_verification? %>
             <%= render "shared/sidebar_filter/geozone_restrictions" %>
           <% end %>
+          <% if extended_feature?('proposals.enable_my_posts_filter') %>
+            <%= render "shared/sidebar_filter/my_posts" %>
+          <% end %>
           <%= render "shared/categories", taggable: "proposal" %>
           <%= render "shared/tag_cloud", taggable: "proposal" %>
           <%= render SDG::Goals::TagCloudComponent.new("Proposal") %>
@@ -123,7 +126,6 @@
     </div>
 
     <div id="proposals" class="proposals-list small-12 medium-9 column">
-
       <%= render Shared::BannerComponent.new("proposals") %>
 
       <% if extended_feature?("proposals.intro_text_for_proposals") %>

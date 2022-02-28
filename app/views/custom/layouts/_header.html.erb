@@ -17,8 +17,8 @@
     <div class='header-right-group'>
       <% unless current_user %>
         <div class='account-buttons show-for-large'>
-          <% link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
-          <% link_to t('devise_views.menu.login_items.signup') , new_user_registration_path, class: 'sign-up-button', role: 'button'  %>
+          <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
+          <%= link_to t('devise_views.menu.login_items.signup') , new_user_registration_path, class: 'sign-up-button', role: 'button'  %>
         </div>
       <% end %>
 

@@ -1,0 +1,33 @@
+<main>
+  <div class='row'>
+    <div class='column'>
+      <h1 class='margin-bottom'>Proposals overview</h1>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='column small-12 medium-9'>
+
+      <h3 class='margin-bottom'>Projekte mit aktiver Beteiligungsphase</h3>
+      <% @current_projekts.each do |projekt| %>
+        <%= render partial: 'projekt', locals: { projekt: projekt } %>
+      <% end %>
+
+      <h3 class='margin-bottom'>Abgeschlossene Projekte</h3>
+      <% @expired_projekts.each do |projekt| %>
+        <%= render partial: 'projekt', locals: { projekt: projekt } %>
+      <% end %>
+
+    </div>
+
+    <div class='column small-12 medium-3'>
+      <%= render "shared/social_share",
+          share_title: t("custom.pages.social_share.share"),
+          title: 'Title',
+          url: url_for(only_path: false),
+          description: 'Description',
+          mobile: 'Description'
+      %>
+    </div>
+  </div>
+</main>

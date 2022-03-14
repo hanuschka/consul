@@ -1,7 +1,16 @@
 class ProjektsController < ApplicationController
   skip_authorization_check
 
+  before_action do
+    raise FeatureFlags::FeatureDisabled, :projekts_overview unless Setting['projekts.overview_page']
+  end
+
   include ProjektControllerHelper
+
+  def index
+    @current_projekts = Projekt.current
+    @expired_projekts = Projekt.expired
+  end
 
   def show
     projekt = Projekt.find(params[:id])

@@ -52,8 +52,11 @@
       <div class='sidebar-projekt-phase-details'>
         <span class='sidebar-projekt-phase-name'>
           <%= phase_name(milestone_phase, 'start') %>
-          <%= link_to "/#{projekt.id}/#{milestone_phase.name}_footer_tab", remote: true, onclick: '$("html, body").animate({scrollTop: $("#filter-subnav").offset().top}); $("#footer-content").addClass("show-loader");' do %>
-            <i class="fas fa-long-arrow-alt-right"></i>
+
+          <% if projekt_feature?(@projekt, 'footer.show_projekt_footer') %>
+            <%= link_to "/#{projekt.id}/#{milestone_phase.name}_footer_tab", remote: true, onclick: '$("html, body").animate({scrollTop: $("#filter-subnav").offset().top}); $("#footer-content").addClass("show-loader");' do %>
+              <i class="fas fa-long-arrow-alt-right"></i>
+            <% end %>
           <% end %>
         </span>
         <span class='sidebar-projekt-phase-duration'><%= format_date(milestone_phase.start_date) %></span>
@@ -66,8 +69,11 @@
       <div class='sidebar-projekt-phase-details'>
         <span class='sidebar-projekt-phase-name'>
           <%= phase_name(milestone_phase, 'ending') %>
-          <%= link_to "/#{projekt.id}/#{milestone_phase.name}_footer_tab", remote: true, onclick: '$("html, body").animate({scrollTop: $("#filter-subnav").offset().top}); $("#footer-content").addClass("show-loader");' do %>
-            <i class="fas fa-long-arrow-alt-right"></i>
+
+          <% if projekt_feature?(@projekt, 'footer.show_projekt_footer') %>
+            <%= link_to "/#{projekt.id}/#{milestone_phase.name}_footer_tab", remote: true, onclick: '$("html, body").animate({scrollTop: $("#filter-subnav").offset().top}); $("#footer-content").addClass("show-loader");' do %>
+              <i class="fas fa-long-arrow-alt-right"></i>
+            <% end %>
           <% end %>
         </span>
         <span class='sidebar-projekt-phase-duration'><%= format_date(milestone_phase.end_date) %></span>

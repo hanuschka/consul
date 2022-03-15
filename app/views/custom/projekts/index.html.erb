@@ -8,12 +8,18 @@
   <div class='row'>
     <div class='column small-12 medium-9'>
 
-      <h3 class='margin-bottom'>Projekte mit aktiver Beteiligungsphase</h3>
+      <% if @current_projekts.any? && @expired_projekts.any? %>
+        <h3 class='margin-bottom'>Projekte mit aktiver Beteiligungsphase</h3>
+      <% end %>
+
       <% @current_projekts.each do |projekt| %>
         <%= render partial: 'projekt', locals: { projekt: projekt } %>
       <% end %>
 
-      <h3 class='margin-bottom'>Abgeschlossene Projekte</h3>
+      <% if @current_projekts.any? && @expired_projekts.any? %>
+        <h3 class='margin-bottom'>Abgeschlossene Projekte</h3>
+      <% end %>
+
       <% @expired_projekts.each do |projekt| %>
         <%= render partial: 'projekt', locals: { projekt: projekt } %>
       <% end %>

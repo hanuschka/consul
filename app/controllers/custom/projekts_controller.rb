@@ -8,8 +8,8 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    @current_projekts = Projekt.current
-    @expired_projekts = Projekt.expired
+    @current_projekts = Projekt.top_level.current
+    @expired_projekts = Projekt.top_level.expired
   end
 
   def show

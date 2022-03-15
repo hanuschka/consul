@@ -22,7 +22,7 @@
       <td><%= I18n.l @projekt.page.created_at, format: :short %></td>
       <td><%= t("admin.site_customization.pages.page.status_#{@projekt.page.status}") %></td>
       <td>
-        <%= render Admin::TableActionsComponent.new(@projekt.page) do |actions| %>
+        <%= render Admin::TableActionsComponent.new(@projekt.page, actions: [:edit]) do |actions| %>
           <%= actions.link_to t("admin.site_customization.pages.page.see_cards"),
                               admin_site_customization_page_widget_cards_path(@projekt.page),
                               class: "cards-link" %>

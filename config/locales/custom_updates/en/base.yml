@@ -50,6 +50,7 @@ en:
         debate_phase_not_active: The discussion phase is not active
         proposal_phase_not_active: The proposal phase is not active
         projekt_not_active: Project is not active
+        projekt_phase_not_active: Projekt phase is not active
 
     devise_views:
       users:

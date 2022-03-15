@@ -53,6 +53,7 @@ de:
         debate_phase_not_active: Die Diskussionsphase ist nicht aktiv
         proposal_phase_not_active: Die Vorschlagsphase ist nich aktiv
         projekt_not_active: Das Projekt ist nicht aktiv
+        projekt_phase_not_active: Die Projektphase ist nicht aktiv
 
     devise_views:
       users:

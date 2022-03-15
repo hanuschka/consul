@@ -11,7 +11,7 @@
 
   <div id="proposals-sidebar"  class="small-12 medium-3 column">
     <aside class="margin-bottom">
-      <%= render partial: 'proposals/new_button' %>
+      <%= render Proposals::NewButtonComponent.new(@current_projekt, @current_tab_phase) %>
 
       <%= render Sidebar::ProjektsFilterComponent.new(@top_level_active_projekts, @top_level_archived_projekts, @all_resources, @current_tab_phase, @current_projekt) %>
     </aside>

@@ -19,7 +19,7 @@ class DeficiencyReportsController < ApplicationController
     @deficiency_reports = DeficiencyReport.all.page(params[:page]).send("sort_by_#{@current_order}")
 
     @categories = DeficiencyReport::Category.all.order(created_at: :asc)
-    @statuses = DeficiencyReport::Status.all.order(created_at: :asc)
+    @statuses = DeficiencyReport::Status.all.order(given_order: :asc)
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
 
@@ -34,6 +34,7 @@ class DeficiencyReportsController < ApplicationController
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
     filter_by_approval_status if params[:approval_status].present?
+    filter_by_my_posts
 
     set_deficiency_report_votes(@deficiency_reports)
   end
@@ -54,7 +55,9 @@ class DeficiencyReportsController < ApplicationController
     @deficiency_report = DeficiencyReport.new(deficiency_report_params.merge(author: current_user, status: status))
 
     if @deficiency_report.save
-      DeficiencyReportMailer.notify_administrators_about_new_deficiency_report(@deficiency_report).deliver_later
+      Administrator.all.each do |admin|
+        DeficiencyReportMailer.notify_administrators_about_new_deficiency_report(@deficiency_report, admin.user).deliver_later
+      end
       redirect_to deficiency_report_path(@deficiency_report)
     else
       render :new
@@ -88,7 +91,9 @@ class DeficiencyReportsController < ApplicationController
 
   def update_official_answer
     @deficiency_report.update(deficiency_report_params)
-    DeficiencyReportMailer.notify_administrators_about_answer_update(@deficiency_report).deliver_later
+    Administrator.all.each do |admin|
+      DeficiencyReportMailer.notify_administrators_about_answer_update(@deficiency_report, admin.user).deliver_later
+    end
     redirect_to deficiency_report_path(@deficiency_report), notice: t("custom.deficiency_reports.notifications.official_answer_updated")
   end
 
@@ -104,6 +109,12 @@ class DeficiencyReportsController < ApplicationController
 
 
   private
+
+  def filter_by_my_posts
+    return unless params[:my_posts_filter] == 'true'
+
+    @deficiency_reports = @deficiency_reports.by_author(current_user&.id)
+  end
 
   def load_categories
     @categories = Tag.category.order(:name)

@@ -278,12 +278,11 @@ footer {
   color: #c2c2c2;
 }
 
-.paid-feature:before {
+.paid-feature:after {
   content: "\f3d1";
   font-weight: bold;
   font-family: "Font Awesome 5 Free";
-  position: absolute;
-  right: -30px;
+  margin-left: 5px;
 }
 
 
@@ -340,4 +339,23 @@ input.checkbox-label + span {
 
 .pagination .current {
   background-color: #1779ba;
+}
+
+// Toggle arrow
+
+span.toggle-arrow {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 14px;
+  cursor: pointer;
+  color: inherit;
+
+  &:after {
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    display: inline-block;
+    transition: 0.25s;
+  }
 }

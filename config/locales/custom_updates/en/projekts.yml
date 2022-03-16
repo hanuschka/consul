@@ -1,6 +1,8 @@
 en:
   custom:    
     projekts:
+      index:
+        title: Projects overview
       backlink: To the project overview
       errors:
         presence: Please select a project

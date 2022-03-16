@@ -1,6 +1,8 @@
 de:
   custom:    
     projekts:
+      index:
+        title: Projektübersicht
       backlink: Zur Projektübersicht
       errors:
         presence: Bitte wählen Sie ein Projekt

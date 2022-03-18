@@ -12,8 +12,8 @@ class ProposalsController
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_target = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
-    if params[:projekts]
-      @selected_projekts_ids = params[:projekts].split(',').select{ |id| Projekt.find_by(id: id).present? }
+    if params[:filter_projekt_ids]
+      @selected_projekts_ids = params[:filter_projekt_ids].select{ |id| Projekt.find_by(id: id).present? }
       selected_parent_projekt_id = get_highest_unique_parent_projekt_id(@selected_projekts_ids)
       @selected_parent_projekt = Projekt.find_by(id: selected_parent_projekt_id)
     end
@@ -135,8 +135,8 @@ class ProposalsController
     end
 
     def take_by_projekts
-      if params[:projekts].present?
-        @resources = @resources.where(projekt_id: params[:projekts].split(',')).distinct
+      if params[:filter_projekt_ids].present?
+        @resources = @resources.where(projekt_id: params[:filter_projekt_ids]).distinct
       end
     end
 

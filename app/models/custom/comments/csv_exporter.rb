@@ -7,7 +7,7 @@ class Comments::CsvExporter
   end
 
   def to_csv
-    CSV.generate(headers: true) do |csv|
+    CSV.generate(headers: true, col_sep: ";") do |csv|
       csv << headers
 
       @comments.each do |comment|
@@ -20,8 +20,11 @@ class Comments::CsvExporter
 
     def headers
       [
+        "id",
+        "content",
+        "author_username",
+        "type",
         "commentable_id",
-        "commentable_type",
         "subject",
         "user_id",
         "created_at",
@@ -43,8 +46,11 @@ class Comments::CsvExporter
 
     def csv_values(comment)
       [
+        comment.id,
+        comment.body,
+        comment.author.username,
+        comment.commentable_type.constantize.model_name.human,
         comment.commentable_id,
-        comment.commentable_type,
         comment.subject,
         comment.user_id,
         comment.created_at,

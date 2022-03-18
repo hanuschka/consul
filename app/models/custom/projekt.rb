@@ -4,6 +4,12 @@ class Projekt < ApplicationRecord
   include ActsAsParanoidAliases
   include Mappable
   include ActiveModel::Dirty
+  include SDG::Relatable
+  include Taggable
+  include Imageable
+
+  translates :description
+  include Globalizable
 
   has_many :children, class_name: 'Projekt', foreign_key: 'parent_id'
   belongs_to :parent, class_name: 'Projekt', optional: true
@@ -11,12 +17,17 @@ class Projekt < ApplicationRecord
   has_many :debates, dependent: :nullify
   has_many :proposals, dependent: :nullify
   has_many :polls, dependent: :nullify
+  has_one :budget, dependent: :nullify
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
 
   has_many :projekt_phases, dependent: :destroy
   has_one :debate_phase, class_name: 'ProjektPhase::DebatePhase'
   has_one :proposal_phase, class_name: 'ProjektPhase::ProposalPhase'
+  has_one :budget_phase, class_name: 'ProjektPhase::BudgetPhase'
+  has_one :comment_phase, class_name: 'ProjektPhase::CommentPhase'
+  has_one :voting_phase, class_name: 'ProjektPhase::VotingPhase'
+  has_one :milestone_phase, class_name: 'ProjektPhase::MilestonePhase'
   has_many :geozone_restrictions, through: :projekt_phases
   has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
 
@@ -26,7 +37,7 @@ class Projekt < ApplicationRecord
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
-  accepts_nested_attributes_for :debate_phase, :proposal_phase, :projekt_notifications
+  accepts_nested_attributes_for :debate_phase, :proposal_phase, :budget_phase, :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications
 
   before_validation :set_default_color
   after_create :create_corresponding_page, :set_order, :create_projekt_phases, :create_default_settings, :create_map_location
@@ -79,6 +90,11 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def regular_projekt_phases
+    projekt_phases.
+      where.not(type: 'ProjektPhase::MilestonePhase')
+  end
+
   def update_page
     update_corresponding_page if self.name_changed?
     yield
@@ -128,7 +144,8 @@ class Projekt < ApplicationRecord
 
   def comments_allowed?(current_user)
     current_user.level_two_or_three_verified? &&
-      current?
+      current? &&
+      comment_phase.current?
   end
 
   def level(counter = 1)
@@ -186,9 +203,9 @@ class Projekt < ApplicationRecord
   def has_active_phase?(controller_name)
     case controller_name
     when 'proposals'
-      proposal_phase.currently_active?
+      proposal_phase.current?
     when 'debates'
-      debate_phase.currently_active?
+      debate_phase.current?
     when 'polls'
       false
     end
@@ -239,6 +256,10 @@ class Projekt < ApplicationRecord
     all.each do |projekt|
       projekt.debate_phase = ProjektPhase::DebatePhase.create unless projekt.debate_phase
       projekt.proposal_phase = ProjektPhase::ProposalPhase.create unless projekt.proposal_phase
+      projekt.budget_phase = ProjektPhase::BudgetPhase.create unless projekt.budget_phase
+      projekt.comment_phase = ProjektPhase::CommentPhase.create unless projekt.comment_phase
+      projekt.voting_phase = ProjektPhase::VotingPhase.create unless projekt.voting_phase
+      projekt.milestone_phase = ProjektPhase::MilestonePhase.create unless projekt.milestone_phase
     end
   end
 
@@ -291,6 +312,10 @@ class Projekt < ApplicationRecord
   def create_projekt_phases
     self.debate_phase = ProjektPhase::DebatePhase.create
     self.proposal_phase = ProjektPhase::ProposalPhase.create
+    self.budget_phase = ProjektPhase::BudgetPhase.create
+    self.comment_phase = ProjektPhase::CommentPhase.create
+    self.voting_phase = ProjektPhase::VotingPhase.create
+    self.milestone_phase = ProjektPhase::MilestonePhase.create
   end
 
   def swap_order_numbers_up

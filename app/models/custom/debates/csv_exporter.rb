@@ -7,7 +7,7 @@ class Debates::CsvExporter
   end
 
   def to_csv
-    CSV.generate(headers: true) do |csv|
+    CSV.generate(headers: true, col_sep: ";") do |csv|
       csv << headers
 
       @debates.each do |debate|
@@ -24,7 +24,13 @@ class Debates::CsvExporter
 
     def headers
       [
+        "id",
+        "title",
+        "description",
+        "project",
+        "category",
         "author",
+        "projekt_id",
         "created_at",
         "updated_at",
         "visit_id",
@@ -42,14 +48,19 @@ class Debates::CsvExporter
         "confidence_score",
         "geozone_id",
         "tsv",
-        "featured_at",
-        "projekt_id"
+        "featured_at"
       ]
     end
 
     def csv_values(debate)
       [
+        debate.id,
+        debate.title,
+        debate.description,
+        debate.projekt&.name,
+        debate.tag_list,
         debate.author.username,
+        debate.projekt_id,
         debate.created_at,
         debate.updated_at,
         debate.visit_id,
@@ -66,8 +77,7 @@ class Debates::CsvExporter
         debate.hot_score,
         debate.confidence_score,
         debate.geozone_id,
-        debate.featured_at,
-        debate.projekt_id
+        debate.featured_at
       ]
     end
 end

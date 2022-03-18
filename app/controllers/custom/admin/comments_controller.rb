@@ -5,7 +5,7 @@ class Admin::CommentsController < Admin::BaseController
     respond_to do |format|
       format.html
       format.csv do
-        send_data Comments::CsvExporter.new(@comments.limit(2000)).to_csv,
+        send_data Comments::CsvExporter.new(@comments.limit(20_000)).to_csv,
           filename: "comments.csv"
       end
     end

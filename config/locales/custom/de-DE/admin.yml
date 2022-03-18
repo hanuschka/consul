@@ -1261,6 +1261,10 @@ de:
       search:
         title: Organisationen suchen
         no_results: Keine Organisationen gefunden.
+    deficiency_reports:
+      no_deficiency_reports: Keine Mängelmeldungen vorhanden.
+      index:
+        title: Mängelmeldungen
     proposals:
       index:
         title: Vorschläge

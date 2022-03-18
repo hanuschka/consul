@@ -16,7 +16,7 @@ class Admin::DebatesController < Admin::BaseController
     respond_to do |format|
       format.html
       format.csv do
-        send_data Debates::CsvExporter.new(@resources.limit(2000)).to_csv,
+        send_data Debates::CsvExporter.new(@resources.limit(nil)).to_csv,
           filename: "debates.csv"
       end
     end

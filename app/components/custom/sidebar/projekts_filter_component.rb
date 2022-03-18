@@ -1,12 +1,14 @@
 class Sidebar::ProjektsFilterComponent < ApplicationComponent
   delegate :projekt_filter_resources_name, :show_archived_projekts_in_sidebar?, to: :helpers
+  attr_reader :aggregations
 
-  def initialize(top_level_active_projekts, top_level_archived_projekts, all_resources, current_tab_phase = nil, current_projekt = nil)
+  def initialize(top_level_active_projekts, top_level_archived_projekts, all_resources, current_tab_phase = nil, current_projekt = nil, aggregations = nil)
     @top_level_active_projekts = top_level_active_projekts
     @top_level_archived_projekts = top_level_archived_projekts
     @all_resources = all_resources
     @current_projekt = current_projekt
     @current_tab_phase = current_tab_phase
+    @aggregations = aggregations || {}
   end
 
 	private

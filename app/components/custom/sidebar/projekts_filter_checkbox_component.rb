@@ -22,10 +22,13 @@ class Sidebar::ProjektsFilterCheckboxComponent < ApplicationComponent
   end
 
   def resource_count
+    return if params[:controller] == 'search'
     @all_resources.where(projekt: projekt.selectable_tree_ids(projekt_filter_resources_name, @group)).count
   end
 
   def selectable_children
+    return @projekt.children.activated if params[:controller] == 'search'
+
     if @group == 'active'
       @projekt.children.with_order_number.selectable_in_sidebar_current(projekt_filter_resources_name)
     elsif @group == 'archived'

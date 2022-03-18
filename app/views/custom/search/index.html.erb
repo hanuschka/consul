@@ -22,7 +22,16 @@
 
 
 <div class="row">
-  <div id="debates" class="debates-list small-12 medium-9 column">
+  <div id='search-page-sidebar' class="small-12 medium-3 column">
+    <aside class="margin-bottom">
+      <% projekts = @results.aggregations.selected_section ? @results.aggregations.selected_section.projekts : @results.aggregations.projekts %>
+      <%= render Sidebar::ProjektsFilterComponent.new(@top_level_active_projekts, @top_level_archived_projekts, @all_resources, nil, nil, projekts.buckets.map{ |b| [ b['key'], b.doc_count] }.to_h) %>
+
+      <%-categories =  @results.aggregations.selected_section ? @results.aggregations.selected_section.tags : @results.aggregations.tags%>
+      <%=render "categories", categories: categories%>
+    </aside>
+  </div>
+  <div id="search-page" class="search-page-list small-12 medium-9 column">
 
     <%= render Shared::BannerComponent.new("searchpage") %>
 
@@ -47,17 +56,6 @@
     <% end %>
     <%= paginate @results, current_page: params[:page]&.to_i || 1, per_page: 10 %>
 
-  </div>
-
-  <div class="small-12 medium-3 column">
-
-    <aside class="margin-bottom">
-      <% projekts = @results.aggregations.selected_section ? @results.aggregations.selected_section.projekts : @results.aggregations.projekts %>
-      <%= render "shared/projekt_sidebar_filter/projekts_sidebar", aggregations: projekts.buckets.map{ |b| [ b['key'], b.doc_count] }.to_h %>
-
-      <%-categories =  @results.aggregations.selected_section ? @results.aggregations.selected_section.tags : @results.aggregations.tags%>
-      <%=render "categories", categories: categories%>
-    </aside>
   </div>
 
 </div>

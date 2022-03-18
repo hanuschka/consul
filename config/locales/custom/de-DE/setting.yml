@@ -117,11 +117,9 @@ de:
           description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen
 
       projekts:
-        connected_resources: Verpflichtende Zuordnung von Diskussionen & Vorschläge zu Projekten
-        connected_resources_description: Diskussionen & Vorschläge können ohne Projektzuordnung nicht erstellt werden
+        overview_page: Projektübersichtsseite in Navigation anzeigen
+        overview_page_description: Zeigt die Projektübersichtsseite in der Navigation an
         show_archived:
-          navigation: Archivierte Projekte in Navigation anzeigen
-          navigation_description: Zeigt archivierte Projekte in der Navigationsleiste wenn aktiviert
           sidebar: Archivierte Projekte in Projektseitenleiste  anzeigen
           sidebar_description: Zeigt archivierte Projekte in der Projektseitenleiste wenn aktiviert
         show_module_links_in_flyout_menu: Modul-Links in den Dropdowns
@@ -136,8 +134,10 @@ de:
           activate: Projekt aktivieren
           activate_description: Aktivieren Sie das Projekt, sodass es in der Applikation sichtbar ist
         general:
-          show_in_navigation: Projekt in Navigation anzeigen
+          show_in_navigation: Projekt in Navigation hervorheben
           show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
+          show_in_overview_page: Projekt in Projektübersichtsseite anzeigen
+          show_in_overview_page_description: Zeigt das Projekt in der Projektübersichtsseite an
           hide_additional_info_in_projekt_selector: Zusätzliche Projektinformationen im Projekt-Selektor ausblenden
           hide_additional_info_in_projekt_selector_description: Verbirgt die zusätzlichen Projektinformationen wie Gebiet, Dauer und Partizipationsberechtigung im Projekt-Selektor
           show_not_active_phases_in_projekts_page_sidebar: Nicht aktive Teilnahmephasen verbergen
@@ -149,23 +149,29 @@ de:
           projekt_page_sharing_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste der Projektseite
           show_phases_in_projekt_page_sidebar: Projektphasen
           show_phases_in_projekt_page_sidebar_description: Aktivieren Sie die Projektphasen in der rechten Seitenleiste der Projektseite
-          show_total_duration_in_projekts_page_sidebar: Projektinformation
-          show_total_duration_in_projekts_page_sidebar_description: Zeigt das Projektverzeichnis in der rechten Seitenleiste der Projektseiten an
           show_navigator_in_projekts_page_sidebar: Projektverzeichnis
           show_navigator_in_projekts_page_sidebar_description: Zeigt die Projektverzeichnis in der rechten Seitenleiste der Projektseiten an
         footer:
           show_projekt_footer: Fußzeile aktivieren
           show_projekt_footer_description: Aktiviert die Fußzeile am unteren Ende des Projektes
-          show_activity_in_projekt_footer: Aktivität
-          show_activity_in_projekt_footer_description: Aktiviert die Aktivität in der Fußzeile eines Projektes
-          show_comments_in_projekt_footer: Kommentare
-          show_comments_in_projekt_footer_description: Aktiviert die Kommentarfunktion in der Fußzeile eines Projekts
           show_notifications_in_projekt_footer: Benachrichtigungen
           show_notifications_in_projekt_footer_description: Aktiviert die Benachrichtigungsfunktion in der Fußzeile eines Projekts
           show_milestones_in_projekt_footer: Meilensteine
           show_milestones_in_projekt_footer_description: Aktiviert die Meilensteinfunktion in der Fußzeile eines Projekts
           show_newsfeed_in_projekt_footer: News-Feed
           show_newsfeed_in_projekt_footer_description: Aktiviert den News-Feed in der Fußzeile eines Projekts
+          comment_info: Kommentarphase
+          comment_info_description: Aktiviert die Kommentarphase in der Fußzeile eines Projekts
+          debate_info: Diskussionsphase
+          debate_info_description: Aktiviert die Diskussionsphase in der Fußzeile eines Projekts
+          proposal_info: Vorschlagsphase
+          proposal_info_description: Aktiviert die Vorschlagsphase in der Fußzeile eines Projekts
+          voting_info: Abstimmungsphase
+          voting_info_description: Aktiviert die Abstimmungsphase in der Fußzeile eines Projekts
+          budget_info: Budgetphase
+          budget_info_description: Aktiviert die Budgetphase in der Fußzeile eines Projekts
+          milestone_info: Umsetzungsphase
+          milestone_info_description: Aktiviert die Umsetzungsphase in der Fußzeile eines Projekts
 
       deficiency_reports:
         show_in_main_menu: Mängelmelder in Navigation anzeigen

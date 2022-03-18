@@ -1,0 +1,41 @@
+<main>
+  <div class='row'>
+    <div class='column'>
+      <h1 class='margin-bottom'>
+        <%= t('custom.projekts.index.title') %>
+      </h1>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='column small-12 medium-9'>
+
+      <% if @current_projekts.any? %>
+        <h3><%= t('custom.projekts.index.current_projekts') %></h3>
+      <% end %>
+
+      <% @current_projekts.each do |projekt| %>
+        <%= render partial: 'projekt', locals: { projekt: projekt } %>
+      <% end %>
+
+      <% if @expired_projekts.any? %>
+        <h3 class='margin-top'><%= t('custom.projekts.index.expired_projekts') %></h3>
+      <% end %>
+
+      <% @expired_projekts.each do |projekt| %>
+        <%= render partial: 'projekt', locals: { projekt: projekt } %>
+      <% end %>
+
+    </div>
+
+    <div class='column small-12 medium-3'>
+      <%= render "shared/social_share",
+          share_title: t("custom.pages.social_share.share"),
+          title: 'Title',
+          url: url_for(only_path: false),
+          description: 'Description',
+          mobile: 'Description'
+      %>
+    </div>
+  </div>
+</main>

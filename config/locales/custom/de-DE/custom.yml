@@ -312,7 +312,7 @@ de:
         geo_limitation: 'Dieses projekt ist auf die folgende Gebiete beschränkt: %{geozones}'
         debate_phase_expired: Die Diskussionsphase ist bereits abgelaufen. Neue Kommentare können nicht mehr hinzugefügt werden
         proposal_phase_expired: Die Vorschlagsphase ist bereits abgelaufen. Neue Kommentare können nicht mehr hinzugefügt werden
-        poll_phase_expired: Die Abstimmungsphase ist bereits abgelaufen. Neue Kommentare können nicht mehr hinzugefügt werden
+        voting_phase_expired: Die Abstimmungsphase ist bereits abgelaufen. Neue Kommentare können nicht mehr hinzugefügt werden
         other: Die Kommentarfunktion ist nicht verfügbar
 
     images:

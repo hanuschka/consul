@@ -8,8 +8,17 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    @current_projekts = Projekt.top_level.current
-    @expired_projekts = Projekt.top_level.expired
+    @current_projekts = Projekt.
+      top_level.
+      current.
+      joins( 'INNER JOIN projekt_settings show_in_overview_page ON projekts.id = show_in_overview_page.projekt_id' ).
+      where( 'show_in_overview_page.key': 'projekt_feature.general.show_in_overview_page', 'show_in_overview_page.value': 'active' )
+
+    @expired_projekts = Projekt.
+      top_level.
+      expired.
+      joins( 'INNER JOIN projekt_settings show_in_overview_page ON projekts.id = show_in_overview_page.projekt_id' ).
+      where( 'show_in_overview_page.key': 'projekt_feature.general.show_in_overview_page', 'show_in_overview_page.value': 'active' )
   end
 
   def show

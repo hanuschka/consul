@@ -49,6 +49,7 @@
               <%= link_to "/#{projekt.id}/#{milestone_phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader")' do %>
                 <h4>
                   <%= t("custom.projekts.page.tabs.#{milestone_phase.resources_name}") %>
+                  <%= "(#{projekt.milestones.count})" %>
                 </h4>
                 <div class='tab-info-summary'>
                   <% if @projekt.milestones.any? %>
@@ -64,6 +65,7 @@
               <%= link_to "/#{projekt.id}/projekt_notifications_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader")' do %>
                 <h4>
                   <%= t("custom.projekts.page.tabs.projekt_notifications") %>
+                  <%= "(#{projekt.projekt_notifications.count})" %>
                 </h4>
                 <div class='tab-info-summary'>
                   <% if @projekt.projekt_notifications.any? %>

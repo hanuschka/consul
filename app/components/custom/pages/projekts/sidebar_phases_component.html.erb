@@ -4,7 +4,7 @@
 
 <div class='sidebar-projekt-phases'>
 
-  <% if phases.any? { |phase| phase.phase_activated? } %>
+  <% if phases.any? { |phase| phase.current? } %>
     <span class='sidebar-projekt-phases-title'><%= t('custom.projekts.page.sidebar.phases.participate') %></span>
   <% end %>
 

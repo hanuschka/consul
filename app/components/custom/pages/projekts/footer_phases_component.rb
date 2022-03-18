@@ -4,8 +4,7 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
 
   def initialize(projekt, default_phase_name)
     @projekt = projekt
-    default_phase_id = ProjektSetting.find_by(projekt: projekt, key: 'projekt_custom_feature.default_footer_tab').value
-    @default_phase_name = default_phase_id.present? ? ProjektPhase.find(default_phase_id).resources_name : 'comments'
+    @default_phase_name = default_phase_name
 
     @phases = projekt.regular_projekt_phases.order(:start_date)
     @milestone_phase = projekt.milestone_phase

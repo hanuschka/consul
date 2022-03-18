@@ -11,7 +11,7 @@ class Proposals::NewButtonComponent < ApplicationComponent
 
     def any_selectable_projekts?
       if @current_tab_phase.present?
-        @selected_parent_projekt.top_parent.all_children_projekts.unshift(@selected_parent_projekt.top_parent).any? { |p| p.selectable?('proposals', current_user) }
+        (@selected_parent_projekt.all_parent_ids + [@selected_parent_projekt.id] +  @selected_parent_projekt.all_children_ids).any? { |id| Projekt.find(id).selectable?('proposals', current_user) }
       else
         Projekt.top_level.selectable_in_selector('proposals', current_user).any?
       end

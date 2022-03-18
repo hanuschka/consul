@@ -25,17 +25,9 @@ class Sidebar::ProjektsFilterCheckboxComponent < ApplicationComponent
 
   def selectable_children
     if @group == 'active'
-      if @current_projekt.present?
-        @projekt.children.selectable_in_sidebar_current(projekt_filter_resources_name).select { |projekt| (projekt.all_parent_ids + [projekt.id] +  projekt.all_children_ids).include?(@current_projekt.id) }
-      else
-        @projekt.children.selectable_in_sidebar_current(projekt_filter_resources_name)
-      end
+      @projekt.children.with_order_number.selectable_in_sidebar_current(projekt_filter_resources_name)
     elsif @group == 'archived'
-      if @current_projekt.present?
-        @projekt.children.selectable_in_sidebar_expired(projekt_filter_resources_name).select { |projekt| (projekt.all_parent_ids + [projekt.id] +  projekt.all_children_ids).include?(@current_projekt.id) }
-      else
-        @projekt.children.selectable_in_sidebar_expired(projekt_filter_resources_name)
-      end
+      @projekt.children.with_order_number.selectable_in_sidebar_expired(projekt_filter_resources_name)
     end
   end
 

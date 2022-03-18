@@ -14,12 +14,11 @@ class PagesController < ApplicationController
     if @custom_page.present? && @custom_page.projekt.present?
       @projekt = @custom_page.projekt
 
-      default_phase_id = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab').value
-      @default_phase_name = default_phase_id.present? ? ProjektPhase.find(default_phase_id).resources_name : 'comments'
+      @default_phase_name = default_phase_name
 
       send("set_#{@default_phase_name}_footer_tab_variables", @projekt)
 
-      scoped_projekt_ids = @projekt.all_children_projekts.unshift(@projekt).pluck(:id)
+      scoped_projekt_ids = @projekt.top_parent.all_children_projekts.unshift(@projekt.top_parent).pluck(:id)
       @comments_count = @projekt.comments.count
       @debates_count = Debate.base_selection(scoped_projekt_ids).count
       @proposals_count = Proposal.base_selection(scoped_projekt_ids).count
@@ -125,7 +124,9 @@ class PagesController < ApplicationController
 
   def take_by_projekts
     if params[:filter_projekt_ids].present?
-      @all_resources = @all_resources.where(projekt_id: params[:filter_projekt_ids]).distinct
+      @filtered_resources = @all_resources.where(projekt_id: params[:filter_projekt_ids]).distinct
+    else
+      @filtered_resources = @all_resources
     end
   end
 
@@ -158,7 +159,7 @@ class PagesController < ApplicationController
 
     @selected_parent_projekt = @current_projekt
 
-    scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).pluck(:id)
+    scoped_projekt_ids = @current_projekt.top_parent.all_children_projekts.unshift(@current_projekt.top_parent).pluck(:id)
 
     @all_resources = Debate.base_selection(scoped_projekt_ids)
 
@@ -167,7 +168,7 @@ class PagesController < ApplicationController
 
     set_debate_votes(@all_resources)
 
-    @debates = @all_resources.page(params[:page]).send("sort_by_#{@current_order}")
+    @debates = @filtered_resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
 
   def set_proposals_footer_tab_variables(projekt=nil)
@@ -182,18 +183,18 @@ class PagesController < ApplicationController
 
     @selected_parent_projekt = @current_projekt
 
-    scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).pluck(:id)
+    scoped_projekt_ids = @current_projekt.top_parent.all_children_projekts.unshift(@current_projekt.top_parent).pluck(:id)
 
     @all_resources = Proposal.base_selection(scoped_projekt_ids)
 
     take_by_projekts
     set_top_level_projekts
 
-    set_proposal_votes(@all_resources)
+    set_proposal_votes(@filtered_resources)
 
-    @proposals_coordinates = all_proposal_map_locations(@all_resources)
+    @proposals_coordinates = all_proposal_map_locations(@filtered_resources)
 
-    @proposals = @all_resources.page(params[:page]).send("sort_by_#{@current_order}")
+    @proposals = @filtered_resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
 
   def set_polls_footer_tab_variables(projekt=nil)
@@ -205,14 +206,14 @@ class PagesController < ApplicationController
     @selected_parent_projekt = @current_projekt
     params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.unshift(@current_projekt.id).map(&:to_s)
 
-    scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).pluck(:id)
+    scoped_projekt_ids = @current_projekt.top_parent.all_children_projekts.unshift(@current_projekt.top_parent).pluck(:id)
 
     @all_resources = Poll.base_selection(scoped_projekt_ids).send(@current_filter)
 
     take_by_projekts
     set_top_level_projekts
 
-    @polls = Kaminari.paginate_array(@all_resources.sort_for_list).page(params[:page])
+    @polls = Kaminari.paginate_array(@filtered_resources.sort_for_list).page(params[:page])
   end
 
   def set_budget_footer_tab_variables(projekt=nil)
@@ -245,5 +246,16 @@ class PagesController < ApplicationController
   def set_milestones_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || Projekt.find(params[:id])
     @current_tab_phase = @current_projekt.milestone_phase
+  end
+
+  def default_phase_name
+    default_phase_id = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab').value
+    if default_phase_id.present?
+      ProjektPhase.find(default_phase_id).resources_name
+    elsif @projekt.projekt_phases.select{ |phase| phase.phase_activated? }.any?
+      @projekt.projekt_phases.select{ |phase| phase.phase_activated? }.first.resources_name
+    else
+      'comments'
+    end
   end
 end

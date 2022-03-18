@@ -1,6 +1,6 @@
 class ProjektPhase::VotingPhase < ProjektPhase
   def phase_activated?
-    ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.phase.voting").value.present?
+    projekt.polls.any? { |poll| poll.current? }
   end
 
   def phase_info_activated?

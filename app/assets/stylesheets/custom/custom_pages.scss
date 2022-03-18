@@ -302,8 +302,13 @@ li.projekt-navigator[aria-expanded="false"] {
 // Footer
 
 .tab-info-summary {
-  height: 4rem;
+  height: 2.75rem;
   overflow: hidden;
+
+  span.time-icon,
+  span.geo-restriction-icon {
+    white-space: nowrap;
+  }
 }
 
 .page-subnav-tab.is-active {

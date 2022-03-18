@@ -17,6 +17,9 @@ class Debate
     where(author_id: user_id)
   }
 
+  scope :seen, -> { where.not(ignored_flag_at: nil) }
+  scope :unseen, -> { where(ignored_flag_at: nil) }
+
   alias_attribute :projekt_phase, :debate_phase
 
   def self.base_selection(scoped_projekt_ids = Projekt.ids)

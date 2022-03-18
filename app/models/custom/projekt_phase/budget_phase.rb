@@ -1,7 +1,6 @@
 class ProjektPhase::BudgetPhase < ProjektPhase
   def phase_activated?
-    ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.phase.budget").value.present? &&
-      projekt.budget.present?
+    projekt.budget.present?
   end
 
   def phase_info_activated?

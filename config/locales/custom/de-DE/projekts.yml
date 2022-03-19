@@ -10,23 +10,10 @@ de:
             title: Projektinformation
             projekt_duration: Gesamtdauer
             affiliation: Gebietszuordnung
-
           phases:
             title: Projektphasen
-            debate_phase: Diskussionsphase
-            debate_phase_link: Zur Übersicht aller Diskussionen
-            debate_phase_button: Starten Sie eine Diskussion
-            debate_phase_not_active: Diskussionsphase nicht aktiviert
-            proposal_phase: Vorschlagsphase
-            proposal_phase_link: Zur Übersicht aller Vorschläge
-            proposal_phase_button: Vorschlag erstellen
-            proposal_phase_not_active: Vorschlagsphase nicht aktiviert
-            voting_phase: Abstimmungsphase
-            voting_phase_link: Zu den Abstimmungen
-            voting_phase_active_count:
-              zero: "Keine Abstimmungen"
-              one: "%{count} Abstimmung"
-              other: "%{count} Abstimmungen"
+          map:
+            title: Gebiet
           navigator:
             title: Projektverzeichnis
       footer:
@@ -41,7 +28,7 @@ de:
           latest_polls: Abstimmungen
           debate_phase_not_started: Die Diskussionsphase ist noch nicht eröffnet.
           debate_phase_expired: Die Diskussionsphase ist bereits abgeschlossen.
-          proposal_phase_not_started: Die Vorschlasphase ist noch nicht eröffnet.
+          proposal_phase_not_started: Die Vorschlagsphase ist noch nicht eröffnet.
           proposal_phase_expired: Die Vorschlagsphase ist bereits abgeschlossen.
           no_proposals: Bislang wurden noch keine Vorschläge erstellt. Erstellen Sie als Erste(r) einen Vorschlag!
           no_debates: Bislang wurden noch keine Diskussionen gestartet. Starten Sie als Erste(r) eine Diskussion!

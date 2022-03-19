@@ -18,14 +18,16 @@
       <% end %>
     </div>
 
-    <% unless current_user %>
-      <div class='account-buttons hide-for-small-only'>
-        <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
-        <%= link_to t('devise_views.menu.login_items.signup') , new_user_registration_path, class: 'sign-up-button', role: 'button'  %>
-      </div>
-    <% end %>
+    <div class='header-right-group not-print'>
+      <% unless current_user %>
+        <div class='account-buttons hide-for-small-only'>
+          <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
+          <%= link_to t('devise_views.menu.login_items.signup') , new_user_registration_path, class: 'sign-up-button', role: 'button'  %>
+        </div>
+      <% end %>
+    </div>
 
-    <div id="responsive-menu">
+    <div id="responsive-menu" class='not-print'>
       <div class="top-bar-right">
         <div class="show-for-small-only">
           <div class="subnavigation">
@@ -42,7 +44,7 @@
     </div>
   </div>
 
-  <div id="navigation_bar" class="subnavigation expanded">
+  <div id="navigation_bar" class="subnavigation expanded not-print">
     <div class="hide-for-small-only">
       <%= render partial: "shared/subnavigation", locals: { placement: 'desktop' } %>
     </div>

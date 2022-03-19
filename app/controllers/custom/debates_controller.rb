@@ -12,8 +12,8 @@ class DebatesController < ApplicationController
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_target = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
-    if params[:projekts]
-      @selected_projekts_ids = params[:projekts].split(',').select{ |id| Projekt.find_by(id: id).present? }
+    if params[:filter_projekt_ids]
+      @selected_projekts_ids = params[:filter_projekt_ids].select{ |id| Projekt.find_by(id: id).present? }
       selected_parent_projekt_id = get_highest_unique_parent_projekt_id(@selected_projekts_ids)
       @selected_parent_projekt = Projekt.find_by(id: selected_parent_projekt_id)
     end
@@ -28,7 +28,7 @@ class DebatesController < ApplicationController
 
     @featured_debates = @debates.featured
 
-    remove_where_projekt_not_active
+    @all_resources = @resources.except(:limit, :offset)
 
     unless params[:search].present?
       take_only_by_tag_names
@@ -36,12 +36,14 @@ class DebatesController < ApplicationController
       take_by_sdgs
       take_by_geozone_affiliations
       take_by_geozone_restrictions
+      take_with_activated_projekt_only
+      take_by_my_posts
     end
 
     @selected_tags = all_selected_tags
 
-    @top_level_active_projekts = Projekt.top_level.selectable_in_sidebar_active('debates')
-    @top_level_archived_projekts = Projekt.top_level.archived.selectable_in_sidebar_archived('debates')
+    @top_level_active_projekts = Projekt.top_level_sidebar_current('debates')
+    @top_level_archived_projekts = Projekt.top_level_sidebar_expired('debates')
   end
 
   def show
@@ -73,10 +75,9 @@ class DebatesController < ApplicationController
 
   private
 
-    def remove_where_projekt_not_active
-      active_projekts_ids = Projekt.all.joins(:projekt_settings).where(projekt_settings: { key: 'projekt_feature.main.activate', value: 'active' }).pluck(:id)
-      @resources = @resources.joins(:projekt).where(projekts: { id: active_projekts_ids })
-    end
+  def take_with_activated_projekt_only
+    @resources = @resources.joins(:projekt).merge(Projekt.activated)
+  end
 
   def debate_params
     attributes = [:tag_list, :terms_of_service, :projekt_id, :related_sdg_list,
@@ -106,8 +107,8 @@ class DebatesController < ApplicationController
   end
 
   def take_by_projekts
-    if params[:projekts].present?
-      @resources = @resources.where(projekt_id: params[:projekts].split(',')).distinct
+    if params[:filter_projekt_ids].present?
+      @resources = @resources.where(projekt_id: params[:filter_projekt_ids].split(',')).distinct
     end
   end
 
@@ -158,6 +159,12 @@ class DebatesController < ApplicationController
 				"
 				@resources = @resources.joins(sql_query).where(geozone_restrictions: { id: @restricted_geozones }).distinct
       end
+    end
+  end
+
+  def take_by_my_posts
+    if params[:my_posts_filter] == 'true'
+      @resources = @resources.by_author(current_user&.id)
     end
   end
 end

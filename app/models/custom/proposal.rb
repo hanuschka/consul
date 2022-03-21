@@ -6,7 +6,7 @@ class Proposal < ApplicationRecord
   has_many :geozone_restrictions, through: :proposal_phase
   has_many :geozone_affiliations, through: :projekt
 
-  validates :projekt_id, presence: true, if: :require_a_projekt?
+  validates :projekt_id, presence: true
   validate :description_sanitized
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
@@ -16,28 +16,35 @@ class Proposal < ApplicationRecord
     where(author_id: user_id)
   }
 
+  scope :seen, -> { where.not(ignored_flag_at: nil) }
+  scope :unseen, -> { where(ignored_flag_at: nil) }
+
   alias_attribute :projekt_phase, :proposal_phase
 
-  def require_a_projekt?
-    Setting["projekts.connected_resources"].present? ? true : false
+  def self.base_selection(scoped_projekt_ids = Projekt.ids)
+    published.
+      not_archived.
+      not_retired.
+      where(projekt_id: scoped_projekt_ids).
+      joins(:projekt).merge(Projekt.activated)
   end
 
   def votable_by?(user)
     return true if user && user.verified_organization?
 
-    user &&
-    !user.organization? &&
-    user.level_three_verified? &&
-    (
-      projekt.blank? ||
-      proposal_phase && proposal_phase.geozone_restricted == "no_restriction" ||
-      proposal_phase && proposal_phase.geozone_restricted == "only_citizens" ||
-      (proposal_phase && proposal_phase.geozone_restricted == "only_geozones" && proposal_phase.geozone_restrictions.any? && proposal_phase.geozone_restrictions.include?(user.geozone) )
-    ) &&
-    (
-      projekt.blank? ||
-      proposal_phase.present? && proposal_phase.currently_active?
-    )
+    user.present? &&
+      !user.organization? &&
+      user.level_two_or_three_verified? &&
+      (
+        Setting['feature.user.skip_verification'].present? ||
+        projekt.blank? ||
+        proposal_phase.present? && proposal_phase.geozone_restrictions.blank? ||
+        (proposal_phase.present? && proposal_phase.geozone_restrictions.any? && proposal_phase.geozone_restrictions.include?(user.geozone) )
+      ) &&
+      (
+        projekt.blank? ||
+        proposal_phase.present? && proposal_phase.current?
+      )
   end
 
   def comments_allowed?(user)

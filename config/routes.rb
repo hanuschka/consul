@@ -64,7 +64,19 @@ Rails.application.routes.draw do
   get "internet_explorer",                                 to: "pages#internet_explorer",                  as: "internet_explorer"
 
   # Static pages
-  resources :pages, path: "/", only: [:show]
+  resources :pages, path: "/", only: [:show] do
+    member do
+      get :comment_phase_footer_tab
+      get :debate_phase_footer_tab
+      get :proposal_phase_footer_tab
+      get :voting_phase_footer_tab
+      get :budget_phase_footer_tab
+      get :milestone_phase_footer_tab
+      get :projekt_notifications_footer_tab
+      get :newsfeed_footer_tab
+      get :extended_sidebar_map
+    end
+  end
 
   # Customize devise
   devise_scope :user do

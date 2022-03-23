@@ -23,7 +23,7 @@ en:
       unconfirmed: "To continue, please click on the confirmation link that we have sent you via email"
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        subject: "[Mehr Demokratie im Gespräch] Just one more click - please confirm your email address"
       reset_password_instructions:
         subject: "Instructions for resetting your password"
       unlock_instructions:

@@ -23,7 +23,7 @@ de:
       unconfirmed: "Um fortzufahren, bestätigen Sie bitte den Verifizierungslink, den wir Ihnen per E-Mail gesendet haben"
     mailer:
       confirmation_instructions:
-        subject: "Anleitung zur Bestätigung"
+        subject: "Betreff: [Mehr Demokratie im Gespräch] Nur noch ein Klick - Bitte bestätigen Sie Ihre E-Mailadresse"
       reset_password_instructions:
         subject: "Anleitung zum Zurücksetzen Ihres Passworts"
       unlock_instructions:

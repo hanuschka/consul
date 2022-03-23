@@ -1,18 +1,28 @@
 <td style="padding-bottom: 20px; padding-left: 10px;">
 
-  <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
-    <%= t("devise_views.mailer.confirmation_instructions.title") %>
-  </h1>
-
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("devise_views.mailer.confirmation_instructions.welcome") %> <strong><%= @email %></strong>
+    <%= t("cli.devise_views.mailer.confirmation_instructions.greeting", name: @user.name) %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("devise_views.mailer.confirmation_instructions.text") %>
+    <%= t("cli.devise_views.mailer.confirmation_instructions.p1") %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= link_to t("devise_views.mailer.confirmation_instructions.confirm_link"), confirmation_url(@resource, confirmation_token: @token), style: "color: #2895F1; text-decoration:none;" %>
+    <%= t("cli.devise_views.mailer.confirmation_instructions.p2") %>
+  </p>
+
+  <div>
+    <%= link_to confirmation_url(@resource, confirmation_token: @token, custom_newsletter: true), style: "background-color:#004078;color:white;padding:10px;border-radius:5px;margin-bottom:20px;display:inline-block;text-decoration: none;" do %>
+      <%= t("cli.devise_views.mailer.confirmation_instructions.cta_with_newsletter") %>
+    <% end %>
+
+    <%= link_to confirmation_url(@resource, confirmation_token: @token, custom_newsletter: false), style: "background-color:#004078;color:white;padding:10px;border-radius:5px;margin-bottom:20px;display:inline-block;text-decoration: none;" do %>
+      <%= t("cli.devise_views.mailer.confirmation_instructions.cta_without_newsletter") %>
+    <% end %>
+  </div>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("cli.devise_views.mailer.confirmation_instructions.expiration_warning") %>
   </p>
 </td>

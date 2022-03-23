@@ -1,11 +1,5 @@
 en:
   custom:
-    devise_views:
-      users:
-        registrations:
-          new:
-            custom_newsletter_title: Yes, I would like to be informed about Consul, citizen participation, and demokracy development.
-            custom_newsletter_label: Yes, I would like to be informed about Consul, citizen participation, and demokracy development.
     admin:
       users:
         columns:
@@ -13,3 +7,17 @@ en:
     account:
       settings:
         custom_newsletter: Email newsletter about Consul, citizen participation, and demokracy development.
+    links:
+      menu:
+        custom_newsletter: Newsletter
+  cli:
+    devise_views:
+      mailer:
+        confirmation_instructions:
+          subject: "[Mehr Demokratie im Gespräch] Just one more click - please confirm your email address"
+          greeting: "Hello %{name}"
+          p1: thank you for your interest in «Mehr Demokratie im Gespräch». You need to confirm your registration by clicking on one of the links below. 
+          p2: "Your commitment also decides whether we are successful with our campaigns. We would therefore like to keep you informed by e-mail in the future. You can unsubscribe from our newsletter at any time. Please click here:"
+          cta_with_newsletter: I confirm my email address and I would like to be informed by email
+          cta_without_newsletter: I confirm my email address and do not want to be informed by email
+          expiration_warning: (For security reasons, this link is only active for 24 hours)

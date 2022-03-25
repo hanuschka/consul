@@ -25,8 +25,13 @@ body>header, .wrapper>header, .top-bar {
   }
 
   .account-buttons {
+    display: none;
     font-size: 0.85rem;
     font-weight: bold;
+
+    @media screen and (min-width: 1200px) {
+      display: block;
+    }
   }
 
   .sign-in-button,

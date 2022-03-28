@@ -12,12 +12,14 @@
     <%= t("cli.devise_views.mailer.confirmation_instructions.p2") %>
   </p>
 
-  <div>
-    <%= link_to confirmation_url(@resource, confirmation_token: @token, custom_newsletter: true), style: "background-color:#004078;color:white;padding:10px;border-radius:5px;margin-bottom:20px;display:inline-block;text-decoration: none;" do %>
+  <div style='text-align:center;'>
+    <%= link_to confirmation_url(@resource, confirmation_token: @token, custom_newsletter: true), style: "background-color:#ACB728;color:white;margin-bottom:20px;display:inline-block;font-weight:bold;font-size:larger;" do %>
       <%= t("cli.devise_views.mailer.confirmation_instructions.cta_with_newsletter") %>
     <% end %>
+  </div>
 
-    <%= link_to confirmation_url(@resource, confirmation_token: @token, custom_newsletter: false), style: "background-color:#004078;color:white;padding:10px;border-radius:5px;margin-bottom:20px;display:inline-block;text-decoration: none;" do %>
+  <div style='text-align:center;'>
+    <%= link_to confirmation_url(@resource, confirmation_token: @token, custom_newsletter: false), style: "background-color:#716566;color:white;margin-bottom:20px;display:inline-block;font-weight:bold;font-size:larger;" do %>
       <%= t("cli.devise_views.mailer.confirmation_instructions.cta_without_newsletter") %>
     <% end %>
   </div>

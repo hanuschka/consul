@@ -1,7 +1,11 @@
 <header>
   <div class="top-bar">
 
-    <h2 class='header-title show-for-medium'>Bürgerbeteiligung<br><span>in <%= Setting['org_name'] %></span></h2>
+    <h2 class='header-title show-for-medium'>
+      Bürgerbeteiligung
+      <br>
+      <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
+    </h2>
 
     <span data-responsive-toggle="responsive-menu"
           data-hide-for="medium"
@@ -35,7 +39,11 @@
         <div class="show-for-small-only">
           <div class="subnavigation">
 
-            <h2 class='city-name'>Bürgerbeteiligung in <%= Setting['org_name'] %></h2>
+            <h2 class='city-name'>
+              Bürgerbeteiligung
+              <br>
+              <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
+            </h2>
 
             <%= render partial: "shared/subnavigation", locals: { placement: 'mobile' } %>
             <div class="small-12 column">

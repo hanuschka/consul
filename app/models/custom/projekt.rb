@@ -272,7 +272,7 @@ class Projekt < ApplicationRecord
       projekt.comment_phase = ProjektPhase::CommentPhase.create unless projekt.comment_phase
       projekt.voting_phase = ProjektPhase::VotingPhase.create unless projekt.voting_phase
       projekt.milestone_phase = ProjektPhase::MilestonePhase.create unless projekt.milestone_phase
-      projekt.notification_phase = ProjektPhase::ProjektNotificationPhase.create unless projekt.notification_phase
+      projekt.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create unless projekt.projekt_notification_phase
       projekt.newsfeed_phase = ProjektPhase::NewsfeedPhase.create unless projekt.newsfeed_phase
     end
   end
@@ -330,6 +330,8 @@ class Projekt < ApplicationRecord
     self.comment_phase = ProjektPhase::CommentPhase.create
     self.voting_phase = ProjektPhase::VotingPhase.create
     self.milestone_phase = ProjektPhase::MilestonePhase.create
+    self.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create
+    self.newsfeed_phase = ProjektPhase::NewsfeedPhase.create
   end
 
   def swap_order_numbers_up

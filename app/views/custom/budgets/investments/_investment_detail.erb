@@ -35,6 +35,12 @@
   </div>
 <% end %>
 
+
+<% if extended_feature?('budget_investments.show_implementation_option_fields') %>
+  <h2><%= t("custom.budgets.investments.show.implementation") %></h2>
+  <%= t("custom.budgets.investments.show.implementation_#{investment.implementation_performer}_text_html", author: investment.author.name, implementation_contribution: investment.implementation_contribution) %>
+<% end %>
+
 <% if investment.should_show_unfeasibility_explanation? %>
   <h2><%= t("budgets.investments.show.unfeasibility_explanation") %></h2>
   <p><%= investment.unfeasibility_explanation %></p>

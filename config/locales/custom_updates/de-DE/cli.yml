@@ -15,8 +15,8 @@ de:
       mailer:
         confirmation_instructions:
           greeting: "Guten Tag %{name},"
-          p1: danke für Ihr Interesse an unserer Veranstaltung «Mehr Demokratie im Gespräch». Sie müssen Ihre Anmeldung jetzt nur noch durch den Klick auf einen der nachfolgenden Links bestätigen.
+          p1: herzlich willkommen auf CONSUL.!
           p2: "Auch Ihr Engagement entscheidet, ob wir mit unseren Aktionen erfolgreich sind. Wir möchten Sie daher auch zukünftig per E-Mail informieren. Unseren Newsletter können Sie jederzeit abbestellen. Bitte klicken Sie hier:"
           cta_with_newsletter: Ich bestätige meine E-Mailadresse und möchte Infos per E-Mail
           cta_without_newsletter: Ich bestätige meine E-Mailadresse und verzichte auf Infos per E-Mail
-          expiration_warning: (Dieser Link ist aus Sicherheitsgründen nur 24 Stunden aktiv. Bitte melden Sie sich erneut an, falls Sie in dieser Zeitspanne Ihren Eintrag nicht erfolgreich bestätigen konnten.)
+          expiration_warning: (Dieser Link ist aus Sicherheitsgründen nur 72 Stunden aktiv. Bitte melden Sie sich erneut an, falls Sie in dieser Zeitspanne Ihren Eintrag nicht erfolgreich bestätigen konnten.)

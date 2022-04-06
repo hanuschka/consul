@@ -50,6 +50,7 @@ body>header, .wrapper>header, .top-bar {
 
 .top-bar {
   justify-content: space-between !important;
+
   h2.header-title {
     line-height: 1em;
     text-transform: uppercase;
@@ -98,7 +99,8 @@ html.is-reveal-open body {
   color: inherit;
   margin-right: 0.25em;
   display: inline-block;
-  text-decoration: none;  
+  text-decoration: none;
+
 }
 
 .sidebar-title-icon.fa-highlighter:before {

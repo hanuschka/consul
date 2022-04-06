@@ -28,6 +28,9 @@ en:
         sidebar:
           phases:
             participate: Open for participation!
+        footer:
+          budget:
+            investments_subtab: Investments
         tabs:
           comments: Comments
           debates: Debates
@@ -42,3 +45,8 @@ en:
         voting_phase: Abstimmungen
         budget_phase: Budget
         milestone_phase: Milestones
+        milestone_phase_details:
+          start: Start
+          ending: Planned end
+        projekt_notification_phase: Notifications
+        newsfeed_phase: Newsfeed

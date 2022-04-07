@@ -5,6 +5,8 @@ de:
     actions:
       actions: Aktionen
       confirm: Sind Sie sich sicher?
+      confirm_action: "Are you sure? %{action} \"%{name}\""
+      confirm_delete: "Are you sure? This action will delete \"%{name}\" and can't be undone."
       confirm_hide: Moderation bestätigen
       hide: Ausblenden
       hide_author: Verfasser*in verbergen
@@ -501,6 +503,7 @@ de:
         author: Autor
         title: Diskussionen
         no_debates: Keine Diskussion vorhanden.
+        download_current_selection: "Aktuelle Auswahl herunterladen"
     hidden_debates:
       index:
         filter: Filter
@@ -1260,6 +1263,10 @@ de:
       search:
         title: Organisationen suchen
         no_results: Keine Organisationen gefunden.
+    deficiency_reports:
+      no_deficiency_reports: Keine Anliegen vorhanden.
+      index:
+        title: Mängelmeldungen
     proposals:
       index:
         title: Vorschläge

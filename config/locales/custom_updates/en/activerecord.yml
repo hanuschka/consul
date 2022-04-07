@@ -15,3 +15,17 @@ en:
         open_answer_text: Open Answer
       widget/card:
         card_category: Category
+      deficiency_report:
+        deficiency_report_category_id: Category
+        video_url: External video URL
+        official_answer: Official answer
+      debate:
+        on_behalf_of: On behalf of
+      proposal:
+        on_behalf_of: On behalf of
+      budget/investment:
+        implementation_performer: Implementation of investment proposal
+        implementation_performers:
+          city: Implementation by the city administration
+          user: I can help with implementation
+        implementation_contribution: How can you contribute?

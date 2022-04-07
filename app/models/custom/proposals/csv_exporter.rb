@@ -1,6 +1,7 @@
 class Proposals::CsvExporter
   require "csv"
   include JsonExporter
+  include ActionView::Helpers::SanitizeHelper
 
   def initialize(proposals)
     @proposals = proposals
@@ -54,7 +55,7 @@ class Proposals::CsvExporter
         proposal.id.to_s,
         proposal.title,
         proposal.summary,
-        proposal.description,
+        strip_tags(proposal.description),
         proposal.projekt&.name,
         proposal.responsible_name,
         proposal.author.username,
@@ -70,8 +71,14 @@ class Proposals::CsvExporter
         proposal.community_id,
         proposal.selected,
         proposal.projekt_id,
-        proposal.map_location&.latitude,
-        proposal.map_location&.longitude
+        geo_field(proposal.map_location&.latitude),
+        geo_field(proposal.map_location&.longitude)
       ]
     end
+
+  def geo_field(field)
+    return nil if field.blank?
+
+    "\"#{field}\""
+  end
 end

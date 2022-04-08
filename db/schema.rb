@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_04_110732) do
+ActiveRecord::Schema.define(version: 2022_04_08_065530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1867,8 +1867,14 @@ ActiveRecord::Schema.define(version: 2022_04_04_110732) do
     t.datetime "bam_letter_verification_code_sent_at"
     t.string "bam_unique_stamp"
     t.string "keycloak_link"
-    t.boolean "custom_analytics_cookies_enabled", default: false
+    t.boolean "custom_statistic_cookies_enabled"
     t.boolean "custom_newsletter", default: false
+    t.string "dor_first_name"
+    t.string "dor_last_name"
+    t.string "dor_street_name"
+    t.string "dor_street_number"
+    t.string "dor_plz"
+    t.string "dor_city"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true

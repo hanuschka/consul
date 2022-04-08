@@ -1,0 +1,11 @@
+de:
+  devise_views:
+    users:
+      registrations:
+        new:
+          dor_first_name_label: Vorname
+          dor_last_name_label: Nachname
+          dor_street_name_label: Straße
+          dor_street_number_label: Hausnummer
+          dor_plz_label: Postleitzahl
+          dor_city_label: Stadt

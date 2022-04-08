@@ -1,0 +1,11 @@
+en:
+  devise_views:
+    users:
+      registrations:
+        new:
+          dor_first_name_label: First name
+          dor_last_name_label: Last name
+          dor_street_name_label: Street
+          dor_street_number_label: Building number
+          dor_plz_label: Postal code
+          dor_city_label: City

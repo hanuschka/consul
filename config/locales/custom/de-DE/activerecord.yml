@@ -184,7 +184,7 @@ de:
         selected: "Als ausgewählt markieren"
         selected_true: "Ausgewählt"
         selected_false: "Nicht ausgewählt"
-        unfeasibility_explanation: "Erläuterung der Durchführbarkeit"
+        unfeasibility_explanation: "Erläuterung der Bewertung"
         valuation_finished: "Begutachtung abgeschlossen"
         valuator_ids: "Gruppen"
         valuation_tag_list: "Tags"

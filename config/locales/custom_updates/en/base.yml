@@ -53,6 +53,9 @@ en:
         projekt_phase_not_active: Projekt phase is not active
 
     devise_views:
+      sessions:
+        new:
+          title: Member-Login
       users:
         registrations:
           new:

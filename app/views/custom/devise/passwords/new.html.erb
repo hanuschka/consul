@@ -1,0 +1,29 @@
+<% provide :title do %><%= t("devise_views.passwords.new.title") %><% end %>
+
+<div class='login-form'>
+  <div class='row'>
+    <div class='column'>
+      <h2><%= t("devise_views.passwords.new.title") %></h2>
+    </div>
+  </div>
+
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+    <%= render "shared/errors", resource: resource %>
+
+    <div class="row">
+      <div class="small-12 column">
+        <%= f.email_field :email, autofocus: true %>
+
+        <div class="small-12 medium-6 small-centered">
+          <%= f.submit t("devise_views.passwords.new.send_submit"), class: "button expanded" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class='row'>
+    <div class='column'>
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>

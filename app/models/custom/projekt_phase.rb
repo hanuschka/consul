@@ -3,6 +3,10 @@ class ProjektPhase < ApplicationRecord
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone
 
+  after_save do
+    Projekt.all.each { |projekt| projekt.update_selectable_in_sidebar_selectors }
+  end
+
   def selectable_by?(user)
     geozone_allowed = geozone_restricted == "no_restriction" || geozone_restricted.nil? ||
                       ( geozone_restricted == "only_citizens" && user.present? && user.level_three_verified? ) ||

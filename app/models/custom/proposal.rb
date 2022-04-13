@@ -6,6 +6,11 @@ class Proposal < ApplicationRecord
   has_many :geozone_restrictions, through: :proposal_phase
   has_many :geozone_affiliations, through: :projekt
 
+  after_save do
+    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('proposals', 'current') }
+    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('proposals', 'expired') }
+  end
+
   validates :projekt_id, presence: true
   validate :description_sanitized
 

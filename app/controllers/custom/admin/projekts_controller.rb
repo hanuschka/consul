@@ -47,6 +47,9 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt.build_voting_phase if @projekt.voting_phase.blank?
     @projekt.voting_phase.geozone_restrictions.build
 
+    @projekt.build_event_phase if @projekt.event_phase.blank?
+    @projekt.event_phase.geozone_restrictions.build
+
     @projekt.build_map_location if @projekt.map_location.blank?
 
     all_settings = ProjektSetting.where(projekt: @projekt).group_by(&:type)
@@ -59,6 +62,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt_features_phase_budget_active = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.budget')
     @projekt_features_phase_voting_active = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.voting')
     @projekt_features_phase_milestone_active = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.milestone')
+    @projekt_features_phase_event_active = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.event')
     @projekt_features_phase_comment_info = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.comment_info')
     @projekt_features_phase_debate_info = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.debate_info')
     @projekt_features_phase_proposal_info = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.proposal_info')
@@ -67,6 +71,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt_features_phase_milestone_info = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.milestone_info')
     @projekt_features_phase_projekt_notification_info = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.projekt_notification_info')
     @projekt_features_phase_newsfeed_info = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.newsfeed_info')
+    @projekt_features_phase_event_info = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.phase.event_info')
 
     @projekt_features_general = all_projekt_features['general']
     @projekt_features_sidebar = all_projekt_features['sidebar']
@@ -76,6 +81,9 @@ class Admin::ProjektsController < Admin::BaseController
 
     @projekt_notification = ProjektNotification.new
     @projekt_notifications = ProjektNotification.where(projekt: @projekt).order(created_at: :desc)
+
+    @projekt_event = ProjektEvent.new
+    @projekt_events = ProjektEvent.where(projekt: @projekt).order(created_at: :desc)
 
     @default_footer_tab_setting = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab')
   end
@@ -105,7 +113,7 @@ class Admin::ProjektsController < Admin::BaseController
   def create
     @projekts = Projekt.top_level.page(params[:page])
     @projekt = Projekt.new(projekt_params.merge(color: "#073E8E"))
-    
+
     if @projekt.save
       redirect_to admin_projekts_path
     else
@@ -153,9 +161,11 @@ class Admin::ProjektsController < Admin::BaseController
       budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
       voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
       milestone_phase_attributes: [:id, :start_date, :end_date],
+      event_phase_attributes: [:id, :start_date, :end_date],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
-      projekt_notifications: [:title, :body]
+      projekt_notifications: [:title, :body],
+      project_events: [:id, :title, :location, :datetime, :weblink],
     ]
     params.require(:projekt).permit(attributes, translation_params(Projekt))
   end

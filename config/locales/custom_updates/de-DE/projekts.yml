@@ -1,5 +1,5 @@
 de:
-  custom:    
+  custom:
     projekts:
       index:
         title: Projektübersicht
@@ -36,6 +36,9 @@ de:
           milestones: Meilensteine
           projekt_notifications: Benachrichtigungen
           newsfeed: Nachrichten
+          projekt_events: Veranstaltungen
+        projekt_events_tab:
+          title: Kommende Veranstaltungen
       phase_name:
         comment_phase: Kommentare
         debate_phase: Diskussionen

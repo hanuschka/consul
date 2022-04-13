@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_04_110732) do
+ActiveRecord::Schema.define(version: 2022_04_12_141250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1408,6 +1408,16 @@ ActiveRecord::Schema.define(version: 2022_04_04_110732) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projekt_events", force: :cascade do |t|
+    t.string "title"
+    t.string "location"
+    t.datetime "datetime"
+    t.string "weblink"
+    t.integer "projekt_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "projekt_notifications", force: :cascade do |t|
     t.bigint "projekt_id"
     t.string "title"
@@ -1471,6 +1481,7 @@ ActiveRecord::Schema.define(version: 2022_04_04_110732) do
     t.string "color"
     t.string "icon"
     t.integer "level", default: 1
+    t.jsonb "selectable_in_sidebar_selector", default: {}
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 
@@ -1867,8 +1878,14 @@ ActiveRecord::Schema.define(version: 2022_04_04_110732) do
     t.datetime "bam_letter_verification_code_sent_at"
     t.string "bam_unique_stamp"
     t.string "keycloak_link"
-    t.boolean "custom_analytics_cookies_enabled", default: false
+    t.boolean "custom_statistic_cookies_enabled"
     t.boolean "custom_newsletter", default: false
+    t.string "dor_first_name"
+    t.string "dor_last_name"
+    t.string "dor_street_name"
+    t.string "dor_street_number"
+    t.string "dor_plz"
+    t.string "dor_city"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true

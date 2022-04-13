@@ -1,5 +1,5 @@
 en:
-  custom:    
+  custom:
     projekts:
       index:
         title: Projects overview
@@ -38,6 +38,7 @@ en:
           polls: Polls
           budgets: Budgets
           milestones: Milestones
+          project_events: Events
       phase_name:
         comment_phase: Kommentare
         debate_phase: Diskussionen

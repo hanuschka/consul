@@ -15,6 +15,12 @@
           <th scope="col"><%= t("admin.users.columns.document_number") %></th>
           <th scope="col"><%= t("admin.users.columns.roles") %></th>
           <th scope="col"><%= t("admin.users.columns.verification_level") %></th>
+          <th scope="col"><%= t("admin.users.columns.dor_first_name") %></th>
+          <th scope="col"><%= t("admin.users.columns.dor_last_name") %></th>
+          <th scope="col"><%= t("admin.users.columns.dor_street_name") %></th>
+          <th scope="col"><%= t("admin.users.columns.dor_street_number") %></th>
+          <th scope="col"><%= t("admin.users.columns.dor_plz") %></th>
+          <th scope="col"><%= t("admin.users.columns.dor_city") %></th>
         <% end %>
       </tr>
     </thead>
@@ -30,6 +36,12 @@
             <td><%= user.document_number %></td>
             <td><%= display_user_roles(user) %></td>
             <td><%= user.user_type %></td>
+            <td><%= user.dor_first_name %></td>
+            <td><%= user.dor_last_name %></td>
+            <td><%= user.dor_street_name %></td>
+            <td><%= user.dor_street_number %></td>
+            <td><%= user.dor_plz %></td>
+            <td><%= user.dor_city %></td>
           <% end %>
         </tr>
       <% end %>

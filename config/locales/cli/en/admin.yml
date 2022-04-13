@@ -1,0 +1,10 @@
+en:
+  admin:
+    users:
+      columns:
+        dor_first_name: First name
+        dor_last_name: Last name
+        dor_street_name: Street name
+        dor_street_number: Street number
+        dor_plz: Postal code
+        dor_city: City

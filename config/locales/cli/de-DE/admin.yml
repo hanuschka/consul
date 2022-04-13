@@ -1,0 +1,10 @@
+de:
+  admin:
+    users:
+      columns:
+        dor_first_name: Vorname
+        dor_last_name: Nachname
+        dor_street_name: Straße
+        dor_street_number: Hausnummer
+        dor_plz: Postleitzahl
+        dor_city: Stadt

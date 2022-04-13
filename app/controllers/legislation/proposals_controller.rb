@@ -6,7 +6,7 @@ class Legislation::ProposalsController < Legislation::BaseController
   before_action :load_categories, only: [:index, :new, :create, :edit, :map, :summary]
   before_action :load_geozones, only: [:edit, :map, :summary]
 
-  before_action :authenticate_user!, except: [:index, :show, :map, :summary]
+  before_action :authenticate_user! #, except: [:index, :show, :map, :summary]
   load_and_authorize_resource :process, class: "Legislation::Process"
   load_and_authorize_resource :proposal, class: "Legislation::Proposal", through: :process
 

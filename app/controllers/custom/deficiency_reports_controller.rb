@@ -6,7 +6,7 @@ class DeficiencyReportsController < ApplicationController
   include DeficiencyReportsHelper
   include Search
 
-  before_action :authenticate_user!, except: [:index, :show, :json_data]
+  before_action :authenticate_user! #, except: [:index, :show, :json_data]
   before_action :load_categories
   before_action :set_view, only: :index
   before_action :destroy_map_location_association, only: :update

@@ -1,5 +1,5 @@
 class Verification::LetterController < ApplicationController
-  before_action :authenticate_user!, except: [:edit, :update]
+  before_action :authenticate_user! #, except: [:edit, :update]
   before_action :login_via_form, only: :update
 
   before_action :verify_resident!, if: :signed_in?

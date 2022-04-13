@@ -8,6 +8,11 @@ class Debate
   has_many :geozone_restrictions, through: :debate_phase
   has_many :geozone_affiliations, through: :projekt
 
+  after_save do
+    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('debates', 'current') }
+    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('debates', 'expired') }
+  end
+
   validates :projekt_id, presence: true
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }

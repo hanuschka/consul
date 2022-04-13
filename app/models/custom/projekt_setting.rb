@@ -1,6 +1,10 @@
 class ProjektSetting < ApplicationRecord
   belongs_to :projekt
 
+  after_save do
+    Projekt.all.each { |projekt| projekt.update_selectable_in_sidebar_selectors }
+  end
+
   validates :key, presence: true, uniqueness: { scope: :projekt_id }
 
   default_scope { order(id: :asc) }
@@ -53,6 +57,8 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.phase.projekt_notification_info": 'active',
         "projekt_feature.phase.newsfeed": '',
         "projekt_feature.phase.newsfeed_info": 'active',
+        "projekt_feature.phase.event": '',
+        "projekt_feature.phase.event_info": 'active',
 
         "projekt_feature.general.show_in_navigation": '',
         "projekt_feature.general.show_in_overview_page": '',

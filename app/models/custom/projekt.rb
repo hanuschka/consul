@@ -18,6 +18,7 @@ class Projekt < ApplicationRecord
   has_many :proposals, dependent: :nullify
   has_many :polls, dependent: :nullify
   has_one :budget, dependent: :nullify
+  has_many :projekt_events, dependent: :nullify
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
 
@@ -30,6 +31,7 @@ class Projekt < ApplicationRecord
   has_one :milestone_phase, class_name: 'ProjektPhase::MilestonePhase'
   has_one :projekt_notification_phase, class_name: 'ProjektPhase::ProjektNotificationPhase'
   has_one :newsfeed_phase, class_name: 'ProjektPhase::NewsfeedPhase'
+  has_one :event_phase, class_name: 'ProjektPhase::EventPhase'
   has_many :geozone_restrictions, through: :projekt_phases
   has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
 
@@ -39,17 +41,19 @@ class Projekt < ApplicationRecord
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
-  accepts_nested_attributes_for :debate_phase, :proposal_phase, :budget_phase, :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications
+  accepts_nested_attributes_for :debate_phase, :proposal_phase, :budget_phase, :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications, :projekt_events, :event_phase
 
   before_validation :set_default_color
   around_update :update_page
   after_create :create_corresponding_page, :set_order, :create_projekt_phases, :create_default_settings, :create_map_location
   after_save do
     Projekt.all.each { |projekt| projekt.update_column('level', projekt.calculate_level) }
+    Projekt.all.each { |projekt| projekt.update_selectable_in_sidebar_selectors }
   end
   after_destroy :ensure_projekt_order_integrity
 
   validates :color, format: { with: /\A#[\d, a-f, A-F]{6}\Z/ }
+  validates :name, presence: true
 
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
   scope :top_level, -> { with_order_number.
@@ -86,11 +90,11 @@ class Projekt < ApplicationRecord
     end
 
     def selectable_in_sidebar_current(controller_name)
-      select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.current? && ( p.send(controller_name).any? || p.has_active_phase?(controller_name) ) } }
+      select { |projekt| projekt.selectable_in_sidebar_selector["#{controller_name}_current"] }
     end
 
     def selectable_in_sidebar_expired(controller_name)
-      select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.expired? && p.send(controller_name).any? } }
+      select { |projekt| projekt.selectable_in_sidebar_selector["#{controller_name}_expired"] }
     end
   end
 
@@ -274,7 +278,29 @@ class Projekt < ApplicationRecord
       projekt.milestone_phase = ProjektPhase::MilestonePhase.create unless projekt.milestone_phase
       projekt.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create unless projekt.projekt_notification_phase
       projekt.newsfeed_phase = ProjektPhase::NewsfeedPhase.create unless projekt.newsfeed_phase
+      projekt.event_phase = ProjektPhase::EventPhase.create unless projekt.event_phase
     end
+  end
+
+  def update_selectable_in_sidebar_selectors
+    controller_names = ['proposals', 'debates', 'polls', 'projekt_events']
+
+    controller_names.each do |controller_name|
+      set_selectable_in_sidebar_selector(controller_name, 'current')
+      set_selectable_in_sidebar_selector(controller_name, 'expired')
+    end
+  end
+
+  def set_selectable_in_sidebar_selector(controller_name, group)
+    selectable_in_sidebar_selector_value = selectable_in_sidebar_selector
+
+    if group == 'current'
+      selectable_in_sidebar_selector_value["#{controller_name}_#{group}"] = all_children_projekts.unshift(self).any? { |p| p.current? && ( p.send(controller_name).any? || p.has_active_phase?(controller_name) ) }
+    elsif group == 'expired'
+      selectable_in_sidebar_selector_value["#{controller_name}_#{group}"] = all_children_projekts.unshift(self).any? { |p| p.expired? && p.send(controller_name).any? }
+    end
+
+    self.update_column('selectable_in_sidebar_selector', selectable_in_sidebar_selector_value)
   end
 
   def title
@@ -332,6 +358,7 @@ class Projekt < ApplicationRecord
     self.milestone_phase = ProjektPhase::MilestonePhase.create
     self.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create
     self.newsfeed_phase = ProjektPhase::NewsfeedPhase.create
+    self.event_phase = ProjektPhase::EventPhase.create
   end
 
   def swap_order_numbers_up

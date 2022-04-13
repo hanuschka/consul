@@ -101,6 +101,14 @@ class PagesController < ApplicationController
     end
   end
 
+  def event_phase_footer_tab
+    set_event_footer_tab_variables
+
+    respond_to do |format|
+      format.js { render "pages/projekt_footer/footer_tab" }
+    end
+  end
+
   def extended_sidebar_map
     @current_projekt = SiteCustomization::Page.find_by(slug: params[:id]).projekt
 
@@ -139,6 +147,7 @@ class PagesController < ApplicationController
 
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.comment_phase
+    params[:current_tab_path] = 'comment_phase_footer_tab'
 
     @commentable = @current_projekt
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
@@ -236,7 +245,7 @@ class PagesController < ApplicationController
 
     params[:section] ||= 'results' if @budget.phase == 'finished'
 
-    if params[:section] == 'results' 
+    if params[:section] == 'results'
       @investments = Budget::Result.new(@budget, @budget.headings.first).investments
     elsif params[:section] == 'stats'
       @stats = Budget::Stats.new(@budget)
@@ -278,6 +287,15 @@ class PagesController < ApplicationController
     @current_tab_phase = @current_projekt.newsfeed_phase
     @rss_id = ProjektSetting.find_by(projekt: @current_projekt, key: "projekt_newsfeed.id").value
     @rss_type = ProjektSetting.find_by(projekt: @current_projekt, key: "projekt_newsfeed.type").value
+  end
+
+  def set_event_footer_tab_variables(projekt=nil)
+    @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
+    @current_tab_phase = @current_projekt.event_phase
+    # binding.pry
+    scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
+    # @projekt_events = @current_projekt.projekt_events
+    @projekt_events = ProjektEvent.base_selection(scoped_projekt_ids)
   end
 
   def default_phase_name(default_phase_id)

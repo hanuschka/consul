@@ -49,6 +49,14 @@ en:
             notification_title: Title
             page_title: Send message
             title: Send message
+          projekt_events_tab:
+            name: Events
+            button: Save notification
+            event_title: Title
+            event_location: Location
+            event_weblink: Weblink
+            event_datetime: Datetime
+            page_title: Create notification
           projekt_page: Project page
           projekt_phase_limitation: Restriction
           projekt_phases: Project phases

@@ -831,7 +831,7 @@ de:
           one: 1 Investitionsvorschlag
           other: "%{count} Investitionsvorschläge"
         follows:
-          one: 1 folge ich 
+          one: 1 folge ich
           other: "%{count} folge ich"
       no_activity: Benutzer hat keine öffentliche Aktivität
       no_private_messages: "Der Benutzer akzeptiert keine privaten Nachrichten."
@@ -963,7 +963,7 @@ de:
           other: "%{count} weitere Tags"
   machine_learning:
     comments_summary: "Zusammenfassung Kommentare"
-    info_text: "Inhalt per AI / Machine Learning generiert"  
+    info_text: "Inhalt per AI / Machine Learning generiert"
   alerts:
     select_one_category: "Bitte wählen Sie nur eine Kategorie"
   search:
@@ -980,6 +980,8 @@ de:
       legislation_proposal: "Beteiligungsverfahren %{doc_count}"
       comment: "Kommentare %{doc_count}"
       site_customization_page: "Webseiten %{doc_count}"
+      event: "Event %{doc_count}"
+      projekt_events: "Event %{doc_count}"
     result_tag:
       de: "d"
       pr: "v"

@@ -26,7 +26,7 @@
                 <%= link_to "/#{params[:id]}/#{phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader"); ' do %>
                   <h4>
                     <%= t("custom.projekts.page.tabs.#{phase.resources_name}") %>
-                    <% if phase.resources_name.in?(['debates', 'proposals', 'polls', 'comments']) %>
+                    <% if phase.resources_name.in?(['debates', 'proposals', 'polls', 'comments', 'projekt_events']) %>
                       <% count = instance_variable_get("@#{phase.resources_name}_count") %>
                       <%= "(#{count})" %>
                     <% end %>
@@ -87,10 +87,8 @@
               <% end %>
             </li>
           <% end %>
-
         </ul>
       </div>
-
     </div>
   </div>
 </nav>

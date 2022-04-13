@@ -8,6 +8,11 @@ class Poll < ApplicationRecord
   belongs_to :projekt, optional: true
   has_many :geozone_affiliations, through: :projekt
 
+  after_save do
+    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('polls', 'current') }
+    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('polls', 'expired') }
+  end
+
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
 
   def self.base_selection(scoped_projekt_ids = Projekt.ids)

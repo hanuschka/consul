@@ -19,6 +19,8 @@
             @debate,
             @debate.author,
             Flag.flagged?(current_user, @debate),
+            extended_feature?('debates.show_report_button_in_debate_sidebar'),
+            extended_feature?('debates.show_related_content'),
             @debate_votes,
             @debate.projekt,
             @debate.debate_phase,

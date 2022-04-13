@@ -9,6 +9,7 @@ namespace :admin do
       end
     end
     resources :projekt_notifications, only: [:create, :update, :destroy]
+    resources :projekt_events, only: [:create, :update, :destroy]
     resources :milestones, controller: "projekt_milestones"
     resources :progress_bars, except: :show, controller: "projekt_progress_bars"
     member do

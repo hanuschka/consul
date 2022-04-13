@@ -1,7 +1,7 @@
 class ProjektSetting < ApplicationRecord
   belongs_to :projekt
 
-  after_save do
+  after_update do
     Projekt.all.each { |projekt| projekt.update_selectable_in_sidebar_selectors }
   end
 

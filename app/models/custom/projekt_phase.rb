@@ -3,7 +3,7 @@ class ProjektPhase < ApplicationRecord
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone
 
-  after_save do
+  after_update do
     Projekt.all.each { |projekt| projekt.update_selectable_in_sidebar_selectors }
   end
 

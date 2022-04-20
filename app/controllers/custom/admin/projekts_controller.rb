@@ -76,6 +76,10 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt_features_general = all_projekt_features['general']
     @projekt_features_sidebar = all_projekt_features['sidebar']
     @projekt_features_footer = all_projekt_features['footer']
+    @projekt_features_debates = all_projekt_features['debates']
+    @projekt_features_proposals = all_projekt_features['proposals']
+    @projekt_features_polls = all_projekt_features['polls']
+    @projekt_features_budgets = all_projekt_features['budgets']
 
     @projekt_newsfeed_settings = all_settings["projekt_newsfeed"]
 

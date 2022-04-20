@@ -39,6 +39,12 @@ de:
           projekt_events: Veranstaltungen
         projekt_events_tab:
           title: Kommende Veranstaltungen
+          no_events: Keine Ereignisse
+          event_title: Veranstaltungstitel
+          event_location: Veranstaltungsort
+          event_date: Datum
+          event_time: Zeit
+          event_weblink: Weblink
       phase_name:
         comment_phase: Kommentare
         debate_phase: Diskussionen
@@ -51,3 +57,8 @@ de:
           ending: Gepl. Fertigstellung
         projekt_notification_phase: Benachrichtigungen
         newsfeed_phase: Newsfeed
+      projekt_events:
+        orders:
+          all: Alle
+          incoming: Kommende
+          past: Vergangene

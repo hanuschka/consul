@@ -9,8 +9,10 @@ class Budget < ApplicationRecord
       ("winners" if finished?),
       ("selected" if publishing_prices_or_later? && !finished?),
       ("unselected" if publishing_prices_or_later?),
-      ("not_unfeasible" if selecting? || valuating?),
-      ("unfeasible" if selecting? || valuating_or_later?)
+      ("all" if selecting? || valuating?),
+      ("feasible" if selecting? || valuating?),
+      ("unfeasible" if selecting? || valuating_or_later?),
+      ("undecided" if selecting? || valuating?)
     ].compact
   end
 end

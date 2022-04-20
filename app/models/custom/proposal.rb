@@ -6,11 +6,6 @@ class Proposal < ApplicationRecord
   has_many :geozone_restrictions, through: :proposal_phase
   has_many :geozone_affiliations, through: :projekt
 
-  after_save do
-    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('proposals', 'current') }
-    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('proposals', 'expired') }
-  end
-
   validates :projekt_id, presence: true
   validate :description_sanitized
 
@@ -31,7 +26,9 @@ class Proposal < ApplicationRecord
       not_archived.
       not_retired.
       where(projekt_id: scoped_projekt_ids).
-      joins(:projekt).merge(Projekt.activated)
+      joins(:projekt).merge(Projekt.activated).
+      joins( 'INNER JOIN projekt_settings shwmn ON projekts.id = shwmn.projekt_id' ).
+      where( 'shwmn.key': 'projekt_feature.proposals.show_in_sidebar_filter', 'shwmn.value': 'active' )
   end
 
   def votable_by?(user)

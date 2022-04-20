@@ -235,8 +235,10 @@ class PagesController < ApplicationController
     @current_projekt = Projekt.find(params[:filter_projekt_id])
 
     @valid_filters = @current_projekt.budget.investments_filters
+    params[:filter] ||= 'feasible' if @current_projekt.budget.phase.in?(['selecting', 'valuating'])
     params[:filter] ||= 'winners' if @current_projekt.budget.phase == 'finished'
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
+    @all_resources = []
 
     @current_tab_phase = @current_projekt.budget_phase
     params[:current_tab_path] = 'budget_phase_footer_tab'
@@ -294,12 +296,12 @@ class PagesController < ApplicationController
   end
 
   def set_event_footer_tab_variables(projekt=nil)
+    @valid_orders = %w[all incoming past]
+    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.event_phase
-    # binding.pry
     scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
-    # @projekt_events = @current_projekt.projekt_events
-    @projekt_events = ProjektEvent.base_selection(scoped_projekt_ids)
+    @projekt_events = ProjektEvent.base_selection(scoped_projekt_ids).page(params[:page]).send("sort_by_#{@current_order}")
   end
 
   def default_phase_name(default_phase_id)

@@ -578,6 +578,10 @@ span.projekt-backlink:before {
   padding-top: 20px;
   padding-bottom: 25px;
   font-size: 16px;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .projekt-event-item-titles {
@@ -593,7 +597,6 @@ span.projekt-backlink:before {
   border-radius: 10px;
   box-shadow: inset 0px 3px 6px #0000000F, 0px 3px 6px #00000024;
   background: transparent linear-gradient(180deg, #FFFFFF 0%, #EDEDED 100%) 0% 0% no-repeat padding-box;
-  cursor: pointer;
 }
 
 .projekt-event-item-calendar-dayname {

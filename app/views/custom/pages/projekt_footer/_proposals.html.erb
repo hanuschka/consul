@@ -1,7 +1,7 @@
 <%= render 'shared/loader_spinner' %>
 
-<% if projekt_feature?(@current_projekt, 'general.show_map') %>
-  <% cache @all_resources.count do %>
+<% if projekt_feature?(@current_projekt, 'proposals.show_map') %>
+  <% cache @proposals.except(:limit, :offset).count do %>
     <div class='margin-bottom'>
       <%= render "proposals/map" %>
     </div>
@@ -15,7 +15,7 @@
     <aside class="margin-bottom">
       <%= render Proposals::NewButtonComponent.new(@current_projekt, @current_tab_phase) %>
 
-      <%= render Sidebar::ProjektsFilterComponent.new(@top_level_active_projekts, @top_level_archived_projekts, @all_resources, @current_tab_phase, @current_projekt) %>
+      <%= render Sidebar::ProjektsFilterComponent.new(@top_level_active_projekts, @top_level_archived_projekts, @proposals.except(:limit, :offset), @current_tab_phase, @current_projekt) %>
     </aside>
   </div>
 

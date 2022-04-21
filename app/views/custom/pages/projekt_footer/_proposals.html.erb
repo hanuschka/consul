@@ -1,11 +1,9 @@
 <%= render 'shared/loader_spinner' %>
 
 <% if projekt_feature?(@current_projekt, 'proposals.show_map') %>
-  <% cache @proposals.except(:limit, :offset).count do %>
-    <div class='margin-bottom'>
-      <%= render "proposals/map" %>
-    </div>
-  <% end %>
+  <div class='margin-bottom'>
+    <%= render "proposals/map" %>
+  </div>
 <% end %>
 
 <div class='row'>

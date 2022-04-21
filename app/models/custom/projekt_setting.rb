@@ -106,6 +106,7 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.budgets.enable_investment_milestones_tab": 'active',
         "projekt_feature.budgets.only_admins_create_investment_proposals": '',
         "projekt_feature.budgets.show_map": 'active',
+        "projekt_feature.budgets.show_results_after_first_vote": '',
 
         "projekt_newsfeed.id": '',
         "projekt_newsfeed.type": '',

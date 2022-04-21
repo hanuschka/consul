@@ -89,7 +89,7 @@
       </div>
 		<% end %>
 
-    <% unless extended_feature?("polls.additional_info_for_each_answer") %>
+    <% unless projekt_feature?(@poll&.projekt, "polls.additional_info_for_each_answer") %>
       <div id="poll_more_info_answers" class="expanded poll-more-info-answers">
         <div class="row padding">
           <% @poll_questions_answers.each do |answer| %>

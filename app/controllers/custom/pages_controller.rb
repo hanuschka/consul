@@ -251,6 +251,13 @@ class PagesController < ApplicationController
 
     params[:section] ||= 'results' if @budget.phase == 'finished'
 
+    # con-1036
+    if @budget.phase == 'publishing_prices' && @budget.projekt.present? && @budget.projekt.projekt_settings.find_by(key: 'projekt_feature.budgets.show_results_after_first_vote').value.present?
+      params[:filter] = 'selected'
+      @current_filter = nil
+    end
+    # con-1036
+
     if params[:section] == 'results'
       @investments = Budget::Result.new(@budget, @budget.headings.first).investments
     elsif params[:section] == 'stats'

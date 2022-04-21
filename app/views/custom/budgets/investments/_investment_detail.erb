@@ -42,7 +42,8 @@
 <% end %>
 
 <% if projekt_feature?(investment.projekt, 'budgets.show_user_cost_estimate') && investment.user_cost_estimate.present? %>
-  <p><%= t('custom.budgets.investments.show.user_cost_estimate', price: investment.user_cost_estimate) %></p>
+  <h2><%= t('custom.budgets.investments.show.user_cost_estimate') %></h2>
+  <p><%= investment.user_cost_estimate %></p>
 <% end %>
 
 <% if investment.should_show_unfeasibility_explanation? %>

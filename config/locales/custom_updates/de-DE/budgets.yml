@@ -16,7 +16,7 @@ de:
           implementation: Umsetzung
           implementation_user_text_html: "<p>%{author} unterstützt bei der Durchführung<p><p>%{implementation_contribution}</p>"
           implementation_city_text_html: "<p>Soll von Stadtverwaltung umgesetzt werden</p>"
-          user_cost_estimate: "Preisliche Einschätzung: %{price}"
+          user_cost_estimate: "Preisliche Einschätzung"
         statuses:
           phases:
             accepting: Der Investitionsvorschlag wurde erfolgreich eingereicht.

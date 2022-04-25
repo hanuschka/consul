@@ -443,7 +443,7 @@ de:
             title: "Bis 2030 auf den bestehenden Initiativen aufbauen, um Fortschrittsmaße für nachhaltige Entwicklung zu erarbeiten, die das Bruttoinlandsprodukt ergänzen, und den Aufbau der statistischen Kapazitäten der Entwicklungsländer unterstützen."
       help:
         title: "Hilfe zu den UN-Nachhaltigkeitsziele"
-        description: "Sie können Ihre Beiträge (Diskussionen, Vorschläge oder Investitionsvorschläge) den Zielen und Unterzielen der UN-Nachhaltigkeitsziele zuordnen. Unten können Sie sich über alle Ziele, ihre Vorgaben und lokalisierten Ziele informieren."
+        description: "Sie können Ihre Beiträge (Diskussionen, Vorschläge oder Projektvorschläge) den Zielen und Unterzielen der UN-Nachhaltigkeitsziele zuordnen. Unten können Sie sich über alle Ziele, ihre Vorgaben und lokalisierten Ziele informieren."
       show:
         read_more: "Mehr erfahren über %{goal}"
         read_less: "Weniger anzeigen über %{goal}"

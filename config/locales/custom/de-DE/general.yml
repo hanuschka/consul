@@ -165,7 +165,7 @@ de:
     banner: Banner
     proposal: Vorschlag
     proposal_notification: "Benachrichtigung"
-    budget/investment: Investitionsvorschlag
+    budget/investment: Projektvorschlag
     budget/group: Budget Gruppe
     budget/heading: Budget Untergruppe
     geozone: Bereiche
@@ -814,7 +814,7 @@ de:
       proposals: Vorschläge
       proposals_status: Status
       debates: Diskussionen
-      budget_investments: Investitionsvorschläge
+      budget_investments: Projektvorschläge
       comments: Kommentare
       actions: Aktionen
       filters:
@@ -828,8 +828,8 @@ de:
           one: 1 Vorschlag
           other: "%{count} Vorschläge"
         budget_investments:
-          one: 1 Investitionsvorschlag
-          other: "%{count} Investitionsvorschläge"
+          one: 1 Projektvorschlag
+          other: "%{count} Projektvorschläge"
         follows:
           one: 1 folge ich
           other: "%{count} folge ich"
@@ -924,7 +924,7 @@ de:
     content_title:
       proposal: "Vorschlag"
       debate: "Diskussion"
-      budget_investment: "Investitionsvorschläge"
+      budget_investment: "Projektvorschläge"
   admin/widget:
     header:
       title: Verwaltung

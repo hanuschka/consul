@@ -25,13 +25,13 @@ de:
           valuating: Unter Bewertung
           valuation_finished: Begutachtung abgeschlossen
         assigned_to: "%{valuator} zugewiesen"
-        title: Investitionsvorschläge
+        title: Projektvorschläge
         edit: Bericht bearbeiten
         table_id: ID
         table_title: Titel
         table_heading_name: Name der Rubrik
         table_actions: Aktionen
-        no_investments: "Keine Investitionsvorschläge vorhanden."
+        no_investments: "Keine Projektvorschläge vorhanden."
       show:
         back: Zurück
         title: Investitionsprojekt

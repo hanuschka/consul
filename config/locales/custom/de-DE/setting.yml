@@ -181,28 +181,28 @@ de:
           show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
           show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Abstimmungsübersichtsseite an
         budgets:
-          remove_investments_supports: Zurückziehen von Unterstützungen für Investitionsvorschläge zulassen
-          remove_investments_supports_description: Ermöglicht es den Nutzern, in der Phase der Projektauswahl Unterstützungen für Investitionsvorschläge zurückzuziehen
+          remove_investments_supports: Zurückziehen von Unterstützungen für Projektvorschläge zulassen
+          remove_investments_supports_description: Ermöglicht es den Nutzern, in der Phase der Projektauswahl Unterstützungen für Projektvorschläge zurückzuziehen
           show_report_button_in_sidebar: Investition melden
           show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Investitionen
           show_follow_button_in_sidebar: Investition folgen
           show_follow_button_in_sidebar_description: Aktivieren Sie die Funktion “Investition folgen”
           show_community_button_in_sidebar: Community
-          show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Community” für Investitionsvorschläge
+          show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Community” für Projektvorschläge
           show_related_content: Verwandte Inhalte
           show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
           show_implementation_option_fields: Umsetzung
-          show_implementation_option_fields_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Umsetzung” hinzu
+          show_implementation_option_fields_description: Fügt beim Erstellen eines Projektvorschlags ein Auswahlfeld “Umsetzung” hinzu
           show_user_cost_estimate: Preisliche Einschätzung
-          show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+          show_user_cost_estimate_description: Fügt beim Erstellen eines Projektvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
-          enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
-          enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
-          only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
+          enable_investment_milestones_tab: Meilensteine in Projektvorschläge
+          enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Projektvorschlägen, die von der Verwaltung angelegt werden müssen
+          only_admins_create_investment_proposals: Nur Admins können neue Projektvorschläge erstellen
           only_admins_create_investment_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
-          show_map: Karte für Investitionsvorschläge anzeigen
-          show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
+          show_map: Karte für Projektvorschläge anzeigen
+          show_map_description: Zeigt die Karte für Projektvorschläge in diesem Projekt an
           show_results_after_first_vote: Ergebnisliste nach erster Beteiligungsphase anzeigen
           show_results_after_first_vote_description: Zeigt in der Phase "Veröffentliching der Preise" nur ausgewählte Projekte als Ergebnisse an
 

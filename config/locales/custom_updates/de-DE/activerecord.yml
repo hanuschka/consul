@@ -28,7 +28,7 @@ de:
       proposal:
         on_behalf_of: Im Namen von
       budget/investment:
-        implementation_performer: Umsetzung des Investitionsvorschlages
+        implementation_performer: Umsetzung des Projektvorschlages
         implementation_performers:
           city: Umsetzung durch die Stadtverwaltung
           user: Ich kann bei der Umsetzung unterstützen

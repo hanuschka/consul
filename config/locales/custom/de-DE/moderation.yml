@@ -76,7 +76,7 @@ de:
         headers:
           moderate: Moderieren
           budget_investment: Haushaltsinvestitionen
-        hide_budget_investments: Investitionsvorschläge verbergen
+        hide_budget_investments: Projektvorschläge verbergen
         ignore_flags: Als gelesen markieren
         orders:
           created_at: neuestes

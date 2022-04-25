@@ -140,7 +140,7 @@ de:
           staff_settings: "Dem Budget zugewiesene Verwalter und Bewerter"
       destroy:
         success_notice: Budget erfolgreich gelöscht
-        unable_notice: Ein Budget mit zugehörigen Investitionsvorschlägen kann nicht gelöscht werden
+        unable_notice: Ein Budget mit zugehörigen Projektvorschlägen kann nicht gelöscht werden
         unable_notice_polls: Sie können kein Budget löschen, das eine zugehörige Abstimmung hat
       new:
         title_multiple: Neues Budget mit mehreren Rubriken
@@ -193,12 +193,12 @@ de:
         notice: "Rubrik erfolgreich aktualisiert"
       destroy:
         success_notice: "Rubrik erfolgreich gelöscht"
-        unable_notice: "Eine Rubrik mit zugehörigen Investitionsvorschlägen kann nicht gelöscht werden"
+        unable_notice: "Eine Rubrik mit zugehörigen Projektvorschlägen kann nicht gelöscht werden"
       form:
         max_ballot_lines_info: 'Maximum number of projects a user can vote on this heading during the "Voting projects" phase. Only for budgets using approval voting.'
         population_info: "Dieses Feld wird nur für statistische Zwecke verwendet, mit dem Ziel, den Prozentsatz der Stimmen in jeder Rubrik anzuzeigen. Dieses Feld ist optional; Sie können es daher leer lassen, wenn es nicht zutrifft."
-        coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Investitionsvorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
-        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, können Sie benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Investitionsvorschlagsseite für diese Rubrik angezeigt."
+        coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Projektvorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
+        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, können Sie benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Projektvorschlagsseite für diese Rubrik angezeigt."
         create: "Neue Rubrik erstellen"
         edit: "Rubrik bearbeiten"
         submit: "Rubrik speichern"
@@ -251,7 +251,7 @@ de:
           filter: Filter
         download_current_selection: "Aktuelle Auswahl herunterladen"
         no_budget_investments: "Keine Investitionsprojekte vorhanden."
-        title: Investitionsvorschläge
+        title: Projektvorschläge
         columns: Spalten
         assigned_admin: Zugewiesene*r Administrator*in
         no_admin_assigned: Kein*e Administrator*in zugewiesen
@@ -280,12 +280,12 @@ de:
           author: Autor
         cannot_calculate_winners: Das Budget muss in einer der Phasen "Finale Abstimmung", "Abstimmung beendet" oder "Ergebnisse" stehen, um Gewinnervorschläge berechnen zu können
         see_results: "Ergebnisse anzeigen"
-        milestone_tags_filter_all: "Status aller Investitionsvorschläge"
+        milestone_tags_filter_all: "Status aller Projektvorschläge"
       show:
         assigned_admin: Zugewiesene*r Administrator*in
         assigned_valuators: Zugewiesene Gutachter*innen
         classification: Klassifizierung
-        info: "%{budget_name} - Gruppe: %{group_name} - Investitionsvorschlag %{id}"
+        info: "%{budget_name} - Gruppe: %{group_name} - Projektvorschlag %{id}"
         edit: Bearbeiten
         edit_classification: Klassifizierung bearbeiten
         by: Von
@@ -381,21 +381,21 @@ de:
     statuses:
       index:
         title: Status der Vorschläge
-        empty_statuses: Es wurde noch kein Status für Investitionsvorschläge definiert
+        empty_statuses: Es wurde noch kein Status für Projektvorschläge definiert
         new_status: Neuen Status für Vorschlag erstellen
         table_name: Name
         table_description: Beschreibung
         table_actions: Aktionen
       edit:
-        title: Status des Investitionsvorschlag bearbeiten
+        title: Status des Projektvorschlag bearbeiten
       update:
-        notice: Status des Investitionsvorschlag erfolgreich aktualisiert
+        notice: Status des Projektvorschlag erfolgreich aktualisiert
       new:
-        title: Status des Investitionsvorschlag erstellen
+        title: Status des Projektvorschlag erstellen
       create:
-        notice: Status des Investitionsvorschlag erfolgreich erstellt
+        notice: Status des Projektvorschlag erfolgreich erstellt
       delete:
-        notice: Status des Investitionsvorschlag erfolgreich gelöscht
+        notice: Status des Projektvorschlag erfolgreich gelöscht
     progress_bars:
       manage: "Fortschrittsbalken verwalten"
       index:
@@ -723,7 +723,7 @@ de:
       hidden_comments: Verborgene Kommentare
       hidden_debates: Verborgene Diskussionen
       hidden_proposals: Verborgene Vorschläge
-      hidden_budget_investments: Verborgene Investitionsvorschläge
+      hidden_budget_investments: Verborgene Projektvorschläge
       hidden_proposal_notifications: Verborgene Benachrichtigungen
       hidden_users: Verborgene Benutzer*innen
       administrators: Administrator*innen
@@ -1444,7 +1444,7 @@ de:
           proposal_votes: Bewertungen Vorschlag
           proposals: Vorschläge
           budgets: Offene Haushalte
-          budget_investments: Investitionsvorschläge
+          budget_investments: Projektvorschläge
           unverified_users: Nicht verifizierte Benutzer*innen
           user_level_three: Benutzer*innen auf Stufe 3
           user_level_two: Benutzer*innen auf Stufe 2

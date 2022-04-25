@@ -95,7 +95,7 @@ de:
     budget_investments:
       alert:
         unverified_user: Benutzer ist nicht bestätigt
-      create: Investitionsvorschlag erstellen
+      create: Projektvorschlag erstellen
       edit: Budgetinvestitionen bearbeiten
       filters:
         heading: Konzept

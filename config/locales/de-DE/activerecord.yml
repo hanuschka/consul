@@ -17,8 +17,8 @@ de:
         one: "Bürgerhaushalt"
         other: "Bürgerhaushalte"
       budget/investment:
-        one: "Investitionsvorschlag"
-        other: "Ausgabenvorschläge"
+        one: "Projektvorschlag"
+        other: "Projektvorschläge"
       milestone:
         one: "Meilenstein"
         other: "Meilensteine"

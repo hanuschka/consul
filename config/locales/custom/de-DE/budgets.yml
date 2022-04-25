@@ -24,14 +24,14 @@ de:
         no_balloted_group_yet: "Sie haben in dieser Gruppe noch nicht abgestimmt. Stimmen Sie jetzt ab!"
         remove: Stimme entfernen
         voted:
-          one: "Sie haben für <span>one</span> Investitionsvorschläge gestimmt."
-          other: "Sie haben für <span>%{count}</span> Investitionsvorschläge gestimmt."
+          one: "Sie haben für <span>one</span> Projektvorschläge gestimmt."
+          other: "Sie haben für <span>%{count}</span> Projektvorschläge gestimmt."
         voted_info: "Ihre Stimme ist bestätigt!"
         voted_info_2: "Aber Sie können Ihre Stimme jederzeit ändern, bis diese Phase abgeschlossen ist."
-        zero: Sie haben noch über keinen Investitionsvorschlag abgestimmt.
+        zero: Sie haben noch über keinen Projektvorschlag abgestimmt.
       reasons_for_not_balloting:
         not_logged_in: Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können.
-        not_verified: Nur verifizierte Benutzer*innen können über einen Investitionsvorschlag abstimmen; %{verify_account}.
+        not_verified: Nur verifizierte Benutzer*innen können über einen Projektvorschlag abstimmen; %{verify_account}.
         organization: Organisationen ist es nicht erlaubt abzustimmen
         not_selected: Für nicht durchführbare Ausgabevorschläge kann nicht abgestimmt werden
         not_enough_money: "Sie haben bereits das gesamte verfügbare Budget zugewiesen.<br><small>Bitte denken Sie daran, dass Sie dies %{change_ballot} jederzeit</small>ändern können"
@@ -46,12 +46,12 @@ de:
     phase:
       drafting: Entwurf (nicht für die Öffentlichkeit sichtbar)
       informing: Information
-      accepting: Investitionsvorschläge einreichen
-      reviewing: Interne Überprüfung der Investitionsvorschläge
+      accepting: Projektvorschläge einreichen
+      reviewing: Interne Überprüfung der Projektvorschläge
       selecting: Unterstützungsphase
-      valuating: Investitionsvorschläge begutachten
-      publishing_prices: Preise der Investitionsvorschläge veröffentlichen
-      balloting: Abstimmung über Investitionsvorschläge
+      valuating: Projektvorschläge begutachten
+      publishing_prices: Preise der Projektvorschläge veröffentlichen
+      balloting: Abstimmung über Projektvorschläge
       reviewing_ballots: Abstimmung überprüfen
       finished: Abschluss aktuelles Budget
     index:
@@ -62,10 +62,10 @@ de:
         title: Budgets
         help: Hilfe zu Budgets
       all_phases: Phasen des Budgets
-      map: Investitionsvorschläge geografisch geordnet
-      investment_proyects: Liste aller Investitionsvorschläge, die gewonnen haben
-      unfeasible_investment_proyects: Liste aller nicht durchführbaren Investitionsvorschläge
-      not_selected_investment_proyects: Liste aller Investitionsvorschläge, die nicht für die Abstimmung ausgewählt wurden
+      map: Projektvorschläge geografisch geordnet
+      investment_proyects: Liste aller Projektvorschläge, die gewonnen haben
+      unfeasible_investment_proyects: Liste aller nicht durchführbaren Projektvorschläge
+      not_selected_investment_proyects: Liste aller Projektvorschläge, die nicht für die Abstimmung ausgewählt wurden
       finished_budgets: Abgeschlossene Budgets
       see_results: Ergebnisse anzeigen
       section_footer:
@@ -85,12 +85,12 @@ de:
         map_remove_marker: "Entfernen Sie die Kartenmarkierung"
       index:
         title: Budgets
-        unfeasible: Undurchführbare Investitionsvorschläge
-        unfeasible_text: "Der Investitionsvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, innerhalb des Limits des Budgetss) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Investitionsvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
-        by_heading: "Investitionsvorschläge im Bereich: %{heading}"
+        unfeasible: Undurchführbare Projektvorschläge
+        unfeasible_text: "Der Projektvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, innerhalb des Limits des Budgetss) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Projektvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
+        by_heading: "Projektvorschläge im Bereich: %{heading}"
         search_form:
           button: Suche
-          placeholder: Suche Investitionsvorschläge...
+          placeholder: Suche Projektvorschläge...
           title: Suche
         search_results:
           one: " enthält den Begriff <strong>'%{search_term}'</strong>"
@@ -111,10 +111,10 @@ de:
           different_heading_assigned: "Sie haben bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
           change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme unter %{check_ballot} entfernen und von vorne beginnen."
           check_ballot_link: "Überprüfung meiner Abstimmung"
-          zero: Sie haben für keinen Investitionsvorschlag in dieser Gruppe abgestimmt.
-          verified_only: "Um ein neuen Investitionsvorschlag zu erstellen %{verify}."
-          create: "Investitionsvorschlag erstellen"
-          not_logged_in: "Um einen neuen Investitionsvorschlag erstellen zu können, müssen Sie %{sign_in} oder %{sign_up}."
+          zero: Sie haben für keinen Projektvorschlag in dieser Gruppe abgestimmt.
+          verified_only: "Um ein neuen Projektvorschlag zu erstellen %{verify}."
+          create: "Projektvorschlag erstellen"
+          not_logged_in: "Um einen neuen Projektvorschlag erstellen zu können, müssen Sie %{sign_in} oder %{sign_up}."
         filter: "Projekte filtern nach"
         filters:
           not_unfeasible: "Durchführbar"
@@ -127,12 +127,12 @@ de:
           confidence_score: Am besten bewertet
           price: Nach Preis
       share:
-        message: "Ich habe einen Investitionsvorschlag %{title} in %{handle} erstellt. Erstellen Sie auch einen Investitionsvorschlag!"
+        message: "Ich habe einen Projektvorschlag %{title} in %{handle} erstellt. Erstellen Sie auch einen Projektvorschlag!"
       show:
         author_deleted: Benutzer gelöscht
         price_explanation: Preiserklärung
         unfeasibility_explanation: Erläuterung der Undurchführbarkeit
-        code: "Code des Investitionsvorschlags: <strong>%{code}</strong>"
+        code: "Code des Projektvorschlags: <strong>%{code}</strong>"
         location: "Standort: <strong>%{location}</strong>"
         organization_name: "Vorgeschlagen von: <strong>%{name}</strong>"
         share: Teilen
@@ -143,15 +143,15 @@ de:
         comments_tab: Kommentare
         milestones_tab: Meilensteine
         author: Autor
-        project_unfeasible: "Dieser Investitionsvorschlag <strong>wurde als nicht durchführbar markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
-        project_selected: "Dieser Investitionsvorschlag wurde für die Abstimmungsphase <strong>ausgewählt</strong>."
-        project_winner: "Best bewerteter Investitionsvorschlag"
-        project_not_selected: "Dieser Investitionsvorschlag wurde <strong>nicht</strong> für die Abstimmungsphase ausgewählt."
+        project_unfeasible: "Dieser Projektvorschlag <strong>wurde als nicht durchführbar markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
+        project_selected: "Dieser Projektvorschlag wurde für die Abstimmungsphase <strong>ausgewählt</strong>."
+        project_winner: "Best bewerteter Projektvorschlag"
+        project_not_selected: "Dieser Projektvorschlag wurde <strong>nicht</strong> für die Abstimmungsphase ausgewählt."
         see_price_explanation: Erläuterung der Kosten anzeigen
       wrong_price_format: Nur ganze Zahlen
       investment:
         add: Stimme
-        already_added: Sie haben diesen Investitionsvorschlag bereits hinzugefügt
+        already_added: Sie haben diesen Projektvorschlag bereits hinzugefügt
         support_title: Unterstützen Sie dieses Projekt
         supports:
           zero: Keine Unterstützung
@@ -202,19 +202,19 @@ de:
       show_all_link: Alle anzeigen
       price: Preis
       amount_available: VerfügbareBudgetmittel
-      accepted: "Genehmigter Investitionsvorschlag: "
-      discarded: "Verworfener Investitionsvorschlag: "
+      accepted: "Genehmigter Projektvorschlag: "
+      discarded: "Verworfener Projektvorschlag: "
       incompatibles: Unvereinbar
       investment_title: Vorschlag Titel
-      investment_proyects: Liste aller Investitionsvorschläge, die gewonnen haben
-      unfeasible_investment_proyects: Liste aller nicht durchführbaren Investitionsvorschläge
-      not_selected_investment_proyects: Liste aller Investitionsvorschläge, die es nicht in die Abstimmung geschafft haben
+      investment_proyects: Liste aller Projektvorschläge, die gewonnen haben
+      unfeasible_investment_proyects: Liste aller nicht durchführbaren Projektvorschläge
+      not_selected_investment_proyects: Liste aller Projektvorschläge, die es nicht in die Abstimmung geschafft haben
     executions:
       link: "Meilensteine"
       page_title: "%{budget} - Meilensteine"
       heading: "Meilensteine des Budgets"
       heading_selection_title: "Nach Gebiet"
-      no_winner_investments: "Keine erfolgreichen Investitionsvorschläge in diesem Status"
+      no_winner_investments: "Keine erfolgreichen Projektvorschläge in diesem Status"
       filters:
         status:
           label: "Aktueller Stand des Projekts"

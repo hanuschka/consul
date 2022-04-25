@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_08_065530) do
+ActiveRecord::Schema.define(version: 2022_04_19_084756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -335,6 +335,7 @@ ActiveRecord::Schema.define(version: 2022_04_08_065530) do
     t.integer "original_heading_id"
     t.integer "implementation_performer", default: 0
     t.text "implementation_contribution"
+    t.integer "user_cost_estimate"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -1404,6 +1405,16 @@ ActiveRecord::Schema.define(version: 2022_04_08_065530) do
     t.integer "percentage"
     t.string "progressable_type"
     t.integer "progressable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "projekt_events", force: :cascade do |t|
+    t.string "title"
+    t.string "location"
+    t.datetime "datetime"
+    t.string "weblink"
+    t.integer "projekt_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

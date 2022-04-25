@@ -18,6 +18,7 @@ class Projekt < ApplicationRecord
   has_many :proposals, dependent: :nullify
   has_many :polls, dependent: :nullify
   has_one :budget, dependent: :nullify
+  has_many :projekt_events, dependent: :nullify
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
 
@@ -30,6 +31,7 @@ class Projekt < ApplicationRecord
   has_one :milestone_phase, class_name: 'ProjektPhase::MilestonePhase'
   has_one :projekt_notification_phase, class_name: 'ProjektPhase::ProjektNotificationPhase'
   has_one :newsfeed_phase, class_name: 'ProjektPhase::NewsfeedPhase'
+  has_one :event_phase, class_name: 'ProjektPhase::EventPhase'
   has_many :geozone_restrictions, through: :projekt_phases
   has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
 
@@ -39,7 +41,7 @@ class Projekt < ApplicationRecord
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
-  accepts_nested_attributes_for :debate_phase, :proposal_phase, :budget_phase, :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications
+  accepts_nested_attributes_for :debate_phase, :proposal_phase, :budget_phase, :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications, :projekt_events, :event_phase
 
   before_validation :set_default_color
   around_update :update_page
@@ -50,6 +52,7 @@ class Projekt < ApplicationRecord
   after_destroy :ensure_projekt_order_integrity
 
   validates :color, format: { with: /\A#[\d, a-f, A-F]{6}\Z/ }
+  validates :name, presence: true
 
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
   scope :top_level, -> { with_order_number.
@@ -86,17 +89,19 @@ class Projekt < ApplicationRecord
     end
 
     def selectable_in_sidebar_current(controller_name)
-      select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.current? && ( p.send(controller_name).any? || p.has_active_phase?(controller_name) ) } }
+      return [] unless controller_name.in?(['proposals', 'debates', 'polls'])
+      select { |projekt| projekt.current? && projekt.all_children_projekts.unshift(projekt).any? { |p| p.projekt_settings.find_by(key: "projekt_feature.#{controller_name}.show_in_sidebar_filter").value.present? } }
     end
 
     def selectable_in_sidebar_expired(controller_name)
-      select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.expired? && p.send(controller_name).any? } }
+      return [] unless controller_name.in?(['proposals', 'debates', 'polls'])
+      select { |projekt| projekt.expired? && projekt.all_children_projekts.unshift(projekt).any? { |p| p.projekt_settings.find_by(key: "projekt_feature.#{controller_name}.show_in_sidebar_filter").value.present? } }
     end
   end
 
   def regular_projekt_phases
     projekt_phases.
-      where.not(type: ['ProjektPhase::MilestonePhase', 'ProjektPhase::ProjektNotificationPhase', 'ProjektPhase::NewsfeedPhase' ])
+      where.not(type: ['ProjektPhase::MilestonePhase', 'ProjektPhase::ProjektNotificationPhase', 'ProjektPhase::NewsfeedPhase', 'ProjektPhase::EventPhase'])
   end
 
   def update_page
@@ -107,11 +112,12 @@ class Projekt < ApplicationRecord
   def selectable?(controller_name, user)
     return true if controller_name == 'polls'
     return false if user.nil?
-    return false if selectable_by_admins_only? && user.administrator.blank?
 
     if controller_name == 'proposals'
+      return false if proposals_selectable_by_admins_only? && user.administrator.blank?
       proposal_phase.selectable_by?(user)
     elsif controller_name == 'debates'
+      return false if debates_selectable_by_admins_only? && user.administrator.blank?
       debate_phase.selectable_by?(user)
     end
   end
@@ -139,9 +145,16 @@ class Projekt < ApplicationRecord
       total_duration_end < timestamp
   end
 
-  def selectable_by_admins_only?
+  def debates_selectable_by_admins_only?
     projekt_settings.
-      find_by( projekt_settings: { key: "projekt_feature.general.only_admins_create_debates_proposals" } ).
+      find_by( projekt_settings: { key: "projekt_feature.debates.only_admins_create_debates" } ).
+      value.
+      present?
+  end
+
+  def proposals_selectable_by_admins_only?
+    projekt_settings.
+      find_by( projekt_settings: { key: "projekt_feature.proposals.only_admins_create_proposals" } ).
       value.
       present?
   end
@@ -274,6 +287,7 @@ class Projekt < ApplicationRecord
       projekt.milestone_phase = ProjektPhase::MilestonePhase.create unless projekt.milestone_phase
       projekt.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create unless projekt.projekt_notification_phase
       projekt.newsfeed_phase = ProjektPhase::NewsfeedPhase.create unless projekt.newsfeed_phase
+      projekt.event_phase = ProjektPhase::EventPhase.create unless projekt.event_phase
     end
   end
 
@@ -332,6 +346,7 @@ class Projekt < ApplicationRecord
     self.milestone_phase = ProjektPhase::MilestonePhase.create
     self.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create
     self.newsfeed_phase = ProjektPhase::NewsfeedPhase.create
+    self.event_phase = ProjektPhase::EventPhase.create
   end
 
   def swap_order_numbers_up

@@ -1,6 +1,11 @@
 <tr class="projekt_phase_settings" style='vertical-align:top;' >
   <td>
     <%= t("custom.admin.projekts.edit.projekt_phases_tab.#{phase_name}") %>
+    <div>
+      <small>
+        <%= "/#{@projekt.page.slug}?selected_phase_id=#{projekt_phase.id}"  %>
+      </small>
+    </div>
   </td>
   <td>
     <%= form_for(@projekt, url: admin_projekt_path, as: :projekt) do |f| %>

@@ -78,6 +78,8 @@ de:
 
       extended_option:
         general:
+          title: Titel der Applikation
+          title_description: Fügt einen Titel zur Applikation hinzu.
           subtitle: Untertitel der Applikation
           subtitle_description: Fügt einen Untertitel zur Applikation hinzu.
         gdpr:
@@ -169,6 +171,9 @@ de:
           show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Vorschlagsübersichtsseite an
           show_map: Karte für Vorschläge anzeigen
           show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
+        proposal_options:
+          votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
+          votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
         polls:
           intermediate_poll_results_for_admins: Zwischenergebnisse von Abstimmungen für Admins
           intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
@@ -197,10 +202,14 @@ de:
           show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
-          enable_investment_milestones_tab: Meilensteine in Vorschlägen
-          enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
+          enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
+          enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
+          only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
+          only_admins_create_investment_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
           show_map: Karte für Investitionsvorschläge anzeigen
           show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
+          show_results_after_first_vote: Ergebnisliste nach erster Beteiligungsphase anzeigen
+          show_results_after_first_vote_description: Zeigt in der Phase "Veröffentliching der Preise" nur ausgewählte Projekte als Ergebnisse an
 
       deficiency_reports:
         show_in_main_menu: Mängelmelder in Navigation anzeigen

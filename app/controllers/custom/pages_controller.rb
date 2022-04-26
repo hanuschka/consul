@@ -234,6 +234,7 @@ class PagesController < ApplicationController
     params[:filter] ||= 'feasible' if @current_projekt.budget.phase.in?(['selecting', 'valuating'])
     params[:filter] ||= 'winners' if @current_projekt.budget.phase == 'finished'
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
+    @all_resources = []
 
     @current_tab_phase = @current_projekt.budget_phase
     params[:current_tab_path] = 'budget_phase_footer_tab'
@@ -245,6 +246,13 @@ class PagesController < ApplicationController
     @heading = @headings.first
 
     params[:section] ||= 'results' if @budget.phase == 'finished'
+
+    # con-1036
+    if @budget.phase == 'publishing_prices' && @budget.projekt.present? && @budget.projekt.projekt_settings.find_by(key: 'projekt_feature.budgets.show_results_after_first_vote').value.present?
+      params[:filter] = 'selected'
+      @current_filter = nil
+    end
+    # con-1036
 
     if params[:section] == 'results'
       @investments = Budget::Result.new(@budget, @budget.headings.first).investments

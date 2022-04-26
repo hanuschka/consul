@@ -160,6 +160,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.extended_editor_for_users": true,
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.links_to_create_resources_in_menu": false,
+        "extended_option.general.title": 'Öffentlichkeitsbeteiligung',
         "extended_option.general.subtitle": 'in der Stadt CONSUL',
 
         "extended_feature.gdpr.gdpr_conformity": false,
@@ -170,14 +171,14 @@ class Setting < ApplicationRecord
         "extended_option.gdpr.devise_verification_token_validity_days": 3,
 
         "extended_feature.modulewide.enable_categories": false,
-        "extended_feature.modulewide.enable_custom_tags": false,
+        # temporarily disabled  "extended_feature.modulewide.enable_custom_tags": false,
         "extended_feature.modulewide.show_number_of_entries_in_modules": true,
         "extended_feature.modulewide.show_affiliation_filter_in_index_sidebar": false,
         "extended_feature.modulewide.hide_comment_replies_by_default": false,
         "extended_feature.modulewide.custom_help_text_in_modules": false,
 
         "extended_feature.debates.intro_text_for_debates": true,
-        # "extended_feature.debates.head_image_for_debates": true,
+        "extended_feature.debates.head_image_for_debates": true,
         # "extended_feature.debates.show_report_button_in_debate_sidebar": true,
         # "extended_feature.debates.show_related_content": true,
         "extended_feature.debates.enable_projekt_filter": true,

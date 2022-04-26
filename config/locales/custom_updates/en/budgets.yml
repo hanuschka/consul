@@ -11,12 +11,15 @@ en:
       investments:
         show:
           callouts:
-            undecided: This investment proposal was not eveluated yet.
-            unfeasible: This investment proposal was evaluated as unfeasible.
+            selecting:
+              undecided: This investment proposal was not eveluated yet.
+              unfeasible: This investment proposal was evaluated as unfeasible.
+            publishing_prices:
+              undecided: The investment proposal was not decided yet.
           implementation: Implementation
           implementation_text_html: "<p>%{author} supports with implementation<p><p>%{implementation_contribution}</p>"
           implementation_city_text_html: "<p>Needs to be implemented by the city</p>"
-          user_cost_estimate: "Cost estimate: %{price}"
+          user_cost_estimate: "Cost estimate"
         statuses:
           phases:
             accepting: The investment proposal was successfully submitted.

@@ -1,8 +1,14 @@
 de:
   custom:
     projekts:
+      projekts:
+        orders:
+          active: 'Aktive Beteiligung'
+          ongoing: 'Laufende Projekte'
+          upcoming: 'Zukünftige Projektvorhaben'
+          expired: 'Abgeschlossen'
       index:
-        title: Projektübersicht
+        title: Projekte
         current_projekts: Projekte mit aktiver Beteiligungsphase
         expired_projekts: Abgeschlossene Projekte
       backlink: Zur Projektübersicht

@@ -101,11 +101,7 @@
           </div>
         <% end %>
 
-        <% if @budget.phase.in?(['accepting', 'reviewing', 'valuating', 'reviewing_ballots']) %>
-          <div class="callout warning">
-            <%= t("custom.budgets.investments.statuses.phases.#{investment.budget.phase}") %>
-          </div>
-        <% end %>
+        <%= render partial: 'budgets/investments/investment_status_callout', locals: { investment: investment } %>
 
         <% if investment.should_show_price? %>
           <div class="sidebar-divider"></div>

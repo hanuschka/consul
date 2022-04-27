@@ -60,9 +60,31 @@ class Projekt < ApplicationRecord
   scope :activated, -> { joins( 'INNER JOIN projekt_settings act ON projekts.id = act.projekt_id' ).
                          where( 'act.key': 'projekt_feature.main.activate', 'act.value': 'active' ) }
 
-  scope :current, ->(timestamp = Date.today) { activated.
-                                               where( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today ).
-                                               where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today) }
+  scope :current, ->(timestamp = Date.today) {
+    activated
+      .where( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today )
+      .where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today)
+  }
+  scope :active, -> { current }
+
+  scope :not_active, -> {
+    activated
+      .where.not( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today )
+      .where.not( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today)
+  }
+
+  scope :ongoing, -> {
+    activated
+      .joins(:projekt_phases)
+      .where( "projekt_phases.start_date <= ?", Date.today )
+      .where( "projekt_phases.end_date >= ?", Date.today )
+  }
+
+  scope :upcoming, -> {
+    activated
+      .where( "total_duration_end > ?", Date.today)
+  }
+
   scope :expired, ->(timestamp = Date.today) { activated.
                                                where( "total_duration_end < ?", Date.today) }
 
@@ -82,6 +104,8 @@ class Projekt < ApplicationRecord
 
     where(author_id: current_user_id)
   }
+
+  scope :last_week, -> { where("projekts.created_at >= ?", 7.days.ago) }
 
   class << self
     def selectable_in_selector(controller_name, current_user)

@@ -534,10 +534,11 @@ span.projekt-backlink:before {
 }
 
 .projekt-listing {
+  display: flex;
   border: 1px solid #e5e6e9;
   background: #f9f9f9;
   color: #707070;
-  padding: 10px;
+  padding: 18px;
   margin-bottom: 1rem;
 
   .image img {
@@ -546,13 +547,18 @@ span.projekt-backlink:before {
     margin-bottom: 20px;
 
     @media (min-width: 40em) {
-      padding-right: 10px;
+      padding-right: 30px;
       margin-bottom: 0;
     }
   }
 
   .content-wrapper {
     padding-right: 15px;
+    padding-top: 15px;
+  }
+
+  .projekt-title {
+    font-size: 18px;
   }
 
   .actions {
@@ -568,6 +574,25 @@ span.projekt-backlink:before {
       margin: auto;
       width: max-content;
       height: fit-content;
+    }
+  }
+
+  p {
+    margin-bottom: 5px;
+  }
+
+  .sdg-tag-list .sdg-goal-tag-list {
+    margin-left: 0;
+
+    .selected-goal {
+      margin-right: 2px;
+      margin-left: 2px;
+
+    }
+    .sdg-goal-icon {
+      min-width: 42px;
+      max-width: 42px;
+      width: auto;
     }
   }
 }
@@ -613,4 +638,39 @@ span.projekt-backlink:before {
 
 .projekt-event-tab-title {
   margin-bottom: 20px;
+}
+
+.projekts-page {
+  .order-links {
+    a, h2 {
+      font-size: 18px;
+    }
+  }
+}
+
+.projekts-map {
+  margin-bottom: 50px;
+  margin-left: calc(-50vw + 37.5rem);
+  margin-right: calc(-50vw + 37.5rem);
+  width: auto;
+}
+
+.projekt-item-attributes {
+  display: flex;
+}
+
+.projekt-item-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+
+.projekt-item-tag {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: #ECECEC;
+  color: black;
+  font-size: 14px;
 }

@@ -78,6 +78,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt_features_footer = all_projekt_features['footer']
     @projekt_features_debates = all_projekt_features['debates']
     @projekt_features_proposals = all_projekt_features['proposals']
+    @projekt_options_proposals = all_projekt_features['proposal_options']
     @projekt_features_polls = all_projekt_features['polls']
     @projekt_features_budgets = all_projekt_features['budgets']
 

@@ -78,6 +78,8 @@ de:
 
       extended_option:
         general:
+          title: Titel der Applikation
+          title_description: Fügt einen Titel zur Applikation hinzu.
           subtitle: Untertitel der Applikation
           subtitle_description: Fügt einen Untertitel zur Applikation hinzu.
         gdpr:
@@ -169,6 +171,9 @@ de:
           show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Vorschlagsübersichtsseite an
           show_map: Karte für Vorschläge anzeigen
           show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
+        proposal_options:
+          votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
+          votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
         polls:
           intermediate_poll_results_for_admins: Zwischenergebnisse von Abstimmungen für Admins
           intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren

@@ -1,4 +1,4 @@
-<main>
+<main class="projekts-page">
   <div class='row'>
     <div class='column'>
       <h1 class='margin-bottom'>
@@ -7,32 +7,35 @@
     </div>
   </div>
 
+  <div class="map projekts-map not-print">
+    <% if @selected_parent_projekt %>
+      <%= render_map(@selected_parent_projekt.map_location, "projekts", false, nil, @projekts_coordinates) %>
+    <% else %>
+      <%= render_map(nil, "projekts", false, nil, @projekts_coordinates) %>
+    <% end %>
+  </div>
+
   <div class='row'>
     <div class='column small-12 medium-9'>
+      <%= render Shared::OrderLinksComponent.new("custom.projekts.projekts") %>
 
-      <% if @current_projekts.any? %>
-        <h3><%= t('custom.projekts.index.current_projekts') %></h3>
-
+      <% if @projekts.any? %>
         <% Projekt.top_level.each do |top_level_projekt| %>
           <% top_level_projekt.all_children_projekts.unshift(top_level_projekt).each do |projekt| %>
-            <%= render partial: 'projekt', locals: { projekt: projekt } if projekt.in? @current_projekts %>
+            <%= render partial: 'projekt', locals: { projekt: projekt } if projekt.in? @projekts %>
           <% end %>
         <% end %>
       <% end %>
-
-      <% if @expired_projekts.any? %>
-        <h3 class='margin-top'><%= t('custom.projekts.index.expired_projekts') %></h3>
-
-        <% Projekt.top_level.each do |top_level_projekt| %>
-          <% top_level_projekt.all_children_projekts.unshift(top_level_projekt).each do |projekt| %>
-            <%= render partial: 'projekt', locals: { projekt: projekt } if projekt.in? @expired_projekts %>
-          <% end %>
-        <% end %>
-      <% end %>
-
     </div>
 
     <div class='column small-12 medium-3'>
+      <%# <% if show_affiliation_filter_in_sidebar? %>
+      <%= render "shared/sidebar_filter/geozone_affiliations" %>
+      <%# <% end %>
+
+      <%= render "shared/categories", taggable: "projekt" %>
+      <%= render SDG::Goals::TagCloudComponent.new("Projekt") %>
+
       <%= render "shared/social_share",
           share_title: t("custom.pages.social_share.share"),
           title: 'Title',

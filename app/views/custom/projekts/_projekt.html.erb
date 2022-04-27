@@ -8,8 +8,15 @@
 
   <div class='column medium-6 content' data-equalizer-watch='projekt'>
     <div class='content-wrapper'>
-      <h4><%= projekt.page.title %></h4>
+      <h4 class="projekt-title"><%= projekt.page.title %></h4>
       <p><%= projekt.description %></p>
+      <div class="projekt-item-tag-list">
+        <% projekt.tags.each do |tag| %>
+          <div class="projekt-item-tag">
+            <%= tag.name %>
+          </div>
+        <% end %>
+      </div>
       <%= render SDG::TagListComponent.new(projekt, limit: 3) %>
     </div>
   </div>

@@ -30,7 +30,7 @@
               <% else %>
                 <%= f.text_field :first_name, disabled: true %>
                 <%= f.text_field :last_name, disabled: true %>
-                <%= f.select :bam_street_id, BamStreet.all.map{ |str| [str.name, str.id]  } %>
+                <%= f.select :bam_street_id, BamStreet.all.map{ |str| [str.name, str.id]  }, {}, { disabled: @account.bam_street.present? } %>
               <% end %>
             </div>
 

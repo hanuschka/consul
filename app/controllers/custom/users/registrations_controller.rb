@@ -65,7 +65,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user.errors[:date_of_birth].uniq! if @user.errors[:date_of_birth].any?
 
     if @user.citizen?
-      @user.errors.add :bam_street_id, :blank if update_user_details_params[:bam_street_id].blank?
+
+      if update_user_details_params[:bam_street_id].blank?
+        @user.errors.add :bam_street_id, :blank
+      else
+        @user.update(plz: @user.bam_street.plz)
+      end
+
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
       @user.errors.add :document_number, :blank if params[:user][:document_number].blank?
       @user.errors.add :document_number, :length unless params[:user][:document_number].length == 4
@@ -76,7 +82,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         update_user_details_params['date_of_birth(1i)'],
         update_user_details_params['date_of_birth(2i)'],
         update_user_details_params['date_of_birth(3i)'],
-        update_user_details_params[:plz]
+        @user.bam_street.plz.to_s
       )
       user_with_this_stamp = User.active.find_by(bam_unique_stamp: bam_unique_stamp)
       @user.errors.add(:first_name, :uniqueness_check) if bam_unique_stamp.nil? || (user_with_this_stamp.present? && user_with_this_stamp != @user)

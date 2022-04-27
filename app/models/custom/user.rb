@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
+  belongs_to :bam_street
 
   scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) }
 

@@ -57,8 +57,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.update(update_user_details_params)
 
-    @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
-    @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/
     @user.errors.add :first_name, :blank if update_user_details_params[:first_name].blank?
     @user.errors.add :last_name, :blank if update_user_details_params[:last_name].blank?
     @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(1i)'].blank?
@@ -67,6 +65,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user.errors[:date_of_birth].uniq! if @user.errors[:date_of_birth].any?
 
     if @user.citizen?
+      @user.errors.add :bam_street_id, :blank if update_user_details_params[:bam_street_id].blank?
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
       @user.errors.add :document_number, :blank if params[:user][:document_number].blank?
       @user.errors.add :document_number, :length unless params[:user][:document_number].length == 4
@@ -82,6 +81,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       user_with_this_stamp = User.active.find_by(bam_unique_stamp: bam_unique_stamp)
       @user.errors.add(:first_name, :uniqueness_check) if bam_unique_stamp.nil? || (user_with_this_stamp.present? && user_with_this_stamp != @user)
     else
+      @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
+      @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/
       @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
       @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?
       @user.errors.add :house_number, :blank if update_user_details_params[:house_number].blank?
@@ -133,6 +134,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_user_details_params
-    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :street_name, :house_number, :city_name)
+    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :street_name, :house_number, :city_name, :bam_street_id)
   end
 end

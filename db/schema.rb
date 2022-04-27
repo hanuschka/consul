@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_19_084756) do
+ActiveRecord::Schema.define(version: 2022_04_27_090545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -160,6 +160,13 @@ ActiveRecord::Schema.define(version: 2022_04_19_084756) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "bam_streets", force: :cascade do |t|
+    t.string "name"
+    t.integer "plz"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "banner_sections", id: :serial, force: :cascade do |t|
@@ -1886,6 +1893,8 @@ ActiveRecord::Schema.define(version: 2022_04_19_084756) do
     t.string "dor_street_number"
     t.string "dor_plz"
     t.string "dor_city"
+    t.bigint "bam_street_id"
+    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -2072,6 +2081,7 @@ ActiveRecord::Schema.define(version: 2022_04_19_084756) do
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "site_customization_pages", "projekts"
+  add_foreign_key "users", "bam_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "valuators", "users"
 end

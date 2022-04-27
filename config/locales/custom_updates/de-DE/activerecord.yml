@@ -62,3 +62,5 @@ de:
         user_cost_estimate: Preisliche Einschätzung
       user:
         bam_street_id: Straße
+      projekt_phase:
+        bam_street_id: Straße

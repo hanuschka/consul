@@ -71,11 +71,12 @@ de:
         affiliations:
           entire_city: Stadtweit
           no_affiliation: Keine Gebietszuordnung
-          only_geozones: Zuordnung zu Stadtteil
+          only_geozones: Zuordnung zu PLZ
         restrictions:
           no_restriction: Alle Nutzer:innen
           only_citizens: Nur Bürger:innen
-          only_geozones: Nur Bürger:innen des Stadtteils
+          only_geozones: Nur Bürger:innen aus PLZ
+          only_streets: Nur Bürger:innen aus Straßen
       sidebar_filter:
         affiliations:
           all_resources: Alle %{resource_name}
@@ -83,14 +84,15 @@ de:
           entire_city_short: Stadtweit
           filter_button: Nach Gebiete filtern
           no_affiliation: Keine Gebietszuordnung
-          only_geozones: Zuordnung zu Stadtteil
+          only_geozones: Zuordnung zu PLZ
           show_more: Mehr anzeigen
           title: Gebiete
         restrictions:
           filter_button: Nach Partizipation filtern
           no_restriction: Alle Nutzer:innen der Plattform
           only_citizens: Nur Bürger:innen der Stadt
-          only_geozones: Nur Bürger:innen des Stadtteils
+          only_geozones: Nur Bürger:innen aus PLZ
+          only_streets: Nur Bürger:innen aus Straßen
           show_more: Mehr anzeigen
           title: Partizipation
     images:

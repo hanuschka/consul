@@ -2,6 +2,8 @@ class ProjektPhase < ApplicationRecord
   belongs_to :projekt, optional: true
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone
+  has_many :bam_street_projekt_phases, dependent: :destroy
+  has_many :bam_streets, through: :bam_street_projekt_phases
 
   def selectable_by?(user)
     geozone_allowed = geozone_restricted == "no_restriction" || geozone_restricted.nil? ||

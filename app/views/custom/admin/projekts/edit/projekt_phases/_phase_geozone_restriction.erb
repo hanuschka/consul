@@ -16,4 +16,21 @@
       <%= b.label(style: 'display:inline-block;cursor:pointer;') { b.check_box(style: 'margin-top:0;') + b.text } %>
     <% end %>
   </div>
+  <br>
+
+  <%= phase_form.radio_button :geozone_restricted, 'only_streets', label: t('custom.geozones.sidebar_filter.restrictions.only_streets'), class: "#{phase_name}_only_streets", disabled: skip_user_verification? %>
+
+  <div class="projekt-phase-street-selector">
+
+    <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), onclick: 'alert("Test")' %>
+
+    <div>
+      <%= projekt_phase.bam_streets.pluck(:name).join().to_s %>
+    </div>
+    <div class='hide'>
+      <%= phase_form.collection_check_boxes :bam_street_ids, BamStreet.all, :id, :name %>
+    </div>
+  </div>
+  <br>
+
 </div>

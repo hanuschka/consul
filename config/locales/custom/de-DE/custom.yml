@@ -290,11 +290,11 @@ de:
         affiliations:
           no_affiliation: Keine Gebietszuordnung
           entire_city: "Stadtweit"
-          only_geozones: Zuordnung zu Stadtteil
+          only_geozones: Zuordnung zu PLZ
         restrictions:
           no_restriction: Alle Nutzer:innen
           only_citizens: Nur Bürger:innen
-          only_geozones: Nur Bürger:innen des Stadtteils
+          only_geozones: Nur Bürger:innen aus PLZ
     proposals:
       form:
         tags_custom: Nutzer-Tags

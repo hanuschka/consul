@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_27_090545) do
+ActiveRecord::Schema.define(version: 2022_04_27_152148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -160,6 +160,15 @@ ActiveRecord::Schema.define(version: 2022_04_27_090545) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "bam_street_projekt_phases", force: :cascade do |t|
+    t.bigint "bam_street_id"
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bam_street_id"], name: "index_bam_street_projekt_phases_on_bam_street_id"
+    t.index ["projekt_phase_id"], name: "index_bam_street_projekt_phases_on_projekt_phase_id"
   end
 
   create_table "bam_streets", force: :cascade do |t|
@@ -2019,6 +2028,8 @@ ActiveRecord::Schema.define(version: 2022_04_27_090545) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
+  add_foreign_key "bam_street_projekt_phases", "bam_streets"
+  add_foreign_key "bam_street_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"

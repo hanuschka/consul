@@ -208,7 +208,8 @@ div.projekt-phase-geozone-restriction-selector {
     margin-right: 2em;
   }
 
-  .projekt-phase-geozone-selector {
+  .projekt-phase-geozone-selector,
+  .projekt-phase-street-selector {
     display: none;
   }
 
@@ -220,25 +221,33 @@ div.projekt-phase-geozone-restriction-selector {
     font-weight: bold;
   }
 
-
-  input.comment_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.comment_phase {
-    display: block;
-  }
-
-  input.debate_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.debate_phase {
-    display: block;
-  }
-
-  input.proposal_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.proposal_phase {
-    display: block;
-  }
-
-  input.budget_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.budget_phase {
-    display: block;
-  }
-
   input#projekt_geozone_affiliated_only_geozones:checked ~ .projekt-phase-geozone-selector {
     display: block;
+  }
+
+  input[class$=_phase_only_geozones]:checked ~ .projekt-phase-geozone-selector {
+    display: block;
+  }
+
+  input[class$=_phase_only_streets]:checked ~ .projekt-phase-street-selector {
+    display: block;
+  }
+
+  .projekt-phase-selected-streets {
+    margin-bottom: 10px;
+
+    .selected-projekt {
+      font-weight: bold;
+      position: relative;
+
+      i {
+        position: absolute;
+        margin-left: 7px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+    }
   }
 }
 

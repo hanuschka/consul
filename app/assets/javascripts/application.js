@@ -133,6 +133,7 @@
 //= require leaflet.locatecontrol
 //= require custom_pages
 //= require moderation_custom
+//= require custom_admin
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management
@@ -207,6 +208,7 @@ var initialize_modules = function() {
   App.AccessibilityFixes.initialize();
   App.CustomPages.initialize();
   App.ModerationCustom.initialize();
+  App.CustomAdmin.initialize();
   App.FooterPhasesComponentCustom.initialize();
   App.OrbitInPopupFixCustom.initialize();
 

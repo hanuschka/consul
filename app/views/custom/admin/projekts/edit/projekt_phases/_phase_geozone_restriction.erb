@@ -20,17 +20,20 @@
 
   <%= phase_form.radio_button :geozone_restricted, 'only_streets', label: t('custom.geozones.sidebar_filter.restrictions.only_streets'), class: "#{phase_name}_only_streets", disabled: skip_user_verification? %>
 
-  <div class="projekt-phase-street-selector">
-
-    <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), onclick: 'alert("Test")' %>
-
-    <div>
-      <%= projekt_phase.bam_streets.pluck(:name).join().to_s %>
+  <div class='projekt-phase-street-selector' data-phase-name=<%= phase_name %>>
+    <div id="projekt-phase-selected-streets-<%= phase_name %>" class='projekt-phase-selected-streets'>
+      <% projekt_phase.bam_streets.each do |street| %>
+        <div class='selected-projekt' data-street-id=<%= street.id %>>
+          <%= street.name %>
+          <i class='fas fa-times js-deselect-street'></i>
+        </div>
+      <% end %>
     </div>
+
+    <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), class: 'js-select-street' %>
+
     <div class='hide'>
       <%= phase_form.collection_check_boxes :bam_street_ids, BamStreet.all, :id, :name %>
     </div>
   </div>
-  <br>
-
 </div>

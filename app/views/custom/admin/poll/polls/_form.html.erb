@@ -55,6 +55,35 @@
     </div>
   </div>
 
+  <div class='row'>
+    <div class='column'>
+
+      <%= check_box_tag :only_streets, nil, false, class: 'voting_phase_only_streets'  %>
+      <%= label_tag :only_streets, 'Beschränkt auf Straßen' %>
+
+      <div class='projekt-phase-street-selector' data-phase-name=<%= 'voting_phase' %>>
+        <div id="projekt-phase-selected-streets-voting_phase" class='projekt-phase-selected-streets'>
+          <% @poll.voting_phase.bam_streets.each do |street| %>
+            <div class='selected-projekt' data-street-id=<%= street.id %>>
+              <%= street.name %>
+              <i class='fas fa-times js-deselect-street'></i> 
+            </div>
+          <% end %>
+        </div>
+
+        <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), class: 'js-select-street', prompt: 'Please select' %>
+
+        <div class='hide'>
+          <%= f.fields_for :voting_phase do |form| %>
+            <%= form.collection_check_boxes :bam_street_ids, BamStreet.all, :id, :name %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <br>
+
   <%if extended_feature?("modulewide.enable_categories") %>
     <div class="row">
       <hr>

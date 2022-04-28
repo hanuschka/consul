@@ -3,12 +3,14 @@ require_dependency Rails.root.join("app", "models", "poll").to_s
 class Poll < ApplicationRecord
   include Taggable
 
-  scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
-
   belongs_to :projekt, optional: true
   has_many :geozone_affiliations, through: :projekt
+  has_one :voting_phase, through: :projekt
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
+  scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
+
+  accepts_nested_attributes_for :voting_phase
 
   def self.base_selection(scoped_projekt_ids = Projekt.ids)
     created_by_admin.

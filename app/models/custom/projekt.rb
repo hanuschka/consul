@@ -192,9 +192,7 @@ class Projekt < ApplicationRecord
   end
 
   def comments_allowed?(current_user)
-    current_user.level_two_or_three_verified? &&
-      current? &&
-      comment_phase.current?
+    comment_phase.selectable_by?(current_user)
   end
 
   def calculate_level(counter = 1)

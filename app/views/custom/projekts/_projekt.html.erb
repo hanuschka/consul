@@ -2,7 +2,9 @@
 
   <div class='column medium-3 image' data-equalizer-watch='projekt'>
     <% if projekt.image.present? %>
-      <%= image_tag projekt.image_url(:medium) %>
+      <%= link_to projekt.page.url do %>
+        <%= image_tag projekt.image_url(:medium) %>
+      <% end %>
     <% end %>
   </div>
 
@@ -24,5 +26,4 @@
   <div class='column medium-3 actions' data-equalizer-watch='projekt'>
     <%= link_to 'Zum Projekt', projekt.page.url, class: 'button' %>
   </div>
-
 </div>

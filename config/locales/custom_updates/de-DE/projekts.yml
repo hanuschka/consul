@@ -11,6 +11,8 @@ de:
         title: Projekte
         current_projekts: Projekte mit aktiver Beteiligungsphase
         expired_projekts: Abgeschlossene Projekte
+        no_projekts: keine Projekte
+
       backlink: Zur Projektübersicht
       errors:
         presence: Bitte wählen Sie ein Projekt

@@ -25,6 +25,7 @@ class Shared::CommentsComponent < ApplicationComponent
 
     def add_phase_specific_keys(keys)
       keys.push(record.projekt_phase)
+      keys.push(record.projekt_phase.geozone_restrictions)
       keys.push(helpers.change_of_current_state(record.projekt_phase.start_date, record.projekt_phase.end_date))
       keys.push(helpers.change_of_current_state(record.projekt.total_duration_start, record.projekt.total_duration_end))
     end
@@ -39,6 +40,7 @@ class Shared::CommentsComponent < ApplicationComponent
       keys.push(record.page)
       keys.push(record.projekt_settings)
       keys.push(record.comment_phase)
+      keys.push(record.comment_phase.geozone_restrictions)
       keys.push(helpers.change_of_current_state(record.comment_phase.start_date, record.comment_phase.end_date))
     end
 

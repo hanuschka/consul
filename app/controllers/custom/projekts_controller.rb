@@ -18,13 +18,9 @@ class ProjektsController < ApplicationController
         .where( 'show_in_overview_page.key': 'projekt_feature.general.show_in_overview_page', 'show_in_overview_page.value': 'active' )
         .page(params[:page]).send(@current_order)
 
-    # TODO: refactor this logic
-    @selected_parent_projekt = @projekts.first
-
     @projekts_coordinates = all_projekts_map_locations(@projekts)
 
     @geozones = Geozone.all
-
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
 
@@ -44,6 +40,8 @@ class ProjektsController < ApplicationController
     @tag_cloud = tag_cloud
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'
+
+    @sdgs = @projekts.includes(:sdg_goals).map(&:sdg_goals).flatten.uniq.compact
   end
 
   def show

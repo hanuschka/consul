@@ -219,19 +219,19 @@ div.projekt-phase-geozone-restriction-selector {
   input#projekt_geozone_affiliated_only_geozones:checked ~ .projekt-phase-geozone-selector {
     display: block;
   }
-}
 
-.projekt-phase-geozone-selector,
-.projekt-phase-street-selector {
-  display: none;
-}
+  .projekt-phase-geozone-selector,
+  .projekt-phase-street-selector {
+    display: none;
+  }
 
-input[class$=_phase_only_geozones]:checked ~ .projekt-phase-geozone-selector {
-  display: block;
-}
+  input[class$=_phase_only_geozones]:checked ~ .projekt-phase-geozone-selector {
+    display: block;
+  }
 
-input[class$=_phase_only_streets]:checked ~ .projekt-phase-street-selector {
-  display: block;
+  input[class$=_phase_only_streets]:checked ~ .projekt-phase-street-selector {
+    display: block;
+  }
 }
 
 .projekt-phase-selected-streets {

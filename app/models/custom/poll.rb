@@ -6,6 +6,7 @@ class Poll < ApplicationRecord
   belongs_to :projekt, optional: true
   has_many :geozone_affiliations, through: :projekt
   has_one :voting_phase, through: :projekt
+  has_many :bam_streets, through: :voting_phase
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
@@ -26,7 +27,7 @@ class Poll < ApplicationRecord
       !user.organization? &&
       user.level_three_verified? &&
       current? &&
-      geozone_allowed?
+      geozone_allowed?(user)
   end
 
   def comments_allowed?(user)
@@ -53,9 +54,12 @@ class Poll < ApplicationRecord
 
   private
 
-  def geozone_allowed?
-    !geozone_restricted ||
+  def geozone_allowed?(user)
+    ( !geozone_restricted && !bam_street_restricted )  ||
+
       ( geozone_restricted && geozone_ids.blank? && user.geozone.present? ) ||
-      ( geozone_restricted && geozone_ids.include?(user.geozone_id))
+      ( geozone_restricted && geozone_ids.include?(user.geozone_id)) ||
+
+      ( bam_street_restricted && bam_streets.ids.include?(user.bam_street.id) )
   end
 end

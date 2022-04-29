@@ -26,7 +26,7 @@ class Poll < ApplicationRecord
       !user.organization? &&
       user.level_three_verified? &&
       current? &&
-      (!geozone_restricted || ( geozone_restricted && geozone_ids.blank? && user.geozone.present? ) || (geozone_restricted && geozone_ids.include?(user.geozone_id)))
+      geozone_allowed?
   end
 
   def comments_allowed?(user)
@@ -49,5 +49,13 @@ class Poll < ApplicationRecord
     if poll_answer_count_by_current_user == 0
       Poll::Voter.find_by!(user: user, poll: self, origin: "web", token: token).destroy
     end
+  end
+
+  private
+
+  def geozone_allowed?
+    !geozone_restricted ||
+      ( geozone_restricted && geozone_ids.blank? && user.geozone.present? ) ||
+      ( geozone_restricted && geozone_ids.include?(user.geozone_id))
   end
 end

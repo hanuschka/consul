@@ -64,3 +64,5 @@ de:
         bam_street_id: Straße
       projekt_phase:
         bam_street_id: Straße
+      poll:
+        bam_street_restricted: Beschränkt auf Straßen

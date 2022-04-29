@@ -30,3 +30,9 @@ en:
           user: I can help with implementation
         implementation_contribution: How can you contribute?
         user_cost_estimate: Cost estimate
+      user:
+        bam_street_id: Street
+      projekt_phase:
+        bam_street_id: Street
+      poll:
+        bam_street_restricted: Limited to streets

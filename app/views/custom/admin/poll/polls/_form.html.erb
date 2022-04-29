@@ -58,8 +58,8 @@
   <div class='row'>
     <div class='column'>
 
-      <%= check_box_tag :only_streets, nil, false, class: 'voting_phase_only_streets'  %>
-      <%= label_tag :only_streets, 'Beschränkt auf Straßen' %>
+      <%= f.check_box :bam_street_restricted, class: 'voting_phase_only_streets'  %>
+      <%= label_tag :bam_street_restricted, 'Beschränkt auf Straßen' %>
 
       <div class='projekt-phase-street-selector' data-phase-name=<%= 'voting_phase' %>>
         <div id="projekt-phase-selected-streets-voting_phase" class='projekt-phase-selected-streets'>

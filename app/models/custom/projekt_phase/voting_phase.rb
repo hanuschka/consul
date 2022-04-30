@@ -4,7 +4,7 @@ class ProjektPhase::VotingPhase < ProjektPhase
   end
 
   def phase_info_activated?
-    ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.phase.voting_info").value.present?
+    info_active?
   end
 
   def name

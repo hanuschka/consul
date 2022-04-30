@@ -49,7 +49,8 @@ class Sidebar::ProjektsFilterComponent < ApplicationComponent
 
   def cache_key
     [
-      ProjektSetting.where('key LIKE ?', '%show_in_sidebar_filter%').pluck(:id, :value).join(','),
+      Projekt.all,
+      ProjektSetting.where('key LIKE ?', '%show_in_sidebar_filter%'),
       params[:filter_projekt_ids],
       controller_name,
       action_name

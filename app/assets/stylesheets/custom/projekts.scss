@@ -648,8 +648,11 @@ span.projekt-backlink:before {
   margin-bottom: 20px;
 }
 
-.projekts-map {
+.projekts-map-wrapper {
   margin-bottom: 50px;
+}
+
+.projekts-map {
   margin-left: calc(-50vw + 37.5rem);
   margin-right: calc(-50vw + 37.5rem);
   width: auto;
@@ -662,6 +665,7 @@ span.projekt-backlink:before {
 .projekt-item-tag-list {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   margin-bottom: 5px;
 }
 
@@ -673,4 +677,8 @@ span.projekt-backlink:before {
   background: #ECECEC;
   color: black;
   font-size: 14px;
+}
+
+.projekt-item-tags {
+  display: flex;
 }

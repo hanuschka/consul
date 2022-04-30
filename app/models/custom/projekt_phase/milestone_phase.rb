@@ -1,10 +1,10 @@
 class ProjektPhase::MilestonePhase < ProjektPhase
   def phase_activated?
-    ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.phase.milestone").value.present?
+    active?
   end
 
   def phase_info_activated?
-    ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.phase.milestone_info").value.present?
+    info_active?
   end
 
   def name

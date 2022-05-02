@@ -14,4 +14,8 @@ class ProjektPhase::CommentPhase < ProjektPhase
   def resources_name
     'comments'
   end
+
+  def default_order
+    1
+  end
 end

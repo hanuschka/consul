@@ -14,4 +14,8 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   def resources_name
     'proposals'
   end
+
+  def default_order
+    3
+  end
 end

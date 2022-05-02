@@ -544,24 +544,33 @@ span.projekt-backlink:before {
 
 .projekt-listing {
   display: flex;
+  flex-wrap: wrap;
   border: 1px solid #e5e6e9;
   background: #f9f9f9;
   color: #707070;
   padding: 18px;
   margin-bottom: 1rem;
 
-  .image img {
-    display: block;
-    margin: 0 auto;
-    margin-bottom: 20px;
+  .image {
+    max-width: 150px;
 
-    @media (min-width: 40em) {
-      padding-right: 30px;
-      margin-bottom: 0;
+    img {
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 20px;
+
+      @media (min-width: 40em) {
+        padding-right: 15px;
+        margin-bottom: 0;
+      }
     }
   }
 
-  .content-wrapper {
+  .content {
+    @media (min-width: 40em) {
+      max-width: calc(100% - 300px);
+    }
+
     padding-right: 15px;
   }
 
@@ -569,19 +578,11 @@ span.projekt-backlink:before {
     font-size: 18px;
   }
 
-  .actions {
-    position: relative;
-    min-height: 80px;
+  .projekt-link {
+    align-self: center;
 
     a.button {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      margin: auto;
-      width: max-content;
-      height: fit-content;
+      min-width: 150px;
     }
   }
 
@@ -652,10 +653,10 @@ span.projekt-backlink:before {
   margin-bottom: 50px;
 }
 
-.projekts-map {
-  margin-left: calc(-50vw + 37.5rem);
-  margin-right: calc(-50vw + 37.5rem);
-  width: auto;
+.projekts-page {
+  ul.order-links li a {
+    margin-bottom: 12px;
+  }
 }
 
 .projekt-item-attributes {

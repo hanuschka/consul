@@ -14,4 +14,8 @@ class ProjektPhase::DebatePhase < ProjektPhase
   def resources_name
     'debates'
   end
+
+  def default_order
+    2
+  end
 end

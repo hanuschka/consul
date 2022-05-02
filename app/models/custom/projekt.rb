@@ -66,7 +66,7 @@ class Projekt < ApplicationRecord
   scope :active, -> {
     current
       .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.all? { |phase| !phase.active? }}
+      .select { |p| p.projekt_phases.any? { |phase| phase.active? }}
   }
 
   scope :not_active, -> {
@@ -81,9 +81,8 @@ class Projekt < ApplicationRecord
 
   scope :ongoing, -> {
     activated
-      .not_active
       .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.any? { |phase| phase.active? }}
+      .select { |p| p.projekt_phases.all? { |phase| !phase.active? }}
   }
 
   scope :upcoming, -> {

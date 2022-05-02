@@ -14,4 +14,8 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   def resources_name
     'budget'
   end
+
+  def default_order
+    5
+  end
 end

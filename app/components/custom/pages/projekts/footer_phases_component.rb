@@ -8,7 +8,9 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
     @projekt = projekt
     @default_phase_name = default_phase_name
 
-    @phases = projekt.regular_projekt_phases.order(:start_date)
+    @phases = projekt.regular_projekt_phases.sort{ |a, b| a.default_order <=> b.default_order }
+      .each{ |x| x.start_date = Date.today if x.start_date.nil? }
+      .sort_by{ |a| a.start_date }
     @milestone_phase = projekt.milestone_phase
     @projekt_notification_phase = projekt.projekt_notification_phase
     @newsfeed_phase = projekt.newsfeed_phase

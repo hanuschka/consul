@@ -14,4 +14,8 @@ class ProjektPhase::VotingPhase < ProjektPhase
   def resources_name
     'polls'
   end
+
+  def default_order
+    4
+  end
 end

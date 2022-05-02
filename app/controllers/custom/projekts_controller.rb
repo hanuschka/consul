@@ -35,7 +35,7 @@ class ProjektsController < ApplicationController
       take_by_my_posts
     end
 
-    @categories = Tag.category.order(:name)
+    @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
     @tag_cloud = tag_cloud
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'

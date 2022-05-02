@@ -135,6 +135,7 @@
 //= require custom_pages
 //= require moderation_custom
 //= require custom_admin
+//= require bam_street_modal
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management
@@ -210,6 +211,7 @@ var initialize_modules = function() {
   App.CustomPages.initialize();
   App.ModerationCustom.initialize();
   App.CustomAdmin.initialize();
+  App.BamStreetModal.initialize();
   App.FooterPhasesComponentCustom.initialize();
   App.LivesubmitCheckboxCustom.initialize();
   App.OrbitInPopupFixCustom.initialize();

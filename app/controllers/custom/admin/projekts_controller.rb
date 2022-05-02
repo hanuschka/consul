@@ -3,8 +3,7 @@ class Admin::ProjektsController < Admin::BaseController
   include Translatable
   include ImageAttributes
 
-
-  before_action :find_projekt, only: [:update, :destroy, :quick_update]
+  before_action :find_projekt, only: [:update, :liveupdate, :destroy, :quick_update]
   before_action :load_geozones, only: [:new, :create, :edit, :update]
   before_action :process_tags, only: [:update]
 
@@ -108,6 +107,10 @@ class Admin::ProjektsController < Admin::BaseController
     end
   end
 
+  def liveupdate
+    @projekt.update_attributes(projekt_params)
+  end
+
   def update_map
     map_location = MapLocation.find_by(projekt: params[:projekt_id])
     map_location.update(map_location_params)
@@ -160,19 +163,19 @@ class Admin::ProjektsController < Admin::BaseController
   def projekt_params
     attributes = [
       :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon, :geozone_affiliated, :tag_list, :related_sdg_list, geozone_affiliation_ids: [], sdg_goal_ids: [],
-      comment_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      debate_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      proposal_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      milestone_phase_attributes: [:id, :start_date, :end_date],
+      comment_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      debate_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      proposal_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      milestone_phase_attributes: [:id, :start_date, :end_date, :active, :info_active],
       event_phase_attributes: [:id, :start_date, :end_date],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
       projekt_notifications: [:title, :body],
       project_events: [:id, :title, :location, :datetime, :weblink],
     ]
-    params.require(:projekt).permit(attributes, translation_params(Projekt))
+    params.require(:projekt).permit(attributes)
   end
 
   def process_tags

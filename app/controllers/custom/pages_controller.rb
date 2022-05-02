@@ -102,7 +102,7 @@ class PagesController < ApplicationController
   end
 
   def event_phase_footer_tab
-    set_event_footer_tab_variables
+    set_projekt_events_footer_tab_variables
 
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
@@ -298,7 +298,7 @@ class PagesController < ApplicationController
     @rss_type = ProjektSetting.find_by(projekt: @current_projekt, key: "projekt_newsfeed.type").value
   end
 
-  def set_event_footer_tab_variables(projekt=nil)
+  def set_projekt_events_footer_tab_variables(projekt=nil)
     @valid_orders = %w[all incoming past]
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt

@@ -13,8 +13,9 @@ en:
           callouts:
             selecting:
               undecided: This investment proposal was not eveluated yet.
-              unfeasible: This investment proposal was evaluated as unfeasible.
+              unfeasible: This investment proposal was marked as unfeasible.
             publishing_prices:
+              unfeasible: This investment proposal was marked as unfeasible.
               undecided: The investment proposal was not decided yet.
           implementation: Implementation
           implementation_text_html: "<p>%{author} supports with implementation<p><p>%{implementation_contribution}</p>"

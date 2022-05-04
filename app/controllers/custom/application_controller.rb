@@ -7,6 +7,11 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def http_basic_auth_site?
+    Rails.application.secrets.http_basic_auth &&
+      !(controller_name == 'sessions' && action_name == 'new')
+  end
+
   def all_selected_tags
     if params[:tags]
       params[:tags].split(",").map { |tag_name| Tag.find_by(name: tag_name) }.compact || []

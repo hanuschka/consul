@@ -1,10 +1,12 @@
 # Overrides and adds customized gems in this file
-# Read more on documentation: 
+# Read more on documentation:
 # * English: https://github.com/consul/consul/blob/master/CUSTOMIZE_EN.md#gemfile
 # * Spanish: https://github.com/consul/consul/blob/master/CUSTOMIZE_ES.md#gemfile
 
 group :development do
-  gem 'pry', '~> 0.14.1'
+  gem 'rack-mini-profiler'
+  gem 'pry', '~> 0.13.0'
+  gem 'pry-byebug', '~> 3.9'
 end
 
 gem "sentry-ruby"

@@ -60,6 +60,6 @@ class Poll < ApplicationRecord
       ( geozone_restricted && geozone_ids.blank? && user.geozone.present? ) ||
       ( geozone_restricted && geozone_ids.include?(user.geozone_id)) ||
 
-      ( bam_street_restricted && bam_streets.ids.include?(user.bam_street.id) )
+      ( bam_street_restricted && user.bam_street.present? && bam_streets.ids.include?(user.bam_street.id) )
   end
 end

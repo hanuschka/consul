@@ -45,6 +45,7 @@ class ProjektPhase < ApplicationRecord
       user.present? &&
       user.level_three_verified? &&
       bam_streets.any? &&
+      user.bam_street.present? &&
       bam_streets.ids.include?(user.bam_street.id) )
   end
 end

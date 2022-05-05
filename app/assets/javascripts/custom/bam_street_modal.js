@@ -18,7 +18,7 @@
     initialize: function() {
       App.BamStreetModal.showModal();
 
-      $("body").on("click", ".js-close-select_bam-street-modal", function() {
+      $("body").on("closed.zf.reveal", "#selectBamStreetModal", function() {
         App.BamStreetModal.hideModal();
       })
     }

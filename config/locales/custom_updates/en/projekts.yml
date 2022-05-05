@@ -54,6 +54,7 @@ en:
         voting_phase: Abstimmungen
         budget_phase: Budget
         milestone_phase: Milestones
+        event_phase: Event phase
         milestone_phase_details:
           start: Start
           ending: Planned end

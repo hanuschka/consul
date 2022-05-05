@@ -24,7 +24,7 @@ class ProjektSetting < ApplicationRecord
   end
 
   def projekt_feature_type
-    if %w[main phase general sidebar footer debates proposals polls budgets].include? projekt_feature_prefix
+    if %w[main phase general sidebar footer debates proposals proposal_options polls budgets].include? projekt_feature_prefix
       projekt_feature_prefix
     else
       "configuration"
@@ -88,6 +88,8 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.proposals.only_admins_create_proposals": '',
         "projekt_feature.proposals.show_in_sidebar_filter": 'active',
         "projekt_feature.proposals.show_map": 'active',
+
+        "projekt_feature.proposal_options.votes_for_proposal_success": 10000,
 
         "projekt_feature.polls.intermediate_poll_results_for_admins": 'active',
         "projekt_feature.polls.show_comments": 'active',

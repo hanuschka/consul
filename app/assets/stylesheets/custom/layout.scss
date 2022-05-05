@@ -3,8 +3,12 @@ body,
 .tabs-content,
 .comments,
 .comment-list .comment-body,
-.fixed-mobile-content {
-  background-color: #F4F4F4;
+.fixed-mobile-content,
+body.admin ul.tabs,
+body.admin .top-bar,
+body.admin .tabs-title > a[aria-selected='true'],
+.admin-top-bar {
+  background-color: #F4F4F4 !important;
 }
 
 .help-header {
@@ -159,4 +163,8 @@ html.is-reveal-open body {
   #deficiency-reports-sidebar.column {
     float: right;
   }
+}
+
+ul.tabs li.tabs-title {
+  margin-bottom: 0;
 }

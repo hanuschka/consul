@@ -115,7 +115,21 @@
       </div>
     <% end %>
 
-    <% if projekt_feature?(@debate.projekt, 'debates.show_comments') %>
-      <%= render "comments" %>
-    <% end %>
+    <div class="additional-content margin-top">
+      <div class="filter-subnav">
+        <div class="row">
+          <div class="small-12 column">
+            <%= render "debates/filter_subnav" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs-content" data-tabs-content="proposals_tabs">
+      <% if projekt_feature?(@debate.projekt, 'debates.show_comments') %>
+        <div class="tabs-panel is-active" id="tab-comments">
+          <%= render "comments" %>
+        </div>
+      <% end %>
+    </div>
   </main>

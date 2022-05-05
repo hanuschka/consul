@@ -63,8 +63,28 @@ class Projekt < ApplicationRecord
   scope :current, ->(timestamp = Date.today) { activated.
                                                where( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today ).
                                                where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today) }
-  scope :expired, ->(timestamp = Date.today) { activated.
-                                               where( "total_duration_end < ?", Date.today) }
+
+  scope :active, -> {
+    current
+      .includes(:projekt_phases)
+      .select { |p| p.projekt_phases.any? { |phase| phase.current? }}
+  }
+
+  scope :ongoing, -> {
+    current
+      .includes(:projekt_phases)
+      .select { |p| p.projekt_phases.all? { |phase| !phase.current? }}
+  }
+
+  scope :upcoming, -> {
+    activated
+      .where( "total_duration_start > ?", Date.today)
+  }
+
+  scope :expired, ->(timestamp = Date.today) {
+    activated
+      .where( "total_duration_end < ?", Date.today)
+  }
 
   scope :visible_in_menu, -> { joins( 'INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id').
                                where( 'vim.key': 'projekt_feature.general.show_in_navigation', 'vim.value': 'active' ) }
@@ -82,6 +102,8 @@ class Projekt < ApplicationRecord
 
     where(author_id: current_user_id)
   }
+
+  scope :last_week, -> { where("projekts.created_at >= ?", 7.days.ago) }
 
   class << self
     def selectable_in_selector(controller_name, current_user)
@@ -168,9 +190,7 @@ class Projekt < ApplicationRecord
   end
 
   def comments_allowed?(current_user)
-    current_user.level_two_or_three_verified? &&
-      current? &&
-      comment_phase.current?
+    comment_phase.selectable_by?(current_user)
   end
 
   def calculate_level(counter = 1)

@@ -64,6 +64,7 @@ de:
         voting_phase: Abstimmungen
         budget_phase: Budget
         milestone_phase: Meilensteine
+        event_phase: Veranstaltungen
         milestone_phase_details:
           start: Umsetzung
           ending: Gepl. Fertigstellung

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_27_122523) do
+ActiveRecord::Schema.define(version: 2022_05_02_141403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -160,6 +160,22 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "bam_street_projekt_phases", force: :cascade do |t|
+    t.bigint "bam_street_id"
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bam_street_id"], name: "index_bam_street_projekt_phases_on_bam_street_id"
+    t.index ["projekt_phase_id"], name: "index_bam_street_projekt_phases_on_projekt_phase_id"
+  end
+
+  create_table "bam_streets", force: :cascade do |t|
+    t.string "name"
+    t.integer "plz"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "banner_sections", id: :serial, force: :cascade do |t|
@@ -1383,6 +1399,7 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
     t.bigint "projekt_id"
     t.boolean "show_open_answer_author_name"
     t.boolean "show_summary_instead_of_questions", default: false
+    t.boolean "bam_street_restricted", default: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -1859,7 +1876,7 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
     t.datetime "date_of_birth"
     t.boolean "email_on_proposal_notification", default: true
     t.boolean "email_digest", default: true
-    t.boolean "email_on_direct_message", default: false
+    t.boolean "email_on_direct_message", default: true
     t.boolean "official_position_badge", default: false
     t.datetime "password_changed_at", default: "2015-01-01 01:01:01", null: false
     t.boolean "created_from_signature", default: false
@@ -1869,7 +1886,6 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
     t.boolean "public_interests", default: false
     t.boolean "recommended_debates", default: true
     t.boolean "recommended_proposals", default: true
-    t.string "keycloak_link"
     t.string "first_name"
     t.string "last_name"
     t.string "plz"
@@ -1880,7 +1896,17 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
     t.string "city_name"
     t.datetime "bam_letter_verification_code_sent_at"
     t.string "bam_unique_stamp"
+    t.string "keycloak_link"
     t.boolean "custom_statistic_cookies_enabled"
+    t.boolean "custom_newsletter", default: false
+    t.string "dor_first_name"
+    t.string "dor_last_name"
+    t.string "dor_street_name"
+    t.string "dor_street_number"
+    t.string "dor_plz"
+    t.string "dor_city"
+    t.bigint "bam_street_id"
+    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -2005,6 +2031,8 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
+  add_foreign_key "bam_street_projekt_phases", "bam_streets"
+  add_foreign_key "bam_street_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"
@@ -2024,6 +2052,7 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
   add_foreign_key "failed_census_calls", "users"
   add_foreign_key "flags", "users"
   add_foreign_key "follows", "users"
+  add_foreign_key "geozones_polls", "geozones"
   add_foreign_key "geozones_polls", "polls"
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"
@@ -2055,6 +2084,7 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
   add_foreign_key "polls", "budgets"
   add_foreign_key "polls", "projekts"
   add_foreign_key "projekt_notifications", "projekts"
+  add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_settings", "projekts"
@@ -2065,5 +2095,7 @@ ActiveRecord::Schema.define(version: 2022_04_27_122523) do
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "site_customization_pages", "projekts"
+  add_foreign_key "users", "bam_streets"
+  add_foreign_key "users", "geozones"
   add_foreign_key "valuators", "users"
 end

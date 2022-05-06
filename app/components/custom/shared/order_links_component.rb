@@ -1,7 +1,6 @@
 require_dependency Rails.root.join("app", "components", "shared", "order_links_component").to_s
 
 class Shared::OrderLinksComponent < ApplicationComponent
-
   private
     def link_path(order)
       if params[:current_tab_path].present?
@@ -9,5 +8,9 @@ class Shared::OrderLinksComponent < ApplicationComponent
       else
         current_path_with_query_params(order: order, page: 1, anchor: anchor)
       end
+    end
+
+    def title_for(order)
+      t("#{i18n_namespace}.orders.#{order}_title")
     end
 end

@@ -8,18 +8,15 @@ class Poll < ApplicationRecord
   belongs_to :projekt, optional: true
   has_many :geozone_affiliations, through: :projekt
 
-  after_save do
-    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('polls', 'current') }
-    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('polls', 'expired') }
-  end
-
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
 
   def self.base_selection(scoped_projekt_ids = Projekt.ids)
     created_by_admin.
       not_budget.
       where(projekt_id: scoped_projekt_ids).
-      joins(:projekt).merge(Projekt.activated)
+      joins(:projekt).merge(Projekt.activated).
+      joins( 'INNER JOIN projekt_settings shwmn ON projekts.id = shwmn.projekt_id' ).
+      where( 'shwmn.key': 'projekt_feature.polls.show_in_sidebar_filter', 'shwmn.value': 'active' )
   end
 
   def answerable_by?(user)

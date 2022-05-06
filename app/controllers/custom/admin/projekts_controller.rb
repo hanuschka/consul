@@ -3,8 +3,7 @@ class Admin::ProjektsController < Admin::BaseController
   include Translatable
   include ImageAttributes
 
-
-  before_action :find_projekt, only: [:update, :destroy, :quick_update]
+  before_action :find_projekt, only: [:update, :liveupdate, :destroy, :quick_update]
   before_action :load_geozones, only: [:new, :create, :edit, :update]
   before_action :process_tags, only: [:update]
 
@@ -76,6 +75,11 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt_features_general = all_projekt_features['general']
     @projekt_features_sidebar = all_projekt_features['sidebar']
     @projekt_features_footer = all_projekt_features['footer']
+    @projekt_features_debates = all_projekt_features['debates']
+    @projekt_features_proposals = all_projekt_features['proposals']
+    @projekt_options_proposals = all_projekt_features['proposal_options']
+    @projekt_features_polls = all_projekt_features['polls']
+    @projekt_features_budgets = all_projekt_features['budgets']
 
     @projekt_newsfeed_settings = all_settings["projekt_newsfeed"]
 
@@ -101,6 +105,10 @@ class Admin::ProjektsController < Admin::BaseController
     else
       redirect_to edit_admin_projekt_path(params[:id]) + params[:tab].to_s, alert: @projekt.errors.messages.values.flatten.join('; ')
     end
+  end
+
+  def liveupdate
+    @projekt.update_attributes(projekt_params)
   end
 
   def update_map
@@ -155,12 +163,12 @@ class Admin::ProjektsController < Admin::BaseController
   def projekt_params
     attributes = [
       :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon, :geozone_affiliated, :tag_list, :related_sdg_list, geozone_affiliation_ids: [], sdg_goal_ids: [],
-      comment_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      debate_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      proposal_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, geozone_restriction_ids: [] ],
-      milestone_phase_attributes: [:id, :start_date, :end_date],
+      comment_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      debate_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      proposal_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
+      milestone_phase_attributes: [:id, :start_date, :end_date, :active, :info_active],
       event_phase_attributes: [:id, :start_date, :end_date],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,

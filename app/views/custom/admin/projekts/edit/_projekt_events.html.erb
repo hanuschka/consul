@@ -10,23 +10,23 @@
 
       <div class='projekt-event-content'>
         <p>
-          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_item.title') %>:</strong>
+          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_title') %>:</strong>
           <%= event.title %></h3>
         </p>
         <p>
-          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_item.location') %>:</strong>
+          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_location') %>:</strong>
           <%= event.location %>
         </p>
         <p>
-          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_item.datetime') %>:</strong>
+          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_datetime') %>:</strong>
           <%= event.datetime.strftime('%d.%m.%y %H:%m') %>
         </p>
         <p>
-          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_item.weblink') %>:</strong>
+          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_weblink') %>:</strong>
           <%= link_to(event.weblink, event.weblink) %>
         </p>
         <p>
-          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_item.created_at') %>:</strong>
+          <strong><%= t('custom.admin.projekts.edit.projekt_events_tab.event_created_at') %>:</strong>
           <%= event.created_at.to_date %>
         </p>
       </div>

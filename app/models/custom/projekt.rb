@@ -48,7 +48,6 @@ class Projekt < ApplicationRecord
   after_create :create_corresponding_page, :set_order, :create_projekt_phases, :create_default_settings, :create_map_location
   after_save do
     Projekt.all.each { |projekt| projekt.update_column('level', projekt.calculate_level) }
-    Projekt.all.each { |projekt| projekt.update_selectable_in_sidebar_selectors }
   end
   after_destroy :ensure_projekt_order_integrity
 
@@ -64,8 +63,28 @@ class Projekt < ApplicationRecord
   scope :current, ->(timestamp = Date.today) { activated.
                                                where( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today ).
                                                where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today) }
-  scope :expired, ->(timestamp = Date.today) { activated.
-                                               where( "total_duration_end < ?", Date.today) }
+
+  scope :active, -> {
+    current
+      .includes(:projekt_phases)
+      .select { |p| p.projekt_phases.any? { |phase| phase.current? }}
+  }
+
+  scope :ongoing, -> {
+    current
+      .includes(:projekt_phases)
+      .select { |p| p.projekt_phases.all? { |phase| !phase.current? }}
+  }
+
+  scope :upcoming, -> {
+    activated
+      .where( "total_duration_start > ?", Date.today)
+  }
+
+  scope :expired, ->(timestamp = Date.today) {
+    activated
+      .where( "total_duration_end < ?", Date.today)
+  }
 
   scope :visible_in_menu, -> { joins( 'INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id').
                                where( 'vim.key': 'projekt_feature.general.show_in_navigation', 'vim.value': 'active' ) }
@@ -84,23 +103,27 @@ class Projekt < ApplicationRecord
     where(author_id: current_user_id)
   }
 
+  scope :last_week, -> { where("projekts.created_at >= ?", 7.days.ago) }
+
   class << self
     def selectable_in_selector(controller_name, current_user)
       select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.selectable?(controller_name, current_user) } }
     end
 
     def selectable_in_sidebar_current(controller_name)
-      select { |projekt| projekt.selectable_in_sidebar_selector["#{controller_name}_current"] }
+      return [] unless controller_name.in?(['proposals', 'debates', 'polls'])
+      select { |projekt| projekt.current? && projekt.all_children_projekts.unshift(projekt).any? { |p| p.projekt_settings.find_by(key: "projekt_feature.#{controller_name}.show_in_sidebar_filter").value.present? } }
     end
 
     def selectable_in_sidebar_expired(controller_name)
-      select { |projekt| projekt.selectable_in_sidebar_selector["#{controller_name}_expired"] }
+      return [] unless controller_name.in?(['proposals', 'debates', 'polls'])
+      select { |projekt| projekt.expired? && projekt.all_children_projekts.unshift(projekt).any? { |p| p.projekt_settings.find_by(key: "projekt_feature.#{controller_name}.show_in_sidebar_filter").value.present? } }
     end
   end
 
   def regular_projekt_phases
     projekt_phases.
-      where.not(type: ['ProjektPhase::MilestonePhase', 'ProjektPhase::ProjektNotificationPhase', 'ProjektPhase::NewsfeedPhase' ])
+      where.not(type: ['ProjektPhase::MilestonePhase', 'ProjektPhase::ProjektNotificationPhase', 'ProjektPhase::NewsfeedPhase', 'ProjektPhase::EventPhase'])
   end
 
   def update_page
@@ -111,11 +134,12 @@ class Projekt < ApplicationRecord
   def selectable?(controller_name, user)
     return true if controller_name == 'polls'
     return false if user.nil?
-    return false if selectable_by_admins_only? && user.administrator.blank?
 
     if controller_name == 'proposals'
+      return false if proposals_selectable_by_admins_only? && user.administrator.blank?
       proposal_phase.selectable_by?(user)
     elsif controller_name == 'debates'
+      return false if debates_selectable_by_admins_only? && user.administrator.blank?
       debate_phase.selectable_by?(user)
     end
   end
@@ -143,9 +167,16 @@ class Projekt < ApplicationRecord
       total_duration_end < timestamp
   end
 
-  def selectable_by_admins_only?
+  def debates_selectable_by_admins_only?
     projekt_settings.
-      find_by( projekt_settings: { key: "projekt_feature.general.only_admins_create_debates_proposals" } ).
+      find_by( projekt_settings: { key: "projekt_feature.debates.only_admins_create_debates" } ).
+      value.
+      present?
+  end
+
+  def proposals_selectable_by_admins_only?
+    projekt_settings.
+      find_by( projekt_settings: { key: "projekt_feature.proposals.only_admins_create_proposals" } ).
       value.
       present?
   end
@@ -159,9 +190,7 @@ class Projekt < ApplicationRecord
   end
 
   def comments_allowed?(current_user)
-    current_user.level_two_or_three_verified? &&
-      current? &&
-      comment_phase.current?
+    comment_phase.selectable_by?(current_user)
   end
 
   def calculate_level(counter = 1)
@@ -280,27 +309,6 @@ class Projekt < ApplicationRecord
       projekt.newsfeed_phase = ProjektPhase::NewsfeedPhase.create unless projekt.newsfeed_phase
       projekt.event_phase = ProjektPhase::EventPhase.create unless projekt.event_phase
     end
-  end
-
-  def update_selectable_in_sidebar_selectors
-    controller_names = ['proposals', 'debates', 'polls', 'projekt_events']
-
-    controller_names.each do |controller_name|
-      set_selectable_in_sidebar_selector(controller_name, 'current')
-      set_selectable_in_sidebar_selector(controller_name, 'expired')
-    end
-  end
-
-  def set_selectable_in_sidebar_selector(controller_name, group)
-    selectable_in_sidebar_selector_value = selectable_in_sidebar_selector
-
-    if group == 'current'
-      selectable_in_sidebar_selector_value["#{controller_name}_#{group}"] = all_children_projekts.unshift(self).any? { |p| p.current? && ( p.send(controller_name).any? || p.has_active_phase?(controller_name) ) }
-    elsif group == 'expired'
-      selectable_in_sidebar_selector_value["#{controller_name}_#{group}"] = all_children_projekts.unshift(self).any? { |p| p.expired? && p.send(controller_name).any? }
-    end
-
-    self.update_column('selectable_in_sidebar_selector', selectable_in_sidebar_selector_value)
   end
 
   def title

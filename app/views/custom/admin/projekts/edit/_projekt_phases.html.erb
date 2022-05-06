@@ -160,13 +160,5 @@
       feature_phase_active: @projekt_features_phase_milestone_active,
       feature_phase_info: @projekt_features_phase_milestone_info
     } %>
-
-    <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
-      projekt_phase: @projekt.event_phase,
-      phase_name: 'event_phase',
-      feature_phase_active: @projekt_features_phase_event_active,
-      feature_phase_info: @projekt_features_phase_event_info
-    } %>
-
   </tbody>
 </table>

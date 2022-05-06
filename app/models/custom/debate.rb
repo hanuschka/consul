@@ -8,11 +8,6 @@ class Debate
   has_many :geozone_restrictions, through: :debate_phase
   has_many :geozone_affiliations, through: :projekt
 
-  after_save do
-    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('debates', 'current') }
-    Projekt.all.each { |projekt| projekt.set_selectable_in_sidebar_selector('debates', 'expired') }
-  end
-
   validates :projekt_id, presence: true
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
@@ -29,7 +24,12 @@ class Debate
 
   def self.base_selection(scoped_projekt_ids = Projekt.ids)
     where(projekt_id: scoped_projekt_ids).
-      joins(:projekt).merge(Projekt.activated)
+      joins(:projekt).merge(Projekt.activated).
+      joins( 'INNER JOIN projekt_settings shwmn ON projekts.id = shwmn.projekt_id' ).
+      where( 'shwmn.key': 'projekt_feature.debates.show_in_sidebar_filter', 'shwmn.value': 'active' )
+
+
+
   end
 
   def votable_by?(user)

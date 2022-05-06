@@ -17,8 +17,8 @@ class Proposal < ApplicationRecord
     where(author_id: user_id)
   }
 
-  scope :seen, -> { where.not(ignored_flag_at: nil) }
-  scope :unseen, -> { where(ignored_flag_at: nil) }
+  scope :seen,                     -> { where.not(ignored_flag_at: nil) }
+  scope :unseen,                   -> { where(ignored_flag_at: nil) }
 
   alias_attribute :projekt_phase, :proposal_phase
 
@@ -27,8 +27,24 @@ class Proposal < ApplicationRecord
       not_archived.
       not_retired.
       where(projekt_id: scoped_projekt_ids).
-      joins(:projekt).merge(Projekt.activated)
+      joins(:projekt).merge(Projekt.activated).
+      joins( 'INNER JOIN projekt_settings shwmn ON projekts.id = shwmn.projekt_id' ).
+      where( 'shwmn.key': 'projekt_feature.proposals.show_in_sidebar_filter', 'shwmn.value': 'active' )
   end
+
+  def successful?
+    total_votes >= custom_votes_needed_for_success
+  end
+
+  def self.successful
+    ids = Proposal.select { |p| p.cached_votes_up >= p.custom_votes_needed_for_success }.pluck(:id)
+    Proposal.where(id: ids)
+	end
+
+  def self.unsuccessful
+    ids = Proposal.select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
+    Proposal.where(id: ids)
+	end
 
   def votable_by?(user)
     user.present? &&
@@ -58,6 +74,12 @@ class Proposal < ApplicationRecord
 
   def elastic_searchable?
     hidden_at.nil? && published?
+  end
+
+  def custom_votes_needed_for_success
+    return Proposal.votes_needed_for_success unless projekt.present?
+    return Proposal.votes_needed_for_success if ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.proposal_options.votes_for_proposal_success").value.to_i == 0
+    ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.proposal_options.votes_for_proposal_success").value.to_i
   end
 
   protected

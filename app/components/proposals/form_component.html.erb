@@ -25,11 +25,13 @@
       </div>
       <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
-      <div>
-        <%= translations_form.text_area :summary,
-                                        rows: 4, maxlength: 200,
-                                        hint: t("proposals.form.proposal_summary_note") %>
-      </div>
+      <% if extended_feature?('proposals.enable_summary') %>
+        <div>
+          <%= translations_form.text_area :summary,
+                                          rows: 4, maxlength: 200,
+                                          hint: t("proposals.form.proposal_summary_note") %>
+        </div>
+      <% end %>
 
       <div>
         <%= translations_form.text_area :description,
@@ -113,6 +115,7 @@
       </div>
     <% end %>
 
-    <%= f.submit(class: "button", value: t("proposals.#{action_name}.form.submit_button")) %>
+    <%= f.submit t("custom.proposals.form.buttons.save_draft"), class: 'button', name: 'save_draft' %>
+    <%= f.submit t("custom.proposals.form.buttons.publish"),    class: "button" %>
   </div>
 <% end %>

@@ -182,6 +182,7 @@ class Setting < ApplicationRecord
         # "extended_feature.debates.show_report_button_in_debate_sidebar": true,
         # "extended_feature.debates.show_related_content": true,
         "extended_feature.debates.enable_projekt_filter": true,
+        "extended_feature.debates.enable_my_posts_filter": true,
 
         "extended_feature.proposals.intro_text_for_proposals": true,
         # "extended_feature.proposals.quorum_for_proposals": false,
@@ -195,6 +196,8 @@ class Setting < ApplicationRecord
         # "extended_feature.proposals.enable_proposal_notifications_tab": true,
         # "extended_feature.proposals.enable_proposal_milestones_tab": true,
         "extended_feature.proposals.enable_projekt_filter": true,
+        "extended_feature.proposals.enable_my_posts_filter": true,
+        "extended_feature.proposals.enable_summary": true,
         "extended_option.proposals.max_active_proposals_per_user": 100,
         "extended_option.proposals.description_max_length": 6000,
 
@@ -212,8 +215,6 @@ class Setting < ApplicationRecord
         # "extended_feature.budget_investments.show_implementation_option_fields": true,
         # "extended_feature.budget_investments.enable_investment_milestones_tab": true,
 
-        "extended_feature.proposals.enable_my_posts_filter": true,
-        "extended_feature.debates.enable_my_posts_filter": true,
         "extended_feature.deficiency_reports.enable_my_posts_filter": true
       }
     end

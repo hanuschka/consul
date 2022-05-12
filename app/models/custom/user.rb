@@ -11,6 +11,7 @@ class User < ApplicationRecord
   around_update :reset_verification_status
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
+  has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   belongs_to :bam_street

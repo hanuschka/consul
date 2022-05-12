@@ -4,7 +4,9 @@
   </div>
 <% end %>
 
-<blockquote><%= @proposal.summary %></blockquote>
+<% if extended_feature?('proposals.enable_summary') %>
+  <blockquote><%= @proposal.summary %></blockquote>
+<% end %>
 
 <% if @proposal.image.present? && ( !@proposal.image.concealed? || params[:controller] == 'admin/proposals' ) %>
   <div class="image">

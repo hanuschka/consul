@@ -125,6 +125,7 @@
 //= require map_refresh
 //= require accessibility_fixes
 //= require components/shared/footer_phases_component
+//= require projekt_question
 //= require components/admin/livesubmit_checkbox
 //= require orbit_in_popup_fix
 //= require polls_custom
@@ -213,6 +214,7 @@ var initialize_modules = function() {
   App.CustomAdmin.initialize();
   App.BamStreetModal.initialize();
   App.FooterPhasesComponentCustom.initialize();
+  App.ProjektQuestionCustom.initialize();
   App.LivesubmitCheckboxCustom.initialize();
   App.OrbitInPopupFixCustom.initialize();
 

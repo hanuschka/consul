@@ -36,6 +36,7 @@ module CustomHelper
       projekt.proposal_phase,
       projekt.voting_phase,
       projekt.budget_phase,
+      projekt.question_phase,
       projekt.milestone_phase,
       projekt.projekt_notification_phase,
       projekt.event_phase,

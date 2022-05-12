@@ -70,6 +70,8 @@ de:
           enable_projekt_filter_description: Zeigt den Projektfilter in der Vorschlagsübersichtseite
           enable_my_posts_filter: Meine Beiträge
           enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Vorschlagsübersichtseite
+          enable_summary: "\"Zusammenfassung\" anzeigen"
+          enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
         polls:
           intro_text_for_polls: Einleitungstext für Abstimmungen
           intro_text_for_polls_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Abstimmungsübersicht

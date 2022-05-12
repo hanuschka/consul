@@ -38,6 +38,8 @@ en:
             'yes': "Yes"
           projekt_map_tab:
             name: Ind. card configuration
+          projekt_questions_tab:
+            name: Questions
           projekt_milestones_tab:
             name: Progress & Milestones
           projekt_news_tab:

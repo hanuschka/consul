@@ -1,0 +1,27 @@
+<% if projekt_question.question_options.any? %>
+  <% if projekt.question_phase.active? && !projekt_answer.persisted? %>
+
+    <%= form_for projekt_answer, url: projekt_projekt_question_answers_path(projekt), remote: true, html: { class: "controls-stacked js-projekt-answer-form" } do |f| %>
+      <% projekt_question.question_options.each do |question_option| %>
+        <label class="control radio <%= "is-active" if projekt_answer.question_option&.id == question_option.id %>">
+          <%= f.radio_button :projekt_question_option_id, question_option.id, label: false %>
+          <span class="control-indicator"></span>
+          <%= question_option.value %>
+        </label>
+      <% end %>
+      <%= f.submit t("legislation.questions.show.answer_question"), class: "button" %>
+    <% end %>
+
+  <% else %>
+
+    <form class="controls-stacked disabled">
+      <% projekt_question.question_options.each do |question_option| %>
+        <label class="control radio <%= "is-active" if projekt_answer.persisted? && (projekt_answer.question_option&.id == question_option.id) %>">
+          <input id="quiz-1" name="radio" type="radio" disabled="true">
+          <span class="control-indicator"></span>
+          <%= question_option.value %>
+        </label>
+      <% end %>
+    </form>
+  <% end %>
+<% end %>

@@ -19,17 +19,22 @@
 <main>
   <% cache [locale_and_user_status(@proposal),
             @proposal,
+            @proposal.voters.count,
+            @proposal_votes,
             @proposal.author,
+            @proposal.projekt,
+            @proposal.proposal_phase,
+            @proposal.projekt.top_parent,
+            @proposal.projekt.page,
+            @proposal.image,
+            @proposal.successful?,
+            @proposal.custom_votes_needed_for_success,
+            proposal_settings_fingerprints,
             Flag.flagged?(current_user, @proposal),
             projekt_feature?(@proposal&.projekt, 'proposals.show_report_button_in_proposal_sidebar'),
             projekt_feature?(@proposal&.projekt, 'proposals.show_follow_button_in_proposal_sidebar'),
             projekt_feature?(@proposal&.projekt, 'proposals.show_community_button_in_proposal_sidebar'),
-            projekt_feature?(@proposal&.projekt, 'proposals.show_related_content'),
-            @proposal_votes,
-            @proposal.projekt,
-            @proposal.proposal_phase,
-            @proposal.successful?,
-            @proposal.image] do %>
+            projekt_feature?(@proposal&.projekt, 'proposals.show_related_content') ] do %>
     <div class="proposal-show">
 
       <% unless action_name == 'created' %>

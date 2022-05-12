@@ -26,6 +26,9 @@ en:
         title_archived: Expired projects
       page:
         sidebar:
+          admin_controls:
+            edit_projekt: Edit projekt
+            edit_projekt_page: Edit projekt page
           phases:
             participate: Open for participation!
         footer:

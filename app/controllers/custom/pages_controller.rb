@@ -109,6 +109,14 @@ class PagesController < ApplicationController
     end
   end
 
+  def question_phase_footer_tab
+    set_projekt_questions_footer_tab_variables
+
+    respond_to do |format|
+      format.js { render "pages/projekt_footer/footer_tab" }
+    end
+  end
+
   def extended_sidebar_map
     @current_projekt = SiteCustomization::Page.find_by(slug: params[:id]).projekt
 
@@ -305,6 +313,23 @@ class PagesController < ApplicationController
     @current_tab_phase = @current_projekt.event_phase
     scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
     @projekt_events = ProjektEvent.base_selection(scoped_projekt_ids).page(params[:page]).send("sort_by_#{@current_order}")
+  end
+
+  def set_projekt_questions_footer_tab_variables(projekt=nil)
+    @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
+    @current_tab_phase = @current_projekt.question_phase
+    scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
+    # @projekt_questions = ProjektQuestion.base_selection(scoped_projekt_ids)
+
+    @projekt_question = @current_projekt.questions.first
+    @commentable = @projekt_question
+
+    @valid_orders = %w[most_voted newest oldest]
+    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+    @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
+
+    set_comment_flags(@comment_tree.comments)
+    @projekt_question_answer = @projekt_question.answer_for_user(current_user) || ProjektQuestionAnswer.new
   end
 
   def default_phase_name(default_phase_id)

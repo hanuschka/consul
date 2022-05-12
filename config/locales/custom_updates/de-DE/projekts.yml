@@ -34,6 +34,9 @@ de:
         title_archived: Abgelaufene Projekte
       page:
         sidebar:
+          admin_controls:
+            edit_projekt: Projekt bearbeiten
+            edit_projekt_page: Projektseite bearbeiten
           phases:
             participate: Offen für Beteiligung!
         footer:
@@ -43,6 +46,7 @@ de:
           comments: Kommentare
           debates: Diskussionen
           proposals: Vorschläge
+          questions: Questions
           polls: Abstimmungen
           budget: Budgets
           milestones: Meilensteine

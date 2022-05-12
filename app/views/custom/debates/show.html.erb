@@ -17,15 +17,17 @@
   <main>
   <% cache [locale_and_user_status(@debate),
             @debate,
+            @debate_votes,
             @debate.author,
+            @debate.projekt,
+            @debate.projekt.top_parent,
+            @debate.projekt.page,
+            @debate.debate_phase,
+            @debate.image,
             Flag.flagged?(current_user, @debate),
             projekt_feature?(@debate.projekt, 'debates.show_report_button_in_sidebar'),
             projekt_feature?(@debate.projekt, 'debates.show_related_content'),
-            projekt_feature?(@debate.projekt, 'debates.allow_downvoting'),
-            @debate_votes,
-            @debate.projekt,
-            @debate.debate_phase,
-            @debate.image ] do %>
+            projekt_feature?(@debate.projekt, 'debates.allow_downvoting')] do %>
 
       <div class="debate-show">
 

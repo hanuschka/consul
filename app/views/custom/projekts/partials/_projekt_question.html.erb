@@ -1,0 +1,30 @@
+<section class="projekt-question-section js-projekt-question-section">
+  <div class="row">
+    <div class="small-12 medium-9 column">
+      <h3 class="quiz-question"><%= projekt_question.title %></h3>
+      <div class="project-question-list" id="legislation-answer-form">
+        <%= render "custom/projekts/partials/projekt_question_answer_form", projekt: projekt, projekt_question: projekt_question, projekt_answer: projekt_question_answer %>
+        <%= render "custom/projekts/partials/projekt_question_particapation_not_allowed", projekt: projekt %>
+      </div>
+    </div>
+    <div class="small-12 medium-3 column quiz-header small-collapse">
+      <% if projekt_question.next_question_id %>
+        <%= link_to projekt_projekt_question_path(projekt, projekt_question.next_question_id), class: "quiz-next-link js-projekt-question-next" do %>
+          <div class="quiz-next">
+            <%= t("legislation.questions.show.next_question") %>
+            <span class="icon-angle-right" aria-hidden="true">
+          </div>
+        <% end %>
+      <% elsif projekt_question.first_question_id %>
+        <%= link_to projekt_projekt_question_path(projekt, projekt_question.first_question_id), class: "quiz-next-link js-projekt-question-next" do %>
+          <div class="quiz-next js-projekt-question-section-next-button">
+            <%= t("legislation.questions.show.first_question") %>
+            <span class="icon-angle-right" aria-hidden="true">
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render "/comments/comment_tree", comment_tree: @comment_tree, display_comments_count: true %>
+</section>

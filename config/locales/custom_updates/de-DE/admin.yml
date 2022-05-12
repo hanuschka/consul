@@ -121,8 +121,18 @@ de:
             'yes': Ja
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
+          projekt_questions_tab:
+            name: Questions
+            title: Questions
           projekt_milestones_tab:
             name: Fortschritt & Meilensteine
+          projekt_notifications_tab:
+            name: Benachrichtigungen
+            page_title: Nachricht senden
+            title: Nachricht senden
+            notification_title: Titel
+            notification_body: Nachricht
+            button: Nachricht senden
           projekt_news_tab:
             name: News-Feed
           projekt_notifications_tab:

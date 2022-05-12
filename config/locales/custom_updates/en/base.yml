@@ -37,6 +37,7 @@ en:
         public_interests: "Keep the labels of the elements I follow public"
       show:
         user_permission_votes: Participate in polls
+        settings: Settings
     comments:
       reply_form:
         leave_comment: Write a reply

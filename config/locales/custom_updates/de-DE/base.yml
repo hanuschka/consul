@@ -40,6 +40,7 @@ de:
         public_interests: Vorschläge, denen ich folge, veröffentlichen
       show:
         user_permission_votes: An Abstimmungen teilnehmen
+        settings: Einstellungen
     comments:
       reply_form:
         leave_comment: Schreiben Sie eine Antwort

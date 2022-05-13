@@ -16,6 +16,10 @@ de:
         current_projekts: Projekte mit aktiver Beteiligungsphase
         expired_projekts: Abgeschlossene Projekte
         no_projekts: keine Projekte
+      projekt_questions :
+        comments_title: "Offene Antworten"
+        comments_button: "Antwort veröffentlichen"
+        login_to_answer: "Sie müssen sich %{signin} oder %{signup}, um an der Kurzumfrage teilzunehmen."
 
       backlink: Zur Projektübersicht
       errors:
@@ -34,6 +38,9 @@ de:
         title_archived: Abgelaufene Projekte
       page:
         sidebar:
+          admin_controls:
+            edit_projekt: Projekt bearbeiten
+            edit_projekt_page: Projektseite bearbeiten
           phases:
             participate: Offen für Beteiligung!
         footer:
@@ -43,12 +50,14 @@ de:
           comments: Kommentare
           debates: Diskussionen
           proposals: Vorschläge
+          questions: Questions
           polls: Abstimmungen
           budget: Budgets
           milestones: Meilensteine
           projekt_notifications: Benachrichtigungen
           newsfeed: News-Feed
           projekt_events: Veranstaltungen
+          projekt_questions: Kurzumfrage
         projekt_events_tab:
           title: Kommende Veranstaltungen
           no_events: Keine Ereignisse
@@ -70,6 +79,7 @@ de:
           ending: Gepl. Fertigstellung
         projekt_notification_phase: Benachrichtigungen
         newsfeed_phase: Newsfeed
+        question_phase: Kurzumfrage
       projekt_events:
         orders:
           all: Alle

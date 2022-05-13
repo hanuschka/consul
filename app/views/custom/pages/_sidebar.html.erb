@@ -1,3 +1,7 @@
+<% if current_user.present? && current_user.administrator? %>
+  <%= render partial: 'pages/sidebar/admin_controls' %>
+<% end %>
+
 <% if projekt_feature?(@custom_page.projekt, "sidebar.show_phases_in_projekt_page_sidebar") %>
   <%= render Pages::Projekts::SidebarPhasesComponent.new(projekt) %>
 <% end %>

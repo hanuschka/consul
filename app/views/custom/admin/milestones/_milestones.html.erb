@@ -73,3 +73,7 @@
               admin_polymorphic_path(milestoneable.milestones.new, action: :new),
               class: "button hollow" %>
 </p>
+
+
+<h2 class='margin-top-25'><%= t('custom.admin.projekts.edit.projekt_settings_tab.milestone_settings') %></h2>
+<%= render partial: "admin/projekts/edit/projekt_settings/features_table", locals: { features: @projekt_features_milestones } %>

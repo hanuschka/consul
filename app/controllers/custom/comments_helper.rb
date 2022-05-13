@@ -8,4 +8,24 @@ module CommentsHelper
       ''
     end
   end
+
+  def comment_tree_title_text(commentable)
+    if commentable.class == Legislation::Question
+      t("legislation.questions.comments.comments_title")
+    elsif commentable.class == ProjektQuestion
+      t("custom.projekts.projekt_questions.comments_title")
+    else
+      t("comments_helper.comments_title")
+    end
+  end
+
+  def comment_button_text(parent_id, commentable)
+    if commentable.class == Legislation::Question
+      parent_id.present? ? t("comments_helper.reply_button") : t("legislation.questions.comments.comment_button")
+    elsif commentable.class == ProjektQuestion
+      t("custom.projekts.projekt_questions.comments_button")
+    else
+      parent_id.present? ? t("comments_helper.reply_button") : t("comments_helper.comment_button")
+    end
+  end
 end

@@ -10,6 +10,9 @@ namespace :admin do
     end
     resources :projekt_notifications, only: [:create, :update, :destroy]
     resources :projekt_events, only: [:create, :update, :destroy]
+    resources :projekt_questions  do
+      post "/answers/order_answers", to: "questions/answers#order_answers"
+    end
     resources :milestones, controller: "projekt_milestones"
     resources :progress_bars, except: :show, controller: "projekt_progress_bars"
     member do

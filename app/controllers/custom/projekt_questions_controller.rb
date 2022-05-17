@@ -1,5 +1,5 @@
 class ProjektQuestionsController < ApplicationController
-  before_action :set_question
+  before_action :set_question, only: [:show]
 
   skip_authorization_check
 
@@ -8,7 +8,14 @@ class ProjektQuestionsController < ApplicationController
 
   has_orders %w[most_voted newest oldest], only: :show
 
+  respond_to :html, :js
+
   layout false
+
+  def index
+    @projekt = Projekt.find(params[:projekt_id])
+    @projekt_questions = @projekt.questions
+  end
 
   def show
     @commentable = @question

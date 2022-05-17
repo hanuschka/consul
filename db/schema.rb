@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_13_092829) do
+ActiveRecord::Schema.define(version: 2022_05_16_170345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1088,14 +1088,14 @@ ActiveRecord::Schema.define(version: 2022_05_13_092829) do
     t.string "name"
     t.string "provider"
     t.string "attribution"
-    t.string "protocol"
     t.string "layer_names"
-    t.string "format"
-    t.string "transparent"
     t.boolean "base"
     t.bigint "projekt_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "show_by_default", default: false
+    t.boolean "transparent", default: false
+    t.integer "protocol", default: 0
     t.index ["projekt_id"], name: "index_map_layers_on_projekt_id"
   end
 

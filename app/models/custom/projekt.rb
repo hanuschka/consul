@@ -46,6 +46,8 @@ class Projekt < ApplicationRecord
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
+  has_many :map_layers
+
   accepts_nested_attributes_for :debate_phase, :proposal_phase, :budget_phase, :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications, :projekt_events, :event_phase, :question_phase
 
   before_validation :set_default_color
@@ -319,6 +321,10 @@ class Projekt < ApplicationRecord
 
   def title
     name
+  end
+
+  def projekt_list_enabled?
+    ProjektSetting.find_by(projekt: self, key: 'projekt_feature.questions.show_questions_list')&.enabled?
   end
 
   private

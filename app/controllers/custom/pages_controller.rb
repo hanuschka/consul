@@ -321,18 +321,22 @@ class PagesController < ApplicationController
     scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
     # @projekt_questions = ProjektQuestion.base_selection(scoped_projekt_ids)
 
-    @projekt_question = @current_projekt.questions.first
-    @commentable = @projekt_question
+    if @current_projekt.projekt_list_enabled?
+      @projekt_questions = @current_projekt.questions
+    else
+      @projekt_question = @current_projekt.questions.first
+      @commentable = @projekt_question
 
-    @valid_orders = %w[most_voted newest oldest]
-    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+      @valid_orders = %w[most_voted newest oldest]
+      @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
-    @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
+      @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
 
-    if @commentable.present?
-      set_comment_flags(@comment_tree.comments)
+      if @commentable.present?
+        set_comment_flags(@comment_tree.comments)
+      end
+      @projekt_question_answer = @projekt_question&.answer_for_user(current_user) || ProjektQuestionAnswer.new
     end
-    @projekt_question_answer = @projekt_question&.answer_for_user(current_user) || ProjektQuestionAnswer.new
   end
 
   def default_phase_name(default_phase_id)

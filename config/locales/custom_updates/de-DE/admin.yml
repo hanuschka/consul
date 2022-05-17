@@ -120,6 +120,7 @@ de:
           index:
             title: Kurzumfrage
             create: Frage erstellen
+            enable_projekt_list: Aktivieren Sie eine Übersicht aller Fragen
           edit:
             title: Frage bearbeiten
             save: Frage aktualisieren
@@ -193,6 +194,7 @@ de:
             comment_phase: Kommentarphase
             budget_phase: Budgetphase
             milestone_phase: Umsetzungsphase
+            question_phase: Kurzumfragenphase
             link:
               voting_phase: Abstimmungen
               budget_phase: Budgets

@@ -28,4 +28,9 @@ module CommentsHelper
       parent_id.present? ? t("comments_helper.reply_button") : t("comments_helper.comment_button")
     end
   end
+
+  def commentable_path(comment)
+    return "/#{comment.commentable.projekt.page.slug}?selected_phase_id=#{comment.commentable.projekt.question_phase.id}#filter-subnav" if comment.commentable.class.name == "ProjektQuestion"
+    polymorphic_path(comment.commentable)
+  end
 end

@@ -1,6 +1,6 @@
 class ProjektsController < ApplicationController
   skip_authorization_check
-  has_orders %w[active ongoing upcoming expired], only: :index
+  has_orders %w[active all ongoing upcoming expired], only: :index
 
   before_action do
     raise FeatureFlags::FeatureDisabled, :projekts_overview unless Setting['projekts.overview_page']
@@ -17,6 +17,11 @@ class ProjektsController < ApplicationController
         .joins( 'INNER JOIN projekt_settings show_in_overview_page ON projekts.id = show_in_overview_page.projekt_id' )
         .where( 'show_in_overview_page.key': 'projekt_feature.general.show_in_overview_page', 'show_in_overview_page.value': 'active' )
 
+    @projekts_count_hash = {}
+
+    valid_orders.each do |order|
+      @projekts_count_hash[order] = @projekts.send(order).count
+    end
 
     @geozones = Geozone.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'

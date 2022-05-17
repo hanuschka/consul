@@ -4,6 +4,9 @@ de:
       deficiency_report:
         one: Mangelmeldung
         other: Mängelmeldungen
+      map_layer:
+        one: Kartenebene
+        other: Kartenebenen
     errors:
       models:
         proposal:
@@ -36,3 +39,15 @@ de:
         user_cost_estimate: Preisliche Einschätzung
       milestone:
         custom_date: Benutzerdefiniertes Datum
+      map_layer:
+        name: Name der Kartenebene
+        provider: Anbieter
+        attribution: Zuschreibung
+        base: Basisschicht der Karte
+        layer_names: Kartenebenennamen
+        show_by_default: standardmäßig anzeigen
+        transparent: diese Kartenebene ist transparent
+        protocol: Kartenprotokoll
+        protocols:
+          regular: default
+          wms: WMS

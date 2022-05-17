@@ -711,10 +711,6 @@ span.projekt-backlink:before {
 }
 
 .projekt-question-section {
-  .comments {
-    margin-top: $line-height * 2.5;
-  }
-
   #comments > h2 {
       font-size: 24px;
   }
@@ -844,5 +840,21 @@ span.projekt-backlink:before {
       pointer-events: none;
       user-select: none;
     }
+  }
+}
+
+.projekt-next-question-button-section {
+  margin-bottom: 10px;
+}
+
+.projekt-next-to-question-list-button {
+  text-align: right;
+}
+
+.projekt-list-tabs {
+  @media screen and (max-width: 650px) {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
   }
 }

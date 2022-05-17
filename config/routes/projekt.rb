@@ -1,5 +1,5 @@
 resources :projekts, only: [:index, :show] do
-  resources :projekt_questions, only: [:show]
+  resources :projekt_questions, only: [:index, :show]
   resources :projekt_question_answers, only: [:create, :update]
 
   member do

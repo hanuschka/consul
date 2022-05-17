@@ -19,13 +19,7 @@
       };
     },
 
-    // reloadCurrentQuestion: function() {
-    //   var href = document.querySelector('.js-project-question-list').dataset.questionUrl
-    //
-    //   this.loadQuestion(href)
-    // },
-
-    loadQuestion: function(url) {
+    loadQuestionSection: function(url) {
       $.get(url)
     },
 
@@ -38,21 +32,18 @@
 
       $elementLabel.siblings('label').removeClass('is-active')
       $elementLabel.addClass('is-active')
-      // $(".js-projekt-question-section").addClass("show-loader");
+      $(".js-projekt-question-section").addClass("show-loader");
     },
 
     initialize: function() {
       $("body").on("click", ".js-projekt-question-next", function(e) {
         e.preventDefault()
         e.stopPropagation()
-        this.loadQuestion(e.currentTarget.href)
+        this.loadQuestionSection(e.currentTarget.href)
       }.bind(this));
 
-      // $('body').on('ajax:success', '.js-projekt-answer-form', function(data) {
-        // this.reloadCurrentQuestion()
-      // }.bind(this));
-
       $('body').on('change', '.js-project-question-list form input', this.debounce(this.submitForm.bind(this), 500))
+      $('body').on('click', 'js-projekt-question-switch', this.loadQuestionSection.bind(this))
     }
   }
 }).call(this);

@@ -12,19 +12,19 @@
 
   <div class="projekts-map-wrapper">
     <div class="map projekts-map not-print">
-      <%= render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), "projekts", false, nil, @projekts_coordinates) %>
+      <%= render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), "projekts", false, nil, @projekts_coordinates, nil) %>
     </div>
     <div class='expand-overview-map-wrapper'>
       <div class='expand-overview-map small js-expand-overview-map not-print wide'>
         <%= t('custom.proposals.index.show_larger_map') %>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 
   <div class='row'>
     <div class='column small-12 medium-9'>
       <%= render_custom_block 'projekts_list' %>
-      <%= render Shared::OrderLinksComponent.new("custom.projekts.projekts") %>
+      <%= render Projekts::ProjektListTabsComponent.new(projekts_count_hash: @projekts_count_hash) %>
 
       <% if @projekts.any? %>
         <% Projekt.top_level.each do |top_level_projekt| %>

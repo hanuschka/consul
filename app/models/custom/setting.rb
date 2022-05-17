@@ -54,8 +54,8 @@ class Setting < ApplicationRecord
         "html.per_page_code_body": "",
         # Code to be included at the top (inside <head>) of every page (useful for tracking)
         "html.per_page_code_head": "",
-        "map.latitude": 51.48,
-        "map.longitude": 0.0,
+        "map.latitude": 48.1372,
+        "map.longitude": 11.5754,
         "map.zoom": 10,
         "process.debates": true,
         "process.proposals": true,
@@ -197,7 +197,7 @@ class Setting < ApplicationRecord
         # "extended_feature.proposals.enable_proposal_milestones_tab": true,
         "extended_feature.proposals.enable_projekt_filter": true,
         "extended_feature.proposals.enable_my_posts_filter": true,
-        "extended_feature.proposals.enable_summary": true,
+        # "extended_feature.proposals.enable_summary": true,
         "extended_option.proposals.max_active_proposals_per_user": 100,
         "extended_option.proposals.description_max_length": 6000,
 

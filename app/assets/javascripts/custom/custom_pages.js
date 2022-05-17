@@ -5,6 +5,7 @@
       var tabFilterSubnav = document.getElementById('filter-subnav')
 
       if (tabFilterSubnav) {
+
         var scrollLeftWidth = $('.page-subnav-tab.is-active').offset().left - tabFilterSubnav.clientWidth
 
         if (scrollLeftWidth > 0) {

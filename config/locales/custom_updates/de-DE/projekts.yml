@@ -1,16 +1,17 @@
 de:
   custom:
     projekts:
-      projekts:
-        orders:
-          active: 'Aktive Beteiligung'
-          ongoing: 'Laufende Projekte'
-          upcoming: 'Zukünftige Projektvorhaben'
-          expired: 'Abgeschlossen'
-          active_title: 'Hier sind alle Projekte mit einer aktiven Beteiligungsphase gelistet. Dabei spielt es keine Rolle, welche Beteiligungsphase eröffnet ist. Als Beteiligungsphasen zählen: Kommentare, Diskussionen, Vorschläge, Abstimmungen, Bürgerbudget, Kollaborative Textbearbeitung und Kurzumfragen.'
-          ongoing_title: 'Hier sind alle Projekte gelistet, die noch in der Umsetzungsphase - also noch nicht abgeschlossen sind - aber aktuell keine aktive Beteiligungsphase haben.'
-          upcoming_title: 'Dies ist eine Vorhabenliste. Hier sind alle zukünftigen Projektvorhaben gelistet.'
-          expired_title: 'Hier sind alle abgeschlossenen Projekte gelistet.'
+      orders:
+        all: 'Alle Projekte'
+        active: 'Aktive Beteiligung'
+        ongoing: 'Laufende Projekte'
+        upcoming: 'Zukünftige Projektvorhaben'
+        expired: 'Abgeschlossen'
+        all_title: 'Alle Projekte'
+        active_title: 'Hier sind alle Projekte mit einer aktiven Beteiligungsphase gelistet. Dabei spielt es keine Rolle, welche Beteiligungsphase eröffnet ist. Als Beteiligungsphasen zählen: Kommentare, Diskussionen, Vorschläge, Abstimmungen, Bürgerbudget, Kollaborative Textbearbeitung und Kurzumfragen.'
+        ongoing_title: 'Hier sind alle Projekte gelistet, die noch in der Umsetzungsphase - also noch nicht abgeschlossen sind - aber aktuell keine aktive Beteiligungsphase haben.'
+        upcoming_title: 'Dies ist eine Vorhabenliste. Hier sind alle zukünftigen Projektvorhaben gelistet.'
+        expired_title: 'Hier sind alle abgeschlossenen Projekte gelistet.'
       index:
         title: Projekte
         current_projekts: Projekte mit aktiver Beteiligungsphase
@@ -20,6 +21,8 @@ de:
         comments_title: "Offene Antworten"
         comments_button: "Antwort veröffentlichen"
         login_to_answer: "Sie müssen sich %{signin} oder %{signup}, um an der Kurzumfrage teilzunehmen."
+        back_to_question_list: 'Zurück zur Fragenliste'
+        comments_count: "%{count} offene Antworten"
 
       backlink: Zur Projektübersicht
       errors:

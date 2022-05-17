@@ -34,6 +34,9 @@ de:
           debate_title: Zuordnung der Diskussion zu einem Projekt
           proposal_description: Bitte ordnen Sie Ihren Vorschlag einem der nachfolgenden Projekte oder Unterprojekte zu. Dies dient dazu, dass die Vorschläge in der Vorschlagsübersicht besser auffindbar sind.
           proposal_title: Zuordnung des Vorschlags zu einem Projekt
+      sidebar:
+        sdgs: SDG
+
       sidebar_filter:
         filter_button: Nach Projekte filtern
         title: Projekte

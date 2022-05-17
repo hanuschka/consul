@@ -4,9 +4,13 @@
 
     updateSDGFilterGoals: function() {
       var url = new URL(window.location.href);
+
+      if (!url.pathname.includes('projekts')) {
+        url.pathname = '/projekts'
+      }
+
       var clickedSDGCode = $(event.target).parent().attr('data-code');
       var currentSDGTarget = "";
-
 
       if (url.searchParams.get('sdg_targets')) {
         currentSDGTarget = url.searchParams.get('sdg_targets').split(',')[0]

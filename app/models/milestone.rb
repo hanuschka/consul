@@ -2,7 +2,7 @@ class Milestone < ApplicationRecord
   include Imageable
   include Documentable
 
-  translates :title, :description, touch: true
+  translates :title, :description, :custom_date, touch: true
   include Globalizable
   translation_class_delegate :status_id
 

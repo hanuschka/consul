@@ -16,6 +16,7 @@ de:
         confirmation_instructions:
           greeting: "Guten Tag %{name},"
           p1: herzlich willkommen auf CONSUL.!
+          p11: danke für Ihre Registrierung auf dem CONSUL Portal zur Kommentierung des Gesetzentwurfes für ein Bundes-Transparenzgesetz. Sie müssen Ihre Anmeldung jetzt nur noch durch den Klick auf einen der nachfolgenden Links bestätigen.
           p2: "Auch Ihr Engagement entscheidet, ob wir mit unseren Aktionen erfolgreich sind. Wir möchten Sie daher auch zukünftig per E-Mail informieren. Unseren Newsletter können Sie jederzeit abbestellen. Bitte klicken Sie hier:"
           cta_with_newsletter: Ich bestätige meine E-Mailadresse und möchte Infos per E-Mail
           cta_without_newsletter: Ich bestätige meine E-Mailadresse und verzichte auf Infos per E-Mail

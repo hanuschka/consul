@@ -291,6 +291,8 @@ class PagesController < ApplicationController
   def set_milestones_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.milestone_phase
+    milestone_order_newest = ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.milestones.newest_first').value.present?
+    @milestones_publication_date_order = milestone_order_newest ? :desc : :asc
   end
 
   def set_projekt_notifications_footer_tab_variables(projekt=nil)

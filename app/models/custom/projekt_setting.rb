@@ -116,7 +116,7 @@ class ProjektSetting < ApplicationRecord
 
         "projekt_feature.questions.show_questions_list": '',
 
-        "projekt_feature.milestones.show_date": 'active',
+        "projekt_feature.milestones.newest_first": '',
 
         "projekt_newsfeed.id": '',
         "projekt_newsfeed.type": '',

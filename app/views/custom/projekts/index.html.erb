@@ -24,7 +24,7 @@
   <div class='row'>
     <div class='column small-12 medium-9'>
       <%= render_custom_block 'projekts_list' %>
-      <%= render Projekts::ProjektListTabsComponent.new(projekts_count_hash: @projekts_count_hash) %>
+      <%= render Projekts::ProjektListTabsComponent.new(current_active_orders: @current_active_orders) %>
 
       <% if @projekts.any? %>
         <% Projekt.top_level.each do |top_level_projekt| %>

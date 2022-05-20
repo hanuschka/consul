@@ -13,7 +13,7 @@ class Milestone < ApplicationRecord
   validates :publication_date, presence: true
   validates_translation :description, presence: true, unless: -> { status_id.present? }
 
-  scope :order_by_publication_date, -> { order(publication_date: :asc, created_at: :asc) }
+  # scope :order_by_publication_date, -> { order(publication_date: :asc, created_at: :asc) }
   scope :published,                 -> { where("publication_date <= ?", Date.current.end_of_day) }
   scope :with_status,               -> { where.not(status_id: nil) }
 

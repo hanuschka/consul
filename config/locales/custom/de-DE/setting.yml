@@ -221,8 +221,8 @@ de:
           enable_summary: "\"Zusammenfassung\" anzeigen"
           enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
         milestones:
-          show_date: Datum der Meilensteine
-          show_date_description: Zeigt das Datum in den Mailensteine an
+          newest_first: Neueste Meilensteine zuerst anzeigen
+          newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst 
 
 
       deficiency_reports:

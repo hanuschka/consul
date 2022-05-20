@@ -23,6 +23,12 @@ class ProjektsController < ApplicationController
       @projekts_count_hash[order] = @projekts.send(order).count
     end
 
+    @current_active_orders = @projekts_count_hash.select do |key, value|
+      value > 0
+    end.keys
+
+    @current_order = valid_orders.include?(params[:order]) ? params[:order] : @current_active_orders.first
+
     @geozones = Geozone.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)

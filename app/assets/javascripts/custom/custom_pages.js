@@ -54,7 +54,9 @@
 
       })
 
-
+      $("body").on("click", ".spinner-placeholder ul.pagination li a", function(event) {
+        $(".spinner-placeholder").addClass("show-loader")
+      })
     }
   }
 }).call(this);

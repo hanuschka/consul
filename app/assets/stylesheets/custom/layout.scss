@@ -168,3 +168,22 @@ html.is-reveal-open body {
 ul.tabs li.tabs-title {
   margin-bottom: 0;
 }
+
+.header-right-group {
+  .account-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+
+   .sign-in-button, .sign-up-button {
+     text-align: center;
+     margin-right: 0;
+     margin-bottom: 5px;
+     padding: 0.25rem 2.2em;
+   }
+}
+
+.resource-n .resource-details .resource-summary a {
+  color: #222;
+  text-decoration: none;
+}

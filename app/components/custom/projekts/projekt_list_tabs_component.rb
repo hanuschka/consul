@@ -2,13 +2,17 @@ class Projekts::ProjektListTabsComponent < ApplicationComponent
   attr_reader :i18n_namespace, :anchor
   delegate :current_path_with_query_params, :current_order, :valid_orders, to: :helpers
 
-  def initialize(projekts_count_hash: {}, anchor: nil)
+  def initialize(current_active_orders: {}, anchor: nil)
     @i18n_namespace = i18n_namespace
     @anchor = anchor
-    @projekts_count_hash = projekts_count_hash
+    @current_active_orders = current_active_orders
   end
 
   private
+
+  def current_active_orders_sorted
+    ['all', 'active', 'ongoing', 'upcoming', 'expired'] & @current_active_orders
+  end
 
     def html_class(order)
       "is-active" if order == current_order

@@ -542,6 +542,10 @@ span.projekt-backlink:before {
   padding: 18px;
   margin-bottom: 1rem;
 
+  .sdg-goal-tag-list li:first-child {
+    margin-left: 0;
+  }
+
   @media screen and (max-width: 650px) {
     justify-content: center;
     padding: 15px 10px;
@@ -611,11 +615,11 @@ span.projekt-backlink:before {
   .sdg-tag-list .sdg-goal-tag-list {
     margin-left: 0;
 
-    .selected-goal {
+    .selected-goal, .unselected-goal {
       margin-right: 2px;
       margin-left: 2px;
-
     }
+
     .sdg-goal-icon {
       min-width: 42px;
       max-width: 42px;
@@ -867,4 +871,44 @@ span.projekt-backlink:before {
   margin-bottom: 0.5rem;
   padding: 0.375rem 0.5rem;
   text-decoration: none;
+}
+
+#filter-projekts-all {
+  .projekt-name-in-label {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 165px;
+    display: inline-block;
+    white-space: nowrap;
+    line-height: 1;
+    position: relative;
+    top: 2px;
+  }
+}
+
+#filter-projekts-all #filter-projekts-active ul {
+  position: relative;
+}
+
+#filter-projekts-all #filter-projekts-active ul > li[aria-expanded="true"] > .projekt-tree-ul-vertical-line {
+  background: #b8b8b8;
+  content: '';
+  width: 1px;
+  position: absolute;
+  display: block;
+  top: 21px;
+  left: -12px;
+}
+
+#filter-projekts-all #filter-projekts-active > ul ul {
+  &::before {
+    background: #b8b8b8;
+    content: '';
+    width: 7px;
+    height: 1px;
+    position: absolute;
+    display: block;
+    top: 11px;
+    left: -27px;
+  }
 }

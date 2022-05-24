@@ -150,11 +150,6 @@
     } %>
 
     <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
-      projekt_phase: @projekt.budget_phase,
-      phase_name: 'budget_phase'
-    } %>
-
-    <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
       projekt_phase: @projekt.milestone_phase,
       phase_name: 'milestone_phase'
     } %>

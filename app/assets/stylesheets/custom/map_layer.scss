@@ -1,9 +1,17 @@
 .map-layer {
   position: relative;
 
-  .edit-map-layer {
+  .edit-map-layer,
+  .delete-map-layer {
     position: absolute;
     top: 5px;
+  }
+
+  .edit-map-layer {
+    right: 30px;
+  }
+
+  .delete-map-layer {
     right: 10px;
   }
 }

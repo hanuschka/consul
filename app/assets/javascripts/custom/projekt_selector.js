@@ -104,9 +104,9 @@
 
     toggleSummary: function($projekt) {
       if ( $projekt.data('showSummary') ) {
-        $('#summary-field').show();
+        $('.summary-field').show();
       } else {
-        $('#summary-field').hide();
+        $('.summary-field').hide();
       }
     },
 

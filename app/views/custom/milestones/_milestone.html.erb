@@ -1,7 +1,7 @@
 <li>
   <div class="milestone-content">
 
-    <% if projekt_feature?(@current_projekt, 'milestones.show_date') && milestone.custom_date.present? %>
+    <% if milestone.custom_date.present? %>
       <span class="milestone-date">
         <strong>
           <%= milestone.custom_date %>
@@ -11,8 +11,7 @@
     <% elsif milestone.publication_date.present? %>
       <span class="milestone-date">
         <strong>
-          <%= t("milestones.show.publication_date",
-                publication_date: l(milestone.publication_date.to_date)) %>
+          <%= l(milestone.publication_date.to_date, format: :long) %>
         </strong>
       </span>
 
@@ -20,10 +19,6 @@
 
     <% if milestone.status.present? %>
       <p>
-        <strong>
-          <%= t("milestones.show.status_changed") %>
-        </strong>
-        <br>
         <span class="milestone-status">
           <%= milestone.status.name %>
         </span>

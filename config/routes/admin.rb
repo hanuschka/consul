@@ -23,8 +23,11 @@ namespace :admin do
       patch :quick_update
     end
     patch :update_map, to: "projekts#update_map"
-    resources :map_layers, only: [:update, :create, :edit, :new]
+
+    resources :map_layers, only: [:update, :create, :edit, :new, :destroy], controller: 'projekts/map_layers'
   end
+
+  resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
 
   # custom deficiency reports routes
   scope module: :deficiency_reports, path: :deficiency_reports, as: :deficiency_report do

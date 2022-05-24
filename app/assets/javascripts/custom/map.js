@@ -206,6 +206,7 @@
       if ( typeof layersData !== "undefined"  ) {
         layersData.forEach(createLayer);
       }
+
       ensureBaseLayerExistence();
       baseLayers[Object.keys(baseLayers)[0]].addTo(map);
 
@@ -215,9 +216,15 @@
             overlayLayers[Object.keys(overlayLayers)[i]].addTo(map)
           }
         }
-
-        L.control.layers(baseLayers, overlayLayers).addTo(map);
       }
+
+
+      if ( Object.keys(baseLayers).length > 1 && Object.keys(overlayLayers).length > 0 ) {
+        L.control.layers(baseLayers, overlayLayers).addTo(map);
+      } else if ( Object.keys(overlayLayers).length > 0 ) {
+        L.control.layers({}, overlayLayers).addTo(map);
+      }
+
 
 ///
 

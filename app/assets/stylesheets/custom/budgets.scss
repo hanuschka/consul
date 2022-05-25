@@ -89,6 +89,19 @@
 }
 
 
+// Sidebar
+
+#budgets-sidebar {
+  .ballot-list li {
+    background-color: white;
+  }
+
+  #categories {
+    display: none;
+  }
+}
+
+
 // Budget heading
 
 @media screen and (min-width: 75em) {

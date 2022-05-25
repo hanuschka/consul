@@ -168,6 +168,7 @@ de:
             link:
               budget_phase: Budgets
               voting_phase: Abstimmungen
+              question_phase: Kurzumfragen
             main_block_title: Projektstatus
             milestone_phase: Umsetzungsphase
             name: Projekteinstellungen

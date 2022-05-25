@@ -726,8 +726,6 @@ span.projekt-backlink:before {
   }
 
   .quiz-header {
-    margin-bottom: $line-height;
-
     .quiz-title,
     .quiz-next {
       padding: 12px;
@@ -758,7 +756,6 @@ span.projekt-backlink:before {
 
     .quiz-next-link {
       display: block;
-      margin-top: 70px;
 
       &:hover,
       &:active {
@@ -910,5 +907,39 @@ span.projekt-backlink:before {
     display: block;
     top: 11px;
     left: -27px;
+  }
+}
+
+.projekt-questions-container {
+  @media screen and (max-width: 650px) {
+    margin-top: 30px;
+  }
+}
+
+.projekt-question-container {
+  display: flex;
+  flex-direction: column;
+  // margin-bottom: $line-height;
+}
+
+.projekt-question-next-question-section {
+  margin-top: 70px;
+
+  @media screen and (max-width: 650px) {
+    margin-top: $line-height;
+  }
+}
+
+.projekt-question-container-question-block {
+  margin-bottom: $line-height;
+
+  @media screen and (max-width: 650px) {
+    order: 2;
+  }
+}
+
+.projekt-questions-user-not-signed-in-mesessage {
+  @media screen and (max-width: 650px) {
+    order: 1;
   }
 }

@@ -874,7 +874,7 @@ span.projekt-backlink:before {
   .projekt-name-in-label {
     text-overflow: ellipsis;
     overflow: hidden;
-    max-width: 165px;
+    max-width: 163px;
     display: inline-block;
     white-space: nowrap;
     line-height: 1;
@@ -883,11 +883,13 @@ span.projekt-backlink:before {
   }
 }
 
-#filter-projekts-all #filter-projekts-active ul {
+#filter-projekts-all #filter-projekts-active ul,
+#filter-projekts-all #filter-projekts-archived ul {
   position: relative;
 }
 
-#filter-projekts-all #filter-projekts-active ul > li[aria-expanded="true"] > .projekt-tree-ul-vertical-line {
+#filter-projekts-all #filter-projekts-active ul > li[aria-expanded="true"] > .projekt-tree-ul-vertical-line,
+#filter-projekts-all #filter-projekts-archived ul > li[aria-expanded="true"] > .projekt-tree-ul-vertical-line {
   background: #b8b8b8;
   content: '';
   width: 1px;
@@ -897,7 +899,8 @@ span.projekt-backlink:before {
   left: -12px;
 }
 
-#filter-projekts-all #filter-projekts-active > ul ul {
+#filter-projekts-all #filter-projekts-active > ul ul,
+#filter-projekts-all #filter-projekts-archived > ul ul {
   &::before {
     background: #b8b8b8;
     content: '';

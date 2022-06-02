@@ -1,21 +1,36 @@
 class Sidebar::ProjektsFilterComponent < ApplicationComponent
   delegate :projekt_filter_resources_name, :show_archived_projekts_in_sidebar?, to: :helpers
 
-  def initialize(top_level_active_projekts, top_level_archived_projekts, all_resources, current_tab_phase = nil, current_projekt = nil)
+  def initialize(
+    top_level_active_projekts:,
+    top_level_archived_projekts:,
+    scoped_projekt_ids:,
+    all_resources:,
+    current_tab_phase: nil,
+    current_projekt: nil
+  )
     @top_level_active_projekts = top_level_active_projekts
     @top_level_archived_projekts = top_level_archived_projekts
+    @scoped_projekt_ids = scoped_projekt_ids
     @all_resources = all_resources
-    @current_projekt = current_projekt
     @current_tab_phase = current_tab_phase
+    @current_projekt = current_projekt
   end
 
 	private
 
   def show_filter?
+    return true if resources_name == "budget"
+
     @top_level_active_projekts.count > 1 ||
-      ( @top_level_active_projekts.count == 1 && @top_level_active_projekts.first.children.with_order_number.selectable_in_sidebar_current(resources_name).any? ) ||
+
+      ( @top_level_active_projekts.count == 1 &&
+        @top_level_active_projekts.first.all_children_projekts.any?{ |projekt| ProjektSetting.find_by( projekt: projekt, key: "projekt_feature.#{resources_name}.show_in_sidebar_filter").value.present? }) ||
+
       @top_level_archived_projekts.count > 1 ||
-      ( @top_level_archived_projekts.count == 1 &&  @top_level_archived_projekts.first.children.with_order_number.selectable_in_sidebar_expired(resources_name).any? )
+
+      ( @top_level_archived_projekts.count == 1 &&
+        @top_level_archived_projekts.first.all_children_projekts.any?{ |projekt| ProjektSetting.find_by( projekt: projekt, key: "projekt_feature.#{resources_name}.show_in_sidebar_filter").value.present? })
   end
 
   def show_archived_projekts_in_sidebar?
@@ -60,6 +75,13 @@ class Sidebar::ProjektsFilterComponent < ApplicationComponent
       ProjektSetting.where('key LIKE ?', 'projekt_feature.main.activate'),
       ProjektSetting.where('key LIKE ?', '%show_in_sidebar_filter%'),
       params[:filter_projekt_ids],
+      params[:tags],
+      params[:projekts],
+      params[:geozone_affiliation],
+      params[:affiliated_geozones],
+      params[:geozone_restriction],
+      params[:restricted_geozones],
+      params[:my_posts_filter],
       controller_name,
       action_name
     ].flatten

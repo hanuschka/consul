@@ -37,6 +37,12 @@
   }
 }
 
+#footer-content {
+  #budgets ul.tabs {
+    background: initial;
+  }
+}
+
 .expanded.jumbo-budget.budget-heading {
   min-height: auto;
 }
@@ -94,6 +100,10 @@
 #budgets-sidebar {
   .ballot-list li {
     background-color: white;
+
+    &:hover {
+      background-color: $brand;
+    }
   }
 
   #categories {

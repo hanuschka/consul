@@ -121,6 +121,10 @@ de:
           show_not_active_phases_in_projekts_page_sidebar_description: Verbirgt die Teilnahmephasen in der rechten Seitenleiste der Projektseite und in der Projektauswahl
           allow_downvoting_comments: Downvotes in Kommentaren aktivieren
           allow_downvoting_comments_description: Aktivieren Sie den "Daumen nach unten"-Button in den Kommentaren
+          enable_tags: Tags aktivieren
+          enable_tags_description: Aktivieren Sie Tags für dieses Projekt
+          enable_sdgs: SDGs aktivieren
+          enable_sdgs_description: Aktivieren Sie die UN-Nachhaltigkeitsziele für dieses Projekt
         sidebar:
           show_phases_in_projekt_page_sidebar: Projektphasen
           show_phases_in_projekt_page_sidebar_description: Aktivieren Sie die Projektphasen in der rechten Seitenleiste der Projektseite

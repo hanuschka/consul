@@ -29,6 +29,7 @@
 /config/deploy-secrets-cli_wit.yml
 /config/deploy-secrets-cli_demo.yml
 /config/maintenance.yml
+/config/secret_emails.yml
 
 /coverage
 

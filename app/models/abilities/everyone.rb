@@ -34,6 +34,9 @@ module Abilities
       if Setting['extended_feature.general.elasticsearch']
         can [:read], Search
       end
+      can [:read], ProjektQuestion
+      can [:read, :create], ProjektQuestionAnswer
+
       can [:read, :help], ::SDG::Goal
       can :read, ::SDG::Phase
 

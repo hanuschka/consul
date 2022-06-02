@@ -11,7 +11,7 @@ module LinkListHelper
 
         active_class = highlight_sdg_chip(goal_code) ? 'selected-goal' : 'unselected-goal'
 
-        js_class = goal_code.class.name == "Integer" ? "js-sdg-custom-goal-filter" : "js-sdg-custom-target-filter-tag"
+        js_class = goal_code.class.name == "Integer" ? "js-sdg-custom-goal-filter" : "js-sdg-custom-target-filter"
 
         tag.li(class: "#{js_class} #{active_class}") do
 					link_to text, '#', link_options
@@ -21,14 +21,12 @@ module LinkListHelper
   end
 
   def highlight_sdg_chip(goal_code)
-    if goal_code.class.name == "Integer"
-      return  @filtered_goals.nil? || @filtered_goals.include?(goal_code)
-    end
-
     if goal_code.class.name == "String"
-      return (@filtered_goals.nil? && @filtered_target.nil?) ||
+      ( @filtered_goals.nil? && @filtered_target.nil? ) ||
         @filtered_target == goal_code ||
         @filtered_goals.include?(goal_code.split('.')[0].to_i)
+    elsif goal_code.class.name == "Integer"
+      @filtered_goals.nil? || @filtered_goals.include?(goal_code)
     end
   end
 end

@@ -1,5 +1,5 @@
 <% cache cache_key do %>
-  <% if @top_level_active_projekts.any? || @top_level_archived_projekts.any? %>
+  <% if show_filter? %>
     <div class="sidebar-divider"></div>
 
     <h2 class="sidebar-title projekt-tag-chip-projekt projekt-tag-chip-icon"><%= t("custom.projekts.sidebar_filter.title") %></h2>
@@ -20,7 +20,7 @@
               <% if @current_tab_phase&.name == 'budget_phase' %>
                 <%= render Sidebar::ProjektsFilterRadioComponent.new(f, projekt, 'active', @all_resources) %>
               <% else %>
-                <%= render Sidebar::ProjektsFilterCheckboxComponent.new(f, projekt, 'active', @all_resources, @current_projekt, aggregations) %>
+                <%= render Sidebar::ProjektsFilterCheckboxComponent.new(f, projekt, @scoped_projekt_ids, 'active', @all_resources, @current_projekt, aggregations) %>
               <% end %>
             <% end %>
           </div>
@@ -37,7 +37,7 @@
               <% if @current_tab_phase&.name == 'budget_phase' %>
                 <%= render Sidebar::ProjektsFilteRadioComponent.new(f, projekt, 'archived', @all_resources) %>
               <% else %>
-                <%= render Sidebar::ProjektsFilterCheckboxComponent.new(f, projekt, 'archived', @all_resources, @current_projekt, aggregations) %>
+                <%= render Sidebar::ProjektsFilterCheckboxComponent.new(f, projekt, @scoped_projekt_ids, 'archived', @all_resources, @current_projekt, aggregations) %>
               <% end %>
             <% end %>
           </div>

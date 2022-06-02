@@ -1,0 +1,5 @@
+en:
+  cli:
+    layouts:
+      header:
+        search_link: Search

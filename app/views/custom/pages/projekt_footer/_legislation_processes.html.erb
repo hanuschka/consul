@@ -14,7 +14,7 @@
               <% if @draft_version.changelog.present? %>
                 <span>
                   <%= link_to t("legislation.draft_versions.show.see_changes"),
-                              projekt_legislation_process_footer_path(@projekt, @draft_version, section: 'changelog'),
+                              projekt_legislation_process_footer_path(@current_projekt, @draft_version, section: 'changelog'),
                               class: "see-changes" %>
                 </span>
               <% end %>
@@ -72,7 +72,7 @@
               <% if @draft_version.changelog.present? %>
                 <span>
                   <%= link_to t("legislation.draft_versions.show.see_changes"),
-                              projekt_legislation_process_footer_path(@projekt, @draft_version, section: 'changelog'),
+                              projekt_legislation_process_footer_path(@current_projekt, @draft_version, section: 'changelog'),
                               class: "see-changes" %>
                 </span>
               <% end %>
@@ -83,7 +83,7 @@
 
           <% unless @draft_version.final_version? %>
             <div class="small-12 medium-3 column">
-              <%= link_to projekt_legislation_process_footer_path(@projekt, @draft_version, section: 'all_drafts_annotations'),
+              <%= link_to projekt_legislation_process_footer_path(@current_projekt, @draft_version, section: 'all_drafts_annotations'),
                           title: t("legislation.draft_versions.show.see_comments"),
                           class: "button expanded" do %>
                 <strong><%= t("legislation.draft_versions.show.see_comments") %></strong>
@@ -153,7 +153,7 @@
           <span><%= t("legislation.draft_versions.show.updated_at", date: format_date(@draft_version.updated_at)) %></span>
         </div>
         <div class="small-12 medium-3 column">
-          <%= link_to projekt_legislation_process_footer_path(@projekt, @draft_version),
+          <%= link_to projekt_legislation_process_footer_path(@current_projekt, @draft_version),
                       title: t("legislation.draft_versions.changes.see_text"), class: "button" do %>
             <strong><%= t("legislation.draft_versions.changes.see_text") %></strong>
           <% end %>
@@ -222,7 +222,7 @@
             </aside>
           </div>
 
-        <%= render "/comments/comment_tree", comment_tree: @comment_tree, display_comments_count: true %>
+        <%# <%= render "/comments/comment_tree", comment_tree: @comment_tree, display_comments_count: true %>
         </div>
       </div>
     </div>

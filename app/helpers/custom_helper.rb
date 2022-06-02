@@ -30,8 +30,8 @@ module CustomHelper
     MapLocation.where(proposal_id: ids).map(&:json_data)
   end
 
-  def projekt_legislation_process_footer_path(current_projekt, draft_version, section: 'text', anchor: 'footer-content')
-    current_projekt.page.url + "?text_draft_version_id=#{draft_version.id}&selected_phase_id=#{current_projekt.legislation_process_phase.id}" + "&section=#{section}" + "##{anchor}"
+  def projekt_legislation_process_footer_path(current_projekt, draft_version, section: 'text', anchor: 'footer-content', params: {})
+    current_projekt.page.url + "?text_draft_version_id=#{draft_version.id}&selected_phase_id=#{current_projekt.legislation_process_phase.id}" + "&section=#{section}&#{params.to_query}" + "##{anchor}"
   end
 
   def sorted_projekt_phases_for_footer(projekt)

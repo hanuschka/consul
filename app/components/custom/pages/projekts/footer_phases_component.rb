@@ -28,7 +28,7 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
 
     @process = @projekt.legislation_processes.first
     @legislation_processes = @process&.draft_versions&.published
-    @legislation_processes_count = @legislation_processes.count
+    @legislation_processes_count = (@legislation_processes&.count || 0)
   end
 
   private

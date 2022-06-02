@@ -289,8 +289,30 @@ class PagesController < ApplicationController
       @draft_version = @draft_versions_list&.last
     end
 
-    if @current_section == 'annotations_list'
+    if @current_section == 'all_drafts_annotations'
       @annotations = @draft_version.annotations
+    end
+
+    if @current_section == 'annotations'
+      @annotation = Legislation::Annotation.find(params[:annotation_id])
+
+      @commentable = @annotation
+
+      # if params[:sub_annotation_ids].present?
+      #   @sub_annotations = Legislation::Annotation.where(id: params[:sub_annotation_ids].split(","))
+      #   annotations = [@commentable, @sub_annotations]
+      # else
+      #   annotations = [@commentable]
+      # end
+      #
+      annotations = [@commentable]
+
+      @valid_orders = %w[most_voted newest oldest]
+      @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+
+      @comment_tree = MergedCommentTree.new(annotations, params[:page], @current_order)
+
+      set_comment_flags(@comment_tree.comments)
     end
   end
 
@@ -344,9 +366,7 @@ class PagesController < ApplicationController
       @top_level_archived_projekts = Projekt.where( id: @current_projekt )
     else
       @top_level_active_projekts = []
-      @top_level_archived_projekts = []
-    end
-  end
+      @top_level_archived_projekts = [] end end
 
   def set_milestones_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt

@@ -166,6 +166,11 @@ class PagesController < ApplicationController
     @current_tab_phase = @current_projekt.debate_phase
     params[:current_tab_path] = 'debate_phase_footer_tab'
 
+    if ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.general.set_default_sorting_to_newest').value.present? &&
+        @valid_orders.include?('created_at')
+      @current_order = 'created_at'
+    end
+
     @selected_parent_projekt = @current_projekt
 
     set_resources(Debate)
@@ -198,6 +203,11 @@ class PagesController < ApplicationController
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.proposal_phase
     params[:current_tab_path] = 'proposal_phase_footer_tab'
+
+    if ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.general.set_default_sorting_to_newest').value.present? &&
+        @valid_orders.include?('created_at')
+      @current_order = 'created_at'
+    end
 
     @selected_parent_projekt = @current_projekt
 

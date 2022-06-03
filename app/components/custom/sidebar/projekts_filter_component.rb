@@ -74,6 +74,7 @@ class Sidebar::ProjektsFilterComponent < ApplicationComponent
       Projekt.all,
       ProjektSetting.where('key LIKE ?', 'projekt_feature.main.activate'),
       ProjektSetting.where('key LIKE ?', '%show_in_sidebar_filter%'),
+      ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_custom_feature.default_footer_tab'),
       params[:filter_projekt_ids],
       params[:tags],
       params[:projekts],

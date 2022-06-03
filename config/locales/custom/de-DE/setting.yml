@@ -105,6 +105,8 @@ de:
         second_level_projekts_in_active_filter_description: Zeigt eine zweite Ebene im Projektfilter für aktive Projekte standardmäßig an
         second_level_projekts_in_archived_filter: Zweite Ebene für archivierte Projekte anzeigen
         second_level_projekts_in_archived_filter_description: Zeigt eine zweite Ebene im Projektfilter für archivierte Projekte standardmäßig an
+        set_default_sorting_to_newest: Standardsortierung auf "Neueste" unstellen
+        set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
 
       projekt_feature:
         main:
@@ -125,6 +127,8 @@ de:
           enable_tags_description: Aktivieren Sie Tags für dieses Projekt
           enable_sdgs: SDGs aktivieren
           enable_sdgs_description: Aktivieren Sie die UN-Nachhaltigkeitsziele für dieses Projekt
+          set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
+          set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
         sidebar:
           show_phases_in_projekt_page_sidebar: Projektphasen
           show_phases_in_projekt_page_sidebar_description: Aktivieren Sie die Projektphasen in der rechten Seitenleiste der Projektseite

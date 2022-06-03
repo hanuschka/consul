@@ -11,6 +11,11 @@ class DebatesController < ApplicationController
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
 
   def index_customization
+    if Setting['projekts.set_default_sorting_to_newest'].present? &&
+        @valid_orders.include?('created_at')
+      @current_order = 'created_at'
+    end
+
     @geozones = Geozone.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)

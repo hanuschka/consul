@@ -26,7 +26,7 @@
                 <%= link_to "/#{params[:id]}/#{phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader"); ' do %>
                   <h4>
                     <%= t("custom.projekts.page.tabs.#{phase.resources_name}") %>
-                    <% if phase.resources_name.in?(['debates', 'proposals', 'polls', 'comments', 'projekt_events']) %>
+                    <% if phase.resources_name.in?(['debates', 'proposals', 'polls', 'comments', 'projekt_events', 'projekt_questions', 'legislation_processes']) %>
                       <% count = instance_variable_get("@#{phase.resources_name}_count") %>
                       <%= "(#{count})" %>
                     <% end %>
@@ -34,6 +34,9 @@
                   <div class='tab-info-summary'>
                     <% if phase.start_date.present? && phase.end_date.present? %>
                       <span class='time-icon'><%= format_date_range(phase.start_date, phase.end_date) %></span>
+                    <% end %>
+                    <% if phase.name == 'legislation_process_phase' && @text_draft_version.present? %>
+                      <span class='time-icon'><%= format_date(@text_draft_version.updated_at) %></span>
                     <% end %>
 
                     <% unless get_projekt_phase_restriction_name(phase, nil, true) == 'no_restriction' %>

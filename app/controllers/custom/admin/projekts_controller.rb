@@ -109,8 +109,10 @@ class Admin::ProjektsController < Admin::BaseController
   def create
     @projekts = Projekt.top_level.page(params[:page])
     @projekt = Projekt.new(projekt_params.merge(color: "#073E8E"))
+    @projekt.order_number = 0
 
     if @projekt.save
+      Projekt.ensure_order_integrity
       redirect_to admin_projekts_path
     else
       render :index

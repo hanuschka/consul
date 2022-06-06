@@ -151,6 +151,8 @@ class Setting < ApplicationRecord
         "projekts.show_module_links_in_flyout_menu": true,
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
+        "projekts.set_default_sorting_to_newest": false,
+
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
         "deficiency_reports.admins_must_approve_officer_answer": false,

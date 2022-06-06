@@ -11,6 +11,7 @@
           proposal.successful?,
           proposal.custom_votes_needed_for_success,
           proposal_settings_fingerprints,
+          projekt_feature?(proposal&.projekt, 'proposals.quorum_for_proposals'),
           params[:tags],
           params[:projekts],
           params[:geozone_affiliation],

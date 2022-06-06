@@ -140,11 +140,6 @@
     } %>
 
     <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
-      projekt_phase: @projekt.legislation_process_phase,
-      phase_name: 'legislation_process_phase'
-    } %>
-
-    <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
       projekt_phase: @projekt.voting_phase,
       phase_name: 'voting_phase'
     } %>
@@ -152,6 +147,11 @@
     <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
       projekt_phase: @projekt.budget_phase,
       phase_name: 'budget_phase'
+    } %>
+
+    <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
+      projekt_phase: @projekt.legislation_process_phase,
+      phase_name: 'legislation_process_phase'
     } %>
 
     <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {

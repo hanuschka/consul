@@ -7,6 +7,8 @@ class PagesController < ApplicationController
   include ProposalsHelper
   include Takeable
 
+  has_orders %w[most_voted newest oldest], only: :show
+
   def show
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
@@ -104,7 +106,7 @@ class PagesController < ApplicationController
     end
   end
 
-  def legislation_proces_footer_tab
+  def legislation_process_phase_footer_tab
     set_legislation_processes_footer_tab_variables
 
     respond_to do |format|
@@ -176,9 +178,10 @@ class PagesController < ApplicationController
     set_resources(Debate)
     set_top_level_projekts
 
-    @scoped_projekt_ids = @current_projekt
-      .top_parent.all_children_projekts.unshift(@current_projekt.top_parent)
-      .pluck(:id)
+    @scoped_projekt_ids =
+      @current_projekt
+        .top_parent.all_children_projekts.unshift(@current_projekt.top_parent)
+        .pluck(:id)
 
     unless params[:search].present?
       take_by_my_posts
@@ -275,14 +278,11 @@ class PagesController < ApplicationController
   end
 
   def set_legislation_processes_footer_tab_variables(projekt=nil)
-    # @valid_orders = Debate.debates_orders(current_user)
-    # @valid_orders.delete('relevance')
-    # @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
     @current_section = params[:section] || 'text'
 
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.legislation_process_phase
-    params[:current_tab_path] = 'legislation_processes_footer_tab'
+    params[:current_tab_path] = 'legislation_process_phase_footer_tab'
 
     @selected_parent_projekt = @current_projekt
 
@@ -426,6 +426,7 @@ class PagesController < ApplicationController
       if @commentable.present?
         set_comment_flags(@comment_tree.comments)
       end
+
       @projekt_question_answer = @projekt_question&.answer_for_user(current_user) || ProjektQuestionAnswer.new
     end
   end

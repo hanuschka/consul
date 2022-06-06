@@ -8,7 +8,6 @@ class ProjektPhase::LegislationProcessPhase < ProjektPhase
   end
 
   def name
-    # 'Legislation::Process'
     'legislation_process_phase'
   end
 

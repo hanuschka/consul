@@ -103,7 +103,9 @@
       </div>
     <% end %>
 
-    <%= f.submit t("custom.proposals.form.buttons.save_draft"), class: 'button', name: 'save_draft' %>
+    <% unless proposal.published? %>
+      <%= f.submit t("custom.proposals.form.buttons.save_draft"), class: 'button', name: 'save_draft' %>
+    <% end %>
     <%= f.submit t("custom.proposals.form.buttons.publish"),    class: "button" %>
   </div>
 <% end %>

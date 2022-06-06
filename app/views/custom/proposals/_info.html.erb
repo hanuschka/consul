@@ -1,6 +1,6 @@
 <% if feature?(:map) && map_location_available?(@proposal.map_location) %>
   <div class="margin-bottom not-print">
-    <%= render_map(@proposal.map_location, "proposal", false, nil, MapLocation.where(proposal_id: @proposal.id).map(&:json_data), @proposal.projekt.map_layers.to_json) %>
+    <%= render_map(@proposal.map_location, "proposal", false, nil, MapLocation.where(proposal_id: @proposal.id).map(&:json_data), @proposal.projekt.map_layers_for_render.to_json) %>
   </div>
 <% end %>
 

@@ -49,4 +49,11 @@ module CustomHelper
       projekt.newsfeed_phase
     ]
   end
+
+  def legislation_process_tabs(process)
+    {
+      "info"           => edit_admin_legislation_process_path(process),
+      "draft_versions" => admin_legislation_process_draft_versions_path(process),
+    }
+  end
 end

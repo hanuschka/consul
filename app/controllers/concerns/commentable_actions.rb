@@ -11,15 +11,13 @@ module CommentableActions
     @resources = @resources.search(@search_terms) if @search_terms.present?
     @resources = @resources.filter_by(@advanced_search_terms)
 
-    @resources = @resources.page(params[:page]).send("sort_by_#{@current_order}")
-
     index_customization
 
     @tag_cloud = tag_cloud
 
     set_resource_votes(@resources)
 
-    set_resources_instance
+    # set_resources_instance
     @remote_translations = detect_remote_translations(@resources, featured_proposals)
   end
 

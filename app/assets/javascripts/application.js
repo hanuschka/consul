@@ -125,6 +125,7 @@
 //= require map_refresh
 //= require accessibility_fixes
 //= require components/shared/footer_phases_component
+//= require projekt_question
 //= require components/admin/livesubmit_checkbox
 //= require orbit_in_popup_fix
 //= require polls_custom
@@ -133,7 +134,9 @@
 //= require leaflet.markercluster
 //= require leaflet.locatecontrol
 //= require custom_pages
+//= require custom_admin
 //= require moderation_custom
+//= require copy_content
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management
@@ -207,8 +210,11 @@ var initialize_modules = function() {
   App.DeficiencyReports.initialize();
   App.AccessibilityFixes.initialize();
   App.CustomPages.initialize();
+  App.CustomAdmin.initialize();
   App.ModerationCustom.initialize();
+  App.CopyContent.initialize();
   App.FooterPhasesComponentCustom.initialize();
+  App.ProjektQuestionCustom.initialize();
   App.LivesubmitCheckboxCustom.initialize();
   App.OrbitInPopupFixCustom.initialize();
 

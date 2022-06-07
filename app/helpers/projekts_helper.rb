@@ -105,7 +105,7 @@ module ProjektsHelper
 
   def format_date(date)
     return '' if date.blank?
-    l date.to_date
+    l(date.to_date, format: :long)
   end
 
   def format_date_range(start_date=nil, end_date=nil, options={})
@@ -124,7 +124,7 @@ module ProjektsHelper
     # end
 
     if end_date.present? && end_date.to_date < Date.today
-      "Abgeschlossen am #{l end_date.to_date}"
+      "Abgeschlossen am #{l(end_date.to_date, format: :long)}"
     elsif end_date.present?  && end_date.to_date > Date.today && start_date.present? && start_date.to_date <= Date.today
       days_left = (end_date.to_date - Date.today).to_i
       t('custom.shared.dates.days_left', count: days_left)
@@ -176,5 +176,15 @@ module ProjektsHelper
 
   def related_polls(projekt, timestamp = Date.current.beginning_of_day)
     Poll.where(projekt_id: projekt.all_children_ids.push(projekt.id))
+  end
+
+  def options_for_projekt_select
+    select_options = []
+
+    Projekt.top_level.each do |top_level_projekt|
+      select_options += top_level_projekt.all_children_projekts.unshift(top_level_projekt).pluck(:name, :id)
+    end
+
+    select_options
   end
 end

@@ -24,7 +24,7 @@ class ProjektSetting < ApplicationRecord
   end
 
   def projekt_feature_type
-    if %w[main phase general sidebar footer debates proposals proposal_options polls budgets].include? projekt_feature_prefix
+    if %w[main phase general sidebar footer debates proposals proposal_options polls budgets milestones].include? projekt_feature_prefix
       projekt_feature_prefix
     else
       "configuration"
@@ -61,6 +61,9 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.hide_additional_info_in_projekt_selector": 'active',
         "projekt_feature.general.show_not_active_phases_in_projekts_page_sidebar": 'active',
         "projekt_feature.general.allow_downvoting_comments": 'active',
+        "projekt_feature.general.enable_tags": '',
+        "projekt_feature.general.enable_sdgs": '',
+        "projekt_feature.general.set_default_sorting_to_newest": '',
 
         "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": 'active',
         "projekt_feature.sidebar.show_map": 'active',
@@ -72,6 +75,7 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.debates.show_report_button_in_sidebar": 'active',
         "projekt_feature.debates.show_related_content": 'active',
         "projekt_feature.debates.show_comments": 'active',
+        "projekt_feature.debates.allow_attached_documents": '',
         "projekt_feature.debates.only_admins_create_debates": '',
         "projekt_feature.debates.allow_downvoting": 'active',
         "projekt_feature.debates.show_in_sidebar_filter": 'active',
@@ -85,9 +89,11 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.proposals.show_community_button_in_proposal_sidebar": 'active',
         "projekt_feature.proposals.show_related_content": 'active',
         "projekt_feature.proposals.show_comments": 'active',
+        "projekt_feature.proposals.allow_attached_documents": 'active',
         "projekt_feature.proposals.only_admins_create_proposals": '',
         "projekt_feature.proposals.show_in_sidebar_filter": 'active',
         "projekt_feature.proposals.show_map": 'active',
+        "projekt_feature.proposals.enable_summary": '',
 
         "projekt_feature.proposal_options.votes_for_proposal_success": 10000,
 
@@ -106,9 +112,14 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.budgets.show_user_cost_estimate": 'active',
         "projekt_feature.budgets.show_comments": 'active',
         "projekt_feature.budgets.enable_investment_milestones_tab": 'active',
+        "projekt_feature.budgets.allow_attached_documents": 'active',
         "projekt_feature.budgets.only_admins_create_investment_proposals": '',
         "projekt_feature.budgets.show_map": 'active',
         "projekt_feature.budgets.show_results_after_first_vote": '',
+
+        "projekt_feature.questions.show_questions_list": '',
+
+        "projekt_feature.milestones.newest_first": '',
 
         "projekt_newsfeed.id": '',
         "projekt_newsfeed.type": '',
@@ -125,7 +136,6 @@ class ProjektSetting < ApplicationRecord
             self.create(key: name, value: value, projekt_id: projekt.id)
           end
         end
-
       end
     end
 

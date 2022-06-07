@@ -311,6 +311,8 @@ div.projekt-phase-geozone-restriction-selector {
     position: relative;
     color: #878787;
     margin-right: 2em;
+    display: flex;
+    align-items: center;
   }
 
   input[type='checkbox'],
@@ -878,9 +880,14 @@ span.projekt-backlink:before {
     max-width: 163px;
     display: inline-block;
     white-space: nowrap;
-    line-height: 1;
-    position: relative;
-    top: 2px;
+  }
+
+  .projekt-number-in-label {
+    margin: 0 5px;
+  }
+
+  .projekt-filter-icon {
+    line-height: auto;
   }
 }
 

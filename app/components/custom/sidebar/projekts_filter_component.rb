@@ -20,7 +20,9 @@ class Sidebar::ProjektsFilterComponent < ApplicationComponent
 	private
 
   def show_filter?
-    return true if resources_name == "budget"
+    if resources_name == "budget"
+      return @current_projekt.present? && @current_projekt.children.joins(:budget).any?
+    end
 
     @top_level_active_projekts.count > 1 ||
 

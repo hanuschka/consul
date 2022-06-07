@@ -10,22 +10,16 @@ de:
               format: muss 5 Ziffern enthalten
             first_name:
               uniqueness_check: Benutzer mit der Kombination aus solche Vorname, Nachname, Geburtsdatum und PLZ existiert bereits
-      
   activerecord:
     models:
       deficiency_report:
         one: Anliegen
         other: Anliegen
+      map_layer:
+        one: Kartenebene
+        other: Kartenebenen
     errors:
       models:
-        user:
-          attributes:
-            document_number:
-              length: muss genau 4 Zeichen lang sein
-            plz:
-              format: muss 5 Ziffern enthalten
-            first_name:
-              uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ wurde bereits verwendet
         officing/residence:
           attributes:
             document_number:
@@ -40,6 +34,14 @@ de:
           attributes:
             color:
               invalid: Bitte den Farbwert als HEX-code eingeben
+        user:
+          attributes:
+            document_number:
+              length: muss genau 4 Zeichen lang sein
+            plz:
+              format: muss 5 Ziffern enthalten
+            first_name:
+              uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ wurde bereits verwendet
     attributes:
       poll/answer:
         open_answer_text: Offene Antwort
@@ -50,9 +52,13 @@ de:
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
       debate:
-        on_behalf_of: Im Namen von
+        on_behalf_of: Diskussion im Namen von jemanden erstellen
+      poll:
+        bam_street_restricted: Beschränkt auf Straßen
+      projekt_phase:
+        bam_street_id: Straße
       proposal:
-        on_behalf_of: Im Namen von
+        on_behalf_of: Vorschlag im Namen von jemanden erstellen
       budget/investment:
         implementation_performer: Umsetzung des Investitionsvorschlages
         implementation_performers:
@@ -60,9 +66,19 @@ de:
           user: Ich kann bei der Umsetzung unterstützen
         implementation_contribution: Was tragen Sie zur Umsetzung bei?
         user_cost_estimate: Preisliche Einschätzung
+      milestone:
+        custom_date: Benutzerdefiniertes Datum
+      map_layer:
+        name: Name der Kartenebene
+        provider: Anbieter
+        attribution: Zuschreibung
+        base: Basisschicht der Karte
+        layer_names: Kartenebenennamen
+        show_by_default: standardmäßig anzeigen
+        transparent: diese Kartenebene ist transparent
+        protocol: Kartenprotokoll
+        protocols:
+          regular: default
+          wms: WMS
       user:
         bam_street_id: Straße
-      projekt_phase:
-        bam_street_id: Straße
-      poll:
-        bam_street_restricted: Beschränkt auf Straßen

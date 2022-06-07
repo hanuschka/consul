@@ -3,7 +3,8 @@ require_dependency Rails.root.join("app", "models", "poll").to_s
 class Poll < ApplicationRecord
   include Taggable
 
-  belongs_to :projekt, optional: true
+  belongs_to :projekt, optional: true, touch: true
+
   has_many :geozone_affiliations, through: :projekt
   has_one :voting_phase, through: :projekt
   has_many :bam_streets, through: :voting_phase

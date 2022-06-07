@@ -1,96 +1,95 @@
 de:
   custom:
     deficiency_reports:
+      form:
+        category:
+          placeholder: Bitte wählen
+        create:
+          submit_button: Anliegen melden
+        labels:
+          description: Text zum Anliegen
+          summary: Zusammenfassung des Anliegens
+          title: Titel Ihres Anliegens
+        new:
+          submit_button: Anliegen melden
       index:
         deficiency_report:
           by: von
-        start_deficiency_report: Ihr Anliegen melden
-        seo:
-          title: Ihr Anliegen
+        orders:
+          hot_score: Aktivste
+          most_commented: Am meisten kommentiert
+          newest: Neuste
         search_form:
           title: Suche nach Anliegen
           placeholder: Anliegen durchsuchen...
           button: suchen
+        section_footer:
+          title: Hilfe zu Anliegen
+          description: Anliegen können, abhängig vom eingestellten Verifizierungsverfahren, von jeder Benutzerin und jedem Benutzer eingebracht werden. Sie bieten eine einfache Möglichkeit auf Dinge in der Stadt hinzuweisen. Wir danken für Ihre Unterstützung!
         section_header:
           title: Ihr Anliegen
           icon_alt: Ihr Anliegen
           help: Hilfe zu Ihrem Anliegen
+        seo:
+          title: Ihr Anliegen
         sidebar:
-          categories:
-            title: Kategorien
-            filter_button: Kategorien filtern
-          statuses:
-            title: Status
-            all_statuses: Alle Anliegen
-          officer_filter:
-            title: Sachbearbeiter
-            all_reports: Alle Anliegen
-            only_current_user: Mir zugewiesene Anliegen
           approval_status_filter:
             title: Admin
             all_reports: Alle Anliegen
             reports_to_approve: Freizugebende Anliegen
-        orders:
-          hot_score: Aktivste
-          newest: Neuste
-          most_commented: Am meisten kommentiert
-        section_footer:
-          title: Hilfe zu Anliegen
-          description: Anliegen können, abhängig vom eingestellten Verifizierungsverfahren, von jeder Benutzerin und jedem Benutzer eingebracht werden. Sie bieten eine einfache Möglichkeit auf Dinge in der Stadt hinzuweisen. Wir danken für Ihre Unterstützung!
-      show:
-        back_link: "Zurück zu allen Anliegen"
-        official_answer: Offizielle Antwort
-        submit_official_answer_button: Antwort speichern
-        approve_official_answer: Antwort freigeben
-        sidebar:
-          delete: Anliege löschen
-          vote: Unterstützer*innen
-          status: Status
-          category: Kategorien
-          officer: Sachbearbeiter*in
-          select_officer: Sachbearbeiter*in auswählen
-          social_share: Teilen
-
-      new:
-        start_new: Ihr Anliegen melden
-        recommendations_title: Empfehlungen zum Erstellen eines Anliegens
-        recommendation_one: Verwenden Sie bitte nicht ausschließelich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien und niemand möchte angeschrien werden.
-        recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
-        recommendation_three: Genießen Sie diesen Ort und die Stimmen, die ihn füllen. Er gehört auch Ihnen.
-        more_info: Mehr Informationen
-        seo:
-          title: Ein Anliegen melden
-      form:
-        category:
-          placeholder: Bitte wählen
-        labels:
-          title: Titel Ihres Anliegens
-          summary: Zusammenfassung des Anliegens
-          description: Text zum Anliegen
-        new:
-          submit_button: Anliegen melden
-        create:
-          submit_button: Anliegen melden
+          categories:
+            filter_button: Kategorien filtern
+            title: Kategorien
+          officer_filter:
+            title: Sachbearbeiter
+            all_reports: Alle Anliegen
+            only_current_user: Mir zugewiesene Anliegen
+          statuses:
+            title: Status
+            all_statuses: Alle Anliegen
+        start_deficiency_report: Ihr Anliegen melden
       mailers:
-        notify_administrators_about_new_deficiency_report:
-          subject: "Neues Anliegen %{identifier}"
-          hi: Lieber Admin,
-          p1: es wurde ein neues Anliegen gemeldet.
-          signature_html: Viele Grüße</br>Consul
         notify_administrators_about_answer_update:
-          subject: "Neue offizielle Antwort von einem/einer Sachbearbeiter*in %{identifier}"
           hi: Lieber Admin,
           p1: ein/e Sachbearbeiter*in hat eine neue offizielle Antwort gespeichert.
           signature_html: Viele Grüße</br>Consul
+          subject: Neue offizielle Antwort von einem/einer Sachbearbeiter*in %{identifier}
+        notify_administrators_about_new_deficiency_report:
+          hi: Lieber Admin,
+          p1: es wurde ein neues Anliegen gemeldet.
+          signature_html: Viele Grüße</br>Consul
+          subject: "Neues Anliegen %{identifier}"
         notify_author_about_status_change:
-          subject: Statusänderung Ihres Anliegens
           hi: Hallo
           p1: der Status des von Ihnen eingereichten Anliegens wurde geändert.
           signature_html: Viele Grüße</br>Consul
+          subject: Statusänderung Ihres Anliegens
         notify_officer:
-          subject: "Neues Anliegen %{identifier}"
           hi: Liebe/r Sachbearbeiter*in,
           p1: Ihnen wurde ein Anliegen vom Admin zugewiesen.
           signature_html: Viele Grüße</br>Consul
+          subject: "Neues Anliegen %{identifier}"
+      new:
+        more_info: Mehr Informationen
+        recommendation_one: Verwenden Sie bitte nicht ausschließelich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien und niemand möchte angeschrien werden.
+        recommendation_three: Genießen Sie diesen Ort und die Stimmen, die ihn füllen. Er gehört auch Ihnen.
+        recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
+        recommendations_title: Empfehlungen zum Erstellen eines Anliegens
+        seo:
+          title: Ein Anliegen melden
+        start_new: Ihr Anliegen melden
       notifications:
-        official_answer_updated: 'Antwort wurde erfolgreich gespeichert'
+        official_answer_updated: Antwort wurde erfolgreich gespeichert
+      show:
+        approve_official_answer: Antwort freigeben
+        back_link: "Zurück zu allen Anliegen"
+        official_answer: Offizielle Antwort
+        sidebar:
+          category: Kategorien
+          delete: Anliege löschen
+          officer: Sachbearbeiter*in
+          select_officer: Sachbearbeiter*in auswählen
+          social_share: Teilen
+          status: Status
+          vote: Unterstützer*innen
+        submit_official_answer_button: Antwort speichern

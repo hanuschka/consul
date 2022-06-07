@@ -8,7 +8,7 @@ class ProjektPhase < ApplicationRecord
   def selectable_by?(user)
     user.present? &&
       user.level_two_or_three_verified? &&
-      projekt.current? &&
+      # projekt.current? &&
       geozone_allowed?(user) &&
       current?
   end

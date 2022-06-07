@@ -1,6 +1,7 @@
 class ProjektPhase::QuestionPhase < ProjektPhase
   def phase_activated?
-    active?
+    # active?
+    projekt.questions.any?
   end
 
   def phase_info_activated?
@@ -16,6 +17,6 @@ class ProjektPhase::QuestionPhase < ProjektPhase
   end
 
   def default_order
-    4
+    3
   end
 end

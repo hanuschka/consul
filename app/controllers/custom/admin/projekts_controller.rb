@@ -67,6 +67,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt_options_proposals = all_projekt_features['proposal_options']
     @projekt_features_polls = all_projekt_features['polls']
     @projekt_features_budgets = all_projekt_features['budgets']
+    @projekt_features_milestones = all_projekt_features['milestones']
 
     @projekt_newsfeed_settings = all_settings["projekt_newsfeed"]
 
@@ -108,8 +109,10 @@ class Admin::ProjektsController < Admin::BaseController
   def create
     @projekts = Projekt.top_level.page(params[:page])
     @projekt = Projekt.new(projekt_params.merge(color: "#073E8E"))
+    @projekt.order_number = 0
 
     if @projekt.save
+      Projekt.ensure_order_integrity
       redirect_to admin_projekts_path
     else
       render :index
@@ -155,6 +158,8 @@ class Admin::ProjektsController < Admin::BaseController
       proposal_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [], bam_street_ids: [] ],
       budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
       voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [], bam_street_ids: [] ],
+=======
+      legislation_process_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted, :active, :info_active, geozone_restriction_ids: [] ],
       milestone_phase_attributes: [:id, :start_date, :end_date, :active, :info_active],
       question_phase_attributes: [:id, :start_date, :end_date, :active, :info_active],
       event_phase_attributes: [:id, :start_date, :end_date],

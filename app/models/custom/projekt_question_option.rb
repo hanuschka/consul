@@ -6,7 +6,7 @@ class ProjektQuestionOption < ApplicationRecord
   include Globalizable
 
   belongs_to :question, class_name: "ProjektQuestion", foreign_key: "projekt_question_id" #, inverse_of: :question_options
-  has_many :answers, foreign_key: "projekt_question_id", dependent: :destroy #, inverse_of: :question
+  has_many :answers, class_name: "ProjektQuestionAnswer", foreign_key: "projekt_question_id", dependent: :destroy #, inverse_of: :question
 
   validates_translation :value, presence: true
 end

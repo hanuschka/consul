@@ -238,6 +238,7 @@ de:
       poll_questions: Abstimmung
       budgets: Budgets
       notification_item:
+        no_notifications: Keine Benachrichtigungen
         new_notifications:
           one: Sie haben eine neue Benachrichtigung
           other: Sie haben %{count} neue Benachrichtigungen
@@ -831,7 +832,7 @@ de:
           one: 1 Investitionsvorschlag
           other: "%{count} Investitionsvorschläge"
         follows:
-          one: 1 folge ich 
+          one: 1 folge ich
           other: "%{count} folge ich"
       no_activity: Benutzer hat keine öffentliche Aktivität
       no_private_messages: "Der Benutzer akzeptiert keine privaten Nachrichten."
@@ -963,7 +964,7 @@ de:
           other: "%{count} weitere Tags"
   machine_learning:
     comments_summary: "Zusammenfassung Kommentare"
-    info_text: "Inhalt per AI / Machine Learning generiert"  
+    info_text: "Inhalt per AI / Machine Learning generiert"
   alerts:
     select_one_category: "Bitte wählen Sie nur eine Kategorie"
   search:

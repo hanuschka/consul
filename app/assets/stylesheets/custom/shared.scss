@@ -226,19 +226,6 @@
 
 }
 
-// Edit Custom Block link
-
-.edit-custom-block-link {
-  margin-left: .5em;
-}
-
-.edit-custom-block-link::before {
-  content: '\f044';
-  font-family: 'Font Awesome 5 Free';
-  font-weight: normal;
-}
-
-
 // Summary styling
 
 .debate-show blockquote, .proposal-show blockquote, .poll-question-show blockquote, .budget-investment-show blockquote, .polls-show blockquote, .debate-quiz blockquote, .budget-investment-show blockquote, .draft-panels blockquote, .debate-questions blockquote, .communities-show blockquote, .topic-show blockquote, .milestone-content blockquote {

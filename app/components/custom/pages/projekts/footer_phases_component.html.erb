@@ -35,9 +35,6 @@
                     <% if phase.start_date.present? && phase.end_date.present? %>
                       <span class='time-icon'><%= format_date_range(phase.start_date, phase.end_date) %></span>
                     <% end %>
-                    <% if phase.name == 'legislation_process_phase' && @text_draft_version.present? %>
-                      <span class='time-icon'><%= format_date(@text_draft_version.updated_at) %></span>
-                    <% end %>
 
                     <% unless get_projekt_phase_restriction_name(phase, nil, true) == 'no_restriction' %>
                       <span class='geo-restriction-icon'><%= get_projekt_phase_restriction_name(phase) %></span>

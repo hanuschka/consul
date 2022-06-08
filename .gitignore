@@ -27,6 +27,7 @@
 /config/deploy-secrets-cli_ekai.yml
 /config/deploy-secrets/*
 /config/maintenance.yml
+/config/secret_emails.yml
 
 /coverage
 

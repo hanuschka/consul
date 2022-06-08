@@ -9,13 +9,17 @@
 
     <div class='columns small-12 medium-3 large-2 show-for-small-only'>
       <% if poll.image.present? %>
-        <%= image_tag poll.image_url(:large), alt: poll.image.title.unicode_normalize %>
+        <%= link_to poll do %>
+          <%= image_tag poll.image_url(:large), alt: poll.image.title.unicode_normalize %>
+        <% end %>
       <% end %>
     </div>
 
     <div class="columns small-12 medium-3 large-2 show-for-medium <%= "image-placeholder icon-#{poll.projekt.icon || 'image'}" unless poll.image.present? %>" data-equalizer-watch='main'>
       <% if poll.image.present? %>
-        <%= image_tag poll.image_url(:thumb_wider), alt: poll.image.title.unicode_normalize %>
+        <%= link_to poll do %>
+          <%= image_tag poll.image_url(:thumb_wider), alt: poll.image.title.unicode_normalize %>
+        <% end %>
       <% end %>
     </div>
 
@@ -32,21 +36,23 @@
           <h4 class='resource-name'><%= link_to_poll poll.name, poll %></h4>
           <div class="resource-summary margin-bottom">
 
-						<% if poll.show_summary_instead_of_questions? %>
-							<div class="">
-								<%= auto_link_already_sanitized_html simple_format(poll.summary) %>
-							</div>
-						<% else %>
-							<ul class="">
-								<% poll.questions.joins(:translations).order('poll_question_translations.title').each do |question| %>
-									<li><%= question.title %></li>
-								<% end %>
-							</ul>
-						<% end %>
+            <%= link_to_poll_with_block poll do %>
+              <% if poll.show_summary_instead_of_questions? %>
+                <div class="">
+                  <%= auto_link_already_sanitized_html simple_format(poll.summary) %>
+                </div>
+              <% else %>
+                <ul class="">
+                  <% poll.questions.joins(:translations).order('poll_question_translations.title').each do |question| %>
+                    <li><%= question.title %></li>
+                  <% end %>
+                </ul>
+              <% end %>
 
-            <div class="truncate"></div>
+              <div class="truncate"></div>
+						<% end %>
           </div>
-          <% # render "shared/tags", taggable: poll, limit: 5 %>
+          <% render "shared/tags", taggable: poll, limit: 5 %>
 
         </div>
         <div class='column small-12 medium-6 large-4 resource-participate table' data-equalizer-watch='details'>

@@ -20,7 +20,7 @@
                 </span>
               <% end %>
             </div>
-            <span><%= t("legislation.draft_versions.show.updated_at",
+            <span><%#= t("legislation.draft_versions.show.updated_at",
                          date: format_date(@draft_version.updated_at)) %></span>
           </div>
           <div class="small-12 column projekt-texts-button-section">
@@ -77,7 +77,7 @@
                 </span>
               <% end %>
             </div>
-            <span><%= t("legislation.draft_versions.show.updated_at", date: format_date(@draft_version.updated_at)) %></span>
+            <span><%#= t("legislation.draft_versions.show.updated_at", date: format_date(@draft_version.updated_at)) %></span>
           </div>
 
           <% unless @draft_version.final_version? %>
@@ -152,7 +152,7 @@
               <%= submit_tag t("legislation.draft_versions.show.select_version_submit"), class: "button" %>
             <% end %>
           </div>
-          <span><%= t("legislation.draft_versions.show.updated_at", date: format_date(@draft_version.updated_at)) %></span>
+          <span><%#= t("legislation.draft_versions.show.updated_at", date: format_date(@draft_version.updated_at)) %></span>
         </div>
         <div class="small-12 column projekt-texts-button-section">
           <%= render "legislation/processes/help_gif" %>
@@ -184,7 +184,7 @@
             <%= submit_tag t("legislation.draft_versions.show.select_version_submit"), class: "button" %>
           <% end %>
         </div>
-        <span><%= t("legislation.draft_versions.show.updated_at", date: format_date(@draft_version.updated_at)) %></span>
+        <span><%#= t("legislation.draft_versions.show.updated_at", date: format_date(@draft_version.updated_at)) %></span>
       </div>
       <div class="small-12 column projekt-texts-button-section">
         <%= render "legislation/processes/help_gif" %>

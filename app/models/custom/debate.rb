@@ -3,8 +3,9 @@ require_dependency Rails.root.join("app", "models", "debate").to_s
 class Debate
   include Imageable
   include Search::Generic
+  include Documentable
 
-  belongs_to :projekt, optional: true
+  belongs_to :projekt, optional: true, touch: true
   has_one :debate_phase, through: :projekt
   has_many :geozone_restrictions, through: :debate_phase
   has_many :geozone_affiliations, through: :projekt
@@ -22,16 +23,6 @@ class Debate
   scope :unseen, -> { where(ignored_flag_at: nil) }
 
   alias_attribute :projekt_phase, :debate_phase
-
-  def self.base_selection(scoped_projekt_ids = Projekt.ids)
-    where(projekt_id: scoped_projekt_ids).
-      joins(:projekt).merge(Projekt.activated).
-      joins( 'INNER JOIN projekt_settings shwmn ON projekts.id = shwmn.projekt_id' ).
-      where( 'shwmn.key': 'projekt_feature.debates.show_in_sidebar_filter', 'shwmn.value': 'active' )
-
-
-
-  end
 
   def votable_by?(user)
     user.present? &&

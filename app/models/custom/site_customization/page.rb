@@ -3,6 +3,7 @@ require_dependency Rails.root.join("app", "models", "site_customization", "page"
 class SiteCustomization::Page < ApplicationRecord
   include Search::Generic
   include Imageable
+  attr_reader :origin
 
   belongs_to :projekt
 

@@ -5,7 +5,7 @@ de:
         home_icon: Startseiten Link
         search_icon: Suchen
         konto_icon: Mein Konto Link
-        admin_icon: Adminmenü Link"
+        admin_icon: Adminmenü Link
         notification_icon: Benachrichtigungen
         projekt_name_label: "Projekt Name: %{projekt_name} "
         archived_projekts_label: Archivierte Projekte
@@ -14,6 +14,7 @@ de:
         new_entry_label: Beitrag erstellen
         new_entry: + Beitrag erstellen
         new_entries:
+          new_budget_investment: Neuen Investitionsvorschlag erstellen
           new_debate: Diskussionsbeitrag erstellen
           new_proposal: Neuen Vorschlag erstellen
         mobile:

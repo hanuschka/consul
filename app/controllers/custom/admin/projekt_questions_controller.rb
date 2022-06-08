@@ -16,20 +16,29 @@ class Admin::ProjektQuestionsController < Admin::BaseController
   def create
     @projekt_question = ProjektQuestion.new(projekt_question_params)
     @projekt_question.projekt_id = @projekt.id
+    @projekt_question.author = current_user
 
     if @projekt_question.save
       notice = 'Question created'
       redirect_to edit_admin_projekt_path(@projekt.id, anchor: 'tab-projekt-questions'), notice: notice
     else
       flash.now[:error] = t("admin.legislation.questions.create.error")
-      render :new
+      render 'admin/projekts/edit/projekt_questions/new'
     end
   end
 
+  def edit
+    @projekt_question = ProjektQuestion.find(params[:id])
+
+    render 'admin/projekts/edit/projekt_questions/edit'
+  end
+
   def update
-    if @projekt_question.update(question_params)
+    @projekt_question = ProjektQuestion.find(params[:id])
+
+    if @projekt_question.update(projekt_question_params)
       notice = 'Question updated'
-      redirect_to edit_admin_projekt_path(@projekt.id), notice: notice
+      redirect_to edit_admin_projekt_path(@projekt.id, anchor: 'tab-projekt-questions'), notice: notice
     else
       flash.now[:error] = t("admin.legislation.questions.update.error")
       render :edit
@@ -39,7 +48,7 @@ class Admin::ProjektQuestionsController < Admin::BaseController
   def destroy
     @projekt_question.destroy!
     notice = t("admin.legislation.questions.destroy.notice")
-    redirect_to admin_legislation_process_questions_path, notice: notice
+    redirect_to edit_admin_projekt_path(@projekt, anchor: 'tab-projekt-questions'), notice: notice
   end
 
   private
@@ -51,6 +60,7 @@ class Admin::ProjektQuestionsController < Admin::BaseController
     def projekt_question_params
       params.require(:projekt_question).permit(
         translation_params(::ProjektQuestion),
+        :comments_enabled, :show_answers_count,
         question_options_attributes: [
           :id, :_destroy, translation_params(::ProjektQuestionOption)
         ]

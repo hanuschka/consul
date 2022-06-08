@@ -1,14 +1,14 @@
 <div class="legislation-draft-versions-index">
-  <%= back_link_to admin_legislation_processes_path, t("admin.legislation.questions.index.back") %>
+  <h2><%= t("custom.admin.projekts.projekt_questions.index.title") %></h2>
 
-  <h2><%= t("custom.admin.projekts.edit.projekt_questions_tab.page_title") %></h2>
+  <h4><%= t("custom.admin.projekts.projekt_questions.index.enable_projekt_list") %></h2>
+  <%= render Admin::Settings::FeaturedSettingsFormComponent.new(ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.questions.show_questions_list'), tab: '#tab-projekt-phases') %>
 
   <div class="float-right">
-    <%= link_to t("admin.legislation.questions.index.create"), new_admin_projekt_projekt_question_path(projekt_id: @projekt.id), class: "button" %>
+    <%= link_to t("custom.admin.projekts.projekt_questions.index.create"), new_admin_projekt_projekt_question_path(projekt_id: @projekt.id), class: "button" %>
   </div>
 
   <div class="small-12 column">
-    <h4 class="inline-block"><%= t("admin.projekt.questions.index.title") %></h4>
 
     <% if @projekt.questions.any? %>
       <table class="stack">
@@ -24,7 +24,7 @@
         <% @projekt.questions.each do |question| %>
           <tr id="<%= dom_id(question) %>">
             <td>
-              <%= link_to question.title, edit_admin_legislation_process_question_path(@projekt, question) %>
+              <%= link_to question.title, edit_admin_projekt_projekt_question_path(@projekt, question) %>
             </td>
             <td>
               <ul>

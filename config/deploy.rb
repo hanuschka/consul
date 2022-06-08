@@ -21,7 +21,7 @@ set :log_level, :info
 set :pty, true
 set :use_sudo, false
 
-set :linked_files, %w[config/database.yml config/secrets.yml]
+set :linked_files, %w[config/database.yml config/secrets.yml config/secret_emails.yml]
 set :linked_dirs, %w[.bundle log tmp public/system public/assets public/ckeditor_assets public/machine_learning/data storage]
 
 set :keep_releases, 5
@@ -98,7 +98,6 @@ task :add_new_settings do
         execute :rake, "projekt_settings:ensure_existence"
         execute :rake, "projekt_settings:destroy_obsolete"
         execute :rake, "deficiency_report_statuses:add_default_statuses"
-        execute :rake, "map_layers:ensure_existence_of_base_layer"
       end
     end
   end

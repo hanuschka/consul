@@ -48,10 +48,12 @@
 
           <h4 class='resource-name'><%= link_to debate.title, debate %></h4>
           <div class="resource-summary margin-bottom">
-            <%= wysiwyg(debate.description) %>
-            <div class="truncate"></div>
+            <%= link_to debate do %></h4>
+              <%= wysiwyg(debate.description) %>
+              <div class="truncate"></div>
+            <% end %>
           </div>
-          <% # render "shared/tags", taggable: debate, limit: 5 %>
+          <%= render "shared/tags", taggable: debate, limit: 5 %>
 
         </div>
         <div class='column small-12 medium-6 large-4 resource-participate table' data-equalizer-watch='details'>

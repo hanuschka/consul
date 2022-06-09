@@ -29,11 +29,19 @@
       width: 190px;
       right: -10%;
     }
-
   }
 }
 
 .home-page {
+
+  .custom-content-block-body,
+  .custom-content-block-controls {
+    margin-bottom: 2.25rem;
+  }
+
+  .custom-content-block-body + .custom-content-block-controls {
+    margin-top: -1.5rem;
+  }
 
   .cards-homepage {
     margin-bottom: 3rem;

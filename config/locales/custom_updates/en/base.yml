@@ -26,6 +26,9 @@ en:
         proposal_phase_not_active: The proposal phase is not active
         voting_phase_expired: The voting period has already expired. New comments can no longer be added.
     devise_views:
+      sessions:
+        new:
+          title: LOSLAND networking platform
       users:
         registrations:
           new:

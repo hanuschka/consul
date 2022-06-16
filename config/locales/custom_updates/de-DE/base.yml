@@ -26,6 +26,9 @@ de:
         proposal_phase_not_active: Die Vorschlagsphase ist nich aktiv
         voting_phase_expired: Die Abstimmungsphase ist bereits abgelaufen. Neue Kommentare können nicht mehr hinzugefügt werden
     devise_views:
+      sessions:
+        new:
+          title: LOSLAND Vernetzungsplattform
       users:
         registrations:
           new:

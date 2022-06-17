@@ -55,7 +55,7 @@ class ProjektQuestion < ApplicationRecord
   end
 
   def comments_open?
-    projekt.question_phase.active?
+    projekt.question_phase.phase_activated?
   end
 
   def best_comments

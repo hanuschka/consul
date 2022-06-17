@@ -3,10 +3,6 @@ class ProjektPhase::LegislationProcessPhase < ProjektPhase
     active?
   end
 
-  def phase_info_activated?
-    info_active?
-  end
-
   def name
     'legislation_process_phase'
   end

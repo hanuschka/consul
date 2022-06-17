@@ -99,16 +99,13 @@ class Projekt < ApplicationRecord
   scope :visible_in_menu, -> { joins( 'INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id').
                                where( 'vim.key': 'projekt_feature.general.show_in_navigation', 'vim.value': 'active' ) }
 
-  scope :visible_in_sidebar, ->(resources_name) { joins( 'INNER JOIN projekt_settings spism ON projekts.id = spism.projekt_id' ).
-                                                  where( 'spism.key': "projekt_feature.#{resources_name}.show_in_sidebar_filter", 'spism.value': 'active' ) }
+  scope :show_in_sidebar, ->(resources_name) { joins( 'INNER JOIN projekt_settings sis ON projekts.id = sis.projekt_id' ).
+                                                  where( 'sis.key': "projekt_feature.#{resources_name}.show_in_sidebar_filter", 'sis.value': 'active' ) }
 
   scope :with_active_feature, ->(projekt_feature_key) { joins( 'INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id').
                                                         where( 'waf.key': "projekt_feature.#{projekt_feature_key}", 'waf.value': 'active' ) }
 
   scope :top_level_navigation, -> { top_level.visible_in_menu }
-
-  scope :top_level_sidebar_current, ->(controller_name) { top_level.visible_in_sidebar(controller_name).current }
-  scope :top_level_sidebar_expired, ->(controller_name) { top_level.visible_in_sidebar(controller_name).expired }
 
   scope :by_my_posts, -> (my_posts_switch, current_user_id) {
     return unless my_posts_switch

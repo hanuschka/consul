@@ -154,11 +154,11 @@ en:
           projekt_phases_tab:
             actions: Actions
             activate: Enabled
-            activate_info: Info enabled
-            activate_phase: Phase enabled
+            activate_phase: Activated
             affiliation: Area allocation
             beginning: Start date
             budget_phase: Budget phase
+            copy_phase_link: Copy link to phase
             comment_phase: Commenting phase
             debate_phase: Discussion phase
             end_date: End date
@@ -177,8 +177,10 @@ en:
             proposal_phase: Proposal phase
             restriction: Participation restriction
             start_date: Start date
+            standard_element: Standart element
             voting_manage: Manage polls
             voting_phase: Voting phase
+            legislation_process_phase: Text drafting phase
           projekt_questions_tab:
             name: Short survey
             title: Questions
@@ -191,7 +193,6 @@ en:
             debates_settings: Debates
             event_phase: Events
             event_phase_description: Enable Events in the footer of a project
-            footer_settings: Footer
             general_settings: General
             milestone_phase: Milestones
             milestone_phase_description: Activates the milestone function in the footer of a project

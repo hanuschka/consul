@@ -23,6 +23,25 @@ class Debate
 
   alias_attribute :projekt_phase, :debate_phase
 
+  def self.scoped_projekt_ids_for_index
+    Projekt.top_level
+      .map{ |p| p.all_children_projekts.unshift(p) }
+      .flatten.select do |projekt|
+        projekt.debates.any? &&
+        projekt.debate_phase.current? &&
+        ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
+        ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.debates.show_in_sidebar_filter').value.present?
+      end
+      .pluck(:id)
+  end
+
+  def self.scoped_projekt_ids_for_footer(projekt)
+    projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
+      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
+      projekt.debate_phase.current?
+    end.pluck(:id)
+  end
+
   def votable_by?(user)
     user.present? &&
     !user.organization? &&

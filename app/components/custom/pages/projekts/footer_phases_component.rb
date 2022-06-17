@@ -19,10 +19,10 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
 
     scoped_projekt_ids = @projekt.all_children_projekts.unshift(@projekt).pluck(:id)
     @comments_count = @projekt.comments.count
-    @debates_count = Debate.where(projekt_id: scoped_projekt_ids).joins(:projekt).merge(Projekt.activated).count
-    @proposals_count = Proposal.base_selection(scoped_projekt_ids).count
-    @polls_count = Poll.base_selection(scoped_projekt_ids).count
-    @projekt_events = ProjektEvent.base_selection(scoped_projekt_ids)
+    @debates_count = Debate.where(projekt_id: Debate.scoped_projekt_ids_for_footer(@projekt)).count
+    @proposals_count = Proposal.base_selection.where(projekt_id: Proposal.scoped_projekt_ids_for_footer(@projekt)).count
+    @polls_count = Poll.base_selection.where(projekt_id: Poll.scoped_projekt_ids_for_footer(@projekt)).count
+    @projekt_events = ProjektEvent.where(projekt_id: ProjektEvent.scoped_projekt_ids_for_footer(@projekt))
     @projekt_events_count = @projekt_events.count
     @projekt_questions_count = @projekt.questions.count
 
@@ -39,7 +39,7 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
 
     phases_total += [milestone_phase, projekt_notification_phase, newsfeed_phase, event_phase].compact
 
-    phases_total.select(&:phase_info_activated?).size > 4
+    phases_total.select(&:phase_activated?).size > 4
   end
 
   def phase_name(phase)

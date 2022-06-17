@@ -114,7 +114,7 @@
         </div>
       </div>
     </th>
-    <th scope="col" class="small-2"><%= t("custom.admin.projekts.edit.projekt_phases_tab.activate_info") %></th>
+    <th scope="col" class="small-2"><%= t("custom.admin.projekts.edit.projekt_phases_tab.activate_phase") %></th>
     <th scope="col" class="small-2"><%= t("custom.admin.projekts.edit.projekt_phases_tab.activate_phase") %></th>
   </thead>
   <tbody>
@@ -155,8 +155,23 @@
     } %>
 
     <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
+      projekt_phase: @projekt.projekt_notification_phase,
+      phase_name: 'projekt_notification_phase'
+    } %>
+
+    <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
       projekt_phase: @projekt.milestone_phase,
       phase_name: 'milestone_phase'
+    } %>
+
+    <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
+      projekt_phase: @projekt.event_phase,
+      phase_name: 'event_phase'
+    } %>
+
+    <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {
+      projekt_phase: @projekt.newsfeed_phase,
+      phase_name: 'newsfeed_phase'
     } %>
   </tbody>
 </table>

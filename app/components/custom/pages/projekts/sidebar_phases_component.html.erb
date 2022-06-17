@@ -1,6 +1,6 @@
 <div class="sidebar-divider hide-for-small-only"></div>
 
-<h2 class="sidebar-title hide-for-small-only"><%= t("custom.projekt.page.sidebar.phases.title") %></h2>
+<h2 class="sidebar-title hide-for-small-only"><%= t("custom.projekts.page.sidebar.phases.title") %></h2>
 
 <div class='sidebar-projekt-phases'>
 
@@ -10,7 +10,7 @@
 
   <% index = 0 %>
   <% phases.each do |phase | %>
-    <% if phase.phase_info_activated? %>
+    <% if phase.phase_activated? %>
       <div class="sidebar-projekt-phase <%= 'active' if phase.current? %>" <%= "aria-expanded=true" if phase.name == 'budget_phase' %>>
         <div class='sidebar-projekt-phase-status'>
         </div>
@@ -18,7 +18,7 @@
           <span class='sidebar-projekt-phase-name'>
             <%= phase_name(phase) %>
 
-            <% if projekt_feature?(@projekt, 'footer.show_projekt_footer') %>
+            <% if projekt_feature?(@projekt, 'general.show_projekt_footer') %>
               <%= link_to "/#{params[:id]}/#{phase.name}_footer_tab", class: 'js-sidebar-phase-link', remote: true, data: { index: index - 1 } do %>
                 <i class="fas fa-long-arrow-alt-right"></i>
               <% end %>
@@ -55,7 +55,7 @@
         <span class='sidebar-projekt-phase-name'>
           <%= phase_name(milestone_phase, 'start') %>
 
-          <% if projekt_feature?(@projekt, 'footer.show_projekt_footer') %>
+          <% if projekt_feature?(@projekt, 'general.show_projekt_footer') %>
             <%= link_to "/#{params[:id]}/#{milestone_phase.name}_footer_tab", remote: true, class: 'js-sidebar-phase-link', data: { index: index } do %>
               <i class="fas fa-long-arrow-alt-right"></i>
             <% end %>
@@ -73,7 +73,7 @@
         <span class='sidebar-projekt-phase-name'>
           <%= phase_name(milestone_phase, 'ending') %>
 
-          <% if projekt_feature?(@projekt, 'footer.show_projekt_footer') %>
+          <% if projekt_feature?(@projekt, 'general.show_projekt_footer') %>
             <%= link_to "/#{params[:id]}/#{milestone_phase.name}_footer_tab", remote: true, class: 'js-sidebar-phase-link', data: { index: index } do %>
               <i class="fas fa-long-arrow-alt-right"></i>
             <% end %>

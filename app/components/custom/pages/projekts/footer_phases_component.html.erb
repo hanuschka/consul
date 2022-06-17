@@ -21,7 +21,7 @@
         <ul id='filter-subnav' class='key-dates'>
           <% @phases.each do |phase| %>
 
-            <% if phase.phase_info_activated? %>
+            <% if phase.phase_activated? %>
               <li id="filter-subnav-<%= phase.resources_name %>" class="page-subnav-tab <%= 'is-active' if phase.resources_name == default_phase_name %>">
                 <%= link_to "/#{params[:id]}/#{phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader"); ' do %>
                   <h4>
@@ -46,7 +46,7 @@
 
           <% end %>
 
-          <% if milestone_phase.phase_info_activated? %>
+          <% if milestone_phase.phase_activated? %>
             <li id="filter-subnav-<%= milestone_phase.resources_name %>" class="page-subnav-tab <%= 'is-active' if milestone_phase.resources_name == default_phase_name %>">
               <%= link_to "/#{params[:id]}/#{milestone_phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader")' do %>
                 <h4>
@@ -62,7 +62,7 @@
             </li>
           <% end %>
 
-          <% if projekt_notification_phase.phase_info_activated? %>
+          <% if projekt_notification_phase.phase_activated? %>
             <li id="filter-subnav-<%= projekt_notification_phase.resources_name %>" class="page-subnav-tab <%= 'is-active' if projekt_notification_phase.resources_name == default_phase_name %>">
               <%= link_to "/#{params[:id]}/#{projekt_notification_phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader")' do %>
                 <h4>
@@ -78,7 +78,7 @@
             </li>
           <% end %>
 
-          <% if event_phase.phase_info_activated? %>
+          <% if event_phase.phase_activated? %>
             <li id="filter-subnav-<%= event_phase.resources_name %>" class="page-subnav-tab <%= 'is-active' if event_phase.resources_name == default_phase_name %>">
               <%= link_to "/#{params[:id]}/#{event_phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader")' do %>
                 <h4>
@@ -94,7 +94,7 @@
             </li>
           <% end %>
 
-          <% if newsfeed_phase.phase_info_activated? %>
+          <% if newsfeed_phase.phase_activated? %>
             <li id="filter-subnav-<%= newsfeed_phase.resources_name %>" class="page-subnav-tab <%= 'is-active' if newsfeed_phase.resources_name == default_phase_name %>">
               <%= link_to "/#{params[:id]}/#{newsfeed_phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader")' do %>
                 <h4>

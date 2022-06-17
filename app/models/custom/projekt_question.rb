@@ -46,6 +46,10 @@ class ProjektQuestion < ApplicationRecord
     true
   end
 
+  def comments_allowed?(current_user)
+    current_user.present?
+  end
+
   def comments_closed?
     !comments_open?
   end

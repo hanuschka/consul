@@ -154,11 +154,11 @@ de:
           projekt_phases_tab:
             actions: Aktionen
             activate: Aktiviert
-            activate_info: Info aktiviert
-            activate_phase: Phase aktiviert
+            activate_phase: Aktiviert
             affiliation: Gebietszuordnung
             beginning: Anfangsdatum
             budget_phase: Budgetphase
+            copy_phase_link: Link abrufen
             comment_phase: Kommentarphase
             debate_phase: Diskussionsphase
             end_date: Enddatum
@@ -180,6 +180,7 @@ de:
             question_phase: Kurzumfragenphase
             restriction: Partizipationsbeschränkung
             start_date: Anfangsdatum
+            standard_element: Standardelement
             voting_manage: Abstimmungen verwalten
             voting_phase: Abstimmungsphase
             legislation_process_phase: Textbearbeitungsphase
@@ -195,7 +196,6 @@ de:
             debates_settings: Diskussion
             event_phase: Veranstaltungen
             event_phase_description: Aktivieren Sie Veranstaltungen in der Fußzeile eines Projekts
-            footer_settings: Fußzeile
             general_settings: Allgemein
             milestone_phase: Meilensteine
             milestone_phase_description: Aktiviert die Meilensteinfunktion in der Fußzeile eines Projektes

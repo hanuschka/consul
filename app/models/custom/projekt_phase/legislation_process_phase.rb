@@ -1,6 +1,7 @@
 class ProjektPhase::LegislationProcessPhase < ProjektPhase
   def phase_activated?
-    active?
+    # active?
+    projekt.legislation_process.present?
   end
 
   def name
@@ -8,7 +9,7 @@ class ProjektPhase::LegislationProcessPhase < ProjektPhase
   end
 
   def resources_name
-    'legislation_processes'
+    'legislation_process'
   end
 
   def default_order

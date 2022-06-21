@@ -131,6 +131,7 @@ class Projekt < ApplicationRecord
 
   def selectable?(controller_name, user)
     return true if controller_name == 'polls'
+    return true if controller_name == 'processes'
     return false if user.nil?
 
     if controller_name == 'proposals'

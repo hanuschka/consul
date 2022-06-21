@@ -164,6 +164,7 @@ en:
             default_tab: Standard Element
             end_date: End date
             ending: End date
+            event_phase: Eventsphase
             information_block_title: Project information
             link:
               budget_phase: Budgets
@@ -171,10 +172,12 @@ en:
             main_block_title: Project status
             milestone_phase: Execution phase
             name: Project settings
+            newsfeed_phase: News-Feed
             page_block_title: Project page
             phase_name: Phase
             phases_block_title: Project phases
             projekt_duration: Project information
+            projekt_notification_phase: Notificationsphase
             proposal_phase: Proposal phase
             restriction: Participation restriction
             start_date: Start date

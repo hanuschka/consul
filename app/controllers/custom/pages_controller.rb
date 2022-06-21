@@ -107,7 +107,7 @@ class PagesController < ApplicationController
   end
 
   def legislation_process_phase_footer_tab
-    set_legislation_processes_footer_tab_variables
+    set_legislation_process_footer_tab_variables
 
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
@@ -275,7 +275,7 @@ class PagesController < ApplicationController
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
   end
 
-  def set_legislation_processes_footer_tab_variables(projekt=nil)
+  def set_legislation_process_footer_tab_variables(projekt=nil)
     @current_section = params[:section] || 'text'
 
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
@@ -400,7 +400,7 @@ class PagesController < ApplicationController
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.event_phase
-    @projekt_events = ProjektEvent.where(projekt_id: ProjektEvent.scoped_projekt_ids_for_footer(@projekt)).page(params[:page]).send("sort_by_#{@current_order}")
+    @projekt_events = ProjektEvent.where(projekt_id: @current_projekt).page(params[:page]).send("sort_by_#{@current_order}")
   end
 
   def set_projekt_questions_footer_tab_variables(projekt=nil)

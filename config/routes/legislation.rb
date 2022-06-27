@@ -50,5 +50,3 @@ resolve "Legislation::Annotation" do |annotation, options|
   [annotation.draft_version.process, :draft_version, :annotation,
    options.merge(draft_version_id: annotation.draft_version, id: annotation)]
 end
-
-

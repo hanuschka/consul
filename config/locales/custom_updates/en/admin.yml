@@ -95,6 +95,7 @@ en:
           statuses: Set categories
         deficiency_reports_title: Deficiency reports
         projekts: Projects
+        legislation: Text edit
       polls:
         questions:
           answers:
@@ -264,6 +265,7 @@ en:
           geozones: Manage geozones
           map_settings: Standard card configuration
           settings: Functions
+          legislation_process: Text edit
       settings:
         index:
           extended_features:

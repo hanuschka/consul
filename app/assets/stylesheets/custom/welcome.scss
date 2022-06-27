@@ -45,8 +45,12 @@
       display: none;
   }
 
+  .jumbo,
+  .hero-video-wrapper {
+    margin-bottom: 4rem;
+  }
+
   .jumbo {
-  
     background-position: $welcomebgposition;
     background-size: 100% auto;
     background-repeat: no-repeat;
@@ -285,6 +289,30 @@
       padding: 0.5rem;
       font-size: 1rem;
       font-weight: normal;
+    }
+  }
+}
+
+.home-page.launch-page {
+  .jumbo {
+    margin-bottom: 0;
+		min-height: 520px;
+  }
+
+  .footer {
+    margin-top: 0;
+  }
+
+  .jumbo-message p {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1.2;
+    display: block;
+  }
+
+  @media only screen and (min-width: 550px) {
+    p {
+      display: block;
     }
   }
 }

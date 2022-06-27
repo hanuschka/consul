@@ -44,8 +44,4 @@ class Legislation::DraftVersion < ApplicationRecord
   def best_comments
     Comment.where(commentable: annotations, ancestry: nil).sort_by_supports.limit(10)
   end
-
-  def comments_enabled?
-    !final_version? && process.allegations_phase.open?
-  end
 end

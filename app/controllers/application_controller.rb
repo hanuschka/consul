@@ -108,13 +108,13 @@ class ApplicationController < ActionController::Base
     def set_return_url # quickfix
       if request.get? && !devise_controller? && is_navigational_format?
         if request.fullpath.include?('/null')
-          Sentry.capture_exception("NULL exception. URL: #{request.base_url + request.fullpath}")
+          Sentry.capture_message("NULL exception. URL: #{request.base_url + request.fullpath}")
           request_path = '/'
+          redirect_to root_path
         else
           request_path = request.fullpath
+          store_location_for(:user, request_path)
         end
-
-        store_location_for(:user, request_path)
       end
     end
 

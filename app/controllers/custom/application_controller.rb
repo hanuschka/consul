@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
     ( controller_name == 'sessions' && action_name == 'new' ) ||
       ( controller_name == 'passwords' && action_name.in?(%w[new edit create]) ) ||
       ( controller_name == 'confirmations' && action_name.in?(%w[new show create update]) ) ||
-      ( controller_name == 'registrations' && action_name.in?(%w[new success]) )
+      ( controller_name == 'registrations' && action_name.in?(%w[new success check_username]) )
   end
 
   def http_basic_auth_site?

@@ -932,7 +932,7 @@ de:
   annotator:
     help:
       alt: Wählen Sie den Text, den Sie kommentieren möchten und drücken Sie den Button mit dem Stift.
-      text: Um dieses Dokument zu kommentieren, müssen Sie %{sign_in} oder %{sign_up}. Dann wählen Sie den Text aus, den Sie kommentieren möchten und klicken auf den Button mit dem Stift.
+      text: Um dieses Dokument zu kommentieren, müssen Sie sich %{sign_in} oder %{sign_up}. Dann wählen Sie den Text aus, den Sie kommentieren möchten und klicken auf den Button mit dem Stift.
       title: Wie kann ich dieses Dokument kommentieren?
   links:
     form:

@@ -16,19 +16,19 @@ class Poll < ApplicationRecord
   end
 
   def self.scoped_projekt_ids_for_index
-   Projekt.top_level.map{ |p| p.all_children_projekts.unshift(p) }
+   Projekt.top_level
+     .map{ |p| p.all_children_projekts.unshift(p) }
     .flatten.select do |projekt|
-      projekt.voting_phase.phase_activated? &&
       ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
-      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.polls.show_in_sidebar_filter').value.present?
+      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.polls.show_in_sidebar_filter').value.present? &&
+      Poll.base_selection.where(projekt_id: projekt.all_children_ids.unshift(projekt.id)).any?
     end.pluck(:id)
   end
 
   def self.scoped_projekt_ids_for_footer(projekt)
     projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
-      projekt.voting_phase.phase_activated? &&
-      projekt.polls.any? &&
-      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present?
+      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
+      Poll.base_selection.where(projekt_id: projekt.all_children_ids.unshift(projekt.id)).any?
     end.pluck(:id)
   end
 

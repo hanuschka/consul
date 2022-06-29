@@ -80,8 +80,12 @@
       display: none;
   }
 
+  .jumbo,
+  .hero-video-wrapper {
+    margin-bottom: 4rem;
+  }
+
   .jumbo {
-  
     background-position: $welcomebgposition;
     background-size: 100% auto;
     background-repeat: no-repeat;
@@ -144,6 +148,36 @@
 
     @media only screen and (min-width: 1900px) {
       height: 600px;
+    }
+  }
+}
+
+.home-page.launch-page {
+  .jumbo {
+    margin-bottom: 0;
+    min-height: calc(100vh - 385px);
+  }
+
+  .footer {
+    margin-top: 0;
+  }
+
+  .jumbo-message p {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1.4;
+    display: block;
+  }
+
+  @media only screen and (min-width: 550px) {
+    p {
+      display: block;
+    }
+  }
+
+  @media only screen and (min-width: 1920px) {
+    .jumbo-message {
+      top: 10%;
     }
   }
 }

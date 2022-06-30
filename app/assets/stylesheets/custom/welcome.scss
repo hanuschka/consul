@@ -140,4 +140,10 @@
       display: block;
     }
   }
+
+  @media only screen and (min-width: 1920px) {
+    .jumbo-message {
+      top: 10%;
+    }
+  }
 }

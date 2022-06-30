@@ -42,8 +42,6 @@ class Projekt < ApplicationRecord
   has_many :geozone_restrictions, through: :projekt_phases
   has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
 
-  has_one :legislation_process, class_name: 'Legislation::Process'
-
   has_many :projekt_settings, dependent: :destroy
   has_many :projekt_notifications, dependent: :destroy
 
@@ -55,7 +53,8 @@ class Projekt < ApplicationRecord
   accepts_nested_attributes_for(
     :debate_phase, :proposal_phase, :budget_phase,
     :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications,
-    :projekt_events, :event_phase, :question_phase, :legislation_process_phase
+    :projekt_events, :event_phase, :question_phase, :legislation_process_phase,
+    :newsfeed_phase, :projekt_notification_phase
   )
 
   before_validation :set_default_color
@@ -131,6 +130,7 @@ class Projekt < ApplicationRecord
 
   def selectable?(controller_name, user)
     return true if controller_name == 'polls'
+    return true if controller_name == 'processes'
     return false if user.nil?
 
     if controller_name == 'proposals'
@@ -319,6 +319,10 @@ class Projekt < ApplicationRecord
       return map_layers.or(MapLayer.where(projekt: nil, base: true))
     end
     map_layers
+  end
+
+  def legislation_process
+    legislation_processes.order(:updated_at).last
   end
 
   private

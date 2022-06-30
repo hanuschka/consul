@@ -107,7 +107,7 @@ class PagesController < ApplicationController
   end
 
   def legislation_process_phase_footer_tab
-    set_legislation_processes_footer_tab_variables
+    set_legislation_process_footer_tab_variables
 
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
@@ -221,12 +221,7 @@ class PagesController < ApplicationController
     load_featured
     remove_archived_from_order_links
 
-    @scoped_projekt_ids = @current_projekt
-      .top_parent.all_children_projekts.unshift(@current_projekt.top_parent).select do |projekt|
-        ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
-        projekt.proposal_phase.current?
-      end
-      .pluck(:id)
+    @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_footer(@current_projekt)
 
     unless params[:search].present?
       take_by_my_posts
@@ -275,7 +270,7 @@ class PagesController < ApplicationController
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
   end
 
-  def set_legislation_processes_footer_tab_variables(projekt=nil)
+  def set_legislation_process_footer_tab_variables(projekt=nil)
     @current_section = params[:section] || 'text'
 
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
@@ -288,7 +283,7 @@ class PagesController < ApplicationController
       .top_parent.all_children_projekts.unshift(@current_projekt.top_parent)
       .pluck(:id)
 
-    @process = @current_projekt.legislation_processes.first
+    @process = @current_projekt.legislation_process
     @draft_versions_list = @process&.draft_versions&.published
 
     if params[:text_draft_version_id]
@@ -400,7 +395,7 @@ class PagesController < ApplicationController
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.event_phase
-    @projekt_events = ProjektEvent.where(projekt_id: ProjektEvent.scoped_projekt_ids_for_footer(@projekt)).page(params[:page]).send("sort_by_#{@current_order}")
+    @projekt_events = ProjektEvent.where(projekt_id: @current_projekt).page(params[:page]).send("sort_by_#{@current_order}")
   end
 
   def set_projekt_questions_footer_tab_variables(projekt=nil)

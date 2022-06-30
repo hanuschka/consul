@@ -3,22 +3,27 @@
 <%= translatable_form_for [:admin, @process], html: { class: "legislation-process-form" } do |f| %>
 
   <%= render "shared/errors", resource: @process %>
+  <div class="row">
+    <%= f.translatable_fields do |translations_form| %>
+        <%= translations_form.text_field :title %>
+    <% end %>
+  </div>
+
 
   <fieldset>
     <legend class="small-12 medium-4 column">
-      <%= t("admin.legislation.processes.form.draft_phase") %>
-      <span class="help-text"><%= t("admin.legislation.processes.form.draft_phase_description") %></span>
+      <%= t("admin.legislation.processes.form.allegations_phase") %>
     </legend>
 
     <div class="small-12 medium-3 column">
-      <%= f.date_field :draft_start_date, id: "draft_start_date" %>
+      <%= f.date_field :allegations_start_date, id: "allegations_start_date" %>
     </div>
 
     <div class="small-12 medium-3 column">
-      <%= f.date_field :draft_end_date, id: "draft_end_date" %>
+      <%= f.date_field :allegations_end_date, id: "allegations_end_date" %>
     </div>
     <div class="small-12 medium-2 column margin-top">
-      <%= f.check_box :draft_phase_enabled, checked: @process.draft_phase.enabled?, label: t("admin.legislation.processes.form.enabled") %>
+      <%= f.check_box :allegations_phase_enabled, checked: @process.allegations_phase.enabled?, label: t("admin.legislation.processes.form.enabled") %>
     </div>
   </fieldset>
 

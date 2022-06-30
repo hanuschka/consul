@@ -102,21 +102,6 @@
 <h2 class="margin-top-25"><%= t("custom.admin.projekts.edit.projekt_phases_tab.phases_block_title") %></h2>
 
 <table class='edit-projekt margin-top'>
-  <thead>
-    <th scope="col" class="small-2"><%= t("custom.admin.projekts.edit.projekt_phases_tab.phase_name") %></th>
-    <th scope="col" class="small-6">
-      <div class='row collapse'>
-        <div class='column small-6'>
-          <%= t("custom.admin.projekts.edit.projekt_phases_tab.beginning") %>
-        </div>
-        <div class='column small-6' style='padding-left:5px;'>
-          <%= t("custom.admin.projekts.edit.projekt_phases_tab.ending") %>
-        </div>
-      </div>
-    </th>
-    <th scope="col" class="small-2"><%= t("custom.admin.projekts.edit.projekt_phases_tab.activate_phase") %></th>
-    <th scope="col" class="small-2"><%= t("custom.admin.projekts.edit.projekt_phases_tab.activate_phase") %></th>
-  </thead>
   <tbody>
 
     <%= render partial: 'custom/admin/projekts/edit/projekt_phases/edit_projekt_phase', locals: {

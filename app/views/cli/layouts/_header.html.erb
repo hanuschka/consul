@@ -1,3 +1,4 @@
+<% launch_page ||= false %>
 <header>
   <div class="top-bar">
 
@@ -15,7 +16,7 @@
     </span>
 
     <div class='header-right-group'>
-      <% unless current_user %>
+      <% if !launch_page && current_user.nil? %>
         <div class='account-buttons show-for-large'>
           <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
           <%= link_to t('devise_views.menu.login_items.signup') , new_user_registration_path, class: 'sign-up-button', role: 'button'  %>
@@ -36,7 +37,7 @@
 
             <h2 class='city-name'>Bürgerbeteiligung in Kirchheim</h2>
 
-            <%= render partial: "shared/subnavigation", locals: { placement: 'mobile' } %>
+            <%= render partial: "shared/subnavigation", locals: { placement: 'mobile', launch_page: launch_page } %>
             <div class="small-12 column">
               <%= render "shared/top_links" %>
             </div>
@@ -46,9 +47,9 @@
     </div>
   </div>
 
-	<div id="navigation_bar" class="subnavigation expanded">
-		<div class="hide-for-small-only">
-			<%= render partial: "shared/subnavigation", locals: { placement: 'desktop' } %>
-		</div>
-	</div>
+  <div id="navigation_bar" class="subnavigation expanded">
+    <div class="hide-for-small-only">
+      <%= render partial: "shared/subnavigation", locals: { placement: 'desktop', launch_page: launch_page } %>
+    </div>
+  </div>
 </header>

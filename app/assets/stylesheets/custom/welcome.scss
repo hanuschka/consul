@@ -58,7 +58,7 @@
     background-repeat: no-repeat;
     background-color: $welcomebgcolor;
     position: relative;
-    height: 285px;
+    min-height: 285px;
  
     .jumbo-message {
       // position: absolute;

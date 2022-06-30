@@ -18,6 +18,7 @@ class CommentsController < ApplicationController
   def vote
     @comment.vote_by(voter: current_user, vote: params[:value])
     @commentable = @comment.commentable
+
     respond_with(@comment, @commentable)
   end
 

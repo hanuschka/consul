@@ -23,8 +23,8 @@
 
   <div class='row'>
     <div class='column small-12 medium-9'>
-      <%= render_custom_block 'projekts_list' %>
-      <%= render Projekts::ProjektListTabsComponent.new(current_active_orders: @current_active_orders) %>
+      <%= render_custom_block "projekts_list_#{@current_projekts_order}" %>
+      <%= render Projekts::ProjektListTabsComponent.new(current_order: @current_projekts_order, current_active_orders: @current_active_orders, overview_page: @current_projekt.overview_page?) %>
 
       <% if @projekts.any? %>
         <% Projekt.top_level.each do |top_level_projekt| %>
@@ -57,4 +57,28 @@
       %>
     </div>
   </div>
+
+  <% if @show_footer %>
+    <nav class="margin-bottom projekt-footer <%= "legislation-process-list" if true %>">
+    <div class="row">
+      <div class="small-12 column">
+        <h3><%= "Beteiligung" %></h3>
+        <div class='footer-phases-filter-subnav'>
+          <ul id='filter-subnav' class='key-dates'>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.comment_phase, @current_phase.resources_name, @comments_count) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.debate_phase, @current_phase.resources_name, @debates_count) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.proposal_phase, @current_phase.resources_name, @proposals_count) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.voting_phase, @current_phase.resources_name, @polls_count) %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+      <div id='footer-content'>
+        <% if (@current_phase.present? && @current_phase.phase_activated?) %>
+          <%= render 'shared/loader_spinner' %>
+          <%= render "pages/projekt_footer/#{@current_phase.resources_name}" %>
+        <% end %>
+      </div>
+  <% end %>
 </main>

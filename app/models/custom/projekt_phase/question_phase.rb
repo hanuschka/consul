@@ -1,7 +1,13 @@
 class ProjektPhase::QuestionPhase < ProjektPhase
   def phase_activated?
-    # active?
-    projekt.questions.any?
+    (
+      ProjektSetting.find_by(projekt_id: projekt.id, key: 'projekt_feature.questions.show_questions_list').enabled? &&
+      projekt.questions.any?
+    )
+  end
+
+  def active?
+    phase_activated?
   end
 
   def name

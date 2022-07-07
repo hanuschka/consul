@@ -5,7 +5,7 @@
     </strong>
     <div class='margin-bottom'>
       <div id=<%= dom_id(projekt_phase, :copy_phase_link) %> class='hide'>
-        <%= request.base_url + "/#{@projekt.page.slug}?selected_phase_id=#{projekt_phase.id}#filter-subnav"  %>
+        <%= request.base_url + "/#{projekt.page.slug}?selected_phase_id=#{projekt_phase.id}#filter-subnav"  %>
       </div>
       <small>
         <%= link_to "</> #{t('custom.admin.projekts.edit.projekt_phases_tab.copy_phase_link')}", '#', class: 'js-copy-source-button phase-copy-link', data: { target: dom_id(projekt_phase, :copy_phase_link) } %>
@@ -14,7 +14,7 @@
 
   </td>
   <td>
-    <%= form_for(@projekt, url: admin_projekt_path, as: :projekt) do |f| %>
+    <%= form_for(projekt, url: admin_projekt_path(projekt), as: :projekt) do |f| %>
       <%= hidden_field_tag :tab, '#tab-projekt-phases' %>
 
       <%= f.fields_for phase_name.to_s do |phase_form| %>
@@ -31,7 +31,7 @@
 
         <% if phase_name.in?(['comment_phase', 'debate_phase', 'proposal_phase', 'question_phase', 'budget_phase', 'legislation_process_phase']) %>
           <strong class='geo-restriction-title'><span class='geo-restriction-icon'><%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction") %></span></strong>
-          <%= render partial: 'custom/admin/projekts/edit/projekt_phases/phase_geozone_restriction', locals: { phase_form: phase_form, projekt_phase: projekt_phase, phase_name: phase_name } %>
+          <%= render partial: 'custom/admin/projekts/edit/projekt_phases/phase_geozone_restriction', locals: { projekt: projekt, phase_form: phase_form, projekt_phase: projekt_phase, phase_name: phase_name } %>
         <% end %>
       <% end %>
 
@@ -44,7 +44,7 @@
       <%= t("custom.admin.projekts.edit.projekt_phases_tab.default_tab") %>
     </strong>
     <div id=<%= dom_id(projekt_phase, :default_footer_tab) %> >
-      <%= render partial: 'admin/projekts/edit/projekt_phases/default_projekt_phase', locals: { projekt_phase: projekt_phase, phase_name: phase_name } %>
+      <%= render partial: 'admin/projekts/edit/projekt_phases/default_projekt_phase', locals: { projekt: projekt, projekt_phase: projekt_phase, phase_name: phase_name } %>
     </div>
   </td>
 
@@ -61,7 +61,7 @@
     <strong>
       <%= t("custom.admin.projekts.edit.projekt_phases_tab.activate_phase") %>
     </strong>
-      <%= render Admin::LivesubmitCheckbox::Component.new(url: liveupdate_admin_projekt_path, resource_name: "projekt[#{phase_name}_attributes]", attribute_name: 'active', id: @projekt.send(phase_name.to_sym).id, current_value: @projekt.send(phase_name.to_sym).active) %>
+      <%= render Admin::LivesubmitCheckbox::Component.new(url: liveupdate_admin_projekt_path(projekt), resource_name: "projekt[#{phase_name}_attributes]", attribute_name: 'active', id: projekt.send(phase_name.to_sym).id, current_value: projekt.send(phase_name.to_sym).active) %>
     <% end %>
   </td>
 </tr>

@@ -1,6 +1,12 @@
 en:
   custom:
     projekts:
+      overview_page:
+        projekt_name: Overview page
+        projekt_name_for_proposal: New projekt proposal
+        projekt_name_for_debate: New projekt debate
+        projekt_name_for_poll: New projekt poll
+
       backlink: To the project overview
       errors:
         presence: Please select a project

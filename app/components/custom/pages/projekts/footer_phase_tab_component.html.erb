@@ -1,6 +1,6 @@
 <% if phase.phase_activated? %>
   <li id="filter-subnav-<%= phase.resources_name %>" class="page-subnav-tab <%= 'is-active' if phase.resources_name == default_phase_name %>">
-    <%= link_to "/#{params[:id]}/#{phase.name}_footer_tab", remote: true, onclick: '$("#footer-content").addClass("show-loader"); ' do %>
+    <%= link_to link_url, remote: true, onclick: '$("#footer-content").addClass("show-loader"); ' do %>
       <h4>
         <%= t("custom.projekts.page.tabs.#{phase.resources_name}") %>
         <%= "(#{resource_count})" if resource_count.present? %>

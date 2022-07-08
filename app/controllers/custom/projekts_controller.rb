@@ -55,9 +55,15 @@ class ProjektsController < ApplicationController
     default_phase_id ||= ProjektSetting.find_by(projekt: @overview_page_special_projekt, key: 'projekt_custom_feature.default_footer_tab').value
 
     if default_phase_id.present?
-      ProjektPhase.find(default_phase_id)
-    elsif @overview_page_special_projekt.projekt_phases.select{ |phase| phase.phase_activated? }.any?
-      @overview_page_special_projekt.projekt_phases.select(&:phase_activated?).first
+      projekt_phase = ProjektPhase.find(default_phase_id)
+
+      if projekt_phase.phase_activated?
+        return projekt_phase
+      end
+    end
+
+    if @overview_page_special_projekt.projekt_phases.select { |phase| phase.phase_activated? }.any?
+      @overview_page_special_projekt.projekt_phases.select { |phase| phase.phase_activated? }.first
     else
       @overview_page_special_projekt.comment_phase
     end

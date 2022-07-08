@@ -70,18 +70,32 @@ class ProposalsController
       @proposal.publish
 
       if @proposal.proposal_phase.active?
-        redirect_to page_path(
-          @proposal.projekt.page.slug,
-          anchor: 'filter-subnav',
-          selected_phase_id: @proposal.proposal_phase.id,
-          order: 'created_at'), notice: t("proposals.notice.published")
+        if @proposal.projekt.overview_page?
+          redirect_to projekts_path(
+            anchor: 'filter-subnav',
+            current_tab_path: 'proposal_phase_footer_tab'
+          )
+        else
+          redirect_to page_path(
+            @proposal.projekt.page.slug,
+            anchor: 'filter-subnav',
+            selected_phase_id: @proposal.proposal_phase.id,
+            order: 'created_at'), notice: t("proposals.notice.published")
+        end
       else
-        redirect_to proposals_path(order: 'created_at'), notice: t("proposals.notice.published")
+        if @proposal.projekt.overview_page?
+          redirect_to projekts_path(
+            anchor: 'filter-subnav',
+            current_tab_path: 'proposal_phase_footer_tab'
+          )
+        else
+          redirect_to proposals_path(order: 'created_at'), notice: t("proposals.notice.published")
+        end
       end
 
     else
+      @selected_projekt = @proposal.projekt.id
       render :new
-
     end
   end
 

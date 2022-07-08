@@ -1,9 +1,13 @@
 <%= render 'shared/loader_spinner' %>
 
-<div class="projekt-questions-container js-projekt-questions-container">
-  <% if @current_projekt.projekt_list_enabled? %>
-    <%= render "custom/projekts/partials/projekt_question_list", projekt: @current_projekt, projekt_questions: @projekt_questions %>
-  <% else %>
-    <%= render "custom/projekts/partials/projekt_question", projekt: @current_projekt, projekt_question: @projekt_question, projekt_question_answer: @projekt_question_answer %>
-  <% end %>
-</div>
+<% if @current_projekt.question_phase.phase_activated? %>
+  <div class="projekt-questions-container js-projekt-questions-container">
+    <% if @current_projekt.projekt_list_enabled? %>
+      <%= render "custom/projekts/partials/projekt_question_list", projekt: @current_projekt, projekt_questions: @projekt_questions %>
+    <% else %>
+      <%= render "custom/projekts/partials/projekt_question", projekt: @current_projekt, projekt_question: @projekt_question, projekt_question_answer: @projekt_question_answer %>
+    <% end %>
+  </div>
+<% else %>
+  <h3>Questions phase not activated</h3>
+<% end %>

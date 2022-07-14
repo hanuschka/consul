@@ -49,6 +49,11 @@ class ProjektsController < ApplicationController
     if @current_phase.present?
       send("set_#{@current_phase.resources_name}_footer_tab_variables", @overview_page_special_projekt)
     end
+
+    @comments_count = @overview_page_special_projekt.comments.count
+    @debates_count = Debate.where(projekt_id: @overview_page_special_projekt.id).count
+    @proposals_count = Proposal.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
+    @polls_count = Poll.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
   end
 
   def find_current_phase(default_phase_id)

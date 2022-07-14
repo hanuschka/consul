@@ -1,0 +1,13 @@
+en:
+  cli:
+    admin:
+      users:
+        columns:
+          pfo_first_name: First name
+          pfo_last_name: Last name
+          pfo_street_name: Street name
+          pfo_street_number: Street number
+          pfo_plz: Post code
+          pfo_city: City
+          gender: Gender
+          date_of_birth: Date of birth

@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    attributes:
+      user:
+        dor_first_name: First name
+        dor_last_name: Last name
+        dor_street_name: Street
+        dor_street_number: Building number
+        dor_plz: Postal code
+        dor_city: City
+        gender: Gender
+        date_of_birth: Date of birth

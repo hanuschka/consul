@@ -3,6 +3,7 @@
 
 <%= render "devise/omniauth_form", action: "sign_up" %>
 
+
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "shared/errors", resource: resource %>
 
@@ -24,6 +25,51 @@
       <%= f.invisible_captcha :address %>
 
       <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label") %>
+
+
+			<div class=row>
+        <div class='column small-12 medium-6'>
+          <%= f.text_field :pfo_first_name, placeholder: t("devise_views.users.registrations.new.pfo_first_name_label") %>
+        </div>
+
+        <div class='column small-12 medium-6'>
+          <%= f.text_field :pfo_last_name, placeholder: t("devise_views.users.registrations.new.pfo_last_name_label") %>
+        </div>
+      </div>
+
+      <div class=row>
+        <div class='column small-12 medium-6'>
+          <%= f.text_field :pfo_street_name, placeholder: t("devise_views.users.registrations.new.pfo_street_name_label") %>
+        </div>
+
+        <div class='column small-12 medium-6'>
+          <%= f.text_field :pfo_street_number, placeholder: t("devise_views.users.registrations.new.pfo_street_number_label") %>
+        </div>
+      </div>
+
+      <div class=row>
+        <div class='column small-12 medium-6'>
+          <%= f.text_field :pfo_plz, placeholder: t("devise_views.users.registrations.new.pfo_plz_label") %>
+        </div>
+
+        <div class='column small-12 medium-6'>
+          <%= f.text_field :pfo_city, placeholder: t("devise_views.users.registrations.new.pfo_city_label") %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column small-12">
+          <%= f.select :gender, options_for_gender_select %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="user-date-of-birth sign-up column small-12">
+          <%= f.date_select :date_of_birth,
+                            prompt: true,
+                            start_year: 1900, end_year: minimum_required_age.years.ago.year %>
+        </div>
+      </div>
 
       <%= f.password_field :password, autocomplete: "off",
                            placeholder: t("devise_views.users.registrations.new.password_label") %>

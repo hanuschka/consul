@@ -1,0 +1,11 @@
+en:
+  devise_views:
+    users:
+      registrations:
+        new:
+          pfo_first_name_label: First name
+          pfo_last_name_label: Last name
+          pfo_street_name_label: Street
+          pfo_street_number_label: Building number
+          pfo_plz_label: Postal code
+          pfo_city_label: City

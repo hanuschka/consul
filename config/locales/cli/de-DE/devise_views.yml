@@ -1,0 +1,11 @@
+de:
+  devise_views:
+    users:
+      registrations:
+        new:
+          pfo_first_name_label: Vorname
+          pfo_last_name_label: Nachname
+          pfo_street_name_label: Straße
+          pfo_street_number_label: Hausnummer
+          pfo_plz_label: Postleitzahl
+          pfo_city_label: Stadt

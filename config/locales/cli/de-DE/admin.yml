@@ -1,0 +1,13 @@
+de:
+  cli:
+    admin:
+      users:
+        columns:
+          pfo_first_name: Vorname
+          pfo_last_name: Nachname
+          pfo_street_name: Straße
+          pfo_street_number: Hausnummer
+          pfo_plz: Postleitzahl
+          pfo_city: Stadt
+          gender: Geschlecht
+          date_of_birth: Geburtsdatum

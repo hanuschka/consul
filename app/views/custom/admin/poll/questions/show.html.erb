@@ -15,7 +15,7 @@
     <p>
       <strong><%= t("custom.admin.polls.questions.show.description") %></strong>
       <br>
-      <%= @question.description.html_safe %>
+      <%= auto_link_already_sanitized_html wysiwyg(@question.description) %>
     </p>
 
     <p>

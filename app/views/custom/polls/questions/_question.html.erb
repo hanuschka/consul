@@ -8,7 +8,7 @@
     <% end %>
   </h3>
   <p>
-    <%= question.description&.html_safe %>
+    <%= auto_link_already_sanitized_html wysiwyg(question.description) %>
   </p>
 
   <div id="<%= dom_id(question) %>_answers" class="padding">

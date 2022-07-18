@@ -40,4 +40,8 @@ module CustomHelper
       "draft_versions" => admin_legislation_process_draft_versions_path(process),
     }
   end
+
+  def in_projekt_footer?
+    params[:current_tab_path].present? && !request.path.starts_with?('/projekts')
+  end
 end

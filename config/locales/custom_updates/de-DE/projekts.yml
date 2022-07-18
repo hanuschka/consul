@@ -1,6 +1,11 @@
 de:
   custom:
     projekts:
+      overview_page:
+        projekt_name: Projektübersichtsseite
+        projekt_name_for_proposal: Neuer Projektvorschlag
+        projekt_name_for_debate: Neue Diskussion
+        projekt_name_for_poll: Abtimmung
       backlink: Zur Projektübersicht
       errors:
         presence: Bitte wählen Sie ein Projekt
@@ -21,6 +26,7 @@ de:
         underway_title: 'Im Reiter "Aktive Beteiligung" sind Projekte, bei denen man sich aktuell beteiligen kann.'
         upcoming: Zukünftige Projektvorhaben
         upcoming_title: 'Im Reiter "Zukünftige Projektvorhaben" sind Beteiligungsprojekte gelistet, die erst in der Zukunft stattfinden.'
+        individual_list: "Individuelle Liste"
       page:
         footer:
           budget:
@@ -77,6 +83,8 @@ de:
         question_phase: Kurzumfrage
         voting_phase: Abstimmungen
       projekt_events:
+        index:
+          title: Veranstaltungskalender
         orders:
           all: Alle
           incoming: Kommende

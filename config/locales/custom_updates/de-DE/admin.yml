@@ -271,11 +271,15 @@ de:
             create: Frage aktualisieren
             title: Frage erstellen
           show_answers_count: Anzahl der Stimmen im Frontend anzeigen
+        overview_page_tab:
+          title: Projektübersichtseite
+          title_footer: Fußzeile
         tabs:
           configuration: Konfigurationseinstellungen
           geozones: Geozonen verwalten
           map_settings: Standard-Kartenkonfiguration
           settings: Funktionen
+          overview_page: Projektübersichtseite
       settings:
         index:
           extended_features:

@@ -27,6 +27,9 @@ de:
           language_switcher_in_menu_description: Aktivieren Sie den Umschalter für weitere Sprachen in der Navigationsleiste
           links_to_create_resources_in_menu: Button "+ Beitrag erstellen" in Navigation anzeigen
           links_to_create_resources_in_menu_description: Zeigt den Button "+ Beitrag erstellen" in der Hauptnavigation an
+          enable_projekt_events_page: Veranstaltungskalender anzeigen
+          enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
+
         gdpr:
           gdpr_conformity: DSGVO-konforme Voreinstellungen
           gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"
@@ -133,6 +136,8 @@ de:
           set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
           show_projekt_footer: Fußzeile aktivieren
           show_projekt_footer_description: Aktiviert die Fußzeile am unteren Ende des Projektes
+          show_in_individual_list: Projekt in individueller Liste anzeigen
+          show_in_individual_list_description: Zeigt das Projekt in einer individuellen Liste an
         sidebar:
           show_phases_in_projekt_page_sidebar: Projektphasen
           show_phases_in_projekt_page_sidebar_description: Aktivieren Sie die Projektphasen in der rechten Seitenleiste der Projektseite
@@ -231,7 +236,7 @@ de:
           enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
         milestones:
           newest_first: Neueste Meilensteine zuerst anzeigen
-          newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst 
+          newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
 
 
       deficiency_reports:

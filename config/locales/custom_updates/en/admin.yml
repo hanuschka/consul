@@ -260,12 +260,16 @@ en:
             create: Update question
             title: Create question
           show_answers_count: Show number of votes in frontend
+        overview_page_tab:
+          title: Project overview page
+          title_footer: Footer
         tabs:
           configuration: Configuration settings
           geozones: Manage geozones
           map_settings: Standard card configuration
           settings: Functions
           legislation_process: Text edit
+          overview_page: Project overview page
       settings:
         index:
           extended_features:

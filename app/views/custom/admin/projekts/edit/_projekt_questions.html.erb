@@ -2,7 +2,7 @@
   <h2><%= t("custom.admin.projekts.projekt_questions.index.title") %></h2>
 
   <h4><%= t("custom.admin.projekts.projekt_questions.index.enable_projekt_list") %></h2>
-  <%= render Admin::Settings::FeaturedSettingsFormComponent.new(ProjektSetting.find_by(projekt: @projekt, key: 'projekt_feature.questions.show_questions_list'), tab: '#tab-projekt-phases') %>
+  <%= render Admin::Settings::FeaturedSettingsFormComponent.new(ProjektSetting.find_by(projekt_id: @projekt.id, key: 'projekt_feature.questions.show_questions_list'), tab: '#tab-projekt-phases') %>
 
   <div class="float-right">
     <%= link_to t("custom.admin.projekts.projekt_questions.index.create"), new_admin_projekt_projekt_question_path(projekt_id: @projekt.id), class: "button" %>

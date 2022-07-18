@@ -8,12 +8,32 @@ class Admin::ProjektsController < Admin::BaseController
   before_action :process_tags, only: [:update]
 
   def index
-    @projekts = Projekt.top_level
-    @projekt = Projekt.new
+    @projekts = Projekt.top_level.regular
+    @new_projekt = Projekt.new
+    @projekt = Projekt.overview_page
+    @default_footer_tab_setting = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab')
 
     @projekts_settings = Setting.all.group_by(&:type)['projekts']
     skip_user_verification_setting = Setting.find_by(key: 'feature.user.skip_verification')
     @projekts_settings.push(skip_user_verification_setting)
+
+    @projekts_overview_page_navigation_settings = Setting.all.select { |setting| setting.key.start_with?('extended_feature.projekts_overview_page_navigation') }
+    @projekts_overview_page_footer_settings = Setting.all.select { |setting| setting.key.start_with?('extended_feature.projekts_overview_page_footer') }
+
+    @overview_page_special_projekt = Projekt.unscoped.find_by(special: true, special_name: 'projekt_overview_page')
+
+    @overview_page_special_projekt.build_comment_phase if @overview_page_special_projekt.comment_phase.blank?
+    @overview_page_special_projekt.comment_phase.geozone_restrictions.build
+
+    @overview_page_special_projekt.build_debate_phase if @overview_page_special_projekt.debate_phase.blank?
+    @overview_page_special_projekt.debate_phase.geozone_restrictions.build
+
+    @overview_page_special_projekt.build_proposal_phase if @overview_page_special_projekt.proposal_phase.blank?
+    @overview_page_special_projekt.proposal_phase.geozone_restrictions.build
+
+    @overview_page_special_projekt.build_voting_phase if @overview_page_special_projekt.voting_phase.blank?
+    @overview_page_special_projekt.voting_phase.geozone_restrictions.build
+
 
     @map_configuration_settings = Setting.all.group_by(&:type)['map']
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
@@ -85,9 +105,17 @@ class Admin::ProjektsController < Admin::BaseController
 
   def update
     if @projekt.update_attributes(projekt_params)
-      redirect_to edit_admin_projekt_path(params[:id]) + params[:tab].to_s, notice: t("admin.settings.index.map.flash.update")
+      if @projekt.overview_page?
+        redirect_to admin_projekts_path + "#tab-projekts-overview-page", notice: t("admin.settings.index.map.flash.update")
+      else
+        redirect_to edit_admin_projekt_path(params[:id]) + params[:tab].to_s, notice: t("admin.settings.index.map.flash.update")
+      end
     else
-      redirect_to edit_admin_projekt_path(params[:id]) + params[:tab].to_s, alert: @projekt.errors.messages.values.flatten.join('; ')
+      if @projekt.overview_page?
+        redirect_to admin_projekts_path + "#tab-projekts-overview-page", alert: @projekt.errors.messages.values.flatten.join('; ')
+      else
+        redirect_to edit_admin_projekt_path(params[:id]) + params[:tab].to_s, notice: t("admin.settings.index.map.flash.update")
+      end
     end
   end
 
@@ -145,8 +173,8 @@ class Admin::ProjektsController < Admin::BaseController
   end
 
   def update_standard_phase
-    @projekt = Projekt.find(params[:id])
-    @default_footer_tab_setting = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab')
+    @projekt = Projekt.find(params[:id]).reload
+    @default_footer_tab_setting = ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab').reload
 
     if @default_footer_tab_setting.present?
       @default_footer_tab_setting.update(value: params[:default_footer_tab][:id])

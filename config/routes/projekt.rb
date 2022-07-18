@@ -1,6 +1,17 @@
+namespace :projekts do
+  get 'events', to: 'projekt_events#index'
+end
+
 resources :projekts, only: [:index, :show] do
   resources :projekt_questions, only: [:index, :show]
   resources :projekt_question_answers, only: [:create, :update]
+
+  collection do
+    get :comment_phase_footer_tab
+    get :debate_phase_footer_tab
+    get :proposal_phase_footer_tab
+    get :voting_phase_footer_tab
+  end
 
   member do
     get :json_data

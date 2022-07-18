@@ -1,3 +1,7 @@
+namespace :projekts do
+  get 'events', to: 'projekt_events#index'
+end
+
 resources :projekts, only: [:index, :show] do
   resources :projekt_questions, only: [:index, :show]
   resources :projekt_question_answers, only: [:create, :update]

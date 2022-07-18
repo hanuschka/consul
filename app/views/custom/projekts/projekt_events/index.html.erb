@@ -1,0 +1,8 @@
+<div class="column help-header">
+  <h1>
+    <i class="fas fa-code-branch"></i>
+    <%= t('custom.projekts.projekt_events.index.title') %>
+  </h1>
+</div>
+
+<%= render Projekts::ProjektEvents::List.new(projekt_events: @projekt_events) %>

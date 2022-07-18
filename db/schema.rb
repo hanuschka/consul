@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_14_215524) do
+ActiveRecord::Schema.define(version: 2022_07_18_131527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1304,6 +1304,7 @@ ActiveRecord::Schema.define(version: 2022_07_14_215524) do
     t.datetime "updated_at", null: false
     t.string "title"
     t.datetime "hidden_at"
+    t.text "description"
     t.index ["hidden_at"], name: "index_poll_question_translations_on_hidden_at"
     t.index ["locale"], name: "index_poll_question_translations_on_locale"
     t.index ["poll_question_id"], name: "index_poll_question_translations_on_poll_question_id"

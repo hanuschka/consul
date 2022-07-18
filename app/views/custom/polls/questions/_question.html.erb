@@ -7,6 +7,9 @@
       </small>
     <% end %>
   </h3>
+  <p>
+    <%= question.description&.html_safe %>
+  </p>
 
   <div id="<%= dom_id(question) %>_answers" class="padding">
     <%= render "polls/questions/answers", question: question, token: token %>

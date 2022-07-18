@@ -105,6 +105,8 @@ de:
         legislation: Textbearbeitung
       polls:
         questions:
+          show:
+            description: Bezeichnung
           answers:
             notice:
               delete:

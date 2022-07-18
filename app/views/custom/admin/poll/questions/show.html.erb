@@ -12,6 +12,11 @@
       <br>
       <%= @question.title %>
     </p>
+    <p>
+      <strong><%= t("custom.admin.polls.questions.show.description") %></strong>
+      <br>
+      <%= @question.description.html_safe %>
+    </p>
 
     <p>
       <strong><%= t("admin.questions.show.author") %></strong>

@@ -1,5 +1,4 @@
 <% if @projekt.present? &&
-      !@projekt.question_phase.expired? &&
       @projekt_question.comments_allowed?(current_user) %>
 
   <%= render "comments/form", { commentable: @projekt_question, parent_id: nil } %>

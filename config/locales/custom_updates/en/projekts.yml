@@ -83,6 +83,8 @@ en:
         question_phase: Short survey
         voting_phase: Voting
       projekt_events:
+        index:
+          title: Events
         orders:
           all: All
           incoming: Incoming

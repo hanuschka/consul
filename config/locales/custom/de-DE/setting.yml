@@ -27,6 +27,9 @@ de:
           language_switcher_in_menu_description: Aktivieren Sie den Umschalter für weitere Sprachen in der Navigationsleiste
           links_to_create_resources_in_menu: Button "+ Beitrag erstellen" in Navigation anzeigen
           links_to_create_resources_in_menu_description: Zeigt den Button "+ Beitrag erstellen" in der Hauptnavigation an
+          enable_projekt_events_page: Veranstaltungskalender anzeigen
+          enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
+
         gdpr:
           gdpr_conformity: DSGVO-konforme Voreinstellungen
           gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"

@@ -8,11 +8,11 @@ class ProjektPhase::QuestionPhase < ProjektPhase
   end
 
   def name
-    'question_phase'
+    "question_phase"
   end
 
   def resources_name
-    'projekt_questions'
+    "projekt_questions"
   end
 
   def default_order

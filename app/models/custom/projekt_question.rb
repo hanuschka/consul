@@ -47,7 +47,8 @@ class ProjektQuestion < ApplicationRecord
   end
 
   def comments_allowed?(current_user)
-    current_user.present?
+    current_user&.present? &&
+      !projekt.question_phase.expired?
   end
 
   def comments_closed?

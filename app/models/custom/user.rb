@@ -14,6 +14,17 @@ class User < ApplicationRecord
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
 
+  validates :pfo_first_name, presence: true, if: :username_required?, on: :create
+  validates :pfo_last_name, presence: true, if: :username_required?, on: :create
+
+  def username
+    if pfo_first_name.present? || pfo_last_name.present?
+      [pfo_first_name, pfo_last_name].join(" ")
+    else
+      super
+    end
+  end
+
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?
   end

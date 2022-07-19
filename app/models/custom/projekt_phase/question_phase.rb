@@ -1,6 +1,6 @@
 class ProjektPhase::QuestionPhase < ProjektPhase
   def phase_activated?
-    projekt.questions.any? && !expired?
+    projekt.questions.any?
   end
 
   def active?

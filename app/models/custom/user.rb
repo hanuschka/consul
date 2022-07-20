@@ -12,10 +12,16 @@ class User < ApplicationRecord
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
-  has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
+  has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer", dependent: :destroy
 
   validates :pfo_first_name, presence: true, if: :username_required?, on: :create
   validates :pfo_last_name, presence: true, if: :username_required?, on: :create
+  validates :pfo_street_name, presence: true, if: :username_required?, on: :create
+  validates :pfo_street_number, presence: true, if: :username_required?, on: :create
+  validates :pfo_plz, presence: true, if: :username_required?, on: :create
+  validates :pfo_city, presence: true, if: :username_required?, on: :create
+  validates :gender, presence: true, if: :username_required?, on: :create
+  validates :date_of_birth, presence: true, if: :username_required?, on: :create
 
   def username
     if pfo_first_name.present? || pfo_last_name.present?

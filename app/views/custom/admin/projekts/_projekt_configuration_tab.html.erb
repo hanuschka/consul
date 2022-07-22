@@ -5,7 +5,6 @@
   </div>
 
   <div class='small-12 medium-7'>
-    <% projekts = Projekt.all %>
     <%= f.select :parent_id, options_for_projekt_select,
                  { include_blank: true, label: t('custom.admin.projekts.index.choose_parent') } %>
   </div>

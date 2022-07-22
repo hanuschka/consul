@@ -23,8 +23,9 @@
 
   <div class='row'>
     <div class='column small-12 medium-9'>
-      <%= render_custom_block "projekts_list_#{@current_projekts_order}" %>
+      <%= render_custom_block "projekts_list_before_tabs_#{@current_projekts_order}" %>
       <%= render Projekts::ProjektListTabsComponent.new(current_order: @current_projekts_order, current_active_orders: @current_active_orders, overview_page: @current_projekt.overview_page?) %>
+      <%= render_custom_block "projekts_list_after_tabs_#{@current_projekts_order}" %>
 
       <% if @projekts.any? %>
         <% Projekt.top_level.each do |top_level_projekt| %>

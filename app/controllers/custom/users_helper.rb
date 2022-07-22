@@ -18,4 +18,12 @@ module UsersHelper
   def skip_user_verification?
     Setting["feature.user.skip_verification"].present?
   end
+
+  def show_admin_menu?(user = nil)
+    unless namespace == "officing"
+      current_administrator? || current_moderator? || current_valuator? || current_manager? ||
+        user&.administrator? || current_poll_officer? || current_sdg_manager? ||
+        user&.projekt_manager?
+    end
+  end
 end

@@ -5,4 +5,6 @@
   </h1>
 </div>
 
-<%= render Projekts::ProjektEvents::List.new(projekt_events: @projekt_events) %>
+<%= render Projekts::ProjektEvents::List.new(projekt_events: @projekt_events, show_projekt_link: true) %>
+
+<%= paginate @projekt_events %>

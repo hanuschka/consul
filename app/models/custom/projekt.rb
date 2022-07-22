@@ -41,22 +41,28 @@ class Projekt < ApplicationRecord
   has_one :event_phase, class_name: 'ProjektPhase::EventPhase'
   has_one :legislation_process_phase, class_name: 'ProjektPhase::LegislationProcessPhase'
   has_one :question_phase, class_name: 'ProjektPhase::QuestionPhase'
+  has_one :argument_phase, class_name: 'ProjektPhase::ArgumentPhase'
   has_many :geozone_restrictions, through: :projekt_phases
   has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
 
   has_many :projekt_settings, dependent: :destroy
   has_many :projekt_notifications, dependent: :destroy
+  has_many :projekt_arguments, dependent: :destroy
 
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
   has_many :map_layers
 
+  has_many :projekt_manager_assignments, dependent: :destroy
+  has_many :projekt_managers, through: :projekt_manager_assignments
+
   accepts_nested_attributes_for(
     :debate_phase, :proposal_phase, :budget_phase,
-    :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications,
-    :projekt_events, :event_phase, :question_phase, :legislation_process_phase,
-    :newsfeed_phase, :projekt_notification_phase
+    :voting_phase, :comment_phase, :milestone_phase,
+    :event_phase, :question_phase, :legislation_process_phase,
+    :newsfeed_phase, :projekt_notification_phase, :argument_phase,
+    :projekt_events, :projekt_notifications, :projekt_arguments
   )
 
   before_validation :set_default_color
@@ -81,19 +87,32 @@ class Projekt < ApplicationRecord
                                                where( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today ).
                                                where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today) }
 
-  scope :expired, ->(timestamp = Date.today) { activated.
-                                               where( "total_duration_end < ?", Date.today) }
+  scope :expired, ->(timestamp = Date.today) {
+    activated.
+      not_in_individual_list.
+      where( "total_duration_end < ?", Date.today)
+  }
 
-  scope :upcoming, ->(timestamp = Date.today) { activated.
-                                                where( "total_duration_start > ?", Date.today) }
+  scope :upcoming, ->(timestamp = Date.today) {
+    activated.
+      not_in_individual_list.
+      where( "total_duration_start > ?", Date.today)
+  }
 
   scope :underway, ->() { current.
+                          not_in_individual_list.
                           includes(:projekt_phases).
                           select { |p| p.projekt_phases.any? { |phase| phase.current? }} }
 
   scope :ongoing, ->() { current.
+                         not_in_individual_list.
                          includes(:projekt_phases).
                          select { |p| p.projekt_phases.all? { |phase| !phase.current? }} }
+
+  scope :not_in_individual_list, -> {
+    joins( 'INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id' )
+      .where( 'siil.key': 'projekt_feature.general.show_in_individual_list', 'siil.value': [nil, ''])
+  }
 
   scope :individual_list, -> {
     joins( 'INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id' )
@@ -140,12 +159,20 @@ class Projekt < ApplicationRecord
   end
 
   def regular_projekt_phases
+    special_types = [
+      "ProjektPhase::MilestonePhase",
+      "ProjektPhase::ProjektNotificationPhase",
+      "ProjektPhase::NewsfeedPhase",
+      "ProjektPhase::EventPhase",
+      "ProjektPhase::ArgumentPhase"
+    ]
+
     projekt_phases.
-      where.not(type: ['ProjektPhase::MilestonePhase', 'ProjektPhase::ProjektNotificationPhase', 'ProjektPhase::NewsfeedPhase', 'ProjektPhase::EventPhase'])
+      where.not(type: special_types)
   end
 
   def update_page
-    update_corresponding_page if self.name_changed?
+    update_corresponding_page if name_changed?
     yield
   end
 
@@ -323,6 +350,7 @@ class Projekt < ApplicationRecord
       projekt.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create unless projekt.projekt_notification_phase
       projekt.newsfeed_phase = ProjektPhase::NewsfeedPhase.create unless projekt.newsfeed_phase
       projekt.event_phase = ProjektPhase::EventPhase.create unless projekt.event_phase
+      projekt.argument_phase = ProjektPhase::ArgumentPhase.create unless projekt.argument_phase
       projekt.legislation_process_phase = ProjektPhase::LegislationProcessPhase.create unless projekt.legislation_process_phase
     end
   end
@@ -422,6 +450,7 @@ class Projekt < ApplicationRecord
     self.voting_phase = ProjektPhase::VotingPhase.create
     self.milestone_phase = ProjektPhase::MilestonePhase.create
     self.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create
+    self.argument_phase = ProjektPhase::ArgumentPhase.create
     self.newsfeed_phase = ProjektPhase::NewsfeedPhase.create
     self.event_phase = ProjektPhase::EventPhase.create
     self.legislation_process_phase = ProjektPhase::LegislationProcessPhase.create

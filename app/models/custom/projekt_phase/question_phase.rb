@@ -1,10 +1,7 @@
 class ProjektPhase::QuestionPhase < ProjektPhase
   def phase_activated?
-    projekt.questions.any?
-  end
-
-  def active?
-    phase_activated?
+    # projekt.questions.any?
+    active?
   end
 
   def name

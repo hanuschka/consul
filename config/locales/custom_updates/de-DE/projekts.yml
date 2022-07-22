@@ -37,6 +37,7 @@ de:
           event_time: Zeit
           event_title: Veranstaltungstitel
           event_weblink: Weblink
+          event_projekt: Projekt
           no_events: Keine Ereignisse
           title: Kommende Veranstaltungen
         sidebar:
@@ -64,6 +65,7 @@ de:
           projekt_events: Veranstaltungen
           projekt_notifications: Benachrichtigungen
           projekt_questions: Kurzumfrage
+          projekt_arguments: Stimmen
           proposals: Vorschläge
           questions: Questions
           legislation_process: Textbearbeitung
@@ -82,10 +84,11 @@ de:
         proposal_phase: Vorschläge
         question_phase: Kurzumfrage
         voting_phase: Abstimmungen
+        argument_phase: Stimmen
       projekt_events:
         index:
           title: Veranstaltungskalender
-        orders:
+        filters:
           all: Alle
           incoming: Kommende
           past: Vergangene
@@ -99,6 +102,14 @@ de:
         next_question: Nächste Frage
         first_question: Erste Frage
         answers_count: "%{count} Stimmen"
+      projekt_arguments:
+        pro: Pro
+        cons: Contra
+        fields:
+          name: Name
+          party: Partei
+          position: Position
+          note: Stimme
       selector:
         connected_resources:
           debate_description: Bitte ordnen Sie Ihre Diskussion einem der nachfolgenden Projekte oder Unterprojekte zu. Dies dient dazu, dass die Diskussionen in der Diskussionsübersicht besser auffindbar sind.

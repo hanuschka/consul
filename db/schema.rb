@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_18_131527) do
+ActiveRecord::Schema.define(version: 2022_07_22_092031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1447,6 +1447,18 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projekt_arguments", force: :cascade do |t|
+    t.string "name"
+    t.string "party"
+    t.boolean "pro"
+    t.string "position"
+    t.text "note"
+    t.integer "projekt_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_arguments_on_projekt_id"
+  end
+
   create_table "projekt_events", force: :cascade do |t|
     t.string "title"
     t.string "location"
@@ -1455,6 +1467,15 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.integer "projekt_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "projekt_manager_assignments", force: :cascade do |t|
+    t.bigint "projekt_id"
+    t.bigint "projekt_manager_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_manager_assignments_on_projekt_id"
+    t.index ["projekt_manager_id"], name: "index_projekt_manager_assignments_on_projekt_manager_id"
   end
 
   create_table "projekt_managers", force: :cascade do |t|
@@ -1587,11 +1608,9 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.string "color"
     t.string "icon"
     t.integer "level", default: 1
-    t.bigint "projekt_manager_id"
     t.boolean "special", default: false
     t.string "special_name"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
-    t.index ["projekt_manager_id"], name: "index_projekts_on_projekt_manager_id"
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
@@ -2181,13 +2200,14 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
   add_foreign_key "poll_voters", "polls"
   add_foreign_key "polls", "budgets"
   add_foreign_key "polls", "projekts"
+  add_foreign_key "projekt_manager_assignments", "projekt_managers"
+  add_foreign_key "projekt_manager_assignments", "projekts"
   add_foreign_key "projekt_managers", "users"
   add_foreign_key "projekt_notifications", "projekts"
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_settings", "projekts"
-  add_foreign_key "projekts", "projekt_managers"
   add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekts"

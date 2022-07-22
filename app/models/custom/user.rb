@@ -13,6 +13,9 @@ class User < ApplicationRecord
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
+  has_one :projekt_manager
+
+  scope :projekt_managers, -> { joins(:projekt_manager) }
 
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?
@@ -35,5 +38,9 @@ class User < ApplicationRecord
 
   def deficiency_report_officer?
     deficiency_report_officer.present?
+  end
+
+  def projekt_manager?
+    projekt_manager.present?
   end
 end

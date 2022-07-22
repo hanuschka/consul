@@ -1,5 +1,7 @@
 <%= form_for(@projekt, url: admin_projekt_path, as: :projekt) do |f| %>
 
+  <%= hidden_field_tag :namespace, @namespace %>
+
   <% if projekt_feature?(@projekt, 'general.enable_sdgs') %>
     <div class="margin-bottom">
       <h2><%= t("custom.admin.projekts.edit.projekt_sdg_tab.sdgs") %></h2>

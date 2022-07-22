@@ -37,6 +37,7 @@ en:
           event_time: Time
           event_title: Title
           event_weblink: Weblink
+          event_projekt: Projekt
           no_events: No events
           title: Events
         sidebar:
@@ -64,6 +65,7 @@ en:
           project_events: Events
           projekt_notifications: Notifications
           projekt_questions: Short survey
+          projekt_arguments: Arguments
           proposals: Proposals
           questions: Questions
           legislation_process: Text editing
@@ -93,6 +95,14 @@ en:
         comments_button: Publish answer
         comments_title: Open answers
         login_to_answer: You must %{signin} or %{signup} to participate in the short survey.
+      projekt_arguments:
+        pro: Pro
+        cons: Contra
+        fields:
+          name: Name
+          party: Party
+          position: Position
+          note: Note
       selector:
         connected_resources:
           debate_description: Please assign your discussion to one of the following projects or subprojects. This serves to make the discussions easier to find in the discussion overview.

@@ -15,6 +15,9 @@
     <div><%= t('custom.projekts.page.projekt_events_tab.event_date') %>:</div>
     <div><%= t('custom.projekts.page.projekt_events_tab.event_time') %>:</div>
     <div><%= t('custom.projekts.page.projekt_events_tab.event_weblink') %>:</div>
+    <% if @show_projekt_link %>
+      <div><%= t('custom.projekts.page.projekt_events_tab.event_projekt') %>:</div>
+    <% end %>
   </div>
   <div class="projekt-event-item-values">
     <div><strong><%= projekt_event.title %></strong></div>
@@ -22,5 +25,8 @@
     <div><%= projekt_event.datetime.strftime('%d.%m.%Y') %></div>
     <div><%= projekt_event.datetime.strftime('%H:%M') %></div>
     <div><a href="<%= projekt_event.weblink %>"><%= projekt_event.weblink %></a></div>
+    <% if @show_projekt_link %>
+      <div><%= link_to(projekt_event.projekt.page.title, projekt_event.projekt.page.url) %></div>
+    <% end %>
   </div>
 </div>

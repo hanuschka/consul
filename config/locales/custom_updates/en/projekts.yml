@@ -94,7 +94,13 @@ en:
       projekt_questions:
         comments_button: Publish answer
         comments_title: Open answers
-        login_to_answer: You must %{signin} or %{signup} to participate in the short survey.
+        participation_not_allowed:
+          login_to_answer: Please %{signin} or %{signup} to proceed.
+          organizations: Organizations cannot take part
+          not_verified: 'Only verified account can take part: %{verify_account}.'
+          phase_expired: Particiapation has already ended
+          phase_not_yet_started: Participation has not started yet
+          phase_not_active: Phase is not activated
       projekt_arguments:
         pro: Pro
         cons: Contra

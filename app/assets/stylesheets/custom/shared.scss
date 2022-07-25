@@ -83,7 +83,7 @@
   a {
     color: #222;
   }
-  
+
   &.filtered {
     background: $brand;
 
@@ -330,5 +330,11 @@ span.toggle-arrow {
     font-weight: bold;
     display: inline-block;
     transition: 0.25s;
+  }
+}
+
+.custom-content-block--margin-bottom {
+  .custom-content-block-body + .custom-content-block-controls {
+    margin-bottom: 15px;
   }
 }

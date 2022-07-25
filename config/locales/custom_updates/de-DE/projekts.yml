@@ -15,6 +15,9 @@ de:
         no_projekts: keine Projekte
         title: Projekte
         to_projekt: Zum Projekt
+        social_share:
+          title: Projektübersicht
+          description:  Die Übersicht aller Projekte
       orders:
         all: 'Alle Projekte'
         all_title: 'Alle Projekte'
@@ -88,6 +91,9 @@ de:
       projekt_events:
         index:
           title: Veranstaltungskalender
+          social_share:
+            title: Veranstaltungen
+            description: "Die Veranstaltungsübersicht von %{domain}"
         filters:
           all: Alle
           incoming: Kommende
@@ -97,11 +103,17 @@ de:
         comments_button: Antwort veröffentlichen
         comments_count: "%{count} offene Antworten"
         comments_title: Offene Antworten
-        login_to_answer: Sie müssen sich %{signin} oder %{signup}, um an der Kurzumfrage teilzunehmen.
         previous_question: Vorherige Frage
         next_question: Nächste Frage
         first_question: Erste Frage
         answers_count: "%{count} Stimmen"
+        participation_not_allowed:
+          login_to_answer: Sie müssen sich %{signin} oder %{signup}, um an der Kurzumfrage teilzunehmen.
+          organizations: Organisationen dürfen sich nicht an der Diskussion beteiligen
+          not_verified: 'Nur verifizierte Benutzer können teilnehmen: %{verify_account}.'
+          phase_expired: Die Beteiligung ist bereits beendet
+          phase_not_yet_started: Die Beteiligung hat noch nicht begonnen
+          phase_not_active: Die Phase ist nicht aktiviert
       projekt_arguments:
         pro: Pro
         cons: Contra

@@ -84,6 +84,7 @@ class Projekt < ApplicationRecord
                          where( 'act.key': 'projekt_feature.main.activate', 'act.value': 'active' ) }
 
   scope :current, ->(timestamp = Date.today) { activated.
+                                               not_in_individual_list.
                                                where( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today ).
                                                where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today) }
 

@@ -76,6 +76,8 @@ de:
         account_link: Konto
         admin_link: Administration
         home_link: Start Seite
+        projekt_events_link: Veranstaltungen
+        projekt_management: Projektmanager
         notification_item:
           no_notifications: Keine Benachrichtigungen
         title_html: Öffentlichkeitsbeteiligung

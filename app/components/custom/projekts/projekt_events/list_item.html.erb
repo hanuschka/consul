@@ -1,0 +1,32 @@
+<div id="<%= dom_id(projekt_event) %>" class="projekt-event-item">
+  <div class="projekt-event-item-calendar-column">
+    <div class="projekt-event-item-calendar">
+      <div class="projekt-event-item-calendar-dayname">
+        <%= projekt_event.datetime.strftime('%b').upcase %>
+      </div>
+      <div class="projekt-event-item-calendar-daynumber">
+        <%= projekt_event.datetime.strftime('%d') %>
+      </div>
+    </div>
+  </div>
+  <div class="projekt-event-item-titles">
+    <div><strong><%= t('custom.projekts.page.projekt_events_tab.event_title') %>:</strong></div>
+    <div><%= t('custom.projekts.page.projekt_events_tab.event_location') %>:</div>
+    <div><%= t('custom.projekts.page.projekt_events_tab.event_date') %>:</div>
+    <div><%= t('custom.projekts.page.projekt_events_tab.event_time') %>:</div>
+    <div><%= t('custom.projekts.page.projekt_events_tab.event_weblink') %>:</div>
+    <% if @show_projekt_link %>
+      <div><%= t('custom.projekts.page.projekt_events_tab.event_projekt') %>:</div>
+    <% end %>
+  </div>
+  <div class="projekt-event-item-values">
+    <div><strong><%= projekt_event.title %></strong></div>
+    <div><%= projekt_event.location %></div>
+    <div><%= projekt_event.datetime.strftime('%d.%m.%Y') %></div>
+    <div><%= projekt_event.datetime.strftime('%H:%M') %></div>
+    <div><a href="<%= projekt_event.weblink %>"><%= projekt_event.weblink %></a></div>
+    <% if @show_projekt_link %>
+      <div><%= link_to(projekt_event.projekt.page.title, projekt_event.projekt.page.url) %></div>
+    <% end %>
+  </div>
+</div>

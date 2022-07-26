@@ -146,12 +146,13 @@ class Setting < ApplicationRecord
         "sdg.process.budgets": false,
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
-        "projekts.overview_page": true,
+
         "projekts.show_archived.sidebar": true,
         "projekts.show_module_links_in_flyout_menu": true,
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
         "projekts.set_default_sorting_to_newest": false,
+
 
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
@@ -165,6 +166,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.extended_editor_for_users": true,
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.links_to_create_resources_in_menu": false,
+        "extended_feature.general.enable_projekt_events_page": false,
         "extended_option.general.title": 'Öffentlichkeitsbeteiligung',
         "extended_option.general.subtitle": 'in der Stadt CONSUL',
         "extended_option.general.launch_date": '',
@@ -221,7 +223,22 @@ class Setting < ApplicationRecord
         # "extended_feature.budget_investments.show_implementation_option_fields": true,
         # "extended_feature.budget_investments.enable_investment_milestones_tab": true,
 
-        "extended_feature.deficiency_reports.enable_my_posts_filter": true
+        "extended_feature.deficiency_reports.enable_my_posts_filter": true,
+
+        "extended_feature.projekts_overview_page_navigation.show_in_navigation": true,
+        "extended_feature.projekts_overview_page_navigation.show_all": true,
+        "extended_feature.projekts_overview_page_navigation.show_underway": true,
+        "extended_feature.projekts_overview_page_navigation.show_ongoing": true,
+        "extended_feature.projekts_overview_page_navigation.show_upcoming": true,
+        "extended_feature.projekts_overview_page_navigation.show_expired": true,
+        "extended_feature.projekts_overview_page_navigation.show_individual_list": true,
+
+        "extended_feature.projekts_overview_page_footer.show_in_all": true,
+        "extended_feature.projekts_overview_page_footer.show_in_underway": true,
+        "extended_feature.projekts_overview_page_footer.show_in_ongoing": true,
+        "extended_feature.projekts_overview_page_footer.show_in_upcoming": true,
+        "extended_feature.projekts_overview_page_footer.show_in_expired": true,
+        "extended_feature.projekts_overview_page_footer.show_in_individual_list": true,
       }
     end
 
@@ -232,6 +249,5 @@ class Setting < ApplicationRecord
     def destroy_obsolete
       Setting.all.each{ |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
     end
-
   end
 end

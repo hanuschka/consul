@@ -1,6 +1,11 @@
 de:
   custom:
     projekts:
+      overview_page:
+        projekt_name: Projektübersichtsseite
+        projekt_name_for_proposal: Neuer Projektvorschlag
+        projekt_name_for_debate: Neue Diskussion
+        projekt_name_for_poll: Abtimmung
       backlink: Zur Projektübersicht
       errors:
         presence: Bitte wählen Sie ein Projekt
@@ -10,6 +15,9 @@ de:
         no_projekts: keine Projekte
         title: Projekte
         to_projekt: Zum Projekt
+        social_share:
+          title: Projektübersicht
+          description:  Die Übersicht aller Projekte
       orders:
         all: 'Alle Projekte'
         all_title: 'Alle Projekte'
@@ -21,6 +29,7 @@ de:
         underway_title: 'Im Reiter "Aktive Beteiligung" sind Projekte, bei denen man sich aktuell beteiligen kann.'
         upcoming: Zukünftige Projektvorhaben
         upcoming_title: 'Im Reiter "Zukünftige Projektvorhaben" sind Beteiligungsprojekte gelistet, die erst in der Zukunft stattfinden.'
+        individual_list: "Individuelle Liste"
       page:
         footer:
           budget:
@@ -31,6 +40,7 @@ de:
           event_time: Zeit
           event_title: Veranstaltungstitel
           event_weblink: Weblink
+          event_projekt: Projekt
           no_events: Keine Ereignisse
           title: Kommende Veranstaltungen
         sidebar:
@@ -58,6 +68,7 @@ de:
           projekt_events: Veranstaltungen
           projekt_notifications: Benachrichtigungen
           projekt_questions: Kurzumfrage
+          projekt_arguments: Stimmen
           proposals: Vorschläge
           questions: Questions
           legislation_process: Textbearbeitung
@@ -76,8 +87,14 @@ de:
         proposal_phase: Vorschläge
         question_phase: Kurzumfrage
         voting_phase: Abstimmungen
+        argument_phase: Stimmen
       projekt_events:
-        orders:
+        index:
+          title: Veranstaltungskalender
+          social_share:
+            title: Veranstaltungen
+            description: "Die Veranstaltungsübersicht von %{domain}"
+        filters:
           all: Alle
           incoming: Kommende
           past: Vergangene
@@ -86,11 +103,25 @@ de:
         comments_button: Antwort veröffentlichen
         comments_count: "%{count} offene Antworten"
         comments_title: Offene Antworten
-        login_to_answer: Sie müssen sich %{signin} oder %{signup}, um an der Kurzumfrage teilzunehmen.
         previous_question: Vorherige Frage
         next_question: Nächste Frage
         first_question: Erste Frage
         answers_count: "%{count} Stimmen"
+        participation_not_allowed:
+          login_to_answer: Sie müssen sich %{signin} oder %{signup}, um an der Kurzumfrage teilzunehmen.
+          organizations: Organisationen dürfen sich nicht an der Diskussion beteiligen
+          not_verified: 'Nur verifizierte Benutzer können teilnehmen: %{verify_account}.'
+          phase_expired: Die Beteiligung ist bereits beendet
+          phase_not_yet_started: Die Beteiligung hat noch nicht begonnen
+          phase_not_active: Die Phase ist nicht aktiviert
+      projekt_arguments:
+        pro: Pro
+        cons: Contra
+        fields:
+          name: Name
+          party: Partei
+          position: Position
+          note: Stimme
       selector:
         connected_resources:
           debate_description: Bitte ordnen Sie Ihre Diskussion einem der nachfolgenden Projekte oder Unterprojekte zu. Dies dient dazu, dass die Diskussionen in der Diskussionsübersicht besser auffindbar sind.

@@ -23,6 +23,7 @@
           <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt.debate_phase, default_phase_name, @debates_count) %>
           <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt.proposal_phase, default_phase_name, @proposals_count) %>
           <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt.question_phase, default_phase_name, @projekt_questions_count) %>
+          <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt.argument_phase, default_phase_name, @projekt_argumens_count) %>
           <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt.voting_phase, default_phase_name, @polls_count) %>
           <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt.budget_phase, default_phase_name) %>
           <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt.legislation_process_phase, default_phase_name, @legislation_processes_count) %>

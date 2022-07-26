@@ -49,14 +49,6 @@
           <% end %>
         </div>
       </div>
-
-      <% unless user_signed_in? %>
-        <div class="projekt-questions-user-not-signed-in-mesessage small-12 medium-12 column quiz-header small-collapse">
-          <div data-alert class="callout primary">
-            <%= sanitize(t("custom.projekts.projekt_questions.login_to_answer", signin: link_to_signin, signup: link_to_signup)) %>
-          </div>
-        </div>
-      <% end %>
     </div>
 
     <% if projekt_question.comments_enabled? %>
@@ -67,4 +59,3 @@
   </section>
 <% else %>
 <% end %>
-

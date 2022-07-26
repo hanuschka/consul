@@ -441,7 +441,7 @@ de:
       retired_warning_link_to_explanation: Lesen Sie die Erläuterung, bevor Sie abstimmen.
       retired: Vorschlag vom Autor zurückgezogen
       share: Teilen
-      no_notifications: "Dieser Vorschlag enthält keine Benachrichtigungen."
+      no_notifications: "Es sind keine Benachrichtigungen vorhanden"
       embed_video_title: "Video über %{proposal}"
       title_video_url: "Externes Video"
       author: Autor

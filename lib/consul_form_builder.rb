@@ -30,9 +30,13 @@ class ConsulFormBuilder < FoundationRailsHelper::FormBuilder
   end
 
   def radio_button(attribute, tag_value, options = {})
-    default_label = object.class.human_attribute_name("#{attribute}_#{tag_value}")
+    if options[:label] == false
+      super
+    else
+      default_label = object.class.human_attribute_name("#{attribute}_#{tag_value}")
 
-    super(attribute, tag_value, { label: default_label }.merge(options))
+      super(attribute, tag_value, { label: default_label }.merge(options))
+    end
   end
 
   def select(attribute, choices, options = {}, html_options = {})

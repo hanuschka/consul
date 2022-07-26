@@ -1,4 +1,6 @@
 class Projekt < ApplicationRecord
+  OVERVIEW_PAGE_NAME = 'projekt_overview_page'
+
   include Milestoneable
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
@@ -39,22 +41,28 @@ class Projekt < ApplicationRecord
   has_one :event_phase, class_name: 'ProjektPhase::EventPhase'
   has_one :legislation_process_phase, class_name: 'ProjektPhase::LegislationProcessPhase'
   has_one :question_phase, class_name: 'ProjektPhase::QuestionPhase'
+  has_one :argument_phase, class_name: 'ProjektPhase::ArgumentPhase'
   has_many :geozone_restrictions, through: :projekt_phases
   has_and_belongs_to_many :geozone_affiliations, through: :geozones_projekts, class_name: 'Geozone'
 
   has_many :projekt_settings, dependent: :destroy
   has_many :projekt_notifications, dependent: :destroy
+  has_many :projekt_arguments, dependent: :destroy
 
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :projekts
 
   has_many :map_layers
 
+  has_many :projekt_manager_assignments, dependent: :destroy
+  has_many :projekt_managers, through: :projekt_manager_assignments
+
   accepts_nested_attributes_for(
     :debate_phase, :proposal_phase, :budget_phase,
-    :voting_phase, :comment_phase, :milestone_phase, :projekt_notifications,
-    :projekt_events, :event_phase, :question_phase, :legislation_process_phase,
-    :newsfeed_phase, :projekt_notification_phase
+    :voting_phase, :comment_phase, :milestone_phase,
+    :event_phase, :question_phase, :legislation_process_phase,
+    :newsfeed_phase, :projekt_notification_phase, :argument_phase,
+    :projekt_events, :projekt_notifications, :projekt_arguments
   )
 
   before_validation :set_default_color
@@ -68,6 +76,7 @@ class Projekt < ApplicationRecord
   validates :color, format: { with: /\A#[\d, a-f, A-F]{6}\Z/ }
   validates :name, presence: true
 
+  scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
   scope :top_level, -> { with_order_number.
                          where(parent: nil) }
@@ -75,25 +84,46 @@ class Projekt < ApplicationRecord
                          where( 'act.key': 'projekt_feature.main.activate', 'act.value': 'active' ) }
 
   scope :current, ->(timestamp = Date.today) { activated.
+                                               not_in_individual_list.
                                                where( "total_duration_start IS NULL OR total_duration_start <= ?", Date.today ).
                                                where( "total_duration_end IS NULL OR total_duration_end >= ?", Date.today) }
 
-  scope :expired, ->(timestamp = Date.today) { activated.
-                                               where( "total_duration_end < ?", Date.today) }
+  scope :expired, ->(timestamp = Date.today) {
+    activated.
+      not_in_individual_list.
+      where( "total_duration_end < ?", Date.today)
+  }
 
-  scope :upcoming, ->(timestamp = Date.today) { activated.
-                                                where( "total_duration_start > ?", Date.today) }
+  scope :upcoming, ->(timestamp = Date.today) {
+    activated.
+      not_in_individual_list.
+      where( "total_duration_start > ?", Date.today)
+  }
 
   scope :underway, ->() { current.
+                          not_in_individual_list.
                           includes(:projekt_phases).
                           select { |p| p.projekt_phases.any? { |phase| phase.current? }} }
 
   scope :ongoing, ->() { current.
+                         not_in_individual_list.
                          includes(:projekt_phases).
                          select { |p| p.projekt_phases.all? { |phase| !phase.current? }} }
 
-  scope :show_in_overview_page, -> { joins( 'INNER JOIN projekt_settings siop ON projekts.id = siop.projekt_id' ).
-                                     where( 'siop.key': 'projekt_feature.general.show_in_overview_page', 'siop.value': 'active' ) }
+  scope :not_in_individual_list, -> {
+    joins( 'INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id' )
+      .where( 'siil.key': 'projekt_feature.general.show_in_individual_list', 'siil.value': [nil, ''])
+  }
+
+  scope :individual_list, -> {
+    joins( 'INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id' )
+      .where( 'siil.key': 'projekt_feature.general.show_in_individual_list', 'siil.value': 'active' )
+  }
+
+  scope :show_in_overview_page, -> {
+    joins( 'INNER JOIN projekt_settings siop ON projekts.id = siop.projekt_id' )
+      .where( 'siop.key': 'projekt_feature.general.show_in_overview_page', 'siop.value': 'active' )
+  }
 
   scope :visible_in_menu, -> { joins( 'INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id').
                                where( 'vim.key': 'projekt_feature.general.show_in_navigation', 'vim.value': 'active' ) }
@@ -114,17 +144,36 @@ class Projekt < ApplicationRecord
 
   scope :last_week, -> { where("projekts.created_at >= ?", 7.days.ago) }
 
+  scope :sort_by_individual_list, -> {
+    individual_list
+  }
+
+  def self.overview_page
+    find_by(
+      special_name: 'projekt_overview_page',
+      special: true
+    )
+  end
+
   def self.selectable_in_selector(controller_name, current_user)
     select { |projekt| projekt.all_children_projekts.unshift(projekt).any? { |p| p.selectable?(controller_name, current_user) } }
   end
 
   def regular_projekt_phases
+    special_types = [
+      "ProjektPhase::MilestonePhase",
+      "ProjektPhase::ProjektNotificationPhase",
+      "ProjektPhase::NewsfeedPhase",
+      "ProjektPhase::EventPhase",
+      "ProjektPhase::ArgumentPhase"
+    ]
+
     projekt_phases.
-      where.not(type: ['ProjektPhase::MilestonePhase', 'ProjektPhase::ProjektNotificationPhase', 'ProjektPhase::NewsfeedPhase', 'ProjektPhase::EventPhase'])
+      where.not(type: special_types)
   end
 
   def update_page
-    update_corresponding_page if self.name_changed?
+    update_corresponding_page if name_changed?
     yield
   end
 
@@ -302,6 +351,7 @@ class Projekt < ApplicationRecord
       projekt.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create unless projekt.projekt_notification_phase
       projekt.newsfeed_phase = ProjektPhase::NewsfeedPhase.create unless projekt.newsfeed_phase
       projekt.event_phase = ProjektPhase::EventPhase.create unless projekt.event_phase
+      projekt.argument_phase = ProjektPhase::ArgumentPhase.create unless projekt.argument_phase
       projekt.legislation_process_phase = ProjektPhase::LegislationProcessPhase.create unless projekt.legislation_process_phase
     end
   end
@@ -333,6 +383,31 @@ class Projekt < ApplicationRecord
 
   def legislation_process
     legislation_processes.order(:updated_at).last
+  end
+
+  def overview_page?
+    special? && (special_name == OVERVIEW_PAGE_NAME)
+  end
+
+  def name
+    if overview_page?
+      I18n.t('custom.projekts.overview_page.projekt_name')
+    else
+      super
+    end
+  end
+
+  def name_for_resource_creation(resource)
+    if overview_page?
+      resource_name = resource.class.name.downcase
+
+      I18n.t(
+        "custom.projekts.overview_page.projekt_name_for_#{resource_name}",
+        default: name
+      )
+    else
+      page.title
+    end
   end
 
   private
@@ -386,6 +461,7 @@ class Projekt < ApplicationRecord
     self.voting_phase = ProjektPhase::VotingPhase.create
     self.milestone_phase = ProjektPhase::MilestonePhase.create
     self.projekt_notification_phase = ProjektPhase::ProjektNotificationPhase.create
+    self.argument_phase = ProjektPhase::ArgumentPhase.create
     self.newsfeed_phase = ProjektPhase::NewsfeedPhase.create
     self.event_phase = ProjektPhase::EventPhase.create
     self.legislation_process_phase = ProjektPhase::LegislationProcessPhase.create

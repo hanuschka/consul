@@ -9,6 +9,8 @@ class Poll < ApplicationRecord
   has_one :voting_phase, through: :projekt
   has_many :bam_streets, through: :voting_phase
 
+  validates :projekt, presence: true
+
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
 

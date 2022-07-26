@@ -1,6 +1,12 @@
 en:
   custom:
     projekts:
+      overview_page:
+        projekt_name: Overview page
+        projekt_name_for_proposal: New projekt proposal
+        projekt_name_for_debate: New projekt debate
+        projekt_name_for_poll: New projekt poll
+
       backlink: To the project overview
       errors:
         presence: Please select a project
@@ -31,6 +37,7 @@ en:
           event_time: Time
           event_title: Title
           event_weblink: Weblink
+          event_projekt: Projekt
           no_events: No events
           title: Events
         sidebar:
@@ -58,6 +65,7 @@ en:
           project_events: Events
           projekt_notifications: Notifications
           projekt_questions: Short survey
+          projekt_arguments: Arguments
           proposals: Proposals
           questions: Questions
           legislation_process: Text editing
@@ -77,6 +85,8 @@ en:
         question_phase: Short survey
         voting_phase: Voting
       projekt_events:
+        index:
+          title: Events
         orders:
           all: All
           incoming: Incoming
@@ -84,7 +94,21 @@ en:
       projekt_questions:
         comments_button: Publish answer
         comments_title: Open answers
-        login_to_answer: You must %{signin} or %{signup} to participate in the short survey.
+        participation_not_allowed:
+          login_to_answer: Please %{signin} or %{signup} to proceed.
+          organizations: Organizations cannot take part
+          not_verified: 'Only verified account can take part: %{verify_account}.'
+          phase_expired: Particiapation has already ended
+          phase_not_yet_started: Participation has not started yet
+          phase_not_active: Phase is not activated
+      projekt_arguments:
+        pro: Pro
+        cons: Contra
+        fields:
+          name: Name
+          party: Party
+          position: Position
+          note: Note
       selector:
         connected_resources:
           debate_description: Please assign your discussion to one of the following projects or subprojects. This serves to make the discussions easier to find in the discussion overview.

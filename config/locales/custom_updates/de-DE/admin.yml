@@ -102,9 +102,12 @@ de:
           statuses: Status definieren
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
+        projekt_managers: Projektmanager*innen
         legislation: Textbearbeitung
       polls:
         questions:
+          show:
+            description: Bezeichnung
           answers:
             notice:
               delete:
@@ -143,6 +146,8 @@ de:
             event_weblink: Weblink
             name: Veranstaltungen
             page_title: Veranstaltungen
+          projekt_managers_tab:
+            name: Projektmanager*innen
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_milestones_tab:
@@ -156,13 +161,26 @@ de:
             notification_title: Titel
             page_title: Nachricht senden
             title: Nachricht senden
+          projekt_arguments_tab:
+            button: Stimme erlstellen
+            name: Stimmen
+            argument_name: Name
+            argument_pro: Pro
+            argument_cons: Contra
+            argument_party: Partei
+            argument_position: Position
+            argument_note: Stimme
+            argument_image: Bild
+            argument_created_at: Created at
+            page_title: Stimmen
+            title: Stimmen
           projekt_page: Projektseite
           projekt_phase_limitation: Beschränkung
           projekt_phases: Projektphasen
           projekt_phases_tab:
             actions: Aktionen
             activate: Aktiviert
-            activate_phase: Status
+            activate_phase: Aktiviert
             affiliation: Gebietszuordnung
             beginning: Anfangsdatum
             budget_phase: Budgetphase
@@ -172,7 +190,7 @@ de:
             default_tab: Standardelement
             end_date: Enddatum
             ending: Enddatum
-            event_phase: Veranstaltungsphase
+            event_phase: Veranstaltungen
             information_block_title: Projektinformationen
             link:
               budget_phase: Budgets
@@ -271,11 +289,21 @@ de:
             create: Frage aktualisieren
             title: Frage erstellen
           show_answers_count: Anzahl der Stimmen im Frontend anzeigen
+        overview_page_tab:
+          title: Projektübersichtseite
+          title_footer: Fußzeile
         tabs:
           configuration: Konfigurationseinstellungen
           geozones: Geozonen verwalten
           map_settings: Standard-Kartenkonfiguration
           settings: Funktionen
+          overview_page: Projektübersichtseite
+      projekt_managers:
+        index:
+          title: Projektmanager*innen
+          no_projekt_managers: Keine Projektmanager*innen vorhanden.
+        search:
+          title: "Projektmanager*innen: Benutzer*innensuche"
       settings:
         index:
           extended_features:
@@ -305,3 +333,5 @@ de:
           category_options:
             active_projekt: Aktiver Beteiligungsprozess
             archived_projekt: Abgeschlossener Beteiligungsprozess
+      flash:
+        deleted: Gelöscht

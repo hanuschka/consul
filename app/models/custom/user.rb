@@ -14,9 +14,10 @@ class User < ApplicationRecord
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
+  has_one :projekt_manager
   belongs_to :bam_street
-
   scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) }
+  scope :projekt_managers, -> { joins(:projekt_manager) }
 
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?
@@ -37,7 +38,7 @@ class User < ApplicationRecord
   end
 
   def citizen?
-    location == 'citizen'
+    location == "citizen"
   end
 
   def username
@@ -58,7 +59,6 @@ class User < ApplicationRecord
   end
 
   def take_votes_if_erased_exists(bam_unique_stamp)
-
     erased_user = User.erased.find_by(bam_unique_stamp: bam_unique_stamp)
 
     if erased_user.present?
@@ -68,10 +68,16 @@ class User < ApplicationRecord
   end
 
   def reset_verification_status
-    if (first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?) && verified_at.present? && bam_unique_stamp.present?
+    if (first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?) &&
+        verified_at.present? &&
+        bam_unique_stamp.present?
       update_columns(verified_at: nil, bam_unique_stamp: nil)
     end
 
     yield
+  end
+
+  def projekt_manager?
+    projekt_manager.present?
   end
 end

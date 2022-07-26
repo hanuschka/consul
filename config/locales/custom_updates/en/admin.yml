@@ -95,6 +95,7 @@ en:
           statuses: Set categories
         deficiency_reports_title: Deficiency reports
         projekts: Projects
+        projekt_managers: Project managers
         legislation: Text edit
       polls:
         questions:
@@ -136,6 +137,8 @@ en:
             event_weblink: Weblink
             name: Events
             page_title: Create notification
+          projekt_managers_tab:
+            name: Project managers
           projekt_map_tab:
             name: Ind. card configuration
           projekt_milestones_tab:
@@ -149,13 +152,26 @@ en:
             notification_title: Title
             page_title: Send message
             title: Send message
+          projekt_arguments_tab:
+            button: Save argument
+            name: Arguments
+            argument_name: Name
+            argument_pro: Pro
+            argument_cons: Cons
+            argument_party: Party
+            argument_position: Position
+            argument_note: Note
+            argument_image: Image
+            argument_created_at: Created at
+            page_title: Arguments
+            title: Arguments
           projekt_page: Project page
           projekt_phase_limitation: Restriction
           projekt_phases: Project phases
           projekt_phases_tab:
             actions: Actions
             activate: Enabled
-            activate_phase: Status
+            activate_phase: Active
             affiliation: Area allocation
             beginning: Start date
             budget_phase: Budget phase
@@ -260,12 +276,22 @@ en:
             create: Update question
             title: Create question
           show_answers_count: Show number of votes in frontend
+        overview_page_tab:
+          title: Project overview page
+          title_footer: Footer
         tabs:
           configuration: Configuration settings
           geozones: Manage geozones
           map_settings: Standard card configuration
           settings: Functions
           legislation_process: Text edit
+          overview_page: Project overview page
+      projekt_managers:
+        index:
+          title: Projekt managers
+          no_projekt_managers: No projekt managers
+        search:
+          title: "Projekt managers: User search"
       settings:
         index:
           extended_features:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_22_092031) do
+ActiveRecord::Schema.define(version: 2022_07_27_200543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -451,6 +451,7 @@ ActiveRecord::Schema.define(version: 2022_07_22_092031) do
     t.string "voting_style", default: "knapsack"
     t.boolean "published"
     t.bigint "projekt_id"
+    t.boolean "hide_money", default: false
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
   end
 
@@ -1469,6 +1470,20 @@ ActiveRecord::Schema.define(version: 2022_07_22_092031) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projekt_livestreams", force: :cascade do |t|
+    t.string "url"
+    t.string "video_platform"
+    t.string "title"
+    t.datetime "starts_at"
+    t.text "description"
+    t.bigint "projekt_id"
+    t.string "external_id"
+    t.string "preview_image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_livestreams_on_projekt_id"
+  end
+
   create_table "projekt_manager_assignments", force: :cascade do |t|
     t.bigint "projekt_id"
     t.bigint "projekt_manager_id"
@@ -2021,6 +2036,7 @@ ActiveRecord::Schema.define(version: 2022_07_22_092031) do
     t.string "pfo_street_number"
     t.string "pfo_plz"
     t.string "pfo_city"
+    t.string "subscriptions_token"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"

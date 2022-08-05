@@ -290,6 +290,8 @@ de:
       sign_in: Anmelden mit Twitter
       sign_up: Registrierung mit Twitter
       name: Twitter
+    servicekonto_nrv:
+      name: "Servicekonto.nrv"
     info:
       sign_in: "Anmelden mit:"
       sign_up: "Registrierung mit:"

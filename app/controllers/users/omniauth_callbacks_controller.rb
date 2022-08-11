@@ -33,11 +33,15 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       raise ActionController::RoutingError, "Not Found" unless Setting["feature.#{feature}"]
 
       auth = request.env["omniauth.auth"]
+      puts "Start oauth"
+      puts auth
 
       identity = Identity.first_or_create_from_oauth(auth)
       @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
+      puts user
 
       if save_user
+        puts 'User saved'
         identity.update!(user: @user)
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?

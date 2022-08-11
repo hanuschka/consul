@@ -283,7 +283,6 @@ Devise.setup do |config|
     client_auth_method: 'basic',
     scope: [:openid, :email],
     response_type: :code,
-    send_nonce: false,
     uid_field: "preferred_username",
     client_options: {
       # port: Rails.application.secrets.openid_connect_port,

@@ -1,6 +1,17 @@
 (function() {
   "use strict";
   App.ProjektQuestionCustom = {
+    initialize: function() {
+      $("body").on("click", ".js-projekt-question-next", function(e) {
+        e.preventDefault()
+        e.stopPropagation()
+        this.loadQuestionSection(e.currentTarget.href)
+      }.bind(this));
+
+      $('body').on('change', '.js-projekt-answer-form input', this.debounce(this.submitForm.bind(this), 500))
+      $('body').on('click', '.js-projekt-answer-form label', this.handleCheckboxClick.bind(this))
+    },
+
     debounce: function(func, duration, immediate) {
       var timeout;
 
@@ -37,23 +48,12 @@
 
     handleCheckboxClick: function(e) {
       var $elementForm = $(e.currentTarget).closest('form')
-      var isLogined = $elementForm.attr('data-logined')
+      var isLoginedAndVerified = $elementForm.attr('data-logined-and-verified')
       var redirectTo = $elementForm.attr('data-redirect-to')
 
-      if (isLogined === 'false') {
+      if (isLoginedAndVerified === 'false') {
         Turbolinks.visit(redirectTo)
       }
-    },
-
-    initialize: function() {
-      $("body").on("click", ".js-projekt-question-next", function(e) {
-        e.preventDefault()
-        e.stopPropagation()
-        this.loadQuestionSection(e.currentTarget.href)
-      }.bind(this));
-
-      $('body').on('change', '.js-projekt-answer-form input', this.debounce(this.submitForm.bind(this), 500))
-      $('body').on('click', '.js-projekt-answer-form label', this.handleCheckboxClick.bind(this))
     }
   }
 }).call(this);

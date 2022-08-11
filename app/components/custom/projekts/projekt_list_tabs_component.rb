@@ -1,17 +1,23 @@
 class Projekts::ProjektListTabsComponent < ApplicationComponent
   attr_reader :i18n_namespace, :anchor
-  delegate :current_path_with_query_params, :current_order, :valid_orders, to: :helpers
+  delegate :current_path_with_query_params, :valid_orders, to: :helpers
 
-  def initialize(current_active_orders: {}, anchor: nil)
+  def initialize(current_active_orders: {}, current_order: nil, anchor: nil, overview_page: false)
     @i18n_namespace = i18n_namespace
     @anchor = anchor
     @current_active_orders = current_active_orders
+    @overview_page = overview_page
+    @current_order = current_order
+  end
+
+  def current_order
+    @current_order.presence || helpers.current_order
   end
 
   private
 
   def current_active_orders_sorted
-    ['all', 'underway', 'ongoing', 'upcoming', 'expired'] & @current_active_orders
+    ['all', 'underway', 'ongoing', 'upcoming', 'expired', 'individual_list'] & @current_active_orders
   end
 
     def html_class(order)
@@ -27,7 +33,7 @@ class Projekts::ProjektListTabsComponent < ApplicationComponent
     end
 
     def link_path(order)
-      if params[:current_tab_path].present?
+      if params[:current_tab_path].present? && !@overview_page
         url_for(action: params[:current_tab_path], controller: 'pages', order: order, page: 1, anchor: anchor, filter_projekt_ids: params[:filter_projekt_ids])
       else
         current_path_with_query_params(order: order, anchor: anchor)

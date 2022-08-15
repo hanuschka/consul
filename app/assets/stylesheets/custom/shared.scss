@@ -83,7 +83,7 @@
   a {
     color: #222;
   }
-  
+
   &.filtered {
     background: $brand;
 
@@ -330,5 +330,71 @@ span.toggle-arrow {
     font-weight: bold;
     display: inline-block;
     transition: 0.25s;
+  }
+}
+
+.custom-content-block--margin-bottom {
+  .custom-content-block-body + .custom-content-block-controls {
+    margin-bottom: 15px;
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-flex-start {
+  justify-content: flex-start;
+}
+
+.show-on-desktop {
+  @media screen and (max-width: 650px) {
+    display: none;
+  }
+}
+
+.show-on-mobile {
+  display: none;
+
+  @media screen and (max-width: 650px) {
+    display: block;
+  }
+}
+
+.collapse-text-widget--inner-content {
+  position: relative;
+  max-height: 145px;
+  overflow: hidden;
+
+  &.-expanded {
+    max-height: 100%;
+  }
+}
+
+.collapse-text-widget--expand-button {
+  display: none;
+  margin-top: 5px;
+  cursor: pointer;
+  user-select: none;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  color: #808080;
+}
+
+// User registration form
+
+.user-date-of-birth.sign-up {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  label {
+    flex-basis: 100%;
+  }
+
+  select {
+    flex-basis: 32%;
+    margin-right: 0;
   }
 }

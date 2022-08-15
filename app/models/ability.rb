@@ -2,15 +2,13 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    # If someone can hide something, he can also hide it
-    # from the moderation screen
-    alias_action :hide_in_moderation_screen, to: :hide
-
     if user # logged-in users
       merge Abilities::Valuator.new(user) if user.valuator?
 
       if user.administrator?
         merge Abilities::Administrator.new(user)
+      elsif user.projekt_manager?
+        merge Abilities::ProjektManager.new(user)
       elsif user.deficiency_report_officer?
         merge Abilities::DeficiencyReports::Officer.new(user)
       elsif user.moderator?

@@ -122,6 +122,22 @@ class PagesController < ApplicationController
     end
   end
 
+  def argument_phase_footer_tab
+    set_projekt_arguments_footer_tab_variables
+
+    respond_to do |format|
+      format.js { render "pages/projekt_footer/footer_tab" }
+    end
+  end
+
+  def livestream_phase_footer_tab
+    set_projekt_livestreams_footer_tab_variables
+
+    respond_to do |format|
+      format.js { render "pages/projekt_footer/footer_tab" }
+    end
+  end
+
   def extended_sidebar_map
     @current_projekt = SiteCustomization::Page.find_by(slug: params[:id]).projekt
 
@@ -190,8 +206,6 @@ class PagesController < ApplicationController
       take_by_projekts(@scoped_projekt_ids)
     end
 
-    set_debate_votes(@resources)
-
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
 
@@ -233,8 +247,6 @@ class PagesController < ApplicationController
       # take_by_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
     end
-
-    set_proposal_votes(@resources)
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
 
@@ -304,13 +316,6 @@ class PagesController < ApplicationController
 
       @commentable = @annotation
 
-      # if params[:sub_annotation_ids].present?
-      #   @sub_annotations = Legislation::Annotation.where(id: params[:sub_annotation_ids].split(","))
-      #   annotations = [@commentable, @sub_annotations]
-      # else
-      #   annotations = [@commentable]
-      # end
-      #
       annotations = [@commentable]
 
       @valid_orders = %w[most_voted newest oldest]
@@ -394,11 +399,14 @@ class PagesController < ApplicationController
   end
 
   def set_projekt_events_footer_tab_variables(projekt=nil)
-    @valid_orders = %w[all incoming past]
-    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+    @valid_filters = %w[all incoming past]
+    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
+
+    params[:current_tab_path] = 'event_phase_footer_tab'
+
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.event_phase
-    @projekt_events = ProjektEvent.where(projekt_id: @current_projekt).page(params[:page]).send("sort_by_#{@current_order}")
+    @projekt_events = ProjektEvent.where(projekt_id: @current_projekt).page(params[:page]).send("sort_by_#{@current_filter}")
   end
 
   def set_projekt_questions_footer_tab_variables(projekt=nil)
@@ -407,10 +415,14 @@ class PagesController < ApplicationController
     scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
     # @projekt_questions = ProjektQuestion.base_selection(scoped_projekt_ids)
 
+    params[:current_tab_path] = 'question_phase_footer_tab'
+
+    projekt_questions = @current_projekt.questions.root_questions
+
     if @current_projekt.projekt_list_enabled?
-      @projekt_questions = @current_projekt.questions
+      @projekt_questions = projekt_questions
     else
-      @projekt_question = @current_projekt.questions.first
+      @projekt_question = projekt_questions.first
       @commentable = @projekt_question
 
       @valid_orders = %w[most_voted newest oldest]
@@ -426,12 +438,37 @@ class PagesController < ApplicationController
     end
   end
 
+  def set_projekt_arguments_footer_tab_variables(projekt = nil)
+    @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
+    @current_tab_phase = @current_projekt.argument_phase
+
+    @projekt_arguments_pro = @current_projekt.projekt_arguments.pro.order(created_at: :desc)
+    @projekt_arguments_cons = @current_projekt.projekt_arguments.cons.order(created_at: :desc)
+  end
+
+  def set_projekt_livestreams_footer_tab_variables(projekt = nil)
+    @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
+    @current_tab_phase = @current_projekt.livestream_phase
+
+    @all_livestreams = @current_projekt.projekt_livestreams.order(created_at: :desc)
+
+    @current_projekt_livestream = @all_livestreams.first
+    @other_livestreams = @all_livestreams.select(:id, :title)
+  end
+
   def default_phase_name(default_phase_id)
     default_phase_id ||= ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab').value
+
     if default_phase_id.present?
-      ProjektPhase.find(default_phase_id).resources_name
-    elsif @projekt.projekt_phases.select{ |phase| phase.phase_activated? }.any?
-      @projekt.projekt_phases.select{ |phase| phase.phase_activated? }.first.resources_name
+      projekt_phase = ProjektPhase.find(default_phase_id)
+
+      if projekt_phase.phase_activated?
+        return projekt_phase.resources_name
+      end
+    end
+
+    if @projekt.projekt_phases.select { |phase| phase.phase_activated? }.any?
+      @projekt.projekt_phases.select { |phase| phase.phase_activated? }.first.resources_name
     else
       'comments'
     end

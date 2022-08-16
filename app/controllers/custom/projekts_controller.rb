@@ -299,7 +299,7 @@ class ProjektsController < ApplicationController
     @projekts_count_hash = {}
 
     valid_orders.each do |order|
-      @projekts_count_hash[order] = @projekts.send(order).count
+      @projekts_count_hash[order] = @projekts.send(order).with_published_custom_page.count
     end
 
     @current_active_orders = @projekts_count_hash.select do |key, value|
@@ -330,7 +330,11 @@ class ProjektsController < ApplicationController
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'
 
-    @projekts = @projekts.send(@current_order)
+    @projekts =
+      @projekts
+        .send(@current_order)
+        .with_published_custom_page
+
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
     @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
 

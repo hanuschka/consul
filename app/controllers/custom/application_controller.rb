@@ -1,9 +1,9 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
-
   before_action :set_top_level_projekts_for_menu, :set_default_social_media_images, :set_partner_emails
   before_action :show_launch_page, if: :show_launch_page?
+  helper_method :set_comment_flags
 
   private
 
@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
       social_media_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon").image
 
       if social_media_icon.attached?
-        @social_media_icon_path = rails_blob_path(social_media_icon, disposition: "attachment").split("?")[0]
+        @social_media_icon_path = polymorphic_path(social_media_icon, disposition: "attachment").split("?")[0]
       else
         @social_media_icon_path = nil
       end
@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
       twitter_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon_twitter").image
 
       if twitter_icon.attached?
-        @social_media_icon_twitter_url = rails_blob_url(twitter_icon.attachment, disposition: "attachment")
+        @social_media_icon_twitter_url = polymorphic_path(twitter_icon.attachment, disposition: "attachment")
           .split("?")[0]
       else
         nil

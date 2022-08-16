@@ -6,10 +6,10 @@
 gem "omniauth_openid_connect"
 
 group :development do
-  gem 'pry', '~> 0.13.0'
   gem 'rack-mini-profiler'
   gem 'pry-byebug', '~> 3.9'
 end
+gem 'pry', '~> 0.13.0'
 
 gem "sentry-ruby"
 gem "sentry-rails"

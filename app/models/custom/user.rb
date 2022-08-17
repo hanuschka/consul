@@ -43,9 +43,11 @@ class User < ApplicationRecord
   private
 
     def attempt_verification
+      return false unless stamp_unique?
       return false unless residency_valid?
 
       update!(geozone:               geozone_with_plz,
+              unique_stamp:          prepare_unique_stamp,
               verified_at:           Time.current)
     end
 
@@ -72,6 +74,17 @@ class User < ApplicationRecord
           postal_code.strip == plz.to_s
         end
       end.first
+    end
+
+    def stamp_unique?
+      User.find_by(unique_stamp: prepare_unique_stamp).blank?
+    end
+
+    def prepare_unique_stamp
+      first_name.downcase + "_" +
+        last_name.downcase + "_" +
+        date_of_birth.to_date.strftime("%Y_%m_%d") + "_" +
+        plz.to_s
     end
 
     def gdpr_conformity?

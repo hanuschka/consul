@@ -18,6 +18,7 @@ class Verification::Residence
   # validates :postal_code, presence: true, unless: :manual_verification?
   # validate :local_postal_code, unless: :manual_verification?
   # validate :local_residence, unless: :manual_verification?
+  validate :user_credentials_uniqueness
 
   def save
     return false unless valid?
@@ -31,6 +32,7 @@ class Verification::Residence
                  geozone:               geozone_with_plz,
                  date_of_birth:         date_of_birth.in_time_zone.to_datetime,
                  gender:                gender,
+                 unique_stamp:          prepare_unique_stamp,
                  verified_at:           Time.current)
   end
 
@@ -73,6 +75,19 @@ class Verification::Residence
           postal_code.strip == plz
         end
       end.first
+    end
+
+    def prepare_unique_stamp
+      first_name.downcase + "_" +
+        last_name.downcase + "_" +
+        date_of_birth.strftime("%Y_%m_%d") + "_" +
+        plz
+    end
+
+    def user_credentials_uniqueness
+      if User.find_by(unique_stamp: prepare_unique_stamp)
+        errors.add(:local_residence, false)
+      end
     end
 
     def document_number_uniqueness

@@ -35,7 +35,7 @@
         <%= render partial: 'custom/admin/projekts/edit/projekt_events/form', locals: { url: admin_projekt_projekt_event_path(@projekt, event), projekt: @projekt, event: event } %>
       </div>
 
-      <%= link_to '', admin_projekt_projekt_event_path(@projekt, event), method: :delete, class: 'delete-projekt-event' %>
+      <%= link_to '', admin_projekt_projekt_event_path(@projekt, event, namespace: @namespace), method: :delete, class: 'delete-projekt-event' %>
       <hr>
     </div>
   <% end %>

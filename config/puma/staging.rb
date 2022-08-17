@@ -3,3 +3,4 @@
 _load_from File.expand_path("../defaults.rb", __FILE__)
 
 environment "staging"
+worker_timeout 3600

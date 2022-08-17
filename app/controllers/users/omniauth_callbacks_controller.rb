@@ -16,6 +16,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def servicekonto_nrv
+    binding.pry
     sign_in_with :servicekonto_nrv_login, :servicekonto_nrv
   end
 
@@ -35,6 +36,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       auth = request.env["omniauth.auth"]
       puts "Start oauth"
       puts auth
+      binding.pry
 
       identity = Identity.first_or_create_from_oauth(auth)
       @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)

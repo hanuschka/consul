@@ -1,20 +1,7 @@
 require_dependency Rails.root.join("app", "controllers", "users", "omniauth_callbacks_controller").to_s
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-
-  def passthru
-    binding.pry
-    super
-  end
-
-  def servicekonto_nrv
-    binding.pry
-    super
-  end
-
   # START Ergänzung für Keycloak-Anbindung
   def openid_connect
-    binding.pry
-
     extra = request.env["omniauth.auth"].extra
 
     info = request.env["omniauth.auth"].info

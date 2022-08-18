@@ -1,9 +1,0 @@
-<div id="<%= dom_id(card) %>"
-     class="card small-12 medium-<%= card.columns %> column margin-bottom end" data-equalizer-watch>
-  <%= link_to card.link_url do %>
-    <% if card.image.present? %>
-      <%= image_tag(card.image_url(:large), alt: card.image.title) %>
-    <% end %>
-    <p><%= card.title %></p>
-  <% end %>
-</div>

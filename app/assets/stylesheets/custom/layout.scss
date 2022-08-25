@@ -25,7 +25,16 @@ body.admin .tabs-title > a[aria-selected='true'],
 }
 
 .footer {
-  background: #d7d7d7;
+  background: $accent;
+  color: $white;
+
+  a, a:hover {
+    color: $white;
+  }
+
+  .subfooter {
+    border-color: $white;
+  }
 }
 
 
@@ -48,7 +57,7 @@ body>header, .wrapper>header, .top-bar {
 }
 
 .top-bar {
-  background: white !important;
+  background: #32837d !important;
 }
 
 .header-right-group {
@@ -67,7 +76,7 @@ body>header, .wrapper>header, .top-bar {
     line-height: 1em;
     text-transform: uppercase;
     font-size: 28px;
-    color: $dark;
+    color: $white;
     margin-bottom: 1em;
     margin-top: 1em;
 
@@ -167,7 +176,7 @@ ul.tabs li.tabs-title {
 
   .sign-up-button {
     margin-right: 1rem;
-    background-color: $brand;
+    background-color: $accent;
     color: $white !important;
   }
 }
@@ -176,7 +185,7 @@ ul.tabs li.tabs-title {
   .account-buttons {
     display: flex;
     flex-direction: column;
-    margin-right: 15px;
+    margin-right: 50px;
   }
 
   .sign-in-button, .sign-up-button {

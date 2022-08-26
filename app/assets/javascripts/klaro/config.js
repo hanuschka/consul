@@ -35,7 +35,7 @@ var klaroConfig = {
     // You can group services by their purpose in the modal. This is advisable
     // if you have a large number of services. Users can then enable or disable
     // entire groups of services instead of having to enable or disable every service.
-    groupByPurpose: false,
+    groupByPurpose: true,
 
     // How Klaro should store the user's preferences. It can be either 'cookie'
     // (the default) or 'localStorage'.
@@ -161,40 +161,40 @@ var klaroConfig = {
             purposes: ['analytics'],
             required: true,
         },
-        {
-            name: 'matomo',
-            default: true,
-            title: 'Matomo/Piwik',
-            purposes: ['analytics'],
-            cookies: [
-                [/^_pk_.*$/, '/', 'klaro.kiprotect.com'], //for the production version
-                [/^_pk_.*$/, '/', 'localhost'], //for the local version
-                'piwik_ignore',
-            ],
+        // {
+        //     name: 'matomo',
+        //     default: true,
+        //     title: 'Matomo/Piwik',
+        //     purposes: ['analytics'],
+        //     cookies: [
+        //         [/^_pk_.*$/, '/', 'klaro.kiprotect.com'], //for the production version
+        //         [/^_pk_.*$/, '/', 'localhost'], //for the local version
+        //         'piwik_ignore',
+        //     ],
 
-            // An optional callback function that will be called each time
-            // the consent state for the service changes (true=consented). Passes
-            // the `service` config as the second parameter as well.
-            callback: function(consent, service) {
-                // This is an example callback function.
-                console.log(
-                    'User consent for service ' + service.name + ': consent=' + consent
-                );
-                // To be used in conjunction with Matomo 'requireCookieConsent' Feature, Matomo 3.14.0 or newer
-                // For further Information see https://matomo.org/faq/new-to-piwik/how-can-i-still-track-a-visitor-without-cookies-even-if-they-decline-the-cookie-consent/
-                /*
-                if(consent==true){
-                    _paq.push(['rememberCookieConsentGiven']);
-                } else {
-                    _paq.push(['forgetCookieConsentGiven']);
-                }
-                */
-            },
+        //     // An optional callback function that will be called each time
+        //     // the consent state for the service changes (true=consented). Passes
+        //     // the `service` config as the second parameter as well.
+        //     callback: function(consent, service) {
+        //         // This is an example callback function.
+        //         console.log(
+        //             'User consent for service ' + service.name + ': consent=' + consent
+        //         );
+        //         // To be used in conjunction with Matomo 'requireCookieConsent' Feature, Matomo 3.14.0 or newer
+        //         // For further Information see https://matomo.org/faq/new-to-piwik/how-can-i-still-track-a-visitor-without-cookies-even-if-they-decline-the-cookie-consent/
+        //         /*
+        //         if(consent==true){
+        //             _paq.push(['rememberCookieConsentGiven']);
+        //         } else {
+        //             _paq.push(['forgetCookieConsentGiven']);
+        //         }
+        //         */
+        //     },
 
-            required: false,
-            optOut: false,
-            onlyOnce: true,
-        },
+        //     required: false,
+        //     optOut: false,
+        //     onlyOnce: true,
+        // },
         {
             name: 'youtube',
             default: true,

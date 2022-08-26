@@ -35,7 +35,7 @@ var klaroConfig = {
     // You can group services by their purpose in the modal. This is advisable
     // if you have a large number of services. Users can then enable or disable
     // entire groups of services instead of having to enable or disable every service.
-    groupByPurpose: true,
+    groupByPurpose: false,
 
     // How Klaro should store the user's preferences. It can be either 'cookie'
     // (the default) or 'localStorage'.
@@ -117,35 +117,11 @@ var klaroConfig = {
                 description:
                     'Hier können Sie einsehen und anpassen, welche Information wir über Sie sammeln. Einträge die als "Beispiel" gekennzeichnet sind dienen lediglich zu Demonstrationszwecken und werden nicht wirklich verwendet.',
             },
-            inlineTracker: {
-                description: 'Beispiel für ein Inline-Tracking Skript',
-            },
-            externalTracker: {
-                description: 'Beispiel für ein externes Tracking Skript',
-            },
-            adsense: {
-                description: 'Anzeigen von Werbeanzeigen (Beispiel)',
-                title: 'Google AdSense Werbezeugs',
+            consul_ahoy: {
+              title: 'Eingebauter Besucherzähler'
             },
             matomo: {
                 description: 'Sammeln von Besucherstatistiken',
-            },
-            camera: {
-                description:
-                    'Eine Überwachungskamera (nur ein Beispiel zu IMG-Tags)',
-            },
-            cloudflare: {
-                description: 'Schutz gegen DDoS-Angriffe',
-            },
-            intercom: {
-                description:
-                    'Chat Widget & Sammeln von Besucherstatistiken (nur ein Beispiel)',
-            },
-            mouseflow: {
-                description: 'Echtzeit-Benutzeranalyse (nur ein Beispiel)',
-            },
-            googleFonts: {
-                description: 'Web-Schriftarten von Google gehostet',
             },
             purposes: {
                 analytics: 'Besucher-Statistiken',
@@ -161,35 +137,11 @@ var klaroConfig = {
                 description:
                     'Here you can see and customize the information that we collect about you. Entries marked as "Example" are just for demonstration purposes and are not really used on this website.',
             },
-            inlineTracker: {
-                description: 'Example of an inline tracking script',
-            },
-            externalTracker: {
-                description: 'Example of an external tracking script',
-            },
-            adsense: {
-                description: 'Displaying of advertisements (just an example)',
-                title: 'Google Adsense Advertisement',
+            consul_ahoy: {
+              title: 'Built-in visitor counter'
             },
             matomo: {
                 description: 'Collecting of visitor statistics',
-            },
-            camera: {
-                description:
-                    'A surveillance camera (just an example for an IMG tag)',
-            },
-            cloudflare: {
-                description: 'Protection against DDoS attacks',
-            },
-            intercom: {
-                description:
-                    'Chat widget & collecting of visitor statistics (just an example)',
-            },
-            mouseflow: {
-                description: 'Real-Time user analytics (just an example)',
-            },
-            googleFonts: {
-                description: 'Web fonts hosted by Google',
             },
             purposes: {
                 analytics: 'Analytics',
@@ -204,47 +156,17 @@ var klaroConfig = {
     // This is a list of third-party services that Klaro will manage for you.
     services: [
         {
-            name: 'twitter',
-            default: false,
-            contextualConsentOnly: true,
-            purposes: ['marketing'],
-        },
-        {
-            name: 'youtube',
+            name: 'consul_ahoy',
             default: true,
-            purposes: ['marketing'],
-        },
-        {
-            // Each service should have a unique (and short) name.
-            name: 'matomo',
-
-            // If "default" is set to true, the service will be enabled by default
-            // Overwrites global "default" setting.
-            // We recommend leaving this to "false" for services that collect
-            // personal information.
-            default: true,
-
-            // The title of your service as listed in the consent modal.
-            title: 'Matomo/Piwik',
-
-            // The purpose(s) of this service. Will be listed on the consent notice.
-            // Do not forget to add translations for all purposes you list here.
             purposes: ['analytics'],
-
-            // A list of regex expressions or strings giving the names of
-            // cookies set by this service. If the user withdraws consent for a
-            // given service, Klaro will then automatically delete all matching
-            // cookies.
+            required: true,
+        },
+        {
+            name: 'matomo',
+            default: true,
+            title: 'Matomo/Piwik',
+            purposes: ['analytics'],
             cookies: [
-                // you can also explicitly provide a path and a domain for
-                // a given cookie. This is necessary if you have services that
-                // set cookies for a path that is not "/" or a domain that
-                // is not the current domain. If you do not set these values
-                // properly, the cookie can't be deleted by Klaro
-                // (there is no way to access the path or domain of a cookie in JS)
-                // Notice that it is not possible to delete cookies that were set
-                // on a third-party domain! See the note at mdn:
-                // https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie#new-cookie_domain
                 [/^_pk_.*$/, '/', 'klaro.kiprotect.com'], //for the production version
                 [/^_pk_.*$/, '/', 'localhost'], //for the local version
                 'piwik_ignore',
@@ -269,67 +191,14 @@ var klaroConfig = {
                 */
             },
 
-            // If "required" is set to true, Klaro will not allow this service to
-            // be disabled by the user.
             required: false,
-
-            // If "optOut" is set to true, Klaro will load this service even before
-            // the user gave explicit consent.
-            // We recommend always leaving this "false".
             optOut: false,
-
-            // If "onlyOnce" is set to true, the service will only be executed
-            // once regardless how often the user toggles it on and off.
             onlyOnce: true,
         },
-
-        // The services will appear in the modal in the same order as defined here.
         {
-            name: 'inlineTracker',
-            title: 'Inline Tracker',
-            purposes: ['analytics'],
-            cookies: ['inline-tracker'],
-            optOut: false,
-        },
-        {
-            name: 'externalTracker',
-            title: 'External Tracker',
-            purposes: ['analytics', 'security'],
-            cookies: ['external-tracker'],
-        },
-        {
-            name: 'intercom',
-            title: 'Intercom',
+            name: 'youtube',
             default: true,
-            purposes: ['livechat'],
+            purposes: ['marketing'],
         },
-        {
-            name: 'mouseflow',
-            title: 'Mouseflow',
-            purposes: ['analytics'],
-        },
-        {
-            name: 'adsense',
-            // if you omit the title here Klaro will try to look it up in the
-            // translations
-            //title: 'Google AdSense',
-            purposes: ['advertising'],
-        },
-        {
-            name: 'camera',
-            title: 'Surveillance Camera',
-            purposes: ['security'],
-        },
-/*        {
-            name: 'googleFonts',
-            title: 'Google Fonts',
-            purposes: ['styling'],
-        },*/
-        {
-            name: 'cloudflare',
-            title: 'Cloudflare',
-            purposes: ['security'],
-            required: true,
-        },
-    ],
+    ]
 };

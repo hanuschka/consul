@@ -1,0 +1,20 @@
+#klaro {
+  button.cm-btn {
+    color: $white;
+    padding: 10px !important;
+    border-radius: 4px;
+  }
+
+  button.cm-btn.cm-btn-lern-more {
+    background-color: $brand;
+  }
+
+  button.cm-btn.cm-btn-success {
+    background-color: $accent;
+    margin-right: 0;
+  }
+
+  button.cm-btn.cm-btn-success.cm-btn-info.cm-btn-accept {
+    background-color: $brand;
+  }
+}

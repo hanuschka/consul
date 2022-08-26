@@ -16,7 +16,7 @@ var klaroConfig = {
     // supporting IE9-10 (which you probably shouldn't) you need to use Klaro
     // with an external stylesheet as the dynamic replacement won't work there.
     styling: {
-        theme: ['light', 'bottom', 'wide'],
+        theme: ['light', 'top', 'wide'],
     },
 
     // Setting this to true will keep Klaro from automatically loading itself
@@ -72,13 +72,13 @@ var klaroConfig = {
     acceptAll: true,
 
     // replace "decline" with cookie manager modal
-    hideDeclineAll: false,
+    hideDeclineAll: true,
 
     // hide "learnMore" link
     hideLearnMore: false,
 
     // show cookie notice as modal
-    noticeAsModal: false,
+    noticeAsModal: true,
 
     // You can also remove the 'Realized with Klaro!' text in the consent modal.
     // Please don't do this! We provide Klaro as a free open source tool.
@@ -112,10 +112,15 @@ var klaroConfig = {
         // If you erase the "consentModal" translations, Klaro will use the
         // bundled translations.
         de: {
+            ok: 'Alle akzeptieren',
+            consentNotice: {
+              description: 'Wir speichern und verarbeiten Ihre personenbezogenen Informationen für folgende Zwecke: {purposes}',
+              learnMore: 'Individuelle Datenschutzeinstellungen'
+            },
             privacyPolicyUrl: '/#datenschutz',
             consentModal: {
-                description:
-                    'Hier können Sie einsehen und anpassen, welche Information wir über Sie sammeln. Einträge die als "Beispiel" gekennzeichnet sind dienen lediglich zu Demonstrationszwecken und werden nicht wirklich verwendet.',
+                title: 'Datenschutzeinstellungen',
+                description: 'Wir nutzen Cookies auf unserer Website. Einige von ihnen sind essenziell, während andere uns helfen, diese Website und Ihre Erfahrung zu verbessern. Hier können Sie einsehen und anpassen, welche Information wir mit Hilfe dieser Cookies sammeln. Um mehr zu erfahren, lesen Sie bitte unsere Datenschutzerklärung.'
             },
             consul_ahoy: {
               title: 'Eingebauter Besucherzähler'
@@ -124,18 +129,24 @@ var klaroConfig = {
                 description: 'Sammeln von Besucherstatistiken',
             },
             purposes: {
-                analytics: 'Besucher-Statistiken',
+                analytics: 'Statistiken',
                 security: 'Sicherheit',
                 livechat: 'Live Chat',
                 advertising: 'Anzeigen von Werbung',
                 styling: 'Styling',
+                essential: 'Essenziell'
             },
         },
         en: {
+            ok: 'Accept all',
+            consentNotice: {
+              description: 'We save and proces your personal information for the following purposes: {purposes}',
+              learnMore: 'Individual data protection settings'
+            },
+            privacyPolicyUrl: '/#datenschutz',
             consentModal: {
-                title: '<u>test</u>',
-                description:
-                    'Here you can see and customize the information that we collect about you. Entries marked as "Example" are just for demonstration purposes and are not really used on this website.',
+                title: 'Data protection settings',
+                description: 'Here you can see and customize the information that we collect about you. Entries marked as "Example" are just for demonstration purposes and are not really used on this website.',
             },
             consul_ahoy: {
               title: 'Built-in visitor counter'
@@ -149,6 +160,7 @@ var klaroConfig = {
                 livechat: 'Livechat',
                 advertising: 'Advertising',
                 styling: 'Styling',
+                essential: 'Essential'
             },
         },
     },
@@ -158,8 +170,8 @@ var klaroConfig = {
         {
             name: 'consul_ahoy',
             default: true,
-            purposes: ['analytics'],
-            required: true,
+            purposes: ['essential'],
+            required: true
         },
         // {
         //     name: 'matomo',

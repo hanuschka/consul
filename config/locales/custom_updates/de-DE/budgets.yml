@@ -11,6 +11,15 @@ de:
       investments:
         form:
           required: Ihr Investitionsvorschlag
+        investment:
+          supporters:
+            zero: Keine Unterstützung
+            one: "1 Unterstützer*in"
+            other: "%{count} Unterstützer*innen"
+          supports:
+            zero: Keine Stimmen
+            one: 1 Stimme
+            other: "%{count} Stimmen"
         show:
           callouts:
             publishing_prices:

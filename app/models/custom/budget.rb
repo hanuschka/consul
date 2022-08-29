@@ -15,4 +15,8 @@ class Budget < ApplicationRecord
       ("undecided" if selecting? || valuating?)
     ].compact
   end
+
+  def multiple_votes_voting?
+    voting_style == "multiple_votes"
+  end
 end

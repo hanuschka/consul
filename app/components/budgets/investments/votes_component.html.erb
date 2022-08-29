@@ -1,6 +1,6 @@
 <div class="supports">
 
-  <% if investment.budget.multiple_votes_voting? %>
+  <% if investment.budget.distributed_voting? %>
     <span class="total-supports <%= "no-button" unless voting_allowed? || user_voted_for? %>">
       <%= t("custom.budgets.investments.investment.supporters", count: investment.total_supporters) %>
     </span>
@@ -31,7 +31,7 @@
           <% end %>
         </div>
       <% else %>
-        <% if investment.budget.multiple_votes_voting? %>
+        <% if investment.budget.distributed_voting? %>
           <%= form_with url: support_path, local: display_support_alert? do |f| %>
             <%= f.select :vote_weight, [[1, 1], [2, 2], [3, 3]] %>
             <%= f.submit t("budgets.investments.votes.support"),

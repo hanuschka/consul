@@ -16,7 +16,7 @@ class Budget < ApplicationRecord
     ].compact
   end
 
-  def multiple_votes_voting?
-    voting_style == "multiple_votes"
+  def distributed_voting?
+    voting_style == "distributed"
   end
 end

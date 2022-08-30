@@ -13,7 +13,7 @@ class Budget
 
     def self.sort_by_votes(budget)
       if budget.balloting? && budget.distributed_voting?
-        all.joins(:budget_ballot_lines)
+        all.left_outer_joins(:budget_ballot_lines)
            .group("budget_investments.id")
            .order("sum(budget_ballot_lines.line_weight) desc")
       else

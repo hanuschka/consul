@@ -345,18 +345,21 @@ class PagesController < ApplicationController
     @headings = @budget.headings.sort_by_name
     @heading = @headings.first
 
-    params[:section] ||= 'results' if @budget.phase == 'finished'
+    params[:section] ||= "results" if @budget.phase == "finished"
 
     # con-1036
-    if @budget.phase == 'publishing_prices' && @budget.projekt.present? && @budget.projekt.projekt_settings.find_by(key: 'projekt_feature.budgets.show_results_after_first_vote').value.present?
-      params[:filter] = 'selected'
+    if @budget.phase == "publishing_prices" &&
+        @budget.projekt.present? &&
+        @budget.projekt.projekt_settings
+          .find_by(key: "projekt_feature.budgets.show_results_after_first_vote").value.present?
+      params[:filter] = "selected"
       @current_filter = nil
     end
     # con-1036
 
-    if params[:section] == 'results'
+    if params[:section] == "results"
       @investments = Budget::Result.new(@budget, @budget.headings.first).investments
-    elsif params[:section] == 'stats'
+    elsif params[:section] == "stats"
       @stats = Budget::Stats.new(@budget)
       @investments = @budget.investments
     else
@@ -371,11 +374,11 @@ class PagesController < ApplicationController
     @investments = @investments.sort_by_votes(@budget)
 
     if @budget.present? && @current_projekt.current?
-      @top_level_active_projekts = Projekt.where( id: @current_projekt )
+      @top_level_active_projekts = Projekt.where(id: @current_projekt)
       @top_level_archived_projekts = []
     elsif @budget.present? && @current_projekt.expired?
       @top_level_active_projekts = []
-      @top_level_archived_projekts = Projekt.where( id: @current_projekt )
+      @top_level_archived_projekts = Projekt.where(id: @current_projekt)
     else
       @top_level_active_projekts = []
       @top_level_archived_projekts = []

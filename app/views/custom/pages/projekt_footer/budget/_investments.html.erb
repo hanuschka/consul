@@ -2,7 +2,7 @@
   <div class='column small'>
     <% if extended_feature?('modulewide.show_number_of_entries_in_modules') %>
       <div class='float-right'>
-        <%= @investments.except(:limit, :offset).count %>
+        <%= @investments.except(:limit, :offset).unscope(:group).count %>
         <%= t('activerecord.models.budget/investment', count: @investments.except(:limit, :offset).count) %>
       </div>
     <% end %>

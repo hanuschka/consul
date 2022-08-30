@@ -368,6 +368,8 @@ class PagesController < ApplicationController
       @investment_ids = @budget.investments.ids
     end
 
+    @investments = @investments.sort_by_votes(@budget)
+
     if @budget.present? && @current_projekt.current?
       @top_level_active_projekts = Projekt.where( id: @current_projekt )
       @top_level_archived_projekts = []
@@ -376,7 +378,9 @@ class PagesController < ApplicationController
       @top_level_archived_projekts = Projekt.where( id: @current_projekt )
     else
       @top_level_active_projekts = []
-      @top_level_archived_projekts = [] end end
+      @top_level_archived_projekts = []
+    end
+  end
 
   def set_milestones_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt

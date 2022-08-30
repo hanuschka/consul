@@ -1,5 +1,20 @@
 en:
   budgets:
+    show:
+      amount_available:
+        distributed:
+          zero: "Sie können immer noch <span>%{count}</span> Stimmen abgeben."
+          one: "Sie können immer noch <span>%{count}</span> Stimme abgeben."
+          other: "Sie können immer noch <span>%{count}</span> Stimmen abgeben."
+      amount_spent:
+        distributed:
+          zero: "Abgegebene Stimmen: <span>%{count}</span>"
+          one: "Abgegebene Stimme: <span>%{count}</span>"
+          other: "Abgegebene Stimmen: <span>%{count}</span>"
+      amount_limit:
+        distributed:
+          one: "Sie können noch <span>1</span> Stimme abgeben"
+          other: "Sie können bis zu <span>%{count}</span> Stimmen abgeben"
     investments:
       index:
         filters:

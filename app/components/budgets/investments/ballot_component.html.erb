@@ -25,15 +25,29 @@
         <%= investment.formatted_price %>
       </p>
       <% if investment.should_show_ballots? %>
-        <%= button_to budget_ballot_lines_path(investment_id: investment.id,
-                                               budget_id: investment.budget_id,
-                                               investments_ids: investment_ids),
-                      class: "button button-support expanded",
-                      title: t("budgets.investments.investment.support_title"),
-                      method: :post,
-                      remote: true,
-                      "aria-label": vote_aria_label do %>
-          <%= t("budgets.investments.investment.add") %>
+
+        <% if investment.budget.distributed_voting? %>
+          <%= form_with url: budget_ballot_lines_path(investment_id: investment.id,
+                                                      budget_id: investment.budget_id,
+                                                      investments_ids: investment_ids),
+                        local: false do |f| %>
+            <%= f.select :line_weight, [[1, 1], [2, 2], [3, 3]] %>
+            <%= f.submit t("budgets.investments.investment.add"),
+              class: "button button-support expanded",
+              title: t("budgets.investments.investment.support_title"),
+              "aria-label": vote_aria_label %>
+          <% end %>
+        <% else %>
+          <%= button_to budget_ballot_lines_path(investment_id: investment.id,
+                                                 budget_id: investment.budget_id,
+                                                 investments_ids: investment_ids),
+                        class: "button button-support expanded",
+                        title: t("budgets.investments.investment.support_title"),
+                        method: :post,
+                        remote: true,
+                        "aria-label": vote_aria_label do %>
+            <%= t("budgets.investments.investment.add") %>
+          <% end %>
         <% end %>
       <% end %>
     </div>

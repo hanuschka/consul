@@ -206,8 +206,6 @@ class PagesController < ApplicationController
       take_by_projekts(@scoped_projekt_ids)
     end
 
-    set_debate_votes(@resources)
-
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
 
@@ -249,8 +247,6 @@ class PagesController < ApplicationController
       # take_by_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
     end
-
-    set_proposal_votes(@resources)
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
 
@@ -385,6 +381,8 @@ class PagesController < ApplicationController
   def set_milestones_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.milestone_phase
+    @current_milestone = @current_projekt.milestones.where("publication_date < ?", Time.zone.today).order(publication_date: :desc).first
+
     milestone_order_newest = ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.milestones.newest_first').value.present?
     @milestones_publication_date_order = milestone_order_newest ? :desc : :asc
   end
@@ -421,10 +419,12 @@ class PagesController < ApplicationController
 
     params[:current_tab_path] = 'question_phase_footer_tab'
 
+    projekt_questions = @current_projekt.questions.root_questions
+
     if @current_projekt.projekt_list_enabled?
-      @projekt_questions = @current_projekt.questions
+      @projekt_questions = projekt_questions
     else
-      @projekt_question = @current_projekt.questions.first
+      @projekt_question = projekt_questions.first
       @commentable = @projekt_question
 
       @valid_orders = %w[most_voted newest oldest]

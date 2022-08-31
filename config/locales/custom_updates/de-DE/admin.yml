@@ -5,6 +5,7 @@ de:
         active_projekts: Aktive Beteiligung
         expired_projekts: Abgeschlossene Projekte
         polls: Abstimmungen
+        investment_proposals: Investitionsvorschläge
     tags:
       destroy: Löschen
   custom:
@@ -145,6 +146,7 @@ de:
             button: Event erstellen
             event_created_at: Hergestellt in
             event_datetime: Datum
+            event_end_datetime: Endtermin
             event_location: Veranstaltungsort
             event_title: Veranstaltungstitel
             event_weblink: Weblink
@@ -201,21 +203,28 @@ de:
             affiliation: Gebietszuordnung
             beginning: Anfangsdatum
             budget_phase: Budgetphase
-            copy_phase_link: Link abrufen
+            copy_phase_link: Link für Tab abrufen
             comment_phase: Kommentarphase
             debate_phase: Diskussionsphase
             default_tab: Standardelement
             end_date: Enddatum
             ending: Enddatum
             event_phase: Veranstaltungen
+            hint: Einstellungen gelten nur für Tab-Info in der Fußzeile
             information_block_title: Projektinformationen
             link:
-              budget_phase: Budgets
-              voting_phase: Abstimmungen
-              question_phase: Kurzumfragen
-              legislation_process_phase: Textbearbeitung
+              question_phase: Zu den Kurzumfragen
+              voting_phase: Zu den Abstimmungen
+              budget_phase: Zu den Budgets
+              legislation_process_phase: Zur Textbearbeitung
+              argument_phase: Zu den Stimmen
+              notification_phase: Zu den Benachrichtigungen
+              milestone_phase: Zu den Meilensteinen
+              event_phase: Zu den Veranstaltungen
+              livestream_phase: Zu den Livestreams
+              newsfeed_phase: Zu den News-Feeds
             main_block_title: Projektstatus
-            milestone_phase: Umsetzungsphase
+            milestone_phase: Meilensteinphase
             name: Projekteinstellungen
             newsfeed_phase: News-Feed
             page_block_title: Projektseite
@@ -365,6 +374,8 @@ de:
           date_of_birth: Geburtsdatum
           document_last_digits: Dokument (4 letzten Ziffern)
           actions: Aktionen
+          action:
+            verify: Verifizieren
       widget:
         card:
           category_options:

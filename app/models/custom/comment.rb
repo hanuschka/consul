@@ -35,13 +35,15 @@ class Comment < ApplicationRecord
       )
   end
 
+  def next_comments
+    self.class
+      .where(commentable_id: commentable_id, commentable_type: commentable_type)
+      .where("id > ?", id)
+  end
+
   def projekt
     return commentable if commentable.is_a?(Projekt)
 
     commentable.projekt if commentable.projekt.present?
-  end
-
-  def votable_by?(user)
-    user.present?
   end
 end

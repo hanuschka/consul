@@ -284,13 +284,13 @@ class ProjektsController < ApplicationController
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_targets = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
-    @projekts = Projekt.show_in_overview_page.regular
+    @projekts = Projekt.regular
     @resources = @projekts
 
     @projekts_count_hash = {}
 
     valid_orders.each do |order|
-      @projekts_count_hash[order] = @projekts.with_published_custom_page.send(order).count
+      @projekts_count_hash[order] = @projekts.send(order).count
     end
 
     @current_active_orders = @projekts_count_hash.select do |key, value|

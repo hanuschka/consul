@@ -84,7 +84,7 @@
   </fieldset>
 
   <div class="actions">
-    <% unless current_user.manager? || investment.persisted? %>
+    <%# unless current_user.manager? || investment.persisted? %>
       <div>
         <%= f.check_box :terms_of_service,
           title: t("form.accept_terms_title"),
@@ -93,7 +93,7 @@
                    conditions: link_to(t("form.conditions"), "/conditions", target: "blank")
                   ) %>
       </div>
-    <% end %>
+    <%# end %>
 
     <%= f.submit %>
   </div>

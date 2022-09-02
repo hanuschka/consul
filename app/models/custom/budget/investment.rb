@@ -11,11 +11,14 @@ class Budget
 
     enum implementation_performer: { city: 0, user: 1 }
 
-    def self.sort_by_votes(budget)
-      if budget.balloting? && budget.distributed_voting?
-        all.left_outer_joins(:budget_ballot_lines)
-           .group("budget_investments.id")
-           .order("sum(budget_ballot_lines.line_weight) desc")
+    scope :sort_by_random, -> { unscope(:order) }
+    scope :sort_by_newest, -> { reorder(created_at: :desc) }
+
+    def self.sort_by_ballot_line_weight(budget)
+      if budget.balloting_or_later? && budget.distributed_voting?
+        left_outer_joins(:budget_ballot_lines)
+          .group("budget_investments.id")
+          .order("sum(budget_ballot_lines.line_weight) DESC NULLS LAST")
       else
         all
       end

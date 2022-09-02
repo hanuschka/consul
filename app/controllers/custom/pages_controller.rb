@@ -345,6 +345,12 @@ class PagesController < ApplicationController
     @headings = @budget.headings.sort_by_name
     @heading = @headings.first
 
+    @valid_orders = %w[random supports ballots ballot_line_weight newest]
+    @valid_orders.delete("supports")
+    @valid_orders.delete("ballots")
+    @valid_orders.delete("ballot_line_weight")
+    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+
     params[:section] ||= "results" if @budget.phase == "finished"
 
     # con-1036
@@ -371,7 +377,7 @@ class PagesController < ApplicationController
       @investment_ids = @budget.investments.ids
     end
 
-    @investments = @investments.sort_by_votes(@budget)
+    @investments = @investments.page(params[:page]).send("sort_by_#{@current_order}")
 
     if @budget.present? && @current_projekt.current?
       @top_level_active_projekts = Projekt.where(id: @current_projekt)

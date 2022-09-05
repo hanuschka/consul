@@ -12,10 +12,7 @@
         <% else %>
           <th scope="col"><%= t("admin.users.columns.name") %></th>
           <th scope="col"><%= t("admin.users.columns.email") %></th>
-          <th scope="col"><%= t("cli.admin.users.columns.gender") %></th>
-          <th scope="col"><%= t("cli.admin.users.columns.date_of_birth") %></th>
 
-          <th scope="col"><%= t("admin.users.columns.document_number") %></th>
           <% if extended_feature?("verification.manual_verifications")  %>
             <th scope="col"><%= t("custom.admin.users.columns.first_name") %></th>
             <th scope="col"><%= t("custom.admin.users.columns.last_name") %></th>

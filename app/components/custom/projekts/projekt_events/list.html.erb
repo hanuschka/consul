@@ -1,6 +1,6 @@
 <div class="row">
   <div id="proposal_notifications" class="small-12 column notification-body">
-    <%= render Shared::OrderLinksComponent.new("custom.projekts.projekt_events", anchor: "tab-comments") %>
+    <%= render "custom/shared/filter_links", i18n_namespace: "custom.projekts.projekt_events" %>
 
     <% if projekt_events.blank? %>
       <div class="callout primary text-center">
@@ -8,7 +8,7 @@
       </div>
     <% else  %>
       <% projekt_events.each do |event| %>
-        <%= render Projekts::ProjektEvents::ListItem.new(projekt_event: event) %>
+        <%= render Projekts::ProjektEvents::ListItem.new(projekt_event: event, show_projekt_link: @show_projekt_link) %>
       <% end %>
     <% end %>
   </div>

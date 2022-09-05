@@ -30,7 +30,7 @@
     <% end %>
 
     <% unless @current_projekt.overview_page? %>
-      <%= render "shared/filter_subnav", i18n_namespace: "polls.index" %>
+      <%= render "custom/shared/filter_links", i18n_namespace: "polls.index" %>
     <% end %>
 
     <div class='row'>

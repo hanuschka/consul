@@ -9,9 +9,17 @@ class ProposalsController
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
 
   def index_customization
-    if Setting['projekts.set_default_sorting_to_newest'].present? &&
-        @valid_orders.include?('created_at')
-      @current_order = 'created_at'
+    if params[:order].nil? &&
+      Setting["projekts.set_default_sorting_to_newest"].present? &&
+      @valid_orders.include?("created_at")
+      @current_order = "created_at"
+    end
+    @resource_name = "proposal"
+
+    if params[:filter_projekt_ids]
+      @selected_projekts_ids = params[:filter_projekt_ids].select { |id| Projekt.find_by(id: id).present? }
+      selected_parent_projekt_id = get_highest_unique_parent_projekt_id(@selected_projekts_ids)
+      @selected_parent_projekt = Projekt.find_by(id: selected_parent_projekt_id)
     end
 
     @geozones = Geozone.all
@@ -130,7 +138,6 @@ class ProposalsController
     @follow = Follow.find_by(user: current_user, followable: @proposal)
     @follow.destroy if @follow
     @proposal.unvote_by(current_user)
-    set_proposal_votes(@proposal)
   end
 
   def created

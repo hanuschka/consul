@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_18_131527) do
+ActiveRecord::Schema.define(version: 2022_09_01_145044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -162,22 +162,6 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.index ["user_id", "user_type"], name: "user_index"
   end
 
-  create_table "bam_street_projekt_phases", force: :cascade do |t|
-    t.bigint "bam_street_id"
-    t.bigint "projekt_phase_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bam_street_id"], name: "index_bam_street_projekt_phases_on_bam_street_id"
-    t.index ["projekt_phase_id"], name: "index_bam_street_projekt_phases_on_projekt_phase_id"
-  end
-
-  create_table "bam_streets", force: :cascade do |t|
-    t.string "name"
-    t.integer "plz"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "banner_sections", id: :serial, force: :cascade do |t|
     t.integer "banner_id"
     t.integer "web_section_id"
@@ -227,6 +211,7 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.integer "budget_id"
     t.integer "group_id"
     t.integer "heading_id"
+    t.integer "line_weight", default: 1
     t.index ["ballot_id", "investment_id"], name: "index_budget_ballot_lines_on_ballot_id_and_investment_id", unique: true
     t.index ["ballot_id"], name: "index_budget_ballot_lines_on_ballot_id"
     t.index ["budget_id"], name: "index_budget_ballot_lines_on_budget_id"
@@ -450,6 +435,7 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.text "description_informing"
     t.string "voting_style", default: "knapsack"
     t.boolean "published"
+    t.boolean "hide_money", default: false
     t.bigint "projekt_id"
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
   end
@@ -779,6 +765,7 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "census_code"
+    t.string "postal_codes"
   end
 
   create_table "geozones_polls", id: :serial, force: :cascade do |t|
@@ -1418,7 +1405,6 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.bigint "projekt_id"
     t.boolean "show_open_answer_author_name"
     t.boolean "show_summary_instead_of_questions", default: false
-    t.boolean "bam_street_restricted", default: false
     t.boolean "show_on_home_page", default: true
     t.boolean "show_on_index_page", default: true
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
@@ -1447,6 +1433,18 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "projekt_arguments", force: :cascade do |t|
+    t.string "name"
+    t.string "party"
+    t.boolean "pro"
+    t.string "position"
+    t.text "note"
+    t.integer "projekt_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_arguments_on_projekt_id"
+  end
+
   create_table "projekt_events", force: :cascade do |t|
     t.string "title"
     t.string "location"
@@ -1455,6 +1453,31 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.integer "projekt_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.datetime "end_datetime"
+  end
+
+  create_table "projekt_livestreams", force: :cascade do |t|
+    t.string "url"
+    t.string "video_platform"
+    t.string "title"
+    t.datetime "starts_at"
+    t.text "description"
+    t.bigint "projekt_id"
+    t.string "external_id"
+    t.string "preview_image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_livestreams_on_projekt_id"
+  end
+
+  create_table "projekt_manager_assignments", force: :cascade do |t|
+    t.bigint "projekt_id"
+    t.bigint "projekt_manager_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_manager_assignments_on_projekt_id"
+    t.index ["projekt_manager_id"], name: "index_projekt_manager_assignments_on_projekt_manager_id"
   end
 
   create_table "projekt_managers", force: :cascade do |t|
@@ -1549,8 +1572,10 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.bigint "projekt_id"
     t.boolean "comments_enabled", default: true
     t.boolean "show_answers_count", default: true
+    t.integer "projekt_livestream_id"
     t.index ["hidden_at"], name: "index_projekt_questions_on_hidden_at"
     t.index ["projekt_id"], name: "index_projekt_questions_on_projekt_id"
+    t.index ["projekt_livestream_id"], name: "index_projekt_questions_on_projekt_livestream_id"
   end
 
   create_table "projekt_settings", force: :cascade do |t|
@@ -1587,11 +1612,11 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.string "color"
     t.string "icon"
     t.integer "level", default: 1
-    t.bigint "projekt_manager_id"
     t.boolean "special", default: false
     t.string "special_name"
+    t.boolean "show_start_date_in_frontend", default: true
+    t.boolean "show_end_date_in_frontend", default: true
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
-    t.index ["projekt_manager_id"], name: "index_projekts_on_projekt_manager_id"
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
@@ -1976,33 +2001,27 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
     t.boolean "public_interests", default: false
     t.boolean "recommended_debates", default: true
     t.boolean "recommended_proposals", default: true
+    t.string "subscriptions_token"
+    t.string "street_number"
+    t.string "document_last_digits"
     t.string "first_name"
     t.string "last_name"
-    t.string "plz"
-    t.string "location"
-    t.integer "bam_letter_verification_code"
     t.string "street_name"
-    t.string "house_number"
+    t.integer "plz"
     t.string "city_name"
-    t.datetime "bam_letter_verification_code_sent_at"
-    t.string "bam_unique_stamp"
-    t.string "keycloak_link"
-    t.boolean "custom_statistic_cookies_enabled"
-    t.boolean "custom_newsletter", default: false
+    t.string "unique_stamp"
     t.string "dor_first_name"
     t.string "dor_last_name"
     t.string "dor_street_name"
     t.string "dor_street_number"
     t.string "dor_plz"
     t.string "dor_city"
-    t.bigint "bam_street_id"
     t.string "pfo_first_name"
     t.string "pfo_last_name"
     t.string "pfo_street_name"
     t.string "pfo_street_number"
     t.string "pfo_plz"
     t.string "pfo_city"
-    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -2127,8 +2146,6 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
-  add_foreign_key "bam_street_projekt_phases", "bam_streets"
-  add_foreign_key "bam_street_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"
@@ -2181,13 +2198,14 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
   add_foreign_key "poll_voters", "polls"
   add_foreign_key "polls", "budgets"
   add_foreign_key "polls", "projekts"
+  add_foreign_key "projekt_manager_assignments", "projekt_managers"
+  add_foreign_key "projekt_manager_assignments", "projekts"
   add_foreign_key "projekt_managers", "users"
   add_foreign_key "projekt_notifications", "projekts"
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_settings", "projekts"
-  add_foreign_key "projekts", "projekt_managers"
   add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekts"
@@ -2195,7 +2213,6 @@ ActiveRecord::Schema.define(version: 2022_07_18_131527) do
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "site_customization_pages", "projekts"
-  add_foreign_key "users", "bam_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "valuators", "users"
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_11_131411) do
+ActiveRecord::Schema.define(version: 2022_09_01_145044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -211,6 +211,7 @@ ActiveRecord::Schema.define(version: 2022_08_11_131411) do
     t.integer "budget_id"
     t.integer "group_id"
     t.integer "heading_id"
+    t.integer "line_weight", default: 1
     t.index ["ballot_id", "investment_id"], name: "index_budget_ballot_lines_on_ballot_id_and_investment_id", unique: true
     t.index ["ballot_id"], name: "index_budget_ballot_lines_on_ballot_id"
     t.index ["budget_id"], name: "index_budget_ballot_lines_on_budget_id"
@@ -1452,6 +1453,8 @@ ActiveRecord::Schema.define(version: 2022_08_11_131411) do
     t.integer "projekt_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.datetime "end_datetime"
   end
 
   create_table "projekt_livestreams", force: :cascade do |t|
@@ -1611,6 +1614,8 @@ ActiveRecord::Schema.define(version: 2022_08_11_131411) do
     t.integer "level", default: 1
     t.boolean "special", default: false
     t.string "special_name"
+    t.boolean "show_start_date_in_frontend", default: true
+    t.boolean "show_end_date_in_frontend", default: true
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 
@@ -2004,6 +2009,7 @@ ActiveRecord::Schema.define(version: 2022_08_11_131411) do
     t.string "street_name"
     t.integer "plz"
     t.string "city_name"
+    t.string "unique_stamp"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true

@@ -3,18 +3,9 @@ class ProjektsController < ApplicationController
   include ProposalsHelper
 
   skip_authorization_check
-  has_orders %w[underway all ongoing upcoming expired individual_list], only: [
-    :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
-    :proposal_phase_footer_tab, :voting_phase_footer_tab
-  ]
-
-  before_action :find_overview_page_projekt, only: [
-    :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
-    :proposal_phase_footer_tab, :voting_phase_footer_tab
-  ]
-
-  skip_authorization_check
-  has_orders %w[underway all ongoing upcoming expired individual_list], only: [
+  has_orders %w[index_order_underway index_order_all
+                index_order_ongoing index_order_upcoming
+                index_order_expired index_order_individual_list], only: [
     :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
     :proposal_phase_footer_tab, :voting_phase_footer_tab
   ]
@@ -293,13 +284,13 @@ class ProjektsController < ApplicationController
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_targets = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
-    @projekts = Projekt.show_in_overview_page.regular
+    @projekts = Projekt.regular
     @resources = @projekts
 
     @projekts_count_hash = {}
 
     valid_orders.each do |order|
-      @projekts_count_hash[order] = @projekts.send(order).with_published_custom_page.count
+      @projekts_count_hash[order] = @projekts.send(order).count
     end
 
     @current_active_orders = @projekts_count_hash.select do |key, value|
@@ -332,13 +323,19 @@ class ProjektsController < ApplicationController
 
     @projekts =
       @projekts
-        .send(@current_order)
         .with_published_custom_page
+        .send(@current_order)
+
+    @map_coordinates = all_projekts_map_locations(@projekts)
+
+    if @projekts.is_a?(Array)
+      @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(25)
+    else
+      @projekts = @projekts.page(params[:page]).per(25)
+    end
 
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
     @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
-
-    @map_coordinates = all_projekts_map_locations(@projekts)
 
     if @overview_page_special_projekt.proposal_phase.phase_activated?
       proposals = Proposal.where(projekt_id: @overview_page_special_projekt.id)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_24_123655) do
+ActiveRecord::Schema.define(version: 2022_09_01_145044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -211,6 +211,7 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.integer "budget_id"
     t.integer "group_id"
     t.integer "heading_id"
+    t.integer "line_weight", default: 1
     t.index ["ballot_id", "investment_id"], name: "index_budget_ballot_lines_on_ballot_id_and_investment_id", unique: true
     t.index ["ballot_id"], name: "index_budget_ballot_lines_on_ballot_id"
     t.index ["budget_id"], name: "index_budget_ballot_lines_on_budget_id"
@@ -1613,6 +1614,8 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.integer "level", default: 1
     t.boolean "special", default: false
     t.string "special_name"
+    t.boolean "show_start_date_in_frontend", default: true
+    t.boolean "show_end_date_in_frontend", default: true
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 

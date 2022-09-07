@@ -147,3 +147,27 @@
     }
   }
 }
+
+
+// Video
+
+.hero-video-wrapper {
+  margin-top: -24px;
+
+  @media (min-width: 75em) {
+    margin-left: calc(-50vw + 37.5rem);
+    margin-right: calc(-50vw + 37.5rem);
+  }
+
+  video {
+    width: 100%;
+
+    &::-webkit-media-controls-timeline,
+    &::-webkit-media-controls-time-remaining-display,
+    &::-webkit-media-controls-mute-button,
+    &::-webkit-media-controls-fullscreen-button,
+    &::-webkit-media-controls-current-time-display {
+      display: none;
+    }
+  }
+}

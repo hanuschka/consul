@@ -3,7 +3,7 @@
   <style>
     <%if header_large%>
       .home-page .jumbo{
-        background-image: url("<%=header_large.image.attachment.url%>");
+        background-image: url("<%=header_large.image.variant(:large)%>");
         background-size: cover;
       }
     <%end%>

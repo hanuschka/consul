@@ -1,12 +1,12 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
-
   before_action :set_top_level_projekts_for_menu, :set_default_social_media_images, :set_partner_emails
   # before_action :show_launch_page, if: :show_launch_page?
 
   before_action :ensure_user_signed_in
   before_action :authenticate_http_basic, if: :http_basic_auth_site?
+  helper_method :set_comment_flags
 
   private
 
@@ -30,14 +30,15 @@ class ApplicationController < ActionController::Base
   end
 
   def show_launch_page?
-    return false if user_signed_in?
-    return false if controller_name == 'sessions' && action_name == 'new'
-
     launch_date_setting = Setting["extended_option.general.launch_date"]
     return false if launch_date_setting.blank?
 
+    return false if current_user&.administrator?
+
+    return false if allowed_public_actions?
+
     begin
-      launch_date = Date.strptime(launch_date_setting, '%d.%m.%Y')
+      launch_date = Date.strptime(launch_date_setting, "%d.%m.%Y")
       launch_date > Date.today
     rescue Date::Error
       false
@@ -58,15 +59,30 @@ class ApplicationController < ActionController::Base
   end
 
   def set_top_level_projekts_for_menu
-    @top_level_projekts_for_menu =Projekt.top_level_navigation
+    @top_level_projekts_for_menu = Projekt.top_level_navigation
   end
 
   def set_default_social_media_images
+    return if params[:controller] == "ckeditor/pictures"
+
     SiteCustomization::Image.all_images
-    social_media_icon_path = SiteCustomization::Image.all.find_by(name: 'social_media_icon').image.url.split('?')[0]
-    @social_media_icon_path = social_media_icon_path.include?('missing') ? nil : social_media_icon_path
-    social_media_icon_twitter_path = SiteCustomization::Image.all.find_by(name: 'social_media_icon_twitter').image.url.split('?')[0]
-    @social_media_icon_twitter_path = social_media_icon_twitter_path.include?('missing') ? nil : social_media_icon_twitter_path
+
+    social_media_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon").image
+
+    if social_media_icon.attached?
+      @social_media_icon_path = polymorphic_path(social_media_icon, disposition: "attachment").split("?")[0]
+    else
+      @social_media_icon_path = nil
+    end
+
+    twitter_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon_twitter").image
+
+    if twitter_icon.attached?
+      @social_media_icon_twitter_url = polymorphic_path(twitter_icon.attachment, disposition: "attachment")
+        .split("?")[0]
+    else
+      nil
+    end
   end
 
   def set_deficiency_report_votes(deficiency_reports)

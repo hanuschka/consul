@@ -8,7 +8,7 @@
                             rgba(34, 34, 34, 0.65) 30%,
                             rgba(34, 34, 34, 0.15) 40%,
                             rgba(34, 34, 34, 0.0)),
-                          url("<%=header_large.image.attachment.url%>");
+                            url("<%= polymorphic_path(header_large.image.attachment) %>");
         background-size: cover;
         background-position: center 90%;
       }

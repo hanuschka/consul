@@ -5,7 +5,7 @@ class Pages::Projekts::SidebarPhasesComponent < ApplicationComponent
   def initialize(projekt)
     @projekt = projekt
 
-    @phases = projekt.regular_projekt_phases.sort do |a, b|
+    @phases = projekt.projekt_phases.regular_phases.sort do |a, b|
       a.default_order <=> b.default_order
     end.each do |x|
       x.start_date = Date.today if x.start_date.nil?
@@ -16,8 +16,7 @@ class Pages::Projekts::SidebarPhasesComponent < ApplicationComponent
 
   private
 
-  def phase_name(phase, part=nil)
-    return t("custom.projekts.phase_name.#{phase.name}_details.#{part}") if part
+  def phase_name(phase)
     t("custom.projekts.phase_name.#{phase.name}")
   end
 

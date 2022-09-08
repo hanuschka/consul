@@ -41,6 +41,12 @@ class Comment < ApplicationRecord
     hidden_at.nil?
   end
 
+  def next_comments
+    self.class
+      .where(commentable_id: commentable_id, commentable_type: commentable_type)
+      .where("id > ?", id)
+  end
+
   def projekt
     return commentable if commentable.is_a?(Projekt)
 

@@ -284,13 +284,13 @@ class ProjektsController < ApplicationController
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_targets = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
-    @projekts = Projekt.show_in_overview_page.regular
+    @projekts = Projekt.regular
     @resources = @projekts
 
     @projekts_count_hash = {}
 
     valid_orders.each do |order|
-      @projekts_count_hash[order] = @projekts.with_published_custom_page.send(order).count
+      @projekts_count_hash[order] = @projekts.send(order).count
     end
 
     @current_active_orders = @projekts_count_hash.select do |key, value|
@@ -325,13 +325,17 @@ class ProjektsController < ApplicationController
       @projekts
         .with_published_custom_page
         .send(@current_order)
-        .page(params[:page])
-        .per(2)
+
+    @map_coordinates = all_projekts_map_locations(@projekts)
+
+    if @projekts.is_a?(Array)
+      @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(25)
+    else
+      @projekts = @projekts.page(params[:page]).per(25)
+    end
 
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
     @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
-
-    @map_coordinates = all_projekts_map_locations(@projekts)
 
     if @overview_page_special_projekt.proposal_phase.phase_activated?
       proposals = Proposal.where(projekt_id: @overview_page_special_projekt.id)

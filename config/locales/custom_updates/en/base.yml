@@ -1,4 +1,8 @@
 en:
+  layouts:
+    header:
+      logo:
+        Logo
   custom:
     account:
       settings:

@@ -22,7 +22,7 @@
 
   <% if @cards.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-bottom">
+      <div class="column small-centered margin-bottom">
         <div class="row">
           <div class="small-12 column">
             <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>

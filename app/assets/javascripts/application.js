@@ -114,12 +114,6 @@
 //= require datepicker
 //= require leaflet.markercluster
 //= require leaflet.locatecontrol
-//= require custom_pages
-//= require custom_admin
-//= require moderation_custom
-//= require custom_admin
-//= require bam_street_modal
-//= require copy_content
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management

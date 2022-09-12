@@ -4,7 +4,6 @@ Rails.application.routes.draw do
 
   draw :account
   draw :admin
-  draw :annotation
   draw :budget
   draw :comment
   draw :community
@@ -77,6 +76,7 @@ Rails.application.routes.draw do
       get :newsfeed_phase_footer_tab
       get :event_phase_footer_tab
       get :argument_phase_footer_tab
+      get :livestream_phase_footer_tab
       get :legislation_process_phase_footer_tab
       get :question_phase_footer_tab
       get :extended_sidebar_map
@@ -112,5 +112,8 @@ Rails.application.routes.draw do
   patch  "admin/debates/:id/toggle_image",                 to: "admin/debates#toggle_image",         as: :admin_debate_toggle_image
 
   # Setting of poll questions order
-  post "/admin/polls/:poll_id/questions/order_questions",  to: "admin/poll/questions#order_questions",  as: "admin_poll_questions_order_questions"
+  post "/admin/polls/:poll_id/questions/order_questions",  to: "admin/poll/questions#order_questions", as: "admin_poll_questions_order_questions"
+
+  # Manuall verify user
+  put "/admin/users/:id/verify",                           to: "admin/users#verify",                 as: :verify_admin_user
 end

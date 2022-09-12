@@ -132,6 +132,8 @@ de:
             debates: Diskussionen
             proposals: Vorschläge
             polls: Abstimmungen
+            verification: Verifizierung
+            extra_fields: Abfragefelder
         geozones:
           name: Name des Gebietes
           plz: Postleitzahl

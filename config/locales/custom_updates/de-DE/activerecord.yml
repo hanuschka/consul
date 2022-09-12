@@ -18,6 +18,9 @@ de:
       map_layer:
         one: Kartenebene
         other: Kartenebenen
+      projekt:
+        one: Projekt
+        other: Projekte
     errors:
       models:
         officing/residence:
@@ -43,6 +46,9 @@ de:
             first_name:
               uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ wurde bereits verwendet
     attributes:
+      projekt:
+        show_start_date_in_frontend: Im Frontend angezeigt
+        show_end_date_in_frontend: Im Frontend angezeigt
       poll/answer:
         open_answer_text: Offene Antwort
       widget/card:
@@ -66,6 +72,8 @@ de:
           user: Ich kann bei der Umsetzung unterstützen
         implementation_contribution: Was tragen Sie zur Umsetzung bei?
         user_cost_estimate: Preisliche Einschätzung
+      geozone:
+        postal_codes: Postleitzahlen
       milestone:
         custom_date: Benutzerdefiniertes Datum
       map_layer:
@@ -82,3 +90,12 @@ de:
           wms: WMS
       user:
         bam_street_id: Straße
+        first_name: Vorname
+        last_name: Nachname
+        street_name: Straße
+        street_number: Hausnummer
+        plz: Postleitzahl
+        city_name: Stadt
+        gender: Geschlecht
+        date_of_birth: Geburtsdatum
+        document_last_digits: Personalausweis / Passport (4 letzten Ziffern)

@@ -4,17 +4,17 @@
       <% if projekt.image.present? %>
         <% if projekt.page&.published? %>
           <%= link_to projekt.page.url do %>
-            <%= image_tag projekt.image_url(:medium) %>
+            <%= image_tag projekt.image.variant(:medium) %>
           <% end %>
         <% else %>
-          <%= image_tag projekt.image_url(:medium) %>
+          <%= image_tag projekt.image.variant(:medium) %>
         <% end %>
       <% end %>
     </div>
 
     <div class='content'>
       <h4 class="projekt-title"><%= projekt.page.title %></h4>
-      <p><%= projekt.description %></p>
+      <p><%= sanitize projekt.description %></p>
       <%= render "shared/tags", taggable: projekt, limit: 5 %>
     </div>
   </div>

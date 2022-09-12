@@ -5,6 +5,7 @@ en:
         active_projekts: Aktiv Projects
         expired_projekts: Expired Projects
         polls: Polls
+        investment_proposals: Investment Proposals
     tags:
       destroy: Delete
   custom:
@@ -165,6 +166,18 @@ en:
             argument_created_at: Created at
             page_title: Arguments
             title: Arguments
+          projekt_livestreams_tab:
+            submit_button: Save Livestream
+            name: Livestreams
+            page_title: Livestream
+            livestream:
+              url: Livestream link
+              title: Title
+              description: Description
+              starts_at: Starts at
+              platform: Platform
+              add_question: Add question
+              question: Questions
           projekt_page: Project page
           projekt_phase_limitation: Restriction
           projekt_phases: Project phases
@@ -196,6 +209,7 @@ en:
             projekt_duration: Project information
             projekt_notification_phase: Notificationsphase
             proposal_phase: Proposal phase
+            livestream_phase: Livestreams
             restriction: Participation restriction
             start_date: Start date
             standard_element: Standart element
@@ -212,6 +226,7 @@ en:
             tags: Tags
             tags_enable: Please activate Tags in the Projectsettings Tab
             tags_hint: Please select one or multiple tags in order to suggest them to platform users.
+            refresh_page: If you activated these features already but they are not visible here, please reload this page.
           projekt_settings_tab:
             budget_settings: Budgets
             debates_settings: Debates
@@ -269,9 +284,16 @@ en:
           edit:
             save: Update question
             title: Edit question
+            title_for_livestream: Create question for livestream
           index:
             create: Create question
             title: Short survey
+            attached_to: Angehängt
+            title: Short survey
+            question_options: Question options
+            answers_count: Answers count
+            comments_count: Comments count
+            enable_projekt_list: Activate projekt questions overview
           new:
             create: Update question
             title: Create question
@@ -303,6 +325,7 @@ en:
             proposals: Proposals
           extended_options: Advanced configuration settings
           extended_settings: Advanced settings
+          extra_fields: Registration & Verification
           features:
             activate:
               disabled: Project disabled

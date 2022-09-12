@@ -13,9 +13,15 @@
       <tr style="border-bottom:none;" >
         <td>
           <%= f.date_field :total_duration_start, label: false %>
+          <div class="show-projekt-dates-in-frontend-checkbox">
+            <%= f.check_box :show_start_date_in_frontend %>
+          </div>
         </td>
         <td>
           <%= f.date_field :total_duration_end, label: false %>
+          <div class="show-projekt-dates-in-frontend-checkbox">
+            <%= f.check_box :show_end_date_in_frontend %>
+          </div>
         </td>
       </tr>
 
@@ -33,7 +39,7 @@
           <%= f.translatable_fields do |translations_form| %>
             <div>
               <%= translations_form.text_area :description,
-                                              rows: 4, maxlength: 200,
+                                              rows: 4, maxlength: 230,
                                               label: t('custom.admin.projekts.edit.description') %>
             </div>
           <% end %>

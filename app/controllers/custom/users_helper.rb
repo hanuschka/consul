@@ -31,4 +31,17 @@ module UsersHelper
         user&.projekt_manager?
     end
   end
+
+  def options_for_gender_select
+    [
+      [t("custom.devise_views.users.gender.male"), "male"],
+      [t("custom.devise_views.users.gender.female"), "female"]
+    ]
+  end
+
+  def custom_admin_root_path(user)
+    return projekt_management_root_path if user.projekt_manager? && !user.administrator?
+
+    admin_root_path
+  end
 end

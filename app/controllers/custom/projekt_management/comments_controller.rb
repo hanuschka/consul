@@ -11,7 +11,16 @@ class ProjektManagement::CommentsController < ProjektManagement::BaseController
   def index
     super
 
-    render "moderation/comments/index"
+    respond_to do |format|
+      format.html do
+        render "moderation/comments/index"
+      end
+
+      format.csv do
+        send_data Comments::CsvExporter.new(@resources.limit(20_000)).to_csv,
+          filename: "comments.csv"
+      end
+    end
   end
 
   def moderate
@@ -40,8 +49,7 @@ class ProjektManagement::CommentsController < ProjektManagement::BaseController
 
     def load_resources
       if current_user&.projekt_manager?
-        # @resources = Comment.moderatable_by_projekt_manager(current_user.projekt_manager.id)
-        @resources = Comment.all
+        @resources = Comment.moderatable_by_projekt_manager(current_user.projekt_manager.id)
       elsif current_user&.administrator?
         @resources = Comment.all
       end

@@ -43,7 +43,10 @@ class User < ApplicationRecord
   private
 
     def attempt_verification
-      return false unless stamp_unique?
+      unless organization?
+        return false unless stamp_unique?
+      end
+
       return false unless residency_valid?
 
       attributes_to_set = {
@@ -66,11 +69,13 @@ class User < ApplicationRecord
                                street_number: street_number,
                                plz: plz,
                                city_name: city_name,
-                               date_of_birth: date_of_birth.strftime("%Y-%m-%d"),
+                               date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),
                                gender: gender)
     end
 
     def residency_valid?
+      return true if organization?
+
       census_data.valid?
     end
 

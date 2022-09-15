@@ -89,9 +89,9 @@ class RemoteCensusApi
                   }
                 }
                 b.empfaenger {
-                  b.behoerdenkennung("ags:99000110")
+                  b.behoerdenkennung("ags:05382060")
                   b.ORGANISATIONSEINHEIT {
-                    b.bezeichnung("Testinst")
+                    b.bezeichnung("Siegburg")
                     b.hierarchieebene(1)
                   }
                 }

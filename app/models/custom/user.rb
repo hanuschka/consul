@@ -42,7 +42,7 @@ class User < ApplicationRecord
 
   private
 
-      def attempt_verification
+    def attempt_verification
       return false unless stamp_unique?
       return false unless residency_valid?
 

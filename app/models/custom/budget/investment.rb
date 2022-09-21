@@ -34,7 +34,7 @@ class Budget
 
     def total_votes
       if budget.distributed_voting?
-        votes_for.sum(:vote_weight)
+        votes_for.sum(:vote_weight) + physical_votes
       else
         cached_votes_up + physical_votes
       end

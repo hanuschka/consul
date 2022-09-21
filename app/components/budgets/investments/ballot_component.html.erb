@@ -8,7 +8,9 @@
         <%= investment.formatted_price %>
       </p>
       <% if investment.should_show_ballots? %>
-<%= investment.budget_ballot_lines.sum(:line_weight) %>
+<%= "Total supporter votes: #{investment.budget_ballot_lines.sum(:line_weight)}" %>
+<br>
+<%= "Total qualified supporter votes: #{investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)}" %>
         <%= button_to budget_ballot_line_path(id: investment.id,
                                               budget_id: investment.budget_id,
                                               investments_ids: investment_ids),
@@ -28,7 +30,9 @@
       <% if investment.should_show_ballots? %>
 
         <% if investment.budget.distributed_voting? %>
-<%= investment.budget_ballot_lines.sum(:line_weight) %>
+<%= "Total supporter votes: #{investment.budget_ballot_lines.sum(:line_weight)}" %>
+<br>
+<%= "Total qualified supporter votes: #{investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)}" %>
           <%= form_with url: budget_ballot_lines_path(investment_id: investment.id,
                                                       budget_id: investment.budget_id,
                                                       investments_ids: investment_ids),

@@ -26,11 +26,15 @@ class User < ApplicationRecord
   validates :gender, presence: true, on: :create, if: :gender_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_last_digits_required?
 
+  before_create { self.unique_stamp = prepare_unique_stamp }
+
   def stamp_unique?
     User.find_by(unique_stamp: prepare_unique_stamp).blank?
   end
 
   def prepare_unique_stamp
+    return nil unless first_name.present? && last_name.present? && date_of_birth.present? && plz.present?
+
     first_name.downcase + "_" +
       last_name.downcase + "_" +
       date_of_birth.to_date.strftime("%Y_%m_%d") + "_" +

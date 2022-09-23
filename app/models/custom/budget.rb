@@ -15,4 +15,8 @@ class Budget < ApplicationRecord
       ("undecided" if selecting? || valuating?)
     ].compact
   end
+
+  def distributed_voting?
+    voting_style == "distributed"
+  end
 end

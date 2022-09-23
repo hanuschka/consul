@@ -8,9 +8,13 @@
         <%= investment.formatted_price %>
       </p>
       <% if investment.should_show_ballots? %>
+        <%= "Total supporter votes: #{investment.budget_ballot_lines.sum(:line_weight)}" %>
+        <br>
+        <%= "Total qualified supporter votes: #{investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)}" %>
         <%= button_to budget_ballot_line_path(id: investment.id,
                                               budget_id: investment.budget_id,
-                                              investments_ids: investment_ids),
+                                              investments_ids: investment_ids,
+                                              user_id: params[:user_id]),
                       class: "button button-remove-support expanded",
                       method: :delete,
                       remote: true,
@@ -25,15 +29,36 @@
         <%= investment.formatted_price %>
       </p>
       <% if investment.should_show_ballots? %>
-        <%= button_to budget_ballot_lines_path(investment_id: investment.id,
-                                               budget_id: investment.budget_id,
-                                               investments_ids: investment_ids),
-                      class: "button button-support expanded",
-                      title: t("budgets.investments.investment.support_title"),
-                      method: :post,
-                      remote: true,
-                      "aria-label": vote_aria_label do %>
-          <%= t("budgets.investments.investment.add") %>
+
+        <% if investment.budget.distributed_voting? %>
+          <%= "Total supporter votes: #{investment.budget_ballot_lines.sum(:line_weight)}" %>
+          <br>
+          <%= "Total qualified supporter votes: #{investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)}" %>
+          <%= form_with url: budget_ballot_lines_path(investment_id: investment.id,
+                                                      budget_id: investment.budget_id,
+                                                      investments_ids: investment_ids),
+                        local: false do |f| %>
+            <% if ballot.amount_available(investment.heading) > 0 %>
+              <%= f.select :line_weight, line_weight_options_for_select %>
+            <% end %>
+            <%= f.hidden_field :user_id, value: params[:user_id]  %>
+            <%= f.submit t("budgets.investments.investment.add"),
+              class: "button button-support expanded",
+              title: t("budgets.investments.investment.support_title"),
+              "aria-label": vote_aria_label %>
+          <% end %>
+        <% else %>
+          <%= button_to budget_ballot_lines_path(investment_id: investment.id,
+                                                 budget_id: investment.budget_id,
+                                                 investments_ids: investment_ids,
+                                                 user_id: params[:user_id]),
+                        class: "button button-support expanded",
+                        title: t("budgets.investments.investment.support_title"),
+                        method: :post,
+                        remote: true,
+                        "aria-label": vote_aria_label do %>
+            <%= t("budgets.investments.investment.add") %>
+          <% end %>
         <% end %>
       <% end %>
     </div>

@@ -47,13 +47,15 @@ class Verification::Residence
   end
 
   def first_name_required?
-    manual_verification? &&
-      Setting["extra_fields.verification.first_name"].present?
+    true
+    # manual_verification? &&
+    #   Setting["extra_fields.verification.first_name"].present?
   end
 
   def last_name_required?
-    manual_verification? &&
-      Setting["extra_fields.verification.last_name"].present?
+    true
+    # manual_verification? &&
+    #   Setting["extra_fields.verification.last_name"].present?
   end
 
   def street_name_required?
@@ -67,8 +69,9 @@ class Verification::Residence
   end
 
   def plz_required?
-    manual_verification? &&
-      Setting["extra_fields.verification.plz"].present?
+    true
+    # manual_verification? &&
+    #   Setting["extra_fields.verification.plz"].present?
   end
 
   def city_name_required?
@@ -77,8 +80,9 @@ class Verification::Residence
   end
 
   def date_of_birth_required?
-    manual_verification? &&
-      Setting["extra_fields.verification.date_of_birth"].present?
+    true
+    # manual_verification? &&
+    #   Setting["extra_fields.verification.date_of_birth"].present?
   end
 
   def gender_required?

@@ -27,6 +27,18 @@ class User < ApplicationRecord
   validates :document_last_digits, presence: true, on: :create, if: :document_last_digits_required?
 
   before_create { self.unique_stamp = prepare_unique_stamp }
+  after_create :take_votes_from_erased_user
+
+  def take_votes_from_erased_user
+    return if erased?
+
+    erased_user = User.erased.find_by(unique_stamp: unique_stamp)
+
+    if erased_user.present?
+      take_votes_from(erased_user)
+      erased_user.update!(unique_stamp: nil)
+    end
+  end
 
   def stamp_unique?
     User.find_by(unique_stamp: prepare_unique_stamp).blank?
@@ -71,11 +83,11 @@ class User < ApplicationRecord
   private
 
     def first_name_required?
-      !organization? && !erased? && Setting["extra_fields.registration.first_name"]
+      !organization? && !erased? # && Setting["extra_fields.registration.first_name"]
     end
 
     def last_name_required?
-      !organization? && !erased? && Setting["extra_fields.registration.last_name"]
+      !organization? && !erased? # && Setting["extra_fields.registration.last_name"]
     end
 
     def street_name_required?
@@ -87,7 +99,7 @@ class User < ApplicationRecord
     end
 
     def plz_required?
-      !organization? && !erased? && Setting["extra_fields.registration.plz"]
+      !organization? && !erased? # && Setting["extra_fields.registration.plz"]
     end
 
     def city_name_required?
@@ -95,7 +107,7 @@ class User < ApplicationRecord
     end
 
     def date_of_birth_required?
-      !organization? && !erased? && Setting["extra_fields.registration.date_of_birth"]
+      !organization? && !erased? # && Setting["extra_fields.registration.date_of_birth"]
     end
 
     def gender_required?

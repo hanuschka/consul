@@ -3,22 +3,25 @@ class Officing::OfflineBallotsController < Officing::BaseController
   end
 
   def find_or_create_user
-    if params[:first_name].blank? || params[:last_name].blank? || params[:plz].blank?
+    if params[:first_name].blank? ||
+        params[:last_name].blank? ||
+        params[:plz].blank? ||
+        params[:"date_of_birth(1i)"].blank? ||
+        params[:"date_of_birth(2i)"].blank? ||
+        params[:"date_of_birth(3i)"].blank?
       flash.now[:error] = "Please make sure all fields are filled in"
       render :verify_user
+
     else
-      @user = User.find_or_initialize_by(
-        first_name: params[:first_name],
-        last_name: params[:last_name],
-        plz: params[:plz]
-      )
+      unique_stamp = User.new(user_params).prepare_unique_stamp
+      @user = User.find_or_initialize_by(unique_stamp: unique_stamp)
 
       unless @user.persisted?
         @user.verified_at = Time.current
         @user.erased_at = Time.current
         @user.password = (0...20).map { ("a".."z").to_a[rand(26)] }.join
         @user.terms_of_service = "1"
-        # @user.date_of_birth =
+        @user.unique_stamp = unique_stamp
         @user.geozone = Geozone.find_with_plz(params[:plz])
         @user.save!
       end
@@ -35,4 +38,10 @@ class Officing::OfflineBallotsController < Officing::BaseController
     @investments = @budget.investments
     @investment_ids = @investments.ids
   end
+
+  private
+
+    def user_params
+      params.permit(:first_name, :last_name, :plz, :date_of_birth)
+    end
 end

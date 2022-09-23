@@ -26,6 +26,17 @@ class User < ApplicationRecord
   validates :gender, presence: true, on: :create, if: :gender_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_last_digits_required?
 
+  def stamp_unique?
+    User.find_by(unique_stamp: prepare_unique_stamp).blank?
+  end
+
+  def prepare_unique_stamp
+    first_name.downcase + "_" +
+      last_name.downcase + "_" +
+      date_of_birth.to_date.strftime("%Y_%m_%d") + "_" +
+      plz.to_s
+  end
+
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?
   end
@@ -53,39 +64,41 @@ class User < ApplicationRecord
     projekt_manager.present?
   end
 
-  def first_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.first_name"]
-  end
+  private
 
-  def last_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.last_name"]
-  end
+    def first_name_required?
+      !organization? && !erased? && Setting["extra_fields.registration.first_name"]
+    end
 
-  def street_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.street_name"]
-  end
+    def last_name_required?
+      !organization? && !erased? && Setting["extra_fields.registration.last_name"]
+    end
 
-  def street_number_required?
-    !organization? && !erased? && Setting["extra_fields.registration.street_number"]
-  end
+    def street_name_required?
+      !organization? && !erased? && Setting["extra_fields.registration.street_name"]
+    end
 
-  def plz_required?
-    !organization? && !erased? && Setting["extra_fields.registration.plz"]
-  end
+    def street_number_required?
+      !organization? && !erased? && Setting["extra_fields.registration.street_number"]
+    end
 
-  def city_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.city_name"]
-  end
+    def plz_required?
+      !organization? && !erased? && Setting["extra_fields.registration.plz"]
+    end
 
-  def date_of_birth_required?
-    !organization? && !erased? && Setting["extra_fields.registration.date_of_birth"]
-  end
+    def city_name_required?
+      !organization? && !erased? && Setting["extra_fields.registration.city_name"]
+    end
 
-  def gender_required?
-    !organization? && !erased? && Setting["extra_fields.registration.gender"]
-  end
+    def date_of_birth_required?
+      !organization? && !erased? && Setting["extra_fields.registration.date_of_birth"]
+    end
 
-  def document_last_digits_required?
-    !organization? && !erased? && Setting["extra_fields.registration.document_last_digits"]
-  end
+    def gender_required?
+      !organization? && !erased? && Setting["extra_fields.registration.gender"]
+    end
+
+    def document_last_digits_required?
+      !organization? && !erased? && Setting["extra_fields.registration.document_last_digits"]
+    end
 end

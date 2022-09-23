@@ -24,25 +24,15 @@ class Verification::Residence
   def save_manual_verification
     return false unless valid?
 
-    user.update!(first_name:            first_name,            #custom
-                 last_name:             last_name,             #custom
-                 street_name:           street_name,           #custom
-                 street_number:         street_number,         #custom
-                 plz:                   plz,                   #custom
-                 city_name:             city_name,             #custom
-                 document_last_digits:  document_last_digits,  #custom
-                 geozone:               geozone_with_plz,      #custom
+    user.update!(first_name:            first_name,                          #custom
+                 last_name:             last_name,                           #custom
+                 street_name:           street_name,                         #custom
+                 street_number:         street_number,                       #custom
+                 plz:                   plz,                                 #custom
+                 city_name:             city_name,                           #custom
+                 document_last_digits:  document_last_digits,                #custom
+                 geozone:               Geozone.geozone_with_plzi(plz),      #custom
                  gender:                gender)
-  end
-
-  def geozone_with_plz
-    return nil unless plz.present?
-
-    Geozone.where.not(postal_codes: nil).select do |geozone|
-      geozone.postal_codes.split(",").any? do |postal_code|
-        postal_code.strip == plz
-      end
-    end.first
   end
 
   def document_number_uniqueness

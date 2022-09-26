@@ -96,13 +96,13 @@ module Abilities
         can :update, Budget::Investment,               budget: { phase: "accepting" }, author_id: user.id
         can :suggest, Budget::Investment,              budget: { phase: "accepting" }
         can :destroy, Budget::Investment,              budget: { phase: ["accepting", "reviewing"] }, author_id: user.id
-        can [:create, :destroy], ActsAsVotable::Vote,
-          voter_id: user.id,
-          votable_type: "Budget::Investment",
-          votable: { budget: { phase: "selecting" }}
+        # can [:create, :destroy], ActsAsVotable::Vote,
+        #   voter_id: user.id,
+        #   votable_type: "Budget::Investment",
+        #   votable: { budget: { phase: "selecting" }}
 
-        can [:show, :create], Budget::Ballot,          budget: { phase: "balloting" }
-        can [:create, :destroy], Budget::Ballot::Line, budget: { phase: "balloting" }
+        # can [:show, :create], Budget::Ballot,          budget: { phase: "balloting" }
+        # can [:create, :destroy], Budget::Ballot::Line, budget: { phase: "balloting" }
 
         can :create, DirectMessage
         can :show, DirectMessage, sender_id: user.id
@@ -154,6 +154,14 @@ module Abilities
       # extending to regular users
       can :access, :ckeditor
       can :manage, Ckeditor::Picture
+
+      can [:create, :destroy], ActsAsVotable::Vote,
+        voter_id: user.id,
+        votable_type: "Budget::Investment",
+        votable: { budget: { phase: "selecting" }}
+      can [:show, :create], Budget::Ballot,          budget: { phase: "balloting" }
+      can [:create, :destroy], Budget::Ballot::Line, budget: { phase: "balloting" }
+
     end
   end
 end

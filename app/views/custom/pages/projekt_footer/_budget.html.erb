@@ -53,7 +53,7 @@
     <% if @budget.phase == 'finished' %>
       <%= render Pages::Projekts::BudgetsSubnavComponent.new(@budget) %>
     <% else %>
-      <%= render "shared/order_links", i18n_namespace: "debates.index" %>
+      <%= render "shared/order_links", i18n_namespace: "budgets.investments.index" %>
     <% end %>
 
     <% if params[:section] == 'results' %>

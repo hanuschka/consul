@@ -16,12 +16,16 @@ de:
           distributed:
             one: "Sie können noch <span>1</span> Stimme abgeben"
             other: "Sie können bis zu <span>%{count}</span> Stimmen abgeben"
-    investmonts:
+    investments:
       index:
         filters:
           all: Alle
           feasible: Durchführbar
           undecided: Noch nicht definiert
+        orders:
+          random: Zufällig
+          ballot_line_weight: Am besten bewertet
+          newest: Neueste zuerst
   custom:
     budgets:
       investments:

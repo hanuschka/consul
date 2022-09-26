@@ -21,6 +21,10 @@ en:
           all: All
           feasible: Feasible
           undecided: Undecided
+        orders:
+          random: Random
+          ballot_line_weight: Most supported
+          newest: Newest
   custom:
     budgets:
       investments:

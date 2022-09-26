@@ -348,7 +348,7 @@ class PagesController < ApplicationController
     @valid_orders = %w[random supports ballots ballot_line_weight newest]
     @valid_orders.delete("supports")
     @valid_orders.delete("ballots")
-    @valid_orders.delete("ballot_line_weight")
+    @valid_orders.delete("ballot_line_weight") unless @budget.phase == 'balloting'
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
     params[:section] ||= "results" if @budget.phase == "finished"

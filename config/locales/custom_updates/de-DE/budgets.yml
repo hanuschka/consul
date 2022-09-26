@@ -40,6 +40,7 @@ de:
             zero: Keine Stimmen
             one: 1 Stimme
             other: "%{count} Stimmen"
+          qualified_supports: "Gesamtstimmen: %{count}"
         show:
           callouts:
             publishing_prices:

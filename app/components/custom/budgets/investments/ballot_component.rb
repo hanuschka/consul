@@ -3,6 +3,15 @@ require_dependency Rails.root.join("app", "components", "budgets", "investments"
 class Budgets::Investments::BallotComponent < ApplicationComponent
   delegate :link_to_signin, :link_to_signup, to: :helpers
 
+  def initialize(investment:, investment_ids:, ballot:,
+                 top_level_active_projekts:, top_level_archived_projekts:)
+    @investment = investment
+    @investment_ids = investment_ids
+    @ballot = ballot
+    @top_level_active_projekts = top_level_active_projekts
+    @top_level_archived_projekts = top_level_archived_projekts
+  end
+
   private
     def line_weight_options_for_select
       raise :budget_not_distributed  unless budget.distributed_voting?

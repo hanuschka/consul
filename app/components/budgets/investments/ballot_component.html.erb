@@ -8,13 +8,14 @@
         <%= investment.formatted_price %>
       </p>
       <% if investment.should_show_ballots? %>
-        <%= "Total supporter votes: #{investment.budget_ballot_lines.sum(:line_weight)}" %>
         <br>
-        <%= "Total qualified supporter votes: #{investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)}" %>
+        <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)) %>
         <%= button_to budget_ballot_line_path(id: investment.id,
                                               budget_id: investment.budget_id,
                                               investments_ids: investment_ids,
-                                              user_id: params[:user_id]),
+                                              user_id: params[:user_id],
+                                              top_level_active_projekt_ids: @top_level_active_projekts.pluck(:id),
+                                              top_level_archived_projekt_ids: @top_level_archived_projekts.pluck(:id)),
                       class: "button button-remove-support expanded",
                       method: :delete,
                       remote: true,
@@ -31,12 +32,13 @@
       <% if investment.should_show_ballots? %>
 
         <% if investment.budget.distributed_voting? %>
-          <%= "Total supporter votes: #{investment.budget_ballot_lines.sum(:line_weight)}" %>
           <br>
-          <%= "Total qualified supporter votes: #{investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)}" %>
+          <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)) %>
           <%= form_with url: budget_ballot_lines_path(investment_id: investment.id,
                                                       budget_id: investment.budget_id,
-                                                      investments_ids: investment_ids),
+                                                      investments_ids: investment_ids,
+                                                      top_level_active_projekt_ids: @top_level_active_projekts.pluck(:id),
+                                                      top_level_archived_projekt_ids: @top_level_archived_projekts.pluck(:id)),
                         local: false do |f| %>
             <% if ballot.amount_available(investment.heading) > 0 %>
               <%= f.select :line_weight, line_weight_options_for_select %>
@@ -51,7 +53,9 @@
           <%= button_to budget_ballot_lines_path(investment_id: investment.id,
                                                  budget_id: investment.budget_id,
                                                  investments_ids: investment_ids,
-                                                 user_id: params[:user_id]),
+                                                 user_id: params[:user_id],
+                                                 top_level_active_projekt_ids: @top_level_active_projekts.pluck(:id),
+                                                 top_level_archived_projekt_ids: @top_level_archived_projekts.pluck(:id)),
                         class: "button button-support expanded",
                         title: t("budgets.investments.investment.support_title"),
                         method: :post,

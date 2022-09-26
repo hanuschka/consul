@@ -3,19 +3,15 @@
 
   <%= f.hidden_field :verification_mode, value: 'manual' %>
 
-  <% if Setting["extra_fields.verification.first_name"] %>
     <div class="small-12 medium-5 clear">
 			<%= f.label t("custom.verification.residence.new.first_name") %>
       <%= f.text_field :first_name, label: false %>
     </div>
-  <% end %>
 
-  <% if Setting["extra_fields.verification.last_name"] %>
     <div class="small-12 medium-5 clear">
 			<%= f.label t("custom.verification.residence.new.last_name") %>
       <%= f.text_field :last_name, label: false %>
     </div>
-  <% end %>
 
   <% if Setting["extra_fields.verification.street_name"] %>
     <div class="small-12 medium-5 clear">
@@ -31,12 +27,10 @@
     </div>
   <% end %>
 
-  <% if Setting["extra_fields.verification.plz"] %>
     <div class="small-12 medium-5 clear">
 			<%= f.label t("custom.verification.residence.new.plz") %>
       <%= f.text_field :plz, label: false %>
     </div>
-  <% end %>
 
   <% if Setting["extra_fields.verification.city_name"] %>
     <div class="small-12 medium-5 clear">
@@ -45,7 +39,6 @@
     </div>
   <% end %>
 
-  <% if Setting["extra_fields.registration.date_of_birth"] %>
     <div class="small-12 medium-5 clear">
 			<%= f.label t("custom.verification.residence.new.date_of_birth") %>
       <div class="user-date-of-birth sign-up">
@@ -55,7 +48,6 @@
                           start_year: 1900, end_year: minimum_required_age.years.ago.year %>
       </div>
     </div>
-  <% end %>
 
   <% if Setting["extra_fields.verification.gender"] %>
     <div class="small-12 medium-5 clear">

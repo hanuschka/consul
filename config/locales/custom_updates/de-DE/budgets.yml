@@ -26,9 +26,19 @@ de:
           random: Zufällig
           ballot_line_weight: Am besten bewertet
           newest: Neueste zuerst
+        sidebar:
+          voted_info:
+            distributed: Sie können jederzeit Ihre Stimme ändern bis zum Ende dieser Phase. Es besteht keine Notwendigkeit, das gesamte verfügbare Budget auszugeben.
+          voted_info_unverified_html: "<p>Herzlichen Dank für Ihre Teilnahme an der Abstimmung! Nun prüfen wir manuell Ihre Daten mit dem Melderegister ab. Dies kann 1-2 Werktage in Anspruch nehmen.<br>
+          Danach werden Ihre Stimmen freigegeben und Sie erhalten eine E-Mail.</p>
+          <p>Ihre Daten werden manuell überprüft. Dies kann 1-2 Werktage in Anspruch nehmen.<br>
+          Danach werden Ihre Stimmen freigegeben.</p>"
   custom:
     budgets:
       investments:
+        index:
+          sidebar:
+            user_votes: "Meine Stimmen: %{count}"
         form:
           required: Ihr Investitionsvorschlag
         investment:
@@ -42,6 +52,7 @@ de:
             other: "%{count} Stimmen"
           qualified_supports: "Gesamtstimmen: %{count}"
           line_weight_label: "Deine Stimmenanzahl"
+          unverified_note: "Ihre Daten werden manuell überprüft. Dies kann 1-2 Werktage in Anspruch nehmen. Danach werden Ihre Stimmen freigegeben."
         show:
           callouts:
             publishing_prices:

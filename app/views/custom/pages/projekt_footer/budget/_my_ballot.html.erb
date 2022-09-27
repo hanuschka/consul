@@ -1,4 +1,4 @@
-<% if @heading && can?(:show, @ballot) && false %>
+<% if @heading && can?(:show, @ballot) %>
   <div class="my-ballot">
     <h2 class="sidebar-title">
       <%= t("budgets.investments.index.sidebar.my_ballot") %>
@@ -24,15 +24,11 @@
       <p><strong><%= t("budgets.investments.index.sidebar.zero") %></strong></p>
     <% end %>
 
-    <p>
-      <%= sanitize(@ballot.change_vote_info(
-          link: link_to(t("budgets.investments.index.sidebar.change_vote_link"),
-              budget_ballot_path(@budget)))) %>
-    </p>
-
-    <%= link_to t("budgets.investments.header.check_ballot"),
-                  budget_ballot_path(@budget),
-                  class: "button expanded" %>
+    <% if @ballot.investments.exists? && !current_user.level_three_verified? %>
+      <p>
+        <%= t("budgets.investments.index.sidebar.voted_info_unverified_html") %>
+      </p>
+    <% end %>
 
     <ul class="ballot-list">
       <% if @heading %>

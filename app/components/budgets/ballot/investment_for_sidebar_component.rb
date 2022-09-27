@@ -20,4 +20,8 @@ class Budgets::Ballot::InvestmentForSidebarComponent < Budgets::Ballot::Investme
     def delete_path
       budget_ballot_line_path(id: investment.id, investments_ids: investment_ids)
     end
+
+    def user_votes
+      tag.span t("custom.budgets.investments.index.sidebar.user_votes", count: 4)
+    end
 end

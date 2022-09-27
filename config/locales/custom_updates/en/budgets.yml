@@ -25,9 +25,19 @@ en:
           random: Random
           ballot_line_weight: Most supported
           newest: Newest
+        sidebar:
+          voted_info:
+            distributed: You can change your vote at any time until the end of this phase. There is no need to spend all available budget.
+          voted_info_unverified_html: "<p>Thank you for taking part in the voting! Now we will manually check your data with the population register. This can take 1-2 working days.<br>
+          After that, your votes will be approved and you will receive an email.</p>
+          <p>Your data will be checked manually. This can take 1-2 working days.<br>
+          After that, your votes will be released.</p>"
   custom:
     budgets:
       investments:
+        index:
+          sidebar:
+            user_votes: "My votes: %{count}"
         form:
           required: Your investment proposal
         investment:
@@ -41,6 +51,7 @@ en:
             other: "%{count} votes"
           qualified_supports: "Total votes: %{count}"
           line_weight_label: "Your votes"
+          unverified_note: "Your data will be checked manually. This can take 1-2 working days. After that, your votes will be released."
         show:
           callouts:
             publishing_prices:

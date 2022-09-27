@@ -2,13 +2,13 @@ $body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont'
 $header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
 $base-font-size:      16px;
 
-// Regular 
+// Regular
 @font-face {
   font-family: "sourcesanspro-regular-webfont";
   src: font-url("sourcesanspro-regular-webfont.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
   font-weight: 100;
   font-style: normal; }
-// Bold 
+// Bold
 @font-face {
   font-family: "sourcesanspro-bold-webfont";
   src: font-url("sourcesanspro-bold-webfont.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
@@ -20,3 +20,77 @@ $base-font-size:      16px;
   src: font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf"), font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf");
   font-weight: 100;
   font-style: normal; }
+
+
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: normal;
+  font-weight: 300;
+  src: font-url("custom/locator_web/LocatorWebLight/LocatorWebLight.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebLight/LocatorWebLight.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebLight/LocatorWebLight.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: italic;
+  font-weight: 300;
+  src: font-url("custom/locator_web/LocatorWebLightItalic/LocatorWebLightItalic.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebLightItalic/LocatorWebLightItalic.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebLightItalic/LocatorWebLightItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: normal;
+  font-weight: 400;
+  src: font-url("custom/locator_web/LocatorWebRegular/LocatorWebRegular.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebRegular/LocatorWebRegular.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebRegular/LocatorWebRegular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: italic;
+  font-weight: 400;
+  src: font-url("custom/locator_web/LocatorWebRegularItalic/LocatorWebRegularItalic.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebRegularItalic/LocatorWebRegularItalic.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebRegularItalic/LocatorWebRegularItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: normal;
+  font-weight: 500;
+  src: font-url("custom/locator_web/LocatorWebMedium/LocatorWebMedium.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebMedium/LocatorWebMedium.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebMedium/LocatorWebMedium.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: italic;
+  font-weight: 500;
+  src: font-url("custom/locator_web/LocatorWebMediumItalic/LocatorWebMediumItalic.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebMediumItalic/LocatorWebMediumItalic.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebMediumItalic/LocatorWebMediumItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: normal;
+  font-weight: 700;
+  src: font-url("custom/locator_web/LocatorWebBold/LocatorWebBold.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebBold/LocatorWebBold.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebBold/LocatorWebBold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LocatorWeb";
+  font-style: italic;
+  font-weight: 700;
+  src: font-url("custom/locator_web/LocatorWebBoldItalic/LocatorWebBoldItalic.eot") format("eot"),
+       font-url("custom/locator_web/LocatorWebBoldItalic/LocatorWebBoldItalic.woff2") format("woff2"),
+       font-url("custom/locator_web/LocatorWebBoldItalic/LocatorWebBoldItalic.woff") format("woff");
+}

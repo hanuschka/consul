@@ -1,5 +1,5 @@
 // brand_color
-$brand:                                           #004a83 !default;
+$brand:                                           #0ab4ff !default;
 $brand-secondary:                                 #002d50 !default;
 $secondary:                                       lighten($brand, 70%);
 $accent:                                          lighten($brand, 50%);
@@ -46,7 +46,7 @@ $welcometitle:                $brand;
 $dropdownbackground:          $white;
 $dropdowntextcolor:           $black;
 $welcometextpositionmedium:   rem-calc(20);
-$welcometextpositionlarge:    rem-calc(25); 
+$welcometextpositionlarge:    rem-calc(25);
 $welcomespan:                 $brand;
 
 

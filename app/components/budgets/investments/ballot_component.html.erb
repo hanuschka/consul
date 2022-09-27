@@ -41,7 +41,8 @@
                                                       top_level_archived_projekt_ids: @top_level_archived_projekts.pluck(:id)),
                         local: false do |f| %>
             <% if ballot.amount_available(investment.heading) > 0 %>
-              <%= f.select :line_weight, line_weight_options_for_select %>
+              <%= f.label :line_weight, t("custom.budgets.investments.investment.line_weight_label")  %>
+              <%= f.select :line_weight, line_weight_options_for_select, label: false %>
             <% end %>
             <%= f.hidden_field :user_id, value: params[:user_id]  %>
             <%= f.submit t("budgets.investments.investment.add"),

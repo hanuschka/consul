@@ -39,6 +39,8 @@ en:
             zero: No votes
             one: 1 vote
             other: "%{count} votes"
+          qualified_supports: "Total votes: %{count}"
+          line_weight_label: "Your votes"
         show:
           callouts:
             publishing_prices:

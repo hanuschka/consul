@@ -41,6 +41,7 @@ de:
             one: 1 Stimme
             other: "%{count} Stimmen"
           qualified_supports: "Gesamtstimmen: %{count}"
+          line_weight_label: "Deine Stimmenanzahl"
         show:
           callouts:
             publishing_prices:

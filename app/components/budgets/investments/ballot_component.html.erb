@@ -23,7 +23,9 @@
           <%= t("budgets.ballots.show.remove") %>
         <% end %>
         <% unless current_user.level_three_verified? %>
-          <%= t("custom.budgets.investments.investment.unverified_note") %>
+          <div class='callout warning'>
+            <%= t("custom.budgets.investments.investment.unverified_note") %>
+          </div>
         <% end %>
       <% end %>
     </div>

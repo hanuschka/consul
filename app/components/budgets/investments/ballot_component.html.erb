@@ -9,7 +9,9 @@
       </p>
       <% if investment.should_show_ballots? %>
         <br>
-        <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)) %>
+        <strong>
+          <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)) %>
+        </strong>
         <%= button_to budget_ballot_line_path(id: investment.id,
                                               budget_id: investment.budget_id,
                                               investments_ids: investment_ids,
@@ -38,7 +40,9 @@
 
         <% if investment.budget.distributed_voting? %>
           <br>
-          <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)) %>
+          <strong>
+            <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight)) %>
+          </strong>
           <%= form_with url: budget_ballot_lines_path(investment_id: investment.id,
                                                       budget_id: investment.budget_id,
                                                       investments_ids: investment_ids,
@@ -46,7 +50,7 @@
                                                       top_level_archived_projekt_ids: @top_level_archived_projekts.pluck(:id)),
                         local: false do |f| %>
             <% if ballot.amount_available(investment.heading) > 0 %>
-              <%= f.label :line_weight, t("custom.budgets.investments.investment.line_weight_label")  %>
+              <%= f.label :line_weight, t("custom.budgets.investments.investment.line_weight_label"), style: "font-weight: normal"  %>
               <%= f.select :line_weight, line_weight_options_for_select, label: false %>
             <% end %>
             <%= f.hidden_field :user_id, value: params[:user_id]  %>

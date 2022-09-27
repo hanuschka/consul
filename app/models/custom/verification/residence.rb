@@ -31,7 +31,7 @@ class Verification::Residence
                  plz:                   plz,                                 #custom
                  city_name:             city_name,                           #custom
                  document_last_digits:  document_last_digits,                #custom
-                 geozone:               Geozone.geozone_with_plzi(plz),      #custom
+                 geozone:               Geozone.find_with_plz(plz),          #custom
                  gender:                gender)
   end
 

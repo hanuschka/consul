@@ -1,5 +1,9 @@
 en:
   custom:
+    account:
+      show:
+        user_unverified_info_html: "<p>Only residents of the city of Jena who are at least 16 years old can vote on the citizens' budget.</p>
+        <p>You must enter your data here, which we will check manually. This can take 1-2 working days. If you have already entered your data when registering, you do not have to enter it again here. We will check them immediately.</p>"
     verification:
       residence:
         new:

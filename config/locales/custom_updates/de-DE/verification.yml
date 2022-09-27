@@ -1,5 +1,9 @@
 de:
   custom:
+    account:
+      show:
+        user_unverified_info_html: "<p>An der Abstimmung zum Bürgerbudget können nur Einwohnerinnen und Einwohner der Stadt Jena teilnehmen, die mindestens 16 Jahre alt sind.</p>
+        <p>Sie müssen hier Ihre Daten eingeben, die wir manuell prüfen. Dies kann 1-2 Werktage in Anspruch nehmen. Sollten Sie Ihre Daten bereits bei der Registrierung eingegeben haben, dann müssen Sie diese hier nicht erneut eingeben. Wir prüfen diese umgehend.</p>"
     verification:
       residence:
         new:

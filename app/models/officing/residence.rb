@@ -83,7 +83,7 @@ class Officing::Residence
 
   def allowed_age
     return if errors[:year_of_birth].any?
-    return unless @census_api_response.valid?
+    # return unless @census_api_response.valid?
 
     unless allowed_age?
       errors.add(:year_of_birth, I18n.t("verification.residence.new.error_not_allowed_age"))

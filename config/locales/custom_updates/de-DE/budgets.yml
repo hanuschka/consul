@@ -38,7 +38,7 @@ de:
       investments:
         index:
           sidebar:
-            user_votes: "Meine Stimmen: %{count}"
+            user_votes: "Abgegebene Stimmen: %{count}"
         form:
           required: Ihr Investitionsvorschlag
         investment:

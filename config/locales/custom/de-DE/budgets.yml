@@ -118,8 +118,8 @@ de:
         filter: "Projekte filtern nach"
         filters:
           not_unfeasible: "Durchführbar"
-          selected: "Ausgewählt"
-          unfeasible: "Nicht durchführbar"
+          selected: "Gültig"
+          unfeasible: "Ungültig"
           unselected: "Nicht für die Endabstimmung ausgewählt"
           winners: "Gewinner"
         orders:

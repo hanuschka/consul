@@ -6,20 +6,23 @@ class Verification::ResidenceController < ApplicationController
     verification_mode = params[:residence][:verification_mode]
 
     last_budget = Budget.joins(projekt: :page).where(budgets: { projekts: { site_customization_pages: { status: 'published' } } }).last
-    last_budget_link = page_path(last_budget.projekt.page.slug,
-                                 selected_phase: "#{last_budget.projekt.budget_phase.id}",
-                                 anchor: "filter-subnav")
+    last_budget_link = nil
 
+    if last_budget.present?
+      last_budget_link = page_path(last_budget.projekt.page.slug,
+                                   selected_phase: "#{last_budget.projekt.budget_phase.id}",
+                                   anchor: "filter-subnav")
+    end
 
     if verification_mode == "manual" && @residence.save_manual_verification
-      if last_budget.present?
+      if last_budget_link.present?
         redirect_to last_budget_link, notice: t("custom.verification.residence.create.flash.success_manual")
       else
         redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
       end
 
     elsif verification_mode != "manual" && @residence.save
-      if last_budget.present?
+      if last_budget_link.present?
         redirect_to last_budget_link, notice: t("verification.residence.create.flash.success")
       else
         redirect_to verified_user_path, notice: t("verification.residence.create.flash.success")

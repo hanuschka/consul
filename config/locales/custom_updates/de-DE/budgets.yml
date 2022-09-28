@@ -24,7 +24,7 @@ de:
           undecided: Noch nicht definiert
         orders:
           random: Zufällig
-          ballot_line_weight: Am besten bewertet
+          ballot_line_weight: Aktuelle Stimmenverteilung
           newest: Neueste zuerst
         sidebar:
           voted_info:

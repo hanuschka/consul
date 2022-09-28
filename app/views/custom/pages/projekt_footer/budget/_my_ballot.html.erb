@@ -38,5 +38,10 @@
         ) %>
       <% end %>
     </ul>
+
+    <%= link_to t("budgets.investments.header.check_ballot"),
+                  budget_ballot_path(@budget),
+                  class: "button hollow expanded" %>
+
   </div>
 <% end %>

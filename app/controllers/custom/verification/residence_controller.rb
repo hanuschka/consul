@@ -5,11 +5,25 @@ class Verification::ResidenceController < ApplicationController
     @residence = Verification::Residence.new(residence_params.merge(user: current_user))
     verification_mode = params[:residence][:verification_mode]
 
+    last_budget = Budget.joins(projekt: :page).where(budgets: { projekts: { site_customization_pages: { status: 'published' } } }).last
+    last_budget_link = page_path(last_budget.projekt.page.slug,
+                                 selected_phase: "#{last_budget.projekt.budget_phase.id}",
+                                 anchor: "filter-subnav")
+
+
     if verification_mode == "manual" && @residence.save_manual_verification
-      redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
+      if last_budget.present?
+        redirect_to last_budget_link, notice: t("custom.verification.residence.create.flash.success_manual")
+      else
+        redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
+      end
 
     elsif verification_mode != "manual" && @residence.save
-      redirect_to verified_user_path, notice: t("verification.residence.create.flash.success")
+      if last_budget.present?
+        redirect_to last_budget_link, notice: t("verification.residence.create.flash.success")
+      else
+        redirect_to verified_user_path, notice: t("verification.residence.create.flash.success")
+      end
 
     else
       render :new

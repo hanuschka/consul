@@ -10,7 +10,12 @@ class Budgets::Ballot::InvestmentComponent < ApplicationComponent
 
   private
     def user_votes
-      count = @investment.budget_ballot_lines.joins(:ballot).find_by(budget_ballots: { user_id: current_user.id }).line_weight
+      user = if params[:user_id].present?
+        User.find(params[:user_id])
+      else
+        current_user
+      end
+      count = @investment.budget_ballot_lines.joins(:ballot).find_by(budget_ballots: { user_id: user.id }).line_weight
       tag.span t("custom.budgets.investments.index.sidebar.user_votes", count: count)
     end
 end

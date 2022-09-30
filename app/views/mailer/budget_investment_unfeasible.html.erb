@@ -1,11 +1,23 @@
 <td style="<%= css_for_mailer_content %>">
 
   <h1 style="<%= css_for_mailer_heading %>">
-    <%= t("mailers.budget_investment_unfeasible.title") %>
+    <%= @investment.title  %>
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.budget_investment_unfeasible.hi") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.budget_investment_unfeasible.thank_you", budget_name: @investment.budget.name) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.budget_investment_unfeasible.rejected") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.budget_investment_unfeasible.reject_reason") %>
   </p>
 
   <p style="<%= css_for_mailer_text + css_for_mailer_quote %>">
@@ -13,18 +25,7 @@
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= sanitize(
-      t("mailers.budget_investment_unfeasible.new",
-        url: link_to(t("mailers.budget_investment_unfeasible.new_href"),
-                     new_budget_investment_url(@investment.budget),
-                     style: css_for_mailer_link)
-      ),
-      attributes: %w[href style]
-    ) %>
-  </p>
-
-  <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.budget_investment_unfeasible.sorry") %>
+    <%= t("mailers.budget_investment_unfeasible.next_steps") %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">

@@ -22,7 +22,7 @@ class Projekt < ApplicationRecord
   has_many :polls, dependent: :nullify
   has_many :legislation_processes, dependent: :nullify, class_name: "Legislation::Process"
   has_one :budget, dependent: :nullify
-  has_many :projekt_events, dependent: :nullify
+  has_many :projekt_events, dependent: :destroy
   has_many :questions, -> { order(:id) },
     class_name: "ProjektQuestion",
     inverse_of:  :projekt,
@@ -224,12 +224,14 @@ class Projekt < ApplicationRecord
     return true if controller_name == "processes"
     return false if user.nil?
 
+    user_has_admin_rights = user.administrator? || user.projekt_manager?
+
     if controller_name == "proposals"
-      return false if proposals_selectable_by_admins_only? && user.administrator.blank?
+      return false if proposals_selectable_by_admins_only? && !user_has_admin_rights
 
       proposal_phase.selectable_by?(user)
     elsif controller_name == "debates"
-      return false if debates_selectable_by_admins_only? && user.administrator.blank?
+      return false if debates_selectable_by_admins_only? && !user_has_admin_rights
 
       debate_phase.selectable_by?(user)
     elsif controller_name == "processes"

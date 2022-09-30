@@ -13,6 +13,7 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
   end
 
   private
+
     def line_weight_options_for_select
       raise :budget_not_distributed  unless budget.distributed_voting?
 

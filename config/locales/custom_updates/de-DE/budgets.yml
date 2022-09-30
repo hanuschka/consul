@@ -53,6 +53,7 @@ de:
           qualified_supports: "Gesamtstimmen: %{count}"
           line_weight_label: "Deine Stimmenanzahl"
           unverified_note: "Ihre Daten werden manuell überprüft. Dies kann 1-2 Werktage in Anspruch nehmen. Danach werden Ihre Stimmen freigegeben."
+          unverified_note_no_data_html: "Bitte %{verify_account}, um teilnehmen zu können."
         show:
           callouts:
             publishing_prices:

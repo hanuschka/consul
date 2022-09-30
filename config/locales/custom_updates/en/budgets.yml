@@ -52,6 +52,7 @@ en:
           qualified_supports: "Total votes: %{count}"
           line_weight_label: "Your votes"
           unverified_note: "Your data will be checked manually. This can take 1-2 working days. After that, your votes will be released."
+          unverified_note_no_data_html: "Plaese %{verify_account}, to make sure your votes are counted."
         show:
           callouts:
             publishing_prices:

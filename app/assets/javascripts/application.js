@@ -119,6 +119,9 @@
 //= require_tree ./sdg_management
 //= require custom
 //= require_tree ./custom
+//= require klaro/testklaro.js
+//= require klaro/config.js
+//= require klaro/klaro.js
 
 var initialize_modules = function() {
   "use strict";

@@ -16,4 +16,4 @@
              ballot: @ballot %>
 <% end %>
 
-<%= paginate @investments %>
+<%= paginate @investments, remote: true, params: { controller: 'pages', action: 'budget_phase_footer_tab' } %>

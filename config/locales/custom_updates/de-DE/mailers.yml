@@ -8,3 +8,9 @@ de:
       next_steps: "Vielen Dank für Ihre wertvolle Beteiligung. Wir würden uns sehr freuen, wenn Sie sich in der Zeit vom 01.10. bis 12.11.22 einen Überblick zu den gültigen Vorschläge verschaffen und an der Abstimmung beteiligen."
       sincerely: "Mit freundlichen Grüßen"
       subject: "Ihr Ausgabenvorschlag '%{code}' wurde als undurchführbar markiert"
+    manual_verification_confirmation:
+      subject: Ihr Konto wurde soeben verifiziert.
+      p1: Ihr Konto wurde soeben verifiziert.
+      p2: Sollten Sie bereits abgestimmt haben, dann können Sie jetzt Ihre Stimmen in der Übersicht einsehen.
+      p3: Sie können Ihre Stimmabgabe bis zum Ende des Verfahrens jederzeit ändern.
+

@@ -15,15 +15,7 @@ class Budget
     scope :sort_by_newest, -> { reorder(created_at: :desc) }
 
     def self.sort_by_ballot_line_weight(budget = nil)
-      budget ||= first.budget
-
-      if budget.balloting_or_later? && budget.distributed_voting?
-        left_outer_joins(:budget_ballot_lines)
-          .group("budget_investments.id")
-          .order("sum(budget_ballot_lines.line_weight) DESC NULLS LAST")
-      else
-        all
-      end
+      order(qualified_votes_count: :desc)
     end
 
     def register_selection(user, vote_weight = 1)

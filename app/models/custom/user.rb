@@ -7,6 +7,7 @@ class User < ApplicationRecord
          authentication_keys: [:login]
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
+  after_save :update_qualified_votes_count_for_budget_investments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
@@ -116,5 +117,13 @@ class User < ApplicationRecord
 
     def document_last_digits_required?
       !organization? && !erased? && Setting["extra_fields.registration.document_last_digits"]
+    end
+
+    def update_qualified_votes_count_for_budget_investments
+      Budget::Ballot.where(user_id: id).each do |ballot|
+        ballot.investments.each do |investment|
+          investment.update(qualified_votes_count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight))
+        end
+      end
     end
 end

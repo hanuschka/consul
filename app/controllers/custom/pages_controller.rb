@@ -332,6 +332,7 @@ class PagesController < ApplicationController
 
     @valid_filters = @current_projekt.budget.investments_filters
     params[:filter] ||= 'feasible' if @current_projekt.budget.phase.in?(['selecting', 'valuating'])
+    params[:filter] ||= 'all' if @current_projekt.budget.phase.in?(['selecting', 'valuating', 'balloting', 'reviewing_ballots'])
     params[:filter] ||= 'winners' if @current_projekt.budget.phase == 'finished'
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
     @all_resources = []
@@ -377,7 +378,7 @@ class PagesController < ApplicationController
       @investment_ids = @budget.investments.ids
     end
 
-    @investments = @investments.send("sort_by_#{@current_order}").page(params[:page])
+    @investments = @investments.send("sort_by_#{@current_order}")
 
     if @budget.present? && @current_projekt.current?
       @top_level_active_projekts = Projekt.where(id: @current_projekt)

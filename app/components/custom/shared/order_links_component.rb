@@ -21,7 +21,7 @@ class Shared::OrderLinksComponent < ApplicationComponent
       t("#{i18n_namespace}.orders.#{order}_title")
     end
 
-    def footer_tab_back_button_url
+    def footer_tab_back_button_url(order)
       if controller_name == 'pages' &&
           params[:current_tab_path].present? &&
           !helpers.request.path.starts_with?('/projekts')

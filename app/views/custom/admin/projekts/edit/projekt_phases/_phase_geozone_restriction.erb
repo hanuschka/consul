@@ -30,7 +30,7 @@
       <% end %>
     </div>
 
-    <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), class: 'js-select-street' %>
+    <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), class: 'js-select-street', prompt: 'Please select' %>
 
     <div class='hide'>
       <%= phase_form.collection_check_boxes :bam_street_ids, BamStreet.all, :id, :name %>

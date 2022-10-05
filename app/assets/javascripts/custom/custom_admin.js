@@ -6,8 +6,8 @@
     selectStreet: function(phaseName, streetId, streetName) {
       var checkboxId;
 
-      if (phaseName == 'voting_phase') {
-        checkboxId = 'poll_' + phaseName + '_attributes_bam_street_ids_' + streetId
+      if (phaseName == 'individual_poll') {
+        checkboxId = 'poll_bam_street_ids_' + streetId
       } else {
         checkboxId = 'projekt_' + phaseName + '_attributes_bam_street_ids_' + streetId
       }
@@ -22,8 +22,8 @@
     deselectStreet: function(streetId, phaseName, $streetPill) {
       var checkboxId;
 
-      if (phaseName == 'voting_phase') {
-        checkboxId = 'poll_' + phaseName + '_attributes_bam_street_ids_' + streetId
+      if (phaseName == 'individual_poll') {
+        checkboxId = 'poll_bam_street_ids_' + streetId
       } else {
         checkboxId = 'projekt_' + phaseName + '_attributes_bam_street_ids_' + streetId
       }

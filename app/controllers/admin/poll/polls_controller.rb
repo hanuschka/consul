@@ -21,7 +21,6 @@ class Admin::Poll::PollsController < Admin::Poll::BaseController
   def create
     @poll = Poll.new(poll_params.merge(author: current_user))
     if @poll.save
-      @poll.voting_phase.update(bam_street_ids: params[:poll][:voting_phase_attributes][:bam_street_ids]) #custom bam
       notice = t("flash.actions.create.poll")
       if @poll.budget.present?
         redirect_to admin_poll_booth_assignments_path(@poll), notice: notice
@@ -38,7 +37,6 @@ class Admin::Poll::PollsController < Admin::Poll::BaseController
 
   def update
     if @poll.update(poll_params)
-      @poll.voting_phase.update(bam_street_ids: params[:poll][:voting_phase_attributes][:bam_street_ids]) #custom bam
       redirect_to [:admin, @poll], notice: t("flash.actions.update.poll")
     else
       render :edit

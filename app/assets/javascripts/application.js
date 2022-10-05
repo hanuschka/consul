@@ -189,7 +189,6 @@ var initialize_modules = function() {
   App.DeficiencyReports.initialize();
   App.AccessibilityFixes.initialize();
   App.CustomPages.initialize();
-  App.CustomAdmin.initialize();
   App.ModerationCustom.initialize();
   App.CustomAdmin.initialize();
   App.BamStreetModal.initialize();

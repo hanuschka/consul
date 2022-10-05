@@ -6,15 +6,14 @@ class Poll < ApplicationRecord
   belongs_to :projekt, optional: true, touch: true
 
   has_many :geozone_affiliations, through: :projekt
-  has_one :voting_phase, through: :projekt
-  has_many :bam_streets, through: :voting_phase
+
+  has_many :bam_street_polls, dependent: :destroy
+  has_many :bam_streets, through: :bam_street_polls
 
   validates :projekt, presence: true
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
-
-  accepts_nested_attributes_for :voting_phase
 
   def self.base_selection
     created_by_admin.

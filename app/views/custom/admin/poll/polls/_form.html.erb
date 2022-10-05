@@ -60,9 +60,9 @@
 
       <%= f.check_box :bam_street_restricted, data: { checkbox_toggle: "#bam-streets" }  %>
 
-      <div id="bam-streets" class='projekt-phase-street-selector' data-phase-name=<%= 'voting_phase' %> style=<%= @poll.bam_street_restricted.present? ? 'display:block' : 'display:none' %> >
-        <div id="projekt-phase-selected-streets-voting_phase" class='projekt-phase-selected-streets'>
-          <% @poll.voting_phase.bam_streets.each do |street| %>
+      <div id="bam-streets" class='projekt-phase-street-selector' data-phase-name=<%= 'individual_poll' %> style=<%= @poll.bam_street_restricted? %> >
+        <div id="projekt-phase-selected-streets-individual_poll" class='projekt-phase-selected-streets'>
+          <% @poll.bam_streets.each do |street| %>
             <div class='selected-projekt' data-street-id=<%= street.id %>>
               <%= street.name %>
               <i class='fas fa-times js-deselect-street'></i> 
@@ -73,9 +73,7 @@
         <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), class: 'js-select-street', prompt: 'Please select' %>
 
         <div class='hide'>
-          <%= f.fields_for :voting_phase do |form| %>
-            <%= form.collection_check_boxes :bam_street_ids, BamStreet.all, :id, :name %>
-          <% end %>
+          <%= f.collection_check_boxes :bam_street_ids, BamStreet.all, :id, :name %>
         </div>
       </div>
 

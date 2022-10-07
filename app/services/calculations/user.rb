@@ -8,7 +8,7 @@ module Calculations
         birth_year.to_s + "_" +
         birth_month.to_s + "_" +
         birth_day.to_s + "_" +
-        plz
+        plz.to_s
     end
   end
 end

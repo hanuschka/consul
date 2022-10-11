@@ -12,3 +12,4 @@ en:
             gender: Please select
             city_name_label: City
             document_last_digits_label: Document (4 last digits)
+            password_hint: Password must contain at least 8 characters.

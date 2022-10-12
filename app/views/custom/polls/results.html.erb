@@ -76,6 +76,21 @@
                     <%= answer.title %>
                   <% end %>
                 </td>
+                <% if current_administrator? || @poll.show_individual_stats_per_answer %>
+                  <td style='width:240px;' class='answers-column <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>' >
+                    <% if answer.total_votes > 0 %>
+                      <span style="cursor:pointer;" data-open=<%= dom_id(answer, :modal_stats) %>><%= t('custom.polls.results.show_individual_stats') %></span>
+                      <div class="reveal" id=<%= dom_id(answer, :modal_stats) %> data-reveal>
+                        <div class='participation-stats'>
+                          <button class="close-button" data-close aria-label="Close modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                          <%= render "shared/stats/participation", stats: Poll::Answer::Stats.new(answer) %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </td>
+                <% end %>
               </tr>
             <% end %>
           </tbody>

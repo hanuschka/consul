@@ -1,6 +1,8 @@
 <%= form_for [:admin, @poll], action: "update" do |f| %>
   <%= render "admin/shared/show_results_fields", form: f %>
 
+  <%= f.check_box :show_individual_stats_per_answer %>
+
   <div class='show-user-name-with-open-answers'>
 
     <% checkbox_options = [[t('custom.admin.polls.settings.show_open_answer_with_username'), true ], [t('custom.admin.polls.settings.show_open_answer_without_username'), false]] %>

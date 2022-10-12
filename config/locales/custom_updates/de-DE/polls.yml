@@ -20,6 +20,7 @@ de:
           update_open_answer: Antwort editieren
       results:
         open_answers: Offene Antworten
+        show_individual_stats: Individuelle Statistik anzeigen
       show:
         cant_answer_not_started_yet: Diese Abstimmung läuft vom %{start_date} bis zum %{end_date}
         cant_answer_organization: Organisationen sind nicht berechtigt an Abstimmungen teilzunehmen.

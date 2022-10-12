@@ -49,6 +49,7 @@ en:
         bam_street_id: Street
       poll:
         bam_street_restricted: Limited to streets
+        show_individual_stats_per_answer: Show Individual Stats Per Answer
       map_layer:
         name: Layer name
         provider: Provider

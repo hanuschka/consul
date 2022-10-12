@@ -5,4 +5,8 @@ class Poll::Question::Answer < ApplicationRecord
     return nil unless self.open_answer
     Poll::Answer.where(question_id: question, answer: title).where.not(open_answer_text: nil)
   end
+
+  def total_votes
+    question.answers.where(answer: title).count
+  end
 end

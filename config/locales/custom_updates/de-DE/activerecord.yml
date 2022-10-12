@@ -61,6 +61,7 @@ de:
         on_behalf_of: Diskussion im Namen von jemanden erstellen
       poll:
         bam_street_restricted: Beschränkt auf Straßen
+        show_individual_stats_per_answer: Individuelle Statistiken anzeigen pro Antwort
       projekt_phase:
         bam_street_id: Straße
       proposal:

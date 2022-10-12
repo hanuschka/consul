@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_05_104754) do
+ActiveRecord::Schema.define(version: 2022_10_12_140007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1436,6 +1436,7 @@ ActiveRecord::Schema.define(version: 2022_10_05_104754) do
     t.boolean "show_on_home_page", default: true
     t.boolean "show_on_index_page", default: true
     t.boolean "bam_street_restricted", default: false
+    t.boolean "show_individual_stats_per_answer", default: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"

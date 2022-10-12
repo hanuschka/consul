@@ -20,6 +20,7 @@ en:
           update_open_answer: Edit answer
       results:
         open_answers: Open answers
+        show_individual_stats: Show individual stats
       show:
         cant_answer_not_started_yet: This poll runs from %{start_date} till %{end_date}
         confirm_participation_button: Confirm my vote

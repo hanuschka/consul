@@ -43,13 +43,24 @@ class User < ApplicationRecord
   private
 
     def attempt_verification
-      return false unless stamp_unique?
+      unless organization?
+        return false unless stamp_unique?
+      end
+
       return false unless residency_valid?
 
-      update!(geozone:               geozone_with_plz,
-              unique_stamp:          prepare_unique_stamp,
-              verified_at:           Time.current)
+      attributes_to_set = {
+        geozone: geozone_with_plz,
+        verified_at: Time.current
+      }
+
+      unless organization?
+        attributes_to_set[:unique_stamp] = prepare_unique_stamp
+      end
+
+      update!(attributes_to_set)
     end
+
 
     def census_data
       RemoteCensusApi.new.call(first_name: first_name,
@@ -58,11 +69,13 @@ class User < ApplicationRecord
                                street_number: street_number,
                                plz: plz,
                                city_name: city_name,
-                               date_of_birth: date_of_birth.strftime("%Y-%m-%d"),
+                               date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),
                                gender: gender)
     end
 
     def residency_valid?
+      return true if organization?
+
       census_data.valid?
     end
 

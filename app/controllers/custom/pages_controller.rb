@@ -331,7 +331,7 @@ class PagesController < ApplicationController
     @current_projekt = Projekt.find(params[:filter_projekt_id])
 
     @valid_filters = @current_projekt.budget.investments_filters
-    params[:filter] ||= 'feasible' if @current_projekt.budget.phase.in?(['selecting', 'valuating'])
+    params[:filter] ||= 'all' if @current_projekt.budget.phase.in?(['selecting', 'valuating'])
     params[:filter] ||= 'winners' if @current_projekt.budget.phase == 'finished'
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
     @all_resources = []

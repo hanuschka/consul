@@ -80,9 +80,11 @@
           <strong><%= t("budgets.investments.show.project_winner") %></strong>
         </div>
       <% elsif investment.selected? %>
+        <!--
         <div class="callout success">
-          <%= sanitize(t("budgets.investments.show.project_selected")) %>
+          <%#= sanitize(t("budgets.investments.show.project_selected")) %>
         </div>
+        -->
       <% elsif @budget.balloting_or_later? %>
         <div class="callout warning">
           <%= sanitize(t("budgets.investments.show.project_not_selected")) %>

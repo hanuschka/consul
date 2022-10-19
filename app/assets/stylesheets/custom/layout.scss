@@ -184,6 +184,16 @@ ul.tabs li.tabs-title {
     margin-right: 0;
     margin-bottom: 5px;
     padding: 0.25rem 2.2em;
+    background: #073E8E;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    width: 145px;
+    height: 60px;
+    border-radius: 38px;
   }
 }
 
@@ -195,8 +205,14 @@ ul.tabs li.tabs-title {
   }
 }
 
-
 .resource-n .resource-details .resource-summary a {
   color: #222;
   text-decoration: none;
+}
+
+@media screen and (min-width: 75em) {
+  body.public {
+    margin-left: calc(40vw - 37.5rem);
+    margin-right: calc(40vw - 37.5rem);
+  }
 }

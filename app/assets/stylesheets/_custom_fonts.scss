@@ -2,13 +2,13 @@ $body-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont'
 $header-font-family: 'sourcesanspro-regular-webfont', 'sourcesanspro-bold-webfont', 'PT_Serif_Web-Regular', sans-serif !important;
 $base-font-size:      16px;
 
-// Regular 
+// Regular
 @font-face {
   font-family: "sourcesanspro-regular-webfont";
   src: font-url("sourcesanspro-regular-webfont.ttf") format("ttf"), font-url("custom/DMSans-Regular.ttf") format("ttf");
   font-weight: 100;
   font-style: normal; }
-// Bold 
+// Bold
 @font-face {
   font-family: "sourcesanspro-bold-webfont";
   src: font-url("sourcesanspro-bold-webfont.ttf") format("ttf"), font-url("custom/DMSans-Bold.ttf") format("ttf");
@@ -20,3 +20,59 @@ $base-font-size:      16px;
   src: font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf"), font-url("custom/PT_Serif_Web-Regular.ttf") format("ttf");
   font-weight: 100;
   font-style: normal; }
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-SemiBoldItalic.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Asap";
+  src: font-url("custom/Asap-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}

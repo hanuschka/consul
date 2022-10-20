@@ -15,14 +15,74 @@
   <%= render "header", header: @header %>
 
   <div class="row">
-    <div class="column medium-9 small-centered">
+    <div class="column small-12 medium-8">
       <%= render_custom_block 'home_page_1' %>
+    </div>
+    <div class="column column small-12 medium-4">
+      <div class="card-section">
+        <div class="card-section--header">
+          <div class="card-section--header-icon">
+          </div>
+          <h4 class="card-section--header-title">
+            Neuigkeiten
+          </h4>
+        </div>
+        <div class="card-section--body">
+          <%= render_custom_block 'home_page_2' %>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section--header">
+          <div class="card-section--header-icon">
+          </div>
+          <h4 class="card-section--header-title">
+            Nutzer*innen
+          </h4>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section--header">
+          <div class="card-section--header-icon">
+          </div>
+          <h4 class="card-section--header-title">
+            Aktivität | letzte 7 Tage
+          </h4>
+        </div>
+        <div class="card-section--body">
+          <div>
+            17 neue Benutzer*innen
+          </div>
+          <div>
+            20 neue Kommentare
+          </div>
+          <div>
+            4 neue Vorschläge
+          </div>
+          <div>
+            7 neue Diskussionen
+          </div>
+          <div class="card-section--divider"> </div>
+
+          <div>
+            Zur Übersicht aller Vorschläge
+          </div>
+          <div>
+            Zur Übersicht aller Diskussionen
+          </div>
+          <div>
+            Zur Übersicht aller Abstimmungen
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <% if @cards.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-bottom">
+      <div class="column small-centered margin-bottom">
         <div class="row">
           <div class="small-12 column">
             <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
@@ -32,29 +92,23 @@
     </div>
   <% end %>
 
-  <div class="row">
-    <div class="column medium-9 small-centered">
-      <%= render_custom_block 'home_page_2' %>
-    </div>
-  </div>
-
   <% if @active_projekts.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-bottom">
+      <div class="column small-centered margin-bottom">
         <%= render partial: "projekt_cards", locals: { projekts: @active_projekts, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
       </div>
     </div>
   <% end %>
 
   <div class="row">
-    <div class="column medium-9 small-centered">
+    <div class="column small-centered">
       <%= render_custom_block 'home_page_3' %>
     </div>
   </div>
 
   <% if @latest_polls.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-bottom">
+      <div class="column small-centered margin-bottom">
         <h3 class='title card-title'><%= t('custom.welcome.current_polls') %></h3>
         <%= render partial: "polls/poll_group", locals: { poll_group: @latest_polls } %>
       </div>
@@ -62,14 +116,14 @@
   <% end %>
 
   <div class="row">
-    <div class="column medium-9 small-centered">
+    <div class="column small-centered">
       <%=render_custom_block 'home_page_4' %>
     </div>
   </div>
 
   <% if @latest_items.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-bottom">
+      <div class="column small-centered margin-bottom">
         <h3 class='title card-title'><%= t('custom.welcome.user_entries') %></h3>
         <%= render "latest_items" %>
       </div>
@@ -77,21 +131,21 @@
   <% end %>
 
   <div class="row">
-    <div class="column medium-9 small-centered">
+    <div class="column small-centered">
       <%=render_custom_block 'home_page_5' %>
     </div>
   </div>
 
   <% if @expired_projekts.any? %>
     <div class="row">
-      <div class="column medium-9 small-centered margin-bottom">
+      <div class="column small-centered margin-bottom">
         <%= render partial: "projekt_cards", locals: { projekts: @expired_projekts, section_title: t("custom.welcome.expired_projekt_cards.title")  } %>
       </div>
     </div>
   <% end %>
 
   <div class="row">
-    <div class="column medium-9 small-centered">
+    <div class="column small-centered">
       <%=render_custom_block 'home_page_6' %>
     </div>
   </div>

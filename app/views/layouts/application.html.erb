@@ -15,8 +15,9 @@
   <body class="<%= yield(:body_class) %> public">
     <%= raw setting["html.per_page_code_body"] %>
 
+    <%= render "layouts/header", with_subnavigation: true %>
+
     <div class="wrapper <%= yield(:wrapper_class) %>">
-      <%= render "layouts/header", with_subnavigation: true %>
 
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>
       <!--[if lt IE 9]>

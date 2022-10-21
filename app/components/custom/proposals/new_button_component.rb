@@ -1,5 +1,5 @@
 class Proposals::NewButtonComponent < ApplicationComponent
-  delegate :current_user, to: :helpers
+  delegate :current_user, :user_signed_in?, :sanitize, :link_to_verify_account, :link_to_signin, :link_to_signup, to: :helpers
   attr_reader :selected_parent_projekt
 
   def initialize(selected_parent_projekt = nil, current_tab_phase = nil)
@@ -12,7 +12,7 @@ class Proposals::NewButtonComponent < ApplicationComponent
     def show_link?
       return true if @selected_parent_projekt&.overview_page?
 
-      any_selectable_projekts? || current_user.nil?
+      any_selectable_projekts?
     end
 
     def any_selectable_projekts?

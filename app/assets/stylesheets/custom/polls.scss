@@ -23,8 +23,12 @@
   }
 }
 
-table.results-table {
+.results-table-wrapper {
   margin-bottom: 40px;
+
+  table {
+    margin-bottom: 0.5rem;
+  }
 }
 
 td.results-column {

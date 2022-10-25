@@ -99,6 +99,7 @@ Rails.application.routes.draw do
 
   # Post open answers
   post  "polls/questions/:id/answers/update_open_answer",   to: "polls/questions#update_open_answer", as: :update_open_answer
+  get   "polls/questions/:id/csv_stats",                    to: "polls/questions#csv_stats",          as: :question_answer_stats
 
   # Manageing bam verification code
   patch    "admin/users/:id/send_letter_verification_code",                  to: "admin/users#send_letter_verification_code",        as: :send_letter_verification_code

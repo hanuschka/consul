@@ -133,7 +133,7 @@ module Abilities
       end
 
 
-      can [:order_questions], Poll::Question
+      can [:order_questions, :csv_stats], Poll::Question
       can [:show], Projekt
       can :verify, User
     end

@@ -134,11 +134,12 @@ module Abilities
 
       can :create, Budget::Investment do |investment|
         investment.budget.phase == "accepting" &&
+          user.level_three_verified? &&
           (
            (ProjektSetting.find_by(
              projekt: investment.projekt,
              key: "projekt_feature.budgets.only_admins_create_investment_proposals").value.present? &&
-            user.administrator?) ||
+            (user.administrator? || user.projekt_manager?)) ||
 
            ProjektSetting.find_by(
              projekt: investment.projekt,

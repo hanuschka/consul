@@ -60,8 +60,11 @@
       }
       App.ProjektSelector.toggleDocumentAttachment($selectedProjekt)
       App.ProjektSelector.toggleSummary($selectedProjekt)
+      App.ProjektSelector.toggleExternalVideoUrl($selectedProjekt)
       App.ProjektSelector.updateAvailableTagsSelection($selectedProjekt)
       App.ProjektSelector.updateAvailableSDGsSelection($selectedProjekt)
+      App.ProjektSelector.toggleExternalFieldsHeader($selectedProjekt)
+
     },
 
     addNextProjektPlaceholder: function( $nextProejektSelector, text ) {
@@ -170,12 +173,35 @@
       }
     },
 
+    toggleExternalVideoUrl: function($projekt) {
+      if ( $projekt.data('allowVideo') ) {
+        $('#external-video-url-fields').show();
+      } else {
+        $('#external-video-url-fields').hide();
+      }
+    },
+
+    toggleExternalFieldsHeader: function($selectedProjekt) {
+      if (
+        $('#on-behalf-of-fields').length == 0 &&
+          $('#attach-documents').is(":hidden") &&
+          $('.summary-field').is(":hidden") &&
+          $('#external-video-url-fields').is(":hidden") &&
+          $('#category_tags').is(":hidden") &&
+          $('#sdgs-selector').is(":hidden")
+      ) {
+        $('#additional-fields-title').hide();
+      } else {
+        $('#additional-fields-title').show();
+      }
+    },
+
     preselectProjekt: function(projektId) {
       // get preselcted projekt id
       var selectedProjektId;
       var url = new URL(window.location.href);
-      if (url.searchParams.get('projekt')) {
-        selectedProjektId = url.searchParams.get('projekt');
+      if (url.searchParams.get('projekt_id')) {
+        selectedProjektId = url.searchParams.get('projekt_id');
       } else {
         selectedProjektId = $('[id$="projekt_id"]').val();
       }

@@ -6,13 +6,13 @@ module UsersHelper
   end
 
   def ck_editor_class(current_user)
-   if extended_feature?("general.extended_editor_for_admins") && current_user.administrator?
-     'extended-a'
-   elsif extended_feature?("general.extended_editor_for_users") && !current_user.administrator?
-     'extended-u'
-   else
-     'regular'
-   end
+    if extended_feature?("general.extended_editor_for_admins") && (current_user.administrator? || current_user.projekt_manager?)
+      'extended-a'
+    elsif extended_feature?("general.extended_editor_for_users")
+      'extended-u'
+    else
+      'regular'
+    end
   end
 
   def skip_user_verification?
@@ -32,5 +32,11 @@ module UsersHelper
       [t("custom.devise_views.users.gender.male"), "male"],
       [t("custom.devise_views.users.gender.female"), "female"]
     ]
+  end
+
+  def custom_admin_root_path(user)
+    return projekt_management_root_path if user.projekt_manager? && !user.administrator?
+
+    admin_root_path
   end
 end

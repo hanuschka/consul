@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_24_123655) do
+ActiveRecord::Schema.define(version: 2022_10_13_092846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -162,6 +162,31 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.index ["user_id", "user_type"], name: "user_index"
   end
 
+  create_table "bam_street_polls", force: :cascade do |t|
+    t.bigint "bam_street_id"
+    t.bigint "poll_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bam_street_id"], name: "index_bam_street_polls_on_bam_street_id"
+    t.index ["poll_id"], name: "index_bam_street_polls_on_poll_id"
+  end
+
+  create_table "bam_street_projekt_phases", force: :cascade do |t|
+    t.bigint "bam_street_id"
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bam_street_id"], name: "index_bam_street_projekt_phases_on_bam_street_id"
+    t.index ["projekt_phase_id"], name: "index_bam_street_projekt_phases_on_projekt_phase_id"
+  end
+
+  create_table "bam_streets", force: :cascade do |t|
+    t.string "name"
+    t.integer "plz"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "banner_sections", id: :serial, force: :cascade do |t|
     t.integer "banner_id"
     t.integer "web_section_id"
@@ -211,6 +236,7 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.integer "budget_id"
     t.integer "group_id"
     t.integer "heading_id"
+    t.integer "line_weight", default: 1
     t.index ["ballot_id", "investment_id"], name: "index_budget_ballot_lines_on_ballot_id_and_investment_id", unique: true
     t.index ["ballot_id"], name: "index_budget_ballot_lines_on_ballot_id"
     t.index ["budget_id"], name: "index_budget_ballot_lines_on_budget_id"
@@ -336,6 +362,8 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.integer "implementation_performer", default: 0
     t.text "implementation_contribution"
     t.string "user_cost_estimate"
+    t.string "on_behalf_of"
+    t.integer "qualified_votes_count", default: 0
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -666,6 +694,7 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.datetime "hidden_at"
     t.tsvector "tsv"
     t.bigint "hot_score", default: 0
+    t.string "on_behalf_of"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1406,6 +1435,8 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.boolean "show_summary_instead_of_questions", default: false
     t.boolean "show_on_home_page", default: true
     t.boolean "show_on_index_page", default: true
+    t.boolean "bam_street_restricted", default: false
+    t.boolean "show_individual_stats_per_answer", default: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -1613,6 +1644,8 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.integer "level", default: 1
     t.boolean "special", default: false
     t.string "special_name"
+    t.boolean "show_start_date_in_frontend", default: true
+    t.boolean "show_end_date_in_frontend", default: true
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
   end
 
@@ -2007,6 +2040,28 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
     t.integer "plz"
     t.string "city_name"
     t.string "unique_stamp"
+    t.string "dor_first_name"
+    t.string "dor_last_name"
+    t.string "dor_street_name"
+    t.string "dor_street_number"
+    t.string "dor_plz"
+    t.string "dor_city"
+    t.string "pfo_first_name"
+    t.string "pfo_last_name"
+    t.string "pfo_street_name"
+    t.string "pfo_street_number"
+    t.string "pfo_plz"
+    t.string "pfo_city"
+    t.boolean "custom_newsletter", default: false
+    t.string "location"
+    t.integer "bam_letter_verification_code"
+    t.string "house_number"
+    t.datetime "bam_letter_verification_code_sent_at"
+    t.string "bam_unique_stamp"
+    t.bigint "bam_street_id"
+    t.string "keycloak_link"
+    t.boolean "custom_statistic_cookies_enabled"
+    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -2131,6 +2186,10 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
+  add_foreign_key "bam_street_polls", "bam_streets"
+  add_foreign_key "bam_street_polls", "polls"
+  add_foreign_key "bam_street_projekt_phases", "bam_streets"
+  add_foreign_key "bam_street_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"
@@ -2198,6 +2257,7 @@ ActiveRecord::Schema.define(version: 2022_08_24_123655) do
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "site_customization_pages", "projekts"
+  add_foreign_key "users", "bam_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "valuators", "users"
 end

@@ -5,17 +5,31 @@
     </p>
   </div>
 
-<% elsif projekt.question_phase.expired? %>
+<% elsif projekt_question.root_question? && projekt.question_phase.expired? %>
   <div class="callout primary">
     <p>
       <%= t("custom.projekts.projekt_questions.participation_not_allowed.phase_expired") %>
     </p>
   </div>
 
-<% elsif !projekt.question_phase.current? %>
+<% elsif projekt_question.root_question? && !projekt.question_phase.current? %>
   <div class="callout primary">
     <p>
       <%= t("custom.projekts.projekt_questions.participation_not_allowed.phase_not_yet_started") %>
+    </p>
+  </div>
+
+<% elsif projekt_question.root_question? && projekt.question_phase.only_citizens_allowed? && !current_user.current_city_citizen? %>
+  <div class="callout warning">
+    <p>
+      <%= t("custom.shared.warnings.only_for_citizens", city: Setting["org_name"]) %>
+    </p>
+  </div>
+
+<% elsif projekt_question.root_question? && projekt.question_phase.only_geozones_allowed? && !projekt.question_phase.geozone_allowed?(current_user) %>
+  <div class="callout warning">
+    <p>
+      <%= t("custom.shared.warnings.only_for_geozones", geozones: projekt.question_phase.geozone_restrictions_formated) %>
     </p>
   </div>
 
@@ -35,7 +49,7 @@
     </p>
   </div>
 
-<% elsif !projekt.question_phase.active? %>
+<% elsif projekt_question.root_question? && !projekt.question_phase.active? %>
   <div class="callout primary">
     <p>
       <%= t("custom.projekts.projekt_questions.participation_not_allowed.phase_not_active") %>

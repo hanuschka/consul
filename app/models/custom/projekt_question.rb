@@ -50,7 +50,7 @@ class ProjektQuestion < ApplicationRecord
   end
 
   def base_query_for_navigation
-    base_query = projekt.questions.sorted.limit(1)
+    base_query = projekt.questions.sorted
 
     if root_question?
       base_query.root_questions
@@ -70,7 +70,11 @@ class ProjektQuestion < ApplicationRecord
   def next_question_id
     return @next_question_id if @next_question_id.present?
 
-    @next_question_id ||= base_query_for_navigation.where("id > ?", id).ids.first
+    @next_question_id ||= next_questions.ids.first
+  end
+
+  def next_questions
+    base_query_for_navigation.where("id > ?", id)
   end
 
   def previous_question_id
@@ -81,13 +85,36 @@ class ProjektQuestion < ApplicationRecord
     @first_question_id ||= base_query_for_navigation.ids.first
   end
 
+  def most_recent_question_id
+    @most_recent_question_id ||= base_query_for_navigation.ids.last
+  end
+
   def answer_for_user(user)
     answers.find_by(user: user)
   end
 
   def comments_allowed?(current_user)
-    current_user&.present? &&
-      !projekt.question_phase.expired?
+    !comments_not_allowed?(current_user)
+  end
+
+  def comments_not_allowed?(current_user)
+    return true if comments_closed?
+    return true if current_user.nil?
+    return true if current_user.unverified?
+    return true if current_user.organization?
+
+    if root_question?
+      (
+        projekt.question_phase.particapation_closed? ||
+        projekt.question_phase.only_citizens_allowed? && current_user.not_current_city_citizen? ||
+        projekt.question_phase.only_geozones_allowed? && projekt.question_phase.geozone_not_allowed?(current_user) ||
+        projekt.question_phase.expired? ||
+        projekt.question_phase.not_current? ||
+        projekt.question_phase.not_active?
+      )
+    else
+      true
+    end
   end
 
   def comments_closed?

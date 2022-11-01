@@ -20,25 +20,33 @@
     </div>
     <div class="column column small-12 medium-4">
       <div class="card-section">
-        <div class="card-section--header">
-          <div class="card-section--header-icon">
-          </div>
-          <h4 class="card-section--header-title">
-            Neuigkeiten
-          </h4>
-        </div>
+        <h4 class="card-section--header">
+          <i class="fas fa-bullhorn"></i>
+          Neuigkeiten
+        </h4>
         <div class="card-section--body">
           <%= render_custom_block 'home_page_2' %>
         </div>
       </div>
 
       <div class="card-section">
-        <div class="card-section--header">
-          <div class="card-section--header-icon">
+        <h4 class="card-section--header">
+          <i class="fas fa-info-circle"></i>
+          Nutzer*innen
+        </h4>
+        <div class="card-section--body">
+          <div class="system-users-list">
+            <div class="system-users-list--title">
+              <%= number_with_delimiter(User.count,  delimiter: ".") %> Nutzer*innen
+            </div>
+            <div class="system-users-list--images">
+              <% User.where.not(first_name: nil).last(5).each do |user| %>
+                <div class="system-users-list--image">
+                  <%= user&.first_name&.chars&.first&.capitalize %>
+                </div>
+              <% end %>
+            </div>
           </div>
-          <h4 class="card-section--header-title">
-            Nutzer*innen
-          </h4>
         </div>
       </div>
 

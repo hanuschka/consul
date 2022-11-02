@@ -31,6 +31,10 @@ body > header .locale.locale-custom,
 // Adapting header to mobile view
 
 @media screen and (max-width: 39.9375em) {
+  .header-right-group {
+    margin-bottom: 12px;
+  }
+
   h2.city-name {
     border-bottom: 1px solid currentColor;
     padding-bottom: 0.5rem;

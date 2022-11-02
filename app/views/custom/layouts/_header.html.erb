@@ -1,12 +1,11 @@
 <% launch_page ||= false %>
 <header>
   <div class="top-bar">
-
-    <h2 class='header-title show-for-medium'>
-      <%= Setting['extended_option.general.title'] %>
-      <br>
-      <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
-    </h2>
+    <div class="top-bar-title">
+      <%= link_to root_path do %>
+        <%= image_tag(image_path_for("logo_header.png"), class: "", alt: t("layouts.header.logo")) %>
+      <% end %>
+    </div>
 
     <span data-responsive-toggle="responsive-menu"
           data-hide-for="medium"
@@ -21,17 +20,11 @@
 
     <div class='header-right-group not-print'>
       <% if !launch_page && current_user.nil? %>
-        <div class='account-buttons show-for-large'>
+        <div class='account-buttons show-for-medium'>
           <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
           <%= link_to t('devise_views.menu.login_items.signup') , new_user_registration_path, class: 'sign-up-button', role: 'button'  %>
         </div>
       <% end %>
-
-      <div class="top-bar-title">
-        <%= link_to root_path do %>
-          <%= image_tag(image_path_for("logo_header.png"), class: "", alt: t("layouts.header.logo")) %>
-        <% end %>
-      </div>
     </div>
 
     <div id="responsive-menu" class='not-print'>

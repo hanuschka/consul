@@ -31,8 +31,8 @@ de:
       users:
         registrations:
           new:
-            privacy_link: Datenschutzbestimmung
-            terms: Mit der Registrierung akzeptieren Sie die %{terms} und %{privacy}
+            privacy_link: Datenschutzerklärung
+            terms: Hiermit willige ich ein, dass meine eingegebenen Daten elektronisch gespeichert und zum Zweck der Kontaktaufnahme verarbeitet werden. Mir ist bekannt, dass ich meine Einwilligung jederzeit widerrufen kann. Hinweise zum Datenschutz und Informationsschreiben nach Art. 13 DSGVO sind in der %{privacy} zu finden. Die %{terms} nehme ich zudem zur Kenntnis.
         gender:
           male: männlich
           female: weiblich

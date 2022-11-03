@@ -8,3 +8,9 @@
   margin-bottom: 0;
   margin-top: 7px !important;
 }
+
+@media screen and (min-width: 40em) {
+  #navigation_bar .top-level-item > .flyout-item-name > a {
+    font-weight: bold !important;
+  }
+}

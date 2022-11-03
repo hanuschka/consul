@@ -10,7 +10,8 @@
 }
 
 @media screen and (min-width: 40em) {
-  #navigation_bar .top-level-item > .flyout-item-name > a {
+  #navigation_bar .top-level-item > .flyout-item-name > a,
+  #navigation_bar .top-level-item > .flyout-item-name  {
     font-weight: bold !important;
   }
 }

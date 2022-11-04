@@ -349,17 +349,6 @@ p {
   left: -60px;
 }
 
-.button {
-  height: 37px;
-  padding: 9px 20px 0;
-  font-size: 15px;
-  border-radius: 6px;
-
-  &.-grey {
-    background: #c0cedb;
-    color: black;
-  }
-}
 
 .resource-item {
   display: flex;
@@ -371,6 +360,18 @@ p {
   margin-bottom: 25px;
   overflow: hidden;
   color: #67788A;
+
+  .button {
+    height: 37px;
+    padding: 9px 20px 0;
+    font-size: 15px;
+    border-radius: 6px;
+
+    &.-grey {
+      background: #c0cedb;
+      color: black;
+    }
+  }
 }
 
 .resource-item--image {

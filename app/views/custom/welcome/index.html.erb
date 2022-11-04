@@ -88,6 +88,14 @@
     </div>
   </div>
 
+  <% if @active_projekts.any? %>
+    <div class="row">
+      <div class="column small-centered margin-bottom">
+        <%= render partial: "projekt_cards", locals: { projekts: @active_projekts, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
+      </div>
+    </div>
+  <% end %>
+
   <% if @cards.any? %>
     <div class="row">
       <div class="column small-centered margin-bottom">
@@ -100,13 +108,6 @@
     </div>
   <% end %>
 
-  <% if @active_projekts.any? %>
-    <div class="row">
-      <div class="column small-centered margin-bottom">
-        <%= render partial: "projekt_cards", locals: { projekts: @active_projekts, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
-      </div>
-    </div>
-  <% end %>
 
   <div class="row">
     <div class="column small-centered">

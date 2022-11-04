@@ -353,14 +353,13 @@ p {
 .resource-item {
   display: flex;
   flex-direction: column;
-  height: 480px;
+  max-height: 480px;
   width: 300px;
   border-radius: 12px;
   background: white;
   margin-bottom: 25px;
   overflow: hidden;
   color: #67788A;
-  position: relative;
 
   .button {
     height: 37px;
@@ -437,13 +436,14 @@ p {
 .resource-item--body {
   padding: 0 22px 25px;
   border-bottom: 1px solid #d9d9d9;
+  min-height: 199px;
+  max-height: 199px;
 }
 
 .resource-item--footer {
   display: flex;
   justify-content: center;
   height: 80px;
-  position: absolute;
   bottom: 0;
   width: 100%;
 

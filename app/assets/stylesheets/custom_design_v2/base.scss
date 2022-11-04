@@ -360,6 +360,7 @@ p {
   margin-bottom: 25px;
   overflow: hidden;
   color: #67788A;
+  position: relative;
 
   .button {
     height: 37px;
@@ -375,11 +376,17 @@ p {
 }
 
 .resource-item--image {
-  max-height: 180px;
   height: 180px;
   width: 100%;
-  object-fit: cover;
+  background: #dcdcdc;
   margin-bottom: 22px;
+
+  img {
+    max-height: 180px;
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+  }
 }
 
 .resource-item--title {
@@ -394,6 +401,7 @@ p {
 
 .resource-item--tags {
   display: flex;
+  min-width: 100px;
 }
 
 .resource-item--tag {
@@ -435,6 +443,9 @@ p {
   display: flex;
   justify-content: center;
   height: 80px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 
   .button {
     margin-bottom: 0;

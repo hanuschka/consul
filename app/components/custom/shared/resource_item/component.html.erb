@@ -2,21 +2,23 @@
   <div class="resource-item--projekt-name">
   </div>
 
-  <% if @image_url.present? %>
-    <%= image_tag(@image_url, class: 'resource-item--image') %>
-  <% end %>
+  <div class="resource-item--image">
+    <% if @image_url.present? %>
+      <%= image_tag(@image_url) %>
+    <% end %>
+  </div>
 
   <div class="resource-item--body">
     <div class="resource-item--subline">
-      <% if @tags.present? %>
-        <div class="resource-item--tags">
-          <% @tags.first(2).each do |tag| %>
-            <div class="resource-item--tag">
-              <%= tag %>
-            </div>
+      <div class="resource-item--tags">
+          <% if @tags.present? %>
+            <% @tags.first(2).each do |tag| %>
+              <div class="resource-item--tag">
+                <%= tag %>
+              </div>
+            <% end %>
           <% end %>
         </div>
-      <% end %>
       <div class="resource-item--date">
         <%= @date %>
       </div>

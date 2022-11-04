@@ -1,0 +1,56 @@
+<div class="resource-item">
+  <div class="resource-item--projekt-name">
+  </div>
+
+  <% if @image_url.present? %>
+    <%= image_tag(@image_url, class: 'resource-item--image') %>
+  <% end %>
+
+  <div class="resource-item--body">
+    <div class="resource-item--subline">
+      <% if @tags.present? %>
+        <div class="resource-item--tags">
+          <% @tags.first(2).each do |tag| %>
+            <div class="resource-item--tag">
+              <%= tag %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <div class="resource-item--date">
+        <%= @date %>
+      </div>
+    </div>
+
+    <div class="resource-item--title">
+      <%= @title %>
+    </div>
+
+    <div class="resource-item--description">
+      <%= truncate(@description, length: 120) %>
+    </div>
+
+    <% if additional_body.present? %>
+      <div class="resource-item--additional-body">
+        <%= additional_body %>
+      </div>
+    <% end %>
+
+    <% if @author.present? %>
+      <div class="resource-item--author">
+        <%= image_tag(nil, class: 'resource-item--author-photo') %>
+        <div class="resource-item--author-name">
+          <%= @author.name %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+  <div class="resource-item--footer">
+    <% if first_footer_item.present? %>
+      <div class="resource-item--footer-section">
+        <%= first_footer_item %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -114,8 +114,6 @@
 //= require datepicker
 //= require leaflet.markercluster
 //= require leaflet.locatecontrol
-//= require klaro/config.js
-//= require klaro/klaro.js
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management

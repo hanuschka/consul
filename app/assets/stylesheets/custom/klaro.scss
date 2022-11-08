@@ -1,9 +1,14 @@
 .klaro .cookie-modal .cm-list-input:checked+.cm-list-label .slider {
-  background-color: $accent !important;
+  background-color: $brand !important;
 }
 
 .klaro {
   .cookie-modal {
+    .title {
+      border-bottom: 0;
+      margin-top: 0.7em !important;
+    }
+
     .cn-ok {
       .cm-btn.cm-btn-info {
         padding: 10px;

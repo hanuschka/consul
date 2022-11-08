@@ -113,8 +113,9 @@ var klaroConfig = {
         // bundled translations.
         de: {
             consentModal: {
+                title: "Datenschutzeinstellungen",
                 description:
-                    'Hier können Sie einsehen und anpassen, welche Information wir über Sie sammeln. Einträge die als "Beispiel" gekennzeichnet sind dienen lediglich zu Demonstrationszwecken und werden nicht wirklich verwendet.',
+                    'Wir nutzen Cookies auf unserer Website. Einige von ihnen sind essenziell, während andere uns helfen, diese Website und Ihre Erfahrung zu verbessern. Hier können Sie einsehen und anpassen, welche Information wir mit Hilfe dieser Cookies sammeln.',
             },
             inlineTracker: {
                 description: 'Beispiel für ein Inline-Tracking Skript',
@@ -127,7 +128,7 @@ var klaroConfig = {
                 title: 'Google AdSense Werbezeugs',
             },
             matomo: {
-                description: 'Sammeln von Besucherstatistiken',
+                description: 'Statistik-Cookies helfen uns zu verstehen, wie Besucher mit unseren Seiten interagieren und wann und wie oft welche Seiten aufgerufen werden. Dazu werden Informationen anonymisiert gesammelt.',
             },
             camera: {
                 description:
@@ -147,12 +148,13 @@ var klaroConfig = {
                 description: 'Web-Schriftarten von Google gehostet',
             },
             purposes: {
-                analytics: 'Besucher-Statistiken',
+                analytics: 'Statistiken',
                 security: 'Sicherheit',
                 livechat: 'Live Chat',
                 advertising: 'Anzeigen von Werbung',
                 styling: 'Styling',
-                system: 'Plattformbetrieb'
+                system: 'Essenziell',
+                marketing: 'Externe Medien'
             },
             ok: 'Alle akzeptieren',
             consentNotice: {
@@ -202,18 +204,13 @@ var klaroConfig = {
                 livechat: 'Livechat',
                 advertising: 'Advertising',
                 styling: 'Styling',
-                system: 'Plattform operation',
+                system: 'Plattform operation'
             },
         },
     },
 
     // This is a list of third-party services that Klaro will manage for you.
     services: [
-        {
-            name: 'youtube',
-            default: true,
-            purposes: ['marketing'],
-        },
         {
             // Each service should have a unique (and short) name.
             name: 'matomo',
@@ -225,7 +222,7 @@ var klaroConfig = {
             default: true,
 
             // The title of your service as listed in the consent modal.
-            title: 'Matomo/Piwik',
+            title: 'Matomo',
 
             // The purpose(s) of this service. Will be listed on the consent notice.
             // Do not forget to add translations for all purposes you list here.
@@ -281,14 +278,22 @@ var klaroConfig = {
             // If "onlyOnce" is set to true, the service will only be executed
             // once regardless how often the user toggles it on and off.
             onlyOnce: true,
+            default: false,
         },
         {
             name: 'system',
-            title: 'Session cookie',
+            title: 'System',
+            description: 'Diese Cookies dienen der korrekten Funktionsweise der Webseite.',
             default: true,
             purposes: ['system'],
             optOut: false,
             required: true
+        },
+        {
+            name: 'youtube',
+            title: 'Youtube/Videos',
+            default: false,
+            purposes: ['marketing'],
         },
     ],
 };

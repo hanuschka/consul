@@ -1,5 +1,5 @@
 <% date = projekt.total_duration_end.present? ? "Noch #{(projekt.total_duration_end - Date.today).to_i.days} Tage" : nil %>
-<%= render(Shared::ResourceItem::Component.new(title: projekt.page.title, description: projekt.description, tags: projekt.tags.first(3), date: date, image_url: projekt.image&.variant(:medium))) do |c| %>
+<%= render(Shared::ResourceItem::Component.new(title: projekt.page.title, description: projekt.description, tags: projekt.tags.first(3), image_url: projekt.image&.variant(:medium))) do |c| %>
   <% c.additional_body do %>
     <div class="projekt-phase-link">
       <i class="far fa-lightbulb"></i>

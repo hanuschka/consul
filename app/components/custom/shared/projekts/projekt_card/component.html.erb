@@ -1,0 +1,16 @@
+<%= render(Shared::ResourceItem::Component.new(component_attributes)) do |c| %>
+  <% c.additional_body do %>
+    <a href="<%= projekts_path(selected_phase_id: @projekt.proposal_phase.id, anchor: 'filter-subnav') %>" class="projekt-phase-link">
+      <i class="far fa-lightbulb"></i>
+      Aktive Vorschlagsphase
+    </a>
+    <a href="<%= projekts_path(selected_phase_id: @projekt.comment_phase.id, anchor: 'filter-subnav') %>" class="projekt-phase-link">
+      <i class="far fa-lightbulb"></i>
+      Aktive Kommentarphase
+    </a>
+  <% end %>
+
+  <% c.first_footer_item do  %>
+   <%= link_to('Zum Projekt', projekt.page.url, class: 'button -grey') %>
+  <% end %>
+<% end %>

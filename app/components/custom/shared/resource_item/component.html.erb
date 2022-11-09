@@ -1,58 +1,86 @@
-<div class="resource-item">
+<% tags = capture do  %>
+  <div class="resource-item--tags">
+    <% if @tags.present? %>
+      <% @tags.first(2).each do |tag| %>
+        <div class="resource-item--tag">
+          <%= tag %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="resource-item <%= component_class_name %>">
   <div class="resource-item--projekt-name">
   </div>
 
-  <div class="resource-item--image">
+  <div class="resource-item--image-container">
     <% if @image_url.present? %>
-      <%= image_tag(@image_url) %>
+      <%= image_tag(@image_url, class: 'resource-item--image') %>
+      <%= image_tag(@image_url, class: 'resource-item--image-blur') %>
     <% end %>
   </div>
 
-  <div class="resource-item--body">
+  <div class="resource-item--content">
     <div class="resource-item--subline">
-      <div class="resource-item--tags">
-          <% if @tags.present? %>
-            <% @tags.first(2).each do |tag| %>
-              <div class="resource-item--tag">
-                <%= tag %>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
+      <div class="resource-item--subline--date-range">
+        <%= date_range %>
+      </div>
+
+      <%= tags %>
+
       <div class="resource-item--date">
-        <%= @date %>
+        <%= days_left %>
       </div>
     </div>
+    <div class="resource-item--body-wrapper">
+      <div class="resource-item--body">
 
-    <div class="resource-item--title">
-      <%= @title %>
-    </div>
+        <%= tags %>
 
-    <div class="resource-item--description">
-      <%= truncate(@description, length: 100) %>
-    </div>
-
-    <% if additional_body.present? %>
-      <div class="resource-item--additional-body">
-        <%= additional_body %>
-      </div>
-    <% end %>
-
-    <% if @author.present? %>
-      <div class="resource-item--author">
-        <%= image_tag(nil, class: 'resource-item--author-photo') %>
-        <div class="resource-item--author-name">
-          <%= @author.name %>
+        <div class="resource-item--title">
+          <%= @title %>
         </div>
-      </div>
-    <% end %>
 
-  </div>
-  <div class="resource-item--footer">
-    <% if first_footer_item.present? %>
-      <div class="resource-item--footer-section">
-        <%= first_footer_item %>
+        <div class="resource-item--description">
+          <%= truncate(@description, length: truncate_length) %>
+          <%# <% if @id.present? && Rails.env.development? %>
+          <%#   <%= @id %>
+          <%# <% end %>
+        </div>
+
+        <% if additional_body.present? %>
+          <div class="resource-item--additional-body resource-item--additional-body--card">
+            <%= additional_body %>
+          </div>
+        <% end %>
+
+        <% if @author.present? %>
+          <div class="resource-item--author">
+            <%= image_tag(nil, class: 'resource-item--author-photo') %>
+            <div class="resource-item--author-name">
+              <%= @author.name %>
+            </div>
+          </div>
+        <% end %>
       </div>
-    <% end %>
+
+      <div class="resource-item--footer">
+        <% if first_footer_item.present? %>
+          <div class="resource-item--footer-section">
+            <%= first_footer_item %>
+          </div>
+        <% end %>
+
+        <% if additional_body.present? %>
+          <div class="resource-item--footer-section">
+            <div class="resource-item--additional-body resource-item--additional-body--wide">
+              <%= additional_body %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
+
 </div>

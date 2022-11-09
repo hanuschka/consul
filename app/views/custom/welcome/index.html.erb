@@ -91,7 +91,7 @@
   <% if @active_projekts.any? %>
     <div class="row">
       <div class="column small-centered margin-bottom">
-        <%= render partial: "projekt_cards", locals: { projekts: @active_projekts, section_title: t("custom.welcome.active_projekt_cards.title")  } %>
+        <%= render Shared::Projekts::ProjektCardList::Component.new(projekts: @active_projekts, title: t("custom.welcome.active_projekt_cards.title"), wide: true) %>
       </div>
     </div>
   <% end %>

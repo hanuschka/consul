@@ -458,6 +458,10 @@ class Projekt < ApplicationRecord
     all_parent_ids + [id] + all_children_ids
   end
 
+  def current_phases
+    projekt_phases.regular_phases.select(&:current?)
+  end
+
   private
 
     def create_corresponding_page

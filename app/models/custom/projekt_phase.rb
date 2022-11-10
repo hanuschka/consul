@@ -50,6 +50,7 @@ class ProjektPhase < ApplicationRecord
       ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
   end
 
+<<<<<<< HEAD
   def not_current?
     !current?
   end

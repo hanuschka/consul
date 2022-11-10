@@ -47,11 +47,6 @@
         </div>
         <div class="resource-item--sdgs">
           <% if @sdgs.present? %>
-            <%# <% @sdgs.first(5).each do |sdg| %>
-            <%#   <div class="resource-item--tag">
-            <%#     <%= render(SDG::Goals::IconComponent.new(sdg))  %>
-            <%#   </div>
-            <%# <% end %>
             <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
           <% end %>
         </div>

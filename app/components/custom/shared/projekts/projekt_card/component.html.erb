@@ -1,13 +1,11 @@
 <%= render(Shared::ResourceItem::Component.new(component_attributes)) do |c| %>
   <% c.additional_body do %>
-    <a href="<%= projekts_path(selected_phase_id: @projekt.proposal_phase.id, anchor: 'filter-subnav') %>" class="projekt-phase-link">
-      <i class="far fa-lightbulb"></i>
-      Aktive Vorschlagsphase
-    </a>
-    <a href="<%= projekts_path(selected_phase_id: @projekt.comment_phase.id, anchor: 'filter-subnav') %>" class="projekt-phase-link">
-      <i class="far fa-lightbulb"></i>
-      Aktive Kommentarphase
-    </a>
+    <% projekt.current_phases.each do |phase| %>
+      <a href="<%= projekts_path(selected_phase_id: phase.id, anchor: 'filter-subnav') %>" class="projekt-phase-link">
+        <i class="far fa-lightbulb"></i>
+        Direkt zu den <%= t("custom.projekts.phase_name.#{phase.name}") %>
+      </a>
+    <% end %>
   <% end %>
 
   <% c.first_footer_item do  %>

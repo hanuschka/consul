@@ -482,7 +482,7 @@ p {
 }
 
 .resource-item--sdgs {
-  .sdg-goal-tag-list {
+  .sdg-goal-tag-list, .sdg-target-tag-list {
     display: flex;
     list-style: none;
     margin-left: 0;

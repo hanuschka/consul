@@ -8,5 +8,8 @@ class Budget
     scope :unseen, -> { where(ignored_flag_at: nil) }
 
     enum implementation_performer: { city: 0, user: 1 }
+
+    scope :sort_by_random, -> { reorder('RANDOM()') }
+    scope :sort_by_newest, -> { reorder(created_at: :desc) }
   end
 end

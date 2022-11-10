@@ -16,8 +16,15 @@ class Budgets::Investments::FiltersComponent < ApplicationComponent
     end
 
     def link_path(filter)
-      if params[:current_tab_path] == 'budget_phase_footer_tab'
-        url_for(action: params[:current_tab_path], controller: 'pages', page: 1, filter: filter, filter_projekt_ids: params[:filter_projekt_ids], section: params[:section] )
+      if params[:current_tab_path].present? && !helpers.request.path.starts_with?("/projekts")
+        url_for(action: params[:current_tab_path],
+                controller: "/pages",
+                page: 1,
+                filter: filter,
+                filter_projekt_ids: params[:filter_projekt_ids],
+                section: params[:section],
+                id: params[:id],
+                order: params[:order])
       else
         current_path_with_query_params(filter: filter, page: 1)
       end

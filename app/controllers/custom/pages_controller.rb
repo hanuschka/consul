@@ -345,6 +345,9 @@ class PagesController < ApplicationController
     @headings = @budget.headings.sort_by_name
     @heading = @headings.first
 
+    @valid_orders = %w[random newest]
+    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+
     params[:section] ||= 'results' if @budget.phase == 'finished'
 
     # con-1036
@@ -367,6 +370,8 @@ class PagesController < ApplicationController
       @investments = @investments.send(params[:filter]) if params[:filter]
       @investment_ids = @budget.investments.ids
     end
+
+    @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(10)
 
     if @budget.present? && @current_projekt.current?
       @top_level_active_projekts = Projekt.where( id: @current_projekt )

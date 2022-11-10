@@ -456,6 +456,10 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def current_phases
+    projekt_phases.regular_phases.select(&:current?)
+  end
+
   private
 
     def create_corresponding_page

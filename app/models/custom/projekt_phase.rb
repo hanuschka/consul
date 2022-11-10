@@ -33,7 +33,6 @@ class ProjektPhase < ApplicationRecord
       ((end_date >= Date.today if end_date.present?) || end_date.blank? )
   end
 
-
   private
 
   def geozone_allowed?(user)

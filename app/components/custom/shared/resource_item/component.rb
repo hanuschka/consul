@@ -6,18 +6,21 @@ class Shared::ResourceItem::Component < ApplicationComponent
   DATE_RAGE_FORMAT = "%d. %B %Y"
 
   def initialize(
-    tags: [], title:, description:, image_url:,
+    title:, description:, image_url:,
     author: nil, wide: false, id: nil,
-    start_date: nil, end_date: nil
+    start_date: nil, end_date: nil,
+    tags: [], sdgs: []
   )
     @title = title
     @description = description
     @image_url = image_url
-    @tags = tags
     @author = author
     @wide = wide
     @start_date = start_date
     @end_date = end_date
+    @tags = tags
+    @sdgs = sdgs
+
     @id = id
   end
 

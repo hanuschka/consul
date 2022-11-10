@@ -1,7 +1,7 @@
 <% tags = capture do  %>
   <div class="resource-item--tags">
     <% if @tags.present? %>
-      <% @tags.first(2).each do |tag| %>
+      <% @tags.first(3).each do |tag| %>
         <div class="resource-item--tag">
           <%= tag %>
         </div>
@@ -22,11 +22,8 @@
   </div>
 
   <div class="resource-item--content">
-    <div class="resource-item--subline">
-      <div class="resource-item--subline--date-range">
-        <%= date_range %>
-      </div>
 
+    <div class="resource-item--subline">
       <%= tags %>
 
       <div class="resource-item--date">
@@ -44,9 +41,19 @@
 
         <div class="resource-item--description">
           <%= truncate(@description, length: truncate_length) %>
-          <%# <% if @id.present? && Rails.env.development? %>
-          <%#   <%= @id %>
-          <%# <% end %>
+          <% if @id.present? && Rails.env.development? %>
+            <%= @id %>
+          <% end %>
+        </div>
+        <div class="resource-item--sdgs">
+          <% if @sdgs.present? %>
+            <%# <% @sdgs.first(5).each do |sdg| %>
+            <%#   <div class="resource-item--tag">
+            <%#     <%= render(SDG::Goals::IconComponent.new(sdg))  %>
+            <%#   </div>
+            <%# <% end %>
+            <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
+          <% end %>
         </div>
 
         <% if additional_body.present? %>
@@ -63,6 +70,13 @@
             </div>
           </div>
         <% end %>
+
+
+        <% if @author.present? %>
+          <div class="resource-item--body">
+          </div>
+        <% end %>
+
       </div>
 
       <div class="resource-item--footer">

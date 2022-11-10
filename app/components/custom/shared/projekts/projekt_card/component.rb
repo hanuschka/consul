@@ -11,6 +11,7 @@ class Shared::Projekts::ProjektCard::Component < ApplicationComponent
       title: projekt.page.title,
       description: projekt.description,
       tags: projekt.tags.first(3),
+      sdgs: projekt.related_sdgs.first(5),
       start_date: projekt.total_duration_start,
       end_date: projekt.total_duration_end,
       wide: @wide,

@@ -15,7 +15,7 @@ class Shared::Projekts::ProjektCard::Component < ApplicationComponent
       start_date: projekt.total_duration_start,
       end_date: projekt.total_duration_end,
       wide: @wide,
-      url: helpers.projekt_path(),
+      url: projekt.page.url,
       image_url: projekt.image&.variant(:medium),
       id: projekt.id
     }

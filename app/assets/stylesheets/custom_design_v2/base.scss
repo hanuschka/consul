@@ -398,6 +398,14 @@ p {
 .resource-item--title {
   font-size: 20px;
   margin-bottom: 8px;
+
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
 }
 
 .resource-item--description {

@@ -14,12 +14,12 @@
   <div class="resource-item--projekt-name">
   </div>
 
-  <div class="resource-item--image-container">
+  <a href="<%= @url %>" class="resource-item--image-container">
     <% if @image_url.present? %>
       <%= image_tag(@image_url, class: 'resource-item--image') %>
       <%= image_tag(@image_url, class: 'resource-item--image-blur') %>
     <% end %>
-  </div>
+  </a>
 
   <div class="resource-item--content">
 
@@ -35,9 +35,9 @@
 
         <%= tags %>
 
-        <div class="resource-item--title">
+        <a href="<%= @url %>" class="resource-item--title">
           <%= @title %>
-        </div>
+        </a>
 
         <div class="resource-item--description">
           <%= truncate(@description, length: truncate_length) %>

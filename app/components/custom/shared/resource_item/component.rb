@@ -9,13 +9,14 @@ class Shared::ResourceItem::Component < ApplicationComponent
     title:, description:, image_url:,
     author: nil, wide: false, id: nil,
     start_date: nil, end_date: nil,
-    tags: [], sdgs: []
+    url: nil, tags: [], sdgs: []
   )
     @title = title
     @description = description
     @image_url = image_url
     @author = author
     @wide = wide
+    @url = url
     @start_date = start_date
     @end_date = end_date
     @tags = tags
@@ -39,7 +40,6 @@ class Shared::ResourceItem::Component < ApplicationComponent
   def date_range
     return if @start_date.blank? || @end_date.blank?
 
-    "01. September 2022 - 31. Dezember 2022"
     "#{@start_date.strftime(DATE_RAGE_FORMAT)} - #{@end_date.strftime(DATE_RAGE_FORMAT)}"
   end
 

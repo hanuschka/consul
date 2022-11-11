@@ -1,0 +1,64 @@
+<div class="sidebar">
+  <div class="card-section">
+    <h4 class="card-section--header">
+      <i class="fas fa-bullhorn"></i>
+      Neuigkeiten
+    </h4>
+    <div class="card-section--body">
+      <%= render_custom_block 'home_page_sidebar' %>
+    </div>
+  </div>
+
+  <div class="card-section">
+    <h4 class="card-section--header">
+      <i class="fas fa-info-circle"></i>
+      Nutzer*innen
+    </h4>
+    <div class="card-section--body">
+      <div class="system-users-list">
+        <div class="system-users-list--title">
+          <%= number_with_delimiter(User.count,  delimiter: ".") %> Nutzer*innen
+        </div>
+        <div class="system-users-list--images">
+          <% User.where.not(first_name: nil).last(5).each do |user| %>
+            <div class="system-users-list--image">
+              <%= user&.first_name&.chars&.first&.capitalize %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-section">
+    <h4 class="card-section--header">
+      Aktivität | letzte 7 Tage
+    </h4>
+    <div class="card-section--body">
+      <div>
+        17 neue Benutzer*innen
+      </div>
+      <div>
+        20 neue Kommentare
+      </div>
+      <div>
+        4 neue Vorschläge
+      </div>
+      <div>
+        7 neue Diskussionen
+      </div>
+      <div class="card-section--divider"> </div>
+
+      <div>
+        Zur Übersicht aller Vorschläge
+      </div>
+      <div>
+        Zur Übersicht aller Diskussionen
+      </div>
+      <div>
+        Zur Übersicht aller Abstimmungen
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,7 +1,7 @@
-<div class="resources-list">
+<div class="resources-list <%= class_names %>">
   <h3 class="title card-title"><%= @title %></h3>
 
-  <div class="projekts-list">
+  <div class="projekts-list resources-list--inner">
     <% @projekts.each do |projekt| %>
       <%= render Shared::Projekts::ProjektCard::Component.new(projekt: projekt, wide: @wide) %>
     <% end %>

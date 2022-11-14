@@ -4,4 +4,10 @@ class Shared::Projekts::ProjektCardList::Component < ApplicationComponent
     @title = title
     @wide = wide
   end
+
+  def class_names
+    if @wide
+      "-wide"
+    end
+  end
 end

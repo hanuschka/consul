@@ -1,9 +1,15 @@
 <% tags = capture do  %>
   <div class="resource-item--tags">
     <% if @tags.present? %>
-      <% @tags.first(3).each do |tag| %>
+      <% @tags.first(2).each do |tag| %>
         <div class="resource-item--tag">
           <%= tag %>
+        </div>
+      <% end %>
+
+      <% if @tags[2].present? %>
+        <div class="resource-item--tag resource-item--last-tag">
+          <%= @tags[2] %>
         </div>
       <% end %>
     <% end %>
@@ -33,7 +39,9 @@
     <div class="resource-item--body-wrapper">
       <div class="resource-item--body">
 
-        <%= tags %>
+        <div class="resource-item--tags-in-body">
+          <%= tags %>
+        </div>
 
         <a href="<%= @url %>" class="resource-item--title">
           <%= @title %>
@@ -43,11 +51,6 @@
           <%= truncate(@description, length: truncate_length) %>
           <% if @id.present? && Rails.env.development? %>
             <%= @id %>
-          <% end %>
-        </div>
-        <div class="resource-item--sdgs">
-          <% if @sdgs.present? %>
-            <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
           <% end %>
         </div>
 
@@ -72,6 +75,12 @@
           </div>
         <% end %>
 
+      </div>
+
+      <div class="resource-item--sdgs resource-item--sdgs-in-card">
+        <% if @sdgs.present? %>
+          <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
+        <% end %>
       </div>
 
       <div class="resource-item--footer">

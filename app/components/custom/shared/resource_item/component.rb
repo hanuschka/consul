@@ -22,6 +22,12 @@ class Shared::ResourceItem::Component < ApplicationComponent
     @tags = tags
     @sdgs = sdgs
 
+    if @wide
+      @sdgs = @sdgs.first(5)
+    else
+      @sdgs = @sdgs.first(4)
+    end
+
     @id = id
   end
 

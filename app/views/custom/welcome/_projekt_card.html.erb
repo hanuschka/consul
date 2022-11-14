@@ -1,12 +1,19 @@
 <div id="<%= dom_id(projekt) %>"
-     class="card-homepage small-12 medium-4 column margin-bottom end">
+     class="card small-12 medium-4 column margin-bottom end">
   <%= link_to projekt.page.url do %>
-    <% if projekt.image.present? %>
-      <%= image_tag(projekt.image.variant(:medium), alt: projekt.page.title) %>
-    <% else %>
-      <%= image_tag('projekt_default.jpg', size: '300x300', alt: projekt.page.title) %>
+    <figure class="figure-card" style="margin-bottom: 0;">
+      <div class="gradient"></div>
+      <% if projekt.image.present? %>
+        <%= image_tag(projekt.image.variant(:medium), alt: projekt.page.title) %>
+      <% else %>
+        <%= image_tag('projekt_default.jpg', size: '300x300', alt: projekt.page.title) %>
+      <% end %>
+      <figcaption>
+        <h3><%= projekt.page.title %></h3>
+      </figcaption>
+    </figure>
+    <% if projekt.description.present? %>
+      <p class="description" style='margin-top:1rem;'><%= projekt.description %></p>
     <% end %>
-
-    <h3><%= projekt.page.title %></h3>
   <% end %>
 </div>

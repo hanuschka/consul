@@ -1,10 +1,17 @@
 <div id="<%= dom_id(card) %>"
-     class="card-homepage small-12 medium-<%= card.columns %> column margin-bottom end">
+     class="card small-12 medium-<%= card.columns %> column margin-bottom end">
   <%= link_to card.link_url do %>
-    <% if card.image.present? %>
-      <%= image_tag(card.image.variant(:large), alt: card.image.title) %>
-    <% end %>
-
-    <h3><%= card.title %></h3>
+    <figure class="figure-card">
+      <div class="gradient"></div>
+      <% if card.image.present? %>
+        <%= image_tag(card.image.variant(:large), alt: card.image.title) %>
+      <% end %>
+      <figcaption>
+        <h3><%= card.title %></h3>
+      </figcaption>
+    </figure>
+    <p class="description"><%= card.description %></p>
+    <p><%= card.link_text %></p>
   <% end %>
 </div>
+

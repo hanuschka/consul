@@ -2,13 +2,13 @@
   <div class="resource-item--tags">
     <% if @tags.present? %>
       <% @tags.first(2).each do |tag| %>
-        <div class="resource-item--tag">
+        <div class="resource-item--tag js-projekt-tag-filter-link">
           <%= tag %>
         </div>
       <% end %>
 
       <% if @tags[2].present? %>
-        <div class="resource-item--tag resource-item--last-tag">
+        <div class="resource-item--tag resource-item--last-tag js-projekt-tag-filter-link">
           <%= @tags[2] %>
         </div>
       <% end %>
@@ -24,6 +24,13 @@
     <% if @image_url.present? %>
       <%= image_tag(@image_url, class: 'resource-item--image') %>
       <%= image_tag(@image_url, class: 'resource-item--image-blur') %>
+    <% else %>
+      <div class="resource-item--image-placeholder">
+        <i class="resource-item--image-placeholder-icon fa fa-file"></i>
+        <div class="resource-item--image-placeholder-text">
+          Projekt
+        </div>
+      </div>
     <% end %>
   </a>
 
@@ -77,11 +84,11 @@
 
       </div>
 
-      <div class="resource-item--sdgs resource-item--sdgs-in-card">
-        <% if @sdgs.present? %>
+      <% if @sdgs.present? %>
+        <div class="resource-item--sdgs resource-item--sdgs-in-card">
           <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
 
       <div class="resource-item--footer">
         <% if first_footer_item.present? %>

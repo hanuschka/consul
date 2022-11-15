@@ -8,6 +8,7 @@ class Shared::Projekts::ProjektCard::Component < ApplicationComponent
 
   def component_attributes
     {
+      resource: @projekt,
       title: projekt.page.title,
       description: projekt.description,
       tags: projekt.tags.first(3),

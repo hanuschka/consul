@@ -378,6 +378,10 @@ class PagesController < ApplicationController
       @investment_ids = @budget.investments.ids
     end
 
+    if @budget.phase == "finished" && @budget.voting_style == "distributed"
+      @current_order = "ballot_line_weight"
+    end
+
     @investments = @investments.send("sort_by_#{@current_order}")
 
     if @budget.present? && @current_projekt.current?

@@ -48,7 +48,7 @@
               <%= link_to investment.title, budget_investment_path(@budget, investment) %>
             </td>
             <td class="text-center">
-              <%= investment.ballot_lines_count %>
+              <%= investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight) %>
             </td>
             <% if @budget.show_money? %>
               <td class="text-center">

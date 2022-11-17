@@ -8,6 +8,7 @@ class Shared::ResourceItem::Component < ApplicationComponent
   def initialize(
     resource: nil,
     title:, description:, image_url:,
+    resource_name: nil,
     author: nil, wide: false, id: nil,
     start_date: nil, end_date: nil,
     url: nil, tags: [], sdgs: []
@@ -23,6 +24,7 @@ class Shared::ResourceItem::Component < ApplicationComponent
     @end_date = end_date
     @tags = tags
     @sdgs = sdgs
+    @resource_name = resource_name
 
     if @wide
       @sdgs = @sdgs.first(5)

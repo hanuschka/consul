@@ -97,6 +97,12 @@
           </div>
         <% end %>
 
+        <% if second_footer_item.present? %>
+          <div class="resource-item--footer-section">
+            <%= second_footer_item %>
+          </div>
+        <% end %>
+
         <% if additional_body.present? %>
           <div class="resource-item--footer-section">
             <div class="resource-item--additional-body resource-item--additional-body--wide">

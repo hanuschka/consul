@@ -539,6 +539,12 @@ p {
   height: 100%;
   align-items: center;
   display: flex;
+  flex-grow: 1;
+  justify-content: center;
+
+  &:first-child {
+    border-right: 1px solid #d9d9d9;
+  }
 }
 
 .resource-item--additional-body {
@@ -749,16 +755,21 @@ p {
       width: 100%;
     }
   }
+}
 
-  .button {
-    height: 37px;
-    padding: 9px 20px 0;
-    font-size: 15px;
-    border-radius: 6px;
+.button {
+  height: 37px;
+  padding: 9px 20px 0;
+  font-size: 15px;
+  border-radius: 6px;
 
-    &.-grey {
-      background: #c0cedb;
-      color: black;
-    }
+  &.-grey {
+    background: #c0cedb;
+    color: black;
+  }
+
+  &.-orange {
+    background: #FFA42D;
+    color: black;
   }
 }

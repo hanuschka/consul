@@ -21,11 +21,11 @@
 
   <% if @active_projekts.any? %>
     <div class="d-flex u-flex-container">
-      <%= render Shared::Projekts::ProjektCardList::Component.new(projekts: @active_projekts, title: t("custom.welcome.active_projekt_cards.title"), wide: false) %>
+      <%= render Projekts::ProjektList::Component.new(projekts: @active_projekts, title: t("custom.welcome.active_projekt_cards.title"), wide: false) %>
       <%= render 'sidebar'  %>
     </div>
     <div class="d-flex u-flex-container">
-      <%= render Shared::Projekts::ProjektCardList::Component.new(projekts: @active_projekts, title: t("custom.welcome.active_projekt_cards.title"), wide: true) %>
+      <%= render Projekts::ProjektList::Component.new(projekts: @active_projekts, title: t("custom.welcome.active_projekt_cards.title"), wide: true) %>
       <%= render 'sidebar'  %>
     </div>
   <% end %>

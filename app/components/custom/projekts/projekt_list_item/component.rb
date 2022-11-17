@@ -1,4 +1,4 @@
-class Shared::Projekts::ProjektCard::Component < ApplicationComponent
+class Projekts::ProjektListItem::Component < ApplicationComponent
   attr_reader :projekt
 
   def initialize(projekt:, wide: false)

@@ -747,6 +747,11 @@ img.resource-item--author-photo, .resource-item--author-photo {
         font-size: 14px;
       }
 
+      .resource-item--head-title {
+        display: flex;
+        padding: 0;
+      }
+
       .resource-item--tags {
         display: none;
       }

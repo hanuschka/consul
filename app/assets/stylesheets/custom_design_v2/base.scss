@@ -647,6 +647,12 @@ img.resource-item--author-photo, .resource-item--author-photo {
   align-items: center;
 }
 
+.resource-item--footer-section {
+  &:last-child {
+    display: none;
+  }
+}
+
 .resource-item {
   &.-wide {
     width: 100%;
@@ -794,6 +800,10 @@ img.resource-item--author-photo, .resource-item--author-photo {
 
       &:first-child {
         border-bottom: 1px solid #d9d9d9;
+      }
+
+      &:last-child {
+        display: flex;
       }
     }
 

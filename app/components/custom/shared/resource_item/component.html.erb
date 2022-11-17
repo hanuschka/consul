@@ -40,7 +40,11 @@
       <%= tags %>
 
       <div class="resource-item--date">
-        <%= days_left %>
+        <% if days_left.present? %>
+          <%= days_left %>
+        <% elsif date.present? %>
+          <%= date %>
+        <% end %>
       </div>
     </div>
     <div class="resource-item--body-wrapper">
@@ -66,23 +70,16 @@
             <%= additional_body %>
           </div>
         <% end %>
-
-        <% if @author.present? %>
-          <div class="resource-item--author">
-            <%= image_tag(nil, class: 'resource-item--author-photo') %>
-            <div class="resource-item--author-name">
-              <%= @author.name %>
-            </div>
-          </div>
-        <% end %>
-
-
-        <% if @author.present? %>
-          <div class="resource-item--body">
-          </div>
-        <% end %>
-
       </div>
+
+      <% if @author.present? %>
+        <div class="resource-item--author">
+          <%= image_tag('', class: 'resource-item--author-photo') %>
+          <div class="resource-item--author-name">
+            <%= @author.name %>
+          </div>
+        </div>
+      <% end %>
 
       <% if @sdgs.present? %>
         <div class="resource-item--sdgs resource-item--sdgs-in-card">

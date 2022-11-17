@@ -504,7 +504,6 @@ p {
 
 .resource-item--body {
   padding: 0 25px 25px;
-  border-bottom: 1px solid #d9d9d9;
   // min-height: 199px;
   height: 230px;
   // max-height: 199px;
@@ -524,6 +523,7 @@ p {
   height: 80px;
   bottom: 0;
   width: 100%;
+  border-top: 1px solid #d9d9d9;
 
   .button {
     margin-bottom: 0;
@@ -545,6 +545,20 @@ p {
   &:first-child {
     border-right: 1px solid #d9d9d9;
   }
+}
+
+.resource-item--author {
+  display: flex;
+  align-items: center;
+  padding: 0 25px 25px;
+}
+
+img.resource-item--author-photo {
+  width: 35px;
+  height: 35px !important;
+  border-radius: 50%;
+  margin-right: 12px;
+  background: #c5c5c5;
 }
 
 .resource-item--additional-body {
@@ -574,7 +588,7 @@ p {
 
 .resource-item--sdgs-in-card {
   padding: 12px 25px;
-  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
 }
 
 .projekts-list {
@@ -732,6 +746,7 @@ p {
       flex-direction: column;
       font-size: 14px;
       align-items: center;
+      border-top: none;
 
       border-left: 1px solid #d9d9d9;
     }

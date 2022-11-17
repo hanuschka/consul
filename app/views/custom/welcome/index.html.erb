@@ -41,28 +41,28 @@
     </div>
   <% end %>
 
-  <%# <% if @debates.any? %>
-  <%#   <div class="d-flex u-flex-container">
-  <%#     <%= render Shared::ResourcesList::Component.new(title: 'Debates', wide: false) do |c| %>
-  <%#       <% c.body do %>
-  <%#         <% @debates.each do |debate| %>
-  <%#           <%= render Debates::ListItem::Component.new(debate: debate, wide: false) %>
-  <%#         <% end %>
-  <%#       <% end %>
-  <%#     <% end %>
-  <%#     <%= render 'sidebar'  %>
-  <%#   </div>
-  <%#   <div class="d-flex u-flex-container">
-  <%#     <%= render Shared::ResourcesList::Component.new(title: 'Debates', wide: true) do |c| %>
-  <%#       <% c.body do %>
-  <%#         <% @debates.each do |debate| %>
-  <%#           <%= render Debates::ListItem::Component.new(debate: debate, wide: true) %>
-  <%#         <% end %>
-  <%#       <% end %>
-  <%#     <% end %>
-  <%#     <%= render 'sidebar'  %>
-  <%#   </div>
-  <%# <% end %>
+  <% if @debates.any? %>
+    <div class="d-flex u-flex-container">
+      <%= render Shared::ResourcesList::Component.new(title: 'Debates', wide: false) do |c| %>
+        <% c.body do %>
+          <% @debates.each do |debate| %>
+            <%= render Debates::ListItem::Component.new(debate: debate, wide: false) %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <%= render 'sidebar'  %>
+    </div>
+    <div class="d-flex u-flex-container">
+      <%= render Shared::ResourcesList::Component.new(title: 'Debates', wide: true) do |c| %>
+        <% c.body do %>
+          <% @debates.each do |debate| %>
+            <%= render Debates::ListItem::Component.new(debate: debate, wide: true) %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <%= render 'sidebar'  %>
+    </div>
+  <% end %>
 
 
   <% if @cards.any? %>

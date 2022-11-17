@@ -15,6 +15,7 @@ class Projekts::ProjektListItem::Component < ApplicationComponent
       sdgs: projekt.related_sdgs.first(5),
       start_date: projekt.total_duration_start,
       end_date: projekt.total_duration_end,
+      resource_name: "Projekt",
       wide: @wide,
       url: projekt.page.url,
       image_url: projekt.image&.variant(:medium),

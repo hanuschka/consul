@@ -1,8 +1,8 @@
 class Proposals::ProposalList::Component < ApplicationComponent
   renders_one :body
 
-  def initialize(proposal:, title:, wide: false)
-    @proposal = proposal
+  def initialize(proposals:, title:, wide: false)
+    @proposals = proposals
     @title = title
     @wide = wide
   end

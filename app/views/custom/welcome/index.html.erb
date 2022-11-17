@@ -30,6 +30,17 @@
     </div>
   <% end %>
 
+  <% if @proposals.any? %>
+    <div class="d-flex u-flex-container">
+      <%= render Proposals::ProposalList::Component.new(proposals: @proposals, title: "Proposals", wide: false) %>
+      <%= render 'sidebar'  %>
+    </div>
+    <div class="d-flex u-flex-container">
+      <%= render Proposals::ProposalList::Component.new(proposals: @proposals, title: "Proposals", wide: true) %>
+      <%= render 'sidebar'  %>
+    </div>
+  <% end %>
+
   <% if @cards.any? %>
     <div class="column small-centered margin-bottom">
       <div class="row">

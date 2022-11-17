@@ -1,7 +1,8 @@
-class Shared::ResourcesList::Component < ApplicationComponent
+class Projekts::ProjektList::Component < ApplicationComponent
   renders_one :body
 
-  def initialize(title:, wide: false)
+  def initialize(projekts:, title:, wide: false)
+    @projekts = projekts
     @title = title
     @wide = wide
   end

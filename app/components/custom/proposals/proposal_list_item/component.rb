@@ -1,24 +1,24 @@
-class Projekts::ProjektListItem::Component < ApplicationComponent
-  attr_reader :projekt
+class Projekts::ProposalListItem::Component < ApplicationComponent
+  attr_reader :proposal
 
-  def initialize(projekt:, wide: false)
-    @projekt = projekt
+  def initialize(proposal:, wide: false)
+    @proposal = proposal
     @wide = wide
   end
 
   def component_attributes
     {
-      resource: @projekt,
-      title: projekt.page.title,
-      description: projekt.description,
-      tags: projekt.tags.first(3),
-      sdgs: projekt.related_sdgs.first(5),
-      start_date: projekt.total_duration_start,
-      end_date: projekt.total_duration_end,
+      resource: @proposal,
+      title: proposal.page.title,
+      description: proposal.description,
+      tags: proposal.tags.first(3),
+      sdgs: proposal.related_sdgs.first(5),
+      start_date: proposal.total_duration_start,
+      end_date: proposal.total_duration_end,
       wide: @wide,
-      url: projekt.page.url,
-      image_url: projekt.image&.variant(:medium),
-      id: projekt.id
+      url: proposal.page.url,
+      image_url: proposal.image&.variant(:medium),
+      id: proposal.id
     }
   end
 end

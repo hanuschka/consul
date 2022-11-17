@@ -1,7 +1,7 @@
 <%= render Shared::ResourcesList::Component.new(title: @title, wide: @wide) do |c| %>
   <% c.body do %>
     <% @projekts.each do |projekt| %>
-      <%= render Projekts::ProjektListItem::Component.new(projekt: projekt, wide: @wide) %>
+      <%= render Proposals::ProposalListItem::Component.new(projekt: projekt, wide: @wide) %>
     <% end %>
   <% end %>
 <% end %>

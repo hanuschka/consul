@@ -307,6 +307,9 @@ p {
 
 .resources-list {
   // width: 860px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .u-flex-container {
@@ -564,13 +567,9 @@ p {
 }
 
 .projekts-list {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
 }
 
 .projekts-list.-wide {
-  direction: column;
 }
 
 .resource-item--subline--date-range {

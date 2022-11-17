@@ -1,4 +1,4 @@
-class Shared::Projekts::ProjektCardList::Component < ApplicationComponent
+class Projekts::ProjektList::Component < ApplicationComponent
   def initialize(projekts:, title:, wide: false)
     @projekts = projekts
     @title = title

@@ -1,9 +1,9 @@
 <div class="u-main-column resources-list <%= class_names %>">
   <h3 class="title card-title"><%= @title %></h3>
 
-  <div class="projekts-list resources-list--inner">
+  <div class="resources-list--inner">
     <% @projekts.each do |projekt| %>
-      <%= render Shared::Projekts::ProjektCard::Component.new(projekt: projekt, wide: @wide) %>
+      <%= render Projekts::ProjektListItem::Component.new(projekt: projekt, wide: @wide) %>
     <% end %>
   </div>
 </div>

@@ -19,6 +19,8 @@ class Proposals::ProposalListItem::Component < ApplicationComponent
       resource_name: "Proposal",
       url: helpers.proposals_path(proposal),
       image_url: proposal.image&.variant(:medium),
+      date: proposal.created_at,
+      author: proposal.author,
       id: proposal.id
     }
   end

@@ -399,6 +399,10 @@ p {
       text-decoration: none;
     }
   }
+
+  .sdg-goal-icon {
+    width: 45px;
+  }
 }
 
 .resource-item--image-container {
@@ -501,7 +505,8 @@ p {
 .resource-item--body {
   padding: 0 25px 25px;
   border-bottom: 1px solid #d9d9d9;
-  min-height: 199px;
+  // min-height: 199px;
+  height: 230px;
   // max-height: 199px;
 }
 
@@ -671,6 +676,8 @@ p {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0;
+      // height: 17px;
+      min-height: 17px;
 
       .resource-item--subline--date-range {
         display: flex;

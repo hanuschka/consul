@@ -1,11 +1,8 @@
 <%= render(Shared::ResourceItem::Component.new(component_attributes)) do |c| %>
-  <% c.additional_body do %>
-  <% end %>
-
   <% c.first_footer_item do  %>
    <%= link_to('Unterstützen', helpers.proposal_path(proposal), class: 'button -orange') %>
   <% end %>
   <% c.second_footer_item do  %>
-   <%= link_to('Zum Projekt', helpers.proposal_path(proposal), class: 'button -grey') %>
+    <%= proposal.votes_for.size %> Unterstützer*innen
   <% end %>
 <% end %>

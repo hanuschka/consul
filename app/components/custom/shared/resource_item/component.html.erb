@@ -43,7 +43,9 @@
       <%= tags %>
 
       <% if @head_title.present? %>
-        <%= @head_title %>
+        <div class="resource-item--head-title">
+          <%= @head_title %>
+        </div>
       <% else %>
         <div class="resource-item--date">
           <% if days_left.present? %>

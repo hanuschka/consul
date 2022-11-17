@@ -21,6 +21,7 @@ class WelcomeController < ApplicationController
     # @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts : []
     @active_projekts = Projekt.current.first(3)
     @proposals = Proposal.first(3)
+    @debates = Debate.first(3)
     @expired_projekts = @active_feeds.include?("expired_projekts") ? @feeds.find{ |feed| feed.kind == 'expired_projekts' }.expired_projekts : []
     @latest_polls = @active_feeds.include?("polls") ? @feeds.find{ |feed| feed.kind == 'polls' }.polls : []
 

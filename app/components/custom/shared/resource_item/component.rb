@@ -8,6 +8,7 @@ class Shared::ResourceItem::Component < ApplicationComponent
 
   def initialize(
     resource: nil,
+    head_title: nil,
     title:, description:, image_url:,
     resource_name: nil,
     author: nil, wide: false, id: nil,
@@ -16,6 +17,7 @@ class Shared::ResourceItem::Component < ApplicationComponent
   )
     @resource = resource
     @title = title
+    @head_title = head_title
     @description = description
     @image_url = image_url
     @author = author

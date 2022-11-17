@@ -9,6 +9,7 @@ class Proposals::ProposalListItem::Component < ApplicationComponent
   def component_attributes
     {
       resource: @proposal,
+      head_title: proposal.projekt.page.title,
       title: proposal.title,
       description: proposal.summary,
       tags: proposal.tags.first(3),

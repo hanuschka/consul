@@ -17,8 +17,11 @@
 <% end %>
 
 <div class="resource-item <%= component_class_name %>">
-  <div class="resource-item--projekt-name">
-  </div>
+  <% if @head_title.present? %>
+    <div class="resource-item--head-title">
+      <%= @head_title %>
+    </div>
+  <% end %>
 
   <a href="<%= @url %>" class="resource-item--image-container">
     <% if @image_url.present? %>
@@ -39,14 +42,31 @@
     <div class="resource-item--subline">
       <%= tags %>
 
-      <div class="resource-item--date">
-        <% if days_left.present? %>
-          <%= days_left %>
-        <% elsif date.present? %>
-          <%= date %>
-        <% end %>
-      </div>
+      <% if @head_title.present? %>
+        <%= @head_title %>
+      <% else %>
+        <div class="resource-item--date">
+          <% if days_left.present? %>
+            <%= days_left %>
+          <% elsif date.present? %>
+            <%= date %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @author.present? %>
+        <div class="resource-item--author resource-item--author-in-subline">
+          <div class="resource-item--author-name">
+            <%= @author.name %>
+          </div>
+          <%# <%= image_tag('', class: 'resource-item--author-photo') %>
+          <div class="resource-item--author-photo">
+
+          </div>
+        </div>
+      <% end %>
     </div>
+
     <div class="resource-item--body-wrapper">
       <div class="resource-item--body">
 
@@ -73,8 +93,11 @@
       </div>
 
       <% if @author.present? %>
-        <div class="resource-item--author">
-          <%= image_tag('', class: 'resource-item--author-photo') %>
+        <div class="resource-item--author resource-item--author-in-card">
+          <%# <%= image_tag('', class: 'resource-item--author-photo') %>
+          <div class="resource-item--author-photo">
+
+          </div>
           <div class="resource-item--author-name">
             <%= @author.name %>
           </div>

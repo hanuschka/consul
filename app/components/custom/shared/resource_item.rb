@@ -1,4 +1,4 @@
-class Shared::ResourceItem::Component < ApplicationComponent
+class Shared::ResourceItem < ApplicationComponent
   renders_one :additional_body
   renders_one :first_footer_item
   renders_one :second_footer_item

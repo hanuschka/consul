@@ -1,4 +1,4 @@
-<%= render(Shared::ResourceItem::Component.new(component_attributes)) do |c| %>
+<%= render(Shared::ResourceItem.new(component_attributes)) do |c| %>
   <% c.additional_body do %>
     <% number_of_phases_to_take = projekt.current_phases.size > 3 ? 2 : 3 %>
     <% projekt.current_phases.first(number_of_phases_to_take).each do |phase| %>

@@ -1,4 +1,4 @@
-class Proposals::ListItem::Component < ApplicationComponent
+class Proposals::ListItem < ApplicationComponent
   attr_reader :proposal
 
   def initialize(proposal:, wide: false)

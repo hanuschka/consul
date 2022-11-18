@@ -81,7 +81,7 @@
         </a>
 
         <div class="resource-item--description">
-          <%== truncate(@description, length: truncate_length)&.html_safe %>
+          <%= raw(truncate(@description, length: truncate_length)&.html_safe) %>
           <% if @id.present? && Rails.env.development? %>
             <%= @id %>
           <% end %>
@@ -126,7 +126,7 @@
         <% end %>
 
         <% if additional_body.present? %>
-          <div class="resource-item--footer-section">
+          <div class="resource-item--footer-section resource-item--additional-body-in-footer">
             <div class="resource-item--additional-body resource-item--additional-body--wide">
               <%= additional_body %>
             </div>

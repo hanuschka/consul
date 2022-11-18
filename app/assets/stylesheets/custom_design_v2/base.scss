@@ -680,13 +680,16 @@ img.resource-item--author-photo, .resource-item--author-photo {
   display: none;
 }
 
-.resource-item--head-title a {
+.resource-item--head-title  {
   height: 45px;
   padding: 0 25px;
   background: #003A71;
-  color: white;
   display: flex;
   align-items: center;
+
+  a {
+    color: white;
+  }
 }
 
 .resource-item--footer-section {

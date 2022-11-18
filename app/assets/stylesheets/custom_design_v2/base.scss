@@ -558,6 +558,18 @@ p {
     align-items: center;
     justify-content: center;
   }
+
+  .participation-not-allowed {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    top: 0;
+    left: 0;
+  }
+  .total-votes {
+    display: none;
+  }
 }
 
 .resource-item--subline--date-range {
@@ -668,7 +680,7 @@ img.resource-item--author-photo, .resource-item--author-photo {
   display: none;
 }
 
-.resource-item--head-title {
+.resource-item--head-title a {
   height: 45px;
   padding: 0 25px;
   background: #003A71;

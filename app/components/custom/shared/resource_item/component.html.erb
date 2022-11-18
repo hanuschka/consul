@@ -17,9 +17,9 @@
 <% end %>
 
 <div class="resource-item <%= component_class_name %>">
-  <% if @head_title.present? %>
+  <% if @projekt.present? %>
     <div class="resource-item--head-title">
-      <%= @head_title %>
+      <%= link_to @projekt&.page.title, @projekt.page.url  %>
     </div>
   <% end %>
 
@@ -42,9 +42,9 @@
     <div class="resource-item--subline">
       <%= tags %>
 
-      <% if @head_title.present? %>
+      <% if @projekt.present? %>
         <div class="resource-item--head-title">
-          <%= @head_title %>
+          <%= link_to @projekt&.page.title, @projekt.page.url  %>
         </div>
       <% else %>
         <div class="resource-item--date">

@@ -88,7 +88,7 @@
       <%= render 'sidebar'  %>
     </div>
     <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList::Component.new(title: 'Poll', wide: true) do |c| %>
+      <%= render Shared::ResourcesList::Component.new(title: 'Polls', wide: true) do |c| %>
         <% c.body do %>
           <% @polls.each do |poll| %>
             <%= render Polls::ListItem::Component.new(poll: poll, wide: false) %>

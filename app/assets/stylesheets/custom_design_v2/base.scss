@@ -524,9 +524,7 @@ p {
 
 .resource-item--body {
   padding: 0 25px 15px;
-  height: 115px;
-  // min-height: 199px;
-  // max-height: 199px;
+  min-height: 115px;
 }
 
 .resource-item--additional-body--wide {

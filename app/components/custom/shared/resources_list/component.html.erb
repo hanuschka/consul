@@ -2,6 +2,8 @@
   <h3 class="title card-title"><%= @title %></h3>
 
   <div class="resources-list--inner">
-    <%= body %>
+     <% @resources.each do |resource| %>
+       <%= render resource_component(resource) %>
+     <% end %>
   </div>
 </div>

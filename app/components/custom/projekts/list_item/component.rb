@@ -1,4 +1,4 @@
-class Projekts::ProjektListItem::Component < ApplicationComponent
+class Projekts::ListItem::Component < ApplicationComponent
   attr_reader :projekt
 
   def initialize(projekt:, wide: false)

@@ -1,6 +1,6 @@
 <%= render(Shared::ResourceItem::Component.new(component_attributes)) do |c| %>
   <% c.first_footer_item do  %>
-    <%= render Shared::InFavorAgainstComponent.new(debate) %>
+    <%= render Debates::VotesComponent.new(debate) %>
   <% end %>
   <% c.second_footer_item do  %>
     <%= debate.votes_for.size %> Unterstützer*innen

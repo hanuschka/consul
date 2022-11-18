@@ -542,9 +542,21 @@ p {
   bottom: 0;
   width: 100%;
   border-top: 1px solid #d9d9d9;
+  position: relative;
 
   .button {
     margin-bottom: 0;
+  }
+
+  .callout.warning {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -560,8 +572,8 @@ p {
   flex-grow: 1;
   justify-content: center;
 
-  &:first-child {
-    border-right: 1px solid #d9d9d9;
+  &:last-child {
+    border-left: 1px solid #d9d9d9;
   }
 }
 
@@ -712,6 +724,10 @@ img.resource-item--author-photo, .resource-item--author-photo {
 
     .resource-item--author-in-card {
       display: none;
+    }
+
+    .resource-item--footer-section:last-child {
+      border-left: 0;
     }
 
     .resource-item--additional-body--card {

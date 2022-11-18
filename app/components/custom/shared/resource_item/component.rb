@@ -14,7 +14,7 @@ class Shared::ResourceItem::Component < ApplicationComponent
     author: nil, wide: false, id: nil,
     start_date: nil, end_date: nil, date: nil,
     url: nil, tags: [], sdgs: [],
-    image_placeholder_icon_class: 'fa-file',
+    image_placeholder_icon_class: 'fa-file'
   )
     @resource = resource
     @title = title

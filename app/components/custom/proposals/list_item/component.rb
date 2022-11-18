@@ -22,8 +22,7 @@ class Proposals::ListItem::Component < ApplicationComponent
       image_url: proposal.image&.variant(:medium),
       date: proposal.created_at,
       author: proposal.author,
-      id: proposal.id,
-      image_placeholder_icon_class: ''
+      id: proposal.id
     }
   end
 end

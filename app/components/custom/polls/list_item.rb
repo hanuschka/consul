@@ -1,4 +1,4 @@
-class Polls::ListItem::Component < ApplicationComponent
+class Polls::ListItem < ApplicationComponent
   attr_reader :poll
 
   def initialize(poll:, wide: false)
@@ -18,7 +18,7 @@ class Polls::ListItem::Component < ApplicationComponent
       # end_date: poll.total_duration_end,
       wide: @wide,
       resource_name: "poll",
-      url: helpers.proposal_path(poll),
+      url: helpers.poll_path(poll),
       image_url: poll.image&.variant(:medium),
       date: poll.created_at,
       author: poll.author,

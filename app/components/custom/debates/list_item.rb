@@ -1,4 +1,4 @@
-class Debates::ListItem::Component < ApplicationComponent
+class Debates::ListItem < ApplicationComponent
   attr_reader :debate
 
   def initialize(debate:, wide: false)

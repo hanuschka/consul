@@ -523,9 +523,9 @@ p {
 }
 
 .resource-item--body {
-  padding: 0 25px 25px;
+  padding: 0 25px 15px;
+  height: 115px;
   // min-height: 199px;
-  height: 230px;
   // max-height: 199px;
 }
 
@@ -707,6 +707,8 @@ img.resource-item--author-photo, .resource-item--author-photo {
       .resource-item--author-photo {
         margin-right: 0;
         margin-left: 12px;
+        width: 32px;
+        height: 32px !important;
       }
     }
 

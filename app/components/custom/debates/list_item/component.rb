@@ -9,7 +9,7 @@ class Debates::ListItem::Component < ApplicationComponent
   def component_attributes
     {
       resource: @debate,
-      head_title: debate.projekt&.page&.title,
+      projekt: debate.projekt,
       title: debate.title,
       description: debate.description,
       tags: debate.tags.first(3),
@@ -18,7 +18,7 @@ class Debates::ListItem::Component < ApplicationComponent
       # end_date: debate.total_duration_end,
       wide: @wide,
       resource_name: "Debate",
-      url: helpers.proposals_path(debate),
+      url: helpers.debate_path(debate),
       image_url: debate.image&.variant(:medium),
       date: debate.created_at,
       author: debate.author,

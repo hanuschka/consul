@@ -29,7 +29,7 @@
       <%= image_tag(@image_url, class: 'resource-item--image-blur') %>
     <% else %>
       <div class="resource-item--image-placeholder">
-        <i class="resource-item--image-placeholder-icon fa fa-file"></i>
+        <i class="resource-item--image-placeholder-icon fa <%= @image_placeholder_icon_class %>"></i>
         <div class="resource-item--image-placeholder-text">
           <%= @resource_name %>
         </div>

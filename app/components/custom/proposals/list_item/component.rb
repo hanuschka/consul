@@ -1,4 +1,4 @@
-class Proposals::ProposalListItem::Component < ApplicationComponent
+class Proposals::ListItem::Component < ApplicationComponent
   attr_reader :proposal
 
   def initialize(proposal:, wide: false)
@@ -22,7 +22,8 @@ class Proposals::ProposalListItem::Component < ApplicationComponent
       image_url: proposal.image&.variant(:medium),
       date: proposal.created_at,
       author: proposal.author,
-      id: proposal.id
+      id: proposal.id,
+      image_placeholder_icon_class: ''
     }
   end
 end

@@ -13,7 +13,8 @@ class Shared::ResourceItem::Component < ApplicationComponent
     resource_name: nil,
     author: nil, wide: false, id: nil,
     start_date: nil, end_date: nil, date: nil,
-    url: nil, tags: [], sdgs: []
+    url: nil, tags: [], sdgs: [],
+    image_placeholder_icon_class: 'fa-file',
   )
     @resource = resource
     @title = title
@@ -29,6 +30,7 @@ class Shared::ResourceItem::Component < ApplicationComponent
     @tags = tags
     @sdgs = sdgs
     @resource_name = resource_name
+    @image_placeholder_icon_class = image_placeholder_icon_class
 
     if @wide
       @sdgs = @sdgs.first(5)

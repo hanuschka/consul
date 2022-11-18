@@ -403,6 +403,22 @@ p {
   .sdg-goal-icon {
     width: 45px;
   }
+
+  .in-favor-against {
+    button {
+      font-size: 19px;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .percentage {
+      text-align: center;
+    }
+  }
 }
 
 .resource-item--image-container {
@@ -652,9 +668,14 @@ img.resource-item--author-photo, .resource-item--author-photo {
 }
 
 .resource-item--footer-section {
-  &:last-child {
-    display: none;
-  }
+  // &:last-child {
+
+  //   display: none;
+  // }
+}
+
+.resource-item--additional-body-in-footer {
+  display: none;
 }
 
 .resource-item {
@@ -672,6 +693,10 @@ img.resource-item--author-photo, .resource-item--author-photo {
 
     .resource-item--sdgs-in-card {
       display: none;
+    }
+
+    .resource-item--additional-body-in-footer {
+      display: flex;
     }
 
     .resource-item--author-in-subline {

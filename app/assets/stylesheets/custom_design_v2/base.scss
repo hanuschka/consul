@@ -596,6 +596,7 @@ p {
     padding-left: 25px;
     display: flex;
     align-items: center;
+    font-weight: 500;
 
     i {
       margin-right: 10px;
@@ -894,8 +895,9 @@ img.resource-item--author-photo, .resource-item--author-photo {
         justify-content: center;
 
         i {
-          margin-right: 10px;
+          margin-right: 0;
           font-size: 30px;
+          margin-bottom: 7px;
         }
       }
     }

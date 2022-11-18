@@ -1,0 +1,9 @@
+<% cache [deficiency_report,
+          deficiency_report.status] do %>
+  <% if deficiency_report.status.present? %>
+    <div class="deficiency-report-status"  >
+      <i class="fas fa-<%= "#{deficiency_report.status.icon}" %>" style='<%= "color:#{deficiency_report.status.color}" %>' ></i>
+      <%= deficiency_report.status.title %>
+    </div>
+  <% end %>
+<% end %>

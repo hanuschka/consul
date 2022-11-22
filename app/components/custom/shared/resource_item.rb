@@ -42,7 +42,7 @@ class Shared::ResourceItem < ApplicationComponent
   end
 
   def component_class_name
-    class_name = @resource_name&.underscore
+    class_name = "#{@resource_name&.underscore}-list-item"
 
     if @wide
       class_name += " -wide"

@@ -1,13 +1,15 @@
 <%= render(Shared::ResourceItem.new(component_attributes)) do |c| %>
   <% c.first_footer_item do  %>
+    <%# <%= budget_investment.id %>
+    <%# <br/>
+    <%# <%= budget_investment.budget.id %>
     <%= render partial: 'budgets/investments/investment_status_callout', locals: { investment: budget_investment } %>
 
+
     <% if budget_investment.feasible? %>
-      <% if budget_investment.should_show_votes? %>
-        <div id="<%= dom_id(budget_investment) %>_votes" class="">
-          <%= render Budgets::Investments::VotesComponent.new(budget_investment) %>
-        </div>
-      <% end %>
+      <div id="<%= dom_id(budget_investment) %>_votes" class="">
+        <%= render Budgets::Investments::VotesComponent.new(budget_investment) %>
+      </div>
     <% end %>
 
     <% if budget_investment.feasible? %>

@@ -41,5 +41,9 @@ class Budget
     def comments_allowed?(user)
       permission_problem(user).nil?
     end
+
+    def should_show_votes?
+      budget.balloting?
+    end
   end
 end

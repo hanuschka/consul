@@ -1,4 +1,4 @@
-<% if investment.budget.phase.in?(['accepting', 'reviewing', 'valuating', 'reviewing_ballots']) %>
+<% if investment.budget.phase.in?(['accepting', 'reviewing', 'valuating', 'reviewing_ballots', 'publishing_prices']) %>
   <% callout_class = investment.budget.phase == 'accepting' ? 'success' : 'warning' %>
 
   <div class="callout <%= callout_class %>">

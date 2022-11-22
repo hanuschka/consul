@@ -543,7 +543,7 @@ p {
   bottom: 0;
   width: 100%;
   border-top: 1px solid #d9d9d9;
-  position: relative;
+  // position: relative;
 
   .button {
     margin-bottom: 0;
@@ -551,11 +551,13 @@ p {
 
   .callout.warning, .callout.success, .callout.error, .callout.alert {
     width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+    // // position: absolute;
+    // top: 0;
+    // left: 0;
+    font-size: 12px;
     height: 100%;
     display: flex;
+    margin-bottom: 0;
     align-items: center;
     justify-content: center;
     text-align: left;
@@ -586,6 +588,7 @@ p {
   display: flex;
   flex-grow: 1;
   justify-content: center;
+  // position: relative;
 
   &:last-child {
     border-left: 1px solid #d9d9d9;
@@ -604,6 +607,10 @@ p {
       font-size: 30px;
     }
   }
+}
+
+.resource-item--footer-section + .resource-item--footer-section {
+  min-width: 50%;
 }
 
 .resource-item--author {

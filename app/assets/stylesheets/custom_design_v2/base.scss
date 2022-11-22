@@ -528,7 +528,7 @@ p {
   min-height: 115px;
 }
 
-.resource-item.projekt {
+.resource-item.projekt-list-item {
   .resource-item--body {
     min-height: 215px;
   }
@@ -552,6 +552,15 @@ p {
 
     .total-votes {
       display: none;
+    }
+
+    .in-favor-against {
+      display: flex;
+
+      .in-favor, .against {
+        display: flex;
+        flex-direction: column-reverse;
+      }
     }
   }
 

@@ -54,11 +54,11 @@
 
   <% if @polls.any? %>
     <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @polls, title: "Debates", wide: false) %>
+      <%= render Shared::ResourcesList.new(resources: @polls, title: "Polls", wide: false) %>
       <%= render 'sidebar'  %>
     </div>
     <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @polls, title: "Debates", wide: true) %>
+      <%= render Shared::ResourcesList.new(resources: @polls, title: "Polls", wide: true) %>
       <%= render 'sidebar'  %>
     </div>
   <% end %>

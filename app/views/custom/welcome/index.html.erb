@@ -74,6 +74,17 @@
     </div>
   <% end %>
 
+  <% if @budgets.any? %>
+    <div class="d-flex u-flex-container">
+      <%= render Shared::ResourcesList.new(resources: @budgets, title: "Budget", wide: false) %>
+      <%= render 'sidebar'  %>
+    </div>
+    <div class="d-flex u-flex-container">
+      <%= render Shared::ResourcesList.new(resources: @budgets, title: "Budget", wide: true) %>
+      <%= render 'sidebar'  %>
+    </div>
+  <% end %>
+
   <% if @cards.any? %>
     <div class="column small-centered margin-bottom">
       <div class="row">

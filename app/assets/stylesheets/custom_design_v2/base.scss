@@ -473,7 +473,7 @@ p {
 .resources-list--inner {
   display: flex;
   grid-gap: 15px;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
   align-items: flex-start;
 }
@@ -549,7 +549,7 @@ p {
     margin-bottom: 0;
   }
 
-  .callout.warning {
+  .callout.warning, .callout.success, .callout.error {
     width: 100%;
     position: absolute;
     top: 0;
@@ -558,7 +558,8 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    text-align: left;
+    border: none;
   }
 
   .participation-not-allowed {
@@ -912,7 +913,10 @@ img.resource-item--author-photo, .resource-item--author-photo {
 
 .button {
   height: 37px;
-  padding: 9px 20px 0;
+  padding: 0 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 15px;
   border-radius: 6px;
 

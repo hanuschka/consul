@@ -25,6 +25,8 @@ class Shared::ResourcesList < ApplicationComponent
       Polls::ListItem.new(poll: resource, wide: @wide)
     when DeficiencyReport
       DeficiencyReports::ListItem.new(deficiency_report: resource, wide: @wide)
+    when Budget::Investment
+      Budgets::Investments::ListItem.new(budget_investment: resource, wide: @wide)
     end
   end
 end

@@ -525,7 +525,8 @@ p {
 
 .resource-item--body {
   padding: 0 25px 15px;
-  min-height: 115px;
+  // min-height: 115px;
+  min-height: 152px;
 }
 
 .resource-item.projekt-list-item {
@@ -586,6 +587,8 @@ p {
     z-index: 10;
     top: 0;
     left: 0;
+    font-size: 12px;
+    line-height: 1.2;
   }
 }
 
@@ -600,6 +603,8 @@ p {
   display: flex;
   flex-grow: 1;
   justify-content: center;
+  position: relative;
+  text-align: center;
   position: relative;
 
   &:last-child {
@@ -754,6 +759,10 @@ img.resource-item--author-photo, .resource-item--author-photo {
       .resource-item--additional-body {
         width: 100%;
         padding: 0px 20px;
+      }
+
+      .participation-not-allowed {
+        font-size: 16px;
       }
     }
 

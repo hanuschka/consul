@@ -1,22 +1,16 @@
 <%= render(Shared::ResourceItem.new(component_attributes)) do |c| %>
   <% c.first_footer_item do  %>
-    <% if show_status_message?  %>
-      <div class="supported callout <%= status_message_class %> ">
-        <%# <%= t("custom.budgets.investments.statuses.phases.#{budget_investment.budget.phase}") %>
-        <%= render partial: 'budgets/investments/investment_status_callout', locals: { investment: budget_investment } %>
-      </div>
-    <% end %>
+    <%= render partial: 'budgets/investments/investment_status_callout', locals: { investment: budget_investment } %>
 
-    <%# <% if budget_investment.feasible? %>
+    <% if budget_investment.feasible? %>
       <% if budget_investment.should_show_votes? %>
         <div id="<%= dom_id(budget_investment) %>_votes" class="">
           <%= render Budgets::Investments::VotesComponent.new(budget_investment) %>
         </div>
       <% end %>
-    <%# <% end %>
+    <% end %>
 
-
-    <%# <% if budget_investment.feasible? %>
+    <% if budget_investment.feasible? %>
       <% if budget_investment.should_show_vote_count? %>
         <% c.second_footer_item do  %>
           <div id="<%= dom_id(budget_investment) %>_votes" class="">
@@ -41,7 +35,6 @@
           </div>
         <% end %>
       <% end %>
-
-    <%# <% end %>
+    <% end %>
   <% end %>
 <% end %>

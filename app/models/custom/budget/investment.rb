@@ -8,5 +8,9 @@ class Budget
     scope :unseen, -> { where(ignored_flag_at: nil) }
 
     enum implementation_performer: { city: 0, user: 1 }
+
+    def should_show_votes?
+      budget.balloting?
+    end
   end
 end

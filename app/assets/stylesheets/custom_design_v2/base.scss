@@ -588,7 +588,7 @@ p {
   display: flex;
   flex-grow: 1;
   justify-content: center;
-  // position: relative;
+  position: relative;
 
   &:last-child {
     border-left: 1px solid #d9d9d9;
@@ -611,6 +611,7 @@ p {
 
 .resource-item--footer-section + .resource-item--footer-section {
   min-width: 50%;
+  max-width: 50%;
 }
 
 .resource-item--author {

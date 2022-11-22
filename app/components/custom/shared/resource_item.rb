@@ -42,9 +42,13 @@ class Shared::ResourceItem < ApplicationComponent
   end
 
   def component_class_name
+    class_name = @resource_name&.underscore
+
     if @wide
-      '-wide'
+      class_name += " -wide"
     end
+
+    class_name
   end
 
   def days_left

@@ -433,8 +433,8 @@ p {
 
   .resource-item--image {
     max-height: 180px;
-    height: 180px;
-    width: 300px;
+    height: 180px !important;
+    width: auto;
     object-fit: cover;
     margin: auto;
     z-index: 10;
@@ -528,12 +528,10 @@ p {
   min-height: 115px;
 }
 
-.resource-item--additional-body--wide {
-  display: none;
-}
-
-.resource-item--tags-in-body {
-
+.resource-item.projekt {
+  .resource-item--body {
+    min-height: 215px;
+  }
 }
 
 .resource-item--footer {
@@ -547,6 +545,14 @@ p {
 
   .button {
     margin-bottom: 0;
+  }
+
+  .votes {
+    border-left: none !important;
+
+    .total-votes {
+      display: none;
+    }
   }
 
   .callout.warning, .callout.success, .callout.error, .callout.alert {
@@ -571,9 +577,6 @@ p {
     z-index: 10;
     top: 0;
     left: 0;
-  }
-  .total-votes {
-    display: none;
   }
 }
 
@@ -728,6 +731,7 @@ img.resource-item--author-photo, .resource-item--author-photo {
   display: none;
 }
 
+
 .resource-item {
   &.-wide {
     width: 100%;
@@ -737,12 +741,31 @@ img.resource-item--author-photo, .resource-item--author-photo {
     // max-width: 865px;
     max-width: 930px;
 
+    .resource-item--footer-section  {
+      .resource-item--additional-body {
+        width: 100%;
+        padding: 0px 20px;
+      }
+    }
+
+    .resource-item--footer-section + .resource-item--footer-section {
+      min-height: 50%;
+      max-height: 50%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+
     .resource-item--head-title {
       display: none;
     }
 
     .resource-item--sdgs-in-card {
       display: none;
+    }
+
+    .resource-item--image {
+      height: auto !important;
+      max-height: none;
     }
 
     .resource-item--additional-body-in-footer {
@@ -770,8 +793,10 @@ img.resource-item--author-photo, .resource-item--author-photo {
       border-left: 0;
     }
 
-    .resource-item--additional-body--card {
-      display: none;
+    .resource-item--body {
+      .resource-item--additional-body {
+        display: none;
+      }
     }
 
     .resource-item--last-tag {
@@ -808,6 +833,7 @@ img.resource-item--author-photo, .resource-item--author-photo {
     .resource-item--body {
       height: 100%;
       max-height: none;
+
     }
 
 

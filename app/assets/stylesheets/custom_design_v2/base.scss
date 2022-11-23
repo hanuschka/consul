@@ -400,6 +400,12 @@ p {
     }
   }
 
+  a.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .sdg-goal-icon {
     width: 45px;
   }
@@ -753,7 +759,6 @@ img.resource-item--author-photo, .resource-item--author-photo {
     flex-direction: row;
     // max-width: 865px;
     max-width: 930px;
-
 
     .resource-item--body-wrapper {
       .resource-item--author {

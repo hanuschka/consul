@@ -21,7 +21,6 @@ class Polls::ListItem < ApplicationComponent
       url: helpers.poll_path(poll),
       image_url: poll.image&.variant(:medium),
       date: poll.created_at,
-      author: poll.author,
       id: poll.id
     }
   end

@@ -34,6 +34,10 @@
     <div class="resource-item--head-title">
       <%= link_to @projekt&.page.title, @projekt.page.url  %>
     </div>
+  <% elsif @head_title.present? %>
+    <div class="resource-item--head-title">
+      <%= @head_title %>
+    </div>
   <% end %>
 
   <a href="<%= @url %>" class="resource-item--image-container">
@@ -61,6 +65,10 @@
         </div>
         <%# <% if resource.projekt.overview_page? %>
         <%#   <%= t("custom.projekts.overview_page.projekt_name_for_proposal") %>
+      <% elsif @head_title.present? %>
+        <div class="resource-item--head-title">
+          <%= @head_title %>
+        </div>
       <% else %>
         <div class="resource-item--date">
           <% if days_left.present? %>

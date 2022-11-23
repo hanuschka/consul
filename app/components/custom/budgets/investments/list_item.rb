@@ -9,6 +9,7 @@ class Budgets::Investments::ListItem < ApplicationComponent
   def component_attributes
     {
       resource: @budget_investment,
+      projekt: @budget_investment.budget.projekt,
       title: budget_investment.title,
       description: budget_investment.description,
       wide: @wide,

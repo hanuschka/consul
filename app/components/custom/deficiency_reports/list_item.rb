@@ -9,6 +9,7 @@ class DeficiencyReports::ListItem < ApplicationComponent
   def component_attributes
     {
       resource: @deficiency_report,
+      head_title: @deficiency_report.category.name,
       title: deficiency_report.title,
       description: deficiency_report.summary,
       tags: deficiency_report.tags.first(3),

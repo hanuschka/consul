@@ -6,7 +6,9 @@
           <%= t("proposals.proposal.archived") %>
         </div>
       <% else %>
-        <%= render Proposals::VotesComponent.new(@proposal, vote_url: vote_proposal_path(proposal, value: "yes")) %>
+        <div id="proposal_<%= @proposal.id %>_votes">
+          <%= render Proposals::NewVotesComponent.new(@proposal, vote_url: vote_proposal_path(proposal, value: "yes")) %>
+        </div>
       <% end %>
     <% end %>
   <% end %>

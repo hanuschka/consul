@@ -16,6 +16,19 @@
   </div>
 <% end %>
 
+<% author_name_html = capture do %>
+  <% if @author.present? %>
+    <%= link_to user_path(@author), class: 'resource-item--author' do %>
+      <%# <%= image_tag('', class: 'resource-item--author-photo') %>
+      <div class="resource-item--author-photo">
+      </div>
+      <div class="resource-item--author-name">
+        <%= @author.name %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
 <div class="resource-item <%= component_class_name %>">
   <% if @projekt.present? %>
     <div class="resource-item--head-title">
@@ -44,8 +57,10 @@
 
       <% if @projekt.present? %>
         <div class="resource-item--head-title">
-          <%= link_to @projekt&.page.title, @projekt.page.url  %>
+          <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
         </div>
+        <%# <% if resource.projekt.overview_page? %>
+        <%#   <%= t("custom.projekts.overview_page.projekt_name_for_proposal") %>
       <% else %>
         <div class="resource-item--date">
           <% if days_left.present? %>
@@ -58,13 +73,7 @@
 
       <% if @author.present? %>
         <div class="resource-item--author resource-item--author-in-subline">
-          <div class="resource-item--author-name">
-            <%= @author.name %>
-          </div>
-          <%# <%= image_tag('', class: 'resource-item--author-photo') %>
-          <div class="resource-item--author-photo">
-
-          </div>
+          <%= author_name_html %>
         </div>
       <% end %>
     </div>
@@ -101,10 +110,11 @@
 
           </div>
           <div class="resource-item--author-name">
-            <%= @author.name %>
+            Author name
           </div>
         </div>
       <% end %>
+      <%= author_name_html %>
 
       <% if @sdgs.present? %>
         <div class="resource-item--sdgs resource-item--sdgs-in-card">

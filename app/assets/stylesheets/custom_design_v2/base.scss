@@ -745,7 +745,6 @@ img.resource-item--author-photo, .resource-item--author-photo {
   display: none;
 }
 
-
 .resource-item {
   &.-wide {
     width: 100%;
@@ -754,6 +753,23 @@ img.resource-item--author-photo, .resource-item--author-photo {
     flex-direction: row;
     // max-width: 865px;
     max-width: 930px;
+
+
+    .resource-item--body-wrapper {
+      .resource-item--author {
+        display: none;
+      }
+    }
+
+    .resource-item--author {
+      margin-bottom: 0;
+      flex-direction: row-reverse;
+      padding: 0;
+
+      a {
+        color: white;
+      }
+    }
 
     .resource-item--footer-section  {
       .resource-item--additional-body {

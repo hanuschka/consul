@@ -13,7 +13,6 @@ class Budgets::Investments::ListItem < ApplicationComponent
       title: budget_investment.title,
       description: budget_investment.description,
       wide: @wide,
-      resource_name: "budget_investment",
       url: helpers.projekt_path(budget_investment),
       image_url: budget_investment.image&.variant(:medium),
       date: budget_investment.created_at,

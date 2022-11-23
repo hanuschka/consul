@@ -17,7 +17,6 @@ class Debates::ListItem < ApplicationComponent
       # start_date: debate.total_duration_start,
       # end_date: debate.total_duration_end,
       wide: @wide,
-      resource_name: "Debate",
       url: helpers.debate_path(debate),
       image_url: debate.image&.variant(:medium),
       date: debate.created_at,

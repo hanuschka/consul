@@ -11,7 +11,6 @@ class Shared::ResourceItem < ApplicationComponent
     projekt: nil,
     head_title: nil,
     title:, description:, image_url:,
-    resource_name: nil,
     author: nil, wide: false, id: nil,
     start_date: nil, end_date: nil, date: nil,
     url: nil, tags: [], sdgs: [],
@@ -31,7 +30,7 @@ class Shared::ResourceItem < ApplicationComponent
     @date = date
     @tags = tags
     @sdgs = sdgs
-    @resource_name = resource_name
+    @resource_name = @resource.class.name.downcase
     @image_placeholder_icon_class = image_placeholder_icon_class
 
     if @wide

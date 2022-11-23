@@ -17,7 +17,6 @@ class Polls::ListItem < ApplicationComponent
       # start_date: poll.total_duration_start,
       # end_date: poll.total_duration_end,
       wide: @wide,
-      resource_name: "poll",
       url: helpers.poll_path(poll),
       image_url: poll.image&.variant(:medium),
       date: poll.created_at,

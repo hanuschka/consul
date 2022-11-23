@@ -1,0 +1,10 @@
+de:
+  custom:
+    resource_names:
+      projekt: Projekt
+      debate: Diskussion
+      proposal: Vorschläge
+      poll: Abstimmung
+      budget_investment: Mangel
+      deficiency_report: Vorschlag für Budget
+      event: Veranstaltung

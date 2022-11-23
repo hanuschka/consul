@@ -17,7 +17,6 @@ class DeficiencyReports::ListItem < ApplicationComponent
       # start_date: deficiency_report.total_duration_start,
       # end_date: deficiency_report.total_duration_end,
       wide: @wide,
-      resource_name: "deficiency_report",
       url: helpers.deficiency_report_path(deficiency_report),
       image_url: deficiency_report.image&.variant(:medium),
       date: deficiency_report.created_at,

@@ -1,8 +1,18 @@
 <%= render(Shared::ResourceItem.new(component_attributes)) do |c| %>
-  <% c.first_footer_item do  %>
-   <%= link_to('Unterstützen', helpers.proposal_path(proposal), class: 'button -orange') %>
+  <% unless proposal.successful? %>
+    <% c.first_footer_item do  %>
+      <% if proposal.archived? %>
+        <div class="padding text-center callout warning">
+          <%= t("proposals.proposal.archived") %>
+        </div>
+      <% else %>
+        <%= render Proposals::VotesComponent.new(@proposal, vote_url: vote_proposal_path(proposal, value: "yes")) %>
+      <% end %>
+    <% end %>
   <% end %>
+
   <% c.second_footer_item do  %>
     <%= t("proposals.proposal.supports", count: proposal.total_votes) %>
   <% end %>
 <% end %>
+

@@ -3,9 +3,9 @@
   <div class="top-bar">
 
     <h2 class='header-title show-for-medium'>
-      <%= Setting['extended_option.general.title'] %>
-      <br>
-      <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
+      <%= link_to root_path do %>
+        <%= image_tag(image_path_for("r-next.png"), class: "", style: "height:50px !important", alt: t("layouts.header.logo")) %>
+      <% end %>
     </h2>
 
     <span data-responsive-toggle="responsive-menu"
@@ -38,13 +38,6 @@
       <div class="top-bar-right">
         <div class="show-for-small-only">
           <div class="subnavigation">
-
-            <h2 class='city-name'>
-              <%= Setting['extended_option.general.title'] %>
-              <br>
-              <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
-            </h2>
-
             <% if !launch_page && current_user.nil? %>
               <div class='account-buttons'>
                 <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>

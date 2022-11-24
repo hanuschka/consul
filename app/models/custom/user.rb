@@ -83,38 +83,47 @@ class User < ApplicationRecord
   end
 
   def first_name_required?
+    return false
     !organization? && !erased? #&& Setting["extra_fields.registration.first_name"]
   end
 
   def last_name_required?
+    return false
     !organization? && !erased? #&& Setting["extra_fields.registration.last_name"]
   end
 
   def street_name_required?
+    return false
     !organization? && !erased? && Setting["extra_fields.registration.street_name"]
   end
 
   def street_number_required?
+    return false
     !organization? && !erased? && Setting["extra_fields.registration.street_number"]
   end
 
   def plz_required?
+    return false
     !organization? && !erased? #&& Setting["extra_fields.registration.plz"]
   end
 
   def city_name_required?
+    return false
     !organization? && !erased? && Setting["extra_fields.registration.city_name"]
   end
 
   def date_of_birth_required?
+    return false
     !organization? && !erased? #&& Setting["extra_fields.registration.date_of_birth"]
   end
 
   def gender_required?
+    return false
     !organization? && !erased? && Setting["extra_fields.registration.gender"]
   end
 
   def document_last_digits_required?
+    return false
     !organization? && !erased? && Setting["extra_fields.registration.document_last_digits"]
   end
 

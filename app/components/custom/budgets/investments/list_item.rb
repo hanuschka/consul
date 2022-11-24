@@ -17,6 +17,7 @@ class Budgets::Investments::ListItem < ApplicationComponent
       image_url: budget_investment.image&.variant(:medium),
       date: budget_investment.created_at,
       author: budget_investment.author,
+      image_placeholder_icon_class: "fa-euro-sign",
       id: budget_investment.id
     }
   end

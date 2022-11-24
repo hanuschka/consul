@@ -20,6 +20,7 @@ class Proposals::ListItem < ApplicationComponent
       url: helpers.proposal_path(proposal),
       image_url: proposal.image&.variant(:medium),
       date: proposal.created_at,
+      image_placeholder_icon_class: "fa-lightbulb",
       author: proposal.author,
       id: proposal.id
     }

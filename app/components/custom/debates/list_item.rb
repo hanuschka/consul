@@ -20,6 +20,7 @@ class Debates::ListItem < ApplicationComponent
       url: helpers.debate_path(debate),
       image_url: debate.image&.variant(:medium),
       date: debate.created_at,
+      image_placeholder_icon_class: "fa-comments",
       author: debate.author,
       id: debate.id
     }

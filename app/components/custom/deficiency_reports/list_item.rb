@@ -21,6 +21,7 @@ class DeficiencyReports::ListItem < ApplicationComponent
       image_url: deficiency_report.image&.variant(:medium),
       date: deficiency_report.created_at,
       author: deficiency_report.author,
+      image_placeholder_icon_class: "fa-exclamation-triangle",
       id: deficiency_report.id
     }
   end

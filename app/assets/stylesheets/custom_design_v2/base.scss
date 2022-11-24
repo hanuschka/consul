@@ -580,9 +580,9 @@ p {
 
   .callout.warning, .callout.success, .callout.error, .callout.alert {
     width: 100%;
-    // // position: absolute;
-    // top: 0;
-    // left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
     font-size: 12px;
     height: 100%;
     display: flex;

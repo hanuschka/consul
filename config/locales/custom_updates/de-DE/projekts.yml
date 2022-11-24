@@ -82,7 +82,7 @@ de:
         comment_phase: Kommentare
         debate_phase: Diskussionen
         event_phase: Veranstaltungen
-        legislation_process_phase: Textbearbeitungsphase
+        legislation_process_phase: Text
         milestone_phase: Meilensteine
         newsfeed_phase: Newsfeed
         projekt_notification_phase: Benachrichtigungen
@@ -90,6 +90,9 @@ de:
         question_phase: Kurzumfrage
         voting_phase: Abstimmungen
         argument_phase: Stimmen
+        notification_phase: Neuigkeiten
+      link_to_phase_prefix: Direkt zu den
+      more_phases: Weitere Phasen
       projekt_events:
         index:
           title: Veranstaltungskalender

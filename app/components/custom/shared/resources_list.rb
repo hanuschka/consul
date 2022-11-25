@@ -1,10 +1,12 @@
 class Shared::ResourcesList < ApplicationComponent
   renders_one :body
 
-  def initialize(resources:, title:, wide: false)
+  def initialize(resources:, filter_param: nil, filter_options: nil, title:, wide: false)
     @resources = resources
     @title = title
     @wide = wide
+    @filter_param = filter_param.presence || "created_at"
+    @filter_options = filter_options.presence || default_filter_options
   end
 
   def class_names
@@ -32,5 +34,14 @@ class Shared::ResourcesList < ApplicationComponent
     when Budget::Investment
       Budgets::Investments::ListItem.new(budget_investment: resource, wide: @wide)
     end
+  end
+
+  def default_filter_options
+    [
+      ["desc", "Neueste zuerst"],
+      ["asc", "Zuerst die alten"],
+      ["asc", "Zuerst die alten"],
+      ["asc", "Zuerst die alten"]
+    ]
   end
 end

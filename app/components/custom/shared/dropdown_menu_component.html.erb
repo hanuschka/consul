@@ -1,0 +1,15 @@
+<div class="dropdown-container" data-name="<%= @name %>">
+
+  <div class="dropdown-toggle click-dropdown">
+    <%= @options.first[1] %>
+  </div>
+  <div class="dropdown-menu">
+    <ul>
+    <% @options.each do |option| %>
+      <li data-value="<%= option[0] %>" class="<%= @item_class_name %>" >
+        <%= option[1] %>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+</div>

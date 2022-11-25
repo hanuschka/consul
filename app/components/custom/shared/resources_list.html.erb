@@ -6,12 +6,13 @@
 
     </div>
     <div class="resources-list--sort">
-      <div class="resources-list--sort-label">
-        Sortieren nach:
-      </div>
-      <div class="resources-list--sort-dropdown">
-        Neueste zuerst:
-      </div>
+      <%= render(
+            Shared::DropdownMenuComponent.new(
+              name: @filter_param,
+              options: @filter_options
+            )
+        )
+      %>
 
     </div>
     <div class="resources-list--switch-view-button js-resource-list-switch-view-button">
@@ -19,8 +20,8 @@
     </div>
   </div>
   <div class="resources-list--inner">
-     <% @resources.each do |resource| %>
-       <%= render resource_component(resource) %>
-     <% end %>
+    <% @resources.each do |resource| %>
+      <%= render resource_component(resource) %>
+    <% end %>
   </div>
 </div>

@@ -13,6 +13,10 @@ class Shared::ResourcesList < ApplicationComponent
     end
   end
 
+  def switch_view_mode_icon
+    @wide ? "fa-grip-vertical" : "fa-bars"
+  end
+
   def resource_component(resource)
     case resource
     when Projekt

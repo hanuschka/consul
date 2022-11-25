@@ -16,9 +16,15 @@
     },
 
     switchResourceViewMode: function(e) {
-      $(e.currentTarget)
-        .closest(".resources-list")
-        .toggleClass(this.WIDE_MODE_CLASS);
+      var $switchButton =
+        $(e.currentTarget)
+          .closest(".resources-list")
+          .toggleClass(this.WIDE_MODE_CLASS);
+
+      var $switchButtonIcon = $switchButton.find("i");
+
+      $switchButtonIcon.toggleClass("fa-grip-vertical");
+      $switchButtonIcon.toggleClass("fa-bars");
     }
   };
 }).call(this);

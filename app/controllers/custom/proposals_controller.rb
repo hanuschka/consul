@@ -52,6 +52,8 @@ class ProposalsController
     @proposals_coordinates = all_proposal_map_locations(@resources)
     @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
     # @selected_tags = all_selected_tags
+
+    if params[:in_frame]
   end
 
   def new

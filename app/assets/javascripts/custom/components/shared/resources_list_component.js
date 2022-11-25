@@ -16,8 +16,7 @@
     },
 
     switchResourceViewMode: function(e) {
-      var $switchButton =
-        $(e.currentTarget)
+      var $switchButton = $(e.currentTarget);
 
       $switchButton
         .closest(".resources-list")

@@ -1,8 +1,8 @@
 .resources-list {
   &.-wide {
-    // .resources-list--switch-view-button {
-    //   background: #dedede;
-    // }
+    .resources-list--switch-view-button {
+      display: none;
+    }
   }
 }
 

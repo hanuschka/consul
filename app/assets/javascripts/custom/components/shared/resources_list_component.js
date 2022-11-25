@@ -18,8 +18,10 @@
     switchResourceViewMode: function(e) {
       var $switchButton =
         $(e.currentTarget)
-          .closest(".resources-list")
-          .toggleClass(this.WIDE_MODE_CLASS);
+
+      $switchButton
+        .closest(".resources-list")
+        .toggleClass(this.WIDE_MODE_CLASS);
 
       var $switchButtonIcon = $switchButton.find("i");
 

@@ -1,6 +1,23 @@
 <div class="u-main-column resources-list <%= class_names %>">
-  <h3 class="title card-title"><%= @title %></h3>
+  <h3 class="resources-list--title"><%= @title %></h3>
 
+  <div class="resources-list--navigation">
+    <div class="resources-list--line-divider">
+
+    </div>
+    <div class="resources-list--sort">
+      <div class="resources-list--sort-label">
+        Sortieren nach:
+      </div>
+      <div class="resources-list--sort-dropdown">
+        Neueste zuerst:
+      </div>
+
+    </div>
+    <div class="resources-list--switch-view-button">
+      <i class="fa fa-bars"></i>
+    </div>
+  </div>
   <div class="resources-list--inner">
      <% @resources.each do |resource| %>
        <%= render resource_component(resource) %>

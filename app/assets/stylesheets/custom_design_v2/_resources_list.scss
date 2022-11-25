@@ -1,5 +1,5 @@
-.resources-list {
-  &.-wide {
+@media (min-width: 970px) {
+  .resources-list {
     .resources-list--switch-view-button {
       display: none;
     }

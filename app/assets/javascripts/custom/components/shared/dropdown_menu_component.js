@@ -3,18 +3,12 @@
   App.DropdownMenuComponent = {
     initialize: function() {
       window.addEventListener("click", function(e) {
-        // Close the menu if click happen outside menu
         if (e.target.closest(".dropdown-container") === null) {
           this.closeDropdown();
         }
-        // console.log("closeDropdown")
       }.bind(this));
 
-      $(document).on(
-        "click",
-        ".dropdown-toggle",
-        this.openDropdown.bind(this)
-      );
+      $(document).on("click", ".dropdown-toggle", this.openDropdown.bind(this));
     },
 
     openDropdown: function(e) {

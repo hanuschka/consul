@@ -9,6 +9,7 @@
       }.bind(this));
 
       $(document).on("click", ".dropdown-toggle", this.openDropdown.bind(this));
+      $(document).on("click", ".js-dropdown-item", this.selectOption.bind(this));
     },
 
     openDropdown: function(e) {
@@ -27,5 +28,12 @@
     closeDropdown: function() {
       $(".dropdown-container.dropdown-open").removeClass("dropdown-open");
     },
+
+    selectOption: function(e) {
+      this.closeDropdown();
+
+      console.log(e.currentTarget)
+      e.currentTarget.closest(".js-dropdown").querySelector(".dropdown-toggle").innerHTML = e.currentTarget.textContent;
+    }
   };
 }).call(this);

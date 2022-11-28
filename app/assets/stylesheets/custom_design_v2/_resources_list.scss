@@ -58,9 +58,6 @@
       transition: 200ms background ease;
     }
 
-
-
-
     .dropdown-container {
       margin: 0 auto;
     }
@@ -141,8 +138,13 @@
       width: 107%;
     }
 
+    // .dropdown-open {
+    //   .dropdown-menu.dropdown-active {
+    //     display: block;
+    //   }
+    // }
     .dropdown-open {
-      .dropdown-menu.dropdown-active {
+      .dropdown-menu {
         display: block;
       }
     }

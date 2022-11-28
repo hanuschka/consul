@@ -1,20 +1,20 @@
 <div class="sidebar">
-  <div class="card-section">
-    <h4 class="card-section--header">
-      <i class="fas fa-bullhorn"></i>
-      Neuigkeiten
-    </h4>
-    <div class="card-section--body">
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-bullhorn"></i>
+        Neuigkeiten
+      </h4>
       <%= render_custom_block 'home_page_sidebar' %>
     </div>
   </div>
 
-  <div class="card-section">
-    <h4 class="card-section--header">
-      <i class="fas fa-info-circle"></i>
-      Nutzer*innen
-    </h4>
-    <div class="card-section--body">
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-info-circle"></i>
+        Nutzer*innen
+      </h4>
       <div class="system-users-list">
         <div class="system-users-list--title">
           <%= number_with_delimiter(User.count,  delimiter: ".") %> Nutzer*innen
@@ -30,11 +30,12 @@
     </div>
   </div>
 
-  <div class="card-section">
-    <h4 class="card-section--header">
-      Aktivität | letzte 7 Tage
-    </h4>
-    <div class="card-section--body">
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-info-circle"></i>
+        Aktivität | letzte 7 Tage
+      </h4>
       <div>
         17 neue Benutzer*innen
       </div>
@@ -47,8 +48,10 @@
       <div>
         7 neue Diskussionen
       </div>
-      <div class="card-section--divider"> </div>
+    </div>
 
+
+    <div class="sidebar-card--section sidebar-active-users-section">
       <div>
         <i class="far fa-lightbulb">
         </i>
@@ -60,11 +63,10 @@
         Zur Übersicht aller Diskussionen
       </div>
       <div>
-        <i class="far fa-vote-yea">
+        <i class="fas fa-vote-yea">
         </i>
         Zur Übersicht aller Abstimmungen
       </div>
     </div>
   </div>
-
 </div>

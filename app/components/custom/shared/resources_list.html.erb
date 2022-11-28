@@ -20,14 +20,17 @@
     </div>
   </div>
 
-  <% if additional_top_content.present? %>
-    <div class="resources-list--additional-top-content">
-      <%= additional_top_content %>
-    </div>
-  <% end %>
-  <div class="resources-list--inner">
-    <% @resources.each do |resource| %>
-      <%= render resource_component(resource) %>
+  <div class="resources-list--body">
+    <% if additional_top_content.present? %>
+      <div class="resources-list--additional-top-content">
+        <%= additional_top_content %>
+      </div>
     <% end %>
+
+    <div class="resources-list--inner">
+      <% @resources.each do |resource| %>
+        <%= render resource_component(resource) %>
+      <% end %>
+    </div>
   </div>
 </div>

@@ -1,4 +1,5 @@
 class Shared::ResourcesList < ApplicationComponent
+  renders_one :additional_top_content
   renders_one :body
 
   def initialize(resources:, filter_param: nil, filter_options: nil, title:, wide: false)

@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "controllers", "welcome_controller").to_s
 
 class WelcomeController < ApplicationController
+  include ProjektControllerHelper
+
   def welcome
     redirect_to root_path
   end
@@ -20,6 +22,7 @@ class WelcomeController < ApplicationController
     # TODO
     # @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts : []
     @active_projekts = Projekt.current.first(3)
+    @active_projekts_map_coordinates = all_projekts_map_locations(@active_projekts)
     @proposals = Proposal.where.not(projekt_id: nil).first(3)
     @debates = Debate.where.not(projekt_id: nil).first(3)
     @polls = Poll.where.not(projekt_id: nil).first(3)

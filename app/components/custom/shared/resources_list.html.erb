@@ -19,6 +19,12 @@
       <i class="fa <%= switch_view_mode_icon %>"></i>
     </div>
   </div>
+
+  <% if additional_top_content.present? %>
+    <div class="resources-list--additional-top-content">
+      <%= additional_top_content %>
+    </div>
+  <% end %>
   <div class="resources-list--inner">
     <% @resources.each do |resource| %>
       <%= render resource_component(resource) %>

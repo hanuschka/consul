@@ -41,8 +41,6 @@ class Shared::ResourcesList < ApplicationComponent
     [
       ["desc", "Neueste zuerst"],
       ["asc", "Zuerst die alten"],
-      ["asc", "Zuerst die alten"],
-      ["asc", "Zuerst die alten"]
     ]
   end
 end

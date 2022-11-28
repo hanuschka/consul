@@ -9,7 +9,8 @@
       <%= render(
             Shared::DropdownMenuComponent.new(
               name: @filter_param,
-              options: @filter_options
+              options: @filter_options,
+              item_css_class: 'js-resource-list-filter-dropdown-item'
             )
         )
       %>

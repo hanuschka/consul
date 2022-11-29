@@ -17,7 +17,7 @@ class ProjektsController < ApplicationController
 
   before_action :select_projekts, only: [
     :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
-    :proposal_phase_footer_tab, :voting_phase_footer_tab
+    :proposal_phase_footer_tab, :voting_phase_footer_tab, :list
   ]
 
   before_action do
@@ -45,6 +45,10 @@ class ProjektsController < ApplicationController
     @debates_count = Debate.where(projekt_id: @overview_page_special_projekt.id).count
     @proposals_count = Proposal.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
     @polls_count = Poll.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
+  end
+
+  def list
+    render
   end
 
   def find_current_phase(default_phase_id)

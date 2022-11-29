@@ -2,12 +2,19 @@ class Shared::ResourcesList < ApplicationComponent
   renders_one :additional_top_content
   renders_one :body
 
-  def initialize(resources:, filter_param: nil, filter_options: nil, title:, wide: false)
+  def initialize(
+    resources:,
+    filter_param: nil,
+    filter_options: nil,
+    title:, wide: false,
+    resources_url: nil
+  )
     @resources = resources
     @title = title
     @wide = wide
     @filter_param = filter_param.presence || "created_at"
     @filter_options = filter_options.presence || default_filter_options
+    @resources_url = resources_url
   end
 
   def class_names

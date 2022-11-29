@@ -35,8 +35,6 @@
 
       var filterName = filterItem.dataset.name;
       var filterValue = filterItem.dataset.value;
-
-      // console.log(filterName, filterValue)
     }
   };
 }).call(this);

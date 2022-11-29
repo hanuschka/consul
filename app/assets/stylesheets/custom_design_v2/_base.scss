@@ -462,6 +462,13 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     line-height: 1.3;
   }
 
+  .resource-item--description-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
   .resources-list--inner {
     display: flex;
     grid-gap: 15px;
@@ -519,7 +526,10 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     padding: 0 25px 15px;
     // min-height: 115px;
     // min-height: 142px;
+    display: flex;
+    flex-direction: column;
     min-height: 128px;
+    flex-grow: 1;
 
     .resource-item--additional-body {
       margin-top: 12px;
@@ -596,7 +606,6 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   }
 
   .resource-item--footer-section {
-    height: 100%;
     align-items: center;
     display: flex;
     flex-grow: 1;
@@ -650,6 +659,7 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
       text-decoration: underline;
       display: block;
       color: inherit;
+      text-align: left;
     }
 
     i {
@@ -728,6 +738,11 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     }
   }
 
+  .resource-item--sdgs-in-body {
+    display: none;
+    margin-top: 15px;
+  }
+
   .resource-item--footer-section {
     // &:last-child {
 
@@ -796,6 +811,10 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
             display: none;
           }
 
+          .resource-item--sdgs-in-body {
+            display: block;
+          }
+
           .resource-item--image {
             height: auto !important;
             max-height: none;
@@ -859,14 +878,12 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
           }
 
           .resource-item--body-wrapper {
-            height: 100%;
             flex: 1;
           }
 
           .resource-item--body {
-            height: 100%;
             max-height: none;
-
+            flex-grow: 1;
           }
 
 
@@ -927,7 +944,6 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
           }
 
           .resource-item--footer {
-            height: 100%;
             width: 120px;
             width: 35%;
             flex-direction: column;

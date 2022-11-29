@@ -12,7 +12,7 @@ class Shared::ResourcesList < ApplicationComponent
     @resources = resources
     @title = title
     @wide = wide
-    @filter_param = filter_param.presence || "created_at"
+    @filter_param = filter_param.presence || "order"
     @filter_options = filter_options.presence || default_filter_options
     @resources_url = resources_url
   end
@@ -46,8 +46,8 @@ class Shared::ResourcesList < ApplicationComponent
 
   def default_filter_options
     [
-      ["desc", "Neueste zuerst"],
-      ["asc", "Zuerst die alten"],
+      ["newest", "Neueste zuerst"],
+      ["oldest", "Zuerst die alten"],
     ]
   end
 end

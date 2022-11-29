@@ -97,18 +97,23 @@
           <%= @title %>
         </a>
 
-        <div class="resource-item--description">
-          <%= raw(truncate(@description, length: truncate_length)&.html_safe) %>
-          <% if @id.present? && Rails.env.development? %>
-            <%= @id %>
+        <div class="resource-item--description-wrapper">
+          <div class="resource-item--description">
+            <%= raw(truncate(@description, length: truncate_length)&.html_safe) %>
+            <% if @id.present? && Rails.env.development? %>
+              <%= @id %>
+            <% end %>
+          </div>
+
+          <% if additional_body.present? %>
+            <div class="resource-item--additional-body">
+              <%= additional_body %>
+            </div>
+            <div class="resource-item--sdgs resource-item--sdgs-in-body">
+              <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
+            </div>
           <% end %>
         </div>
-
-        <% if additional_body.present? %>
-          <div class="resource-item--additional-body">
-            <%= additional_body %>
-          </div>
-        <% end %>
       </div>
 
       <%= author_name_html %>

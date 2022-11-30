@@ -467,6 +467,15 @@ class Projekt < ApplicationRecord
     projekt_phases.regular_phases.select(&:current?)
   end
 
+  def self.available_filters(all_projekts)
+    projekts_count_hash = {}
+    INDEX_FILTERS.each do |order|
+      projekts_count_hash[order] = all_projekts.send(order).count
+    end
+
+    projekts_count_hash.select { |_, value| value > 0 }.keys
+  end
+
   private
 
     def create_corresponding_page

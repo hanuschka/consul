@@ -37,9 +37,13 @@
       var filterValue = filterItem.dataset.value;
       var resourcesList = filterItem.closest(".js-resources-list");
       var resourcesUrl = resourcesList.dataset.resourcesUrl;
-      var resourcesUrlWithFilter = resourcesUrl + "?" + filterName + "=" + filterValue
+      var resourcesUrlWithFilter = resourcesUrl + "?" + filterName + "=" + filterValue;
 
-      $.get(resourcesUrlWithFilter);
+      $.get(resourcesUrlWithFilter, function(responseData) {
+        resourcesList.querySelector(".js-resources-list--body").innerHTML = responseData;
+
+        App.Map.initialize();
+      });
     }
   };
 }).call(this);

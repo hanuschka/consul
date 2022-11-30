@@ -286,28 +286,19 @@ class ProjektsController < ApplicationController
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_targets = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
-    @projekts = Projekt.regular
-    @resources = @projekts
-
-    @projekts_count_hash = {}
-
-    valid_orders.each do |order|
-      @projekts_count_hash[order] = @projekts.send(order).count
-    end
-
-    @current_active_orders = @projekts_count_hash.select do |key, value|
-      value > 0
-    end.keys
-
-    @current_order = valid_orders.include?(params[:order]) ? params[:order] : @current_active_orders.first
-    @current_projekts_order = @current_order
-
     @geozones = Geozone.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
 
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+
+    @all_projekts = Projekt.regular.with_published_custom_page
+    @projekts = @all_projekts
+
+    @current_active_orders = Projekt.available_filters(@all_projekts)
+    @current_order = valid_orders.include?(params[:order]) ? params[:order] : @current_active_orders.first
+    @current_projekts_order = @current_order
 
     unless params[:search].present?
       take_only_by_tag_names
@@ -318,17 +309,15 @@ class ProjektsController < ApplicationController
       take_by_my_posts
     end
 
+    @projekts = @projekts.send(@current_order)
+
     @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
     @tag_cloud = tag_cloud
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'
 
-    @projekts =
-      @projekts
-        .with_published_custom_page
-        .send(@current_order)
-
     @map_coordinates = all_projekts_map_locations(@projekts)
+    @resources = @projekts
 
     if @projekts.is_a?(Array)
       @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(25)

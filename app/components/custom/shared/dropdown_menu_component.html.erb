@@ -1,7 +1,7 @@
 <div class="dropdown-container js-dropdown" data-name="<%= @name %>">
 
   <div class="dropdown-toggle click-dropdown">
-    <%= @options.first[1] %>
+    <%= @selected_option&.second.presence || @options.first[1] %>
   </div>
   <div class="dropdown-menu">
     <ul>

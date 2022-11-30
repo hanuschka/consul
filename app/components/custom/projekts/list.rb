@@ -14,7 +14,7 @@ class Projekts::List < ApplicationComponent
       map_coordinates: @map_coordinates,
       wide: false,
       resources_url: list_projekts_path,
-      current_filter: nil,
+      current_filter_option: current_filter_option,
       filter_param: "order",
       filter_options: filter_options,
       only_content: @only_content,
@@ -29,5 +29,9 @@ class Projekts::List < ApplicationComponent
         t("custom.projekts.orders.#{filter}")
       ]
     end
+  end
+
+  def current_filter_option
+    filter_options.find { |filter_option| filter_option[0] == @current_filter }
   end
 end

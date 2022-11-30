@@ -3,7 +3,6 @@ class Shared::ResourcesList < ApplicationComponent
 
   def initialize(
     title:,
-    map_coordinates: nil,
     resources:,
     resources_name: nil,
     filter_param: nil,
@@ -11,7 +10,9 @@ class Shared::ResourcesList < ApplicationComponent
     current_filter_option: nil,
     resources_url: nil,
     only_content: false,
-    wide: false, css_class: nil
+    map_coordinates: nil,
+    wide: false,
+    css_class: nil
   )
     @resources = resources
     @resources_name = resources_name
@@ -22,6 +23,7 @@ class Shared::ResourcesList < ApplicationComponent
     @current_filter_option = current_filter_option
     @resources_url = resources_url
     @only_content = only_content
+    @map_coordinates = map_coordinates
     @css_class = css_class
   end
 

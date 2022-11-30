@@ -1,16 +1,19 @@
 class Shared::ResourcesList < ApplicationComponent
-  renders_one :additional_top_content
   renders_one :body
 
   def initialize(
+    title:,
+    map_coordinates: nil,
     resources:,
+    resources_name: nil,
     filter_param: nil,
     filter_options: nil,
-    title:, wide: false,
     resources_url: nil,
+    wide: false,
     css_class: nil
   )
     @resources = resources
+    @resources_name = resources_name
     @title = title
     @wide = wide
     @filter_param = filter_param.presence || "order"

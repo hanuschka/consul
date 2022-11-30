@@ -21,13 +21,7 @@
 
   <% if @active_projekts.any? %>
     <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @active_projekts, title: t("custom.welcome.active_projekt_cards.title"), wide: false, resources_url: list_projekts_path(format: :js), css_class: 'js-projekts-list') do |c| %>
-        <% c.additional_top_content do %>
-          <div class="map resources-list--projekt-map not-print">
-            <%= render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), "projekts", false, nil, @active_projekts_map_coordinates, MapLayer.general.to_json) %>
-          </div>
-        <% end %>
-      <% end %>
+      <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates) %>
       <%= render 'sidebar'  %>
     </div>
     <div class="d-flex u-flex-container">

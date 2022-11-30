@@ -3,9 +3,7 @@ class ProjektsController < ApplicationController
   include ProposalsHelper
 
   skip_authorization_check
-  has_orders %w[index_order_underway index_order_all
-                index_order_ongoing index_order_upcoming
-                index_order_expired index_order_individual_list], only: [
+  has_orders Projekt::INDEX_FILTERS, only: [
     :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
     :proposal_phase_footer_tab, :voting_phase_footer_tab, :list
   ]

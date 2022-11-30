@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class Shared::ResourceItem < ApplicationComponent
   renders_one :additional_body
   renders_one :first_footer_item
   renders_one :second_footer_item
 
-  DATE_RANGE_FORMAT = "%d. %B %Y"
-  DATE_FORMAT = "%d.%m.%Y"
+  DATE_RANGE_FORMAT = "%d. %B %Y".freeze
+  DATE_FORMAT = "%d.%m.%Y".freeze
 
   def initialize(
     resource: nil,
@@ -14,7 +16,7 @@ class Shared::ResourceItem < ApplicationComponent
     author: nil, wide: false, id: nil,
     start_date: nil, end_date: nil, date: nil,
     url: nil, tags: [], sdgs: [],
-    image_placeholder_icon_class: 'fa-file'
+    image_placeholder_icon_class: "fa-file"
   )
     @resource = resource
     @title = title

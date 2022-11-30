@@ -1,9 +1,0 @@
-<% if @projekts.any? %>
-  <div class="map resources-list--projekt-map not-print">
-    <%= helpers.render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), "projekts", false, nil, @projekt_map_coordinates, MapLayer.general.to_json) %>
-  </div>
-
-  <% @projekts.each do |projekt| %>
-    <%= render(Projekts::ListItem.new(projekt: projekt)) %>
-  <% end %>
-<% end %>

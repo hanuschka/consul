@@ -1,5 +1,10 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
+  INDEX_FILTERS = %w[
+    index_order_underway index_order_all
+    index_order_ongoing index_order_upcoming
+    index_order_expired index_order_individual_list
+  ].freeze
 
   include Milestoneable
   acts_as_paranoid column: :hidden_at

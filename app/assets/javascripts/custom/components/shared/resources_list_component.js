@@ -18,16 +18,16 @@
     },
 
     switchResourceViewMode: function(e) {
-      var $switchButton = $(e.currentTarget);
+      var switchButton = e.currentTarget;
 
-      $switchButton
+      switchButton
         .closest(".resources-list")
-        .toggleClass(this.WIDE_MODE_CLASS);
+        .classList.toggle(this.WIDE_MODE_CLASS);
 
-      var $switchButtonIcon = $switchButton.find("i");
+      var switchButtonIcon = switchButton.querySelector("i");
 
-      $switchButtonIcon.toggleClass("fa-grip-vertical");
-      $switchButtonIcon.toggleClass("fa-bars");
+      switchButtonIcon.classList.toggle("fa-grip-vertical");
+      switchButtonIcon.classList.toggle("fa-bars");
     },
 
     loadResourcesWithFilter: function(e) {
@@ -35,6 +35,11 @@
 
       var filterName = filterItem.dataset.name;
       var filterValue = filterItem.dataset.value;
+      var resourcesList = filterItem.closest(".js-resources-list");
+      var resourcesUrl = resourcesList.dataset.resourcesUrl;
+      var resourcesUrlWithFilter = resourcesUrl + "?" + filterName + "=" + filterValue
+
+      $.get(resourcesUrlWithFilter);
     }
   };
 }).call(this);

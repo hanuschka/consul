@@ -7,7 +7,8 @@ class Shared::ResourcesList < ApplicationComponent
     filter_param: nil,
     filter_options: nil,
     title:, wide: false,
-    resources_url: nil
+    resources_url: nil,
+    css_class: nil
   )
     @resources = resources
     @title = title
@@ -15,12 +16,17 @@ class Shared::ResourcesList < ApplicationComponent
     @filter_param = filter_param.presence || "order"
     @filter_options = filter_options.presence || default_filter_options
     @resources_url = resources_url
+    @css_class = css_class
   end
 
   def class_names
+    base = @css_class.to_s
+
     if @wide
-      "-wide"
+      base += " -wide"
     end
+
+    base
   end
 
   def switch_view_mode_icon

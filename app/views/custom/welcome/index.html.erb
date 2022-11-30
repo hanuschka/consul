@@ -24,19 +24,11 @@
       <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters) %>
       <%= render 'sidebar'  %>
     </div>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @active_projekts, title: t("custom.welcome.active_projekt_cards.title"), wide: true) %>
-      <%= render 'sidebar'  %>
-    </div>
   <% end %>
 
   <% if @proposals.any? %>
     <div class="d-flex u-flex-container">
       <%= render Shared::ResourcesList.new(resources: @proposals, title: "Proposals", wide: false) %>
-      <%= render 'sidebar'  %>
-    </div>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @proposals, title: "Proposals", wide: true) %>
       <%= render 'sidebar'  %>
     </div>
   <% end %>
@@ -46,19 +38,11 @@
       <%= render Shared::ResourcesList.new(resources: @debates, title: "Debates", wide: false) %>
       <%= render 'sidebar'  %>
     </div>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @debates, title: "Debates", wide: true) %>
-      <%= render 'sidebar'  %>
-    </div>
   <% end %>
 
   <% if @polls.any? %>
     <div class="d-flex u-flex-container">
       <%= render Shared::ResourcesList.new(resources: @polls, title: "Polls", wide: false) %>
-      <%= render 'sidebar'  %>
-    </div>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @polls, title: "Polls", wide: true) %>
       <%= render 'sidebar'  %>
     </div>
   <% end %>
@@ -68,19 +52,11 @@
       <%= render Shared::ResourcesList.new(resources: @deficiency_reports, title: "Deficiency reports", wide: false) %>
       <%= render 'sidebar'  %>
     </div>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @deficiency_reports, title: "Deficiency reports", wide: true) %>
-      <%= render 'sidebar'  %>
-    </div>
   <% end %>
 
   <% if @budgets.any? %>
     <div class="d-flex u-flex-container">
       <%= render Shared::ResourcesList.new(resources: @budgets, title: "Budget", wide: false) %>
-      <%= render 'sidebar'  %>
-    </div>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @budgets, title: "Budget", wide: true) %>
       <%= render 'sidebar'  %>
     </div>
   <% end %>

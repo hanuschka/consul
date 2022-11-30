@@ -7,11 +7,11 @@ class ProjektsController < ApplicationController
                 index_order_ongoing index_order_upcoming
                 index_order_expired index_order_individual_list], only: [
     :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
-    :proposal_phase_footer_tab, :voting_phase_footer_tab
+    :proposal_phase_footer_tab, :voting_phase_footer_tab, :list
   ]
 
   before_action :find_overview_page_projekt, only: [
-    :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
+    :index, :list, :comment_phase_footer_tab, :debate_phase_footer_tab,
     :proposal_phase_footer_tab, :voting_phase_footer_tab
   ]
 
@@ -48,7 +48,7 @@ class ProjektsController < ApplicationController
   end
 
   def list
-    render
+    render layout: false
   end
 
   def find_current_phase(default_phase_id)

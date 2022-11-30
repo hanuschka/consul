@@ -1,8 +1,10 @@
 class Projekts::List < ApplicationComponent
-  def initialize(projekts:, map_coordinates:, content_only: false)
+  def initialize(projekts:, all_projekts: nil, map_coordinates:, content_only: false, filters: nil, current_filter: nil, only_content: false)
     @projekts = projekts
     @map_coordinates = map_coordinates
-    @content_only = content_only
+    @current_filter = current_filter
+    @filters = filters
+    @only_content = only_content
   end
 
   def call
@@ -11,15 +13,17 @@ class Projekts::List < ApplicationComponent
       title: t("custom.welcome.active_projekt_cards.title"),
       map_coordinates: @map_coordinates,
       wide: false,
-      resources_url: list_projekts_path(format: :js),
-      filter_param: 'order',
+      resources_url: list_projekts_path,
+      current_filter: nil,
+      filter_param: "order",
       filter_options: filter_options,
+      only_content: @only_content,
       css_class: "js-projekts-list"
     ))
   end
 
   def filter_options
-    Projekt::INDEX_FILTERS.map do |filter|
+    @filters.map do |filter|
       [
         filter,
         t("custom.projekts.orders.#{filter}")

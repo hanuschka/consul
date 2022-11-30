@@ -21,8 +21,14 @@ class WelcomeController < ApplicationController
 
     # TODO
     # @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts : []
-    @active_projekts = Projekt.current.first(3)
+
+    @all_projekts = Projekt.regular.with_published_custom_page
+    @current_active_projekt_filters = Projekt.available_filters(@all_projekts)
+    @current_projekt_filter = Projekt::INDEX_FILTERS.include?(params[:order]) ? params[:order] : @current_active_projekt_filters.first
+
+    @active_projekts = @all_projekts.send(@current_projekt_filter).first(3)
     @active_projekts_map_coordinates = all_projekts_map_locations(@active_projekts)
+
     @proposals = Proposal.where.not(projekt_id: nil).first(3)
     @debates = Debate.where.not(projekt_id: nil).first(3)
     @polls = Poll.where.not(projekt_id: nil).first(3)

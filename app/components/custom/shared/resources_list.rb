@@ -8,7 +8,9 @@ class Shared::ResourcesList < ApplicationComponent
     resources_name: nil,
     filter_param: nil,
     filter_options: nil,
+    current_filter: nil,
     resources_url: nil,
+    only_content: false,
     wide: false,
     css_class: nil
   )
@@ -18,7 +20,9 @@ class Shared::ResourcesList < ApplicationComponent
     @wide = wide
     @filter_param = filter_param.presence || "order"
     @filter_options = filter_options.presence || default_filter_options
+    @current_filter = current_filter
     @resources_url = resources_url
+    @only_content = only_content
     @css_class = css_class
   end
 

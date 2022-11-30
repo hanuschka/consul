@@ -1,37 +1,46 @@
-<div class="u-main-column resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @resources_url %>">
-  <h3 class="resources-list--title"><%= @title %></h3>
-
-  <div class="resources-list--navigation">
-    <div class="resources-list--line-divider">
-
+<% body = capture do  %>
+  <% if @map_coordinates.present? %>
+    <div class="map resources-list--map not-print">
+      <%= helpers.render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), @resources_name, false, nil, @map_coordinates, MapLayer.general.to_json) %>
     </div>
-    <div class="resources-list--sort">
-      <%= render(
-            Shared::DropdownMenuComponent.new(
-              name: @filter_param,
-              options: @filter_options,
-              item_css_class: 'js-resource-list-filter-dropdown-item'
-            )
+  <% end %>
+
+  <div class="resources-list--inner">
+    <% @resources.each do |resource| %>
+      <%= render resource_component(resource) %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @only_content %>
+  <%= body %>
+<% else %>
+  <div class="u-main-column resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @resources_url %>">
+    <h3 class="resources-list--title"><%= @title %></h3>
+
+    <div class="resources-list--navigation">
+      <div class="resources-list--line-divider">
+
+      </div>
+      <div class="resources-list--sort">
+        <%= render(
+          Shared::DropdownMenuComponent.new(
+            name: @filter_param,
+            options: @filter_options,
+            item_css_class: 'js-resource-list-filter-dropdown-item'
+          )
         )
       %>
 
-    </div>
-    <div class="resources-list--switch-view-button js-resource-list-switch-view-button">
-      <i class="fa <%= switch_view_mode_icon %>"></i>
-    </div>
-  </div>
-
-  <div class="resources-list--body js-resources-list--body">
-    <% if @map_coordinates.present? %>
-      <div class="map resources-list--map not-print">
-        <%= helpers.render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), @resources_name, false, nil, @map_coordinates, MapLayer.general.to_json) %>
       </div>
-    <% end %>
+      <div class="resources-list--switch-view-button js-resource-list-switch-view-button">
+        <i class="fa <%= switch_view_mode_icon %>"></i>
+      </div>
+    </div>
 
-    <div class="resources-list--inner">
-      <% @resources.each do |resource| %>
-        <%= render resource_component(resource) %>
-      <% end %>
+    <div class="resources-list--body js-resources-list--body">
+      <%= body %>
     </div>
   </div>
-</div>
+<% end %>
+

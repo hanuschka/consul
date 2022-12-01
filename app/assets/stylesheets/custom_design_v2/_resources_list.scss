@@ -62,4 +62,16 @@
       color: #707070;
       transition: 200ms background ease;
     }
+
+    .resources-list--map {
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+
+      .map_location {
+        height: 450px;
+      }
+    }
 }
+
+

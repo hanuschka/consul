@@ -10,10 +10,10 @@ class Projekts::List < ApplicationComponent
   def call
     render(Shared::ResourcesList.new(
       resources: @projekts,
-      title: t("custom.welcome.active_projekt_cards.title"),
+      title: t("custom.resource_names_plular.projekt"),
       map_coordinates: @map_coordinates,
       wide: false,
-      resources_url: list_projekts_path,
+      resources_url: list_projekts_url(limit: 3),
       current_filter_option: current_filter_option,
       filter_param: "order",
       filter_options: filter_options,

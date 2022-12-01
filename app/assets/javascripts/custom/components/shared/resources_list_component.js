@@ -37,6 +37,11 @@
       var filterValue = filterItem.dataset.value;
       var resourcesList = filterItem.closest(".js-resources-list");
       var resourcesUrl = resourcesList.dataset.resourcesUrl;
+
+      if (!resourcesUrl) {
+        return;
+      }
+
       var resourcesUrlWithFilter = resourcesUrl + "?" + filterName + "=" + filterValue;
 
       $.get(resourcesUrlWithFilter, function(responseData) {

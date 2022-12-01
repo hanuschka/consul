@@ -8,3 +8,11 @@ de:
       budget_investment: Mangel
       deficiency_report: Vorschlag für Budget
       event: Veranstaltung
+    resource_names_plular:
+      projekt: Projekts
+      debate: Diskussions
+      proposal: Vorschläges
+      poll: Abstimmungs
+      budget_investment: Mangels
+      deficiency_report: Vorschlag für Budget
+      event: Veranstaltung

@@ -42,9 +42,10 @@
         return;
       }
 
-      var resourcesUrlWithFilter = resourcesUrl + "?" + filterName + "=" + filterValue;
+      var resourcesUrlObject = new URL(resourcesUrl);
+      resourcesUrlObject.searchParams.set(filterName, filterValue)
 
-      $.get(resourcesUrlWithFilter, function(responseData) {
+      $.get(resourcesUrlObject.toString(), function(responseData) {
         resourcesList.querySelector(".js-resources-list--body").innerHTML = responseData;
 
         App.Map.initialize();

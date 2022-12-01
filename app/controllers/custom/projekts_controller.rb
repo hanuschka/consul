@@ -319,10 +319,12 @@ class ProjektsController < ApplicationController
     @map_coordinates = all_projekts_map_locations(@projekts)
     @resources = @projekts
 
+    limit = params[:limit].presence || 25
+
     if @projekts.is_a?(Array)
-      @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(25)
+      @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(limit)
     else
-      @projekts = @projekts.page(params[:page]).per(25)
+      @projekts = @projekts.page(params[:page]).per(limit)
     end
 
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq

@@ -81,7 +81,7 @@
 
   .resource-item--title {
     font-size: 20px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 
     text-decoration: none;
     color: inherit;
@@ -94,7 +94,6 @@
 
   .resource-item--description {
     font-size: 15px;
-    margin-top: 5px;
     margin-bottom: 0;
     line-height: 1.3;
   }
@@ -166,7 +165,7 @@
   .resource-item.projekt-list-item {
     .resource-item--body {
       // min-height: 168px;
-      min-height: 203px;
+      min-height: 208px;
     }
   }
 

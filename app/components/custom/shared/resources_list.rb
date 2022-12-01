@@ -15,7 +15,7 @@ class Shared::ResourcesList < ApplicationComponent
     css_class: nil
   )
     @resources = resources
-    @resources_name = resources_name
+    @resources_name = resources.first.class.name.downcase.pluralize
     @title = title
     @wide = wide
     @filter_param = filter_param.presence || "order"

@@ -155,7 +155,13 @@
     padding: 0 25px 15px;
     // min-height: 115px;
     // min-height: 142px;
+    display: flex;
+    flex-direction: column;
     min-height: 128px;
+
+    .resource-item--sdgs {
+      display: none;
+    }
 
     .resource-item--additional-body {
       margin-top: 12px;
@@ -406,6 +412,14 @@
             }
           }
 
+          .resource-item--description-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+          }
+
+
           .resource-item--footer-section  {
             .resource-item--additional-body {
               width: 100%;
@@ -465,6 +479,10 @@
           .resource-item--body {
             .resource-item--additional-body {
               display: none;
+            }
+
+            .resource-item--sdgs {
+              display: flex;
             }
           }
 

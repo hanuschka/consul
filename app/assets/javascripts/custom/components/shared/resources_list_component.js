@@ -31,6 +31,8 @@
     },
 
     loadResourcesWithFilter: function(e) {
+      e.preventDefault();
+
       var filterItem = e.currentTarget;
 
       var filterName = filterItem.dataset.name;

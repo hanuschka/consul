@@ -8,8 +8,8 @@
         }
       }.bind(this));
 
-      $(document).on("click", ".dropdown-toggle", this.openDropdown.bind(this));
-      $(document).on("click", ".js-dropdown-item", this.selectOption.bind(this));
+      $(".dropdown-toggle").on("click", this.openDropdown.bind(this));
+      $(".js-dropdown-item").on("click", this.selectOption.bind(this));
     },
 
     openDropdown: function(e) {

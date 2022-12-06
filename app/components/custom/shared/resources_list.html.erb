@@ -1,5 +1,5 @@
 <% body = capture do  %>
-  <% if @map_coordinates.present? %>
+  <% if @map_coordinates.present? && @standalone %>
     <div class="map resources-list--map not-print">
       <%= helpers.render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), @resources_name, false, nil, @map_coordinates, MapLayer.general.to_json) %>
     </div>
@@ -16,7 +16,15 @@
   <%= body %>
 <% else %>
   <div class="u-main-column resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @resources_url %>">
-    <h3 class="resources-list--title"><%= @title %></h3>
+    <% if @standalone %>
+      <h3 class="resources-list--title"><%= @title %></h3>
+    <% end %>
+
+    <% if @map_coordinates.present? && !@standalone %>
+      <div class="map resources-list--map not-print">
+        <%= helpers.render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), @resources_name, false, nil, @map_coordinates, MapLayer.general.to_json) %>
+      </div>
+    <% end %>
 
     <div class="resources-list--navigation">
       <div class="resources-list--line-divider">
@@ -31,7 +39,7 @@
             name: @filter_param,
             options: @filter_options,
             selected_option: @current_filter_option,
-            item_css_class: 'js-resource-list-filter-dropdown-item'
+            item_css_class: item_css_class
           )
         )
       %>

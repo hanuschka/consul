@@ -9,7 +9,9 @@
   <div class='u-flex-container'>
     <div class="u-main-column">
       <% if @projekts.any? %>
-        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true) %>
+        <div class="projekts-overview-page--projekts-list">
+          <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true) %>
+        </div>
       <% else %>
         <h4 class="text-center">
           <%= t('custom.projekts.index.no_projekts_for_current_filter') %>
@@ -17,20 +19,55 @@
       <% end %>
     </div>
 
-    <div class='projekt-sidebar column small-12 medium-3'>
-      <div class="custom-content-block--margin-bottom">
-        <%= render_custom_block "projekt_index_sidebar" %>
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card--section">
+          <h4 class="sidebar-card--header">
+            <i class="fas fa-bullhorn"></i>
+            Information
+          </h4>
+          <%= render_custom_block 'projekt_overview_page_sidebar' %>
+        </div>
       </div>
 
+      <div class="sidebar-card">
+        <div class="sidebar-card--section">
+          <h4 class="sidebar-card--header">
+            <i class="fas fa-bullhorn"></i>
+            Tags
+          </h4>
+          <%= render "shared/categories", taggable: "projekt" %>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card--section">
+          <h4 class="sidebar-card--header">
+            <i class="fas fa-bullhorn"></i>
+            Tags
+          </h4>
+          <%= render "shared/tag_cloud", taggable: "projekt" %>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card--section">
+          <h4 class="sidebar-card--header">
+            <i class="fas fa-bullhorn"></i>
+            SDGS
+          </h4>
+          <% if @sdgs.present? %>
+            <%= render SDG::Goals::TagCloudComponent.new("Projekt", sdg_targets: @sdg_targets) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class='projekt-sidebar column small-12 medium-3'>
       <% if show_affiliation_filter_in_sidebar? %>
         <%= render "shared/sidebar_filter/geozone_affiliations" %>
       <% end %>
 
-      <%= render "shared/categories", taggable: "projekt" %>
-      <%= render "shared/tag_cloud", taggable: "projekt" %>
-      <% if @sdgs.present? %>
-        <%= render SDG::Goals::TagCloudComponent.new("Projekt", sdg_targets: @sdg_targets) %>
-      <% end %>
     </div>
   </div>
 

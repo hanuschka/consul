@@ -12,7 +12,8 @@ class Shared::ResourcesList < ApplicationComponent
     only_content: false,
     map_coordinates: nil,
     wide: false,
-    css_class: nil
+    css_class: nil,
+    standalone: false
   )
     @resources = resources
     @resources_name = resources.first.class.name.downcase.pluralize
@@ -25,6 +26,7 @@ class Shared::ResourcesList < ApplicationComponent
     @only_content = only_content
     @map_coordinates = map_coordinates
     @css_class = css_class
+    @standalone = standalone
   end
 
   def class_names
@@ -35,6 +37,12 @@ class Shared::ResourcesList < ApplicationComponent
     end
 
     base
+  end
+
+  def item_css_class
+    if @standalone
+      "js-resource-list-filter-dropdown-item"
+    end
   end
 
   def switch_view_mode_icon

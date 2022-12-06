@@ -7,7 +7,7 @@
     <ul>
     <% @options.each do |option| %>
       <li data-name="<%= @name %>" data-value="<%= option[0] %>" class="js-dropdown-item <%= @item_css_class %>" >
-        <%= option[1] %>
+        <%= link_to(option[1], option[2]) %>
       </li>
     <% end %>
     </ul>

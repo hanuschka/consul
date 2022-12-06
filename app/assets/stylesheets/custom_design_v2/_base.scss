@@ -1,6 +1,7 @@
 $main-text-color: #67788A;
 
 body.new-custom-design > header .locale.locale-custom,
+
 .wrapper > header .locale.locale-custom {
   height: 2.5rem;
   margin-left: 0;
@@ -46,6 +47,11 @@ body.new-custom-design > header .locale.locale-custom,
 
 body.new-custom-design {
   font-family: "Asap", "sourcesanspro-regular-webfont", "sourcesanspro-bold-webfont", "PT_Serif_Web-Regular", sans-serif !important;
+  color: #67788A;
+
+  h1, h2, h3, h4, h5 {
+    color: #292929;
+  }
 }
 
 body.new-custom-design > header, .new-custom-design .wrapper > header {

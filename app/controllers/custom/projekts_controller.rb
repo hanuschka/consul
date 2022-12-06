@@ -309,12 +309,12 @@ class ProjektsController < ApplicationController
       take_by_my_posts
     end
 
-    @projekts = @projekts.send(@current_order)
-
     @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
     @tag_cloud = tag_cloud
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'
+
+    @projekts = @projekts.send(@current_order)
 
     @map_coordinates = all_projekts_map_locations(@projekts)
     @resources = @projekts

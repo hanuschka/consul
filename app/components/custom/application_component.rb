@@ -22,4 +22,24 @@ class ApplicationComponent < ViewComponent::Base
 
       "/#{projekt.page.slug}?selected_phase_id=#{current_projekt_phase.id}&filter=#{filter}&order=#{order}&filter_projekt_ids=#{filter_projekt_ids}i&page=#{pagination_page}"
     end
+
+    def current_path_with_query_params_merged_subarrays(new_query_parameters)
+      params = request.query_parameters.dup
+
+      new_query_parameters.stringify_keys.each do |key, value|
+        selected_values = params[key].present? ? params[key].split(",") : []
+
+        if selected_values.include?(value)
+          selected_values.delete(value)
+        else
+          selected_values.push(value)
+        end
+
+        params[key] = selected_values.join(",")
+      end
+
+      params = params.delete_if { |key, value| value.blank? }
+
+      url_for(params.merge(only_path: true))
+    end
 end

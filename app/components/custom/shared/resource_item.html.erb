@@ -2,13 +2,13 @@
   <div class="resource-item--tags">
     <% if @tags.present? %>
       <% @tags.first(2).each do |tag| %>
-         <%= link_to(helpers.taggables_path(@resource.class.name.underscore, tag.name), class: 'resource-item--tag js-projekt-tag-filter-link') do %>
+         <%= link_to(path_for_resource_with_params(@resource, tags: tag.name), target: 'blank', class: 'resource-item--tag') do %>
           <%= tag.name %>
         <% end %>
       <% end %>
 
       <% if @tags[2].present? %>
-         <%= link_to(helpers.taggables_path(@resource.class.name.underscore, @tags[2].name), class: 'resource-item--tag resource-item--last-tag js-projekt-tag-filter-link') do %>
+         <%= link_to(path_for_resource_with_params(@resource, tags: @tags[2].name), target: '_blank', class: 'resource-item--tag resource-item--last-tag') do %>
           <%= @tags[2].name %>
         <% end %>
       <% end %>

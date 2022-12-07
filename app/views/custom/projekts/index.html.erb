@@ -8,15 +8,9 @@
 
   <div class='u-flex-container'>
     <div class="u-main-column">
-      <% if @projekts.any? %>
-        <div class="projekts-overview-page--projekts-list">
-          <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true) %>
-        </div>
-      <% else %>
-        <h4 class="text-center">
-          <%= t('custom.projekts.index.no_projekts_for_current_filter') %>
-        </h4>
-      <% end %>
+      <div class="projekts-overview-page--projekts-list">
+        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true) %>
+      </div>
     </div>
 
     <div class="sidebar">

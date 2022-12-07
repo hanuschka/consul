@@ -27,4 +27,23 @@ class ApplicationComponent < ViewComponent::Base
 
     url_for(params.merge(only_path: true))
   end
+
+  def path_for_resource_with_params(resource, params)
+    case resource
+    when Debate
+      debates_path(params)
+    when Proposal
+      proposals_path(params)
+    when Poll
+      polls_path(params)
+    when Budget::Investment
+      budget_investments_path(resource, params)
+    when Legislation::Proposal
+      legislation_process_proposals_path(resource, params)
+    when Projekt
+      projekts_path(params)
+    else
+      "#"
+    end
+  end
 end

@@ -6,8 +6,14 @@
   <% end %>
 
   <div class="resources-list--inner">
-    <% @resources.each do |resource| %>
-      <%= render resource_component(resource) %>
+    <% if @resources.present? %>
+      <% @resources.each do |resource| %>
+        <%= render resource_component(resource) %>
+      <% end %>
+    <% else %>
+      <h4 class="resources-list--not-items-message text-center">
+        <%= @no_items_text %>
+      </h4>
     <% end %>
   </div>
 <% end %>

@@ -1,11 +1,11 @@
 <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
-  <ul id="categories" class="no-bullet">
+  <ul class="tag-list-filter no-bullet">
     <% selected_categories = params[:tags] ? params[:tags].split(',') : [] %>
 
     <% @categories.each do |category| %>
-      <li class="inline-block">
-        <% css_class = selected_categories.include?(category.name) ? "is-active" : "" %>
-        <%= link_to(category.name, current_path_with_query_params_merged_subarrays(tags: category.name), class: css_class) %>
+      <% css_class = selected_categories.include?(category.name) ? "is-active" : "" %>
+      <li class="tag-item <%= css_class %>">
+        <%= link_to(category.name, current_path_with_query_params_merged_subarrays(tags: category.name)) %>
       </li>
     <% end %>
   </ul>

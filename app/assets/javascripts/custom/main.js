@@ -3,7 +3,7 @@
 
   App.CustomJS = {
     initialize: function() {
-      App.StikyTopbar.initialize();
+      App.StikyHeader.initialize();
       App.ResourcesListComponent.initialize();
       App.DropdownMenuComponent.initialize();
     }

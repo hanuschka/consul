@@ -24,6 +24,10 @@
         </div>
       </div>
 
+      <% if show_affiliation_filter_in_sidebar? %>
+        <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
+      <% end %>
+
       <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
         <div class="sidebar-card">
           <div class="sidebar-card--section">
@@ -46,6 +50,9 @@
           <% if @sdgs.present? %>
             <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
           <% end %>
+          <%# <% if @sdgs.present? %>
+          <%#   <%= render Shared::SDGFilterComponent.new(sdg_targets: @sdg_targets) %>
+          <%# <% end %>
         </div>
       </div>
     </div>

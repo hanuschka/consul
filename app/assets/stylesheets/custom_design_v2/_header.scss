@@ -1,30 +1,33 @@
-$main-text-color: #67788A;
-
-@media screen and (min-width: 75em) {
-  body.new-custom-design > .wrapper, .new-custom-design .footer, .new-custom-design header .top-bar {
-    // margin-left: calc(40vw - 37.5rem);
-    // margin-right: calc(40vw - 37.5rem);
-    // max-width: 1200px;
-    max-width: 1245px;
-    width: 100%;
-    margin: auto;
-  }
-
-  body.new-custom-design > .wrapper {
-    // max-width: 1080px;
-    // max-width: 1050px;
-    // max-width: 1150px;
-    max-width: 1245px;
-    width: 100%;
+.new-custom-design {
+  header {
+    padding: 0;
+    background: white !important;
   }
 }
+body.new-custom-design > header .locale.locale-custom,
+body.new-custom-design .wrapper > header .locale.locale-custom {
+  height: 2.5rem;
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 
-body.new-custom-design {
-  font-family: "Asap", "sourcesanspro-regular-webfont", "sourcesanspro-bold-webfont", "PT_Serif_Web-Regular", sans-serif !important;
-  color: #67788A;
+  &::after {
+    display: none;
+  }
 
-  h1, h2, h3, h4, h5 {
-    color: #292929;
+  .locale-form {
+    margin-top: 0.65rem;
+
+    label {
+      color: $dark
+    }
+
+    .locale-switcher {
+
+      &:focus {
+        outline: 3px solid #ffbf47 !important
+      }
+    }
   }
 }
 
@@ -33,14 +36,17 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   max-width: auto;
 }
 
-.new-custom-design {
-  #navigation_bar .top-level-item > a,
-  #navigation_bar .top-level-item > .flyout-item-name > a,
-  #navigation_bar .top-level-item > .flyout-item-name, .subnavigation a {
-    line-height: 3rem;
-    font-weight: normal;
-  }
 
+.new-custom-design {
+  header {
+   &.-sticky {
+     position: fixed;
+     left: 0;
+     right: 0;
+     top: 0;
+     background: white;
+   }
+  }
 
   li#notifications {
     // margin-right: 0;
@@ -231,133 +237,6 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
       margin-left: 1rem;
       margin-right: 1rem;
       margin-bottom: 1rem;
-    }
-  }
-
-  .resource-n .resource-details .resource-summary a {
-    color: #222;
-    text-decoration: none;
-  }
-
-  @media screen and (min-width: 75em) {
-    body.new-custom-design.public {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-
-  html {
-    font-size: 18px;
-  }
-
-  h2 {
-    font-weight: 500;
-    font-size: 42px;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    font-size: 38px;
-    font-weight: 500;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    line-height: 1.5;
-    font-size: 18px;
-  }
-
-  .resources-list {
-    // width: 860px;
-    // display: flex;
-    // justify-content: space-between;
-    // flex-wrap: wrap;
-    margin-bottom: 30px;
-  }
-
-  .u-flex-container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .card-section--header {
-    // font-size: 18px;
-    font-size: 16px;
-    margin-bottom: 8px;
-  }
-
-  .u-main-column {
-    width: 930px;
-  }
-
-  .system-users-list {
-  }
-
-  .system-users-list--title {
-    margin-bottom: 10px;
-  }
-
-  .system-users-list--images {
-    display: flex;
-  }
-
-  .system-users-list--image {
-    width: 40px;
-    height: 40px;
-    background: black;
-    border-radius: 50%;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    border: 2px solid white;
-  }
-
-  .system-users-list--image:first-child {
-    position: static;
-  }
-
-  .system-users-list--image:nth-child(2) {
-    left: -15px;
-  }
-
-  .system-users-list--image:nth-child(3) {
-    left: -30px;
-  }
-
-  .system-users-list--image:nth-child(4) {
-    left: -45px;
-  }
-
-  .system-users-list--image:nth-child(5) {
-    left: -60px;
-  }
-
-  .button {
-    height: 37px;
-    padding: 0 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 15px;
-    border-radius: 6px;
-
-    &.-grey {
-      background: #c0cedb;
-      color: black;
-    }
-
-    &.-orange {
-      background: #FFA42D;
-      color: black;
-    }
-
-    &.-purple {
-      background: #EAE4FB;
-      color: black;
     }
   }
 }

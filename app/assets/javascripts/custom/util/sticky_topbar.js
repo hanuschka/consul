@@ -4,7 +4,7 @@
     initialized: false,
 
     initialize: function() {
-      if (this.initialized)  {
+      if (this.initialized) {
         return;
       }
 
@@ -20,9 +20,9 @@
 
     handleScroll: function() {
       if (window.pageYOffset > this.initialHeaderOffsetY) {
-        this.header.classList.add("-sticky")
+        this.header.classList.add("sticky-header")
       } else {
-        this.header.classList.remove("-sticky");
+        this.header.classList.remove("sticky-header");
       }
     }
   };

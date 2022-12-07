@@ -39,13 +39,15 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
 
 .new-custom-design {
   header {
-   &.-sticky {
-     position: fixed;
-     left: 0;
-     right: 0;
-     top: 0;
-     background: white;
-   }
+  }
+
+  .sticky-header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: white;
+    z-index: 100;
   }
 
   li#notifications {

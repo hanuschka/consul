@@ -42,8 +42,9 @@
             <i class="fas fa-bullhorn"></i>
             SDGS
           </h4>
+
           <% if @sdgs.present? %>
-            <%= render SDG::Goals::TagCloudComponent.new("Projekt", sdg_targets: @sdg_targets) %>
+            <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
           <% end %>
         </div>
       </div>

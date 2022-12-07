@@ -26,4 +26,17 @@
     display: flex;
     flex-wrap:  wrap;
   }
+
+  .sdg-tag-list-new {
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    li {
+      list-style: none;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+  }
 }

@@ -13,7 +13,8 @@ class Shared::ResourcesList < ApplicationComponent
     map_coordinates: nil,
     wide: false,
     css_class: nil,
-    standalone: false
+    standalone: false,
+    no_items_text: nil
   )
     @resources = resources
     @resources_name = resources.first.class.name.downcase.pluralize
@@ -27,6 +28,7 @@ class Shared::ResourcesList < ApplicationComponent
     @map_coordinates = map_coordinates
     @css_class = css_class
     @standalone = standalone
+    @no_items_text = no_items_text
   end
 
   def class_names

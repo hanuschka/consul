@@ -21,7 +21,8 @@ class Projekts::List < ApplicationComponent
       filter_options: filter_options,
       only_content: @only_content,
       css_class: "js-projekts-list",
-      standalone: @standalone
+      standalone: @standalone,
+      no_items_text: t('custom.projekts.index.no_projekts_for_current_filter')
     ))
   end
 

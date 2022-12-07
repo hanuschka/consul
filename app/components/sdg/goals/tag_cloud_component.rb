@@ -18,4 +18,13 @@ class SDG::Goals::TagCloudComponent < ApplicationComponent
     def goals
       SDG::Goal.order(:code)
     end
+  private
+
+    def heading
+      t("custom.sdg.goals.filter.heading")
+    end
+
+    def goals
+      SDG::Goal.order(:code)
+    end
 end

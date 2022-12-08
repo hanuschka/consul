@@ -56,6 +56,10 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     top: 0;
     background: white;
     z-index: 1000;
+
+    .top-bar-background-wrapper {
+      background: transparent !important;
+    }
   }
 
   li#notifications {

@@ -10,19 +10,20 @@
 
       window.onscroll = this.handleScroll.bind(this);
 
-      // Get the navbar
-      this.header = document.querySelector(".js-stiky-header");
-
       // Get the offset position of the header
-      this.initialHeaderOffsetY = this.header.offsetTop;
+      this.initialHeaderOffsetY = this.header().offsetTop;
       this.initialized = true;
+    },
+
+    header() {
+      return document.querySelector(".js-stiky-header");
     },
 
     handleScroll: function() {
       if (window.pageYOffset > this.initialHeaderOffsetY) {
-        this.header.classList.add("sticky-header")
-      } else {
-        this.header.classList.remove("sticky-header");
+        this.header().classList.add("sticky-header");
+      } else if (window.pageXOffset === this.initialHeaderOffsetY) {
+        this.header().classList.remove("sticky-header");
       }
     }
   };

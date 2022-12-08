@@ -12,7 +12,7 @@ class Projekts::List < ApplicationComponent
   def call
     render(Shared::ResourcesList.new(
       resources: @projekts,
-      title: t("custom.resource_names_plular.projekt"),
+      title: t("custom.resource_names.projekt"),
       map_coordinates: @map_coordinates,
       wide: false,
       resources_url: list_projekts_url(limit: 3),

@@ -22,10 +22,16 @@
           <% end %>
         </div>
 
-        <div id="navigation_bar" class="header--navigation subnavigation expanded not-print">
+        <div id="navigation_bar" class="header--navigation expanded not-print">
           <div class="hide-for-small-only">
             <%= render partial: "shared/subnavigation", locals: { placement: 'desktop', launch_page: launch_page } %>
           </div>
+
+          <% if !launch_page && current_user.nil? %>
+            <div class='header--account-buttons show-for-large'>
+              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
+            </div>
+          <% end %>
         </div>
 
         <!-- <h2 class='header-title show-for-medium'> -->
@@ -33,25 +39,6 @@
         <!--   <br> -->
         <!--   <%= content_tag :span, Setting['extended_option.general.subtitle'] %> -->
         <!-- </h2> -->
-        <!--  -->
-        <!-- <span data-responsive-toggle="responsive-menu" -->
-        <!--       data-hide-for="medium" -->
-        <!--       class="hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll" -->
-        <!--       role="button" -->
-        <!--       tabindex="0" -->
-        <!--       aria-haspopup="true" -->
-        <!--       aria-expanded="false" -->
-        <!--       aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' > -->
-        <!--   <span class="menu-icon dark" data-toggle></span> -->
-        <!-- </span> -->
-
-        <div class='header-right-group not-print'>
-          <% if !launch_page && current_user.nil? %>
-            <div class='account-buttons show-for-large'>
-              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
-            </div>
-          <% end %>
-        </div>
 
         <div id="responsive-menu" class='not-print'>
           <div class="top-bar-right">
@@ -65,7 +52,7 @@
                 </h2>
 
                 <% if !launch_page && current_user.nil? %>
-                  <div class='account-buttons'>
+                  <div class='header--account-buttons'>
                     <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
                   </div>
                 <% end %>

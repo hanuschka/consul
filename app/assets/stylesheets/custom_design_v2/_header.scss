@@ -141,7 +141,7 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
 
   }
 
-  .subnavigation a {
+  .header--navigation a {
     padding-top: 0;
     padding-bottom: 0;
   }
@@ -150,6 +150,8 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   .top-bar {
     height: 150px;
     display: flex;
+    align-items: flex-start;
+    padding-top: 20px;
     justify-content: flex-start !important;
     background: transparent !important;
   }
@@ -164,8 +166,22 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   }
 
   .header--navigation {
+    display: flex;
+    justify-content: space-between;
     margin-left: 55px;
+    width: 100%;
     height: 60px;
+    background: transparent;
+    margin-top: 10px;
+
+    ul li {
+      margin-right: 0;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+    }
 
     .content-items {
       .nav-element {
@@ -177,17 +193,8 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     }
   }
 
-  .subnavigation ul.main-menu .projekt-name, .subnavigation ul.main-menu li.nav-element a {
+  .header--navigation ul.main-menu .projekt-name, .header--navigation ul.main-menu li.nav-element a {
     color: black;
-  }
-
-  .subnavigation {
-    width: 100%;
-    background: transparent;
-  }
-
-  .subnavigation ul li {
-    margin-right: 0;
   }
 
   .user-notification-badge--wrapper {
@@ -257,11 +264,12 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   }
 
 
-  .header-right-group {
-    .account-buttons {
+  header {
+    .header--account-buttons {
       display: flex;
       flex-direction: column;
       margin-right: 15px;
+      margin-top: 2px;
     }
 
     .sign-in-button, .sign-up-button {
@@ -283,7 +291,7 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   }
 
   #responsive-menu {
-    .account-buttons {
+    .header--account-buttons {
       margin-left: 1rem;
       margin-right: 1rem;
       margin-bottom: 1rem;

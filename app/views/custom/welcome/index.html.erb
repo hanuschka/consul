@@ -21,42 +21,7 @@
 
   <% if @active_projekts.any? %>
     <div class="d-flex u-flex-container">
-      <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters) %>
-      <%= render 'sidebar'  %>
-    </div>
-  <% end %>
-
-  <% if @proposals.any? %>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @proposals, title: "Proposals", wide: false) %>
-      <%= render 'sidebar'  %>
-    </div>
-  <% end %>
-
-  <% if @debates.any? %>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @debates, title: "Debates", wide: false) %>
-      <%= render 'sidebar'  %>
-    </div>
-  <% end %>
-
-  <% if @polls.any? %>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @polls, title: "Polls", wide: false) %>
-      <%= render 'sidebar'  %>
-    </div>
-  <% end %>
-
-  <% if @deficiency_reports.any? %>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @deficiency_reports, title: "Deficiency reports", wide: false) %>
-      <%= render 'sidebar'  %>
-    </div>
-  <% end %>
-
-  <% if @budgets.any? %>
-    <div class="d-flex u-flex-container">
-      <%= render Shared::ResourcesList.new(resources: @budgets, title: "Budget", wide: false) %>
+      <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters, load_resources_url: list_projekts_url) %>
       <%= render 'sidebar'  %>
     </div>
   <% end %>
@@ -83,31 +48,22 @@
 
   <div class="row">
     <div class="column small-centered">
-      <%=render_custom_block 'home_page_4' %>
+      <%= render_custom_block 'home_page_4' %>
     </div>
   </div>
 
   <% if @latest_items.any? %>
-    <div class="row">
-      <div class="column small-centered margin-bottom">
-        <h3 class='title card-title'><%= t('custom.welcome.user_entries') %></h3>
-        <%= render "latest_items" %>
-      </div>
-    </div>
+    <%= render Shared::ResourcesList.new(resources: @latest_items, title: t('custom.welcome.user_entries'), wide: false) %>
   <% end %>
 
   <div class="row">
     <div class="column small-centered">
-      <%=render_custom_block 'home_page_5' %>
+      <%= render_custom_block 'home_page_5' %>
     </div>
   </div>
 
   <% if @expired_projekts.any? %>
-    <div class="row">
-      <div class="column small-centered margin-bottom">
-        <%= render partial: "projekt_cards", locals: { projekts: @expired_projekts, section_title: t("custom.welcome.expired_projekt_cards.title")  } %>
-      </div>
-    </div>
+    <%= render Projekts::List.new(projekts: @expired_projekts, title: t("custom.welcome.expired_projekt_cards.title")) %>
   <% end %>
 
   <div class="row">

@@ -21,7 +21,7 @@
 <% if @only_content %>
   <%= body %>
 <% else %>
-  <div class="u-main-column resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @resources_url %>">
+  <div class="u-main-column resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @load_resources_url %>">
     <% unless @hide_title %>
       <h3 class="resources-list--title"><%= @title %></h3>
     <% end %>
@@ -30,21 +30,23 @@
       <div class="resources-list--line-divider">
 
       </div>
-      <div class="resources-list--sort">
-        <div class="resources-list--sort-title">
-          Sortieren nach:
-        </div>
-        <%= render(
-          Shared::DropdownMenuComponent.new(
-            name: @filter_param,
-            options: @filter_options,
-            selected_option: @current_filter_option,
-            item_css_class: item_css_class
+      <% if @load_resources_url.present? %>
+        <div class="resources-list--sort">
+          <div class="resources-list--sort-title">
+            Sortieren nach:
+          </div>
+          <%= render(
+            Shared::DropdownMenuComponent.new(
+              name: @filter_param,
+              options: @filter_options,
+              selected_option: @current_filter_option,
+              item_css_class: item_css_class
+            )
           )
-        )
-      %>
+        %>
+        </div>
+      <% end %>
 
-      </div>
       <div class="resources-list--switch-view-button js-resource-list-switch-view-button">
         <i class="fa <%= switch_view_mode_icon %>"></i>
       </div>

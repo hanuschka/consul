@@ -32,7 +32,7 @@ class Shared::ResourceItem < ApplicationComponent
     @date = date
     @tags = tags
     @sdgs = sdgs
-    @resource_name = @resource.class.name.downcase
+    @resource_name = @resource.class.name.downcase.gsub("::", "_")
     @image_placeholder_icon_class = image_placeholder_icon_class
 
     if @wide

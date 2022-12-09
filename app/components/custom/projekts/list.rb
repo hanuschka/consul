@@ -1,5 +1,5 @@
 class Projekts::List < ApplicationComponent
-  def initialize(projekts:, all_projekts: nil, map_coordinates:, content_only: false, filters: nil, current_filter: nil, only_content: false, overview_page_mode: false, anchor: nil, standalone: false)
+  def initialize(projekts:, title: nil, all_projekts: nil, map_coordinates:, content_only: false, filters: nil, current_filter: nil, only_content: false, overview_page_mode: false, anchor: nil, standalone: false)
     @projekts = projekts
     @map_coordinates = map_coordinates
     @current_filter = current_filter
@@ -7,12 +7,13 @@ class Projekts::List < ApplicationComponent
     @only_content = only_content
     @anchor = anchor
     @standalone = standalone
+    @title = title.presence || t("custom.resource_names.projekt")
   end
 
   def call
     render(Shared::ResourcesList.new(
       resources: @projekts,
-      title: t("custom.resource_names.projekt"),
+      title: @title,
       map_coordinates: @map_coordinates,
       wide: false,
       resources_url: list_projekts_url(limit: 3),

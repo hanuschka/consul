@@ -78,12 +78,7 @@
   </div>
 
   <% if @latest_polls.any? %>
-    <div class="row">
-      <div class="column small-centered margin-bottom">
-        <h3 class='title card-title'><%= t('custom.welcome.current_polls') %></h3>
-        <%= render partial: "polls/poll_group", locals: { poll_group: @latest_polls } %>
-      </div>
-    </div>
+    <%= render Shared::ResourcesList.new(resources: @polls, title: t('custom.welcome.current_polls') , wide: false) %>
   <% end %>
 
   <div class="row">

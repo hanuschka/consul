@@ -3,6 +3,16 @@
     padding: 0;
     background: transparent !important;
     z-index: 100;
+
+    .main-menu {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  .hader--subnavigation-wrapper {
+    width: 100%;
   }
 
   .homepage-image-header {
@@ -18,7 +28,7 @@
     opacity: 0.77;
     background: white;
     display: inline-block;
-    padding: 22px 30px;
+    padding: 20px 30px;
     line-height: 1.3;
     color: #005A9F;
     font-size: 32px;

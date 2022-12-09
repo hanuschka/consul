@@ -1,11 +1,13 @@
 class Projekts::List < ApplicationComponent
   def initialize(
     projekts:, title: nil,
-    all_projekts: nil, map_coordinates:,
+    all_projekts: nil, map_coordinates: nil,
     content_only: false, filters: nil,
     current_filter: nil, only_content: false,
     overview_page_mode: false, anchor: nil,
-    hide_title: false
+    load_resources_url: nil,
+    hide_title: false, no_filter: false,
+    integrated: false
   )
     @projekts = projekts
     @map_coordinates = map_coordinates
@@ -15,6 +17,9 @@ class Projekts::List < ApplicationComponent
     @anchor = anchor
     @title = title.presence || t("custom.resource_names.projekt")
     @hide_title = hide_title
+    @no_filter = no_filter
+    @load_resources_url = load_resources_url
+    @integrated = integrated
   end
 
   def call
@@ -23,18 +28,22 @@ class Projekts::List < ApplicationComponent
       title: @title,
       map_coordinates: @map_coordinates,
       wide: false,
-      resources_url: list_projekts_url(limit: 3),
+      load_resources_url: @load_resources_url,
       current_filter_option: current_filter_option,
       filter_param: "order",
       filter_options: filter_options,
       only_content: @only_content,
       css_class: "js-projekts-list",
       hide_title: @hide_title,
-      no_items_text: t('custom.projekts.index.no_projekts_for_current_filter')
+      no_filter: @no_filter,
+      no_items_text: t('custom.projekts.index.no_projekts_for_current_filter'),
+      integrated: @integrated
     ))
   end
 
   def filter_options
+    return if @filters.blank?
+
     @filters.map do |filter|
       [
         filter,
@@ -45,6 +54,8 @@ class Projekts::List < ApplicationComponent
   end
 
   def current_filter_option
+    return if filter_options.blank?
+
     filter_options.find { |filter_option| filter_option[0] == @current_filter }
   end
 

@@ -8,13 +8,15 @@ class Shared::ResourcesList < ApplicationComponent
     filter_param: nil,
     filter_options: nil,
     current_filter_option: nil,
-    resources_url: nil,
+    load_resources_url: nil,
     only_content: false,
     map_coordinates: nil,
     wide: false,
     css_class: nil,
     hide_title: false,
-    no_items_text: nil
+    no_items_text: nil,
+    no_filter: false,
+    integrated: false
   )
     @resources = resources
     @resources_name = resources.first.class.name.downcase.pluralize
@@ -23,12 +25,14 @@ class Shared::ResourcesList < ApplicationComponent
     @filter_param = filter_param.presence || "order"
     @filter_options = filter_options.presence || default_filter_options
     @current_filter_option = current_filter_option
-    @resources_url = resources_url
+    @load_resources_url = load_resources_url
     @only_content = only_content
     @map_coordinates = map_coordinates
     @css_class = css_class
     @hide_title = hide_title
     @no_items_text = no_items_text
+    @no_filter = no_filter
+    @integrated = integrated
   end
 
   def class_names
@@ -42,7 +46,7 @@ class Shared::ResourcesList < ApplicationComponent
   end
 
   def item_css_class
-    if @standalone
+    unless @integrated
       "js-resource-list-filter-dropdown-item"
     end
   end

@@ -31,7 +31,6 @@
 
     selectOption: function(e) {
       this.closeDropdown();
-
       e.currentTarget.closest(".js-dropdown").querySelector(".dropdown-toggle").innerHTML = e.currentTarget.textContent;
     }
   };

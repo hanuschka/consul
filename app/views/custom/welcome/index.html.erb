@@ -21,7 +21,7 @@
 
   <% if @active_projekts.any? %>
     <div class="d-flex u-flex-container">
-      <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters, standalone: true) %>
+      <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters) %>
       <%= render 'sidebar'  %>
     </div>
   <% end %>

@@ -20,6 +20,8 @@ de:
         social_share:
           title: Projektübersicht
           description:  Die Übersicht aller Projekte
+      filter:
+        title: Filtern nach
       orders:
         index_order_all: 'Alle Projekte'
         index_order_all_title: 'Alle Projekte'

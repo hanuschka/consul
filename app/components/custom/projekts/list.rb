@@ -35,8 +35,9 @@ class Projekts::List < ApplicationComponent
       only_content: @only_content,
       css_class: "js-projekts-list",
       hide_title: @hide_title,
+      filter_title: t("custom.projekts.filter.title"),
       no_filter: @no_filter,
-      no_items_text: t('custom.projekts.index.no_projekts_for_current_filter'),
+      no_items_text: t("custom.projekts.index.no_projekts_for_current_filter"),
       integrated: @integrated
     ))
   end

@@ -1,4 +1,58 @@
 .new-custom-design {
+  .card-section--header {
+    // font-size: 18px;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .u-main-column {
+    width: 930px;
+  }
+
+  .system-users-list {
+  }
+
+  .system-users-list--title {
+    margin-bottom: 10px;
+  }
+
+  .system-users-list--images {
+    display: flex;
+  }
+
+  .system-users-list--image {
+    width: 40px;
+    height: 40px;
+    background: black;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 2px solid white;
+  }
+
+  .system-users-list--image:first-child {
+    position: static;
+  }
+
+  .system-users-list--image:nth-child(2) {
+    left: -15px;
+  }
+
+  .system-users-list--image:nth-child(3) {
+    left: -30px;
+  }
+
+  .system-users-list--image:nth-child(4) {
+    left: -45px;
+  }
+
+  .system-users-list--image:nth-child(5) {
+    left: -60px;
+  }
+
   .sidebar-card--section {
     padding: 20px 25px;
   }

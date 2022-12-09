@@ -10,12 +10,12 @@ $main-text-color: #67788A;
     margin: auto;
   }
 
+  body.new-custom-design > header {
+    margin-bottom: 50px;
+  }
+
   body.new-custom-design > .wrapper {
-    // max-width: 1080px;
-    // max-width: 1050px;
-    // max-width: 1150px;
-    max-width: 1245px;
-    width: 100%;
+    // padding-top: 35px;
   }
 }
 
@@ -28,10 +28,11 @@ body.new-custom-design {
   }
 }
 
-body.new-custom-design > header, .new-custom-design .wrapper > header {
-  height: 100px;
-  max-width: auto;
-}
+// body.new-custom-design > header, .new-custom-design .wrapper > header {
+//   // height: 100px;
+//   height: 100px;
+//   max-width: auto;
+// }
 
 .new-custom-design {
   #navigation_bar .top-level-item > a,

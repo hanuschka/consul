@@ -2,8 +2,13 @@
   "use strict";
   App.ResourcesListComponent = {
     WIDE_MODE_CLASS: "-wide",
+    initialized: false,
 
     initialize: function() {
+      if (this.initialized) {
+        return;
+      }
+
       $(document).on("click", ".js-resource-list-switch-view-button",
         this.switchResourceViewMode.bind(this)
       );
@@ -11,6 +16,8 @@
       $(document).on("click", ".js-resource-list-filter-dropdown-item",
         this.loadResourcesWithFilter.bind(this)
       );
+
+      this.initialized = true;
     },
 
     switchViewModeButton: function() {

@@ -14,6 +14,7 @@ class Shared::ResourcesList < ApplicationComponent
     wide: false,
     css_class: nil,
     hide_title: false,
+    filter_title: nil,
     no_items_text: nil,
     no_filter: false,
     integrated: false
@@ -31,6 +32,7 @@ class Shared::ResourcesList < ApplicationComponent
     @css_class = css_class
     @hide_title = hide_title
     @no_items_text = no_items_text
+    @filter_title = filter_title.presence || "Sortieren nach"
     @no_filter = no_filter
     @integrated = integrated
   end

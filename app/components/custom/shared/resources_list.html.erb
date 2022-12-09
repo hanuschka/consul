@@ -22,7 +22,7 @@
   <%= body %>
 <% else %>
   <div class="u-main-column resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @resources_url %>">
-    <% if @standalone %>
+    <% unless @hide_title %>
       <h3 class="resources-list--title"><%= @title %></h3>
     <% end %>
 

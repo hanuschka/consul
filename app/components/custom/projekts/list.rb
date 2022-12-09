@@ -1,13 +1,20 @@
 class Projekts::List < ApplicationComponent
-  def initialize(projekts:, title: nil, all_projekts: nil, map_coordinates:, content_only: false, filters: nil, current_filter: nil, only_content: false, overview_page_mode: false, anchor: nil, standalone: false)
+  def initialize(
+    projekts:, title: nil,
+    all_projekts: nil, map_coordinates:,
+    content_only: false, filters: nil,
+    current_filter: nil, only_content: false,
+    overview_page_mode: false, anchor: nil,
+    hide_title: false
+  )
     @projekts = projekts
     @map_coordinates = map_coordinates
     @current_filter = current_filter
     @filters = filters
     @only_content = only_content
     @anchor = anchor
-    @standalone = standalone
     @title = title.presence || t("custom.resource_names.projekt")
+    @hide_title = hide_title
   end
 
   def call
@@ -22,7 +29,7 @@ class Projekts::List < ApplicationComponent
       filter_options: filter_options,
       only_content: @only_content,
       css_class: "js-projekts-list",
-      standalone: @standalone,
+      hide_title: @hide_title,
       no_items_text: t('custom.projekts.index.no_projekts_for_current_filter')
     ))
   end

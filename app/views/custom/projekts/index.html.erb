@@ -9,7 +9,7 @@
   <div class='u-flex-container'>
     <div class="u-main-column">
       <div class="projekts-overview-page--projekts-list">
-        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true) %>
+        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true) %>
       </div>
     </div>
 

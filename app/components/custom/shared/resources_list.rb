@@ -13,7 +13,7 @@ class Shared::ResourcesList < ApplicationComponent
     map_coordinates: nil,
     wide: false,
     css_class: nil,
-    standalone: false,
+    hide_title: false,
     no_items_text: nil
   )
     @resources = resources
@@ -27,7 +27,7 @@ class Shared::ResourcesList < ApplicationComponent
     @only_content = only_content
     @map_coordinates = map_coordinates
     @css_class = css_class
-    @standalone = standalone
+    @hide_title = hide_title
     @no_items_text = no_items_text
   end
 

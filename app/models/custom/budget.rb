@@ -19,4 +19,8 @@ class Budget < ApplicationRecord
   def distributed_voting?
     voting_style == "distributed"
   end
+
+  def projekt_phase
+    budget_phase
+  end
 end

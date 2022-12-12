@@ -10,7 +10,9 @@ class Budgets::Investments::FiltersComponent < ApplicationComponent
           link_path(filter),
           current_filter == filter,
           remote: remote?,
-          onclick: (controller_name == 'pages' ? '$(".spinner-placeholder").addClass("show-loader")' : '')
+          class: "js-remote-link-push-state",
+          "data-footer-tab-back-url": footer_tab_back_button_url(filter),
+          onclick: (controller_name == "pages" ? '$(".spinner-placeholder").addClass("show-loader")' : "")
         ]
       end
     end
@@ -30,7 +32,18 @@ class Budgets::Investments::FiltersComponent < ApplicationComponent
       end
     end
 
+    def footer_tab_back_button_url(filter)
+      if controller_name == "pages" &&
+          params[:current_tab_path].present? &&
+          !helpers.request.path.starts_with?("/projekts")
+
+        url_for_footer_tab_back_button(params[:id], params[:page], params[:current_tab_path], filter, params[:order], params[:filter_projekt_ids])
+      else
+        "empty"
+      end
+    end
+
     def remote?
-      controller_name == 'pages'
+      controller_name == "pages"
     end
 end

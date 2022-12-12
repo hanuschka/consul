@@ -1,5 +1,6 @@
 class ProjektSetting < ApplicationRecord
-  belongs_to :projekt
+  attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+  belongs_to :projekt, touch: true
 
   validates :key, presence: true, uniqueness: { scope: :projekt_id }
 
@@ -77,6 +78,7 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.proposals.show_map": 'active',
         "projekt_feature.proposals.enable_summary": '',
         "projekt_feature.proposals.allow_voting": 'active',
+        "projekt_feature.proposals.enable_external_video": 'active',
 
         "projekt_feature.proposal_options.votes_for_proposal_success": 10000,
 

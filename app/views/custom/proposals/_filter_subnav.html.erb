@@ -6,7 +6,7 @@
     data-deep-link-smudge-delay="500"
     data-tabs>
   <% if projekt_feature?(@proposal&.projekt, 'proposals.show_comments') %>
-    <li class="tabs-title is-active">
+    <li class="tabs-title <%= 'is-active' if default_active_proposal_footer_tab?('comments') %>">
       <%= link_to "#tab-comments" do %>
         <h3>
           <%= t("proposals.show.comments_tab") %>

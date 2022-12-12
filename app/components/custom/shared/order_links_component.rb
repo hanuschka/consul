@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "components", "shared", "order_links_c
 
 class Shared::OrderLinksComponent < ApplicationComponent
   private
+
     def link_path(order)
       if params[:current_tab_path].present? && !helpers.request.path.starts_with?("/projekts")
         url_for(action: params[:current_tab_path],
@@ -18,5 +19,16 @@ class Shared::OrderLinksComponent < ApplicationComponent
 
     def title_for(order)
       t("#{i18n_namespace}.orders.#{order}_title")
+    end
+
+    def footer_tab_back_button_url(order)
+      if controller_name == "pages" &&
+          params[:current_tab_path].present? &&
+          !helpers.request.path.starts_with?("/projekts")
+
+        url_for_footer_tab_back_button(params[:id], params[:page], params[:current_tab_path], params[:filter], order, params[:filter_projekt_ids])
+      else
+        "empty"
+      end
     end
 end

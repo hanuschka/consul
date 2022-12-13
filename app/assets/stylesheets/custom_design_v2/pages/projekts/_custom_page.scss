@@ -87,7 +87,8 @@
 
   .custom-page--banner-image {
     width: 630px;
-    object-fit: contain;
+    // object-fit: contain;
+    object-fit: cover;
     position: relative;
     bottom: -50px;
     height: 390px !important;

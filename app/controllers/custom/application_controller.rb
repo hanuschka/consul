@@ -5,8 +5,6 @@ class ApplicationController < ActionController::Base
   before_action :show_launch_page, if: :show_launch_page?
   helper_method :set_comment_flags
 
-  layout :set_layout_version
-
   private
 
     def show_launch_page?
@@ -83,13 +81,5 @@ class ApplicationController < ActionController::Base
     def set_partner_emails
       filename = File.join(Rails.root, "config", "secret_emails.yml")
       @partner_emails = File.exist?(filename) ? File.readlines(filename).map(&:chomp) : []
-    end
-
-    def set_layout_version
-      if Setting.new_design_enabled?
-        "application_new"
-      else
-        "application"
-      end
     end
 end

@@ -1,0 +1,98 @@
+<div class="sidebar">
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-info-circle"></i>
+        Information
+      </h4>
+      <%= render_custom_block 'home_page_sidebar' %>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-info-circle"></i>
+        Administration
+      </h4>
+      <%= render partial: 'pages/sidebar/admin_controls' %>
+    </div>
+  </div>
+
+  <% if projekt_feature?(@custom_page.projekt, "sidebar.show_phases_in_projekt_page_sidebar") %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <h4 class="sidebar-card--header">
+          <i class="fas fa-pager"></i>
+          Phasen
+        </h4>
+        <%= render Pages::Projekts::SidebarPhasesNewComponent.new(projekt) %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if projekt_feature?(@custom_page.projekt, 'general.enable_sdgs') %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <h4 class="sidebar-card--header">
+          <i class="fas fa-tag"></i>
+          SDGS
+        </h4>
+        <%= render partial: 'pages/sidebar/sdgs', locals: { projekt: projekt } %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if projekt_feature?(@custom_page.projekt, 'general.enable_tags') %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <h4 class="sidebar-card--header">
+          <i class="fas fa-tag"></i>
+          Tags
+        </h4>
+        <%= render partial: 'pages/sidebar/tags', locals: { projekt: projekt } %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if projekt_feature?(projekt, 'sidebar.show_map') %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <h4 class="sidebar-card--header">
+          <i class="fas fa-map"></i>
+          Karte
+        </h4>
+        <%= render Pages::Projekts::SidebarMapNewComponent.new(projekt, @default_phase_name) %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if projekt_feature?(@custom_page.projekt, "sidebar.show_navigator_in_projekts_page_sidebar") %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <h4 class="sidebar-card--header">
+          <i class="fas fa-list-alt"></i>
+          Aufbau
+        </h4>
+        <%= render partial: 'pages/sidebar/projekt_list', locals: { projekts: [projekt.top_parent], current_projekt: projekt } %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if projekt_feature?(@custom_page.projekt, "sidebar.projekt_page_sharing") %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <h4 class="sidebar-card--header">
+          <i class="fas fa-share-alt"></i>
+          Teilen
+        </h4>
+        <%= render "shared/social_share",
+            title: projekt.page.title,
+            url: url_for(only_path: false),
+            description: strip_tags(projekt.page.content || '')[0..200] + '...',
+            mobile: projekt.page.title
+        %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,77 @@
+<%= content_for :body_class, "custom-page" %>
+<% provide :title do %><%= @custom_page.title %><% end %>
+
+<style>
+<% if @custom_page.image.present? %>
+  .custom-page-banner {
+    background-image: url("<%= url_for(@custom_page.image.attachment) %>");
+    background-size: cover;
+    background-position: center center;
+  }
+<% end %>
+</style>
+
+<main>
+  <div class="custom-page--banner-wrapper">
+    <div class="custom-page--banner">
+      <div class="custom-page--banner-text-section-wrapper">
+        <div class="custom-page--banner-text-section">
+          <h1 class="custom-page--banner-title">
+            <%= @custom_page.title %>
+          </h1>
+
+          <% if @custom_page.projekt.present? %>
+            <div class="custom-page--banner-description">
+              <%= @custom_page.projekt.description %>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @custom_page.projekt.present? %>
+          <div class="custom-page--banner-breadcrumbs">
+            <%= breadcrumbs_links(@custom_page.projekt) %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @custom_page.image.present? %>
+        <%= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="d-flex u-flex-container">
+    <% if @custom_page.projekt.present? %>
+      <div class="u-main-column">
+        <div class="new-card new-main-content-card">
+          <%= render 'custom_page_content' %>
+        </div>
+      </div>
+
+      <div class="projekt-sidebar margin-bottom">
+        <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt } %>
+      </div>
+
+    <% else %>
+      <%= render 'custom_page_content' %>
+    <% end %>
+  </div>
+
+
+  <% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, 'general.show_projekt_footer') %>
+    <div class="d-flex u-flex-container">
+      <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_phase_name) %>
+    </div>
+
+    <div class="d-flex u-flex-container">
+      <div id='footer-content'>
+        <%= render 'shared/loader_spinner' %>
+        <%= render "pages/projekt_footer/#{@default_phase_name}" %>
+      </div>
+    </div>
+  <% end %>
+</main>
+
+<script>
+  App.Projekts.toggleDefaultProjekts();
+</script>

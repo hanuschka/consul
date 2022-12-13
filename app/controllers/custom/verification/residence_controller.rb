@@ -1,9 +1,13 @@
 require_dependency Rails.root.join("app", "controllers", "verification", "residence_controller").to_s
 
 class Verification::ResidenceController < ApplicationController
+  def new
+    current_user_attributes = current_user.attributes.transform_keys(&:to_sym).slice(*allowed_params)
+    @residence = Verification::Residence.new(current_user_attributes)
+  end
+
   def create
     @residence = Verification::Residence.new(residence_params.merge(user: current_user))
-    verification_mode = params[:residence][:verification_mode]
 
     last_budget = Budget.joins(projekt: :page).where(budgets: { projekts: { site_customization_pages: { status: 'published' } } }).last
     last_budget_link = nil
@@ -14,18 +18,11 @@ class Verification::ResidenceController < ApplicationController
                                    anchor: "filter-subnav")
     end
 
-    if verification_mode == "manual" && @residence.save_manual_verification
-      if last_budget_link.present?
-        redirect_to last_budget_link, notice: t("custom.verification.residence.create.flash.success_manual")
-      else
-        redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
-      end
-
-    elsif verification_mode != "manual" && @residence.save
+    if @residence.save
       if last_budget_link.present?
         redirect_to last_budget_link, notice: t("verification.residence.create.flash.success")
       else
-        redirect_to verified_user_path, notice: t("verification.residence.create.flash.success")
+        redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
       end
 
     else
@@ -39,7 +36,7 @@ class Verification::ResidenceController < ApplicationController
       [
         :document_number, :document_type, :date_of_birth, :postal_code, :terms_of_service,
         :first_name, :last_name, :street_name, :street_number,
-        :plz, :city_name, :gender, :document_last_digits
+        :plz, :city_name, :gender, :document_type, :document_last_digits
       ]
     end
 end

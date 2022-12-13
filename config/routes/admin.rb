@@ -3,7 +3,12 @@ namespace :admin do
 
   # custom projekt routes
   resources :projekts, only: [:index, :edit, :create, :update, :destroy] do
-    resources :settings, controller: 'projekt_settings', only: [:update] do
+    resources :projekt_phases, only: [:edit, :update] do
+      member do
+        patch :toggle_active_status
+      end
+    end
+    resources :settings, controller: "projekt_settings", only: [:update] do
       member do
         patch :update_default_projekt_footer_tab
       end
@@ -20,7 +25,6 @@ namespace :admin do
     member do
       get :order_up
       get :order_down
-      patch :liveupdate
       patch :update_standard_phase
       patch :quick_update
     end
@@ -30,6 +34,9 @@ namespace :admin do
   end
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
+
+  # custom age restriction routes
+  resources :age_restrictions
 
   # custom deficiency reports routes
   scope module: :deficiency_reports, path: :deficiency_reports, as: :deficiency_report do

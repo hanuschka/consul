@@ -12,13 +12,13 @@ class Budgets::Investments::FiltersComponent < ApplicationComponent
           remote: remote?,
           class: "js-remote-link-push-state",
           "data-footer-tab-back-url": footer_tab_back_button_url(filter),
-          onclick: (params[:current_tab_path] == 'budget_phase_footer_tab' ? '$(".spinner-placeholder").addClass("show-loader")' : '')
+          onclick: (controller_name == "pages" ? '$(".spinner-placeholder").addClass("show-loader")' : "")
         ]
       end
     end
 
     def link_path(filter)
-      if params[:current_tab_path].present? && !helpers.request.path.starts_with?('/projekts')
+      if params[:current_tab_path].present? && !helpers.request.path.starts_with?("/projekts")
         url_for(action: params[:current_tab_path],
                 controller: "/pages",
                 page: 1,
@@ -26,25 +26,24 @@ class Budgets::Investments::FiltersComponent < ApplicationComponent
                 filter_projekt_ids: params[:filter_projekt_ids],
                 section: params[:section],
                 id: params[:id],
-                order: params[:order]
-               )
+                order: params[:order])
       else
         current_path_with_query_params(filter: filter, page: 1)
       end
     end
 
     def footer_tab_back_button_url(filter)
-      if controller_name == 'pages' &&
+      if controller_name == "pages" &&
           params[:current_tab_path].present? &&
-          !helpers.request.path.starts_with?('/projekts')
+          !helpers.request.path.starts_with?("/projekts")
 
-        url_for_footer_tab_back_button(params[:id], params[:current_tab_path], filter, params[:order], params[:filter_projekt_ids])
+        url_for_footer_tab_back_button(params[:id], params[:page], params[:current_tab_path], filter, params[:order], params[:filter_projekt_ids])
       else
         "empty"
       end
     end
 
     def remote?
-      params[:current_tab_path] == 'budget_phase_footer_tab'
+      controller_name == "pages"
     end
 end

@@ -7,11 +7,9 @@ en:
       reject_reason: "A comment from the valuator:"
       next_steps: "Thank you for your valuable participation. We would be very pleased if you would come in the period from 01.10. until 12.11.22 to get an overview of the valid proposals and take part in the vote."
       sincerely: "Sincerely"
-      subject: "Ausgabenvorschlag '%{code}' wurde als undurchführbar markiert"
       subject: "Your investment proposal '%{code}' has been marked as unfeasible."
     manual_verification_confirmation:
       subject: Your account has just been verified.
       p1: Your account has just been verified.
       p2: If you have already voted, you can now view your votes in the overview.
       p3: You can change your vote at any time up to the end of the process.
-

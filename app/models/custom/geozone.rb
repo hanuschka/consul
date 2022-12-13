@@ -11,7 +11,7 @@ class Geozone < ApplicationRecord
 
     Geozone.where.not(postal_codes: nil).select do |geozone|
       geozone.postal_codes.split(",").any? do |postal_code|
-        postal_code.strip == plz
+        postal_code.strip == plz.to_s
       end
     end.first
   end

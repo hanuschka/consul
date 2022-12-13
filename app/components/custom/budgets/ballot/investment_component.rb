@@ -2,13 +2,13 @@ require_dependency Rails.root.join("app", "components", "budgets", "ballot", "in
 
 class Budgets::Ballot::InvestmentComponent < ApplicationComponent
   delegate :current_user, to: :helpers
+
   private
 
     def delete_path
       budget_ballot_line_path(id: investment.id, budget_id: investment.budget.id)
     end
 
-  private
     def user_votes
       user = if params[:user_id].present?
         User.find(params[:user_id])
@@ -17,5 +17,15 @@ class Budgets::Ballot::InvestmentComponent < ApplicationComponent
       end
       count = @investment.budget_ballot_lines.joins(:ballot).find_by(budget_ballots: { user_id: user.id }).line_weight
       tag.span t("custom.budgets.investments.index.sidebar.user_votes", count: count)
+    end
+
+    def ballot
+      Budget::Ballot.where(user: current_user, budget: budget).first_or_create!
+    end
+
+    def show_delete_vote_button?
+      permission_problem = investment.reason_for_not_being_ballotable_by(current_user, ballot)
+
+      permission_problem.blank? || permission_problem == :not_enough_available_votes
     end
 end

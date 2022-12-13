@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "components", "budgets", "investments", "ballot_component").to_s
 
 class Budgets::Investments::BallotComponent < ApplicationComponent
-  delegate :link_to_signin, :link_to_signup, to: :helpers
+  delegate :link_to_signin, :link_to_signup, :link_to_verify_account, to: :helpers
 
   def initialize(investment:, investment_ids:, ballot:,
                  top_level_active_projekts:, top_level_archived_projekts:)
@@ -14,8 +14,22 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
 
   private
 
+    def user
+      if current_user&.administrator? &&
+          controller_name == "offline_ballots" &&
+          params[:user_id]
+        User.find(params[:user_id])
+      else
+        current_user
+      end
+    end
+
+    def reason
+      @reason ||= investment.reason_for_not_being_ballotable_by(user, ballot)
+    end
+
     def line_weight_options_for_select
-      raise :budget_not_distributed  unless budget.distributed_voting?
+      raise :budget_not_distributed unless budget.distributed_voting?
 
       remaining_votes = ballot.amount_available(investment.heading)
 
@@ -25,15 +39,21 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
     end
 
     def cannot_vote_text
-      if reason.present? && reason == :not_logged_in
-        t("votes.budget_investments.not_logged_in",
-          signin: link_to_signin, signup: link_to_signup)
-      elsif reason.present? && !voted?
-        t("budgets.ballots.reasons_for_not_balloting.#{reason}",
-          verify_account: link_to_verify_account,
-          my_heading: link_to_my_heading,
-          change_ballot: link_to_change_ballot,
-          heading_link: heading_link(assigned_heading, budget))
+      return nil if voted? && reason == :not_enough_available_votes
+
+      if reason == :not_logged_in
+        t(path_to_key,
+          sign_in: link_to_signin, sign_up: link_to_signup)
+      elsif reason.present?
+        t(path_to_key,
+          verify: link_to_verify_account,
+          city: Setting["org_name"],
+          geozones: @investment.budget.budget_phase.geozone_restrictions_formatted,
+          age_restriction: @investment.budget.budget_phase.age_restriction_formatted)
       end
+    end
+
+    def path_to_key
+      "custom.projekt_phases.permission_problem.ballot_component.budget_phase.#{reason}"
     end
 end

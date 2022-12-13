@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_03_130743) do
+ActiveRecord::Schema.define(version: 2022_12_02_115716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -90,6 +90,24 @@ ActiveRecord::Schema.define(version: 2022_10_03_130743) do
     t.index ["user_id"], name: "index_administrators_on_user_id"
   end
 
+  create_table "age_restriction_translations", force: :cascade do |t|
+    t.bigint "age_restriction_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["age_restriction_id"], name: "index_age_restriction_translations_on_age_restriction_id"
+    t.index ["locale"], name: "index_age_restriction_translations_on_locale"
+  end
+
+  create_table "age_restrictions", force: :cascade do |t|
+    t.integer "order"
+    t.integer "min_age"
+    t.integer "max_age"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ahoy_events", force: :cascade do |t|
     t.bigint "visit_id"
     t.bigint "user_id"
@@ -160,6 +178,15 @@ ActiveRecord::Schema.define(version: 2022_10_03_130743) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "bam_street_polls", force: :cascade do |t|
+    t.bigint "bam_street_id"
+    t.bigint "poll_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bam_street_id"], name: "index_bam_street_polls_on_bam_street_id"
+    t.index ["poll_id"], name: "index_bam_street_polls_on_poll_id"
   end
 
   create_table "bam_street_projekt_phases", force: :cascade do |t|
@@ -1427,6 +1454,7 @@ ActiveRecord::Schema.define(version: 2022_10_03_130743) do
     t.boolean "show_on_home_page", default: true
     t.boolean "show_on_index_page", default: true
     t.boolean "bam_street_restricted", default: false
+    t.boolean "show_individual_stats_per_answer", default: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -1525,6 +1553,18 @@ ActiveRecord::Schema.define(version: 2022_10_03_130743) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_geozones_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_translations", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "phase_tab_name"
+    t.text "new_resource_button_name"
+    t.text "resource_form_title"
+    t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
+  end
+
   create_table "projekt_phases", force: :cascade do |t|
     t.string "type"
     t.date "start_date"
@@ -1534,6 +1574,9 @@ ActiveRecord::Schema.define(version: 2022_10_03_130743) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active"
+    t.boolean "verification_restricted", default: false
+    t.bigint "age_restriction_id"
+    t.index ["age_restriction_id"], name: "index_projekt_phases_on_age_restriction_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
   end
 
@@ -2176,6 +2219,8 @@ ActiveRecord::Schema.define(version: 2022_10_03_130743) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
+  add_foreign_key "bam_street_polls", "bam_streets"
+  add_foreign_key "bam_street_polls", "polls"
   add_foreign_key "bam_street_projekt_phases", "bam_streets"
   add_foreign_key "bam_street_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"
@@ -2236,6 +2281,7 @@ ActiveRecord::Schema.define(version: 2022_10_03_130743) do
   add_foreign_key "projekt_notifications", "projekts"
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
+  add_foreign_key "projekt_phases", "age_restrictions"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_settings", "projekts"
   add_foreign_key "projekts", "projekts", column: "parent_id"

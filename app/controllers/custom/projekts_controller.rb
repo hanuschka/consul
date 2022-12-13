@@ -43,6 +43,12 @@ class ProjektsController < ApplicationController
     @debates_count = Debate.where(projekt_id: @overview_page_special_projekt.id).count
     @proposals_count = Proposal.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
     @polls_count = Poll.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
+
+    if Setting.new_design_enabled?
+      render :index_new, layout: "application_new"
+    else
+      render :index
+    end
   end
 
   def list

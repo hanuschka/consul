@@ -1,0 +1,97 @@
+<main class="projekts-page projekts-overview-page">
+  <div class="u-main-column projekts-overview-page--heading">
+    <h1 class='projekts-overview-page--title'>
+      <%= t('custom.projekts.index.title') %>
+    </h1>
+    <%= render_custom_block "projekts_overview_page" %>
+  </div>
+
+  <div class='u-flex-container'>
+    <div class="u-main-column">
+      <div class="projekts-overview-page--projekts-list">
+        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: list_projekts_url, integrated: true) %>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card--section">
+          <h4 class="sidebar-card--header">
+            <i class="fas fa-bullhorn"></i>
+            Information
+          </h4>
+          <%= render_custom_block 'projekt_overview_page_sidebar' %>
+        </div>
+      </div>
+
+      <% if show_affiliation_filter_in_sidebar? %>
+        <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
+      <% end %>
+
+      <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
+        <div class="sidebar-card">
+          <div class="sidebar-card--section">
+            <h4 class="sidebar-card--header">
+              <i class="fas fa-bullhorn"></i>
+              Tags
+            </h4>
+            <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card--section">
+          <h4 class="sidebar-card--header">
+            <i class="fas fa-bullhorn"></i>
+            SDGS
+          </h4>
+
+          <% if @sdgs.present? %>
+            <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
+          <% end %>
+          <%# <% if @sdgs.present? %>
+          <%#   <%= render Shared::SDGFilterComponent.new(sdg_targets: @sdg_targets) %>
+          <%# <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= paginate @projekts %>
+
+  <% if @show_footer %>
+    <nav class="margin-bottom projekt-footer <%= "legislation-process-list" if true %>">
+    <div class="row">
+      <div class="small-12 column">
+        <h3><%= "Beteiligung" %></h3>
+        <div class='footer-phases-filter-subnav'>
+          <ul id='filter-subnav' class='key-dates'>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.comment_phase, @current_phase.resources_name, @comments_count) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.debate_phase, @current_phase.resources_name, @debates_count) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.proposal_phase, @current_phase.resources_name, @proposals_count) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(@overview_page_special_projekt.voting_phase, @current_phase.resources_name, @polls_count) %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+      <div id='footer-content'>
+        <% if (@current_phase.present? && @current_phase.phase_activated?) %>
+          <%= render 'shared/loader_spinner' %>
+          <%= render "pages/projekt_footer/#{@current_phase.resources_name}" %>
+        <% end %>
+      </div>
+  <% end %>
+  <div class="row">
+    <div class="column show-on-mobile projekt-mobile-share-buttons">
+      <%= render "shared/social_share",
+          share_title: t("custom.pages.social_share.share"),
+          title: t("custom.projekts.index.social_share.title"),
+          url: url_for(only_path: false),
+          description: t("custom.projekts.index.social_share.description", domain: request.domain),
+          mobile: t("custom.projekts.index.social_share.description", domain: request.domain)
+      %>
+    </div>
+  </div>
+</main>

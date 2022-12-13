@@ -171,6 +171,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.enable_old_design": false,
         "extended_option.general.title": 'Öffentlichkeitsbeteiligung',
         "extended_option.general.subtitle": 'in der Stadt CONSUL',
+        "extended_option.general.button_text": 'Machen Sie mit!',
         "extended_option.general.launch_date": '',
 
         "extended_feature.gdpr.gdpr_conformity": false,

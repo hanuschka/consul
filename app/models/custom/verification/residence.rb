@@ -29,6 +29,7 @@ class Verification::Residence
       date_of_birth:         date_of_birth.in_time_zone.to_datetime,
       geozone:               Geozone.find_with_plz(plz),
       gender:                gender,
+      verified_at:           Time.current
     )
 
     user.send(:strip_whitespace)

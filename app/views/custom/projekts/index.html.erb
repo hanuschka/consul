@@ -1,60 +1,75 @@
-<main class="projekts-page projekts-overview-page">
-  <div class="u-main-column projekts-overview-page--heading">
-    <h1 class='projekts-overview-page--title'>
-      <%= t('custom.projekts.index.title') %>
-    </h1>
-    <%= render_custom_block "projekts_overview_page" %>
-  </div>
-
-  <div class='u-flex-container'>
-    <div class="u-main-column">
-      <div class="projekts-overview-page--projekts-list">
-        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: list_projekts_url, integrated: true) %>
+<main class="projekts-page">
+  <div class="help-header">
+    <div class='row'>
+      <div class='column'>
+        <h1 class='projekts-page-title'>
+          <i class="fas fa-code-branch"></i>
+          <%= t('custom.projekts.index.title') %>
+        </h1>
       </div>
     </div>
+  </div>
 
-    <div class="sidebar">
-      <div class="sidebar-card">
-        <div class="sidebar-card--section">
-          <h4 class="sidebar-card--header">
-            <i class="fas fa-bullhorn"></i>
-            Information
-          </h4>
-          <%= render_custom_block 'projekt_overview_page_sidebar' %>
-        </div>
+  <div class="projekts-map-wrapper">
+    <div class="map projekts-map not-print">
+      <%= render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), "projekts", false, nil, @map_coordinates, MapLayer.general.to_json) %>
+    </div>
+    <div class='expand-overview-map-wrapper'>
+      <div class='expand-overview-map small js-expand-overview-map not-print wide'>
+        <%= t('custom.proposals.index.show_larger_map') %>
+      </div>
+    </div>
+  </div>
+
+  <div class='projekt-list-page-container row'>
+    <div class="proejkt-list-tabs-container column show-on-mobile">
+      <%= render_custom_block "projekts_list_before_tabs_#{@current_projekts_order}" %>
+      <%= render Projekts::ProjektListTabsComponent.new(current_order: @current_projekts_order, current_active_orders: @current_active_orders, overview_page: @current_projekt.overview_page?) %>
+      <%= render_custom_block "projekts_list_after_tabs_#{@current_projekts_order}" %>
+    </div>
+
+    <div class='projekt-list column small-12 medium-9'>
+      <div class="proejkt-list-tabs-container show-on-desktop">
+        <%= render_custom_block "projekts_list_before_tabs_#{@current_projekts_order}" %>
+        <%= render Projekts::ProjektListTabsComponent.new(current_order: @current_projekts_order, current_active_orders: @current_active_orders, overview_page: @current_projekt.overview_page?) %>
+        <%= render_custom_block "projekts_list_after_tabs_#{@current_projekts_order}" %>
+      </div>
+
+      <% if @projekts.any? %>
+        <% Projekt.top_level.each do |top_level_projekt| %>
+          <% top_level_projekt.all_children_projekts.unshift(top_level_projekt).each do |projekt| %>
+            <%= render partial: 'projekt', locals: { projekt: projekt } if projekt.in? @projekts %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <h4 class="text-center">
+          <%= t('custom.projekts.index.no_projekts_for_current_filter') %>
+        </h3>
+      <% end %>
+    </div>
+
+    <div class='projekt-sidebar column small-12 medium-3'>
+      <div class="custom-content-block--margin-bottom">
+        <%= render_custom_block "projekt_index_sidebar" %>
       </div>
 
       <% if show_affiliation_filter_in_sidebar? %>
-        <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
+        <%= render "shared/sidebar_filter/geozone_affiliations" %>
       <% end %>
 
-      <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
-        <div class="sidebar-card">
-          <div class="sidebar-card--section">
-            <h4 class="sidebar-card--header">
-              <i class="fas fa-bullhorn"></i>
-              Tags
-            </h4>
-            <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
-          </div>
-        </div>
+      <%= render "shared/categories", taggable: "projekt" %>
+      <%#= render "shared/tag_cloud", taggable: "projekt" %>
+      <% if @sdgs.present? %>
+        <%= render SDG::Goals::TagCloudComponent.new("Projekt", sdg_targets: @sdg_targets) %>
       <% end %>
 
-      <div class="sidebar-card">
-        <div class="sidebar-card--section">
-          <h4 class="sidebar-card--header">
-            <i class="fas fa-bullhorn"></i>
-            SDGS
-          </h4>
-
-          <% if @sdgs.present? %>
-            <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
-          <% end %>
-          <%# <% if @sdgs.present? %>
-          <%#   <%= render Shared::SDGFilterComponent.new(sdg_targets: @sdg_targets) %>
-          <%# <% end %>
-        </div>
-      </div>
+      <%= render "shared/social_share",
+          share_title: t("custom.pages.social_share.share"),
+          title: t("custom.projekts.index.social_share.title"),
+          url: url_for(only_path: false),
+          description: t("custom.projekts.index.social_share.description", domain: request.domain),
+          mobile: t("custom.projekts.index.social_share.description", domain: request.domain)
+      %>
     </div>
   </div>
 

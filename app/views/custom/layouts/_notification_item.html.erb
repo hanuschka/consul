@@ -1,36 +1,34 @@
 <% placement ||= nil %>
 <% if user_signed_in? %>
   <li id="notifications"
-      class='nav-element user-notification-badge js-access-top-level-menu js-prevent-key-scroll'
+      class='nav-element js-access-top-level-menu js-prevent-key-scroll'
       <%= "aria-label='#{t('custom.links.menu.notification_icon')}'" if placement == 'desktop' %>
       <%= "tabindex=0" if placement == 'desktop' %>
   >
     <%= link_to notifications_path, rel: "nofollow",
-                                    class: "notifications ",
+                                    class: "notifications",
                                     tabindex: ( placement == 'desktop' ? "-1" : 0 ),
                                     aria: { hidden: true }  do %>
 
-      <span class="icon-notification" aria-hidden="true"
-            title="<%= t("layouts.header.notification_item.new_notifications",
-                       count: current_user.notifications_count) %>">
-      </span>
       <% if current_user.notifications.unread.count > 0 %>
-        <span class="user-notification--count" >
-          <%= current_user.notifications_count %>
-        </span>
+        <span class="icon-circle" aria-hidden="true"></span>
+        <span class="icon-notification" aria-hidden="true"
+              title="<%= t("layouts.header.notification_item.new_notifications",
+                         count: current_user.notifications_count) %>">
         </span>
         <span class="show-for-small-only">
           <%= t("layouts.header.notification_item.new_notifications",
-                count: current_user.notifications_count) %>
+              count: current_user.notifications_count) %>
         </span>
       <% else %>
-        <!-- <span class="icon-no-notification" aria-hidden="true" -->
-        <!--       title="<%= t("custom.layouts.header.notification_item.no_notifications") %>"> -->
-        <!-- </span> -->
-        <!-- <span class="show-for-small-only"> -->
-        <!--   <%= t("layouts.header.notification_item.no_notifications") %> -->
-        <!-- </span> -->
+        <span class="icon-no-notification" aria-hidden="true"
+              title="<%= t("custom.layouts.header.notification_item.no_notifications") %>">
+        </span>
+        <span class="show-for-small-only">
+          <%= t("layouts.header.notification_item.no_notifications") %>
+        </span>
       <% end %>
+
     <% end %>
   </li>
 <% end %>

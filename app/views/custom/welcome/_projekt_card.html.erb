@@ -1,17 +1,12 @@
-<% date = projekt.total_duration_end.present? ? "Noch #{(projekt.total_duration_end - Date.today).to_i.days} Tage" : nil %>
-<%= render(Shared::ResourceItem.new(title: projekt.page.title, description: projekt.description, tags: projekt.tags.first(3), image_url: projekt.image&.variant(:medium))) do |c| %>
-  <% c.additional_body do %>
-    <div class="projekt-phase-link">
-      <i class="far fa-lightbulb"></i>
-      Aktive Vorschlagsphase
-    </div>
-    <div class="projekt-phase-link">
-      <i class="far fa-lightbulb"></i>
-      Aktive Kommentarphase
-    </div>
-  <% end %>
+<div id="<%= dom_id(projekt) %>"
+     class="card-homepage small-12 medium-4 column margin-bottom end">
+  <%= link_to projekt.page.url do %>
+    <% if projekt.image.present? %>
+      <%= image_tag(projekt.image.variant(:medium), alt: projekt.page.title) %>
+    <% else %>
+      <%= image_tag('projekt_default.jpg', size: '300x300', alt: projekt.page.title) %>
+    <% end %>
 
-  <% c.first_footer_item do  %>
-   <%= link_to('Zum Projekt', projekt.page.url, class: 'button -grey') %>
+    <h3><%= projekt.page.title %></h3>
   <% end %>
-<% end %>
+</div>

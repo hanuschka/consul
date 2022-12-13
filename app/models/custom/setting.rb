@@ -169,6 +169,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.links_to_create_resources_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
+        "extended_feature.general.enable_old_design": false,
         "extended_option.general.title": 'Öffentlichkeitsbeteiligung',
         "extended_option.general.subtitle": 'in der Stadt CONSUL',
         "extended_option.general.launch_date": '',
@@ -232,6 +233,14 @@ class Setting < ApplicationRecord
 
     def destroy_obsolete
       Setting.all.each{ |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
+    end
+
+    def old_design_enabled?
+      self["extended_feature.general.enable_old_design"] == 'active'
+    end
+
+    def new_design_enabled?
+      !old_design_enabled?
     end
   end
 end

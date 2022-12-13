@@ -1,0 +1,71 @@
+<% launch_page ||= false %>
+
+<%header_large = Widget::Card.header.find_by title: "header_large" %>
+<style>
+<% if header_large %>
+  .top-bar-background-wrapper {
+    max-width: 1445px;
+    background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
+    background-size: cover;
+    background-position: top;
+    margin: auto;
+  }
+<%end%>
+</style>
+<header>
+  <div class="js-stiky-header top-bar-wrapper">
+    <div class="top-bar-background-wrapper">
+      <div class="top-bar">
+        <div class="top-bar--title">
+          <%= link_to root_path do %>
+            <%= image_tag(image_path_for("logo_header_2.png"), class: "", alt: t("layouts.header.logo")) %>
+          <% end %>
+        </div>
+
+        <div class="header--navigation expanded not-print">
+          <div class="hader--subnavigation-wrapper hide-for-small-only">
+            <%= render partial: "shared/subnavigation", locals: { placement: 'desktop', launch_page: launch_page } %>
+          </div>
+
+          <% if !launch_page && current_user.nil? %>
+            <div class='header--account-buttons show-for-large'>
+              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- <h2 class='header-title show-for-medium'> -->
+        <!--   <%= Setting['extended_option.general.title'] %> -->
+        <!--   <br> -->
+        <!--   <%= content_tag :span, Setting['extended_option.general.subtitle'] %> -->
+        <!-- </h2> -->
+
+        <div id="responsive-menu" class='not-print'>
+          <div class="top-bar-right">
+            <div class="show-for-small-only">
+              <div class="subnavigation">
+
+                <h2 class='city-name'>
+                  <%= Setting['extended_option.general.title'] %>
+                  <br>
+                  <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
+                </h2>
+
+                <% if !launch_page && current_user.nil? %>
+                  <div class='header--account-buttons'>
+                    <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
+                  </div>
+                <% end %>
+
+                <%= render partial: "shared/subnavigation", locals: { placement: 'mobile', launch_page: launch_page } %>
+                <div class="small-12 column">
+                  <%= render "shared/top_links" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

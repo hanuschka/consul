@@ -46,5 +46,11 @@ class WelcomeController < ApplicationController
     else
       @latest_items = []
     end
+
+    if Setting.new_design_enabled?
+      render :index_new, layout: "application_new"
+    else
+      render :index
+    end
   end
 end

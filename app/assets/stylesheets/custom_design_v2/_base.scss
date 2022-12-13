@@ -22,6 +22,7 @@ $main-text-color: #67788A;
 body.new-custom-design {
   font-family: "Asap", "sourcesanspro-regular-webfont", "sourcesanspro-bold-webfont", "PT_Serif_Web-Regular", sans-serif !important;
   color: #67788A;
+  margin: 0;
 
   h1, h2, h3, h4, h5 {
     color: #292929;
@@ -35,6 +36,23 @@ body.new-custom-design {
 // }
 
 .new-custom-design {
+  .notice-container {
+    z-index: 1000;
+  }
+
+  .account-admin-items li#notifications a.notifications {
+    position: relative;
+    height: auto;
+    width: auto;
+  }
+
+  .hader--subnavigation-wrapper {
+    .flyout-item-name a, .flyout-item-name {
+      line-height: 3rem !important;
+      font-weight: normal !important;
+    }
+  }
+
   #responsive-menu {
     .account-buttons {
       margin-left: 1rem;

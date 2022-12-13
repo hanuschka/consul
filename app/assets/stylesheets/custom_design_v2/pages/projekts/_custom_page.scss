@@ -68,20 +68,35 @@
     font-weight: 400;
   }
 
+  .custom-page--banner-description {
+    font-size: 22px;
+  }
+
   .custom-page--banner-text-section-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding-top: 90px;
     padding-bottom: 40px;
+    max-width: 50%;
+  }
+
+  .custom-page--banner-text-section {
+    max-width: 90%;
   }
 
   .custom-page--banner-image {
-    width: auto;
+    width: 630px;
     object-fit: contain;
     position: relative;
     bottom: -50px;
     height: 390px !important;
+  }
+
+  .custom-page--banner-breadcrumbs {
+    .custom-breadcrumbs .breadcrumbs-item, .custom-breadcrumbs .breadcrumbs-divider {
+      font-size: 16px;
+    }
   }
 }
 

@@ -40,6 +40,8 @@ de:
         not_enough_available_votes: "Sie haben die maximal zulässige Anzahl von Stimmen erreicht"
         change_ballot: Ändern Sie Ihre Wahl
         casted_offline: Sie haben schon offline abgestimmt
+        only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt %{city} beschränkt.
+        only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
     groups:
       show:
         title: Wählen Sie eine Option

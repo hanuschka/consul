@@ -48,7 +48,7 @@ class WelcomeController < ApplicationController
     end
 
     if Setting.new_design_enabled?
-      render :index_new, layout: "application_new"
+      render :index_new
     else
       render :index
     end

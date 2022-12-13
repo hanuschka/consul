@@ -13,6 +13,7 @@ class PagesController < ApplicationController
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
     set_resource_instance
+    custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
     if @custom_page.present? && @custom_page.projekt.present?
       @projekt = @custom_page.projekt
@@ -23,10 +24,10 @@ class PagesController < ApplicationController
 
       @cards = @custom_page.cards
 
-      render action: :custom_page
+      render action: custom_page_name
     elsif @custom_page.present?
       @cards = @custom_page.cards
-      render action: :custom_page
+      render action: custom_page_name
     else
       render action: params[:id]
     end

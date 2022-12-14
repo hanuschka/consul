@@ -7,8 +7,28 @@
     width: 10px;
     height: 10px;
     min-width: 10px;
-    margin-top: 5px;
+    margin-top: 7px;
     margin-right: 12px;
+  }
+
+
+  .sidebar-projekt-phase-details {
+    color: #207868 !important;
+  }
+
+  .sidebar-projekt-phase:not(:last-child) > .sidebar-projekt-phase-details {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      border-left: 2px solid;
+      left: -18px;
+      top: 15px;
+      z-index: 1;
+      color: #207868 !important;
+    }
   }
 
   .sidebar {

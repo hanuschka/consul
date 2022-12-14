@@ -40,15 +40,17 @@
   <% end %>
 
   <% if projekt_feature?(@custom_page.projekt, 'general.enable_sdgs') %>
-    <div class="sidebar-card">
-      <div class="sidebar-card--section">
-        <h4 class="sidebar-card--header">
-          <i class="fas fa-tag"></i>
-          SDGS
-        </h4>
-        <%= render partial: 'pages/sidebar/sdgs_new', locals: { projekt: projekt } %>
+    <% if projekt.sdg_goals.any? %>
+      <div class="sidebar-card">
+        <div class="sidebar-card--section">
+          <h4 class="sidebar-card--header">
+            <i class="fas fa-tag"></i>
+            SDGS
+          </h4>
+          <%= render partial: 'pages/sidebar/sdgs_new', locals: { projekt: projekt } %>
+        </div>
       </div>
-    </div>
+    <% end %>
   <% end %>
 
   <% if projekt_feature?(@custom_page.projekt, 'general.enable_tags') %>

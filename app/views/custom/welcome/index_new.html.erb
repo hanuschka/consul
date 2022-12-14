@@ -11,63 +11,43 @@
               social_url: root_url %>
 <% end %>
 
-<main>
+<main class="welcome-page">
   <%= render "header_new", header: @header %>
 
   <div class="d-flex u-flex-container">
     <div class="u-main-column">
       <%= render_custom_block 'home_page_1' %>
+
+      <% if @active_projekts.any? %>
+        <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters, load_resources_url: list_projekts_url) %>
+        <div class="welcome-page--projekts-link">
+          <%= link_to "Zur Übersicht aller Projekte", projekts_path  %>
+        </div>
+      <% end %>
+
+      <% if @cards.any? %>
+        <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
+      <% end %>
+
+      <%= render_custom_block 'home_page_2' %>
+
+      <% if @latest_polls.any? %>
+        <%= render Shared::ResourcesList.new(resources: @polls, title: t('custom.welcome.current_polls') , wide: false) %>
+      <% end %>
+
+      <%= render_custom_block 'home_page_4' %>
+
+      <% if @latest_items.any? %>
+        <%= render Shared::ResourcesList.new(resources: @latest_items, title: t('custom.welcome.user_entries'), wide: false) %>
+      <% end %>
+
+      <%= render_custom_block 'home_page_5' %>
+
+      <% if @expired_projekts.any? %>
+        <%= render Projekts::List.new(projekts: @expired_projekts, title: t("custom.welcome.expired_projekt_cards.title")) %>
+      <% end %>
+      <%= render_custom_block 'home_page_6' %>
     </div>
     <%= render 'sidebar'  %>
-  </div>
-
-  <% if @active_projekts.any? %>
-    <div class="d-flex u-flex-container">
-      <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters, load_resources_url: list_projekts_url) %>
-    </div>
-  <% end %>
-
-  <% if @cards.any? %>
-    <div class="d-flex u-flex-container">
-      <div class="u-main-column">
-        <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
-      </div>
-    </div>
-  <% end %>
-
-  <div class="d-flex u-flex-container">
-    <div class="u-main-column">
-      <%= render_custom_block 'home_page_2' %>
-    </div>
-  </div>
-
-  <% if @latest_polls.any? %>
-    <%= render Shared::ResourcesList.new(resources: @polls, title: t('custom.welcome.current_polls') , wide: false) %>
-  <% end %>
-
-  <div class="d-flex u-flex-container">
-    <div class="u-main-column">
-      <%= render_custom_block 'home_page_4' %>
-    </div>
-  </div>
-
-  <% if @latest_items.any? %>
-    <%= render Shared::ResourcesList.new(resources: @latest_items, title: t('custom.welcome.user_entries'), wide: false) %>
-  <% end %>
-
-  <div class="d-flex u-flex-container">
-    <div class="u-main-column">
-      <%= render_custom_block 'home_page_5' %>
-    </div>
-  </div>
-
-  <% if @expired_projekts.any? %>
-    <%= render Projekts::List.new(projekts: @expired_projekts, title: t("custom.welcome.expired_projekt_cards.title")) %>
-  <% end %>
-
-  <div class="d-flex u-flex-container">
-    <div class="u-main-column">
-      <%=render_custom_block 'home_page_6' %>
-    </div>
   </div>
 </main>

@@ -276,7 +276,7 @@
 }
 
 .additional-content .filter-subnav {
-  background: $secondary;
+  background: #e7f2fc;
 }
 
 .comment-body .comment-user.is-author, .comment-body .comment-user.is-admin, .comment-body .comment-user.is-moderator, .notification-body .comment-user.is-author, .notification-body .comment-user.is-admin, .notification-body .comment-user.is-moderator {
@@ -433,4 +433,8 @@ span.toggle-arrow {
     flex-basis: 32%;
     margin-right: 0;
   }
+}
+
+.card {
+  background-color: #f4f4f4 !important;
 }

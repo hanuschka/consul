@@ -2,7 +2,7 @@ require_dependency Rails.root.join("app", "models", "budget", "investment").to_s
 
 class Budget
   class Investment < ApplicationRecord
-    delegate :projekt, to: :budget
+    delegate :projekt, :projekt_phase, to: :budget
 
     has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
 
@@ -32,6 +32,14 @@ class Budget
       else
         cached_votes_up + physical_votes
       end
+    end
+
+    def permission_problem(user)
+      budget.budget_phase.permission_problem(user)
+    end
+
+    def comments_allowed?(user)
+      permission_problem(user).nil?
     end
   end
 end

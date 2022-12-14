@@ -1,20 +1,12 @@
 <div class="sidebar">
-  <div class="sidebar-card">
-    <div class="sidebar-card--section">
-      <h4 class="sidebar-card--header">
-        <i class="fas fa-bullhorn"></i>
-        Neuigkeiten
-      </h4>
+  <%= render Shared::SidebarCardComponent.new(title: 'Neuigkeiten', icon_name: "bullhorn") do |c| %>
+    <% c.body do %>
       <%= render_custom_block 'home_page_sidebar' %>
-    </div>
-  </div>
+    <% end %>
+  <% end %>
 
-  <div class="sidebar-card">
-    <div class="sidebar-card--section">
-      <h4 class="sidebar-card--header">
-        <i class="fas fa-info-circle"></i>
-        Nutzer*innen
-      </h4>
+  <%= render Shared::SidebarCardComponent.new(title: 'Nutzer*innen', icon_name: "info-circle") do |c| %>
+    <% c.body do %>
       <div class="system-users-list">
         <div class="system-users-list--title">
           <%= number_with_delimiter(User.count,  delimiter: ".") %> Nutzer*innen
@@ -27,46 +19,43 @@
           <% end %>
         </div>
       </div>
-    </div>
-  </div>
+    <% end %>
+  <% end %>
 
-  <!-- <div class="sidebar-card"> -->
-  <!--   <div class="sidebar-card--section"> -->
-  <!--     <h4 class="sidebar-card--header"> -->
-  <!--       <i class="fas fa-info-circle"></i> -->
-  <!--       Aktivität | letzte 7 Tage -->
-  <!--     </h4> -->
-  <!--     <div> -->
-  <!--       17 neue Benutzer*innen -->
-  <!--     </div> -->
-  <!--     <div> -->
-  <!--       20 neue Kommentare -->
-  <!--     </div> -->
-  <!--     <div> -->
-  <!--       4 neue Vorschläge -->
-  <!--     </div> -->
-  <!--     <div> -->
-  <!--       7 neue Diskussionen -->
-  <!--     </div> -->
-  <!--   </div> -->
-  <!--  -->
-  <!--  -->
-  <!--   <div class="sidebar-card--section sidebar-active-users-section"> -->
-  <!--     <div> -->
-  <!--       <i class="far fa-lightbulb"> -->
-  <!--       </i> -->
-  <!--       Zur Übersicht aller Vorschläge -->
-  <!--     </div> -->
-  <!--     <div> -->
-  <!--       <i class="far fa-comments"> -->
-  <!--       </i> -->
-  <!--       Zur Übersicht aller Diskussionen -->
-  <!--     </div> -->
-  <!--     <div> -->
-  <!--       <i class="fas fa-vote-yea"> -->
-  <!--       </i> -->
-  <!--       Zur Übersicht aller Abstimmungen -->
-  <!--     </div> -->
-  <!--   </div> -->
-  <!-- </div> -->
+  <%# <%= render Shared::SidebarCardComponent.new(title: 'Aktivität | letzte 7 Tage', icon_name: "info-circle") do |c| %>
+  <%#   <% c.body do %>
+  <%#     <div>
+  <%#       17 neue Benutzer*innen
+  <%#     </div>
+  <%#     <div>
+  <%#       20 neue Kommentare
+  <%#     </div>
+  <%#     <div>
+  <%#       4 neue Vorschläge
+  <%#     </div>
+  <%#     <div>
+  <%#       7 neue Diskussionen
+  <%#     </div>
+  <%#   <% end %>
+  <%#
+  <%#   <% c.additional_body do %>
+  <%#     <div class="sidebar-active-users-section">
+  <%#       <div>
+  <%#         <i class="far fa-lightbulb">
+  <%#         </i>
+  <%#         Zur Übersicht aller Vorschläge
+  <%#       </div>
+  <%#       <div>
+  <%#         <i class="far fa-comments">
+  <%#         </i>
+  <%#         Zur Übersicht aller Diskussionen
+  <%#       </div>
+  <%#       <div>
+  <%#         <i class="fas fa-vote-yea">
+  <%#         </i>
+  <%#         Zur Übersicht aller Abstimmungen
+  <%#       </div>
+  <%#     </div>
+  <%#   <% end %>
+  <%# <% end %>
 </div>

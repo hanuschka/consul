@@ -25,4 +25,15 @@ module ContentBlocksHelper
 
     AdminWYSIWYGSanitizer.new.sanitize(res)
   end
+
+  def show_custom_projekt_content_block?(key, projekt)
+    content_block = SiteCustomization::ContentBlock.custom_block_for(key, I18n.locale)
+
+    current_user.present? && (
+      (current_user.administrator? || (
+          current_user.projekt_manager? && can?(:edit, @projekt)
+        )
+      ) || content_block.present?
+    )
+  end
 end

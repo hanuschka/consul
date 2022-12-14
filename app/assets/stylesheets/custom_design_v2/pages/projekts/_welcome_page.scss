@@ -1,4 +1,10 @@
 .new-custom-design {
+  .welcome-page--first-content-block {
+    .custom-content-block-body {
+      margin-top: 0 !important;
+    }
+  }
+
   .welcome-page {
     .custom-content-block-body {
       margin-bottom: 40px;

@@ -86,7 +86,27 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
 
 
 .new-custom-design {
-  header {
+  .top-bar--title-logo-stikcy {
+    display: none;
+  }
+
+  .header--navigation ul.main-menu li.nav-element a,
+  .header--navigation ul.main-menu .projekt-name {
+    color: white !important;
+  }
+
+  .main-navigation-item--account--image-wrapper {
+    background: white !important;
+    color: black !important;
+  }
+
+  .locale .locale-form select {
+    background: white !important;
+    color: black !important;
+
+    &:after {
+      color: black;
+    }
   }
 
   .sticky-header {
@@ -104,6 +124,33 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     .top-bar-background-wrapper {
       background: transparent !important;
     }
+
+    .top-bar--title-logo-top {
+      display: none;
+    }
+
+    .top-bar--title-logo-stikcy {
+      display: block;
+    }
+
+     .header--navigation ul.main-menu li.nav-element a,
+     .header--navigation ul.main-menu .projekt-name {
+       color: black !important;
+     }
+
+     .main-navigation-item--account--image-wrapper {
+       background: black !important;
+       color: white !important;
+     }
+
+     .locale .locale-form select {
+       background: black !important;
+       color: white !important;
+
+       &:after {
+         color: white;
+       }
+     }
   }
 
   li#notifications {

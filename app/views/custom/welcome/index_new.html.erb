@@ -16,7 +16,9 @@
 
   <div class="d-flex u-flex-container">
     <div class="u-main-column">
-      <%= render_custom_block 'home_page_1' %>
+      <div class="welcome-page--first-content-block">
+        <%= render_custom_block 'home_page_1' %>
+      </div>
 
       <% if @active_projekts.any? %>
         <%= render Projekts::List.new(projekts: @active_projekts, map_coordinates: @active_projekts_map_coordinates, current_filter: @current_projekt_filter, filters: @current_active_projekt_filters, load_resources_url: list_projekts_url) %>

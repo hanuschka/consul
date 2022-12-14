@@ -468,6 +468,8 @@ class Projekt < ApplicationRecord
   end
 
   def self.available_filters(all_projekts)
+    return [] if all_projekts.blank?
+
     projekts_count_hash = {}
     INDEX_FILTERS.each do |order|
       projekts_count_hash[order] = all_projekts.send(order).count

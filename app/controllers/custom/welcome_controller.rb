@@ -24,9 +24,16 @@ class WelcomeController < ApplicationController
 
     @all_projekts = Projekt.regular.with_published_custom_page
     @current_active_projekt_filters = Projekt.available_filters(@all_projekts)
-    @current_projekt_filter = Projekt::INDEX_FILTERS.include?(params[:order]) ? params[:order] : @current_active_projekt_filters.first
+    # @current_active_projekt_filters = Projekt.available_filters([])
+    @current_projekt_filter = @current_active_projekt_filters.first
 
-    @active_projekts = @all_projekts.send(@current_projekt_filter).first(3)
+    if @current_projekt_filter.present?
+      @active_projekts = @all_projekts.send(@current_projekt_filter)
+    else
+      @active_projekts = @all_projekts
+    end
+
+    @active_projekts = @active_projekts.first(3)
     @active_projekts_map_coordinates = all_projekts_map_locations(@active_projekts)
 
     @proposals = Proposal.where.not(projekt_id: nil).first(3)

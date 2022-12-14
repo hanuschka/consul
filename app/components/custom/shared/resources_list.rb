@@ -1,5 +1,5 @@
 class Shared::ResourcesList < ApplicationComponent
-  renders_one :body
+  renders_one :bottom_content
 
   def initialize(
     title:,

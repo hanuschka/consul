@@ -15,7 +15,7 @@ class Projekts::List < ApplicationComponent
     @filters = filters
     @only_content = only_content
     @anchor = anchor
-    @title = title.presence || t("custom.resource_names.projekt")
+    @title = title.presence || t("custom.projekts.projekt_list.title")
     @hide_title = hide_title
     @no_filter = no_filter
     @load_resources_url = load_resources_url

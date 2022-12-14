@@ -26,7 +26,12 @@
 
     <aside class="margin-bottom">
       <% projekts = @results.aggregations.selected_section ? @results.aggregations.selected_section.projekts : @results.aggregations.projekts %>
-      <%= render Sidebar::ProjektsFilterComponent.new(@top_level_active_projekts, @top_level_archived_projekts, @all_resources, nil, nil, projekts.buckets.map{ |b| [ b['key'], b.doc_count] }.to_h) %>
+      <%= render Sidebar::ProjektsFilterComponent.new(
+        top_level_active_projekts: @top_level_active_projekts,
+        top_level_archived_projekts: @top_level_archived_projekts,
+        scoped_projekt_ids: nil,
+        all_resources: @all_resources,
+        aggregations: projekts.buckets.map{ |b| [ b['key'], b.doc_count] }.to_h) %>
       <%-categories =  @results.aggregations.selected_section ? @results.aggregations.selected_section.tags : @results.aggregations.tags%>
       <%=render "categories", categories: categories%>
     </aside>

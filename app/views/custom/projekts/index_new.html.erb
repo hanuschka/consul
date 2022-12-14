@@ -1,13 +1,12 @@
 <main class="projekts-page projekts-overview-page">
-  <div class="u-main-column projekts-overview-page--heading">
-    <h1 class='projekts-overview-page--title'>
-      <%= t('custom.projekts.index.title') %>
-    </h1>
-    <%= render_custom_block "projekts_overview_page" %>
-  </div>
-
   <div class='u-flex-container'>
     <div class="u-main-column">
+      <div class="u-main-column projekts-overview-page--heading">
+        <h1 class='projekts-overview-page--title'>
+          <%= t('custom.projekts.index.title') %>
+        </h1>
+        <%= render_custom_block "projekts_overview_page" %>
+      </div>
       <div class="projekts-overview-page--projekts-list">
         <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: list_projekts_url, integrated: true) %>
       </div>
@@ -40,21 +39,18 @@
         </div>
       <% end %>
 
-      <div class="sidebar-card">
-        <div class="sidebar-card--section">
-          <h4 class="sidebar-card--header">
-            <i class="fas fa-bullhorn"></i>
-            SDGS
-          </h4>
+      <% if @sdgs.present? %>
+        <div class="sidebar-card">
+          <div class="sidebar-card--section">
+            <h4 class="sidebar-card--header">
+              <i class="fas fa-bullhorn"></i>
+              SDGS
+            </h4>
 
-          <% if @sdgs.present? %>
             <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
-          <% end %>
-          <%# <% if @sdgs.present? %>
-          <%#   <%= render Shared::SDGFilterComponent.new(sdg_targets: @sdg_targets) %>
-          <%# <% end %>
+          </div>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 

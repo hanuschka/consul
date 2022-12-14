@@ -320,7 +320,10 @@ class ProjektsController < ApplicationController
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'
 
-    @projekts = @projekts.send(@current_order)
+    @current_order = nil
+    if @current_order.present?
+      @projekts = @projekts.send(@current_order)
+    end
 
     @map_coordinates = all_projekts_map_locations(@projekts)
     @resources = @projekts

@@ -9,6 +9,9 @@ class Debate
   has_many :geozone_restrictions, through: :debate_phase
   has_many :geozone_affiliations, through: :projekt
 
+  delegate :votable_by?, to: :debate_phase
+  delegate :comments_allowed?, to: :debate_phase
+
   validates :projekt_id, presence: true
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
@@ -39,28 +42,6 @@ class Debate
       ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
       projekt.all_children_projekts.unshift(projekt).any? { |p| p.debate_phase.current? || p.debates.any? }
     end.pluck(:id)
-  end
-
-  def votable_by?(user)
-    user.present? &&
-    !user.organization? &&
-    user.level_two_or_three_verified? &&
-    (
-      Setting['feature.user.skip_verification'].present? ||
-      projekt.blank? ||
-      debate_phase && debate_phase.geozone_restrictions.blank? ||
-      (debate_phase && debate_phase.geozone_restrictions.any? && debate_phase.geozone_restrictions.include?(user.geozone) )
-    ) &&
-    (
-      projekt.blank? ||
-      debate_phase.present? && debate_phase.current?
-    )
-
-    #  user.voted_for?(self)
-  end
-
-  def comments_allowed?(user)
-    projekt.present? ? debate_phase.selectable_by?(user) : false
   end
 
   def register_vote(user, vote_value)

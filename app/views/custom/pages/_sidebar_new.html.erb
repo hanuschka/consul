@@ -13,15 +13,19 @@
     </div>
   <% end %>
 
-  <div class="sidebar-card">
-    <div class="sidebar-card--section">
-      <h4 class="sidebar-card--header">
-        <i class="fas fa-info-circle"></i>
-        Information
-      </h4>
-      <%= render_custom_block "projekt_page_sidebar_#{projekt.id}" %>
+  <% content_block_sidebar_name = "projekt_page_sidebar_#{projekt.id}" %>
+
+  <% if show_custom_projekt_content_block?(content_block_sidebar_name, @projekt) %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <h4 class="sidebar-card--header">
+          <i class="fas fa-info-circle"></i>
+          Information
+        </h4>
+        <%= render_custom_block "projekt_page_sidebar_#{projekt.id}" %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <% if projekt_feature?(@custom_page.projekt, "sidebar.show_phases_in_projekt_page_sidebar") %>
     <div class="sidebar-card">

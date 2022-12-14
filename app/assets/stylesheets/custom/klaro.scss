@@ -4,6 +4,11 @@
 
 .klaro {
   .cookie-modal {
+    .cn-body {
+      span {
+        color: $dark;
+      }
+    }
     .cn-ok {
       .cm-btn.cm-btn-info {
         padding: 10px;

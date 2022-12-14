@@ -1,15 +1,7 @@
 <div class="sidebar">
-  <div class="sidebar-card">
-    <div class="sidebar-card--section">
-      <h4 class="sidebar-card--header">
-        <i class="fas fa-info-circle"></i>
-        Information
-      </h4>
-      <%= render_custom_block 'home_page_sidebar' %>
-    </div>
-  </div>
+  <% show_admin_controlls = (current_user && current_user.email.in?(@partner_emails) || current_user.present? && current_user.administrator? ||  current_user.present? && current_user.projekt_manager? || current_user.present? && (current_user.administrator? || (current_user.projekt_manager? && can?(:edit, @projekt)))) %>
 
-  <% if current_user && current_user.email.in?(@partner_emails) %>
+  <% if show_admin_controlls %>
     <div class="sidebar-card">
       <div class="sidebar-card--section">
         <h4 class="sidebar-card--header">
@@ -20,6 +12,16 @@
       </div>
     </div>
   <% end %>
+
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-info-circle"></i>
+        Information
+      </h4>
+      <%= render_custom_block "projekt_page_sidebar_#{projekt.id}" %>
+    </div>
+  </div>
 
   <% if projekt_feature?(@custom_page.projekt, "sidebar.show_phases_in_projekt_page_sidebar") %>
     <div class="sidebar-card">

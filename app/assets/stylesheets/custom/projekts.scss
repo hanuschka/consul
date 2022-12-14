@@ -232,6 +232,10 @@ div.projekt-phase-geozone-restriction-selector {
     display: block;
   }
 
+  input.question_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.question_phase {
+    display: block;
+  }
+
   input.budget_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.budget_phase {
     display: block;
   }
@@ -471,6 +475,14 @@ span.projekt-backlink:before {
 .admin .projekt-event {
   position: relative;
 
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 5px;
+  }
+
   input[type='checkbox'] {
     display: none;
   }
@@ -663,19 +675,63 @@ span.projekt-backlink:before {
   }
 }
 
+.projekt-event-item--description-text {
+  font-size: 15px;
+}
+
+.projekt-event-item-values--title {
+  font-size: 22px;
+  margin-bottom: 2px;
+
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 .projekt-event-item-titles {
   padding-right: 58px;
 }
 
+.projekt-event-item-values--details-row {
+  margin-bottom: 5px;
+}
+
 .projekt-event-item-calendar {
   width: 70px;
-  height: 70px;
   padding-top: 5px;
   text-align: center;
-  margin-right: 50px;
+  margin-right: 35px;
   border-radius: 10px;
   box-shadow: inset 0px 3px 6px #0000000F, 0px 3px 6px #00000024;
   background: transparent linear-gradient(180deg, #FFFFFF 0%, #EDEDED 100%) 0% 0% no-repeat padding-box;
+}
+
+.projekt-event-item-calendar--separator {
+  line-height: 0.5;
+}
+
+.projekt-event-item-calendar--enddatetime {
+  margin-top: -11px
+}
+
+.projekt-event-item-values--details-row {
+  display: flex;
+
+  .projekt-event-item-values--details-row-column {
+    padding-right: 12px;
+    font-size: 14px;
+
+    i {
+      padding-right: 5px;
+      font-size: 15px;
+    }
+  }
+
+  @media screen and (max-width: 750px) {
+    flex-direction: column;
+  }
 }
 
 .projekt-event-item-calendar-dayname {
@@ -1561,4 +1617,37 @@ span.projekt-backlink:before {
   font-weight: normal;
   font-family: "Font Awesome 5 Free";
   color: #004a83;
+}
+
+.projekt-new-question-notification {
+  width: 100%;
+  min-height: 50px;
+  background: #b0d7b7;
+  padding-left: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 15px 25px;
+}
+
+.projekt-new-question-notification--title {
+  text-overflow: ellipsis;
+  max-height: 99px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+
+.projekt-livestream-livequestion {
+  margin-top: 20px;
+}
+
+.projekt-new-questions-notification-links-section {
+  display: flex;
+}
+
+.projekt-all-questions-notification-link {
+  margin-left: 15px;
 }

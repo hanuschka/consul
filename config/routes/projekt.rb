@@ -7,6 +7,7 @@ resources :projekts, only: [:index, :show] do
     get :debate_phase_footer_tab
     get :proposal_phase_footer_tab
     get :voting_phase_footer_tab
+    get :list
   end
 
   member do
@@ -19,4 +20,8 @@ post "update_selected_parent_projekt", to: "projekts#update_selected_parent_proj
 
 get :events, to: "projekt_events#index", as: :projekt_events
 
-resources :projekt_livestreams, only: [:show]
+resources :projekt_livestreams, only: [:show] do
+  member do
+    post :new_questions
+  end
+end

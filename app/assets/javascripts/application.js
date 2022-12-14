@@ -119,6 +119,7 @@
 //= require_tree ./sdg_management
 //= require custom
 //= require_tree ./custom
+//= require_tree ./custom/util
 
 var initialize_modules = function() {
   "use strict";
@@ -182,7 +183,6 @@ var initialize_modules = function() {
   App.SDGCustom.initialize();
   App.Geozones.initialize();
   App.ExpandProposalsMap.initialize();
-  App.GDPRNotice.initialize();
   App.MapRefresh.initialize();
   App.PollsCustom.initialize();
   App.RadioButtonFilter.initialize();
@@ -196,6 +196,7 @@ var initialize_modules = function() {
   App.ProjektQuestionCustom.initialize();
   App.LivesubmitCheckboxCustom.initialize();
   App.OrbitInPopupFixCustom.initialize();
+  App.CustomJS.initialize();
 
   if ($("#projekt-selector-fields").length) {
     App.ProjektSelector.initialize();

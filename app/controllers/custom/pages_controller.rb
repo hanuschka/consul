@@ -13,6 +13,7 @@ class PagesController < ApplicationController
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
     set_resource_instance
+    custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
     if @custom_page.present? && @custom_page.projekt.present?
       @projekt = @custom_page.projekt
@@ -23,10 +24,10 @@ class PagesController < ApplicationController
 
       @cards = @custom_page.cards
 
-      render action: :custom_page
+      render action: custom_page_name
     elsif @custom_page.present?
       @cards = @custom_page.cards
-      render action: :custom_page
+      render action: custom_page_name
     else
       render action: params[:id]
     end
@@ -366,7 +367,9 @@ class PagesController < ApplicationController
       @investments = @budget.investments
       @investments = @investments.send(params[:filter]) if params[:filter]
       @investment_ids = @budget.investments.ids
+      @investments = @investments.page(params[:page])
     end
+
 
     if @budget.present? && @current_projekt.current?
       @top_level_active_projekts = Projekt.where( id: @current_projekt )
@@ -421,7 +424,7 @@ class PagesController < ApplicationController
 
     projekt_questions = @current_projekt.questions.root_questions
 
-    if @current_projekt.projekt_list_enabled?
+    if @current_projekt.question_list_enabled?
       @projekt_questions = projekt_questions
     else
       @projekt_question = projekt_questions.first

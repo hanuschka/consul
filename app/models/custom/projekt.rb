@@ -1,5 +1,10 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
+  INDEX_FILTERS = %w[
+    index_order_underway index_order_all
+    index_order_ongoing index_order_upcoming
+    index_order_expired index_order_individual_list
+  ].freeze
 
   include Milestoneable
   acts_as_paranoid column: :hidden_at
@@ -22,7 +27,7 @@ class Projekt < ApplicationRecord
   has_many :polls, dependent: :nullify
   has_many :legislation_processes, dependent: :nullify, class_name: "Legislation::Process"
   has_one :budget, dependent: :nullify
-  has_many :projekt_events, dependent: :nullify
+  has_many :projekt_events, dependent: :destroy
   has_many :questions, -> { order(:id) },
     class_name: "ProjektQuestion",
     inverse_of:  :projekt,
@@ -110,35 +115,47 @@ class Projekt < ApplicationRecord
 
   scope :index_order_all, ->() {
     current
+      .with_published_custom_page
+      .show_in_overview_page
   }
 
   scope :index_order_underway, ->() {
     current
+      .with_published_custom_page
+      .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.any?(&:current?) }
+      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) }
   }
 
   scope :index_order_ongoing, ->() {
     current
+      .with_published_custom_page
+      .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.all? { |phase| !phase.current? } }
+      .select { |p| p.projekt_phases.regular_phases.all? { |phase| !phase.current? } }
   }
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
     activated
+      .with_published_custom_page
+      .show_in_overview_page
       .not_in_individual_list
       .where("total_duration_start > ?", timestamp)
   }
 
   scope :index_order_expired, ->(timestamp = Time.zone.today) {
     expired
+      .with_published_custom_page
+      .show_in_overview_page
       .not_in_individual_list
   }
 
   scope :index_order_individual_list, -> {
-    joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
+    with_published_custom_page
+      .show_in_overview_page
+      .joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
   }
 
@@ -198,17 +215,8 @@ class Projekt < ApplicationRecord
     end
   end
 
-  def regular_projekt_phases
-    special_types = [
-      "ProjektPhase::MilestonePhase",
-      "ProjektPhase::ProjektNotificationPhase",
-      "ProjektPhase::NewsfeedPhase",
-      "ProjektPhase::EventPhase",
-      "ProjektPhase::ArgumentPhase"
-    ]
-
-    projekt_phases.
-      where.not(type: special_types)
+  def published?
+    page&.status == "published"
   end
 
   def update_page
@@ -221,12 +229,14 @@ class Projekt < ApplicationRecord
     return true if controller_name == "processes"
     return false if user.nil?
 
+    user_has_admin_rights = user.administrator? || user.projekt_manager?
+
     if controller_name == "proposals"
-      return false if proposals_selectable_by_admins_only? && user.administrator.blank?
+      return false if proposals_selectable_by_admins_only? && !user_has_admin_rights
 
       proposal_phase.selectable_by?(user)
     elsif controller_name == "debates"
-      return false if debates_selectable_by_admins_only? && user.administrator.blank?
+      return false if debates_selectable_by_admins_only? && !user_has_admin_rights
 
       debate_phase.selectable_by?(user)
     elsif controller_name == "processes"
@@ -410,7 +420,7 @@ class Projekt < ApplicationRecord
     name
   end
 
-  def projekt_list_enabled?
+  def question_list_enabled?
     ProjektSetting.find_by(projekt: self, key: "projekt_feature.questions.show_questions_list")&.enabled?
   end
 
@@ -449,6 +459,19 @@ class Projekt < ApplicationRecord
     else
       page.title
     end
+  end
+
+  def current_phases
+    projekt_phases.regular_phases.select(&:current?)
+  end
+
+  def self.available_filters(all_projekts)
+    projekts_count_hash = {}
+    INDEX_FILTERS.each do |order|
+      projekts_count_hash[order] = all_projekts.send(order).count
+    end
+
+    projekts_count_hash.select { |_, value| value > 0 }.keys
   end
 
   private

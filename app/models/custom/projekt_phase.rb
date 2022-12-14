@@ -1,7 +1,19 @@
 class ProjektPhase < ApplicationRecord
+  REGULAR_PROJEKT_PHASES = [
+    "ProjektPhase::MilestonePhase",
+    "ProjektPhase::ProjektNotificationPhase",
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::EventPhase",
+    "ProjektPhase::ArgumentPhase",
+    "ProjektPhase::LivestreamPhase"
+  ].freeze
+
   belongs_to :projekt, optional: true, touch: true
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone
+
+  scope :regular_phases, -> { where.not(type: REGULAR_PROJEKT_PHASES) }
+  scope :special_phases, -> { where(type: REGULAR_PROJEKT_PHASES) }
 
   def selectable_by?(user)
     user.present? &&
@@ -20,7 +32,6 @@ class ProjektPhase < ApplicationRecord
       ((start_date <= Date.today if start_date.present?) || start_date.blank? ) &&
       ((end_date >= Date.today if end_date.present?) || end_date.blank? )
   end
-
 
   private
 

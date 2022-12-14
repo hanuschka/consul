@@ -3,21 +3,19 @@ class ProjektsController < ApplicationController
   include ProposalsHelper
 
   skip_authorization_check
-  has_orders %w[index_order_underway index_order_all
-                index_order_ongoing index_order_upcoming
-                index_order_expired index_order_individual_list], only: [
+  has_orders Projekt::INDEX_FILTERS, only: [
     :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
-    :proposal_phase_footer_tab, :voting_phase_footer_tab
+    :proposal_phase_footer_tab, :voting_phase_footer_tab, :list
   ]
 
   before_action :find_overview_page_projekt, only: [
-    :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
+    :index, :list, :comment_phase_footer_tab, :debate_phase_footer_tab,
     :proposal_phase_footer_tab, :voting_phase_footer_tab
   ]
 
   before_action :select_projekts, only: [
     :index, :comment_phase_footer_tab, :debate_phase_footer_tab,
-    :proposal_phase_footer_tab, :voting_phase_footer_tab
+    :proposal_phase_footer_tab, :voting_phase_footer_tab, :list
   ]
 
   before_action do
@@ -45,6 +43,16 @@ class ProjektsController < ApplicationController
     @debates_count = Debate.where(projekt_id: @overview_page_special_projekt.id).count
     @proposals_count = Proposal.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
     @polls_count = Poll.base_selection.where(projekt_id: @overview_page_special_projekt.id).count
+
+    if Setting.new_design_enabled?
+      render :index_new
+    else
+      render :index
+    end
+  end
+
+  def list
+    render layout: false
   end
 
   def find_current_phase(default_phase_id)
@@ -284,28 +292,19 @@ class ProjektsController < ApplicationController
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_targets = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
 
-    @projekts = Projekt.show_in_overview_page.regular
-    @resources = @projekts
-
-    @projekts_count_hash = {}
-
-    valid_orders.each do |order|
-      @projekts_count_hash[order] = @projekts.with_published_custom_page.send(order).count
-    end
-
-    @current_active_orders = @projekts_count_hash.select do |key, value|
-      value > 0
-    end.keys
-
-    @current_order = valid_orders.include?(params[:order]) ? params[:order] : @current_active_orders.first
-    @current_projekts_order = @current_order
-
     @geozones = Geozone.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
 
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+
+    @all_projekts = Projekt.regular.with_published_custom_page
+    @projekts = @all_projekts
+
+    @current_active_orders = Projekt.available_filters(@all_projekts)
+    @current_order = valid_orders.include?(params[:order]) ? params[:order] : @current_active_orders.first
+    @current_projekts_order = @current_order
 
     unless params[:search].present?
       take_only_by_tag_names
@@ -321,21 +320,21 @@ class ProjektsController < ApplicationController
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'
 
-    @projekts =
-      @projekts
-        .with_published_custom_page
-        .send(@current_order)
+    @projekts = @projekts.send(@current_order)
+
+    @map_coordinates = all_projekts_map_locations(@projekts)
+    @resources = @projekts
+
+    limit = params[:limit].presence || 25
 
     if @projekts.is_a?(Array)
-      @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(25)
+      @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(limit)
     else
-      @projekts = @projekts.page(params[:page]).per(25)
+      @projekts = @projekts.page(params[:page]).per(limit)
     end
 
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
     @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
-
-    @map_coordinates = all_projekts_map_locations(@projekts)
 
     if @overview_page_special_projekt.proposal_phase.phase_activated?
       proposals = Proposal.where(projekt_id: @overview_page_special_projekt.id)

@@ -12,7 +12,16 @@
   }
 
   .hader--subnavigation-wrapper {
+    .flyout-item-name a, .flyout-item-name {
+      line-height: 3rem !important;
+      font-weight: normal !important;
+    }
+  }
+
+  .hader--subnavigation-wrapper {
     width: 100%;
+    display: flex;
+    align-items: center;
   }
 
   .homepage-image-header {

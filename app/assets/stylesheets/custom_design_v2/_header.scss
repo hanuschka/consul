@@ -103,9 +103,18 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   .locale .locale-form select {
     background: white !important;
     color: black !important;
+    transition: all 200ms ease;
+  }
 
+  .locale .locale-form {
     &:after {
-      color: black;
+      color: black !important;
+    }
+  }
+
+  .top-bar-wrapper {
+    .top-bar-background-wrapper {
+      transition: all 200ms ease;
     }
   }
 
@@ -146,9 +155,11 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
      .locale .locale-form select {
        background: black !important;
        color: white !important;
+     }
 
+     .locale .locale-form {
        &:after {
-         color: white;
+         color: white !important;
        }
      }
   }

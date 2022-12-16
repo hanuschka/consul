@@ -20,7 +20,7 @@
             <%= @custom_page.title %>
           </h1>
 
-          <% if @custom_page.projekt.present? %>
+          <% if @custom_page.subtitle.present? %>
             <div class="custom-page--banner-description">
               <%= @custom_page.subtitle %>
             </div>
@@ -53,7 +53,9 @@
       </div>
 
     <% else %>
-      <%= render 'custom_page_content' %>
+      <div class="u-main-column">
+        <%= render 'custom_page_content' %>
+      </div>
     <% end %>
   </div>
 

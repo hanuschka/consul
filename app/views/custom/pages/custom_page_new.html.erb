@@ -12,33 +12,39 @@
 </style>
 
 <main>
-  <div class="custom-page--banner-wrapper">
-    <div class="custom-page--banner">
-      <div class="custom-page--banner-text-section-wrapper">
-        <div class="custom-page--banner-text-section">
-          <h1 class="custom-page--banner-title">
-            <%= @custom_page.title %>
-          </h1>
+  <% if @custom_page.subtitle.blank? && @custom_page.image.blank? %>
+    <h1 class="custom-page--title margin-bottom">
+      <%= @custom_page.title %>
+    </h1>
+  <% else %>
+    <div class="custom-page--banner-wrapper">
+      <div class="custom-page--banner">
+        <div class="custom-page--banner-text-section-wrapper">
+          <div class="custom-page--banner-text-section">
+            <h1 class="custom-page--banner-title">
+              <%= @custom_page.title %>
+            </h1>
 
-          <% if @custom_page.subtitle.present? %>
-            <div class="custom-page--banner-description">
-              <%= @custom_page.subtitle %>
+            <% if @custom_page.subtitle.present? %>
+              <div class="custom-page--banner-description">
+                <%= @custom_page.subtitle %>
+              </div>
+            <% end %>
+          </div>
+
+          <% if @custom_page.projekt.present? %>
+            <div class="custom-page--banner-breadcrumbs">
+              <%= breadcrumbs_links(@custom_page.projekt) %>
             </div>
           <% end %>
         </div>
 
-        <% if @custom_page.projekt.present? %>
-          <div class="custom-page--banner-breadcrumbs">
-            <%= breadcrumbs_links(@custom_page.projekt) %>
-          </div>
+        <% if @custom_page.image.present? %>
+          <%= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
         <% end %>
       </div>
-
-      <% if @custom_page.image.present? %>
-        <%= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
-      <% end %>
-    </div>
-  </div>
+    </div
+  <% end %>
 
   <div class="d-flex u-flex-container">
     <% if @custom_page.projekt.present? %>

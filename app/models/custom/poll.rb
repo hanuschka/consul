@@ -4,20 +4,32 @@ class Poll < ApplicationRecord
   include Taggable
 
   belongs_to :projekt, optional: true, touch: true
-
+  has_one :voting_phase, through: :projekt
   has_many :geozone_affiliations, through: :projekt
 
-  has_many :bam_street_polls, dependent: :destroy
-  has_many :bam_streets, through: :bam_street_polls
+  # has_many :bam_street_polls, dependent: :destroy
+  # has_many :bam_streets, through: :bam_street_polls
 
   validates :projekt, presence: true
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
+  scope :current, -> { joins(:voting_phase).merge(ProjektPhase::VotingPhase.current) }
+
+  def not_allow_user_geozone?(user)
+    geozone_restricted? && geozone_ids.any? && !geozone_ids.include?(user.geozone_id)
+  end
+
+  def citizen_not_alloed?(user)
+    geozone_restricted? && geozone_ids.empty? && user.not_current_city_citizen?
+  end
+
+  def geozone_restrictions_formatted
+    geozones.map(&:name).flatten.join(", ")
+  end
 
   def self.base_selection
-    created_by_admin.
-      not_budget
+    created_by_admin.not_budget
   end
 
   def self.scoped_projekt_ids_for_index
@@ -38,11 +50,11 @@ class Poll < ApplicationRecord
   end
 
   def answerable_by?(user)
-    user &&
-      !user.organization? &&
-      user.level_three_verified? &&
-      current? &&
-      geozone_allowed?(user)
+    @answerable ||= voting_phase.permission_problem(user).blank?
+  end
+
+  def reason_for_not_being_answerable_by(user)
+    voting_phase.permission_problem(user)
   end
 
   def comments_allowed?(user)
@@ -67,14 +79,7 @@ class Poll < ApplicationRecord
     end
   end
 
-  private
-
-  def geozone_allowed?(user)
-    ( !geozone_restricted && !bam_street_restricted )  ||
-
-      ( geozone_restricted && geozone_ids.blank? && user.geozone.present? ) ||
-      ( geozone_restricted && geozone_ids.include?(user.geozone_id)) ||
-
-      ( bam_street_restricted && user.bam_street.present? && bam_streets.ids.include?(user.bam_street.id) )
+  def projekt_phase
+    voting_phase
   end
 end

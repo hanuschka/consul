@@ -35,12 +35,6 @@
     <div class="small-12 column">
       <%= render "images/nested_image", f: f %>
     </div>
-
-    <div class="clear">
-      <div class="small-6 medium-6 column">
-        <%= f.check_box :geozone_restricted, data: { checkbox_toggle: "#geozones" } %>
-      </div>
-    </div>
   </div>
 
   <div id="geozones" style="<%= @poll.geozone_restricted? ? "" : "display:none" %>">
@@ -52,31 +46,6 @@
           <% end %>
         </div>
       <% end %>
-    </div>
-  </div>
-
-  <div class='row'>
-    <div class='column'>
-
-      <%= f.check_box :bam_street_restricted, data: { checkbox_toggle: "#bam-streets" }  %>
-
-      <div id="bam-streets" class='projekt-phase-street-selector' data-phase-name=<%= 'individual_poll' %> style=<%= @poll.bam_street_restricted? %> >
-        <div id="projekt-phase-selected-streets-individual_poll" class='projekt-phase-selected-streets'>
-          <% @poll.bam_streets.each do |street| %>
-            <div class='selected-projekt' data-street-id=<%= street.id %>>
-              <%= street.name %>
-              <i class='fas fa-times js-deselect-street'></i> 
-            </div>
-          <% end %>
-        </div>
-
-        <%= select_tag :streets, options_from_collection_for_select(BamStreet.all, :id, :name), class: 'js-select-street', prompt: 'Please select' %>
-
-        <div class='hide'>
-          <%= f.collection_check_boxes :bam_street_ids, BamStreet.all, :id, :name %>
-        </div>
-      </div>
-
     </div>
   </div>
   <br>

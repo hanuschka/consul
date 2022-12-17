@@ -77,7 +77,7 @@ Rails.application.routes.draw do
       get :event_phase_footer_tab
       get :argument_phase_footer_tab
       get :livestream_phase_footer_tab
-      get :legislation_process_phase_footer_tab
+      get :legislation_phase_footer_tab
       get :question_phase_footer_tab
       get :extended_sidebar_map
     end
@@ -117,4 +117,5 @@ Rails.application.routes.draw do
 
   # Manuall verify user
   put "/admin/users/:id/verify",                           to: "admin/users#verify",                 as: :verify_admin_user
+  put "/admin/users/:id/unverify",                         to: "admin/users#unverify",               as: :unverify_admin_user
 end

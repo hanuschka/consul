@@ -6,12 +6,12 @@ module UsersHelper
   end
 
   def ck_editor_class(current_user)
-    if extended_feature?("general.extended_editor_for_admins") && current_user.administrator?
-      "extended-a"
-    elsif extended_feature?("general.extended_editor_for_users") && !current_user.administrator?
-      "extended-u"
+    if extended_feature?("general.extended_editor_for_admins") && (current_user.administrator? || current_user.projekt_manager?)
+      'extended-a'
+    elsif extended_feature?("general.extended_editor_for_users")
+      'extended-u'
     else
-      "regular"
+      'regular'
     end
   end
 
@@ -35,7 +35,8 @@ module UsersHelper
   def options_for_gender_select
     [
       [t("custom.devise_views.users.gender.male"), "male"],
-      [t("custom.devise_views.users.gender.female"), "female"]
+      [t("custom.devise_views.users.gender.female"), "female"],
+      [t("custom.devise_views.users.gender.other_gen"), "other_gen"]
     ]
   end
 

@@ -6,6 +6,10 @@ class Proposal < ApplicationRecord
   has_many :geozone_restrictions, through: :proposal_phase
   has_many :geozone_affiliations, through: :projekt
 
+  delegate :votable_by?, to: :proposal_phase
+  delegate :comments_allowed?, to: :proposal_phase
+
+  validates_translation :description, presence: true
   validates :projekt_id, presence: true
   validate :description_sanitized
 
@@ -52,33 +56,11 @@ class Proposal < ApplicationRecord
   def self.successful
     ids = Proposal.select { |p| p.cached_votes_up >= p.custom_votes_needed_for_success }.pluck(:id)
     Proposal.where(id: ids)
-	end
+  end
 
   def self.unsuccessful
     ids = Proposal.select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
     Proposal.where(id: ids)
-	end
-
-  def votable_by?(user)
-    return true if user && user.verified_organization?
-
-    user.present? &&
-      !user.organization? &&
-      user.level_two_or_three_verified? &&
-      (
-        Setting['feature.user.skip_verification'].present? ||
-        projekt.blank? ||
-        proposal_phase.present? && proposal_phase.geozone_restrictions.blank? ||
-        (proposal_phase.present? && proposal_phase.geozone_restrictions.any? && proposal_phase.geozone_restrictions.include?(user.geozone) )
-      ) &&
-      (
-        projekt.blank? ||
-        proposal_phase.present? && proposal_phase.current?
-      )
-  end
-
-  def comments_allowed?(user)
-    projekt.present? ? proposal_phase.selectable_by?(user) : false
   end
 
   def description_sanitized

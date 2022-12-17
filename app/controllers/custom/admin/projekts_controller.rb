@@ -77,10 +77,6 @@ class Admin::ProjektsController < Admin::BaseController
     end
   end
 
-  def liveupdate
-    @projekt.update_attributes(projekt_params)
-  end
-
   def create
     @projekts = Projekt.top_level.page(params[:page])
     @projekt = Projekt.new(projekt_params.merge(color: "#073E8E"))
@@ -124,38 +120,6 @@ class Admin::ProjektsController < Admin::BaseController
   end
 
   private
-
-    def projekt_params
-      attributes = [
-        :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
-        :geozone_affiliated, :tag_list, :related_sdg_list, geozone_affiliation_ids: [], sdg_goal_ids: [],
-        comment_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                   :active, geozone_restriction_ids: [], bam_street_ids: []],
-        debate_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                  :active, geozone_restriction_ids: [], bam_street_ids: []],
-        proposal_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                    :active, geozone_restriction_ids: [], bam_street_ids: []],
-        budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                  :active, geozone_restriction_ids: []],
-        voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                  :active, geozone_restriction_ids: [], bam_street_ids: []],
-        legislation_process_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                               :active, geozone_restriction_ids: []],
-        milestone_phase_attributes: [:id, :start_date, :end_date, :active],
-        newsfeed_phase_attributes: [:id, :start_date, :end_date, :active],
-        event_phase_attributes: [:id, :start_date, :end_date, :active],
-        question_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                    :active, geozone_restriction_ids: []],
-        projekt_notification_phase_attributes: [:id, :start_date, :end_date, :active],
-        argument_phase_attributes: [:id, :start_date, :end_date, :active, geozone_restriction_ids: []],
-        map_location_attributes: map_location_attributes,
-        image_attributes: image_attributes,
-        projekt_notifications: [:title, :body],
-        project_events: [:id, :title, :location, :datetime, :weblink],
-        projekt_manager_ids: []
-      ]
-      params.require(:projekt).permit(attributes, translation_params(Projekt))
-    end
 
     def namespace_projekt_path(projekt)
       admin_projekt_path(projekt)

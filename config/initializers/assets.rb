@@ -17,6 +17,10 @@ Rails.application.config.assets.precompile += %w[ckeditor/plugins/abbr/*]
 Rails.application.config.assets.precompile += %w[ckeditor/plugins/iframe/*]
 Rails.application.config.assets.precompile += %w[ckeditor/plugins/widget/*]
 Rails.application.config.assets.precompile += %w[ckeditor/plugins/youtube/*]
+
+Rails.application.config.assets.precompile += Dir.glob("#{Rails.root}/app/assets/javascripts/cli/**/*.js")
+Rails.application.config.assets.precompile += Dir.glob("#{Rails.root}/app/assets/javascripts/klaro/*.js")
+
 Rails.application.config.assets.precompile += %w[stat_graphs.js]
 Rails.application.config.assets.precompile += %w[dashboard_graphs.js]
 Rails.application.config.assets.precompile += %w[application-rtl.css]

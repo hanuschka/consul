@@ -9,6 +9,9 @@ class Debate
   has_many :geozone_restrictions, through: :debate_phase
   has_many :geozone_affiliations, through: :projekt
 
+  delegate :votable_by?, to: :debate_phase
+  delegate :comments_allowed?, to: :debate_phase
+
   validates :projekt_id, presence: true
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
@@ -41,30 +44,6 @@ class Debate
     end.pluck(:id)
   end
 
-  def votable_by?(user)
-    return true if user && user.verified_organization?
-
-    user.present? &&
-    !user.organization? &&
-    user.level_three_verified? &&
-    (
-      projekt.blank? ||
-      debate_phase && debate_phase.geozone_restricted == "no_restriction" ||
-      debate_phase && debate_phase.geozone_restricted == "only_citizens" ||
-      (debate_phase && debate_phase.geozone_restricted == "only_geozones" && debate_phase.geozone_restrictions.any? && debate_phase.geozone_restrictions.include?(user.geozone) )
-    ) &&
-    (
-      projekt.blank? ||
-      debate_phase.present? && debate_phase.current?
-    )
-
-    #  user.voted_for?(self)
-  end
-
-  def comments_allowed?(user)
-    projekt.present? ? debate_phase.selectable_by?(user) : false
-  end
-
   def register_vote(user, vote_value)
     send("process_#{vote_value}_vote", user) if votable_by?(user)
   end
@@ -87,5 +66,9 @@ class Debate
       disliked_by user
       Debate.increment_counter(:cached_anonymous_votes_total, id) if user.unverified?
     end
+  end
+
+  def votes_score
+    cached_votes_up + cached_votes_down
   end
 end

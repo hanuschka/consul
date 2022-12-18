@@ -335,8 +335,9 @@ class PagesController < ApplicationController
 
     @valid_filters = @current_projekt.budget.investments_filters
     params[:filter] ||= "feasible" if @current_projekt.budget.phase.in?(["selecting", "valuating"])
-    params[:filter] ||= "all" if @current_projekt.budget.phase.in?(["publishing_prices", "balloting", "reviewing_ballots"])
+    params[:filter] ||= "all" if @current_projekt.budget.phase.in?(["publishing_prices", "reviewing_ballots"])
     params[:filter] ||= "winners" if @current_projekt.budget.phase == "finished"
+    params[:filter] ||= "selected"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
     @all_resources = []
 
@@ -351,7 +352,7 @@ class PagesController < ApplicationController
     @valid_orders = %w[random supports ballots ballot_line_weight newest]
     @valid_orders.delete("supports")
     @valid_orders.delete("ballots")
-    @valid_orders.delete("ballot_line_weight") unless @budget.phase == "balloting"
+    @valid_orders.delete("ballot_line_weight") # unless @budget.phase == "balloting"
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
     params[:section] ||= 'results' if @budget.phase == 'finished'

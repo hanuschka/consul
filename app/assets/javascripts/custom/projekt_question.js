@@ -2,10 +2,8 @@
   "use strict";
   App.ProjektQuestionCustom = {
     initialize: function() {
-      $("body").on("click", ".js-projekt-question-next", function(e) {
-        e.preventDefault()
-        e.stopPropagation()
-        this.loadQuestionSection(e.currentTarget.href)
+      $("body").on("click", ".js-projekt-question-new", function(e) {
+        $(e.target.closest('.projekt-new-question-notification')).hide();
       }.bind(this));
 
       $('body').on('change', '.js-projekt-answer-form input', this.debounce(this.submitForm.bind(this), 500))
@@ -30,10 +28,6 @@
       };
     },
 
-    loadQuestionSection: function(url) {
-      $.get(url)
-    },
-
     submitForm: function(e) {
       var $element = $(e.currentTarget)
       $element.closest('form').trigger('submit.rails')
@@ -48,10 +42,10 @@
 
     handleCheckboxClick: function(e) {
       var $elementForm = $(e.currentTarget).closest('form')
-      var isLoginedAndVerified = $elementForm.attr('data-logined-and-verified')
+      var shouldRedirect = $elementForm.attr('data-should-redirect')
       var redirectTo = $elementForm.attr('data-redirect-to')
 
-      if (isLoginedAndVerified === 'false') {
+      if (shouldRedirect === 'true') {
         Turbolinks.visit(redirectTo)
       }
     }

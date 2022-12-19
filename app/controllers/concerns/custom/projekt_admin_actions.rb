@@ -71,7 +71,9 @@ module ProjektAdminActions
   end
 
   def update
-    authorize!(:update, Projekt) if params[:namespace] == "projekt_management"
+    if should_authorize_projekt_manager?
+      authorize!(:update, @projekt)
+    end
 
     if @projekt.update_attributes(projekt_params)
       redirect_to redirect_path(params[:id], params[:tab].to_s),
@@ -85,7 +87,9 @@ module ProjektAdminActions
   def update_map
     map_location = MapLocation.find_by(projekt: params[:projekt_id])
 
-    authorize!(:update_map, map_location) if params[:namespace] == "projekt_management"
+    if should_authorize_projekt_manager?
+      authorize!(:update_map, map_location)
+    end
 
     map_location.update!(map_location_params)
 
@@ -100,7 +104,9 @@ module ProjektAdminActions
       key: "projekt_custom_feature.default_footer_tab"
     ).reload
 
-    authorize!(:update_standard_phase, @default_footer_tab_setting) if current_user.projekt_manager?
+    if should_authorize_projekt_manager?
+      authorize!(:update_standard_phase, @default_footer_tab_setting)
+    end
 
     if @default_footer_tab_setting.present?
       @default_footer_tab_setting.update!(value: params[:default_footer_tab][:id])
@@ -116,28 +122,8 @@ module ProjektAdminActions
     def projekt_params
       attributes = [
         :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+        :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated, :tag_list, :related_sdg_list, geozone_affiliation_ids: [], sdg_goal_ids: [],
-        comment_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                   :active, geozone_restriction_ids: []],
-        debate_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                  :active, geozone_restriction_ids: []],
-        proposal_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                    :active, geozone_restriction_ids: []],
-        budget_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                  :active, geozone_restriction_ids: []],
-        voting_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                  :active, geozone_restriction_ids: []],
-        legislation_process_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                               :active, geozone_restriction_ids: []],
-        milestone_phase_attributes: [:id, :start_date, :end_date, :active],
-        newsfeed_phase_attributes: [:id, :start_date, :end_date, :active],
-        event_phase_attributes: [:id, :start_date, :end_date, :active],
-        question_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                    :active, geozone_restriction_ids: []],
-        livestream_phase_attributes: [:id, :start_date, :end_date, :geozone_restricted,
-                                    :active, geozone_restriction_ids: []],
-        projekt_notification_phase_attributes: [:id, :start_date, :end_date, :active],
-        argument_phase_attributes: [:id, :start_date, :end_date, :active, geozone_restriction_ids: []],
         map_location_attributes: map_location_attributes,
         image_attributes: image_attributes,
         projekt_notifications: [:title, :body],
@@ -174,5 +160,9 @@ module ProjektAdminActions
       else
         edit_admin_projekt_path(projekt_id) + tab
       end
+    end
+
+    def should_authorize_projekt_manager?
+      current_user&.projekt_manager? && !current_user&.administrator?
     end
 end

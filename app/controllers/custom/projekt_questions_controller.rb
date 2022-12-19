@@ -31,10 +31,16 @@ class ProjektQuestionsController < ApplicationController
 
   def show
     @commentable = @question
+    @current_order = "newest"
+
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
 
     @answer = @question.answer_for_user(current_user) || ProjektQuestionAnswer.new
+
+    if @question.livestream_question?
+      @projekt_livestream_livequestion_path = new_questions_projekt_livestream_path(@question.projekt_livestream.id, current_projekt_question_id: @question.id, most_recent_question_id: @question.most_recent_question_id)
+    end
   end
 
   private

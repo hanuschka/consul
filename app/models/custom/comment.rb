@@ -35,9 +35,15 @@ class Comment < ApplicationRecord
       )
   end
 
+  def next_comments
+    self.class
+      .where(commentable_id: commentable_id, commentable_type: commentable_type)
+      .where("id > ?", id)
+  end
+
   def projekt
     return commentable if commentable.is_a?(Projekt)
 
-    commentable.projekt if commentable.projekt.present?
+    commentable&.projekt.presence if commentable.respond_to?(:projekt)
   end
 end

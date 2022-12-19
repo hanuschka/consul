@@ -49,8 +49,24 @@ class ProjektQuestion < ApplicationRecord
     projekt_livestream_id.present?
   end
 
+  def projekt_phase
+    if projekt_livestream_id.present?
+      projekt.livestream_phase
+    else
+      projekt.question_phase
+    end
+  end
+
+  def permission_problem(user)
+    @permission_problem = projekt_phase.permission_problem(user)
+  end
+
+  def comments_allowed?(current_user)
+    permission_problem(current_user).blank?
+  end
+
   def base_query_for_navigation
-    base_query = projekt.questions.sorted.limit(1)
+    base_query = projekt.questions.sorted
 
     if root_question?
       base_query.root_questions
@@ -70,7 +86,11 @@ class ProjektQuestion < ApplicationRecord
   def next_question_id
     return @next_question_id if @next_question_id.present?
 
-    @next_question_id ||= base_query_for_navigation.where("id > ?", id).ids.first
+    @next_question_id ||= next_questions.ids.first
+  end
+
+  def next_questions
+    base_query_for_navigation.where("id > ?", id)
   end
 
   def previous_question_id
@@ -81,21 +101,12 @@ class ProjektQuestion < ApplicationRecord
     @first_question_id ||= base_query_for_navigation.ids.first
   end
 
+  def most_recent_question_id
+    @most_recent_question_id ||= base_query_for_navigation.ids.last
+  end
+
   def answer_for_user(user)
     answers.find_by(user: user)
-  end
-
-  def comments_allowed?(current_user)
-    current_user&.present? &&
-      !projekt.question_phase.expired?
-  end
-
-  def comments_closed?
-    !comments_open?
-  end
-
-  def comments_open?
-    projekt.question_phase.phase_activated?
   end
 
   def best_comments

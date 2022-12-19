@@ -12,7 +12,7 @@ class Verification::Residence
   validates :terms_of_service, acceptance: { allow_nil: false }
 
   validate :allowed_age
-  validate :document_number_uniqueness
+  # validate :document_number_uniqueness
 
   # validate :local_postal_code
   # validate :local_residence

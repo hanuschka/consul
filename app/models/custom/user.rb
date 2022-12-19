@@ -9,7 +9,6 @@ class User < ApplicationRecord
   before_validation :strip_whitespace
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
-  after_create :take_votes_from_erased_user
   after_create :attempt_verification
   after_save :update_qualified_votes_count_for_budget_investments
 
@@ -169,22 +168,11 @@ class User < ApplicationRecord
     end
 
     def attempt_verification
-      unless organization?
-        return false unless stamp_unique?
-      end
-
       return false unless residency_valid?
 
-      attributes_to_set = {
-        geozone: geozone_with_plz,
-        verified_at: Time.current
-      }
-
       unless organization?
-        attributes_to_set[:unique_stamp] = prepare_unique_stamp
+        verify!
       end
-
-      update!(attributes_to_set)
     end
 
     def census_data

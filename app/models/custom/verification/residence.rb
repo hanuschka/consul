@@ -41,7 +41,8 @@ class Verification::Residence
   end
 
   def document_required?
-    Setting["extra_fields.verification.check_documents"].present?
+    false
+    # Setting["extra_fields.verification.check_documents"].present?
   end
 
   private

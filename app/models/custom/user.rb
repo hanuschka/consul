@@ -94,39 +94,48 @@ class User < ApplicationRecord
   end
 
   def first_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def last_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def street_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def street_number_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def plz_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def city_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def date_of_birth_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def gender_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    true
+    # !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def document_required?
-    !organization? && !erased? && Setting["extra_fields.registration.check_documents"]
+    false
+    # !organization? && !erased? && Setting["extra_fields.registration.check_documents"]
   end
 
   def current_city_citizen?

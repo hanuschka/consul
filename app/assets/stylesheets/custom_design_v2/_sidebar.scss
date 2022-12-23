@@ -5,10 +5,6 @@
     margin-bottom: 8px;
   }
 
-  .u-main-column {
-    width: 930px;
-  }
-
   .system-users-list {
   }
 
@@ -104,6 +100,29 @@
   .geozone-affiliation-filter {
     li {
       list-style: none;
+    }
+  }
+
+  .header--responsive-menu-wrapper {
+    display: none;
+  }
+
+
+  @media screen and (max-width: $tablet-viewport-start) {
+  }
+  @media (max-width: $mobile-viewport-start) {
+    .sidebar {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    .header--responsive-menu-wrapper {
+      display: block;
+    }
+
+    .header--responsive-menu {
+      display: none;
     }
   }
 }

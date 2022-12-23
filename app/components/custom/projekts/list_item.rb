@@ -36,7 +36,7 @@ class Projekts::ListItem < ApplicationComponent
       "fa-euro-sign"
     when ProjektPhase::VotingPhase
       "fa-vote-yea"
-    when ProjektPhase::LegislationProcessPhase
+    when ProjektPhase::LegislationPhase
       "fa-file-word"
     when ProjektPhase::ArgumentPhase
       "fa-user-tie"

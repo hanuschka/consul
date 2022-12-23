@@ -638,9 +638,9 @@
   }
 
   @media (max-width: $mobile-viewport-start) {
-    // .resource-item {
-    //   width: 100%;
-    //   max-width: 320px;
-    // }
+    .resource-item {
+      width: 100%;
+      max-width: 310px;
+    }
   }
 }

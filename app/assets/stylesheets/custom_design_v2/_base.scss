@@ -143,6 +143,26 @@ body.new-custom-design {
     }
   }
 
+  @media (max-width: $big-tablet-viewport-start) {
+    h2 {
+      font-size: 30px;
+    }
+
+    h3 {
+      font-size: 28px;
+    }
+  }
+
+  @media (max-width: $small-tablet-viewport-start) {
+    h2 {
+      font-size: 28px;
+    }
+
+    h3 {
+      font-size: 26px;
+    }
+  }
+
   @media (max-width: $mobile-viewport-start) {
     h2 {
       font-size: 24px;

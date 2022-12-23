@@ -84,6 +84,13 @@
 
     .resources-list--map .map_location {
       height: 415px;
+      max-width: 90vw;
+    }
+  }
+
+  @media (max-width: $mobile-viewport-start) {
+    .resources-list--inner {
+      justify-content: center;
     }
   }
 }

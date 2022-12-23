@@ -506,5 +506,11 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     .content-items {
       width: 100%;
     }
+
+    .header--account-buttons  {
+      .sign-in-button {
+        width: 100% !important;
+      }
+    }
   }
 }

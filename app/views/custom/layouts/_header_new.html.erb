@@ -40,7 +40,7 @@
           </div>
 
           <% if !launch_page && current_user.nil? %>
-            <div class='header--account-buttons show-for-large'>
+            <div class='header--account-buttons show-on-desktop'>
               <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
             </div>
           <% end %>
@@ -58,7 +58,7 @@
               </h2>
 
               <% if !launch_page && current_user.nil? %>
-                <div class='header--account-buttons'>
+                <div class='header--account-buttons show-on-mobile'>
                   <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
                 </div>
               <% end %>

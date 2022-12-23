@@ -467,5 +467,25 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     .hamburger-menu {
       margin-left: 0;
     }
+
+    .homepage-image-header--title {
+      font-size: 22px;
+      padding: 10px 20px;
+    }
+
+    .homepage-image-header--button.button {
+      font-size: 22px;
+      height: 40px;
+      padding: 0 20px;
+    }
+
+    .homepage-image-header--title-wrapper {
+      padding-top: 140px;
+    }
+
+    .homepage-image-header {
+      height: 380px;
+      margin-bottom: 35px;
+    }
   }
 }

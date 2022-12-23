@@ -142,4 +142,10 @@ body.new-custom-design {
       color: black;
     }
   }
+
+  @media (max-width: $mobile-viewport-start) {
+    h2 {
+      font-size: 24px;
+    }
+  }
 }

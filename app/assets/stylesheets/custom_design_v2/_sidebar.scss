@@ -108,15 +108,13 @@
   }
 
 
-  @media screen and (max-width: $tablet-viewport-start) {
-  }
-  @media (max-width: $mobile-viewport-start) {
+  @media (max-width: $small-tablet-viewport-start) {
     .sidebar {
       display: none;
     }
   }
 
-  @media screen and (max-width: 640px) {
+  @media screen and (max-width: $mobile-viewport-start) {
     .header--responsive-menu-wrapper {
       display: block;
     }

@@ -424,4 +424,48 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
       display: none;
     }
   }
+
+  .header--mobile-hamburger-menu {
+    position: static;
+
+    .menu-icon::after {
+      color: white;
+      // background: #fff;
+      // box-shadow: 0 7px 0 #fff, 0 14px 0 #fff;
+    }
+  }
+
+  @media (max-width: $mobile-viewport-start) {
+    .top-bar {
+      justify-content: space-between !important;
+      padding-top: 10px;
+    }
+
+    .top-bar--title-logo-stikcy {
+      display: block;
+    }
+
+    .top-bar--title-logo-top {
+      display: none;
+    }
+
+    .subnavigation {
+      left: 0;
+      right: 0;
+      top: 70px;
+      padding: 0 10px;
+    }
+
+    .city-name {
+      font-size: 24px;
+    }
+
+    .top-bar-background-wrapper, .sticky-header .top-bar-background-wrapper {
+      height: 70px;
+    }
+
+    .hamburger-menu {
+      margin-left: 0;
+    }
+  }
 }

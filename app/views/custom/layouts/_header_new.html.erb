@@ -16,6 +16,17 @@
   <div class="js-stiky-header top-bar-wrapper">
     <div class="top-bar-background-wrapper">
       <div class="top-bar">
+        <span data-responsive-toggle="responsive-menu"
+              data-hide-for="medium"
+              class="hamburger-menu header--mobile-hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll"
+              role="button"
+              tabindex="0"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
+              <span class="menu-icon dark" data-toggle></span>
+        </span>
+
         <div class="top-bar--title">
           <%= link_to root_path do %>
             <%= image_tag(image_path_for("logo_header_new.png"), alt: setting["org_name"], class: 'top-bar--title-logo-top') %>
@@ -34,33 +45,27 @@
             </div>
           <% end %>
         </div>
+      </div>
 
-        <!-- <h2 class='header-title show-for-medium'> -->
-        <!--   <%= Setting['extended_option.general.title'] %> -->
-        <!--   <br> -->
-        <!--   <%= content_tag :span, Setting['extended_option.general.subtitle'] %> -->
-        <!-- </h2> -->
+      <div class="header--responsive-menu-wrapper">
+        <div id="responsive-menu" class='header--responsive-menu not-print'>
+          <div class="top-bar-right">
+            <div class="subnavigation">
+              <h2 class='city-name'>
+                <%= Setting['extended_option.general.title'] %>
+                <br>
+                <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
+              </h2>
 
-        <div class="header--responsive-menu-wrapper">
-          <div id="responsive-menu" class='header--responsive-menu not-print'>
-            <div class="top-bar-right">
-              <div class="subnavigation">
-                <h2 class='city-name'>
-                  <%= Setting['extended_option.general.title'] %>
-                  <br>
-                  <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
-                </h2>
-
-                <% if !launch_page && current_user.nil? %>
-                  <div class='header--account-buttons'>
-                    <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
-                  </div>
-                <% end %>
-
-                <%= render partial: "shared/subnavigation", locals: { placement: 'mobile', launch_page: launch_page } %>
-                <div class="small-12 column">
-                  <%= render "shared/top_links" %>
+              <% if !launch_page && current_user.nil? %>
+                <div class='header--account-buttons'>
+                  <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
                 </div>
+              <% end %>
+
+              <%= render partial: "shared/subnavigation", locals: { placement: 'mobile', launch_page: launch_page } %>
+              <div class="small-12 column">
+                <%= render "shared/top_links" %>
               </div>
             </div>
           </div>

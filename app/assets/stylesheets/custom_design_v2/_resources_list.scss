@@ -76,6 +76,16 @@
       height: 530px;
     }
   }
+
+  @media (max-width: $mobile-viewport-start) {
+    .resources-list--title {
+      font-size: 22px;
+    }
+
+    .resources-list--map .map_location {
+      height: 415px;
+    }
+  }
 }
 
 

@@ -51,15 +51,18 @@
         <div id="responsive-menu" class='header--responsive-menu not-print'>
           <div class="top-bar-right">
             <div class="subnavigation">
-              <h2 class='city-name'>
-                <%= Setting['extended_option.general.title'] %>
-                <br>
-                <%= content_tag :span, Setting['extended_option.general.subtitle'] %>
-              </h2>
+              <div class="header--responsive-menu-title">
+                <div>
+                  <%= Setting['extended_option.general.title'] %>
+                </div>
+                <div>
+                  <b><%= Setting["extended_option.general.subtitle"] %></b>
+                </div>
+              </div>
 
               <% if !launch_page && current_user.nil? %>
-                <div class='header--account-buttons show-on-mobile'>
-                  <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'sign-in-button', role: 'button' %>
+                <div class='show-on-mobile header--responsive-menu-sign-in-section'>
+                  <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'header--responsive-menu-sign-in-button', role: 'button' %>
                 </div>
               <% end %>
 

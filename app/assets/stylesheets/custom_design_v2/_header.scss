@@ -429,16 +429,34 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     position: static;
 
     .menu-icon::after {
-      color: white;
-      // background: #fff;
-      // box-shadow: 0 7px 0 #fff, 0 14px 0 #fff;
+      // color: white;
+      background: #fff;
+      box-shadow: 0 7px 0 #fff, 0 14px 0 #fff;
     }
+  }
+
+  .header--responsive-menu-title {
+    color: #005A9F;
+  }
+
+  .header--responsive-menu-sign-in-button {
+    width: auto;
+    background: #073E8E !important;
+    color: white !important;
+    border-radius: 5px !important;
+    padding: 10px 20px;
+    line-height: inherit !important;
   }
 
   @media (max-width: $mobile-viewport-start) {
     .top-bar {
       justify-content: space-between !important;
       padding-top: 10px;
+    }
+
+    header, .wrapper > header {
+      height: 70px !important;
+      max-width: auto;
     }
 
     .top-bar--title-logo-stikcy {
@@ -453,12 +471,14 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
       left: 0;
       right: 0;
       top: 70px;
-      padding: 20px 20px;
+      padding: 30px;
+      max-width: 320px;
     }
 
-    .city-name {
-      font-size: 24px;
-      margin: 0;
+    .header--responsive-menu-title {
+      font-size: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #c7c7c7;
     }
 
     .header--account-buttons {
@@ -491,7 +511,7 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     }
 
     .homepage-image-header--title-wrapper {
-      padding-top: 140px;
+      padding-top: 180px;
     }
 
     .homepage-image-header {
@@ -507,10 +527,9 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
       width: 100%;
     }
 
-    .header--account-buttons  {
-      .sign-in-button {
-        width: 100% !important;
-      }
+    .header--responsive-menu-sign-in-section {
+      margin-top: 20px;
+      margin-bottom: 10px;
     }
   }
 }

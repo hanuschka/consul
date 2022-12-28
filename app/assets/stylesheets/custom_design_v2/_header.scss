@@ -478,7 +478,7 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     .header--responsive-menu-title {
       font-size: 20px;
       padding-bottom: 20px;
-      border-bottom: 1px solid #c7c7c7;
+      border-bottom: 1px solid #e0e0e0;
     }
 
     .header--account-buttons {
@@ -530,6 +530,89 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     .header--responsive-menu-sign-in-section {
       margin-top: 20px;
       margin-bottom: 10px;
+    }
+
+    header .header--responsive-menu  {
+      .main-menu {
+        flex-direction: column;
+      }
+
+      .user-notification--count {
+        position: relative;
+        right: 0;
+        top: 7px;
+        width: auto;
+      }
+
+      .content-items {
+        padding-top: 15px;
+        padding-bottom: 20px;
+      }
+
+      .account-admin-items {
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .main-navigation-item-account--wrapper {
+        margin-left: 0;
+      }
+    }
+
+    .main-navigation--link-icon {
+      display: inline-block;
+      min-width: 37px !important;
+    }
+
+    span.icon-notification:before {
+      font-size: 19px;
+    }
+
+    i {
+      font-size: 20px;
+    }
+
+    .subnavigation ul.main-menu {
+      padding-bottom: 0;
+    }
+
+    .sticky-header {
+      .header--mobile-hamburger-menu {
+        .menu-icon::after {
+          background: black;
+          box-shadow: 0 7px 0 black, 0 14px 0 black;
+        }
+      }
+    }
+
+    .header--responsive-menu--user {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .header--responsive-menu--user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 100%;
+      background: black;
+      color: white;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+
+    .header--responsive-menu--user-name {
+      color: black;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: -7px;
     }
   }
 }

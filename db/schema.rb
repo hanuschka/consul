@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_02_115716) do
+ActiveRecord::Schema.define(version: 2022_12_27_114335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -713,6 +713,7 @@ ActiveRecord::Schema.define(version: 2022_12_02_115716) do
     t.tsvector "tsv"
     t.bigint "hot_score", default: 0
     t.string "on_behalf_of"
+    t.datetime "assigned_at"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1327,6 +1328,7 @@ ActiveRecord::Schema.define(version: 2022_12_02_115716) do
     t.integer "given_order", default: 1
     t.boolean "most_voted", default: false
     t.boolean "open_answer", default: false
+    t.integer "rating_scale_weight"
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -2093,7 +2095,10 @@ ActiveRecord::Schema.define(version: 2022_12_02_115716) do
     t.string "bam_unique_stamp"
     t.bigint "bam_street_id"
     t.string "keycloak_link"
-    t.boolean "custom_statistic_cookies_enabled"
+    t.boolean "adm_email_on_new_comment", default: false
+    t.boolean "adm_email_on_new_proposal", default: false
+    t.boolean "adm_email_on_new_debate", default: false
+    t.boolean "adm_email_on_new_deficiency_report", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -2161,6 +2166,15 @@ ActiveRecord::Schema.define(version: 2022_12_02_115716) do
     t.datetime "started_at"
     t.index ["started_at"], name: "index_visits_on_started_at"
     t.index ["user_id"], name: "index_visits_on_user_id"
+  end
+
+  create_table "votation_types", force: :cascade do |t|
+    t.integer "questionable_id"
+    t.string "questionable_type"
+    t.integer "vote_type"
+    t.integer "max_votes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "votes", id: :serial, force: :cascade do |t|

@@ -7,6 +7,50 @@
         </h1>
         <%= render_custom_block "projekts_overview_page" %>
       </div>
+
+      <div class="show-on-mobile">
+        <div class="mobile-filter">
+          <div class="mobile-filter--toggle-button">
+            <div class="mobile-filter--toggle-button-inner">
+              <i class="fa fa-filter"> </i>
+              Filter
+            </div>
+          </div>
+          <div class="mobile-filter--body">
+          <% if show_affiliation_filter_in_sidebar? %>
+            <div class="mobile-filter--body-section">
+              <div class="mobile-filter--section-title">
+                <i class="mobile-filter--section-title-icon fa fa-map" ></i>
+
+                Gebiete
+              </div>
+              <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
+            </div>
+            <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
+              <div class="mobile-filter--body-section">
+                <div class="mobile-filter--section-title">
+                  <i class="mobile-filter--section-title-icon fa fa-map" ></i>
+
+                  TAGS
+                </div>
+                <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
+              </div>
+            <% end %>
+          <% end %>
+          <% if @sdgs.present? %>
+            <div class="mobile-filter--body-section">
+              <div class="mobile-filter--section-title">
+                <i class="mobile-filter--section-title-icon fa fa-map" ></i>
+                SDGS
+              </div>
+
+              <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
+            </div>
+          <% end %>
+          </div>
+        </div>
+      </div>
+
       <div class="projekts-overview-page--projekts-list">
         <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: list_projekts_url, integrated: true) %>
       </div>
@@ -24,7 +68,15 @@
       </div>
 
       <% if show_affiliation_filter_in_sidebar? %>
-        <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
+        <div class="sidebar-card">
+          <div class="sidebar-card--section">
+            <h4 class="sidebar-card--header">
+              <i class="fas fa-bullhorn"></i>
+              <%= t("custom.geozones.sidebar_filter.affiliations.title") %>
+            </h4>
+            <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
+          </div>
+        </div>
       <% end %>
 
       <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
@@ -90,4 +142,5 @@
       %>
     </div>
   </div>
+
 </main>

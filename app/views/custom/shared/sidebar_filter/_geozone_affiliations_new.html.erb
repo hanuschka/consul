@@ -1,12 +1,5 @@
 <% resource_name = @resource_name.capitalize.constantize.model_name.human count: :other %>
 
-<div class="sidebar-card">
-  <div class="sidebar-card--section">
-    <h4 class="sidebar-card--header">
-      <i class="fas fa-bullhorn"></i>
-      <%= t("custom.geozones.sidebar_filter.affiliations.title") %>
-    </h4>
-
     <div id='geozone_affiliation' class='geozone-filter'>
       <ul class="geozone-affiliation-filter">
         <li <%= "class=label-selected" if @selected_geozone_affiliation == 'all_resources' %> >
@@ -53,5 +46,3 @@
         </ul>
       </ul>
     </div>
-  </div>
-</div>

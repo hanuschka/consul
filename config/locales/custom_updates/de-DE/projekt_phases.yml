@@ -40,6 +40,7 @@ de:
             different_heading_assigned: "Sie haben bereits für eine andere Rubrik gestimmt: %{heading_link}"
             casted_offline: Sie haben bereits offline abgestimmt
             not_enough_available_votes: Nicht genug verfügbare Stimmen
+            not_enough_money: Sie haben nicht mehr ausreichend Geld zur Verfügung
         commenting:
           shared:
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."

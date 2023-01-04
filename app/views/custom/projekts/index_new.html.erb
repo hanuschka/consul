@@ -10,13 +10,18 @@
 
       <div class="show-on-mobile">
         <div class="mobile-filter">
-          <div class="mobile-filter--toggle-button">
+          <button
+            type="button"
+            class="mobile-filter--toggle-button"
+            data-toggle="mobile_filter_body"
+          >
             <div class="mobile-filter--toggle-button-inner">
               <i class="fa fa-filter"> </i>
               Filter
             </div>
-          </div>
-          <div class="mobile-filter--body">
+          </button>
+
+          <div id="mobile_filter_body" class="mobile-filter--body" data-toggler="hide" >
           <% if show_affiliation_filter_in_sidebar? %>
             <div class="mobile-filter--body-section">
               <div class="mobile-filter--section-title">

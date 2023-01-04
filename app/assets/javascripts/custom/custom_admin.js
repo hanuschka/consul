@@ -1,7 +1,32 @@
 (function() {
   "use strict";
   App.CustomAdmin = {
+    updateVotationTypeHint: function(newVotationTypeName) {
+      $('span.votation-type-hint').each(function() {
+       $(this).addClass('hide');
+      });
+
+
+      var visibleHintId = '#votation-type-' + newVotationTypeName;
+      $(visibleHintId).removeClass('hide')
+    },
+
+    toggleVotationTypeMaxVotesField: function(newVotationTypeName) {
+      var typesAllowingMultipleAnswers = ['multiple', 'multiple_with_weights']
+
+      if ( typesAllowingMultipleAnswers.includes(newVotationTypeName) ) {
+        $('#votation_max_votes').removeClass('hide')
+      } else {
+        $('#votation_max_votes').addClass('hide')
+      }
+    },
+
     initialize: function() {
+      $("body").on("click", ".js-update-votation-type-hint", function() {
+        var newVotationTypeName = event.target.value;
+        App.CustomAdmin.updateVotationTypeHint(newVotationTypeName);
+        App.CustomAdmin.toggleVotationTypeMaxVotesField(newVotationTypeName);
+      })
 
       $("body").on("click", ".js-map-layer-base-checkbox", function() {
         var $base_checkbox = $(this)

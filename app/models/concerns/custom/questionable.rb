@@ -1,6 +1,10 @@
 require_dependency Rails.root.join("app", "models", "concerns", "questionable").to_s
 
 module Questionable
+  def max_votes
+    votation_type.max_votes || question_answers.count
+  end
+
   private
 
     def find_by_attributes(user, title)
@@ -9,10 +13,10 @@ module Questionable
         { author: user }
       when "multiple"
         { author: user, answer: title }
+      when "multiple_with_weight"
+        { author: user, answer: title }
       when "rating_scale"
         { author: user }
-      when "multiple_with_weights"
-        { author: user, answer: title }
       end
     end
 end

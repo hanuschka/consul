@@ -12,7 +12,7 @@
     },
 
     toggleVotationTypeMaxVotesField: function(newVotationTypeName) {
-      var typesAllowingMultipleAnswers = ['multiple', 'multiple_with_weights']
+      var typesAllowingMultipleAnswers = ['multiple', 'multiple_with_weight']
 
       if ( typesAllowingMultipleAnswers.includes(newVotationTypeName) ) {
         $('#votation_max_votes').removeClass('hide')
@@ -21,11 +21,20 @@
       }
     },
 
+    toggleRatingScaleLabels: function(newVotationTypeName) {
+      if ( newVotationTypeName == 'rating_scale' ) {
+        $('#rating-scale-labels').removeClass('hide')
+      } else {
+        $('#rating-scale-labels').addClass('hide')
+      }
+    },
+
     initialize: function() {
       $("body").on("click", ".js-update-votation-type-hint", function() {
         var newVotationTypeName = event.target.value;
         App.CustomAdmin.updateVotationTypeHint(newVotationTypeName);
         App.CustomAdmin.toggleVotationTypeMaxVotesField(newVotationTypeName);
+        App.CustomAdmin.toggleRatingScaleLabels(newVotationTypeName);
       })
 
       $("body").on("click", ".js-map-layer-base-checkbox", function() {

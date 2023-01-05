@@ -1,6 +1,6 @@
 .new-custom-design {
   .layout-left-column {
-    flex-grow: 1;
+    width: 100%;
     margin-right: 20px;
   }
 
@@ -10,11 +10,6 @@
   }
 
   @media screen and (max-width: $big-tablet-viewport-start) {
-    .layout-left-column {
-      // width: auto;
-      // margin-right: auto;
-    }
-
     .layout-main-column {
       padding: 0 20px;
     }

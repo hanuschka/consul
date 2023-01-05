@@ -68,9 +68,11 @@
   }
 
   .resources-list--map {
+    margin: auto;
     margin-bottom: 20px;
     border-radius: 12px;
     overflow: hidden;
+    width: 100%;
 
     .map_location {
       height: 530px;

@@ -58,6 +58,11 @@ class ApplicationController < ActionController::Base
       []
     end
   end
+  
+  def set_projekts_for_overview_page_navigation
+    @projekts_for_overview_page_navigation = Projekt.joins(:projekt_settings)
+      .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+  end
 
   def set_top_level_projekts_for_menu
     @top_level_projekts_for_menu = Projekt.top_level_navigation
@@ -94,55 +99,8 @@ class ApplicationController < ActionController::Base
     @projekts = Projekt.top_level
   end
 
-<<<<<<< HEAD
   def set_partner_emails
-    filename = File.join(Rails.root, 'config', 'secret_emails.yml')
-    @partner_emails = File.exist?(filename) ? File.readlines(filename).map(&:chomp) : []
+    filename = File.join(Rails.root, "config", "secret_emails.yml")
+    @partner_emails = File.exist?(filename) ? File.readlines(filename).map { |l| l.chomp.downcase } : []
   end
-=======
-    def set_projekts_for_overview_page_navigation
-      @projekts_for_overview_page_navigation = Projekt.joins(:projekt_settings)
-        .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
-    end
-
-    def set_top_level_projekts_for_menu
-      @top_level_projekts_for_menu = Projekt.top_level_navigation
-    end
-
-    def set_default_social_media_images
-      return if params[:controller] == "ckeditor/pictures"
-
-      SiteCustomization::Image.all_images
-
-      social_media_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon").image
-
-      if social_media_icon.attached?
-        @social_media_icon_path = polymorphic_path(social_media_icon, disposition: "attachment").split("?")[0]
-      else
-        @social_media_icon_path = nil
-      end
-
-      twitter_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon_twitter").image
-
-      if twitter_icon.attached?
-        @social_media_icon_twitter_url = polymorphic_path(twitter_icon.attachment, disposition: "attachment")
-          .split("?")[0]
-      else
-        nil
-      end
-    end
-
-    def set_deficiency_report_votes(deficiency_reports)
-      @deficiency_report_votes = current_user ? current_user.deficiency_report_votes(deficiency_reports) : {}
-    end
-
-    def set_projekts_for_selector
-      @projekts = Projekt.top_level
-    end
-
-    def set_partner_emails
-      filename = File.join(Rails.root, "config", "secret_emails.yml")
-      @partner_emails = File.exist?(filename) ? File.readlines(filename).map { |l| l.chomp.downcase } : []
-    end
->>>>>>> 0cc778692690504519b3dea8ef1a3d99a3ca437f
 end

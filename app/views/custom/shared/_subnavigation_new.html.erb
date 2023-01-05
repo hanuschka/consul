@@ -1,3 +1,42 @@
+<% if deficiency_reports_feature?('show_in_main_menu') && !launch_page  %>
+  <% deficiency_reports = capture do %>
+    <%= render partial: 'shared/subnavigation_deficiency_reports', locals: { placement: placement }  %>
+  <% end %>
+<% end %>
+
+<% if placement == 'desktop' && !launch_page %>
+  <% right_desktop = capture do %>
+    <%= raw content_block("subnavigation_right_desktop", I18n.locale)  %>
+  <% end %>
+<% end %>
+
+<% if placement == 'mobile' && !launch_page %>
+  <% right_mobile = capture do %>
+    <%= raw content_block("subnavigation_right_mobile", I18n.locale) %>
+  <% end %>
+<% end %>
+
+<% if Setting['extended_feature.general.enable_projekt_events_page'].present? && !launch_page %>
+  <% projekt_events = capture do %>
+    <%= render partial: 'shared/subnavigation_projekt_events', locals: { placement: placement }  %>
+  <% end %>
+<% end %>
+
+<% if extended_feature?("general.links_to_create_resources_in_menu") &&
+    !launch_page &&
+    ( Projekt.top_level.selectable_in_selector('debates', current_user).any? ||
+     Projekt.top_level.selectable_in_selector('proposals', current_user).any? ||
+     Projekt.joins(:budget).where( budgets: { phase: 'accepting'} ).any? ) %>
+
+   <% subnavigation_new_entry = capture do %>
+     <%= render partial: 'shared/subnavigation_new_entry', locals: { placement: placement } %>
+   <% end %>
+ <% end %>
+
+<% navigation_items = [deficiency_reports, right_desktop, right_mobile, projekt_events, subnavigation_new_entry].compact.reject { |item| item == "\n" }.compact %>
+
+<% free_top_level_item_slots = 5 - (@top_level_projekts_for_menu&.size || 0) %>
+
 <ul class="main-menu">
   <div class="content-items">
     <%# <%= render partial: 'shared/subnavigation_home', locals: { placement: placement } %>
@@ -5,16 +44,24 @@
     <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
     <%= raw content_block("subnavigation_left_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
     <%= render partial: 'shared/subnavigation_projekts', locals: { placement: placement } unless launch_page %>
-    <%= render partial: 'shared/subnavigation_deficiency_reports', locals: { placement: placement } if deficiency_reports_feature?('show_in_main_menu') && !launch_page %>
-    <%= raw content_block("subnavigation_right_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
-    <%= raw content_block("subnavigation_right_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
-    <%= render partial: 'shared/subnavigation_projekt_events', locals: { placement: placement } if Setting['extended_feature.general.enable_projekt_events_page'].present? && !launch_page %>
-    <% if extended_feature?("general.links_to_create_resources_in_menu") &&
-        !launch_page &&
-        ( Projekt.top_level.selectable_in_selector('debates', current_user).any? ||
-          Projekt.top_level.selectable_in_selector('proposals', current_user).any? ||
-          Projekt.joins(:budget).where( budgets: { phase: 'accepting'} ).any? ) %>
-      <%= render partial: 'shared/subnavigation_new_entry', locals: { placement: placement } %>
+
+    <% navigation_items.first(free_top_level_item_slots).each do |navigation_item| %>
+      <%= navigation_item %>
+    <% end %>
+
+    <% navigation_items_to_render_in_more_dropdown = navigation_items[free_top_level_item_slots..] %>
+
+    <% if navigation_items_to_render_in_more_dropdown.size > 0 %>
+      <li class="nav-element top-level-item">
+        <div class="flyout-item-name projekt-name">
+          More
+        </div>
+        <ul class="nav-flyout-block">
+          <% navigation_items_to_render_in_more_dropdown.each do |navigation_item| %>
+            <%= navigation_item %>
+          <% end %>
+        </ul>
+      </li>
     <% end %>
   </div>
 

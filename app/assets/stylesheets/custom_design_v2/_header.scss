@@ -13,7 +13,8 @@
 
   .hader--subnavigation-wrapper {
     .flyout-item-name a, .flyout-item-name {
-      line-height: 3rem !important;
+      // line-height: 3rem !important;
+      line-height: 1.5rem !important;
       font-weight: normal !important;
     }
   }
@@ -124,6 +125,10 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   .header--navigation ul.main-menu li.nav-element a,
   .header--navigation ul.main-menu .projekt-name {
     color: white !important;
+  }
+
+  .header--navigation ul.main-menu .nav-flyout-block .projekt-name {
+    color: black !important;
   }
 
   .header--navigation  ul.nav-flyout-block li.nav-element a {
@@ -409,6 +414,18 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     }
   }
 
+  .main-menu .nav-flyout-block li.nav-element.top-level-item > ul.nav-flyout-block {
+    left: 100%;
+    top: 0;
+  }
+
+  .nav-flyout-block {
+    .nav-element {
+      padding: 1em;
+      width: 300px;
+    }
+  }
+
   @media screen and (max-width: $big-tablet-viewport-start) {
     .homepage-image-header {
       height: 500px;
@@ -446,6 +463,10 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     border-radius: 5px !important;
     padding: 10px 20px;
     line-height: inherit !important;
+  }
+
+  .nav-flyout-block {
+    background: white;
   }
 
   @media (max-width: $mobile-viewport-start) {

@@ -179,7 +179,7 @@ class Projekt < ApplicationRecord
     joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
       .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active") }
 
-  scope :top_level_navigation, -> { top_level.visible_in_menu }
+  scope :top_level_navigation, -> { top_level.visible_in_menu.with_published_custom_page }
 
   scope :by_my_posts, ->(my_posts_switch, current_user_id) {
     return unless my_posts_switch

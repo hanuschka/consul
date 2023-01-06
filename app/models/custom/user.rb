@@ -10,6 +10,7 @@ class User < ApplicationRecord
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   around_update :reset_verification_status
   before_create { self.geozone = geozone_with_plz }
+  after_create :take_votes_from_erased_user
   after_save :update_qualified_votes_count_for_budget_investments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -31,6 +32,41 @@ class User < ApplicationRecord
   validates :gender, presence: true, on: :create, if: :gender_required?
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
+
+  def verify!
+    return false unless stamp_unique?
+
+    take_votes_from_erased_user
+    update_columns(
+      verified_at: Time.current,
+      unique_stamp: prepare_unique_stamp,
+      geozone_id: geozone_with_plz&.id
+    )
+  end
+
+  def take_votes_from_erased_user
+    return if erased?
+
+    erased_user = User.erased.find_by(unique_stamp: unique_stamp)
+
+    if erased_user.present?
+      take_votes_from(erased_user)
+      erased_user.update!(unique_stamp: nil)
+    end
+  end
+
+  def stamp_unique?
+    User.where.not(id: id).find_by(unique_stamp: prepare_unique_stamp).blank?
+  end
+
+  def prepare_unique_stamp
+    return nil if first_name.blank? || last_name.blank? || date_of_birth.blank? || plz.blank?
+
+    first_name.downcase + "_" +
+      last_name.downcase + "_" +
+      date_of_birth.to_date.strftime("%Y_%m_%d") + "_" +
+      plz.to_s
+  end
 
   def gdpr_conformity?
     Setting["extended_feature.gdpr.gdpr_conformity"].present?

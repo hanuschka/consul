@@ -2,6 +2,34 @@
   "use strict";
   App.CustomAdmin = {
 
+    updateVotationTypeHint: function(newVotationTypeName) {
+      $('span.votation-type-hint').each(function() {
+       $(this).addClass('hide');
+      });
+
+
+      var visibleHintId = '#votation-type-' + newVotationTypeName;
+      $(visibleHintId).removeClass('hide')
+    },
+
+    toggleVotationTypeMaxVotesField: function(newVotationTypeName) {
+      var typesAllowingMultipleAnswers = ['multiple', 'multiple_with_weight']
+
+      if ( typesAllowingMultipleAnswers.includes(newVotationTypeName) ) {
+        $('#votation_max_votes').removeClass('hide')
+      } else {
+        $('#votation_max_votes').addClass('hide')
+      }
+    },
+
+    toggleRatingScaleLabels: function(newVotationTypeName) {
+      if ( newVotationTypeName == 'rating_scale' ) {
+        $('#rating-scale-labels').removeClass('hide')
+      } else {
+        $('#rating-scale-labels').addClass('hide')
+      }
+    },
+
     // Street selector: start
     selectStreet: function(streetId, streetName) {
       var checkboxId = "projekt_phase_bam_street_ids_" + streetId
@@ -20,6 +48,13 @@
     // Street selector: end
 
     initialize: function() {
+      $("body").on("click", ".js-update-votation-type-hint", function() {
+        var newVotationTypeName = event.target.value;
+        App.CustomAdmin.updateVotationTypeHint(newVotationTypeName);
+        App.CustomAdmin.toggleVotationTypeMaxVotesField(newVotationTypeName);
+        App.CustomAdmin.toggleRatingScaleLabels(newVotationTypeName);
+      })
+
       $("body").on("change", ".js-select-street", function() { // select street
         var streetId = this.value;
         var streetName = $(this).find('option:selected').text();
@@ -30,7 +65,7 @@
         var $streetPill = $(this).closest('.selected-street');
         var streetId = $streetPill.data('street-id');
         App.CustomAdmin.deselectStreet(streetId, $streetPill);
-      })
+			})
 
       $("body").on("click", ".js-map-layer-base-checkbox", function() {
         var $base_checkbox = $(this)

@@ -54,11 +54,6 @@ de:
           p1: ein/e Sachbearbeiter*in hat eine neue offizielle Antwort gespeichert.
           signature_html: Viele Grüße</br>Consul
           subject: Neue offizielle Antwort von einem/einer Sachbearbeiter*in %{identifier}
-        notify_administrators_about_new_deficiency_report:
-          hi: Lieber Admin,
-          p1: es wurde ein neues Anliegen gemeldet.
-          signature_html: Viele Grüße</br>Consul
-          subject: "Neues Anliegen %{identifier}"
         notify_author_about_status_change:
           hi: Hallo
           p1: der Status des von Ihnen eingereichten Anliegens wurde geändert.

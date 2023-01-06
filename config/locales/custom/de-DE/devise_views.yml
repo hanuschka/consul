@@ -18,6 +18,13 @@ de:
         text: "Bestätigen Sie Ihre E-Mail-Adresse mithilfe des folgenden Links:"
         title: Willkommen
         welcome: Willkommen
+        reg_welcome_html: "Herzlich willkommen bei <a href='http://mein.regensburg.de' target='_blank'>http://mein.regensburg.de</a>!"
+        reg_p1_html: "Vielen Dank für Ihr Interesse an der Beteiligung. Gemeinsam mit Ihnen machen wir Regensburg grün, gerecht und produktiv."
+        reg_p2_html: "Derzeit befinden sich die R_NEXT Projekte in der Strategiephase. Wir wollen dazu Ihre Meinung hören und sind gespannt auf die Vorschläge auf <a href='http://mein.regensburg.de' target='_blank'>http://mein.regensburg.de</a>."
+        reg_p3_html: "Kontaktieren Sie uns gerne, wenn Fragen zur Anmeldung oder zu R_NEXT aufkommen: <a href='mailto:R_NEXT@Regensburg.de'>R_NEXT@Regensburg.de</a>"
+        reg_p4_html: "Besuchen Sie auch unsere R_NEXT-Homepage, um mehr über uns und unsere Arbeit für Regensburg zu erfahren: <a href='https://www.regensburg.de/r-next' target='_blank'>https://www.regensburg.de/r-next</a>"
+        reg_p5_html: "Herzliche Grüße vom R_NEXT-Team"
+        reg_p6_html: "<br>Über R_NEXT<br>Das Projekt REGENSBURG_NEXT liegt in der Verantwortung der Stabsstelle Smart City im Referat für Wirtschaft, Wissenschaft und Finanzen der Stadt Regensburg. Das interdisziplinäre Projektteam ist jedoch über die gesamte Stadtverwaltung verteilt und bezieht weitere Akteur*innen aus Stadtgesellschaft, Wirtschaft und Wissenschaft mit ein."
       reset_password_instructions:
         change_link: Mein Passwort ändern
         hello: Hallo

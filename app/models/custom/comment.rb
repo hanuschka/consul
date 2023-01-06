@@ -6,6 +6,8 @@ class Comment < ApplicationRecord
   scope :seen, -> { where.not(ignored_flag_at: nil) }
   scope :unseen, -> { where(ignored_flag_at: nil) }
 
+  delegate :comments_allowed?, to: :projekt
+
   def elastic_searchable?
     hidden_at.nil?
   end

@@ -12,4 +12,10 @@
   .new-main-content-card {
     padding: 35px 50px;
   }
+
+  @media (max-width: 1365px) {
+    .new-main-content-card {
+      padding: 25px 35px;
+    }
+  }
 }

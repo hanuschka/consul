@@ -1,0 +1,48 @@
+<div class="show-on-small-tablet">
+  <div class="mobile-filter">
+    <button
+        type="button"
+        class="mobile-filter--toggle-button"
+        data-toggle="mobile_filter_body"
+        >
+        <div class="mobile-filter--toggle-button-inner">
+          <i class="fa fa-filter"> </i>
+          Filter
+        </div>
+    </button>
+
+    <div id="mobile_filter_body" class="mobile-filter--body" data-toggler="hide" >
+      <% if helpers.show_affiliation_filter_in_sidebar? %>
+        <div class="mobile-filter--body-section">
+          <div class="mobile-filter--section-title">
+            <i class="mobile-filter--section-title-icon fa fa-map" ></i>
+
+            Gebiete
+          </div>
+          <%= render "shared/sidebar_filter/geozone_affiliations_new", resource_name: @resource_name %>
+        </div>
+        <%if @categories.present? && extended_feature?("modulewide.enable_categories") %>
+          <div class="mobile-filter--body-section">
+            <div class="mobile-filter--section-title">
+              <i class="mobile-filter--section-title-icon fa fa-map" ></i>
+
+              TAGS
+            </div>
+            <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
+          </div>
+        <% end %>
+      <% end %>
+      <% if @sdgs.present? %>
+        <div class="mobile-filter--body-section">
+          <div class="mobile-filter--section-title">
+            <i class="mobile-filter--section-title-icon fa fa-map" ></i>
+            SDGS
+          </div>
+
+          <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+

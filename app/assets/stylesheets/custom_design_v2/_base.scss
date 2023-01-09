@@ -143,6 +143,10 @@ body.new-custom-design {
     }
   }
 
+  .show-on-small-tablet {
+    display: none;
+  }
+
   @media (max-width: $big-tablet-viewport-start) {
     h2 {
       font-size: 30px;
@@ -160,6 +164,10 @@ body.new-custom-design {
 
     h3 {
       font-size: 26px;
+    }
+
+    .show-on-small-tablet {
+      display: block;
     }
   }
 

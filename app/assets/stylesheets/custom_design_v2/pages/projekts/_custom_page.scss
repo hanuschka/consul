@@ -244,11 +244,38 @@
         display: none;
       }
     }
+
+    .mobile-projekt-tabs {
+      .footer-phases-filter-subnav ul > li  {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        min-height: auto;
+      }
+
+      .footer-phases-filter-subnav ul > li a {
+        min-height: none;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        h4 {
+          font-size: 20px;
+        }
+      }
+    }
   }
 
   .mobile-projekt-tabs {
     .tabs-panel {
       padding: 0;
+    }
+
+    .key-dates li::after {
+      display: none;
     }
   }
 

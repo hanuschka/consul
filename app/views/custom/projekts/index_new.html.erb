@@ -8,53 +8,7 @@
         <%= render_custom_block "projekts_overview_page" %>
       </div>
 
-      <div class="show-on-mobile">
-        <div class="mobile-filter">
-          <button
-            type="button"
-            class="mobile-filter--toggle-button"
-            data-toggle="mobile_filter_body"
-          >
-            <div class="mobile-filter--toggle-button-inner">
-              <i class="fa fa-filter"> </i>
-              Filter
-            </div>
-          </button>
-
-          <div id="mobile_filter_body" class="mobile-filter--body" data-toggler="hide" >
-          <% if show_affiliation_filter_in_sidebar? %>
-            <div class="mobile-filter--body-section">
-              <div class="mobile-filter--section-title">
-                <i class="mobile-filter--section-title-icon fa fa-map" ></i>
-
-                Gebiete
-              </div>
-              <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
-            </div>
-            <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
-              <div class="mobile-filter--body-section">
-                <div class="mobile-filter--section-title">
-                  <i class="mobile-filter--section-title-icon fa fa-map" ></i>
-
-                  TAGS
-                </div>
-                <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
-              </div>
-            <% end %>
-          <% end %>
-          <% if @sdgs.present? %>
-            <div class="mobile-filter--body-section">
-              <div class="mobile-filter--section-title">
-                <i class="mobile-filter--section-title-icon fa fa-map" ></i>
-                SDGS
-              </div>
-
-              <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
-            </div>
-          <% end %>
-          </div>
-        </div>
-      </div>
+      <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
 
       <div class="projekts-overview-page--projekts-list">
         <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: list_projekts_url, integrated: true) %>
@@ -79,7 +33,7 @@
               <i class="fas fa-bullhorn"></i>
               <%= t("custom.geozones.sidebar_filter.affiliations.title") %>
             </h4>
-            <%= render "shared/sidebar_filter/geozone_affiliations_new" %>
+            <%= render "shared/sidebar_filter/geozone_affiliations_new", resource_name: @resource_name %>
           </div>
         </div>
       <% end %>

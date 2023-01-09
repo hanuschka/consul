@@ -100,7 +100,8 @@
 
   .resources-list--inner {
     display: flex;
-    grid-gap: 15px;
+    // grid-gap: 15px;
+    grid-gap: 12px;
     justify-content: flex-start;
     flex-wrap: wrap;
     align-items: flex-start;

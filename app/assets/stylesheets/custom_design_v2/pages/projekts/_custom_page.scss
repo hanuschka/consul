@@ -238,6 +238,12 @@
       width: calc(100vw - 60px);
       margin: auto;
     }
+
+    .page-subnav-tab {
+      .tab-info-summary {
+        display: none;
+      }
+    }
   }
 
   .mobile-projekt-tabs {
@@ -258,7 +264,6 @@
 
     a {
       color: black !important;
-
     }
 
     &.is-active {

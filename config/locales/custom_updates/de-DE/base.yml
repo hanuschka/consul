@@ -18,7 +18,7 @@ de:
         admin_notifications: Admin Benachrichtigungen
     comments:
       reply_form:
-        leave_comment: Schreiben Sie eine Antwort
+        leave_comment: Deine Meinung
     devise_views:
       users:
         registrations:

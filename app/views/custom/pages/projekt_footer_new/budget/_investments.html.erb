@@ -1,0 +1,19 @@
+<div class='row'>
+  <div class='column small'>
+    <% if extended_feature?('modulewide.show_number_of_entries_in_modules') %>
+      <div class='float-right'>
+        <%= @investments.total_count %>
+        <%= t('activerecord.models.budget/investment', count: @investments.to_a.size) %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% @investments.each do |investment| %>
+  <%= render "/budgets/investments/investment",
+             investment: investment,
+             investment_ids: @investment_ids,
+             ballot: @ballot %>
+<% end %>
+
+<%= paginate @investments, remote: true, params: { controller: 'pages', action: 'budget_phase_footer_tab' } %>

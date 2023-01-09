@@ -239,4 +239,33 @@
       margin: auto;
     }
   }
+
+  .mobile-projekt-tabs {
+    .tabs-panel {
+      padding: 0;
+    }
+  }
+
+  .mobile-projekt-tabs-navigation {
+    display: flex;
+  }
+
+  .mobile-projekt-tab {
+    width: calc(100% / 3);
+    color: black;
+    margin-right: 0 !important;
+    text-align: center;
+
+    &.is-active {
+      background: #BFCDDB;
+
+      a {
+        color: black !important;
+
+        &::after {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
 }

@@ -18,4 +18,10 @@
       padding: 25px 35px;
     }
   }
+
+  @media (max-width: $mobile-viewport-start) {
+    .new-main-content-card {
+      padding: 18px 22px;
+    }
+  }
 }

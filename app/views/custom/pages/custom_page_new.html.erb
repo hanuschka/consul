@@ -97,7 +97,29 @@
   </div>
 
   <% if @custom_page.projekt.present? %>
+    <div class="show-on-mobile">
+      <div class="mobile-projekt-tabs">
+        <ul class="tabs mobile-projekt-tabs-navigation" data-tabs id="example-tabs">
+          <li class="tabs-title mobile-projekt-tab is-active"><a href="#panel1" aria-selected="true">Inalt</a></li>
+          <li class="tabs-title mobile-projekt-tab"><a data-tabs-target="panel2" href="#panel2">Info</a></li>
+          <li class="tabs-title mobile-projekt-tab"><a data-tabs-target="panel3" href="#panel3">Beteiligung</a></li>
+        </ul>
 
+        <div class="layout-main-column">
+          <div class="tabs-content" data-tabs-content="example-tabs">
+            <div class="tabs-panel is-active" id="panel1">
+              <%= projekt_content %>
+            </div>
+            <div class="tabs-panel" id="panel2">
+              <%= projekt_sidebar %>
+            </div>
+            <div class="tabs-panel" id="panel3">
+              <%= projekt_footer %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
 </main>
 

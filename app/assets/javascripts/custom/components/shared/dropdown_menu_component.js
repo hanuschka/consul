@@ -1,20 +1,29 @@
 (function() {
   "use strict";
   App.DropdownMenuComponent = {
+    initialized: false,
+
     initialize: function() {
+      if (this.initialized) {
+        return;
+      }
+
       window.addEventListener("click", function(e) {
         if (e.target.closest(".dropdown-container") === null) {
           this.closeDropdown();
         }
       }.bind(this));
 
-      $(".js-dropdown-toggle").on("click", this.openDropdown.bind(this));
-      $(".js-dropdown-item").on("click", this.selectOption.bind(this));
+      $(document).on("click", ".js-dropdown-toggle", this.openDropdown.bind(this));
+      $(document).on("click", ".js-dropdown-item", this.selectOption.bind(this));
+
+      this.initialized = true;
     },
 
     openDropdown: function(e) {
       e.preventDefault();
 
+      console.log('openDropdown')
       var $dropdownElement = $(e.currentTarget.parentElement);
 
       if ($dropdownElement.hasClass("dropdown-open") === true) {

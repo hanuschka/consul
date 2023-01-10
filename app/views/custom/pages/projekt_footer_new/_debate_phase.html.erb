@@ -2,7 +2,7 @@
 
 <div class="layout-main-column">
   <div class="layout-left-column">
-    <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories) %>
+    <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
     <%= render 'shared/loader_spinner' %>
 
       <% debates_footer_url = url_for(action: params[:current_tab_path], controller: "/pages") %>
@@ -41,6 +41,5 @@
         </div>
       </div>
     <% end %>
-
   </div>
 </div>

@@ -206,15 +206,22 @@ class PagesController < ApplicationController
 
     @scoped_projekt_ids = Debate.scoped_projekt_ids_for_footer(@current_projekt)
 
+    @geozones = Geozone.all
+    @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
+    @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
+
     unless params[:search].present?
       take_by_my_posts
       # take_by_tag_names
       # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
+      take_by_geozone_affiliations
+      take_by_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
     end
 
+    @resource_name = 'debate'
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
 

@@ -65,7 +65,7 @@
       <div class="layout-main-column">
         <div class="layout-full-width-column">
           <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_phase_name) %>
-          <div id='footer-content'>
+          <div class="js-projekt-footer-content">
             <%= render 'shared/loader_spinner' %>
             <%= render "pages/projekt_footer_new/#{@default_phase_name}" %>
           </div>
@@ -105,17 +105,15 @@
           <li class="tabs-title mobile-projekt-tab"><a data-tabs-target="panel3" href="#panel3">Beteiligung</a></li>
         </ul>
 
-        <div class="layout-main-column">
-          <div class="tabs-content" data-tabs-content="example-tabs">
-            <div class="tabs-panel is-active" id="panel1">
-              <%= projekt_content %>
-            </div>
-            <div class="tabs-panel" id="panel2">
-              <%= projekt_sidebar %>
-            </div>
-            <div class="tabs-panel" id="panel3">
-              <%= projekt_footer %>
-            </div>
+        <div class="tabs-content" data-tabs-content="example-tabs">
+          <div class="tabs-panel is-active" id="panel1">
+            <%= projekt_content %>
+          </div>
+          <div class="tabs-panel" id="panel2">
+            <%= projekt_sidebar %>
+          </div>
+          <div class="tabs-panel" id="panel3">
+            <%= projekt_footer %>
           </div>
         </div>
       </div>

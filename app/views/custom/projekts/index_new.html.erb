@@ -11,7 +11,16 @@
       <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
 
       <div class="projekts-overview-page--projekts-list">
-        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: projekts_path, full_page_reload: true) %>
+        <%= render Projekts::List.new(
+          projekts: @projekts,
+          map_coordinates: @map_coordinates,
+          current_filter: @current_order,
+          filters: @current_active_orders,
+          overview_page_mode: true,
+          hide_title: true,
+          load_resources_url: projekts_path,
+          full_page_reload: true
+          ) %>
       </div>
     </div>
 

@@ -38,8 +38,8 @@
           <%= render(
             Shared::DropdownMenuComponent.new(
               name: @filter_param,
-              options: @filter_options,
-              selected_option: @current_filter_option,
+              options: filter_options,
+              selected_option: selected_filter_otpion,
               item_css_class: item_css_class
             )
           )

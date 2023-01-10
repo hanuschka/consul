@@ -5,11 +5,18 @@
     <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories) %>
     <%= render 'shared/loader_spinner' %>
 
-    <% if @debates.any? %>
-      <%= render(Shared::ResourcesList.new(resources: @debates, title: 'Debates', current_filter_option: current_order, filter_param: "order", filter_options: @valid_orders)) %>
-    <% else %>
-      <%# = empty_recommended_debates_message_text(current_user) %>
-    <% end %>
+      <% debates_footer_url = url_for(action: params[:current_tab_path], controller: "/pages") %>
+      <%= render(
+            Shared::ResourcesList.new(
+              resources: @debates,
+              title: 'Debates',
+              load_resources_url: debates_footer_url,
+              current_filter: @current_order,
+              filter_param: "order",
+              filters: @valid_orders,
+              no_items_text: empty_recommended_debates_message_text(current_user)
+            ))
+      %>
     <%= paginate @debates, remote: true, params: { controller: 'pages', action: 'debate_phase_footer_tab' } %>
   </div>
 

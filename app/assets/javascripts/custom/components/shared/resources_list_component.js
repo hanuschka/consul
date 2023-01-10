@@ -45,7 +45,7 @@
       var filterName = filterItem.dataset.name;
       var filterValue = filterItem.dataset.value;
       var resourcesList = filterItem.closest(".js-resources-list");
-      var resourcesUrl = resourcesList.dataset.resourcesUrl;
+      var resourcesUrl = window.location.origin + resourcesList.dataset.resourcesUrl;
       var fullPageReload = resourcesList.dataset.fullPageReload;
 
       if (!resourcesUrl) {

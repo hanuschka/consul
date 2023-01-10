@@ -3,8 +3,7 @@ class Projekts::List < ApplicationComponent
     projekts:, title: nil,
     all_projekts: nil, map_coordinates: nil,
     content_only: false, filters: nil,
-    current_filter: nil, only_content: false,
-    overview_page_mode: false, anchor: nil,
+    current_filter: nil, only_content: false, overview_page_mode: false, anchor: nil,
     load_resources_url: nil,
     hide_title: false, no_filter: false,
     full_page_reload: false
@@ -29,9 +28,10 @@ class Projekts::List < ApplicationComponent
       map_coordinates: @map_coordinates,
       wide: false,
       load_resources_url: @load_resources_url,
-      current_filter_option: current_filter_option,
+      current_filter: @current_filter,
+      filter_i18n_scope: "custom.projekts.orders",
       filter_param: "order",
-      filter_options: filter_options,
+      filters: @filters,
       only_content: @only_content,
       css_class: "js-projekts-list",
       hide_title: @hide_title,
@@ -41,27 +41,29 @@ class Projekts::List < ApplicationComponent
       full_page_reload: @full_page_reload
     ))
   end
+  #
+  # def filters
+  #   return if @filters.blank?
+  #
+  #   @filters.map do |filter|
+  #     {
+  #       value: filter,
+  #       title: t("custom.projekts.orders.#{filter}")
+  #     }
+  #   end
+  # end
 
-  def filter_options
-    return if @filters.blank?
-
-    @filters.map do |filter|
-      [
-        filter,
-        t("custom.projekts.orders.#{filter}"),
-        filter_link_path(filter)
-      ]
-    end
-  end
-
-  def current_filter_option
-    return if filter_options.blank?
-
-    filter_options.find { |filter_option| filter_option[0] == @current_filter }
-  end
+  # def current_filter_option
+  #   return if filters.blank?
+  #
+  #   filters.find { |filter_option| filter_option[:value] == @current_filter }
+  # end
 
   # def html_class(order)
   #   "is-active" if order == current_order
+  # end
+  # def filter_link_path(order)
+  #   current_path_with_query_params(order: order, anchor: @anchor)
   # end
 
   def tag_name(order)
@@ -70,10 +72,6 @@ class Projekts::List < ApplicationComponent
     else
       :span
     end
-  end
-
-  def filter_link_path(order)
-    current_path_with_query_params(order: order, anchor: @anchor)
   end
 
   def title_for(order)

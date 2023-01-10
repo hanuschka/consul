@@ -6,8 +6,9 @@ class Shared::ResourcesList < ApplicationComponent
     resources:,
     resources_name: nil,
     filter_param: nil,
-    filter_options: nil,
-    current_filter_option: nil,
+    filters: nil,
+    current_filter: nil,
+    filter_i18n_scope: nil,
     load_resources_url: nil,
     only_content: false,
     map_coordinates: nil,
@@ -24,8 +25,9 @@ class Shared::ResourcesList < ApplicationComponent
     @title = title
     @wide = wide
     @filter_param = filter_param.presence || "order"
-    @filter_options = filter_options.presence || default_filter_options
-    @current_filter_option = current_filter_option
+    @filters = filters.presence || default_filter_options
+    @current_filter = current_filter
+    @filter_i18n_scope = filter_i18n_scope
     @load_resources_url = load_resources_url
     @only_content = only_content
     @map_coordinates = map_coordinates
@@ -45,6 +47,23 @@ class Shared::ResourcesList < ApplicationComponent
     end
 
     base
+  end
+
+  def filter_options
+    return if @filters.blank?
+
+    @filters.map do |filter|
+      {
+        value: filter,
+        title: t(filter, scope: @filter_i18n_scope)
+      }
+    end
+  end
+
+  def selected_filter_otpion
+    return if filter_options.blank?
+
+    filter_options.find { |filter_option| filter_option[:value] == @current_filter }
   end
 
   def item_css_class
@@ -73,8 +92,14 @@ class Shared::ResourcesList < ApplicationComponent
 
   def default_filter_options
     [
-      ["newest", "Neueste zuerst"],
-      ["oldest", "Zuerst die alten"],
+      {
+        value: "newest",
+        title: "Neueste zuerst"
+      },
+      {
+        value: "oldest",
+        title: "Zuerst die alten"
+      }
     ]
   end
 end

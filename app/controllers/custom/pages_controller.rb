@@ -39,7 +39,7 @@ class PagesController < ApplicationController
     set_comment_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -47,7 +47,7 @@ class PagesController < ApplicationController
     set_debate_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -55,7 +55,7 @@ class PagesController < ApplicationController
     set_proposal_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -63,7 +63,7 @@ class PagesController < ApplicationController
     set_voting_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -71,7 +71,7 @@ class PagesController < ApplicationController
     set_budget_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -79,7 +79,7 @@ class PagesController < ApplicationController
     set_milestone_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -87,7 +87,7 @@ class PagesController < ApplicationController
     set_projekt_notification_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -95,7 +95,7 @@ class PagesController < ApplicationController
     set_newsfeed_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -103,7 +103,7 @@ class PagesController < ApplicationController
     set_event_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -111,7 +111,7 @@ class PagesController < ApplicationController
     set_legislation_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -119,7 +119,7 @@ class PagesController < ApplicationController
     set_question_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -127,7 +127,7 @@ class PagesController < ApplicationController
     set_argument_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -135,7 +135,7 @@ class PagesController < ApplicationController
     set_livestream_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -177,19 +177,27 @@ class PagesController < ApplicationController
   end
 
   def set_debate_phase_footer_tab_variables(projekt=nil)
-    @valid_orders = Debate.debates_orders(current_user)
-    @valid_orders.delete('relevance')
-    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : Setting["selectable_setting.debates.default_order"]
-
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.debate_phase
     params[:current_tab_path] = 'debate_phase_footer_tab'
     params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
 
-    if ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.general.set_default_sorting_to_newest').value.present? &&
-        @valid_orders.include?('created_at')
-      @current_order = 'created_at'
-    end
+    @valid_orders = Debate.debates_orders(current_user)
+    @valid_orders.delete('relevance')
+
+    default_projekt_order_is_newest = ProjektSetting.find_by(
+        projekt: @current_projekt,
+        key: 'projekt_feature.general.set_default_sorting_to_newest'
+      ).value.present?
+
+    @current_order =
+      if @valid_orders.include?(params[:order])
+        params[:order]
+      elsif default_projekt_order_is_newest
+        "created_at"
+      else
+        Setting["selectable_setting.debates.default_order"]
+      end
 
     @selected_parent_projekt = @current_projekt
 
@@ -425,7 +433,7 @@ class PagesController < ApplicationController
     @valid_filters = %w[all incoming past]
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
 
-    params[:current_tab_path] = 'event_phase_footer_tab'
+    params[:current_tab_path] = "event_phase_footer_tab"
 
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.event_phase
@@ -438,7 +446,7 @@ class PagesController < ApplicationController
     scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
     # @projekt_questions = ProjektQuestion.base_selection(scoped_projekt_ids)
 
-    params[:current_tab_path] = 'question_phase_footer_tab'
+    params[:current_tab_path] = "question_phase_footer_tab"
 
     projekt_questions = @current_projekt.questions.root_questions
 
@@ -480,7 +488,7 @@ class PagesController < ApplicationController
   end
 
   def default_phase_name(default_phase_id)
-    default_phase_id ||= ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab').value
+    default_phase_id ||= ProjektSetting.find_by(projekt: @projekt, key: "projekt_custom_feature.default_footer_tab").value
 
     if default_phase_id.present?
       projekt_phase = ProjektPhase.find(default_phase_id)
@@ -503,5 +511,13 @@ class PagesController < ApplicationController
     @resources = @current_order == "recommendations" && current_user.present? ? @resources.recommendations(current_user) : @resources.for_render
     @resources = @resources.search(@search_terms) if @search_terms.present?
     @resources = @resources.filter_by(@advanced_search_terms)
+  end
+
+  def footer_tab_partial_path
+    if Setting.new_design_enabled?
+      "pages/projekt_footer_new/footer_tab"
+    else
+      "pages/projekt_footer/footer_tab"
+    end
   end
 end

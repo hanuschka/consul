@@ -8,7 +8,7 @@
         }
       }.bind(this));
 
-      $(".dropdown-toggle").on("click", this.openDropdown.bind(this));
+      $(".js-dropdown-toggle").on("click", this.openDropdown.bind(this));
       $(".js-dropdown-item").on("click", this.selectOption.bind(this));
     },
 

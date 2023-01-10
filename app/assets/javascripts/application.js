@@ -197,6 +197,7 @@ var initialize_modules = function() {
   App.ProjektQuestionCustom.initialize();
   App.LivesubmitCheckboxCustom.initialize();
   App.OrbitInPopupFixCustom.initialize();
+
   App.CustomJS.initialize();
 
   if ($("#projekt-selector-fields").length) {

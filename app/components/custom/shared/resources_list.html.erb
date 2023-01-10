@@ -21,7 +21,7 @@
 <% if @only_content %>
   <%= body %>
 <% else %>
-  <div class="resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @load_resources_url %>">
+  <div class="resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @load_resources_url %>" data-full-page-reload="<%= @full_page_reload %>">
     <% unless @hide_title %>
       <h3 class="resources-list--title"><%= @title %></h3>
     <% end %>

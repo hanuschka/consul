@@ -13,7 +13,7 @@
         this.switchResourceViewMode.bind(this)
       );
 
-      $(document).on("click", ".js-resource-list-filter-dropdown-item",
+      $(document).on("click", ".js-resources-list .js-dropdown-item",
         this.loadResourcesWithFilter.bind(this)
       );
 
@@ -46,19 +46,21 @@
       var filterValue = filterItem.dataset.value;
       var resourcesList = filterItem.closest(".js-resources-list");
       var resourcesUrl = resourcesList.dataset.resourcesUrl;
+      var fullPageReload = resourcesList.dataset.fullPageReload;
 
       if (!resourcesUrl) {
         return;
       }
 
       var resourcesUrlObject = new URL(resourcesUrl);
-      resourcesUrlObject.searchParams.set(filterName, filterValue)
+      resourcesUrlObject.searchParams.set(filterName, filterValue);
+      var resultingUrl = resourcesUrlObject.toString();
 
-      $.get(resourcesUrlObject.toString(), function(responseData) {
-        resourcesList.querySelector(".js-resources-list--body").innerHTML = responseData;
-
-        App.Map.initialize();
-      });
+      if (fullPageReload === "true") {
+        Turbolinks.visit(resultingUrl);
+      } else {
+        $.get(resultingUrl);
+      }
     }
   };
 }).call(this);

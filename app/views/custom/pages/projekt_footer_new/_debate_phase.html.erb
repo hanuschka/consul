@@ -5,12 +5,8 @@
     <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories) %>
     <%= render 'shared/loader_spinner' %>
 
-    <%# <% unless @current_projekt.overview_page? %>
-      <%#   <%= render "shared/order_links", i18n_namespace: "debates.index" %>
-      <%# <% end %>
-
     <% if @debates.any? %>
-      <%= render(Shared::ResourcesList.new(resources: @debates, title: 'Debates', current_filter_option: current_order, filter_param: "order", filter_options: valid_orders)) %>
+      <%= render(Shared::ResourcesList.new(resources: @debates, title: 'Debates', current_filter_option: current_order, filter_param: "order", filter_options: @valid_orders)) %>
     <% else %>
       <%# = empty_recommended_debates_message_text(current_user) %>
     <% end %>

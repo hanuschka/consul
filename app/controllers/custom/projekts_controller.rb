@@ -52,7 +52,7 @@ class ProjektsController < ApplicationController
   end
 
   def list
-    render layout: false
+    render
   end
 
   def find_current_phase(default_phase_id)
@@ -320,7 +320,6 @@ class ProjektsController < ApplicationController
     @selected_tags = all_selected_tags
     @resource_name = 'projekt'
 
-    @current_order = nil
     if @current_order.present?
       @projekts = @projekts.send(@current_order)
     end

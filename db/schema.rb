@@ -180,15 +180,6 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.index ["user_id", "user_type"], name: "user_index"
   end
 
-  create_table "bam_street_polls", force: :cascade do |t|
-    t.bigint "bam_street_id"
-    t.bigint "poll_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bam_street_id"], name: "index_bam_street_polls_on_bam_street_id"
-    t.index ["poll_id"], name: "index_bam_street_polls_on_poll_id"
-  end
-
   create_table "bam_street_projekt_phases", force: :cascade do |t|
     t.bigint "bam_street_id"
     t.bigint "projekt_phase_id"
@@ -254,6 +245,7 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.integer "budget_id"
     t.integer "group_id"
     t.integer "heading_id"
+    t.integer "line_weight", default: 1
     t.index ["ballot_id", "investment_id"], name: "index_budget_ballot_lines_on_ballot_id_and_investment_id", unique: true
     t.index ["ballot_id"], name: "index_budget_ballot_lines_on_ballot_id"
     t.index ["budget_id"], name: "index_budget_ballot_lines_on_budget_id"
@@ -1475,7 +1467,6 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.boolean "show_on_home_page", default: true
     t.boolean "show_on_index_page", default: true
     t.boolean "bam_street_restricted", default: false
-    t.boolean "show_individual_stats_per_answer", default: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -2102,33 +2093,10 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.string "street_number"
     t.string "document_last_digits"
     t.string "unique_stamp"
-<<<<<<< HEAD
-=======
-    t.string "dor_first_name"
-    t.string "dor_last_name"
-    t.string "dor_street_name"
-    t.string "dor_street_number"
-    t.string "dor_plz"
-    t.string "dor_city"
-    t.string "pfo_first_name"
-    t.string "pfo_last_name"
-    t.string "pfo_street_name"
-    t.string "pfo_street_number"
-    t.string "pfo_plz"
-    t.string "pfo_city"
-    t.boolean "custom_newsletter", default: false
-    t.string "location"
-    t.integer "bam_letter_verification_code"
-    t.string "house_number"
-    t.datetime "bam_letter_verification_code_sent_at"
-    t.string "bam_unique_stamp"
-    t.bigint "bam_street_id"
-    t.string "keycloak_link"
     t.boolean "adm_email_on_new_comment", default: false
     t.boolean "adm_email_on_new_proposal", default: false
     t.boolean "adm_email_on_new_debate", default: false
     t.boolean "adm_email_on_new_deficiency_report", default: false
->>>>>>> setup_project
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -2263,8 +2231,6 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
-  add_foreign_key "bam_street_polls", "bam_streets"
-  add_foreign_key "bam_street_polls", "polls"
   add_foreign_key "bam_street_projekt_phases", "bam_streets"
   add_foreign_key "bam_street_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"

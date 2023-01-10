@@ -11,7 +11,7 @@
       <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
 
       <div class="projekts-overview-page--projekts-list">
-        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: list_projekts_url, integrated: true) %>
+        <%= render Projekts::List.new(projekts: @projekts, map_coordinates: @map_coordinates, current_filter: @current_active_projekt_filters, filters: @current_active_orders, overview_page_mode: true, hide_title: true, load_resources_url: projekts_url, full_page_reload: true) %>
       </div>
     </div>
 
@@ -86,7 +86,7 @@
       <div id='footer-content'>
         <% if (@current_phase.present? && @current_phase.phase_activated?) %>
           <%= render 'shared/loader_spinner' %>
-          <%= render "pages/projekt_footer/#{@current_phase.resources_name}" %>
+          <%= render "pages/projekt_footer_new/#{@current_phase.name}" %>
         <% end %>
       </div>
   <% end %>

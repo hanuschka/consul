@@ -7,7 +7,7 @@ class Projekts::List < ApplicationComponent
     overview_page_mode: false, anchor: nil,
     load_resources_url: nil,
     hide_title: false, no_filter: false,
-    integrated: false
+    full_page_reload: false
   )
     @projekts = projekts
     @map_coordinates = map_coordinates
@@ -19,7 +19,7 @@ class Projekts::List < ApplicationComponent
     @hide_title = hide_title
     @no_filter = no_filter
     @load_resources_url = load_resources_url
-    @integrated = integrated
+    @full_page_reload = full_page_reload
   end
 
   def call
@@ -38,7 +38,7 @@ class Projekts::List < ApplicationComponent
       filter_title: t("custom.projekts.filter.title"),
       no_filter: @no_filter,
       no_items_text: t("custom.projekts.index.no_projekts_for_current_filter"),
-      integrated: @integrated
+      full_page_reload: @full_page_reload
     ))
   end
 

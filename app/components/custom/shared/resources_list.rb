@@ -17,7 +17,7 @@ class Shared::ResourcesList < ApplicationComponent
     filter_title: nil,
     no_items_text: nil,
     no_filter: false,
-    integrated: false
+    full_page_reload: false
   )
     @resources = resources
     @resources_name = resources.first.class.name.downcase.pluralize
@@ -34,7 +34,7 @@ class Shared::ResourcesList < ApplicationComponent
     @no_items_text = no_items_text
     @filter_title = filter_title.presence || "Sortieren nach"
     @no_filter = no_filter
-    @integrated = integrated
+    @full_page_reload = full_page_reload
   end
 
   def class_names
@@ -48,9 +48,6 @@ class Shared::ResourcesList < ApplicationComponent
   end
 
   def item_css_class
-    unless @integrated
-      "js-resource-list-filter-dropdown-item"
-    end
   end
 
   def switch_view_mode_icon

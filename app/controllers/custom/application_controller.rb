@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
+  include ProjektSettingsHelper
+
   before_action :set_projekts_for_overview_page_navigation, :set_top_level_projekts_for_menu,
                 :set_default_social_media_images, :set_partner_emails
   before_action :show_launch_page, if: :show_launch_page?

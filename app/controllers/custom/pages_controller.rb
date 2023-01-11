@@ -220,20 +220,28 @@ class PagesController < ApplicationController
   end
 
   def set_proposal_phase_footer_tab_variables(projekt=nil)
-    @valid_orders = Proposal.proposals_orders(current_user)
-    @valid_orders.delete("archival_date")
-    @valid_orders.delete('relevance')
-    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : Setting["selectable_setting.proposals.default_order"]
-
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.proposal_phase
     params[:current_tab_path] = 'proposal_phase_footer_tab'
     params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
 
-    if ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.general.set_default_sorting_to_newest').value.present? &&
-        @valid_orders.include?('created_at')
-      @current_order = 'created_at'
-    end
+    @valid_orders = Proposal.proposals_orders(current_user)
+    @valid_orders.delete("archival_date")
+    @valid_orders.delete('relevance')
+
+    use_default_created_at_order = (
+      ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.general.set_default_sorting_to_newest').value.present? &&
+      @valid_orders.include?('created_at')
+    )
+
+    @current_order =
+      if @valid_orders.include?(params[:order])
+        params[:order]
+      elsif use_default_created_at_order
+        'created_at'
+      else
+        Setting["selectable_setting.proposals.default_order"]
+      end
 
     @selected_parent_projekt = @current_projekt
 
@@ -258,7 +266,9 @@ class PagesController < ApplicationController
       take_by_projekts(@scoped_projekt_ids)
     end
 
-    @proposals_coordinates = all_proposal_map_locations(@resources)
+    if projekt_feature?(@current_projekt, "proposals.show_map")
+      @proposals_coordinates = all_proposal_map_locations(@resources)
+    end
 
     @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end

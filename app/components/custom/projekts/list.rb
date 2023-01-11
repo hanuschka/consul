@@ -3,7 +3,7 @@ class Projekts::List < ApplicationComponent
     projekts:, title: nil,
     all_projekts: nil, map_coordinates: nil,
     content_only: false, filters: nil,
-    current_filter: nil, only_content: false, overview_page_mode: false, anchor: nil,
+    current_filter: nil, only_content: false, anchor: nil,
     load_resources_url: nil,
     hide_title: false, no_filter: false,
     full_page_reload: false

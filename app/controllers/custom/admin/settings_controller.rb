@@ -7,6 +7,13 @@ class Admin::SettingsController < Admin::BaseController
     @feature_settings = all_settings["feature"]
 
     @extended_feature_general = all_settings["extended_feature.general"]
+
+    if Rails.env.production?
+      @extended_feature_general = @extended_feature_general.rejekt! do |feature|
+        feature.key == "extended_feature.general.enable_old_design"
+      end
+    end
+
     @extended_feature_gdpr = all_settings["extended_feature.gdpr"]
     @extended_feature_modulewide = all_settings["extended_feature.modulewide"]
     @extended_feature_debates = all_settings["extended_feature.debates"]

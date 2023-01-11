@@ -302,6 +302,10 @@ class PagesController < ApplicationController
       take_by_projekts(@scoped_projekt_ids)
     end
 
+    # if projekt_feature?(@current_projekt, "proposals.show_map")
+    @polls_coordinates = all_proposal_map_locations(@resources)
+    # end
+
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
   end
 

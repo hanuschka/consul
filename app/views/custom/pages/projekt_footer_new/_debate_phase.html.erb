@@ -14,7 +14,7 @@
               current_filter: @current_order,
               filter_param: "order",
               filters: @valid_orders,
-              no_items_text: empty_recommended_debates_message_text(current_user)
+              no_items_text: "No debates"
             ))
       %>
     <%= paginate @debates, remote: true, params: { controller: 'pages', action: 'debate_phase_footer_tab' } %>

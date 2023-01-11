@@ -12,25 +12,15 @@
     </button>
 
     <div id="mobile_filter_body" class="mobile-filter--body" data-toggler="hide" >
-      <% if helpers.show_affiliation_filter_in_sidebar? %>
+      <%if @categories.present? && extended_feature?("modulewide.enable_categories") %>
         <div class="mobile-filter--body-section">
           <div class="mobile-filter--section-title">
             <i class="mobile-filter--section-title-icon fa fa-map" ></i>
 
-            Gebiete
+            TAGS
           </div>
-          <%= render "shared/sidebar_filter/geozone_affiliations_new", resource_name: @resource_name %>
+          <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
         </div>
-        <%if @categories.present? && extended_feature?("modulewide.enable_categories") %>
-          <div class="mobile-filter--body-section">
-            <div class="mobile-filter--section-title">
-              <i class="mobile-filter--section-title-icon fa fa-map" ></i>
-
-              TAGS
-            </div>
-            <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
-          </div>
-        <% end %>
       <% end %>
       <% if @sdgs.present? %>
         <div class="mobile-filter--body-section">

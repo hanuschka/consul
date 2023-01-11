@@ -239,7 +239,11 @@ class Setting < ApplicationRecord
     end
 
     def old_design_enabled?
-      self["extended_feature.general.enable_old_design"] == 'active'
+      if Rails.env.production?
+        true
+      else
+        self["extended_feature.general.enable_old_design"] == "active"
+      end
     end
 
     def new_design_enabled?

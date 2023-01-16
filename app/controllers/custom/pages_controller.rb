@@ -179,15 +179,16 @@ class PagesController < ApplicationController
   def set_debate_phase_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.debate_phase
-    params[:current_tab_path] = 'debate_phase_footer_tab'
+
+    params[:current_tab_path] = "debate_phase_footer_tab"
     params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
 
     @valid_orders = Debate.debates_orders(current_user)
-    @valid_orders.delete('relevance')
+    @valid_orders.delete("relevance")
 
     default_projekt_order_is_newest = ProjektSetting.find_by(
         projekt: @current_projekt,
-        key: 'projekt_feature.general.set_default_sorting_to_newest'
+        key: "projekt_feature.general.set_default_sorting_to_newest"
       ).value.present?
 
     @current_order =
@@ -222,6 +223,7 @@ class PagesController < ApplicationController
   def set_proposal_phase_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.proposal_phase
+
     params[:current_tab_path] = 'proposal_phase_footer_tab'
     params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
 

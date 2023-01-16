@@ -14,7 +14,11 @@
       </div>
     <% end %>
 
-      <% debates_footer_url = url_for(action: params[:current_tab_path], controller: "/pages") %>
+      <% if @current_projekt.overview_page? %>
+
+      <% else %>
+        <% debates_footer_url = url_for(action: params[:current_tab_path], controller: "/pages", format: :js) %>
+      <% end %>
       <%= render(
             Shared::ResourcesList.new(
               resources: @polls,

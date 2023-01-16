@@ -6,12 +6,16 @@
     <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
     <%= render 'shared/loader_spinner' %>
 
-      <% debates_footer_url = url_for(action: params[:current_tab_path], controller: "/pages") %>
+      <% if @current_projekt.overview_page? %>
+
+      <% else %>
+        <% proposal_footer_url = url_for(action: params[:current_tab_path], controller: "/pages", format: :js) %>
+      <% end %>
       <%= render(
             Shared::ResourcesList.new(
               resources: @proposals,
               title: 'Proposals',
-              load_resources_url: debates_footer_url,
+              load_resources_url: proposal_footer_url,
               map_coordinates: @proposals_coordinates,
               current_filter: @current_order,
               filter_param: "order",

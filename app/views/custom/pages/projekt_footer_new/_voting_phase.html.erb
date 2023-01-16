@@ -17,18 +17,18 @@
       <% if @current_projekt.overview_page? %>
 
       <% else %>
-        <% debates_footer_url = url_for(action: params[:current_tab_path], controller: "/pages", format: :js) %>
+        <% voting_phase_url = url_for(action: params[:current_tab_path], controller: "/pages", format: :js) %>
       <% end %>
       <%= render(
             Shared::ResourcesList.new(
               resources: @polls,
               title: 'Polls',
-              load_resources_url: debates_footer_url,
+              load_resources_url: voting_phase_url,
               map_coordinates: @polls_coordinates,
-              current_filter: @current_order,
+              current_filter: @current_filter,
               filter_param: "order",
               filters: @valid_orders,
-              no_items_text: "No proposals"
+              no_items_text: "No polls"
             ))
       %>
     <%= paginate @polls, remote: true, params: { controller: 'pages', action: 'voting_phase_footer_tab' } %>

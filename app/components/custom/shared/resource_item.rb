@@ -4,6 +4,7 @@ class Shared::ResourceItem < ApplicationComponent
   renders_one :additional_body
   renders_one :first_footer_item
   renders_one :second_footer_item
+  renders_one :image_ontop_item
 
   DATE_RANGE_FORMAT = "%d. %B %Y".freeze
   DATE_FORMAT = "%d.%m.%Y".freeze
@@ -12,7 +13,7 @@ class Shared::ResourceItem < ApplicationComponent
     resource: nil,
     projekt: nil,
     head_title: nil,
-    title:, description:, image_url:,
+    title:, description:, image_url: nil,
     author: nil, wide: false, id: nil,
     start_date: nil, end_date: nil, date: nil,
     url: nil, tags: [], sdgs: [],

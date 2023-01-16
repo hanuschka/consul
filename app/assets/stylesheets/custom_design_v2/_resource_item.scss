@@ -79,6 +79,32 @@
     }
   }
 
+  .resource-item--image-ontop-item-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    .projekt-event-item-calendar {
+      margin-left: 20px;
+      margin-top: 20px;
+      justify-content: space-between;
+      width: auto;
+      display: inline-flex;
+
+      .projekt-event-item-calendar--enddatetime {
+        margin-top: 0;
+        align-items: center;
+        display: flex;
+      }
+
+      .projekt-event-item-calendar--separator {
+        line-height: 1;
+        font-size: 60px;
+        margin-top: 6px;
+      }
+    }
+  }
+
   .resource-item--title {
     font-size: 20px;
     margin-bottom: 10px;

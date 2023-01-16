@@ -25,7 +25,8 @@ class Shared::ResourcesList < ApplicationComponent
     @title = title
     @wide = wide
     @filter_param = filter_param.presence || "order"
-    @filters = filters.presence || default_filter_options
+    # @filters = filters.presence || default_filter_options
+    @filters = filters.presence
     @current_filter = current_filter
     @filter_i18n_scope = filter_i18n_scope
     @load_resources_url = load_resources_url
@@ -87,19 +88,15 @@ class Shared::ResourcesList < ApplicationComponent
       DeficiencyReports::ListItem.new(deficiency_report: resource, wide: @wide)
     when Budget::Investment
       Budgets::Investments::ListItem.new(budget_investment: resource, wide: @wide)
+    when ProjektEvent
+      ProjektEvents::ListItem.new(projekt_event: resource, wide: @wide)
     end
   end
 
   def default_filter_options
     [
-      {
-        value: "newest",
-        title: "Neueste zuerst"
-      },
-      {
-        value: "oldest",
-        title: "Zuerst die alten"
-      }
+      "newest",
+      "oldest"
     ]
   end
 end

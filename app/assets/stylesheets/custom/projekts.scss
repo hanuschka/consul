@@ -711,12 +711,12 @@ span.projekt-backlink:before {
 
 .projekt-event-item-calendar {
   width: 70px;
-  padding-top: 5px;
   text-align: center;
   margin-right: 35px;
   border-radius: 10px;
   box-shadow: inset 0px 3px 6px #0000000F, 0px 3px 6px #00000024;
   background: transparent linear-gradient(180deg, #FFFFFF 0%, #EDEDED 100%) 0% 0% no-repeat padding-box;
+  color: black;
 }
 
 .projekt-event-item-calendar--separator {
@@ -745,6 +745,13 @@ span.projekt-backlink:before {
   }
 }
 
+.projekt-event-item-calendar-day {
+  width: 72px;
+  height: 72px;
+  padding: 5px;
+  color: black;
+}
+
 .projekt-event-item-calendar-dayname {
   color: #FF4120;
   font-weight: bold;
@@ -753,8 +760,9 @@ span.projekt-backlink:before {
 
 .projekt-event-item-calendar-daynumber {
   font-size: 38px;
-  font-weight: bold;
-  margin-top: -14px;
+  font-weight: 500;
+  margin-top: -2px;
+  line-height: 1;
 }
 
 .projekt-event-tab-title {

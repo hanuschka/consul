@@ -30,7 +30,7 @@
       <div class="resources-list--line-divider">
 
       </div>
-      <% if @load_resources_url.present? %>
+      <% if @load_resources_url.present? && filter_options.present? %>
         <div class="resources-list--sort">
           <div class="resources-list--sort-title">
             <%= @filter_title %>:

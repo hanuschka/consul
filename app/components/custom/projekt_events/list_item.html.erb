@@ -2,4 +2,13 @@
   <% c.image_ontop_item do  %>
     <%= render(ProjektEvents::ItemDayCalendarComponent.new(projekt_event: projekt_event)) %>
   <% end %>
+
+  <% c.additional_head_title_element do %>
+    <div class="projekt-event-item--weblink">
+      <%= link_to projekt_event.weblink do %>
+        <i class="fa fa-globe"></i>
+        Weblink
+      <% end %>
+    </div>
+  <% end %>
 <% end %>

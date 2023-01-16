@@ -34,9 +34,10 @@
     <div class="resource-item--head-title">
       <%= link_to @projekt&.page.title, @projekt.page.url  %>
     </div>
-  <% elsif @head_title.present? %>
+  <% elsif @head_title.present? || additional_head_title_element.present? %>
     <div class="resource-item--head-title">
       <%= @head_title %>
+      <%= additional_head_title_element %>
     </div>
   <% end %>
 
@@ -62,8 +63,10 @@
 
   <div class="resource-item--content">
 
-    <div class="resource-item--subline">
-      <%= tags %>
+    <div class="resource-item--wide-head-title">
+      <% if tags.present? %>
+        <%= tags %>
+      <% end %>
 
       <% if @projekt.present? %>
         <div class="resource-item--head-title">
@@ -86,7 +89,7 @@
       <% end %>
 
       <% if @author.present? %>
-        <div class="resource-item--author resource-item--author-in-subline">
+        <div class="resource-item--author resource-item--author-in-wide-head-title">
           <%= author_name_html %>
         </div>
       <% end %>
@@ -95,9 +98,17 @@
     <div class="resource-item--body-wrapper">
       <div class="resource-item--body">
 
-        <div class="resource-item--tags-in-body">
-          <%= tags %>
-        </div>
+        <% if @subline.present? %>
+          <div class="resource-item--subline">
+            <%= @subline %>
+          </div>
+        <% end %>
+
+        <% if tags.present? %>
+          <div class="resource-item--tags-in-body">
+            <%= tags %>
+          </div>
+        <% end %>
 
         <a href="<%= @url %>" class="resource-item--title">
           <%= @title %>
@@ -105,9 +116,9 @@
 
         <div class="resource-item--description-wrapper">
           <div class="resource-item--description">
-            <%= raw(truncate(@description, length: truncate_length)&.html_safe) %>
-            <% if @id.present? && Rails.env.development? %>
-              <%= @id %>
+            <% if @wyshwig %>
+            <% else %>
+              <%= raw(truncate(@description, length: truncate_length)&.html_safe) %>
             <% end %>
           </div>
 
@@ -130,27 +141,29 @@
         </div>
       <% end %>
 
-      <div class="resource-item--footer">
-        <% if first_footer_item.present? %>
-          <div class="resource-item--footer-section">
-            <%= first_footer_item %>
-          </div>
-        <% end %>
-
-        <% if second_footer_item.present? %>
-          <div class="resource-item--footer-section">
-            <%= second_footer_item %>
-          </div>
-        <% end %>
-
-        <% if additional_body.present? %>
-          <div class="resource-item--footer-section resource-item--additional-body-in-footer">
-            <div class="resource-item--additional-body">
-              <%= additional_body %>
+      <% if show_footer? %>
+        <div class="resource-item--footer">
+          <% if first_footer_item.present? %>
+            <div class="resource-item--footer-section">
+              <%= first_footer_item %>
             </div>
-          </div>
-        <% end %>
-      </div>
+          <% end %>
+
+          <% if second_footer_item.present? %>
+            <div class="resource-item--footer-section">
+              <%= second_footer_item %>
+            </div>
+          <% end %>
+
+          <% if additional_body.present? %>
+            <div class="resource-item--footer-section resource-item--additional-body-in-footer">
+              <div class="resource-item--additional-body">
+                <%= additional_body %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 

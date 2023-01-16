@@ -5,6 +5,7 @@ class Shared::ResourceItem < ApplicationComponent
   renders_one :first_footer_item
   renders_one :second_footer_item
   renders_one :image_ontop_item
+  renders_one :additional_head_title_element
 
   DATE_RANGE_FORMAT = "%d. %B %Y".freeze
   DATE_FORMAT = "%d.%m.%Y".freeze
@@ -14,7 +15,7 @@ class Shared::ResourceItem < ApplicationComponent
     projekt: nil,
     head_title: nil,
     title:, description:, image_url: nil,
-    author: nil, wide: false, id: nil,
+    author: nil, wide: false, id: nil, subline: nil,
     start_date: nil, end_date: nil, date: nil,
     url: nil, tags: [], sdgs: [],
     image_placeholder_icon_class: "fa-file"
@@ -28,6 +29,7 @@ class Shared::ResourceItem < ApplicationComponent
     @author = author
     @wide = wide
     @url = url
+    @subline = subline
     @start_date = start_date
     @end_date = end_date
     @date = date
@@ -77,5 +79,13 @@ class Shared::ResourceItem < ApplicationComponent
     else
       120
     end
+  end
+
+  def show_footer?
+    (
+      first_footer_item.present? ||
+      second_footer_item.present? ||
+      additional_body.present?
+    )
   end
 end

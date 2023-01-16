@@ -154,6 +154,7 @@ de:
             event_end_datetime: Endtermin
             event_location: Veranstaltungsort
             event_title: Veranstaltungstitel
+            event_summary: Zusammenfassung
             event_weblink: Weblink
             name: Veranstaltungen
             page_title: Veranstaltungen

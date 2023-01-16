@@ -8,6 +8,10 @@
   </div>
 
   <div class='small-12 medium-7'>
+    <%= f.text_field :summary, {label: t("custom.admin.projekts.edit.projekt_events_tab.event_summary"), required: true } %>
+  </div>
+
+  <div class='small-12 medium-7'>
     <%= f.text_field :location, {label: t("custom.admin.projekts.edit.projekt_events_tab.event_location") } %>
   </div>
 

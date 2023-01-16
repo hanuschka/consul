@@ -13,36 +13,12 @@
 
     <div id="mobile_filter_body" class="mobile-filter--body" data-toggler="hide" >
       <% if @projekts_filter_variables.present? %>
-        <div class="mobile-filter--body-section">
-          <div class="mobile-filter--section-title">
-            <i class="mobile-filter--section-title-icon fa fa-map" ></i>
-
-            Projekts
-          </div>
-          <%= render Sidebar::ProjektsFilterComponent.new(@projekts_filter_variables) %>
-        </div>
+        <%= render Sidebar::ProjektsFilterComponent.new(@projekts_filter_variables) %>
       <% end %>
 
-      <%if @categories.present? && extended_feature?("modulewide.enable_categories") %>
-        <div class="mobile-filter--body-section">
-          <div class="mobile-filter--section-title">
-            <i class="mobile-filter--section-title-icon fa fa-map" ></i>
-
-            TAGS
-          </div>
-          <%# <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
-        </div>
-      <% end %>
-      <% if @sdgs.present? %>
-        <div class="mobile-filter--body-section">
-          <div class="mobile-filter--section-title">
-            <i class="mobile-filter--section-title-icon fa fa-map" ></i>
-            SDGS
-          </div>
-
-          <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
-        </div>
-      <% end %>
+      <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: @resource_name, geozones: @geozones %>
+      <%= render "shared/categories", taggable: "projekt", categories: @categories, projekt_footer_mode: true %>
+      <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
     </div>
   </div>
 </div>

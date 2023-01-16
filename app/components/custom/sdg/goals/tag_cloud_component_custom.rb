@@ -1,9 +1,13 @@
-require_dependency Rails.root.join("app", "components", "sdg", "goals", "tag_cloud_component").to_s
+class SDG::Goals::TagCloudComponentCustom < ApplicationComponent
+  attr_reader :class_name
 
-class SDG::Goals::TagCloudComponent < ApplicationComponent
   def initialize(class_name, sdg_targets: [])
     @class_name = class_name
     @sdg_targets = sdg_targets
+  end
+
+  def render?
+    SDG::ProcessEnabled.new(class_name).enabled?
   end
 
   private
@@ -22,5 +26,13 @@ class SDG::Goals::TagCloudComponent < ApplicationComponent
 
       options_from_collection_for_select(@sdg_targets, :code, :code, selected_target)
     end
+  end
+
+  def heading
+    t("custom.sdg.goals.filter.heading")
+  end
+
+  def goals
+    SDG::Goal.order(:code)
   end
 end

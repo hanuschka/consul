@@ -26,50 +26,16 @@
     <div class="sidebar">
       <div class="sidebar-card">
         <div class="sidebar-card--section">
-          <h4 class="sidebar-card--header">
-            <i class="fas fa-bullhorn"></i>
-            Information
+          <h4 class="sidebar-title">
+            <i class="fas fa-bullhorn"></i>Information
           </h4>
           <%= render_custom_block 'projekt_overview_page_sidebar' %>
         </div>
       </div>
 
-      <% if show_affiliation_filter_in_sidebar? %>
-        <div class="sidebar-card">
-          <div class="sidebar-card--section">
-            <h4 class="sidebar-card--header">
-              <i class="fas fa-bullhorn"></i>
-              <%= t("custom.geozones.sidebar_filter.affiliations.title") %>
-            </h4>
-            <%= render "shared/sidebar_filter/geozone_affiliations_new", resource_name: @resource_name %>
-          </div>
-        </div>
-      <% end %>
-
-      <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
-        <div class="sidebar-card">
-          <div class="sidebar-card--section">
-            <h4 class="sidebar-card--header">
-              <i class="fas fa-bullhorn"></i>
-              Tags
-            </h4>
-            <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
-          </div>
-        </div>
-      <% end %>
-
-      <% if @sdgs.present? %>
-        <div class="sidebar-card">
-          <div class="sidebar-card--section">
-            <h4 class="sidebar-card--header">
-              <i class="fas fa-bullhorn"></i>
-              SDGS
-            </h4>
-
-            <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
-          </div>
-        </div>
-      <% end %>
+      <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: @resource_name, geozones: @geozones %>
+      <%= render "shared/categories", taggable: "projekt", categories: @categories %>
+      <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
     </div>
   </div>
 

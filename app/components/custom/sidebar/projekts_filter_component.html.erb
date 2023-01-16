@@ -5,7 +5,6 @@
     <h2 class="sidebar-title projekt-tag-chip-projekt projekt-tag-chip-icon"><%= t("custom.projekts.sidebar_filter.title") %></h2>
 
     <div id='filter-projekts-all' data-resources-name=<%= resource_name_js %> data-projekts-to-toggle=<%= projekts_to_toggle_js %>  >
-
       <%= form_with url: form_path, method: :get, local: local_form? do |f| %>
 
         <% if show_archived_projekts_in_sidebar? && @top_level_active_projekts.any? && @top_level_archived_projekts.any? %>

@@ -30,7 +30,7 @@
 
             TAGS
           </div>
-          <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
+          <%# <%= render Shared::CategoriesFilterComponent.new(categories: @categories) %>
         </div>
       <% end %>
       <% if @sdgs.present? %>
@@ -40,7 +40,7 @@
             SDGS
           </div>
 
-          <%= render SDG::Goals::TagCloudComponentNew.new("Projekt", sdg_targets: @sdg_targets) %>
+          <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
         </div>
       <% end %>
     </div>

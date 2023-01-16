@@ -126,6 +126,7 @@ body.new-custom-design {
     align-items: center;
     font-size: 15px;
     border-radius: 6px;
+    transition: background-color 0.1s ease;
 
     &.-grey {
       background: #c0cedb;
@@ -140,6 +141,11 @@ body.new-custom-design {
     &.-purple {
       background: #EAE4FB;
       color: black;
+    }
+
+    &:hover {
+      color: white;
+      background: #04406e;
     }
   }
 

@@ -3,7 +3,7 @@
 <% else %>
   <div id="<%= dom_id(projekt_event) %>" class="projekt-event-item">
     <div class="projekt-event-item-calendar-column">
-      <%= ProjektEvent::ItemDayCalendarComponent.new(projekt_event: projekt_event) %>
+      <%= render(::ProjektEvents::ItemDayCalendarComponent.new(projekt_event: projekt_event)) %>
     </div>
     <div class="projekt-event-item-values">
       <h3 class="projekt-event-item-values--title">

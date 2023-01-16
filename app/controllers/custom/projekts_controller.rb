@@ -318,8 +318,8 @@ class ProjektsController < ApplicationController
     end
 
     @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
-    @tag_cloud = tag_cloud
-    @selected_tags = all_selected_tags
+    # @tag_cloud = tag_cloud
+    # @selected_tags = all_selected_tags
     @resource_name = 'projekt'
 
     if @current_order.present?

@@ -206,18 +206,20 @@ class PagesController < ApplicationController
     set_top_level_projekts
 
     @scoped_projekt_ids = Debate.scoped_projekt_ids_for_footer(@current_projekt)
+    @resources = @resources.send("sort_by_#{@current_order}")
 
     unless params[:search].present?
       take_by_my_posts
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
+      take_by_sdgs
+      take_by_geozone_affiliations
       take_by_projekts(@scoped_projekt_ids)
+      load_generic_resource_filter_data(@resources)
+      take_by_tag_names
+      # take_by_geozone_restrictions
     end
 
-    @resource_name = 'debate'
-    @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
+    @resource_name = "debate"
+    @debates = @resources.page(params[:page])
   end
 
   def set_proposal_phase_footer_tab_variables(projekt=nil)
@@ -536,5 +538,15 @@ class PagesController < ApplicationController
     else
       "pages/projekt_footer/footer_tab"
     end
+  end
+
+  def load_generic_resource_filter_data(resources)
+    @categories = resources.map { |p| p.tags.category }.flatten.uniq.compact.sort
+
+    @geozones = Geozone.all
+    @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
+    @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
   end
 end

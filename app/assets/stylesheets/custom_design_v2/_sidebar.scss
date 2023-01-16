@@ -101,6 +101,16 @@
     max-width: 300px;
   }
 
+  // Overide old styles
+  .sidebar-divider {
+    display: none;
+  }
+
+  .sidebar-title {
+    border-top: none;
+    display: none;
+  }
+
   .geozone-affiliation-filter {
     li {
       list-style: none;

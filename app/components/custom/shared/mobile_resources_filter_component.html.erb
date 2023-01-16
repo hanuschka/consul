@@ -12,6 +12,17 @@
     </button>
 
     <div id="mobile_filter_body" class="mobile-filter--body" data-toggler="hide" >
+      <% if @projekts_filter_variables.present? %>
+        <div class="mobile-filter--body-section">
+          <div class="mobile-filter--section-title">
+            <i class="mobile-filter--section-title-icon fa fa-map" ></i>
+
+            Projekts
+          </div>
+          <%= render Sidebar::ProjektsFilterComponent.new(@projekts_filter_variables) %>
+        </div>
+      <% end %>
+
       <%if @categories.present? && extended_feature?("modulewide.enable_categories") %>
         <div class="mobile-filter--body-section">
           <div class="mobile-filter--section-title">

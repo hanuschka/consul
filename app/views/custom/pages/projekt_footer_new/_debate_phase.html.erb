@@ -2,7 +2,19 @@
 
 <div class="layout-main-column">
   <div class="layout-left-column">
-    <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
+    <%= render Shared::MobileResourcesFilterComponent.new(
+      sdgs: @sdgs,
+      categories: @categories,
+      resource_name: @resource_name,
+      projekts_filter_variables: {
+        top_level_active_projekts: @top_level_active_projekts,
+        top_level_archived_projekts: @top_level_archived_projekts,
+        scoped_projekt_ids: @scoped_projekt_ids,
+        all_resources: @all_resources,
+        current_tab_phase: @current_tab_phase,
+        current_projekt: @current_projekt
+      }
+    ) %>
     <%= render 'shared/loader_spinner' %>
 
       <% if @current_projekt.overview_page? %>

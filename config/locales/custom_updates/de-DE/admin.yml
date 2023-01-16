@@ -153,6 +153,7 @@ de:
             event_datetime: Datum
             event_end_datetime: Endtermin
             event_location: Veranstaltungsort
+            event_image: Bild
             event_title: Veranstaltungstitel
             event_summary: Zusammenfassung
             event_weblink: Weblink

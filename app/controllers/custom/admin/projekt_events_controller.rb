@@ -1,4 +1,6 @@
 class Admin::ProjektEventsController < Admin::BaseController
+  include ImageAttributes
+
   before_action :set_projekt
 
   def create
@@ -41,7 +43,11 @@ class Admin::ProjektEventsController < Admin::BaseController
     def projekt_event_params
       params
         .require(:projekt_event)
-        .permit(:title, :summary, :description, :location, :datetime, :end_datetime, :weblink)
+        .permit(
+          :title, :summary, :description, :location,
+          :datetime, :end_datetime, :weblink,
+          image_attributes: image_attributes
+        )
     end
 
     def set_projekt

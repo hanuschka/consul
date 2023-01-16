@@ -83,10 +83,11 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    z-index: 100;
 
     .projekt-event-item-calendar {
-      margin-left: 20px;
-      margin-top: 20px;
+      margin-left: 17px;
+      margin-top: 17px;
       justify-content: space-between;
       width: auto;
       display: inline-flex;

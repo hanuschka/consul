@@ -21,7 +21,7 @@ class ProjektEvents::ListItem < ApplicationComponent
       # end_date: projekt_event.total_duration_end,
       wide: @wide,
       # url: helpers.projekt_events_path(projekt_event),
-      # image_url: projekt_event.image&.variant(:medium),
+      image_url: projekt_event.image&.variant(:medium),
       date: projekt_event.created_at,
       # author: projekt_event.author,
       image_placeholder_icon_class: "fa-calendar-alt",

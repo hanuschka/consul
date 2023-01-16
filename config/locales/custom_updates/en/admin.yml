@@ -135,6 +135,7 @@ en:
             button: Save event
             event_created_at: Created at
             event_datetime: Start date
+            event_image: Image
             event_enddatetime: End date
             event_location: Location
             event_title: Title

@@ -54,17 +54,21 @@
   </div>
 
   <div class="sidebar">
+    <%= render Shared::NewButtonComponent.new(projekt_phase: @current_tab_phase) %>
+
     <% unless @current_projekt.overview_page? %>
-      <aside class="margin-bottom">
-        <%= render Sidebar::ProjektsFilterComponent.new(
-          top_level_active_projekts: @top_level_active_projekts,
-          top_level_archived_projekts: @top_level_archived_projekts,
-          scoped_projekt_ids: @scoped_projekt_ids,
-          all_resources: @all_resources,
-          current_tab_phase: @current_tab_phase,
-          current_projekt: @current_projekt
-        ) %>
-      </aside>
+      <%= render Sidebar::ProjektsFilterComponent.new(
+        top_level_active_projekts: @top_level_active_projekts,
+        top_level_archived_projekts: @top_level_archived_projekts,
+        scoped_projekt_ids: @scoped_projekt_ids,
+        all_resources: @all_resources,
+        current_tab_phase: @current_tab_phase,
+        current_projekt: @current_projekt
+      ) %>
     <% end %>
+
+    <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: @resource_name, geozones: @geozones %>
+    <%= render "shared/categories", taggable: "projekt", categories: @categories, projekt_footer_mode: true %>
+    <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
   </div>
 </div>

@@ -159,7 +159,6 @@ class PagesController < ApplicationController
 
   def set_top_level_projekts
     @top_level_active_projekts = Projekt.where( id: @current_projekt.top_parent ).current
-
     @top_level_archived_projekts = Projekt.where( id: @current_projekt.top_parent ).expired
   end
 
@@ -213,9 +212,9 @@ class PagesController < ApplicationController
       take_by_sdgs
       take_by_geozone_affiliations
       take_by_projekts(@scoped_projekt_ids)
+      take_by_geozone_restrictions
       load_generic_resource_filter_data(@resources)
       take_by_tag_names
-      # take_by_geozone_restrictions
     end
 
     @resource_name = "debate"
@@ -261,13 +260,16 @@ class PagesController < ApplicationController
 
     @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_footer(@current_projekt)
 
+    @resource_name = "proposal"
+
     unless params[:search].present?
       take_by_my_posts
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
+      take_by_sdgs
+      take_by_geozone_affiliations
+      take_by_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
+      load_generic_resource_filter_data(@resources)
+      take_by_tag_names
     end
 
     if projekt_feature?(@current_projekt, "proposals.show_map")
@@ -298,12 +300,15 @@ class PagesController < ApplicationController
 
     @scoped_projekt_ids = Poll.scoped_projekt_ids_for_footer(@current_projekt)
 
+    @resource_name = "poll"
+
     unless params[:search].present?
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_polls_geozone_restrictions
+      take_by_sdgs
+      take_by_geozone_affiliations
+      take_by_polls_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
+      load_generic_resource_filter_data(@resources)
+      take_by_tag_names
     end
 
     # if projekt_feature?(@current_projekt, "proposals.show_map")

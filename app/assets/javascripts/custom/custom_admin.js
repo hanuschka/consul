@@ -24,9 +24,9 @@
 
     toggleRatingScaleLabels: function(newVotationTypeName) {
       if ( newVotationTypeName == 'rating_scale' ) {
-        $('#rating-scale-labels').removeClass('hide')
+        $('.rating-scale-labels').removeClass('hide')
       } else {
-        $('#rating-scale-labels').addClass('hide')
+        $('.rating-scale-labels').addClass('hide')
       }
     },
 

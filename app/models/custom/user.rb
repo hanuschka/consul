@@ -18,7 +18,8 @@ class User < ApplicationRecord
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
-  belongs_to :bam_street
+  belongs_to :city_street
+
   scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) }
   scope :projekt_managers, -> { joins(:projekt_manager) }
 

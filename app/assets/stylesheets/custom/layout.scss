@@ -36,7 +36,9 @@ main {
 
 .top-bar .top-bar-title a img {
   max-width: 300px;
-  height: auto;
+  height: 44px !important;
+  margin-left: 26px;
+  margin-right: 26px;
 }
 
 .top-bar-title {

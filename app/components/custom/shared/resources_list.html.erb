@@ -23,7 +23,13 @@
 <% else %>
   <div class="resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @load_resources_url %>" data-full-page-reload="<%= @full_page_reload %>">
     <% unless @hide_title %>
-      <h3 class="resources-list--title"><%= @title %></h3>
+      <h3 class="resources-list--title">
+        <% if @title_link.present?  %>
+          <%= link_to(@title, @title_link) %>
+        <% else %>
+          <%= @title %>
+        <% end %>
+      </h3>
     <% end %>
 
     <div class="resources-list--navigation">

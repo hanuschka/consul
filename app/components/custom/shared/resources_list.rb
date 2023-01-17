@@ -3,6 +3,7 @@ class Shared::ResourcesList < ApplicationComponent
 
   def initialize(
     title:,
+    title_link: nil,
     resources:,
     resources_name: nil,
     filter_param: nil,
@@ -23,6 +24,7 @@ class Shared::ResourcesList < ApplicationComponent
     @resources = resources
     @resources_name = resources.first.class.name.downcase.pluralize
     @title = title
+    @title_link = title_link
     @wide = wide
     @filter_param = filter_param.presence || "order"
     # @filters = filters.presence || default_filter_options

@@ -11,6 +11,15 @@
     // font-size: 30px;
     font-size: 28px;
     margin-bottom: 0;
+
+    a {
+      color: black;
+
+      &:hover {
+        color: black;
+        text-decoration: none;
+      }
+    }
   }
 
   .resources-list--navigation {

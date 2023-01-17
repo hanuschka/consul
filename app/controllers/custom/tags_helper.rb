@@ -25,7 +25,7 @@ module TagsHelper
   def projekt_footer_filter_path(tag_name)
     updated_params = prepare_tag_filter_params(tag_name)
 
-    if params[:current_tab_path]
+    if params[:current_tab_path] && !@current_projekt&.overview_page?
       url_for(action: params[:current_tab_path], controller: "pages", **updated_params, format: :js)
     else
       url_for(action: "index", controller: controller_name, **updated_params, format: :js)

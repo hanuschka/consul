@@ -342,7 +342,10 @@ class ProjektsController < ApplicationController
 
     if @overview_page_special_projekt.proposal_phase.phase_activated?
       proposals = Proposal.where(projekt_id: @overview_page_special_projekt.id)
-      @map_coordinates = @map_coordinates + all_proposal_map_locations(proposals)
+
+      if params[:proposal_locations] == "true"
+        @map_coordinates = @map_coordinates + all_proposal_map_locations(proposals)
+      end
     end
   end
 end

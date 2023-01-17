@@ -1,44 +1,20 @@
 class Projekts::List < ApplicationComponent
   def initialize(
-    projekts:, title: nil,
-    all_projekts: nil, map_coordinates: nil,
-    content_only: false, filters: nil,
-    current_filter: nil, only_content: false, anchor: nil,
-    load_resources_url: nil,
-    hide_title: false, no_filter: false,
-    full_page_reload: false
+    projekts:, **attributes
   )
     @projekts = projekts
-    @map_coordinates = map_coordinates
-    @current_filter = current_filter
-    @filters = filters
-    @only_content = only_content
-    @anchor = anchor
-    @title = title.presence || t("custom.projekts.projekt_list.title")
-    @hide_title = hide_title
-    @no_filter = no_filter
-    @load_resources_url = load_resources_url
-    @full_page_reload = full_page_reload
+    @attributes = attributes
   end
 
   def call
     render(Shared::ResourcesList.new(
       resources: @projekts,
-      title: @title,
-      map_coordinates: @map_coordinates,
-      wide: false,
-      load_resources_url: @load_resources_url,
-      current_filter: @current_filter,
+      title: t("custom.projekts.projekt_list.title"),
       filter_i18n_scope: "custom.projekts.orders",
-      filter_param: "order",
-      filters: @filters,
-      only_content: @only_content,
       css_class: "js-projekts-list",
-      hide_title: @hide_title,
       filter_title: t("custom.projekts.filter.title"),
-      no_filter: @no_filter,
       no_items_text: t("custom.projekts.index.no_projekts_for_current_filter"),
-      full_page_reload: @full_page_reload
+      **@attributes
     ))
   end
   #

@@ -2,7 +2,7 @@ require_dependency Rails.root.join("app", "models", "officing", "residence").to_
 
 class Officing::Residence
 
-  attr_accessor :first_name, :last_name, :bam_unique_stamp
+  attr_accessor :first_name, :last_name, :unique_stamp
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -12,10 +12,15 @@ class Officing::Residence
   def save
     return false unless valid?
 
-    bam_unique_stamp = ::Calculations::User.bam_unique_stamp(first_name, last_name, date_of_birth.year, date_of_birth.month, date_of_birth.day, postal_code)
+    unique_stamp = User.new(
+      first_name: first_name,
+      last_name: last_name,
+      date_of_birth: date_of_birth.in_time_zone.to_datetime,
+      plz: postal_code
+    ).prepare_unique_stamp
 
-    if User.find_by(bam_unique_stamp: bam_unique_stamp).present?
-      self.user = User.find_by(bam_unique_stamp: bam_unique_stamp)
+    if User.find_by(unique_stamp: unique_stamp).present?
+      self.user = User.find_by(unique_stamp: unique_stamp)
       user.update!(verified_at: Time.current)
     else
       user_params = {
@@ -31,7 +36,7 @@ class Officing::Residence
         password:              random_password,
         terms_of_service:      "1",
         email:                 nil,
-        bam_unique_stamp:      bam_unique_stamp
+        unique_stamp:          unique_stamp
       }
       self.user = User.create!(user_params)
     end
@@ -55,6 +60,7 @@ class Officing::Residence
 
   def local_residence
     return if errors.any?
+
     true
   end
 end

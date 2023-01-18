@@ -7,9 +7,9 @@ class User < ApplicationRecord
          authentication_keys: [:login]
 
   before_validation :strip_whitespace
+
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
-  around_update :reset_verification_status
-  before_create { self.geozone = geozone_with_plz }
+  around_update :reset_verification_status #cli
   after_create :take_votes_from_erased_user
   after_save :update_qualified_votes_count_for_budget_investments
 
@@ -20,7 +20,7 @@ class User < ApplicationRecord
   has_one :projekt_manager
   belongs_to :city_street
 
-  scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) }
+  scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) } #cli
   scope :projekt_managers, -> { joins(:projekt_manager) }
 
   validates :first_name, presence: true, on: :create, if: :first_name_required?
@@ -52,7 +52,7 @@ class User < ApplicationRecord
 
     if erased_user.present?
       take_votes_from(erased_user)
-      erased_user.update!(unique_stamp: nil)
+      erased_user.update!(unique_stamp: nil, document_number: nil, document_type: nil) # modified for cli
     end
   end
 
@@ -83,22 +83,6 @@ class User < ApplicationRecord
     self.email_on_direct_message = false
   end
 
-  def full_name
-    "#{first_name} #{last_name}"
-  end
-
-  def citizen?
-    location == "citizen"
-  end
-
-  def username
-    full_name
-  end
-
-  def username_required?
-    false
-  end
-
   def deficiency_report_votes(deficiency_reports)
     voted = votes.for_deficiency_reports(Array(deficiency_reports).map(&:id))
     voted.each_with_object({}) { |v, h| h[v.votable_id] = v.value }
@@ -108,62 +92,52 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
-  def take_votes_if_erased_exists(bam_unique_stamp)
-    erased_user = User.erased.find_by(bam_unique_stamp: bam_unique_stamp)
-
-    if erased_user.present?
-      take_votes_from(erased_user)
-      erased_user.update!(bam_unique_stamp: nil, document_number: nil, document_type: nil)
-    end
-  end
-
-  def reset_verification_status
-    if (first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?) &&
-        verified_at.present? &&
-        bam_unique_stamp.present?
-      update_columns(verified_at: nil, bam_unique_stamp: nil)
-    end
-
-    yield
-  end
-
   def projekt_manager?
     projekt_manager.present?
   end
 
   def first_name_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def last_name_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def street_name_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def street_number_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def plz_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def city_name_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def date_of_birth_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def gender_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
   def document_required?
+    return false #cli line
     !organization? && !erased? && Setting["extra_fields.registration.check_documents"]
   end
 
@@ -182,6 +156,36 @@ class User < ApplicationRecord
   def verified?
     !unverified?
   end
+
+
+  # cli_methods
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def citizen?
+    location == "citizen"
+  end
+
+  def username
+    full_name
+  end
+
+  def username_required?
+    false
+  end
+
+  def reset_verification_status
+    if (first_name_changed? || last_name_changed? || date_of_birth_changed? || plz_changed?) &&
+        verified_at.present? &&
+        unique_stamp.present?
+      update_columns(verified_at: nil, unique_stamp: nil)
+    end
+
+    yield
+  end
+
 
   private
 

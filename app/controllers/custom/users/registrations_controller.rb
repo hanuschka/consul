@@ -55,7 +55,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update_details
     @user = current_user
-    @user.update(update_user_details_params)
+    @user.update!(update_user_details_params)
 
     @user.errors.add :first_name, :blank if update_user_details_params[:first_name].blank?
     @user.errors.add :last_name, :blank if update_user_details_params[:last_name].blank?
@@ -66,26 +66,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if @user.citizen?
 
-      if update_user_details_params[:bam_street_id].blank?
-        @user.errors.add :bam_street_id, :blank
+      if update_user_details_params[:city_street_id].blank?
+        @user.errors.add :city_street_id, :blank
       else
-        @user.update(plz: @user.bam_street.plz)
+        @user.update(plz: @user.city_street.plz)
       end
 
       @user.errors.add :document_type, :blank if update_user_details_params[:document_type].blank?
       @user.errors.add :document_number, :blank if params[:user][:document_number].blank?
       @user.errors.add :document_number, :length unless params[:user][:document_number].length == 4
 
-      bam_unique_stamp = ::Calculations::User.bam_unique_stamp(
-        update_user_details_params[:first_name],
-        update_user_details_params[:last_name],
-        update_user_details_params['date_of_birth(1i)'],
-        update_user_details_params['date_of_birth(2i)'],
-        update_user_details_params['date_of_birth(3i)'],
-        @user.bam_street.plz.to_s
-      )
-      user_with_this_stamp = User.active.find_by(bam_unique_stamp: bam_unique_stamp)
-      @user.errors.add(:first_name, :uniqueness_check) if bam_unique_stamp.nil? || (user_with_this_stamp.present? && user_with_this_stamp != @user)
+      @user.errors.add(:first_name, :uniqueness_check) unless @user.stamp_unique?
     else
       @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
       @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/
@@ -96,15 +87,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if @user.errors.any?
       render :user_details
-    elsif @user.citizen? && @user.update(update_user_details_params)
+    elsif @user.citizen?
       Verifications::CreateXML.create_verification_request(current_user.id, params[:user][:document_number])
       redirect_to complete_user_registration_path
-    elsif @user.update(update_user_details_params)
-      current_user.update( bam_letter_verification_code: rand(11111111..99999999) ) unless current_user.bam_letter_verification_code.present?
+    else
+      @user.update(bam_letter_verification_code: rand(11111111..99999999)) unless @user.bam_letter_verification_code.present?
       Verifications::CreateXML.create_verification_letter(current_user)
       redirect_to complete_user_registration_code_path
-    else
-      render :user_details
     end
   end
   
@@ -140,6 +129,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_user_details_params
-    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :street_name, :house_number, :city_name, :bam_street_id)
+    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :street_name, :house_number, :city_name, :city_street_id)
   end
 end

@@ -15,10 +15,9 @@ module Verifications
       if result == "true"
         geozone = Geozone.find_by(external_code: user.plz)
         document_number = (user.document_type == 'card') ? "ABCD_#{user.id}" : "DCBA_#{user.id}"
-        bam_unique_stamp = ::Calculations::User.bam_unique_stamp(user.first_name, user.last_name, user.date_of_birth.year, user.date_of_birth.month, user.date_of_birth.day, user.plz)
-        user.update(verified_at: Time.now, geozone: geozone, document_number: document_number, bam_unique_stamp: bam_unique_stamp)
+        user.update(verified_at: Time.now, geozone: geozone, document_number: document_number, unique_stamp: user.prepare_unique_stamp)
         Mailer.residence_confirmed(user).deliver_later
-        user.take_votes_if_erased_exists(bam_unique_stamp)
+        user.take_votes_from_erased_user
       elsif result == 'false'
         errors = []
         errors.push("Vorname") if doc.at_xpath('request').at_xpath('vorname').text == 'false'

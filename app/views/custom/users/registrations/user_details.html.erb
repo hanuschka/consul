@@ -35,7 +35,7 @@
     </div>
     <div class="row">
       <div class="small-12 column">
-        <%= f.select :bam_street_id, BamStreet.all.map{ |str| [str.name, str.id]  }, { prompt: t('helpers.select.prompt') } %>
+        <%= f.select :city_street_id, CityStreet.all.map{ |str| [str.name, str.id]  }, { prompt: t('helpers.select.prompt') } %>
       </div>
     </div>
   <% else %>

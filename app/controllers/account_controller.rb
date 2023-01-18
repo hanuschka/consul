@@ -28,7 +28,7 @@ class AccountController < ApplicationController
                    else
                      [:username, :public_activity, :public_interests, :email_on_comment,
                       :email_on_comment_reply, :email_on_direct_message, :email_digest, :newsletter,
-                      :official_position_badge, :recommended_debates, :recommended_proposals, :bam_street_id]
+                      :official_position_badge, :recommended_debates, :recommended_proposals, :city_street_id]
                    end
       params.require(:account).permit(*attributes)
     end

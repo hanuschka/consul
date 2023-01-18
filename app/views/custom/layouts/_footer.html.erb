@@ -107,7 +107,7 @@
   <% end %>
 </footer>
 
-<% show_bam_modal = current_user.present? && !current_user.bam_street.present? && current_user.citizen? && !devise_controller? %>
+<% show_bam_modal = true %>
 
 <div class="reveal" id="selectBamStreetModal" data-reveal data-show-modal=<%= show_bam_modal %>>
   <p><i>Liebe Bürger:innen,</i></p>

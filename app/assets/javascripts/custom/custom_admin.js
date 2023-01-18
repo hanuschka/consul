@@ -32,7 +32,7 @@
 
     // Street selector: start
     selectStreet: function(streetId, streetName) {
-      var checkboxId = "projekt_phase_bam_street_ids_" + streetId
+      var checkboxId = "projekt_phase_city_street_ids_" + streetId
       $('#' + checkboxId).prop( "checked", true );
 
       var streetPill = "<div class='selected-street' data-street-id=" + streetId + ">" + streetName  + "<i class='fas fa-times js-deselect-street'></i></div>"
@@ -41,7 +41,7 @@
     },
 
     deselectStreet: function(streetId, $streetPill) {
-      var checkboxId = "projekt_phase_bam_street_ids_" + streetId
+      var checkboxId = "projekt_phase_city_street_ids_" + streetId
       $('#' + checkboxId).prop( "checked", false);
       $streetPill.remove();
     },
@@ -65,7 +65,7 @@
         var $streetPill = $(this).closest('.selected-street');
         var streetId = $streetPill.data('street-id');
         App.CustomAdmin.deselectStreet(streetId, $streetPill);
-			})
+      })
 
       $("body").on("click", ".js-map-layer-base-checkbox", function() {
         var $base_checkbox = $(this)

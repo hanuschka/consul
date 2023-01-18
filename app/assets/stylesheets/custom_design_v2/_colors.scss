@@ -1,11 +1,3 @@
-$brand:                                           #004a83 !default;
-$brand-secondary:                                 #002d50 !default;
+$brand:                                           #003a71 !default;
 $secondary:                                       lighten($brand, 70%);
-$accent:                                          lighten($brand, 50%);
 $dark:                                            darken($brand, 10%);
-
-
-// Menu variables
-
-$dark:                                            #222;
-$white:                                           #fff;

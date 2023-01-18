@@ -37,7 +37,7 @@
       width: 8px;
       height: 8px;
       top: 7px;
-      background: #003A71;
+      background: $brand;
       border-radius: 50%;
     }
 
@@ -69,10 +69,10 @@
     top: 0;
     right: 0;
     padding: 0 60px;
-    color: #003A71;
+    color: $brand;
 
     h1 {
-      color: #003A71;
+      color: $brand;
     }
   }
 
@@ -137,6 +137,10 @@
       border: 1px solid #CFCECE;
       border-radius: 5px 5px 0px 0px;
       margin-right: 10px;
+
+      @media (max-width: $mobile-viewport-start) {
+        margin-right: 0;
+      }
 
       &.is-active {
         background: #E1EDF7;

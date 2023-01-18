@@ -59,4 +59,21 @@ module CustomHelper
       comment_flags: @comment_flags
     }
   end
+
+  def topbar_image_path
+    image_name =
+      if Setting.enabled?("extended_feature.general.use_white_top_navigation_text")
+        "logo_header_white_new.png"
+      else
+        "logo_header_new.png"
+      end
+
+    image = SiteCustomization::Image.image_for(image_name)
+
+    if image
+      polymorphic_path(image)
+    else
+      image_name
+    end
+  end
 end

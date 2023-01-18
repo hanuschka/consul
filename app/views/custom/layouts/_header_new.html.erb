@@ -1,6 +1,6 @@
 <% launch_page ||= false %>
 
-<%header_large = Widget::Card.header.find_by title: "header_large" %>
+<% header_large = Widget::Card.header.find_by title: "header_large" %>
 <style>
 <% if header_large %>
   .top-bar-background-wrapper {
@@ -15,7 +15,7 @@
 <header>
   <div class="js-stiky-header top-bar-wrapper">
     <div class="top-bar-background-wrapper">
-      <div class="top-bar">
+      <div class="top-bar" data-white-text="<%= Setting.enabled?('extended_feature.general.use_white_top_navigation_text') %>">
         <span data-responsive-toggle="responsive-menu"
               data-hide-for="medium"
               class="hamburger-menu header--mobile-hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll"
@@ -29,8 +29,8 @@
 
         <div class="top-bar--title">
           <%= link_to root_path do %>
-            <%= image_tag(image_path_for("logo_header_new.png"), alt: setting["org_name"], class: 'top-bar--title-logo-top') %>
-            <%= image_tag(image_path_for("logo_header_new_sticky.png"), alt: setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
+            <%= image_tag(topbar_image_path, alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
+            <%= image_tag(image_path_for("logo_header_new.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
           <% end %>
         </div>
 

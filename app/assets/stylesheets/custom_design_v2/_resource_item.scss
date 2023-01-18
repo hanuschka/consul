@@ -398,7 +398,7 @@
   .resource-item--head-title  {
     height: 45px;
     padding: 0 25px;
-    background: #003A71;
+    background: $brand;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -568,7 +568,7 @@
 
         .resource-item--wide-head-title {
           height: 45px;
-          background: #003A71;
+          background: $brand;
           color: white;
           padding: 5px 27px;
           display: flex;

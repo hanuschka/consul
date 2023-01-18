@@ -34,3 +34,5 @@ de:
         general:
           enable_old_design: Altes Design verwenden
           enable_old_design_description: Verwenden Sie das alte Design, in dem Sie die Einstellungen hier ändern
+          use_white_top_navigation_text: Weiße Schrift in Top-Navigation aktivieren
+          use_white_top_navigation_text_description:

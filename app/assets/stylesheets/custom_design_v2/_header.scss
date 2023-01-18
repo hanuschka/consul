@@ -124,7 +124,7 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
 
   .header--navigation ul.main-menu li.nav-element a,
   .header--navigation ul.main-menu .projekt-name {
-    color: white !important;
+    // color: white !important;
   }
 
   .header--navigation ul.main-menu .nav-flyout-block .projekt-name {
@@ -136,19 +136,18 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   }
 
   .main-navigation-item--account--image-wrapper {
-    background: white !important;
-    color: black !important;
+    background: black !important;
+    color: white !important;
   }
 
   .locale .locale-form select {
-    background: white !important;
-    color: black !important;
-    // transition: all 200ms ease;
+    background: black !important;
+    color: white !important;
   }
 
   .locale .locale-form {
     &:after {
-      color: black !important;
+      color: white !important;
     }
   }
 
@@ -156,6 +155,33 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     height: 150px;
 
     // transition: all 200ms ease;
+  }
+
+  .top-bar {
+    // height: 150px;
+    display: flex;
+    align-items: center;
+    padding-top: 18px;
+    justify-content: flex-start !important;
+    background: transparent !important;
+
+  }
+
+  .top-bar[data-white-text="true"], .sticky-header .top-bar  {
+    .header--navigation ul.main-menu li.nav-element a,
+    .header--navigation ul.main-menu .projekt-name {
+      color: white;
+    }
+
+    .locale .locale-form select {
+      background: white !important;
+      color: black !important;
+    }
+
+    .main-navigation-item--account--image-wrapper {
+      background: white !important;
+      color: black !important;
+    }
   }
 
   .sticky-header {
@@ -166,43 +192,41 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     background: white;
     z-index: 1000;
 
-    .top-bar {
-      // height: 100px;
-    }
-
     .top-bar-background-wrapper {
       background: transparent !important;
       height: 100px;
     }
 
-    .top-bar--title-logo-top {
-      display: none;
+    .top-bar {
+      .top-bar--title-logo-top {
+        display: none;
+      }
+
+      .top-bar--title-logo-stikcy {
+        display: block;
+      }
+
+      .header--navigation ul.main-menu li.nav-element a,
+      .header--navigation ul.main-menu .projekt-name {
+        color: black !important;
+      }
+
+      .main-navigation-item--account--image-wrapper {
+        background: black !important;
+        color: white !important;
+      }
+
+      .locale .locale-form select {
+        background: black !important;
+        color: white !important;
+      }
+
+      .locale .locale-form {
+        &:after {
+          color: white !important;
+        }
+      }
     }
-
-    .top-bar--title-logo-stikcy {
-      display: block;
-    }
-
-     .header--navigation ul.main-menu li.nav-element a,
-     .header--navigation ul.main-menu .projekt-name {
-       color: black !important;
-     }
-
-     .main-navigation-item--account--image-wrapper {
-       background: black !important;
-       color: white !important;
-     }
-
-     .locale .locale-form select {
-       background: black !important;
-       color: white !important;
-     }
-
-     .locale .locale-form {
-       &:after {
-         color: white !important;
-       }
-     }
   }
 
   li#notifications {
@@ -253,16 +277,6 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
   .header--navigation a {
     padding-top: 0;
     padding-bottom: 0;
-  }
-
-
-  .top-bar {
-    // height: 150px;
-    display: flex;
-    align-items: center;
-    padding-top: 18px;
-    justify-content: flex-start !important;
-    background: transparent !important;
   }
 
   .top-bar--title {

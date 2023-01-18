@@ -309,4 +309,19 @@
       }
     }
   }
+
+  .projekt-footer {
+    .row {
+      max-width: initial;
+    }
+
+    .column {
+      padding: 0;
+    }
+
+    .comments {
+      width: 75%;
+      margin: 0;
+    }
+  }
 }

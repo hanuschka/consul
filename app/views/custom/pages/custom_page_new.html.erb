@@ -62,7 +62,7 @@
 
   <% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, 'general.show_projekt_footer') %>
     <% projekt_footer = capture do %>
-      <div class="layout-main-column">
+      <div class="projekt-footer layout-main-column">
         <div class="layout-full-width-column">
           <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_phase_name) %>
           <div class="js-projekt-footer-content">

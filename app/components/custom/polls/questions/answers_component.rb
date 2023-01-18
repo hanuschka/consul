@@ -60,7 +60,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def should_show_answer_weight?
-    question.votation_type.multiple_with_weight? &&
+    question.votation_type&.multiple_with_weight? &&
       question.max_votes.present?
   end
 
@@ -74,6 +74,6 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
 
   def disable_answer?(question_answer)
     (question.multiple? && user_answers.count == question.max_votes) ||
-      (question.votation_type.multiple_with_weight? && available_vote_weight(question_answer) == 0)
+      (question.votation_type&.multiple_with_weight? && available_vote_weight(question_answer) == 0)
   end
 end

@@ -55,6 +55,17 @@
         margin-right: 10px;
       }
     }
+
+    @media (max-width: $mobile-viewport-start) {
+      margin: auto;
+
+      .sidebar {
+        display: block !important;
+        min-width: unset;
+        max-width: 420px;
+        margin: auto;
+      }
+    }
   }
 
   .custom-page--banner {
@@ -140,6 +151,7 @@
 
       @media (max-width: $mobile-viewport-start) {
         margin-right: 0;
+        min-width: unset;
       }
 
       &.is-active {
@@ -310,16 +322,11 @@
     }
   }
 
-  .mobile-projekt-tabs-content {
-    .sidebar {
-      display: block !important;
-      margin: auto;
-      min-width: 300px;
-      max-width: 420px;
-    }
-  }
-
   .projekt-footer {
+    .key-dates {
+      margin: 0;
+    }
+
     .row {
       max-width: initial;
     }
@@ -331,6 +338,10 @@
     .comments {
       width: 75%;
       margin: 0;
+
+      @media (max-width: $mobile-viewport-start) {
+        width: 100%;
+      }
     }
   }
 }

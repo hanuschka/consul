@@ -112,8 +112,10 @@
           </div>
           <div class="tabs-panel" id="projekt-mobile-sidebar-content-tab">
             <% if @custom_page.projekt.present? %>
-              <div class="projekt-sidebar margin-bottom">
-                <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "mobile" } %>
+              <div class="layout-main-column">
+                <div class="projekt-sidebar margin-bottom">
+                  <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "mobile" } %>
+                </div>
               </div>
             <% end %>
           </div>

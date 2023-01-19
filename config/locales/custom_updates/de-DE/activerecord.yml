@@ -106,7 +106,7 @@ de:
         bam_street_id: Straße
         first_name: Vorname
         last_name: Nachname
-        street_name: Straße
+        city_street_id: Straße
         street_number: Hausnummer
         plz: Postleitzahl
         city_name: Stadt

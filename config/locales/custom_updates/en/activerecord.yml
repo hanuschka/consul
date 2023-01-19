@@ -73,7 +73,7 @@ en:
         bam_street_id: Street
         first_name: First name
         last_name: Last name
-        street_name: Street
+        city_street_id: Street
         street_number: Street number
         plz: Postal code
         city_name: City

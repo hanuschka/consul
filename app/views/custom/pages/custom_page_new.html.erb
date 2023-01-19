@@ -52,12 +52,6 @@
           <%= render 'custom_page_content' %>
         </div>
     <% end %>
-
-    <% projekt_sidebar = capture do  %>
-      <div class="projekt-sidebar margin-bottom">
-        <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt } %>
-      </div>
-    <% end %>
   <% end %>
 
   <% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, 'general.show_projekt_footer') %>
@@ -80,10 +74,13 @@
         <div class="layout-left-column">
           <%= projekt_content %>
         </div>
-        <%= projekt_sidebar %>
+        <% if @custom_page.projekt.present? %>
+          <div class="projekt-sidebar margin-bottom">
+            <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "desktop" } %>
+          </div>
+        <% end %>
       </div>
     </div>
-
   <% else %>
     <div class="show-on-desktop">
       <div class="layout-left-column">
@@ -100,23 +97,27 @@
     <div class="show-on-mobile">
       <div class="mobile-projekt-tabs">
         <ul class="tabs mobile-projekt-tabs-navigation" data-tabs id="example-tabs">
-          <li class="tabs-title mobile-projekt-tab is-active"><a href="#panel1" aria-selected="true">Inalt</a></li>
-          <li class="tabs-title mobile-projekt-tab"><a data-tabs-target="panel2" href="#panel2">Info</a></li>
-          <li class="tabs-title mobile-projekt-tab"><a data-tabs-target="panel3" href="#panel3">Beteiligung</a></li>
+          <li class="tabs-title mobile-projekt-tab is-active"><a href="#projekt-mobile-description-tab" aria-selected="true">Inalt</a></li>
+          <li class="tabs-title mobile-projekt-tab"><a data-tabs-target="projekt-mobile-sidebar-content-tab" href="#projekt-mobile-sidebar-content-tab">Info</a></li>
+          <li class="tabs-title mobile-projekt-tab"><a data-tabs-target="projekt-mobile-footer-tab" href="#projekt-mobile-footer-tab">Beteiligung</a></li>
         </ul>
 
-        <div class="tabs-content" data-tabs-content="example-tabs">
-          <div class="tabs-panel is-active" id="panel1">
+        <div class="mobile-projekt-tabs-content tabs-content" data-tabs-content="example-tabs">
+          <div class="tabs-panel is-active" id="projekt-mobile-description-tab">
             <div class="layout-main-column">
               <div class="layout-left-column">
                 <%= projekt_content %>
               </div>
             </div>
           </div>
-          <div class="tabs-panel" id="panel2">
-            <%= projekt_sidebar %>
+          <div class="tabs-panel" id="projekt-mobile-sidebar-content-tab">
+            <% if @custom_page.projekt.present? %>
+              <div class="projekt-sidebar margin-bottom">
+                <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "mobile" } %>
+              </div>
+            <% end %>
           </div>
-          <div class="tabs-panel" id="panel3">
+          <div class="tabs-panel" id="projekt-mobile-footer-tab">
             <%= projekt_footer %>
           </div>
         </div>

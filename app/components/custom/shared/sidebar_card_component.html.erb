@@ -1,9 +1,12 @@
 <div class="sidebar-card">
   <div class="sidebar-card--section">
-    <h4 class="sidebar-card--header">
-      <i class="fas fa-<%= @icon_name %>"></i>
-      <%= @title %>
-    </h4>
+    <% if @title.present? %>
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-<%= @icon_name %>"></i>
+        <%= @title %>
+      </h4>
+    <% end %>
+
     <%= body %>
   </div>
 

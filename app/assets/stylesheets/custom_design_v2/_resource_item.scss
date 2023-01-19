@@ -326,6 +326,7 @@
       display: block;
       color: inherit;
       text-align: left;
+      word-wrap: nowrap;
     }
 
     i {
@@ -465,7 +466,8 @@
         .resource-item--footer-section  {
           .resource-item--additional-body {
             width: 100%;
-            padding: 0px 20px;
+            padding: 0px 18px;
+
           }
 
           .participation-not-allowed {

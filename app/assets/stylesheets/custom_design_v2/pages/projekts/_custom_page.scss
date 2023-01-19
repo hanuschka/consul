@@ -310,6 +310,15 @@
     }
   }
 
+  .mobile-projekt-tabs-content {
+    .sidebar {
+      display: block !important;
+      margin: auto;
+      min-width: 300px;
+      max-width: 420px;
+    }
+  }
+
   .projekt-footer {
     .row {
       max-width: initial;

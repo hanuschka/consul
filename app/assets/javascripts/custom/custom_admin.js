@@ -53,15 +53,18 @@
         var $selectedRadioButton = $(this)
         var $transparentCheckbox = $selectedRadioButton.closest('.map-layer-form').find('#map_layer_transparent')
         var $layerNamesInput = $selectedRadioButton.closest('.map-layer-form').find('#map_layer_layer_names')
+        var $layerDefsInput = $selectedRadioButton.closest('.map-layer-form').find('#map_layer_layer_defs')
 
         if ( $selectedRadioButton.val() == 'regular' ) {
           $transparentCheckbox.prop("checked", false);
           $transparentCheckbox.attr("disabled", true);
           $layerNamesInput.attr("disabled", true);
+          $layerDefsInput.attr("disabled", true);
   
         } else if ( $selectedRadioButton.val() == 'wms' ) {
           $transparentCheckbox.removeAttr("disabled");
           $layerNamesInput.removeAttr("disabled");
+          $layerDefsInput.removeAttr("disabled");
         }
       })
 

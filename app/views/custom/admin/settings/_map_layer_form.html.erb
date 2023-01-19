@@ -40,14 +40,21 @@
         <% end %>
         <%= f.check_box :transparent, disabled: layer.protocol != 'wms' %>
       </div>
+    </div>
+    <div class='row'>
       <div class='column medium-6'>
         <%= f.text_field :layer_names,
           hint: t('custom.map_layer.hints.layer_names'),
           disabled: layer.protocol != 'wms'
         %>
       </div>
+      <div class='column medium-6'>
+        <%= f.text_field :layer_defs,
+          hint: t('custom.map_layer.hints.layer_defs'),
+          disabled: layer.protocol != 'wms'
+        %>
+      </div>
     </div>
-
     <div class='row'>
       <div class='column'>
         <%= f.submit %>

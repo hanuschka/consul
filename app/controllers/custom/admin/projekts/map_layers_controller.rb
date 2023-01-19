@@ -62,7 +62,7 @@ class Admin::Projekts::MapLayersController < Admin::BaseController
 
     def map_layer_params
       params.require(:map_layer).permit(
-        :name, :layer_names, :base, :show_by_default,
+        :name, :layer_names, :layer_defs, :base, :show_by_default,
         :provider, :attribution, :protocol, :format, :transparent
       )
     end

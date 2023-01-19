@@ -72,6 +72,7 @@ de:
         protocols:
           regular: default
           wms: WMS
+        layer_defs: LayerDefs-Argument
       user:
         first_name: Vorname
         last_name: Nachname

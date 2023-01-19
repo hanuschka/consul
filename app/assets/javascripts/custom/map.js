@@ -181,7 +181,8 @@
             layers: item.layer_names,
             format: (item.transparent ? 'image/png' : 'image/jpeg'),
             transparent: (item.transparent),
-            show_by_default: (item.show_by_default)
+            show_by_default: (item.show_by_default),
+            layerDefs: item.layer_defs // cli_flen
           });
 
         } else {

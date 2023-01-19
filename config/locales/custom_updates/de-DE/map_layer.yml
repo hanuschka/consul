@@ -6,6 +6,7 @@ de:
         layer_names: WMS Kartenebenename(n), Komma getrennt, ohne Leerzeichen
         name: für Endbenutzer sichtbar
         provider: Karten-URL
+        layer_defs: LayerDefs-Argument
       labels:
         attribution: Attribution
         layer_names: Kartenebenennamen

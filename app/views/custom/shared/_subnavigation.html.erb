@@ -18,6 +18,10 @@
     <% end %>
   </div>
 
+  <% if placement == 'desktop' %>
+    <div id="google_translate_element"></div>
+  <% end %>
+
   <% unless launch_page %>
     <div class="account-admin-items">
       <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>

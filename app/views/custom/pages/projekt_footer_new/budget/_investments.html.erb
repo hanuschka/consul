@@ -1,19 +1,12 @@
-<div class='row'>
-  <div class='column small'>
-    <% if extended_feature?('modulewide.show_number_of_entries_in_modules') %>
-      <div class='float-right'>
-        <%= @investments.total_count %>
-        <%= t('activerecord.models.budget/investment', count: @investments.to_a.size) %>
-      </div>
-    <% end %>
-  </div>
-</div>
-
-<% @investments.each do |investment| %>
-  <%= render "/budgets/investments/investment",
-             investment: investment,
-             investment_ids: @investment_ids,
-             ballot: @ballot %>
-<% end %>
+<%= render(
+      Shared::ResourcesList.new(
+        resources: @investments,
+        load_resources_url: '',
+        map_coordinates: budget.investment_map_locations,
+        current_filter: @current_order,
+        filter_param: "order",
+        filters: @valid_orders
+      ))
+%>
 
 <%= paginate @investments, remote: true, params: { controller: 'pages', action: 'budget_phase_footer_tab' } %>

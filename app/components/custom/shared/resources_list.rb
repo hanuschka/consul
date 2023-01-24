@@ -2,7 +2,7 @@ class Shared::ResourcesList < ApplicationComponent
   renders_one :bottom_content
 
   def initialize(
-    title:,
+    title: nil,
     title_link: nil,
     resources:,
     resources_name: nil,

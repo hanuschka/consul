@@ -1,18 +1,12 @@
 <%= render 'shared/loader_spinner' %>
 
-<% if @current_projekt.budget.present? %>
-  <%= render Pages::Projekts::BudgetsTabComponent.new(@budget, @ballot, current_user) %>
+<div class="layout-main-column">
+  <div class="layout-left-column">
+    <% if @current_projekt.budget.present? %>
+      <%= render Pages::Projekts::BudgetsTabComponent.new(@budget, @ballot, current_user) %>
 
-  <div class='row'>
-    <div id='budgets-sidebar' class='small-12 medium-3 column'>
-       <%= render "budgets/investments/sidebar" %>
-    </div>
-
-    <div id='budgets' class='budgets-list spinner-placeholder small-12 medium-9 column'>
       <% if @budget.phase == 'finished' %>
         <%= render Pages::Projekts::BudgetsSubnavComponent.new(@budget) %>
-      <% else %>
-        <%= render "shared/order_links", i18n_namespace: "budgets.investments.index" %>
       <% end %>
 
       <% if params[:section] == 'results' %>
@@ -22,14 +16,14 @@
       <% elsif params[:section] == 'executions' %>
         <%= render 'pages/projekt_footer/budget/executions' %>
       <% else %>
-        <%= render 'pages/projekt_footer/budget/investments' %>
+        <%= render 'pages/projekt_footer_new/budget/investments', budget: @budget %>
       <% end %>
-    </div>
-  </div>
-<% else %>
-  <div class='row'>
-    <div class='column'>
+    <% else %>
       <h3>Dieses Projekt hat kein zugehöriges Budget</h3>
-    </div>
+    <% end %>
   </div>
-<% end %>
+
+  <div class="sidebar">
+    <%= render "budgets/investments/sidebar" %>
+  </div>
+</div>

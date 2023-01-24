@@ -26,7 +26,7 @@
       <h3 class="resources-list--title">
         <% if @title_link.present?  %>
           <%= link_to(@title, @title_link) %>
-        <% else %>
+        <% elsif @title.present? %>
           <%= @title %>
         <% end %>
       </h3>

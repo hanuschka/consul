@@ -1,6 +1,6 @@
 <%= render 'shared/loader_spinner' %>
 
-<div class="layout-main-column">
+<div class="layout-main-column budgets-page">
   <div class="layout-left-column">
     <% if @current_projekt.budget.present? %>
       <%= render Pages::Projekts::BudgetsTabComponent.new(@budget, @ballot, current_user) %>
@@ -10,11 +10,11 @@
       <% end %>
 
       <% if params[:section] == 'results' %>
-        <%= render 'pages/projekt_footer/budget/results' %>
+        <%= render 'pages/projekt_footer_new/budget/results' %>
       <% elsif params[:section] == 'stats' %>
-        <%= render 'pages/projekt_footer/budget/stats' %>
+        <%= render 'pages/projekt_footer_new/budget/stats' %>
       <% elsif params[:section] == 'executions' %>
-        <%= render 'pages/projekt_footer/budget/executions' %>
+        <%= render 'pages/projekt_footer_new/budget/executions' %>
       <% else %>
         <% if @budget.phase == 'informing' %>
           <div class="new-card">

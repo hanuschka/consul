@@ -1,4 +1,6 @@
-<div class='participation-stats'>
-  <%= render "shared/stats/participation", stats: @stats %>
-  <%= render "budgets/stats/advanced_stats", stats: @stats if @stats.advanced? %>
+<div class="new-card">
+  <div class='participation-stats'>
+    <%= render "shared/stats/participation", stats: @stats %>
+    <%= render "budgets/stats/advanced_stats", stats: @stats if @stats.advanced? %>
+  </div>
 </div>

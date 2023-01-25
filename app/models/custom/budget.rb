@@ -26,11 +26,11 @@ class Budget < ApplicationRecord
 
   def investment_map_locations
     if publishing_prices_or_later? && investments.selected.any?
-      investments = investments.selected
+      local_investments = investments.selected
     else
-      investments = investments
+      local_investments = investments
     end
 
-    MapLocation.where(investment_id: investments).map(&:json_data)
+    MapLocation.where(investment_id: local_investments).map(&:json_data)
   end
 end

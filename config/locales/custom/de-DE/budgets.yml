@@ -115,7 +115,7 @@ de:
           check_ballot_link: "Überprüfung meiner Abstimmung"
           zero: Sie haben für keinen Investitionsvorschlag in dieser Gruppe abgestimmt.
           create: "Investitionsvorschlag erstellen"
-        filter: "Projekte filtern nach"
+        filter: Filter
         filters:
           not_unfeasible: "Durchführbar"
           selected: "Ausgewählt"

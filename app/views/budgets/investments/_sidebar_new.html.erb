@@ -1,60 +1,82 @@
-<% if can?(:create, Budget::Investment.new(budget: @budget)) %>
-  <% if current_user && current_user.level_two_or_three_verified? %>
-    <%= link_to t("budgets.investments.index.sidebar.create"),
-      new_budget_investment_path(budget_id: @budget.id), class: "button budget expanded" %>
-  <% else %>
-    <div class="callout warning">
-      <%= sanitize(t("budgets.investments.index.sidebar.verified_only",
-                     verify: link_to_verify_account)) %>
+<div class="sidebar-card">
+  <div class="sidebar-card--section">
+    <h4 class="sidebar-card--header">
+      <i class="fas fa-info-circle"></i>
+      Information
+    </h4>
+
+    <%= render_custom_block "budgets_footer_#{@budget.id}" %>
+
+    <div class="margin-top">
+      <%= @budget.investments.count %> Vorschläge
     </div>
-  <% end %>
-<% end %>
+
+    <% if can?(:create, Budget::Investment.new(budget: @budget)) %>
+      <div class="margin-top">
+        <% if current_user && current_user.level_two_or_three_verified? %>
+          <%= link_to t("budgets.investments.index.sidebar.create"),
+            new_budget_investment_path(budget_id: @budget.id), class: "button budget expanded" %>
+        <% else %>
+          <div class="callout warning">
+            <%= sanitize(t("budgets.investments.index.sidebar.verified_only",
+                           verify: link_to_verify_account)) %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
 
 <% if @heading && can?(:show, @ballot) %>
-  <div class="my-ballot">
-    <h2 class="sidebar-title">
-      <%= t("budgets.investments.index.sidebar.my_ballot") %>
-    </h2>
+  <div class="sidebar-card budget-investment-sidebar-ballot">
+    <div class="sidebar-card--section">
+      <h2 class="sidebar-title">
+        <i class="fas fa-vote-yea"></i>
+        <%= t("budgets.investments.index.sidebar.my_ballot") %>
+      </h2>
 
-    <% if @ballot.investments.by_heading(@heading.id).count > 0 %>
+      <% if @ballot.investments.by_heading(@heading.id).count > 0 %>
+        <p>
+        <em><%= sanitize(@ballot.voted_info(@heading)) %></em>
+        </p>
+      <% elsif @assigned_heading.present? %>
+        <p>
+        <%= sanitize(t("budgets.investments.index.sidebar.different_heading_assigned",
+                       heading_link: heading_link(@assigned_heading, @budget)
+                      )) %>
+                    <br>
+                    <small>
+                      <%= sanitize(t("budgets.investments.index.sidebar.change_ballot",
+                                     check_ballot: link_to(t("budgets.investments.index.sidebar.check_ballot_link"),
+                                                           budget_ballot_path(@budget)))) %>
+                    </small>
+        </p>
+      <% else %>
+        <p><%= t("budgets.investments.index.sidebar.zero") %></p>
+      <% end %>
+
       <p>
-      <em><%= sanitize(@ballot.voted_info(@heading)) %></em>
+      <%= sanitize(@ballot.change_vote_info(
+        link: link_to(t("budgets.investments.index.sidebar.change_vote_link"),
+                      budget_ballot_path(@budget)))) %>
       </p>
-    <% elsif @assigned_heading.present? %>
-      <p>
-      <%= sanitize(t("budgets.investments.index.sidebar.different_heading_assigned",
-                     heading_link: heading_link(@assigned_heading, @budget)
-                    )) %>
-                  <br>
-                  <small>
-                    <%= sanitize(t("budgets.investments.index.sidebar.change_ballot",
-                                   check_ballot: link_to(t("budgets.investments.index.sidebar.check_ballot_link"),
-                                                         budget_ballot_path(@budget)))) %>
-                  </small>
-      </p>
-    <% else %>
-      <p><strong><%= t("budgets.investments.index.sidebar.zero") %></strong></p>
-    <% end %>
 
-    <p>
-    <%= sanitize(@ballot.change_vote_info(
-      link: link_to(t("budgets.investments.index.sidebar.change_vote_link"),
-                    budget_ballot_path(@budget)))) %>
-    </p>
+      <ul class="ballot-list">
+        <% if @heading %>
+          <%= render Budgets::Ballot::InvestmentForSidebarComponent.with_collection(
+            @ballot.investments.by_heading(@heading.id),
+            investment_ids: @investment_ids
+          ) %>
+      <% end %>
+      </ul>
 
-    <ul class="ballot-list">
-      <% if @heading %>
-        <%= render Budgets::Ballot::InvestmentForSidebarComponent.with_collection(
-          @ballot.investments.by_heading(@heading.id),
-          investment_ids: @investment_ids
-        ) %>
-    <% end %>
-    </ul>
+      <%= link_to t("budgets.investments.header.check_ballot"),
+        budget_ballot_path(@budget),
+        class: "button hollow expanded" %>
 
-    <%= link_to t("budgets.investments.header.check_ballot"),
-      budget_ballot_path(@budget),
-      class: "button hollow expanded" %>
+    </div>
   </div>
+
 <% end %>
 
 <% if @heading && !@heading.content_blocks.where(locale: I18n.locale).empty? %>
@@ -64,6 +86,6 @@
 <% if @map_location&.available? %>
   <%= render "budgets/investments/map" %>
 <% end %>
-<%= render "shared/tag_cloud", taggable: "Budget::Investment" %>
-<%= render "budgets/investments/categories" %>
+<%# <%= render "shared/tag_cloud", taggable: "Budget::Investment" %>
+<%# <%= render "budgets/investments/categories" %>
 <%= render Budgets::Investments::FiltersComponent.new %>

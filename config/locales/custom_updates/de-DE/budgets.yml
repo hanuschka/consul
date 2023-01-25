@@ -19,8 +19,9 @@ de:
     investments:
       index:
         filters:
-          all: Alle
-          feasible: Durchführbar
+          all: Alle Vorschläge
+          feasible: Durchführbare Vorschläge
+          unfeasible: Nicht durchführbare Vorschläge
           undecided: Noch nicht definiert
         orders:
           random: Zufällig

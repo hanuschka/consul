@@ -11,18 +11,18 @@
         <%= budget.formatted_heading_price(heading) %>
       </div>
     </div>
-  </div>
-
-  <% if can? :show, ballot %>
-    <% if ballot.valid_heading?(heading) %>
-      <div class="progress-bar-nav" data-fixed-bar>
-        <div id="progress_bar">
-          <%= render "budgets/ballot/progress_bar", ballot: ballot, heading: heading %>
+    <% if can? :show, ballot %>
+      <% if ballot.valid_heading?(heading) %>
+        <div class="progress-votes">
+          <div class="progress-bar-nav" data-fixed-bar>
+            <div id="progress_bar">
+              <%= render "budgets/ballot/progress_bar", ballot: ballot, heading: heading %>
+            </div>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
-  <% else %>
-  <% end %>
+  </div>
 <% else %>
   <% if render_map? %>
     <div class="map proposals-map">

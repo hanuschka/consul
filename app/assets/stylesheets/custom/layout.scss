@@ -211,5 +211,41 @@ ul.tabs li.tabs-title {
 
 .auth-page .auth-image .logo {
   margin: 3rem 2rem;
+
+  @media screen and (min-width: 350px) {
+    margin: 4rem;
+  }
+
+  @media screen and (min-width: 500px) {
+    margin: 4rem 4rem;
+  }
+
+  @media screen and (min-width: 40rem) {
+    margin: 3rem 1rem 0;
+  }
+
+  @media screen and (min-width: 800px) {
+    margin: 3rem 1.5rem 0;
+  }
+
+  @media screen and (min-width: 1000px) {
+    margin: 3rem 2rem 0;
+  }
+
+  @media screen and (min-width: 1200px) {
+    margin: 3rem 2.5rem 0;
+  }
+
+  @media screen and (min-width: 1400px) {
+    margin: 3rem 2rem 0;
+  }
+
+  @media screen and (min-width: 1600px) {
+    margin: 3rem 3rem 0;
+  }
+
+  @media screen and (min-width: 2000px) {
+    margin: 4rem 4rem 0;
+  }
 }
 

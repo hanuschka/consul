@@ -42,10 +42,6 @@ class Budget
       permission_problem(user).nil?
     end
 
-    def should_show_votes?
-      budget.balloting?
-    end
-
     def permission_problem_keys_allowing_ballot_line_deletion
       [:not_enough_available_votes, :not_enough_money]
     end

@@ -15,6 +15,7 @@
 
     <% if placement == 'mobile' %>
       <%= link_to custom_admin_root_path(current_user), class: 'admin-items-link' do %>
+        <i class="fa fa-cog main-navigation--link-icon"></i>
         <%= t('layouts.header.administration_menu') %>
       <% end %>
 

@@ -99,6 +99,7 @@ class Sidebar::ProjektsFilterComponent < ApplicationComponent
     def cache_key
       [
         Projekt.all,
+        Setting.new_design_enabled?,
         ProjektSetting.where("key LIKE ?", "projekt_feature.main.activate"),
         ProjektSetting.where("key LIKE ?", "%show_in_sidebar_filter%"),
         ProjektSetting.find_by(projekt: @current_projekt, key: "projekt_custom_feature.default_footer_tab"),

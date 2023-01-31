@@ -2,16 +2,7 @@ require_dependency Rails.root.join("app", "helpers", "tags_helper").to_s
 
 module TagsHelper
   def taggables_path(taggable_type, tag_name)
-    currently_selected_tags = params[:tags].present? ? params[:tags].split(',') : []
-    currently_selected_tags.include?(tag_name) ? currently_selected_tags.delete(tag_name) : currently_selected_tags.push(tag_name)
-    selected_tags = currently_selected_tags.join(',')
-
-    updated_params = params.merge({tags: selected_tags}).permit(
-      :tags, :geozone_affiliation, :geozone_restriction, :affiliated_geozones, :restricted_geozones,
-      :sdg_goals, :sdg_targets,
-      :order,
-      filter_projekt_ids: []
-    )
+    updated_params = prepare_tag_filter_params(tag_name)
 
     case taggable_type
     when "debate"
@@ -29,6 +20,29 @@ module TagsHelper
     else
       "#"
     end
+  end
+
+  def projekt_footer_filter_path(tag_name)
+    updated_params = prepare_tag_filter_params(tag_name)
+
+    if params[:current_tab_path] && !@current_projekt&.overview_page?
+      url_for(action: params[:current_tab_path], controller: "pages", **updated_params, format: :js)
+    else
+      url_for(action: "index", controller: controller_name, **updated_params, format: :js)
+    end
+  end
+
+  def prepare_tag_filter_params(tag_name)
+    currently_selected_tags = params[:tags].present? ? params[:tags].split(',') : []
+    currently_selected_tags.include?(tag_name) ? currently_selected_tags.delete(tag_name) : currently_selected_tags.push(tag_name)
+    selected_tags = currently_selected_tags.join(',')
+
+    params.merge({tags: selected_tags}).permit(
+      :tags, :geozone_affiliation, :geozone_restriction, :affiliated_geozones, :restricted_geozones,
+      :sdg_goals, :sdg_targets,
+      :order,
+      filter_projekt_ids: []
+    )
   end
 
   def taggable_path(taggable)

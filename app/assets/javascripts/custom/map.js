@@ -4,7 +4,12 @@
     maps: [],
     initialize: function() {
       $("*[data-map]").each(function() {
-        App.Map.initializeMap(this);
+        try {
+          App.Map.initializeMap(this);
+        }
+        catch (error) {
+          console.log(error)
+        }
       });
       $(".js-toggle-map").on({
         click: function() {

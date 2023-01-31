@@ -1,0 +1,13 @@
+<%= render(Shared::ResourceItem.new(component_attributes)) do |c| %>
+  <% if deficiency_report.status.present? %>
+    <% c.first_footer_item do  %>
+      <%= render "deficiency_reports/status", deficiency_report: deficiency_report %>
+    <% end %>
+  <% end %>
+
+    <% c.second_footer_item do  %>
+      <div id="<%= dom_id(deficiency_report) %>_votes">
+        <%= render "deficiency_reports/votes", deficiency_report: deficiency_report %>
+      </div>
+    <% end %>
+<% end %>

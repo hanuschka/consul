@@ -12,7 +12,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   def poll_question_answers_class
     classes = ["poll-question-answers"]
 
-    if question.votation_type.rating_scale?
+    if question.votation_type&.rating_scale?
       classes.push("rating-scale")
 
       count_of_rating_scale_cells = question.question_answers.count
@@ -35,7 +35,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def button_not_answered_class
-    if question.votation_type.rating_scale?
+    if question.votation_type&.rating_scale?
       "rating-scale-button"
     else
       "button secondary hollow expanded"
@@ -43,7 +43,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def button_answered_class
-    if question.votation_type.rating_scale?
+    if question.votation_type&.rating_scale?
       "rating-scale-button rating-scale-button--answered"
     else
       "button answered expanded"
@@ -51,21 +51,21 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def show_additional_info_images?
-    return if question.votation_type.rating_scale?
+    return if question.votation_type&.rating_scale?
 
     projekt_feature?(question.poll&.projekt, "polls.additional_info_for_each_answer") &&
       question.show_images?
   end
 
   def show_additional_info_description?(question_answer)
-    return if question.votation_type.rating_scale?
+    return if question.votation_type&.rating_scale?
 
     projekt_feature?(question.poll&.projekt, "polls.additional_info_for_each_answer") &&
       answer_with_description?(question_answer)
   end
 
   def should_show_answer_weight?
-    question.votation_type.multiple_with_weight? &&
+    question.votation_type&.multiple_with_weight? &&
       question.max_votes.present?
   end
 
@@ -79,6 +79,6 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
 
   def disable_answer?(question_answer)
     (question.multiple? && user_answers.count == question.max_votes) ||
-      (question.votation_type.multiple_with_weight? && available_vote_weight(question_answer) == 0)
+      (question.votation_type&.multiple_with_weight? && available_vote_weight(question_answer) == 0)
   end
 end

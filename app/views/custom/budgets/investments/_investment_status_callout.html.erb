@@ -1,5 +1,7 @@
-<% if investment.budget.phase.in?(['accepting', 'reviewing', 'valuating', 'reviewing_ballots']) %>
-  <div class="callout warning">
+<% if investment.budget.phase.in?(['accepting', 'reviewing', 'valuating', 'reviewing_ballots', 'publishing_prices']) %>
+  <% callout_class = investment.budget.phase == 'accepting' ? 'success' : 'warning' %>
+
+  <div class="callout <%= callout_class %>">
     <%= t("custom.budgets.investments.statuses.phases.#{investment.budget.phase}") %>
   </div>
 <% elsif investment.unfeasible? && investment.budget.phase == 'selecting' %>

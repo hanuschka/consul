@@ -132,14 +132,17 @@ en:
             "no": "No"
             "yes": "Yes"
           projekt_events_tab:
-            button: Save notification
+            button: Save event
             event_created_at: Created at
-            event_datetime: Datetime
+            event_datetime: Start date
+            event_image: Image
+            event_enddatetime: End date
             event_location: Location
             event_title: Title
+            event_summary: Summary
             event_weblink: Weblink
             name: Events
-            page_title: Create notification
+            page_title: Create event
           projekt_managers_tab:
             name: Project managers
           projekt_map_tab:

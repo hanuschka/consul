@@ -1,19 +1,39 @@
-<%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
-  <div class="sidebar-divider"></div>
-  <h2 class="sidebar-title projekt-tag-chip-category projekt-tag-chip-icon"><%= t("shared.tags_cloud.categories") %></h2>
-  <br>
+<% projekt_footer_mode ||= false %>
 
-  <ul id="categories" class="no-bullet categories">
-    <% selected_categories = params[:tags] ? params[:tags].split(',') : []%>
+<% if categories.present? && extended_feature?("modulewide.enable_categories") %>
+  <% categories_html = capture do %>
+    <div class="sidebar-divider"></div>
+    <h2 class="sidebar-title projekt-tag-chip-category projekt-tag-chip-icon"><%= t("shared.tags_cloud.categories") %></h2>
+    <br>
 
-    <% @categories.each do |category| %>
-      <li class="inline-block">
-        <% css_class = selected_categories.include?(category.name) ? "is-active" : "" %>
-        <%= link_to taggables_path(taggable, category.name), class: css_class do %>
-          <span class="tag"><%= category.name %></span>
-        <% end %>
-      </li>
-    <% end %>
+    <ul id="categories" class="no-bullet categories">
+      <% selected_categories = params[:tags] ? params[:tags].split(',') : []%>
 
-  </ul>
+      <% @categories.each do |category| %>
+        <li class="inline-block">
+          <% css_class = selected_categories.include?(category.name) ? "is-active" : "" %>
+
+          <% if projekt_footer_mode %>
+            <% link_path = projekt_footer_filter_path(category.name) %>
+          <% else %>
+            <% link_path = taggables_path(taggable, category.name) %>
+          <% end %>
+
+          <%= link_to link_path, remote: projekt_footer_mode, class: css_class do %>
+            <span class="tag"><%= category.name %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if Setting.new_design_enabled? %>
+    <div class="sidebar-card">
+      <div class="sidebar-card--section">
+        <%= categories_html %>
+      </div>
+    </div>
+  <% else %>
+    <%= categories_html %>
+  <% end %>
 <%end%>

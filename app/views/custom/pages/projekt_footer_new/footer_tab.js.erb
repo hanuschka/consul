@@ -1,0 +1,21 @@
+$("#filter-subnav li").removeClass("is-active")
+$("li#filter-subnav-<%= @current_tab_phase.name %>").addClass("is-active")
+$(".js-projekt-footer-content").removeClass("show-loader");
+
+$(".js-projekt-footer-content").html("<%= j render("pages/projekt_footer_new/#{@current_tab_phase.name}") %>");
+
+App.Projekts.toggleDefaultProjekts()
+App.Projekts.toggleProjektsInSidebarFilter();
+App.CollapseTextComponent.enableHoverButtons();
+App.Legislation.initialize();
+App.LivesteamLivequestion.initialize();
+
+if ($(".legislation-annotatable").length) {
+  App.LegislationAnnotatable.initialize();
+}
+
+$('.js-projekt-footer-content').foundation();
+
+
+App.Map.destroy();
+App.Map.initialize();

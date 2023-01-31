@@ -13,6 +13,7 @@ class PagesController < ApplicationController
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
     set_resource_instance
+    custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
     if @custom_page.present? && @custom_page.projekt.present?
       @projekt = @custom_page.projekt
@@ -23,10 +24,10 @@ class PagesController < ApplicationController
 
       @cards = @custom_page.cards
 
-      render action: :custom_page
+      render action: custom_page_name
     elsif @custom_page.present?
       @cards = @custom_page.cards
-      render action: :custom_page
+      render action: custom_page_name
     else
       render action: params[:id]
     end
@@ -38,7 +39,7 @@ class PagesController < ApplicationController
     set_comment_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -46,7 +47,7 @@ class PagesController < ApplicationController
     set_debate_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -54,7 +55,7 @@ class PagesController < ApplicationController
     set_proposal_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -62,7 +63,7 @@ class PagesController < ApplicationController
     set_voting_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -70,7 +71,7 @@ class PagesController < ApplicationController
     set_budget_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -78,7 +79,7 @@ class PagesController < ApplicationController
     set_milestone_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -86,7 +87,7 @@ class PagesController < ApplicationController
     set_projekt_notification_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -94,7 +95,7 @@ class PagesController < ApplicationController
     set_newsfeed_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -102,7 +103,7 @@ class PagesController < ApplicationController
     set_event_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -110,7 +111,7 @@ class PagesController < ApplicationController
     set_legislation_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -118,7 +119,7 @@ class PagesController < ApplicationController
     set_question_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -126,7 +127,7 @@ class PagesController < ApplicationController
     set_argument_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -134,7 +135,7 @@ class PagesController < ApplicationController
     set_livestream_phase_footer_tab_variables
 
     respond_to do |format|
-      format.js { render "pages/projekt_footer/footer_tab" }
+      format.js { render footer_tab_partial_path }
     end
   end
 
@@ -158,7 +159,6 @@ class PagesController < ApplicationController
 
   def set_top_level_projekts
     @top_level_active_projekts = Projekt.where( id: @current_projekt.top_parent ).current
-
     @top_level_archived_projekts = Projekt.where( id: @current_projekt.top_parent ).expired
   end
 
@@ -179,20 +179,26 @@ class PagesController < ApplicationController
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.debate_phase
 
-    @valid_orders = Debate.debates_orders(current_user)
-    @valid_orders.delete('relevance')
-
-    @current_order = if @valid_orders.include?(params[:order])
-                       params[:order]
-                     elsif helpers.projekt_feature?(@current_projekt, 'general.set_default_sorting_to_newest') && @valid_orders.include?('created_at')
-                       @current_order = 'created_at'
-                     else
-                       Setting["selectable_setting.debates.default_order"]
-                     end
-
-    params[:current_tab_path] = 'debate_phase_footer_tab'
+    params[:current_tab_path] = "debate_phase_footer_tab"
     params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
     params[:projekt_label_ids] ||= []
+
+    @valid_orders = Debate.debates_orders(current_user)
+    @valid_orders.delete("relevance")
+
+    default_projekt_order_is_newest = ProjektSetting.find_by(
+        projekt: @current_projekt,
+        key: "projekt_feature.general.set_default_sorting_to_newest"
+      ).value.present?
+
+    @current_order =
+      if @valid_orders.include?(params[:order])
+        params[:order]
+      elsif default_projekt_order_is_newest
+        "created_at"
+      else
+        Setting["selectable_setting.debates.default_order"]
+      end
 
     @selected_parent_projekt = @current_projekt
 
@@ -200,35 +206,47 @@ class PagesController < ApplicationController
     set_top_level_projekts
 
     @scoped_projekt_ids = Debate.scoped_projekt_ids_for_footer(@current_projekt)
+    @resources = @resources.send("sort_by_#{@current_order}")
 
     unless params[:search].present?
       take_by_my_posts
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
+      take_by_sdgs
+      take_by_geozone_affiliations
       take_by_projekts(@scoped_projekt_ids)
       take_by_projekt_labels if params[:projekt_label_ids].any?
+      take_by_geozone_restrictions
+      load_generic_resource_filter_data(@resources)
+      take_by_tag_names
     end
 
-    @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
+    @resource_name = "debate"
+    @debates = @resources.page(params[:page])
   end
 
   def set_proposal_phase_footer_tab_variables(projekt=nil)
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.proposal_phase
 
+    params[:current_tab_path] = 'proposal_phase_footer_tab'
+    params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
+
     @valid_orders = Proposal.proposals_orders(current_user)
     @valid_orders.delete("archival_date")
     @valid_orders.delete('relevance')
 
-    @current_order = if @valid_orders.include?(params[:order])
-                       params[:order]
-                     elsif helpers.projekt_feature?(@current_projekt, 'general.set_default_sorting_to_newest') && @valid_orders.include?('created_at')
-                       @current_order = 'created_at'
-                     else
-                       Setting["selectable_setting.proposals.default_order"]
-                     end
+    use_default_created_at_order = (
+      ProjektSetting.find_by(projekt: @current_projekt, key: 'projekt_feature.general.set_default_sorting_to_newest').value.present? &&
+      @valid_orders.include?('created_at')
+    )
+
+    @current_order =
+      if @valid_orders.include?(params[:order])
+        params[:order]
+      elsif use_default_created_at_order
+        'created_at'
+      else
+        Setting["selectable_setting.proposals.default_order"]
+      end
 
     params[:current_tab_path] = 'proposal_phase_footer_tab'
     params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
@@ -248,17 +266,22 @@ class PagesController < ApplicationController
 
     @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_footer(@current_projekt)
 
+    @resource_name = "proposal"
+
     unless params[:search].present?
       take_by_my_posts
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
+      take_by_sdgs
+      take_by_geozone_affiliations
+      take_by_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
       take_by_projekt_labels if params[:projekt_label_ids].any?
+      load_generic_resource_filter_data(@resources)
+      take_by_tag_names
     end
 
-    @proposals_coordinates = all_proposal_map_locations(@resources)
+    if projekt_feature?(@current_projekt, "proposals.show_map")
+      @proposals_coordinates = all_proposal_map_locations(@resources)
+    end
 
     @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
@@ -284,13 +307,20 @@ class PagesController < ApplicationController
 
     @scoped_projekt_ids = Poll.scoped_projekt_ids_for_footer(@current_projekt)
 
+    @resource_name = "poll"
+
     unless params[:search].present?
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_polls_geozone_restrictions
+      take_by_sdgs
+      take_by_geozone_affiliations
+      take_by_polls_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
+      load_generic_resource_filter_data(@resources)
+      take_by_tag_names
     end
+
+    # if projekt_feature?(@current_projekt, "proposals.show_map")
+    @polls_coordinates = all_proposal_map_locations(@resources)
+    # end
 
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
   end
@@ -434,7 +464,7 @@ class PagesController < ApplicationController
     @valid_filters = %w[all incoming past]
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
 
-    params[:current_tab_path] = 'event_phase_footer_tab'
+    params[:current_tab_path] = "event_phase_footer_tab"
 
     @current_projekt = projekt || SiteCustomization::Page.find_by(slug: params[:id]).projekt
     @current_tab_phase = @current_projekt.event_phase
@@ -447,7 +477,7 @@ class PagesController < ApplicationController
     scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
     # @projekt_questions = ProjektQuestion.base_selection(scoped_projekt_ids)
 
-    params[:current_tab_path] = 'question_phase_footer_tab'
+    params[:current_tab_path] = "question_phase_footer_tab"
 
     projekt_questions = @current_projekt.questions.root_questions
 
@@ -489,7 +519,7 @@ class PagesController < ApplicationController
   end
 
   def default_phase_name(default_phase_id)
-    default_phase_id ||= ProjektSetting.find_by(projekt: @projekt, key: 'projekt_custom_feature.default_footer_tab').value
+    default_phase_id ||= ProjektSetting.find_by(projekt: @projekt, key: "projekt_custom_feature.default_footer_tab").value
 
     if default_phase_id.present?
       projekt_phase = ProjektPhase.find(default_phase_id)
@@ -512,5 +542,23 @@ class PagesController < ApplicationController
     @resources = @current_order == "recommendations" && current_user.present? ? @resources.recommendations(current_user) : @resources.for_render
     @resources = @resources.search(@search_terms) if @search_terms.present?
     @resources = @resources.filter_by(@advanced_search_terms)
+  end
+
+  def footer_tab_partial_path
+    if Setting.new_design_enabled?
+      "pages/projekt_footer_new/footer_tab"
+    else
+      "pages/projekt_footer/footer_tab"
+    end
+  end
+
+  def load_generic_resource_filter_data(resources)
+    @categories = resources.map { |p| p.tags.category }.flatten.uniq.compact.sort
+
+    @geozones = Geozone.all
+    @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
+    @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
+    @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
   end
 end

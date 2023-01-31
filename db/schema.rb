@@ -1543,6 +1543,7 @@ ActiveRecord::Schema.define(version: 2023_01_26_104630) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.datetime "end_datetime"
+    t.string "summary"
   end
 
   create_table "projekt_label_translations", force: :cascade do |t|

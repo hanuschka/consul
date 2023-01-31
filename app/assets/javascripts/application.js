@@ -119,6 +119,7 @@
 //= require_tree ./sdg_management
 //= require custom
 //= require_tree ./custom
+//= require_tree ./custom/util
 
 var initialize_modules = function() {
   "use strict";
@@ -196,7 +197,8 @@ var initialize_modules = function() {
   App.ProjektQuestionCustom.initialize();
   App.LivesubmitCheckboxCustom.initialize();
   App.OrbitInPopupFixCustom.initialize();
-  App.ModalNotification.initialize();
+
+  App.CustomJS.initialize();
 
   if ($("#projekt-selector-fields").length) {
     App.ProjektSelector.initialize();

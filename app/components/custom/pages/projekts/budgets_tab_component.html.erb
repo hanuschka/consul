@@ -1,40 +1,66 @@
-<% if render_map? %>
-  <div class="map proposals-map">
-    <%= render_map(budget.projekt.map_location, "budgets", false, nil, coordinates, budget.projekt.map_layers_for_render.to_json) %>
-  </div>
+<% if Setting.new_design_enabled? %>
+  <div class="new-card">
+    <h3 class="budget--current-phase-name">
+      <%= budget.current_phase.name %>
+    </h3>
 
-  <div class='expand-overview-map-wrapper'>
-    <div class='expand-overview-map small js-expand-overview-map not-print wide'>
-      <%= t('custom.proposals.index.show_larger_map') %>
-    </div>
-  </div>
-<% end %>
+    <div class="budget--price">
+      <div class="budget--price-title"><%= t("budgets.investments.header.price") %></div>
 
-<section class="no-margin-top margin-bottom">
-  <div class="expanded jumbo-budget budget-heading padding">
-
-    <div class="row progress-votes">
-      <div class="small-12 column">
-        <h2 class="margin-top">
-          <%= budget.current_phase.name %>
-        </h2>
-        <h3>
-          <span class="tagline"><%= t("budgets.investments.header.price") %></span>
-          <%= budget.formatted_heading_price(heading) %>
-        </h3>
-
-        <% if can? :show, ballot %>
-          <% if ballot.valid_heading?(heading) %>
-            <div class="progress-bar-nav" data-fixed-bar>
-              <div id="progress_bar">
-                <%= render "budgets/ballot/progress_bar", ballot: ballot, heading: heading %>
-              </div>
-            </div>
-          <% end %>
-        <% else %>
-        <% end %>
-
+      <div class="budget--price-value">
+        <%= budget.formatted_heading_price(heading) %>
       </div>
     </div>
+    <% if can? :show, ballot %>
+      <% if ballot.valid_heading?(heading) %>
+        <div class="progress-votes">
+          <div class="progress-bar-nav" data-fixed-bar>
+            <div id="progress_bar">
+              <%= render "budgets/ballot/progress_bar", ballot: ballot, heading: heading %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
   </div>
-</section>
+<% else %>
+  <% if render_map? %>
+    <div class="map proposals-map">
+      <%= render_map(budget.projekt.map_location, "budgets", false, nil, coordinates, budget.projekt.map_layers_for_render.to_json) %>
+    </div>
+
+    <div class='expand-overview-map-wrapper'>
+      <div class='expand-overview-map small js-expand-overview-map not-print wide'>
+        <%= t('custom.proposals.index.show_larger_map') %>
+      </div>
+    </div>
+  <% end %>
+
+  <section class="no-margin-top margin-bottom">
+    <div class="expanded jumbo-budget budget-heading padding">
+
+      <div class="row progress-votes">
+        <div class="small-12 column">
+          <h2 class="margin-top">
+            <%= budget.current_phase.name %>
+          </h2>
+          <h3>
+            <span class="tagline"><%= t("budgets.investments.header.price") %></span>
+            <%= budget.formatted_heading_price(heading) %>
+          </h3>
+
+          <% if can? :show, ballot %>
+            <% if ballot.valid_heading?(heading) %>
+              <div class="progress-bar-nav" data-fixed-bar>
+                <div id="progress_bar">
+                  <%= render "budgets/ballot/progress_bar", ballot: ballot, heading: heading %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+<% end %>

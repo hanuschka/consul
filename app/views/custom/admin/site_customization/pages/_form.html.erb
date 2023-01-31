@@ -42,7 +42,7 @@
           <%= translations_form.text_field :title %>
         </div>
         <div class="small-12 column">
-          <%= translations_form.text_field :subtitle %>
+          <%= translations_form.text_area :subtitle, rows: 3 %>
         </div>
         <div class="column">
           <%= translations_form.text_area :content, class: "html-area #{ck_editor_class(current_user)}" %>

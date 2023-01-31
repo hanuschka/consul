@@ -1,9 +1,9 @@
-$("#<%= dom_id(@proposal) %>_votes").html("<%= j render("proposals/votes", proposal: @proposal) %>");
+$("#<%= dom_id(@proposal) %>_votes").html("<%= j render(Proposals::NewVotesComponent.new(@proposal)) %>");
+$("#<%= dom_id(@proposal) %>_votes_count").html("<%= j t("proposals.proposal.supports", count: @proposal.total_votes) %>");
 
 <% if @proposal.voters.include? current_user %>
-  $("div[data-voted-badge=<%= @proposal.id %>]").removeClass('hide');
+    // $("div[data-voted-badge=<%= @proposal.id %>]").removeClass('hide');
 <% end %>
-
-App.Followable.update("<%= dom_id(@follow.followable) %>",
-                      "<%= j render("follows/follow_button", follow: @follow) %>",
-                      "<%= j render("layouts/flash") %>")
+// App.Followable.update("<%= dom_id(@follow.followable) %>",
+//                       "<%= j render("follows/follow_button", follow: @follow) %>",
+//                       "<%= j render("layouts/flash") %>")

@@ -42,8 +42,10 @@ class Admin::ProjektArgumentsController < Admin::BaseController
   private
 
     def projekt_argument_params
-      params.require(:projekt_argument).permit(:name, :party, :pro, :position,
-                                               :note, image_attributes: image_attributes)
+      params.require(:projekt_argument).permit(
+        :name, :party, :pro, :position,
+       :note, image_attributes: image_attributes
+      )
     end
 
     def set_projekt

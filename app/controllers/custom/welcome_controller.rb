@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "controllers", "welcome_controller").to_s
 
 class WelcomeController < ApplicationController
+  include ProjektControllerHelper
+
   def welcome
     redirect_to root_path
   end
@@ -17,7 +19,29 @@ class WelcomeController < ApplicationController
     @affiliated_geozones = []
     @restricted_geozones = []
 
-    @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts : []
+    # TODO
+    # @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts : []
+
+    @all_projekts = Projekt.regular.with_published_custom_page
+    @current_active_projekt_filters = Projekt.available_filters(@all_projekts)
+    # @current_active_projekt_filters = Projekt.available_filters([])
+    @current_projekt_filter = @current_active_projekt_filters.first
+
+    if @current_projekt_filter.present?
+      @active_projekts = @all_projekts.send(@current_projekt_filter)
+    else
+      @active_projekts = @all_projekts
+    end
+
+    @active_projekts = @active_projekts.first(3)
+    @active_projekts_map_coordinates = all_projekts_map_locations(@active_projekts)
+
+    @proposals = Proposal.where.not(projekt_id: nil).first(3)
+    @debates = Debate.where.not(projekt_id: nil).first(3)
+    @polls = Poll.where.not(projekt_id: nil).first(3)
+    @deficiency_reports = DeficiencyReport.first(3)
+    @budgets = Budget::Investment.all.first(3)
+
     @expired_projekts = @active_feeds.include?("expired_projekts") ? @feeds.find{ |feed| feed.kind == 'expired_projekts' }.expired_projekts : []
     @latest_polls = @active_feeds.include?("polls") ? @feeds.find{ |feed| feed.kind == 'polls' }.polls : []
 
@@ -28,6 +52,12 @@ class WelcomeController < ApplicationController
         .sort_by(&:created_at).reverse
     else
       @latest_items = []
+    end
+
+    if Setting.new_design_enabled?
+      render :index_new
+    else
+      render :index
     end
   end
 end

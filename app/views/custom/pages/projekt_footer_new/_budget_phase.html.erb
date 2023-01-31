@@ -1,0 +1,43 @@
+<%= render 'shared/loader_spinner' %>
+
+<div class="layout-main-column budgets-page">
+  <div class="layout-left-column">
+    <% if @current_projekt.budget.present? %>
+      <%= render Pages::Projekts::BudgetsTabComponent.new(@budget, @ballot, current_user) %>
+
+      <% if @budget.phase == 'finished' %>
+        <%= render Pages::Projekts::BudgetsSubnavComponent.new(@budget) %>
+      <% end %>
+
+      <% if params[:section] == 'results' %>
+        <%= render 'pages/projekt_footer_new/budget/results' %>
+      <% elsif params[:section] == 'stats' %>
+        <%= render 'pages/projekt_footer_new/budget/stats' %>
+      <% elsif params[:section] == 'executions' %>
+        <%= render 'pages/projekt_footer_new/budget/executions' %>
+      <% else %>
+        <% if @budget.phase == 'informing' %>
+          <div class="new-card">
+            <h4>
+              Noch keine Investitionsvorschläge vorhanden
+            </h3>
+            <div>
+              Investitionsvorschläge können erst in der nächsten Phase
+              eingereicht werden. Diese beginnt am
+              <%= @budget.current_phase.next_enabled_phase.starts_at.strftime("%d. %B %Y") %>
+              <!-- 02. September 2022 -->
+            </div>
+          </div>
+        <% else %>
+          <%= render 'pages/projekt_footer_new/budget/investments', budget: @budget %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <h3>Dieses Projekt hat kein zugehöriges Budget</h3>
+    <% end %>
+  </div>
+
+  <div class="sidebar">
+    <%= render "budgets/investments/sidebar_new" %>
+  </div>
+</div>

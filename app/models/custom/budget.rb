@@ -23,4 +23,14 @@ class Budget < ApplicationRecord
   def projekt_phase
     budget_phase
   end
+
+  def investment_map_locations
+    if publishing_prices_or_later? && investments.selected.any?
+      local_investments = investments.selected
+    else
+      local_investments = investments
+    end
+
+    MapLocation.where(investment_id: local_investments).map(&:json_data)
+  end
 end

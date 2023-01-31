@@ -82,7 +82,7 @@
             ) %>
           <% end %>
           <% if show_affiliation_filter_in_sidebar? %>
-            <%= render "shared/sidebar_filter/geozone_affiliations" %>
+            <%= render "shared/sidebar_filter/geozone_affiliations", geozones: @geozones %>
           <% end %>
           <% unless skip_user_verification? %>
             <%= render "shared/sidebar_filter/geozone_restrictions" %>
@@ -90,9 +90,9 @@
           <% if extended_feature?('proposals.enable_my_posts_filter') %>
             <%= render "shared/sidebar_filter/my_posts" %>
           <% end %>
-          <%= render "shared/categories", taggable: "proposal" %>
+          <%= render "shared/categories", taggable: "proposal", categories: @categories %>
           <%#= render "shared/tag_cloud", taggable: "proposal" %>
-          <%= render SDG::Goals::TagCloudComponent.new("Proposal") %>
+          <%= render SDG::Goals::TagCloudComponentCustom.new("Proposal") %>
         <% end %>
         <%= render "retired" %>
 

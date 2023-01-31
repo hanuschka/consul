@@ -1,5 +1,10 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
+  INDEX_FILTERS = %w[
+    index_order_underway index_order_all
+    index_order_ongoing index_order_upcoming
+    index_order_expired index_order_individual_list
+  ].freeze
 
   include Milestoneable
   acts_as_paranoid column: :hidden_at
@@ -176,7 +181,7 @@ class Projekt < ApplicationRecord
     joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
       .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active") }
 
-  scope :top_level_navigation, -> { top_level.visible_in_menu }
+  scope :top_level_navigation, -> { top_level.visible_in_menu.with_published_custom_page }
 
   scope :by_my_posts, ->(my_posts_switch, current_user_id) {
     return unless my_posts_switch
@@ -466,6 +471,21 @@ class Projekt < ApplicationRecord
 
   def all_projekt_labels_in_tree
     ProjektLabel.where(projekt_id: all_ids_in_tree)
+  end
+
+  def current_phases
+    projekt_phases.regular_phases.select(&:current?)
+  end
+
+  def self.available_filters(all_projekts)
+    return [] if all_projekts.blank?
+
+    projekts_count_hash = {}
+    INDEX_FILTERS.each do |order|
+      projekts_count_hash[order] = all_projekts.send(order).count
+    end
+
+    projekts_count_hash.select { |_, value| value > 0 }.keys
   end
 
   private

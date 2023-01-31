@@ -349,15 +349,15 @@ span.toggle-arrow {
 
 .show-on-desktop {
   @media screen and (max-width: 650px) {
-    display: none;
+    display: none !important;
   }
 }
 
 .show-on-mobile {
-  display: none;
+  display: none !important;
 
   @media screen and (max-width: 650px) {
-    display: block;
+    display: block !important;
   }
 }
 

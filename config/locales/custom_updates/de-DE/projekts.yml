@@ -14,11 +14,14 @@ de:
         expired_projekts: Abgeschlossene Projekte
         no_projekts: Keine Projekte
         no_projekts_for_current_filter: Keine Projekte für aktuellen filter
-        title: Projekte
+        title_old: Projekte
+        title: Projektübersicht
         to_projekt: Zum Projekt
         social_share:
           title: Projektübersicht
           description:  Die Übersicht aller Projekte
+      filter:
+        title: Filtern nach
       orders:
         index_order_all: 'Alle Projekte'
         index_order_all_title: 'Alle Projekte'
@@ -52,7 +55,7 @@ de:
             edit_projekt_settings: Projektfunktionen
             edit_projekt_page: Projektseite bearbeiten
           map:
-            title: Gebiet
+            title: Karte
           navigator:
             title: Projektverzeichnis
           phases:
@@ -82,7 +85,7 @@ de:
         comment_phase: Kommentare
         debate_phase: Diskussionen
         event_phase: Veranstaltungen
-        legislation_process_phase: Textbearbeitungsphase
+        legislation_process_phase: Text
         milestone_phase: Meilensteine
         newsfeed_phase: Newsfeed
         projekt_notification_phase: Benachrichtigungen
@@ -90,6 +93,9 @@ de:
         question_phase: Kurzumfrage
         voting_phase: Abstimmungen
         argument_phase: Stimmen
+        notification_phase: Neuigkeiten
+      link_to_phase_prefix: Direkt zu den
+      more_phases: Weitere Phasen
       projekt_events:
         index:
           title: Veranstaltungskalender
@@ -147,3 +153,5 @@ de:
         title: Projekte
         title_active: Aktive Projekte
         title_archived: Abgelaufene Projekte
+      projekt_list:
+        title: Projektübersicht

@@ -1,0 +1,66 @@
+<% body = capture do  %>
+  <% if @map_coordinates.present? %>
+    <div class="map resources-list--map not-print">
+      <%= helpers.render_map(MapLocation.new(latitude: Setting['map.latitude'], longitude: Setting['map.longitude'], zoom: Setting['map.zoom']), @resources_name, false, nil, @map_coordinates, MapLayer.general.to_json) %>
+    </div>
+  <% end %>
+
+  <div class="resources-list--inner">
+    <% if @resources.present? %>
+      <% @resources.each do |resource| %>
+        <%= render resource_component(resource) %>
+      <% end %>
+    <% else %>
+      <h4 class="resources-list--not-items-message text-center">
+        <%= @no_items_text %>
+      </h4>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @only_content %>
+  <%= body %>
+<% else %>
+  <div class="resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @load_resources_url %>" data-full-page-reload="<%= @full_page_reload %>">
+    <% unless @hide_title %>
+      <h3 class="resources-list--title">
+        <% if @title_link.present?  %>
+          <%= link_to(@title, @title_link) %>
+        <% elsif @title.present? %>
+          <%= @title %>
+        <% end %>
+      </h3>
+    <% end %>
+
+    <div class="resources-list--navigation">
+      <div class="resources-list--line-divider">
+
+      </div>
+      <% if @load_resources_url.present? && filter_options.present? %>
+        <div class="resources-list--sort">
+          <div class="resources-list--sort-title">
+            <%= @filter_title %>:
+          </div>
+          <%= render(
+            Shared::DropdownMenuComponent.new(
+              name: @filter_param,
+              options: filter_options,
+              selected_option: selected_filter_otpion,
+              item_css_class: item_css_class
+            )
+          )
+        %>
+        </div>
+      <% end %>
+
+      <div class="resources-list--switch-view-button js-resource-list-switch-view-button">
+        <i class="fa <%= switch_view_mode_icon %>"></i>
+      </div>
+    </div>
+
+    <div class="resources-list--body js-resources-list--body">
+      <%= body %>
+    </div>
+  </div>
+<% end %>
+

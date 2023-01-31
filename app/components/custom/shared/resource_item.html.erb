@@ -1,0 +1,170 @@
+<% tags = capture do  %>
+  <div class="resource-item--tags">
+    <% if @tags.present? %>
+      <% @tags.first(2).each do |tag| %>
+         <%= link_to(path_for_resource_with_params(@resource, tags: tag.name), target: 'blank', class: 'resource-item--tag') do %>
+          <%= tag.name %>
+        <% end %>
+      <% end %>
+
+      <% if @tags[2].present? %>
+         <%= link_to(path_for_resource_with_params(@resource, tags: @tags[2].name), target: '_blank', class: 'resource-item--tag resource-item--last-tag') do %>
+          <%= @tags[2].name %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
+<% author_name_html = capture do %>
+  <% if @author.present? %>
+    <%= link_to user_path(@author), class: 'resource-item--author' do %>
+      <%# <%= image_tag('', class: 'resource-item--author-photo') %>
+      <div class="resource-item--author-photo">
+      </div>
+      <div class="resource-item--author-name">
+        <%= @author.name %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="resource-item <%= component_class_name %>">
+  <% if @projekt.present? %>
+    <div class="resource-item--head-title">
+      <%= link_to @projekt&.page.title, @projekt.page.url  %>
+    </div>
+  <% elsif @head_title.present? || additional_head_title_element.present? %>
+    <div class="resource-item--head-title">
+      <%= @head_title %>
+      <%= additional_head_title_element %>
+    </div>
+  <% end %>
+
+  <a href="<%= @url %>" class="resource-item--image-container">
+    <% if image_ontop_item.present? %>
+      <div class="resource-item--image-ontop-item-container">
+        <%= image_ontop_item %>
+      </div>
+    <% end %>
+
+    <% if @image_url.present? %>
+      <%= image_tag(@image_url, class: 'resource-item--image') %>
+      <%= image_tag(@image_url, class: 'resource-item--image-blur') %>
+    <% else %>
+      <div class="resource-item--image-placeholder">
+        <i class="resource-item--image-placeholder-icon fa <%= @image_placeholder_icon_class %>"></i>
+        <div class="resource-item--image-placeholder-text">
+          <%= t("custom.resource_names.#{@resource_name}") %>
+        </div>
+      </div>
+    <% end %>
+  </a>
+
+  <div class="resource-item--content">
+
+    <div class="resource-item--wide-head-title">
+      <% if tags.present? %>
+        <%= tags %>
+      <% end %>
+
+      <% if @projekt.present? %>
+        <div class="resource-item--head-title">
+          <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
+        </div>
+        <%# <% if resource.projekt.overview_page? %>
+        <%#   <%= t("custom.projekts.overview_page.projekt_name_for_proposal") %>
+      <% elsif @head_title.present? %>
+        <div class="resource-item--head-title">
+          <%= @head_title %>
+        </div>
+      <% else %>
+        <div class="resource-item--date">
+          <% if days_left.present? %>
+            <%= days_left %>
+          <% elsif date.present? %>
+            <%= date %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @author.present? %>
+        <div class="resource-item--author resource-item--author-in-wide-head-title">
+          <%= author_name_html %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="resource-item--body-wrapper">
+      <div class="resource-item--body">
+
+        <% if @subline.present? %>
+          <div class="resource-item--subline">
+            <%= @subline %>
+          </div>
+        <% end %>
+
+        <% if tags.present? %>
+          <div class="resource-item--tags-in-body">
+            <%= tags %>
+          </div>
+        <% end %>
+
+        <a href="<%= @url %>" class="resource-item--title">
+          <%= @title %>
+        </a>
+
+        <div class="resource-item--description-wrapper">
+          <div class="resource-item--description">
+            <% if @wyshwig %>
+            <% else %>
+              <%= raw(truncate(@description, length: truncate_length)&.html_safe) %>
+            <% end %>
+          </div>
+
+          <% if additional_body.present? %>
+            <div class="resource-item--additional-body">
+              <%= additional_body %>
+            </div>
+            <div class="resource-item--sdgs resource-item--sdgs-in-body">
+              <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <%= author_name_html %>
+
+      <% if @sdgs.present? %>
+        <div class="resource-item--sdgs resource-item--sdgs-in-card">
+          <%= render SDG::FilterLinksComponent.new(@sdgs, Projekt) %>
+        </div>
+      <% end %>
+
+      <% if show_footer? %>
+        <div class="resource-item--footer">
+          <% if first_footer_item.present? %>
+            <div class="resource-item--footer-section">
+              <%= first_footer_item %>
+            </div>
+          <% end %>
+
+          <% if second_footer_item.present? %>
+            <div class="resource-item--footer-section">
+              <%= second_footer_item %>
+            </div>
+          <% end %>
+
+          <% if additional_body.present? %>
+            <div class="resource-item--footer-section resource-item--additional-body-in-footer">
+              <div class="resource-item--additional-body">
+                <%= additional_body %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+</div>

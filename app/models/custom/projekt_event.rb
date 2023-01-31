@@ -1,4 +1,6 @@
 class ProjektEvent < ApplicationRecord
+  include Imageable
+
   belongs_to :projekt
 
   validates :title, presence: true

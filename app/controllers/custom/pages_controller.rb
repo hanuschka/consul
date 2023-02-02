@@ -375,7 +375,7 @@ class PagesController < ApplicationController
 
     @valid_filters = @current_projekt.budget.investments_filters
     params[:filter] ||= "feasible" if @current_projekt.budget.phase.in?(["selecting", "valuating"])
-    params[:filter] ||= "all" if @current_projekt.budget.phase.in?(["publishing_prices", "balloting", "reviewing_ballots"])
+    params[:filter] ||= "selected" if @current_projekt.budget.phase.in?(["publishing_prices", "balloting", "reviewing_ballots"])
     params[:filter] ||= "winners" if @current_projekt.budget.phase == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
     @all_resources = []
@@ -394,21 +394,21 @@ class PagesController < ApplicationController
     @valid_orders.delete("ballot_line_weight") unless @budget.phase == "balloting"
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
-    params[:section] ||= 'results' if @budget.phase == 'finished'
+    params[:section] ||= "results" if @budget.phase == "finished"
 
     # con-1036
-    if @budget.phase == 'publishing_prices' &&
+    if @budget.phase == "publishing_prices" &&
         @budget.projekt.present? &&
         @budget.projekt.projekt_settings
-          .find_by(key: 'projekt_feature.budgets.show_results_after_first_vote').value.present?
-      params[:filter] = 'selected'
+          .find_by(key: "projekt_feature.budgets.show_results_after_first_vote").value.present?
+      params[:filter] = "selected"
       @current_filter = nil
     end
     # con-1036
 
-    if params[:section] == 'results'
+    if params[:section] == "results"
       @investments = Budget::Result.new(@budget, @budget.headings.first).investments
-    elsif params[:section] == 'stats'
+    elsif params[:section] == "stats"
       @stats = Budget::Stats.new(@budget)
       @investments = @budget.investments
     else
@@ -424,7 +424,9 @@ class PagesController < ApplicationController
       @current_order = "ballot_line_weight"
     end
 
-    @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(20)
+    @investments = @investments.send("sort_by_#{@current_order}")
+      .page(params[:page])
+      .per(20)
 
     if @budget.present? && @current_projekt.current?
       @top_level_active_projekts = Projekt.where( id: @current_projekt )

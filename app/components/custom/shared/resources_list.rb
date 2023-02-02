@@ -19,7 +19,8 @@ class Shared::ResourcesList < ApplicationComponent
     filter_title: nil,
     no_items_text: nil,
     no_filter: false,
-    full_page_reload: false
+    full_page_reload: false,
+    additional_data: {}
   )
     @resources = resources
     @resources_name = resources.first.class.name.downcase.pluralize
@@ -40,6 +41,7 @@ class Shared::ResourcesList < ApplicationComponent
     @filter_title = filter_title.presence || "Sortieren nach"
     @no_filter = no_filter
     @full_page_reload = full_page_reload
+    @additional_data = additional_data
   end
 
   def class_names
@@ -89,7 +91,13 @@ class Shared::ResourcesList < ApplicationComponent
     when DeficiencyReport
       DeficiencyReports::ListItem.new(deficiency_report: resource, wide: @wide)
     when Budget::Investment
-      Budgets::Investments::ListItem.new(budget_investment: resource, wide: @wide)
+      Budgets::Investments::ListItem.new(
+        budget_investment: resource,
+        ballot: @additional_data[:ballot],
+        top_level_active_projekts: @additional_data[:top_level_active_projekts],
+        top_level_archived_projekts: @additional_data[:top_level_archived_projekts],
+        wide: @wide
+      )
     when ProjektEvent
       ProjektEvents::ListItem.new(projekt_event: resource, wide: @wide)
     end

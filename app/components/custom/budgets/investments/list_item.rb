@@ -1,9 +1,12 @@
 class Budgets::Investments::ListItem < ApplicationComponent
   attr_reader :budget_investment
 
-  def initialize(budget_investment:, wide: false)
+  def initialize(budget_investment:, ballot:, top_level_active_projekts:, top_level_archived_projekts:, wide: false)
     @budget_investment = budget_investment
     @wide = wide
+    @ballot = ballot
+    @top_level_active_projekts = top_level_active_projekts
+    @top_level_archived_projekts = top_level_archived_projekts
   end
 
   def component_attributes
@@ -13,7 +16,7 @@ class Budgets::Investments::ListItem < ApplicationComponent
       title: budget_investment.title,
       description: budget_investment.description,
       wide: @wide,
-      url: helpers.projekt_path(budget_investment),
+      url: helpers.budget_investment_path(budget_investment),
       image_url: budget_investment.image&.variant(:medium),
       date: budget_investment.created_at,
       author: budget_investment.author,
@@ -35,9 +38,9 @@ class Budgets::Investments::ListItem < ApplicationComponent
 
   def status_message_class
     if budget_investment.budget.accepting?
-      'success'
+      "success"
     else
-      'warning'
+      "warning"
     end
   end
 end

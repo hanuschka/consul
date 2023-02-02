@@ -123,6 +123,11 @@
     font-size: 15px;
     margin-bottom: 0;
     line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    max-height: 86px;
   }
 
   .resources-list--inner {
@@ -238,30 +243,31 @@
       }
     }
 
-    .callout.warning, .callout.success, .callout.error, .callout.alert {
+    .callout.warning, .callout.success, .callout.error,
+    .callout.alert, .participation-not-allowed,
+    .participation-not-allowed p{
       width: 100%;
       position: absolute;
       top: 0;
       left: 0;
       font-size: 12px;
       height: 100%;
-      display: flex;
+      // display: flex;
       margin-bottom: 0;
       align-items: center;
       justify-content: center;
       text-align: left;
       border: none;
+      margin: 0;
+      padding: 10px;
     }
 
-    .participation-not-allowed {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
-      top: 0;
-      left: 0;
-      font-size: 12px;
-      line-height: 1.2;
+    .participation-not-allowed p{
+      display: flex;
+    }
+
+    p.investment-project-amount {
+      margin-bottom: 0;
     }
   }
 
@@ -282,6 +288,12 @@
 
     &:last-child {
       border-left: 1px solid #d9d9d9;
+    }
+
+    .budget-item--vote-button {
+      .total-supports {
+        display: none;
+      }
     }
 
     .deficiency-report-status {

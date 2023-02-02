@@ -22,6 +22,9 @@
 
             <div class="investment-project-description">
               <%= wysiwyg(investment.description) %>
+              <p>
+                <%= investment.id %>
+              </p>
               <div class="truncate"></div>
             </div>
             <%# = render "shared/tags", taggable: investment, limit: 5 %>
@@ -30,7 +33,6 @@
       </div>
 
       <% unless investment.unfeasible? %>
-
         <% if investment.should_show_votes? %>
           <div id="<%= dom_id(investment) %>_votes"
                class="small-12 medium-3 column text-center">

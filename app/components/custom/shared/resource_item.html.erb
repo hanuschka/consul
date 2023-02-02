@@ -118,7 +118,12 @@
           <div class="resource-item--description">
             <% if @wyshwig %>
             <% else %>
-              <%= raw(truncate(@description, length: truncate_length)&.html_safe) %>
+              <%= helpers.wysiwyg(@description) %>
+              <% if Rails.env.development? %>
+                <p>
+                <%= @resource.id %>
+                </p>
+              <% end %>
             <% end %>
           </div>
 
@@ -166,5 +171,4 @@
       <% end %>
     </div>
   </div>
-
 </div>

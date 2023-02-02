@@ -162,7 +162,7 @@ de:
         different_heading_assigned: "Sie haben bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
         change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme in %{check_ballot} zurückziehen und von vorne beginnen."
         check_ballot_link: "Meine Abstimmungen überprüfen"
-        price: "Dieser Bereich verfügt über ein Budget von"
+        price: "Dieses Budget verfügt über einen Rahmen von"
       votes:
         already_supported: "Sie haben dieses Investitionsprojekt bereits unterstützt. Teilen Sie es!"
         confirm_group:

@@ -11,11 +11,11 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
   private
 
     def budget
-      ballot.budget
+      ballot&.budget
     end
 
     def voted?
-      ballot.has_investment?(investment)
+      ballot&.has_investment?(investment)
     end
 
     def reason

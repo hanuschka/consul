@@ -264,10 +264,10 @@ class Budget
       return permission_problem(user)    if permission_problem?(user)
       return :not_selected               unless selected?
       return :no_ballots_allowed         unless budget.balloting?
-      return :different_heading_assigned unless ballot.valid_heading?(heading)
-      return :casted_offline             if ballot.casted_offline?
+      return :different_heading_assigned unless ballot&.valid_heading?(heading)
+      return :casted_offline             if ballot&.casted_offline?
 
-      ballot.reason_for_not_being_ballotable(self)
+      ballot&.reason_for_not_being_ballotable(self)
     end
 
     def permission_problem(user)

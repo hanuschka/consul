@@ -5,7 +5,10 @@
       Information
     </h4>
 
-    <%= render_custom_block "budgets_footer_#{@budget.id}" %>
+    <% content_block_key = "budgets_footer_#{params[:section]}_#{@budget.id}" %>
+    <% if render_custom_content_block?(content_block_key) %>
+      <%= render_custom_block(content_block_key) %>
+    <% end %>
 
     <div class="margin-top">
       <%= @budget.investments.count %> Vorschläge

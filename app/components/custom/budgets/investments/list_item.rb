@@ -16,13 +16,19 @@ class Budgets::Investments::ListItem < ApplicationComponent
       title: budget_investment.title,
       description: budget_investment.description,
       wide: @wide,
-      url: helpers.budget_investment_path(budget_investment),
+      url: budget_investment_url,
       image_url: budget_investment.image&.variant(:medium),
       date: budget_investment.created_at,
       author: budget_investment.author,
       image_placeholder_icon_class: "fa-euro-sign",
       id: budget_investment.id
     }
+  end
+
+  def budget_investment_url
+    helpers.budget_investment_path(budget_investment.id)
+  rescue
+    ""
   end
 
   def show_status_message?

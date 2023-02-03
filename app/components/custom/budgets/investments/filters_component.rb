@@ -3,16 +3,12 @@ require_dependency Rails.root.join("app", "components", "budgets", "investments"
 class Budgets::Investments::FiltersComponent < ApplicationComponent
   private
 
-    def selected_filter
-      (current_filter.presence || "selected")
-    end
-
     def filters
       valid_filters.map do |filter|
         [
           t("budgets.investments.index.filters.#{filter}"),
           link_path(filter),
-          selected_filter == filter,
+          params[:filter] == filter,
           remote: remote?,
           class: "js-remote-link-push-state",
           "data-footer-tab-back-url": footer_tab_back_button_url(filter),

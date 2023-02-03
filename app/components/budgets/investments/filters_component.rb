@@ -7,12 +7,16 @@ class Budgets::Investments::FiltersComponent < ApplicationComponent
 
   private
 
+  def selected_filter
+    (current_filter.presence || "selected")
+  end
+
     def filters
       valid_filters.map do |filter|
         [
           t("budgets.investments.index.filters.#{filter}"),
           current_path_with_query_params(filter: filter, page: 1),
-          current_filter == filter
+          selected_filter == filter
         ]
       end
     end

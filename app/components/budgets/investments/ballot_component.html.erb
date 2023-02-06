@@ -1,17 +1,22 @@
 <div class="supports ballot">
   <% if voted? %>
     <div class="remove supported">
-      <span class="icon-check-circle"
-            title="<%= t("budgets.investments.investment.already_added") %>">
-      </span>
-      <p class="investment-project-amount">
-        <%= investment.formatted_price %>
-      </p>
+      <div class="votes-info">
+        <span class="icon-check-circle"
+              title="<%= t("budgets.investments.investment.already_added") %>">
+        </span>
+        <p class="investment-project-amount">
+          <%= investment.formatted_price %>
+        </p>
+        <% if investment.should_show_ballots? %>
+          <br>
+          <strong>
+            <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.sum(:line_weight)) %>
+          </strong>
+        <% end %>
+      </div>
+
       <% if investment.should_show_ballots? %>
-        <br>
-        <strong>
-          <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.budget_ballot_lines.sum(:line_weight)) %>
-        </strong>
         <%= button_to budget_ballot_line_path(id: investment.id,
                                               budget_id: investment.budget_id,
                                               investments_ids: investment_ids,
@@ -28,9 +33,11 @@
     </div>
   <% else %>
     <div class="add in-favor">
-      <p class="investment-project-amount">
+      <div class="votes-info-price">
+        <p class="investment-project-amount">
         <%= investment.formatted_price %>
-      </p>
+        </p>
+      </div>
       <% if investment.should_show_ballots? %>
 
         <% if investment.budget.distributed_voting? %>

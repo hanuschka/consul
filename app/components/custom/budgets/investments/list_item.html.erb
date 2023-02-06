@@ -8,7 +8,7 @@
           <%= render Budgets::Investments::VotesComponent.new(budget_investment) %>
         </div>
       <% elsif budget_investment.should_show_ballots? && !budget_investment.should_show_votes? %>
-        <div id="<%= dom_id(budget_investment) %>_ballot" class="">
+        <div id="<%= dom_id(budget_investment) %>_ballot" class="budget-investment-ballot">
           <%= render Budgets::Investments::BallotComponent.new(
             investment: budget_investment,
             investment_ids: budget_investment.budget.investments.ids,
@@ -27,26 +27,7 @@
         <div class="supports js-participation">
         </div>
       <% end %>
-    <% elsif budget_investment.should_show_ballots? && !budget_investment.should_show_votes? %>
-      <% c.second_footer_item do  %>
-        <p class="investment-project-amount">
-        <%= budget_investment.formatted_price %>
-        </p>
-      <% end %>
-    <% elsif budget_investment.should_show_ballots? && !budget_investment.should_show_votes? %>
-      <% c.second_footer_item do  %>
-        <div id="<%= dom_id(budget_investment) %>_ballot" class="">
-          <%= render Budgets::Investments::BallotComponent.new(
-            investment: budget_investment,
-            investment_ids: budget_investment.budget.investments.ids,
-            ballot: @ballot,
-            top_level_active_projekts: @top_level_active_projekts,
-            top_level_archived_projekts: @top_level_archived_projekts
-          ) %>
-        </div>
-      <% end %>
-
-    <% elsif budget_investment.should_show_price? && !budget_investment.should_show_votes? %>
+    <% elsif !budget_investment.should_show_ballots? && budget_investment.should_show_price? && !budget_investment.should_show_votes? %>
       <% c.second_footer_item do  %>
         <div id="<%= dom_id(budget_investment) %>_price" class="supports">
           <div class="supports">

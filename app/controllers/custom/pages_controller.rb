@@ -427,6 +427,7 @@ class PagesController < ApplicationController
 
     @investments = @investments.send("sort_by_#{@current_order}")
       .page(params[:page])
+      .per(1)
       .per(20)
 
     if @budget.present? && @current_projekt.current?

@@ -8,7 +8,7 @@
       Information
     </h4>
 
-    <% content_block_key = "budgets_footer_#{params[:section]}_#{@budget.id}" %>
+    <% content_block_key = "budgets_footer_#{@budget.current_phase.name}_#{@budget.id}" %>
     <%= render_custom_block(content_block_key) %>
 
     <div class="margin-top">

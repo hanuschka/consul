@@ -315,13 +315,10 @@
           justify-content: center;
 
           .investment-project-amount {
-            margin-left: 30px;
+            margin-left: 55px;
           }
         }
       }
-      // .investment-project-amount {
-      //   display: none;
-      // }
 
       br {
         display: none;
@@ -334,14 +331,6 @@
       p {
         padding-top: 6px;
       }
-
-      // .votes-info {
-      //   margin-left: 25px;
-      // }
-      //
-      // .votes-info-price {
-      //   margin-left: 25px;
-      // }
 
       .icon-check-circle {
         display: none;
@@ -358,8 +347,17 @@
 
     .budget-investment-ballot {
       width: 100%;
-      padding: 0 30px;
+      // padding: 0 30px;
+      padding: 0 15px;
       height: 100%;
+
+      .votes-info strong {
+        font-size: 13px;
+      }
+
+      button {
+        font-size: 14px;
+      }
     }
 
     .deficiency-report-status {

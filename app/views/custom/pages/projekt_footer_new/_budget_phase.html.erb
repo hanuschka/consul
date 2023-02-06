@@ -24,7 +24,7 @@
             <div>
               Investitionsvorschläge können erst in der nächsten Phase
               eingereicht werden. Diese beginnt am
-              <%= @budget.current_phase.next_enabled_phase.starts_at.strftime("%d. %B %Y") %>
+              <%= I18n.l(@budget.current_phase.next_enabled_phase.starts_at, format: :budget_first_phase_short) %>
               <!-- 02. September 2022 -->
             </div>
           </div>

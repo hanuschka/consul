@@ -1,3 +1,6 @@
+<%# <% if show_only_in_first_phase_TODO %>
+<%#
+<%# <% end %>
 <div class="sidebar-card">
   <div class="sidebar-card--section">
     <h4 class="sidebar-card--header">
@@ -6,9 +9,7 @@
     </h4>
 
     <% content_block_key = "budgets_footer_#{params[:section]}_#{@budget.id}" %>
-    <% if render_custom_content_block?(content_block_key) %>
-      <%= render_custom_block(content_block_key) %>
-    <% end %>
+    <%= render_custom_block(content_block_key) %>
 
     <div class="margin-top">
       <%= @budget.investments.count %> Vorschläge

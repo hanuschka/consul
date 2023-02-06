@@ -16,7 +16,7 @@ class Budgets::Investments::ListItem < ApplicationComponent
       title: budget_investment.title,
       description: budget_investment.description,
       wide: @wide,
-      url: budget_investment_url,
+      url: helpers.url_for(budget_investment),
       image_url: budget_investment.image&.variant(:medium),
       date: budget_investment.created_at,
       author: budget_investment.author,

@@ -1,35 +1,34 @@
-<%# <% if show_only_in_first_phase_TODO %>
-<%#
-<%# <% end %>
-<div class="sidebar-card">
-  <div class="sidebar-card--section">
-    <h4 class="sidebar-card--header">
-      <i class="fas fa-info-circle"></i>
-      Information
-    </h4>
+<% unless @budget.informing? %>
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="fas fa-info-circle"></i>
+        Information
+      </h4>
 
-    <% content_block_key = "budgets_footer_#{@budget.current_phase.name}_#{@budget.id}" %>
-    <%= render_custom_block(content_block_key) %>
+      <% content_block_key = "budgets_footer_#{@budget.current_phase.kind}_#{@budget.id}" %>
+      <%= render_custom_block(content_block_key) %>
 
-    <div class="margin-top">
-      <%= @budget.investments.count %> Vorschläge
-    </div>
-
-    <% if can?(:create, Budget::Investment.new(budget: @budget)) %>
       <div class="margin-top">
-        <% if current_user && current_user.level_two_or_three_verified? %>
-          <%= link_to t("budgets.investments.index.sidebar.create"),
-            new_budget_investment_path(budget_id: @budget.id), class: "button budget expanded" %>
-        <% else %>
-          <div class="callout warning">
-            <%= sanitize(t("budgets.investments.index.sidebar.verified_only",
-                           verify: link_to_verify_account)) %>
-          </div>
-        <% end %>
+        <%= @budget.investments.count %> Vorschläge
       </div>
-    <% end %>
+
+      <% if can?(:create, Budget::Investment.new(budget: @budget)) %>
+        <div class="margin-top">
+          <% if current_user && current_user.level_two_or_three_verified? %>
+            <%= link_to t("budgets.investments.index.sidebar.create"),
+              new_budget_investment_path(budget_id: @budget.id), class: "button budget expanded" %>
+          <% else %>
+            <div class="callout warning">
+              <%= sanitize(t("budgets.investments.index.sidebar.verified_only",
+                verify: link_to_verify_account)) %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <% if @heading && can?(:show, @ballot) %>
   <div class="sidebar-card budget-investment-sidebar-ballot">

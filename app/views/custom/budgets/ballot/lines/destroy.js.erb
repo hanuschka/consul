@@ -1,0 +1,13 @@
+$("#progress_bar").html("<%= j render("budgets/ballot/progress_bar", ballot: @ballot, heading: @heading) %>");
+
+<% if Setting.new_design_enabled? %>
+    $("#sidebar").html("<%= j render("budgets/investments/sidebar_new") %>");
+<% else %>
+    $("#sidebar").html("<%= j render("budgets/investments/sidebar") %>");
+<% end %>
+
+$("#ballot").html("<%= j render("budgets/ballot/ballot") %>")
+
+<%= render "refresh_ballots",
+            investment_ids: @investment_ids,
+            ballot: @ballot %>

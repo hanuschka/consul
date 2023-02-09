@@ -17,22 +17,28 @@
             top_level_archived_projekts: @top_level_archived_projekts
           ) %>
         </div>
+      <% elsif budget_investment.should_show_price? && !budget_investment.should_show_votes? %>
+        <% c.second_footer_item do  %>
+          <div id="<%= dom_id(budget_investment) %>_price" class="supports">
+            <div class="supports">
+              <span class="total-supports no-button price">
+                <%= budget_investment.formatted_price %>
+              </span>
+            </div>
+          </div>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
 
   <% if budget_investment.feasible? %>
-    <% if budget_investment.should_show_vote_count? %>
+    <% if !budget_investment.should_show_votes? && !budget_investment.should_show_ballots? && !budget_investment.should_show_price? && budget_investment.should_show_vote_count? %>
       <% c.second_footer_item do  %>
-        <div class="supports js-participation">
-        </div>
-      <% end %>
-    <% elsif !budget_investment.should_show_ballots? && budget_investment.should_show_price? && !budget_investment.should_show_votes? %>
-      <% c.second_footer_item do  %>
-        <div id="<%= dom_id(budget_investment) %>_price" class="supports">
-          <div class="supports">
-            <span class="total-supports no-button price">
-              <%= budget_investment.formatted_price %>
+        <div id="<%= dom_id(budget_investment) %>_votes" class="">
+          <div class="supports js-participation">
+            <span class="total-supports no-button">
+              <%= t("budgets.investments.investment.supports",
+                    count: budget_investment.total_votes) %>
             </span>
           </div>
         </div>

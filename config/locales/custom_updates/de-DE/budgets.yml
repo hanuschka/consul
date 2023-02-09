@@ -21,7 +21,7 @@ de:
         filters:
           all: Alle Vorschläge
           feasible: Durchführbare Vorschläge
-          unfeasible: Nicht durchführbare Vorschläge
+          unfeasible: Nicht ausgewählte Vorschläge
           undecided: Noch nicht definiert
         orders:
           random: Zufällig
@@ -69,6 +69,6 @@ de:
             accepting: Der Investitionsvorschlag wurde erfolgreich eingereicht.
             reviewing: Der Investitionsvorschlag wird zur Zeit intern auf seine Durchführbarkeit überprüft.
             valuating: Die Kosten für diesen Investitionsvorschlag werden intern ermittelt.
-            publishing_prices: Die interne Kostenschätzung des Vorschlags ist abgeschlossen.
+            publishing_prices: Die interne Kostenschätzung wurde abgeschlossen.
             reviewing_ballots: Die Abstimmung wird gerade intern überprüft.
             finished: Die interne Kostenschätzung des Vorschlags ist abgeschlossen.

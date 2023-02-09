@@ -109,6 +109,9 @@ de:
           change_vote_info:
             knapsack: "Sie können jederzeit %{link} bis zum Ende dieser Phase. Es besteht keine Notwendigkeit, das gesamte verfügbare Budget auszugeben"
             approval: "Sie können jederzeit %{link} bis zum Ende dieser Phase."
+          change_vote_info_plain:
+            knapsack: "Sie können jederzeit ihre stimme ändern  bis zum Ende dieser Phase. Es besteht keine Notwendigkeit, das gesamte verfügbare Budget auszugeben"
+            approval: "Sie können jederzeit ihre stimme ändern  bis zum Ende dieser Phase."
           change_vote_link: "Ihre Stimme ändern"
           different_heading_assigned: "Sie haben bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
           change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme unter %{check_ballot} entfernen und von vorne beginnen."
@@ -118,7 +121,7 @@ de:
         filter: Filter
         filters:
           not_unfeasible: "Durchführbar"
-          selected: "Ausgewählt"
+          selected: "Ausgewählte Vorschläge"
           unfeasible: "Nicht durchführbar"
           unselected: "Nicht für die Endabstimmung ausgewählt"
           winners: "Gewinner"

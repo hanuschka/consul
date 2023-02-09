@@ -89,6 +89,9 @@
 <% if @map_location&.available? %>
   <%= render "budgets/investments/map" %>
 <% end %>
-<%# <%= render "shared/tag_cloud", taggable: "Budget::Investment" %>
-<%# <%= render "budgets/investments/categories" %>
-<%= render Budgets::Investments::FiltersComponent.new %>
+
+<% unless @budget.phase == 'publishing_prices' && projekt_feature?(@projekt, 'budgets.show_results_after_first_vote')  # con-1036 %>
+  <% if params[:section].blank? || params[:section] == 'overview' %>
+    <%= render Budgets::Investments::FiltersComponent.new %>
+  <% end %>
+<% end %>

@@ -59,9 +59,7 @@
       <% end %>
 
       <p>
-      <%= sanitize(@ballot.change_vote_info(
-        link: link_to(t("budgets.investments.index.sidebar.change_vote_link"),
-                      budget_ballot_path(@budget)))) %>
+      <%= @ballot.change_vote_info_plain_text %>
       </p>
 
       <ul class="ballot-list">
@@ -76,7 +74,6 @@
       <%= link_to t("budgets.investments.header.check_ballot"),
         budget_ballot_path(@budget),
         class: "button hollow expanded" %>
-
     </div>
   </div>
 

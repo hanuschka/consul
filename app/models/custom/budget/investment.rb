@@ -9,6 +9,11 @@ class Budget
     scope :seen, -> { where.not(ignored_flag_at: nil) }
     scope :unseen, -> { where(ignored_flag_at: nil) }
 
+    scope :exit_hard, -> {
+      binding.pry
+      exit 1
+    }
+
     enum implementation_performer: { city: 0, user: 1 }
 
     scope :sort_by_random, -> { reorder('RANDOM()') }
@@ -44,6 +49,10 @@ class Budget
 
     def permission_problem_keys_allowing_ballot_line_deletion
       [:not_enough_available_votes, :not_enough_money]
+    end
+
+    def final_winner?
+      selected? && !incompatible? && winner?
     end
   end
 end

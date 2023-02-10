@@ -49,4 +49,13 @@
       content: none;
     }
   }
+
+  .budget-investment-status-icon {
+    font-size: 50px;
+
+    &.-winner {
+      font-size: 30px;
+      color: #fdce14;
+    }
+  }
 }

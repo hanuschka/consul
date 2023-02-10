@@ -17,13 +17,6 @@ class Budget::VotingStyles::Base
     )
   end
 
-  def change_vote_info_text
-    I18n.t(
-      "budgets.investments.index.sidebar.change_vote_info_plain.#{name}",
-      phase_end_date: I18n.l(budget.current_phase.ends_at.to_date, format: :long)
-    )
-  end
-
   def amount_progress(heading)
     I18n.t(
       "budgets.ballots.show.amount_progress",

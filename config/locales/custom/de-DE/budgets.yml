@@ -116,7 +116,7 @@ de:
           different_heading_assigned: "Sie haben bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
           change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme unter %{check_ballot} entfernen und von vorne beginnen."
           check_ballot_link: "Überprüfung meiner Abstimmung"
-          zero: Sie haben für keinen Investitionsvorschlag in dieser Gruppe abgestimmt.
+          zero:  Sie haben bislang noch für keinen Investitionsvorschlag abgestimmt.
           create: "Investitionsvorschlag erstellen"
         filter: Filter
         filters:

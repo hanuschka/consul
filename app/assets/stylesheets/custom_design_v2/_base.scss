@@ -36,6 +36,10 @@ body.new-custom-design {
   h1, h2, h3, h4, h5 {
     color: #292929;
   }
+
+  label > [type='checkbox'], label > [type='radio'] {
+    margin-top: 8px;
+  }
 }
 
 // body.new-custom-design > header, .new-custom-design .wrapper > header {

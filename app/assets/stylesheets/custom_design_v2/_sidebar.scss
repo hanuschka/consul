@@ -57,6 +57,7 @@
     font-size: 16px;
     margin-bottom: 12px;
     color: black;
+    font-weight: 500;
 
     i {
       margin-right: 3px;
@@ -85,6 +86,14 @@
     margin-bottom: 15px;
     color: $main-text-color;
     font-size: 14px;
+
+    p {
+      font-size: 14px;
+    }
+
+    input {
+      margin-bottom: 10px;
+    }
 
     .sidebar-divider {
       // display: none;

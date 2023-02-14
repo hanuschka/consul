@@ -15,3 +15,5 @@
 
   <%= render Proposals::FormComponent.new(proposal, url: proposals_path, selected_projekt: @selected_projekt) %>
 </main>
+
+<%= render UserResource::FormComponent.new(proposal, url: proposals_path, selected_projekt: @selected_projekt)>

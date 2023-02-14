@@ -9,11 +9,6 @@ class Budget
     scope :seen, -> { where.not(ignored_flag_at: nil) }
     scope :unseen, -> { where(ignored_flag_at: nil) }
 
-    scope :exit_hard, -> {
-      binding.pry
-      exit 1
-    }
-
     enum implementation_performer: { city: 0, user: 1 }
 
     scope :sort_by_random, -> { reorder('RANDOM()') }

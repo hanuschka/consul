@@ -39,4 +39,10 @@
       margin-bottom: 8px;
     }
   }
+
+  .tags a.selected, .tag-cloud a.selected, .categories a.selected, .geozone
+  a.selected, .sidebar-links a.selected, .tags span.selected {
+    background: #06408E;
+    color: #ffffff;
+  }
 }

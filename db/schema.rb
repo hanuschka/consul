@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_26_104630) do
+ActiveRecord::Schema.define(version: 2023_02_14_071100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -640,6 +640,7 @@ ActiveRecord::Schema.define(version: 2023_01_26_104630) do
     t.datetime "featured_at"
     t.bigint "projekt_id"
     t.string "on_behalf_of"
+    t.string "video_url"
     t.index ["author_id", "hidden_at"], name: "index_debates_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_debates_on_author_id"
     t.index ["cached_votes_down"], name: "index_debates_on_cached_votes_down"

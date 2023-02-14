@@ -145,7 +145,8 @@ de:
       recommendation_three: Kritik ist sehr willkommen. Denn dies ist ein Raum für unterschiedliche Betrachtungen. Aber wir empfehlen Ihnen, sich an sprachlicher Eleganz und Intelligenz zu halten. Die Welt ist ein besserer Ort mit diesen Tugenden.
       recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
       recommendations_title: Empfehlungen für die Erstellung einer Diskussion
-      start_new: Eine Diskussion starten
+      start_new: Diskussion starten
+      description: Mit einer eigenen Diskussion tragen Sie dazu bei, möglichst viele Facetten eines Themas zu beleuchten – vielen Dank, dass Sie sich einbringen! In nur wenigen Schritten ist Ihre Diskussion erstellt und erlaubt es anderen BürgerInnen, sich zu beteiligen.
     show:
       author_deleted: Benutzer*in gelöscht
       comments:

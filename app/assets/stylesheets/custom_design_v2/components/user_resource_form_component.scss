@@ -1,0 +1,154 @@
+.user-resource-form-component--title {
+  font-weight: 500;
+  font-size: 35px;
+}
+
+.user-resource-form-component--description {
+  margin-bottom: 30px;
+}
+
+.user-resource-form-component--banner-editor {
+  width: 100%;
+  background: #D9F0EB;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 30px;
+  padding-right: 20px;
+  height: 350px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+
+  .translatable-fields {
+    width: 50%;
+  }
+
+  textarea {
+    background: transparent !important;
+    height: 3rem;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-size: 27px;
+    overflow: hidden;
+    height: 320px;
+
+    &::placeholder  {
+      color: gray;
+      opacity: 0.7;
+    }
+  }
+
+  #projekt-selector-fields {
+    display: block;
+  }
+
+  #projekt-selector-fields .projekt-selector {
+    width: 248px;
+  }
+}
+
+.banner-editor-image-attachment {
+  position: relative;
+  background: #e2e2e2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48%;
+}
+
+.banner-editor-image-attachment--placeholder {
+  width: 70%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+  padding-top: 40px;
+}
+
+.banner-editor-image-attachment--text {
+  color: #003A71;
+  opacity: 0.5;
+  line-height: 1.25;
+  margin-bottom: 65px;
+}
+
+.banner-editor-image-attachment--label {
+  color: #003A71;
+  font-size: 33px;
+  opacity: 0.7;
+}
+
+.banner-editor-image-attachment--plus-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 35px;
+  color: #003A71;
+  opacity: 0.5;
+  font-size: 57px;
+  width: 50px;
+  height: 50px;
+}
+
+h3.user-resource-form-component--submit-section--privacy-policy {
+  font-size: 27px;
+  color: black;
+  border-bottom: 1px solid $border;
+  padding-bottom: 20px;
+}
+
+
+.sidebar-card {
+
+  .documents-list {
+    legend {
+      display: none;
+    }
+  }
+
+  p.help-text {
+    color: inherit;
+    font-size: inherit;
+    font-style: inherit;
+  }
+
+  .button.upload-document::before {
+    display: none;
+  }
+
+  .column {
+    padding: 0;
+    float: none;
+  }
+
+  input[type=file] {
+    margin: 0 !important;
+  }
+
+  .action-remove {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .small-9 {
+    width: 100%;
+  }
+
+  .small-3 {
+    width: 100%;
+  }
+
+  input {
+    font-size: 15px;
+  }
+
+  //
+  // .attachment-actions {
+  //   display: flex;
+  // }
+}

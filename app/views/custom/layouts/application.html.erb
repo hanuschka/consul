@@ -14,7 +14,7 @@
   </head>
   <% if Setting.new_design_enabled? %>
     <body class="<%= yield(:body_class) %> new-custom-design public">
-      <%= raw setting["html.per_page_code_body"] %>
+      <%# <%= raw setting["html.per_page_code_body"] %>
 
       <%= render "layouts/header", with_subnavigation: true %>
 

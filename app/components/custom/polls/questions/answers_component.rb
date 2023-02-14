@@ -81,7 +81,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def disable_answer?(question_answer)
-    (question.multiple? && user_answers.count == question.max_votes) ||
+    (question.votation_type.multiple? && user_answers.count == question.max_votes) ||
       (question.votation_type.multiple_with_weight? && available_vote_weight(question_answer) == 0)
   end
 end

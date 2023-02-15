@@ -147,6 +147,28 @@ h3.user-resource-form-component--submit-section--privacy-policy {
     font-size: 15px;
   }
 
+  .sdg-related-list-selector {
+    legend {
+      display: none;
+    }
+  }
+
+  #sdgs-selector {
+    margin-top: 0;
+
+    > br {
+      display: none;
+    }
+  }
+
+  #category_tags + br {
+    display: none;
+  }
+
+  .button.upload-document {
+    margin-bottom: 0;
+  }
+
   //
   // .attachment-actions {
   //   display: flex;

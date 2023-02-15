@@ -3,9 +3,9 @@
   <p class="help-text"><%= note %></p>
 
   <div id="nested-image">
-    <%# <%= f.fields_for image_fields do |image_builder| %>
-    <%#   <%= render Images::FieldsComponent.new(image_builder, imageable: imageable) %>
-    <%# <% end %>
+    <%= f.fields_for image_fields do |image_builder| %>
+      <%= render Images::FieldsComponent.new(image_builder, imageable: imageable) %>
+    <% end %>
   </div>
 
   <%= link_to_add_association t("images.form.add_new_image"), f, image_fields,

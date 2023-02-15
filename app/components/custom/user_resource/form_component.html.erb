@@ -26,11 +26,11 @@
               autocomplete: "off" %>
           <% end %>
 
-          <%# <% if extended_feature?("debates.head_image_for_debates") %>
-          <%#   <div class="images">
-          <%#     <%= render "images/nested_image", imageable: resource, f: f %>
-          <%#   </div>
-          <%# <% end %>
+          <% if extended_feature?("debates.head_image_for_debates") %>
+            <div class="images">
+              <%= render "images/nested_image", imageable: resource, f: f %>
+            </div>
+          <% end %>
 
           <div class="banner-editor-image-attachment">
             <div class="banner-editor-image-attachment--placeholder">
@@ -158,8 +158,7 @@
 
 
 
-          <% if (extended_feature?("modulewide.enable_categories") && @categories&.any?) ||
-              SDG::ProcessEnabled.new(f.object).enabled?    %>
+          <% if extended_feature?("modulewide.enable_categories") && @categories&.any? && SDG::ProcessEnabled.new(f.object).enabled? %>
             <div class="sidebar-card">
               <div class="sidebar-card--section">
                 <div class="sidebar-card--header">
@@ -183,7 +182,7 @@
             <div class="sidebar-card">
               <div class="sidebar-card--section">
                 <div class="sidebar-card--header">
-                  <i class="fa fa-video"></i>
+                  <i class="fa fa-user"></i>
                   Veröffentlichen für
                 </div>
                 <p>

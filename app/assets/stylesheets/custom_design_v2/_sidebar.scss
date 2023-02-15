@@ -65,7 +65,6 @@
     }
   }
 
-
   .sidebar-card--section + .sidebar-card--section {
     border-top: 1px solid #D9D9D9;
   }
@@ -117,7 +116,7 @@
 
   .sidebar-title {
     border-top: none;
-    // display: none;
+    display: none;
     font-size: 16px;
     margin-bottom: 12px;
     color: black;

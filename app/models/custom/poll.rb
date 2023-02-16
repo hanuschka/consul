@@ -14,7 +14,6 @@ class Poll < ApplicationRecord
 
   scope :with_current_projekt,  -> { joins(:projekt).merge(Projekt.current) }
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
-  scope :current, -> { joins(:voting_phase).merge(ProjektPhase::VotingPhase.current) }
 
   def not_allow_user_geozone?(user)
     geozone_restricted? && geozone_ids.any? && !geozone_ids.include?(user.geozone_id)
@@ -50,10 +49,14 @@ class Poll < ApplicationRecord
   end
 
   def answerable_by?(user)
-    @answerable ||= voting_phase.permission_problem(user).blank?
+    @answerable ||= (voting_phase.permission_problem(user).blank? && current?)
   end
 
   def reason_for_not_being_answerable_by(user)
+    return :poll_expired if expired?
+
+    return :poll_not_current if !current?
+
     voting_phase.permission_problem(user)
   end
 

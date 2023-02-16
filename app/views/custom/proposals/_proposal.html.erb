@@ -5,7 +5,7 @@
     </div>
   </div>
 
-  <% cache [proposal, "image"] do %>
+  <% cache [proposal, proposal.image, "image"] do %>
     <div class='columns small-12 medium-3 large-2 show-for-small-only not-print'>
       <% if show_image_thumbnail?(proposal) %>
         <%= link_to namespaced_proposal_path(proposal) do %>
@@ -39,6 +39,9 @@
                   params[:geozone_restriction],
                   params[:restricted_geozones],
                   "details"] do %>
+          <div class='resource-projekt-labels'>
+            <%= render Shared::ProjektLabelsComponent.new(resource: proposal) %>
+          </div>
           <h4 class='resource-name'><%= link_to proposal.title, namespaced_proposal_path(proposal) %></h4>
           <div class="resource-summary margin-bottom">
             <%= link_to namespaced_proposal_path(proposal) do %>

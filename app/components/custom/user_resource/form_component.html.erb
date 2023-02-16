@@ -26,21 +26,22 @@
               autocomplete: "off" %>
           <% end %>
 
-          <% if extended_feature?("debates.head_image_for_debates") %>
-            <div class="images">
-              <%= render "images/nested_image", imageable: resource, f: f %>
-            </div>
-          <% end %>
+          <%# <% if extended_feature?("debates.head_image_for_debates") %>
+          <%# <% end %>
 
           <div class="banner-editor-image-attachment">
             <div class="banner-editor-image-attachment--placeholder">
               <div class="banner-editor-image-attachment--text">
                 Diskussionsbeiträge mit aussagekräftigem Bild erhalten durchschnittlich 34 % mehr Unterstützung
               </div>
+            </div>
               <i class="banner-editor-image-attachment--plus-icon fa fa-plus"></i>
-              <div class="banner-editor-image-attachment--label">
-                Bild hinzufügen
-              </div>
+
+            <div id="nested-image-2">
+              <% f.object.image ||= Image.new %>
+              <%= f.fields_for :image do |image_builder| %>
+                <%= render Images::FieldsComponent.new(image_builder, imageable: f.object) %>
+              <% end %>
             </div>
           </div>
         </div>
@@ -156,8 +157,6 @@
             </div>
           <%end%>
 
-
-
           <% if extended_feature?("modulewide.enable_categories") && @categories&.any? && SDG::ProcessEnabled.new(f.object).enabled? %>
             <div class="sidebar-card">
               <div class="sidebar-card--section">
@@ -196,4 +195,3 @@
     </div>
   <% end %>
 </main>
-

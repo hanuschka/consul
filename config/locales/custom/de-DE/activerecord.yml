@@ -444,7 +444,7 @@ de:
         attachment: "Anhang"
       image:
         title: Titel
-        attachment: "Anhang"
+        attachment: "Bild hinzufügen"
       poll/question/answer:
         title: Antwort
         description: Beschreibung

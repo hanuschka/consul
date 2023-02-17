@@ -51,6 +51,7 @@ class Images::DirectUploadComponent < ApplicationComponent
       f.file_field(
         :attachment,
         label_options: { class: "direct-image-upload--select-button js-direct-image-upload--select-button" },
+        label: false,
         accept: accepted_content_types_extensions,
         class: "js-direct-image-upload--input",
         data: { url: direct_upload_path }

@@ -1,7 +1,6 @@
 .direct-image-upload {
   height: 100%;
   position: relative;
-  background: #e2e2e2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +20,14 @@
   }
 
   .form-error {
-    font-size: 15px;
+    font-size: 14px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 0;
+    padding: 12px 20px;
   }
 }
 
@@ -36,6 +42,7 @@
 .direct-image-upload--file-attach-area {
   height: 100%;
   cursor: pointer;
+  background: #e2e2e2;
 }
 
 .direct-image-upload--placeholder {
@@ -55,8 +62,7 @@
 }
 
 .direct-image-upload--file-field {
-  position: absolute;
-  bottom: 58px;
+  bottom: 0;
 }
 
 .banner-editor-image-attachment--label {
@@ -116,7 +122,14 @@
   .error {
     margin: 0;
     display: block;
-    padding: 3px 20px;
+    font-size: 14px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 0;
+    padding: 12px 20px;
   }
 }
 

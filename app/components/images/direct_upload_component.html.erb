@@ -7,17 +7,16 @@
       <div class="direct-image-upload--plus">
         +
       </div>
-
-      <div class="direct-image-upload--file-field">
-        <%= file_field %>
-      </div>
     </div>
   </div>
 
   <div class="direct-image-upload--inputs">
     <%= f.hidden_field :id %>
     <%= f.hidden_field :user_id, value: current_user.id %>
-    <%= f.hidden_field :cached_attachment %>
+    <%= f.hidden_field :cached_attachment, class: "js-direct-image-upload--cached-attachment" %>
+    <div class="direct-image-upload--file-field">
+      <%= file_field %>
+    </div>
   </div>
 
   <div class="action-add js-attachment-errors direct-image-upload--attachment-errors <%= singular_name %>-attachment">

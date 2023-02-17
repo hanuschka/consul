@@ -3,7 +3,6 @@
     <div class="layout-main-column">
       <div class="layout-left-column">
 
-        <%= render "shared/errors", resource: resource %>
         <%# <%= back_path %>
 
         <h1 class="user-resource-form--title">
@@ -13,6 +12,8 @@
         <div class="user-resource-form--description">
           <%= helpers.render_custom_block "user_resource_form_#{resource.class.name.downcase}" %>
         </div>
+
+        <%= render "shared/errors", resource: resource %>
 
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>

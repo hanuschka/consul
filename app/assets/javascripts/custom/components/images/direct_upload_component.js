@@ -13,7 +13,7 @@
     },
 
     fileAttachAreaClick: function(e) {
-      e.currentTarget.querySelector('.js-direct-image-upload--input').click();
+      e.currentTarget.closest(".js-direct-image-upload").querySelector('.js-direct-image-upload--input').click();
     },
 
     initializeDirectUploadInput: function(input) {
@@ -143,6 +143,7 @@
 
         $mainElement.find(".image-preview").remove();
         $mainElement.find(".js-direct-image-upload--preview-area").removeClass("-active");
+        $mainElement.find(".js-direct-image-upload--cached-attachment").val("");
       });
     },
   };

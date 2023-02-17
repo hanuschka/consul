@@ -6,6 +6,23 @@
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+
+  .image-preview, figure, img {
+    width: 100%;
+    height: 100%;
+  }
+
+  img {
+    object-fit: cover;
+  }
+
+  .medium-9 {
+    width: 100%;
+  }
+
+  .form-error {
+    font-size: 15px;
+  }
 }
 
 .direct-image-upload--select-button {

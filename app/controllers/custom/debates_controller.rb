@@ -66,7 +66,6 @@ class DebatesController < ApplicationController
     @debate = Debate.new(strong_params)
     @debate.author = current_user
 
-    binding.pry
     if @debate.save
       track_event
       NotificationServices::NewDebateNotifier.new(@debate.id).call

@@ -11,20 +11,23 @@
         </h1>
 
         <div class="user-resource-form--description">
-          <%= t("new.description", scope: i18n_scope) %>
+          <%= helpers.render_custom_block "user_resource_form_#{resource.class.name.downcase}" %>
         </div>
 
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
           <div class="user-resource-form--banner-editor">
-            <%= translations_form.text_area :title,
-              maxlength: Debate.title_max_length,
-              data: suggest_data(resource),
-              label: false,
-              class: 'user-resource-form--banner-editor-title',
-              placeholder: "Geben Sie Ihrer Diskussion einen plakativen Titel, zum Beispiel „Die Projektlaufzeit ist zu lang“ oder „Bitte die geplanten Maßnahmen erweitern“.",
-              autocomplete: "off" %>
+            <div class="user-resource-form--title-wrapper">
+              <%= translations_form.text_area :title,
+                maxlength: Debate.title_max_length,
+                data: suggest_data(resource),
+                label: false,
+                class: 'user-resource-form--banner-editor-title',
+                placeholder: "Geben Sie Ihrer Diskussion einen plakativen Titel, zum Beispiel „Die Projektlaufzeit ist zu lang“ oder „Bitte die geplanten Maßnahmen erweitern“.",
+                autocomplete: "off"
+              %>
+            </div>
 
 
             <% if extended_feature?("debates.head_image_for_debates") %>

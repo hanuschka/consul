@@ -26,7 +26,7 @@
   <div class="<%= preview_area_class %> direct-image-upload--preview-area js-direct-image-upload--preview-area">
 
     <% if attachable.attachment.attached? && attachable.attachment.image? %>
-      <%# <%= render_image(attachable, :thumb, false) %>
+      <%= render_image(attachable, :thumb, false) %>
     <% end %>
 
     <!-- <img class="js-direact-image-upload--preview-image"> -->

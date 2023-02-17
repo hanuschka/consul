@@ -85,7 +85,15 @@
     }
   }
 
-  .user-resource-form--banner-editor-title {
+  .user-resource-form--title-wrapper {
+    width: 50%;
+
+    .form-error {
+      margin-bottom: 0;
+    }
+  }
+
+  textarea.user-resource-form--banner-editor-title {
     background: transparent !important;
     height: 3rem;
     border: none;
@@ -93,8 +101,8 @@
     box-shadow: none;
     font-size: 27px;
     overflow: hidden;
-    height: 320px;
-    width: 50%;
+    height: 270px;
+    padding: 0;
 
     &::placeholder  {
       color: gray;

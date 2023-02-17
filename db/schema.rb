@@ -2169,6 +2169,7 @@ ActiveRecord::Schema.define(version: 2023_02_14_071100) do
     t.boolean "adm_email_on_new_debate", default: false
     t.boolean "adm_email_on_new_deficiency_report", default: false
     t.bigint "city_street_id"
+    t.boolean "adm_email_on_new_manual_verification", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

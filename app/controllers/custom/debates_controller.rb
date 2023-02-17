@@ -66,6 +66,7 @@ class DebatesController < ApplicationController
     @debate = Debate.new(strong_params)
     @debate.author = current_user
 
+    binding.pry
     if @debate.save
       track_event
       NotificationServices::NewDebateNotifier.new(@debate.id).call
@@ -140,7 +141,7 @@ class DebatesController < ApplicationController
   private
 
   def debate_params
-    attributes = [:tag_list, :terms_of_service, :projekt_id, :related_sdg_list, :on_behalf_of,
+    attributes = [:tag_list, :terms_of_service, :projekt_id, :related_sdg_list, :on_behalf_of, :video_url,
                   projekt_label_ids: [],
                   image_attributes: image_attributes,
                   documents_attributes: document_attributes]

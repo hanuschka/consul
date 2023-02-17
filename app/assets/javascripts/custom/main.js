@@ -11,6 +11,7 @@
       App.DropdownMenuComponent.initialize();
       App.ModalNotification.initialize();
       App.StikyHeader.initialize();
+      App.DirectUploadComponent.initialize();
     }
   };
 }).call(this);

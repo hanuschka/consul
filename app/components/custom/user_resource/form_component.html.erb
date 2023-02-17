@@ -1,4 +1,4 @@
-<main class="user-resource-form-component">
+<main class="user-resource-form">
   <%= translatable_form_for(resource, html: { class: "debate-form" }) do |f| %>
     <div class="layout-main-column">
       <div class="layout-left-column">
@@ -6,61 +6,50 @@
         <%= render "shared/errors", resource: resource %>
         <%# <%= back_path %>
 
-        <h1 class="user-resource-form-component--title">
+        <h1 class="user-resource-form--title">
           <%= t("new.start_new", scope: i18n_scope) %>
         </h1>
 
-        <div class="user-resource-form-component--description">
+        <div class="user-resource-form--description">
           <%= t("new.description", scope: i18n_scope) %>
         </div>
 
-        <div class="user-resource-form-component--banner-editor">
-          <%= f.translatable_fields do |translations_form| %>
-            <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
+        <%= f.translatable_fields do |translations_form| %>
+          <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
+          <div class="user-resource-form--banner-editor">
             <%= translations_form.text_area :title,
               maxlength: Debate.title_max_length,
               data: suggest_data(resource),
               label: false,
+              class: 'user-resource-form--banner-editor-title',
               placeholder: "Geben Sie Ihrer Diskussion einen plakativen Titel, zum Beispiel „Die Projektlaufzeit ist zu lang“ oder „Bitte die geplanten Maßnahmen erweitern“.",
               autocomplete: "off" %>
-          <% end %>
 
-          <%# <% if extended_feature?("debates.head_image_for_debates") %>
-          <%# <% end %>
 
-          <div class="banner-editor-image-attachment">
-            <div class="banner-editor-image-attachment--placeholder">
-              <div class="banner-editor-image-attachment--text">
-                Diskussionsbeiträge mit aussagekräftigem Bild erhalten durchschnittlich 34 % mehr Unterstützung
+            <% if extended_feature?("debates.head_image_for_debates") %>
+              <div class="banner-editor-image-attachment">
+                <% f.object.image ||= Image.new %>
+                <%= f.fields_for :image do |image_builder| %>
+                  <%= render Images::DirectUploadComponent.new(image_builder, imageable: f.object) %>
+                  <%# <%= render Images::FieldsComponent.new(image_builder, imageable: f.object) %>
+                <% end %>
               </div>
-            </div>
-              <i class="banner-editor-image-attachment--plus-icon fa fa-plus"></i>
-
-            <div id="nested-image-2">
-              <% f.object.image ||= Image.new %>
-              <%= f.fields_for :image do |image_builder| %>
-                <%= render Images::FieldsComponent.new(image_builder, imageable: f.object) %>
-              <% end %>
-            </div>
+            <% end %>
           </div>
-        </div>
 
-        <div>
-          <%= f.translatable_fields do |translations_form| %>
-            <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
-            <%= translations_form.text_area :description,
-              maxlength: Debate.description_max_length,
-              label: false,
-              placeholder: "Beschreiben Sie hier, worum es Ihnen in Ihrer Diskussion geht. Folgendes Vorgehen hat sich bewährt: Beginnen Sie mit einer allgemeinen Beschreibung Ihres Anliegens und stellen Sie im Anschluss Ihre Position zum Thema dar. Achten Sie beim Schreiben möglichst auf kurze Sätze. Nutzen Sie außerdem Absätze, um Ihren Text lesbarer zu machen. (Viele Nutzer lesen Ihren Text auf mobilen Geräten.) Beschränken Sie Ihren Inhalt – sofern möglich – auf maximal drei Absätze. Verwenden Sie überdies – wenn passend – Aufzählungen und Stichpunkte für eine bessere Übersichtlichkeit.",
-              class: "html-area #{helpers.ck_editor_class(current_user)}" %>
-          <% end %>
-        </div>
+          <%= translations_form.text_area :description,
+            maxlength: Debate.description_max_length,
+            label: false,
+            placeholder: "Beschreiben Sie hier, worum es Ihnen in Ihrer Diskussion geht. Folgendes Vorgehen hat sich bewährt: Beginnen Sie mit einer allgemeinen Beschreibung Ihres Anliegens und stellen Sie im Anschluss Ihre Position zum Thema dar. Achten Sie beim Schreiben möglichst auf kurze Sätze. Nutzen Sie außerdem Absätze, um Ihren Text lesbarer zu machen. (Viele Nutzer lesen Ihren Text auf mobilen Geräten.) Beschränken Sie Ihren Inhalt – sofern möglich – auf maximal drei Absätze. Verwenden Sie überdies – wenn passend – Aufzählungen und Stichpunkte für eine bessere Übersichtlichkeit.",
+            class: "html-area #{helpers.ck_editor_class(current_user)}"
+          %>
+      <% end %>
 
-        <div class="user-resource-form-component--submit-section">
+        <div class="user-resource-form--submit-section">
           <% if resource.new_record? %>
-            <h3 class="user-resource-form-component--submit-section--privacy-policy">
+            <h3 class="user-resource-form--submit-section--privacy-policy">
               Datenschutzbestimmungen & Allgemeine Nutzerbedingungen
             </h3>
 
@@ -95,7 +84,7 @@
               <% else %>
                 <!-- <legend><%= t("custom.shared.form.projekt_assignment") %></legend> -->
                 <div class="margin-top">
-                  <%# <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: resource, projekts: Projekt.top_level }  %>
+                  <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: resource, projekts: Projekt.top_level }  %>
                 </div>
               <% end %>
             </div>

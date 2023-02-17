@@ -1,0 +1,139 @@
+.direct-image-upload {
+  height: 100%;
+  position: relative;
+  background: #e2e2e2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.direct-image-upload--select-button {
+  color: #003A71;
+  font-size: 33px;
+  opacity: 0.7;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.direct-image-upload--file-attach-area {
+  height: 100%;
+  cursor: pointer;
+}
+
+.direct-image-upload--placeholder {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  padding-top: 40px;
+  margin: auto;
+}
+
+.direct-image-upload--text {
+  color: #003A71;
+  opacity: 0.5;
+  line-height: 1.25;
+}
+
+.direct-image-upload--file-field {
+  position: absolute;
+  bottom: 58px;
+}
+
+.banner-editor-image-attachment--label {
+  color: #003A71;
+  font-size: 33px;
+  opacity: 0.7;
+}
+
+.direct-image-upload--plus {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  color: #003A71;
+  font-size: 130px;
+  line-height: 1;
+  text-align: center;
+  width: 135px;
+  height: 130px;
+  opacity: 0.5;
+
+}
+
+.direct-image-upload--image-actions-area {
+  position: absolute;
+  bottom: 0;
+  background: #0000008a;
+  backdrop-filter: blur(15px);
+  font-weight: 500;
+  width: 100%;
+  height: 35px;
+  color: white;
+  display: flex;
+  padding: 0 20px;
+  align-items: center;
+  justify-content: space-between;
+
+  .file-name {
+    width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .remove-cached-attachment {
+    outline: none !important;
+  }
+}
+
+.direct-image-upload--attachment-errors {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
+  .error {
+    margin: 0;
+    display: block;
+    padding: 3px 20px;
+  }
+}
+
+
+.direct-upload--remove-cached-image {
+  color: #cf2a0e;
+  cursor: pointer;
+}
+
+.direct-image-upload--preview-area {
+  width: 100%;
+  display: none;
+
+  &.-active {
+    display: block;
+  }
+}
+
+.direct-image-upload--file-title {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  // backdrop-filter: blur(15px) !important;
+  font-weight: 500;
+  padding: 0;
+  height: 100% !important;
+  width: 40%;
+
+  &:focus {
+    border: none !important;
+    box-shadow: none;
+  }
+}

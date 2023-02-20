@@ -12,7 +12,15 @@
 <% end %>
 
 <main>
-  <%= render "header", header: @header %>
+  <div class='hero-video-wrapper'>
+    <%= video_tag 'https://cli-erg.fra1.digitaloceanspaces.com/Ergersheim.mp4',
+      autoplay: true,
+      loop: true,
+      muted: true,
+      controls: true,
+      controlsList: "nodownload nofullscreen noremoteplayback noplaybackrate",
+      disablepictureinpicture: true  %>
+  </div>
 
   <div class="row">
     <div class="column medium-9 small-centered">

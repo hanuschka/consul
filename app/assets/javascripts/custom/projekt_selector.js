@@ -26,8 +26,10 @@
 
       // show next selector
       if ( $selectedProjekt.data('projektSelectableChildren') ) {
-        $nextSpacer.css('visibility', 'visible')
-        $nextProejektSelector.css('visibility', 'visible')
+        // $nextSpacer.css('visibility', 'visible')
+        // $nextProejektSelector.css('visibility', 'visible')
+        $nextSpacer.show()
+        $nextProejektSelector.show()
         $nextProejektSelector.attr('data-target', '#group-for-' + projektId)
         $nextProejektSelector.children('.projekt_group').hide()
       }
@@ -89,7 +91,8 @@
 
     resetNextSelectors: function($selector) {
       $selector.nextAll().each( function() {
-        $(this).css('visibility', 'hidden');
+        // $(this).css('visibility', 'hidden');
+        $(this).hide()
         $(this).find('.selected-projekt').show();
         $(this).children('.projekt').remove();
       })
@@ -125,6 +128,7 @@
       if ( $projekt.data('allow-tags') ) {
         $('#category_tags').show();
         $('#category_tags a').show();
+        $(".sidebar-category-tags-selector-section").show();
 
         if ( $projekt.data("tag-ids") ) {
           $('#category_tags a').each(function() {
@@ -136,6 +140,7 @@
 
       } else {
         $('#category_tags').hide();
+        $(".sidebar-category-tags-selector-section").hide();
       }
 
     },
@@ -146,6 +151,7 @@
       if ( $projekt.data('allow-sdgs') ) {
         $('#sdgs-selector').show();
         $('#sdgs-selector label[for*=_sdg_goal_ids_]').show();
+        $(".sidebar-sdgs-selector-section").show();
 
         if ( $projekt.data("sdg-ids") ) {
           $('#sdgs-selector label[for*=_sdg_goal_ids_]').each(function() {
@@ -154,9 +160,9 @@
             }
           })
         }
-
       } else {
         $('#sdgs-selector').hide();
+        $(".sidebar-sdgs-selector-section").hide();
       }
     },
 
@@ -181,8 +187,10 @@
     toggleDocumentAttachment: function($projekt) {
       if ( $projekt.data('allowAttachedDocument') ) {
         $('#attach-documents').show();
+        $(".sidebar-documment-attacher-section").show();
       } else {
         $('#attach-documents').hide();
+        $(".sidebar-documment-attacher-section").hide();
       }
     },
 
@@ -197,8 +205,10 @@
     toggleExternalVideoUrl: function($projekt) {
       if ( $projekt.data('allowVideo') ) {
         $('#external-video-url-fields').show();
+        $(".sidebar-external-video-section").show();
       } else {
         $('#external-video-url-fields').hide();
+        $(".sidebar-external-video-section").hide();
       }
     },
 

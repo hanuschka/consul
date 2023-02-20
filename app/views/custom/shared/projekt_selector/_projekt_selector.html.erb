@@ -20,6 +20,14 @@
     <%= render partial: 'shared/projekt_selector/projekt_group', locals: { projekts: projekts.selectable_in_selector(controller_name, current_user), parent_id: 0 } %>
   </div>
 
+  <% if Setting.new_design_enabled? %>
+    <div class="js-projekt-child-projekt-list-hint projekt-child-projekt-list-hint">
+      <p>
+      Sie können Ihren Vorschlag optional einer Unterkategorie im Projekt zuordnen:
+      </p>
+    </div>
+  <% end %>
+
   <div class='spacer'>
     <i class="fas fa-chevron-right"></i>
   </div>

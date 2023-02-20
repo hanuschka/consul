@@ -23,7 +23,6 @@
     openDropdown: function(e) {
       e.preventDefault();
 
-      console.log('openDropdown')
       var $dropdownElement = $(e.currentTarget.parentElement);
 
       if ($dropdownElement.hasClass("dropdown-open") === true) {

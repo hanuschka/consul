@@ -2,8 +2,8 @@
   .mobile-filter {
     width: 100%;
     background: white;
-    border-top: 1px solid #D9D9D9;
-    border-bottom: 1px solid #D9D9D9;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
     margin-bottom: 20px;
 
     .sidebar-card {
@@ -22,7 +22,7 @@
 
     .sidebar-card {
       border-radius: 0;
-      border-bottom: 1px solid #D9D9D9;
+      border-bottom: 1px solid $border-color;
     }
 
     .sidebar-card:last-child {
@@ -47,7 +47,7 @@
     align-items: center;
     color: black;
     height: 40px;
-    border-bottom: 1px solid #D9D9D9;
+    border-bottom: 1px solid $border-color;
 
     i {
       color: $brand;
@@ -61,7 +61,7 @@
 
   .mobile-filter--body-section {
     padding: 22px 25px;
-    border-top: 1px solid #D9D9D9;
+    border-top: 1px solid $border-color;
   }
 
   .mobile-filter--body-section:first-child {

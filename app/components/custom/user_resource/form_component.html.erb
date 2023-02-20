@@ -87,14 +87,13 @@
                 <%= f.hidden_field :projekt_id, value: @selected_projekt.id %>
               <% else %>
                 <!-- <legend><%= t("custom.shared.form.projekt_assignment") %></legend> -->
-                <div class="margin-top">
-                  <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: resource, projekts: Projekt.top_level }  %>
-                </div>
+                <p>Ihr Vorschlag wird diesem Projekt zugeordnet:</p>
+                <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: resource, projekts: Projekt.top_level }  %>
               <% end %>
             </div>
           </div>
 
-          <div class="sidebar-card">
+          <div class="sidebar-card sidebar-documment-attacher-section">
             <div class="sidebar-card--section">
               <div class="sidebar-card--header">
                 <i class="fa fa-file"></i>
@@ -106,7 +105,7 @@
             </div>
           </div>
 
-          <div class="sidebar-card">
+          <div class="sidebar-card sidebar-external-video-section">
             <div class="sidebar-card--section">
               <div class="sidebar-card--header">
                 <i class="fa fa-video"></i>
@@ -126,10 +125,10 @@
           <%= f.invisible_captcha :subtitle %>
 
           <%if @categories&.any? %>
-            <div class="sidebar-card">
+            <div class="sidebar-card sidebar-category-tags-selector-section">
               <div class="sidebar-card--section">
                 <div class="sidebar-card--header">
-                  <i class="fa fa-video"></i>
+                  <i class="fa fa-chip"></i>
                   Tags
                 </div>
                 <p>
@@ -151,7 +150,7 @@
           <%end%>
 
           <% if extended_feature?("modulewide.enable_categories") && @categories&.any? && SDG::ProcessEnabled.new(f.object).enabled? %>
-            <div class="sidebar-card">
+            <div class="sidebar-card sidebar-sdgs-selector">
               <div class="sidebar-card--section">
                 <div class="sidebar-card--header">
                   <i class="fa fa-video"></i>

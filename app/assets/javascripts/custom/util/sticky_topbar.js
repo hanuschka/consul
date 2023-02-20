@@ -8,6 +8,10 @@
         return;
       }
 
+      if (!this.header()) {
+        return;
+      }
+
       window.onscroll = this.handleScroll.bind(this);
 
       // Get the offset position of the header

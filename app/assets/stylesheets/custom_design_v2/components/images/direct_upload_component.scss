@@ -31,6 +31,32 @@
   }
 }
 
+.direct-image-upload--progress-bar-wrapper {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: 100;
+}
+
+.direct-image-upload--loading-bar {
+  height: 5px;
+  width: 0;
+  transition: width 500ms ease-out;
+
+  &.uploading {
+    background-color: green;
+  }
+
+  &.complete {
+    background-color: $success-color;
+  }
+
+  &.errors {
+    background-color: $alert-color;
+    margin-top: 5px;
+  }
+}
+
 .direct-image-upload--select-button {
   color: #003A71;
   font-size: 33px;
@@ -43,6 +69,11 @@
   height: 100%;
   cursor: pointer;
   background: #e2e2e2;
+  transition: background 0.2s ease-in-out;
+
+  &:hover {
+    background: #dcdcdc;
+  }
 }
 
 .direct-image-upload--placeholder {
@@ -53,6 +84,7 @@
   width: 80%;
   padding-top: 40px;
   margin: auto;
+  user-select: none;
 }
 
 .direct-image-upload--text {
@@ -63,12 +95,6 @@
 
 .direct-image-upload--file-field {
   bottom: 0;
-}
-
-.banner-editor-image-attachment--label {
-  color: #003A71;
-  font-size: 33px;
-  opacity: 0.7;
 }
 
 .direct-image-upload--plus {
@@ -85,7 +111,15 @@
   width: 135px;
   height: 130px;
   opacity: 0.5;
+}
 
+.banner-editor-image-attachment--label {
+  position: absolute;
+  color: #003A71;
+  font-size: 33px;
+  opacity: 0.7;
+  margin-top: 80px;
+  bottom: 30px;
 }
 
 .direct-image-upload--image-actions-area {

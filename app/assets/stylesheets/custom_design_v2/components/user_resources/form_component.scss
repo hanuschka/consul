@@ -9,19 +9,6 @@
   }
 
   .user-resource-form {
-    #projekt-selector-fields .projekt-selector {
-      width: 100%;
-      flex-basis: auto;
-      flex-basis: auto;
-    }
-
-    #projekt-selector-fields {
-      flex-direction: column;
-    }
-
-    .spacer {
-      display: none !important;
-    }
   }
 
   .user-resource-form--banner-editor {
@@ -167,7 +154,7 @@
     font-size: 25px;
     color: black;
     border-bottom: 1px solid $border;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
   }
 
   .sidebar-card {
@@ -176,6 +163,10 @@
       legend {
         display: none;
       }
+    }
+
+    .callout:last-child {
+      margin-bottom: 0;
     }
 
     p.help-text {

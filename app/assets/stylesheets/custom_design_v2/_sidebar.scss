@@ -66,7 +66,7 @@
   }
 
   .sidebar-card--section + .sidebar-card--section {
-    border-top: 1px solid #D9D9D9;
+    border-top: 1px solid $border-color;
   }
 
   .sidebar-active-users-section {
@@ -80,14 +80,14 @@
     position: relative;
     background: white;
     border-radius: 10px;
-    // border: 1px solid #D9D9D9;
-    border: 1px solid #d9d9d9b3;
+    border: 1px solid $border-color;
     margin-bottom: 15px;
     color: $main-text-color;
     font-size: 14px;
 
     p {
       font-size: 14px;
+      margin-bottom: 10px;
     }
 
     input {
@@ -101,7 +101,7 @@
 
   .sidebar-card--separator {
     position: relative;
-    border-top: 1px solid #D9D9D9;
+    border-top: 1px solid $border-color;
   }
 
   .sidebar {

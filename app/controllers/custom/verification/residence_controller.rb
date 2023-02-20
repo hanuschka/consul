@@ -19,14 +19,14 @@ class Verification::ResidenceController < ApplicationController
     end
 
     if @residence.save
+      NotificationServices::NewManualVerificationRequestNotifier.call(current_user.id) # remove unless manual
       if last_budget_link.present?
         redirect_to last_budget_link, notice: t("verification.residence.create.flash.success")
       else
         redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
       end
-
     else
-      render :new
+      redirect_to new_residence_path, notice: t("custom.verification.residence.create.flash.error")
     end
   end
 
@@ -35,7 +35,7 @@ class Verification::ResidenceController < ApplicationController
     def allowed_params
       [
         :document_number, :document_type, :date_of_birth, :postal_code, :terms_of_service,
-        :first_name, :last_name, :street_name, :street_number,
+        :first_name, :last_name, :city_street_id, :street_number,
         :plz, :city_name, :gender, :document_type, :document_last_digits
       ]
     end

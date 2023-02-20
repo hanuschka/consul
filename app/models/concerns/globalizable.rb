@@ -3,7 +3,7 @@ module Globalizable
   extend ActiveSupport::Concern
 
   included do
-    # globalize_accessors
+    globalize_accessors
     accepts_nested_attributes_for :translations, allow_destroy: true
 
     validate :check_translations_number, on: :update, if: :translations_required?

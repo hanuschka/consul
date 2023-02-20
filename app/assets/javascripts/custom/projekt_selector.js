@@ -26,8 +26,6 @@
 
       // show next selector
       if ( $selectedProjekt.data('projektSelectableChildren') ) {
-        // $nextSpacer.css('visibility', 'visible')
-        // $nextProejektSelector.css('visibility', 'visible')
         $nextSpacer.show()
         $nextProejektSelector.show()
         $nextProejektSelector.attr('data-target', '#group-for-' + projektId)

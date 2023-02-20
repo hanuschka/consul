@@ -105,6 +105,18 @@
             </div>
           </div>
 
+          <% if translations_interface_enabled? %>
+            <div class="sidebar-card js-sidebar-documment-attacher-section">
+              <div class="sidebar-card--section">
+                <div class="sidebar-card--header">
+                  <i class="fa fa-language"></i>
+                  Sprachen
+                </div>
+                <%= render "shared/globalize_locales", resource: resource %>
+              </div>
+            </div>
+          <% end %>
+
           <div class="sidebar-card sidebar-external-video-section">
             <div class="sidebar-card--section">
               <div class="sidebar-card--header">
@@ -119,16 +131,13 @@
             </div>
           </div>
 
-          <!-- <legend class='margin-top'><%= t("custom.debates.form.required") %></legend> -->
-          <%= render "shared/globalize_locales", resource: resource %>
-
           <%= f.invisible_captcha :subtitle %>
 
           <%if @categories&.any? %>
             <div class="sidebar-card js-sidebar-category-tags-selector-section">
               <div class="sidebar-card--section">
                 <div class="sidebar-card--header">
-                  <i class="fa fa-chip"></i>
+                  <i class="fa fa-tag"></i>
                   Tags
                 </div>
                 <p>

@@ -4,30 +4,33 @@
     initialize: function() {
       this.enableCustomCkeditorStyles();
 
-      $("textarea.html-area").each(function(index, element) {
-        if ($(this).hasClass("extended-u")) {
-          var replaceBy = this.name;
-          var toolbar = "extended_user";
-          var height = 500;
+      $("textarea.html-area").each(function(_, element) {
+        App.HTMLEditor.enableCKeditorFor(element);
+      });
+    },
 
-        } else if ($(this).hasClass("extended-a")) {
-          var replaceBy = this.id;
-          var toolbar = "extended_admin";
-          var height = 500;
+    enableCKeditorFor: function(element) {
+      if ($(element).hasClass("extended-u")) {
+        var replaceBy = element.name;
+        var toolbar = "extended_user";
+        var height = 500;
 
-        } else {
-          var replaceBy = this.name;
-        }
+      } else if ($(element).hasClass("extended-a")) {
+        var replaceBy = element.id;
+        var toolbar = "extended_admin";
+        var height = 500;
 
-        var language = $("html").attr("lang");
-        var placeholder = element.placeholder;
+      } else {
+        var replaceBy = element.name;
+      }
 
-        CKEDITOR.replace(replaceBy, {
-          language: language,
-          toolbar: toolbar,
-          height: height,
-          placeholdertext: placeholder
-        });
+      var language = $("html").attr("lang");
+
+      CKEDITOR.replace(replaceBy, {
+        language: language,
+        toolbar: toolbar,
+        height: height,
+        placeholdertext: element.placeholder
       });
     },
 

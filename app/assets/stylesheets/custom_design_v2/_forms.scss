@@ -42,4 +42,9 @@
     border-radius: 10px !important;
     overflow: auto !important;
   }
+
+  form select {
+    background: transparent;
+    border-radius: 10px;
+  }
 }

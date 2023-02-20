@@ -10,18 +10,25 @@
     },
 
     enableCKeditorFor: function(element) {
+      if ($(document.body).hasClass('new-custom-design')) {
+        var hasNewDesign = true;
+      }
+
       if ($(element).hasClass("extended-u")) {
         var replaceBy = element.name;
         var toolbar = "extended_user";
-        var height = 500;
-
       } else if ($(element).hasClass("extended-a")) {
         var replaceBy = element.id;
         var toolbar = "extended_admin";
-        var height = 500;
-
       } else {
         var replaceBy = element.name;
+      }
+
+      if (hasNewDesign) {
+        var height = 320;
+      }
+      else {
+        var height = 450;
       }
 
       var language = $("html").attr("lang");

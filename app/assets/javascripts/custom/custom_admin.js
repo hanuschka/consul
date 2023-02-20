@@ -23,11 +23,28 @@
 
     toggleRatingScaleLabels: function(newVotationTypeName) {
       if ( newVotationTypeName == 'rating_scale' ) {
-        $('#rating-scale-labels').removeClass('hide')
+        $('.rating-scale-labels').removeClass('hide')
       } else {
-        $('#rating-scale-labels').addClass('hide')
+        $('.rating-scale-labels').addClass('hide')
       }
     },
+
+    // Street selector: start
+    selectStreet: function(streetId, streetName) {
+      var checkboxId = "projekt_phase_city_street_ids_" + streetId
+      $('#' + checkboxId).prop( "checked", true );
+
+      var streetPill = "<div class='selected-street' data-street-id=" + streetId + ">" + streetName  + "<i class='fas fa-times js-deselect-street'></i></div>"
+      var streetPillsDivId = "#projekt-phase-selected-streets"
+      $(streetPillsDivId).append(streetPill)
+    },
+
+    deselectStreet: function(streetId, $streetPill) {
+      var checkboxId = "projekt_phase_city_street_ids_" + streetId
+      $('#' + checkboxId).prop( "checked", false);
+      $streetPill.remove();
+    },
+    // Street selector: end
 
     initialize: function() {
       $("body").on("click", ".js-update-votation-type-hint", function() {
@@ -35,6 +52,18 @@
         App.CustomAdmin.updateVotationTypeHint(newVotationTypeName);
         App.CustomAdmin.toggleVotationTypeMaxVotesField(newVotationTypeName);
         App.CustomAdmin.toggleRatingScaleLabels(newVotationTypeName);
+      })
+
+      $("body").on("change", ".js-select-street", function() { // select street
+        var streetId = this.value;
+        var streetName = $(this).find('option:selected').text();
+        App.CustomAdmin.selectStreet(streetId, streetName);
+      })
+
+      $("body").on("click", ".js-deselect-street", function() {
+        var $streetPill = $(this).closest('.selected-street');
+        var streetId = $streetPill.data('street-id');
+        App.CustomAdmin.deselectStreet(streetId, $streetPill);
       })
 
       $("body").on("click", ".js-map-layer-base-checkbox", function() {

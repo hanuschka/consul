@@ -20,7 +20,6 @@
     }
 
     .selected-projekt {
-      border-radius: 10px;
       background: white;
       border: 1px solid $border-color;
     }
@@ -37,6 +36,11 @@
       flex-basis: auto;
       border-radius: 10px;
 
+      > .selected-projekt, .projekt:first-child {
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
       &:last-child {
         margin-bottom: 0;
       }
@@ -51,10 +55,6 @@
       border: none;
       border-bottom: 1px solid $border-color;
 
-      &:first-child {
-        border-radius: 10px;
-        overflow: hidden;
-      }
     }
 
     .projekt_group {

@@ -13,6 +13,7 @@ en:
         adm_email_on_new_proposal: Email notification on each new Proposal
         adm_email_on_new_debate: Email notification on each new Debate
         adm_email_on_new_deficiency_report: Email notification on each new Deficiency Report
+        adm_email_on_new_manual_verification: Receive email notification after each new user verification
       show:
         user_permission_votes: Participate in polls
         admin_notifications: Admin Notifications
@@ -62,6 +63,7 @@ en:
           no_restriction: All users of the platform
           only_citizens: Only citizens of the city
           only_geozones: Only citizens of the district
+          only_streets: Only citizens of a street
           show_more: Show more
           title: Participation
     images:
@@ -70,7 +72,7 @@ en:
     layouts:
       footer:
         demokratie: demokratie.today
-        demokratie_url: https://www.demokratie.today/
+        demokratie_url: https://demokratie.today/
         description: The platform is based on %{consul}, a %{open_source} and is modified by %{demokratie}.
         impressum: Imprint
         statistic_cookies_settings: Cookie Settings
@@ -119,6 +121,7 @@ en:
       form:
         projekt_assignment: Project
         star_message: All Fields marked with a (*) are required
+        projekt_labels: Labels *
       index:
         resource:
           by: by

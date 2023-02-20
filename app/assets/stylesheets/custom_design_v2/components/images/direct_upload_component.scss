@@ -98,11 +98,6 @@
 }
 
 .direct-image-upload--plus {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   margin: auto;
   color: #003A71;
   font-size: 130px;
@@ -113,13 +108,25 @@
   opacity: 0.5;
 }
 
-.banner-editor-image-attachment--label {
+.direct-image-upload--label {
   position: absolute;
-  color: #003A71;
-  font-size: 33px;
-  opacity: 0.7;
-  margin-top: 80px;
   bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.direct-image-upload--label-title {
+  font-size: 33px;
+  color: #003A71;
+  opacity: 0.7;
+}
+
+.direct-image-upload--hint {
+  color: #003A71;
+  opacity: 0.5;
+  font-size: 14px;
 }
 
 .direct-image-upload--image-actions-area {

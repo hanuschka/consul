@@ -15,6 +15,10 @@
     flex-direction: column;
     margin-bottom: 0;
 
+    .selected-projekt-placeholder {
+      font-size: 15px;
+    }
+
     .selected-projekt, .projekt {
       min-height: 45px;
     }
@@ -54,7 +58,7 @@
       background: white;
       border: none;
       border-bottom: 1px solid $border-color;
-
+      font-size: 15px;
     }
 
     .projekt_group {

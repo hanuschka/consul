@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_13_134039) do
+ActiveRecord::Schema.define(version: 2023_02_20_144731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2143,12 +2143,6 @@ ActiveRecord::Schema.define(version: 2023_02_13_134039) do
     t.integer "plz"
     t.string "city_name"
     t.string "unique_stamp"
-    t.string "dor_first_name"
-    t.string "dor_last_name"
-    t.string "dor_street_name"
-    t.string "dor_street_number"
-    t.string "dor_plz"
-    t.string "dor_city"
     t.string "pfo_first_name"
     t.string "pfo_last_name"
     t.string "pfo_street_name"

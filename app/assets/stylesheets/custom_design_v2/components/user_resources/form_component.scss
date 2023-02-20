@@ -22,6 +22,7 @@
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
+    border-radius: 10px;
 
     .translatable-fields {
       width: 50%;
@@ -92,8 +93,8 @@
     padding: 0;
 
     &::placeholder  {
-      color: gray;
-      opacity: 0.7;
+      color: #003A71;
+      opacity: 0.3;
     }
 
     &:focus {

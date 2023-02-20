@@ -128,7 +128,7 @@
       if ( $projekt.data('allow-tags') ) {
         $('#category_tags').show();
         $('#category_tags a').show();
-        $(".sidebar-category-tags-selector-section").show();
+        $(".js-sidebar-category-tags-selector-section").show();
 
         if ( $projekt.data("tag-ids") ) {
           $('#category_tags a').each(function() {
@@ -140,7 +140,7 @@
 
       } else {
         $('#category_tags').hide();
-        $(".sidebar-category-tags-selector-section").hide();
+        $(".js-sidebar-category-tags-selector-section").hide();
       }
 
     },
@@ -151,7 +151,7 @@
       if ( $projekt.data('allow-sdgs') ) {
         $('#sdgs-selector').show();
         $('#sdgs-selector label[for*=_sdg_goal_ids_]').show();
-        $(".sidebar-sdgs-selector-section").show();
+        $(".js-sidebar-sdgs-selector-section").show();
 
         if ( $projekt.data("sdg-ids") ) {
           $('#sdgs-selector label[for*=_sdg_goal_ids_]').each(function() {
@@ -162,7 +162,7 @@
         }
       } else {
         $('#sdgs-selector').hide();
-        $(".sidebar-sdgs-selector-section").hide();
+        $(".js-sidebar-sdgs-selector-section").hide();
       }
     },
 
@@ -187,10 +187,10 @@
     toggleDocumentAttachment: function($projekt) {
       if ( $projekt.data('allowAttachedDocument') ) {
         $('#attach-documents').show();
-        $(".sidebar-documment-attacher-section").show();
+        $(".js-sidebar-documment-attacher-section").show();
       } else {
         $('#attach-documents').hide();
-        $(".sidebar-documment-attacher-section").hide();
+        $(".js-sidebar-documment-attacher-section").hide();
       }
     },
 

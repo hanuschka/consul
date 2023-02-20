@@ -46,7 +46,7 @@
           <%= translations_form.text_area :description,
             maxlength: Debate.description_max_length,
             label: false,
-            placeholder: "Beschreiben Sie hier, worum es Ihnen in Ihrer Diskussion geht. Folgendes Vorgehen hat sich bewährt: Beginnen Sie mit einer allgemeinen Beschreibung Ihres Anliegens und stellen Sie im Anschluss Ihre Position zum Thema dar. Achten Sie beim Schreiben möglichst auf kurze Sätze. Nutzen Sie außerdem Absätze, um Ihren Text lesbarer zu machen. (Viele Nutzer lesen Ihren Text auf mobilen Geräten.) Beschränken Sie Ihren Inhalt – sofern möglich – auf maximal drei Absätze. Verwenden Sie überdies – wenn passend – Aufzählungen und Stichpunkte für eine bessere Übersichtlichkeit.",
+            placeholder: t("custom.debates.form.description_placeholder_html"),
             class: "html-area #{helpers.ck_editor_class(current_user)}"
           %>
       <% end %>
@@ -93,7 +93,7 @@
             </div>
           </div>
 
-          <div class="sidebar-card sidebar-documment-attacher-section">
+          <div class="sidebar-card js-sidebar-documment-attacher-section">
             <div class="sidebar-card--section">
               <div class="sidebar-card--header">
                 <i class="fa fa-file"></i>
@@ -125,7 +125,7 @@
           <%= f.invisible_captcha :subtitle %>
 
           <%if @categories&.any? %>
-            <div class="sidebar-card sidebar-category-tags-selector-section">
+            <div class="sidebar-card js-sidebar-category-tags-selector-section">
               <div class="sidebar-card--section">
                 <div class="sidebar-card--header">
                   <i class="fa fa-chip"></i>
@@ -150,7 +150,7 @@
           <%end%>
 
           <% if extended_feature?("modulewide.enable_categories") && @categories&.any? && SDG::ProcessEnabled.new(f.object).enabled? %>
-            <div class="sidebar-card sidebar-sdgs-selector">
+            <div class="sidebar-card js-sidebar-sdgs-selector-section">
               <div class="sidebar-card--section">
                 <div class="sidebar-card--header">
                   <i class="fa fa-video"></i>

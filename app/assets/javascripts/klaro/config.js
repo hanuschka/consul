@@ -85,7 +85,7 @@ var klaroConfig = {
     // Placing a link to our website helps us spread the word about it,
     // which ultimately enables us to make Klaro! better for everyone.
     // So please be fair and keep the link enabled. Thanks :)
-    //disablePoweredBy: true,
+    disablePoweredBy: true,
 
     // you can specify an additional class (or classes) that will be added to the Klaro `div`
     //additionalClass: 'my-klaro',

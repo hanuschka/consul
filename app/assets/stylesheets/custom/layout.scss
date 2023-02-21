@@ -46,7 +46,17 @@ main {
 }
 
 .top-bar-title {
-  margin-right: 0;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+
+  @media screen and (min-width: 40em) {
+    margin-right: 0;
+    margin-left: auto;
+  }
+}
+
+.hamburger-menu {
+  margin-right: 1rem;
 }
 
 body>header, .wrapper>header, .top-bar {
@@ -55,6 +65,11 @@ body>header, .wrapper>header, .top-bar {
 
 .top-bar {
   background: white !important;
+  flex-direction: row-reverse;
+
+  @media screen and (min-width: 40em) {
+    flex-direction: row;
+  }
 }
 
 .header-right-group {

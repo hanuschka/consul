@@ -68,8 +68,8 @@ class User < ApplicationRecord
   end
 
   def username
-    if pfo_first_name.present? || pfo_last_name.present?
-      [pfo_first_name, pfo_last_name].join(" ")
+    if first_name.present? || last_name.present?
+      [first_name, last_name].join(" ")
     else
       super
     end

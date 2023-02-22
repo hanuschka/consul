@@ -9,7 +9,7 @@
       }
     },
 
-    selectProjekt: function($projekt, shouldUpdateMap) {
+    selectProjekt: function($projekt) {
       var $selectedProjekt = $projekt.clone().removeClass('js-select-projekt')
       var projektId = $projekt.data('projektId')
       var $currentProjektSelector = $projekt.closest('.projekt-selector')
@@ -55,8 +55,11 @@
         App.ProjektSelector.addNextProjektPlaceholder($nextProejektSelector, "(verpflichtend)")
       }
 
-      if ( shouldUpdateMap ) {
+      if ( $selectedProjekt.data('showMap') ) {
+        $('#map-container').show();
         App.ProjektSelector.replaceProjektMapOnProposalCreation($selectedProjekt)
+      } else {
+        $('#map-container').hide();
       }
 
       App.ProjektSelector.toggleDocumentAttachment($selectedProjekt)
@@ -66,6 +69,7 @@
       App.ProjektSelector.updateAvailableSDGsSelection($selectedProjekt)
       App.ProjektSelector.toggleExternalFieldsHeader($selectedProjekt)
       App.ProjektSelector.updateMainHeader($selectedProjekt)
+      App.ProjektSelector.updateProjektLabelSelector($selectedProjekt)
 
     },
 
@@ -159,6 +163,24 @@
       }
     },
 
+    updateProjektLabelSelector: function ($projekt) {
+      var labelIdsToShow = $projekt.data("projekt-label-ids").toString().split(",");
+
+      if (labelIdsToShow.join().length == 0) {
+        $('#label-for-projekt-labels-selector').addClass('hide');
+      } else {
+        $('#label-for-projekt-labels-selector').removeClass('hide');
+      }
+
+      $("#projekt_labels_selector .projekt-label").each(function(index, label) {
+        if (labelIdsToShow.includes($(label).data("labelId").toString())) {
+          $(label).removeClass('hide');
+        } else {
+          $(label).addClass('hide');
+        }
+      });
+    },
+
     toggleDocumentAttachment: function($projekt) {
       if ( $projekt.data('allowAttachedDocument') ) {
         $('#attach-documents').show();
@@ -240,11 +262,9 @@
       }
 
       // show projekts staring with top parent
-      var shouldUpdateMap = $('form#new_proposal').length == 1
-
       $.each(projektIdsToShow, function(index, projektId) {
         var $selectedProjekt = $('#projekt_' + projektId)
-        App.ProjektSelector.selectProjekt($selectedProjekt, shouldUpdateMap);
+        App.ProjektSelector.selectProjekt($selectedProjekt);
         $selectedProjekt.closest('.projekt_group').hide();
       });
     },
@@ -300,6 +320,22 @@
       }
     },
 
+    selectLabel: function($label) {
+      var labelId = $label.data('labelId');
+      var $labelCheckBox = $("#projekt-labels-checkboxes [id*='_projekt_label_ids_" + labelId + "']");
+      $labelCheckBox.prop("checked", !$labelCheckBox.prop("checked"));
+
+      if ($labelCheckBox.prop("checked")) {
+        var labelBackgroundColor = $label.data('backgroundColor');
+        var labelTextColor = $label.data('textColor');
+        $label.css('background-color', labelBackgroundColor);
+        $label.css('color', labelTextColor);
+      } else {
+        $label.css('background-color', '#767676')
+        $label.css('color', '#fff')
+      }
+    },
+
     initialize: function() {
       $("body").on("click", ".js-toggle-projekt-group", function(event) {
         App.ProjektSelector.toggleProjektGroup(this);
@@ -313,6 +349,10 @@
         if ( $(event.target).closest('.js-toggle-projekt-group').length == 0 ) {
           $('.projekt_group').hide();
         }
+      });
+
+      $("body").on("click", ".js-select-projekt-label", function() {
+        App.ProjektSelector.selectLabel($(this));
       });
 
       App.ProjektSelector.preselectProjekt();

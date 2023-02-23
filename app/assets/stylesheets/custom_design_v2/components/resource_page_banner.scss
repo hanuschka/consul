@@ -1,0 +1,33 @@
+.new-custom-design {
+  .resource-page-banner {
+    display: flex;
+    justify-content: space-between;
+    background: #D9F0EB;
+    padding: 45px 42px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  .resource-page-banner--text-section {
+    width: 48%;
+    color: #003A71;
+  }
+
+  .resource-page-banner--image {
+    width: 48%;
+  }
+
+  .resource-page-banner--title {
+    font-size: 28px;
+    color: #003A71;
+    margin-bottom: 30px;
+  }
+
+  .resourece-page-banner--detail {
+    font-weight: 500;
+
+    i {
+      padding-right: 5px;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 .new-custom-design {
-  .new-card {
+  .new-card, .main-content-card {
     background: white;
     border-radius: 10px;
     border: 1px solid $border-color;
@@ -9,18 +9,18 @@
     padding: 20px 25px;
   }
 
-  .new-main-content-card {
+  .main-content-card {
     padding: 35px 50px;
   }
 
   @media (max-width: 1365px) {
-    .new-main-content-card {
+    .main-content-card {
       padding: 25px 35px;
     }
   }
 
   @media (max-width: $mobile-viewport-start) {
-    .new-main-content-card {
+    .main-content-card {
       padding: 18px 22px;
     }
   }

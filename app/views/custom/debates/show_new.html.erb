@@ -15,7 +15,6 @@
 <% end %>
 
 <main>
-  <div class="debate-show">
     <%# <%= render partial: "shared/participation/projekt_bar", locals: { resource: @debate } %>
 
     <div id="<%= dom_id(@debate) %>" class="layout-main-column">
@@ -23,116 +22,163 @@
                 @debate,
                 @debate.author,
                 @debate.projekt,
+                Setting.new_design_enabled?,
                 Flag.flagged?(current_user, @debate),
-                "show" ] do %>
-
+                "show" ] do
+      %>
               <div class="layout-left-column">
-                <h1 class="debate-page--title"><%= "#{@debate.author.name} startet eine Diskussion"  %></h1>
-                <div class="debate-page--description">
-                  <%= auto_link_already_sanitized_html wysiwyg(@debate.description) %>
+                <h1 class="resource-page--title"><%= "#{@debate.author.name} startet eine Diskussion"  %></h1>
+                <div class="resource-page--title-subline">
+                  <%= @debate.author.name %> hat eine Diskussion zu einem Projekt gestartet. Sie
+                  können die Diskussion an der rechten Seitenleiste
+                  unterstützen, indem Sie ihn mit Daumen hoch bewerten. Sie
+                  können aber auch Ihre Ablehnung zum Ausdruck bringen, indem
+                  Sie auf Daumen nach unten klicken. Des Weiteren haben Sie die
+                  mit der Kommentarfunktion am unteren Ende die Möglichkeit
+                  selbst in die Diskussion einzusteigen.
                 </div>
 
-                <div class="resource-page-banner">
-                  <h2 class="resource-page-banner--title">
-                    <%= @debate.title %>
-                  </h2>
-
-                  <div class="resourece-page-banner--details">
-                    <% if @debate.conflictive? %>
-                      <div data-alert class="callout alert margin-top">
-                        <strong><%= t("debates.show.flag") %></strong>
-                      </div>
-                    <% end %>
-                    <% if @debate.image.present? && !@debate.image.concealed? %>
-                      <%= render_image(@debate.image, :large, true) %>
-                    <% end %>
+                <% if @debate.conflictive? %>
+                  <div data-alert class="callout alert margin-top">
+                    <strong><%= t("debates.show.flag") %></strong>
                   </div>
-                </div>
-
-                <% if projekt_feature?(@debate.projekt, "debates.allow_attached_documents") %>
-                  <%= render "documents/documents",
-                    documents: @debate.documents,
-                    max_documents_allowed: Debate.max_documents_allowed %>
                 <% end %>
 
-                <div class='margin-top margin-bottom'>
-                  <%= render "shared/tags", taggable: @debate, limit: 5 %>
+                <div class="resource-page-banner">
+                  <div class="resource-page-banner--text-section">
+                    <h2 class="resource-page-banner--title">
+                      <%= @debate.title %>
+                    </h2>
+
+                    <div class="resourece-page-banner--details">
+                      <div class="resourece-page-banner--detail">
+                        <i class="fa fa-calendar"></i>
+                        <%= l(@debate.created_at, format: :new_date_with_year) %>
+                      </div>
+                      <div class="resourece-page-banner--detail">
+                        <i class="fa fa-comment"></i>
+                        <%= @debate.comments.count %> Kommentare
+                      </div>
+                      <div class="resourece-page-banner--detail">
+                        <i class="fa fa-code-branch"></i>
+                        Zugehöriges Projekt:
+                        <%= @debate.projekt.name %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <% if @debate.image.present? && !@debate.image.concealed? %>
+                    <%= image_tag(@debate.image.variant(:large), class: "resource-page-banner--image") %>
+                  <% end %>
+                </div>
+
+                <div class="resource-page--description new-card">
+
+                    <%= @debate.description %>
                 </div>
 
                 <% if projekt_feature?(@debate.projekt, 'debates.show_related_content') %>
                   <%= render "relationable/related_content", relationable: @debate %>
                 <% end %>
-              <% end %>
               </div>
+
               <aside class="sidebar">
                 <% if @debate.editable_by?(current_user) %>
-                  <div class="sidebar-divider"></div>
-                  <h2><%= t("debates.show.author") %></h2>
-                  <%= link_to edit_debate_path(@debate), class: "button hollow expanded" do %>
-                    <span class="icon-edit"></span>
-                    <%= t("debates.show.edit_debate_link") %>
+                  <%= render(Shared::SidebarCardComponent.new(title: t("debates.show.author"), icon_name: "cog")) do |c| %>
+                    <% c.body do %>
+                      <%= link_to edit_debate_path(@debate), class: "button hollow expanded" do %>
+                        <span class="icon icon-edit"></span>
+                        <%= t("debates.show.edit_debate_link") %>
+                      <% end %>
+                    <% end %>
                   <% end %>
                 <% end %>
 
                 <% if current_user.present? && current_user.administrator? %>
-                  <div class='sidebar-divider'></div>
-                  <h2><%= t("custom.shared.show.admin") %></h2>
-                  <div class="js-moderator-debate-actions">
-                    <%= render "actions", debate: @debate %>
-                  </div>
+                  <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "cog")) do |c| %>
+                    <% c.body do %>
+                      <div class="js-moderator-debate-actions">
+                        <%= render "actions", debate: @debate %>
+                      </div>
+                    <% end %>
+                  <% end %>
                 <% end %>
 
                 <% if projekt_feature?(@debate&.projekt, 'debates.allow_voting') %>
-                  <div class="sidebar-divider"></div>
-                  <h2><%= t("votes.supports") %></h2>
-                  <div id="<%= dom_id(@debate) %>_votes">
-                    <%= render "debates/votes", debate: @debate %>
-                  </div>
+                  <%= render(Shared::SidebarCardComponent.new(title: t("votes.supports"), icon_name: "vote-yea")) do |c| %>
+                    <% c.body do %>
+                      <div id="<%= dom_id(@debate) %>_votes">
+                        <%= render "debates/votes", debate: @debate %>
+                      </div>
+                    <% end %>
+                  <% end %>
                 <% end %>
 
-                <%= render "shared/participation/resource_info", resource: @debate %>
+                <% if projekt_feature?(@debate.projekt, "debates.allow_attached_documents") %>
+                  <%= render(Shared::SidebarCardComponent.new(title: t("documents.title"), icon_name: "file")) do |c| %>
+                    <% c.body do %>
+                      <%= render "documents/documents",
+                        documents: @debate.documents,
+                        max_documents_allowed: Debate.max_documents_allowed
+                      %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+
+                <%= render(Shared::SidebarCardComponent.new(title: "Tags", icon_name: "tag")) do |c| %>
+                  <% c.body do %>
+                    <%= render "shared/tags", taggable: @debate, limit: 5 %>
+                  <% end %>
+                <% end %>
+
+                <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.information"), icon_name: "cog")) do |c| %>
+                  <% c.body do %>
+                    <%= render "shared/participation/resource_info", resource: @debate %>
+                  <% end %>
+                <% end %>
 
                 <% cache [locale_and_user_status(@debate),
                           @debate,
                           @debate.projekt,
+                          Setting.new_design_enabled?,
                           "flag"] do %>
-                          <% if projekt_feature?(@debate.projekt, 'debates.show_report_button_in_sidebar') %>
-                            <%= render "shared/participation/flag", resource: @debate %>
-                          <% end %>
 
-                          <%= render "shared/social_share",
-                            share_title: t("debates.show.share"),
-                            title: @debate.title,
-                            url: debate_url(@debate),
-                            description: @debate.title,
-                            mobile: @debate.title
-                          %>
+                    <% if projekt_feature?(@debate.projekt, 'debates.show_report_button_in_sidebar') %>
+                      <%= render "shared/participation/flag", resource: @debate %>
+                    <% end %>
 
-                        <% if current_user && projekt_feature?(@debate.projekt, 'debates.show_related_content') %>
-                          <div class="sidebar-divider"></div>
-                          <h2><%= t("custom.shared.show.related_title") %></h2>
-                          <p><%= t("custom.shared.show.related_text") %></p>
-                          <div class="">
-                            <%= link_to '#related_content', data: {toggle: "related_content"}, id: "add-related-content", class: "button hollow expanded" do %>
-                              <%= t("custom.shared.show.related_button") %>
-                            <% end %>
-                          </div>
+                    <%= render(Shared::SidebarCardComponent.new(title: t("debates.show.share"), icon_name: "share-alt")) do |c| %>
+                      <% c.body do %>
+                        <%= render "shared/social_share",
+                          share_title: t("debates.show.share"),
+                          title: @debate.title,
+                          url: debate_url(@debate),
+                          description: @debate.title,
+                          mobile: @debate.title
+                        %>
+                    <% end %>
+                  <% end %>
+
+                  <% if current_user && projekt_feature?(@debate.projekt, 'debates.show_related_content') %>
+                    <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.related_title"), icon_name: "share-alt")) do |c| %>
+                      <% c.body do %>
+                        <p><%= t("custom.shared.show.related_text") %></p>
+                        <%= link_to '#related_content', data: {toggle: "related_content"}, id: "add-related-content", class: "button hollow expanded" do %>
+                          <%= t("custom.shared.show.related_button") %>
                         <% end %>
                       <% end %>
+                    <% end %>
+                  <% end %>
 
+                <% end %>
               </aside>
-    </div>
-
-  </div>
+      </div>
+  <% end %>
 
   <% if projekt_feature?(@debate.projekt, 'debates.show_comments') %>
     <div class="additional-content margin-top">
       <div class="filter-subnav">
-        <div class="row">
-          <div class="small-12 column">
-            <%= render "debates/filter_subnav" %>
-          </div>
-        </div>
+        <%= render "debates/filter_subnav" %>
       </div>
     </div>
 

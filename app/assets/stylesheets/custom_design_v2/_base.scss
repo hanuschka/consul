@@ -37,6 +37,11 @@ body.new-custom-design {
     color: #292929;
   }
 
+  h1 {
+    font-size: 35px;
+    font-weight: 500;
+  }
+
   label > [type='checkbox'], label > [type='radio'] {
     margin-top: 8px;
   }
@@ -132,6 +137,10 @@ body.new-custom-design {
     font-size: 15px;
     border-radius: 6px;
     transition: background-color 0.1s ease;
+
+    .icon {
+      padding-right: 5px;
+    }
 
     &.-grey {
       background: #c0cedb;

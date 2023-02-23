@@ -200,5 +200,5 @@ de:
       long: "%d. %B %Y %H:%M:%S"
       short: "%d. %B %H:%M"
       api: "%Y-%m-%d %H"
-      budget_first_phase_short: "%d. %B %Y"
+      new_date_with_year: "%d. %B %Y"
     pm: nachmittags

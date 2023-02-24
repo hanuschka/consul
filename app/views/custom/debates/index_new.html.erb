@@ -90,6 +90,7 @@
     <% if extended_feature?('debates.enable_my_posts_filter') %>
       <%= render "shared/sidebar_filter/my_posts" %>
     <% end %>
+
     <% if controller_name == 'debates' && current_user&.administrator? %>
       <%= render Shared::SidebarCardComponent.new(title: 'Export', icon_name: "tag") do |c| %>
         <% c.body do %>

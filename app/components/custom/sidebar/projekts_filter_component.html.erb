@@ -1,6 +1,6 @@
-<% cache cache_key do %>
-  <% if show_filter? %>
-    <% projekt_filter_html = capture do %>
+<% projekt_filter_html = capture do %>
+  <% cache cache_key do %>
+    <% if show_filter? %>
       <div class="sidebar-divider"></div>
       <h2 class="sidebar-title projekt-tag-chip-projekt projekt-tag-chip-icon"><%= t("custom.projekts.sidebar_filter.title") %></h2>
       <div id='filter-projekts-all' data-resources-name=<%= resource_name_js %> data-projekts-to-toggle=<%= projekts_to_toggle_js %>  >
@@ -65,25 +65,25 @@
             </div>
           <% end %>
 
-        <% if @current_tab_phase&.name != 'budget_phase' %>
-          <div class="sidebar-filter-group">
-            <%= f.submit t('custom.projekts.sidebar_filter.filter_button'), class: 'sidebar-filter-button js-remote-link-push-state', onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
-            <%= button_tag '', class: 'js-reset-projekts-filter sidebar-reset-filter-button' %>
-          </div>
-        <% end %>
+          <% if @current_tab_phase&.name != 'budget_phase' %>
+            <div class="sidebar-filter-group">
+              <%= f.submit t('custom.projekts.sidebar_filter.filter_button'), class: 'sidebar-filter-button js-remote-link-push-state', onclick: '$(".spinner-placeholder").addClass("show-loader")' %>
+              <%= button_tag '', class: 'js-reset-projekts-filter sidebar-reset-filter-button' %>
+            </div>
+          <% end %>
 
         <% end %>
       </div>
     <% end %>
+  <% end %>
+<% end %>
 
-    <% if Setting.new_design_enabled? %>
-      <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.sidebar_filter.title"), icon_name: "code-branch") do |c| %>
-        <% c.body do %>
-          <%= projekt_filter_html %>
-        <% end %>
-      <% end %>
-    <% else %>
-      <%= projekt_filter_html  %>
+<% if Setting.new_design_enabled? %>
+  <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.sidebar_filter.title"), icon_name: "code-branch") do |c| %>
+    <% c.body do %>
+      <%= projekt_filter_html %>
     <% end %>
   <% end %>
+<% else %>
+  <%= projekt_filter_html  %>
 <% end %>

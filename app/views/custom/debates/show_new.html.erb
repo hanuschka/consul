@@ -120,8 +120,10 @@
                     <% end %>
 
                     <% if projekt_feature?(@debate.projekt, 'debates.show_report_button_in_sidebar') %>
-                      <% c.additional_section do %>
-                        <%= render Shared::ReportResourceComponent.new(@debate) %>
+                      <% if show_flag_action?(@debate) || show_unflag_action?(@debate) %>
+                        <% c.additional_section do %>
+                          <%= render Shared::ReportResourceComponent.new(@debate) %>
+                        <% end %>
                       <% end %>
                     <% end %>
                   <% end %>

@@ -116,7 +116,9 @@
                     <% end %>
 
                     <% c.additional_section do %>
-                      <%= t("debates.debate.votes", count: @debate.votes_score) %>
+                      <div id="debate_<%= @debate.id %>_votes_count">
+                        <%= t("debates.debate.votes", count: @debate.votes_score) %>
+                      </div>
                     <% end %>
 
                     <% if projekt_feature?(@debate.projekt, 'debates.show_report_button_in_sidebar') %>

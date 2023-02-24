@@ -20,10 +20,7 @@ de:
         social_share:
           title: Projektübersicht
           description:  Die Übersicht aller Projekte
-        information_default_text:
-          Sie möchten etwas bewegen? Dann schlagen Sie
-          Ihr eigenes Projekt vor – und lassen Sie Ihre MitbürgerInnen an Ihren
-          Ideen teilhaben.
+        information_default_text: Sie möchten Dinge anregen und bewegen? Dann starten Sie Ihre eigene Diskussion.
       filter:
         title: Filtern nach
       orders:

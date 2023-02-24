@@ -24,7 +24,7 @@
     </div>
 
     <div class="sidebar">
-      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "bullhorn") do |c| %>
+      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "info-circle") do |c| %>
         <% c.body do %>
           <%= render_custom_block 'projekt_overview_page_sidebar', default_content: t("custom.projekts.index.information_default_text")  %>
         <% end %>

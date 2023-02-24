@@ -24,14 +24,20 @@
       <% end %>
 
       <% if extended_feature?("debates.intro_text_for_debates") %>
-        <%= render_custom_block('debates_welcome', default_content: t("custom.debates.index.welcome_default_text")) %>
+        <div class="resource-page--intro-text">
+          <%= render_custom_block('debates_welcome', default_content: t("custom.debates.index.welcome_default_text")) %>
+        </div>
       <% end %>
 
       <% unless @search_terms || !has_featured? %>
         <%= render "featured_debates" %>
       <% end %>
     <% end %>
+  </div>
+</div>
 
+<div class="layout-main-column">
+  <div class="layout-left-column">
     <%# <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
     <%#   <%= link_to t('debates.index.section_header.help'), '#section_help' %>
     <%# <% end %>
@@ -61,10 +67,15 @@
   <div id="debates-sidebar" class="sidebar">
 
     <% if controller_name == 'debates' %>
-      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "bullhorn") do |c| %>
+      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "info-circle") do |c| %>
         <% c.body do %>
-          <%= render_custom_block 'projekt_overview_page_sidebar', default_content: t("custom.debates.index.sidebar_information_default_text")  %>
-          <%= Debate.count %> <%= t("custom.common.debates") %>
+          <div class="margin-bottom-half">
+            <%= render_custom_block 'projekt_overview_page_sidebar', default_content: t("custom.debates.index.sidebar_information_default_text")  %>
+          </div>
+          <div class="margin-bottom-half">
+            <%= Debate.count %> <%= t("custom.common.debates") %>
+          </div>
+
           <%= render Shared::NewButtonComponent.new(resources_name: "debates", query_params: params) %>
         <% end %>
       <% end %>

@@ -186,6 +186,10 @@
 
     .resource-item--head-title {
       display: none;
+
+      .custom-breadcrumbs .breadcrumbs-item {
+        font-size: 14px;
+      }
     }
   }
 

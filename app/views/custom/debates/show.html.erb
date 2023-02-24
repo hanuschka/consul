@@ -138,7 +138,7 @@
 
     <div class="tabs-content" data-tabs-content="proposals_tabs">
       <div class="tabs-panel is-active" id="tab-comments">
-        <%= render "comments" %>
+        <%= render Shared::CommentsComponent.new(@debate, @comment_tree) %>
       </div>
     </div>
   <% end %>

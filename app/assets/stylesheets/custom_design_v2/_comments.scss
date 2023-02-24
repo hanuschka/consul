@@ -2,6 +2,10 @@
   .comments {
     background: transparent !important;
 
+    .new-comments-component--title {
+      font-size: 28px;
+    }
+
     .comment-form, .comment {
       background: white;
       border-radius: 10px;
@@ -37,6 +41,12 @@
 
     .submenu a {
       font-size: 18px;
+    }
+  }
+
+  .comment-votes {
+    .votes {
+      flex-direction: row;
     }
   }
 }

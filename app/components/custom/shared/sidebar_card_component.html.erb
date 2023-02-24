@@ -10,10 +10,12 @@
     <%= body %>
   </div>
 
-  <% if additional_body.present? %>
-    <div class="sidebar-card--separator"> </div>
-    <div class="sidebar-card--section">
-      <%= additional_body %>
-    </div>
+  <% if additional_sections.present? %>
+    <% additional_sections.each do |additional_section| %>
+      <div class="sidebar-card--separator"> </div>
+      <div class="sidebar-card--section">
+        <%= additional_section %>
+      </div>
+    <% end %>
   <% end %>
 </div>

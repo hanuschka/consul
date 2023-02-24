@@ -27,7 +27,7 @@
   <% end %>
 
   <% if Setting.new_design_enabled? %>
-    <%= render Shared::SidebarCardComponent.new(title: 'SDGS', icon_name: "tag") do |c| %>
+    <%= render Shared::SidebarCardComponent.new(title: t("shared.tags_cloud.categories"), icon_name: "tag") do |c| %>
       <% c.body do %>
         <%= categories_html %>
       <% end %>

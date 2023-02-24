@@ -77,11 +77,11 @@
     <% end %>
 
     <% if Setting.new_design_enabled? %>
-      <div class="sidebar-card">
-        <div class="sidebar-card--section">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.sidebar_filter.title"), icon_name: "code-branch") do |c| %>
+        <% c.body do %>
           <%= projekt_filter_html %>
-        </div>
-      </div>
+        <% end %>
+      <% end %>
     <% else %>
       <%= projekt_filter_html  %>
     <% end %>

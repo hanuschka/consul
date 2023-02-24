@@ -8,13 +8,6 @@
     <%= render "shared/canonical", href: debates_url %>
   <% end %>
 
-  <%=
-    link_to t("admin.budget_investments.index.download_current_selection"),
-    admin_debates_path(csv_params),
-    target: '_blank',
-    class: "float-right small clear"
-  %>
-
   <main>
     <% if @search_terms || @advanced_search_terms %>
       <div class="highlight no-margin-top padding margin-bottom">

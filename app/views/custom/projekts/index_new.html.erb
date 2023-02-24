@@ -24,14 +24,11 @@
     </div>
 
     <div class="sidebar">
-      <div class="sidebar-card">
-        <div class="sidebar-card--section">
-          <h4 class="sidebar-title">
-            <i class="fas fa-bullhorn"></i>Information
-          </h4>
-          <%= render_custom_block 'projekt_overview_page_sidebar' %>
-        </div>
-      </div>
+      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "bullhorn") do |c| %>
+        <% c.body do %>
+          <%= render_custom_block 'projekt_overview_page_sidebar', default_content: t("custom.projekts.index.information_default_text")  %>
+        <% end %>
+      <% end %>
 
       <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: @resource_name, geozones: @geozones %>
       <%= render "shared/categories", taggable: "projekt", categories: @categories %>

@@ -1,5 +1,5 @@
 <h1>
-  Debates
+  <%= t("debates.index.title") %>
 </h1>
 <div class="flex-column">
   <div class="layout-left-column">
@@ -24,7 +24,7 @@
       <% end %>
 
       <% if extended_feature?("debates.intro_text_for_debates") %>
-        <%= render_custom_block 'debates_welcome' %>
+        <%= render_custom_block('debates_welcome', default_content: t("custom.debates.index.welcome_default_text")) %>
       <% end %>
 
       <% unless @search_terms || !has_featured? %>
@@ -32,9 +32,9 @@
       <% end %>
     <% end %>
 
-    <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-      <%= link_to t('debates.index.section_header.help'), '#section_help' %>
-    <% end %>
+    <%# <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
+    <%#   <%= link_to t('debates.index.section_header.help'), '#section_help' %>
+    <%# <% end %>
 
     <%= render 'shared/loader_spinner' %>
       <% if @current_projekt&.overview_page? %>
@@ -51,6 +51,7 @@
               current_filter: @current_order,
               filter_param: "order",
               filters: @valid_orders,
+              filter_i18n_scope: "debates.index.orders",
               no_items_text: "No debates"
             ))
       %>
@@ -60,21 +61,15 @@
   <div id="debates-sidebar" class="sidebar">
 
     <% if controller_name == 'debates' %>
-      <%= render Shared::NewButtonComponent.new(resources_name: "debates", query_params: params) %>
-    <% else %>
-      <%= render Shared::NewButtonComponent.new(projekt_phase: @current_tab_phase) %>
-    <% end %>
-
-    <% if controller_name == 'debates' %>
-      <%= render Shared::SidebarCardComponent.new(title: 'Export', icon_name: "tag") do |c| %>
+      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "bullhorn") do |c| %>
         <% c.body do %>
-          <%=
-            link_to t("admin.budget_investments.index.download_current_selection"),
-              admin_debates_path(csv_params),
-              target: '_blank'
-            %>
+          <%= render_custom_block 'projekt_overview_page_sidebar', default_content: t("custom.debates.index.sidebar_information_default_text")  %>
+          <%= Debate.count %> <%= t("custom.common.debates") %>
+          <%= render Shared::NewButtonComponent.new(resources_name: "debates", query_params: params) %>
         <% end %>
       <% end %>
+    <% else %>
+      <%= render Shared::NewButtonComponent.new(projekt_phase: @current_tab_phase) %>
     <% end %>
 
     <% unless @current_projekt&.overview_page? %>
@@ -95,6 +90,17 @@
     <% if extended_feature?('debates.enable_my_posts_filter') %>
       <%= render "shared/sidebar_filter/my_posts" %>
     <% end %>
+    <% if controller_name == 'debates' && current_user&.administrator? %>
+      <%= render Shared::SidebarCardComponent.new(title: 'Export', icon_name: "tag") do |c| %>
+        <% c.body do %>
+          <%=
+            link_to t("admin.budget_investments.index.download_current_selection"),
+              admin_debates_path(csv_params),
+              target: '_blank',
+              class: "float-right small clear"
+            %>
+        <% end %>
+      <% end %>
+    <% end %>
   </div>
 </div>
-

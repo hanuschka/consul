@@ -20,6 +20,10 @@ de:
         social_share:
           title: Projektübersicht
           description:  Die Übersicht aller Projekte
+        information_default_text:
+          Sie möchten etwas bewegen? Dann schlagen Sie
+          Ihr eigenes Projekt vor – und lassen Sie Ihre MitbürgerInnen an Ihren
+          Ideen teilhaben.
       filter:
         title: Filtern nach
       orders:
@@ -149,7 +153,7 @@ de:
       sidebar:
         sdgs: SDGs
       sidebar_filter:
-        filter_button: Nach Projekte filtern
+        filter_button: Filter anwenden
         title: Projekte
         title_active: Aktive Projekte
         title_archived: Abgelaufene Projekte

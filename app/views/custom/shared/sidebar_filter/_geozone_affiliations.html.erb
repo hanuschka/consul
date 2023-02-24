@@ -53,11 +53,12 @@
   <% end %>
 
   <% if Setting.new_design_enabled? %>
-    <div class="sidebar-card">
-      <div class="sidebar-card--section">
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.geozones.sidebar_filter.affiliations.title"), icon_name: "location-dot") do |c| %>
+      <% c.body do %>
+        <h3 class="sidebar-title projekt-tag-chip-geozone-affiliation projekt-tag-chip-icon"><%= t("custom.geozones.sidebar_filter.affiliations.title") %></h3>
         <%= geozone_affiliation_html %>
-      </div>
-    </div>
+      <% end %>
+    <% end %>
   <% else %>
     <%= geozone_affiliation_html %>
   <% end %>

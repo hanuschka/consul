@@ -4,7 +4,6 @@
   <% categories_html = capture do %>
     <div class="sidebar-divider"></div>
     <h2 class="sidebar-title projekt-tag-chip-category projekt-tag-chip-icon"><%= t("shared.tags_cloud.categories") %></h2>
-    <br>
 
     <ul id="categories" class="no-bullet categories">
       <% selected_categories = params[:tags] ? params[:tags].split(',') : []%>
@@ -28,11 +27,11 @@
   <% end %>
 
   <% if Setting.new_design_enabled? %>
-    <div class="sidebar-card">
-      <div class="sidebar-card--section">
+    <%= render Shared::SidebarCardComponent.new(title: 'SDGS', icon_name: "tag") do |c| %>
+      <% c.body do %>
         <%= categories_html %>
-      </div>
-    </div>
+      <% end %>
+    <% end %>
   <% else %>
     <%= categories_html %>
   <% end %>

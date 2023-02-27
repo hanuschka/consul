@@ -58,7 +58,7 @@
 }
 
 .direct-image-upload--select-button {
-  color: #003A71;
+  color: $brand;
   font-size: 33px;
   opacity: 0.7;
   font-weight: 400;
@@ -88,7 +88,7 @@
 }
 
 .direct-image-upload--text {
-  color: #003A71;
+  color: $brand;
   opacity: 0.5;
   line-height: 1.25;
 }
@@ -99,7 +99,7 @@
 
 .direct-image-upload--plus {
   margin: auto;
-  color: #003A71;
+  color: $brand;
   font-size: 130px;
   line-height: 1;
   text-align: center;
@@ -119,12 +119,12 @@
 
 .direct-image-upload--label-title {
   font-size: 33px;
-  color: #003A71;
+  color: $brand;
   opacity: 0.7;
 }
 
 .direct-image-upload--hint {
-  color: #003A71;
+  color: $brand;
   opacity: 0.5;
   font-size: 14px;
 }

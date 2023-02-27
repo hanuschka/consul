@@ -4,15 +4,16 @@
 
 <div class="layout-main-column">
   <div class="layout-left-column">
-    <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
+    <%# <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
     <%= render 'shared/loader_spinner' %>
 
     <% event_phase_url = url_for(action: params[:current_tab_path], controller: "/pages", format: :js) %>
     <%= render(
       Shared::ResourcesList.new(
         resources: @projekt_events,
+        resource_type: ProjektEvent,
         title: 'Events',
-        load_resources_url: event_phase_url,
+        remote_url: event_phase_url,
         current_filter: @current_filter,
         filter_param: "order",
         filters: @valid_orders,

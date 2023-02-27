@@ -1,19 +1,19 @@
 <div class="flex-column">
   <div class="layout-left-column">
 
-    <%= render Shared::MobileResourcesFilterComponent.new(
-      sdgs: @sdgs,
-      categories: @categories,
-      resource_name: @resource_name,
-      projekts_filter_variables: {
-        top_level_active_projekts: @top_level_active_projekts,
-        top_level_archived_projekts: @top_level_archived_projekts,
-        scoped_projekt_ids: @scoped_projekt_ids,
-        all_resources: @all_resources,
-        current_tab_phase: @current_tab_phase,
-        current_projekt: @current_projekt
-      }
-    ) %>
+    <%# <%= render Shared::MobileResourcesFilterComponent.new(
+    <%#   sdgs: @sdgs,
+    <%#   categories: @categories,
+    <%#   resource_name: @resource_name,
+    <%#   projekts_filter_variables: {
+    <%#     top_level_active_projekts: @top_level_active_projekts,
+    <%#     top_level_archived_projekts: @top_level_archived_projekts,
+    <%#     scoped_projekt_ids: @scoped_projekt_ids,
+    <%#     all_resources: @all_resources,
+    <%#     current_tab_phase: @current_tab_phase,
+    <%#     current_projekt: @current_projekt
+    <%#   }
+    <%# ) %>
     <%= render 'shared/loader_spinner' %>
 
       <% if @current_projekt.overview_page? %>
@@ -24,8 +24,9 @@
       <%= render(
             Shared::ResourcesList.new(
               resources: @proposals,
+              resource_type: Proposal,
               title: 'Proposals',
-              load_resources_url: proposal_footer_url,
+              remote_url: proposal_footer_url,
               map_coordinates: @proposals_coordinates,
               current_filter: @current_order,
               filter_param: "order",

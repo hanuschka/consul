@@ -3,18 +3,18 @@
 </h1>
 <div class="flex-column">
   <div class="layout-left-column">
-    <%= render Shared::MobileResourcesFilterComponent.new( sdgs: @sdgs, categories: @categories,
-      resource_name: @resource_name,
-      geozones: @geozones,
-      projekts_filter_variables: {
-        top_level_active_projekts: @top_level_active_projekts,
-        top_level_archived_projekts: @top_level_archived_projekts,
-        scoped_projekt_ids: @scoped_projekt_ids,
-        all_resources: @all_resources,
-        current_tab_phase: @current_tab_phase,
-        current_projekt: @current_projekt
-      }
-    ) %>
+    <%# <%= render Shared::MobileResourcesFilterComponent.new( sdgs: @sdgs, categories: @categories,
+    <%#   resource_name: @resource_name,
+    <%#   geozones: @geozones,
+    <%#   projekts_filter_variables: {
+    <%#     top_level_active_projekts: @top_level_active_projekts,
+    <%#     top_level_archived_projekts: @top_level_archived_projekts,
+    <%#     scoped_projekt_ids: @scoped_projekt_ids,
+    <%#     all_resources: @all_resources,
+    <%#     current_tab_phase: @current_tab_phase,
+    <%#     current_projekt: @current_projekt
+    <%#   }
+    <%# ) %>
 
     <% if controller_name == 'debates' %>
       <% if feature?("user.recommendations") && @recommended_debates.present? %>
@@ -53,12 +53,12 @@
       <%= render(
             Shared::ResourcesList.new(
               resources: @debates,
-              load_resources_url: debates_load_url,
+              resource_type: Debate,
               current_filter: @current_order,
               filter_param: "order",
               filters: @valid_orders,
               filter_i18n_scope: "debates.index.orders",
-              no_items_text: "No debates"
+              no_items_text: empty_recommended_debates_message_text(current_user)
             ))
       %>
     <%= paginate @debates, remote: true, params: { controller: 'pages', action: 'debate_phase_footer_tab' } %>
@@ -95,7 +95,7 @@
     <% end %>
 
     <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: @resource_name, geozones: @geozones %>
-    <%= render "shared/categories", taggable: "projekt", categories: @categories, projekt_footer_mode: true %>
+    <%= render "shared/categories", taggable: "debate", categories: @categories %>
     <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
 
     <% if extended_feature?('debates.enable_my_posts_filter') %>

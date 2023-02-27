@@ -21,6 +21,7 @@
   @media screen and (max-width: $big-tablet-viewport-start) {
     .layout-main-column {
       padding: 0 25px;
+      flex-direction: column-reverse;
     }
   }
 

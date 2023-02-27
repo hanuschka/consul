@@ -13,6 +13,7 @@ function initComponents() {
   initializeMjAccordion();
   App.LivesteamLivequestion.initialize();
   App.CollapseTextComponent.initialize();
+  App.NonBlockRemoteLinks.initialize();
 }
 
 $(function() {

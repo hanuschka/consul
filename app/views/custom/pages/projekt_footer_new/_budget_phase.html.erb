@@ -34,12 +34,13 @@
           <%= render(
                 Shared::ResourcesList.new(
                   resources: @investments,
+                  resource_type: Budget::Investment,
                   map_coordinates: @budget.investment_map_locations,
                   current_filter: @current_order,
                   filter_param: "order",
                   filters: @valid_orders,
                   filter_i18n_scope: "budgets.investments.index.orders",
-                  load_resources_url: budget_investments_footer_url,
+                  remote_url: budget_investments_footer_url,
                   additional_data: {
                     ballot: @ballot,
                     top_level_active_projekts: @top_level_active_projekts,

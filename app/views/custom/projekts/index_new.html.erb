@@ -8,7 +8,7 @@
         <%= render_custom_block "projekts_overview_page" %>
       </div>
 
-      <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
+      <%# <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
 
       <div class="projekts-overview-page--projekts-list">
         <%= render Projekts::List.new(
@@ -16,9 +16,7 @@
           map_coordinates: @map_coordinates,
           current_filter: @current_order,
           filters: @current_active_orders,
-          hide_title: true,
-          load_resources_url: projekts_path(proposal_locations: "true"),
-          full_page_reload: true
+          hide_title: true
           ) %>
       </div>
     </div>

@@ -1,17 +1,17 @@
 <div class="flex-column">
   <div class="layout-left-column">
-    <%= render Shared::MobileResourcesFilterComponent.new( sdgs: @sdgs, categories: @categories,
-      resource_name: @resource_name,
-      geozones: @geozones,
-      projekts_filter_variables: {
-        top_level_active_projekts: @top_level_active_projekts,
-        top_level_archived_projekts: @top_level_archived_projekts,
-        scoped_projekt_ids: @scoped_projekt_ids,
-        all_resources: @all_resources,
-        current_tab_phase: @current_tab_phase,
-        current_projekt: @current_projekt
-      }
-    ) %>
+    <%# <%= render Shared::MobileResourcesFilterComponent.new( sdgs: @sdgs, categories: @categories,
+    <%#   resource_name: @resource_name,
+    <%#   geozones: @geozones,
+    <%#   projekts_filter_variables: {
+    <%#     top_level_active_projekts: @top_level_active_projekts,
+    <%#     top_level_archived_projekts: @top_level_archived_projekts,
+    <%#     scoped_projekt_ids: @scoped_projekt_ids,
+    <%#     all_resources: @all_resources,
+    <%#     current_tab_phase: @current_tab_phase,
+    <%#     current_projekt: @current_projekt
+    <%#   }
+    <%# ) %>
 
     <% if controller_name == 'debates' %>
       <% if feature?("user.recommendations") && @recommended_debates.present? %>
@@ -44,7 +44,8 @@
       <%= render(
             Shared::ResourcesList.new(
               resources: @debates,
-              load_resources_url: debates_load_url,
+              resource_type: Debate,
+              remote_url: debates_load_url,
               current_filter: @current_order,
               filter_param: "order",
               filters: @valid_orders,

@@ -16,13 +16,18 @@
       padding: 15px 25px;
     }
 
+    .comment-form, .comment {
+      margin-bottom: 35px;
+    }
+
     .comment {
       padding-bottom: 0;
     }
 
-    .comment-list, .comment-list .comment-list {
+    .comment-list {
       border-left: none;
       padding-left: 0;
+      margin-top: 15px;
     }
 
     .comment-list .comment-body {

@@ -1,16 +1,19 @@
 class Shared::ResourcesList < ApplicationComponent
   renders_one :bottom_content
 
+  attr_reader :filters, :remote_url, :resource_type
+
   def initialize(
     title: nil,
     title_link: nil,
     resources:,
+    resource_type: nil,
     resources_name: nil,
     filter_param: nil,
     filters: nil,
     current_filter: nil,
     filter_i18n_scope: nil,
-    load_resources_url: nil,
+    remote_url: nil,
     only_content: false,
     map_coordinates: nil,
     wide: false,
@@ -19,20 +22,20 @@ class Shared::ResourcesList < ApplicationComponent
     filter_title: nil,
     no_items_text: nil,
     no_filter: false,
-    full_page_reload: false,
     additional_data: {}
   )
     @resources = resources
+    @resource_type = resource_type
     @resources_name = resources.first.class.name.downcase.pluralize
     @title = title
     @title_link = title_link
     @wide = wide
     @filter_param = filter_param.presence || "order"
     # @filters = filters.presence || default_filter_options
-    @filters = filters.presence
+    @filters = filters
     @current_filter = current_filter
     @filter_i18n_scope = filter_i18n_scope
-    @load_resources_url = load_resources_url
+    @remote_url = remote_url
     @only_content = only_content
     @map_coordinates = map_coordinates
     @css_class = css_class
@@ -40,7 +43,6 @@ class Shared::ResourcesList < ApplicationComponent
     @no_items_text = no_items_text
     @filter_title = filter_title.presence || "Sortieren nach"
     @no_filter = no_filter
-    @full_page_reload = full_page_reload
     @additional_data = additional_data
   end
 
@@ -54,24 +56,21 @@ class Shared::ResourcesList < ApplicationComponent
     base
   end
 
-  def filter_options
-    return if @filters.blank?
-
-    @filters.map do |filter|
-      {
-        value: filter,
-        title: t(filter, scope: @filter_i18n_scope)
-      }
-    end
-  end
-
   def selected_filter_otpion
-    return if filter_options.blank?
+    return if filters.blank?
 
-    filter_options.find { |filter_option| filter_option[:value] == @current_filter }
+    filters.find { |filter| filter == @current_filter }
   end
 
   def item_css_class
+  end
+
+  def i18n_namespace_for_filter
+    if resource_type == Projekt
+      "custom.projekts.orders"
+    elsif resource_type == Debate
+      "debates.index.orders"
+    end
   end
 
   def switch_view_mode_icon

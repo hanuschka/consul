@@ -456,12 +456,6 @@ body.new-custom-design > header, .new-custom-design .wrapper > header {
     }
   }
 
-  @media (max-width: $small-tablet-viewport-start) {
-    .sidebar {
-      display: none;
-    }
-  }
-
   .header--mobile-hamburger-menu {
     position: static;
 

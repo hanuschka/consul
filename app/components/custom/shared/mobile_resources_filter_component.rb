@@ -9,4 +9,8 @@ class Shared::MobileResourcesFilterComponent < ApplicationComponent
     @resource_name = resource_name
     @projekts_filter_variables = projekts_filter_variables
   end
+
+  def render?
+    false
+  end
 end

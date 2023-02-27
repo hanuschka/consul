@@ -10,16 +10,17 @@
 
   .resource-page-banner--text-section {
     width: 48%;
-    color: #003A71;
+    color: $brand;
   }
 
   .resource-page-banner--image {
     width: 48%;
+    min-height: 332px;
   }
 
   .resource-page-banner--title {
     font-size: 28px;
-    color: #003A71;
+    color: $brand;
     margin-bottom: 30px;
   }
 

@@ -27,7 +27,7 @@
           map_coordinates: @active_projekts_map_coordinates,
           current_filter: @current_projekt_filter,
           filters: @current_active_projekt_filters,
-          load_resources_url: list_projekts_path
+          remote_url: list_projekts_path
         ) %>
       <% end %>
 
@@ -38,7 +38,7 @@
       <%= render_custom_block 'home_page_2' %>
 
       <% if @latest_polls.any? %>
-        <%= render Shared::ResourcesList.new(resources: @polls, title: t('custom.welcome.current_polls') , wide: false) %>
+        <%= render Shared::ResourcesList.new(resources: @polls, resource_type: Poll, title: t('custom.welcome.current_polls') , wide: false) %>
       <% end %>
 
       <%= render_custom_block 'home_page_4' %>

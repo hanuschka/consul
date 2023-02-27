@@ -42,7 +42,7 @@
 
     .attachment-errors.image-attachment label.button {
       border: none;
-      color: #003A71;
+      color: $brand;
       font-size: 33px;
       opacity: 0.7;
       font-weight: 400;
@@ -93,7 +93,7 @@
     padding: 0;
 
     &::placeholder  {
-      color: #003A71;
+      color: $brand;
       opacity: 0.3;
     }
 
@@ -129,7 +129,7 @@
     }
 
     .help-text {
-      color: #003A71;
+      color: $brand;
       opacity: 0.5;
       line-height: 1.25;
       margin-bottom: 65px;

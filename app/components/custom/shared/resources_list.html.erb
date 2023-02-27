@@ -21,7 +21,7 @@
 <% if @only_content %>
   <%= body %>
 <% else %>
-  <div class="resources-list js-resources-list <%= class_names %>" data-resources-url="<%= @load_resources_url %>" data-full-page-reload="<%= @full_page_reload %>">
+  <div class="resources-list js-resources-list <%= class_names %>">
     <% unless @hide_title %>
       <h3 class="resources-list--title">
         <% if @title_link.present?  %>
@@ -33,24 +33,18 @@
     <% end %>
 
     <div class="resources-list--navigation">
-      <div class="resources-list--line-divider">
-
+      <div class="items-list-line-divider">
       </div>
-      <% if @load_resources_url.present? && filter_options.present? %>
-        <div class="resources-list--sort">
-          <div class="resources-list--sort-title">
-            <%= @filter_title %>:
-          </div>
-          <%= render(
-            Shared::DropdownMenuComponent.new(
-              name: @filter_param,
-              options: filter_options,
+      <% if filters.present? %>
+        <%= render(
+            Shared::FilterDropdownComponent.new(
+              title: @filter_title,
+              options: filters,
               selected_option: selected_filter_otpion,
-              item_css_class: item_css_class
+              i18n_namespace: i18n_namespace_for_filter,
+              remote_url: remote_url
             )
-          )
-        %>
-        </div>
+        ) %>
       <% end %>
 
       <div class="resources-list--switch-view-button js-resource-list-switch-view-button">

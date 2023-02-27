@@ -5,7 +5,7 @@
     updateLabelStyle: function($label) {
       $label.closest('ul').find('li.label-selected').each( function() {
         $(this).removeClass('label-selected');
-      })      
+      })
 
       $label.closest('li').addClass('label-selected')
     },
@@ -55,9 +55,10 @@
         App.Geozones.updateGeozoneRestrictionParam($label);
       });
 
-      $("body").on("click", ".js-toggle-geozones", function() {
+      $("body").on("click", ".js-toggle-geozones", function(e) {
         event.preventDefault();
-        var $label = $(this).closest('label');
+        var $label = $(e.currentTarget).closest('label');
+        console.log(e.currentTarget)
 
         var $wrapper = $label.closest('li');
         if ($wrapper.attr("aria-expanded") != "true") {
@@ -81,10 +82,10 @@
 
       $("body").on("click", ".js-show-all-geozones", function(event) {
         event.preventDefault();
-        $(this).parent().siblings('li').each(function() { 
-          $(this).removeClass('hide');
-        })
-        $(this).addClass('hide');
+        // $(this).parent().siblings('li').each(function() {
+        //   $(this).removeClass('hide');
+        // })
+        // $(this).addClass('hide');
       });
     }
   };

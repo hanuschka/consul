@@ -9,6 +9,7 @@ class Projekts::List < ApplicationComponent
   def call
     render(Shared::ResourcesList.new(
       resources: @projekts,
+      resource_type: Projekt,
       title: t("custom.projekts.projekt_list.title"),
       filter_i18n_scope: "custom.projekts.orders",
       css_class: "js-projekts-list",

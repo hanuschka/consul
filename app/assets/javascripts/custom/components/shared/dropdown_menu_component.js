@@ -39,6 +39,7 @@
 
     selectOption: function(e) {
       this.closeDropdown();
+      console.log('TEST')
       e.currentTarget.closest(".js-dropdown").querySelector(".dropdown-toggle").innerHTML = e.currentTarget.textContent;
     }
   };

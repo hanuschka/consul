@@ -10,9 +10,19 @@
     <% unless record.is_a?(ProjektQuestion) ||
         (record.is_a?(Projekt) && record.overview_page?) ||
         comment_tree.root_comments.where(hidden_at: nil).count < 2 %>
-      <%= render Shared::OrderLinksComponent.new("comments", anchor: "tab-comments") %>
+      <div class="d-flex">
+        <div class="items-list-line-divider"></div>
+        <%= render(
+          Shared::FilterDropdownComponent.new(
+            title: "Sortieren nach:",
+            anchor: 'comments',
+            options: helpers.valid_orders,
+            selected_option: helpers.current_order,
+            i18n_namespace: "comments.orders"
+          )
+        ) %>
+      </div>
     <% end %>
-
     <%= render "comments/comment_list", comments: comment_tree.root_comments %>
     <%= pagination_links %>
   </div>

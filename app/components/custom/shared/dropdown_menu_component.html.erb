@@ -1,15 +1,15 @@
 <div class="dropdown-container js-dropdown" data-name="<%= @name %>">
 
   <div class="dropdown-toggle js-dropdown-toggle click-dropdown">
-    <%= @selected_option&.fetch(:title, nil).presence || @options.first[:title] %>
+    <%= @selected_option.presence || @options.first %>
   </div>
   <div class="dropdown-menu">
     <ul>
-    <% @options.each do |option| %>
-      <li data-name="<%= @name %>" data-value="<%= option[:value] %>" class="js-dropdown-item <%= @item_css_class %>" >
-        <%= option[:title] %>
-      </li>
-    <% end %>
+      <% options.each do |option| %>
+        <li class="js-dropdown-item <%= @item_css_class %>" >
+          <%= option %>
+        </li>
+      <% end %>
     </ul>
   </div>
 </div>

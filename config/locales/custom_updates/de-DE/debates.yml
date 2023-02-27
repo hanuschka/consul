@@ -22,6 +22,7 @@ de:
         projekts: Projekte
         creation_only_for_citizens: Neue Diskussionen können in diesem Projekt nur von Bürgerinnen und Bürgern der Stadt %{city} erstellt werden.
         creation_only_for_specific_geozones: Neue Diskussionen können nur von Bürger*innen aus dem Postleitzahlbereich %{geozones} erstellt werden
+        download_current_selection: Herunterladen
         welcome_default_text:
           Diskussionen sind essenziell, um ein
           differenziertes Meinungsbild zu den einzelnen Projekten zu erhalten.

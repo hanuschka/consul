@@ -58,7 +58,7 @@
               filter_param: "order",
               filters: @valid_orders,
               filter_i18n_scope: "debates.index.orders",
-              no_items_text: empty_recommended_debates_message_text(current_user)
+              no_items_text: "Keine Ergebnisse"
             ))
       %>
     <%= paginate @debates, remote: true, params: { controller: 'pages', action: 'debate_phase_footer_tab' } %>
@@ -106,10 +106,9 @@
       <%= render Shared::SidebarCardComponent.new(title: 'Export', icon_name: "tag") do |c| %>
         <% c.body do %>
           <%=
-            link_to t("admin.budget_investments.index.download_current_selection"),
+            link_to t("custom.debates.index.download_current_selection"),
               admin_debates_path(csv_params),
-              target: '_blank',
-              class: "float-right small clear"
+              target: '_blank'
             %>
         <% end %>
       <% end %>

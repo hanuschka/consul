@@ -67,7 +67,7 @@
                     </div>
                   </div>
 
-                  <% if @debate.image.present? && !@debate.image.concealed? %>
+                  <% if @debate.image.present? && !@debate.image.concealed? && @debate.image.variant(:large).present? %>
                     <%= image_tag(@debate.image.variant(:large), class: "resource-page-banner--image") %>
                   <% end %>
                 </div>
@@ -150,7 +150,7 @@
                   <% end %>
                 <% end %>
 
-                <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.information"), icon_name: "cog")) do |c| %>
+                <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.information"), icon_name: "info-circle")) do |c| %>
                   <% c.body do %>
                     <%= render "shared/participation/resource_info", resource: @debate %>
                   <% end %>

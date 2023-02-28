@@ -7,6 +7,26 @@
     }
   }
 
+  .resources-list {
+    .input-group-button {
+      display: none;
+    }
+
+    .show-for-sr {
+      display: none;
+    }
+
+    input[type="text"] {
+      height: 40px;
+      margin-bottom: 0;
+      border-radius: 10px;
+    }
+
+    .input-group {
+      margin-right: 10px;
+    }
+  }
+
   .resources-list--title {
     // font-size: 30px;
     font-size: 28px;

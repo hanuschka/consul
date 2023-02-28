@@ -21,6 +21,8 @@ class Sidebar::ProjektsFilterCheckboxComponent < ApplicationComponent
 	private
 
   def resource_count
+    return 0 if resource_count.blank?
+
     projekt_ids_to_count = projekt.all_children_ids.unshift(projekt.id) & @scoped_projekt_ids
 
     @all_resources.where( projekt: projekt_ids_to_count ).count

@@ -33,6 +33,11 @@
     <% end %>
 
     <div class="resources-list--navigation">
+      <%= render "shared/search_form",
+        search_path: debates_path(page: 1),
+        i18n_namespace: "debates.index.search_form"
+      %>
+
       <div class="items-list-line-divider">
       </div>
       <% if filters.present? %>

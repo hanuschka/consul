@@ -48,10 +48,23 @@ class DebatesController < ApplicationController
 
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
 
-    if Setting.new_design_enabled?
-      render :index_new
-    else
-      render :index
+    respond_to do |format|
+      format.html do
+        if Setting.new_design_enabled?
+          render :index_new
+        else
+          render :index
+        end
+      end
+
+      if current_user&.administrator?
+        format.csv do
+          current_time_formated = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
+
+          send_data Debates::CsvExporter.new(@debates.limit(nil)).to_csv,
+            filename: "debates_#{current_time_formated}.csv"
+        end
+      end
     end
   end
 

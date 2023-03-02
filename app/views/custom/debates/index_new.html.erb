@@ -95,7 +95,8 @@
         <% c.body do %>
           <%=
             link_to t("custom.debates.index.download_current_selection"),
-              admin_debates_path(csv_params),
+              debates_path(**request.query_parameters, format: :csv),
+              format: :csv,
               target: '_blank'
             %>
         <% end %>

@@ -329,6 +329,14 @@ class ProjektsController < ApplicationController
     @map_coordinates = all_projekts_map_locations(@projekts)
     @resources = @projekts
 
+
+    @selected_sdg_goals_codes = params[:sdg_goals].present? ? params[:sdg_goals].split(",").map{ |code| code.to_i } : nil
+    @selected_sdg_goals = SDG::Goal.where(code: @selected_sdg_goals_codes)
+
+    @selected_sdg_target_code = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
+    @sdg_targets_for_selected_goals = SDG::Target.where(goal: @selected_sdg_goals)
+    @selected_sdg_targets = @sdg_targets_for_selected_goals.where(code: @selected_sdg_target_code)
+
     limit = params[:limit].presence || 25
 
     if @projekts.is_a?(Array)
@@ -336,9 +344,6 @@ class ProjektsController < ApplicationController
     else
       @projekts = @projekts.page(params[:page]).per(limit)
     end
-
-    @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
-    @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
 
     if @overview_page_special_projekt.proposal_phase.phase_activated?
       proposals = Proposal.where(projekt_id: @overview_page_special_projekt.id)

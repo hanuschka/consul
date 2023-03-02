@@ -68,6 +68,6 @@
 
     <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: @resource_name, geozones: @geozones %>
     <%= render "shared/categories", taggable: "projekt", categories: @categories, projekt_footer_mode: true %>
-    <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
+    <%# <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
   </div>
 </div>

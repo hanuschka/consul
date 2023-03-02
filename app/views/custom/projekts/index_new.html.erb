@@ -8,8 +8,6 @@
         <%= render_custom_block "projekts_overview_page" %>
       </div>
 
-      <%# <%= render Shared::MobileResourcesFilterComponent.new(sdgs: @sdgs, categories: @categories, resource_name: @resource_name) %>
-
       <div class="projekts-overview-page--projekts-list">
         <%= render Projekts::List.new(
           projekts: @projekts,
@@ -30,7 +28,12 @@
 
       <%= render "shared/sidebar_filter/geozone_affiliations", resource_name: @resource_name, geozones: @geozones %>
       <%= render "shared/categories", taggable: "projekt", categories: @categories %>
-      <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
+      <%= render SDG::FilterComponent.new(
+        "Projekt",
+        selected_sdg_goals: @selected_sdg_goals,
+        selected_sdg_targets: @selected_sdg_targets,
+        sdg_targets_for_selected_goals: @sdg_targets_for_selected_goals
+      ) %>
     </div>
   </div>
 

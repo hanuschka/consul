@@ -36,6 +36,7 @@ class DebatesController < ApplicationController
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
+    @tag_cloud = tag_cloud
 
     unless params[:search].present?
       take_by_my_posts

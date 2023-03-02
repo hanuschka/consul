@@ -1,0 +1,30 @@
+<% sdg_content_html = capture do %>
+  <div class="sdg-goal-tag-cloud sdg-tag-list margin-top">
+    <div class="sidebar-divider"></div>
+    <h2 class="sidebar-title sdg-tag-icon"><%= heading %></h2>
+    <%= render SDG::FilterLinksComponent.new(goals, class_name.constantize) %>
+
+    <% if selected_sdg_goals.any? %>
+      <div class="filter margin-top">
+        <label for="advanced_search_target"><%= sanitize(t("custom.sdg.targets.label",
+                                                           more_link: link_to( t('custom.sdg.targets.more_link_text'), sdg_goals_path ))) %></label>
+        <%= select_tag("select_target", target_options,
+                       include_blank: t("custom.sdg.targets.select"), class: 'js-sdg-custom-target-filter-dropdown')  %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if Setting.new_design_enabled? %>
+  <div class="sidebar-card">
+    <div class="sidebar-card--section">
+      <h4 class="sidebar-card--header">
+        <i class="sdg-tag-icon"></i>
+        SDGS
+      </h4>
+      <%= sdg_content_html  %>
+    </div>
+  </div>
+<% else %>
+  <%= sdg_content_html  %>
+<% end %>

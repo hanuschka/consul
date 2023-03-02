@@ -12,6 +12,7 @@
       App.ModalNotification.initialize();
       App.StikyHeader.initialize();
       App.DirectUploadComponent.initialize();
+      App.TextSearchFormComponent.initialize();
     }
   };
 }).call(this);

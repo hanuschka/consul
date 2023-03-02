@@ -60,9 +60,11 @@
                         <%= @debate.comments.count %> Kommentare
                       </div>
                       <div class="resourece-page-banner--detail">
-                        <i class="fa fa-code-branch"></i>
-                        Zugehöriges Projekt:
-                        <%= @debate.projekt.name %>
+                        <%= link_to(projekt_path(@debate.projekt)) do %>
+                          <i class="fa fa-code-branch"></i>
+                          Zugehöriges Projekt:
+                          <%= @debate.projekt.name %>
+                        <% end %>
                       </div>
                     </div>
                   </div>
@@ -73,7 +75,7 @@
                 </div>
 
                 <div class="resource-page--description new-card">
-                    <%= @debate.description %>
+                    <%= auto_link_already_sanitized_html wysiwyg(@debate.description) %>
                 </div>
 
                 <% if projekt_feature?(@debate.projekt, 'debates.show_related_content') %>
@@ -86,6 +88,8 @@
               </div>
 
               <aside class="sidebar">
+                <%= render Users::ResourceAuthorComponent.new(user: @debate.author) %>
+
                 <% if @debate.editable_by?(current_user) %>
                   <%= render(Shared::SidebarCardComponent.new(title: t("debates.show.author"), icon_name: "user-gear")) do |c| %>
                     <% c.body do %>

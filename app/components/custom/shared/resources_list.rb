@@ -20,6 +20,7 @@ class Shared::ResourcesList < ApplicationComponent
     css_class: nil,
     hide_title: false,
     filter_title: nil,
+    text_search_enabled: false,
     no_items_text: nil,
     no_filter: false,
     additional_data: {}
@@ -40,6 +41,7 @@ class Shared::ResourcesList < ApplicationComponent
     @map_coordinates = map_coordinates
     @css_class = css_class
     @hide_title = hide_title
+    @text_search_enabled = text_search_enabled
     @no_items_text = no_items_text
     @filter_title = filter_title.presence || "Sortieren nach"
     @no_filter = no_filter

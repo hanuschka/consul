@@ -82,10 +82,10 @@
 
       $("body").on("click", ".js-show-all-geozones", function(event) {
         event.preventDefault();
-        // $(this).parent().siblings('li').each(function() {
-        //   $(this).removeClass('hide');
-        // })
-        // $(this).addClass('hide');
+        $(this).parent().siblings('li').each(function() {
+          $(this).removeClass('hide');
+        })
+        $(this).addClass('hide');
       });
     }
   };

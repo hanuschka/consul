@@ -1,0 +1,13 @@
+<div class="resource-item--image-container">
+  <a href="<%= @url %>" class="resource-item--image-container">
+    <% if image_ontop_item.present? %>
+      <div class="resource-item--image-ontop-item-container">
+        <%= image_ontop_item %>
+      </div>
+    <% end %>
+
+    <% if @image_url.present? %>
+      <%= image_tag(@image_url, class: 'resource-item--image') %>
+      <%= image_tag(@image_url, class: 'resource-item--image-blur') %>
+    <% else %>
+</div>

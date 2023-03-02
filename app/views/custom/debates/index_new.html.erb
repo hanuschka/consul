@@ -3,19 +3,6 @@
 </h1>
 <div class="flex-column">
   <div class="layout-left-column">
-    <%# <%= render Shared::MobileResourcesFilterComponent.new( sdgs: @sdgs, categories: @categories,
-    <%#   resource_name: @resource_name,
-    <%#   geozones: @geozones,
-    <%#   projekts_filter_variables: {
-    <%#     top_level_active_projekts: @top_level_active_projekts,
-    <%#     top_level_archived_projekts: @top_level_archived_projekts,
-    <%#     scoped_projekt_ids: @scoped_projekt_ids,
-    <%#     all_resources: @all_resources,
-    <%#     current_tab_phase: @current_tab_phase,
-    <%#     current_projekt: @current_projekt
-    <%#   }
-    <%# ) %>
-
     <% if controller_name == 'debates' %>
       <% if feature?("user.recommendations") && @recommended_debates.present? %>
         <%= render "shared/recommended_index", recommended: @recommended_debates,
@@ -56,6 +43,7 @@
               resource_type: Debate,
               current_filter: @current_order,
               filter_param: "order",
+              text_search_enabled: true,
               filters: @valid_orders,
               filter_i18n_scope: "debates.index.orders",
               no_items_text: "Keine Ergebnisse"

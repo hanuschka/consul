@@ -47,6 +47,16 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
+
+    .search-form-header {
+      margin-right: 20px;
+      max-width: 320px;
+      flex-grow: 1;
+
+      label {
+        flex-grow: 1;
+      }
+    }
   }
 
   .resources-list--sort {

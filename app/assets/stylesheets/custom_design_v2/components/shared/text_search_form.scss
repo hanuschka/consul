@@ -1,0 +1,17 @@
+.text-search-form {
+  flex-grow: 1;
+  position: relative;
+}
+
+.text-search-form--reset-button {
+  font-size: 22px;
+  color: #a5a5a5;
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  cursor: pointer;
+
+  &:hover {
+    color: darken(#a5a5a5, 10%);
+  }
+}

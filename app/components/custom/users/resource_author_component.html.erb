@@ -1,0 +1,53 @@
+<div class="resource-author">
+  <div class="resource-author--background-image">
+
+  </div>
+  <div class="resource-author--info">
+    <div class="resource-author--avatar">
+
+    </div>
+    <div class="resource-author--name">
+      <%= user.name %>
+    </div>
+
+    <div class="resource-author--registration-date">
+      Beigetreten am: <%= l(user.created_at) %>
+    </div>
+
+    <div class="resource-author--resources">
+      <% if user.proposals.exists? %>
+        <div class="resource-author--resources-item">
+          <div class="resource-author--name">
+            Vorschläge
+          </div>
+          <div class="resource-author--count">
+            <%= user.proposals.count %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if user.debates.exists? %>
+        <div class="resource-author--resources-item">
+          <div class="resource-author--name">
+            Diskussionen
+          </div>
+          <div class="resource-author--count">
+            <%= user.debates.count %>
+          </div>
+        </div>
+      <% end %>
+
+
+      <% if user.comments.exists? %>
+        <div class="resource-author--resources-item">
+          <div class="resource-author--name">
+            Kommentare
+          </div>
+          <div class="resource-author--count">
+            <%= user.comments.count %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

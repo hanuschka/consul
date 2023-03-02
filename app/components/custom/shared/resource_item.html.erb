@@ -1,21 +1,3 @@
-<% tags = capture do  %>
-  <div class="resource-item--tags">
-    <% if @tags.present? %>
-      <% @tags.first(2).each do |tag| %>
-         <%= link_to(path_for_resource_with_params(@resource, tags: tag.name), target: 'blank', class: 'resource-item--tag') do %>
-          <%= tag.name %>
-        <% end %>
-      <% end %>
-
-      <% if @tags[2].present? %>
-         <%= link_to(path_for_resource_with_params(@resource, tags: @tags[2].name), target: '_blank', class: 'resource-item--tag resource-item--last-tag') do %>
-          <%= @tags[2].name %>
-        <% end %>
-      <% end %>
-    <% end %>
-  </div>
-<% end %>
-
 <% author_name_html = capture do %>
   <% if @author.present? %>
     <%= link_to user_path(@author), class: 'resource-item--author' do %>
@@ -30,16 +12,30 @@
 <% end %>
 
 <div class="resource-item <%= component_class_name %>">
-  <% if @projekt.present? %>
-    <div class="resource-item--head-title">
-      <%= link_to @projekt&.page.title, @projekt.page.url  %>
-    </div>
-  <% elsif @head_title.present? || additional_head_title_element.present? %>
-    <div class="resource-item--head-title">
-      <%= @head_title %>
-      <%= additional_head_title_element %>
-    </div>
-  <% end %>
+  <div class="resource-item--head-title">
+    <% if @projekt.present? %>
+      <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
+      <%# <% if resource.projekt.overview_page? %>
+        <%#   <%= t("custom.projekts.overview_page.projekt_name_for_proposal") %>
+      <% elsif @head_title.present? || additional_head_title_element.present? %>
+        <%= @head_title %>
+        <%= additional_head_title_element %>
+      <% else %>
+        <div class="resource-item--date">
+          <% if days_left.present? %>
+            <%= days_left %>
+          <% elsif date.present? %>
+            <%= date %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @author.present? %>
+        <div class="resource-item--author-in-wide-head-title">
+          <%= author_name_html %>
+        </div>
+      <% end %>
+  </div>
 
   <a href="<%= @url %>" class="resource-item--image-container">
     <% if image_ontop_item.present? %>
@@ -62,57 +58,38 @@
   </a>
 
   <div class="resource-item--content">
-
-    <div class="resource-item--wide-head-title">
-      <% if tags.present? %>
-        <%= tags %>
-      <% end %>
-
-      <% if @projekt.present? %>
-        <div class="resource-item--head-title">
-          <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
-        </div>
-        <%# <% if resource.projekt.overview_page? %>
-        <%#   <%= t("custom.projekts.overview_page.projekt_name_for_proposal") %>
-      <% elsif @head_title.present? %>
-        <div class="resource-item--head-title">
-          <%= @head_title %>
-        </div>
-      <% else %>
-        <div class="resource-item--date">
-          <% if days_left.present? %>
-            <%= days_left %>
-          <% elsif date.present? %>
-            <%= date %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <% if @author.present? %>
-        <div class="resource-item--author resource-item--author-in-wide-head-title">
-          <%= author_name_html %>
-        </div>
-      <% end %>
-    </div>
-
     <div class="resource-item--body-wrapper">
       <div class="resource-item--body">
 
-        <% if @subline.present? %>
-          <div class="resource-item--subline">
+        <div class="resource-item--body-heading">
+          <% if @subline.present? %>
             <%= @subline %>
-          </div>
-        <% end %>
+          <% elsif @tags.present? %>
+            <div class="resource-item--tags">
+              <% if @tags.present? %>
+                <% @tags.first(2).each do |tag| %>
+                  <%= link_to(path_for_resource_with_params(@resource, tags: tag.name), target: 'blank', class: 'resource-item--tag') do %>
+                    <%= tag.name %>
+                  <% end %>
+                <% end %>
 
-        <% if tags.present? %>
-          <div class="resource-item--tags-in-body">
-            <%= tags %>
-          </div>
-        <% end %>
+                <% if @tags[2].present? %>
+                  <%= link_to(path_for_resource_with_params(@resource, tags: @tags[2].name), target: '_blank', class: 'resource-item--tag resource-item--last-tag') do %>
+                    <%= @tags[2].name %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
 
-        <a href="<%= @url %>" class="resource-item--title">
-          <%= @title %>
-        </a>
+          <% if date.present? %>
+            <div class="resource-item--date"><%= date %></div>
+          <% end %>
+
+          <a href="<%= @url %>" class="resource-item--title">
+            <%= @title %>
+          </a>
+        </div>
 
         <div class="resource-item--description-wrapper">
           <div class="resource-item--description">

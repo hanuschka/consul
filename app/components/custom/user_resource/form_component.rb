@@ -8,8 +8,9 @@ module UserResource
 
     attr_reader :resource
 
-    def initialize(resource, url:, selected_projekt:, categories:)
+    def initialize(resource, url:, title:, selected_projekt:, categories:)
       @resource = resource
+      @title = title
       @url = url
       @selected_projekt = selected_projekt
       @categories = categories

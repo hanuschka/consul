@@ -6,7 +6,7 @@
         <%# <%= back_path %>
 
         <h1 class="user-resource-form--title">
-          <%= t("new.start_new", scope: i18n_scope) %>
+          <%= @title %>
         </h1>
 
         <div class="user-resource-form--description">
@@ -33,7 +33,9 @@
 
             <% if extended_feature?("debates.head_image_for_debates") %>
               <div class="banner-editor-image-attachment">
-                <% f.object.image ||= Image.new %>
+                <% if f.object.image.blank? %>
+                  <% f.object.build_image %>
+                <% end %>
                 <%= f.fields_for :image do |image_builder| %>
                   <%= render Images::DirectUploadComponent.new(image_builder, imageable: f.object) %>
                   <%# <%= render Images::FieldsComponent.new(image_builder, imageable: f.object) %>

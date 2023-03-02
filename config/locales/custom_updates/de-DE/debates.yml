@@ -33,3 +33,12 @@ de:
         sidebar_information_default_text:
             Sie möchten Dinge anregen und bewegen? Dann starten Sie Ihre eigene
             Diskussion.
+      show:
+        welcome_default_text:
+          hat eine Diskussion zu einem Projekt gestartet. Sie
+          können die Diskussion an der rechten Seitenleiste
+          unterstützen, indem Sie ihn mit Daumen hoch bewerten. Sie
+          können aber auch Ihre Ablehnung zum Ausdruck bringen, indem
+          Sie auf Daumen nach unten klicken. Des Weiteren haben Sie die
+          mit der Kommentarfunktion am unteren Ende die Möglichkeit
+          selbst in die Diskussion einzusteigen.

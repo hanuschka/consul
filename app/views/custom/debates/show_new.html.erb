@@ -15,27 +15,19 @@
 <% end %>
 
 <main>
-    <%# <%= render partial: "shared/participation/projekt_bar", locals: { resource: @debate } %>
-
+    <%# <% debate_cache_key = [locale_and_user_status(@debate),
+    <%#             @debate,
+    <%#             @debate.author,
+    <%#             @debate.projekt,
+    <%#             Setting.new_design_enabled?,
+    <%#             Flag.flagged?(current_user, @debate),
+    <%#             "show" ]
+    <%# %>
     <div id="<%= dom_id(@debate) %>" class="layout-main-column">
-      <% cache [locale_and_user_status(@debate),
-                @debate,
-                @debate.author,
-                @debate.projekt,
-                Setting.new_design_enabled?,
-                Flag.flagged?(current_user, @debate),
-                "show" ] do
-      %>
               <div class="layout-left-column">
                 <h1 class="resource-page--title"><%= "#{@debate.author.name} startet eine Diskussion"  %></h1>
                 <div class="resource-page--title-subline">
-                  <%= @debate.author.name %> hat eine Diskussion zu einem Projekt gestartet. Sie
-                  können die Diskussion an der rechten Seitenleiste
-                  unterstützen, indem Sie ihn mit Daumen hoch bewerten. Sie
-                  können aber auch Ihre Ablehnung zum Ausdruck bringen, indem
-                  Sie auf Daumen nach unten klicken. Des Weiteren haben Sie die
-                  mit der Kommentarfunktion am unteren Ende die Möglichkeit
-                  selbst in die Diskussion einzusteigen.
+                  <%= render_custom_block('debate_show_welcome_text', custom_prefix: @debate.author.name , default_content: t('custom.debates.show.welcome_default_text')) %>
                 </div>
 
                 <% if @debate.conflictive? %>
@@ -80,7 +72,7 @@
                       )
                     %>
                   </div>
-              </div>
+                </div>
 
                 <div class="resource-page--description new-card">
                     <%= auto_link_already_sanitized_html wysiwyg(@debate.description) %>
@@ -200,5 +192,4 @@
                 <% end %>
               </aside>
       </div>
-  <% end %>
 </main>

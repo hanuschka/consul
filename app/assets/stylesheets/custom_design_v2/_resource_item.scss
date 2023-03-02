@@ -112,9 +112,6 @@
 
   .resource-item--date {
     font-size: 11px;
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 
   .resource-item--description {
@@ -182,6 +179,10 @@
     }
   }
 
+  .resource-item--head-title-projekt-breadcrumbs {
+    display: none;
+  }
+
   .resource-item--body {
     padding: 0 25px 15px;
     // min-height: 115px;
@@ -190,13 +191,15 @@
     flex-direction: column;
     min-height: 143px;
 
-    .resource-item--sdgs {
-      display: none;
-    }
-
     .resource-item--additional-body {
       margin-top: 12px;
     }
+  }
+
+  .resource-item--sdgs {
+    display: flex;
+    padding: 12px 25px;
+    border-top: 1px solid $border-color;
   }
 
   .resource-item.projekt-list-item {
@@ -427,11 +430,6 @@
     }
   }
 
-  .resource-item--sdgs-in-card {
-    padding: 12px 25px;
-    border-top: 1px solid $border-color;
-  }
-
   .resource-item--subline {
     text-transform: uppercase;
   }
@@ -453,6 +451,9 @@
 
   .resource-item--body-heading {
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
   }
 
   .resource-item--image-placeholder {
@@ -536,6 +537,15 @@
           padding-right: 25px;
         }
 
+
+        .resource-item--head-title-projekt {
+          display: none;
+        }
+
+        .resource-item--head-title-projekt-breadcrumbs {
+          display: block;
+        }
+
         .resource-item--content {
           grid-area: 2 / 2 / 4 / 4;
           display: flex;
@@ -585,10 +595,6 @@
           max-width: 100%;
         }
 
-        .resource-item--sdgs-in-card {
-          display: none;
-        }
-
         .resource-item--image {
           height: auto !important;
           max-height: none;
@@ -623,10 +629,6 @@
           .resource-item--additional-body {
             display: none;
           }
-
-          .resource-item--sdgs {
-            display: flex;
-          }
         }
 
         .resource-item--last-tag {
@@ -639,8 +641,6 @@
         }
 
         .resource-item--body {
-          height: 100%;
-          max-height: none;
         }
 
         .resource-item--wide-head-title {
@@ -671,7 +671,6 @@
 
         .resource-item--title {
           font-size: 23px;
-          margin-bottom: 2px;
         }
 
         .resource-item--description {
@@ -686,12 +685,28 @@
           display: flex;
         }
 
-        .resource-item--body {
+        .resource-item--body-and-sdgs {
           width: 65%;
+          padding-top: 15px;
+          padding-left: 28px;
           padding-right: 20px;
-          border-bottom: none;
-          padding-top: 20px;
           padding-bottom: 15px;
+          height: 100%;
+        }
+
+        .resource-item--sdgs {
+          border-top: none;
+          padding: 0;
+        }
+
+        .resource-item--body {
+          border-bottom: none;
+          padding: 0;
+          max-height: none;
+        }
+
+        .resource-item--body-heading {
+          margin-bottom: 5px;
         }
 
         .resource-item--footer {

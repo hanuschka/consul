@@ -6,14 +6,10 @@
 
   .text-search-form--reset-button {
     font-size: 22px;
-    color: #a5a5a5;
+    color: blue;
     position: absolute;
-    top: 8px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
     cursor: pointer;
-
-    &:hover {
-      color: darken(#a5a5a5, 10%);
-    }
   }
 }

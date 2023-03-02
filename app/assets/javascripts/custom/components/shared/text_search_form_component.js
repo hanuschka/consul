@@ -3,6 +3,7 @@
   App.TextSearchFormComponent = {
     initialize: function() {
       $(".js-text-search-form-reset-button").on("click", this.resetForm.bind(this));
+      // $(".js-text-search-form").on("click", this.enableTurbolinksSubmit.bind(this));
     },
 
     resetForm: function(e) {

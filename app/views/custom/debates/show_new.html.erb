@@ -69,10 +69,18 @@
                     </div>
                   </div>
 
-                  <% if @debate.image.present? && !@debate.image.concealed? && @debate.image.variant(:large).present? %>
-                    <%= image_tag(@debate.image.variant(:large), class: "resource-page-banner--image") %>
-                  <% end %>
-                </div>
+                  <%# <%= image_tag(@debate.image.variant(:large), class: "resource-page-banner--image") %>
+                  <div class="resource-page-banner--image">
+                    <%= render(
+                      Shared::ResourceImageComponent.new(
+                        image_url: @debate.image&.variant(:large),
+                        image_placeholder_icon_class: "fa-comments",
+                        resource_name: 'debate'
+                      )
+                      )
+                    %>
+                  </div>
+              </div>
 
                 <div class="resource-page--description new-card">
                     <%= auto_link_already_sanitized_html wysiwyg(@debate.description) %>

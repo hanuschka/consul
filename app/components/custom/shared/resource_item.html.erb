@@ -44,17 +44,13 @@
       </div>
     <% end %>
 
-    <% if @image_url.present? %>
-      <%= image_tag(@image_url, class: 'resource-item--image') %>
-      <%= image_tag(@image_url, class: 'resource-item--image-blur') %>
-    <% else %>
-      <div class="resource-item--image-placeholder">
-        <i class="resource-item--image-placeholder-icon fa <%= @image_placeholder_icon_class %>"></i>
-        <div class="resource-item--image-placeholder-text">
-          <%= t("custom.resource_names.#{@resource_name}") %>
-        </div>
-      </div>
-    <% end %>
+    <%= render(
+        Shared::ResourceImageComponent.new(
+          image_url: @image_url,
+          image_placeholder_icon_class: @image_placeholder_icon_class,
+          resource_name: @resource_name)
+        )
+    %>
   </a>
 
   <div class="resource-item--content">

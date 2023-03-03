@@ -18,7 +18,9 @@ class Shared::FilterDropdownComponent < ApplicationComponent
     end
 
     def translate_option(option)
-      t("#{option}", scope: i18n_namespace)
+      return if option.blank?
+
+      t(option, scope: i18n_namespace)
     end
 
     def link_path(option)

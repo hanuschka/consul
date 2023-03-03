@@ -1,7 +1,7 @@
 <% provide(:title) { goal.title } %>
 
 <main class="sdg-goal-show">
-  <%= back_link_to sdg_goals_path %>
+  <%= back_link_to page_path(Projekt.find(13).page.slug) %>
 
   <article class="sdg-goal sdg-goal-<%= code %>">
     <header>

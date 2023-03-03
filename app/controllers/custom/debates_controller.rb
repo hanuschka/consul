@@ -38,14 +38,14 @@ class DebatesController < ApplicationController
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
     @tag_cloud = tag_cloud
 
-    unless params[:search].present?
-      take_by_my_posts
-      take_by_tag_names
-      take_by_sdgs
-      take_by_geozone_affiliations
-      take_by_geozone_restrictions
-      take_by_projekts(@scoped_projekt_ids)
-    end
+    # if params[:search].blank?
+    take_by_my_posts
+    take_by_tag_names
+    take_by_sdgs
+    take_by_geozone_affiliations
+    take_by_geozone_restrictions
+    take_by_projekts(@scoped_projekt_ids)
+    # end
 
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
 

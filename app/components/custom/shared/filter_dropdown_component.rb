@@ -13,6 +13,10 @@ class Shared::FilterDropdownComponent < ApplicationComponent
 
   private
 
+  def selected_option
+    translate_option(@selected_option.presence || @options.first)
+  end
+
     def remote
       remote_url.present?
     end

@@ -172,5 +172,8 @@ de:
   date:
     formats:
       long: '%d. %B %Y'
+  time:
+    formats:
+      date_only: '%d.%m.%Y'
   tag_names:
     general: General

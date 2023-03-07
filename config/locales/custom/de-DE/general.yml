@@ -1025,3 +1025,8 @@ de:
       le: "l"
       co: "k"
       si: "s"
+
+  date:
+    formats:
+      long: '%d. %B %Y'
+      date_only: '%d.%m.%Y'

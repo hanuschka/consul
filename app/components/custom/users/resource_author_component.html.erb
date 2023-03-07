@@ -11,16 +11,16 @@
     </div>
 
     <div class="resource-author--registration-date">
-      Beigetreten am: <%= l(user.created_at) %>
+      Beigetreten am: <%= l(user.created_at, format: :date_only) %>
     </div>
 
     <div class="resource-author--resources">
       <% if user.proposals.exists? %>
         <div class="resource-author--resources-item">
-          <div class="resource-author--name">
+          <div class="resource-author--resources-name">
             Vorschläge
           </div>
-          <div class="resource-author--count">
+          <div class="resource-author--resources-count">
             <%= user.proposals.count %>
           </div>
         </div>
@@ -28,10 +28,10 @@
 
       <% if user.debates.exists? %>
         <div class="resource-author--resources-item">
-          <div class="resource-author--name">
+          <div class="resource-author--resources-name">
             Diskussionen
           </div>
-          <div class="resource-author--count">
+          <div class="resource-author--resources-count">
             <%= user.debates.count %>
           </div>
         </div>
@@ -40,10 +40,10 @@
 
       <% if user.comments.exists? %>
         <div class="resource-author--resources-item">
-          <div class="resource-author--name">
+          <div class="resource-author--resources-name">
             Kommentare
           </div>
-          <div class="resource-author--count">
+          <div class="resource-author--resoures-count">
             <%= user.comments.count %>
           </div>
         </div>

@@ -4,20 +4,10 @@
 <div class="flex-column">
   <div class="layout-left-column">
     <% if controller_name == 'proposals' %>
-      <% if feature?("user.recommendations") && @recommended_proposals.present? %>
-        <%= render "shared/recommended_index", recommended: @recommended_proposals,
-          disable_recommendations_path: recommendations_disable_debates_path,
-          namespace: "proposals" %>
-      <% end %>
-
-      <% if extended_feature?("proposals.intro_text_for_debates") %>
+      <% if extended_feature?("proposals.intro_text_for_proposals") %>
         <div class="resource-page--intro-text">
-          <%= render_custom_block('debates_welcome', default_content: t("custom.proposals.index.welcome_default_text")) %>
+          <%= render_custom_block('proposals_index_welcome', default_content: t("custom.proposals.index.welcome_default_text_html")) %>
         </div>
-      <% end %>
-
-      <% unless @search_terms || !has_featured? %>
-        <%= render "featured_proposals" %>
       <% end %>
     <% end %>
   </div>
@@ -25,42 +15,6 @@
 
 <div class="layout-main-column">
   <div class="layout-left-column">
-    <%# <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-    <%#   <%= link_to t('proposals.index.section_header.help'), '#section_help' %>
-    <%# <% end %>
-
-    <%= render 'shared/loader_spinner' %>
-      <% if @current_projekt&.overview_page? %>
-      <% elsif controller_name == 'proposals' %>
-        <% debates_load_url = debates_path %>
-      <% else %>
-        <% debates_load_url = url_for(action: params[:current_tab_path], controller: "/pages", format: :js) %>
-      <% end %>
-        <% unless @search_terms || @advanced_search_terms || @tag_filter %>
-          <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-            <div id="section_help" class="margin" data-magellan-target="section_help">
-              <%=render_custom_block 'proposals_help' %>
-            </div>
-          <% end %>
-        <% end %>
-        <%= render Shared::AdvancedSearchComponent.new %>
-      <% if extended_feature?("proposals.intro_text_for_proposals") %>
-        <%=render_custom_block 'proposals_welcome' %>
-      <% end %>
-
-      <% if show_featured_proposals? %>
-        <div id="featured-proposals" class="row featured-proposals">
-          <div class="small-12 column">
-            <h2>
-              <%= t("proposals.index.featured_proposals") %>
-            </h2>
-          </div>
-          <% @featured_proposals.each do |featured_proposal| %>
-            <%= render "featured_proposal", proposal: featured_proposal %>
-          <% end %>
-        </div>
-      <% end %>
-
       <%= render(
             Shared::ResourcesList.new(
               resources: @proposals,
@@ -69,7 +23,6 @@
               filter_param: "order",
               text_search_enabled: true,
               filters: @valid_orders,
-              filter_i18n_scope: "proposals.index.orders",
               no_items_text: "Keine Ergebnisse"
             ))
       %>

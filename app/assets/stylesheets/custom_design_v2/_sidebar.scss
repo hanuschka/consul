@@ -56,6 +56,10 @@
   .sidebar-card--section {
     padding: 20px 25px;
 
+    h2 {
+      display: none;
+    }
+
     .resource-info-title {
       display: none;
     }

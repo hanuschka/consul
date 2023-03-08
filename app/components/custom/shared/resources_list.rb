@@ -12,7 +12,6 @@ class Shared::ResourcesList < ApplicationComponent
     filter_param: nil,
     filters: nil,
     current_filter: nil,
-    filter_i18n_scope: nil,
     remote_url: nil,
     only_content: false,
     map_coordinates: nil,
@@ -35,7 +34,6 @@ class Shared::ResourcesList < ApplicationComponent
     # @filters = filters.presence || default_filter_options
     @filters = filters
     @current_filter = current_filter
-    @filter_i18n_scope = filter_i18n_scope
     @remote_url = remote_url
     @only_content = only_content
     @map_coordinates = map_coordinates
@@ -64,14 +62,15 @@ class Shared::ResourcesList < ApplicationComponent
     filters.find { |filter| filter == @current_filter }
   end
 
-  def item_css_class
-  end
-
-  def i18n_namespace_for_filter
+  def i18n_namespace
     if resource_type == Projekt
-      "custom.projekts.orders"
+      "custom.projekts"
     elsif resource_type == Debate
-      "debates.index.orders"
+      "debates.index"
+    elsif resource_type == Proposal
+      "proposals.index"
+    elsif resource_type == Budget::Investment
+      "budget.investment.index"
     end
   end
 

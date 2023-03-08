@@ -6,7 +6,9 @@
   <div class="sidebar-divider"></div>
   <div id="proposal_sticky" data-sticky-container>
     <div class="sticky fixed-mobile-content"
-         data-sticky
+         <% if Setting.old_design_enabled? %>
+           data-sticky="true"
+         <% end %>
          data-stick-to="bottom"
          data-sticky-on="small"
          data-top-anchor="0"

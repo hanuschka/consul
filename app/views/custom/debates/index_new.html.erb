@@ -4,20 +4,11 @@
 <div class="flex-column">
   <div class="layout-left-column">
     <% if controller_name == 'debates' %>
-      <% if feature?("user.recommendations") && @recommended_debates.present? %>
-        <%= render "shared/recommended_index", recommended: @recommended_debates,
-          disable_recommendations_path: recommendations_disable_debates_path,
-          namespace: "debates" %>
-      <% end %>
 
       <% if extended_feature?("debates.intro_text_for_debates") %>
         <div class="resource-page--intro-text">
-          <%= render_custom_block('debates_welcome', default_content: t("custom.debates.index.welcome_default_text")) %>
+          <%= render_custom_block('debates_index_welcome', default_content: t("custom.debates.index.welcome_default_text")) %>
         </div>
-      <% end %>
-
-      <% unless @search_terms || !has_featured? %>
-        <%= render "featured_debates" %>
       <% end %>
     <% end %>
   </div>
@@ -45,7 +36,6 @@
               filter_param: "order",
               text_search_enabled: true,
               filters: @valid_orders,
-              filter_i18n_scope: "debates.index.orders",
               no_items_text: "Keine Ergebnisse"
             ))
       %>

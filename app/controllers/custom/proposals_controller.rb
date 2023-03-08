@@ -151,6 +151,15 @@ class ProposalsController
 
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+
+    view_name =
+      if Setting.new_design_enabled?
+        :show_new
+      else
+        :show
+      end
+
+    render view_name
   end
 
   def unvote

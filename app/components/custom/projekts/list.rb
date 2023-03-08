@@ -11,7 +11,6 @@ class Projekts::List < ApplicationComponent
       resources: @projekts,
       resource_type: Projekt,
       title: t("custom.projekts.projekt_list.title"),
-      filter_i18n_scope: "custom.projekts.orders",
       css_class: "js-projekts-list",
       filter_title: t("custom.projekts.filter.title"),
       no_items_text: t("custom.projekts.index.no_projekts_for_current_filter"),

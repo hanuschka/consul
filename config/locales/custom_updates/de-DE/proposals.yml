@@ -20,6 +20,18 @@ de:
         show_smaller_map: Weniger anzeigen
         creation_only_for_citizens: Neue Vorschläge können in diesem Projekt nur von Bürgerinnen und Bürgern der Stadt %{city} eingereicht werden.
         creation_only_for_specific_geozones: Vorschläge können nur von Bürger*innen aus dem Postleitzahlbereich %{geozones} eingebracht werden.
+        welcome_default_text_html:
+          In den einzelnen Beteiligungsprojekten können
+          BürgerInnen Vorschläge erstellen, die auf dieser Seite gesammelt
+          werden. Sie können die Vorschläge nachstehend nach dem Grad der
+          Beteiligung, ihrem Veröffentlichungsdatum oder ihrem Zuspruch
+          filtern. Zudem können Sie einzelne Vorschläge unterstützen und
+          kommentieren oder einen eigenen Vorschlag machen.
+          <br />
+          <br />
+          Auf der rechten Seite können Sie gezielt nach Vorschlägen zu bestimmten Projekten
+          suchen oder Ihre Auswahl auf bestimmte Stadtgebiete eingrenzen bzw.
+          Vorschläge nach Schlagworten anzeigen lassen.
       proposal:
         support: Unterstützen
         unsupport: Zurückziehen

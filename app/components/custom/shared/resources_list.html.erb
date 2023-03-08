@@ -37,7 +37,7 @@
         <%= render(
           Shared::TextSearchFormComponent.new(
             search_path: debates_path,
-            i18n_namespace: "debates.index.search_form"
+            i18n_namespace: "#{i18n_namespace}.search_form",
           )
         ) %>
       <% end %>
@@ -50,7 +50,7 @@
               title: @filter_title,
               options: filters,
               selected_option: selected_filter_otpion,
-              i18n_namespace: i18n_namespace_for_filter,
+              i18n_namespace: "#{i18n_namespace}.orders",
               remote_url: remote_url
             )
         ) %>

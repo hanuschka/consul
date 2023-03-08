@@ -58,9 +58,8 @@
       <% end %>
 
       <%= render "shared/categories", taggable: "projekt", categories: @categories %>
-      <%#= render "shared/tag_cloud", taggable: "projekt" %>
       <% if @sdgs.present? %>
-        <%# <%= render SDG::Goals::TagCloudComponentCustom.new("Projekt", sdg_targets: @sdg_targets) %>
+        <%= render SDG::FilterComponent.new("Projekt") %>
       <% end %>
 
       <%= render "shared/social_share",

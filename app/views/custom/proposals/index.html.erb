@@ -92,7 +92,7 @@
           <% end %>
           <%= render "shared/categories", taggable: "proposal", categories: @categories %>
           <%#= render "shared/tag_cloud", taggable: "proposal" %>
-          <%= render SDG::Goals::TagCloudComponentCustom.new("Proposal") %>
+          <%= render SDG::FilterComponent.new("Proposal") %>
         <% end %>
         <%= render "retired" %>
 

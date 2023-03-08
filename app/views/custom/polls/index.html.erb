@@ -31,7 +31,7 @@
         <% end %>
         <%= render "shared/categories", taggable: "poll", categories: @categories %>
         <%#= render "shared/tag_cloud", taggable: "poll" %>
-        <%= render SDG::Goals::TagCloudComponentCustom.new("Poll") %>
+      <%= render SDG::FilterComponent.new("Poll") %>
       </aside>
     </div>
 

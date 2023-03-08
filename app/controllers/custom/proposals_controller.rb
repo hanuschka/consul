@@ -52,10 +52,17 @@ class ProposalsController
     @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
     # @selected_tags = all_selected_tags
 
+    view_name =
+      if Setting.new_design_enabled?
+        :index_new
+      else
+        :index
+      end
+
     if params[:frame]
-      render layout: false
+      render view_name layout: false
     else
-      render
+      render view_name
     end
   end
 

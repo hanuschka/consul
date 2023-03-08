@@ -329,14 +329,6 @@ class ProjektsController < ApplicationController
     @map_coordinates = all_projekts_map_locations(@projekts)
     @resources = @projekts
 
-
-    @selected_sdg_goals_codes = params[:sdg_goals].present? ? params[:sdg_goals].split(",").map{ |code| code.to_i } : nil
-    @selected_sdg_goals = SDG::Goal.where(code: @selected_sdg_goals_codes)
-
-    @selected_sdg_target_code = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
-    @sdg_targets_for_selected_goals = SDG::Target.where(goal: @selected_sdg_goals)
-    @selected_sdg_targets = @sdg_targets_for_selected_goals.where(code: @selected_sdg_target_code)
-
     limit = params[:limit].presence || 25
 
     if @projekts.is_a?(Array)

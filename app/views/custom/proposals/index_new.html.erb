@@ -1,23 +1,23 @@
 <h1>
-  <%= t("debates.index.title") %>
+  <%= t("proposals.index.title") %>
 </h1>
 <div class="flex-column">
   <div class="layout-left-column">
-    <% if controller_name == 'debates' %>
-      <% if feature?("user.recommendations") && @recommended_debates.present? %>
-        <%= render "shared/recommended_index", recommended: @recommended_debates,
+    <% if controller_name == 'proposals' %>
+      <% if feature?("user.recommendations") && @recommended_proposals.present? %>
+        <%= render "shared/recommended_index", recommended: @recommended_proposals,
           disable_recommendations_path: recommendations_disable_debates_path,
-          namespace: "debates" %>
+          namespace: "proposals" %>
       <% end %>
 
-      <% if extended_feature?("debates.intro_text_for_debates") %>
+      <% if extended_feature?("proposals.intro_text_for_debates") %>
         <div class="resource-page--intro-text">
-          <%= render_custom_block('debates_welcome', default_content: t("custom.debates.index.welcome_default_text")) %>
+          <%= render_custom_block('debates_welcome', default_content: t("custom.proposals.index.welcome_default_text")) %>
         </div>
       <% end %>
 
       <% unless @search_terms || !has_featured? %>
-        <%= render "featured_debates" %>
+        <%= render "featured_proposals" %>
       <% end %>
     <% end %>
   </div>
@@ -26,45 +26,69 @@
 <div class="layout-main-column">
   <div class="layout-left-column">
     <%# <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-    <%#   <%= link_to t('debates.index.section_header.help'), '#section_help' %>
+    <%#   <%= link_to t('proposals.index.section_header.help'), '#section_help' %>
     <%# <% end %>
 
     <%= render 'shared/loader_spinner' %>
       <% if @current_projekt&.overview_page? %>
-      <% elsif controller_name == 'debates' %>
+      <% elsif controller_name == 'proposals' %>
         <% debates_load_url = debates_path %>
       <% else %>
         <% debates_load_url = url_for(action: params[:current_tab_path], controller: "/pages", format: :js) %>
       <% end %>
+        <% unless @search_terms || @advanced_search_terms || @tag_filter %>
+          <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
+            <div id="section_help" class="margin" data-magellan-target="section_help">
+              <%=render_custom_block 'proposals_help' %>
+            </div>
+          <% end %>
+        <% end %>
+        <%= render Shared::AdvancedSearchComponent.new %>
+      <% if extended_feature?("proposals.intro_text_for_proposals") %>
+        <%=render_custom_block 'proposals_welcome' %>
+      <% end %>
+
+      <% if show_featured_proposals? %>
+        <div id="featured-proposals" class="row featured-proposals">
+          <div class="small-12 column">
+            <h2>
+              <%= t("proposals.index.featured_proposals") %>
+            </h2>
+          </div>
+          <% @featured_proposals.each do |featured_proposal| %>
+            <%= render "featured_proposal", proposal: featured_proposal %>
+          <% end %>
+        </div>
+      <% end %>
 
       <%= render(
             Shared::ResourcesList.new(
-              resources: @debates,
-              resource_type: Debate,
+              resources: @proposals,
+              resource_type: Proposal,
               current_filter: @current_order,
               filter_param: "order",
               text_search_enabled: true,
               filters: @valid_orders,
-              filter_i18n_scope: "debates.index.orders",
+              filter_i18n_scope: "proposals.index.orders",
               no_items_text: "Keine Ergebnisse"
             ))
       %>
-    <%= paginate @debates %>
+    <%= paginate @proposals %>
   </div>
 
-  <div id="debates-sidebar" class="sidebar">
+  <div id="proposals-sidebar" class="sidebar">
 
-    <% if controller_name == 'debates' %>
+    <% if controller_name == 'proposals' %>
       <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "info-circle") do |c| %>
         <% c.body do %>
           <div class="margin-bottom-half">
-            <%= render_custom_block 'projekt_overview_page_sidebar', default_content: t("custom.debates.index.sidebar_information_default_text")  %>
+            <%= render_custom_block 'projekt_overview_page_sidebar', default_content: t("custom.proposals.index.sidebar_information_default_text")  %>
           </div>
           <div class="margin-bottom-half">
-            <%= Debate.count %> <%= t("custom.common.debates") %>
+            <%= Debate.count %> <%= t("custom.common.proposals") %>
           </div>
 
-          <%= render Shared::NewButtonComponent.new(resources_name: "debates", query_params: params) %>
+          <%= render Shared::NewButtonComponent.new(resources_name: "proposals", query_params: params) %>
         <% end %>
       <% end %>
     <% else %>
@@ -86,15 +110,15 @@
     <%= render "shared/categories", taggable: "debate", categories: @categories %>
     <%= render SDG::FilterComponent.new("Debate") %>
 
-    <% if extended_feature?('debates.enable_my_posts_filter') %>
+    <% if extended_feature?('proposals.enable_my_posts_filter') %>
       <%= render "shared/sidebar_filter/my_posts" %>
     <% end %>
 
-    <% if controller_name == 'debates' && current_user&.administrator? %>
+    <% if controller_name == 'proposals' && current_user&.administrator? %>
       <%= render Shared::SidebarCardComponent.new(title: 'Export', icon_name: "tag") do |c| %>
         <% c.body do %>
           <%=
-            link_to t("custom.debates.index.download_current_selection"),
+            link_to t("custom.proposals.index.download_current_selection"),
               debates_path(**request.query_parameters, format: :csv),
               format: :csv,
               target: '_blank'
@@ -104,3 +128,4 @@
     <% end %>
   </div>
 </div>
+<% provide :title do %><%= t("proposals.index.title") %><% end %>

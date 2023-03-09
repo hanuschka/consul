@@ -263,7 +263,7 @@
       font-size: rem-calc(16);
       margin: -1px 0 rem-calc(12);
       padding-top: rem-calc(6);
-      text-transform: uppercase;
+      // text-transform: uppercase;
     }
   }
 
@@ -740,7 +740,7 @@
     padding-bottom: 0;
     padding-left: 0;
     padding-top: 0;
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
 
   .icon-budget {
@@ -764,7 +764,7 @@
 
   h1 {
     font-size: rem-calc(24);
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
 }
 
@@ -892,7 +892,7 @@
   h2 {
     font-size: $small-font-size;
     line-height: $line-height;
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
 
   h3 {
@@ -1013,7 +1013,7 @@
 
   .budget-title {
     font-weight: bold;
-    text-transform: uppercase;
+    // text-transform: uppercase;
 
     &::after {
       border-bottom: 2px solid #fff;
@@ -1035,7 +1035,7 @@
 
     p {
       margin-bottom: 0;
-      text-transform: uppercase;
+      // text-transform: uppercase;
     }
   }
 
@@ -1123,7 +1123,7 @@
   .amount-available {
     font-weight: bold;
     margin-bottom: 0;
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
 
   .total-amount {

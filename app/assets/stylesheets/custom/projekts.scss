@@ -857,7 +857,7 @@ span.projekt-backlink:before {
         font-size: $small-font-size;
         font-weight: 700;
         margin-bottom: 0;
-        text-transform: uppercase;
+        // text-transform: uppercase;
       }
     }
 
@@ -884,7 +884,7 @@ span.projekt-backlink:before {
       font-size: $small-font-size;
       font-weight: bold;
       text-align: right;
-      text-transform: uppercase;
+      // text-transform: uppercase;
       transition: background 0.25s ease-out, background 0.25s ease-out;
 
       .icon-angle-right {

@@ -19,7 +19,7 @@
 
   .title {
     font-weight: bold;
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
 
   .description li p {
@@ -135,7 +135,7 @@
 
     .debate-type {
       @include brand-text;
-      text-transform: uppercase;
+      // text-transform: uppercase;
       font-weight: 700;
       font-size: $small-font-size;
 
@@ -193,7 +193,7 @@
         font-size: $small-font-size;
         font-weight: 700;
         margin-bottom: 0;
-        text-transform: uppercase;
+        // text-transform: uppercase;
       }
     }
 
@@ -220,7 +220,7 @@
       font-size: $small-font-size;
       font-weight: bold;
       text-align: right;
-      text-transform: uppercase;
+      // text-transform: uppercase;
       transition: background 0.25s ease-out, background 0.25s ease-out;
 
       .icon-angle-right {
@@ -399,7 +399,7 @@
     }
 
     .draft-panel {
-      text-transform: uppercase;
+      // text-transform: uppercase;
       font-weight: 700;
       padding: rem-calc(8) rem-calc(16);
       color: #696969;
@@ -534,7 +534,7 @@
           line-height: 1;
           display: block;
           font-size: $small-font-size;
-          text-transform: uppercase;
+          // text-transform: uppercase;
           font-weight: 700;
           color: #696969;
           padding: 0;
@@ -921,7 +921,7 @@
   .process-title {
     font-size: $small-font-size;
     margin-bottom: 0;
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
 
   .process-link {

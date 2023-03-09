@@ -48,7 +48,7 @@ $table-header:   #ecf1f6;
     }
 
     &.title {
-      text-transform: uppercase;
+      // text-transform: uppercase;
     }
   }
 
@@ -115,7 +115,7 @@ $table-header:   #ecf1f6;
 
       small {
         color: inherit;
-        text-transform: uppercase;
+        // text-transform: uppercase;
       }
 
       a {
@@ -512,7 +512,7 @@ code {
     color: $text-medium;
     font-size: rem-calc(13);
     padding: rem-calc(6);
-    text-transform: uppercase;
+    // text-transform: uppercase;
 
     &.featured {
       background: $info-bg;

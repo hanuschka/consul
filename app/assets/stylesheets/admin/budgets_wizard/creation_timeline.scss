@@ -10,7 +10,7 @@
     font-size: $small-font-size;
     font-weight: bold;
     padding: $line-height / 2 $line-height * 3 0;
-    text-transform: uppercase;
+    // text-transform: uppercase;
 
     &::before {
       background: $brand;

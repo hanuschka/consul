@@ -1000,7 +1000,7 @@ footer {
   font-weight: bold;
   margin: -1px 0 $line-height / 2;
   padding-top: $line-height / 4;
-  text-transform: uppercase;
+  // text-transform: uppercase;
 }
 
 // 05. Auth pages
@@ -1729,7 +1729,7 @@ table {
     font-weight: bold;
     line-height: rem-calc(20);
     padding-top: $line-height / 4;
-    text-transform: uppercase;
+    // text-transform: uppercase;
     vertical-align: top;
 
     @include breakpoint(medium) {
@@ -2303,7 +2303,7 @@ table {
 
   h2 {
     font-size: $small-font-size;
-    text-transform: uppercase;
+    // text-transform: uppercase;
   }
 
   h3 {
@@ -2685,7 +2685,7 @@ table {
     color: #fff;
     font-size: rem-calc(24);
     line-height: rem-calc(24);
-    text-transform: uppercase;
+    // text-transform: uppercase;
     padding: $line-height / 4 $line-height / 2;
     position: absolute;
     width: 100%;

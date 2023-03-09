@@ -43,6 +43,10 @@
   &:focus {
     color: #075E54;
   }
+
+  @media (min-width: 640px) {
+    display: none !important;
+  }
 }
 
 .ssb-email {

@@ -1,0 +1,22 @@
+h1:not(.logo) {
+  margin-bottom: 2rem;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 9rem;
+    height: 0;
+    margin-top: 0.125em;
+    margin-bottom: 0;
+    border-style: solid;
+    border-width: 6px 6px 6px 0;
+    border-color: transparent transparent #0ab4ff transparent;
+    animation: scalingLine 400ms ease-in-out;
+    transform-origin: 0 50%;
+    animation-fill-mode: forwards;
+  }
+}
+
+.sidebar-title {
+  border-top: 0;
+}

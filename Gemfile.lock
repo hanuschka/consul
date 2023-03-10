@@ -358,7 +358,6 @@ GEM
       actionmailer (>= 3.2)
       letter_opener (~> 1.0)
       railties (>= 3.2)
-    libv8 (3.11.8.17)
     loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -520,7 +519,6 @@ GEM
     recipient_interceptor (0.3.0)
       mail
     redcarpet (3.5.1)
-    ref (2.0.0)
     regexp_parser (2.1.1)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -651,9 +649,6 @@ GEM
       unicode-display_width (~> 1.1, >= 1.1.1)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
-    therubyracer (0.11.4)
-      libv8 (~> 3.11.8.12)
-      ref
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -810,7 +805,6 @@ DEPENDENCIES
   spring (~> 2.1.1)
   spring-commands-rspec (~> 1.0.4)
   sprockets (~> 4.0.2)
-  therubyracer (~> 0.11.0)
   translator-text (~> 0.1.0)
   turbolinks (~> 5.2.1)
   turnout (~> 2.5.0)

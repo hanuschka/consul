@@ -1,4 +1,5 @@
-h1:not(.logo) {
+h1:not(.logo):not(.no-narrative-line),
+h3.card-title {
   margin-bottom: 2rem;
 
   &::after {
@@ -17,6 +18,36 @@ h1:not(.logo) {
   }
 }
 
+h3.card-title {
+  margin-bottom: 1rem !important;
+}
+
 .sidebar-title {
-  border-top: 0;
+  border-top: none;
+}
+
+
+.home-page h2.title, .home-page h3.title, .custom-page h2.title, .custom-page h3.title, .sdg-goal-show h2.title, .sdg-goal-show h3.title, .sdg-goals-index h2.title, .sdg-goals-index h3.title {
+  border-top: none;
+}
+
+.deficiency-report-new header, .proposal-new header, .debate-new header, .budget-investment-new header {
+  background-color: #76b729;
+  border-color: #76b729;
+}
+
+.deficiency-report-new header, .proposal-new header, .debate-new header, .budget-investment-new header {
+  @media (min-width: 64em) {
+    background-image: linear-gradient(to right, #76b729 0, #76b729 calc(100% - 7.25rem - 1px), #fdfdfd calc(100% - 7.25rem), #fdfdfd 100%)
+  }
+}
+
+h1.no-narrative-line {
+  &::before {
+    color: #76b729 !important;
+  }
+
+  &::after {
+    color: #fff;
+  }
 }

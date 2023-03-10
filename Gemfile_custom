@@ -9,12 +9,14 @@ group :development do
   gem 'pry-byebug', '~> 3.9'
 end
 
-# gem 'therubyracer', '~> 0.11.0'
+gem 'therubyracer', '~> 0.12.0'
 
 gem 'httparty'
 
 gem "sentry-ruby"
 gem "sentry-rails"
+
+gem 'rb-readline'
 
 source "https://rails-assets.org" do
   gem "rails-assets-leaflet.markercluster"

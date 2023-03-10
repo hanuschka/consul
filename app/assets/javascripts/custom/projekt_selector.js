@@ -100,8 +100,7 @@
     },
 
     replaceProjektMapOnProposalCreation: function($projekt) {
-
-      if ( $projekt.data('showMap') ) {
+      if ($projekt.data('showMap')) {
         $('#map-container').show();
 
         $.ajax("/projekts/" + $projekt.data('projektId') + "/map_html", {
@@ -116,10 +115,8 @@
         });
 
         App.Map.maps[0].setView([$projekt.data('latitude'), $projekt.data('longitude')], $projekt.data('zoom')).invalidateSize();
-
       } else {
         $('#map-container').hide();
-
       }
     },
 

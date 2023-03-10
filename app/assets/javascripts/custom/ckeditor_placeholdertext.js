@@ -45,7 +45,6 @@
 			placeholder = pluginNamespace.template.replace( '{PLACEHOLDER}', editor.config.placeholdertext );
 
 		if ( isEditorEmpty( editor ) ) {
-      console.log('placeholder', placeholder)
 			editor.editable().setHtml( placeholder );
 		}
 	}

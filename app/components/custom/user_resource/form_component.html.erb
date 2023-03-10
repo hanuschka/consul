@@ -3,7 +3,7 @@
     <div class="layout-main-column">
       <div class="layout-left-column">
 
-        <%# <%= back_path %>
+        <%= back_path %>
 
         <h1 class="user-resource-form--title">
           <%= @title %>
@@ -18,18 +18,17 @@
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
-          <div class="user-resource-form--banner-editor">
+          <div class="user-resource-form--banner-editor <%= banner_class_name %>">
             <div class="user-resource-form--title-wrapper">
               <%= translations_form.text_area :title,
-                maxlength: Debate.title_max_length,
+                maxlength: title_max_length,
                 data: suggest_data(resource),
                 label: false,
                 class: 'user-resource-form--banner-editor-title',
-                placeholder: "Geben Sie Ihrer Diskussion einen plakativen Titel, zum Beispiel „Die Projektlaufzeit ist zu lang“ oder „Bitte die geplanten Maßnahmen erweitern“.",
+                placeholder: t("custom.#{i18n_scope}.form.title_placeholder"),
                 autocomplete: "off"
               %>
             </div>
-
 
             <% if extended_feature?("debates.head_image_for_debates") %>
               <div class="banner-editor-image-attachment">
@@ -44,9 +43,8 @@
             <% end %>
           </div>
 
-
           <%= translations_form.text_area :description,
-            maxlength: Debate.description_max_length,
+            maxlength: max_description_lenght,
             label: false,
             placeholder: t("custom.debates.form.description_placeholder_html"),
             class: "html-area #{helpers.ck_editor_class(current_user)}"
@@ -69,7 +67,7 @@
             </div>
           <% end %>
 
-          <%= f.submit(class: "button", value: t("debates.#{action_name}.form.submit_button")) %>
+          <%= f.submit(class: "button", value: t("#{i18n_scope}.#{action_name}.form.submit_button")) %>
         </div>
       </div>
 

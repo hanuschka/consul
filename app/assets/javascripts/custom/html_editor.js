@@ -43,7 +43,7 @@
 
     enableCustomCkeditorStyles: function() {
       if ($(document.body).hasClass('new-custom-design')) {
-        CKEDITOR.addCss(".cke_editable{font-size: 16px; } ");
+        CKEDITOR.addCss(".cke_editable{font-size: 16px; line-height: 1.3; } ");
       }
     },
 

@@ -4,11 +4,14 @@ de:
       form:
         tags_custom: Nutzer-Tags
         required: Ihr Diskussionsbeitrag
+        title_placeholder: "
+          Geben Sie Ihrer Diskussion einen plakativen Titel, zum Beispiel „Die
+          Projektlaufzeit ist zu lang“ oder „Bitte die geplanten Maßnahmen
+          erweitern“.
+        "
         description_placeholder_html: "
         Beschreiben Sie hier, worum es Ihnen in Ihrer Diskussion geht.
         Folgendes Vorgehen hat sich bewährt:
-
-
 
         Beginnen Sie mit einer allgemeinen Beschreibung Ihres Anliegens und stellen Sie im Anschluss Ihre Position zum Thema dar. <br /><br />
         Achten Sie beim Schreiben möglichst auf kurze Sätze. <br /><br />

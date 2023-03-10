@@ -13,7 +13,7 @@
 
   .user-resource-form--banner-editor {
     width: 100%;
-    background: #D9F0EB;
+    background-color: #D9F0EB;
     padding-top: 30px;
     padding-bottom: 30px;
     padding-left: 30px;
@@ -23,6 +23,10 @@
     display: flex;
     justify-content: space-between;
     border-radius: 10px;
+
+    &.-proposal {
+      background-color: #FFE9CC;
+    }
 
     .translatable-fields {
       width: 50%;

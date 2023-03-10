@@ -171,6 +171,8 @@ class Proposal < ApplicationRecord
   end
 
   def editable_by?(user)
+    return false if user.nil?
+
     author_id == user.id && editable?
   end
 

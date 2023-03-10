@@ -11,6 +11,10 @@ de:
         buttons:
           save_draft: Als Entwurf speichern
           publish: Vorschlag jetzt veröffentlichen
+        map_location_instructions: "
+          Wo soll Ihr Vorschlag umgesetzt werden? Platzieren Sie einen „Pin“,
+          um andere ins Bild zu setzen.
+        "
         title_placeholder: "
           Geben Sie Ihrem Vorschlag einen plakativen Titel, zum Beispiel
           „Zebrastreifen vor der XY-Grundschule“ oder „Mehr Vielfalt auf den

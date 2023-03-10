@@ -132,6 +132,10 @@ body.new-custom-design {
     display: none;
   }
 
+  .help-text {
+    color: $main-text-color;
+  }
+
   @media (max-width: $big-tablet-viewport-start) {
     h2 {
       font-size: 30px;

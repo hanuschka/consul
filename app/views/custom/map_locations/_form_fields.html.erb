@@ -1,5 +1,13 @@
-<%= form.label :map_location, label %>
-<p class="help-text" id="tag-list-help-text"><%= help %></p>
+<% label ||= nil %>
+<% help ||= nil %>
+
+<% if label.present? %>
+  <%= form.label :map_location, label %>
+<% end %>
+
+<% if help.present? %>
+  <p class="help-text" id="tag-list-help-text"><%= help %></p>
+<% end %>
 
 <% mappable = @proposal || @deficiency_report || @investment || nil %>
 

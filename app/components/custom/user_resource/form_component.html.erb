@@ -49,6 +49,17 @@
             placeholder: t("custom.debates.form.description_placeholder_html"),
             class: "html-area #{helpers.ck_editor_class(current_user)}"
           %>
+
+          <div class="new-card" id='map-container'>
+            <%= render "map_locations/form_fields",
+              form:     f,
+              map_location: resource.map_location || MapLocation.new,
+              help: t("custom.#{i18n_scope}.form.map_location_instructions"),
+              remove_marker_label: t("proposals.form.map_remove_marker"),
+              parent_class: "proposal",
+              i18n_namespace: "proposals"
+            %>
+          </div>
       <% end %>
 
         <div class="user-resource-form--submit-section">

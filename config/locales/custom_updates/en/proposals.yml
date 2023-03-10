@@ -11,6 +11,33 @@ en:
         buttons:
           save_draft: Save draft
           publish: Publish proposal
+        map_location_instructions: "
+          Wo soll Ihr Vorschlag umgesetzt werden? Platzieren Sie einen „Pin“,
+          um andere ins Bild zu setzen.
+        "
+        title_placeholder: "
+          Geben Sie Ihrem Vorschlag einen plakativen Titel, zum Beispiel
+          „Zebrastreifen vor der XY-Grundschule“ oder „Mehr Vielfalt auf den
+          Wochenmärkten“.
+        "
+        description_placeholder_html: "
+          Beschreiben Sie hier Ihren Vorschlag. Folgendes Vorgehen hat sich
+          bewährt: <br /><br />
+
+          Beginnen Sie mit einer allgemeinen Beschreibung Ihrer Idee und
+          stellen Sie im Anschluss dar, was sich mit der Umsetzung Ihres Vorschlags
+          verbessern würde. <br /><br />
+
+          Achten Sie beim Schreiben möglichst auf kurze Sätze.<br /> <br />
+
+          Nutzen Sie außerdem Absätze, um Ihren Text lesbarer zu machen. (Viele
+          Nutzer lesen Ihren Text auf mobilen Geräten.) <br /> <br />
+
+          Beschränken Sie Ihren Inhalt – sofern möglich – auf maximal drei Absätze. <br /> <br />
+
+          Verwenden Sie überdies – wenn passend – Aufzählungen und Stichpunkte für eine bessere
+          Übersichtlichkeit.
+        "
       index:
         max_number_reached: You have reached the maximum number (%{max_number}) of proposals per user. Before you can create another suggestion, you must withdraw an active suggestion.
         no_active_projekt: Currently no participation procedure

@@ -1,6 +1,11 @@
-<div class="column help-header">
+<div class="column">
+  <div class="custom-breadcrumbs">
+    <%= link_to link_to t('custom.projekt.page.breadcrumbs.homepage'), root_path, class: 'breadcrumbs-item' %>
+    <div class="breadcrumbs-divider">/</div>
+    <div class="breadcrumbs-item"><%= t('custom.projekts.projekt_events.index.title') %></div>
+  </div>
+
   <h1>
-    <i class="fas fa-code-branch"></i>
     <%= t('custom.projekts.projekt_events.index.title') %>
   </h1>
 </div>

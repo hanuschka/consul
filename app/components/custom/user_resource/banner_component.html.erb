@@ -1,34 +1,34 @@
-<div class="resource-page-banner">
-  <div class="resource-page-banner--text-section">
-    <h2 class="resource-page-banner--title">
-      <%= title %>
+<div class="user-resource-banner <%= resource_class %>">
+  <div class="user-resource-banner--text-section">
+    <h2 class="user-resource-banner--title">
+      <%= resource.title %>
     </h2>
 
     <div class="resourece-page-banner--details">
       <div class="resourece-page-banner--detail">
         <i class="fa fa-calendar"></i>
-        <%= l(created_at, format: :new_date_with_year) %>
+        <%= l(resource.created_at, format: :new_date_with_year) %>
       </div>
       <div class="resourece-page-banner--detail">
         <i class="fa fa-comment"></i>
-        <%= comments_count %> Kommentare
+        <%= resource.comments.count %> Kommentare
       </div>
       <div class="resourece-page-banner--detail">
-        <%= link_to(projekt_path(@debate.projekt)) do %>
+        <%= link_to(projekt_path(resource.projekt)) do %>
           <i class="fa fa-code-branch"></i>
           Zugehöriges Projekt:
-          <%= projekt_name %>
+          <%= resource.projekt.name %>
         <% end %>
       </div>
     </div>
   </div>
 
-  <div class="resource-page-banner--image">
+  <div class="user-resource-banner--image">
     <%= render(
       Shared::ResourceImageComponent.new(
-        image_url: image_name,
+        image_url: resource.image&.variant(:large),
         image_placeholder_icon_class: "fa-comments",
-        resource_name: resource_name
+        resource_name: resource.class.name.downcase
       )
     )
   %>

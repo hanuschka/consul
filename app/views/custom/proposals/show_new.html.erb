@@ -22,7 +22,7 @@
     <div class="layout-main-column">
       <div class="layout-left-column">
         <h1 class="resource-page--title"><%= "#{@proposal.author.name} startet eine Diskussion"  %></h1>
-        <div class="resource-page--title-subline">
+        <div class="common-page-description">
           <%= render_custom_block('debate_show_welcome_text', custom_prefix: @proposal.author.name , default_content: t('custom.proposals.show.welcome_default_text')) %>
         </div>
 
@@ -38,43 +38,7 @@
 
     <div class="layout-main-column">
       <div class="layout-left-column">
-        <div class="resource-page-banner">
-          <div class="resource-page-banner--text-section">
-            <h2 class="resource-page-banner--title">
-              <%= @proposal.title %>
-            </h2>
-
-            <div class="resourece-page-banner--details">
-              <div class="resourece-page-banner--detail">
-                <i class="fa fa-calendar"></i>
-                <%= l(@proposal.created_at, format: :new_date_with_year) %>
-              </div>
-              <div class="resourece-page-banner--detail">
-                <i class="fa fa-comment"></i>
-                <%= @proposal.comments.count %> Kommentare
-              </div>
-              <div class="resourece-page-banner--detail">
-                <%= link_to(projekt_path(@proposal.projekt)) do %>
-                  <i class="fa fa-code-branch"></i>
-                  Zugehöriges Projekt:
-                  <%= @proposal.projekt.name %>
-                <% end %>
-              </div>
-            </div>
-          </div>
-
-          <%# <%= image_tag(@proposal.image.variant(:large), class: "resource-page-banner--image") %>
-          <div class="resource-page-banner--image">
-            <%= render(
-              Shared::ResourceImageComponent.new(
-                image_url: @proposal.image&.variant(:large),
-                image_placeholder_icon_class: "fa-comments",
-                resource_name: 'proposal'
-              )
-            )
-          %>
-          </div>
-        </div>
+        <%= render UserResource::BannerComponent.new(@proposal)  %>
 
         <div class="resource-page--description new-card">
           <%= auto_link_already_sanitized_html wysiwyg(@proposal.description) %>
@@ -87,6 +51,7 @@
         <% if ((projekt_feature?(@proposal&.projekt, 'proposals.show_comments') ||
             projekt_feature?(@proposal&.projekt, 'proposals.enable_proposal_notifications_tab') ||
             projekt_feature?(@proposal&.projekt, 'proposals.enable_proposal_milestones_tab')) && !preview) %>
+
           <div class="additional-content margin-top">
             <div class="filter-subnav">
               <div class="row">

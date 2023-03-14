@@ -30,7 +30,7 @@ html{
 
 body.new-custom-design {
   font-family: "Asap", "sourcesanspro-regular-webfont", "sourcesanspro-bold-webfont", "PT_Serif_Web-Regular", sans-serif !important;
-  color: #67788A;
+  color: $main-text-color;
   margin: 0;
 
   h1, h2, h3, h4, h5 {
@@ -40,6 +40,8 @@ body.new-custom-design {
   h1 {
     font-size: 35px;
     font-weight: 500;
+    margin-bottom: 15px;
+    line-height: 1.2;
   }
 
   label > [type='checkbox'], label > [type='radio'] {
@@ -97,14 +99,14 @@ body.new-custom-design {
 
   h2 {
     font-weight: 500;
-    font-size: 42px;
+    font-size: 35px;
     line-height: 1.2;
     margin-bottom: 1rem;
   }
 
   h3 {
     // font-size: 38px;
-    font-size: 18px;
+    font-size: 28px;
     font-weight: 500;
     line-height: 1.2;
     margin-bottom: 1rem;

@@ -173,8 +173,10 @@ de:
   date:
     formats:
       long: '%d. %B %Y'
+      date_only: '%d.%m.%Y'
   time:
     formats:
       date_only: '%d.%m.%Y'
+      date_with_time: '%d.%m.%Y %H:%M'
   tag_names:
     general: General

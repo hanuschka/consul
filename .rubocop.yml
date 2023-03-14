@@ -4,6 +4,7 @@ require:
   - rubocop-rspec
 
 AllCops:
+  TargetRubyVersion: 2.7.6
   DisplayCopNames: true
   DisplayStyleGuide: true
   Exclude:

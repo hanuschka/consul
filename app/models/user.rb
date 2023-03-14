@@ -424,6 +424,7 @@ class User < ApplicationRecord
       validator = ActiveModel::Validations::LengthValidator.new(
         attributes: :username,
         maximum: User.username_max_length)
+
       validator.validate(self)
     end
 end

@@ -85,5 +85,9 @@ module UserResource
     def banner_class_name
       "-#{resource.class.name.downcase}"
     end
+
+    def render_map?
+      resource.is_a?(Proposal)
+    end
   end
 end

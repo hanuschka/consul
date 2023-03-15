@@ -1,5 +1,10 @@
 de:
   custom:
+    proposal_notifications:
+      new:
+        title: Benachrichtigung erstellen
+        body_field_placeholder: Text eingeben... Seien Sie klar und präzise.
+        title_field_placeholder: Titel
     proposals:
       created:
         dashboard: Als Entwurf speichern und später veröffentlichen

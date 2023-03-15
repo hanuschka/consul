@@ -50,16 +50,18 @@
           %>
       <% end %>
 
-        <div class="new-card" id='map-container'>
-          <%= render "map_locations/form_fields",
-            form:     f,
-            map_location: resource.map_location || MapLocation.new,
-            help: t("custom.#{i18n_scope}.form.map_location_instructions"),
-            remove_marker_label: t("proposals.form.map_remove_marker"),
-            parent_class: "proposal",
-            i18n_namespace: "proposals"
-          %>
-        </div>
+        <% if render_map? %>
+          <div class="new-card" id='map-container'>
+            <%= render "map_locations/form_fields",
+              form:     f,
+              map_location: resource.map_location || MapLocation.new,
+              help: t("custom.#{i18n_scope}.form.map_location_instructions"),
+              remove_marker_label: t("proposals.form.map_remove_marker"),
+              parent_class: "proposal",
+              i18n_namespace: "proposals"
+            %>
+          </div>
+        <% end %>
 
         <div class="user-resource-form--submit-section">
           <% if resource.new_record? %>

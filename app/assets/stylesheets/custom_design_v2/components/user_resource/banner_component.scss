@@ -6,6 +6,10 @@
     padding: 45px 42px;
     border-radius: 10px;
     margin-bottom: 15px;
+
+    &.-proposal {
+      background-color: #FFE9CC;
+    }
   }
 
   .user-resource-banner--text-section {

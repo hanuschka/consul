@@ -22,6 +22,7 @@ class Shared::ResourcesList < ApplicationComponent
     text_search_enabled: false,
     no_items_text: nil,
     no_filter: false,
+    hide_actions: false,
     additional_data: {}
   )
     @resources = resources
@@ -43,6 +44,7 @@ class Shared::ResourcesList < ApplicationComponent
     @no_items_text = no_items_text
     @filter_title = filter_title.presence || "Sortieren nach"
     @no_filter = no_filter
+    @hide_actions = hide_actions
     @additional_data = additional_data
   end
 

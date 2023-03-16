@@ -1,0 +1,23 @@
+<% if Setting.new_design_enabled? %>
+  <div class="layout-main-column">
+    <div class="layout-left-column">
+      <div class="margin-bottom">
+        <%= back_link_to %>
+      </div>
+
+      <h1><%= t("dashboard.polls.new.title") %></h1>
+      <div class="margin-bottom-twice">
+        <%= render UserResource::BannerComponent.new(@proposal) %>
+      </div>
+      <%= render "form_new" %>
+    </div>
+    <aside class="sidebar">
+    </aside>
+  </div>
+
+<% else %>
+  <% content_for :action_title, t("dashboard.polls.new.title") %>
+  <%= back_link_to %>
+
+  <%= render "form" %>
+<% end %>

@@ -8,6 +8,7 @@ class Poll < ApplicationRecord
   belongs_to :projekt, optional: true, touch: true
   has_one :voting_phase, through: :projekt
   has_many :geozone_affiliations, through: :projekt
+  before_validation :set_projekt_id_if_missing
 
   validates :projekt, presence: true
 
@@ -82,5 +83,11 @@ class Poll < ApplicationRecord
 
   def projekt_phase
     voting_phase
+  end
+
+  def set_projekt_id_if_missing
+    if projekt_id.nil? && related.present? && related.projekt_id.present?
+      self.projekt_id = related.projekt_id
+    end
   end
 end

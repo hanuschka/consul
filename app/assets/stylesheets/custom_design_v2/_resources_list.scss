@@ -42,6 +42,10 @@
     }
   }
 
+  .resources-list--title + .resources-list--body {
+    margin-top: 30px;
+  }
+
   .resources-list--navigation {
     display: flex;
     align-items: center;

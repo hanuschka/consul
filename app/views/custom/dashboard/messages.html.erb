@@ -1,13 +1,15 @@
 <% if Setting.new_design_enabled? %>
   <div class="layout-main-column">
     <div class="layout-left-column">
-      <%= back_link_to(proposal_dashboard_path(@proposal)) %>
+      <div class="margin-bottom">
+        <%= back_link_to(proposal_dashboard_path(@proposal)) %>
+      </div>
 
       <h1>
         Benachrichtigung erstellen
       </h1>
       <div class="margin-bottom-twice">
-        <%= render UserResource::BannerComponent.new(@proposal)  %>
+        <%= render UserResource::BannerComponent.new(@proposal) %>
       </div>
       <h3> Benachrichtigungen (<%= @notifications&.count || 0 %>) </h3>
 

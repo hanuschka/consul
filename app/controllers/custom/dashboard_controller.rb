@@ -29,6 +29,9 @@ class DashboardController < Dashboard::BaseController
   def related_content
   end
 
+  def campaign
+  end
+
   private
 
     def active_resources

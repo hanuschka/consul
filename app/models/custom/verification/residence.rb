@@ -48,6 +48,8 @@ class Verification::Residence
   private
 
     def census_data
+      street_name = CityStreet.find_by(id: city_street_id).name
+
       @census_data ||= RemoteCensusApi.new.call(first_name: first_name,
                                                 last_name: last_name,
                                                 street_name: street_name,

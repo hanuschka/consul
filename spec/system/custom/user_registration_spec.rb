@@ -51,7 +51,7 @@ describe "User registration" do
       expect(User.count).to eq(1)
       expect(User.first.registered_address).not_to be_present
       expect(User.first).to have_attributes(
-        username: "nutzer",
+        username: "Max Mustermann",
         email: "nutzer@consul.dev",
         city_name: "Bremen",
         plz: 33333,
@@ -90,7 +90,7 @@ describe "User registration" do
         expect(User.first.registered_address).to eq(RegisteredAddress.second)
         expect(User.first.registered_address_street).to eq(RegisteredAddress::Street.first)
         expect(User.first).to have_attributes(
-          username: "nutzer",
+          username: "Max Mustermann",
           email: "nutzer@consul.dev",
           gender: "male",
           first_name: "Max",
@@ -122,7 +122,7 @@ describe "User registration" do
         expect(User.count).to eq(1)
         expect(User.first.registered_address).not_to be_present
         expect(User.first).to have_attributes(
-          username: "nutzer",
+          username: "Max Mustermann",
           email: "nutzer@consul.dev",
           gender: "male",
           first_name: "Max",
@@ -155,7 +155,7 @@ describe "User registration" do
         expect(User.count).to eq(1)
         expect(User.first.registered_address).not_to be_present
         expect(User.first).to have_attributes(
-          username: "nutzer",
+          username: "John Mustermann",
           email: "nutzer@consul.dev",
           gender: "male",
           first_name: "John",
@@ -188,7 +188,7 @@ describe "User registration" do
         expect(User.count).to eq(1)
         expect(User.first.registered_address).not_to be_present
         expect(User.first).to have_attributes(
-          username: "nutzer",
+          username: "Max Mustermann",
           email: "nutzer@consul.dev",
           gender: "male",
           first_name: "Max",
@@ -226,7 +226,7 @@ describe "User registration" do
         expect(User.first.registered_address).to eq(RegisteredAddress.second)
         expect(User.first.registered_address_street).to eq(RegisteredAddress::Street.first)
         expect(User.first).to have_attributes(
-          username: "nutzer",
+          username: "Max Mustermann",
           email: "nutzer@consul.dev",
           gender: "male",
           first_name: "Max",

@@ -87,7 +87,7 @@
         });
 
         if (editable) {
-          marker.on("dragend", updateFormfields);
+          marker.on("dragend", updateFormfieldsWithMarker);
           marker.addTo(map);
         } else {
           markersGroup.addLayer(marker);
@@ -96,15 +96,15 @@
         return marker;
       };
 
-      // function to remove marker
-      var removeMarker = function(e) {
-        e.preventDefault();
-        if (marker) {
-          map.removeLayer(marker);
-          marker = null;
-        }
-        clearFormfields();
-      };
+      // // function to remove marker TODO: consider removing this function
+      // var removeMarker = function(e) {
+      //   e.preventDefault();
+      //   if (marker) {
+      //     map.removeLayer(marker);
+      //     marker = null;
+      //   }
+      //   clearFormfields();
+      // };
 
       // function to create or move existing marker
       var moveOrPlaceMarker = function(e) {
@@ -113,22 +113,23 @@
         } else {
           marker = createMarker(e.latlng.lat, e.latlng.lng);
         }
-        updateFormfields();
+        updateFormfieldsWithMarker();
       };
 
-      // function to update form fields TODO: refactor, should probably be removed
-      var updateFormfields = function() {
+      // function to update form fields when marker is updated
+      var updateFormfieldsWithMarker = function() {
         $(latitudeInputSelector).val(marker.getLatLng().lat);
         $(longitudeInputSelector).val(marker.getLatLng().lng);
         $(zoomInputSelector).val(map.getZoom());
+        $(shapeInputSelector).val(JSON.stringify({}));
       };
 
-      // function to clear form fields OLD TODO: refactor, should probably be expanded
-      var clearFormfields = function() {
-        $(latitudeInputSelector).val("");
-        $(longitudeInputSelector).val("");
-        $(zoomInputSelector).val("");
-      };
+      // function to clear form fields OLD TODO: consider removing this function
+      // var clearFormfields = function() {
+      //   $(latitudeInputSelector).val("");
+      //   $(longitudeInputSelector).val("");
+      //   $(zoomInputSelector).val("");
+      // };
 
       // function to open marker popup
       var openMarkerPopup = function(e) {
@@ -249,17 +250,38 @@
         L.control.layers({}, overlayLayers).addTo(map);
       }
 
-      // render shape created by admin if available
-      if (adminShape && Object.keys(adminShape).length > 0) {
-        var adminShapeLayer = L.geoJSON(adminShape);
-        adminShapeLayer.pm.setOptions({ adminShape: true })
-        adminShapeLayer.setStyle({
-          color: adminShapesColor,
-          fillColor: adminShapesColor,
-          fillOpacity: 0.4,
-        })
-        adminShapeLayer.addTo(map);
+      // render shape created by admin, if available
+      if (adminShape) {
+        if (App.Map.validCoordinates(adminShape)) {
+          marker = createMarker(adminShape.lat, adminShape.long, adminShapesColor, adminShape.fa_icon_class);
+
+        } else if (Object.keys(adminShape).length > 0) {
+          var adminShapeLayer = L.geoJSON(adminShape);
+          adminShapeLayer.pm.setOptions({ adminShape: true })
+          adminShapeLayer.setStyle({
+            color: adminShapesColor,
+            fillColor: adminShapesColor,
+            fillOpacity: 0.4,
+          })
+          adminShapeLayer.addTo(map);
+
+        }
       }
+
+      // adds second attribution to tell about admin pins and shapes
+      var adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
+      var adminShapeExplainer = L.control({
+        position: 'bottomleft'
+      });
+      adminShapeExplainer.onAdd = function(map) {
+        var container = L.DomUtil.create('div', 'my-attribution');
+        container.innerHTML = adminShapeExplainerText;
+        container.className += ' leaflet-control-attribution';
+        container.style.color = adminShapesColor;
+        return container;
+      }
+      adminShapeExplainer.addTo(map);
+
 
       // ads pins and shapes created by user
       if (processCoordinates) {

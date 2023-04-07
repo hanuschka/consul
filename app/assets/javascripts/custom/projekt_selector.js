@@ -100,6 +100,8 @@
 
     replaceProjektMapOnProposalCreation: function($projekt) {
 
+      App.Map.destroy();
+
       if ( $projekt.data('showMap') ) {
         $('#map-container').show();
 
@@ -107,14 +109,12 @@
           type: "GET",
           dataType: "html",
           success: function(data) {
-            $('.js-remove-marker-div').remove();
             App.Map.destroy();
             $('div.map_location.map').first().replaceWith(data)
             App.Map.initialize();
+            App.Map.maps[0].setView([$projekt.data('latitude'), $projekt.data('longitude')], $projekt.data('zoom')).invalidateSize();
           }
         });
-
-        App.Map.maps[0].setView([$projekt.data('latitude'), $projekt.data('longitude')], $projekt.data('zoom')).invalidateSize();
 
       } else {
         $('#map-container').hide();
@@ -164,7 +164,11 @@
     },
 
     updateProjektLabelSelector: function ($projekt) {
-      var labelIdsToShow = $projekt.data("projekt-label-ids").toString().split(",");
+      if ($projekt.data("projekt-label-ids")) {
+        var labelIdsToShow = $projekt.data("projekt-label-ids").toString().split(",");
+      } else {
+        var labelIdsToShow = [];
+      }
 
       if (labelIdsToShow.join().length == 0) {
         $('#label-for-projekt-labels-selector').addClass('hide');

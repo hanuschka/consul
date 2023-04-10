@@ -32,21 +32,21 @@
       var adminShape = $(element).data("admin-shape");
       var adminShapesColor = 'red';
 
+      // variables that define location and tooltips of process coordinates (both pins and shapes)
       var process = $(element).data("parent-class");
       var processCoordinates = $(element).data("process-coordinates");
 
-      // var markerLatitude = $(element).data("marker-latitude");
-      // var markerLongitude = $(element).data("marker-longitude");
-      // var markerColor = $(element).data("marker-color");
-      // var markerIconClass = $(element).data("marker-fa-icon-class")
-
+      // variables to define map form input selectors
       var latitudeInputSelector = $(element).data("latitude-input-selector");
       var longitudeInputSelector = $(element).data("longitude-input-selector");
       var zoomInputSelector = $(element).data("zoom-input-selector");
       var shapeInputSelector = $(element).data("shape-input-selector");
 
+      // defines if it's allowed to edit map
       var editable = $(element).data("editable");
+      var enableGeomanControls = $(element).data("enable-geoman-controls");
 
+      // biolerplate for marker
       var marker = null;
       var markersGroup = L.markerClusterGroup();
       var markerIcon = L.divIcon({
@@ -56,22 +56,23 @@
       });
 
 
-      // App.Map.cleanCoordinates(element); TODO: consider removing this function
-
-
       /* Create leaflet map start */
-
       var map = L.map(element.id, {
         gestureHandling: true,
         maxZoom: 18
       }).setView(mapCenterLatLng, zoom);
       App.Map.maps.push(map);
 
+      // update form fields when map center changes
+      map.on("moveend", function() {
+        $(latitudeInputSelector).val(map.getCenter().lat);
+        $(longitudeInputSelector).val(map.getCenter().lng);
+        $(zoomInputSelector).val(map.getZoom());
+      });
       /* Create leaflet map end */
 
 
       /* Leaflet basic plugins start */
-
       // Leaflet.Locate plugin: ads control to map
       L.control.locate({icon: 'fa fa-map-marker'}).addTo(map);
 
@@ -114,12 +115,10 @@
 
         return id
       }
-
       /* Leaflet basic plugins end */
 
 
       /* Function definitions start */
-
       // function to create a marker
       var createMarker = function(latitude, longitude, color, iconClass) {
         if ( !iconClass ) {
@@ -155,16 +154,6 @@
         return marker;
       };
 
-      // // function to remove marker TODO: consider removing this function
-      // var removeMarker = function(e) {
-      //   e.preventDefault();
-      //   if (marker) {
-      //     map.removeLayer(marker);
-      //     marker = null;
-      //   }
-      //   clearFormfields();
-      // };
-
       // function to create or move existing marker
       var moveOrPlaceMarker = function(e) {
         if (marker) {
@@ -182,13 +171,6 @@
         $(zoomInputSelector).val(map.getZoom());
         $(shapeInputSelector).val(JSON.stringify({}));
       };
-
-      // function to clear form fields OLD TODO: consider removing this function
-      // var clearFormfields = function() {
-      //   $(latitudeInputSelector).val("");
-      //   $(longitudeInputSelector).val("");
-      //   $(zoomInputSelector).val("");
-      // };
 
       // function to open marker popup
       var openMarkerPopup = function(e) {
@@ -232,11 +214,32 @@
         }
       };
 
+      // function to add event listeners to the shape layer, used when shape layer is editable
+      function addEventListenersToShapeLayer(layer) {
+        layer.on('pm:edit', function(e) {
+          updateShapeFieldInForm(e.layer);
+        })
+
+        layer.on('pm:dragend', function(e) {
+          updateShapeFieldInForm(e.layer);
+        })
+
+        // allows multiple cuts
+        layer.on('pm:cut', function(e) {
+          if (typeof(e.layer.getLatLngs) == 'function') {
+            e.originalLayer.setLatLngs(e.layer.getLatLngs());
+            e.originalLayer.addTo(map);
+            e.originalLayer._pmTempLayer = false;
+
+            e.layer._pmTempLayer = true;
+            e.layer.remove();
+          }
+        })
+      }
+      /* Function definitions end */
 
 
-
-      /* Manages base and overlay layers start */
-
+      /* Assembles a map: start */
       // function to create tile or overlay layer
       var createLayer = function(item, index) {
 
@@ -299,7 +302,7 @@
         L.control.layers({}, overlayLayers).addTo(map);
       }
 
-      // render shape created by admin, if available
+      // render marker or shape created by admin, if available
       if (adminShape) {
         if (App.Map.validCoordinates(adminShape)) {
           marker = createMarker(adminShape.lat, adminShape.long, adminShapesColor, adminShape.fa_icon_class);
@@ -312,6 +315,9 @@
             fillColor: adminShapesColor,
             fillOpacity: 0.4,
           })
+          if (editable) {
+            addEventListenersToShapeLayer(adminShapeLayer)
+          }
           adminShapeLayer.addTo(map);
 
         }
@@ -371,12 +377,10 @@
           }
         });
       }
-
-      /* Manages base and overlay layers end */
+      /* Assembles a map: end */
 
 
       /* Leaflet-Geoman plugin: config start */
-
       // configure editor controls
       if ( editable ) {
 
@@ -394,6 +398,19 @@
           drawText: false,
           removalMode: false
         });
+        if ( !enableGeomanControls ) {
+          map.pm.addControls({
+            drawPolyline: false,
+            drawRectangle: false,
+            drawPolygon: false,
+            drawCircle: false,
+            editMode: false,
+            dragMode: false,
+            cutPolygon: false,
+            rotateMode: false,
+            oneBlock: true
+          })
+        }
 
         // add consul marker to geoman controls
         map.pm.Toolbar.createCustomControl({
@@ -420,12 +437,23 @@
           block: 'edit',
           onClick: function() {
             removeShapesAndMarkers();
-            map.off("click", moveOrPlaceMarker);
-            map.pm.Toolbar.toggleButton('clearMap', true);
+            if ( enableGeomanControls ) {
+              map.pm.Toolbar.toggleButton('clearMap', true);
+              map.off("click", moveOrPlaceMarker);
+            } else {
+              map.pm.Toolbar.toggleButton('clearMap', false);
+              map.pm.Toolbar.toggleButton('consulMarker', true);
+              map.on("click", moveOrPlaceMarker);
+            }
           },
+          afterClick: function() {
+            if (!enableGeomanControls) {
+              $(".control-icon.leaflet-pm-icon-delete").closest(".active").removeClass("active")
+            }
+          } 
         });
 
-        // // toggle consul marker button by default for regular users
+        // toggle consul marker button by default for regular users
         if ( !adminEditor ) {
           map.pm.Toolbar.toggleButton('consulMarker', true)
           map.on("click", moveOrPlaceMarker);
@@ -449,7 +477,7 @@
           })
         }
 
-        // remove past elements when new element is started
+        // remove past elements when new element is started, except for cutting
         map.on('pm:drawstart', function(e) {
           if (e.shape == 'Cut') {
             return
@@ -471,7 +499,7 @@
           })
         }
 
-        // save newly created shape to form
+        // add newly created shape to form field
         map.on('pm:create', function(e) {
           var layer = e.layer;
 
@@ -480,34 +508,8 @@
           }
 
           updateShapeFieldInForm(layer);
-
-          layer.on('pm:edit', function(e) {
-            updateShapeFieldInForm(e.layer);
-          })
-
-          layer.on('pm:dragend', function(e) {
-            updateShapeFieldInForm(e.layer);
-          })
-
-          // allows multiple cuts
-          layer.on('pm:cut', function(e) {
-            if (typeof(e.layer.getLatLngs) == 'function') {
-              e.originalLayer.setLatLngs(e.layer.getLatLngs());
-              e.originalLayer.addTo(map);
-              e.originalLayer._pmTempLayer = false;
-
-              e.layer._pmTempLayer = true;
-              e.layer.remove();
-            }
-          })
+          addEventListenersToShapeLayer(layer)
         })
-
-        // update form fields when map center changes // TODO: should only work for admins
-        map.on("moveend", function() {
-          $(latitudeInputSelector).val(map.getCenter().lat);
-          $(longitudeInputSelector).val(map.getCenter().lng);
-          $(zoomInputSelector).val(map.getZoom());
-        });
 
         // update shape field in form
         var updateShapeFieldInForm = function(layer) {
@@ -524,41 +526,8 @@
           $(shapeInputSelector).val(shapeString);
         };
       }
-
       /* Leaflet-Geoman plugin: config start */
-
-
-      if ( !editable ) {
-        map._layersMaxZoom = 19;
-        map.addLayer(markersGroup);
-      }
-
-
-      // // ads a market to admin map TODO: consider removing these lines
-      // if (markerLatitude && markerLongitude && !processCoordinates) {
-      //   marker = createMarker(markerLatitude, markerLongitude, markerColor, markerIconClass);
-      // }
-
-      // if (editable) { TODO: consider removing these lines
-      //   $('.js-select-projekt').on("click", removeMarker);
-      //   map.on("zoomend", function() {
-      //     if (marker) {
-      //       updateFormfields();
-      //     }
-      //   });
-      // }
-
-
     },
-
-    // cleanCoordinates: function(element) {
-    //   var clean_markers, markers;
-    //   markers = $(element).attr("data-marker-process-coordinates");
-    //   if (markers != null) {
-    //     clean_markers = markers.replace(/-?(\*+)/g, null);
-    //     $(element).attr("data-marker-process-coordinates", clean_markers);
-    //   }
-    // },
 
     validCoordinates: function(coordinates) {
       return App.Map.isNumeric(coordinates.lat) && App.Map.isNumeric(coordinates.long);

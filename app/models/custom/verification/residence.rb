@@ -53,11 +53,11 @@ class Verification::Residence
       street_number_extension: street_number_extension,
       document_type:           document_type,
       document_last_digits:    document_last_digits,
-      registered_address_id:   registered_address_id,
-      verified_at:             Time.current
+      registered_address_id:   registered_address_id
     )
 
     user.save!
+    user.verify!
   end
 
   def document_required?

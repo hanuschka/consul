@@ -76,7 +76,13 @@ class Verification::Residence
   private
 
     def census_data
-      street_name = CityStreet.find_by(id: city_street_id).name
+      if form_registered_address_id.present?
+        registered_address = RegisteredAddress.find(form_registered_address_id)
+        street_name = registered_address.registered_address_street.name
+        street_number = registered_address.street_number
+        plz = registered_address.registered_address_street.plz
+        city_name = registered_address.registered_address_city.name
+      end
 
       @census_data ||= RemoteCensusApi.new.call(first_name: first_name,
                                                 last_name: last_name,

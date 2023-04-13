@@ -6,7 +6,7 @@ class User < ApplicationRecord
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
 
-  delegate :registered_address_street, to: :registered_address
+  delegate :registered_address_street, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -45,11 +45,13 @@ class User < ApplicationRecord
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
-  def self.transfer_city_streets # delete later
+  def self.transfer_city_streets # TODO delete this method
     transferred_user_ids = []
     not_transferred_user_ids = []
 
     User.find_each do |user|
+      next if user.registered_address.present?
+
       next if user.city_street.blank? && user.street_name.blank?
 
       street_name_selector = if user.city_street.present?

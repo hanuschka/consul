@@ -53,12 +53,17 @@
   }
 
   .jumbo {
-    background-position: $welcomebgposition;
-    background-size: 100% auto;
+    // background-position: $welcomebgposition;
+    // background-size: 100% auto;
     background-repeat: no-repeat;
     background-color: $welcomebgcolor;
     position: relative;
-    height: 285px;
+    // height: 285px;
+
+    background-size: contain; //cli
+    background-position: top; //cli
+    background-color: #f4f4f4 !important; //cli
+    height: 150px;
  
     .jumbo-message {
       position: absolute;
@@ -81,21 +86,41 @@
       display: none;
     }
 
+    @media only screen and (min-width: 390px) {
+      height: 190px;
+    }
+
+    @media only screen and (min-width: 490px) {
+      height: 220px;
+    }
+
     @media only screen and (min-width: 550px) {
+      height: 250px;
+
       p {
         display: block;
       }
     }
 
     @media only screen and (min-width: 640px) {
+      background-size: cover; //cli
     }
 
     @media only screen and (min-width: 768px) {
-      height: 380px;
+      // height: 380px;
+      height: 300px; //cli
       
       h1 {
         font-size: rem-calc(40);
       }
+    }
+
+    @media only screen and (min-width: 900px) {
+      height: 340px; //cli
+    }
+
+    @media only screen and (min-width: 1000px) {
+      height: 390px; //cli
     }
 
     @media only screen and (min-width: 75rem) {
@@ -113,7 +138,11 @@
     }
 
     @media only screen and (min-width: 1900px) {
-      height: 600px;
+      height: 700px;
+    }
+
+    @media only screen and (min-width: 2560px) {
+      height: 900px;
     }
   }
 }

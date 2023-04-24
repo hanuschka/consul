@@ -4,6 +4,8 @@ class MapLocation < ApplicationRecord
   belongs_to :projekt, touch: true
   belongs_to :deficiency_report, touch: true
 
+  before_save :ensure_shape_is_json
+
   def json_data
     {
       investment_id: investment_id,
@@ -15,6 +17,18 @@ class MapLocation < ApplicationRecord
       color: get_pin_color,
       fa_icon_class: get_fa_icon_class
     }
+  end
+
+  def shape_json_data
+    return shape if shape == {}
+
+    shape.merge({
+      investment_id: investment_id,
+      proposal_id: proposal_id,
+      projekt_id: projekt_id,
+      deficiency_report_id: deficiency_report_id,
+      color: get_pin_color
+    })
   end
 
   private
@@ -29,7 +43,7 @@ class MapLocation < ApplicationRecord
     elsif @deficiency_report.present?
       @deficiency_report.category.color
     elsif @projekt.present?
-      @projekt.color
+      "red"
     end
   end
 
@@ -51,5 +65,11 @@ class MapLocation < ApplicationRecord
     @projekt = Projekt.find_by(id: projekt_id) if projekt_id.present?
     @proposal = Proposal.find_by(id: proposal_id) if proposal_id.present?
     @deficiency_report = DeficiencyReport.find_by(id: deficiency_report_id) if deficiency_report_id.present?
+  end
+
+  def ensure_shape_is_json
+    self.shape = JSON.parse(shape) if shape.is_a?(String)
+  rescue JSON::ParserError
+    self.shape = {}
   end
 end

@@ -162,6 +162,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,
+        "deficiency_reports.enable_geoman_controls_in_maps": true,
 
         "extended_feature.general.elasticsearch": false,
 

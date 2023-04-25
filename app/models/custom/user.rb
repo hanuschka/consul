@@ -30,16 +30,16 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true, on: :create, if: :extended_registration?
   validates :last_name, presence: true, on: :create, if: :extended_registration?
-  validates :gender, presence: true, on: :create, if: :extended_registration?
-  validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
+  # validates :gender, presence: true, on: :create, if: :extended_registration?
+  # validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
   validates :city_name, presence: true, on: :create, if: :show_no_registered_address_field?
   validates :plz, presence: true, on: :create, if: :show_no_registered_address_field?
-  validates :street_name, presence: true, on: :create, if: :show_no_registered_address_field?
-  validates :street_number, presence: true, on: :create, if: :show_no_registered_address_field?
+  # validates :street_name, presence: true, on: :create, if: :show_no_registered_address_field?
+  # validates :street_number, presence: true, on: :create, if: :show_no_registered_address_field?
 
-  validates :document_type, presence: true, on: :create, if: :document_required?
-  validates :document_last_digits, presence: true, on: :create, if: :document_required?
+  # validates :document_type, presence: true, on: :create, if: :document_required?
+  # validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create

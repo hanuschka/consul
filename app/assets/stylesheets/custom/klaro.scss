@@ -4,11 +4,14 @@
 
 .klaro {
   .cookie-modal {
+    z-index: 4999 !important;
+
     .cn-body {
       span {
         color: $dark;
       }
     }
+
     .cn-ok {
       .cm-btn.cm-btn-info {
         padding: 10px;

@@ -26,10 +26,12 @@
       var layersData = $(element).data('map-layers');
       var baseLayers = {};
       var overlayLayers = {};
+      var adminMarker = null;
+      var adminShape = $(element).data("admin-shape");
+      var showAdminShape = $(element).data("show-admin-shape");
 
       // variables that define map editing behaviour
       var adminEditor = $(element).data("admin-editor");
-      var adminShape = $(element).data("admin-shape");
       var adminShapesColor = 'red';
 
       // variables that define location and tooltips of process coordinates (both pins and shapes)
@@ -41,9 +43,11 @@
       var longitudeInputSelector = $(element).data("longitude-input-selector");
       var zoomInputSelector = $(element).data("zoom-input-selector");
       var shapeInputSelector = $(element).data("shape-input-selector");
+      var showAdminShapeInputSelector = $(element).data("show-admin-shape-input-selector");
 
       // defines if it's allowed to edit map
       var editable = $(element).data("editable");
+      var enableGeomanControls = $(element).data("enable-geoman-controls");
 
       // biolerplate for marker
       var marker = null;
@@ -64,9 +68,11 @@
 
       // update form fields when map center changes
       map.on("moveend", function() {
-        $(latitudeInputSelector).val(map.getCenter().lat);
-        $(longitudeInputSelector).val(map.getCenter().lng);
-        $(zoomInputSelector).val(map.getZoom());
+        if ( adminEditor && !marker ) {
+          $(latitudeInputSelector).val(map.getCenter().lat);
+          $(longitudeInputSelector).val(map.getCenter().lng);
+          $(zoomInputSelector).val(map.getZoom());
+        }
       });
       /* Create leaflet map end */
 
@@ -119,24 +125,33 @@
 
       /* Function definitions start */
       // function to create a marker
-      var createMarker = function(latitude, longitude, color, iconClass) {
+      var getMarkerIconHTML = function(color, iconClass) {
+        var markerIconHTML;
+
         if ( !iconClass ) {
           iconClass = 'circle';
         } else {
           iconClass = iconClass
         };
 
-        var markerLatLng = new L.LatLng(latitude, longitude);
-
         if ( adminEditor ) {
           color = adminShapesColor;
         }
 
         if ( color ) {
-          markerIcon.options.html = '<div class="map-icon icon-' + iconClass + '" style="background-color: ' + color + '"></div>'
+          markerIconHTML = '<div class="map-icon icon-' + iconClass + '" style="background-color: ' + color + '"></div>'
         } else {
-          markerIcon.options.html = '<div class="map-icon icon-' + iconClass + '"></div>'
+          markerIconHTML = '<div class="map-icon icon-' + iconClass + '"></div>'
         }
+
+        return markerIconHTML;
+      }
+
+      var createMarker = function(latitude, longitude, color, iconClass) {
+
+        var markerLatLng = new L.LatLng(latitude, longitude);
+
+        markerIcon.options.html = getMarkerIconHTML(color, iconClass);
 
         marker = L.marker(markerLatLng, {
           icon: markerIcon,
@@ -169,6 +184,10 @@
         $(longitudeInputSelector).val(marker.getLatLng().lng);
         $(zoomInputSelector).val(map.getZoom());
         $(shapeInputSelector).val(JSON.stringify({}));
+
+        if ( adminEditor ) {
+          $(showAdminShapeInputSelector).val(true);
+        }
       };
 
       // function to open marker popup
@@ -180,21 +199,16 @@
         } else if ( process == "deficiency-reports") {
           route = "/deficiency_reports/" + e.target.options.id + "/json_data"
         } else if ( process == "projekts") {
-          if (e.target.options.proposal_id) {
-            route = "/proposals/" + e.target.options.proposal_id + "/json_data"
-          }
-          else {
-            route = "/projekts/" + e.target.options.id + "/json_data"
-          }
+          route = "/projekts/" + e.target.options.id + "/json_data"
         } else {
           route = "/investments/" + e.target.options.id + "/json_data"
         }
 
         marker = e.target;
-          $.ajax(route, {
-            type: "GET",
-            dataType: "json",
-            success: function(data) {
+        $.ajax(route, {
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
             e.target.bindPopup(getPopupContent(data)).openPopup();
           }
         });
@@ -302,9 +316,29 @@
       }
 
       // render marker or shape created by admin, if available
-      if (adminShape) {
+      if (adminShape && showAdminShape) {
         if (App.Map.validCoordinates(adminShape)) {
-          marker = createMarker(adminShape.lat, adminShape.long, adminShapesColor, adminShape.fa_icon_class);
+          if ( adminEditor ) {
+            marker = createMarker(adminShape.lat, adminShape.long, adminShapesColor, adminShape.fa_icon_class);
+
+
+          } else {
+            var markerLatLng = new L.LatLng(adminShape.lat, adminShape.long);
+            markerIcon.options.html = getMarkerIconHTML(adminShapesColor, adminShape.fa_icon_class);
+
+            adminMarker = L.marker(markerLatLng, {
+              icon: markerIcon
+            });
+            adminMarker.pm.setOptions({ adminShape: true })
+
+            adminMarker.on("click", function() {
+              if (!this._popup) {
+                this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+              }
+            });
+
+            adminMarker.addTo(map);
+          }
 
         } else if (Object.keys(adminShape).length > 0) {
           var adminShapeLayer = L.geoJSON(adminShape);
@@ -314,27 +348,36 @@
             fillColor: adminShapesColor,
             fillOpacity: 0.4,
           })
+
           if (editable) {
             addEventListenersToShapeLayer(adminShapeLayer)
+          } else {
+            adminShapeLayer.on("click", function() {
+              if (!this._popup) {
+                this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+              }
+            });
           }
-          adminShapeLayer.addTo(map);
 
+          adminShapeLayer.addTo(map);
         }
       }
 
       // adds second attribution to tell about admin pins and shapes
-      var adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
-      var adminShapeExplainer = L.control({
-        position: 'bottomleft'
-      });
-      adminShapeExplainer.onAdd = function(map) {
-        var container = L.DomUtil.create('div', 'my-attribution');
-        container.innerHTML = adminShapeExplainerText;
-        container.className += ' leaflet-control-attribution';
-        container.style.color = adminShapesColor;
-        return container;
+      if ( showAdminShape ) {
+        var adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
+        var adminShapeExplainer = L.control({
+          position: 'bottomleft'
+        });
+        adminShapeExplainer.onAdd = function(map) {
+          var container = L.DomUtil.create('div', 'my-attribution');
+          container.innerHTML = adminShapeExplainerText;
+          container.className += ' leaflet-control-attribution';
+          container.style.color = adminShapesColor;
+          return container;
+        }
+        adminShapeExplainer.addTo(map);
       }
-      adminShapeExplainer.addTo(map);
 
 
       // ads pins and shapes created by user
@@ -349,7 +392,6 @@
               marker.options.id = coordinates.deficiency_report_id
             } else if (process == "projekts") {
               marker.options.id = coordinates.projekt_id
-              marker.options.proposal_id = coordinates.proposal_id // proposals on projekt page
             } else {
               marker.options.id = coordinates.investment_id
             }
@@ -357,7 +399,11 @@
             marker.on("click", openMarkerPopup);
 
           } else {
-            var userShape = L.geoJSON(coordinates);
+            var userShape = L.geoJSON(coordinates, {
+              style: function(feature) {
+                return { color: coordinates.color };
+              }
+            });
 
             if (process == "proposals") {
               userShape.options.id = coordinates.proposal_id
@@ -365,7 +411,6 @@
               userShape.options.id = coordinates.deficiency_report_id
             } else if (process == "projekts") {
               userShape.options.id = coordinates.projekt_id
-              userShape.options.proposal_id = coordinates.proposal_id // proposals on projekt page
             } else {
               userShape.options.id = coordinates.investment_id
             }
@@ -397,23 +442,38 @@
           drawText: false,
           removalMode: false
         });
+        if ( !enableGeomanControls ) {
+          map.pm.addControls({
+            drawPolyline: false,
+            drawRectangle: false,
+            drawPolygon: false,
+            drawCircle: false,
+            editMode: false,
+            dragMode: false,
+            cutPolygon: false,
+            rotateMode: false,
+            oneBlock: true
+          })
+        }
 
         // add consul marker to geoman controls
-        map.pm.Toolbar.createCustomControl({
-          name: 'consulMarker',
-          className: 'control-icon leaflet-pm-icon-marker',
-          title: 'Marker setzen',
-          block: 'draw',
-          onClick: function() {
-            removeShapesAndMarkers();
+        if ( enableGeomanControls ) {
+          map.pm.Toolbar.createCustomControl({
+            name: 'consulMarker',
+            className: 'control-icon leaflet-pm-icon-marker',
+            title: 'Marker setzen',
+            block: 'draw',
+            onClick: function() {
+              removeShapesAndMarkers();
 
-            if (this.toggleStatus) {
-              map.off("click", moveOrPlaceMarker);
-            } else {
-              map.on("click", moveOrPlaceMarker);
+              if (this.toggleStatus) {
+                map.off("click", moveOrPlaceMarker);
+              } else {
+                map.on("click", moveOrPlaceMarker);
+              }
             }
-          }
-        });
+          });
+        }
 
         // add remove consul marker to geoman controls
         map.pm.Toolbar.createCustomControl({
@@ -423,9 +483,25 @@
           block: 'edit',
           onClick: function() {
             removeShapesAndMarkers();
-            map.off("click", moveOrPlaceMarker);
-            map.pm.Toolbar.toggleButton('clearMap', true);
+            if ( enableGeomanControls ) {
+              map.pm.Toolbar.toggleButton('clearMap', true);
+              map.off("click", moveOrPlaceMarker);
+            } else {
+              map.pm.Toolbar.toggleButton('clearMap', false);
+              map.pm.Toolbar.toggleButton('consulMarker', true);
+              map.on("click", moveOrPlaceMarker);
+            }
           },
+          afterClick: function() {
+            if (!enableGeomanControls) {
+              $(".control-icon.leaflet-pm-icon-delete").closest(".active").removeClass("active")
+            }
+
+            if ( !adminEditor ) {
+              $(latitudeInputSelector).val('');
+              $(longitudeInputSelector).val('');
+            }
+          } 
         });
 
         // toggle consul marker button by default for regular users
@@ -472,6 +548,9 @@
               layer.remove();
             }
           })
+
+          $(shapeInputSelector).val({});
+          $(showAdminShapeInputSelector).val(false);
         }
 
         // add newly created shape to form field
@@ -499,6 +578,10 @@
           $(longitudeInputSelector).val(map.getCenter().lng);
           $(zoomInputSelector).val(map.getZoom());
           $(shapeInputSelector).val(shapeString);
+
+          if (adminEditor) {
+            $(showAdminShapeInputSelector).val(true);
+          }
         };
       }
       /* Leaflet-Geoman plugin: config start */

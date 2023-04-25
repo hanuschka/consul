@@ -62,6 +62,7 @@
         $('#map-container').hide();
       }
 
+      App.ProjektSelector.toggleImageAttachment($selectedProjekt)
       App.ProjektSelector.toggleDocumentAttachment($selectedProjekt)
       App.ProjektSelector.toggleSummary($selectedProjekt)
       App.ProjektSelector.toggleExternalVideoUrl($selectedProjekt)
@@ -185,6 +186,16 @@
       });
     },
 
+    toggleImageAttachment: function($projekt) {
+      if ( $projekt.data('allowAttachedImage') ) {
+        $('#attach-image').show();
+      } else {
+        $('#attach-image #nested-image .direct-upload').remove();
+        $("#new_image_link").removeClass("hide");
+        $('#attach-image').hide();
+      }
+    },
+
     toggleDocumentAttachment: function($projekt) {
       if ( $projekt.data('allowAttachedDocument') ) {
         $('#attach-documents').show();
@@ -242,7 +253,7 @@
       }
     },
 
-    preselectProjekt: function(projektId) {
+    preselectProjekt: function() {
       // get preselcted projekt id
       var selectedProjektId;
       var url = new URL(window.location.href);
@@ -271,6 +282,11 @@
         App.ProjektSelector.selectProjekt($selectedProjekt);
         $selectedProjekt.closest('.projekt_group').hide();
       });
+
+      if ( $selectedProjekt.data('hideProjektSelector') ) {
+        $('#projekt-selector-block').prev('legend').hide();
+        $('#projekt-selector-block').hide();
+      }
     },
 
 

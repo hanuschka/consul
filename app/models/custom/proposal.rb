@@ -1,5 +1,6 @@
 require_dependency Rails.root.join("app", "models", "proposal").to_s
 class Proposal < ApplicationRecord
+  include Labelable
 
   belongs_to :projekt, optional: true, touch: true
   has_one :proposal_phase, through: :projekt
@@ -13,6 +14,11 @@ class Proposal < ApplicationRecord
   validates :projekt_id, presence: true
   validate :description_sanitized
 
+  # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
+  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create #custom
+  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create #custom
+  validates :terms_general, acceptance: { allow_nil: false }, on: :create #custom
+
   scope :with_current_projekt, -> { joins(:projekt).merge(Projekt.current) }
   scope :by_author, ->(user_id) {
     return if user_id.nil?
@@ -20,7 +26,11 @@ class Proposal < ApplicationRecord
     where(author_id: user_id)
   }
 
-  scope :sort_by_alphabet, -> { with_translations(I18n.locale).reorder("LOWER(proposal_translations.title) ASC") }
+  scope :sort_by_alphabet, -> {
+    with_translations(I18n.locale).
+    select("proposals.*, LOWER(proposal_translations.title)").
+    reorder("LOWER(proposal_translations.title) ASC")
+  }
   scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc) }
 
   scope :seen,                     -> { where.not(ignored_flag_at: nil) }
@@ -30,7 +40,7 @@ class Proposal < ApplicationRecord
 
   def self.proposals_orders(user = nil)
     orders = %w[hot_score created_at alphabet votes_up random]
-    orders << "recommendations" if Setting["feature.user.recommendations_on_proposals"] && user&.recommended_proposals
+    # orders << "recommendations" if Setting["feature.user.recommendations_on_proposals"] && user&.recommended_proposals
     orders
   end
 

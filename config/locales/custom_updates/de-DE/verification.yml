@@ -7,6 +7,7 @@ de:
           last_name: Nachname
           street_name: Straße
           street_number: Hausnummer
+          street_number_extension: Hausnummerergänzung
           plz: Postleitzahl
           city_name: Stadt
           gender: Geschlecht
@@ -15,3 +16,4 @@ de:
         create:
           flash:
             success_manual: Vielen Dank, Ihre Daten wurden gespeichert
+            error: Wir konnten Ihre Daten nicht verifizieren, bitte kontaktieren Sie uns.

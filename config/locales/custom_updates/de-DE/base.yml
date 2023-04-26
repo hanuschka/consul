@@ -13,6 +13,7 @@ de:
         adm_email_on_new_proposal: E-Mail-Benachrichtigung erhalten nach jedem neuen Vorschlag
         adm_email_on_new_debate: E-Mail-Benachrichtigung erhalten nach jedem neuen Diskussionsbeitrag
         adm_email_on_new_deficiency_report: E-Mail-Benachrichtigung erhalten nach jeder neuen Mangelmeldung
+        adm_email_on_new_manual_verification: E-Mail-Benachrichtigung erhalten nach jeder neuen Nutzerverifizierung
       show:
         user_permission_votes: An Abstimmungen teilnehmen
         admin_notifications: Admin Benachrichtigungen
@@ -32,6 +33,10 @@ de:
         document_type:
           card: Personalausweis
           pass: Reisepass
+    helpers:
+      select:
+        prompt: Bitte wählen
+        not_in_list: Nicht in der Liste enthalten
     gdpr_notice:
       accept: Akzeptieren
       link_text: Mehr Infos
@@ -62,6 +67,7 @@ de:
           no_restriction: Alle Nutzer:innen der Plattform
           only_citizens: Nur Bürger:innen der Stadt
           only_geozones: Nur Bürger:innen des Stadtteils
+          only_streets: Nur Bürger:innen aus Straße
           show_more: Mehr anzeigen
           title: Partizipation
     images:
@@ -70,7 +76,7 @@ de:
     layouts:
       footer:
         demokratie: demokratie.today
-        demokratie_url: https://www.demokratie.today/
+        demokratie_url: https://demokratie.today/
         description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
         impressum: Impressum
         statistic_cookies_settings: Cookie Einstellungen
@@ -122,6 +128,7 @@ de:
       form:
         projekt_assignment: Projektzuordnung
         star_message: Alle mit (*) gekennzeichneten Felder sind Pflichtfelder
+        projekt_labels: Labels *
       index:
         resource:
           by: von
@@ -137,6 +144,7 @@ de:
         report_button: Melden
         report_text: Melden Sie uns diesen Beitrag bei unangebrachten Inhalt oder bei Urheberrechtsverletzungen.
         report_title: Melden
+      download: Herunterladen
     tag_names:
       projekt: Weitere %{resources} zu diesem Projekt
     users:

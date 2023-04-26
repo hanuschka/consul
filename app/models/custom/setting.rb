@@ -33,8 +33,8 @@ class Setting < ApplicationRecord
         "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": false,
-        "feature.user.recommendations_on_debates": true,
-        "feature.user.recommendations_on_proposals": true,
+        # "feature.user.recommendations_on_debates": true,
+        # "feature.user.recommendations_on_proposals": true,
         "feature.user.skip_verification": "true",
         "feature.community": true,
         "feature.map": true,
@@ -162,6 +162,8 @@ class Setting < ApplicationRecord
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,
+        "deficiency_reports.enable_geoman_controls_in_maps": true,
+
         # "extended_feature.general.elasticsearch": false,
 
         "extended_feature.general.extended_editor_for_admins": true,
@@ -169,6 +171,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.links_to_create_resources_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
+        "extended_feature.general.enable_google_translate": false,
         "extended_option.general.title": 'Öffentlichkeitsbeteiligung',
         "extended_option.general.subtitle": 'in der Stadt CONSUL',
         "extended_option.general.launch_date": '',

@@ -1,5 +1,5 @@
 <% resource = @proposal || @debate || @poll || @process %>
-<% projekt_phase = ("legislation_phase") if resource.is_a?(Legislation::Process) %>
+<% projekt_phase = projekt.send("legislation_phase") if resource.is_a?(Legislation::Process) %>
 <% projekt_phase ||= resource.class.name == "Poll" ? nil : projekt.send("#{resource.class.name.downcase.gsub('::', '_')}_phase") %>
 <% vertical_align = !projekt.has_active_phase?(controller_name) || projekt_feature?(projekt, "general.hide_additional_info_in_projekt_selector") || controller_name == 'polls' %>
 
@@ -17,12 +17,15 @@
      <%= "data-show-map=true" if projekt_feature?(projekt, "#{controller_name}.show_map") %>
      <%= "data-show-summary=true" if projekt_feature?(projekt, "proposals.enable_summary")  %>
      <%= "data-allow-video=true" if projekt_feature?(projekt, "proposals.enable_external_video") %>
+     <%= "data-allow-attached-image=true" if projekt_feature?(projekt, "#{controller_name}.allow_attached_image")  %>
      <%= "data-allow-attached-document=true" if projekt_feature?(projekt, "#{controller_name}.allow_attached_documents")  %>
      <%= "data-allow-tags=true" if projekt_feature?(projekt, "general.enable_tags")  %>
      <%= "data-tag-ids=#{ projekt.tags.category.ids.any? ? projekt.tags.category.ids.join(',') : false }" if projekt_feature?(projekt, "general.enable_tags") %>
      <%= "data-allow-sdgs=true" if projekt_feature?(projekt, "general.enable_sdgs") %>
      <%= "data-sdg-ids=#{ projekt.sdg_goals.ids.any? ? projekt.sdg_goals.ids.join(',') : false}" if projekt_feature?(projekt, "general.enable_sdgs") %>
+     <%= "data-projekt-label-ids=#{ projekt.all_projekt_labels.ids.join(',') }" if projekt.all_projekt_labels.any? %>
      <%= "data-resource-form-title=#{ projekt_phase.resource_form_title.gsub(' ', '_') }" if projekt_phase&.resource_form_title.present? %>
+     <%= "data-hide-projekt-selector=true" if projekt_feature?(projekt, "#{controller_name}.hide_projekt_selector") %>
      >
 
 

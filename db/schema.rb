@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_04_142104) do
+ActiveRecord::Schema.define(version: 2023_04_14_081219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -488,6 +488,22 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
   create_table "campaigns", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "track_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "city_street_projekt_phases", force: :cascade do |t|
+    t.bigint "city_street_id"
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city_street_id"], name: "index_city_street_projekt_phases_on_city_street_id"
+    t.index ["projekt_phase_id"], name: "index_city_street_projekt_phases_on_projekt_phase_id"
+  end
+
+  create_table "city_streets", force: :cascade do |t|
+    t.string "name"
+    t.string "plz"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -1132,6 +1148,7 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.boolean "show_by_default", default: false
     t.boolean "transparent", default: false
     t.integer "protocol", default: 0
+    t.string "layer_defs"
     t.index ["projekt_id"], name: "index_map_layers_on_projekt_id"
   end
 
@@ -1144,10 +1161,13 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.bigint "projekt_id"
     t.string "pin_color"
     t.bigint "deficiency_report_id"
+    t.jsonb "shape", default: {}, null: false
+    t.boolean "show_admin_shape", default: false
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
     t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
+    t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
   end
 
   create_table "milestone_statuses", id: :serial, force: :cascade do |t|
@@ -1379,6 +1399,7 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.boolean "show_images", default: false
     t.boolean "multiple", default: false
     t.integer "given_order"
+    t.boolean "show_hint_callout", default: true
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
@@ -1525,6 +1546,36 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.datetime "end_datetime"
+    t.string "summary"
+  end
+
+  create_table "projekt_label_translations", force: :cascade do |t|
+    t.bigint "projekt_label_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["locale"], name: "index_projekt_label_translations_on_locale"
+    t.index ["projekt_label_id"], name: "index_projekt_label_translations_on_projekt_label_id"
+  end
+
+  create_table "projekt_labelings", force: :cascade do |t|
+    t.bigint "projekt_label_id"
+    t.string "labelable_type"
+    t.bigint "labelable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["labelable_type", "labelable_id"], name: "index_projekt_labelings_on_labelable_type_and_labelable_id"
+    t.index ["projekt_label_id"], name: "index_projekt_labelings_on_projekt_label_id"
+  end
+
+  create_table "projekt_labels", force: :cascade do |t|
+    t.string "color"
+    t.string "icon"
+    t.bigint "projekt_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_labels_on_projekt_id"
   end
 
   create_table "projekt_livestreams", force: :cascade do |t|
@@ -1598,8 +1649,11 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.boolean "active"
     t.boolean "verification_restricted", default: false
     t.bigint "age_restriction_id"
+    t.string "registered_address_grouping_restriction", default: ""
+    t.jsonb "registered_address_grouping_restrictions", default: {}, null: false
     t.index ["age_restriction_id"], name: "index_projekt_phases_on_age_restriction_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
+    t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
   end
 
   create_table "projekt_question_answers", force: :cascade do |t|
@@ -1766,6 +1820,48 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.index ["projekt_id"], name: "index_proposals_on_projekt_id"
     t.index ["selected"], name: "index_proposals_on_selected"
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
+  end
+
+  create_table "registered_address_cities", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "registered_address_groupings", force: :cascade do |t|
+    t.string "key"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "registered_address_street_projekt_phases", force: :cascade do |t|
+    t.bigint "registered_address_street_id"
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_phase_id"], name: "index_ras_projekt_phases_on_projekt_phase_id"
+    t.index ["registered_address_street_id"], name: "index_ras_projekt_phases_on_ras_id"
+  end
+
+  create_table "registered_address_streets", force: :cascade do |t|
+    t.string "name"
+    t.string "plz"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name", "plz"], name: "index_registered_address_streets_on_name_and_plz", unique: true
+  end
+
+  create_table "registered_addresses", force: :cascade do |t|
+    t.string "street_number"
+    t.string "street_number_extension"
+    t.jsonb "groupings", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "registered_address_street_id"
+    t.integer "registered_address_city_id"
+    t.index ["groupings"], name: "index_registered_addresses_on_groupings", using: :gin
+    t.index ["registered_address_street_id"], name: "index_registered_addresses_on_registered_address_street_id"
   end
 
   create_table "related_content_scores", id: :serial, force: :cascade do |t|
@@ -2095,18 +2191,6 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.integer "plz"
     t.string "city_name"
     t.string "unique_stamp"
-    t.string "dor_first_name"
-    t.string "dor_last_name"
-    t.string "dor_street_name"
-    t.string "dor_street_number"
-    t.string "dor_plz"
-    t.string "dor_city"
-    t.string "pfo_first_name"
-    t.string "pfo_last_name"
-    t.string "pfo_street_name"
-    t.string "pfo_street_number"
-    t.string "pfo_plz"
-    t.string "pfo_city"
     t.boolean "custom_newsletter", default: false
     t.string "location"
     t.integer "bam_letter_verification_code"
@@ -2119,7 +2203,13 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.boolean "adm_email_on_new_proposal", default: false
     t.boolean "adm_email_on_new_debate", default: false
     t.boolean "adm_email_on_new_deficiency_report", default: false
+    t.bigint "city_street_id"
+    t.boolean "adm_email_on_new_manual_verification", default: false
+    t.text "keycloak_id_token", default: ""
+    t.bigint "registered_address_id"
+    t.string "street_number_extension"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
+    t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -2127,6 +2217,7 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
     t.index ["geozone_id"], name: "index_users_on_geozone_id"
     t.index ["hidden_at"], name: "index_users_on_hidden_at"
     t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
+    t.index ["registered_address_id"], name: "index_users_on_registered_address_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username"
   end
@@ -2263,6 +2354,8 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
   add_foreign_key "budget_valuators", "budgets"
   add_foreign_key "budget_valuators", "valuators"
   add_foreign_key "budgets", "projekts"
+  add_foreign_key "city_street_projekt_phases", "city_streets"
+  add_foreign_key "city_street_projekt_phases", "projekt_phases"
   add_foreign_key "dashboard_administrator_tasks", "users"
   add_foreign_key "dashboard_executed_actions", "dashboard_actions", column: "action_id"
   add_foreign_key "dashboard_executed_actions", "proposals"
@@ -2309,6 +2402,8 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
   add_foreign_key "poll_voters", "polls"
   add_foreign_key "polls", "budgets"
   add_foreign_key "polls", "projekts"
+  add_foreign_key "projekt_labelings", "projekt_labels"
+  add_foreign_key "projekt_labels", "projekts"
   add_foreign_key "projekt_manager_assignments", "projekt_managers"
   add_foreign_key "projekt_manager_assignments", "projekts"
   add_foreign_key "projekt_managers", "users"
@@ -2321,11 +2416,16 @@ ActiveRecord::Schema.define(version: 2023_01_04_142104) do
   add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekts"
+  add_foreign_key "registered_address_street_projekt_phases", "projekt_phases"
+  add_foreign_key "registered_address_street_projekt_phases", "registered_address_streets"
+  add_foreign_key "registered_addresses", "registered_address_streets"
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"
   add_foreign_key "sdg_managers", "users"
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "users", "bam_streets"
+  add_foreign_key "users", "city_streets"
   add_foreign_key "users", "geozones"
+  add_foreign_key "users", "registered_addresses"
   add_foreign_key "valuators", "users"
 end

@@ -9,7 +9,7 @@
       }
     },
 
-    selectProjekt: function($projekt, shouldUpdateMap) {
+    selectProjekt: function($projekt) {
       var $selectedProjekt = $projekt.clone().removeClass('js-select-projekt')
       var projektId = $projekt.data('projektId')
       var $currentProjektSelector = $projekt.closest('.projekt-selector')
@@ -55,10 +55,14 @@
         App.ProjektSelector.addNextProjektPlaceholder($nextProejektSelector, "(verpflichtend)")
       }
 
-      if ( shouldUpdateMap ) {
+      if ( $selectedProjekt.data('showMap') ) {
+        $('#map-container').show();
         App.ProjektSelector.replaceProjektMapOnProposalCreation($selectedProjekt)
+      } else {
+        $('#map-container').hide();
       }
 
+      App.ProjektSelector.toggleImageAttachment($selectedProjekt)
       App.ProjektSelector.toggleDocumentAttachment($selectedProjekt)
       App.ProjektSelector.toggleSummary($selectedProjekt)
       App.ProjektSelector.toggleExternalVideoUrl($selectedProjekt)
@@ -66,6 +70,7 @@
       App.ProjektSelector.updateAvailableSDGsSelection($selectedProjekt)
       App.ProjektSelector.toggleExternalFieldsHeader($selectedProjekt)
       App.ProjektSelector.updateMainHeader($selectedProjekt)
+      App.ProjektSelector.updateProjektLabelSelector($selectedProjekt)
 
     },
 
@@ -96,6 +101,8 @@
 
     replaceProjektMapOnProposalCreation: function($projekt) {
 
+      App.Map.destroy();
+
       if ( $projekt.data('showMap') ) {
         $('#map-container').show();
 
@@ -103,14 +110,12 @@
           type: "GET",
           dataType: "html",
           success: function(data) {
-            $('.js-remove-marker-div').remove();
             App.Map.destroy();
             $('div.map_location.map').first().replaceWith(data)
             App.Map.initialize();
+            App.Map.maps[0].setView([$projekt.data('latitude'), $projekt.data('longitude')], $projekt.data('zoom')).invalidateSize();
           }
         });
-
-        App.Map.maps[0].setView([$projekt.data('latitude'), $projekt.data('longitude')], $projekt.data('zoom')).invalidateSize();
 
       } else {
         $('#map-container').hide();
@@ -156,6 +161,38 @@
 
       } else {
         $('#sdgs-selector').hide();
+      }
+    },
+
+    updateProjektLabelSelector: function ($projekt) {
+      if ($projekt.data("projekt-label-ids")) {
+        var labelIdsToShow = $projekt.data("projekt-label-ids").toString().split(",");
+      } else {
+        var labelIdsToShow = [];
+      }
+
+      if (labelIdsToShow.join().length == 0) {
+        $('#label-for-projekt-labels-selector').addClass('hide');
+      } else {
+        $('#label-for-projekt-labels-selector').removeClass('hide');
+      }
+
+      $("#projekt_labels_selector .projekt-label").each(function(index, label) {
+        if (labelIdsToShow.includes($(label).data("labelId").toString())) {
+          $(label).removeClass('hide');
+        } else {
+          $(label).addClass('hide');
+        }
+      });
+    },
+
+    toggleImageAttachment: function($projekt) {
+      if ( $projekt.data('allowAttachedImage') ) {
+        $('#attach-image').show();
+      } else {
+        $('#attach-image #nested-image .direct-upload').remove();
+        $("#new_image_link").removeClass("hide");
+        $('#attach-image').hide();
       }
     },
 
@@ -216,7 +253,7 @@
       }
     },
 
-    preselectProjekt: function(projektId) {
+    preselectProjekt: function() {
       // get preselcted projekt id
       var selectedProjektId;
       var url = new URL(window.location.href);
@@ -240,13 +277,16 @@
       }
 
       // show projekts staring with top parent
-      var shouldUpdateMap = $('form#new_proposal').length == 1
-
       $.each(projektIdsToShow, function(index, projektId) {
         var $selectedProjekt = $('#projekt_' + projektId)
-        App.ProjektSelector.selectProjekt($selectedProjekt, shouldUpdateMap);
+        App.ProjektSelector.selectProjekt($selectedProjekt);
         $selectedProjekt.closest('.projekt_group').hide();
       });
+
+      if ( $selectedProjekt.data('hideProjektSelector') ) {
+        $('#projekt-selector-block').prev('legend').hide();
+        $('#projekt-selector-block').hide();
+      }
     },
 
 
@@ -300,6 +340,22 @@
       }
     },
 
+    selectLabel: function($label) {
+      var labelId = $label.data('labelId');
+      var $labelCheckBox = $("#projekt-labels-checkboxes [id*='_projekt_label_ids_" + labelId + "']");
+      $labelCheckBox.prop("checked", !$labelCheckBox.prop("checked"));
+
+      if ($labelCheckBox.prop("checked")) {
+        var labelBackgroundColor = $label.data('backgroundColor');
+        var labelTextColor = $label.data('textColor');
+        $label.css('background-color', labelBackgroundColor);
+        $label.css('color', labelTextColor);
+      } else {
+        $label.css('background-color', '#767676')
+        $label.css('color', '#fff')
+      }
+    },
+
     initialize: function() {
       $("body").on("click", ".js-toggle-projekt-group", function(event) {
         App.ProjektSelector.toggleProjektGroup(this);
@@ -313,6 +369,10 @@
         if ( $(event.target).closest('.js-toggle-projekt-group').length == 0 ) {
           $('.projekt_group').hide();
         }
+      });
+
+      $("body").on("click", ".js-select-projekt-label", function() {
+        App.ProjektSelector.selectLabel($(this));
       });
 
       App.ProjektSelector.preselectProjekt();

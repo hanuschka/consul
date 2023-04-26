@@ -274,7 +274,8 @@ de:
             projekt_notification_phase: Benachrichtigungen
             proposal_phase: Vorschläge
             question_phase: Kurzumfrage
-            restriction: Partizipationsbeschränkung
+            geo_restriction_title: Gebietsbeschränkung
+            extended_geo_restriction_title: Zusatzliche individuelle Gebietsbeschränkungen
             start_date: Anfangsdatum
             standard_element: Standardelement
             voting_manage: Abstimmungen verwalten
@@ -426,14 +427,13 @@ de:
         columns:
           first_name: Vorname
           last_name: Nachname
-          city_street_id: Straße
-          street_number: Hausnummer
-          street_number_extension: Hausnummerergänzung
+          street_address: Adresse
           plz: Postleitzahl
           geozone: Gebiet
           city_name: Stadt
           gender: Geschlecht
           date_of_birth: Geburtsdatum
+          document_type: Dokument
           document_last_digits: Dokument (4 letzten Ziffern)
           verified_at: Verifiziert am
           actions: Aktionen

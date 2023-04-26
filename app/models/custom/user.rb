@@ -6,7 +6,7 @@ class User < ApplicationRecord
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
 
-  delegate :registered_address_street, to: :registered_address
+  delegate :registered_address_street, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -23,7 +23,7 @@ class User < ApplicationRecord
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
-  belongs_to :city_street, optional: true
+  belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
@@ -44,6 +44,51 @@ class User < ApplicationRecord
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
+
+  def self.transfer_city_streets # TODO delete this method
+    transferred_user_ids = []
+    not_transferred_user_ids = []
+
+    User.find_each do |user|
+      next if user.registered_address.present?
+
+      next if user.city_street.blank? && user.street_name.blank?
+
+      street_name_selector = if user.city_street.present?
+                               user.city_street.name.split()[0].downcase
+                             elsif user.street_name.present?
+                               user.street_name.split()[0].downcase
+                             end
+
+      matching_registered_addresses = RegisteredAddress.joins(:registered_address_street)
+        .where("LOWER(registered_address_streets.name) LIKE ? AND CONCAT(street_number,LOWER(street_number_extension)) = ?",
+               "#{street_name_selector}%", user.street_number&.downcase)
+
+      next if matching_registered_addresses.blank?
+
+      matching_registered_addresses.map do |ra|
+        puts "Processing user with id: #{user.id}"
+        puts "Transfer \"CityStreet: #{user.city_street&.name || user.street_name } #{user.street_number}\" to" \
+          " \"RegisteredAddress: #{ra.registered_address_street.name} #{ra.street_number}#{ra.street_number_extension}\"? (y/n)"
+        answer = gets.chomp
+
+        if answer == "y"
+          transferred_user_ids << user.id
+          user.update_columns(
+            registered_address_id: ra.id
+          )
+          break
+        elsif answer == "c"
+          break
+        else
+          not_transferred_user_ids << user.id
+        end
+      end
+    end
+
+    puts "Transferred user ids: #{transferred_user_ids}"
+    puts "Not transferred user ids: #{not_transferred_user_ids - transferred_user_ids}"
+  end
 
   def show_no_registered_address_field?
     return false unless extended_registration?

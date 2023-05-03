@@ -8,6 +8,9 @@
     max-width: -moz-available;          /* WebKit-based browsers will ignore this. */
     max-width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
     max-width: fill-available;
+    min-width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    min-width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    min-width: fill-available;
   }
 }
 

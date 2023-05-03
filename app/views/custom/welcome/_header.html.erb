@@ -1,17 +1,7 @@
 <% if header.present? %>
-  <%header_large = Widget::Card.header.find_by title: "header_large" %>
-  <style>
-    <%if header_large%>
-      .home-page .jumbo{
-        background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
-      }
-    <%end%>
-  </style>
+  <% header_large = Widget::Card.header.find_by title: "header_large" %>
 
-  <div class="jumbo not-print">
-    <div class='jumbo-message'>
-    </div>
-  </div>
-
-  <div class="background-header"></div>
+  <% if header_large %>
+    <%= image_tag polymorphic_path(header_large.image.attachment), id: "welcome-header" %>
+  <% end %>
 <% end %>

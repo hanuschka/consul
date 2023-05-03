@@ -1,3 +1,16 @@
+#welcome-header {
+  margin-top: -24px;
+  margin-bottom: 4rem;
+
+  @media only screen and (min-width: 75rem) {
+    margin-left: calc(-50vw + 37.5rem);
+    margin-right: calc(-50vw + 37.5rem);
+    max-width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    max-width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    max-width: fill-available;
+  }
+}
+
 // Welcome page
 
 .home-page {

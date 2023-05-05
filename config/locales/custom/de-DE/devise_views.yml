@@ -107,7 +107,7 @@ de:
         new:
           cancel: Anmeldung abbrechen
           email_label: E-Mail
-          organization_signup: Vertreten Sie eine Organisation oder ein Kollektiv? %{signup_link}
+          organization_signup: "Vertreten Sie eine Organisation oder ein Kollektiv? <b>%{signup_link}</b>"
           organization_signup_link: Registrieren Sie sich hier
           password_confirmation_label: Passwort bestätigen
           password_label: Passwort

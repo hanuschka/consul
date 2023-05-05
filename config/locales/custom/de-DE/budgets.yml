@@ -132,7 +132,7 @@ de:
         message: "Ich habe einen Investitionsvorschlag %{title} in %{handle} erstellt. Erstellen Sie auch einen Investitionsvorschlag!"
       show:
         author_deleted: Benutzer gelöscht
-        price_explanation: Preiserklärung
+        price_explanation: Stellungnahme der Stadtverwaltung
         unfeasibility_explanation: Erläuterung der Undurchführbarkeit
         code: "Code des Investitionsvorschlags: <strong>%{code}</strong>"
         location: "Standort: <strong>%{location}</strong>"

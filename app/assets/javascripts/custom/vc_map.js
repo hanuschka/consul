@@ -27,12 +27,12 @@
     },
 
     loadModule: function(app, url, callback) {
-      const xhr = new XMLHttpRequest();
+      var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
-            const config = JSON.parse(xhr.responseText);
-            const module = new window.vcs.VcsModule(config);
+            var config = JSON.parse(xhr.responseText);
+            var module = new window.vcs.VcsModule(config);
             app.addModule(module, function(error) {
               if (error) {
                 callback(error);
@@ -81,6 +81,36 @@
         }
       }
 
+      ////// function CustomFeatureInfoInteraction(layerName) {
+      //////   if (!(this instanceof CustomFeatureInfoInteraction)) {
+      //////     throw new TypeError("Cannot call a class as a function");
+      //////   }
+
+      //////   window.vcs.AbstractInteraction.call(this, window.vcs.EventType.CLICK, window.vcs.ModificationKeyType.NONE);
+      //////   this.layerName = layerName;
+      //////   window.vcs.AbstractInteraction.prototype.setActive.call(this);
+      ////// }
+      ////// 
+      ////// CustomFeatureInfoInteraction.prototype = Object.create(window.vcs.AbstractInteraction.prototype);
+      ////// CustomFeatureInfoInteraction.prototype.constructor = CustomFeatureInfoInteraction;
+      ////// 
+      ////// CustomFeatureInfoInteraction.prototype.pipe = function(event) {
+      //////   if (event.feature) {
+      //////     // restrict alert to specific layer
+      //////     if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
+      //////       alert('The ID of the selected feature is: ' + event.feature.getId());
+      //////     }
+      //////   }
+      //////   return event;
+      ////// };
+
+
+
+
+
+
+
+
       const { eventHandler } = app.maps;
       /** @type {function():void} */
       let stop;
@@ -108,7 +138,7 @@
     },
 
     createSimpleEditorLayer: function(app) {
-      const layer = new vcs.VectorLayer({
+      var layer = new vcs.VectorLayer({
         name: '_demoDrawingLayer',
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
@@ -118,17 +148,17 @@
       });
 
       // layer style
-      const style = new vcs.VectorStyleItem({
+      var style = new vcs.VectorStyleItem({
         fill: {
-            color: '#ff0000',
+          color: '#ffff00',
         },
         stroke: {
-            color: '#ffffff',
-            width: 1,
+          color: '#ffffff',
+          width: 1,
         },
         image: {
-            color: '#00ff00',
-            src: '../dist/assets/cesium/Assets/Textures/pin.svg',
+          color: '#00ff00',
+          src: '../dist/assets/cesium/Assets/Textures/pin.svg',
         },
       });
       layer.setStyle(style);
@@ -140,7 +170,7 @@
       layer.activate();
       app.layers.add(layer);
 
-      const feature = new ol.Feature({ geometry: new ol.geom.Point([13.368109, 52.524500])});
+      var feature = new ol.Feature({ geometry: new ol.geom.Point([13.368109, 52.524500])});
       layer.addFeatures([feature]);
 
       return layer;
@@ -166,6 +196,36 @@
 
     setActiveMap: function(maps, mapName) {
       maps.setActiveMap(mapName);
+    },
+
+    drawFeature: function(app, geometryType) {
+      var layer = app.layers.getByKey('_demoDrawingLayer') || createSimpleEditorLayer(app);
+      layer.activate();
+      var session = vcs.startCreateFeatureSession(app, layer, geometryType);
+      // adapt the features style
+      var featureCreatedDestroy = session.featureCreated.addEventListener(function(feature) {
+        if (feature.getGeometry() instanceof ol.geom.Point && layer.getFeatures().length > 2) {
+          var pinStyle = new vcs.VectorStyleItem({});
+            pinStyle.image = new ol.style.Icon({
+              color: '#0000ff',
+              src: '../dist/assets/cesium/Assets/Textures/pin.svg',
+              scale: 1,
+            });
+          feature.setStyle(pinStyle.style);
+        }
+      });
+      // to draw only a single feature, stop the session, after creationFinished was fired
+      var finishedDestroy = session.creationFinished.addEventListener(function(feature) {
+        session.stop();
+        // reactivate feature info by creating new feature info session
+        App.VCMap.createFeatureInfoSession(app);
+      });
+      var destroy = function() {
+        featureCreatedDestroy();
+        finishedDestroy();
+      };
+      return destroy;
     }
+
   };
 }).call(this);

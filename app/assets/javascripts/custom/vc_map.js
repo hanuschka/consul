@@ -18,7 +18,7 @@
       App.VCMap.createFeatureInfoSession(vcsApp);
 
       // set cesium base url
-      window.CESIUM_BASE_URL = '../dist/assets/cesium/';
+      window.CESIUM_BASE_URL = '../dist3/assets/cesium/';
       // adding helper instance to window
       window.vcsApp = vcsApp;
 
@@ -158,7 +158,7 @@
         },
         image: {
           color: '#00ff00',
-          src: '../dist/assets/cesium/Assets/Textures/pin.svg',
+          src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
         },
       });
       layer.setStyle(style);
@@ -208,7 +208,7 @@
           var pinStyle = new vcs.VectorStyleItem({});
             pinStyle.image = new ol.style.Icon({
               color: '#0000ff',
-              src: '../dist/assets/cesium/Assets/Textures/pin.svg',
+              src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
               scale: 1,
             });
           feature.setStyle(pinStyle.style);

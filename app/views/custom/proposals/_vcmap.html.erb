@@ -1,21 +1,15 @@
 <div id="mySampleApp" class="myApplication">
   <div class="myMapContainer">
-    <div id="myMapUUID"><span>Map</span></div>
+    <div id="myMapUUIDnew"><span>Map</span></div>
     <div id="map-overlay" class="map-overlay">
-      <button onclick="zoom(window.vcsApp.maps.activeMap)">zoom in</button>
-      <button onclick="zoom(window.vcsApp.maps.activeMap, true)">zoom out</button>
+      <button onclick="App.VCMap.zoom(window.vcsApp.maps.activeMap)">zoom in</button>
+      <button onclick="App.VCMap.zoom(window.vcsApp.maps.activeMap, true)">zoom out</button>
     </div>
   </div>
   <div id="controls" class="controls">
-    <button onclick="setActiveMap(window.vcsApp.maps, 'ol3')">2D</button>
-    <button onclick="setActiveMap(window.vcsApp.maps, 'cesium')">3D</button>
-    <button onclick="drawFeature(window.vcsApp, vcs.GeometryType.Point)">draw point</button>
-    <button onclick="drawFeature(window.vcsApp, vcs.GeometryType.Polygon)">draw polygon</button>
+    <button onclick="App.VCMap.setActiveMap(window.vcsApp.maps, 'ol3')">2D</button>
+    <button onclick="App.VCMap.setActiveMap(window.vcsApp.maps, 'cesium')">3D</button>
+    <button onclick="App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Point)">draw point</button>
+    <button onclick="App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Polygon)">draw polygon</button>
   </div>
 </div>
-
-<script id="vcmap-core" type="module" src="../dist/vcmap-core.js"></script>
-<script src="../demo/demo.js"></script>
-<script>
-  init();
-</script>

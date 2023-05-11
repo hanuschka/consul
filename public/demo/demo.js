@@ -84,6 +84,9 @@ async function init() {
         window.CESIUM_BASE_URL = '../dist/assets/cesium/';
         // adding helper instance to window
         window.vcsApp = vcsApp;
+
+        // add base layer
+        createSimpleEditorLayer(vcsApp);
     }
 }
 
@@ -124,6 +127,10 @@ function createSimpleEditorLayer(app) {
         name: '_demoDrawingLayer',
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
+        vectorProperties: {
+          altitudeMode: 'clampToGround'
+        }
+
     });
     // layer style
     const style = new vcs.VectorStyleItem({
@@ -145,6 +152,9 @@ function createSimpleEditorLayer(app) {
     // activate and add layer
     layer.activate();
     app.layers.add(layer);
+
+    const feature = new ol.Feature({ geometry: new ol.geom.Point([13.368109, 52.524500])});
+    layer.addFeatures([feature]);
 
     return layer;
 }
@@ -171,7 +181,8 @@ function drawFeature(app, geometryType) {
         }
     });
     // to draw only a single feature, stop the session, after creationFinished was fired
-    const finishedDestroy = session.creationFinished.addEventListener(() => {
+    const finishedDestroy = session.creationFinished.addEventListener((feature) => {
+        debugger
         session.stop();
         // reactivate feature info by creating new feature info session
         createFeatureInfoSession(app);

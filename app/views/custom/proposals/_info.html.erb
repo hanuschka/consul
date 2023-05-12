@@ -6,6 +6,8 @@
           Flag.flagged?(current_user, @proposal),
           "show_info"] do %>
 
+  <%= render "vcmap" %>
+
   <% if feature?(:map) && map_location_available?(@proposal) %>
     <div class="margin-bottom not-print">
       <%= render Shared::MapComponent.new(

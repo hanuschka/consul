@@ -50,90 +50,54 @@
     },
 
     createFeatureInfoSession: function(app) {
-      /**
-       * @class
-       * @extends {import("@vcmap/core").AbstractInteraction}
-       */
-
-      class CustomFeatureInfoInteraction extends window.vcs.AbstractInteraction {
-        /**
-         * @param {string} layerName
-         */
-
-        constructor(layerName) {
-          super(window.vcs.EventType.CLICK, window.vcs.ModificationKeyType.NONE);
-          this.layerName = layerName;
-          super.setActive();
+      function CustomFeatureInfoInteraction(layerName) {
+        if (!(this instanceof CustomFeatureInfoInteraction)) {
+          throw new TypeError("Cannot call a class as a function");
         }
-        /**
-         * @param {import("@vcmap/core").InteractionEvent} event
-         * @returns {Promise<import("@vcmap/core").InteractionEvent>}
-         */
 
-        pipe(event) {
-          if (event.feature) {
-            // restrict alert to specific layer
-            if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
-              alert(`The ID of the selected feature is: ${event.feature.getId()}`);
-            }
-          }
-          return event;
-        }
+        window.vcs.AbstractInteraction.call(this, window.vcs.EventType.CLICK, window.vcs.ModificationKeyType.NONE);
+        this.layerName = layerName;
+        window.vcs.AbstractInteraction.prototype.setActive.call(this);
       }
 
-      ////// function CustomFeatureInfoInteraction(layerName) {
-      //////   if (!(this instanceof CustomFeatureInfoInteraction)) {
-      //////     throw new TypeError("Cannot call a class as a function");
-      //////   }
+      CustomFeatureInfoInteraction.prototype = Object.create(window.vcs.AbstractInteraction.prototype);
+      CustomFeatureInfoInteraction.prototype.constructor = CustomFeatureInfoInteraction;
 
-      //////   window.vcs.AbstractInteraction.call(this, window.vcs.EventType.CLICK, window.vcs.ModificationKeyType.NONE);
-      //////   this.layerName = layerName;
-      //////   window.vcs.AbstractInteraction.prototype.setActive.call(this);
-      ////// }
-      ////// 
-      ////// CustomFeatureInfoInteraction.prototype = Object.create(window.vcs.AbstractInteraction.prototype);
-      ////// CustomFeatureInfoInteraction.prototype.constructor = CustomFeatureInfoInteraction;
-      ////// 
-      ////// CustomFeatureInfoInteraction.prototype.pipe = function(event) {
-      //////   if (event.feature) {
-      //////     // restrict alert to specific layer
-      //////     if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
-      //////       alert('The ID of the selected feature is: ' + event.feature.getId());
-      //////     }
-      //////   }
-      //////   return event;
-      ////// };
+      CustomFeatureInfoInteraction.prototype.pipe = function(event) {
+        if (event.feature) {
+          // restrict alert to specific layer
+          if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
+            alert('The ID of the selected feature is: ' + event.feature.getId());
+          }
+        }
+        return event;
+      };
 
+      var eventHandler = app.maps.eventHandler;
+      var stop;
 
+      var interaction = new CustomFeatureInfoInteraction('_demoDrawingLayer');
+      var listener = eventHandler.addExclusiveInteraction(interaction, function() {
+                       if (stop) {
+                         stop();
+                       }
+                     });
 
-
-
-
-
-
-      const { eventHandler } = app.maps;
-      /** @type {function():void} */
-      let stop;
-      const interaction = new CustomFeatureInfoInteraction('_demoDrawingLayer');
-      const listener = eventHandler.addExclusiveInteraction(
-          interaction,
-          () => { stop?.(); },
-      );
-      const currentFeatureInteractionEvent = eventHandler.featureInteraction.active;
+      var currentFeatureInteractionEvent = eventHandler.featureInteraction.active;
       eventHandler.featureInteraction.setActive(window.vcs.EventType.CLICK);
 
-      const stopped = new window.vcs.VcsEvent();
-      stop = () => {
-        listener();
-        interaction.destroy();
-        eventHandler.featureInteraction.setActive(currentFeatureInteractionEvent);
-        stopped.raiseEvent();
-        stopped.destroy();
-      }; 
+      var stopped = new window.vcs.VcsEvent();
+      stop = function() {
+               listener();
+               interaction.destroy();
+               eventHandler.featureInteraction.setActive(currentFeatureInteractionEvent);
+               stopped.raiseEvent();
+               stopped.destroy();
+             };
 
       return {
-        stopped,
-        stop,
+        stopped: stopped,
+        stop: stop
       };
     },
 

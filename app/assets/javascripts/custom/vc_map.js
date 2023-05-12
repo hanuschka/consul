@@ -2,16 +2,15 @@
   "use strict";
   App.VCMap = {
     initialize: function() {
-      // $("#vcmap-core").each(function() {
-      //   App.Map.initializeMap(this);
-      // }
-      App.VCMap.initializeMap($("#vcmap-core"))
+      document.querySelectorAll("[data-vcmap]").forEach(function(element) {
+        App.VCMap.initializeMap(document.querySelector("[data-vcmap]"));
+      });
     },
 
     initializeMap: function(element) {
       // init App and load a config file
       var vcsApp = new window.vcs.VcsApp();
-      vcsApp.maps.setTarget('myMapUUIDnew');
+      vcsApp.maps.setTarget(element);
       App.VCMap.loadModule(vcsApp, 'https://new.virtualcitymap.de/map.config.json');
 
       // create new feature info session to allow feature click interaction
@@ -163,7 +162,7 @@
     },
 
     drawFeature: function(app, geometryType) {
-      var layer = app.layers.getByKey('_demoDrawingLayer') || createSimpleEditorLayer(app);
+      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
       layer.activate();
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
       // adapt the features style

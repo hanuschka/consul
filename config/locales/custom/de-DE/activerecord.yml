@@ -17,7 +17,7 @@ de:
         one: "Budget"
         other: "Budgets"
       budget/investment:
-        one: Vorschlage
+        one: Vorschlag
         other: Vorschläge
       milestone:
         one: "Meilenstein"

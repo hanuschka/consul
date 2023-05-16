@@ -23,6 +23,9 @@
 
       // add base layer
       App.VCMap.createSimpleEditorLayer(vcsApp);
+
+      // add predefined shapes
+      App.VCMap.drawPredefinedFeatures(vcsApp, element);
     },
 
     loadModule: function(app, url, callback) {
@@ -133,9 +136,6 @@
       layer.activate();
       app.layers.add(layer);
 
-      var feature = new ol.Feature({ geometry: new ol.geom.Point([13.368109, 52.524500])});
-      layer.addFeatures([feature]);
-
       return layer;
     },
 
@@ -188,7 +188,53 @@
         finishedDestroy();
       };
       return destroy;
-    }
+    },
 
+    drawPredefinedFeatures: function(app, element) {
+      var processCoordinates = $(element).data("process-coordinates");
+      var process = $(element).data("parent-class");
+
+      processCoordinates.forEach(function(coordinates) {
+        App.VCMap.drawPredefinedFeature(app, coordinates, process)
+      });
+    },
+
+    drawPredefinedFeature: function(app, coordinates, process) {
+      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
+      var feature;
+
+      if (App.Map.validCoordinates(coordinates)) { // geometryType === 'Point'
+        feature = new ol.Feature({ geometry: new ol.geom.Point([coordinates.long, coordinates.lat])});
+
+        var pinStyle = new vcs.VectorStyleItem({});
+          pinStyle.image = new ol.style.Icon({
+            color: '#0000ff',
+            src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
+            scale: 1,
+          });
+        feature.setStyle(pinStyle.style);
+
+        feature.process = process;
+        feature.resource_id = getResourceId(coordinates);
+      }
+
+      function getResourceId(coordinates) {
+        var id;
+
+        if (process == "proposals") {
+          id = coordinates.proposal_id
+        } else if (process == "deficiency-reports") {
+          id = coordinates.deficiency_report_id
+        } else if (process == "projekts") {
+          id = coordinates.projekt_id
+        } else {
+          id = coordinates.investment_id
+        }
+
+        return id
+      }
+
+      layer.addFeatures([feature]);
+    }
   };
 }).call(this);

@@ -14,8 +14,11 @@
       App.VCMap.loadModule(vcsApp, 'https://new.virtualcitymap.de/map.config.json');
 
       // custom map options
-      vcsApp.customMapOptions	= {}
+      vcsApp.customMapOptions = {}
       vcsApp.customMapOptions.editable = $(element).data("editable")
+      vcsApp.customMapOptions.latitudeInputSelector = $(element).data("latitude-input-selector");
+      vcsApp.customMapOptions.longitudeInputSelector = $(element).data("longitude-input-selector");
+      vcsApp.customMapOptions.zoomInputSelector = $(element).data("zoom-input-selector");
 
       // create new feature info session to allow feature click interaction
       App.VCMap.createFeatureInfoSession(vcsApp);
@@ -167,6 +170,7 @@
     },
 
     drawFeature: function(app, geometryType) {
+      event.preventDefault()
       var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
       layer.activate();
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
@@ -184,7 +188,24 @@
       });
       // to draw only a single feature, stop the session, after creationFinished was fired
       var finishedDestroy = session.creationFinished.addEventListener(function(feature) {
+        // convert Mercator coordinates to WGS84
+        var geometry = feature.getGeometry();
+        if (geometry instanceof ol.geom.Point) {
+            var wgs84coordinates = vcs.Projection.mercatorToWgs84(geometry.getCoordinates());
+            console.log(wgs84coordinates);
+        } else if (geometry instanceof ol.geom.Polygon) {
+            var coordinates = geometry.getLinearRing(0).getCoordinates();
+            var wgs84coordinates = coordinates.map(function(c) {
+                return vcs.Projection.mercatorToWgs84(c);
+            });
+        }
+
         session.stop();
+        
+        $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[1]);
+        $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0]);
+        $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line 
+
         // reactivate feature info by creating new feature info session
         App.VCMap.createFeatureInfoSession(app);
       });

@@ -111,10 +111,15 @@
           type: "GET",
           dataType: "html",
           success: function(data) {
-            App.Map.destroy();
-            $('div.map_location.map').first().replaceWith(data)
-            App.Map.initialize();
-            App.Map.maps[0].setView([$projekt.data('latitude'), $projekt.data('longitude')], $projekt.data('zoom')).invalidateSize();
+            if ( $projekt.data('vcMap') ) {
+              $('div.map_location.map').first().replaceWith(data)
+              App.VCMap.initialize();
+            } else {
+              App.Map.destroy();
+              $('div.map_location.map').first().replaceWith(data)
+              App.Map.initialize();
+              App.Map.maps[0].setView([$projekt.data('latitude'), $projekt.data('longitude')], $projekt.data('zoom')).invalidateSize();
+            }
           }
         });
 

@@ -13,6 +13,10 @@
       vcsApp.maps.setTarget(element);
       App.VCMap.loadModule(vcsApp, 'https://new.virtualcitymap.de/map.config.json');
 
+      // custom map options
+      vcsApp.customMapOptions	= {}
+      vcsApp.customMapOptions.editable = $(element).data("editable")
+
       // create new feature info session to allow feature click interaction
       App.VCMap.createFeatureInfoSession(vcsApp);
 
@@ -66,11 +70,12 @@
       CustomFeatureInfoInteraction.prototype.constructor = CustomFeatureInfoInteraction;
 
       CustomFeatureInfoInteraction.prototype.pipe = function(event) {
-        if (event.feature) {
-          // restrict alert to specific layer
-          if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
-            alert('The ID of the selected feature is: ' + event.feature.getId());
-          }
+        if (event.feature && !vcsApp.editable && event.feature.resource_id) {
+          //// // restrict alert to specific layer
+          //// if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
+          ////   alert('The ID of the selected feature is: ' + event.feature.getId());
+          //// }
+          App.VCMap.showFeatureInfo(event.feature);
         }
         return event;
       };
@@ -235,6 +240,50 @@
       }
 
       layer.addFeatures([feature]);
+    },
+
+
+    showFeatureInfo: function(feature) {
+
+      // function to open feature info popup
+      var openMarkerPopup = function(feature) {
+        var route;
+
+        if ( feature.process == "proposals" ) {
+          route = "/proposals/" + feature.resource_id + "/json_data"
+        } else if ( feature.process == "deficiency-reports") {
+          route = "/deficiency_reports/" + feature.resource_id + "/json_data"
+        } else if ( feature.process == "projekts") {
+          route = "/projekts/" + feature.resource_id + "/json_data"
+        } else {
+          route = "/investments/" + feature.resource_id + "/json_data"
+        }
+
+        // marker = e.target;
+        $.ajax(route, {
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+            ///e.target.bindPopup(getPopupContent(data)).openPopup();
+            alert(getPopupContent(data, feature));
+          }
+        });
+      };
+
+      // function to generate marker popup content
+      var getPopupContent = function(data, feature) {
+        if (feature.process == "proposals" || data.proposal_id) {
+          return "<a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a>";
+        } else if ( feature.process == "deficiency-reports" ) {
+          return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
+        } else if ( feature.process == "projekts" ) {
+          return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
+        } else {
+          return "<a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a>";
+        }
+      };
+
+      openMarkerPopup(feature);
     }
   };
 }).call(this);

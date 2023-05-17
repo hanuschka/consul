@@ -6,18 +6,21 @@
           Flag.flagged?(current_user, @proposal),
           "show_info"] do %>
 
-  <%= render "vcmap" %>
-
   <% if feature?(:map) && map_location_available?(@proposal) %>
-    <div class="margin-bottom not-print">
-      <%= render Shared::MapComponent.new(
-        mappable: @proposal,
-        map_location: @proposal.map_location || @proposal.projekt&.map_location_with_admin_shape,
-        parent_class: "proposal",
-        projekt: @proposal.projekt,
-        show_admin_shape: @proposal.projekt.map_location.show_admin_shape?
-      ) %>
-    </div>
+    <% if @proposal.projekt.vc_map_enabled? %>
+      <%= render "vcmap" %>
+
+    <% else %>
+      <div class="margin-bottom not-print">
+        <%= render Shared::MapComponent.new(
+          mappable: @proposal,
+          map_location: @proposal.map_location || @proposal.projekt&.map_location_with_admin_shape,
+          parent_class: "proposal",
+          projekt: @proposal.projekt,
+          show_admin_shape: @proposal.projekt.map_location.show_admin_shape?
+        ) %>
+      </div>
+    <% end %>
   <% end %>
 
   <% if @proposal.projekt_labels.any? %>

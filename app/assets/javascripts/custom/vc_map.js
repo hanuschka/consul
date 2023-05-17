@@ -201,10 +201,10 @@
         }
 
         session.stop();
-        
+
         $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[1]);
         $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0]);
-        $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line 
+        $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
 
         // reactivate feature info by creating new feature info session
         App.VCMap.createFeatureInfoSession(app);

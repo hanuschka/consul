@@ -2,17 +2,24 @@
   "use strict";
   App.VCMap = {
     initialize: function() {
-      // $("#vcmap-core").each(function() {
-      //   App.Map.initializeMap(this);
-      // }
-      App.VCMap.initializeMap($("#vcmap-core"))
+      document.querySelectorAll("[data-vcmap]").forEach(function(element) {
+        App.VCMap.initializeMap(document.querySelector("[data-vcmap]"));
+      });
     },
 
     initializeMap: function(element) {
       // init App and load a config file
       var vcsApp = new window.vcs.VcsApp();
-      vcsApp.maps.setTarget('myMapUUIDnew');
+      vcsApp.maps.setTarget(element);
       App.VCMap.loadModule(vcsApp, 'https://new.virtualcitymap.de/map.config.json');
+
+      // custom map options
+      vcsApp.customMapOptions = {}
+      vcsApp.customMapOptions.editable = $(element).data("editable")
+      vcsApp.customMapOptions.latitudeInputSelector = $(element).data("latitude-input-selector");
+      vcsApp.customMapOptions.longitudeInputSelector = $(element).data("longitude-input-selector");
+      vcsApp.customMapOptions.zoomInputSelector = $(element).data("zoom-input-selector");
+      vcsApp.customMapOptions.shapeInputSelector = $(element).data("shape-input-selector");
 
       // create new feature info session to allow feature click interaction
       App.VCMap.createFeatureInfoSession(vcsApp);
@@ -24,6 +31,9 @@
 
       // add base layer
       App.VCMap.createSimpleEditorLayer(vcsApp);
+
+      // add predefined shapes
+      App.VCMap.drawPredefinedFeatures(vcsApp, element);
     },
 
     loadModule: function(app, url, callback) {
@@ -64,11 +74,12 @@
       CustomFeatureInfoInteraction.prototype.constructor = CustomFeatureInfoInteraction;
 
       CustomFeatureInfoInteraction.prototype.pipe = function(event) {
-        if (event.feature) {
-          // restrict alert to specific layer
-          if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
-            alert('The ID of the selected feature is: ' + event.feature.getId());
-          }
+        if (event.feature && !vcsApp.editable && event.feature.resource_id) {
+          //// // restrict alert to specific layer
+          //// if (event.feature[window.vcs.vcsLayerName] === this.layerName) {
+          ////   alert('The ID of the selected feature is: ' + event.feature.getId());
+          //// }
+          App.VCMap.showFeatureInfo(event.feature);
         }
         return event;
       };
@@ -134,9 +145,6 @@
       layer.activate();
       app.layers.add(layer);
 
-      var feature = new ol.Feature({ geometry: new ol.geom.Point([13.368109, 52.524500])});
-      layer.addFeatures([feature]);
-
       return layer;
     },
 
@@ -163,7 +171,8 @@
     },
 
     drawFeature: function(app, geometryType) {
-      var layer = app.layers.getByKey('_demoDrawingLayer') || createSimpleEditorLayer(app);
+      event.preventDefault()
+      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
       layer.activate();
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
       // adapt the features style
@@ -180,7 +189,41 @@
       });
       // to draw only a single feature, stop the session, after creationFinished was fired
       var finishedDestroy = session.creationFinished.addEventListener(function(feature) {
+        // convert Mercator coordinates to WGS84
+        var geometry = feature.getGeometry();
+        if (geometry instanceof ol.geom.Point) {
+          var wgs84coordinates = vcs.Projection.mercatorToWgs84(geometry.getCoordinates());
+
+          $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[1]);
+          $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0]);
+          $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
+          $(app.customMapOptions.shapeInputSelector).val(JSON.stringify({}));
+
+        } else if (geometry instanceof ol.geom.Polygon) {
+          var coordinates = geometry.getLinearRing(0).getCoordinates();
+          var wgs84coordinates = coordinates.map(function(c) {
+            return vcs.Projection.mercatorToWgs84(c);
+          });
+
+          var geoJSONShape = {
+            type: "Feature",
+            geometry: {
+              type: 'Polygon',
+              coordinates: [wgs84coordinates]
+            },
+            properties: {}
+          };
+
+          var shapeString = JSON.stringify(geoJSONShape);
+
+          $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[0][1]);
+          $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0][0]);
+          $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
+          $(app.customMapOptions.shapeInputSelector).val(shapeString);
+        }
+
         session.stop();
+
         // reactivate feature info by creating new feature info session
         App.VCMap.createFeatureInfoSession(app);
       });
@@ -189,7 +232,112 @@
         finishedDestroy();
       };
       return destroy;
-    }
+    },
 
+    drawPredefinedFeatures: function(app, element) {
+      var processCoordinates = $(element).data("process-coordinates");
+      var process = $(element).data("parent-class");
+
+      processCoordinates.forEach(function(coordinates) {
+        App.VCMap.drawPredefinedFeature(app, coordinates, process)
+      });
+    },
+
+    drawPredefinedFeature: function(app, coordinates, process) {
+      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
+      var feature;
+
+      if (App.Map.validCoordinates(coordinates)) { // geometryType === 'Point'
+        feature = new ol.Feature({ geometry: new ol.geom.Point([coordinates.long, coordinates.lat])});
+
+        var pinStyle = new vcs.VectorStyleItem({});
+        pinStyle.image = new ol.style.Icon({
+          color: coordinates.color,
+          src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
+          scale: 1,
+        });
+        feature.setStyle(pinStyle.style);
+
+        feature.process = process;
+        feature.resource_id = getResourceId(coordinates);
+        layer.addFeatures([feature]);
+
+      } else { // geometryType === 'Polygon'
+        var polygoneCoordinates = coordinates.geometry.coordinates[0].map(function(c) {
+          return [c[0], c[1]];
+        });
+
+        feature = new ol.Feature({ geometry: new ol.geom.Polygon([polygoneCoordinates])});
+        var polygonStyle = new vcs.VectorStyleItem({});
+        polygonStyle.fillColor = coordinates.color;
+        polygonStyle.strokeColor = "#000000";
+        polygonStyle.strokeWidth = 2;
+        feature.setStyle(polygonStyle.style);
+
+        feature.process = process;
+        feature.resource_id = getResourceId(coordinates);
+        layer.addFeatures([feature]);
+      }
+
+      function getResourceId(coordinates) {
+        var id;
+
+        if (process == "proposals") {
+          id = coordinates.proposal_id
+        } else if (process == "deficiency-reports") {
+          id = coordinates.deficiency_report_id
+        } else if (process == "projekts") {
+          id = coordinates.projekt_id
+        } else {
+          id = coordinates.investment_id
+        }
+
+        return id
+      }
+    },
+
+
+    showFeatureInfo: function(feature) {
+
+      // function to open feature info popup
+      var openMarkerPopup = function(feature) {
+        var route;
+
+        if ( feature.process == "proposals" ) {
+          route = "/proposals/" + feature.resource_id + "/json_data"
+        } else if ( feature.process == "deficiency-reports") {
+          route = "/deficiency_reports/" + feature.resource_id + "/json_data"
+        } else if ( feature.process == "projekts") {
+          route = "/projekts/" + feature.resource_id + "/json_data"
+        } else {
+          route = "/investments/" + feature.resource_id + "/json_data"
+        }
+
+        // marker = e.target;
+        $.ajax(route, {
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+            ///e.target.bindPopup(getPopupContent(data)).openPopup();
+            alert(getPopupContent(data, feature));
+          }
+        });
+      };
+
+      // function to generate marker popup content
+      var getPopupContent = function(data, feature) {
+        if (feature.process == "proposals" || data.proposal_id) {
+          return "<a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a>";
+        } else if ( feature.process == "deficiency-reports" ) {
+          return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
+        } else if ( feature.process == "projekts" ) {
+          return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
+        } else {
+          return "<a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a>";
+        }
+      };
+
+      openMarkerPopup(feature);
+    }
   };
 }).call(this);

@@ -1,10 +1,11 @@
 class Shared::MapComponent < ApplicationComponent
   attr_reader :mappable, :map_location, :parent_class, :editable,
-              :process_coordinates, :projekt, :show_admin_shape
+              :process_coordinates, :projekt, :show_admin_shape, :map_style
   delegate :map_location_latitude, :map_location_longitude, :map_location_zoom,
            :map_location_input_id, :projekt_feature?, to: :helpers
 
   def initialize(
+    map_style: "regular",
     mappable: nil,
     map_location: nil,
     parent_class:,
@@ -13,6 +14,7 @@ class Shared::MapComponent < ApplicationComponent
     projekt: nil,
     show_admin_shape: false
   )
+    @map_style = map_style
     @mappable = mappable
     @map_location = map_location || MapLocation.new
     @parent_class = parent_class
@@ -33,8 +35,6 @@ class Shared::MapComponent < ApplicationComponent
 
     def prepare_map_settings
       options = {
-        map: "",
-
         map_center_latitude: map_location_latitude(map_location),
         map_center_longitude: map_location_longitude(map_location),
         map_zoom: map_location_zoom(map_location),
@@ -57,6 +57,13 @@ class Shared::MapComponent < ApplicationComponent
       }
 
       options[:map_layers] = map_layers if map_layers.present?
+
+      if map_style == "regular"
+        options[:map] = ""
+      elsif map_style == "vcmap"
+        options[:vcmap] = ""
+      end
+
       options
     end
 

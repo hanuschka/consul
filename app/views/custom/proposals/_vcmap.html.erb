@@ -1,15 +1,25 @@
-<div id="mySampleApp" class="myApplication">
-  <div class="myMapContainer">
-    <div id="myMapUUIDnew"><span>Map</span></div>
-    <div id="map-overlay" class="map-overlay">
-      <button onclick="App.VCMap.zoom(window.vcsApp.maps.activeMap)">zoom in</button>
-      <button onclick="App.VCMap.zoom(window.vcsApp.maps.activeMap, true)">zoom out</button>
-    </div>
+<div class="map proposals-map not-print">
+  <% if @selected_parent_projekt %>
+    <%= render Shared::VCMapComponent.new(
+      map_location: @selected_parent_projekt.map_location,
+      parent_class: "proposals",
+      process_coordinates: @proposals_coordinates,
+      projekt: @selected_parent_projekt,
+    ) %>
+
+  <% else %>
+    <%= render Shared::VCMapComponent.new(
+      parent_class: "proposals",
+      process_coordinates: @proposals_coordinates
+    ) %>
+
+  <% end %>
+</div>
+<div class='expand-overview-map-wrapper'>
+  <div class='expand-overview-map small js-expand-overview-map not-print wide'>
+    <%= t("custom.proposals.index.show_larger_map") %>
   </div>
-  <div id="controls" class="controls">
-    <button onclick="App.VCMap.setActiveMap(window.vcsApp.maps, 'ol3')">2D</button>
-    <button onclick="App.VCMap.setActiveMap(window.vcsApp.maps, 'cesium')">3D</button>
-    <button onclick="App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Point)">draw point</button>
-    <button onclick="App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Polygon)">draw polygon</button>
-  </div>
+</div>
+<div class="clear"></div>
+<div class="no-bullet margin-top">
 </div>

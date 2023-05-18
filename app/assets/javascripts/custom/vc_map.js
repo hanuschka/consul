@@ -19,6 +19,7 @@
       vcsApp.customMapOptions.latitudeInputSelector = $(element).data("latitude-input-selector");
       vcsApp.customMapOptions.longitudeInputSelector = $(element).data("longitude-input-selector");
       vcsApp.customMapOptions.zoomInputSelector = $(element).data("zoom-input-selector");
+      vcsApp.customMapOptions.shapeInputSelector = $(element).data("shape-input-selector");
 
       // create new feature info session to allow feature click interaction
       App.VCMap.createFeatureInfoSession(vcsApp);
@@ -191,20 +192,37 @@
         // convert Mercator coordinates to WGS84
         var geometry = feature.getGeometry();
         if (geometry instanceof ol.geom.Point) {
-            var wgs84coordinates = vcs.Projection.mercatorToWgs84(geometry.getCoordinates());
-            console.log(wgs84coordinates);
+          var wgs84coordinates = vcs.Projection.mercatorToWgs84(geometry.getCoordinates());
+
+          $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[1]);
+          $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0]);
+          $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
+          $(app.customMapOptions.shapeInputSelector).val(JSON.stringify({}));
+
         } else if (geometry instanceof ol.geom.Polygon) {
-            var coordinates = geometry.getLinearRing(0).getCoordinates();
-            var wgs84coordinates = coordinates.map(function(c) {
-                return vcs.Projection.mercatorToWgs84(c);
-            });
+          var coordinates = geometry.getLinearRing(0).getCoordinates();
+          var wgs84coordinates = coordinates.map(function(c) {
+            return vcs.Projection.mercatorToWgs84(c);
+          });
+
+          var geoJSONShape = {
+            type: "Feature",
+            geometry: {
+              type: 'Polygon',
+              coordinates: [wgs84coordinates]
+            },
+            properties: {}
+          };
+
+          var shapeString = JSON.stringify(geoJSONShape);
+
+          $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[0][1]);
+          $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0][0]);
+          $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
+          $(app.customMapOptions.shapeInputSelector).val(shapeString);
         }
 
         session.stop();
-
-        $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[1]);
-        $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0]);
-        $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
 
         // reactivate feature info by creating new feature info session
         App.VCMap.createFeatureInfoSession(app);
@@ -233,15 +251,32 @@
         feature = new ol.Feature({ geometry: new ol.geom.Point([coordinates.long, coordinates.lat])});
 
         var pinStyle = new vcs.VectorStyleItem({});
-          pinStyle.image = new ol.style.Icon({
-            color: '#0000ff',
-            src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
-            scale: 1,
-          });
+        pinStyle.image = new ol.style.Icon({
+          color: coordinates.color,
+          src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
+          scale: 1,
+        });
         feature.setStyle(pinStyle.style);
 
         feature.process = process;
         feature.resource_id = getResourceId(coordinates);
+        layer.addFeatures([feature]);
+
+      } else { // geometryType === 'Polygon'
+        var polygoneCoordinates = coordinates.geometry.coordinates[0].map(function(c) {
+          return [c[0], c[1]];
+        });
+
+        feature = new ol.Feature({ geometry: new ol.geom.Polygon([polygoneCoordinates])});
+        var polygonStyle = new vcs.VectorStyleItem({});
+        polygonStyle.fillColor = coordinates.color;
+        polygonStyle.strokeColor = "#000000";
+        polygonStyle.strokeWidth = 2;
+        feature.setStyle(polygonStyle.style);
+
+        feature.process = process;
+        feature.resource_id = getResourceId(coordinates);
+        layer.addFeatures([feature]);
       }
 
       function getResourceId(coordinates) {
@@ -259,8 +294,6 @@
 
         return id
       }
-
-      layer.addFeatures([feature]);
     },
 
 

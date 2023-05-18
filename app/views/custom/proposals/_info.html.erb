@@ -8,7 +8,13 @@
 
   <% if feature?(:map) && map_location_available?(@proposal) %>
     <% if @proposal.projekt.vc_map_enabled? %>
-      <%= render "vcmap" %>
+      <%= render Shared::VCMapComponent.new(
+        mappable: @proposal,
+        map_location: @proposal.map_location || @proposal.projekt&.map_location_with_admin_shape,
+        parent_class: "proposal",
+        projekt: @proposal.projekt,
+        show_admin_shape: @proposal.projekt.map_location.show_admin_shape?
+      ) %>
 
     <% else %>
       <div class="margin-bottom not-print">

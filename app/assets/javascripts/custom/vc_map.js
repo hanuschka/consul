@@ -20,6 +20,7 @@
       vcsApp.customMapOptions.longitudeInputSelector = $(element).data("longitude-input-selector");
       vcsApp.customMapOptions.zoomInputSelector = $(element).data("zoom-input-selector");
       vcsApp.customMapOptions.shapeInputSelector = $(element).data("shape-input-selector");
+      vcsApp.customMapOptions.defaultColor = $(element).data("default-color");
 
       // create new feature info session to allow feature click interaction
       App.VCMap.createFeatureInfoSession(vcsApp);
@@ -117,23 +118,27 @@
         name: '_demoDrawingLayer',
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
-        vectorProperties: {
-          altitudeMode: 'clampToGround'
-        }
+        // vectorProperties: {
+        //   altitudeMode: 'clampToGround'
+        // }
       });
 
       // layer style
       var style = new vcs.VectorStyleItem({
         fill: {
-          color: '#ffff00',
+          color: app.customMapOptions.defaultColor,
         },
         stroke: {
           color: '#ffffff',
-          width: 1,
+          width: 3,
         },
         image: {
-          color: '#00ff00',
+          color: app.customMapOptions.defaultColor,
           src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
+          stroke: {
+            color: '#ffffff',
+            width: 3,
+          },
         },
       });
       layer.setStyle(style);
@@ -174,18 +179,19 @@
       event.preventDefault()
       var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
       layer.activate();
+      layer.removeAllFeatures();
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
       // adapt the features style
       var featureCreatedDestroy = session.featureCreated.addEventListener(function(feature) {
-        if (feature.getGeometry() instanceof ol.geom.Point && layer.getFeatures().length > 2) {
-          var pinStyle = new vcs.VectorStyleItem({});
-            pinStyle.image = new ol.style.Icon({
-              color: '#0000ff',
-              src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
-              scale: 1,
-            });
-          feature.setStyle(pinStyle.style);
-        }
+        // if (feature.getGeometry() instanceof ol.geom.Point && layer.getFeatures().length > 2) {
+        //   var pinStyle = new vcs.VectorStyleItem({});
+        //     pinStyle.image = new ol.style.Icon({
+        //       color: '#0000ff',
+        //       src: '../dist3/assets/cesium/Assets/Textures/pin.svg',
+        //       scale: 1,
+        //     });
+        //   feature.setStyle(pinStyle.style);
+        // }
       });
       // to draw only a single feature, stop the session, after creationFinished was fired
       var finishedDestroy = session.creationFinished.addEventListener(function(feature) {
@@ -268,11 +274,11 @@
         });
 
         feature = new ol.Feature({ geometry: new ol.geom.Polygon([polygoneCoordinates])});
-        var polygonStyle = new vcs.VectorStyleItem({});
-        polygonStyle.fillColor = coordinates.color;
-        polygonStyle.strokeColor = "#000000";
-        polygonStyle.strokeWidth = 2;
-        feature.setStyle(polygonStyle.style);
+        // var polygonStyle = new vcs.VectorStyleItem({});
+        // polygonStyle.fillColor = coordinates.color;
+        // polygonStyle.strokeColor = "#000000";
+        // polygonStyle.strokeWidth = 2;
+        // feature.setStyle(polygonStyle.style);
 
         feature.process = process;
         feature.resource_id = getResourceId(coordinates);
@@ -296,6 +302,11 @@
       }
     },
 
+    clearFeatures: function(app) {
+      event.preventDefault();
+      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
+      layer.removeAllFeatures();
+    },
 
     showFeatureInfo: function(feature) {
 

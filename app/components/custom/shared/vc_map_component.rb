@@ -38,9 +38,9 @@ class Shared::VCMapComponent < ApplicationComponent
       options = {
         vcmap: "",
 
-        # map_center_latitude: map_location_latitude(map_location),
-        # map_center_longitude: map_location_longitude(map_location),
-        # map_zoom: map_location_zoom(map_location),
+        map_center_latitude: map_location_latitude(map_location),
+        map_center_longitude: map_location_longitude(map_location),
+        map_zoom: map_location_zoom(map_location),
 
         # admin_editor: false,
 
@@ -73,14 +73,6 @@ class Shared::VCMapComponent < ApplicationComponent
         []
       end
     end
-
-    # def map_layers
-    #   if projekt.present?
-    #     projekt.map_layers_for_render.to_json
-    #   else
-    #     MapLayer.general.to_json
-    #   end
-    # end
 
     # def admin_shape
     #   return unless projekt.present?

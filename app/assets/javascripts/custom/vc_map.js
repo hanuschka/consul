@@ -21,6 +21,9 @@
       vcsApp.customMapOptions.zoomInputSelector = $(element).data("zoom-input-selector");
       vcsApp.customMapOptions.shapeInputSelector = $(element).data("shape-input-selector");
       vcsApp.customMapOptions.defaultColor = $(element).data("default-color");
+      vcsApp.customMapOptions.mapCenterLatitude = $(element).data("map-center-latitude");
+      vcsApp.customMapOptions.mapCenterLongitude = $(element).data("map-center-longitude");
+      vcsApp.customMapOptions.mapCenterZoom = $(element).data("map-center-zoom");
 
       // create new feature info session to allow feature click interaction
       App.VCMap.createFeatureInfoSession(vcsApp);
@@ -35,6 +38,15 @@
 
       // add predefined shapes
       App.VCMap.drawPredefinedFeatures(vcsApp, element);
+
+      ////// // enable editing new points without having to
+      ////// if (vcsApp.customMapOptions.editable) {
+      //////   debugger
+      //////   App.VCMap.drawFeature(vcsApp, 'Point')
+      ////// }
+
+      // set default view
+      App.VCMap.setDefaultView(vcsApp);
     },
 
     loadModule: function(app, url, callback) {
@@ -173,6 +185,35 @@
 
     setActiveMap: function(maps, mapName) {
       maps.setActiveMap(mapName);
+    },
+
+    setDefaultView: function(app) {
+      var map = app.maps.activeMap;
+      var mapCenterLat = app.customMapOptions.mapCenterLatitude;
+      var mapCenterLong = app.customMapOptions.mapCenterLongitude;
+      var mapCenterZoom = app.customMapOptions.mapCenterZoom;
+
+      var viewpoint = {
+        "type": "Viewpoint",
+        "name": "Default",
+        "cameraPosition": [
+          7.628326765047903,
+          51.19524414598677,
+          567.4244392829526
+        ],
+        "groundPosition": [
+          7.628881118887374,
+          51.19874066185536,
+          327.79466475129635
+        ],
+        "distance": 458.54351897275285,
+        "heading": 5.688482507076805,
+        "pitch": -31.5078138733279,
+        "roll": 0.02191005047832281,
+        "animate": true
+      }
+
+      map.gotoViewpoint(viewpoint);
     },
 
     drawFeature: function(app, geometryType) {

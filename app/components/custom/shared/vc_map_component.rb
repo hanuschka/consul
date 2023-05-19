@@ -26,7 +26,7 @@ class Shared::VCMapComponent < ApplicationComponent
     content_tag :div,
                 id: "myMapUUIDnew",
                 # id: "#{dom_id(map_location)}_#{parent_class}",
-                class: "map_location map",
+                # class: "map_location map",
                 data: prepare_map_settings do
       content_tag :span, "Map"
     end
@@ -58,7 +58,7 @@ class Shared::VCMapComponent < ApplicationComponent
         editable: editable
       }
 
-      # options[:map_layers] = map_layers if map_layers.present?
+      options[:default_color] = projekt.color if projekt.present?
 
       options
     end

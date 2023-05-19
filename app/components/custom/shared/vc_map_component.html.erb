@@ -1,4 +1,4 @@
-<div class="vcmap-container">
+<div class="vcmap-container map_location map">
   <%= map_div %>
   <div id="map-overlay" class="map-overlay">
     <button onclick="App.VCMap.zoom(window.vcsApp.maps.activeMap)">zoom in</button>
@@ -10,6 +10,7 @@
     <% if editable %>
       <button onclick="App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Point)">draw point</button>
       <button onclick="App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Polygon)">draw polygon</button>
+      <button onclick="App.VCMap.clearFeatures(window.vcsApp)">clear features</button>
     <% end %>
   </div>
 </div>

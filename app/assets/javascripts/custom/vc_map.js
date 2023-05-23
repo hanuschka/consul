@@ -46,7 +46,11 @@
       ////// }
 
       // set default view
-      App.VCMap.setDefaultView(vcsApp);
+      // vcsApp.maps.added.addEventListener(function(map) {
+      //   if ( map.className === 'CesiumMap') {
+      //     App.VCMap.setDefaultView(vcsApp);
+      //   }
+      // });
     },
 
     loadModule: function(app, url, callback) {
@@ -130,9 +134,9 @@
         name: '_demoDrawingLayer',
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
-        // vectorProperties: {
-        //   altitudeMode: 'clampToGround'
-        // }
+        vectorProperties: {
+          altitudeMode: 'absolute'
+        }
       });
 
       // layer style
@@ -188,6 +192,7 @@
     },
 
     setDefaultView: function(app) {
+      debugger
       var map = app.maps.activeMap;
       var mapCenterLat = app.customMapOptions.mapCenterLatitude;
       var mapCenterLong = app.customMapOptions.mapCenterLongitude;

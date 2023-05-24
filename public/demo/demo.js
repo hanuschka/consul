@@ -85,6 +85,8 @@ async function init() {
         // adding helper instance to window
         window.vcsApp = vcsApp;
 
+        drawFeature(vcsApp, 'Point')
+
         // add base layer
         createSimpleEditorLayer(vcsApp);
     }

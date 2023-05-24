@@ -18,9 +18,13 @@
       vcsApp.customMapOptions.editable = $(element).data("editable")
       vcsApp.customMapOptions.latitudeInputSelector = $(element).data("latitude-input-selector");
       vcsApp.customMapOptions.longitudeInputSelector = $(element).data("longitude-input-selector");
+      vcsApp.customMapOptions.altitudeInputSelector = $(element).data("altitude-input-selector");
       vcsApp.customMapOptions.zoomInputSelector = $(element).data("zoom-input-selector");
       vcsApp.customMapOptions.shapeInputSelector = $(element).data("shape-input-selector");
       vcsApp.customMapOptions.defaultColor = $(element).data("default-color");
+      vcsApp.customMapOptions.mapCenterLatitude = $(element).data("map-center-latitude");
+      vcsApp.customMapOptions.mapCenterLongitude = $(element).data("map-center-longitude");
+      vcsApp.customMapOptions.mapCenterZoom = $(element).data("map-center-zoom");
 
       // create new feature info session to allow feature click interaction
       App.VCMap.createFeatureInfoSession(vcsApp);
@@ -35,6 +39,18 @@
 
       // add predefined shapes
       App.VCMap.drawPredefinedFeatures(vcsApp, element);
+
+      vcsApp.maps.mapActivated.addEventListener(function(map) {
+        // set default view
+        if ( map.className === 'CesiumMap') {
+          App.VCMap.setDefaultView(vcsApp, map);
+        }
+
+        // enable editing new points without having user to enable it manually
+        if (vcsApp.customMapOptions.editable) {
+          App.VCMap.drawFeature(vcsApp, vcs.GeometryType.Point)
+        }
+      });
     },
 
     loadModule: function(app, url, callback) {
@@ -118,9 +134,9 @@
         name: '_demoDrawingLayer',
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
-        // vectorProperties: {
-        //   altitudeMode: 'clampToGround'
-        // }
+        vectorProperties: {
+          altitudeMode: 'absolute'
+        }
       });
 
       // layer style
@@ -175,14 +191,34 @@
       maps.setActiveMap(mapName);
     },
 
+    setDefaultView: function(app, map) {
+      var mapCenterLat = app.customMapOptions.mapCenterLatitude;
+      var mapCenterLong = app.customMapOptions.mapCenterLongitude;
+
+      var viewpoint = new vcs.Viewpoint({
+        "groundPosition": [
+          mapCenterLong,
+          mapCenterLat,
+        ],
+        "pitch": -35,
+        "animate": true
+      });
+
+      map.gotoViewpoint(viewpoint);
+    },
+
     drawFeature: function(app, geometryType) {
-      event.preventDefault()
       var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
       layer.activate();
       layer.removeAllFeatures();
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
       // adapt the features style
       var featureCreatedDestroy = session.featureCreated.addEventListener(function(feature) {
+        if (layer.getFeatures().length > 1) {
+            layer.removeFeaturesById(['_shape']);
+        }
+        feature.setId('_shape');
+
         // if (feature.getGeometry() instanceof ol.geom.Point && layer.getFeatures().length > 2) {
         //   var pinStyle = new vcs.VectorStyleItem({});
         //     pinStyle.image = new ol.style.Icon({
@@ -193,6 +229,7 @@
         //   feature.setStyle(pinStyle.style);
         // }
       });
+
       // to draw only a single feature, stop the session, after creationFinished was fired
       var finishedDestroy = session.creationFinished.addEventListener(function(feature) {
         // convert Mercator coordinates to WGS84
@@ -202,6 +239,7 @@
 
           $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[1]);
           $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0]);
+          $(app.customMapOptions.altitudeInputSelector).val(wgs84coordinates[2]);
           $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
           $(app.customMapOptions.shapeInputSelector).val(JSON.stringify({}));
 
@@ -254,7 +292,7 @@
       var feature;
 
       if (App.Map.validCoordinates(coordinates)) { // geometryType === 'Point'
-        feature = new ol.Feature({ geometry: new ol.geom.Point([coordinates.long, coordinates.lat])});
+        feature = new ol.Feature({ geometry: new ol.geom.Point([coordinates.long, coordinates.lat, coordinates.alt])});
 
         var pinStyle = new vcs.VectorStyleItem({});
         pinStyle.image = new ol.style.Icon({
@@ -270,7 +308,7 @@
 
       } else { // geometryType === 'Polygon'
         var polygoneCoordinates = coordinates.geometry.coordinates[0].map(function(c) {
-          return [c[0], c[1]];
+          return [c[0], c[1], c[2]];
         });
 
         feature = new ol.Feature({ geometry: new ol.geom.Polygon([polygoneCoordinates])});
@@ -303,7 +341,6 @@
     },
 
     clearFeatures: function(app) {
-      event.preventDefault();
       var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
       layer.removeAllFeatures();
     },

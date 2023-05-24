@@ -52,6 +52,7 @@ class Shared::VCMapComponent < ApplicationComponent
 
         latitude_input_selector: "##{map_location_input_id(parent_class, "latitude")}",
         longitude_input_selector: "##{map_location_input_id(parent_class, "longitude")}",
+        altitude_input_selector: "##{map_location_input_id(parent_class, "altitude")}",
         zoom_input_selector: "##{map_location_input_id(parent_class, "zoom")}",
         shape_input_selector: "##{map_location_input_id(parent_class, "shape")}",
 

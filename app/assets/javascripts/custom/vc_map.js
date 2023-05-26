@@ -210,7 +210,7 @@
     drawFeature: function(app, geometryType) {
       var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
       layer.activate();
-      layer.removeAllFeatures();
+      // layer.removeAllFeatures();
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
       // adapt the features style
       var featureCreatedDestroy = session.featureCreated.addEventListener(function(feature) {
@@ -266,10 +266,11 @@
           $(app.customMapOptions.shapeInputSelector).val(shapeString);
         }
 
-        session.stop();
+        // session.stop();
 
+        // Launch the same function
         // reactivate feature info by creating new feature info session
-        App.VCMap.createFeatureInfoSession(app);
+        // App.VCMap.createFeatureInfoSession(app);
       });
       var destroy = function() {
         featureCreatedDestroy();
@@ -317,6 +318,8 @@
         // polygonStyle.strokeColor = "#000000";
         // polygonStyle.strokeWidth = 2;
         // feature.setStyle(polygonStyle.style);
+        //
+        // feature.set('olcs_altitudeMode', 'clampToGround');
 
         feature.process = process;
         feature.resource_id = getResourceId(coordinates);

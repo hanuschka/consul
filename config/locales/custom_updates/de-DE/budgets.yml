@@ -21,6 +21,7 @@ de:
         filters:
           all: Alle
           feasible: Zugelassene
+          unfeasible: Nicht zugelassene
           undecided: Noch nicht definiert
         orders:
           random: Zufällig

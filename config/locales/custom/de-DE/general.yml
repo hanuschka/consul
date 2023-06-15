@@ -389,7 +389,7 @@ de:
         all: Alle
         duplicated: Dupliziert
         started: Underway
-        unfeasible: Nicht zugelassen
+        unfeasible: Nicht zugelassene
         done: Erledigt
         other: Andere
       search_form:

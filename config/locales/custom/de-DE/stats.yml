@@ -23,7 +23,7 @@ de:
       page_title: "%{budget} - Partizipation Statistiken"
       total_investments: "Investitionsvorschläge gesamt"
       total_selected_investments: "Vorschläge in finaler Abstimmungsphase"
-      total_unfeasible_investments: "Nicht durchführbare Vorschläge"
+      total_unfeasible_investments: "Nicht zugelassene Vorschläge"
       by_phase: "Teilnehmer*innen nach Phase"
       by_heading: "Teilnehmer*innen nach Phase und Rubrik"
       total: "Gesamt"

@@ -20,7 +20,7 @@ de:
       index:
         filters:
           all: Alle
-          feasible: Durchführbar
+          feasible: Zugelassene
           undecided: Noch nicht definiert
         orders:
           random: Zufällig
@@ -50,15 +50,15 @@ de:
           line_weight_label: "Deine Stimmenanzahl"
           unverified_note: "Ihre Daten werden manuell überprüft. Dies kann 1-2 Werktage in Anspruch nehmen. Danach werden Ihre Stimmen freigegeben."
           unverified_note_no_data_html: "Bitte %{verify_account}."
-          unfeasible_html: "Dieser Investitionsvorschlag <strong>wurde als nicht durchführbar markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
+          unfeasible_html: "Dieser Investitionsvorschlag <strong>wurde als nicht zugelassen markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
         show:
           callouts:
             publishing_prices:
               undecided: Der Investitionsvorschlag wird nicht zur Wahl gestellt.
-              unfeasible: Dieser Investitionsvorschlag wurde als nicht durchführbar markiert
+              unfeasible: Dieser Investitionsvorschlag wurde als nicht zugelassen markiert
             selecting:
               undecided: Dieser Investitionsvorschlag befindet sich gerade noch in der Bewertung.
-              unfeasible: Dieser Investitionsvorschlag wurde als nicht durchführbar klassifiziert.
+              unfeasible: Dieser Investitionsvorschlag wurde als nicht zugelassen klassifiziert.
           implementation: Umsetzung
           implementation_city_text_html: <p>Soll von Stadtverwaltung umgesetzt werden</p>
           implementation_user_text_html: <p>%{author} unterstützt bei der Durchführung<p><p>%{implementation_contribution}</p>
@@ -66,6 +66,6 @@ de:
         statuses:
           phases:
             accepting: Der Investitionsvorschlag wurde erfolgreich eingereicht.
-            reviewing: Der Investitionsvorschlag wird zur Zeit intern auf seine Durchführbarkeit überprüft.
+            reviewing: Der Investitionsvorschlag wird zur Zeit intern auf seine Zulässigkeit überprüft.
             reviewing_ballots: Die Abstimmung wird gerade intern überprüft.
             valuating: Die Kosten für diesen Investitionsvorschlag werden intern ermittelt.

@@ -177,7 +177,7 @@ de:
         duration: "Zeitrahmen"
         feasibility_feasible: "Durchführbar"
         feasibility_undecided: "Undefiniert"
-        feasibility_unfeasible: "Undurchführbar"
+        feasibility_unfeasible: "Nicht zugelassen"
         incompatible: "Als inkompatibel markieren"
         milestone_tag_list: "Status des Vorschlags"
         price_explanation: "Erläuterung der Kosten"

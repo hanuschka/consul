@@ -32,7 +32,7 @@ de:
         zero: Sie haben noch über keinen Ausgabenvorschlag abgestimmt.
       reasons_for_not_balloting:
         not_verified: Nur verifizierte Benutzer*innen können über einen Ausgabenvorschlag abstimmen; %{verify_account}.
-        not_selected: Für nicht durchführbare Ausgabevorschläge kann nicht abgestimmt werden
+        not_selected: Für nicht zugelassene Ausgabevorschläge kann nicht abgestimmt werden
         not_enough_money: "Sie haben bereits das gesamte verfügbare Budget zugewiesen.<br><small>Bitte denken Sie daran, dass Sie dies %{change_ballot} jederzeit</small>ändern können"
         no_ballots_allowed: Die Auswahlphase ist abgeschlossen
         different_heading_assigned: "Sie haben bereits für eine andere Rubrik gestimmt: %{heading_link}"
@@ -85,8 +85,8 @@ de:
         map_remove_marker: "Entfernen Sie die Kartenmarkierung"
       index:
         title: Bürgerhaushalte
-        unfeasible: Undurchführbare Investitionsvorschläge
-        unfeasible_text: "Der Ausgabenvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, im Aufgabenbereich der Stadt, innerhalb des Limits des Haushaltes) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Ausgabenvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
+        unfeasible: Nicht zugelassene Investitionsvorschläge
+        unfeasible_text: "Der Ausgabenvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Zulässigkeit, im Aufgabenbereich der Stadt, innerhalb des Limits des Haushaltes) um für zugelassen erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Ausgabenvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
         by_heading: "Ausgabenvorschläge im Bereich: %{heading}"
         search_form:
           button: Suche
@@ -114,9 +114,9 @@ de:
           not_logged_in: "Um einen neuen Ausgabenvorschlag erstellen zu können, müssen Sie %{sign_in} oder %{sign_up}."
         filter: "Projekte filtern nach"
         filters:
-          not_unfeasible: "Durchführbar"
+          not_unfeasible: "Zugelassen"
           selected: "Ausgewählt"
-          unfeasible: "Undurchführbar"
+          unfeasible: "Nicht zugelassen"
           unselected: "Nicht ausgewählt"
           winners: "Bestbewertete Vorschläge"
         orders:
@@ -128,7 +128,7 @@ de:
       show:
         author_deleted: Benutzer gelöscht
         price_explanation: Stellungnahme der Stadtverwaltung
-        unfeasibility_explanation: Erläuterung der Undurchführbarkeit
+        unfeasibility_explanation: Erläuterung
         code: "Code des Ausgabenvorschlags: <strong>%{code}</strong>"
         location: "Standort: <strong>%{location}</strong>"
         organization_name: "Vorgeschlagen von: <strong>%{name}</strong>"
@@ -140,7 +140,7 @@ de:
         comments_tab: Kommentare
         milestones_tab: Meilensteine
         author: Autor
-        project_unfeasible: "Dieser Ausgabenvorschlag <strong>wurde als nicht durchführbar markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
+        project_unfeasible: "Dieser Ausgabenvorschlag <strong>wurde als nicht zugelassen markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
         project_selected: "Dieser Ausgabenvorschlag wurde für die Abstimmungsphase <strong>ausgewählt</strong>."
         project_winner: "Best bewerteter Ausgabenvorschlag"
         project_not_selected: "Dieser Ausgabenvorschlag wurde <strong>nicht</strong> für die Abstimmungsphase ausgewählt."
@@ -205,7 +205,7 @@ de:
       incompatibles: Unvereinbar
       investment_title: Projekt Titel
       investment_proyects: Liste aller Ausgabenvorschläge
-      unfeasible_investment_proyects: Liste aller nicht durchführbaren Ausgabenvorschläge
+      unfeasible_investment_proyects: Liste aller nicht zugelassene Ausgabenvorschläge
       not_selected_investment_proyects: Liste aller Ausgabenvorschläge, die es nicht in die Abstimmung geschafft haben
     executions:
       link: "Meilensteine"

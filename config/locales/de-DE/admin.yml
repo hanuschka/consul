@@ -210,7 +210,7 @@ de:
           feasible: Durchführbar
           selected: Ausgewählt
           undecided: Offen
-          unfeasible: Undurchführbar
+          unfeasible: Nicht zugelassen
           min_total_supports: Minimum Unterstützer*innen
           max_total_supports: Maximum Unterstützer*innen
           winners: Bestbewertete Vorschläge
@@ -227,7 +227,7 @@ de:
         no_valuators_assigned: Kein*e Begutacher*in zugewiesen
         feasibility:
           feasible: "Durchführbar"
-          unfeasible: "Undurchführbar"
+          unfeasible: "Nicht zugelassen"
           undecided: "Offen"
         selected: "Ausgewählt"
         select: "Auswählen"
@@ -286,7 +286,7 @@ de:
         user_tags: Tags, die von Benutzer*innen zugewiesen wurden
         tags_placeholder: "Geben Sie die gewünschten Tags durch Kommas (,) getrennt ein"
         undefined: Undefiniert
-      search_unfeasible: Suche undurchführbar
+      search_unfeasible: Suche nicht zugelassene
     budgets_wizard:
       creation_timeline:
         budget: Bürgerhaushalt
@@ -857,8 +857,8 @@ de:
         title: "Bürgerhaushalt ausgewählt"
         description: "Wird an den Autor gesendet, wenn sein Vorschlag zum Bürgerhaushalt ausgewählt wurde."
       budget_investment_unfeasible:
-        title: "Vorschlag Bürgerhaushalt nicht durchführbar"
-        description: "Wird dem Autor gesendet, wenn sein Vorschlag zum Bürgerhaushalt nicht durchführbar ist."
+        title: "Vorschlag Bürgerhaushalt nicht zugelassen"
+        description: "Wird dem Autor gesendet, wenn sein Vorschlag zum Bürgerhaushalt nicht zugelassen ist."
       budget_investment_unselected:
         title: "Bürgerhaushalt nicht ausgewählt"
         description: "Wird an den Autor gesendet, wenn sein Vorschlag zum Bürgerhaushalt nicht ausgewählt wurde."

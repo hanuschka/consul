@@ -60,7 +60,7 @@ de:
       new_href: "neuer Investitionsvorschlag"
       sincerely: "Mit freundlichen Grüßen"
       sorry: "Entschuldigung für die Unannehmlichkeiten und vielen Dank für Ihre wertvolle Beteiligung."
-      subject: "Ihr Investitionsvorschlag '%{code}' wurde als undurchführbar markiert"
+      subject: "Ihr Investitionsvorschlag '%{code}' wurde als nicht zugelassen markiert"
     budget_investment_selected:
       subject: "Ihr Investitionsprojekt %{code} wurde ausgewählt"
       hi: "Liebe*r Benutzer*in,"

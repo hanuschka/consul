@@ -314,7 +314,7 @@ de:
     retire_options:
       duplicated: Dupliziert
       started: In Ausführung
-      unfeasible: Undurchführbar
+      unfeasible: Nicht zugelassen
       done: Fertig
       other: Andere
     form:
@@ -355,7 +355,7 @@ de:
         all: Alle
         duplicated: Dupliziert
         started: Underway
-        unfeasible: Undurchführbar
+        unfeasible: Nicht zugelassen
         done: Erledigt
         other: Andere
       search_form:
@@ -846,7 +846,7 @@ de:
     verified_only: 'Nur verifizierte Benutzer können Vorschläge bewerten: %{verify_account}.'
     budget_investments:
       not_verified: Nur verifizierte Benutzer können über ein Investitionsprojekt abstimmen; %{verify_account}.
-      unfeasible: Undurchführbare Investitionsprojekte können nicht unterstützt werden
+      unfeasible: Nicht zugelassene Investitionsprojekte können nicht unterstützt werden
       not_voting_allowed: Die Abstimmungsphase ist beendet
       different_heading_assigned:
         one: "Sie können nur Investitionsprojekte in %{count} Bezirk unterstützen. Sie haben bereits Projekte in %{supported_headings} unterstützt."

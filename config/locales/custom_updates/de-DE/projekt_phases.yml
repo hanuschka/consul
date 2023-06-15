@@ -41,7 +41,7 @@ de:
             phase_not_active: Diese Projektphase ist nicht aktiv
             phase_expired: Diese Projektphase ist bereits abgelaufen
             phase_not_current: Diese Projektphase wurde noch nicht gestartet
-            not_selected: Für nicht durchführbare Investitionsvorschläge kann nicht abgestimmt werden
+            not_selected: Für nicht zugelassene Investitionsvorschläge kann nicht abgestimmt werden
             no_ballots_allowed: Die Auswahlphase ist abgeschlossen
             different_heading_assigned: "Sie haben bereits für eine andere Rubrik gestimmt: %{heading_link}"
             casted_offline: Sie haben bereits offline abgestimmt

@@ -238,10 +238,10 @@ de:
           without_valuator: Ohne zugewiesene*n Gutachter*in
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
-          feasible: Durchführbar
+          feasible: Zugelassen
           selected: Ausgewählt
           undecided: Offen
-          unfeasible: Undurchführbar
+          unfeasible: Nicht zugelassen
           min_total_supports: Minimum Unterstützer*innen
           max_total_supports: Maximum Unterstützer*innen
           winners: Bestbewertete Vorschläge
@@ -257,8 +257,8 @@ de:
         no_admin_assigned: Kein*e Administrator*in zugewiesen
         no_valuators_assigned: Kein*e Gutachter*in*in zugewiesen
         feasibility:
-          feasible: "Durchführbar"
-          unfeasible: "Undurchführbar"
+          feasible: "Zugelassen"
+          unfeasible: "Nicht zugelassen"
           undecided: "Offen"
         selected: "Ausgewählt"
         select: "Auswählen"
@@ -270,7 +270,7 @@ de:
           valuator: Gutachter*in
           valuation_group: Bewertungsgruppe
           geozone: Bezug der Vorschläge
-          feasibility: Durchführbarkeit
+          feasibility: Zulässigkeit
           valuation_finished: Bewertung fertig?
           selected: Status
           visible_to_valuators: Gutachter*innen zeigen
@@ -318,7 +318,7 @@ de:
         user_tags: Tags, die von Benutzer*innen zugewiesen wurden
         tags_placeholder: "Geben Sie die gewünschten Tags durch Kommas (,) getrennt ein"
         undefined: Undefiniert
-      search_unfeasible: Suche undurchführbar
+      search_unfeasible: Suche nicht zugelassene
     budgets_wizard:
       creation_timeline:
         budget: Budget
@@ -903,8 +903,8 @@ de:
         title: "Budget ausgewählt"
         description: "Wird an den Autor gesendet, wenn sein Vorschlag zum Budget ausgewählt wurde."
       budget_investment_unfeasible:
-        title: "Vorschlag Budget nicht durchführbar"
-        description: "Wird dem Autor gesendet, wenn sein Vorschlag zum Budget nicht durchführbar ist."
+        title: "Vorschlag Budget nicht zugelassen"
+        description: "Wird dem Autor gesendet, wenn sein Vorschlag zum Budget nicht zugelassen ist."
       budget_investment_unselected:
         title: "Budget nicht ausgewählt"
         description: "Wird an den Autor gesendet, wenn sein Vorschlag zum Budget nicht ausgewählt wurde."

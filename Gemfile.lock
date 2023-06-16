@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/ffi/ffi.git
+  revision: 73c36d77d76ef681cade4c4024abfe73af8a38b6
+  submodules: true
+  specs:
+    ffi (1.15.5)
+
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -250,7 +257,6 @@ GEM
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
-    ffi (1.15.4)
     file_validators (3.0.0)
       activemodel (>= 3.2)
       mime-types (>= 1.0)
@@ -739,6 +745,7 @@ DEPENDENCIES
   erb_lint (~> 0.0.37)
   factory_bot_rails (~> 6.2.0)
   faker (~> 2.18.0)
+  ffi!
   file_validators (~> 3.0.0)
   font-awesome-sass (~> 5.15.1)
   foundation-rails (~> 6.6.2.0)

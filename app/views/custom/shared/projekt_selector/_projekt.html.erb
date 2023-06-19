@@ -8,6 +8,7 @@
      tabindex="0"
      aria-labeled-by=<%= "#{dom_id(projekt)}_name" %>
      data-projekt-id="<%= projekt.id %>"
+     data-projekt-phase-id="<%= projekt_phase.id if projekt_phase.present? %>"
      <%= "data-parent-id=#{projekt.parent.id}" if projekt.parent.present? %>
      <%= "data-projekt-selectable=true" if projekt.selectable_in_selector?(controller_name, current_user) %>
      <%= "data-projekt-selectable-children=true" if projekt.children.selectable_in_selector(controller_name, current_user).any? %>

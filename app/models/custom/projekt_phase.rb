@@ -11,9 +11,11 @@ class ProjektPhase < ApplicationRecord
   translates :phase_tab_name, touch: true
   translates :new_resource_button_name, touch: true
   translates :resource_form_title, touch: true
+  translates :projekt_selector_hint, touch: true
   include Globalizable
 
   belongs_to :projekt, optional: true, touch: true
+  has_many :projekt_settings, through: :projekt
   belongs_to :age_restriction
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone,
@@ -29,6 +31,11 @@ class ProjektPhase < ApplicationRecord
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 
+  has_many :subscriptions, class_name: "ProjektPhaseSubscription", dependent: :destroy
+  has_many :subscribers, through: :subscriptions, source: :user
+
+  default_scope { order(given_order: :asc) }
+
   scope :regular_phases, -> { where.not(type: REGULAR_PROJEKT_PHASES) }
   scope :special_phases, -> { where(type: REGULAR_PROJEKT_PHASES) }
 
@@ -38,6 +45,18 @@ class ProjektPhase < ApplicationRecord
       .where("start_date IS NULL OR start_date <= ?", timestamp)
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
+
+  scope :sorted, -> do
+    regular_phases.sort_by(&:default_order).each do |x|
+      x.start_date = Time.zone.today if x.start_date.nil?
+    end.sort_by(&:start_date)
+  end
+
+  def self.order_phases(ordered_array)
+    ordered_array.each_with_index do |phase_id, order|
+      find(phase_id).update_column(:given_order, (order + 1))
+    end
+  end
 
   def selectable_by?(user)
     permission_problem(user).blank?
@@ -102,6 +121,40 @@ class ProjektPhase < ApplicationRecord
 
   def individual_group_value_restriction_formatted
     individual_group_values.map(&:name).flatten.join(", ")
+  end
+
+  def hide_projekt_selector?
+    false
+  end
+
+  def resource_count
+    nil
+  end
+
+  def selectable_by_admins_only?
+    false
+  end
+
+  def subscribed?(user)
+    return false unless user
+
+    subscriptions.where(user_id: user.id).exists?
+  end
+
+  def subscribe(user)
+    return false unless user
+
+    subscriptions.create(user_id: user.id)
+  end
+
+  def unsubscribe(user)
+    return false unless user
+
+    subscriptions.where(user_id: user.id).destroy_all
+  end
+
+  def title
+    phase_tab_name.presence || I18n.t("custom.projekts.page.tabs.#{resources_name}")
   end
 
   private

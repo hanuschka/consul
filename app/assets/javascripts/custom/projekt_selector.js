@@ -71,6 +71,7 @@
       App.ProjektSelector.toggleExternalFieldsHeader($selectedProjekt)
       App.ProjektSelector.updateMainHeader($selectedProjekt)
       App.ProjektSelector.updateProjektLabelSelector($selectedProjekt)
+      App.ProjektSelector.updateProjektSelectorHint($selectedProjekt)
 
     },
 
@@ -251,6 +252,27 @@
         defaultText = $header.data('defaultText');
         $header.text(defaultText);
       }
+    },
+
+    updateProjektSelectorHint: function($selectedProjekt) {
+      var $hintElement = $('[id$="_creation_recommendations"]').first();
+      if (!$hintElement.length) {
+        return;
+      }
+
+      var projektPhaseId = $selectedProjekt.data('projektPhaseId');
+      if ( !projektPhaseId ) {
+        return;
+      }
+
+      $.ajax("/projekt_phases/" + projektPhaseId + "/selector_hint_html", {
+        type: "GET",
+        dataType: "html",
+        success: function(data) {
+          $hintElement.html(data);
+          $(document).foundation()
+        }
+      });
     },
 
     preselectProjekt: function() {

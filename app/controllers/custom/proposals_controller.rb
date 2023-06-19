@@ -34,7 +34,7 @@ class ProposalsController
     load_featured
     remove_archived_from_order_links
 
-    @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index
+    @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index(current_user)
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
@@ -134,6 +134,11 @@ class ProposalsController
 
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently
+
+    elsif !@projekt.visible_for?(current_user)
+      @individual_group_value_names = @projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+
     end
 
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)

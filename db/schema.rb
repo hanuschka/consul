@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_03_153535) do
+ActiveRecord::Schema.define(version: 2023_05_31_072439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1190,6 +1190,7 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
     t.bigint "deficiency_report_id"
     t.jsonb "shape", default: {}, null: false
     t.boolean "show_admin_shape", default: false
+    t.float "altitude"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
@@ -1394,6 +1395,7 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
     t.integer "given_order", default: 1
     t.boolean "most_voted", default: false
     t.boolean "open_answer", default: false
+    t.string "more_info_link"
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -1653,6 +1655,15 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_geozones_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_subscriptions", force: :cascade do |t|
+    t.bigint "projekt_phase_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_phase_id"], name: "index_projekt_phase_subscriptions_on_projekt_phase_id"
+    t.index ["user_id"], name: "index_projekt_phase_subscriptions_on_user_id"
+  end
+
   create_table "projekt_phase_translations", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.string "locale", null: false
@@ -1661,6 +1672,7 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
     t.string "phase_tab_name"
     t.text "new_resource_button_name"
     t.text "resource_form_title"
+    t.text "projekt_selector_hint"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -1678,6 +1690,7 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
     t.bigint "age_restriction_id"
     t.string "registered_address_grouping_restriction", default: ""
     t.jsonb "registered_address_grouping_restrictions", default: {}, null: false
+    t.integer "given_order"
     t.index ["age_restriction_id"], name: "index_projekt_phases_on_age_restriction_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -1751,6 +1764,16 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["projekt_id"], name: "index_projekt_settings_on_projekt_id"
+  end
+
+  create_table "projekt_subscriptions", force: :cascade do |t|
+    t.bigint "projekt_id"
+    t.bigint "user_id"
+    t.boolean "active", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_id"], name: "index_projekt_subscriptions_on_projekt_id"
+    t.index ["user_id"], name: "index_projekt_subscriptions_on_user_id"
   end
 
   create_table "projekt_translations", force: :cascade do |t|
@@ -2244,6 +2267,7 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
     t.text "keycloak_id_token", default: ""
     t.bigint "registered_address_id"
     t.string "street_number_extension"
+    t.boolean "reverify", default: true
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -2447,9 +2471,13 @@ ActiveRecord::Schema.define(version: 2023_05_03_153535) do
   add_foreign_key "projekt_notifications", "projekts"
   add_foreign_key "projekt_phase_geozones", "geozones"
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
+  add_foreign_key "projekt_phase_subscriptions", "projekt_phases"
+  add_foreign_key "projekt_phase_subscriptions", "users"
   add_foreign_key "projekt_phases", "age_restrictions"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_settings", "projekts"
+  add_foreign_key "projekt_subscriptions", "projekts"
+  add_foreign_key "projekt_subscriptions", "users"
   add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekts"

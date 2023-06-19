@@ -67,6 +67,10 @@ class Projekt < ApplicationRecord
   has_many :projekt_manager_assignments, dependent: :destroy
   has_many :projekt_managers, through: :projekt_manager_assignments
 
+  has_many :subscriptions, -> { where(projekt_subscriptions: { active: true }) },
+    class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
+  has_many :subscribers, through: :subscriptions, source: :user
+
   accepts_nested_attributes_for(
     :debate_phase, :proposal_phase, :budget_phase,
     :voting_phase, :comment_phase, :milestone_phase,
@@ -209,6 +213,7 @@ class Projekt < ApplicationRecord
 
   def self.selectable_in_selector(controller_name, current_user)
     select do |projekt|
+      projekt.all_parent_projekts.unshift(projekt).none? { |p| p.hidden_for?(current_user) } &&
       projekt.all_children_projekts.unshift(projekt).any? do |p|
         p.selectable_in_selector?(controller_name, current_user)
       end
@@ -240,7 +245,6 @@ class Projekt < ApplicationRecord
 
       debate_phase.selectable_by?(user)
     elsif controller_name == "processes"
-      # return false if proposals_selectable_by_admins_only? && user.administrator.blank?
       legislation_phase.selectable_by?(user)
     end
   end
@@ -311,6 +315,15 @@ class Projekt < ApplicationRecord
     end
 
     all_parent_ids
+  end
+
+  def all_parent_projekts(all_parent_projekts = [])
+    if parent.present?
+      all_parent_projekts.push(parent)
+      parent.all_parent_projekts(all_parent_projekts)
+    end
+
+    all_parent_projekts
   end
 
   def all_children_ids(all_children_ids = [])
@@ -474,11 +487,15 @@ class Projekt < ApplicationRecord
   end
 
   def visible_for?(user = nil)
-    return true if individual_group_values.empty?
+    return true if individual_group_values.hard.empty?
     return false unless user.present?
     return true if user.administrator?
 
-    (individual_group_values.ids & user.individual_group_values.ids).any?
+    (individual_group_values.hard.ids & user.individual_group_values.hard.ids).any?
+  end
+
+  def hidden_for?(user = nil)
+    !visible_for?(user)
   end
 
   private

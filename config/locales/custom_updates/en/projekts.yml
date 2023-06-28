@@ -44,10 +44,12 @@ en:
           title: Events
         sidebar:
           admin_controls:
+            title: Admin
             copy_code: Copy source code
             edit_projekt: Edit projekt
             edit_projekt_settings: Project settings
             edit_projekt_page: Edit projekt page
+            create_newsletter_draft: Create newsletter
           map:
             title: District
           navigator:
@@ -59,6 +61,9 @@ en:
             title: Categories
           projekt_start: Projekt start
           projekt_end: Planned completion
+          phases_subscription:
+            title: Notifications
+            description: Would you like to stay current?
         tabs:
           budgets: Budgets
           comments: Comments

@@ -34,7 +34,7 @@ class ProposalsController
     load_featured
     remove_archived_from_order_links
 
-    @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index
+    @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index(current_user)
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
@@ -64,7 +64,7 @@ class ProposalsController
   end
 
   def edit
-    @selected_projekt = @proposal.projekt
+    @selected_projekt = @proposal.projekt_phase.projekt
   end
 
   def create
@@ -76,26 +76,26 @@ class ProposalsController
     elsif @proposal.save
       @proposal.publish
 
-      if @proposal.proposal_phase.active?
-        if @proposal.projekt.overview_page?
+      if @proposal.projekt_phase.active?
+        if @proposal.projekt_phase.projekt.overview_page?
           redirect_to projekts_path(
-            anchor: 'filter-subnav',
-            selected_phase_id: @proposal.proposal_phase.id,
+            anchor: "filter-subnav",
+            selected_phase_id: @proposal.projekt_phase.id,
             order: params[:order]
           ), notice: t("proposals.notice.published")
         else
           redirect_to page_path(
-            @proposal.projekt.page.slug,
-            anchor: 'filter-subnav',
-            selected_phase_id: @proposal.proposal_phase.id,
+            @proposal.projekt_phase.projekt.page.slug,
+            anchor: "filter-subnav",
+            selected_phase_id: @proposal.projekt_phase.id,
             order: params[:order]
           ), notice: t("proposals.notice.published")
         end
       else
-        if @proposal.projekt.overview_page?
+        if @proposal.projekt_phase.projekt.overview_page?
           redirect_to projekts_path(
-            anchor: 'filter-subnav',
-            selected_phase_id: @proposal.proposal_phase.id,
+            anchor: "filter-subnav",
+            selected_phase_id: @proposal.projekt_phase.id,
             order: params[:order]
           ), notice: t("proposals.notice.published")
         else
@@ -105,7 +105,7 @@ class ProposalsController
         end
       end
     else
-      @selected_projekt = @proposal.projekt
+      @selected_projekt = @proposal.projekt_phase.projekt
       render :new
     end
   end
@@ -113,20 +113,20 @@ class ProposalsController
   def publish
     @proposal.publish
 
-    if @proposal.proposal_phase.active?
+    if @proposal.projekt_phase.active?
       redirect_to page_path(
-        @proposal.projekt.page.slug,
-        anchor: 'filter-subnav',
-        selected_phase_id: @proposal.proposal_phase.id,
-        order: 'created_at'), notice: t("proposals.notice.published")
+        @proposal.projekt_phase.projekt.page.slug,
+        anchor: "filter-subnav",
+        selected_phase_id: @proposal.projekt_phase.id,
+        order: "created_at"), notice: t("proposals.notice.published")
     else
-      redirect_to proposals_path(order: 'created_at'), notice: t("proposals.notice.published")
+      redirect_to proposals_path(order: "created_at"), notice: t("proposals.notice.published")
     end
   end
 
   def show
     super
-    @projekt = @proposal.projekt
+    @projekt = @proposal.projekt_phase.projekt
     @notifications = @proposal.notifications
     @notifications = @proposal.notifications.not_moderated
     @related_contents = Kaminari.paginate_array(@proposal.relationed_contents)
@@ -134,6 +134,11 @@ class ProposalsController
 
     if request.path != proposal_path(@proposal)
       redirect_to proposal_path(@proposal), status: :moved_permanently
+
+    elsif !@projekt.visible_for?(current_user)
+      @individual_group_value_names = @projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+
     end
 
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
@@ -182,7 +187,7 @@ class ProposalsController
 
     def proposal_params
       attributes = [:video_url, :responsible_name, :tag_list, :on_behalf_of,
-                    :geozone_id, :projekt_id, :related_sdg_list,
+                    :geozone_id, :projekt_id, :projekt_phase_id, :related_sdg_list,
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general,
                     projekt_label_ids: [],
                     image_attributes: image_attributes,

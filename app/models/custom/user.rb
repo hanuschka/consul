@@ -16,7 +16,6 @@ class User < ApplicationRecord
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
-  after_update :update_qualified_total_ballot_line_weight_for_budget_investments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
@@ -29,6 +28,8 @@ class User < ApplicationRecord
   belongs_to :registered_address, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
+
+  validate :email_should_not_be_used_by_hidden_user
 
   validates :first_name, presence: true, on: :create, if: :extended_registration?
   validates :last_name, presence: true, on: :create, if: :extended_registration?
@@ -159,8 +160,16 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
-  def projekt_manager?
-    projekt_manager.present?
+  def projekt_manager?(projekt = nil)
+    if projekt.present?
+      projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
+    else
+      projekt_manager.present?
+    end
+  end
+
+  def can_manage_projekt?(projekt)
+    projekt_manager?(projekt) || administrator?
   end
 
   def extended_registration?
@@ -195,25 +204,6 @@ class User < ApplicationRecord
 
   private
 
-    def update_qualified_total_ballot_line_weight_for_budget_investments
-      Budget::Ballot.where(user_id: id).find_each do |ballot|
-        ballot.investments.each do |investment|
-          if Setting["feature.user.skip_verification"].present?
-            new_qualified_total_ballot_line_weight = investment.budget_ballot_lines
-                                                               .joins(ballot: :user)
-                                                               .sum(:line_weight)
-          else
-            new_qualified_total_ballot_line_weight = investment.budget_ballot_lines
-                                                               .joins(ballot: :user)
-                                                               .where.not(ballot: { users: { verified_at: nil }})
-                                                               .sum(:line_weight)
-          end
-
-          investment.update!(qualified_total_ballot_line_weight: new_qualified_total_ballot_line_weight)
-        end
-      end
-    end
-
     def geozone_with_plz
       Geozone.find_with_plz(plz)
     end
@@ -225,5 +215,11 @@ class User < ApplicationRecord
       self.street_name = street_name.strip unless street_name.nil?
       self.street_number = street_number.strip unless street_number.nil?
       self.street_number_extension = street_number_extension.strip unless street_number_extension.nil?
+    end
+
+    def email_should_not_be_used_by_hidden_user
+      if User.only_hidden.find_by(email: email).present?
+        errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
+      end
     end
 end

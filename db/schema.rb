@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2023_06_28_145149) do
+=======
+ActiveRecord::Schema.define(version: 2023_05_24_113857) do
+>>>>>>> 4e02b66c14cc1cc57c1dae605ebfe973e8095cb3
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1200,7 +1204,10 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.jsonb "shape", default: {}, null: false
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
+<<<<<<< HEAD
     t.bigint "projekt_phase_id"
+=======
+>>>>>>> 4e02b66c14cc1cc57c1dae605ebfe973e8095cb3
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"

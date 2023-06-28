@@ -7,6 +7,7 @@
   <%= "data-longitude=#{projekt_phase.map_location.longitude}" if projekt_phase.map_location.present? %>
   <%= "data-zoom=#{projekt_phase.map_location.zoom}" if projekt_phase.map_location.present? %>
   <%= "data-show-map=true" if projekt_phase_feature?(projekt_phase, "show_map") %>
+  <%= "data-vc-map=true" if projekt.vc_map_enabled? %>
   <%= "data-show-summary=true" if projekt_phase_feature?(projekt_phase, "enable_summary") %>
   <%= "data-allow-video=true" if projekt_phase_feature?(projekt_phase, "enable_external_video") %>
   <%= "data-allow-attached-image=true" if projekt_phase_feature?(projekt_phase, "allow_attached_image") %>

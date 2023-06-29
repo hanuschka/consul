@@ -1,8 +1,8 @@
 class Shared::VCMapComponent < ApplicationComponent
   attr_reader :mappable, :map_location, :parent_class, :editable,
-              :process_coordinates, :projekt, :show_admin_shape, :map_style
+              :process_coordinates, :projekt, :projekt_phase, :show_admin_shape, :map_style
   delegate :map_location_latitude, :map_location_longitude, :map_location_zoom,
-           :map_location_input_id, :projekt_feature?, to: :helpers
+           :map_location_input_id, :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
   def initialize(
     mappable: nil,
@@ -11,6 +11,7 @@ class Shared::VCMapComponent < ApplicationComponent
     editable: false,
     process_coordinates: nil,
     projekt: nil,
+    projekt_phase: nil,
     show_admin_shape: false
   )
     @mappable = mappable
@@ -19,6 +20,7 @@ class Shared::VCMapComponent < ApplicationComponent
     @editable = editable
     @process_coordinates = process_coordinates || get_process_coordinates
     @projekt = projekt
+    @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
   end
 

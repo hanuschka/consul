@@ -36,12 +36,17 @@ module Takeable
   end
 
   def take_by_projekt_labels
-    return if params[:projekt_label_ids].all?(&:blank?)
+    return if params[:projekt_label_ids].blank?
 
     @resources = @resources
       .joins(:projekt_labels)
       .where(projekt_labels: { id: params[:projekt_label_ids] })
-      .distinct
+  end
+
+  def take_by_sentiment
+    return if params[:sentiment_id].blank?
+
+    @resources = @resources.where(sentiment_id: params[:sentiment_id])
   end
 
   def take_by_tag_names

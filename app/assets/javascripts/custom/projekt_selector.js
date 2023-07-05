@@ -78,8 +78,7 @@
       updateAvailableTagsSelection($projektPhase);
       updateAvailableSDGsSelection($projektPhase);
       toggleExternalFieldsHeader($projektPhase);
-      updateProjektLabelSelector($projektPhase);
-      // updateSentimentSelector($projektPhase);
+      toggleTagging($projektPhase);
 
       function updateProjektSelectorHint(projektPhaseId) {
         var $hintElement = $('[id$="_creation_recommendations"]').first();
@@ -252,7 +251,22 @@
         }
       }
 
+      function toggleTagging($projektPhase) {
+        if ($projektPhase.data("projekt-label-ids") || $projektPhase.data("sentiment-ids") ) {
+          $('legend.tagging').removeClass('hide');
+        } else {
+          $('legend.tagging').addClass('hide');
+        }
+
+        updateProjektLabelSelector($projektPhase);
+        updateSentimentSelector($projektPhase);
+      }
+
       function updateProjektLabelSelector($projektPhase) {
+        if ($projektPhase.data("projekt-labels-name")) {
+          $('#projekt_labels_selector label[for$=_projekt_labels]').text($projektPhase.data("projekt-labels-name").replaceAll("_", " "));
+        }
+
         if ($projektPhase.data("projekt-label-ids")) {
           var labelIdsToShow = $projektPhase.data("projekt-label-ids").toString().split(",");
         } else {
@@ -260,9 +274,11 @@
         }
 
         if (labelIdsToShow.join().length == 0) {
-          $('#label-for-projekt-labels-selector').addClass('hide');
+          $('#projekt_labels_selector').addClass('hide');
+          $('#projekt_labels_selector input[type=checkbox]').prop('checked', false);
+
         } else {
-          $('#label-for-projekt-labels-selector').removeClass('hide');
+          $('#projekt_labels_selector').removeClass('hide');
         }
 
         $("#projekt_labels_selector .projekt-label").each(function(index, label) {
@@ -275,6 +291,10 @@
       }
 
       function updateSentimentSelector($projektPhase) {
+        if ($projektPhase.data("sentiments-name")) {
+          $('#sentiment_selector label[for$=_sentiment_id]').text($projektPhase.data("sentiments-name").replaceAll("_", " "));
+        }
+
         if ($projektPhase.data("sentiment-ids")) {
           var sentimentIdsToShow = $projektPhase.data("sentiment-ids").toString().split(",");
         } else {
@@ -282,12 +302,13 @@
         }
 
         if (sentimentIdsToShow.join().length == 0) {
-          $('#sentiment-selector').addClass('hide');
+          $('#sentiment_selector').addClass('hide');
+          $('#sentiment_selector input[type=radio]').prop('checked', false);
         } else {
-          $('#sentiment-selector').removeClass('hide');
+          $('#sentiment_selector').removeClass('hide');
         }
 
-        $("#sentiment-selector .sentiment").each(function(index, sentiment) {
+        $("#sentiment_selector .sentiment").each(function(index, sentiment) {
           if (sentimentIdsToShow.includes($(sentiment).data("sentimentId").toString())) {
             $(sentiment).removeClass('hide');
           } else {
@@ -327,17 +348,21 @@
       $('#projekt-phase-group-for-projekt-' + projektId).show();
     },
 
-    preselectProjekt: function() {
+    preselectProjektPhase: function() {
       // get preselcted projekt id
       var selectedProjektId;
+      var selectedProjektPhaseId;
       var url = new URL(window.location.href);
-      if (url.searchParams.get('projekt_id')) {
+
+      if (url.searchParams.get('projekt_phase_id')) {
         selectedProjektId = url.searchParams.get('projekt_id');
+        selectedProjektPhaseId = url.searchParams.get('projekt_phase_id');
       } else {
         selectedProjektId = $('[id$="projekt_id"]').val();
+        selectedProjektPhaseId = $('[id$="projekt_phase_id"]').val();
       }
 
-      if ( selectedProjektId === '' ) {
+      if ( selectedProjektPhaseId === '' ) {
         return false;
       }
 
@@ -350,7 +375,7 @@
         $selectedProjekt = $('#projekt_' + $selectedProjekt.data('parentId'))
       }
 
-      // show projekts staring with top parent
+      // show projekts staring with top parent and select projekt
       $.each(projektIdsToShow, function(index, projektId) {
         var $selectedProjekt = $('#projekt_' + projektId)
         App.ProjektSelector.selectProjekt($selectedProjekt);
@@ -361,6 +386,10 @@
         $('#projekt-selector-block').prev('legend').hide();
         $('#projekt-selector-block').hide();
       }
+
+      // select projekt phase
+      var $selectedProjektPhase = $('#projekt-phase-selector-' + selectedProjektPhaseId)
+      App.ProjektSelector.selectProjektPhase($selectedProjektPhase);
     },
 
 
@@ -453,7 +482,7 @@
         App.ProjektSelector.selectLabel($(this));
       });
 
-      App.ProjektSelector.preselectProjekt();
+      App.ProjektSelector.preselectProjektPhase();
 
       // Accessibility fixes
       $('body').on('keyup', '.js-toggle-projekt-group', function(event) {

@@ -19,9 +19,7 @@ class Debate
   validates :projekt_phase, presence: true
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
-  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create #custom
-  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create #custom
-  validates :terms_general, acceptance: { allow_nil: false }, on: :create #custom
+  validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :with_current_projekt, -> { joins(projekt_phase: :projekt).merge(Projekt.current) }
   scope :by_author, ->(user_id) {
@@ -39,6 +37,8 @@ class Debate
 
   scope :seen, -> { where.not(ignored_flag_at: nil) }
   scope :unseen, -> { where(ignored_flag_at: nil) }
+
+  scope :for_public_render, -> { all }
 
   def self.debates_orders(user = nil)
     orders = %w[hot_score created_at alphabet votes_total random]

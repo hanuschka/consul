@@ -136,6 +136,7 @@ class ProjektPhase < ApplicationRecord
     unless Setting["feature.user.skip_verification"].present?
       return age_permission_problem(user) if age_permission_problem(user).present?
       return geozone_permission_problem(user) if geozone_permission_problem(user)
+      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
       return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
     end
 
@@ -227,6 +228,14 @@ class ProjektPhase < ApplicationRecord
     false
   end
 
+  def projekt_labels_label_text
+    labels_name.presence || I18n.t("custom.projekts.page.footer.sidebar.projekt_labels.title")
+  end
+
+  def sentiment_label_text
+    sentiments_name.presence || I18n.t("custom.projekts.page.footer.sidebar.sentiments.title")
+  end
+
   private
 
     def phase_specific_permission_problems(user)
@@ -259,29 +268,26 @@ class ProjektPhase < ApplicationRecord
     end
 
     def advanced_geozone_restriction_permission_problem(user)
-      case registered_address_grouping_restriction
-      when "no_restriction" || nil
-        nil
-      else
-        if user.registered_address.blank?
-          :no_registered_address
-        elsif !user.level_three_verified?
-          :not_verified
-        elsif !user_registered_address_permitted?(user)
-          :only_specific_registered_address_groupings
-        end
+      return nil if registered_address_grouping_restriction.blank? || registered_address_grouping_restriction == "no_restriction"
+
+      if user.registered_address.blank?
+        :no_registered_address
+      elsif !user.level_three_verified?
+        :not_verified
+      elsif !user_registered_address_permitted?(user)
+        :only_specific_registered_address_groupings
       end
     end
 
     def user_registered_address_permitted?(user)
-      registered_address_grouping_restrictions[registered_address_grouping_restriction]
-        .include?(user.registered_address.groupings[registered_address_grouping_restriction])
+      registered_address_grouping_restrictions[registered_address_grouping_restriction]&.include?(user.registered_address.groupings[registered_address_grouping_restriction])
     end
 
     def age_permission_problem(user)
+      return nil if user.age.blank?
       return nil if age_restriction.blank?
       return :not_verified if !user.level_three_verified?
-      return nil if age_restriction.min_age <= user.age && user.age <= age_restriction.max_age
+      return nil if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
 
       :only_specific_ages
     end

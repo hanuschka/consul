@@ -41,8 +41,8 @@ class MapLocation < ApplicationRecord
     if @proposal.present? && @proposal.projekt_phase.projekt.overview_page?
       "#009900"
 
-    elsif @proposal.present? && @proposal.projekt_phase.projekt.present?
-      @proposal.projekt_phase.projekt.color
+    elsif @proposal.present? && @proposal.sentiment.present?
+      @proposal.sentiment.color
 
     elsif @investment.present?
       @investment.projekt.color
@@ -52,6 +52,9 @@ class MapLocation < ApplicationRecord
 
     elsif @projekt.present?
       "red"
+
+    else
+      "#004a83"
     end
   end
 
@@ -61,8 +64,8 @@ class MapLocation < ApplicationRecord
     if @proposal.present? && @proposal.projekt_phase.projekt.overview_page?
       "user"
 
-    elsif @proposal.present? && @proposal.projekt_phase.projekt.present?
-      @proposal.projekt_phase.projekt.icon
+    elsif @proposal.present? && @proposal.projekt_labels.any?
+      @proposal.projekt_labels.count == 1 ? @proposal.projekt_labels.first.icon : "tags"
 
     elsif @investment.present? && @investment.projekt.present?
       @investment.projekt.icon
@@ -73,6 +76,8 @@ class MapLocation < ApplicationRecord
     elsif @projekt.present?
       @projekt.icon
 
+    else
+      "circle"
     end
   end
 

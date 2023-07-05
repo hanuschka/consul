@@ -8,7 +8,7 @@ class Debate
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id", optional: true # TODO: remove column after data migration con1538
 
-  delegate :projekt, to: :projekt_phase
+  delegate :projekt, to: :projekt_phase, allow_nil: true
   belongs_to :projekt_phase, touch: true
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt_phase
@@ -37,6 +37,8 @@ class Debate
 
   scope :seen, -> { where.not(ignored_flag_at: nil) }
   scope :unseen, -> { where(ignored_flag_at: nil) }
+
+  scope :for_public_render, -> { all }
 
   def self.debates_orders(user = nil)
     orders = %w[hot_score created_at alphabet votes_total random]

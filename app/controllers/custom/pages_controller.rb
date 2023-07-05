@@ -81,7 +81,6 @@ class PagesController < ApplicationController
   def set_debate_phase_footer_tab_variables
     @valid_orders = Debate.debates_orders(current_user)
     @valid_orders.delete("relevance")
-
     @current_order = if @valid_orders.include?(params[:order])
                        params[:order]
                      elsif helpers.projekt_feature?(@projekt, "general.set_default_sorting_to_newest") && @valid_orders.include?("created_at")
@@ -90,24 +89,9 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.debates.default_order"]
                      end
 
-    params[:filter_projekt_ids] ||= @projekt.all_children_ids.push(@projekt.id).map(&:to_s)
-    params[:projekt_label_ids] ||= []
-
-    @selected_parent_projekt = @projekt
-
-    set_resources(Debate)
-
-    @scoped_projekt_phase_ids = Debate.scoped_projekt_phase_ids_for_footer(@projekt_phase)
-
-    unless params[:search].present?
-      take_by_my_posts
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
-      take_by_projekt_phases(@scoped_projekt_phase_ids)
-      take_by_projekt_labels if params[:projekt_label_ids].any?
-    end
+    @resources = @projekt_phase.debates.for_public_render
+    take_by_projekt_labels
+    take_by_sentiment
 
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
@@ -164,11 +148,7 @@ class PagesController < ApplicationController
     @legislation_phase = @projekt_phase
     @current_section = params[:section] || "text"
 
-    @selected_parent_projekt = @projekt
-
-    @scoped_projekt_ids = @projekt.top_parent.all_children_projekts.unshift(@projekt.top_parent).pluck(:id)
-
-    @process = @projekt.legislation_process
+    @process = @projekt_phase.legislation_process
     @draft_versions_list = @process&.draft_versions&.published
 
     if params[:text_draft_version_id]
@@ -199,6 +179,8 @@ class PagesController < ApplicationController
   def set_budget_phase_footer_tab_variables
     @budget = @projekt_phase.budget
     return if @budget.blank?
+
+    @heading = @budget.headings.first
 
     @all_resources = []
 

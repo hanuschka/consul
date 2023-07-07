@@ -1,11 +1,15 @@
 <%= render "heading" %>
 <%= render "nav_bar" %>
 
-<div class="row">
-  <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.settings.page_title") %></h2>
+<% @projekt_phase_features.each do |key, value| %>
+  <div class="row">
+    <div class="column">
+      <h2><%= t("custom.admin.projekt_phases.settings.block_title.#{key}") %></h2>
+    </div>
   </div>
-</div>
+  <%= render "custom/admin/projekt_phases/settings/features_table", features: value %>
+<% end %>
 
-<%= render "custom/admin/projekt_phases/settings/features_table", features: @projekt_phase_features %>
-<%= render "custom/admin/projekt_phases/settings/options_table", options: @projekt_phase_options %>
+<% @projekt_phase_options.each do |key, value| %>
+  <%= render "custom/admin/projekt_phases/settings/options_table", options: value %>
+<% end %>

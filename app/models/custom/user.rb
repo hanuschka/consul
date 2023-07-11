@@ -29,6 +29,8 @@ class User < ApplicationRecord
   belongs_to :registered_address, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :verified, -> { where.not(verified_at: nil) }
+  scope :to_reverify, -> { verified.where("verified_at < ?", 1.year.ago).where(reverify: true) }
 
   validate :email_should_not_be_used_by_hidden_user
 
@@ -111,6 +113,14 @@ class User < ApplicationRecord
       verified_at: Time.current,
       unique_stamp: prepare_unique_stamp,
       geozone_id: geozone_with_plz&.id
+    )
+  end
+
+  def unverify!
+    update_columns(
+      verified_at: nil,
+      unique_stamp: nil,
+      geozone_id: nil
     )
   end
 
@@ -201,6 +211,16 @@ class User < ApplicationRecord
     return registered_address.formatted_name if registered_address.present?
 
     "#{street_name} #{street_number}#{street_number_extension}"
+  end
+
+  def reverify!
+    return if organization?
+
+    unverify!
+
+    unless attempt_verification
+      Mailer.reverification_failed(self).deliver_later
+    end
   end
 
   private

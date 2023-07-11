@@ -331,6 +331,8 @@ de:
               note: "Der Banner sollte mindestens 200 Pixel hoch und 1920 Pixel breit sein. Sie können ein Bild des folgenden Formats hochladen: %{accepted_content_types}, bis zu %{max_file_size} MB."
               title: Seitenbanner
       users:
+        reverify_button_text: Verifizierung aktuallisieren
+        reverify_success_notice: Reverifizierungsprozess läuft
         columns:
           first_name: Vorname
           last_name: Nachname

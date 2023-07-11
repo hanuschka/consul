@@ -17,6 +17,7 @@ class Admin::UsersController < Admin::BaseController
   def verify
     @user = User.find(params[:id])
     if @user.verify!
+      @user.update!(reverify: false)
       @verification_result_notice = "Benutzer verifiziert"
       Mailer.manual_verification_confirmation(@user).deliver_later
     else
@@ -26,6 +27,11 @@ class Admin::UsersController < Admin::BaseController
 
   def unverify
     @user = User.find(params[:id])
-    @user.update!(verified_at: nil, geozone: nil, unique_stamp: nil)
+    @user.update!(verified_at: nil, geozone: nil, unique_stamp: nil, reverify: true)
+  end
+
+  def reverify
+    VerificationServices::UsersReverifier.call
+    redirect_to admin_users_path, notice: t("custom.admin.users.reverify_success_notice")
   end
 end

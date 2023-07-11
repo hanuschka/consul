@@ -21,7 +21,48 @@ class RemoteCensusApi
     end
 
     def valid?
-      @body.css("ns2|ergebnisstatus code", "ns2" => "http://www.osci.de/xmeld30").text == "01"
+      debugger
+      response_code_matched? &&
+        first_name_matched? &&
+        last_name_matched? &&
+        house_number_matched? &&
+        postleitzahl_matched? &&
+        street_matched? &&
+        city_matched?
+    end
+
+    def response_code_matched?
+      @body.xpath("//ns2:ergebnisstatus/code", "ns2" => "http://www.osci.de/xmeld30").text == "01"
+    end
+
+    def first_name_matched?
+      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld30").text ==
+        @body.xpath("//ns2:datenZurAnfrage //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld30").text
+    end
+
+    def last_name_matched?
+      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:nachname", "ns2" => "http://www.osci.de/xmeld30").text ==
+        @body.xpath("//ns2:datenZurAnfrage //ns2:nachname/name", "ns2" => "http://www.osci.de/xmeld30").text
+    end
+
+    def house_number_matched?
+      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummer", "ns2" => "http://www.osci.de/xmeld30").text ==
+        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummer", "ns2" => "http://www.osci.de/xmeld30").text
+    end
+
+    def postleitzahl_matched?
+      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl", "ns2" => "http://www.osci.de/xmeld30").text ==
+        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl", "ns2" => "http://www.osci.de/xmeld30").text
+    end
+
+    def street_matched?
+      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //strasse", "ns2" => "http://www.osci.de/xmeld30").text ==
+        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/strasse", "ns2" => "http://www.osci.de/xmeld30").text
+    end
+
+    def city_matched?
+      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //wohnort", "ns2" => "http://www.osci.de/xmeld30").text ==
+        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/wohnort", "ns2" => "http://www.osci.de/xmeld30").text
     end
   end
 

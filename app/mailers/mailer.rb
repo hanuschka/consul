@@ -162,6 +162,15 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def reverification_failed(user)
+    @email_to = user.email
+    @user = user
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.reverification_failed.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)

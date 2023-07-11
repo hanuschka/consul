@@ -166,6 +166,13 @@ module Abilities
 
       can [:manage], ProjektLabel
       can [:manage], Sentiment
+      can [:manage], ProjektPhase
+      can [:manage], ProjektQuestion
+      can [:manage], ProjektLivestream
+      can [:manage], ProjektArgument
+      can [:manage], ProjektEvent
+      can [:manage], MapLocation
+      can [:manage], MapLayer
     end
   end
 end

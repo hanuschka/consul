@@ -18,6 +18,7 @@ class Projekt < ApplicationRecord
   belongs_to :parent, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
 
@@ -45,7 +46,6 @@ class Projekt < ApplicationRecord
   has_many :debates, through: :debate_phases
   has_many :proposals, through: :proposal_phases
   has_many :budgets, through: :budget_phases
-  has_many :comments, through: :comment_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
   has_many :projekt_livestreams, through: :livestream_phases
@@ -224,18 +224,17 @@ class Projekt < ApplicationRecord
   end
 
   def selectable_in_selector?(controller_name, user)
-    return true if controller_name == "processes"
     return false if user.nil?
 
     if controller_name == "proposals"
-      if proposals_selectable_by_admins_only? && !user.can_manage_projekt?(self)
+      if proposal_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
         false
       else
         proposal_phases.any? { |phase| phase.selectable_by?(user) }
       end
 
     elsif controller_name == "debates"
-      if debates_selectable_by_admins_only? && !user.can_manage_projekt?(self)
+      if debate_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
         false
       else
         debate_phases.any? { |phase| phase.selectable_by?(user) }
@@ -245,8 +244,9 @@ class Projekt < ApplicationRecord
       voting_phases.any? { |phase| phase.selectable_by?(user) }
 
     elsif controller_name == "processes"
-      # return false if proposals_selectable_by_admins_only? && user.administrator.blank?
-      legislation_phases.any? { |phase| phase.selectable_by?(user) }
+      legislation_phases
+        .reject { |lp| lp.legislation_process.present? || !lp.selectable_by?(user) }
+        .any?
     end
   end
 
@@ -271,20 +271,6 @@ class Projekt < ApplicationRecord
     activated? &&
       total_duration_end.present? &&
       total_duration_end < timestamp
-  end
-
-  def debates_selectable_by_admins_only?
-    projekt_settings.
-      find_by(projekt_settings: { key: "projekt_feature.debates.only_admins_create_debates" }).
-      value.
-      present?
-  end
-
-  def proposals_selectable_by_admins_only?
-    projekt_settings.
-      find_by(projekt_settings: { key: "projekt_feature.proposals.only_admins_create_proposals" }).
-      value.
-      present?
   end
 
   def activated_children
@@ -461,10 +447,20 @@ class Projekt < ApplicationRecord
     !visible_for?(user)
   end
 
+  def comments_allowed?(user = nil)
+    true
+  end
+
   private
 
     def create_corresponding_page
-      page = SiteCustomization::Page.new(title: name, slug: form_page_slug, projekt: self)
+      page = SiteCustomization::Page.new(
+        title: name,
+        slug: form_page_slug,
+        status: "published",
+        projekt: self,
+        content: ""
+      )
 
       if page.save
         self.page = page

@@ -4,6 +4,7 @@ en:
       subject: "Your investment proposal '%{title}' has been marked as unfeasible."
       hi: "Dear User"
       rejected: "Unfortunately, after examining your proposal \"%{title}\", we have to inform you that it is not valid and therefore cannot be put to the vote."
+      proposal_link_html: "Please see more info by visiting this link: <a href=\"%{link_url}\">link to the proposal.</a>"
       thank_you: "Thank you very much for submitting your proposal"
       sincerely: "Sincerely"
     manual_verification_confirmation:

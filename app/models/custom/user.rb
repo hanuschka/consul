@@ -15,6 +15,7 @@ class User < ApplicationRecord
   before_validation :strip_whitespace
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
+  after_create :attempt_verification
   after_create :take_votes_from_erased_user
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -221,5 +222,30 @@ class User < ApplicationRecord
       if User.only_hidden.find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
       end
+    end
+
+    def attempt_verification
+      return false unless residency_valid?
+
+      unless organization?
+        verify!
+      end
+    end
+
+    def census_data
+      RemoteCensusApi.new.call(first_name: first_name,
+                               last_name: last_name,
+                               street_name: street_name,
+                               street_number: street_number,
+                               plz: plz,
+                               city_name: city_name,
+                               date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),
+                               gender: gender)
+    end
+
+    def residency_valid?
+      return true if organization?
+
+      census_data.valid?
     end
 end

@@ -57,10 +57,12 @@ class Verification::Residence
     )
 
     user.save!
+    user.verify!
   end
 
   def document_required?
-    Setting["extra_fields.verification.check_documents"].present?
+    false
+    # Setting["extra_fields.verification.check_documents"].present?
   end
 
   def show_no_registered_address_field?
@@ -70,4 +72,29 @@ class Verification::Residence
       form_registered_address_street_id == "0" ||
       form_registered_address_id == "0"
   end
+
+  private
+
+    def census_data
+      if form_registered_address_id.present?
+        registered_address = RegisteredAddress.find(form_registered_address_id)
+        street_name = registered_address.registered_address_street.name
+        street_number = registered_address.street_number
+        plz = registered_address.registered_address_street.plz
+        city_name = registered_address.registered_address_city.name
+      end
+
+      @census_data ||= RemoteCensusApi.new.call(first_name: first_name,
+                                                last_name: last_name,
+                                                street_name: street_name,
+                                                street_number: street_number,
+                                                plz: plz,
+                                                city_name: city_name,
+                                                date_of_birth: date_of_birth,
+                                                gender: gender)
+    end
+
+    def residency_valid?
+      census_data.valid?
+    end
 end

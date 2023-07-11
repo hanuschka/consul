@@ -128,6 +128,9 @@ de:
           random: Zufällig
           confidence_score: Am besten bewertet
           price: Nach Preis
+          newest: Neueste
+          oldest: Älteste
+          most_voted: Am besten bewertet
       share:
         message: "Ich habe einen Investitionsvorschlag %{title} in %{handle} erstellt. Erstellen Sie auch einen Investitionsvorschlag!"
       show:

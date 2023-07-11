@@ -4,6 +4,7 @@ de:
       subject: "Ihr Ausgabenvorschlag '%{title}' wurde als undurchführbar markiert"
       hi: "Liebe*r Benutzer*in,"
       rejected: "vielen Dank für die Einreichung Ihres Vorschlags \"%{title}\". Leider wurde Ihr Vorschlag mit folgender Begründung abgelehnt:"
+      proposal_link_html: "Sie können die Begründung der Ablehnung auch direkt auf der Beteiligungsplattform einsehen: <a href=\"%{link_url}\">Link zum Vorschlag</a>."
       thank_you: Vielen Dank für Ihre Beteiligung!
       sincerely: Mit freundlichen Grüßen
     manual_verification_confirmation:

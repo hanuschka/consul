@@ -11,6 +11,12 @@
         signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
   </p>
 
+  <p>
+    <h5>
+      <%= t("devise_views.users.registrations.new.data_as_on_id_card") %>
+    </h5>
+  </p>
+
   <%= render_custom_block "registration_form_hint" %>
 
   <div class="row">

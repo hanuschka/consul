@@ -21,7 +21,6 @@ class RemoteCensusApi
     end
 
     def valid?
-      debugger
       response_code_matched? &&
         first_name_matched? &&
         last_name_matched? &&

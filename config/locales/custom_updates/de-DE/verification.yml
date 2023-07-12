@@ -3,7 +3,7 @@ de:
     verification:
       residence:
         new:
-          first_name: Vorname
+          first_name: Vorname(n)
           last_name: Nachname
           street_name: Straße
           street_number: Hausnummer

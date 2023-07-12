@@ -15,12 +15,10 @@ class Budget
     scope :sort_by_newest, -> { reorder(created_at: :desc) }
 
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
-    validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create #custom
-    validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create #custom
-    validates :terms_general, acceptance: { allow_nil: false }, on: :create #custom
+    validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
     def self.sort_by_ballot_line_weight(budget = nil)
-      order(qualified_votes_count: :desc)
+      order(qualified_total_ballot_line_weight: :desc)
     end
 
     def register_selection(user, vote_weight = 1)
@@ -37,6 +35,16 @@ class Budget
       else
         cached_votes_up + physical_votes
       end
+    end
+
+    def total_ballot_votes
+      qualified_total_ballot_line_weight
+    end
+
+    def total_ballot_votes_percentage
+      return 0 if total_ballot_votes.zero?
+
+      (total_ballot_votes.to_f / heading.total_ballot_votes.to_f) * 100.0
     end
 
     def permission_problem(user)

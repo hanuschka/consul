@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "components", "budgets", "investments", "votes_component").to_s
 
 class Budgets::Investments::VotesComponent < ApplicationComponent
-  delegate :link_to_signin, :link_to_signup, :link_to_verify_account, :projekt_feature?, to: :helpers
+  delegate :link_to_signin, :link_to_signup, :link_to_verify_account, :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
   private
 
@@ -16,7 +16,8 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
           city: Setting["org_name"],
           geozones: investment.budget.budget_phase.geozone_restrictions_formatted,
           age_restriction: investment.budget.budget_phase.age_restriction_formatted,
-          restricted_streets: investment.budget.budget_phase.street_restrictions_formatted
+          restricted_streets: investment.budget.budget_phase.street_restrictions_formatted,
+          individual_group_values: investment.budget.budget_phase.individual_group_value_restriction_formatted
          )
       end
     end

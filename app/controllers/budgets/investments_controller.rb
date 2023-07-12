@@ -50,7 +50,6 @@ module Budgets
         redirect_to root_path
       end
 
-
       @investments = investments.page(params[:page]).per(PER_PAGE).for_render
 
       @investment_ids = @investments.ids
@@ -64,6 +63,11 @@ module Budgets
     end
 
     def show
+      if !@investment.projekt.visible_for?(current_user)
+        @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)
+        render "custom/pages/forbidden", layout: false
+      end
+
       @commentable = @investment
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
@@ -77,6 +81,7 @@ module Budgets
 
       if @investment.save
         Mailer.budget_investment_created(@investment).deliver_later
+        NotificationServices::NewBudgetInvestmentNotifier.call(@investment.id) #custom
         redirect_to budget_investment_path(@budget, @investment),
                     notice: t("flash.actions.create.budget_investment")
       else

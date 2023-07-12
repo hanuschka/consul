@@ -32,7 +32,7 @@ class DebatesController < ApplicationController
 
     @featured_debates = Debate.featured
 
-    @scoped_projekt_ids = Debate.scoped_projekt_ids_for_index
+    @scoped_projekt_ids = Debate.scoped_projekt_ids_for_index(current_user)
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
@@ -59,7 +59,8 @@ class DebatesController < ApplicationController
   end
 
   def edit
-    @selected_projekt = @debate.projekt
+    @selected_projekt = @debate.projekt_phase.projekt
+    params[:projekt_phase_id] = @debate.projekt_phase.id
   end
 
   def create
@@ -70,26 +71,26 @@ class DebatesController < ApplicationController
       track_event
       NotificationServices::NewDebateNotifier.new(@debate.id).call
 
-      if @debate.debate_phase.active?
-        if @debate.projekt.overview_page?
+      if @debate.projekt_phase.active?
+        if @debate.projekt_phase.projekt.overview_page?
           redirect_to projekts_path(
-            anchor: 'filter-subnav',
-            selected_phase_id: @debate.debate_phase.id,
+            anchor: "filter-subnav",
+            selected_phase_id: @debate.projekt_phase.id,
             order: params[:order]
           ), notice: t("flash.actions.create.debate")
         else
           redirect_to page_path(
-            @debate.projekt.page.slug,
-            anchor: 'filter-subnav',
-            selected_phase_id: @debate.debate_phase.id,
+            @debate.projekt_phase.projekt.page.slug,
+            anchor: "filter-subnav",
+            selected_phase_id: @debate.projekt_phase.id,
             order: params[:order]
           ), notice: t("flash.actions.create.debate")
         end
       else
-        if @debate.projekt.overview_page?
+        if @debate.projekt_phase.projekt.overview_page?
           redirect_to projekts_path(
-            anchor: 'filter-subnav',
-            selected_phase_id: @debate.debate_phase.id,
+            anchor: "filter-subnav",
+            selected_phase_id: @debate.projekt_phase.id,
             order: params[:order]
           ), notice: t("flash.actions.create.debate")
         else
@@ -99,7 +100,7 @@ class DebatesController < ApplicationController
         end
       end
     else
-      @selected_projekt = @debate.projekt
+      @selected_projekt = @debate.projekt_phase.projekt
       render :new
     end
   end
@@ -107,10 +108,17 @@ class DebatesController < ApplicationController
   def show
     super
 
-    @projekt = @debate.projekt
-
+    @projekt = @debate.projekt_phase.projekt
     @related_contents = Kaminari.paginate_array(@debate.relationed_contents).page(params[:page]).per(5)
-    redirect_to debate_path(@debate), status: :moved_permanently if request.path != debate_path(@debate)
+
+    if request.path != debate_path(@debate)
+      redirect_to debate_path(@debate), status: :moved_permanently
+
+    elsif !@projekt.visible_for?(current_user)
+      @individual_group_value_names = @projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+
+    end
 
     @geozones = Geozone.all
 
@@ -134,8 +142,9 @@ class DebatesController < ApplicationController
   private
 
   def debate_params
-    attributes = [:tag_list, :projekt_id, :related_sdg_list, :on_behalf_of,
-                  :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general,
+    attributes = [:tag_list, :projekt_id, :projekt_phase_id, :related_sdg_list, :on_behalf_of,
+                  :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
+                  :sentiment_id,
                   projekt_label_ids: [],
                   image_attributes: image_attributes,
                   documents_attributes: document_attributes]

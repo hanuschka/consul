@@ -11,6 +11,8 @@
         signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
   </p>
 
+  <%= render_custom_block "registration_form_hint" %>
+
   <div class="row">
     <div class="small-12 column">
 
@@ -122,6 +124,17 @@
         </div>
       <% end %>
 
+      <% if IndividualGroup.soft.visible.any? %>
+        <% IndividualGroup.soft.visible.each do |individual_group| %>
+          <div class="options-group">
+            <label><%= individual_group.name %></label>
+            <%= f.collection_check_boxes :individual_group_value_ids, individual_group.individual_group_values, :id, :name do |b| %>
+              <%= b.label(class: "checkbox-label checkbox-label--inline") { b.check_box + b.text } %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+
       <%= f.password_field :password, autocomplete: "off",
                            placeholder: t("devise_views.users.registrations.new.password_label") %>
 
@@ -148,7 +161,7 @@
       <%= f.check_box :terms_general,
         title: t("custom.terms.general.title"),
         label: t("custom.terms.general.label",
-                 terms_link: link_to(t("custom.terms.terms_link.text"), "/privacy",
+                 terms_link: link_to(t("custom.terms.terms_link.text"), "/conditions",
                                      title: t("shared.target_blank"), target: "_blank")),
         class: "checkbox-label--aligned" %>
 

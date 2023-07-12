@@ -4,7 +4,7 @@ de:
       users:
         registrations:
           new:
-            first_name_label: Vorname
+            first_name_label: Vorname(n)
             last_name_label: Nachname
             street_name_label: Straße
             street_number_label: Hausnummer

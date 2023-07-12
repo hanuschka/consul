@@ -18,6 +18,7 @@ class Projekt < ApplicationRecord
   belongs_to :parent, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
 
@@ -45,7 +46,6 @@ class Projekt < ApplicationRecord
   has_many :debates, through: :debate_phases
   has_many :proposals, through: :proposal_phases
   has_many :budgets, through: :budget_phases
-  has_many :comments, through: :comment_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
   has_many :projekt_livestreams, through: :livestream_phases
@@ -224,7 +224,6 @@ class Projekt < ApplicationRecord
   end
 
   def selectable_in_selector?(controller_name, user)
-    return true if controller_name == "processes"
     return false if user.nil?
 
     if controller_name == "proposals"
@@ -245,7 +244,9 @@ class Projekt < ApplicationRecord
       voting_phases.any? { |phase| phase.selectable_by?(user) }
 
     elsif controller_name == "processes"
-      legislation_phases.any? { |phase| phase.selectable_by?(user) }
+      legislation_phases
+        .reject { |lp| lp.legislation_process.present? || !lp.selectable_by?(user) }
+        .any?
     end
   end
 
@@ -450,10 +451,20 @@ class Projekt < ApplicationRecord
     projekt_settings.find_by(key: "projekt_feature.general.vc_map_enabled")&.enabled?
   end
 
+  def comments_allowed?(user = nil)
+    true
+  end
+
   private
 
     def create_corresponding_page
-      page = SiteCustomization::Page.new(title: name, slug: form_page_slug, projekt: self)
+      page = SiteCustomization::Page.new(
+        title: name,
+        slug: form_page_slug,
+        status: "published",
+        projekt: self,
+        content: ""
+      )
 
       if page.save
         self.page = page

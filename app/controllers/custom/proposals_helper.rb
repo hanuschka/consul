@@ -12,9 +12,31 @@ module ProposalsHelper
 
   def json_data
     proposal = Proposal.find(params[:id])
+
+    labels = []
+    proposal.projekt_labels.each do |label|
+      label = {
+        name: label.name,
+        icon: label.icon
+      }
+      labels.push(label)
+    end
+
+    sentiment = {}
+    if proposal.sentiment.present?
+      sentiment["name"] = proposal.sentiment.name
+      sentiment["background-color"] = proposal.sentiment.color
+      sentiment["color"] = helpers.pick_text_color(proposal.sentiment.color)
+    end
+
+    image_url = proposal.image.present? ? url_for(proposal.image.variant(:popup)) : nil
+
     data = {
       proposal_id: proposal.id,
-      proposal_title: proposal.title
+      proposal_title: proposal.title,
+      image_url: image_url,
+      labels: labels,
+      sentiment: sentiment
     }.to_json
 
     respond_to do |format|

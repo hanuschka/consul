@@ -18,6 +18,8 @@ Rails.application.config.assets.precompile += Dir.glob("#{Rails.root}/app/assets
 Rails.application.config.assets.precompile += Dir.glob("#{Rails.root}/app/assets/javascripts/ckeditor/plugins/**/*.png")
 Rails.application.config.assets.precompile += Dir.glob("#{Rails.root}/app/assets/javascripts/ckeditor/plugins/**/*.css")
 
+Rails.application.config.assets.precompile += Dir.glob("#{Rails.root}/vendor/assets/javascripts/vcmap/**/*.js") #custom
+
 Rails.application.config.assets.precompile += %w[stat_graphs.js]
 Rails.application.config.assets.precompile += %w[dashboard_graphs.js]
 Rails.application.config.assets.precompile += %w[application-rtl.css]

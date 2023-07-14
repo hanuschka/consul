@@ -237,12 +237,14 @@ class Projekt < ApplicationRecord
 
       proposal_phase.selectable_by?(user)
     elsif controller_name == "debates"
-      return false if debates_selectable_by_admins_only? && !user_has_admin_rights
+      false
+      # return false if debates_selectable_by_admins_only? && !user_has_admin_rights
 
-      debate_phase.selectable_by?(user)
+      # debate_phase.selectable_by?(user)
     elsif controller_name == "processes"
+      false
       # return false if proposals_selectable_by_admins_only? && user.administrator.blank?
-      legislation_phase.selectable_by?(user)
+      # legislation_phase.selectable_by?(user)
     end
   end
 

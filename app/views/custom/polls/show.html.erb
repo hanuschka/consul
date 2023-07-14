@@ -12,14 +12,8 @@
 <main>
   <div class="polls-show">
     <div class="row">
-      <div class="column margin-bottom">
-        <%= render partial: "shared/participation/projekt_bar", locals: { resource: @poll } %>
-      </div>
-    </div>
-
-    <div class="row">
       <div class="column small-12 medium-9">
-        <h1><%= @poll.name %></h1>
+        <h1 class="margin-top"><%= @poll.name %></h1>
       </div>
     </div>
 

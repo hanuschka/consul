@@ -6,7 +6,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  font-size: 18px;
+  font-size: 12px;
   font-weight: 700;
   border-radius: 30px;
   background-color: #0091c8;
@@ -19,5 +19,9 @@
     &:hover {
       color: #fff;
     }
+  }
+
+  @media (min-width: 40rem) {
+    font-size: 18px;
   }
 }

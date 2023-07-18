@@ -1,3 +1,15 @@
-$body-font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif !important !default;
-$header-font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif !important !default;
+$body-font-family: "asap" !important;
+$header-font-family: "asap" !important;
 $base-font-size:      16px;
+
+@font-face {
+  font-family: "asap";
+  src: font-url("Asap-VariableFont_wght.ttf") format("truetype");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "asap-italic";
+  src: font-url("Asap-Italic-VariableFont_wght.ttf") format("truetype");
+  font-style: italic;
+}

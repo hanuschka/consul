@@ -24,3 +24,14 @@ resources :projekt_livestreams, only: [:show] do
     post :new_questions
   end
 end
+
+resources :projekt_phases, only: [] do
+  member do
+    get :selector_hint_html
+    get :form_heading_text
+    get :map_html
+    post :toggle_subscription
+  end
+end
+
+patch "/projekt_subscriptions/:id/toggle_subscription", to: "projekt_subscriptions#toggle_subscription", as: :toggle_subscription_projekt_subscription

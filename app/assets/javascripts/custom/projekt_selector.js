@@ -128,10 +128,15 @@
             type: "GET",
             dataType: "html",
             success: function(data) {
-              App.Map.destroy();
-              $('div.map_location.map').first().replaceWith(data)
-              App.Map.initialize();
-              App.Map.maps[0].setView([$projektPhase.data('latitude'), $projektPhase.data('longitude')], $projektPhase.data('zoom')).invalidateSize();
+              if ( $projektPhase.data('vcMap') ) {
+                $('div.map_location.map').first().replaceWith(data)
+                App.VCMap.initialize();
+              } else {
+                App.Map.destroy();
+                $('div.map_location.map').first().replaceWith(data)
+                App.Map.initialize();
+                App.Map.maps[0].setView([$projektPhase.data('latitude'), $projektPhase.data('longitude')], $projektPhase.data('zoom')).invalidateSize();
+              }
             }
           });
         } else {
@@ -170,45 +175,6 @@
           $('#external-video-url-fields').show();
         } else {
           $('#external-video-url-fields').hide();
-        }
-      }
-
-      function updateAvailableTagsSelection($projektPhase) {
-        $('[id$=_tag_list_predefined]').val('')
-
-        if ( $projektPhase.data('allow-tags') ) {
-          $('#category_tags').show();
-          $('#category_tags a').show();
-
-          if ( $projektPhase.data("tag-ids") ) {
-            $('#category_tags a').each(function() {
-              if ( !$projektPhase.data("tag-ids").toString().split(',').includes($(this).data('categoryId').toString()) ) {
-                $(this).hide();
-              }
-            })
-          }
-        } else {
-          $('#category_tags').hide();
-        }
-      }
-
-      function updateAvailableSDGsSelection($projektPhase) {
-        // $('[id$=_tag_list_predefined]').val('')
-
-        if ( $projektPhase.data('allow-sdgs') ) {
-          $('#sdgs-selector').show();
-          $('#sdgs-selector label[for*=_sdg_goal_ids_]').show();
-
-          if ( $projektPhase.data("sdg-ids") ) {
-            $('#sdgs-selector label[for*=_sdg_goal_ids_]').each(function() {
-              if ( !$projektPhase.data("sdg-ids").toString().split(',').includes($(this).data('sdgGoalId').toString()) ) {
-                $(this).hide();
-              }
-            })
-          }
-
-        } else {
-          $('#sdgs-selector').hide();
         }
       }
 

@@ -45,9 +45,8 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.show_in_individual_list": "",
         "projekt_feature.general.allow_downvoting_comments": "active",
         "projekt_feature.general.set_default_sorting_to_newest": "",
-
-        "projekt_feature.general.enable_tags": "",
-        "projekt_feature.general.enable_sdgs": "",
+        "projekt_feature.general.show_in_sidebar_filter": 'active',
+        "projekt_feature.general.vc_map_enabled": '',
 
         "projekt_feature.sidebar.show_notification_subscription_toggler": "active",
         "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": "active",

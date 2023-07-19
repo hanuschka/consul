@@ -57,11 +57,10 @@ class Shared::VCMapComponent < ApplicationComponent
         altitude_input_selector: "##{map_location_input_id(parent_class, "altitude")}",
         zoom_input_selector: "##{map_location_input_id(parent_class, "zoom")}",
         shape_input_selector: "##{map_location_input_id(parent_class, "shape")}",
+        default_color: "#00ff00",
 
         editable: editable
       }
-
-      options[:default_color] = projekt.color if projekt.present?
 
       options
     end

@@ -1,17 +1,16 @@
 <div class="map proposals-map not-print">
-  <% if @projekt_phase.present? %>
+  <% if @projekt_phase %>
     <%= render Shared::VCMapComponent.new(
       map_location: @projekt_phase.map_location,
       parent_class: "proposals",
-      process_coordinates: @proposals_coordinates
+      process_coordinates: @proposals_coordinates,
+      projekt_phase: @projekt_phase
     ) %>
-
   <% else %>
     <%= render Shared::VCMapComponent.new(
       parent_class: "proposals",
       process_coordinates: @proposals_coordinates
     ) %>
-
   <% end %>
 </div>
 <div class='expand-overview-map-wrapper'>

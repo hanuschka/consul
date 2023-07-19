@@ -8,22 +8,23 @@
 
   <% if feature?(:map) && map_location_available?(@proposal) %>
     <% if @proposal.projekt.vc_map_enabled? %>
-      <%= render Shared::VCMapComponent.new(
-        mappable: @proposal,
-        map_location: @proposal.map_location || @proposal.projekt_phase.projekt.map_location_with_admin_shape,
-        parent_class: "proposal",
-        projekt: @proposal.projekt_phase.projekt,
-        show_admin_shape: @proposal.projekt_phase.projekt.map_location.show_admin_shape?
-      ) %>
-
-    <% else %>
       <div class="margin-bottom not-print">
-        <%= render Shared::MapComponent.new(
+        <%= render Shared::VCMapComponent.new(
           mappable: @proposal,
           map_location: @proposal.map_location || @proposal.projekt&.map_location_with_admin_shape,
           parent_class: "proposal",
           projekt: @proposal.projekt,
           show_admin_shape: @proposal.projekt.map_location.show_admin_shape?
+        ) %>
+      </div>
+    <% else %>
+      <div class="margin-bottom not-print">
+        <%= render Shared::MapComponent.new(
+          mappable: @proposal,
+          map_location: @proposal.map_location || @proposal.projekt_phase.projekt.map_location_with_admin_shape,
+          parent_class: "proposal",
+          projekt: @proposal.projekt_phase.projekt,
+          show_admin_shape: @proposal.projekt_phase.projekt.map_location.show_admin_shape?
         ) %>
       </div>
     <% end %>
@@ -67,10 +68,6 @@
       <%= auto_link_already_sanitized_html wysiwyg(@proposal.description) %>
     </div>
   <% end %>
-
-  <div class='margin-top margin-bottom'>
-    <%= render "shared/tags", taggable: @proposal, limit: 5 %>
-  </div>
 
   <% if @proposal.video_url.present? %>
     <div class="video-link not-print">

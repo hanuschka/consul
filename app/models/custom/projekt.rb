@@ -93,6 +93,11 @@ class Projekt < ApplicationRecord
       .where("act.key": "projekt_feature.main.activate", "act.value": "active")
   }
 
+  scope :not_activated, -> {
+    joins("INNER JOIN projekt_settings nact ON projekts.id = nact.projekt_id")
+      .where("nact.key": "projekt_feature.main.activate", "nact.value": [nil, ""])
+  }
+
   scope :current, ->(timestamp = Time.zone.today) {
     activated
       .where("total_duration_start IS NULL OR total_duration_start <= ?", timestamp)
@@ -149,6 +154,10 @@ class Projekt < ApplicationRecord
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
   }
 
+  scope :index_order_drafts, -> {
+    not_activated
+  }
+
   scope :not_in_individual_list, -> {
     joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": [nil, ""])
@@ -159,16 +168,17 @@ class Projekt < ApplicationRecord
       .where("siop.key": "projekt_feature.general.show_in_overview_page", "siop.value": "active")
   }
 
+  scope :show_in_homepage, -> {
+    joins("INNER JOIN projekt_settings sihp ON projekts.id = sihp.projekt_id")
+      .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
+  }
+
   scope :visible_in_menu, ->(user = nil) {
     joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
       .with_order_number
       .select { |p| p.visible_for?(user) }
   }
-
-  scope :show_in_sidebar, ->(resources_name) {
-    joins("INNER JOIN projekt_settings sis ON projekts.id = sis.projekt_id")
-      .where("sis.key": "projekt_feature.#{resources_name}.show_in_sidebar_filter", "sis.value": "active") }
 
   scope :with_active_feature, ->(projekt_feature_key) {
     joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
@@ -436,11 +446,15 @@ class Projekt < ApplicationRecord
   end
 
   def visible_for?(user = nil)
-    return true if individual_group_values.hard.empty?
-    return false unless user.present?
-    return true if user.administrator?
+    return true if user.present? && user.administrator?
+    return true if user.present? && user.projekt_manager?(self)
+    return false unless activated?
 
-    (individual_group_values.hard.ids & user.individual_group_values.hard.ids).any?
+    if individual_group_values.hard.empty?
+      true
+    else
+      user.present? && (individual_group_values.hard.ids & user.individual_group_values.hard.ids).any?
+    end
   end
 
   def hidden_for?(user = nil)
@@ -449,6 +463,10 @@ class Projekt < ApplicationRecord
 
   def comments_allowed?(user = nil)
     true
+  end
+
+  def vc_map_enabled?
+    projekt_settings.find_by(key: "projekt_feature.general.vc_map_enabled")&.enabled?
   end
 
   private

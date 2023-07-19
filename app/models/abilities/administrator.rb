@@ -66,8 +66,10 @@ module Abilities
       can :publish, Budget, id: Budget.drafting.ids
       can :calculate_winners, Budget, &:reviewing_ballots?
       can :read_results, Budget do |budget|
-        budget.balloting_finished? && budget.has_winning_investments?
+        budget.balloting_or_later?
+        # budget.balloting_finished? && budget.has_winning_investments?
       end
+      can :recalculate_winners, Budget, &:balloting_or_later?
 
       can [:read, :create, :update, :destroy], Budget::Group
       can [:read, :create, :update, :destroy], Budget::Heading
@@ -84,7 +86,7 @@ module Abilities
 
       can [:index, :create, :update, :destroy], Geozone
 
-      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments], Poll
+      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments, :send_notifications], Poll
       can [:read, :create, :update, :destroy, :available], Poll::Booth
       can [:search, :create, :index, :destroy], ::Poll::Officer
       can [:create, :destroy, :manage], ::Poll::BoothAssignment
@@ -148,7 +150,7 @@ module Abilities
 
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes], Poll::Question
-      can [:show], Projekt
+      can [:manage], Projekt
       can [:verify, :unverify], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
@@ -163,6 +165,14 @@ module Abilities
       can [:results, :stats], Poll, projekt: { projekt_settings: { key: "projekt_feature.polls.intermediate_poll_results_for_admins", value: "active" }}
 
       can [:manage], ProjektLabel
+      can [:manage], Sentiment
+      can [:manage], ProjektPhase
+      can [:manage], ProjektQuestion
+      can [:manage], ProjektLivestream
+      can [:manage], ProjektArgument
+      can [:manage], ProjektEvent
+      can [:manage], MapLocation
+      can [:manage], MapLayer
     end
   end
 end

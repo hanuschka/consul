@@ -16,7 +16,6 @@ class User < ApplicationRecord
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
-  after_update :update_qualified_total_ballot_line_weight_for_budget_investments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
@@ -161,8 +160,16 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
-  def projekt_manager?
-    projekt_manager.present?
+  def projekt_manager?(projekt = nil)
+    if projekt.present?
+      projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
+    else
+      projekt_manager.present?
+    end
+  end
+
+  def can_manage_projekt?(projekt)
+    projekt_manager?(projekt) || administrator?
   end
 
   def extended_registration?
@@ -195,19 +202,41 @@ class User < ApplicationRecord
     "#{street_name} #{street_number}#{street_number_extension}"
   end
 
-  private
+  def link_to_registered_address  #TODO remove after data migration
+    if city_street.present?
+      old_street_address = "#{city_street.name} #{street_number}#{street_number_extension}"
+    elsif street_name.present?
+      old_street_address = "#{street_name} #{street_number}#{street_number_extension}"
+    else
+      return
+    end
 
-    def update_qualified_total_ballot_line_weight_for_budget_investments
-      Budget::Ballot.where(user_id: id).find_each do |ballot|
-        ballot.investments.each do |investment|
-          new_qualified_total_ballot_line_weight = investment.budget_ballot_lines
-                                                             .joins(ballot: :user)
-                                                             .sum(:line_weight)
+    ra_streets = RegisteredAddress::Street.where("lower(name) LIKE lower(?)", "#{old_street_address[0..5]}%")
 
-          investment.update!(qualified_total_ballot_line_weight: new_qualified_total_ballot_line_weight)
+    ra_streets.each do |ras|
+      r_addresses = RegisteredAddress.where(registered_address_street_id: ras.id, street_number: street_number)
+
+      r_addresses.each do |ra|
+        puts "User ID: #{id}"
+        puts "Old street Address: #{old_street_address}"
+        puts "Registered Address: #{ra.formatted_name}"
+        puts "Is it a match? (y/n)"
+
+        answer = gets.chomp
+
+        if answer == "y"
+          update_columns(
+            registered_address_id: ra.id,
+          )
+
+          puts "Updated!"
+          return
         end
       end
     end
+  end
+
+  private
 
     def geozone_with_plz
       Geozone.find_with_plz(plz)

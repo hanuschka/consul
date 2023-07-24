@@ -19,6 +19,29 @@ de:
       votation_type:
         one: Art der Abstimmung
         other: Arte der Abstimmung
+      individual_group:
+        one: Individuelle Gruppe
+        other: Individuelle Gruppen
+      individual_group_value:
+        one: Gruppenwert
+        other: Gruppenwerte
+      projekt_label:
+        one: Label
+        other: Labels
+      projekt_phase: Projektphase
+      projekt_phase/comment_phase: Kommentare
+      projekt_phase/debate_phase: Diskussionen
+      projekt_phase/proposal_phase: Vorschläge
+      projekt_phase/voting_phase: Abstimmung
+      projekt_phase/budget_phase: Budget
+      projekt_phase/event_phase: Veranstaltungen
+      projekt_phase/argument_phase: Stimmen
+      projekt_phase/milestone_phase: Meilensteine
+      projekt_phase/question_phase: Kurzumfrage
+      projekt_phase/livestream_phase: Livestreams
+      projekt_phase/projekt_notification_phase: Benachrichtigungen
+      projekt_phase/legislation_phase: Textbearbeitung
+      projekt_phase/newsfeed_phase: News-Feed
     errors:
       models:
         proposal:
@@ -29,22 +52,31 @@ de:
               blank: Bitte wählen Sie ein Projekt
             projekt_labels:
               blank: Bitte wählen Sie mindestens ein Label
+            sentiment:
+              blank: Bitte wählen Sie ein Sentiment
         debate:
           attributes:
             projekt_id:
               blank: Bitte wählen Sie ein Projekt
             projekt_labels:
               blank: Bitte wählen Sie mindestens ein Label
+            sentiment:
+              blank: Bitte wählen Sie ein Sentiment
         projekt:
           attributes:
             color:
               invalid: Bitte den Farbwert als HEX-code eingeben
     attributes:
       projekt:
+        total_duration_start: Anfangsdatum
+        total_duration_end: Enddatum
         show_start_date_in_frontend: Im Frontend angezeigt
         show_end_date_in_frontend: Im Frontend angezeigt
+        description: Projektbeschreibung
       poll/answer:
         open_answer_text: Offene Antwort
+      poll/question/answer:
+        more_info_link: Erklärungslink
       widget/card:
         card_category: Kategorie
       deficiency_report:
@@ -58,6 +90,8 @@ de:
         on_behalf_of: Vorschlag im Namen von jemanden erstellen
       budget:
         voting_style_distributed: "Mehrere Stimmen"
+        hide_money: Geld ausblenden
+        max_number_of_winners: maximale Anzahl an Gewinnern
       budget/investment:
         implementation_performer: Umsetzung des Investitionsvorschlages
         implementation_performers:
@@ -116,3 +150,42 @@ de:
         min_rating_scale_label: Linkes Label
         max_rating_scale_label: Rechtes Label
         show_hint_callout: Diese Textbox im Frontend anzeigen
+      individual_group:
+        name: Name
+        visible: sichtbar
+        kind: Art
+        kinds:
+          hard: starke Gruppe
+          soft: schwache Gruppe
+      individual_group_value:
+        name: Name
+      projekt_label:
+        icon: Icon
+        color: Farbe
+        name: Name
+      projekt_question:
+        show_answers_count: Anzahl der Stimmen im Frontend anzeigen    
+        comments_enabled: Offene Antwort aktiviert
+      projekt_event:
+        title: Veranstaltungstitel
+        location: Veranstaltungsort
+        datetime: Datum
+        end_datetime: Endtermin
+        weblink: Weblink
+      projekt_notification:
+        title: Titel
+        body: Nachricht
+      projekt_argument:
+        name: Name
+        party: Partei
+        position: Position
+        note:  Stimme
+      projekt_livestream:
+        url: Livestream link
+        title: Titel
+        starts_at: Startet um
+        platform: Portal
+        description: Beschreibung
+      projekt_phase:
+        start_date: Anfangsdatum
+        end_date: Enddatum

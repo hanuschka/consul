@@ -2,7 +2,7 @@ require_dependency Rails.root.join("app", "components", "proposals", "votes_comp
 
 class Proposals::VotesComponent < ApplicationComponent
   delegate :user_signed_in?, :link_to_signin, :link_to_signup,
-           :link_to_verify_account, :projekt_feature?, to: :helpers
+           :link_to_verify_account, :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
   private
 
@@ -23,7 +23,8 @@ class Proposals::VotesComponent < ApplicationComponent
               city: Setting["org_name"],
               geozones: @proposal_phase&.geozone_restrictions_formatted,
               age_restriction: @proposal_phase&.age_restriction_formatted,
-              restricted_streets: @proposal_phase&.street_restrictions_formatted
+              restricted_streets: @proposal_phase&.street_restrictions_formatted,
+              individual_group_values: @proposal_phase&.individual_group_value_restriction_formatted
         )
 
       end

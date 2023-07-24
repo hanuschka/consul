@@ -3,6 +3,10 @@
 <% if @users.any? %>
   <h3><%= page_entries_info @users %></h3>
 
+  <% if @current_filter != "erased" %>
+    <%= link_to t("custom.shared.download"), admin_users_path(format: :csv), class: "float-right small clear" %>
+  <% end %>
+
   <table>
     <thead>
       <tr>
@@ -18,11 +22,11 @@
 
           <th scope="col"><%= t("custom.admin.users.columns.first_name") %></th>
           <th scope="col"><%= t("custom.admin.users.columns.last_name") %></th>
-          <th scope="col"><%= t("custom.admin.users.columns.street_name") %></th>
-          <th scope="col"><%= t("custom.admin.users.columns.street_number") %></th>
+          <th scope="col"><%= t("custom.admin.users.columns.city_name") %></th>
+          <th scope="col"><%= t("custom.admin.users.columns.street_address_old") %></th>
+          <th scope="col"><%= t("custom.admin.users.columns.street_address") %></th>
           <th scope="col"><%= t("custom.admin.users.columns.plz") %></th>
           <th scope="col"><%= t("custom.admin.users.columns.geozone") %></th>
-          <th scope="col"><%= t("custom.admin.users.columns.city_name") %></th>
           <th scope="col"><%= t("custom.admin.users.columns.document_type") %></th>
           <th scope="col"><%= t("custom.admin.users.columns.document_last_digits") %></th>
 

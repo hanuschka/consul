@@ -21,7 +21,8 @@ class Management::Budgets::InvestmentsController < Management::BaseController
   end
 
   def create
-    @investment.terms_of_service = "1"
+    # @investment.terms_of_service = "1" #custom
+    @investment.resource_terms = "1" #custom
     @investment.author = managed_user
     @investment.heading = @budget.headings.first if @budget.single_heading?
 

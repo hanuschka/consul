@@ -30,3 +30,24 @@
     margin-top: 0;
   }
 }
+
+
+// Options
+
+.option-group-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+// Config block
+
+.config-block {
+  background-color: $white;
+  padding: 2rem;
+  border: 1px solid #afafaf;
+  margin-bottom: 3rem !important;
+
+  .image .attachment-errors > .js-image-attachment {
+    display: none;
+  }
+}

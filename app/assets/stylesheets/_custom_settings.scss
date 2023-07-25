@@ -3,6 +3,9 @@ $brand:                                           #004078;
 $brand-secondary:                                 #002d50 !default;
 $secondary:                                       lighten($brand, 70%);
 $accent:                                          #90A422;
+$dark:                                            darken($brand, 10%);
+$brand-lighter:                                   rgba($brand, 0.5);
+$text-over-brand:                                 $white;
 
 // Menu variables
 
@@ -15,7 +18,6 @@ $flyout-item-text-color:                          $black;
 $flyout-item-bg-color:                            $white;
 $flyout-block-border-color:                       #dee0e3;
 $flyout-item-divider-color:                       lighten($flyout-block-border-color, 5%);
-$flyout-item-projekt-modules-links-color:         $flyout-item-text-color;
 
 
 $flyout-item-line-height:                         1.5rem;

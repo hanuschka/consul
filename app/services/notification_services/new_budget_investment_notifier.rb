@@ -13,14 +13,14 @@ module NotificationServices
     private
 
       def users_to_notify_ids
-        [projekt_subscriber_ids].flatten.uniq
+        [projekt_phase_subscriber_ids].flatten.uniq
           .reject { |id| id == @investment.author.id }
       end
 
-      def projekt_subscriber_ids
-        return [] unless @investment.projekt.present?
+      def projekt_phase_subscriber_ids
+        return [] unless @investment.projekt_phase.present?
 
-        @investment.projekt.budget_phase.subscribers.ids
+        @investment.projekt_phase.subscribers.ids
       end
   end
 end

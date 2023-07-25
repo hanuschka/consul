@@ -16,17 +16,20 @@ class User < ApplicationRecord
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
-  after_save :update_qualified_votes_count_for_budget_investments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
+  has_many :user_individual_group_values, dependent: :destroy
+  has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
+
+  validate :email_should_not_be_used_by_hidden_user
 
   validates :first_name, presence: true, on: :create, if: :extended_registration?
   validates :last_name, presence: true, on: :create, if: :extended_registration?
@@ -157,8 +160,16 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
-  def projekt_manager?
-    projekt_manager.present?
+  def projekt_manager?(projekt = nil)
+    if projekt.present?
+      projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
+    else
+      projekt_manager.present?
+    end
+  end
+
+  def can_manage_projekt?(projekt)
+    projekt_manager?(projekt) || administrator?
   end
 
   def extended_registration?
@@ -185,15 +196,47 @@ class User < ApplicationRecord
     !unverified?
   end
 
-  private
+  def formatted_address
+    return registered_address.formatted_name if registered_address.present?
 
-    def update_qualified_votes_count_for_budget_investments
-      Budget::Ballot.where(user_id: id).find_each do |ballot|
-        ballot.investments.each do |investment|
-          investment.update(qualified_votes_count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight))
+    "#{street_name} #{street_number}#{street_number_extension}"
+  end
+
+  def link_to_registered_address  #TODO remove after data migration
+    if city_street.present?
+      old_street_address = "#{city_street.name} #{street_number}#{street_number_extension}"
+    elsif street_name.present?
+      old_street_address = "#{street_name} #{street_number}#{street_number_extension}"
+    else
+      return
+    end
+
+    ra_streets = RegisteredAddress::Street.where("lower(name) LIKE lower(?)", "#{old_street_address[0..5]}%")
+
+    ra_streets.each do |ras|
+      r_addresses = RegisteredAddress.where(registered_address_street_id: ras.id, street_number: street_number)
+
+      r_addresses.each do |ra|
+        puts "User ID: #{id}"
+        puts "Old street Address: #{old_street_address}"
+        puts "Registered Address: #{ra.formatted_name}"
+        puts "Is it a match? (y/n)"
+
+        answer = gets.chomp
+
+        if answer == "y"
+          update_columns(
+            registered_address_id: ra.id,
+          )
+
+          puts "Updated!"
+          return
         end
       end
     end
+  end
+
+  private
 
     def geozone_with_plz
       Geozone.find_with_plz(plz)
@@ -206,5 +249,11 @@ class User < ApplicationRecord
       self.street_name = street_name.strip unless street_name.nil?
       self.street_number = street_number.strip unless street_number.nil?
       self.street_number_extension = street_number_extension.strip unless street_number_extension.nil?
+    end
+
+    def email_should_not_be_used_by_hidden_user
+      if User.only_hidden.find_by(email: email).present?
+        errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
+      end
     end
 end

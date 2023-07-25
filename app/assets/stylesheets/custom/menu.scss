@@ -170,10 +170,6 @@ span.icon-account {
   display: none;
 }
 
-.projekt-modules-links {
-  display: none;
-}
-
 #responsive-menu {
   width: 100%;
 
@@ -438,26 +434,6 @@ span.icon-account {
     }
   }
 
-  // Styling projekts in navigation items
-
-  .subnavigation ul.main-menu {
-
-    .projekt-modules-links {
-      display: block;
-      font-size: 11px;
-      line-height: initial;
-      color: $flyout-item-projekt-modules-links-color;
-
-      a.projekt-module-link {
-        display: inline;
-        line-height: initial;
-        color: $flyout-item-projekt-modules-links-color;
-        font-weight: normal;
-      }
-    }
-
-  }
-
   // Styling notification 
 
   .account-admin-items {
@@ -492,4 +468,16 @@ span.icon-account {
 .subnavigation a {
   padding-top: 0;
   padding-bottom: 0;
+}
+
+
+// Draft projekts
+
+.draft-projekt {
+  &:before {
+    content: "\f15c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    margin-right: 4px;
+  }
 }

@@ -36,24 +36,23 @@ class ProjektSetting < ApplicationRecord
 
     def defaults
       {
-        "projekt_feature.main.activate": '',
+        "projekt_feature.main.activate": "",
 
-        "projekt_feature.general.show_in_navigation": '',
-        "projekt_feature.general.show_in_overview_page_navigation": '',
-        "projekt_feature.general.show_in_overview_page": '',
-        "projekt_feature.general.hide_additional_info_in_projekt_selector": 'active',
-        "projekt_feature.general.show_not_active_phases_in_projekts_page_sidebar": 'active',
-        "projekt_feature.general.allow_downvoting_comments": 'active',
-        "projekt_feature.general.enable_tags": '',
-        "projekt_feature.general.enable_sdgs": '',
-        "projekt_feature.general.set_default_sorting_to_newest": '',
-        "projekt_feature.general.show_projekt_footer": 'active',
-        "projekt_feature.general.show_in_individual_list": '',
+        "projekt_feature.general.show_in_navigation": "active",
+        "projekt_feature.general.show_in_overview_page": "active",
+        "projekt_feature.general.show_in_overview_page_navigation": "",
+        "projekt_feature.general.show_in_homepage": "active",
+        "projekt_feature.general.show_in_individual_list": "",
+        "projekt_feature.general.allow_downvoting_comments": "active",
+        "projekt_feature.general.set_default_sorting_to_newest": "",
+        "projekt_feature.general.show_in_sidebar_filter": 'active',
+        "projekt_feature.general.vc_map_enabled": '',
 
-        "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": 'active',
-        "projekt_feature.sidebar.show_map": 'active',
-        "projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar": 'active',
-        "projekt_feature.sidebar.projekt_page_sharing": 'active',
+        "projekt_feature.sidebar.show_notification_subscription_toggler": "active",
+        "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": "active",
+        "projekt_feature.sidebar.show_map": "active",
+        "projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar": "active",
+        "projekt_feature.sidebar.projekt_page_sharing": "active",
 
         "projekt_feature.debates.show_report_button_in_sidebar": 'active',
         "projekt_feature.debates.show_related_content": 'active',
@@ -64,7 +63,7 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.debates.allow_downvoting": 'active',
         "projekt_feature.debates.show_in_sidebar_filter": 'active',
         "projekt_feature.debates.allow_voting": 'active',
-        "projekt_feature.debates.hide_projekt_selector": '',
+        "projekt_feature.debates.hide_projekt_selector": 'active',
 
         "projekt_feature.proposals.quorum_for_proposals": '',
         "projekt_feature.proposals.enable_proposal_support_withdrawal": 'active',
@@ -84,7 +83,7 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.proposals.allow_voting": 'active',
         "projekt_feature.proposals.enable_external_video": 'active',
         "projekt_feature.proposals.enable_geoman_controls_in_maps": 'active',
-        "projekt_feature.proposals.hide_projekt_selector": '',
+        "projekt_feature.proposals.hide_projekt_selector": 'active',
 
         "projekt_feature.proposal_options.votes_for_proposal_success": 10000,
 
@@ -108,10 +107,11 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.budgets.show_map": 'active',
         "projekt_feature.budgets.show_results_after_first_vote": '',
         "projekt_feature.budgets.enable_geoman_controls_in_maps": 'active',
+        "projekt_feature.budgets.show_relative_ballotting_results": '',
 
         "projekt_feature.questions.show_questions_list": '',
 
-        "projekt_feature.milestones.newest_first": '',
+				"projekt_feature.milestones.newest_first": '',
 
         "projekt_newsfeed.id": '',
         "projekt_newsfeed.type": '',
@@ -151,5 +151,4 @@ class ProjektSetting < ApplicationRecord
         update(value: self.value)
     end
   end
-
 end

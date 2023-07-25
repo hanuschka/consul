@@ -13,6 +13,9 @@ en:
       modal_notification:
         one: Modal notification
         other: Modal notifications
+      projekt_label:
+        one: Label
+        other: Labels
     errors:
       models:
         proposal:
@@ -29,6 +32,8 @@ en:
         show_end_date_in_frontend: Visible in front end
       poll/answer:
         open_answer_text: Open Answer
+      poll/question/answer:
+        more_info_link: Explanation link
       widget/card:
         card_category: Category
       deficiency_report:
@@ -82,3 +87,16 @@ en:
         active_from: From
         active_to: To
         html_content: HTML-Code of the notification
+      individual_group:
+        name: Name
+        visible: Visible
+        kind: Kind
+        kinds:
+          hard: hard
+          soft: soft
+      individual_group_value:
+        name: Name
+      projekt_label:
+        icon: Icon
+        color: Color
+        name: Name

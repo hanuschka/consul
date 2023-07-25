@@ -1,5 +1,5 @@
 <main class="debate-new">
-  <%=  debates_back_link_path %>
+  <%= debates_back_link_path %>
 
   <%= header do %>
     <% if feature?('help_page') %>
@@ -9,7 +9,7 @@
     <% end %>
   <% end %>
 
-  <aside>
+  <aside class="margin-bottom">
     <%= helpers.render_custom_block 'debates_creation_recommendations' %>
   </aside>
 

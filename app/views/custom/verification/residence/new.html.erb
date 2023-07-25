@@ -5,22 +5,11 @@
 
     <h1><%= t("verification.residence.new.title") %></h1>
 
-    <div class="user-permissions small-12">
-      <p><%= t("verification.user_permission_info") %></p>
-
-      <ul>
-        <li><span class="icon-check"></span>&nbsp;<%= t("verification.user_permission_debates") %></li>
-        <li><span class="icon-check"></span>&nbsp;<%= t("verification.user_permission_proposal") %></li>
-        <li><span class="icon-x"></span>&nbsp;<%= t("verification.user_permission_support_proposal") %></li>
-        <li><span class="icon-x"></span>&nbsp;<%= t("verification.user_permission_votes") %></li>
-      </ul>
-    </div>
-
     <%= form_for @residence, as: "residence", url: residence_path do |f| %>
       <%= render "errors" %>
 
       <div class="row">
-        <div class="small-12 medium-5 column">
+        <div class="small-12 medium-10 large-5 column">
 
           <div class="">
             <%= f.label :first_name, t("custom.verification.residence.new.first_name") %>
@@ -163,7 +152,7 @@
             <%= f.check_box :terms_general,
               title: t("custom.terms.general.title"),
               label: t("custom.terms.general.label",
-                       terms_link: link_to(t("custom.terms.terms_link.text"), "/privacy",
+                       terms_link: link_to(t("custom.terms.terms_link.text"), "/conditions",
                                            title: t("shared.target_blank"), target: "_blank")),
               class: "checkbox-label--aligned" %>
 

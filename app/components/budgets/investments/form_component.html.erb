@@ -11,20 +11,6 @@
       </div>
     <% end %>
 
-    <% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>
-      <div>
-        <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
-      </div>
-
-      <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
-        <%= f.text_field :implementation_contribution %>
-      </div>
-    <% end %>
-
-    <% if projekt_phase_feature?(investment.projekt_phase, "form.show_user_cost_estimate") %>
-      <%= f.text_field :user_cost_estimate %>
-    <% end %>
-
     <% if projekt_phase_feature?(budget&.projekt_phase, "form.show_map") %>
       <div class="margin-bottom">
         <%= render "map_locations/form_fields",
@@ -55,6 +41,20 @@
               maxlength: Budget::Investment.description_max_length,
               class: "html-area #{helpers.ck_editor_class(current_user)}" %>
       </div>
+    <% end %>
+
+    <% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>
+      <div>
+        <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
+      </div>
+
+      <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
+        <%= f.text_field :implementation_contribution %>
+      </div>
+    <% end %>
+
+    <% if projekt_phase_feature?(investment.projekt_phase, "form.show_user_cost_estimate") %>
+      <%= f.text_field :user_cost_estimate %>
     <% end %>
   </fieldset>
 

@@ -1,7 +1,7 @@
 // brand_color
-$brand:                                           #004a83 !default;
-$brand-secondary:                                 #002d50 !default;
-$secondary:                                       lighten($brand, 70%);
+$brand:                                           #00a0ad !default;
+$brand-secondary:                                 #fac600 !default;
+$secondary:                                       #fac600 !default;
 $accent:                                          lighten($brand, 50%);
 $dark:                                            darken($brand, 10%);
 $brand-lighter:                                   rgba($brand, 0.5);

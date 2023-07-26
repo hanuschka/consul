@@ -1,4 +1,7 @@
 class ProjektPhase::VotingPhase < ProjektPhase
+  has_many :polls, foreign_key: :projekt_phase_id,
+    dependent: :restrict_with_exception, inverse_of: :projekt_phase
+
   def phase_activated?
     active?
   end
@@ -13,6 +16,18 @@ class ProjektPhase::VotingPhase < ProjektPhase
 
   def default_order
     4
+  end
+
+  def resource_count
+    polls.for_public_render.count
+  end
+
+  def admin_nav_bar_items
+    %w[duration naming restrictions settings]
+  end
+
+  def safe_to_destroy?
+    polls.empty?
   end
 
   private

@@ -17,6 +17,10 @@ de:
       show:
         user_permission_votes: An Abstimmungen teilnehmen
         admin_notifications: Admin Benachrichtigungen
+        user_groups_title: Individuelle Gruppen
+    boolean:
+      "yes": "ja"
+      "no": "nein"
     comments:
       reply_form:
         leave_comment: Schreiben Sie eine Antwort
@@ -128,7 +132,10 @@ de:
       form:
         projekt_assignment: Projektzuordnung
         star_message: Alle mit (*) gekennzeichneten Felder sind Pflichtfelder
-        projekt_labels: Labels *
+        projekt_labels_label: Labels
+        projekt_labels_hint: Bitte wählen Sie mindestens eine Option aus
+        sentiment_label: Sentiment
+        sentiment_hint: Bitte wählen Sie eine Option aus
       index:
         resource:
           by: von

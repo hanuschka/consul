@@ -115,6 +115,7 @@ module Abilities
       if user.level_two_or_three_verified?
         can :vote, Legislation::Proposal
         can :create, Legislation::Answer
+
         can :create, DirectMessage
         can :show, DirectMessage, sender_id: user.id
       end
@@ -139,14 +140,12 @@ module Abilities
       can :create, Budget::Investment do |investment|
         investment.budget.phase == "accepting" &&
           (
-           (ProjektSetting.find_by(
-             projekt: investment.projekt,
-             key: "projekt_feature.budgets.only_admins_create_investment_proposals").value.present? &&
+            (investment.projekt_phase.settings.find_by(
+              key: "feature.general.only_admins_create_investment_proposals").value.present? &&
             (user.administrator? || user.projekt_manager?)) ||
 
-           ProjektSetting.find_by(
-             projekt: investment.projekt,
-             key: "projekt_feature.budgets.only_admins_create_investment_proposals").value.blank?
+            investment.projekt_phase.settings.find_by(
+              key: "feature.general.only_admins_create_investment_proposals").value.blank?
           )
       end
 
@@ -159,13 +158,13 @@ module Abilities
       can :access, :ckeditor
       can :manage, Ckeditor::Picture
 
-      can [:create, :destroy], ActsAsVotable::Vote,
-        voter_id: user.id,
-        votable_type: "Budget::Investment",
-        votable: { budget: { phase: "selecting" }}
-      can [:show, :create], Budget::Ballot,          budget: { phase: "balloting" }
-      can [:create, :destroy], Budget::Ballot::Line, budget: { phase: "balloting" }
+      can :toggle_subscription, ProjektSubscription do |subscription|
+        subscription.user == user
+      end
 
+      can :toggle_subscription, ProjektPhaseSubscription do |subscription|
+        subscription.user == user
+      end
     end
   end
 end

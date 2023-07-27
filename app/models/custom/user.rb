@@ -6,31 +6,101 @@ class User < ApplicationRecord
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
 
+  delegate :registered_address_street, to: :registered_address, allow_nil: true
+
+  attr_accessor :form_registered_address_city_id,
+                :form_registered_address_street_id,
+                :form_registered_address_id
+
   before_validation :strip_whitespace
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
-  after_save :update_qualified_votes_count_for_budget_investments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
+  has_many :user_individual_group_values, dependent: :destroy
+  has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
-  belongs_to :city_street
+  belongs_to :city_street, optional: true              # TODO delete this line
+  belongs_to :registered_address, optional: true
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
 
-  validates :first_name, presence: true, on: :create, if: :first_name_required?
-  validates :last_name, presence: true, on: :create, if: :last_name_required?
-  validates :city_street_id, presence: true, on: :create, if: :street_name_required?
-  validates :street_number, presence: true, on: :create, if: :street_number_required?
-  validates :plz, presence: true, on: :create, if: :plz_required?
-  validates :city_name, presence: true, on: :create, if: :city_name_required?
-  validates :date_of_birth, presence: true, on: :create, if: :date_of_birth_required?
-  validates :gender, presence: true, on: :create, if: :gender_required?
+  validate :email_should_not_be_used_by_hidden_user
+
+  validates :first_name, presence: true, on: :create, if: :extended_registration?
+  validates :last_name, presence: true, on: :create, if: :extended_registration?
+  validates :gender, presence: true, on: :create, if: :extended_registration?
+  validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
+
+  validates :city_name, presence: true, on: :create, if: :show_no_registered_address_field?
+  validates :plz, presence: true, on: :create, if: :show_no_registered_address_field?
+  validates :street_name, presence: true, on: :create, if: :show_no_registered_address_field?
+  validates :street_number, presence: true, on: :create, if: :show_no_registered_address_field?
+
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
+
+  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create
+  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
+  validates :terms_general, acceptance: { allow_nil: false }, on: :create
+
+  def self.transfer_city_streets # TODO delete this method
+    transferred_user_ids = []
+    not_transferred_user_ids = []
+
+    User.find_each do |user|
+      next if user.registered_address.present?
+
+      next if user.city_street.blank? && user.street_name.blank?
+
+      street_name_selector = if user.city_street.present?
+                               user.city_street.name.split()[0].downcase
+                             elsif user.street_name.present?
+                               user.street_name.split()[0].downcase
+                             end
+
+      matching_registered_addresses = RegisteredAddress.joins(:registered_address_street)
+        .where("LOWER(registered_address_streets.name) LIKE ? AND CONCAT(street_number,LOWER(street_number_extension)) = ?",
+               "#{street_name_selector}%", user.street_number&.downcase)
+
+      next if matching_registered_addresses.blank?
+
+      matching_registered_addresses.map do |ra|
+        puts "Processing user with id: #{user.id}"
+        puts "Transfer \"CityStreet: #{user.city_street&.name || user.street_name } #{user.street_number}\" to" \
+          " \"RegisteredAddress: #{ra.registered_address_street.name} #{ra.street_number}#{ra.street_number_extension}\"? (y/n)"
+        answer = gets.chomp
+
+        if answer == "y"
+          transferred_user_ids << user.id
+          user.update_columns(
+            registered_address_id: ra.id
+          )
+          break
+        elsif answer == "c"
+          break
+        else
+          not_transferred_user_ids << user.id
+        end
+      end
+    end
+
+    puts "Transferred user ids: #{transferred_user_ids}"
+    puts "Not transferred user ids: #{not_transferred_user_ids - transferred_user_ids}"
+  end
+
+  def show_no_registered_address_field?
+    return false unless extended_registration?
+    return true if RegisteredAddress::Street.none?
+
+    form_registered_address_city_id == "0" ||
+      form_registered_address_street_id == "0" ||
+      form_registered_address_id == "0"
+  end
 
   def verify!
     return false unless stamp_unique?
@@ -117,39 +187,19 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
-  def projekt_manager?
-    projekt_manager.present?
+  def projekt_manager?(projekt = nil)
+    if projekt.present?
+      projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
+    else
+      projekt_manager.present?
+    end
   end
 
-  def first_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+  def can_manage_projekt?(projekt)
+    projekt_manager?(projekt) || administrator?
   end
 
-  def last_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
-  end
-
-  def street_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
-  end
-
-  def street_number_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
-  end
-
-  def plz_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
-  end
-
-  def city_name_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
-  end
-
-  def date_of_birth_required?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
-  end
-
-  def gender_required?
+  def extended_registration?
     !organization? && !erased? && Setting["extra_fields.registration.extended"]
   end
 
@@ -173,15 +223,47 @@ class User < ApplicationRecord
     !unverified?
   end
 
-  private
+  def formatted_address
+    return registered_address.formatted_name if registered_address.present?
 
-    def update_qualified_votes_count_for_budget_investments
-      Budget::Ballot.where(user_id: id).find_each do |ballot|
-        ballot.investments.each do |investment|
-          investment.update(qualified_votes_count: investment.budget_ballot_lines.joins(ballot: :user).where.not(ballot: { users: { verified_at: nil } }).sum(:line_weight))
+    "#{street_name} #{street_number}#{street_number_extension}"
+  end
+
+  def link_to_registered_address  #TODO remove after data migration
+    if city_street.present?
+      old_street_address = "#{city_street.name} #{street_number}#{street_number_extension}"
+    elsif street_name.present?
+      old_street_address = "#{street_name} #{street_number}#{street_number_extension}"
+    else
+      return
+    end
+
+    ra_streets = RegisteredAddress::Street.where("lower(name) LIKE lower(?)", "#{old_street_address[0..5]}%")
+
+    ra_streets.each do |ras|
+      r_addresses = RegisteredAddress.where(registered_address_street_id: ras.id, street_number: street_number)
+
+      r_addresses.each do |ra|
+        puts "User ID: #{id}"
+        puts "Old street Address: #{old_street_address}"
+        puts "Registered Address: #{ra.formatted_name}"
+        puts "Is it a match? (y/n)"
+
+        answer = gets.chomp
+
+        if answer == "y"
+          update_columns(
+            registered_address_id: ra.id,
+          )
+
+          puts "Updated!"
+          return
         end
       end
     end
+  end
+
+  private
 
     def geozone_with_plz
       Geozone.find_with_plz(plz)
@@ -190,7 +272,15 @@ class User < ApplicationRecord
     def strip_whitespace
       self.first_name = first_name.strip unless first_name.nil?
       self.last_name = last_name.strip unless last_name.nil?
-      self.street_number = street_number.strip unless street_number.nil?
       self.city_name = city_name.strip unless city_name.nil?
+      self.street_name = street_name.strip unless street_name.nil?
+      self.street_number = street_number.strip unless street_number.nil?
+      self.street_number_extension = street_number_extension.strip unless street_number_extension.nil?
+    end
+
+    def email_should_not_be_used_by_hidden_user
+      if User.only_hidden.find_by(email: email).present?
+        errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
+      end
     end
 end

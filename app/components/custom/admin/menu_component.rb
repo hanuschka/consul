@@ -76,7 +76,7 @@ class Admin::MenuComponent < ApplicationComponent
 
     def settings?
       controllers_names = ["settings", "tags", "geozones", "images", "content_blocks",
-                           "local_census_records", "imports", "age_restrictions"]
+                           "local_census_records", "imports", "age_restrictions", "individual_groups", "individual_group_values"]
       controllers_names.include?(controller_name) &&
         controller.class.parent != Admin::Poll::Questions::Answers &&
         controller.class != Admin::DeficiencyReports::SettingsController
@@ -109,6 +109,42 @@ class Admin::MenuComponent < ApplicationComponent
         t("custom.admin.menu.modal_notification"),
         admin_modal_notifications_path,
         controller_name == "modal_notifications"
+      ]
+    end
+
+    def registered_addresses?
+      %w[registered_addresses registered_address_groupings registered_address_streets].include?(controller_name)
+    end
+
+    def registered_addresses_list
+      [
+        t("custom.admin.menu.registered_addresses.list"),
+        admin_registered_addresses_path,
+        controller_name == "registered_addresses"
+      ]
+    end
+
+    def registered_address_groupings_list
+      [
+        t("custom.admin.menu.registered_address_groupings.list"),
+        admin_registered_address_groupings_path,
+        controller_name == "registered_address_groupings"
+      ]
+    end
+
+    def registered_address_streets_list
+      [
+        t("custom.admin.menu.registered_address_streets.list"),
+        admin_registered_address_streets_path,
+        controller_name == "registered_address_streets"
+      ]
+    end
+
+    def individual_groups_link
+      [
+        t("custom.admin.menu.individual_groups"),
+        admin_individual_groups_path,
+        ["individual_groups", "individual_group_values"].include?(controller_name)
       ]
     end
 end

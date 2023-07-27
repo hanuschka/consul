@@ -151,6 +151,7 @@ td.projekt-info {
 }
 
 td.projekt-level {
+  text-align: center;
 }
 
 td.projekt-order {
@@ -196,70 +197,23 @@ table.edit-projekt {
   }
 }
 
-div.projekt-phase-restriction-selector {
+.projekt-phase-restriction-option {
+  margin-bottom: 0.25em;
+}
 
-  input[type='radio'] {
-    margin-bottom: 0.5em
-  }
+.projekt-phase-geo-restriction {
 
-  .projekt-phase-geozone-selector label {
-    margin-right: 2em;
-  }
-
-  input[type='checkbox'] + label {
-    font-weight: normal;
-  }
-
-  input[type='checkbox']:checked + label {
-    font-weight: bold;
-  }
-
-  input.comment_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.comment_phase {
-    display: block;
-  }
-
-  input.debate_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.debate_phase {
-    display: block;
-  }
-
-  input.proposal_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.proposal_phase {
-    display: block;
-  }
-
-  input.question_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.question_phase {
-    display: block;
-  }
-
-  input.budget_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.budget_phase {
-    display: block;
-  }
-
-  input.voting_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.voting_phase {
-    display: block;
-  }
-
-  input.legislation_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.legislation_phase {
-    display: block;
-  }
-
-  input.livestream_phase_only_geozones:checked ~ .projekt-phase-geozone-selector.livestream_phase {
-    display: block;
-  }
-
-  input#projekt_geozone_affiliated_only_geozones:checked ~ .projekt-phase-geozone-selector {
-    display: block;
-  }
-
-  .projekt-phase-geozone-selector,
-  .projekt-phase-street-selector {
+  + label + .projekt-phase-geo-restriction-selector {
     display: none;
+    margin-left: 21px;
+    column-count: 3;
+
+    label {
+      font-weight: normal;
+    }
   }
 
-  input[class$=_phase_only_geozones]:checked ~ .projekt-phase-geozone-selector {
-    display: block;
-  }
-
-  input[class$=_phase_only_streets]:checked ~ .projekt-phase-street-selector {
+  &:checked + label + .projekt-phase-geo-restriction-selector {
     display: block;
   }
 }
@@ -1688,26 +1642,107 @@ span.projekt-backlink:before {
   margin-left: 15px;
 }
 
-// Projekt labels
+// Resource tags: projekt labels and sentiments
 
-#projekt_labels_selector {
-  .projekt-label {
-    cursor: pointer;
-    font-size: 1.2rem;
-  }
-}
+@mixin resource-tags {
+  display: inline-block;
+  margin-bottom: 0.25rem;
+  color: #fff;
+  background-color: #767676;
+  padding: 0.33333rem 0.5rem;
+  margin-left: 0 !important;
+  margin-right: 0.2rem;
+  border-radius: 0.1875rem;
+  font-size: 0.8rem;
+  font-weight: normal;
+  line-height: 1;
+  white-space: nowrap;
+  position: relative;
 
-#projekt-labels-checkboxes {
-  display: none;
-}
-
-#projekt-labels-sidebar {
-  .projekt-label {
-    margin-bottom: 0.25rem;
-  }
-
-  .projekt-label a {
+  a {
     color: inherit;
     text-decoration: none;
+
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+}
+
+@mixin resource-tags-with-icon {
+  @include resource-tags;
+  padding-left: 24px;
+
+  &::before {
+    content: "\f111";
+    font-family: "Font Awesome 5 Free";
+    font-weight: normal;
+    position: absolute;
+    left: 7px;
+    top: 6px;
+  }
+
+  &.selected::before {
+    content: "\f192";
+  }
+}
+
+.projekt-labels {
+  .projekt-label {
+    @include resource-tags;
+
+    &.selected {
+      background-color: $brand !important;
+    }
+  }
+}
+
+.sentiments {
+  .sentiment {
+    @include resource-tags-with-icon;
+  }
+}
+
+.resource-taggings {
+  .sentiment {
+    padding-left: 0.5rem;
+
+    &::before {
+      content: "";
+    }
+  }
+}
+
+// tagging in selector
+
+#projekt_labels_selector {
+  input {
+    display: none;
+  }
+
+  .projekt-label {
+    color: #fff !important;
+
+    i {
+      margin-right: 7px;
+    }
+  }
+
+  input:checked + .projekt-label {
+    color: #fff !important;
+    background-color: $brand !important;
+  }
+}
+
+#sentiment_selector {
+  input {
+    display: none;
+  }
+
+  input:checked + .sentiment {
+    &::before {
+      content: "\f192";
+    }
   }
 }

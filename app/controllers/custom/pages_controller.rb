@@ -210,18 +210,7 @@ class PagesController < ApplicationController
       end
     end
 
-    @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(100)
-
-    if @budget.present? && @projekt.current?
-      @top_level_active_projekts = Projekt.where(id: @projekt)
-      @top_level_archived_projekts = []
-    elsif @budget.present? && @projekt.expired?
-      @top_level_active_projekts = []
-      @top_level_archived_projekts = Projekt.where(id: @projekt)
-    else
-      @top_level_active_projekts = []
-      @top_level_archived_projekts = []
-    end
+    @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(20)
   end
 
   def set_milestone_phase_footer_tab_variables

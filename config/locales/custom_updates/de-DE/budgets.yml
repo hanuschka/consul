@@ -71,3 +71,5 @@ de:
             valuating: Die Kosten für diesen Projektvorschlag werden intern ermittelt.
         form:
           required: Ihr Projektvorschlag
+      results:
+        recalculate_winners: Gewinner neu berechnen

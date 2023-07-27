@@ -1,3 +1,5 @@
+require_dependency Rails.root.join("app", "helpers", "legislation_helper").to_s
+
 module LegislationHelper
   def cannot_annotate_callout_text(permission_problem_key, legislation_phase)
     return nil if permission_problem_key.blank?
@@ -11,7 +13,9 @@ module LegislationHelper
                verify: link_to_verify_account,
                city: Setting["org_name"],
                geozones: legislation_phase.geozone_restrictions_formatted,
-               age_restriction: legislation_phase.age_restriction_formatted
+               age_restriction: legislation_phase.age_restriction_formatted,
+               restricted_streets: legislation_phase.street_restrictions_formatted,
+               individual_group_values: legislation_phase.individual_group_value_restriction_formatted
               ))
     end
   end

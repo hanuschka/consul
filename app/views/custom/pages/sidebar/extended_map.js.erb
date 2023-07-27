@@ -2,5 +2,11 @@ $("#extended-sidebar-map").html("<%= j render("pages/sidebar/sidebar_map_extende
 $("#extended-sidebar-map").css('position', 'fixed');
 
 $('#extended-sidebar-map').foundation();
-App.Map.destroy();
-App.Map.initialize();
+
+<% if @current_projekt.vc_map_enabled? %>
+  var map = document.querySelector("#extended-sidebar-map *[data-vcmap]")
+  App.VCMap.initializeMap(map);
+<% else %>
+  var map = document.querySelector("#extended-sidebar-map *[data-map]")
+  App.Map.initializeMap(map);
+<% end %>

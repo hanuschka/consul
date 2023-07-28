@@ -32,7 +32,7 @@
 
     // Street selector: start
     selectStreet: function(streetId, streetName) {
-      var checkboxId = "projekt_phase_city_street_ids_" + streetId
+      var checkboxId = "projekt_phase_registered_address_street_ids_" + streetId
       $('#' + checkboxId).prop( "checked", true );
 
       var streetPill = "<div class='selected-street' data-street-id=" + streetId + ">" + streetName  + "<i class='fas fa-times js-deselect-street'></i></div>"
@@ -41,7 +41,7 @@
     },
 
     deselectStreet: function(streetId, $streetPill) {
-      var checkboxId = "projekt_phase_city_street_ids_" + streetId
+      var checkboxId = "projekt_phase_registered_address_street_ids_" + streetId
       $('#' + checkboxId).prop( "checked", false);
       $streetPill.remove();
     },

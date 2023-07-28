@@ -22,15 +22,15 @@
     }
 
     &:nth-child(1) .projekt_group {
-      z-index: 3;
+      z-index: 29;
     }
 
     &:nth-child(2) .projekt_group {
-      z-index: 2;
+      z-index: 28;
     }
 
     &:nth-child(3) .projekt_group {
-      z-index: 1;
+      z-index: 27;
     }
   }
 
@@ -64,7 +64,7 @@
   .selected-projekt,
   .projekt {
     min-height: 65px;
-		background-color: #DADADA;
+    background-color: #DADADA;
     border: 1px solid #D6DBDF;
   }
 
@@ -139,4 +139,23 @@
     }
   }
 
+}
+
+#projekt-phase-selector-fields {
+  span.projekt-phase-selector {
+    background-color: #767676;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+    margin-bottom: 0.3rem;
+    display: inline-block;
+    padding: 0.33333rem 0.5rem;
+    border-radius: 0.1875rem;
+    line-height: 1;
+
+    &.active {
+      background: #1779ba;
+    }
+  }
 }

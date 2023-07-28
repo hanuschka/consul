@@ -42,7 +42,8 @@ de:
         casted_offline: Sie haben schon offline abgestimmt
         only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt %{city} beschränkt.
         only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-        only_specific_streets: "Die Beteiligung ist auf Bürger*innen aus folgenden Strassen beschränkt: %{restricted_streets}."
+        only_specific_registered_address_groupings:
+
     groups:
       show:
         title: Wählen Sie eine Option

@@ -1,7 +1,20 @@
 require_dependency Rails.root.join("app", "controllers", "users", "registrations_controller").to_s
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  prepend_before_action :authenticate_scope!, only: [:edit, :update, :destroy, :finish_signup, :do_finish_signup, :user_location, :update_location, :user_details, :update_details, :complete, :complete_code, :user_verification_code, :update_user_verification_code]
+  include HasRegisteredAddress
+
+  # def create
+  #   build_resource(sign_up_params)
+  #   resource.registering_from_web = true
+
+  #   if resource.valid?
+  #     super
+  #   else
+  #     set_registered_address_instance_variables
+  #     increase_error_count_for_registered_address_selectors
+  #     render :new
+  #   end
+  # end
 
   def user_info
     @user = User.new
@@ -59,14 +72,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     @user.errors.add :first_name, :blank if update_user_details_params[:first_name].blank?
     @user.errors.add :last_name, :blank if update_user_details_params[:last_name].blank?
-    @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(1i)'].blank?
-    @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(2i)'].blank?
-    @user.errors.add :date_of_birth, :blank if update_user_details_params['date_of_birth(3i)'].blank?
-    @user.errors[:date_of_birth].uniq! if @user.errors[:date_of_birth].any?
+    if update_user_details_params["date_of_birth(1i)"].blank? ||
+         update_user_details_params["date_of_birth(2i)"].blank? ||
+         update_user_details_params["date_of_birth(3i)"].blank?
+      @user.errors.add :date_of_birth, :invalid
+    end
 
     if @user.citizen?
-
-      if update_user_details_params[:city_street_id].blank?
+      if RegisteredAddress::City.any?
+        set_related_params
+        set_registered_address_instance_variables
+        increase_error_count_for_registered_address_selectors
+      elsif update_user_details_params[:city_street_id].blank?
         @user.errors.add :city_street_id, :blank
       else
         @user.update(plz: @user.city_street.plz)
@@ -88,9 +105,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if @user.errors.any?
       render :user_details
     elsif @user.citizen?
+      @user.save
       Verifications::CreateXML.create_verification_request(current_user.id, params[:user][:document_number])
       redirect_to complete_user_registration_path
     else
+      @user.save
       @user.update(bam_letter_verification_code: rand(11111111..99999999)) unless @user.bam_letter_verification_code.present?
       Verifications::CreateXML.create_verification_letter(current_user)
       redirect_to complete_user_registration_code_path
@@ -123,12 +142,58 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
-  def create_user_params
-    params[:user].delete(:redeemable_code) if params[:user].present? && params[:user][:redeemable_code].blank?
-    params.require(:user).permit(:redeemable_code, :locale, :email, :password, :password_confirmation, :terms_of_service)
-  end
+    def create_user_params
+      params[:user].delete(:redeemable_code) if params[:user].present? && params[:user][:redeemable_code].blank?
+      params.require(:user).permit(:redeemable_code, :locale, :email, :password, :password_confirmation, :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general)
+    end
+  
+    def update_user_details_params
+      params.require(:user).permit(
+        :first_name, :last_name,
+        :city_name, :plz, :street_name, :street_number, :street_number_extension,
+        :registered_address_id,
+        :date_of_birth,
+        :document_type,
+        #:house_number, :city_street_id,
+        individual_group_value_ids: [])
+    end
 
-  def update_user_details_params
-    params.require(:user).permit(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)", :document_type, :street_name, :house_number, :city_name, :city_street_id)
-  end
+    # def sign_up_params
+    #   set_related_params
+    #   params[:user].delete(:redeemable_code) if params[:user].present? &&
+    #                                             params[:user][:redeemable_code].blank?
+    #   params.require(:user).permit(:username, :email,
+    #                                :first_name, :last_name,
+    #                                :city_name, :plz, :street_name, :street_number, :street_number_extension,
+    #                                :registered_address_id,
+    #                                :gender, :date_of_birth,
+    #                                :document_type, :document_last_digits,
+    #                                :password, :password_confirmation,
+    #                                :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general,
+    #                                :locale,
+    #                                :redeemable_code,
+    #                                individual_group_value_ids: [])
+    # end
+
+    def set_related_params
+      @user.form_registered_address_city_id = params[:form_registered_address_city_id]
+      @user.form_registered_address_street_id = params[:form_registered_address_street_id]
+      @user.form_registered_address_id = params[:form_registered_address_id]
+
+
+      # @registered_address_street = RegisteredAddress::Street.find(params[:form_registered_address_street_id]) if params[:form_registered_address_street_id].present?
+      # @registered_address = RegisteredAddress.find(params[:form_registered_address_id]) if params[:form_registered_address_id].present?
+
+      if params[:form_registered_address_id].present?
+        registered_address = RegisteredAddress.find(params[:form_registered_address_id])
+
+        @user.registered_address_id = registered_address.id
+
+        @user.city_name = registered_address.registered_address_city.name
+        @user.plz = registered_address.registered_address_street.plz
+        @user.street_name = registered_address.registered_address_street.name
+        @user.street_number = registered_address.street_number
+        @user.street_number_extension = registered_address.street_number_extension
+      end
+    end
 end

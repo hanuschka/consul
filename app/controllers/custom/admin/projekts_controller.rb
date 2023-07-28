@@ -1,20 +1,11 @@
 class Admin::ProjektsController < Admin::BaseController
   include ProjektAdminActions
 
-  before_action :find_projekt, only: [:update, :liveupdate, :destroy, :quick_update]
-  before_action :load_geozones, only: [:new, :create, :edit, :update]
-  before_action :process_tags, only: [:update]
-
-  helper_method :namespace_projekt_path
-
   def index
-    @projekts = Projekt.top_level.regular
+    super
+
     @new_projekt = Projekt.new
     @projekt = Projekt.overview_page
-    @default_footer_tab_setting = ProjektSetting.find_by(
-      projekt: @projekt,
-      key: "projekt_custom_feature.default_footer_tab"
-    )
 
     @projekts_settings = Setting.all.group_by(&:type)["projekts"]
     skip_user_verification_setting = Setting.find_by(key: "feature.user.skip_verification")
@@ -32,19 +23,6 @@ class Admin::ProjektsController < Admin::BaseController
       special: true,
       special_name: "projekt_overview_page"
     )
-
-    @overview_page_special_projekt.build_comment_phase if @overview_page_special_projekt.comment_phase.blank?
-    @overview_page_special_projekt.comment_phase.geozone_restrictions.build
-
-    @overview_page_special_projekt.build_debate_phase if @overview_page_special_projekt.debate_phase.blank?
-    @overview_page_special_projekt.debate_phase.geozone_restrictions.build
-
-    @overview_page_special_projekt
-      .build_proposal_phase if @overview_page_special_projekt.proposal_phase.blank?
-    @overview_page_special_projekt.proposal_phase.geozone_restrictions.build
-
-    @overview_page_special_projekt.build_voting_phase if @overview_page_special_projekt.voting_phase.blank?
-    @overview_page_special_projekt.voting_phase.geozone_restrictions.build
 
     @map_configuration_settings = Setting.all.group_by(&:type)["map"]
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
@@ -118,10 +96,4 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt.order_down
     redirect_to admin_projekts_path
   end
-
-  private
-
-    def namespace_projekt_path(projekt)
-      admin_projekt_path(projekt)
-    end
 end

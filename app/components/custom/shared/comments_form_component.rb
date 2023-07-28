@@ -10,13 +10,16 @@ class Shared::CommentsFormComponent < ApplicationComponent
   private
 
     def projekt_phase
-      return record.comment_phase if record.is_a?(Projekt)
+      return nil if record.is_a?(Projekt)
+      return record if record.is_a?(ProjektPhase)
       return record.projekt_phase if record.respond_to?(:projekt_phase)
 
       nil
     end
 
     def permission_problem_key
+      return nil if projekt_phase.blank?
+
       @permission_problem_key ||= projekt_phase.permission_problem(current_user)
     end
 
@@ -32,8 +35,9 @@ class Shared::CommentsFormComponent < ApplicationComponent
                  verify: link_to_verify_account,
                  city: Setting["org_name"],
                  geozones: projekt_phase.geozone_restrictions_formatted,
+                 age_restriction: projekt_phase.age_restriction_formatted,
                  restricted_streets: projekt_phase.street_restrictions_formatted,
-                 age_restriction: projekt_phase.age_restriction_formatted
+                 individual_group_values: projekt_phase.individual_group_value_restriction_formatted
         ))
 
       end

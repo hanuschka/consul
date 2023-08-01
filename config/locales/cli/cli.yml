@@ -24,7 +24,7 @@ de:
           first_name: Vorname
           last_name: Nachname
           street_name: Strasse
-          house_number: Hausnummer
+          street_number: Hausnummer
           post_code: PLZ
           city_name: Stadt
           bam_letter_verification_code: Code

@@ -99,7 +99,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/
       @user.errors.add :city_name, :blank if update_user_details_params[:city_name].blank?
       @user.errors.add :street_name, :blank if update_user_details_params[:street_name].blank?
-      @user.errors.add :house_number, :blank if update_user_details_params[:house_number].blank?
+      @user.errors.add :street_number, :blank if update_user_details_params[:street_number].blank?
     end
 
     if @user.errors.any?
@@ -154,7 +154,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         :registered_address_id,
         :date_of_birth,
         :document_type,
-        #:house_number, :city_street_id,
+        :city_street_id,
         individual_group_value_ids: [])
     end
 

@@ -37,7 +37,7 @@ de:
         last_name_placeholder: Nachname
         plz_placeholder: Postleitzahl
         street_name_placeholder: Straße
-        house_number_placeholder: Hausnummer
+        street_number_placeholder: Hausnummer
         city_name_placeholder: Stadt
         document_number_placeholder: Letzten vier Zeichen auf Dokument
         card_name: '1) Personalausweis'

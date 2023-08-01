@@ -15,7 +15,7 @@ de:
         date_of_birth: Geburtsdatum
         document_type: Dokumententyp
         street_name: Straße
-        house_number: Hausnummer
+        street_number: Hausnummer
         city_name: Stadt
         bam_letter_verification_code: Verifizierungscode
       poll/answer:

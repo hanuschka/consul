@@ -61,7 +61,7 @@ module Verifications
           xml.geburtsdatum user.date_of_birth.strftime("%d.%m.%Y")
           xml.plz user.plz
           xml.strasse user.street_name
-          xml.hausnummer user.house_number
+          xml.hausnummer user.street_number
           xml.stadt user.city_name
           xml.letter_verification_code user.bam_letter_verification_code
         }

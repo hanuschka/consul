@@ -93,7 +93,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @user.errors.add :document_number, :blank if params[:user][:document_number].blank?
       @user.errors.add :document_number, :length unless params[:user][:document_number].length == 4
 
-      @user.errors.add(:first_name, :uniqueness_check) unless @user.stamp_unique?
+      if @user.first_name.present? &&
+           @user.last_name.present? &&
+           @user.date_of_birth.present? &&
+           @user.plz.present? &&
+           !@user.stamp_unique?
+        @user.errors.add(:first_name, :uniqueness_check) unless @user.stamp_unique?
+      end
     else
       @user.errors.add :plz, :blank if update_user_details_params[:plz].blank?
       @user.errors.add :plz, :format unless update_user_details_params[:plz] =~ /\A\d{5}\z/

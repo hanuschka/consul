@@ -30,7 +30,7 @@
               <% else %>
                 <%= f.text_field :first_name, disabled: true %>
                 <%= f.text_field :last_name, disabled: true %>
-                <%= f.select :city_street_id, CityStreet.all.map{ |str| [str.name_with_plz, str.id]  }, { prompt: t('helpers.select.prompt') }, { disabled: @account.city_street.present? } %>
+                <%#= f.select :city_street_id, CityStreet.all.map{ |str| [str.name_with_plz, str.id]  }, { prompt: t('helpers.select.prompt') }, { disabled: @account.city_street.present? } %>
               <% end %>
             </div>
 

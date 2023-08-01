@@ -106,16 +106,3 @@
     </div>
   <% end %>
 </footer>
-
-<% show_bam_modal = true %>
-
-<div class="reveal" id="selectBamStreetModal" data-reveal data-show-modal=<%= show_bam_modal %>>
-  <p><i>Liebe Bürger:innen,</i></p>
-  <p><i>wir entwickeln uns stets weiter und freuen uns auf regen Austausch mit Ihnen. Wir wollen hier zukünftig auch Projekte einstellen, bei denen uns z. B. die Meinung der unmittelbaren Anwohner:innen besonders interessiert. Aus diesem Grund haben wir eine Möglichkeit eingeführt, dass wir die Beteiligung bei einzelnen Maßnahmen, (Bsp.: Umwidmung einer Straße in eine Fahrradstraße) straßengenau eingrenzen können. Daher möchten wir Sie bitten, Ihre Angaben zu ergänzen. Bitte klicken Sie dazu in der oberen roten Leiste auf das „Mein Konto“- Symbol und fügen Sie dort die Straße hinzu, in der Sie wohnen oder klicken Sie hier:</i></p>
-  <p><%= link_to 'Straßenname eingeben', account_path, class: 'button', onclick: "$('#selectBamStreetModal').foundation('close');" %></p>
-  <p><i>Bitte wählen Sie hier die Straße aus, in der Sie laut ihres Ausweisdokuments gemeldet sind. Die Daten werden auf verschlüsseltem Weg verifiziert. Der Schutz Ihrer Daten ist selbstverständlich weiterhin gewährleistet. Sie haben nicht selbstständig die Möglichkeit Ihre Straßenangabe zu ändern. Sollten Sie umziehen und somit eine Änderung nötig sein, wenden Sie sich bitte an buergerbeteiligung@stadt.bamberg.de.</i></p>
-  <p><i>Vielen Dank</i></p>
-  <button class="close-button" data-close aria-label="Close modal" type="button">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>

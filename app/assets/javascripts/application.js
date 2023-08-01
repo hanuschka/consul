@@ -190,7 +190,6 @@ var initialize_modules = function() {
   App.CustomPages.initialize();
   App.ModerationCustom.initialize();
   App.CustomAdmin.initialize();
-  App.BamStreetModal.initialize();
   App.CopyContent.initialize();
   App.FooterPhasesComponentCustom.initialize();
   App.RemoteLinksPushState.initialize();

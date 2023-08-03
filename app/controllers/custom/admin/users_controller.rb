@@ -7,9 +7,9 @@ class Admin::UsersController < Admin::BaseController
 
     unless params[:format] == "csv"
       if @users.is_a?(Array)
-        @users = Kaminari.paginate_array(@users).page(params[:page])
+        @users = Kaminari.paginate_array(@users).page(params[:page]).per(50)
       else
-        @users = @users.page(params[:page])
+        @users = @users.page(params[:page]).per(50)
       end
     end
 

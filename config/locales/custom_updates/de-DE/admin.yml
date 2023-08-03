@@ -332,6 +332,13 @@ de:
         reverify_button_text: Verifizierung aktuallisieren
         reverify_success_notice: Reverifizierungsprozess läuft
         columns:
+          id: ID
+          erase_reason: Grund des Löschens
+          name: Name
+          email: E-Mail
+          document_number: Dokumentennummern
+          roles: Rollen
+          verification_level: Überprüfungsstatus
           first_name: Vorname
           last_name: Nachname
           street_address: Adresse
@@ -342,6 +349,8 @@ de:
           date_of_birth: Geburtsdatum
           document_type: Dokument
           document_last_digits: Dokument (4 letzten Ziffern)
+          unique_stamp: Unique Stamp
+          created_at: Nutzer angelegt am
           verified_at: Verifiziert am
           actions: Aktionen
           action:

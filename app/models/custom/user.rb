@@ -1,6 +1,9 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 class User < ApplicationRecord
+  SORTING_OPTIONS = { id: "id", name: "username", email: "email", city_name: "city_name",
+    created_at: "created_at", verified_at: "verified_at" }.freeze
+
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
@@ -94,6 +97,24 @@ class User < ApplicationRecord
 
     puts "Transferred user ids: #{transferred_user_ids}"
     puts "Not transferred user ids: #{not_transferred_user_ids - transferred_user_ids}"
+  end
+
+  def self.order_filter(params)
+    sorting_key = params[:sort_by]&.downcase&.to_sym
+    allowed_sort_option = SORTING_OPTIONS[sorting_key]
+    direction = params[:direction] == "desc" ? "desc" : "asc"
+
+    if allowed_sort_option.present?
+      order("#{allowed_sort_option} #{direction}")
+    elsif sorting_key == :roles
+      if direction == "asc"
+        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+      else
+        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+      end
+    else
+      order(id: :desc)
+    end
   end
 
   def show_no_registered_address_field?
@@ -221,6 +242,18 @@ class User < ApplicationRecord
     unless attempt_verification
       Mailer.reverification_failed(self).deliver_later
     end
+  end
+
+  def roles
+    roles = []
+    roles << :admin if administrator?
+    roles << :moderator if moderator?
+    roles << :valuator if valuator?
+    roles << :manager if manager?
+    roles << :poll_officer if poll_officer?
+    roles << :official if official?
+    roles << :organization if organization?
+    roles
   end
 
   def link_to_registered_address  #TODO remove after data migration

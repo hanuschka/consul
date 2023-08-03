@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "controllers", "organizations", "registrations_controller").to_s
 
 class Organizations::RegistrationsController < Devise::RegistrationsController
+  raise FeatureFlags::FeatureDisabled, :organizations
+
   private
 
     def allowed_params

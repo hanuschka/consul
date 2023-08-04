@@ -85,3 +85,9 @@ de:
         link: Livestream
         p1: es ist ein neue Livestream auf Consul eingegangen.
         signature_html: Viele Grüße</br>Consul
+      user_reverification_failed:
+        subject: Verifizierung nicht länger gültig
+        hi: Sehr geehrte*r Nutzer*in von Consul,
+        link_text: diesen Link
+        p1: Ihre Verifizierung ist nicht länger gültig - über %{link} können Sie Ihre Daten aktualisieren und eine erneute Verifizierung beantragen
+        signature_html: Viele Grüße</br>Consul

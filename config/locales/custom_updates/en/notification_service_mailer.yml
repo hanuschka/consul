@@ -79,3 +79,9 @@ en:
         link: Projekt livestream
         p1: New projekt livestream has just been added to Consul
         signature_html: Best regards</br>Consul
+      user_reverification_failed:
+        subject: Verification no longer valid
+        hi: Dear Consul user,
+        link_text: this link
+        p1: Your verification is no longer valid - you can update your details and request re-verification via %{link}
+        signature_html: Best regards</br>Consul

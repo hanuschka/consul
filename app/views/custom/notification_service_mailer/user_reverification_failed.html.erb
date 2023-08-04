@@ -1,0 +1,19 @@
+<td style="padding-bottom: 20px; padding-left: 10px;">
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.notification_service_mailers.user_reverification_failed.hi") %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+   <%= sanitize(
+     t("custom.notification_service_mailers.user_reverification_failed.p1",
+       link: link_to(t("custom.notification_service_mailers.user_reverification_failed.link_text"), account_url)
+     ),
+     attributes: %w[href style]
+   ) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.notification_service_mailers.user_reverification_failed.signature_html") %>
+  </p>
+</td>

@@ -17,6 +17,7 @@ en:
       show:
         user_permission_votes: Participate in polls
         admin_notifications: Admin Notifications
+        edit_personal_data_button: Edit my details
     boolean:
       "yes": "yes"
       "no": "no"

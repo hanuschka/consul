@@ -18,6 +18,7 @@ de:
         user_permission_votes: An Abstimmungen teilnehmen
         admin_notifications: Admin Benachrichtigungen
         user_groups_title: Individuelle Gruppen
+        edit_personal_data_button: Persönliche Daten bearbeiten
     boolean:
       "yes": "ja"
       "no": "nein"

@@ -5,7 +5,7 @@ module NotificationServices
     end
 
     def call
-      NotificationServiceMailer.user_reverification_failed(user_id).deliver_later
+      NotificationServiceMailer.user_reverification_failed(@user_id).deliver_later
     end
   end
 end

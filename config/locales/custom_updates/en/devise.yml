@@ -13,6 +13,7 @@ en:
             gender: Please select
             city_name_label: City
             document_last_digits_label: Document (4 last digits)
+            document_number: Dokument number
             password_hint: Password must contain at least 8 characters.
             form_registered_address_label: Address
             form_registered_address_city_label: City/Town

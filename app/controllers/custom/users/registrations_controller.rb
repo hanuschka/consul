@@ -6,12 +6,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     build_resource(sign_up_params)
     resource.registering_from_web = true
+    increase_error_count_for_registered_address_selectors
 
-    if resource.valid?
+    if resource.errors.empty? && resource.valid?
       super
     else
       set_registered_address_instance_variables
-      increase_error_count_for_registered_address_selectors
       render :new
     end
   end

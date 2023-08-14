@@ -33,15 +33,14 @@ module HasRegisteredAddress
 
     def increase_error_count_for_registered_address_selectors
       return unless resource.extended_registration?
+      return unless RegisteredAddress.any?
 
-      if RegisteredAddress::City.any?
-        if params[:form_registered_address_city_id].blank?
-          resource.errors.add(:form_registered_address_city_id, :blank)
-        elsif params[:form_registered_address_street_id].blank?
-          resource.errors.add(:form_registered_address_street_id, :blank)
-        elsif params[:form_registered_address_id].blank?
-          resource.errors.add(:form_registered_address_id, :blank)
-        end
+      if params[:form_registered_address_city_id].blank?
+        resource.errors.add(:form_registered_address_city_id, :blank)
+      elsif params[:form_registered_address_street_id].blank?
+        resource.errors.add(:form_registered_address_street_id, :blank)
+      elsif params[:form_registered_address_id].blank?
+        resource.errors.add(:form_registered_address_id, :blank)
       end
     end
 end

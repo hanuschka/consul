@@ -6,6 +6,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     build_resource(sign_up_params)
     resource.registering_from_web = true
+    resource.form_registered_address_city_id = params[:form_registered_address_city_id]
+    resource.form_registered_address_street_id = params[:form_registered_address_street_id]
+    resource.form_registered_address_id = params[:form_registered_address_id]
     increase_error_count_for_registered_address_selectors
 
     if resource.errors.empty? && resource.valid?

@@ -63,14 +63,14 @@ class User < ApplicationRecord
       next if user.city_street.blank? && user.street_name.blank?
 
       street_name_selector = if user.city_street.present?
-                               user.city_street.name.split()[0].downcase
+                               user.city_street.name.downcase[0..7]
                              elsif user.street_name.present?
-                               user.street_name.split()[0].downcase
+                               user.street_name.downcase[0..7]
                              end
 
       matching_registered_addresses = RegisteredAddress.joins(:registered_address_street)
         .where("LOWER(registered_address_streets.name) LIKE ? AND CONCAT(street_number,LOWER(street_number_extension)) = ?",
-               "#{street_name_selector}%", user.street_number&.downcase)
+               "#{street_name_selector}%", user.street_number&.downcase.gsub(" ", ""))
 
       next if matching_registered_addresses.blank?
 

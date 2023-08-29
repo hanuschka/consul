@@ -57,7 +57,7 @@ module MapLayerAdminActions
       params.require(:map_layer).permit(
         :layer_defs, # cli_flen
         :name, :layer_names, :base, :show_by_default, :provider,
-        :attribution, :protocol, :format, :transparent
+        :attribution, :protocol, :format, :transparent, :opacity
       )
     end
 

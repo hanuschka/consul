@@ -7,6 +7,7 @@ de:
         name: für Endbenutzer sichtbar
         provider: Karten-URL
         layer_defs: LayerDefs-Argument
+        opacity: Transparenz für die Kartenschicht einstellen 
       labels:
         attribution: Attribution
         layer_names: Kartenebenennamen

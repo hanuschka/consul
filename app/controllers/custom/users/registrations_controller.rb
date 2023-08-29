@@ -23,26 +23,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def create_user
     @user = User.new(create_user_params)
-    @user.username = Time.now.strftime("%Y%^b%d%H%M%S%L")
+    @user.username = Time.zone.now.strftime("%Y%^b%d%H%M%S%L")
 
-    if @user.valid?
-      @user.save
-
-      if @user.persisted?
-        if @user.active_for_authentication?
-          set_flash_message! :notice, :signed_up_but_unconfirmed
-          redirect_to users_sign_up_success_path
-        else
-          set_flash_message! :notice, :"signed_up_but_#{@user.inactive_message}"
-          expire_data_after_sign_in!
-          respond_with @user, location: after_inactive_sign_up_path_for(@user)
-        end
-      else
-        clean_up_passwords @user
-        set_minimum_password_length
-        respond_with @user
-      end
-
+    if @user.save
+      set_flash_message! :notice, :signed_up_but_unconfirmed
+      redirect_to users_sign_up_success_path
     else
       render :user_info
     end

@@ -1,4 +1,6 @@
 class FormularAnswersController < ApplicationController
+  include ImageAttributes
+
   skip_authorization_check
   respond_to :js
 
@@ -16,9 +18,10 @@ class FormularAnswersController < ApplicationController
       email = @formular_answer.email_address
       Mailer.formular_answer_confirmation(email).deliver_later if email.present?
       @success_notification = t("custom.formular_answer.notifications.success")
+      render :create_success
+    else
+      render :create
     end
-
-    render :create
   end
 
   def update
@@ -33,13 +36,19 @@ class FormularAnswersController < ApplicationController
 
     if @formular_answer.answer_errors.none? && @formular_answer.save
       @success_notification = t("custom.formular_answer.notifications.success")
+      render :update_success
+    else
+      remder :update
     end
   end
 
   private
 
     def formular_answer_params
-      params.require(:formular_answer).permit(:formular_id, answers: {})
+      params.require(:formular_answer).permit(
+        :formular_id, answers: {},
+        formular_answer_images_attributes: image_attributes.push(:formular_field_key)
+      )
     end
 
     def validate_answer(formular_answer)

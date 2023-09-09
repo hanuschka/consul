@@ -177,3 +177,7 @@ en:
         show_less: "Show less"
   tag_names:
     general: General
+  formular_answer_images:    
+    errors:
+      messages:
+        in_between: must be betwee %{min} and %{max}

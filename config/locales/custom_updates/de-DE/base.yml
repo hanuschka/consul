@@ -189,3 +189,7 @@ de:
       long: '%d. %B %Y'
   tag_names:
     general: General
+  formular_answer_images:    
+    errors:
+      messages:
+        in_between: muss zwischen %{min} und %{max} sein

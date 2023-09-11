@@ -178,6 +178,8 @@ en:
   tag_names:
     general: General
   formular_answer_images:    
+    form:
+      add_new_image: Add image
     errors:
       messages:
         in_between: must be betwee %{min} and %{max}

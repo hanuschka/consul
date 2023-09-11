@@ -52,6 +52,8 @@ class FormularAnswersController < ApplicationController
     end
 
     def validate_answer(formular_answer)
+      formular_answer.valid?
+
       formular_fields = formular_answer.persisted? ? formular_answer.formular_fields.follow_up : formular_answer.formular_fields.primary
 
       formular_fields.each do |formular_field|
@@ -70,7 +72,11 @@ class FormularAnswersController < ApplicationController
     end
 
     def validate_for_presence(formular_answer, formular_field)
-      return unless formular_answer.answers[formular_field.key].blank?
+      if formular_field.kind == "image"
+        return if formular_answer.formular_answer_images.find { |im| im.formular_field_key == formular_field.key }.present?
+      else
+        return if formular_answer.answers[formular_field.key].present?
+      end
 
       error_message = t("custom.formular_answer.errors.blank")
       formular_answer.answer_errors[formular_field.key] = error_message

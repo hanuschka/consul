@@ -11,14 +11,16 @@ class FormularAnswers::ImageFieldsComponent < ApplicationComponent
   private
 
     def formular_answer_image
-      formular_answer.formular_answer_images.find { |im| im.formular_field_key == formular_field.key } || f.object
+      # formular_answer.formular_answer_images.find { |im| im.formular_field_key == formular_field.key } || f.object
+      # formular_answer.formular_answer_images.find_by(formular_field_key: formular_field.key) || f.object
+      f.object
     end
 
     def destroy_link(formular_answer_image)
       if !formular_answer_image.persisted? && formular_answer_image.cached_attachment.present?
         link_to t("images.form.delete_button"), "#", class: "delete remove-cached-attachment"
       else
-        link_to_remove_association remove_association_text, f, class: "delete remove-image"
+        link_to_remove_association t("images.form.delete_button"), f, class: "delete remove-image"
       end
     end
 
@@ -40,9 +42,5 @@ class FormularAnswers::ImageFieldsComponent < ApplicationComponent
 
     def accepted_content_types_extensions
       ".jpg,.jpeg,.png"
-    end
-
-    def remove_association_text
-      t("images.form.delete_button")
     end
 end

@@ -12,7 +12,7 @@ class FormularAnswerImage < ApplicationRecord
   # validate :validate_title_length
 
   def self.max_file_size
-    1
+    5
   end
 
   def self.accepted_content_types

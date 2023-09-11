@@ -8,6 +8,8 @@ class FormularAnswerImageDirectUpload
                 :attachment, :cached_attachment
 
   validates :attachment, presence: true
+  validate :parent_resource_attachment_validations,
+    if: -> { attachment.present? && relation.present? }
 
   def initialize(attributes = {})
     attributes.each do |name, value|
@@ -32,6 +34,14 @@ class FormularAnswerImageDirectUpload
   end
 
   private
+
+    def parent_resource_attachment_validations
+      @relation.valid?
+
+      if @relation.errors.key? :attachment
+        errors.add(:attachment, @relation.errors.full_messages_for(:attachment))
+      end
+    end
 
     def relation_attributtes
       {

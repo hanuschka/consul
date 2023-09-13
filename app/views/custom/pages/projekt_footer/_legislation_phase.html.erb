@@ -15,7 +15,8 @@
               <% if @draft_version.changelog.present? %>
                 <span>
                   <%= link_to t("legislation.draft_versions.show.see_changes"),
-                              projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase, @draft_version, section: 'changelog'),
+                              projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase, section: 'changelog'),
+                              remote: true,
                               class: "see-changes" %>
                 </span>
               <% end %>
@@ -72,7 +73,8 @@
               <% if @draft_version.changelog.present? %>
                 <span>
                   <%= link_to t("legislation.draft_versions.show.see_changes"),
-                              projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase, @draft_version, section: 'changelog'),
+                              projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase, section: 'changelog'),
+                              remote: true,
                               class: "see-changes" %>
                 </span>
               <% end %>
@@ -157,8 +159,8 @@
         </div>
         <div class="small-12 column projekt-texts-button-section">
           <%= render "legislation/processes/help_gif" %>
-          <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase, @draft_version),
-                      title: t("legislation.draft_versions.changes.see_text"), class: "button hollow projekt-all-comments-button" do %>
+          <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase),
+                      title: t("legislation.draft_versions.changes.see_text"), class: "button hollow projekt-all-comments-button", remote: true do %>
             <%= t("legislation.draft_versions.changes.see_text") %>
           <% end %>
         </div>
@@ -189,8 +191,8 @@
       </div>
       <div class="small-12 column projekt-texts-button-section">
         <%= render "legislation/processes/help_gif" %>
-        <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase, @draft_version),
-                    title: t("legislation.annotations.version_chooser.see_text"), class: "button hollow" do %>
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase),
+                    title: t("legislation.annotations.version_chooser.see_text"), class: "button hollow", remote: true do %>
           <%= t("legislation.annotations.version_chooser.see_text") %>
         <% end %>
       </div>

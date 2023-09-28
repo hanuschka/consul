@@ -2,7 +2,8 @@ class Organizations::RegistrationsController < Devise::RegistrationsController
   invisible_captcha only: [:create], honeypot: :address, scope: :user
 
   def new
-    super(&:build_organization)
+    redirect_to new_user_registration_path
+    # super(&:build_organization)
   end
 
   def success

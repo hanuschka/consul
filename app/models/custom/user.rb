@@ -114,6 +114,7 @@ class User < ApplicationRecord
     )
 
     recalculate_ballot_line_weight_for_relevant_investments
+    true
   end
 
   def unverify!
@@ -124,6 +125,7 @@ class User < ApplicationRecord
     )
 
     recalculate_ballot_line_weight_for_relevant_investments
+    true
   end
 
   def take_votes_from_erased_user

@@ -8,13 +8,12 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       sign_in(resource)
 
       if signed_in?(resource_name)
-        last_budget = Budget.joins(projekt: :page)
-                            .where(budgets: { projekts: { site_customization_pages: { status: 'published' } } })
-                            .last
+        last_budget = Budget.joins(projekt_phase: { projekt: :page })
+          .where(budgets: { projekt_phases: { projekts: { site_customization_pages: { status: "published" }}}}).last
 
         if last_budget.present?
           page_path(last_budget.projekt.page.slug,
-                    selected_phase: last_budget.projekt.budget_phase.id.to_s,
+                    selected_phase_id: last_budget.projekt_phase.id.to_s,
                     anchor: "filter-subnav")
         else
           signed_in_root_path(resource)

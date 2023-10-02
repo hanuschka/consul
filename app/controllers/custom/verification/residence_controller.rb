@@ -14,12 +14,13 @@ class Verification::ResidenceController < ApplicationController
     @residence.form_registered_address_street_id = params[:form_registered_address_street_id]
     @residence.form_registered_address_id = params[:form_registered_address_id]
 
-    last_budget = Budget.joins(projekt: :page).where(budgets: { projekts: { site_customization_pages: { status: 'published' } } }).last
+    last_budget = Budget.joins(projekt_phase: { projekt: :page })
+      .where(budgets: { projekt_phases: { projekts: { site_customization_pages: { status: "published" }}}}).last
     last_budget_link = nil
 
     if last_budget.present?
       last_budget_link = page_path(last_budget.projekt.page.slug,
-                                   selected_phase: "#{last_budget.projekt.budget_phase.id}",
+                                   selected_phase_id: last_budget.projekt_phase.id,
                                    anchor: "filter-subnav")
     end
 

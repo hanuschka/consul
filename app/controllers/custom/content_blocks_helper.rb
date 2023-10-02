@@ -8,7 +8,7 @@ module ContentBlocksHelper
 
     if current_user&.administrator?
       edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_admin_site_customization_content_block_path(block, return_to: request.path) )
-    elsif current_user&.projekt_manager?(@custom_page&.projekt)
+    elsif @custom_page&.projekt && current_user&.projekt_manager?(@custom_page&.projekt)
       edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: request.path) )
     end
 

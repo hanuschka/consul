@@ -26,6 +26,6 @@ class Admin::UsersController < Admin::BaseController
 
   def unverify
     @user = User.find(params[:id])
-    @user.update!(verified_at: nil, geozone: nil, unique_stamp: nil)
+    @user.unverify!
   end
 end

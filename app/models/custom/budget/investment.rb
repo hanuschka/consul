@@ -60,5 +60,16 @@ class Budget
     def permission_problem_keys_allowing_ballot_line_deletion
       [:not_enough_available_votes, :not_enough_money]
     end
+
+    def calculate_qualified_total_ballot_line_weight
+      budget_ballot_lines
+        .joins(ballot: :user).where.not(users: { verified_at: nil, geozone_id: nil })
+        .sum(:line_weight)
+    end
+
+    def calculate_unqualified_total_ballot_line_weight
+      budget_ballot_lines
+        .sum(:line_weight)
+    end
   end
 end

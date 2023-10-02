@@ -106,11 +106,24 @@ class User < ApplicationRecord
     return false unless stamp_unique?
 
     take_votes_from_erased_user
+
     update_columns(
       verified_at: Time.current,
       unique_stamp: prepare_unique_stamp,
       geozone_id: geozone_with_plz&.id
     )
+
+    recalculate_ballot_line_weight_for_relevant_investments
+  end
+
+  def unverify!
+    update_columns(
+      verified_at: nil,
+      unique_stamp: nil,
+      geozone_id: nil
+    )
+
+    recalculate_ballot_line_weight_for_relevant_investments
   end
 
   def take_votes_from_erased_user
@@ -277,6 +290,20 @@ class User < ApplicationRecord
     def email_should_not_be_used_by_hidden_user
       if User.only_hidden.find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
+      end
+    end
+
+    def recalculate_ballot_line_weight_for_relevant_investments
+      relevant_ballots = Budget::Ballot.where(user: self)
+        .joins(:budget).where(budgets: { phase: "balloting" })
+
+      return unless relevant_ballots.present?
+
+      relevant_ballots.each do |ballot|
+        ballot.investments.each do |investment|
+          new_qualified_total_ballot_line_weight = investment.calculate_qualified_total_ballot_line_weight
+          investment.update!(qualified_total_ballot_line_weight: new_qualified_total_ballot_line_weight)
+        end
       end
     end
 end

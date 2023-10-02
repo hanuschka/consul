@@ -151,10 +151,6 @@ class User < ApplicationRecord
     end
   end
 
-  def stamp_unique?
-    User.find_by(unique_stamp: prepare_unique_stamp).blank?
-  end
-
   def prepare_unique_stamp
     return nil unless first_name.present? && last_name.present? && date_of_birth.present? && plz.present?
 

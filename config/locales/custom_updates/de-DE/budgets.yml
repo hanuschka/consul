@@ -33,6 +33,7 @@ de:
           Danach werden Ihre Stimmen freigegeben und Sie erhalten eine E-Mail.</p>
           <p>Ihre Daten werden manuell überprüft. Dies kann 1-2 Werktage in Anspruch nehmen.<br>
           Danach werden Ihre Stimmen freigegeben.</p>"
+          voted_info_geozone_restricted_html: Ihr Konto wurde verifiziert. Ihre Stimmen wurden jedoch nicht gezählt, da die Geo-Restriktion Ihre Stimme ausschließt.
   custom:
     budgets:
       investments:
@@ -53,6 +54,7 @@ de:
           qualified_supports: "Gesamtstimmen: %{count}"
           line_weight_label: "Deine Stimmenanzahl"
           unverified_note: "Ihre Daten werden manuell überprüft. Dies kann 1-2 Werktage in Anspruch nehmen. Wenn Ihre Daten den Kriterien entsprechen, dann werden Ihre Stimmen freigegeben."
+          geozone_restricted_note: "Ihr Konto wurde verifiziert. Ihre Stimmen wurden jedoch nicht gezählt, da die Geo-Restriktion Ihre Stimme ausschließt."
           unverified_note_no_data_html: "Bitte %{verify_account}."
           unfeasible_html: "Dieser Investitionsvorschlag <strong>wurde als nicht durchführbar markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
         show:

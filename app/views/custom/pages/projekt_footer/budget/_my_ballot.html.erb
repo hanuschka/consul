@@ -12,10 +12,16 @@
       <p><strong><%= t("budgets.investments.index.sidebar.zero") %></strong></p>
     <% end %>
 
-    <% if @ballot.investments.exists? && !current_user.level_three_verified? %>
-      <p>
-        <%= t("budgets.investments.index.sidebar.voted_info_unverified_html") %>
-      </p>
+    <% if @ballot.investments.exists? %>
+      <% if current_user.verified_at.nil? %>
+        <p>
+          <%= t("budgets.investments.index.sidebar.voted_info_unverified_html") %>
+        </p>
+      <% elsif current_user.geozone_id.nil? %>
+        <p>
+          <%= t("budgets.investments.index.sidebar.voted_info_geozone_restricted_html") %>
+        </p>
+      <% end %>
     <% end %>
 
     <ul class="ballot-list">

@@ -138,6 +138,13 @@ module Abilities
       can :comment_as_moderator, [ProjektPhase, Debate, Proposal, Budget::Investment, Poll, ProjektQuestion] do |resource|
         user.projekt_manager.allowed_to?("moderate", resource.projekt)
       end
+
+      can [:results, :stats], Poll do |poll|
+        user.projekt_manager?(poll.projekt) &&
+          poll.projekt_phase
+            .settings.find_by(key: "feature.resource.intermediate_poll_results_for_admins", value: "active")
+            .present?
+      end
     end
   end
 end

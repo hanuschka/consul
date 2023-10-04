@@ -77,7 +77,7 @@
       </div>
     <% end %>
 
-    <% if current_user.administrator? || current_user.moderator? %>
+    <% if allowed_to_post_on_behalf_of?(current_user, @investment.projekt) %>
       <div>
         <%= f.text_field :on_behalf_of %>
       </div>

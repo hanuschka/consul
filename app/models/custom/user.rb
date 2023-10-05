@@ -300,7 +300,7 @@ class User < ApplicationRecord
 
       regex_pattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?=.*[A-Z])(?=.*[a-z])(?=.*[#{escaped_special_symbols}])|(?=.*[A-Z])(?=.*\d)(?=.*[#{escaped_special_symbols}])|(?=.*[a-z])(?=.*\d)(?=.*[#{escaped_special_symbols}])/
 
-      unless password.match?(regex)
+      unless password.match?(regex_pattern)
         errors.add :password, :low_complexity
       end
     end

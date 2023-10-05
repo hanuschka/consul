@@ -33,6 +33,7 @@ class User < ApplicationRecord
   scope :projekt_managers, -> { joins(:projekt_manager) }
 
   validate :email_should_not_be_used_by_hidden_user
+  validate :password_complexity, if: :password_required?
 
   validates :first_name, presence: true, on: :create, if: :extended_registration?
   validates :last_name, presence: true, on: :create, if: :extended_registration?
@@ -287,6 +288,20 @@ class User < ApplicationRecord
     def email_should_not_be_used_by_hidden_user
       if User.only_hidden.find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
+      end
+    end
+
+    def password_complexity
+      return unless password.present?
+
+      # at least three of the following four elements: a capital letter, a small letter, a digit, or a special symbol
+      special_symbols = "~!@#$%^&*()_-+={}[]|:;,<>.?/"
+      escaped_special_symbols = Regexp.escape(special_symbols)
+
+      regex_pattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?=.*[A-Z])(?=.*[a-z])(?=.*[#{escaped_special_symbols}])|(?=.*[A-Z])(?=.*\d)(?=.*[#{escaped_special_symbols}])|(?=.*[a-z])(?=.*\d)(?=.*[#{escaped_special_symbols}])/
+
+      unless password.match?(regex)
+        errors.add :password, :low_complexity
       end
     end
 end

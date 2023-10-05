@@ -26,6 +26,10 @@ en:
           attributes:
             color:
               invalid: Please provide color in HEX format
+        user:
+          attributes:
+            password:
+              low_complexity: "must include minimum three of the following four cretiria: uppercase letter lower, case letter, digit, special symbol (e.g. ! or @)"
     attributes:
       projekt:
         show_start_date_in_frontend: Visible in front end

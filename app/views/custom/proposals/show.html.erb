@@ -107,8 +107,6 @@
             <%= render "shared/participation/flag", resource: @proposal %>
           <% end %>
 
-          <%= render "proposals/social_share", proposal: @proposal, share_title: t("proposals.show.share") %>
-
           <% if current_user && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_follow_button_in_proposal_sidebar") %>
             <div class="sidebar-divider"></div>
             <h2><%= t("shared.follow") %></h2>

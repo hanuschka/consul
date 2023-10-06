@@ -1,5 +1,8 @@
 en:
   custom:
+    common:
+      information: Information
+      share: Share
     account:
       settings:
         email_digest: Receive a summary of proposal notifications
@@ -169,6 +172,13 @@ en:
       start_entry: + Create a post
       start_proposal: Create a proposal
       user_entries: Latest submissions
+      latest_activity:
+        title: My activity
+        proposals: Proposals
+        debates: Debates
+        budget_investments: Investment proposals
+        comments: Comments
+        follows: Follows
     welcome_launch:
       p1: We're building a new citizen participation platform for the city of %{org_name}
       p2: We'll go live on %{date}!
@@ -178,3 +188,9 @@ en:
         show_less: "Show less"
   tag_names:
     general: General
+  formular_answer_images:
+    form:
+      add_new_image: Add image
+    errors:
+      messages:
+        in_between: must be betwee %{min} and %{max}

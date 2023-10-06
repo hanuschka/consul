@@ -1,0 +1,14 @@
+de:
+  custom:
+    users:
+      settings: Kontoeinstellungen
+      activity: Aktivität
+      contact: Kontakt
+      resources_filter:
+    user_page:
+      filters:
+        proposals: Vorschläge
+        debates: Diskussionen
+        budget_investments: Budgetinvestitionen
+        comments: Kommentare
+        follows: Folge ich

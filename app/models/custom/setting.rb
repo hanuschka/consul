@@ -22,6 +22,17 @@ class Setting < ApplicationRecord
   end
 
   class << self
+    def all_settings_hash
+      unless Current.settings.present?
+        Current.settings = Setting.all.pluck(:key, :value).to_h
+      end
+
+      Current.settings
+    end
+
+    def [](key)
+      all_settings_hash[key]
+    end
 
     def defaults
       {
@@ -173,6 +184,8 @@ class Setting < ApplicationRecord
         "extended_option.general.title": 'Öffentlichkeitsbeteiligung',
         "extended_option.general.subtitle": 'in der Stadt CONSUL',
         "extended_option.general.launch_date": '',
+        "extended_feature.general.enable_old_design": true,
+        "extended_feature.general.use_white_top_navigation_text": false,
 
         "extended_feature.gdpr.gdpr_conformity": true,
         "extended_feature.gdpr.link_out_warning": true,
@@ -226,7 +239,7 @@ class Setting < ApplicationRecord
 
         "extra_fields.registration.extended": false,
         "extra_fields.registration.check_documents": false,
-        "extra_fields.verification.check_documents": false,
+        "extra_fields.verification.check_documents": false
       }
     end
 
@@ -236,6 +249,22 @@ class Setting < ApplicationRecord
 
     def destroy_obsolete
       Setting.all.each{ |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
+    end
+
+    def old_design_enabled?
+      if Rails.env.production?
+        true
+      else
+        enabled?("extended_feature.general.enable_old_design")
+      end
+    end
+
+    def new_design_enabled?
+      !old_design_enabled?
+    end
+
+    def enabled?(key)
+      self[key] == "active"
     end
   end
 end

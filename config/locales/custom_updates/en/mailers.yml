@@ -17,3 +17,5 @@ en:
       p1: Dear Consul User,
       p2_html: Your verification is no longer valid - you can update your details and request re-verification via %{account_link}.
       account_link: this Link
+    formular_follow_up_letter:
+      button_text: To the form

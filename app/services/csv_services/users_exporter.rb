@@ -23,6 +23,7 @@ module CsvServices
         [
           "Id", "Username", "Email", "Vorname", "Nachname",
           "Stadt", "Adresse", "Postleitzahl", "Gebiet",
+          "Nutzer angelegt am",
           "Dokument", "Dokument (4 letzten Ziffern)",
           "Geschlecht", "Geburtsdatum", "Rollen", "Unique Stamp", "Verifiziert am"
         ]
@@ -32,6 +33,7 @@ module CsvServices
         user_row = [
           user.id, user.name, user.email, user.first_name, user.last_name,
           user.city_name, user.formatted_address, user.plz, user.geozone&.name,
+          user.created_at,
           user.document_type, user.document_last_digits
         ]
 

@@ -1,0 +1,73 @@
+.hide-on-mobile {
+  @media screen and (max-width: 650px) {
+    display: none !important;
+  }
+}
+
+.progress {
+  height: 1.3rem;
+  border-radius: 0.3rem;
+  overflow: hidden;
+  position: relative;
+  color: black;
+
+  .meter {
+    height: 100%;
+    background-color: #FFA42D;
+    display: block;
+  }
+
+  .percentage {
+    top: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+}
+
+.supports {
+  // position: relative;
+
+  abbr {
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .button {
+    background-color: #FFA42D;
+    color: black;
+
+    &:focus, &:active {
+      background-color: #FFA42D;
+      color: black;
+    }
+
+    &:hover {
+      background: #ffbf6b;
+      color: black;
+    }
+  }
+
+  .in-favor {
+    .button {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.cke_editable {
+  line-height: 1.4;
+}
+
+.common-page-description {
+  margin-bottom: 35px;
+}
+
+.documents .document-link {
+  border-radius: 5px;
+}
+
+ul.deficiency-reports-sidebar-filter input::checked ~ .checkmark::before {
+
+     content: "\f192";
+}

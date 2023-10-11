@@ -16,14 +16,8 @@ class DebatesController < ApplicationController
 
     @resource_name = "debate"
 
-    if params[:filter_projekt_ids]
-      @selected_projekts_ids = params[:filter_projekt_ids].select { |id| Projekt.find_by(id: id).present? }
-      selected_parent_projekt_id = get_highest_unique_parent_projekt_id(@selected_projekts_ids)
-      @selected_parent_projekt = Projekt.find_by(id: selected_parent_projekt_id)
-    end
-
-    related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
-    related_projekts = Projekt.where(id: related_projekt_ids)
+    # related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
+    # related_projekts = Projekt.where(id: related_projekt_ids)
 
     @geozones = Geozone.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
@@ -38,25 +32,34 @@ class DebatesController < ApplicationController
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
 
-    @categories = Tag.category.joins(:taggings)
-      .where(taggings: { taggable_type: "Projekt", taggable_id: related_projekt_ids }).order(:name).uniq
+    # @categories = Tag.category.joins(:taggings)
+    #   .where(taggings: { taggable_type: "Projekt", taggable_id: related_projekt_ids }).order(:name).uniq
+    #
+    # if params[:sdg_goals].present?
+    #   sdg_goal_ids = SDG::Goal.where(code: params[:sdg_goals].split(",")).ids
+    #   @sdg_targets = SDG::Target.where(goal_id: sdg_goal_ids).joins(:relations)
+    #     .where(sdg_relations: { relatable_type: "Projekt", relatable_id: related_projekt_ids })
+    # end
 
-    if params[:sdg_goals].present?
-      sdg_goal_ids = SDG::Goal.where(code: params[:sdg_goals].split(",")).ids
-      @sdg_targets = SDG::Target.where(goal_id: sdg_goal_ids).joins(:relations)
-        .where(sdg_relations: { relatable_type: "Projekt", relatable_id: related_projekt_ids })
-    end
+    @resources = @resources.by_projekt_id(@scoped_projekt_ids)
+    @all_resources = @resources
 
     unless params[:search].present?
       take_by_my_posts
-      take_by_tag_names(related_projekts)
-      take_by_sdgs(related_projekts)
+      # take_by_tag_names(related_projekts)
+      # take_by_sdgs(related_projekts)
       take_by_geozone_affiliations
       take_by_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
     end
 
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
+
+    if Setting.new_design_enabled?
+      render :index_new
+    else
+      render :index
+    end
   end
 
   def new
@@ -121,15 +124,6 @@ class DebatesController < ApplicationController
     @projekt = @debate.projekt_phase.projekt
     @related_contents = Kaminari.paginate_array(@debate.relationed_contents).page(params[:page]).per(5)
 
-    if request.path != debate_path(@debate)
-      redirect_to debate_path(@debate), status: :moved_permanently
-
-    elsif !@projekt.visible_for?(current_user)
-      @individual_group_value_names = @projekt.individual_group_values.pluck(:name)
-      render "custom/pages/forbidden", layout: false
-
-    end
-
     @geozones = Geozone.all
 
     @selected_geozone_affiliation = params[:geozone_affiliation] || 'all_resources'
@@ -137,6 +131,22 @@ class DebatesController < ApplicationController
 
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
+
+
+    if request.path != debate_path(@debate)
+      redirect_to debate_path(@debate), status: :moved_permanently
+
+    elsif !@projekt.visible_for?(current_user)
+      @individual_group_value_names = @projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+
+    elsif Setting.new_design_enabled?
+      render :show_new
+
+    else
+      render :show
+
+    end
   end
 
   def flag

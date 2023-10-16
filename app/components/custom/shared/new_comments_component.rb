@@ -2,10 +2,11 @@ class Shared::NewCommentsComponent < ApplicationComponent
   attr_reader :record, :comment_tree
   delegate :current_user, :current_order, :locale_and_user_status, :commentable_cache_key, to: :helpers
 
-  def initialize(record, comment_tree, show_title: true)
+  def initialize(record, comment_tree, show_title: true, remote_url: nil)
     @record = record
     @comment_tree = comment_tree
     @show_title = show_title
+    @remote_url = remote_url
   end
 
   private
@@ -75,14 +76,6 @@ class Shared::NewCommentsComponent < ApplicationComponent
       paginate comment_tree.root_comments, params: { action: "projekt_phase_footer_tab" }, remote: true
     else
       paginate comment_tree.root_comments, params: { anchor: "comments" }
-    end
-  end
-
-  def remote_url
-    if record.is_a?(ProjektPhase::CommentPhase)
-      helpers.projekt_footer_phase_filter_url(record)
-    else
-      nil
     end
   end
 end

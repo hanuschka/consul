@@ -24,6 +24,7 @@ html{
 
     .wrapper {
       margin-bottom: 80px;
+      margin-top: 100px;
     }
 
     main, .top-bar {
@@ -202,4 +203,14 @@ body.custom-new-design {
 
 .notification {
   border-radius: 5px;
+}
+
+.page-main-title {
+  @media(max-width: $big-tablet-viewport-start) {
+    padding: 0 20px;
+  }
+}
+
+.padding-on-mobile {
+  padding: 0 20px;
 }

@@ -207,10 +207,10 @@
     flex-grow: 1;
 
     .button {
-      margin-bottom: 0;
-      margin-top: 0;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
       height: 32px;
-      padding: 0 15px 0;
+      padding: 0 15px 0 !important;
     }
 
     .callout.warning, .callout.success, .callout.error,
@@ -225,9 +225,8 @@
       margin: 0;
       padding: 8px 25px;
       width: 299px;
-      margin-left: -25px;
+      border-radius: 5px;
     }
-    // .participation-not-allowed p{
 
     p.investment-project-amount {
       margin-bottom: 0;
@@ -257,16 +256,22 @@
     padding: 10px 25px;
     flex-direction: column;
 
-    & > * {
-      padding: 10px 25px !important;
-    }
-
     .supports-container {
       border-left: none;
+      min-height: 146px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .votes {
-      padding-bottom: 20px;
+      .in-favor-against {
+        padding-top: 10px;
+      }
+
+      .total-votes {
+        padding-bottom: 10px;
+      }
     }
 
     form {
@@ -281,11 +286,13 @@
     .supports {
       display: flex;
       flex-direction: column;
-      // justify-content: center;
-      min-height: 146px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
 
       .total-supports {
         display: block;
+        margin-top: 10px;
         margin-bottom: 10px;
       }
     }
@@ -413,9 +420,23 @@
     align-items: center;
     padding: 10px 25px;
     border-top: 1px solid #d9d9d9;
+
+    .label {
+      border-radius: 5px;
+    }
+  }
+
+  .resource-item--author-name {
+    // display: flex;
+    // flex-wrap: wrap;
+  }
+
+  .resource-item--author-full-name {
+    margin-right: 10px;
   }
 
   .resource-item--author-photo {
+    min-width: 35px;
     width: 35px;
     height: 35px !important;
     border-radius: 50%;
@@ -438,9 +459,18 @@
       display: block;
       color: inherit;
       text-align: left;
+      position: relative;
+      padding-left: 25px;
 
       &:hover {
         color: #28313b;
+      }
+
+      &:before{
+        font-family: "Font Awesome 5 Free";
+        font-weight: bold;
+        position: absolute;
+        left: 0;
       }
     }
 

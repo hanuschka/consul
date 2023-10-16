@@ -113,10 +113,9 @@ class Users::NewPublicActivityComponent < ApplicationComponent
 
     def list_params
       params = {
-        title: t("custom.users.activity"),
+        title: current_user == user ? t("custom.users.my_activity") : t("custom.users.activity"),
         current_filter: current_filter,
         filters: valid_filters,
-        paginate: current_filter != 'follows',
         filter_param: "filter",
         filter_title: "Filtern nach",
         filter_i18n_namespace: "custom.user_page"

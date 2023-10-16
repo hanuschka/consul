@@ -1,5 +1,5 @@
 .sidebar-card--section {
-  padding: 20px 25px;
+  padding: 18px 25px;
 
   h2 {
     display: none;
@@ -47,6 +47,7 @@
   margin-bottom: 15px;
   color: $main-text-color;
   font-size: 14px;
+  width: 100%;
 
   &:last-child {
     margin-bottom: 0;

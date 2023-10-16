@@ -10,7 +10,7 @@
           <% end %>
           <% c.placeholder do %>
             <% if @user.background_image.attached? %>
-              <%= image_tag(@user.background_image) %>
+              <%= image_tag(@user.background_image.variant(resize: "2000X500")) %>
             <% end %>
           <% end %>
         <% end %>
@@ -48,7 +48,7 @@
         <%= image_tag(@user.image&.variant(:medium)) %>
       </div>
     <% else %>
-      <div class="users-profile-banner--avatar-placeholder">
+      <div class="users-profile-banner--avatar users-profile-banner--avatar-placeholder">
         <%= @user.first_letter_of_name %>
       </div>
     <% end %>
@@ -61,12 +61,15 @@
       Beigetreten am: <%= l(@user.created_at, format: :date_only) %>
     </div>
     <div class="users-profile-banner--info-line">
-      <% if @user.level_three_verified? %>
-        <span class="icon-check"></span>
-        <%= t("account.show.verified_account") %>
-      <% else %>
-        Konto ist nicht verifiziert
+      <% unless skip_user_verification? %>
+        <% if @user.level_three_verified? %>
+          <span class="icon-check"></span>
+          <%= t("account.show.verified_account") %>
+        <% else %>
+          <%= t("custom.account.show.not_verified_account") %>
+        <% end %>
       <% end %>
     </div>
+    <%= render Shared::OfficialPositionBadgeComponent.new(user: @user) %>
   </div>
 </div>

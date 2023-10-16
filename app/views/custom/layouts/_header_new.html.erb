@@ -17,8 +17,10 @@
 
         <div class="top-bar--title">
           <%= link_to root_path do %>
-            <%= image_tag(topbar_image_path, alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
-            <%= image_tag(image_path_for("logo_header_new.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
+            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
+            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
+            <%#= image_tag(topbar_image_path, alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
+            <%#= image_tag(image_path_for("logo_header_new.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
           <% end %>
         </div>
 
@@ -29,7 +31,7 @@
 
           <% if !launch_page && current_user.nil? %>
             <div class='header--account-buttons show-on-desktop'>
-              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'button sign-in-button', role: 'button' %>
+              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'button sign-in-button -brand', role: 'button' %>
             </div>
           <% end %>
         </div>
@@ -42,10 +44,14 @@
             <% if current_user.present? %>
               <div class="header--responsive-menu--user">
                 <div class="header--responsive-menu--user-avatar">
-                  <%= current_user.name.chars.first.upcase %>
+                  <% if current_user&.image&.attached? %>
+                    <%= image_tag(current_user.image.variant(:medium)) %>
+                  <% else %>
+                    <%= current_user.first_letter_of_name %>
+                  <% end %>
                 </div>
                 <div class="header--responsive-menu--user-name">
-                  <%= current_user.name %>
+                  <%= current_user.full_name %>
                 </div>
                 <%= link_to("Profil anzeigen", user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
               </div>
@@ -66,7 +72,7 @@
               </div>
             <% end %>
 
-            <%# <%= render partial: "shared/subnavigation_new", locals: { placement: 'mobile', launch_page: launch_page } %>
+            <%= render partial: "shared/subnavigation_new", locals: { placement: 'mobile', launch_page: launch_page } %>
             <div class="small-12 column">
               <%= render "shared/top_links" %>
             </div>

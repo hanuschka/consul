@@ -1,13 +1,16 @@
 de:
   custom:
+    common:
+      information: Information
+      share: Teilen
     account:
       settings:
-        email_digest: Erhalten Sie eine Zusammenfassung der Benachrichtigungen zu Vorschlägen
-        email_on_comment: E-Mail-Benachrichtigung erhalten, bei Kommentare zu meinen Aktivitäten
-        email_on_comment_reply: E-Mail-Benachrichtigung erhalten, bei Antworten auf meine Kommentare
+        email_digest: Zusammenfassung von Vorschlägen
+        email_on_comment: Kommentaren zu meinen Aktivitäten
+        email_on_comment_reply: Antworten auf meine Kommentare
         email_on_direct_message: Private Nachrichten per Mail zulassen
-        newsletter: E-Mail-Benachrichtigung erhalten, bei wichtigen System-Infos
-        public_activity: Meine Aktivität veröffentlichen
+        newsletter: Newsletter
+        public_activity: Übersicht meiner Aktivität veröffentlichen
         public_interests: Vorschläge, denen ich folge, veröffentlichen
         adm_email_on_new_comment: E-Mail-Benachrichtigung erhalten nach jedem neuen Kommentar
         adm_email_on_new_proposal: E-Mail-Benachrichtigung erhalten nach jedem neuen Vorschlag
@@ -18,6 +21,8 @@ de:
         user_permission_votes: An Abstimmungen teilnehmen
         admin_notifications: Admin Benachrichtigungen
         user_groups_title: Individuelle Gruppen
+        hard_user_groups_title: Starke Gruppen
+        soft_user_groups_title: Schwache Gruppen
     boolean:
       "yes": "ja"
       "no": "nein"
@@ -175,8 +180,15 @@ de:
       current_polls: Laufende Abstimmungen
       start_debate: Diskussion starten
       start_entry: + Beitrag erstellen
-      start_proposal: Vorschlag erstellen
+      start_proposal: Eigenen Vorschlag erstellen
       user_entries: Neueste Beiträge
+      latest_activity:
+        title: Meine Aktivität
+        proposals: Vorschläge
+        debates: Diskussionen
+        budget_investments: Investitionsvorschläge
+        comments: Kommentare
+        follows: Follows
     welcome_launch:
       p1: Hier entsteht die neue Beteiligungsplattform der Stadt %{org_name}
       p2: Unser Go-Live ist am %{date}!
@@ -186,6 +198,18 @@ de:
         show_less: "Zeige weniger"
   date:
     formats:
+      date_only: '%d.%m.%Y'
       long: '%d. %B %Y'
+  time:
+    formats:
+      date_only: '%d.%m.%Y'
+      date_with_time: '%d.%m.%Y %H:%M'
+      new_date_with_year: "%d. %B %Y"
   tag_names:
     general: General
+  formular_answer_images:
+    form:
+      add_new_image: Bild hinzufügen
+    errors:
+      messages:
+        in_between: muss zwischen %{min} und %{max} sein

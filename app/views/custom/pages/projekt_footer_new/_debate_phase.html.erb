@@ -1,0 +1,38 @@
+<%= render "shared/loader_spinner" %>
+
+<div class="flex-column">
+  <div class="main-column">
+    <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
+      <%= link_to t('debates.index.section_header.help'), '#section_help' %>
+    <% end %>
+
+    <%= render(
+      Shared::ResourcesListComponent.new(
+        resources: @debates,
+        resource_type: Debate,
+        remote_url: projekt_footer_phase_filter_url(@projekt_phase),
+        text_search_enabled: true,
+        current_filter: @current_order,
+        filter_param: "order",
+        filters: @valid_orders,
+        empty_list_text: t("custom.debates.index.empty_list_text")
+      ))
+    %>
+  <%= paginate @debates, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
+  </div>
+
+  <div id="debates-sidebar" class="sidebar">
+    <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+    <%# <%= render Sidebar::Filters::GeozoneAffiliationsCardComponent.new(geozones: @geozones, resource_name: @resource_name) %>
+    <%# <%= render Sidebar::CategoriesCardComponent.new(categories: @categories) %>
+    <%# <%= render Sidebar::SdgsCardComponent.new(sdgs: @sdgs, sdg_targets: @sdg_targets) %>
+
+    <% if current_user.present? && extended_feature?('debates.enable_my_posts_filter') %>
+      <%= render Sidebar::Filters::MyPostsCardComponent.new %>
+    <% end %>
+
+    <%= render Sidebar::ExportListComponent.new(
+      path: admin_proposals_path(**request.query_parameters, format: :csv),
+    ) %>
+</div>
+</div>

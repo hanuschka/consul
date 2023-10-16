@@ -13,6 +13,7 @@ class PagesController < ApplicationController
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
     set_resource_instance
+    custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page.projekt.visible_for?(current_user)
       @projekt = @custom_page.projekt
@@ -28,7 +29,7 @@ class PagesController < ApplicationController
 
       @cards = @custom_page.cards
 
-      render action: :custom_page
+      render action: custom_page_name
 
     elsif @custom_page.present? && @custom_page.projekt.present?
       @individual_group_value_names = @custom_page.projekt.individual_group_values.pluck(:name)
@@ -36,7 +37,7 @@ class PagesController < ApplicationController
 
     elsif @custom_page.present?
       @cards = @custom_page.cards
-      render action: :custom_page
+      render action: custom_page_name
 
     else
       render action: params[:id]
@@ -90,8 +91,13 @@ class PagesController < ApplicationController
                      end
 
     @resources = @projekt_phase.debates.for_public_render
-    take_by_projekt_labels
-    take_by_sentiment
+
+    if params[:search].present?
+      @resources = @resources.search(params[:search])
+    else
+      take_by_projekt_labels
+      take_by_sentiment
+    end
 
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
@@ -109,18 +115,27 @@ class PagesController < ApplicationController
                      end
 
     @resources = @projekt_phase.proposals.for_public_render
-    take_by_projekt_labels
-    take_by_sentiment
+
+    if params[:search].present?
+      @resources = @resources.search(params[:search])
+    else
+      take_by_projekt_labels
+      take_by_sentiment
+      take_by_my_posts
+    end
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
     @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
 
   def set_voting_phase_footer_tab_variables
-    @valid_filters = %w[all current]
-    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
+    # @valid_filters = %w[all current]
+    # @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
 
-    @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
+    @valid_orders = nil
+
+    # @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
+    @resources = @projekt_phase.polls.for_public_render.all
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
   end
 
@@ -209,6 +224,9 @@ class PagesController < ApplicationController
       end
     end
 
+    @invetment_coordinates = MapLocation.where(investment_id: @investments).map do |map_location|
+      map_location.shape_json_data.presence || map_location.json_data
+    end
     @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(20)
   end
 

@@ -1,0 +1,58 @@
+.custom-new-design {
+  .resource-page-banner {
+    display: flex;
+    justify-content: space-between;
+    background: #D9F0EB;
+    color: $brand;
+    padding: 42px 42px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+
+    &.-proposal {
+      background-color: #FFE9CC;
+    }
+
+    &.-poll {
+      background-color: #EAE4FB;
+    }
+
+    &.-deficiencyreport {
+      background-color: #fff;
+    }
+
+    a {
+      color: inherit;
+    }
+  }
+
+  .resource-page-banner--text-section {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .resource-page-banner--image {
+    width: 48%;
+    min-height: 260px;
+    max-height: 260px;
+
+    .resource-image {
+      border-radius: 5px;
+    }
+  }
+
+  .resource-page-banner--title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .resource-page-banner--detail {
+    display: flex;
+    font-weight: 500;
+    align-items: center;
+
+    i {
+      padding-right: 5px;
+    }
+  }
+}

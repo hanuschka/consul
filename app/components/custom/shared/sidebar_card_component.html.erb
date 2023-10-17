@@ -1,11 +1,14 @@
-<div class="sidebar-card <%= @class_name %>">
+<div class="sidebar-card <%= class_name %>">
   <div class="sidebar-card--section">
     <% if @title.present? %>
-      <h4 class="sidebar-card--title">
-        <i class="fas fa-<%= @icon_name %>"></i>
-        <div class="sidebar-card--title-text">
-          <%= @title %>
+      <h4 class="sidebar-card--title js-sidebar-card--title">
+        <div class="d-flex sidebar-card--title-inner">
+          <i class="fas fa-<%= @icon_name %>"></i>
+          <div class="sidebar-card--title-text">
+            <%= @title %>
+          </div>
         </div>
+        <div class="icon-chevron-down sidebar-collapse-icon <%= @collapsed_on_mobile ? "" : "-mobile-filter" %>"></div>
       </h4>
     <% end %>
 
@@ -15,7 +18,9 @@
       </div>
     <% end %>
 
-    <%= content %>
+    <div class="sidebar-card--content">
+      <%= content %>
+    </div>
   </div>
 
   <% if additional_sections.present? %>

@@ -85,13 +85,13 @@
 
             <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.enable_proposal_notifications_tab") && @notifications.present? %>
               <div class="proposal-resources-section">
-                <%= render Proposals::NotificationsComponent.new(notifications: @notifications, author: @proposal.author) %>
+                <%= render Shared::NotificationsComponent.new(notifiable: @proposal, author: @proposal.author) %>
               </div>
             <% end %>
 
             <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.enable_proposal_milestones_tab") && @milestones.present? %>
               <div class="proposal-resources-section">
-                <%= render Proposals::MilestonesComponent.new(milestones: @milestones, milestoneable: @proposal) %>
+                <%= render Shared::MilestonesComponent.new(milestones: @milestones, milestoneable: @proposal) %>
               </div>
             <% end %>
 

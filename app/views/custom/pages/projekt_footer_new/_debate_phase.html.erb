@@ -2,9 +2,10 @@
 
 <div class="flex-layout flex-layout-reverse-on-mobile">
   <div class="main-column">
-    <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-      <%= link_to t('debates.index.section_header.help'), '#section_help' %>
-    <% end %>
+
+    <div class="new-resource-cta">
+      <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+    </div>
 
     <%= render(
       Shared::ResourcesListComponent.new(
@@ -22,10 +23,12 @@
   </div>
 
   <div id="debates-sidebar" class="sidebar">
-    <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
-    <%# <%= render Sidebar::Filters::GeozoneAffiliationsCardComponent.new(geozones: @geozones, resource_name: @resource_name) %>
-    <%# <%= render Sidebar::CategoriesCardComponent.new(categories: @categories) %>
-    <%# <%= render Sidebar::SdgsCardComponent.new(sdgs: @sdgs, sdg_targets: @sdg_targets) %>
+    <% content_block_sidebar_name = "projekt_phase_footer_sidebar_#{@projekt_phase.id}" %>
+    <% if render_custom_projekt_content_block?(content_block_sidebar_name, @projekt_phase.projekt) %>
+      <%= render Shared::SidebarCardComponent.new(title: "Beteiligunsinformation", icon_name: "info-circle") do |c| %>
+        <%= render_custom_block content_block_sidebar_name %>
+      <% end %>
+    <% end %>
 
     <% if current_user.present? && extended_feature?('debates.enable_my_posts_filter') %>
       <%= render Sidebar::Filters::MyPostsCardComponent.new %>
@@ -34,5 +37,5 @@
     <%= render Sidebar::ExportListComponent.new(
       path: admin_proposals_path(**request.query_parameters, format: :csv),
     ) %>
-</div>
+  </div>
 </div>

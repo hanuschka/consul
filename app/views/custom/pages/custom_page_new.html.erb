@@ -12,6 +12,19 @@
 </style>
 
 <main class="projekt-page">
+  <% if @custom_page.projekt.present? %>
+    <div class="custom-fixed-tabs margin-bottom">
+      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-body">
+        Inhalt
+      </div>
+      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
+        Info
+      </div>
+      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
+        Beteiligung
+      </div>
+    </div>
+  <% end %>
   <% if @custom_page.subtitle.blank? && @custom_page.image.blank? %>
     <h1 class="page-main-title margin-bottom">
       <%= @custom_page.title %>
@@ -42,20 +55,6 @@
         <% if @custom_page.image.present? %>
           <%= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
         <% end %>
-      </div>
-    </div>
-  <% end %>
-
-  <% if @custom_page.projekt.present? %>
-    <div class="custom-fixed-tabs">
-      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-body">
-        Inhalt
-      </div>
-      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
-        Info
-      </div>
-      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
-        Beteiligung
       </div>
     </div>
   <% end %>

@@ -33,16 +33,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         @permission_problem_key ||= :not_logged_in
 
       elsif @projekt_phase.present?
-        if @projekt_phase.is_a?(ProjektPhase::BudgetPhase) || @projekt_phase.hide_projekt_selector?
-          @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
+        @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
 
-        elsif @projekt_phase.projekt.all_ids_in_tree.any? { |id| Projekt.find(id).can_assign_resources?(@projekt_phase.resources_name, current_user) }
-          nil
-
-        else
-          @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
-
-        end
       end
     end
 
@@ -87,7 +79,7 @@ class Shared::NewButtonComponent < ApplicationComponent
     end
 
     def new_button_classes
-      classes = %w[button expanded new-resource-button]
+      classes = %w[button -orange new-resource-button]
 
       if @projekt_phase.class.name.in?(["ProjektPhase::ProposalPhase", "ProjektPhase::DebatePhase"]) ||
           @resources_name.in?(["proposals", "debates"])

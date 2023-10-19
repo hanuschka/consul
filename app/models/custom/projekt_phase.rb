@@ -98,7 +98,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def self.any_selectable?(user)
-    true
+    any? { |phase| phase.selectable_by?(user) }
   end
 
   def selectable_by?(user)
@@ -165,10 +165,6 @@ class ProjektPhase < ApplicationRecord
 
   def individual_group_value_restriction_formatted
     individual_group_values.map(&:name).flatten.join(", ")
-  end
-
-  def hide_projekt_selector?
-    false
   end
 
   def resource_count

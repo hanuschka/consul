@@ -119,7 +119,6 @@
     width: 200px;
     line-height: 1.2;
     margin-top: -2px;
-
     text-decoration: none;
     color: inherit;
 
@@ -261,6 +260,7 @@
       min-height: 146px;
       display: flex;
       justify-content: center;
+      border-top: none;
       align-items: center;
     }
 

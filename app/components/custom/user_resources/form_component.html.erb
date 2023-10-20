@@ -88,6 +88,7 @@
               i18n_namespace: "proposals" %>
           </div>
         <% end %>
+
         <div class="user-resources-form--submit-section">
           <% if resource.new_record? %>
             <h3 class="user-resources-form--submit-section--privacy-policy">
@@ -111,9 +112,9 @@
                          )
                         ) %>
             </div>
-          <% end %>
 
-          <%= f.submit(class: "button", value: t("custom.user_resources.form.submit_button")) %>
+            <%= f.submit(class: "button", value: t("custom.user_resources.form.submit_button")) %>
+          <% end %>
         </div>
       </div>
 

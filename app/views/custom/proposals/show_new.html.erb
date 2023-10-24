@@ -17,9 +17,22 @@
 <% end %>
 
 <main class="resource-page">
+  <div class="custom-fixed-tabs margin-bottom">
+    <div class="js-scroll-link custom-tab" data-anchor-id="proposal-content">
+      <%= t("custom.common.fixed_tabs.content") %>
+    </div>
+    <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_comments") %>
+      <div class="js-scroll-link custom-tab" data-anchor-id="proposal-comments">
+        <%= t("custom.common.fixed_tabs.comments") %>
+      </div>
+    <% end %>
+    <div class="js-scroll-link custom-tab" data-anchor-id="proposal-author">
+      <%= t("custom.common.fixed_tabs.author") %>
+    </div>
+  </div>
   <div id="<%= dom_id(@proposal) %>">
     <div class="flex-layout">
-      <div class="main-column">
+      <div class="main-column" id="proposal-content">
         <%= resources_back_link(fallback_path: proposals_path) %>
 
         <h1 class="resource-page--title"><%= "Beitrag von #{@proposal.author.name}" %></h1>
@@ -104,14 +117,16 @@
         </div>
       </div>
 
-      <aside class="sidebar">
+      <aside class="sidebar" id="proposal-author">
         <%= render Sidebar::ResourceAuthorComponent.new(user: @proposal.author) %>
 
         <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.allow_voting") %>
-          <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", collapsed_on_mobile: false)) do |c| %>
-            <div class="proposal-page--votes">
-              <%= render "proposals/support_status", proposal: @proposal %>
-            </div>
+          <%= render(Mobile::FixedBottomActionComponent.new) do %>
+            <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
+              <div class="proposal-page--votes">
+                <%= render "proposals/support_status", proposal: @proposal %>
+              </div>
+            <% end %>
           <% end %>
         <% end %>
 

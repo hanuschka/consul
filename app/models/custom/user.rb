@@ -34,6 +34,9 @@ class User < ApplicationRecord
   belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
 
+  has_many :projekt_subscriptions, -> { where(active: true) }
+  has_many :projekt_phase_subscriptions
+
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { verified.where("verified_at < ?", 1.year.ago).where(reverify: true) }
@@ -303,6 +306,10 @@ class User < ApplicationRecord
 
   def first_letter_of_name
     (first_name || name)&.chars&.first&.upcase
+  end
+
+  def unread_notifications_count
+    notifications.where(read_at: nil).count
   end
 
   private

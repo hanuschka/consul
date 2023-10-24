@@ -6,8 +6,11 @@ class PagesController < ApplicationController
   include CustomHelper
   include ProposalsHelper
   include Takeable
+  include RandomSeed
 
   has_orders %w[most_voted newest oldest], only: :show
+
+  before_action :set_random_seed
 
   def show
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
@@ -20,7 +23,7 @@ class PagesController < ApplicationController
       @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
 
       if @projekt.projekt_phases.active.any?
-        @default_projekt_phase = get_default_projekt_phase(params[:selected_phase_id])
+        @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
         @projekt_phase = @default_projekt_phase
         params[:projekt_phase_id] = @default_projekt_phase.id
         params[:projekt_id] ||= @projekt.id
@@ -57,6 +60,17 @@ class PagesController < ApplicationController
 
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
+      format.csv do
+        formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
+
+        if @projekt_phase.name == "debate_phase"
+          send_data Debates::CsvExporter.new(@debates.limit(nil)).to_csv,
+            filename: "debates1-#{formated_time}.csv"
+        elsif @projekt_phase.name == "proposal_phase"
+          send_data Proposals::CsvExporter.new(@proposals.limit(nil)).to_csv,
+            filename: "proposals1-#{formated_time}.csv"
+        end
+      end
     end
   end
 
@@ -99,7 +113,7 @@ class PagesController < ApplicationController
       take_by_sentiment
     end
 
-    @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
+    @debates = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
   end
 
   def set_proposal_phase_footer_tab_variables
@@ -125,7 +139,7 @@ class PagesController < ApplicationController
     end
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
-    @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
+    @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
   end
 
   def set_voting_phase_footer_tab_variables
@@ -224,10 +238,7 @@ class PagesController < ApplicationController
       end
     end
 
-    @invetment_coordinates = MapLocation.where(investment_id: @investments).map do |map_location|
-      map_location.shape_json_data.presence || map_location.json_data
-    end
-    @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(20)
+    @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
   end
 
   def set_milestone_phase_footer_tab_variables

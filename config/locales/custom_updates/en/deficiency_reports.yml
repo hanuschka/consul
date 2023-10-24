@@ -41,7 +41,7 @@ en:
       index:
         title: Mängelmelder
         welcome_default_text_html: In every city there are deficiencies every now and then - it's good if they are reported by attentive citizens so that they can be rectified quickly.
-          On this page you can see which defects have already been reported. The map will help you locate the respective defect.<br><br>
+          On this page you can see which defects have already been reported. The map will help you locate the respective defect.
           Please contact us if you notice a deficiency - and contribute to a clean cityscape and a functioning city.
         count: Mangelmeldungen
         deficiency_report:
@@ -103,12 +103,14 @@ en:
           title: Report a deficiency
         start_new: Report a deficiency
       show:
+        title: "%{author} reported this issue"
         welcome_text_default: This defeciency has already been reported to us by a user. Here you can view the current status and follow the progress of the deficiency report.
            You can also express your opinion with your own comment. And after the deficiency has been closed, you can find the city's official statement here.
         video:
           title: Video
         approve_official_answer: Publish reply
-        official_answer: Official reply
+        official_answer:
+          title: Official reply
         sidebar:
           category: Categories
           delete: Delete report

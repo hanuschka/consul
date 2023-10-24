@@ -22,12 +22,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media(max-width: $mobile-viewport-start) {
+    padding-top: 10px;
+  }
 }
 
 .user-resource-image-upload--text {
   color: $brand;
   opacity: 0.5;
   line-height: 1.25;
+
+  @media(max-width: $mobile-viewport-start) {
+    font-size: 14px;
+    padding: 0 10px;
+  }
 }
 
 .user-resource-image-upload--plus {
@@ -36,8 +45,6 @@
   font-size: 130px;
   line-height: 1;
   text-align: center;
-  width: 135px;
-  height: 130px;
   opacity: 0.5;
 }
 
@@ -48,6 +55,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media(max-width: $mobile-viewport-start) {
+    padding: 0 10px;
+  }
 }
 
 .user-resource-image-upload--label-title {
@@ -60,4 +71,7 @@
   color: $brand;
   opacity: 0.5;
   font-size: 14px;
+
+  @media(max-width: $small-tablet-viewport-start) {
+  }
 }

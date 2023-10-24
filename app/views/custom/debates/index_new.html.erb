@@ -35,7 +35,7 @@
     </div>
 
     <div id="debates-sidebar" class="sidebar">
-      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "info-circle") do |c| %>
+      <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "info-circle", opened_on_mobile: true) do |c| %>
         <div class="margin-bottom-half">
           <%= render_custom_block "debates_index_sidebar", default_content: t("custom.debates.index.sidebar_information_default_text") %>
         </div>
@@ -49,8 +49,16 @@
           </span>
         </div>
 
-        <%= render Shared::NewButtonComponent.new(resources_name: "debates", query_params: params) %>
+        <div class="hide-on-mobile">
+          <%= render Shared::NewButtonComponent.new(resources_name: "debates", query_params: params) %>
+        </div>
       <% end %>
+
+      <div class="show-on-mobile">
+        <%= render(Mobile::FixedBottomActionComponent.new) do %>
+          <%= render Shared::NewButtonComponent.new(resources_name: "debates", query_params: params) %>
+        <% end %>
+      </div>
 
       <% if extended_feature?('debates.enable_projekt_filter') %>
         <%= render Sidebar::ProjektsFilterComponent.new(
@@ -80,7 +88,7 @@
       <% end %>
 
       <%= render Sidebar::ExportListComponent.new(
-        path: admin_proposals_path(**request.query_parameters, format: :csv),
+        path: debates_path(**request.query_parameters, format: :csv),
       ) %>
   </div>
   </div>

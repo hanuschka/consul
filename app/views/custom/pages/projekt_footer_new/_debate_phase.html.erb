@@ -16,6 +16,7 @@
         current_filter: @current_order,
         filter_param: "order",
         filters: @valid_orders,
+        projekt_phase: @projekt_phase,
         empty_list_text: t("custom.debates.index.empty_list_text")
       ))
     %>
@@ -35,7 +36,7 @@
     <% end %>
 
     <%= render Sidebar::ExportListComponent.new(
-      path: admin_proposals_path(**request.query_parameters, format: :csv),
+      path: projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase, **request.query_parameters, format: :csv)
     ) %>
   </div>
 </div>

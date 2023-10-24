@@ -1,4 +1,11 @@
+$header-mobile-height: 60px;
+
 .custom-new-design {
+  .top-bar-wrapper {
+    position: fixed;
+    width: 100%;
+  }
+
   header {
     padding: 0;
     z-index: 1000;
@@ -7,7 +14,7 @@
     height: 90px;
 
     @media(max-width: $small-tablet-viewport-start) {
-      height: 70px;
+      height: $header-mobile-height;
     }
 
     .main-menu {
@@ -31,7 +38,7 @@
     background-color: white;
 
     @media(max-width: $small-tablet-viewport-start) {
-      height: 70px;
+      height: $header-mobile-height;
     }
   }
 
@@ -536,7 +543,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   @media (max-width: $small-tablet-viewport-start) {
     .top-bar {
       justify-content: space-between !important;
-      padding-top: 10px;
+      padding-top: 5px;
     }
 
     header, .wrapper > header {

@@ -18,6 +18,7 @@ class Projekt < ApplicationRecord
   belongs_to :parent, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
 
@@ -45,7 +46,6 @@ class Projekt < ApplicationRecord
   has_many :debates, through: :debate_phases
   has_many :proposals, through: :proposal_phases
   has_many :budgets, through: :budget_phases
-  has_many :comments, through: :comment_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
   has_many :projekt_livestreams, through: :livestream_phases
@@ -61,6 +61,7 @@ class Projekt < ApplicationRecord
 
   has_many :projekt_manager_assignments, dependent: :destroy
   has_many :projekt_managers, through: :projekt_manager_assignments
+  accepts_nested_attributes_for :projekt_manager_assignments
 
   has_many :subscriptions, -> { where(projekt_subscriptions: { active: true }) },
     class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
@@ -93,6 +94,11 @@ class Projekt < ApplicationRecord
       .where("act.key": "projekt_feature.main.activate", "act.value": "active")
   }
 
+  scope :not_activated, -> {
+    joins("INNER JOIN projekt_settings nact ON projekts.id = nact.projekt_id")
+      .where("nact.key": "projekt_feature.main.activate", "nact.value": [nil, ""])
+  }
+
   scope :current, ->(timestamp = Time.zone.today) {
     activated
       .where("total_duration_start IS NULL OR total_duration_start <= ?", timestamp)
@@ -105,7 +111,8 @@ class Projekt < ApplicationRecord
   }
 
   scope :index_order_all, ->() {
-    with_published_custom_page
+    activated
+      .with_published_custom_page
       .show_in_overview_page
   }
 
@@ -149,6 +156,10 @@ class Projekt < ApplicationRecord
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
   }
 
+  scope :index_order_drafts, -> {
+    not_activated
+  }
+
   scope :not_in_individual_list, -> {
     joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": [nil, ""])
@@ -159,16 +170,17 @@ class Projekt < ApplicationRecord
       .where("siop.key": "projekt_feature.general.show_in_overview_page", "siop.value": "active")
   }
 
+  scope :show_in_homepage, -> {
+    joins("INNER JOIN projekt_settings sihp ON projekts.id = sihp.projekt_id")
+      .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
+  }
+
   scope :visible_in_menu, ->(user = nil) {
     joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
       .with_order_number
       .select { |p| p.visible_for?(user) }
   }
-
-  scope :show_in_sidebar, ->(resources_name) {
-    joins("INNER JOIN projekt_settings sis ON projekts.id = sis.projekt_id")
-      .where("sis.key": "projekt_feature.#{resources_name}.show_in_sidebar_filter", "sis.value": "active") }
 
   scope :with_active_feature, ->(projekt_feature_key) {
     joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
@@ -198,6 +210,11 @@ class Projekt < ApplicationRecord
     )
   end
 
+  def self.with_pm_permission_to(permission, projekt_manager)
+    joins(:projekt_manager_assignments)
+      .where("projekt_manager_assignments.projekt_manager_id = ? AND ? = ANY(projekt_manager_assignments.permissions)", projekt_manager.id, permission)
+  end
+
   def self.selectable_in_selector(controller_name, current_user)
     select do |projekt|
       projekt.all_parent_projekts.unshift(projekt).none? { |p| p.hidden_for?(current_user) } &&
@@ -224,27 +241,29 @@ class Projekt < ApplicationRecord
   end
 
   def selectable_in_selector?(controller_name, user)
-    return true if controller_name == "polls"
-    return true if controller_name == "processes"
     return false if user.nil?
 
     if controller_name == "proposals"
-      if proposals_selectable_by_admins_only? && !user.can_manage_projekt?(self)
+      if proposal_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
         false
       else
         proposal_phases.any? { |phase| phase.selectable_by?(user) }
       end
 
     elsif controller_name == "debates"
-      if debates_selectable_by_admins_only? && !user.can_manage_projekt?(self)
+      if debate_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
         false
       else
         debate_phases.any? { |phase| phase.selectable_by?(user) }
       end
 
+    elsif controller_name == "polls"
+      voting_phases.any? { |phase| phase.selectable_by?(user) }
+
     elsif controller_name == "processes"
-      # return false if proposals_selectable_by_admins_only? && user.administrator.blank?
-      legislation_phases.any? { |phase| phase.selectable_by?(user) }
+      legislation_phases
+        .reject { |lp| lp.legislation_process.present? || !lp.selectable_by?(user) }
+        .any?
     end
   end
 
@@ -269,20 +288,6 @@ class Projekt < ApplicationRecord
     activated? &&
       total_duration_end.present? &&
       total_duration_end < timestamp
-  end
-
-  def debates_selectable_by_admins_only?
-    projekt_settings.
-      find_by(projekt_settings: { key: "projekt_feature.debates.only_admins_create_debates" }).
-      value.
-      present?
-  end
-
-  def proposals_selectable_by_admins_only?
-    projekt_settings.
-      find_by(projekt_settings: { key: "projekt_feature.proposals.only_admins_create_proposals" }).
-      value.
-      present?
   end
 
   def activated_children
@@ -443,20 +448,24 @@ class Projekt < ApplicationRecord
     ProjektLabel.where(projekt_id: all_ids_in_tree)
   end
 
-  def map_location_with_admin_shape
-    map_location.show_admin_shape? ? map_location : nil
-  end
-
   def visible_for?(user = nil)
-    return true if individual_group_values.hard.empty?
-    return false unless user.present?
-    return true if user.administrator?
+    return true if user.present? && user.administrator?
+    return true if user.present? && user.projekt_manager?(self)
+    return false unless activated?
 
-    (individual_group_values.hard.ids & user.individual_group_values.hard.ids).any?
+    if individual_group_values.hard.empty?
+      true
+    else
+      user.present? && (individual_group_values.hard.ids & user.individual_group_values.hard.ids).any?
+    end
   end
 
   def hidden_for?(user = nil)
     !visible_for?(user)
+  end
+
+  def comments_allowed?(user = nil)
+    true
   end
 
   def vc_map_enabled?
@@ -466,7 +475,13 @@ class Projekt < ApplicationRecord
   private
 
     def create_corresponding_page
-      page = SiteCustomization::Page.new(title: name, slug: form_page_slug, projekt: self)
+      page = SiteCustomization::Page.new(
+        title: name,
+        slug: form_page_slug,
+        status: "published",
+        projekt: self,
+        content: ""
+      )
 
       if page.save
         self.page = page

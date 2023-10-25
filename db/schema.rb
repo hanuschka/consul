@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_28_145149) do
+ActiveRecord::Schema.define(version: 2023_08_28_130640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -644,6 +644,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.bigint "projekt_id"
     t.string "on_behalf_of"
     t.bigint "projekt_phase_id"
+    t.bigint "sentiment_id"
     t.index ["author_id", "hidden_at"], name: "index_debates_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_debates_on_author_id"
     t.index ["cached_votes_down"], name: "index_debates_on_cached_votes_down"
@@ -656,6 +657,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.index ["hot_score"], name: "index_debates_on_hot_score"
     t.index ["projekt_id"], name: "index_debates_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_debates_on_projekt_phase_id"
+    t.index ["sentiment_id"], name: "index_debates_on_sentiment_id"
     t.index ["tsv"], name: "index_debates_on_tsv", using: :gin
   end
 
@@ -789,6 +791,16 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
+  create_table "email_activities", force: :cascade do |t|
+    t.string "email"
+    t.string "actionable_type"
+    t.bigint "actionable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actionable_id", "actionable_type"], name: "index_email_activities_on_actionable_id_and_actionable_type"
+    t.index ["actionable_type", "actionable_id"], name: "index_email_activities_on_actionable_type_and_actionable_id"
+  end
+
   create_table "failed_census_calls", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "document_number"
@@ -824,6 +836,61 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.index ["followable_type", "followable_id"], name: "index_follows_on_followable_type_and_followable_id"
     t.index ["user_id", "followable_type", "followable_id"], name: "access_follows"
     t.index ["user_id"], name: "index_follows_on_user_id"
+  end
+
+  create_table "formular_answers", force: :cascade do |t|
+    t.jsonb "answers", default: {}, null: false
+    t.bigint "formular_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["formular_id"], name: "index_formular_answers_on_formular_id"
+  end
+
+  create_table "formular_fields", force: :cascade do |t|
+    t.integer "given_order", default: 1
+    t.boolean "required", default: false, null: false
+    t.string "name"
+    t.string "description"
+    t.string "key"
+    t.string "kind"
+    t.jsonb "options", default: {}, null: false
+    t.bigint "formular_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "follow_up", default: false
+    t.index ["formular_id"], name: "index_formular_fields_on_formular_id"
+    t.index ["key", "formular_id"], name: "index_formular_fields_on_key_and_formular_id", unique: true
+    t.index ["name", "formular_id"], name: "index_formular_fields_on_name_and_formular_id", unique: true
+  end
+
+  create_table "formular_follow_up_letter_recipients", force: :cascade do |t|
+    t.bigint "formular_follow_up_letter_id"
+    t.bigint "formular_answer_id"
+    t.string "email"
+    t.string "subscription_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["formular_answer_id"], name: "index_recipients_on_formular_answer_id"
+    t.index ["formular_follow_up_letter_id"], name: "index_recipients_on_formular_follow_up_letter_id"
+  end
+
+  create_table "formular_follow_up_letters", force: :cascade do |t|
+    t.bigint "formular_id"
+    t.string "subject"
+    t.string "from"
+    t.text "body"
+    t.date "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "show_follow_up_button", default: false
+    t.index ["formular_id"], name: "index_formular_follow_up_letters_on_formular_id"
+  end
+
+  create_table "formulars", force: :cascade do |t|
+    t.bigint "projekt_phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["projekt_phase_id"], name: "index_formulars_on_projekt_phase_id"
   end
 
   create_table "geozones", id: :serial, force: :cascade do |t|
@@ -1184,6 +1251,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.string "layer_defs"
     t.string "mappable_type"
     t.bigint "mappable_id"
+    t.decimal "opacity", precision: 2, scale: 1, default: "1.0"
     t.index ["mappable_type", "mappable_id"], name: "index_map_layers_on_mappable_type_and_mappable_id"
     t.index ["projekt_id"], name: "index_map_layers_on_projekt_id"
   end
@@ -1647,6 +1715,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.bigint "projekt_manager_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "permissions", default: [], array: true
     t.index ["projekt_id"], name: "index_projekt_manager_assignments_on_projekt_id"
     t.index ["projekt_manager_id"], name: "index_projekt_manager_assignments_on_projekt_manager_id"
   end
@@ -1897,6 +1966,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.bigint "projekt_id"
     t.string "on_behalf_of"
     t.bigint "projekt_phase_id"
+    t.bigint "sentiment_id"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_up"], name: "index_proposals_on_cached_votes_up"
@@ -1908,6 +1978,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
     t.index ["projekt_id"], name: "index_proposals_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_proposals_on_projekt_phase_id"
     t.index ["selected"], name: "index_proposals_on_selected"
+    t.index ["sentiment_id"], name: "index_proposals_on_sentiment_id"
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
   end
 
@@ -2489,6 +2560,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
   add_foreign_key "dashboard_executed_actions", "proposals"
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
+  add_foreign_key "debates", "sentiments"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
@@ -2498,6 +2570,12 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
   add_foreign_key "failed_census_calls", "users"
   add_foreign_key "flags", "users"
   add_foreign_key "follows", "users"
+  add_foreign_key "formular_answers", "formulars"
+  add_foreign_key "formular_fields", "formulars"
+  add_foreign_key "formular_follow_up_letter_recipients", "formular_answers"
+  add_foreign_key "formular_follow_up_letter_recipients", "formular_follow_up_letters"
+  add_foreign_key "formular_follow_up_letters", "formulars"
+  add_foreign_key "formulars", "projekt_phases"
   add_foreign_key "geozones_polls", "geozones"
   add_foreign_key "geozones_polls", "polls"
   add_foreign_key "identities", "users"
@@ -2561,6 +2639,7 @@ ActiveRecord::Schema.define(version: 2023_06_28_145149) do
   add_foreign_key "proposals", "communities"
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"
+  add_foreign_key "proposals", "sentiments"
   add_foreign_key "registered_address_street_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_street_projekt_phases", "registered_address_streets"
   add_foreign_key "registered_addresses", "registered_address_streets"

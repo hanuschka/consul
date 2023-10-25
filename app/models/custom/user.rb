@@ -1,6 +1,9 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 class User < ApplicationRecord
+  SORTING_OPTIONS = { id: "id", name: "username", email: "email", city_name: "city_name",
+    created_at: "created_at", verified_at: "verified_at" }.freeze
+
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
@@ -91,6 +94,24 @@ class User < ApplicationRecord
 
     puts "Transferred user ids: #{transferred_user_ids}"
     puts "Not transferred user ids: #{not_transferred_user_ids - transferred_user_ids}"
+  end
+
+  def self.order_filter(params)
+    sorting_key = params[:sort_by]&.downcase&.to_sym
+    allowed_sort_option = SORTING_OPTIONS[sorting_key]
+    direction = params[:direction] == "desc" ? "desc" : "asc"
+
+    if allowed_sort_option.present?
+      order("#{allowed_sort_option} #{direction}")
+    elsif sorting_key == :roles
+      if direction == "asc"
+        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+      else
+        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+      end
+    else
+      order(id: :desc)
+    end
   end
 
   def show_no_registered_address_field?
@@ -200,6 +221,52 @@ class User < ApplicationRecord
     return registered_address.formatted_name if registered_address.present?
 
     "#{street_name} #{street_number}#{street_number_extension}"
+  end
+
+  def roles
+    roles = []
+    roles << :admin if administrator?
+    roles << :moderator if moderator?
+    roles << :valuator if valuator?
+    roles << :manager if manager?
+    roles << :poll_officer if poll_officer?
+    roles << :official if official?
+    roles << :organization if organization?
+    roles
+  end
+
+  def link_to_registered_address  #TODO remove after data migration
+    if city_street.present?
+      old_street_address = "#{city_street.name} #{street_number}#{street_number_extension}"
+    elsif street_name.present?
+      old_street_address = "#{street_name} #{street_number}#{street_number_extension}"
+    else
+      return
+    end
+
+    ra_streets = RegisteredAddress::Street.where("lower(name) LIKE lower(?)", "#{old_street_address[0..5]}%")
+
+    ra_streets.each do |ras|
+      r_addresses = RegisteredAddress.where(registered_address_street_id: ras.id, street_number: street_number)
+
+      r_addresses.each do |ra|
+        puts "User ID: #{id}"
+        puts "Old street Address: #{old_street_address}"
+        puts "Registered Address: #{ra.formatted_name}"
+        puts "Is it a match? (y/n)"
+
+        answer = gets.chomp
+
+        if answer == "y"
+          update_columns(
+            registered_address_id: ra.id,
+          )
+
+          puts "Updated!"
+          return
+        end
+      end
+    end
   end
 
   private

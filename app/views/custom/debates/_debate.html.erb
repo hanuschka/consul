@@ -42,23 +42,28 @@
                   params[:projekt_label_ids],
                   "details"] do %>
  
-          <div class='resource-projekt-labels'>
-            <%= render Shared::ProjektLabelsComponent.new(resource: debate) %>
-          </div>
           <h4 class='resource-name'><%= link_to debate.title, debate %></h4>
+          <div class='resource-taggings'>
+            <div class='resource-projekt-labels'>
+              <%= render Shared::ProjektLabelsComponent.new(resource: debate) %>
+            </div>
+            <div class='resource-sentiment'>
+              <%= render Shared::SentimentsComponent.new(resource: debate) %>
+            </div>
+          </div>
+
           <div class="resource-summary margin-bottom">
             <%= link_to debate do %></h4>
               <%= wysiwyg(debate.description) %>
               <div class="truncate"></div>
             <% end %>
           </div>
-          <%= render "shared/tags", taggable: debate, limit: 5 %>
         <% end %>
       </div>
 
       <div class='column small-12 medium-6 large-4 resource-participate table' data-equalizer-watch='details'>
         <div class='table-cell align-middle'>
-          <% if projekt_phase_feature?(debate.projekt_phase, "allow_voting") %>
+          <% if projekt_phase_feature?(debate.projekt_phase, "resource.allow_voting") %>
             <div id="<%= dom_id(debate) %>_votes">
               <%= render "debates/votes", debate: debate %>
             </div>

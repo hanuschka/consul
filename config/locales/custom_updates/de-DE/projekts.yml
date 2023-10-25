@@ -32,8 +32,15 @@ de:
         index_order_upcoming_title: 'Im Reiter "Zukünftige Projektvorhaben" sind Beteiligungsprojekte gelistet, die erst in der Zukunft stattfinden.'
         index_order_individual_list: "Individuelle Liste"
         index_order_individual_list_title: "Individuelle Liste"
+        index_order_drafts: "Entwürfe"
+        index_order_drafts_title: "Entwürfe"
       page:
         footer:
+          sidebar:
+            projekt_labels:
+              title: Labels
+            sentiments:
+              title: Sentiment
           budget:
             investments_subtab: Investitionen
         projekt_events_tab:
@@ -56,7 +63,7 @@ de:
             edit_projekt_managers: Projektmanager*innen
             edit_projekt_map: Karteneinstellungen
             edit_projekt_sdg: SDGs & Tags
-            create_newsletter_draft: Newsletter Entwurf erstellen
+            create_newsletter_draft: Newsletter-Entwurf
           map:
             title: Gebiet
           navigator:

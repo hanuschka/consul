@@ -1,5 +1,5 @@
-<%= form_for(livestream, url: url) do |f| %>
-  <%= render "shared/errors", resource: f.object %>
+<%= form_with model: livestream, url: polymorphic_path([@namespace, @projekt_phase, livestream]) do |f| %>
+  <%= render "shared/errors", resource: livestream %>
 
   <div class='small-12 medium-7'>
     <%= f.text_field :url, { id: dom_id(livestream, :url), required: true } %>
@@ -20,6 +20,6 @@
   <% end %>
 
   <div>
-    <%= f.submit(class: "button") %>
+    <%= f.submit "Livestream erstellen", class: "button" %>
   </div>
 <% end %>

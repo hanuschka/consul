@@ -26,14 +26,11 @@ class ProjektPhase::DebatePhase < ProjektPhase
   end
 
   def resource_count
-    Debate.where(projekt_phase_id: Debate.scoped_projekt_phase_ids_for_footer(self)).count
+    debates.for_public_render.count
   end
 
   def selectable_by_admins_only?
-    projekt_settings.
-      find_by(projekt_settings: { key: "projekt_feature.debates.only_admins_create_debates" }).
-      value.
-      present?
+    feature?("general.only_admins_create_debates")
   end
 
   def admin_nav_bar_items
@@ -42,6 +39,13 @@ class ProjektPhase::DebatePhase < ProjektPhase
 
   def safe_to_destroy?
     debates.empty?
+  end
+
+  def downvoting_allowed?
+    settings
+      .find_by(key: "feature.resource.allow_downvoting")
+      .value
+      .present?
   end
 
   private

@@ -21,16 +21,23 @@ class Admin::NewslettersController < Admin::BaseController
       body += "<p>#{@projekt.description}</p>" if @projekt.description
       body += "<p><img src='#{url_for(@projekt.image.variant(:large))}'></p>" if @projekt.image
 
-      body += "<p><strong>#{t("custom.newsletters.new_projekt.total_duration_start")}:</strong> #{l(@projekt.total_duration_start, format: "%d. %B %Y")}</p>"
-      body += "<p><strong>#{t("custom.newsletters.new_projekt.total_duration_end")}:</strong> #{t("custom.newsletters.new_projekt.total_duration_end_till")} #{l(@projekt.total_duration_end, format: "%d. %B %Y")}</p>"
+      if @projekt.total_duration_start.present?
+        body += "<p><strong>#{t("custom.newsletters.new_projekt.total_duration_start")}:</strong> #{l(@projekt.total_duration_start, format: "%d. %B %Y")}</p>"
+      end
+
+      if @projekt.total_duration_end.present?
+        body += "<p><strong>#{t("custom.newsletters.new_projekt.total_duration_end")}:</strong> #{t("custom.newsletters.new_projekt.total_duration_end_till")} #{l(@projekt.total_duration_end, format: "%d. %B %Y")}</p>"
+      end
 
       body += "<p><strong>#{t("custom.newsletters.new_projekt.open_phases")}:</strong></p>"
       body += "<ul style='margin-bottom:30px;'>#{open_phases_for_body}</ul>"
 
       body += "<p style='margin-bottom:30px;'>"
-      body += "<a href='#{@projekt.page.url}' style='background:#004a83;padding:0.75rem 1.5rem;color:#fff;border-radius:4px;margin-right:20px;'>#{t("custom.newsletters.new_projekt.url")}</a>"
-      body += "<a href='#{@projekt.page.url}#filter-subnav' style='background:#004a83;padding:0.75rem 1.5rem;color:#fff;border-radius:4px;'>#{t("custom.newsletters.new_projekt.url_participate")}</a>"
+      body += "<a href='#{page_url(@projekt.page.slug)}' style='background:#004a83;padding:0.75rem 1.5rem;color:#fff;border-radius:4px;margin-right:20px;display:inline-block;margin-bottom:15px;'>#{t("custom.newsletters.new_projekt.url")}</a>"
+      body += "<a href='#{page_url(@projekt.page.slug)}#filter-subnav' style='background:#004a83;padding:0.75rem 1.5rem;color:#fff;border-radius:4px;display:inline-block;'>#{t("custom.newsletters.new_projekt.url_participate")}</a>"
       body += "</p>"
+
+      body += "<p></p>"
 
       body
     end

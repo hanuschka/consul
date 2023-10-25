@@ -64,22 +64,29 @@
 
     selectProjektPhase: function($projektPhase) {
       var projektPhaseId = $projektPhase.data('projektPhaseId')
-
       $('[id$="projekt_phase_id"]').val(projektPhaseId)
+
+      if ( $("span#persisted-resource-data").length ) {
+        var persistedResourceData = $("span#persisted-resource-data").data();
+
+        if ( persistedResourceData['resourceMap'] ) {
+          $('#map-container').show();
+        }
+
+      } else {
+        replaceProjektMapOnResourceCreation($projektPhase);
+      }
 
       updateProjektSelectorHint(projektPhaseId);
       updateFormHeading(projektPhaseId);
       updateActivePhaseSelector(projektPhaseId);
-      replaceProjektMapOnProposalCreation($projektPhase);
       toggleImageAttachment($projektPhase);
       toggleDocumentAttachment($projektPhase);
       toggleSummary($projektPhase);
       toggleExternalVideoUrl($projektPhase);
-      updateAvailableTagsSelection($projektPhase);
-      updateAvailableSDGsSelection($projektPhase);
+      toggleOnBehalfOf($projektPhase);
       toggleExternalFieldsHeader($projektPhase);
-      updateProjektLabelSelector($projektPhase);
-      // updateSentimentSelector($projektPhase);
+      toggleTagging($projektPhase);
 
       function updateProjektSelectorHint(projektPhaseId) {
         var $hintElement = $('[id$="_creation_recommendations"]').first();
@@ -98,6 +105,10 @@
       }
 
       function updateFormHeading(projektPhaseId) {
+        if ( $('.admin-content').length ) {
+          return
+        }
+
         var $header = $('header h1').first();
 
         $.ajax("/projekt_phases/" + projektPhaseId + "/form_heading_text", {
@@ -115,7 +126,7 @@
         $('#projekt-phase-selector-' + projektPhaseId).addClass('active');
       }
 
-      function replaceProjektMapOnProposalCreation($projektPhase) {
+      function replaceProjektMapOnResourceCreation($projektPhase) {
         App.Map.destroy();
 
         if ( $projektPhase.data('showMap') ) {
@@ -125,10 +136,15 @@
             type: "GET",
             dataType: "html",
             success: function(data) {
-              App.Map.destroy();
-              $('div.map_location.map').first().replaceWith(data)
-              App.Map.initialize();
-              App.Map.maps[0].setView([$projektPhase.data('latitude'), $projektPhase.data('longitude')], $projektPhase.data('zoom')).invalidateSize();
+              if ( $projektPhase.data('vcMap') ) {
+                $('div.map_location.map').first().replaceWith(data)
+                App.VCMap.initialize();
+              } else {
+                App.Map.destroy();
+                $('div.map_location.map').first().replaceWith(data)
+                App.Map.initialize();
+                App.Map.maps[0].setView([$projektPhase.data('latitude'), $projektPhase.data('longitude')], $projektPhase.data('zoom')).invalidateSize();
+              }
             }
           });
         } else {
@@ -170,53 +186,19 @@
         }
       }
 
-      function updateAvailableTagsSelection($projektPhase) {
-        $('[id$=_tag_list_predefined]').val('')
-
-        if ( $projektPhase.data('allow-tags') ) {
-          $('#category_tags').show();
-          $('#category_tags a').show();
-
-          if ( $projektPhase.data("tag-ids") ) {
-            $('#category_tags a').each(function() {
-              if ( !$projektPhase.data("tag-ids").toString().split(',').includes($(this).data('categoryId').toString()) ) {
-                $(this).hide();
-              }
-            })
-          }
+      function toggleOnBehalfOf($projektPhase) {
+        if ( $projektPhase.data('createOnBehalfOf') ) {
+          $('#create-on-behalf-of').removeClass('hide');
         } else {
-          $('#category_tags').hide();
-        }
-      }
-
-      function updateAvailableSDGsSelection($projektPhase) {
-        // $('[id$=_tag_list_predefined]').val('')
-
-        if ( $projektPhase.data('allow-sdgs') ) {
-          $('#sdgs-selector').show();
-          $('#sdgs-selector label[for*=_sdg_goal_ids_]').show();
-
-          if ( $projektPhase.data("sdg-ids") ) {
-            $('#sdgs-selector label[for*=_sdg_goal_ids_]').each(function() {
-              if ( !$projektPhase.data("sdg-ids").toString().split(',').includes($(this).data('sdgGoalId').toString()) ) {
-                $(this).hide();
-              }
-            })
-          }
-
-        } else {
-          $('#sdgs-selector').hide();
+          $('#create-on-behalf-of').addClass('hide');
         }
       }
 
       function toggleExternalFieldsHeader($projektPhase) {
         if (
-          $('#on-behalf-of-fields').length == 0 &&
+          $('#create-on-behalf-of').is(":hidden") &&
             $('#attach-documents').is(":hidden") &&
-            $('.summary-field').is(":hidden") &&
-            $('#external-video-url-fields').is(":hidden") &&
-            $('#category_tags').is(":hidden") &&
-            $('#sdgs-selector').is(":hidden")
+            (!$('#external-video-url-fields').length || $('#external-video-url-fields').is(":hidden"))
         ) {
           $('#additional-fields-title').hide();
         } else {
@@ -224,7 +206,22 @@
         }
       }
 
+      function toggleTagging($projektPhase) {
+        if ($projektPhase.data("projekt-label-ids") || $projektPhase.data("sentiment-ids") ) {
+          $('legend.tagging').removeClass('hide');
+        } else {
+          $('legend.tagging').addClass('hide');
+        }
+
+        updateProjektLabelSelector($projektPhase);
+        updateSentimentSelector($projektPhase);
+      }
+
       function updateProjektLabelSelector($projektPhase) {
+        if ($projektPhase.data("projekt-labels-name")) {
+          $('#projekt_labels_selector label[for$=_projekt_labels]').text($projektPhase.data("projekt-labels-name").replaceAll("_", " "));
+        }
+
         if ($projektPhase.data("projekt-label-ids")) {
           var labelIdsToShow = $projektPhase.data("projekt-label-ids").toString().split(",");
         } else {
@@ -232,9 +229,11 @@
         }
 
         if (labelIdsToShow.join().length == 0) {
-          $('#label-for-projekt-labels-selector').addClass('hide');
+          $('#projekt_labels_selector').addClass('hide');
+          $('#projekt_labels_selector input[type=checkbox]').prop('checked', false);
+
         } else {
-          $('#label-for-projekt-labels-selector').removeClass('hide');
+          $('#projekt_labels_selector').removeClass('hide');
         }
 
         $("#projekt_labels_selector .projekt-label").each(function(index, label) {
@@ -247,6 +246,10 @@
       }
 
       function updateSentimentSelector($projektPhase) {
+        if ($projektPhase.data("sentiments-name")) {
+          $('#sentiment_selector label[for$=_sentiment_id]').text($projektPhase.data("sentiments-name").replaceAll("_", " "));
+        }
+
         if ($projektPhase.data("sentiment-ids")) {
           var sentimentIdsToShow = $projektPhase.data("sentiment-ids").toString().split(",");
         } else {
@@ -254,12 +257,13 @@
         }
 
         if (sentimentIdsToShow.join().length == 0) {
-          $('#sentiment-selector').addClass('hide');
+          $('#sentiment_selector').addClass('hide');
+          $('#sentiment_selector input[type=radio]').prop('checked', false);
         } else {
-          $('#sentiment-selector').removeClass('hide');
+          $('#sentiment_selector').removeClass('hide');
         }
 
-        $("#sentiment-selector .sentiment").each(function(index, sentiment) {
+        $("#sentiment_selector .sentiment").each(function(index, sentiment) {
           if (sentimentIdsToShow.includes($(sentiment).data("sentimentId").toString())) {
             $(sentiment).removeClass('hide');
           } else {
@@ -313,7 +317,7 @@
         selectedProjektPhaseId = $('[id$="projekt_phase_id"]').val();
       }
 
-      if ( selectedProjektPhaseId === '' ) {
+      if ( selectedProjektId === '' || selectedProjektPhaseId === '' ) {
         return false;
       }
 
@@ -326,17 +330,21 @@
         $selectedProjekt = $('#projekt_' + $selectedProjekt.data('parentId'))
       }
 
-      // show projekts staring with top parent
+      // show projekts staring with top parent and select projekt
       $.each(projektIdsToShow, function(index, projektId) {
         var $selectedProjekt = $('#projekt_' + projektId)
         App.ProjektSelector.selectProjekt($selectedProjekt);
         $selectedProjekt.closest('.projekt_group').hide();
       });
 
-      if ( $selectedProjekt.data('hideProjektSelector') ) {
-        $('#projekt-selector-block').prev('legend').hide();
-        $('#projekt-selector-block').hide();
-      }
+      // if ( $selectedProjekt.data('hideProjektSelector') ) {
+      //   $('#projekt-selector-block').prev('legend').hide();
+      //   $('#projekt-selector-block').hide();
+      // }
+
+      // select projekt phase
+      var $selectedProjektPhase = $('#projekt-phase-selector-' + selectedProjektPhaseId)
+      App.ProjektSelector.selectProjektPhase($selectedProjektPhase);
     },
 
 

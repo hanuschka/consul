@@ -9,14 +9,13 @@ class Legislation::Process < ApplicationRecord
   delegate :projekt, to: :projekt_phase
   belongs_to :projekt_phase, touch: true
 
-  has_one :legislation_phase, through: :projekt
   has_many :geozone_restrictions, through: :legislation_phase
   has_many :geozone_affiliations, through: :projekt
 
   delegate :votable_by?, to: :legislation_phase
   delegate :comments_allowed?, to: :legislation_phase
 
-  validates :projekt_id, presence: true
+  validates :projekt_phase_id, presence: true, on: :create
 
   scope :active, -> { all }
 

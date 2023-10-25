@@ -2,8 +2,9 @@ en:
   custom:
     debates:
       form:
+        tagging: Tagging
         tags_custom: User tags
-        required: Your debate
+        required: Your input
       index:
         no_active_projekt: Currently no participation procedure
         no_active_phase: Phase expired

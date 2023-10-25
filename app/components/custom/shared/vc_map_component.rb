@@ -11,6 +11,7 @@ class Shared::VCMapComponent < ApplicationComponent
     editable: false,
     process_coordinates: nil,
     projekt: nil,
+    projekt_phase: nil,
     show_admin_shape: false
   )
     @mappable = mappable
@@ -19,6 +20,7 @@ class Shared::VCMapComponent < ApplicationComponent
     @editable = editable
     @process_coordinates = process_coordinates || get_process_coordinates
     @projekt = projekt
+    @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
   end
 
@@ -30,6 +32,10 @@ class Shared::VCMapComponent < ApplicationComponent
                 data: prepare_map_settings do
       content_tag :span, "Map"
     end
+  end
+
+  def show_controls?
+    parent_class != "proposals_sidebar"
   end
 
   private
@@ -55,11 +61,9 @@ class Shared::VCMapComponent < ApplicationComponent
         altitude_input_selector: "##{map_location_input_id(parent_class, "altitude")}",
         zoom_input_selector: "##{map_location_input_id(parent_class, "zoom")}",
         shape_input_selector: "##{map_location_input_id(parent_class, "shape")}",
-
+        default_color: "#00ff00",
         editable: editable
       }
-
-      options[:default_color] = projekt.color if projekt.present?
 
       options
     end

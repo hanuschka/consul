@@ -5,7 +5,7 @@ class Proposal < ApplicationRecord
 
   belongs_to :old_projekt, class_name: 'Projekt', foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
-  delegate :projekt, to: :projekt_phase
+  delegate :projekt, to: :projekt_phase, allow_nil: true
   belongs_to :projekt_phase
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt_phase
@@ -18,9 +18,7 @@ class Proposal < ApplicationRecord
   validate :description_sanitized
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
-  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create #custom
-  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create #custom
-  validates :terms_general, acceptance: { allow_nil: false }, on: :create #custom
+  validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :with_current_projekt, -> { joins(projekt_phase: :projekt).merge(Projekt.current) }
   scope :by_author, ->(user_id) {
@@ -39,6 +37,12 @@ class Proposal < ApplicationRecord
   scope :seen,                     -> { where.not(ignored_flag_at: nil) }
   scope :unseen,                   -> { where(ignored_flag_at: nil) }
 
+  scope :for_public_render,        -> {
+    includes(:tags)
+      .published #discard_draft
+      .not_archived # discard_archived
+  }
+
   def self.proposals_orders(user = nil)
     orders = %w[hot_score created_at alphabet votes_up random]
     # orders << "recommendations" if Setting["feature.user.recommendations_on_proposals"] && user&.recommended_proposals
@@ -47,14 +51,13 @@ class Proposal < ApplicationRecord
 
   def self.scoped_projekt_ids_for_index(current_user)
     Projekt.top_level
-      .map{ |p| p.all_children_projekts.unshift(p) }
+      .map { |p| p.all_children_projekts.unshift(p) }
       .flatten.select do |projekt|
-        ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
-        ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.proposals.show_in_sidebar_filter').value.present? &&
+        ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.main.activate").value.present? &&
+        ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.general.show_in_sidebar_filter").value.present? &&
         projekt.all_parent_projekts.unshift(projekt).none? { |p| p.hidden_for?(current_user) } &&
         projekt.all_children_projekts.unshift(projekt).any? { |p| p.proposal_phases.any?(&:current?) || p.proposals.base_selection.any? }
-      end
-      .pluck(:id)
+      end.pluck(:id)
   end
 
   def self.scoped_projekt_ids_for_footer(projekt)
@@ -91,16 +94,23 @@ class Proposal < ApplicationRecord
   end
 
   def custom_votes_needed_for_success
-    return Proposal.votes_needed_for_success unless projekt_phase.projekt.present?
+    return Proposal.votes_needed_for_success unless projekt_phase.present?
 
-    setting_value = ProjektSetting.find_by(projekt: projekt_phase.projekt, key: "projekt_feature.proposal_options.votes_for_proposal_success").value.to_i
-    setting_value == 0 ? Proposal.votes_needed_for_success : setting_value
+    projekt_phase.settings.find_by(key: "option.resource.votes_for_proposal_success").value.to_i
   end
 
   def publish
     update!(published_at: Time.current)
     NotificationServices::NewProposalNotifier.new(id).call
     send_new_actions_notification_on_published
+  end
+
+  def editable_by?(user)
+    return false unless user
+    return false unless editable?
+    return true if author_id == user.id
+
+    author.official_level > 0 && (author.official_level == user.official_level)
   end
 
   protected

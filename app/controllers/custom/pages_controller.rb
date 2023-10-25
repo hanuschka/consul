@@ -81,7 +81,6 @@ class PagesController < ApplicationController
   def set_debate_phase_footer_tab_variables
     @valid_orders = Debate.debates_orders(current_user)
     @valid_orders.delete("relevance")
-
     @current_order = if @valid_orders.include?(params[:order])
                        params[:order]
                      elsif helpers.projekt_feature?(@projekt, "general.set_default_sorting_to_newest") && @valid_orders.include?("created_at")
@@ -90,25 +89,9 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.debates.default_order"]
                      end
 
-    params[:filter_projekt_ids] ||= @projekt.all_children_ids.push(@projekt.id).map(&:to_s)
-    params[:projekt_label_ids] ||= []
-
-    @selected_parent_projekt = @projekt
-
-    set_resources(Debate)
-    set_top_level_projekts
-
-    @scoped_projekt_phase_ids = Debate.scoped_projekt_phase_ids_for_footer(@projekt_phase)
-
-    unless params[:search].present?
-      take_by_my_posts
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
-      take_by_projekt_phases(@scoped_projekt_phase_ids)
-      take_by_projekt_labels if params[:projekt_label_ids].any?
-    end
+    @resources = @projekt_phase.debates.for_public_render
+    take_by_projekt_labels
+    take_by_sentiment
 
     @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
@@ -117,7 +100,6 @@ class PagesController < ApplicationController
     @valid_orders = Proposal.proposals_orders(current_user)
     @valid_orders.delete("archival_date")
     @valid_orders.delete("relevance")
-
     @current_order = if @valid_orders.include?(params[:order])
                        params[:order]
                      elsif helpers.projekt_feature?(@projekt, "general.set_default_sorting_to_newest") && @valid_orders.include?("created_at")
@@ -126,35 +108,11 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    params[:filter_projekt_ids] ||= @projekt.all_children_ids.push(@projekt.id).map(&:to_s)
-    params[:projekt_label_ids] ||= []
-
-    @selected_parent_projekt = @projekt
-
-    set_resources(Proposal)
-    set_top_level_projekts
-
-    discard_draft
-    discard_archived
-    load_retired
-    load_selected
-    load_featured
-    remove_archived_from_order_links
-
-    @scoped_projekt_ids = Proposal.scoped_projekt_ids_for_footer(@projekt)
-
-    unless params[:search].present?
-      take_by_my_posts
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_geozone_restrictions
-      take_by_projekts(@scoped_projekt_ids)
-      take_by_projekt_labels if params[:projekt_label_ids].any?
-    end
+    @resources = @projekt_phase.proposals.for_public_render
+    take_by_projekt_labels
+    take_by_sentiment
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
-
     @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
   end
 
@@ -162,27 +120,7 @@ class PagesController < ApplicationController
     @valid_filters = %w[all current]
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
 
-    # params[:filter_projekt_ids] ||= @current_projekt.all_children_ids.push(@current_projekt.id).map(&:to_s)
-    @selected_parent_projekt = @projekt
-
-    @resources = Poll
-      .created_by_admin
-      .not_budget
-      .send(@current_filter)
-      .includes(:geozones)
-
-    set_top_level_projekts
-
-    @scoped_projekt_ids = Poll.scoped_projekt_ids_for_footer(@projekt)
-
-    unless params[:search].present?
-      # take_by_tag_names
-      # take_by_sdgs
-      # take_by_geozone_affiliations
-      # take_by_polls_geozone_restrictions
-      take_by_projekts(@scoped_projekt_ids)
-    end
-
+    @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
   end
 
@@ -190,11 +128,7 @@ class PagesController < ApplicationController
     @legislation_phase = @projekt_phase
     @current_section = params[:section] || "text"
 
-    @selected_parent_projekt = @projekt
-
-    @scoped_projekt_ids = @projekt.top_parent.all_children_projekts.unshift(@projekt.top_parent).pluck(:id)
-
-    @process = @projekt.legislation_process
+    @process = @projekt_phase.legislation_process
     @draft_versions_list = @process&.draft_versions&.published
 
     if params[:text_draft_version_id]
@@ -226,6 +160,8 @@ class PagesController < ApplicationController
     @budget = @projekt_phase.budget
     return if @budget.blank?
 
+    @heading = @budget.headings.first
+
     @all_resources = []
 
     @valid_filters = @budget.investments_filters
@@ -244,12 +180,13 @@ class PagesController < ApplicationController
 
     # con-1036
     if @budget.phase == "publishing_prices" &&
-        @projekt.projekt_settings
-          .find_by(key: "projekt_feature.budgets.show_results_after_first_vote").value.present?
+        @projekt_phase.settings.find_by(key: "feature.general.show_results_after_first_vote").value.present?
       params[:filter] = "selected"
       @current_filter = nil
     end
     # con-1036
+
+    @investments = @budget.investments
 
     if params[:section] == "results"
       @investments = Budget::Result.new(@budget, @budget.headings.first).investments
@@ -273,26 +210,15 @@ class PagesController < ApplicationController
     end
 
     @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(20)
-
-    if @budget.present? && @projekt.current?
-      @top_level_active_projekts = Projekt.where(id: @projekt)
-      @top_level_archived_projekts = []
-    elsif @budget.present? && @projekt.expired?
-      @top_level_active_projekts = []
-      @top_level_archived_projekts = Projekt.where(id: @projekt)
-    else
-      @top_level_active_projekts = []
-      @top_level_archived_projekts = []
-    end
   end
 
   def set_milestone_phase_footer_tab_variables
-    @current_milestone = @projekt.milestones
+    @current_milestone = @projekt_phase.milestones
                                  .where("publication_date < ?", Time.zone.today)
                                  .order(publication_date: :desc)
                                  .first
 
-    order_newest = ProjektSetting.find_by(projekt: @projekt, key: "projekt_feature.milestones.newest_first").value.present?
+    order_newest = @projekt_phase.settings.find_by(key: "feature.general.newest_first").value.present?
     @milestones_publication_date_order = order_newest ? :desc : :asc
   end
 
@@ -301,8 +227,8 @@ class PagesController < ApplicationController
   end
 
   def set_newsfeed_phase_footer_tab_variables
-    @rss_id = ProjektSetting.find_by(projekt: @projekt, key: "projekt_newsfeed.id").value
-    @rss_type = ProjektSetting.find_by(projekt: @projekt, key: "projekt_newsfeed.type").value
+    @rss_id = @projekt_phase.settings.find_by(key: "option.general.newsfeed_id").value
+    @rss_type = @projekt_phase.settings.find_by(key: "option.general.newsfeed_type").value
   end
 
   def set_event_phase_footer_tab_variables
@@ -312,9 +238,6 @@ class PagesController < ApplicationController
   end
 
   def set_question_phase_footer_tab_variables
-    # scoped_projekt_ids = @current_projekt.all_children_projekts.unshift(@current_projekt).compact.pluck(:id)
-    # @projekt_questions = ProjektQuestion.base_selection(scoped_projekt_ids)
-
     projekt_questions = @projekt_phase.questions.root_questions
 
     if @projekt_phase.question_list_enabled?
@@ -347,6 +270,23 @@ class PagesController < ApplicationController
     @other_livestreams = @all_livestreams.select(:id, :title)
   end
 
+  def set_formular_phase_footer_tab_variables
+    @formular = @projekt_phase.formular
+
+    if params[:token].present?
+      @recipient = FormularFollowUpLetterRecipient.find_by(subscription_token: params[:token])
+      return unless @recipient.present? && @recipient.formular.id == @formular.id
+
+      @formular_fields = @formular.formular_fields.follow_up.each(&:set_custom_attributes)
+      @formular_answer = @recipient.formular_answer
+    else
+      @formular_fields = @formular.formular_fields.primary.each(&:set_custom_attributes)
+      @formular_answer = @formular.formular_answers.new
+    end
+
+    @formular_answer.answer_errors ||= {}
+  end
+
   def get_default_projekt_phase(default_phase_id = nil)
     default_phase_id ||= ProjektSetting.find_by(projekt: @projekt, key: "projekt_custom_feature.default_footer_tab").value
     @default_projekt_phase = ProjektPhase.find_by(id: default_phase_id) || @projekt.projekt_phases.active.first
@@ -366,10 +306,5 @@ class PagesController < ApplicationController
 
   def resource_name
     "page"
-  end
-
-  def set_top_level_projekts
-    @top_level_active_projekts = Projekt.where(id: @projekt.top_parent).current
-    @top_level_archived_projekts = Projekt.where(id: @projekt.top_parent).expired
   end
 end

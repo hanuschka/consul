@@ -28,7 +28,11 @@ module ApplicationHelper
     if remote
       projekt_phase_footer_tab_page_path(projekt_phase.projekt.page, projekt_phase.id, **url_options, **extras)
     else
-      page_path(projekt_phase.projekt.page.slug, selected_phase_id: projekt_phase.id, **url_options, **extras)
+      page_path(projekt_phase.projekt.page.slug, projekt_phase_id: projekt_phase.id, **url_options, **extras)
     end
+  end
+
+  def projekt_footer_phase_filter_url(projekt_phase)
+    projekt_phase_footer_tab_page_path(projekt_phase.projekt.page, projekt_phase.id)
   end
 end

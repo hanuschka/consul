@@ -14,14 +14,16 @@
 <main class="projekt-page">
   <% if @custom_page.projekt.present? %>
     <div class="custom-fixed-tabs margin-bottom">
-      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-body">
-        Inhalt
-      </div>
-      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
-        Info
-      </div>
-      <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
-        Beteiligung
+      <div class="custom-fixed-tabs--content">
+        <div class="js-scroll-link custom-tab" data-anchor-id="projekt-body">
+          Inhalt
+        </div>
+        <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
+          Info
+        </div>
+        <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
+          Beteiligung
+        </div>
       </div>
     </div>
   <% end %>
@@ -62,9 +64,7 @@
   <% if @custom_page.projekt.present? %>
     <div class="flex-layout">
       <div class="main-column">
-        <div class="show-on-small-tablet mobile-achor" id="projekt-body">
-        </div>
-        <div class="js-anchor-navigation-content" id="projekt-body-2">
+        <div class="js-anchor-navigation-content" id="projekt-body">
           <div class="main-content-card">
             <%= render 'custom_page_content' %>
           </div>

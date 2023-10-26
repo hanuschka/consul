@@ -187,7 +187,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     background: transparent !important;
   }
 
-  .home-page {
+  &.home-page {
     .top-bar[data-white-text="true"], .sticky-header .top-bar  {
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {
@@ -452,6 +452,25 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       width: 135px !important;
       height: 50px !important;
       border-radius: 38px !important;
+    }
+  }
+
+  .header--responsive-menu-wrapper {
+    width: 100%;
+  }
+
+  #responsive-menu {
+    width: 100%;
+    z-index: 1005;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    .subnavigation {
+      // z-index: 1005;
+      width: 100%;
+      max-width: 100%;
     }
   }
 

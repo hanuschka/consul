@@ -37,6 +37,7 @@ $header-mobile-height: 60px;
 
   .top-bar-background-wrapper {
     height: 90px;
+    overflow: hidden;
     // max-width: 1920px;
     margin: auto;
     background-color: white;
@@ -187,7 +188,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     background: transparent !important;
   }
 
-  .home-page {
+  &.home-page {
     .top-bar[data-white-text="true"], .sticky-header .top-bar  {
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {

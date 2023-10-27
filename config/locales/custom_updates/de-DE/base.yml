@@ -49,6 +49,9 @@ de:
     helpers:
       select:
         prompt: Bitte wählen
+        gender_prompt: Geschlecht (bitte wählen)
+        address_prompt: Wohnort (bitte wählen)
+        document_prompt: Offizielles Dokument (bitte wählen)
         not_in_list: Nicht in der Liste enthalten
     gdpr_notice:
       accept: Akzeptieren
@@ -198,7 +201,8 @@ de:
         debates: Diskussionen
         budget_investments: Investitionsvorschläge
         comments: Kommentare
-        follows: Follows
+        follows: Folge ich
+        all_activity_link: Meine gesamte Aktivität anzeigen
     welcome_launch:
       p1: Hier entsteht die neue Beteiligungsplattform der Stadt %{org_name}
       p2: Unser Go-Live ist am %{date}!

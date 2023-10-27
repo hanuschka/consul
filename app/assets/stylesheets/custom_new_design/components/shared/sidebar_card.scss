@@ -76,6 +76,10 @@
 .sidebar-card--section {
   padding: 18px 25px;
 
+  &:first-child {
+    padding-top: 0;
+  }
+
   @media(max-width: $small-tablet-viewport-start) {
     padding: 15px 20px;
   }
@@ -117,7 +121,7 @@
 }
 
 .sidebar-card--description {
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   padding: 0 25px;
 }
 

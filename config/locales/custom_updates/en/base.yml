@@ -47,6 +47,9 @@ en:
     helpers:
       select:
         prompt: Please select
+        gender_prompt: Gender (please select)
+        address_prompt: Address (please select)
+        document_prompt: Document type (please select)
         not_in_list: Not in the list
     gdpr_notice:
       accept: Accept
@@ -189,6 +192,7 @@ en:
         budget_investments: Investment proposals
         comments: Comments
         follows: Follows
+        all_activity_link: Show all my activity
     welcome_launch:
       p1: We're building a new citizen participation platform for the city of %{org_name}
       p2: We'll go live on %{date}!

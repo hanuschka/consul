@@ -2,10 +2,12 @@
   <% c.placeholder do %>
     <div class="user-resource-image-upload--placeholder">
       <div class="user-resource-image-upload--placeholder-inner">
-        <div class="user-resource-image-upload--text">
-          <%= t("custom.#{i18n_scope}.form.image_upload.top_line",
-                default: t("custom.user_resources.image_upload.top_line_default")) %>
-        </div>
+        <% unless i18n_scope == "proposals" %>
+          <div class="user-resource-image-upload--text">
+            <%= t("custom.#{i18n_scope}.form.image_upload.top_line",
+                  default: t("custom.user_resources.image_upload.top_line_default")) %>
+          </div>
+        <% end %>
         <div class="user-resource-image-upload--label">
           <div class="user-resource-image-upload--plus">
             +

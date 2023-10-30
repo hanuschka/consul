@@ -211,6 +211,7 @@ class User < ApplicationRecord
   end
 
   def extended_registration?
+    return true # cli specific fix
     !organization? && !erased? && Setting["extra_fields.registration.extended"].present?
   end
 

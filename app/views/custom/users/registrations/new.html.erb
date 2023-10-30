@@ -10,10 +10,6 @@
     <%= render "shared/errors", resource: resource %>
 
     <% if Setting.old_design_enabled? %>
-      <p>
-      <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
-                     signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
-      </p>
       <% username_hint = t("devise_views.users.registrations.new.username_note") %>
     <% end %>
 
@@ -109,7 +105,7 @@
           </div>
         <% end %>
 
-        <% if resource.document_required? %>
+        <% if resource.document_required? && false #cli specific fix %>
           <%= f.select :document_type, user_document_types, prompt: t("custom.helpers.select.document_prompt") %>
           <%= f.text_field :document_last_digits, placeholder: t("custom.devise_views.users.registrations.new.document_last_digits_label") %>
 

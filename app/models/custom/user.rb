@@ -215,6 +215,7 @@ class User < ApplicationRecord
   end
 
   def document_required?
+    return false # cli specific fix
     !organization? && !erased? && Setting["extra_fields.registration.check_documents"]
   end
 

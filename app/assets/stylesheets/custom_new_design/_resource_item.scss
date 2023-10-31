@@ -242,13 +242,13 @@
     text-align: center;
     position: relative;
     border-top: 1px solid $border-color;
-    min-height: 93px;
+    min-height: 60px;
     padding: 10px 25px;
     flex-direction: column;
 
     .supports-container {
       border-left: none;
-      min-height: 146px;
+      // min-height: 146px;
       display: flex;
       justify-content: center;
       border-top: none;

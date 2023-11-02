@@ -4,7 +4,15 @@
   }
 }
 
+.hide-on-desktop {
+  @media screen and (min-width: $big-tablet-viewport-start) {
+    display: none !important;
+  }
+}
+
 .show-on-mobile {
+  display: none;
+
   @media screen and (max-width: $mobile-viewport-start) {
     display: block !important;
   }
@@ -66,16 +74,16 @@
   $button-orange: #FFA42D;
 
   .button {
-    background-color: $button-orange;
+    background-color: $orange-button-color;
     color: black;
 
     &:focus, &:active {
-      background-color: #FFA42D !important;
+      background-color: lighten($orange-button-color, 6%) !important;
       color: black !important;
     }
 
     &:hover {
-      background: lighten($button-orange, 10%) !important;
+      background: lighten($orange-button-color, 5%) !important;
       color: black !important;
     }
   }

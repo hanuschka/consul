@@ -47,7 +47,7 @@ body.custom-new-design {
   h1 {
     font-size: 35px;
     font-weight: 500;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-bottom: 30px;
     line-height: 1.2;
 
@@ -59,28 +59,16 @@ body.custom-new-design {
   }
 
   // .column:not(div#page-content .column) {
-  .column {
-    padding: 0;
-  }
-}
-
-
-// Unset column customization for custum html
-body.custom-new-design {
-  #page-content {
-    .column, .columns {
-      padding-right: 0.625rem;
-      padding-left: 0.625rem;
-
-      @media print, screen and (min-width: 40em) {
-        padding-right: 0.9375rem;
-        padding-left: 0.9375rem;
-      }
-    }
-  }
+  // .column {
+  //   padding: 0;
+  // }
 }
 
 .custom-new-design {
+  .column {
+    padding: 0;
+  }
+
   .notice-container {
     z-index: 1000;
     top: 85px;
@@ -236,4 +224,8 @@ body.custom-new-design {
   @media(max-width: $big-tablet-viewport-start) {
     // padding: 0 20px;
   }
+}
+
+.back {
+  margin-bottom: 10px;
 }

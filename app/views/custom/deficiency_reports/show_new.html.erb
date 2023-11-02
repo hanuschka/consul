@@ -30,7 +30,7 @@
     <div class="flex-layout">
       <div class="main-column">
         <% if @deficiency_report.can_be_published? %>
-          <div class="resource-page--description new-card" style="background-color:#E3FCE7">
+          <div class="resource-page--description new-card main-content-card" style="background-color:#E3FCE7">
             <h3><%= t("custom.deficiency_reports.show.official_answer.title") %></h3>
             <%= AdminWYSIWYGSanitizer.new.sanitize(@deficiency_report.official_answer) %>
           </div>
@@ -38,7 +38,7 @@
 
         <%= render ResourcePage::BannerComponent.new(resource: @deficiency_report) %>
 
-        <div class="resource-page--description new-card">
+        <div class="resource-page--description new-card main-content-card">
           <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.description) %>
         </div>
 
@@ -65,7 +65,7 @@
       </div>
 
       <aside class="sidebar">
-        <%= render Sidebar::ResourceAuthorComponent.new(user: @deficiency_report.author) %>
+        <%= render Sidebar::ResourceAuthorComponent.new(resource: @deficiency_report) %>
 
         <% if can? :update_status, @deficiency_report %>
           <%= render(Shared::SidebarCardComponent.new(
@@ -117,6 +117,12 @@
         <% if current_user == @deficiency_report.author %>
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.author_actions.title"),
+            icon_name: "user-edit")) do |c| %>
+            <%= render "deficiency_reports/author_actions", deficiency_report: @deficiency_report %>
+          <% end %>
+        <% elsif current_user&.administrator? %>
+          <%= render(Shared::SidebarCardComponent.new(
+            title: t("custom.deficiency_reports.show.admin_actions.title"),
             icon_name: "user-edit")) do |c| %>
             <%= render "deficiency_reports/author_actions", deficiency_report: @deficiency_report %>
           <% end %>

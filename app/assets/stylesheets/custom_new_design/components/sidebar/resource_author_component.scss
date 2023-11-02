@@ -5,7 +5,7 @@
   }
 
   .sidebar-resource-author--background-image {
-    height: 75px;
+    height: 85px;
     background-color: #8ab1de;
     width: 100%;
     overflow: hidden;
@@ -16,7 +16,7 @@
     border-radius: 100%;
     width: 90px;
     height: 90px;
-    margin-top: -45px;
+    margin-top: -48px;
     border: 3px solid white;
     margin-bottom: 8px;
     overflow: hidden;
@@ -56,11 +56,12 @@
     padding: 18px 25px;
     padding-right: 28px;
     padding-bottom: 30px;
-    font-weight: bold;
   }
 
-  .sidebar-resource-author--resources-item {
+  .sidebar-card--count-line {
     display: flex;
+    font-weight: bold;
     justify-content: space-between;
+    color: inherit;
   }
 }

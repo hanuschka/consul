@@ -1,3 +1,7 @@
+$orange-button-color: #FFA42D;
+$grey-button-color: #cfd9e2;
+$green-button-color: #00AA0B;
+
 .custom-new-design {
   // .button:not(div#page-content .button) {
   .button {
@@ -23,36 +27,53 @@
     }
 
     &:hover, &:focus {
-      background-color: lighten($brand, 5%);
+      background-color: lighten($brand, 6%);
       color: white;
     }
 
     &.-grey {
-      background: #c0cedb;
+      background: $grey-button-color;
       color: black;
 
-      &:hover {
-        background-color: #d1deeb;
+      &:hover, &:focus {
+        background-color: lighten($grey-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($grey-button-color, 7%)
       }
     }
 
     &.-orange {
-      background: #FFA42D;
+      background: $orange-button-color;
       color: black;
+
+      &:hover, &:focus {
+        background-color: lighten($orange-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($orange-button-color, 7%)
+      }
     }
 
     &.-green {
-      background: #00AA0B;
+      background: $grey-button-color;
       color: white;
 
-      &:hover {
-        background: #0eb819;
+      &:hover, &:focus {
+        background-color: lighten($grey-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($grey-button-color, 7%)
       }
     }
 
     &.-purple {
       background: #EAE4FB;
       color: black;
+
       &:hover, &:focus {
         background-color: #dad2f0;
       }
@@ -94,5 +115,9 @@
     .button {
       font-size: 20px;
     }
+  }
+
+  .button.button-support.unvote {
+    background-color: antiquewhite;
   }
 }

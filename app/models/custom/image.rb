@@ -4,7 +4,8 @@ class Image < ApplicationRecord
   def self.save_image_from_url(url)
     whitelisted_urls = [
       "http://graph.facebook.com/",
-      "https://graph.facebook.com/"
+      "https://graph.facebook.com/",
+      "https://demokratie.today/"
     ]
     return unless whitelisted_urls.any? { |whitelisted_url| url.start_with?(whitelisted_url) }
 

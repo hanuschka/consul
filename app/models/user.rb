@@ -128,7 +128,7 @@ class User < ApplicationRecord
   # Get the existing user by email if the provider gives us a verified email.
   def self.first_or_initialize_for_oauth(auth)
     oauth_email           = auth.info.email
-    oauth_email_confirmed = oauth_email.present? && (auth.info.verified || auth.info.verified_email)
+    oauth_email_confirmed = oauth_email.present?# && (auth.info.verified || auth.info.verified_email)
     oauth_user            = User.find_by(email: oauth_email) if oauth_email_confirmed
 
     user = oauth_user || User.new(
@@ -141,16 +141,18 @@ class User < ApplicationRecord
       terms_data_protection: "1", #custom
       terms_general: "1", #custom
       auth_image_link: auth.info.image, #custom
-      confirmed_at: DateTime.current #custom
-      # confirmed_at: oauth_email_confirmed ? DateTime.current : nil
+      confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
 
-    if auth.info.image.present? && !user.image&.attached? #custom
+    if user.new_record? && auth.info.image.present? && !user.image&.attached? #custom
+      auth.info.image = "https://demokratie.today/wp-content/uploads/2022/02/icon-today-black.png" if Rails.env.development?
+
       image_path = Image.save_image_from_url(auth.info.image) #custom
       image_file = File.open(image_path) #custom
       user.image ||= Image.new(title: "avatar") #custom
       user.image.attachment.attach(io: image_file, filename: "avatar.jpg", content_type: "image/jpg") #custom
-    end 
+    end
+
     user #custom
   end
 

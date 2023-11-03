@@ -131,7 +131,7 @@ class User < ApplicationRecord
     oauth_email_confirmed = oauth_email.present? && (auth.info.verified || auth.info.verified_email)
     oauth_user            = User.find_by(email: oauth_email) if oauth_email_confirmed
 
-    oauth_user || User.new(
+    user = oauth_user || User.new(
       username:  auth.info.name || auth.uid,
       email: oauth_email,
       oauth_email: oauth_email,
@@ -144,6 +144,14 @@ class User < ApplicationRecord
       confirmed_at: DateTime.current #custom
       # confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
+
+    if auth.info.imaga.present? && !user.image.attached? #custom
+      image_path = Image.save_image_from_url(auth.info.image) #custom
+      image_file = File.open(image_path) #custom
+      user.image ||= Image.new(title: "avatar") #custom
+      user.image.attachment.attach(io: image_file, filename: "avatar.jpg", content_type: "image/jpg") #custom
+    end 
+    user #custom
   end
 
   def name

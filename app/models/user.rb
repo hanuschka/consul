@@ -140,6 +140,7 @@ class User < ApplicationRecord
       terms_data_storage: "1", #custom
       terms_data_protection: "1", #custom
       terms_general: "1", #custom
+      auth_image_link: auth.info.image, #custom
       confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
   end

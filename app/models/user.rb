@@ -145,7 +145,7 @@ class User < ApplicationRecord
       # confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
 
-    if auth.info.imaga.present? && !user.image.attached? #custom
+    if auth.info.image.present? && !user.image.attached? #custom
       image_path = Image.save_image_from_url(auth.info.image) #custom
       image_file = File.open(image_path) #custom
       user.image ||= Image.new(title: "avatar") #custom

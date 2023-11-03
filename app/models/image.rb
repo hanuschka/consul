@@ -18,7 +18,7 @@ class Image < ApplicationRecord
 
   # validates :title, presence: true
   validate :validate_title_length
-  validates :user_id, presence: true
+  validates :user_id, presence: true, unless: -> { imageable.is_a?(User) && imageable.new_record? }
   validates :imageable_id, presence: true,         if: -> { persisted? }
   validates :imageable_type, presence: true,       if: -> { persisted? }
   validate :validate_image_dimensions, if: -> { attachment.attached? && attachment.new_record? }

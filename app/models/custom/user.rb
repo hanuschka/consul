@@ -153,6 +153,7 @@ class User < ApplicationRecord
 
   def take_votes_from_erased_user
     return if erased?
+    return if unique_stamp.blank?
 
     erased_user = User.erased.find_by(unique_stamp: unique_stamp)
 

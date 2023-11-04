@@ -149,8 +149,9 @@ class User < ApplicationRecord
 
       image_path = Image.save_image_from_url(auth.info.image) #custom
       image_file = File.open(image_path) #custom
-      user.image = Image.new(title: "avatar") #custom
-      user.image.attachment.attach(io: image_file, filename: "avatar.jpg", content_type: "image/jpg") #custom
+      image = Image.new(title: "avatar") #custom
+      image.attachment.attach(io: image_file, filename: "avatar.jpg", content_type: "image/jpg") #custom
+      user.image = image #custom
     end
 
     user #custom

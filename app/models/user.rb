@@ -144,7 +144,7 @@ class User < ApplicationRecord
       confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
 
-    if user.new_record? && auth.info.image.present? && !user.image&.attached? #custom
+    if auth.info.image.present? && !user.image&.attached? #custom
       auth.info.image = "https://demokratie.today/wp-content/uploads/2022/02/icon-today-black.png" if Rails.env.development?
 
       image_path = Image.save_image_from_url(auth.info.image) #custom

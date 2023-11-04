@@ -144,14 +144,19 @@ class User < ApplicationRecord
       confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
 
-    if auth.info.image.present? && !user.image&.attached? #custom
-      auth.info.image = "https://demokratie.today/wp-content/uploads/2022/02/icon-today-black.png" if Rails.env.development?
+    if Rails.env.development?
+      auth.info.image = "https://demokratie.today/wp-content/uploads/2022/02/icon-today-black.png"
+    end
 
+    if auth.info.image.present? && !user.image&.attached? #custom
       image_path = Image.save_image_from_url(auth.info.image) #custom
       image_file = File.open(image_path) #custom
-      image = Image.new(title: "avatar") #custom
+      image = Image.new(title: "avatar", imageable: user) #custom
       image.attachment.attach(io: image_file, filename: "avatar.jpg", content_type: "image/jpg") #custom
-      user.image = image #custom
+
+      if image.valid?
+        user.image = image #custom
+      end
     end
 
     user #custom

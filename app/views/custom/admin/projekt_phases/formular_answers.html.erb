@@ -24,7 +24,6 @@
       </div>
 
       <%= link_to t("custom.shared.download"), polymorphic_path([@namespace, @projekt_phase], action: :formular_answers, format: :csv), class: "float-right small" %>
-
       <div id="formular-answers" class="">
         <%= render partial: "custom/admin/formular_follow_up_letters/answers_table",
           formular_fields: @formular_fields, image_tag: @image_flag, formular_answers: @formular_answers %>

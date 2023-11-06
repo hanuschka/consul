@@ -15,7 +15,7 @@ class ProjektManagement::SiteCustomization::ContentBlocksController < ProjektMan
     if @content_block.update(content_block_params)
       notice = t("admin.site_customization.content_blocks.update.notice")
       return_to = params[:return_to]
-      redirect_to return_to ? return_to : admin_site_customization_content_blocks_path, notice: notice
+      redirect_to (return_to.presence || admin_site_customization_content_blocks_path), notice: notice
     else
       flash.now[:error] = t("admin.site_customization.content_blocks.update.error")
       render :edit

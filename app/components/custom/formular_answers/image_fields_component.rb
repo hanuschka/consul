@@ -11,8 +11,6 @@ class FormularAnswers::ImageFieldsComponent < ApplicationComponent
   private
 
     def formular_answer_image
-      # formular_answer.formular_answer_images.find { |im| im.formular_field_key == formular_field.key } || f.object
-      # formular_answer.formular_answer_images.find_by(formular_field_key: formular_field.key) || f.object
       f.object
     end
 

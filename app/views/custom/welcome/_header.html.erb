@@ -1,18 +1,27 @@
 <% if Setting.old_design_enabled? %>
   <% if header.present? %>
-    <%header_large = Widget::Card.header.find_by title: "header_large" %>
+
+    <% header_large = Widget::Card.header.find_by title: "header_large" %>
     <style>
-<%if header_large%>
-  .home-page .jumbo{
-    background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
-    background-size: cover;
-    background-position: center 25%;
-  }
-<%end%>
+      <% if header_large %>
+        .home-page .jumbo{
+          background-image: linear-gradient(90deg,
+                              rgba(34, 34, 34, 0.75) 35%,
+                              rgba(34, 34, 34, 0.65) 50%,
+                              rgba(34, 34, 34, 0.0)),
+                              url("<%= polymorphic_path(header_large.image.attachment) %>");
+          background-size: cover;
+          background-position: center 25%;
+        }
+      <% end %>
     </style>
 
-    <div class="jumbo not-print">
+    <div class="jumbo not-print highlight">
       <div class='jumbo-message'>
+        <h1>Mitmachgemeinde Kirchheim!!!!</h1>
+        <p>Mit dieser Seite ermöglicht die Gemeinde Kirchheim b. München Ihre Partizipation bei der Entwicklung unserer Gemeinde. Sie können sich informieren, diskutieren und über Dinge abstimmen, die Ihnen wichtig sind.</p>
+        <p>Ihre Anregungen werden von der Verwaltung und der Politik aufgenommen und bei der Planung berücksichtigt. Die Umsetzung Ihrer Wünsche kann zwar nicht garantiert werden, sehr wohl aber die Beachtung und Abwägung Ihrer Anregungen.</p>
+        <p>Wir freuen uns auf Ihre Beteiligung, viel Spaß beim Mitmachen!</p>
       </div>
     </div>
 
@@ -22,17 +31,17 @@
   <% if header.present? %>
     <% header_large = Widget::Card.header.find_by(title: "header_large") %>
     <style>
-<%if header_large %>
-  .home-page .homepage-image-header{
-    background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
-    background-size: cover;
-    background-position: top;
-  }
-
-  .top-bar-background-wrapper {
-    background: transparent;
-  }
-<%end%>
+      <% if header_large %>
+        .home-page .homepage-image-header{
+          background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
+          background-size: cover;
+          background-position: top;
+        }
+      
+        .top-bar-background-wrapper {
+          background: transparent;
+        }
+      <% end %>
     </style>
 
     <div class="homepage-image-header not-print">

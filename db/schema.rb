@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_03_082952) do
+ActiveRecord::Schema.define(version: 2023_11_15_154654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -849,7 +849,6 @@ ActiveRecord::Schema.define(version: 2023_11_03_082952) do
 
   create_table "formular_answer_images", force: :cascade do |t|
     t.bigint "formular_answer_id"
-    t.string "formular_field_key"
     t.string "title", limit: 80
     t.string "attachment_file_name"
     t.string "attachment_content_type"
@@ -857,6 +856,7 @@ ActiveRecord::Schema.define(version: 2023_11_03_082952) do
     t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "formular_field_key"
     t.index ["formular_answer_id"], name: "index_formular_answer_images_on_formular_answer_id"
   end
 
@@ -865,6 +865,8 @@ ActiveRecord::Schema.define(version: 2023_11_03_082952) do
     t.bigint "formular_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "submitter_id"
+    t.string "original_submitter_email"
     t.index ["formular_id"], name: "index_formular_answers_on_formular_id"
   end
 

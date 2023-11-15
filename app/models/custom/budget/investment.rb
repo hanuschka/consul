@@ -2,9 +2,9 @@ require_dependency Rails.root.join("app", "models", "budget", "investment").to_s
 
 class Budget
   class Investment < ApplicationRecord
-    delegate :projekt, :projekt_phase, to: :budget
+    include OnBehalfOfSubmittable
 
-    has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
+    delegate :projekt, :projekt_phase, to: :budget
 
     has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
 
@@ -13,7 +13,6 @@ class Budget
 
     enum implementation_performer: { city: 0, user: 1 }
 
-    scope :sort_by_random, -> { reorder('RANDOM()') }
     scope :sort_by_newest, -> { reorder(created_at: :desc) }
 
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
@@ -70,6 +69,10 @@ class Budget
     def calculate_unqualified_total_ballot_line_weight
       budget_ballot_lines
         .sum(:line_weight)
+    end
+
+    def final_winner?
+      selected? && !incompatible? && winner?
     end
   end
 end

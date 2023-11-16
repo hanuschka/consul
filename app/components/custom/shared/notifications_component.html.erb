@@ -1,0 +1,28 @@
+<% notifications_html = capture do %>
+  <div class="proposal-notifications-list">
+    <% notifications.each do |notification| %>
+      <%= render CommonNotifications::ListItemComponent.new(notification: notification, enable_moderation_actions: !@notifiable.is_a?(ProjektPhase::ProjektNotificationPhase)) %>
+    <% end %>
+  </div>
+<% end %>
+
+
+
+<div id="proposal_notifications">
+  <% if @notifiable.is_a?(ProjektPhase::ProjektNotificationPhase) %>
+    <%= notifications_html %>
+  <% else %>
+    <%= render Shared::CollapseComponent.new(opened_by_default: opened_by_default?) do |c| %>
+      <% c.head do %>
+        <h3>
+          Benachrichtigungen von <%= @author.name %> (<%= @notifications.count %>)
+        </h3>
+      <% end %>
+
+      <% c.body do %>
+        <%= notifications_html %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+

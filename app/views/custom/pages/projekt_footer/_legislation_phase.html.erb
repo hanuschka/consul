@@ -9,7 +9,7 @@
             <div class="select-box">
               <%= form_tag @projekt.page.url + "#footer-content", method: :get, id: "draft_version_go_to_version" do %>
                 <%= select_tag "text_draft_version_id", options_from_collection_for_select(@draft_versions_list, "id", "display_title", @draft_version.id), "aria-label": t("legislation.draft_versions.show.select_draft_version") %>
-                <%= hidden_field_tag :selected_phase_id, @legislation_phase %>
+                <%= hidden_field_tag :projekt_phase_id, @legislation_phase %>
                 <%= hidden_field_tag :section, 'all_drafts_annotations' %>
               <% end %>
               <% if @draft_version.changelog.present? %>
@@ -68,7 +68,7 @@
             <div class="select-box">
               <%= form_tag @projekt.page.url + '#footer-content', method: :get, id: "draft_version_go_to_version" do %>
                 <%= select_tag "text_draft_version_id", options_from_collection_for_select(@draft_versions_list, "id", "display_title", @draft_version.id), "aria-label": t("legislation.draft_versions.show.select_draft_version") %>
-                <%= hidden_field_tag :selected_phase_id, @legislation_phase.id %>
+                <%= hidden_field_tag :projekt_phase_id, @legislation_phase.id %>
               <% end %>
               <% if @draft_version.changelog.present? %>
                 <span>
@@ -86,8 +86,8 @@
             <div class="small-12 column projekt-texts-button-section">
               <%= render "legislation/processes/help_gif" %>
               <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase, section: 'all_drafts_annotations'),
-                          remote: true,
                           title: t("legislation.draft_versions.show.see_comments"),
+                          remote: true,
                           class: "button expanded hollow projekt-all-comments-button" do %>
                 <%= t("legislation.draft_versions.show.see_comments") %>
               <% end %>
@@ -123,9 +123,9 @@
                          data-section-name="annotations"
                          data-legislation-annotatable-base-url="<%= legislation_process_draft_version_path(@process, @draft_version) %>"
                          data-legislation-open-phase="true"
-              <% end %>
-                <%= AdminLegislationSanitizer.new.sanitize(@draft_version.body_html) %>
-              </section>
+                <% end %>
+                  <%= AdminLegislationSanitizer.new.sanitize(@draft_version.body_html) %>
+                </section>
             </div>
           </div>
 
@@ -150,7 +150,7 @@
           <div class="select-box">
             <%= form_tag @projekt.page.url + '#footer-content', method: :get, id: "draft_version_go_to_version" do %>
               <%= select_tag "text_draft_version_id", options_from_collection_for_select(@draft_versions_list, "id", "display_title", @draft_version.id), "aria-label": t("legislation.draft_versions.show.select_draft_version") %>
-              <%= hidden_field_tag :selected_phase_id, @legislation_phase.id %>
+              <%= hidden_field_tag :projekt_phase_id, @legislation_phase.id %>
               <%= hidden_field_tag :section, 'changelog' %>
               <%= submit_tag t("legislation.draft_versions.show.select_version_submit"), class: "button" %>
             <% end %>
@@ -182,7 +182,7 @@
         <div class="select-box">
           <%= form_tag @projekt.page.url + '#footer-content', method: :get, id: "draft_version_go_to_version" do %>
             <%= select_tag "draft_version_id", options_from_collection_for_select(@draft_versions_list, "id", "display_title", @draft_version.id), "aria-label": t("legislation.draft_versions.show.select_draft_version") %>
-              <%= hidden_field_tag :selected_phase_id, @legislation_phase.id %>
+              <%= hidden_field_tag :projekt_phase_id, @legislation_phase.id %>
               <%= hidden_field_tag :section, 'annotations' %>
             <%= submit_tag t("legislation.draft_versions.show.select_version_submit"), class: "button" %>
           <% end %>

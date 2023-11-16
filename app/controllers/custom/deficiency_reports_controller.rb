@@ -22,12 +22,20 @@ class DeficiencyReportsController < ApplicationController
       @current_order = "created_at"
     end
 
-    @deficiency_reports = DeficiencyReport.all.page(params[:page]).send("sort_by_#{@current_order}")
+    @areas = DeficiencyReport::Area.all.order(created_at: :asc)
+
+    if params[:dr_area].present?
+      @selected_area = DeficiencyReport::Area.find_by(id: params[:dr_area])
+      @map_location = @selected_area.map_location
+      @all_deficiency_reports = @selected_area.deficiency_reports
+    else
+      @all_deficiency_reports = DeficiencyReport.all
+    end
+
+    @deficiency_reports = @all_deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
     @categories = DeficiencyReport::Category.all.order(created_at: :asc)
     @statuses = DeficiencyReport::Status.all.order(given_order: :asc)
-
-    @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
 
     @selected_categories_ids = (params[:dr_categories] || '').split(',')
     @selected_status_id = (params[:dr_status] || '').split(',').first
@@ -35,14 +43,31 @@ class DeficiencyReportsController < ApplicationController
 
     @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
 
-
     filter_by_categories if @selected_categories_ids.present?
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
     filter_by_approval_status if params[:approval_status].present?
     filter_by_my_posts
 
+    @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
+
     set_deficiency_report_votes(@deficiency_reports)
+
+    respond_to do |format|
+      format.html do
+        if Setting.new_design_enabled?
+          render :index_new
+        else
+          render :index
+        end
+      end
+
+      format.csv do
+        formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
+        send_data DeficiencyReport::CsvExporter.new(@deficiency_reports.limit(nil)).to_csv,
+          filename: "deficiency_reports-#{formated_time}.csv"
+      end
+    end
   end
 
   def show
@@ -50,6 +75,12 @@ class DeficiencyReportsController < ApplicationController
     @comment_tree = CommentTree.new(@deficiency_report, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
     set_deficiency_report_votes(@deficiency_reports)
+
+    if Setting.new_design_enabled?
+      render :show_new
+    else
+      render :show
+    end
   end
 
   def new
@@ -58,7 +89,14 @@ class DeficiencyReportsController < ApplicationController
 
   def create
     status = DeficiencyReport::Status.first
-    @deficiency_report = DeficiencyReport.new(deficiency_report_params.merge(author: current_user, status: status))
+
+    if deficiency_report_params["image_attributes"]["cached_attachment"].blank?
+      filtered_deficiency_report_params = deficiency_report_params.except("image_attributes")
+    else
+      filtered_deficiency_report_params = deficiency_report_params
+    end
+
+    @deficiency_report = DeficiencyReport.new(filtered_deficiency_report_params.merge(author: current_user, status: status))
 
     if @deficiency_report.save
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
@@ -133,6 +171,7 @@ class DeficiencyReportsController < ApplicationController
                   :deficiency_report_status_id,
                   :deficiency_report_category_id,
                   :deficiency_report_officer_id,
+                  :deficiency_report_area_id,
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
@@ -174,5 +213,4 @@ class DeficiencyReportsController < ApplicationController
   def set_view
     @view = (params[:view] == "minimal") ? "minimal" : "default"
   end
-
 end

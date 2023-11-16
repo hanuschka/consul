@@ -1,6 +1,9 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 class User < ApplicationRecord
+  include Imageable
+  has_one_attached :background_image
+
   SORTING_OPTIONS = { id: "id", name: "username", email: "email", city_name: "city_name",
     created_at: "created_at", verified_at: "verified_at" }.freeze
 
@@ -29,6 +32,9 @@ class User < ApplicationRecord
   has_one :projekt_manager
   belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
+
+  has_many :projekt_subscriptions, -> { where(active: true) }
+  has_many :projekt_phase_subscriptions
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
 
@@ -136,6 +142,7 @@ class User < ApplicationRecord
 
   def take_votes_from_erased_user
     return if erased?
+    return if unique_stamp.blank?
 
     erased_user = User.erased.find_by(unique_stamp: unique_stamp)
 
@@ -194,11 +201,11 @@ class User < ApplicationRecord
   end
 
   def extended_registration?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    !organization? && !erased? && Setting["extra_fields.registration.extended"].present?
   end
 
   def document_required?
-    !organization? && !erased? && Setting["extra_fields.registration.check_documents"]
+    !organization? && !erased? && Setting["extra_fields.registration.check_documents"].present?
   end
 
   def current_city_citizen?
@@ -267,6 +274,22 @@ class User < ApplicationRecord
         end
       end
     end
+  end
+
+  def full_name
+    if first_name.present? && last_name.present?
+      "#{first_name} #{last_name}"
+    else
+      name
+    end
+  end
+
+  def first_letter_of_name
+    (first_name || name)&.chars&.first&.upcase
+  end
+
+  def unread_notifications_count
+    notifications.where(read_at: nil).count
   end
 
   private

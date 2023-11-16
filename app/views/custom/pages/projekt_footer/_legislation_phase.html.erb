@@ -122,7 +122,7 @@
                          data-selected-phase-id="<%= @legislation_phase.id %>"
                          data-section-name="annotations"
                          data-legislation-annotatable-base-url="<%= legislation_process_draft_version_path(@process, @draft_version) %>"
-                         data-legislation-open-phase="true"
+                         data-legislation-open-phase="true">
                 <% end %>
                   <%= AdminLegislationSanitizer.new.sanitize(@draft_version.body_html) %>
                 </section>

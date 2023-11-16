@@ -23,7 +23,7 @@
     <% end %>
 
     <div class="row">
-      <div class="small-12 column">
+      <div class="small-12">
 
         <%= f.hidden_field :use_redeemable_code %>
         <%= f.hidden_field :locale, value: I18n.locale %>
@@ -35,7 +35,7 @@
 
         <%= f.invisible_captcha :address %>
 
-        <% if resource.extended_registration? %>
+        <% if resource.extended_registration? || true %>
           <% if false %>
             <%= f.select :gender, options_for_gender_select,
               { prompt: t("custom.helpers.select.gender_prompt") },
@@ -81,12 +81,12 @@
           <% end %>
 
           <div id="no-registered-address" style="display:<%#= resource.show_no_registered_address_field? ? "block" : "none" %>">
-            <div class="row">
-              <div class="small-12 medium-4 column">
+            <div class="" style="display:flex;justify-content: space-between;">
+              <div class="" style="width:33%">
                 <%= f.text_field :plz,
                   placeholder: t("custom.devise_views.users.registrations.new.plz_label") %>
               </div>
-              <div class="small-12 medium-8 column">
+              <div class="" style="width:65%">
                 <%= f.text_field :city_name,
                   placeholder: t("custom.devise_views.users.registrations.new.city_name_label") %>
               </div>

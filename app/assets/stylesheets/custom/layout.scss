@@ -130,7 +130,8 @@ html.is-reveal-open body {
   #polls.polls-list.column,
   #budgets.budgets-list.column,
   #deficiency-reports.deficiency-reports-list.column,
-  #search-page.search-page-list.column {
+  #search-page.search-page-list.column,
+  #formular.formular-fields-list.column {
     float: left;
   }
 
@@ -139,7 +140,8 @@ html.is-reveal-open body {
   #polls-sidebar.column,
   #budgets-sidebar.column,
   #deficiency-reports-sidebar.column,
-  #search-page-sidebar.column {
+  #search-page-sidebar.column,
+  #formular-sidebar.column {
     float: right;
   }
 }

@@ -53,6 +53,8 @@ de:
       projekt_phase/projekt_notification_phase: Benachrichtigungen
       projekt_phase/legislation_phase: Textbearbeitung
       projekt_phase/newsfeed_phase: News-Feed
+      projekt_phase/formular_phase: Formular
+      formular_field: Formularfeld
     errors:
       models:
         officing/residence:
@@ -140,6 +142,7 @@ de:
         attribution: Attribution
         base: Basisschicht der Karte
         layer_names: Kartenebenennamen
+        opacity: Opazität
         show_by_default: standardmäßig anzeigen
         transparent: diese Kartenebene ist transparent
         protocol: Kartenprotokoll
@@ -220,3 +223,14 @@ de:
       projekt_phase:
         start_date: Anfangsdatum
         end_date: Enddatum
+      formular_field:
+        name: Name
+        description: Beschreibung
+        required: Pflichtfeld
+        kind: Art
+        email_for_confirmation: Bestätigungsmail an Nutzer*in versenden
+        drop_down_options: Dropdown-Optionen
+      formular_follow_up_letter:
+        subject: Betreff
+        body: Text
+        show_follow_up_button: Link zu Follow-up Formular integrieren

@@ -2,8 +2,35 @@ de:
   custom:
     deficiency_reports:
       form:
+        page_description: Vielen Dank, dass Sie ein Anliegen melden! Sie helfen uns damit, diesen so schnell es geht abzustellen.
+          Bitte beschreiben Sie möglichst genau, was Ihnen aufgefallen ist. Typische Anliegen sind zum Beispiel Straßenschäden oder beschädigte Parkbänke.
+        title_placeholder: Geben Sie dem Anliegen, den Sie melden möchten, einen plakativen Titel wie zum Beispiel “Kaputte Straßenlaterne mit der Nummer 12345”.
+        description_placeholder_html: "Beschreiben Sie hier das Anliegen, den Sie melden möchten.<br><br>
+          Details helfen der Stadtverwaltung, das Anliegen aufzufinden und schnell zu beseitigen.<br></br>
+          Wenn Sie zum Beispiel die Nummer der kaputten Straßenlaterne wissen, dann geben Sie diese gerne an.<br></br>
+          Bitte nennen Sie keine persönlichen Daten von Dritten wie zum Beispiel Adressen."
+        map:
+          hint: Setzen Sie einen Pin auf der Karte, um das Anliegen genau zu verorten.
+        area:
+          title: Städte & Gemeinden
+          description: "Bitte ordnen Sie Ihre Meldung einem Ort zu:"
         category:
+          title: Kategorie
+          description: "Bitte ordnen Sie Ihr Meldung einer Kategorie zu:"
           placeholder: Bitte wählen
+        documents:
+          title: Dokumente hinzufügen
+        languages:
+          title: Sprachen
+          description: "Wählen Sie aus, in welcher Sprache/welchen Sprachen Ihre Diskussion stattfinden soll:"
+        video:
+          title: Video hinzufügen
+          description: Gibt es Videos, die Ihre Argumentation und Sichtweise stützen? Dann fügen Sie diese über einen Link hinzu.
+          placeholder: YouTube oder Vimeo-Link eingeben
+        on_behalf_of:
+          title: Veröffentlichen für
+          description: Dieses Feld sehen nur Admin. Sie können hier einen Beitrag im Namen von jemandem erstellen.
+          placeholder: Namen eingeben...
         create:
           submit_button: Anliegen melden
         labels:
@@ -13,12 +40,19 @@ de:
         new:
           submit_button: Anliegen melden
       index:
+        empty_list_text: "Keine Ergebnisse"
+        title: Anliegen
+        welcome_default_text_html: In jeder Stadt kommt es dann und wann zu Anliegen – gut, wenn diese von aufmerksamen BürgerInnen gemeldet werden, um sie schnell zu beheben.
+          Sie sehen auf dieser Seite, welche Anliegen bereits gemeldet wurden. Die Karte hilft Ihnen dabei, das jeweiliges Anliegen zu verorten.
+          Wenden auch Sie sich an uns, wenn Ihnen ein Anliegen auffällt – und tragen Sie bei zu einem sauberen Stadtbild und einer funktionierenden Stadt.
+        sidebar_information_default_text: Ihnen ist ein Anliegen in der Stadt aufgefallen? Dann freuen wir uns über Ihre Mitteilung, damit wir uns schnellstmöglich darum kümmern können.
+        count: Anliegen
         deficiency_report:
           by: von
         orders:
           hot_score: Aktivste
           most_commented: Am meisten kommentiert
-          newest: Neuste
+          newest: Neueste zuerst
         search_form:
           title: Suche nach Anliegen
           placeholder: Anliegen durchsuchen...
@@ -37,6 +71,9 @@ de:
             title: Admin
             all_reports: Alle Anliegen
             reports_to_approve: Freizugebende Anliegen
+          areas:
+            title: Städte & Gemeinden
+            all_areas: Alle Anliegen
           categories:
             filter_button: Kategorien filtern
             title: Kategorien
@@ -47,6 +84,8 @@ de:
           statuses:
             title: Status
             all_statuses: Alle Anliegen
+          my_posts:
+            title: Meine Beiträge
         start_deficiency_report: Ihr Anliegen melden
       mailers:
         notify_administrators_about_answer_update:
@@ -76,9 +115,15 @@ de:
       notifications:
         official_answer_updated: Antwort wurde erfolgreich gespeichert
       show:
+        title: "%{author} hat dieses Anliegen gemeldet"
+        welcome_text_default: Dieses Anliegen wurde uns bereits von einer Nutzerin oder eine, Nutzer gemeldet. Hier können Sie den aktuellen Status einsehen sowie den Verlauf der Anliegenmeldung verfolgen.
+          Außerdem können Sie mit einem eigenen Kommentar Ihre Meinung äußern. Und nachdem das Anliegen geschlossen wurde, finden Sie hier das offizielle Statement der Stadt.
+        video:
+          title: Video hinzufügen
         approve_official_answer: Antwort freigeben
         back_link: "Zurück zu allen Anliegen"
-        official_answer: Offizielle Antwort
+        official_answer:
+          title: Offizielle Antwort
         sidebar:
           category: Kategorien
           delete: Anliege löschen
@@ -87,4 +132,17 @@ de:
           social_share: Teilen
           status: Status
           vote: Unterstützer*innen
+        status:
+          title: Status
+          description: "Sie können hier den aktuellen Status dieser Meldung nachvollziehen:"
+        category:
+          title: Kategorien
+        officer:
+          title: Sachbearbeiter*in
+        author_actions:
+          title: Autor
+          edit_button: Bearbeiten
+          delete_button: Zurückziehen
+        admin_actions:
+          title: Admin
         submit_official_answer_button: Antwort speichern

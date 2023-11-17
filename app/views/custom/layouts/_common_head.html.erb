@@ -4,6 +4,11 @@
 <meta name="google-site-verification" content="Xwgl4enzeMajKbiQ7e27y_qa-o8WJpwBxztku--6oEw" />
 <title><%= content_for?(:title) ? yield(:title) : default_title %></title>
 <%= stylesheet_link_tag "application" %>
+
+<% if Setting.new_design_enabled? %>
+  <%= stylesheet_link_tag "custom_new_design" %>
+<% end %>
+
 <%= stylesheet_link_tag "print", media: 'print' %>
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
 <%= csrf_meta_tags %>

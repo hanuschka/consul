@@ -1,0 +1,22 @@
+.custom-new-design {
+  .sign-up-progress-bar {
+    font-size: 11px;
+
+    li {
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+  }
+
+  .auth-page-template--form-card {
+    .location-radio-button {
+      input {
+        margin-bottom: 0.25rem;
+      }
+
+      label {
+        display: inline-block !important;
+      }
+    }
+  }
+}

@@ -1,61 +1,73 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
 
-<h2><%= t('custom.sign_up.common.register') %></h2>
+<% form_html = capture do %>
+  <h2><%= t("custom.sign_up.common.register") %></h2>
 
-<%= render 'sign_up_progress_bar' %>
+  <%= render "sign_up_progress_bar" %>
 
-<h4><%= t('custom.sign_up.common.information') %></h4>
+  <h4><%= t("custom.sign_up.common.information") %></h4>
 
-<p class='info-details'><%= t('custom.sign_up.user_info.information_details') %></p>
+  <p class='info-details'><%= t("custom.sign_up.user_info.information_details") %></p>
 
-<%= form_for(@user, url: create_user_path) do |f| %>
-  <%= render "shared/errors", resource: @user %>
+  <%= form_for(@user, url: create_user_path) do |f| %>
+    <%= render "shared/errors", resource: @user %>
 
-  <div class="row">
-    <div class="small-12 column">
+    <div class="row">
+      <div class="small-12 <%= "column" if Setting.old_design_enabled? %>">
 
-      <%= f.hidden_field :use_redeemable_code %>
-      <%= f.hidden_field :locale, value: I18n.locale %>
-      <%= f.invisible_captcha :address %>
+        <%= f.hidden_field :use_redeemable_code %>
+        <%= f.hidden_field :locale, value: I18n.locale %>
+        <%= f.invisible_captcha :address %>
 
-      <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label") %>
+        <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label") %>
 
-      <%= f.password_field :password, autocomplete: "off",
-                           placeholder: t("devise_views.users.registrations.new.password_label"),
-                           hint: t("custom.devise_views.users.registrations.new.password_hint") %>
+        <%= f.password_field :password, autocomplete: "off",
+                             placeholder: t("devise_views.users.registrations.new.password_label"),
+                             hint: t("custom.devise_views.users.registrations.new.password_hint") %>
 
-      <%= f.password_field :password_confirmation, autocomplete: "off",
-                           label: t("devise_views.users.registrations.new.password_confirmation_label"),
-                           placeholder: t("devise_views.users.registrations.new.password_confirmation_label") %>
+        <%= f.password_field :password_confirmation, autocomplete: "off",
+                             label: t("devise_views.users.registrations.new.password_confirmation_label"),
+                             placeholder: t("devise_views.users.registrations.new.password_confirmation_label") %>
 
-      <% if resource.use_redeemable_code %>
-        <%= f.text_field :redeemable_code, placeholder: t("devise_views.users.registrations.new.redeemable_code") %>
-      <% end %>
+        <% if resource.use_redeemable_code %>
+          <%= f.text_field :redeemable_code, placeholder: t("devise_views.users.registrations.new.redeemable_code") %>
+        <% end %>
 
-      <%= f.check_box :terms_data_storage,
-        title: t("custom.terms.data_storage.title"),
-        label: t("custom.terms.data_storage.label"),
-        class: "checkbox-label--aligned" %>
+        <%= f.check_box :terms_data_storage,
+          title: t("custom.terms.data_storage.title"),
+          label: t("custom.terms.data_storage.label"),
+          class: "checkbox-label--aligned" %>
 
-      <%= f.check_box :terms_data_protection,
-        title: t("custom.terms.data_protection.title"),
-        label: t("custom.terms.data_protection.label",
-                 privacy_link: link_to(t("custom.terms.privacy_link.text"), "/privacy",
+        <%= f.check_box :terms_data_protection,
+          title: t("custom.terms.data_protection.title"),
+          label: t("custom.terms.data_protection.label",
+                   privacy_link: link_to(t("custom.terms.privacy_link.text"), "/privacy",
+                                         title: t("shared.target_blank"), target: "_blank")),
+          class: "checkbox-label--aligned" %>
+
+        <%= f.check_box :terms_general,
+          title: t("custom.terms.general.title"),
+          label: t("custom.terms.general.label",
+                   terms_link: link_to(t("custom.terms.terms_link.text"), "/conditions",
                                        title: t("shared.target_blank"), target: "_blank")),
-        class: "checkbox-label--aligned" %>
+          class: "checkbox-label--aligned" %>
 
-      <%= f.check_box :terms_general,
-        title: t("custom.terms.general.title"),
-        label: t("custom.terms.general.label",
-                 terms_link: link_to(t("custom.terms.terms_link.text"), "/conditions",
-                                     title: t("shared.target_blank"), target: "_blank")),
-        class: "checkbox-label--aligned" %>
+        <p><%= t("custom.terms.revoke_consent.text") %></p>
 
-      <p><%= t("custom.terms.revoke_consent.text") %></p>
-
-      <div class="small-12 medium-6 small-centered margin-top">
-        <%= f.submit t("custom.sign_up.user_info.submit"), class: "button expanded" %>
+        <div class="small-12 medium-6 small-centered margin-top">
+          <%= f.submit t("custom.sign_up.user_info.submit"), class: "button expanded" %>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
+<% end %>
+
+<% if Setting.new_design_enabled? %>
+  <%= render Auth::AuthPageTemplateComponent.new do |c| %>
+    <% c.form do %>
+      <%= form_html %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= form_html %>
 <% end %>

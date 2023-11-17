@@ -5,7 +5,7 @@ module Abilities
     def initialize(user)
       merge Abilities::Everyone.new(user)
 
-      can [:read, :update], User, id: user.id
+      can [:read, :update, :refresh_activities], User, id: user.id
 
       can :read, Debate
       can :update, Debate do |debate|
@@ -120,7 +120,7 @@ module Abilities
         can :show, DirectMessage, sender_id: user.id
       end
 
-      can [:create, :show], ProposalNotification, proposal: { author_id: user.id }
+      can [:create, :show, :edit, :update, :destroy], ProposalNotification, proposal: { author_id: user.id }
 
       can [:create], Topic
       can [:update, :destroy], Topic, author_id: user.id

@@ -111,6 +111,8 @@ de:
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
         on_behalf_of: Meldung im Namen von jemanden erstellen
+        category: Kategorie
+        status: Status
       debate:
         on_behalf_of: Erstellen im Namen von
       poll:
@@ -198,7 +200,7 @@ de:
         color: Farbe
         name: Name
       projekt_question:
-        show_answers_count: Anzahl der Stimmen im Frontend anzeigen    
+        show_answers_count: Anzahl der Stimmen im Frontend anzeigen
         comments_enabled: Offene Antwort aktiviert
       projekt_event:
         title: Veranstaltungstitel
@@ -234,3 +236,6 @@ de:
         subject: Betreff
         body: Text
         show_follow_up_button: Link zu Follow-up Formular integrieren
+      formular_answer_image:
+        title: Titel
+        attachment: Anhang

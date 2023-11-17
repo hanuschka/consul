@@ -12,13 +12,17 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   def poll_question_answers_class
     classes = ["poll-question-answers"]
 
-    if question.votation_type.rating_scale?
+    if question&.votation_type&.rating_scale?
       classes.push("rating-scale")
 
       count_of_rating_scale_cells = question.question_answers.count
       count_of_rating_scale_cells += 1 if question.min_rating_scale_label.present?
       count_of_rating_scale_cells += 1 if question.max_rating_scale_label.present?
       classes.push("rating-scale-#{count_of_rating_scale_cells}-answers")
+    else
+      classes.push("regular")
+      classes.push("row")
+      classes.push("gutter-small")
     end
 
     classes.join(" ")
@@ -35,7 +39,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def button_not_answered_class
-    if question.votation_type.rating_scale?
+    if question.votation_type&.rating_scale?
       "rating-scale-button"
     else
       "button secondary hollow expanded"
@@ -43,7 +47,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def button_answered_class
-    if question.votation_type.rating_scale?
+    if question&.votation_type&.rating_scale?
       "rating-scale-button rating-scale-button--answered"
     else
       "button answered expanded"
@@ -51,21 +55,21 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def show_additional_info_images?
-    return if question.votation_type.rating_scale?
+    return if question&.votation_type&.rating_scale?
 
     projekt_phase_feature?(question.poll&.projekt_phase, "resource.additional_info_for_each_answer") &&
       question.show_images?
   end
 
   def show_additional_info_description?(question_answer)
-    return if question.votation_type.rating_scale?
+    return if question&.votation_type&.rating_scale?
 
     projekt_phase_feature?(question.poll&.projekt_phase, "resource.additional_info_for_each_answer") &&
       answer_with_description?(question_answer)
   end
 
   def should_show_answer_weight?
-    question.votation_type.multiple_with_weight? &&
+    question&.votation_type&.multiple_with_weight? &&
       question.max_votes.present?
   end
 
@@ -85,7 +89,17 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   def disable_answer?(question_answer)
     return false unless current_user.present?
 
-    (question.votation_type.multiple? && user_answers.count == question.max_votes) ||
-      (question.votation_type.multiple_with_weight? && available_vote_weight(question_answer) == 0)
+    (question.votation_type&.multiple? && user_answers.count == question.max_votes) ||
+      (question.votation_type&.multiple_with_weight? && available_vote_weight(question_answer) == 0)
+  end
+
+  def has_additional_info?(question_answer)
+    question_answer.more_info_link.present? ||
+      show_additional_info_images? ||
+      show_additional_info_description?(question_answer)
+  end
+
+  def new_design?
+    Setting.new_design_enabled?
   end
 end

@@ -1,37 +1,62 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
 
-<h2><%= t('custom.sign_up.common.register') %></h2>
+<% form_html = capture do %>
+  <% if Setting.old_design_enabled? %>
+    <h2><%= t("custom.sign_up.common.register") %></h2>
 
-<p>
-  <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
-      signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
-</p>
+    <p>
+      <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
+          signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
+    </p>
+  <% end %>
 
-<h4><%= t('custom.sign_up.common.information') %></h4>
-<p class='info-details'><%= t('custom.sign_up.new.information_details') %></p>
+  <h4><%= t("custom.sign_up.common.information") %></h4>
+  <p class='info-details'><%= t("custom.sign_up.new.information_details") %></p>
 
-<ol class='numbered-list-big'>
-  <li>
-    <h4><%= t('custom.sign_up.new.bullet_1') %></h4>
-    <p><%= t('custom.sign_up.new.bullet_1_text') %></p>
-  </li>
+  <ol class='numbered-list-big'>
+    <li>
+      <h4><%= t("custom.sign_up.new.bullet_1") %></h4>
+      <p><%= t("custom.sign_up.new.bullet_1_text") %></p>
+    </li>
 
-  <li>
-    <h4><%= t('custom.sign_up.new.bullet_2') %></h4>
-    <p><%= t('custom.sign_up.new.bullet_2_text') %></p>
-    <%= t('custom.sign_up.new.bullet_2_extra_html') %>
-  </li>
+    <li>
+      <h4><%= t("custom.sign_up.new.bullet_2") %></h4>
+      <p><%= t("custom.sign_up.new.bullet_2_text") %></p>
+      <%= t("custom.sign_up.new.bullet_2_extra_html") %>
+    </li>
 
-  <li>
-    <h4><%= t('custom.sign_up.new.bullet_3') %></h4>
-    <p><%= t('custom.sign_up.new.bullet_3_text') %></p>
-  </li>
+    <li>
+      <h4><%= t("custom.sign_up.new.bullet_3") %></h4>
+      <p><%= t("custom.sign_up.new.bullet_3_text") %></p>
+    </li>
 
-  <li>
-    <h4><%= t('custom.sign_up.new.bullet_4') %></h4>
-  </li>
-</ol>
+    <li>
+      <h4><%= t("custom.sign_up.new.bullet_4") %></h4>
+    </li>
+  </ol>
 
-<div class="small-12 medium-6 small-centered margin-top-25">
-  <%= link_to t("custom.sign_up.new.submit"), collect_user_info_path, class: "button expanded" %>
-</div>
+  <div class="small-12 medium-6 small-centered margin-top-25">
+    <%= link_to t("custom.sign_up.new.submit"), collect_user_info_path, class: "button expanded" %>
+  </div>
+<% end %>
+
+<% if Setting.new_design_enabled? %>
+  <%= render Auth::AuthPageTemplateComponent.new do |c| %>
+    <% c.form do %>
+      <h2><%= t("devise_views.users.registrations.new.title") %></h2>
+      <p>
+        <%= t("custom.devise_views.users.registrations.new.message") %>
+      </p>
+      <%= form_html %>
+    <% end %>
+    <% c.after_card_container do %>
+      <p>
+      <%= link_to(t("custom.devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path) %>
+      </p>
+    <% end %>
+  <% end %>
+<% else %>
+  <h2><%= t("devise_views.users.registrations.new.title") %></h2>
+
+  <%= form_html %>
+<% end %>

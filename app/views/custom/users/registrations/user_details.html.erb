@@ -1,175 +1,184 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
 
-<h2><%= t('custom.sign_up.common.register') %></h2>
+<% form_html = capture do %>
+  <h2><%= t("custom.sign_up.common.register") %></h2>
 
-<%= render 'sign_up_progress_bar' %>
+  <%= render "sign_up_progress_bar" %>
 
-<h4><%= t('custom.sign_up.common.information') %></h4>
-
-<% if @user.citizen? %>
-  <p class='info-details'><%= t('custom.sign_up.user_details.information_details.citizen') %></p>
-<% else %>
-  <p class='info-details'><%= t('custom.sign_up.user_details.information_details.not_citizen') %></p>
-<% end %>
-
-
-
-<%= form_for(@user, url: update_user_details_path(@user)) do |f| %>
-  <%= render "shared/errors", resource: @user %>
-
-  <div class="row">
-    <div class="small-12 medium-6 column">
-      <%= f.text_field :first_name, placeholder: t("custom.sign_up.user_details.first_name_placeholder")  %>
-    </div>
-
-    <div class="small-12 medium-6 column">
-      <%= f.text_field :last_name, placeholder: t("custom.sign_up.user_details.last_name_placeholder")  %>
-    </div>
-  </div>
+  <h4><%= t("custom.sign_up.common.information") %></h4>
 
   <% if @user.citizen? %>
-
-     <% if RegisteredAddress::City.any? %>
-       <% @registered_address_city = RegisteredAddress::City.find_by(name: "Bamberg") %>
-       <% invalid_field_class = resource.form_registered_address_city_id.blank? && action_name == "create" %>
-       <%#= label_tag :form_registered_address_city_id, t("custom.devise_views.users.registrations.new.form_registered_address_city_label"), class: "#{'is-invalid-label' if invalid_field_class}" %>
-       <%= select_tag :form_registered_address_city_id,
-         options_for_select(
-           RegisteredAddress::City.all.map { |city| [city.name, city.id] }.push([t("custom.helpers.select.not_in_list"), 0]),
-           @registered_address_city.id
-         ),
-         {
-           prompt: t("custom.helpers.select.prompt"),
-           class: "js-registration-city-selector show-arrow #{"is-invalid-input" if invalid_field_class}",
-           style: "background-color:#f8f8f8;display:none"
-         } %>
-
-       <div id="registered-address-street-field">
-         <% if @registered_address_city.present? %>
-           <%= render "custom/users/registrations/partials/street_selector",
-             selected_value: resource.form_registered_address_street_id,
-             registered_address_streets: @registered_address_city&.registered_address_streets,
-             invalid_field_class: resource.errors[:form_registered_address_street_id].present? %>
-         <% end %>
-       </div>
-
-       <div id="registered-address-field">
-         <% if @registered_address_city.present? && @registered_address_street.present? %>
-           <%= render "custom/users/registrations/partials/address_selector",
-             selected_value: resource.form_registered_address_id,
-             registered_addresses: @registered_address_street&.registered_addresses,
-             invalid_field_class: resource.errors[:form_registered_address_id].present? %>
-         <% end %>
-       </div>
-
-       <div id="no-registered-address" style="display:<%= resource.show_no_registered_address_field? ? "block" : "none" %>">
-         <div class="row">
-           <div class="small-12 medium-8 column">
-             <%= f.text_field :city_name,
-               placeholder: t("custom.devise_views.users.registrations.new.city_name_label") %>
-           </div>
-           <div class="small-12 medium-4 column">
-             <%= f.text_field :plz,
-               placeholder: t("custom.devise_views.users.registrations.new.plz_label") %>
-           </div>
-         </div>
-         <%= f.text_field :street_name,
-           placeholder: t("custom.devise_views.users.registrations.new.street_name_label") %>
-         <div class="row">
-           <div class="small-12 medium-6 column">
-             <%= f.text_field :street_number,
-               placeholder: t("custom.devise_views.users.registrations.new.street_number_label") %>
-           </div>
-           <div class="small-12 medium-6 column">
-             <%= f.text_field :street_number_extension,
-               placeholder: t("custom.devise_views.users.registrations.new.street_number_extension_label") %>
-           </div>
-         </div>
-       </div>
-
-     <% else %>
-       <div class="row">
-         <div class="small-12 column">
-           <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder")  %>
-         </div>
-       </div>
-       <div class="row">
-         <div class="small-12 column">
-           <%= f.select :city_street_id, CityStreet.all.map{ |str| [str.name, str.id]  }, { prompt: t('helpers.select.prompt') } %>
-         </div>
-       </div>
-     <% end %>
-
-
+    <p class='info-details'><%= t("custom.sign_up.user_details.information_details.citizen") %></p>
   <% else %>
-    <div class="row">
-      <div class="small-12 medium-6 column">
-        <%= f.text_field :street_name, placeholder: t("custom.sign_up.user_details.street_name_placeholder")  %>
-      </div>
-
-      <div class="small-12 medium-6 column">
-        <%= f.text_field :street_number, placeholder: t("custom.sign_up.user_details.street_number_placeholder")  %>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="small-12 medium-6 column">
-        <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder")  %>
-      </div>
-
-      <div class="small-12 medium-6 column">
-        <%= f.text_field :city_name, placeholder: t("custom.sign_up.user_details.city_name_placeholder")  %>
-      </div>
-    </div>
+    <p class='info-details'><%= t("custom.sign_up.user_details.information_details.not_citizen") %></p>
   <% end %>
 
-  <div class="row">
-    <div class="user-date-of-birth column small-12">
-      <%= f.date_select :date_of_birth,
-                        prompt: true,                   
-                        start_year: 1900, end_year: minimum_required_age.years.ago.year %>
-    </div>
-  </div>
+  <%= form_for(@user, url: update_user_details_path(@user)) do |f| %>
+    <%= render "shared/errors", resource: @user %>
 
-  <% if IndividualGroup.soft.visible.any? %>
-    <% IndividualGroup.soft.visible.each do |individual_group| %>
-      <div class="options-group">
-        <label><%= individual_group.name %></label>
-        <%= f.collection_check_boxes :individual_group_value_ids, individual_group.individual_group_values, :id, :name do |b| %>
-          <%= b.label(class: "checkbox-label checkbox-label--inline") { b.check_box + b.text } %>
-        <% end %>
+    <div class="">
+      <div class="">
+        <%= f.text_field :first_name, placeholder: t("custom.sign_up.user_details.first_name_placeholder") %>
+      </div>
+
+      <div class="">
+        <%= f.text_field :last_name, placeholder: t("custom.sign_up.user_details.last_name_placeholder") %>
+      </div>
+    </div>
+
+    <% if @user.citizen? %>
+
+       <% if RegisteredAddress::City.any? %>
+         <% @registered_address_city = RegisteredAddress::City.find_by(name: "Bamberg") %>
+         <% invalid_field_class = resource.form_registered_address_city_id.blank? && action_name == "create" %>
+         <%#= label_tag :form_registered_address_city_id, t("custom.devise_views.users.registrations.new.form_registered_address_city_label"), class: "#{'is-invalid-label' if invalid_field_class}" %>
+         <%= select_tag :form_registered_address_city_id,
+           options_for_select(
+             RegisteredAddress::City.all.map { |city| [city.name, city.id] }.push([t("custom.helpers.select.not_in_list"), 0]),
+             @registered_address_city.id
+           ),
+           {
+             prompt: t("custom.helpers.select.prompt"),
+             class: "js-registration-city-selector show-arrow #{"is-invalid-input" if invalid_field_class}",
+             style: "background-color:#f8f8f8;display:none"
+           } %>
+
+         <div id="registered-address-street-field">
+           <% if @registered_address_city.present? %>
+             <%= render "custom/users/registrations/partials/street_selector",
+               selected_value: resource.form_registered_address_street_id,
+               registered_address_streets: @registered_address_city&.registered_address_streets,
+               invalid_field_class: resource.errors[:form_registered_address_street_id].present? %>
+           <% end %>
+         </div>
+
+         <div id="registered-address-field">
+           <% if @registered_address_city.present? && @registered_address_street.present? %>
+             <%= render "custom/users/registrations/partials/address_selector",
+               selected_value: resource.form_registered_address_id,
+               registered_addresses: @registered_address_street&.registered_addresses,
+               invalid_field_class: resource.errors[:form_registered_address_id].present? %>
+           <% end %>
+         </div>
+
+         <div id="no-registered-address" style="display:<%= resource.show_no_registered_address_field? ? "block" : "none" %>">
+           <div class="row">
+             <div class="small-12 medium-8 column">
+               <%= f.text_field :city_name,
+                 placeholder: t("custom.devise_views.users.registrations.new.city_name_label") %>
+             </div>
+             <div class="small-12 medium-4 column">
+               <%= f.text_field :plz,
+                 placeholder: t("custom.devise_views.users.registrations.new.plz_label") %>
+             </div>
+           </div>
+           <%= f.text_field :street_name,
+             placeholder: t("custom.devise_views.users.registrations.new.street_name_label") %>
+           <div class="row">
+             <div class="small-12 medium-6 ">
+               <%= f.text_field :street_number,
+                 placeholder: t("custom.devise_views.users.registrations.new.street_number_label") %>
+             </div>
+             <div class="small-12 medium-6 column">
+               <%= f.text_field :street_number_extension,
+                 placeholder: t("custom.devise_views.users.registrations.new.street_number_extension_label") %>
+             </div>
+           </div>
+         </div>
+
+       <% else %>
+         <div class="row">
+           <div class="small-12 column">
+             <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder") %>
+           </div>
+         </div>
+         <div class="row">
+           <div class="small-12 column">
+             <%= f.select :city_street_id, CityStreet.all.map { |str| [str.name, str.id] }, { prompt: t("helpers.select.prompt") } %>
+           </div>
+         </div>
+       <% end %>
+
+    <% else %>
+      <div class="" style="display: flex; justify-content: space-between;">
+        <div class="" style="width: 48%;">
+          <%= f.text_field :street_name, placeholder: t("custom.sign_up.user_details.street_name_placeholder") %>
+        </div>
+
+        <div class="" style="width: 48%;">
+          <%= f.text_field :street_number, placeholder: t("custom.sign_up.user_details.street_number_placeholder") %>
+        </div>
+      </div>
+
+      <div class="" style="display: flex; justify-content: space-between;">
+        <div class="" style="width: 48%;">
+          <%= f.text_field :plz, placeholder: t("custom.sign_up.user_details.plz_placeholder") %>
+        </div>
+
+        <div class="" style="width: 48%;">
+          <%= f.text_field :city_name, placeholder: t("custom.sign_up.user_details.city_name_placeholder") %>
+        </div>
       </div>
     <% end %>
-  <% end %>
 
-  <% if @user.citizen? %>
-    <div class='user-document'>
-      <div class='user-document-type'>
-        <%= f.select :document_type, user_document_types, prompt: "" %>
-      </div>
-      <div class='user-document-number'>
-        <%= f.text_field :document_number, placeholder: t("custom.sign_up.user_details.document_number_placeholder"), label: false%>
+    <div class="row">
+      <div class="user-date-of-birth">
+        <%= f.date_select :date_of_birth,
+                          prompt: true,
+                          start_year: 1900, end_year: minimum_required_age.years.ago.year %>
       </div>
     </div>
 
-    <label><%= t('custom.sign_up.user_details.tips') %></label>
+    <% if IndividualGroup.soft.visible.any? %>
+      <% IndividualGroup.soft.visible.each do |individual_group| %>
+        <div class="options-group">
+          <label><%= individual_group.name %></label>
+          <%= f.collection_check_boxes :individual_group_value_ids, individual_group.individual_group_values, :id, :name do |b| %>
+            <%= b.label(class: "checkbox-label checkbox-label--inline") { b.check_box + b.text } %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
 
-    <div class='row margin-bottom'>
-      <div class='column small-12 medium-6'>
-        <label><%= t('custom.sign_up.user_details.card_label') %></label>
-        <p><%= t('custom.sign_up.user_details.card_help') %></p>
-        <%= image_tag 'card.jpg' %>
+    <% if @user.citizen? %>
+      <div class='user-document'>
+        <div class='user-document-type'>
+          <%= f.select :document_type, user_document_types, prompt: "Dokument" %>
+        </div>
+        <div class='user-document-number'>
+          <%= f.text_field :document_number, placeholder: t("custom.sign_up.user_details.document_number_placeholder"), label: false %>
+        </div>
       </div>
 
-      <div class='column small-12 medium-6'>
-        <label><%= t('custom.sign_up.user_details.pass_label') %></label>
-        <p><%= t('custom.sign_up.user_details.pass_help') %></p>
-        <%= image_tag 'pass_new.png' %>
+      <label><%= t("custom.sign_up.user_details.tips") %></label>
+
+      <div class='margin-bottom' style="display: flex; justify-content: space-between;">
+        <div class='' style="width: 48%;">
+          <label><%= t("custom.sign_up.user_details.card_label") %></label>
+          <p><%= t("custom.sign_up.user_details.card_help") %></p>
+          <%= image_tag "card.jpg" %>
+        </div>
+
+        <div class='' style="width: 48%;">
+          <label><%= t("custom.sign_up.user_details.pass_label") %></label>
+          <p><%= t("custom.sign_up.user_details.pass_help") %></p>
+          <%= image_tag "pass_new.png" %>
+        </div>
       </div>
+    <% end %>
+
+    <div class="small-12 small-centered margin-top margin-bottom-1">
+      <%= f.submit t("custom.sign_up.user_details.submit"), class: "button expanded", style: "max-width:unset" %>
     </div>
   <% end %>
+<% end %>
 
-  <div class="small-12 medium-6 small-centered margin-top margin-bottom-1">
-    <%= f.submit t("custom.sign_up.user_details.submit"), class: "button expanded" %>
-  </div>
+<% if Setting.new_design_enabled? %>
+  <%= render Auth::AuthPageTemplateComponent.new do |c| %>
+    <% c.form do %>
+      <%= form_html %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= form_html %>
 <% end %>

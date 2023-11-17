@@ -1,13 +1,24 @@
 <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
 
-<h2><%= t('custom.sign_up.common.register') %></h2>
+<% form_html = capture do %>
+  <h2><%= t("custom.sign_up.common.register") %></h2>
 
-<%= render 'sign_up_progress_bar' %>
+  <%= render "sign_up_progress_bar" %>
 
-<h4><%= t('custom.sign_up.complete.welcome') %></h4>
-<p class='info-details'><%= t('custom.sign_up.complete.welcome_text') %></p>
+  <h4><%= t("custom.sign_up.complete.welcome") %></h4>
+  <p class='info-details'><%= t("custom.sign_up.complete.welcome_text") %></p>
 
+  <div class="small-12 medium-6 small-centered margin-top">
+    <%= link_to t("custom.sign_up.complete.button"), root_path, class: "button expanded" %>
+  </div>
+<% end %>
 
-<div class="small-12 medium-6 small-centered margin-top">
-  <%= link_to t('custom.sign_up.complete.button'), root_path, class: "button expanded" %>
-</div>
+<% if Setting.new_design_enabled? %>
+  <%= render Auth::AuthPageTemplateComponent.new do |c| %>
+    <% c.form do %>
+      <%= form_html %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= form_html %>
+<% end %>

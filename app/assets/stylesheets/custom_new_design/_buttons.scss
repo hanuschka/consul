@@ -1,0 +1,127 @@
+$orange-button-color: #FFA42D;
+$grey-button-color: #cfd9e2;
+$green-button-color: #00AA0B;
+
+.custom-new-design {
+  // .button:not(div#page-content .button) {
+  button {
+    cursor: pointer;
+  }
+
+  .button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    // padding: 0 20px 0;
+    padding: 10px 20px !important;
+    max-width: 300px;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    border-radius: 7px;
+    transition: background-color 0.1s ease;
+
+    .icon {
+      padding-right: 5px;
+    }
+
+    &.-brand-color {
+      color: white;
+      background: $brand;
+    }
+
+    &:hover, &:focus {
+      background-color: lighten($brand, 6%);
+      color: white;
+    }
+
+    &.-grey {
+      background: $grey-button-color;
+      color: black;
+
+      &:hover, &:focus {
+        background-color: lighten($grey-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($grey-button-color, 7%)
+      }
+    }
+
+    &.-orange {
+      background: $orange-button-color;
+      color: black;
+
+      &:hover, &:focus {
+        background-color: lighten($orange-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($orange-button-color, 7%)
+      }
+    }
+
+    &.-green {
+      background: $green-button-color;
+      color: white;
+
+      &:hover, &:focus {
+        background-color: lighten($green-button-color, 5%)
+      }
+
+      &:active {
+        background-color: lighten($green-button-color, 7%)
+      }
+    }
+
+    &.-purple {
+      background: #EAE4FB;
+      color: black;
+
+      &:hover, &:focus {
+        background-color: #dad2f0;
+      }
+    }
+
+    &.hollow {
+      &:hover, &:focus, &:active {
+        background: #E1EDF7;
+        color: #004a83;
+      }
+
+      &.alert {
+        &:hover, &:focus, &:active {
+          background: #ffe7e3;
+          color: #cc4b37;
+        }
+      }
+    }
+  }
+
+  .icon {
+    margin-right: 5px;
+  }
+
+  .submit-button {
+    font-size: 18px;
+    height: 45px;
+  }
+
+  .input-group {
+    .button {
+      border-radius: 7px;
+    }
+  }
+
+  .new-resource-cta {
+    width: 420px;
+
+    .button {
+      font-size: 20px;
+    }
+  }
+
+  .button.button-support.unvote {
+    background-color: antiquewhite;
+  }
+}

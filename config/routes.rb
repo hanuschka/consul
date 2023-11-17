@@ -29,10 +29,12 @@ Rails.application.routes.draw do
   draw :projekt
   draw :search
   draw :projekt_management
+  draw :custom
 
   root "welcome#index"
   get "/welcome", to: "welcome#welcome"
   get "/consul.json", to: "installation#details"
+  get "/latest_activity", to: "welcome#latest_activity" #custom
 
   resources :stats, only: [:index]
   resources :images, only: [:destroy]

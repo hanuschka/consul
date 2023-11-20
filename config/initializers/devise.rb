@@ -251,6 +251,26 @@ Devise.setup do |config|
                   strategy_class: OmniAuth::Strategies::Wordpress,
                   client_options: { site: Rails.application.secrets.wordpress_oauth2_site }
 
+  open_rathaus_config = Rails.application.secrets.open_rathaus_login
+
+  config.omniauth :openid_connect, {
+    name: :open_rathaus,
+    scope: [:openid, :profile, :email, :address, :phone, :stork_level],
+    response_type: :code,
+    uid_field: "sub",
+    client_options: {
+      host: open_rathaus_config[:host],
+      authorization_endpoint: open_rathaus_config[:authorization_endpoint],
+      token_endpoint: open_rathaus_config[:token_endpoint],
+      token_endpoint_auth_method: "client_secret_basic",
+      userinfo_endpoint: open_rathaus_config[:userinfo_endpoint],
+      jwks_uri: open_rathaus_config[:jwks_uri],
+      identifier: open_rathaus_config[:client_id],
+      secret: open_rathaus_config[:client_secret],
+      redirect_uri: open_rathaus_config[:redirect_uri]
+    }
+  }
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

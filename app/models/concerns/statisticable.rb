@@ -148,7 +148,7 @@ module Statisticable
     end
 
     def age_groups
-      [[16, 19],
+      [[14, 19],
        [20, 24],
        [25, 29],
        [30, 34],

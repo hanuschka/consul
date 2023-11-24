@@ -32,4 +32,11 @@ class Budget < ApplicationRecord
       .value
       .present?
   end
+
+  def find_or_create_stats_version
+    if !finished? && stats_version && stats_version.created_at.to_date != Date.today.to_date
+      stats_version.destroy
+    end
+    super
+  end
 end

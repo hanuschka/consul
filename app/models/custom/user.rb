@@ -347,10 +347,10 @@ class User < ApplicationRecord
     def census_data
       RemoteCensusApi.new.call(first_name: first_name,
                                last_name: last_name,
-                               street_name: street_name,
-                               street_number: street_number,
-                               plz: plz,
-                               city_name: city_name,
+                               street_name: registered_address&.registered_address_street&.name.presence || street_name,
+                               street_number: registered_address&.street_number.presence || street_number,
+                               plz: registered_address&.registered_address_street&.plz.presence || plz,
+                               city_name: registered_address&.registered_address_city&.name.presence || city_name,
                                date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),
                                gender: gender)
     end

@@ -4,7 +4,7 @@ class Setting < ApplicationRecord
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type
-    if %w[feature process proposals map html homepage uploads projekts sdg].include? prefix
+    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage].include? prefix
       prefix
     elsif %w[remote_census].include? prefix
       key.rpartition(".").first
@@ -161,6 +161,8 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
+        "welcomepage.usage_stats": true,
+
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
@@ -254,11 +256,7 @@ class Setting < ApplicationRecord
     end
 
     def old_design_enabled?
-      if Rails.env.production?
-        true
-      else
-        enabled?("extended_feature.general.enable_old_design")
-      end
+      enabled?("extended_feature.general.enable_old_design")
     end
 
     def new_design_enabled?

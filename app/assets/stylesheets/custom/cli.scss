@@ -51,3 +51,64 @@ h1.no-narrative-line {
     color: #fff;
   }
 }
+
+.custom-new-design {
+  h1:not(.logo):not(.no-narrative-line),
+  h2:not(.logo):not(.no-narrative-line) {
+    margin-bottom: 2rem;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 9rem;
+      height: 0;
+      margin-top: 0.125em;
+      margin-bottom: 0;
+      border-style: solid;
+      border-width: 6px 6px 6px 0;
+      border-color: transparent transparent #0ab4ff transparent;
+      animation: scalingLine 400ms ease-in-out;
+      transform-origin: 0 50%;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  @media (max-width: 40em) {
+    .top-bar--title-logo-top, .top-bar--title-logo-stikcy {
+      max-width: 180px;
+    }
+  }
+
+  &.home-page {
+
+    .top-bar-wrapper {
+      a.button.sign-in-button.-brand {
+        background-color: #fff;
+        color: #0ab4ff;
+      }
+
+      .top-bar--title-logo-top { 
+        display: block;	
+      } 
+
+      .top-bar--title-logo-stikcy {
+        display: none;
+      }
+    }
+
+    .top-bar-wrapper.sticky-header {
+      a.button.sign-in-button.-brand {
+        background-color: #0ab4ff;
+        color: #fff;
+      }
+
+      .top-bar--title-logo-top { 
+        display: none;
+      } 
+
+      .top-bar--title-logo-stikcy {
+        display: block;	
+      }
+    }
+  }
+}

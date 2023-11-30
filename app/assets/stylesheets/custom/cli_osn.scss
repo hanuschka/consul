@@ -8,12 +8,6 @@ h5 {
   text-decoration: underline;
 }
 
-.erste-schritte {
-  background-color: $accent;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
 #user_terms_of_service {
   margin-bottom: 0;
   margin-top: 7px !important;
@@ -23,5 +17,30 @@ h5 {
   #navigation_bar .top-level-item > .flyout-item-name > a,
   #navigation_bar .top-level-item > .flyout-item-name  {
     font-weight: bold !important;
+  }
+}
+
+.custom-new-design { 
+  .custom-content-block-body, #page-content, .resource-page--description { 
+    a {
+      font-weight: bold;
+      color: #37847f;
+      text-decoration: underline;
+    }
+	}
+
+  a.button.-grey {
+    background-color: #37847f;
+    color: #fff;
+
+    &:hover {
+      background-color: #37847f;
+      color: #fff;
+    }
+  }
+
+  .resource-item--header {
+    background-color: #37847f !important;
+    color: #fff !important;
   }
 }

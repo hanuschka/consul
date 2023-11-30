@@ -10,7 +10,7 @@
       <%= "aria-haspopup=true" if projekt_children_to_show_in_menu.any? && placement == "desktop" %>
       <%= "accesskey=#{accesskey}" if accesskey < 9 && placement == "desktop" %> >
 
-    <div class='flyout-item-name projekt-name <%= "erste-schritte" if active_projekt.name == "Erste Schritte" %>'>
+    <div class='flyout-item-name projekt-name'>
       <%= prepare_projekt_name(active_projekt, placement) %>
     </div>
 

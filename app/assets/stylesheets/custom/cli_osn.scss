@@ -21,7 +21,10 @@ h5 {
 }
 
 .custom-new-design { 
-  .custom-content-block-body, #page-content, .resource-page--description { 
+  .custom-content-block-body,
+  #page-content,
+  .resource-page--description,
+  .auth-page-template--body {
     a {
       font-weight: bold;
       color: #37847f;
@@ -29,7 +32,8 @@ h5 {
     }
 	}
 
-  a.button.-grey {
+  a.button.-grey,
+  a.button.-purple {
     background-color: #37847f;
     color: #fff;
 
@@ -39,8 +43,48 @@ h5 {
     }
   }
 
+  a.button.-orange.new-resource-button {
+    background-color: #ee7444;
+    color: #fff;
+
+    &:hover {
+      background-color: #ee7444;
+      color: #fff;
+    }
+  }
+
   .resource-item--header {
     background-color: #37847f !important;
     color: #fff !important;
+  }
+
+  footer {
+    a {
+      color: #fff !important;
+    }
+
+    h1.logo {
+      margin-top: 0;
+    }
+  }
+
+  .auth-page-template--body {
+    form .button {
+      background-color: #37847f;
+    }
+
+    .button.-green {
+      background-color: #ee7444
+    }
+  }
+
+  .milestone-item {
+    &::after {
+      background-color: #ee7444 !important;
+    }
+
+    .milestone-item--status {
+      background-color: #37847f;
+    }
   }
 }

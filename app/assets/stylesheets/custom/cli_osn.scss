@@ -25,7 +25,7 @@ h5 {
   #page-content,
   .resource-page--description,
   .auth-page-template--body {
-    a {
+    a:not(.button) {
       font-weight: bold;
       color: #37847f;
       text-decoration: underline;
@@ -74,7 +74,11 @@ h5 {
     }
 
     .button.-green {
-      background-color: #ee7444
+      background-color: #ee7444;
+
+      &:hover {
+        background-color: #ee7444;
+      }
     }
   }
 

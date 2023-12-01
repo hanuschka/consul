@@ -6,7 +6,6 @@
        $(this).addClass('hide');
       });
 
-
       var visibleHintId = '#votation-type-' + newVotationTypeName;
       $(visibleHintId).removeClass('hide')
     },
@@ -91,7 +90,7 @@
           $layerNamesInput.attr("disabled", true);
           $layerDefsInput.attr("disabled", true);
           $layerOpacityInput.attr("disabled", true);
-  
+
         } else if ( $selectedRadioButton.val() == 'wms' ) {
           $transparentCheckbox.removeAttr("disabled");
           $layerNamesInput.removeAttr("disabled");

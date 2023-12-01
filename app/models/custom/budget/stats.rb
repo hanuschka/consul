@@ -3,7 +3,7 @@ require_dependency Rails.root.join("app", "models", "budget", "stats").to_s
 class Budget::Stats
   delegate :show_percentage_values_only?, to: :budget
 
-  def phases #cli
+  def phases
     %w[support vote]
   end
 

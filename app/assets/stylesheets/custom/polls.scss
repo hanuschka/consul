@@ -467,16 +467,50 @@ td.answers-column  {
 }
 
 .question-wizard--progress {
-  display: inline-flex;
-  justify-content: center;
-  padding-top: 5px;
+  display: flex;
+  justify-content: flex-start;
+  // padding-top: 5px;
   align-items: center;
-  margin-bottom: 5px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
+  margin-bottom: 10px;
+  // position: absolute !important;
+  // left: 0;
+  // right: 0;
+  // top: 0;
+  // bottom: 0;
+  margin-right: auto;
+  margin-left: auto;
+  height: 12px !important;
   font-size: 28px;
-  width: 80px;
+  width: 100%;
   color: #292929;
+
+  .meter {
+    background-color: #207868 !important;
+  }
+}
+
+.poll-question--nested-question {
+  align-items: center;
+  margin-bottom: 8px;
+
+  .poll-question-answers {
+    margin: 0 !important;
+  }
+  &.-rating-scale {
+    display: flex;
+    justify-content: flex-start;
+
+    .poll-question--nested-question-title {
+      min-width: 250px;
+      max-width: 250px;
+    }
+  }
+}
+
+.poll-question--nested-question-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #292929;
+  margin-right: 15px;
+  margin-bottom: 25px;
 }

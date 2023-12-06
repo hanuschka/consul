@@ -14,4 +14,15 @@
       color: #222;
     }
   }
+
+  .results-table {
+    td.win {
+      font-weight: bold;
+      background: #ccedf8;
+    }
+  }
+
+  label[for="poll_answer_open_answer_text"] {
+    display: none;
+  }
 }

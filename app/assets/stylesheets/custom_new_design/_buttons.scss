@@ -9,12 +9,14 @@ $green-button-color: #00AA0B;
   }
 
   .button {
+    background-color: $brand;
     margin-top: 10px;
     margin-bottom: 10px;
     // padding: 0 20px 0;
     padding: 10px 20px !important;
     max-width: 300px;
-    display: flex !important;
+    // display: flex !important;
+    display: flex;
     justify-content: center;
     align-items: center;
     font-size: 15px;
@@ -84,6 +86,8 @@ $green-button-color: #00AA0B;
     }
 
     &.hollow {
+      background-color: transparent;
+
       &:hover, &:focus, &:active {
         background: #E1EDF7;
         color: #004a83;
@@ -123,5 +127,9 @@ $green-button-color: #00AA0B;
 
   .button.button-support.unvote {
     background-color: antiquewhite;
+  }
+
+  .open-answer {
+    background-color: #207868;
   }
 }

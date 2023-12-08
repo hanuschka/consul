@@ -14,8 +14,12 @@
   justify-content: center;
 }
 
-.d-none {
+.d-none, .custom-new-design .d-none {
   display: none;
+}
+
+.margin-bottom-half {
+  margin-bottom: $line-height / 2;
 }
 
 .margin-left-20 {

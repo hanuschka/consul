@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     background: #D9F0EB;
-    color: $brand;
+    color: $dt-base;
     // padding: 40px 40px;
     padding: 35px 40px;
     border-radius: 10px;
@@ -81,6 +81,7 @@
   .resource-page-banner--title {
     font-size: 28px;
     margin-bottom: 30px;
+    color: inherit;
 
     a {
       &:hover {

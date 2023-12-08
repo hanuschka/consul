@@ -1,0 +1,109 @@
+<% provide :title do %><%= t("custom.users.index.title") %><% end %>
+
+<main class="projekts-page projekts-overview-page">
+  <div class="main-column projekts-overview-page--heading">
+    <div class="padding-on-mobile">
+      <h1>
+        <%= t("custom.users.index.title") %>
+      </h1>
+      <%= render_custom_block "users_overview_page" %>
+      <%# <%= render_custom_block "users_overview_page", default_content: t("custom.users.index.welcome_default_text_html") %>
+    </div>
+  </div>
+
+  <div class="flex-layout padding-on-mobile flex-layout-reverse-on-mobile">
+    <div class="main-column">
+      <div class="users-list d-flex-list">
+        <% @users.each do |user| %>
+          <div class="user-list-item new-card -no-padding">
+            <div class="user-list-item--background-image">
+              <% if user.background_image.attached? %>
+                <%= image_tag(user.background_image.variant(resize: "300x300>")) %>
+              <% end %>
+            </div>
+            <div class="user-list-item--info">
+              <%= link_to user_path(user), class: "user-list-item--avatar" do %>
+                <% if user.image&.variant(:thumb2).present? %>
+                  <%= image_tag(user.image&.variant(:thumb2)) %>
+                <% else %>
+                  <div class="user-list-item--avatar-placeholder">
+                    <%= user.first_letter_of_name %>
+                  </div>
+                <% end %>
+              <% end %>
+
+              <%= link_to user_path(user) do %>
+                <div class="user-list-item--name margin-bottom-10">
+                  <%= user.name %>
+                </div>
+              <% end %>
+
+              <div class="user-list-item--registration-date margin-bottom-10">
+                <%= t("custom.users.banner.registered_at", date: l(user.created_at, format: :date_only)) %>
+              </div>
+              <div class="margin-bottom-10">
+                <%= render Shared::OfficialPositionBadgeComponent.new(user: user) %>
+              </div>
+
+            </div>
+            <% if  user.proposals.exists? || user.debates.exists? || user.comments.exists? %>
+              <div class="user-list-item--resources">
+                <% if user.proposals.exists? %>
+                  <%= link_to user_path(user), class: "sidebar-card--count-line" do %>
+                    <div>
+                      Vorschläge
+                    </div>
+                    <div>
+                      <%= user.proposals.count %>
+                    </div>
+                  <% end %>
+                <% end %>
+
+                <% if user.debates.exists? %>
+                  <%= link_to user_path(user), class: "sidebar-card--count-line" do %>
+                    <div class="sidebar-resource-author--resources-name">
+                      Diskussionen
+                    </div>
+                    <div class="sidebar-resource-author--resources-count">
+                      <%= user.debates.count %>
+                    </div>
+                  <% end %>
+                <% end %>
+
+                <% if user.comments.exists? %>
+                  <%= link_to user_path(user), class: "sidebar-card--count-line" do %>
+                    <div class="sidebar-resource-author--resources-name">
+                      Kommentare
+                    </div>
+                    <div class="sidebar-resource-author--resoures-count">
+                      <%= user.comments.count %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+
+          </div>
+        <% end %>
+      </div>
+
+      <%= paginate @users %>
+    </div>
+
+    <div class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
+        <%= render_custom_block "users_overview_sidebar" %>
+        <%# <%= render_custom_block "users_overview_sidebar", default_content: t("custom.projekts.index.information_default_text") %>
+
+        <div class="resources--info-count margin-bottom-half">
+          <span>
+            <%= t("custom.users.index.users_count") %>
+          </span>
+          <span>
+            <%= @users.total_count %>
+          </span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</main>

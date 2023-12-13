@@ -279,7 +279,7 @@ namespace :admin do
     get :search, on: :collection
   end
 
-  resources :users, only: [:index, :show] do
+  resources :users, only: [:index, :show, :edit, :update] do
     get :reverify, on: :collection #custom
   end
 

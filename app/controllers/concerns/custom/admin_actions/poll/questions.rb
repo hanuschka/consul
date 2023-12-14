@@ -31,10 +31,17 @@ module AdminActions::Poll::Questions
 
   def create
     @question.author = @question.proposal&.author || current_user
-    authorize! :create, @question
+
+    if @question.votation_type.nil?
+      @question.votation_type = VotationType.new(vote_type: :unique)
+    end
 
     if @question.save
-      redirect_to polymorphic_path([@namespace, @question])
+      if @question.parent_question.present?
+        redirect_to polymorphic_path([@namespace, @question.parent_question])
+      else
+        redirect_to polymorphic_path([@namespace, @question])
+      end
     else
       render "admin/poll/questions/new"
     end
@@ -50,7 +57,11 @@ module AdminActions::Poll::Questions
 
   def update
     if @question.update(question_params)
-      redirect_to polymorphic_path([@namespace, @question]), notice: t("flash.actions.save_changes.notice")
+      if @question.parent_question.present?
+        redirect_to polymorphic_path([@namespace, @question.parent_question]), notice: t("flash.actions.save_changes.notice")
+      else
+        redirect_to polymorphic_path([@namespace, @question.poll]), notice: t("flash.actions.save_changes.notice")
+      end
     else
       render "admin/poll/questions/edit"
     end
@@ -58,7 +69,15 @@ module AdminActions::Poll::Questions
 
   def destroy
     @question.destroy!
-    redirect_to polymorphic_path([@namespace, @question.poll]), notice: t("admin.questions.destroy.notice")
+
+    destroy_path =
+      if @question.parent_question.present?
+        polymorphic_path([@namespace, @question.parent_question])
+      else
+        polymorphic_path([@namespace, @question.poll])
+      end
+
+    redirect_to destroy_path, notice: t("admin.questions.destroy.notice")
   end
 
   def order_questions # custom
@@ -75,6 +94,8 @@ module AdminActions::Poll::Questions
         :proposal_id,
         :show_hint_callout,
         :show_images,
+        :parent_question_id,
+        :bundle_question,
         translation_params(Poll::Question),
         votation_type_attributes: [:vote_type, :max_votes]
       )

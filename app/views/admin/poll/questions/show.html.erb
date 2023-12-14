@@ -1,7 +1,7 @@
-<%= back_link_to admin_poll_path(@question.poll) %>
+<%= back_link_to polymorphic_path([@namespace, @question.poll]) %>
 
 <% if can?(:update, @question) %>
-  <%= link_to t("admin.questions.show.edit_question"), edit_admin_question_path(@question),
+  <%= link_to t("admin.questions.show.edit_question"), polymorphic_path([@namespace, @question], action: :edit),
               class: "button hollow float-right" %>
 <% end %>
 
@@ -52,7 +52,7 @@
 
 <div class="clear">
   <% if can?(:create, Poll::Question::Answer.new(question: @question)) %>
-    <%= link_to t("admin.questions.show.add_answer"), new_admin_question_answer_path(@question),
+    <%= link_to t("admin.questions.show.add_answer"), polymorphic_path([@namespace, @question, :answer], action: :new),
                 class: "button float-right" %>
     <%# <%= link_to t("admin.questions.show.add_nested_question"), new_admin_question_path(poll_id: @question.poll.id, parent_question_id: @question.id),
     <%#             class: "button float-right" %>
@@ -78,7 +78,7 @@
     </tr>
   </thead>
 
-  <tbody class="sortable" data-js-url="<%= admin_question_answers_order_answers_path(@question.id) %>">
+  <tbody class="sortable" data-js-url="<%= polymorphic_path([:admin, @question, :answers], action: :order_answers) %>">
     <% @question.question_answers.each do |answer| %>
       <tr id="<%= dom_id(answer) %>" class="poll_question_answer" data-answer-id="<%= answer.id %>">
         <td class="align-top"><%= answer.title %></td>
@@ -89,26 +89,26 @@
           (<%= answer.images.count %>)
           <br>
           <%= link_to t("admin.questions.show.answers.images_list"),
-                      admin_answer_images_path(answer) %>
+                      polymorphic_path([@namespace, answer, :images]) %>
         </td>
         <td class="align-top text-center">
           (<%= answer.documents.count rescue 0 %>)
           <br>
           <%= link_to t("admin.questions.show.answers.documents_list"),
-                      admin_answer_documents_path(answer) %>
+                      polymorphic_path([@namespace, answer, :documents]) %>
         </td>
         <td class="align-top text-center">
           (<%= answer.videos.count %>)
           <br>
           <%= link_to t("admin.questions.show.answers.video_list"),
-                      admin_answer_videos_path(answer) %>
+                      polymorphic_path([@namespace, answer, :videos]) %>
         </td>
         <td>
           <%= render Admin::TableActionsComponent.new(answer,
             actions: [:edit, :destroy],
-            edit_path: edit_admin_answer_path(answer),
+            edit_path: polymorphic_path([@namespace, answer], action: :edit),
             destroy_confirmation: t("custom.admin.polls.questions.answers.notice.delete.confirmation"),
-            destroy_path: admin_answer_path(answer)
+            destroy_path: polymorphic_path([@namespace, answer])
           ) %>
         </td>
       </tr>

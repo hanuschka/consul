@@ -1,12 +1,16 @@
 <h3 class="inline-block"><%= t("admin.polls.show.questions_title") %></h3>
 
+<<<<<<< HEAD
 <%= link_to t("custom.admin.questions.index.create_bundle"), new_admin_question_path(poll_id: @poll.id, bundle_question: true),
             class: "button float-right" %>
 
 <%= link_to t("custom.admin.questions.index.create_normal"), new_admin_question_path(poll_id: @poll.id),
+=======
+<%= link_to t("admin.questions.index.create"), polymorphic_path([@namespace, :question], action: :new, poll_id: @poll.id),
+>>>>>>> afd658591a0760d75036d30ddec93c5a83bb0261
             class: "button float-right" %>
 
-<%= link_to t("custom.admin.polls.poll.send_notifications"), send_notifications_admin_poll_path(@poll.id),
+<%= link_to t("custom.admin.polls.poll.send_notifications"), polymorphic_path([@namespace, @poll], action: :send_notifications),
             class: "button float-right", method: :put, data: { confirm: t("custom.admin.polls.poll.send_notifications_confirm") } %>
 
 <% if @poll.questions.root_questions.empty? %>
@@ -22,9 +26,15 @@
         <th><%= t("admin.actions.actions") %></th>
       </tr>
     </thead>
+<<<<<<< HEAD
     <tbody class="js-new-sortable" data-sort-url="<%= admin_poll_questions_order_questions_path(@poll.id) %>" >
       <% @poll.questions.root_questions.each do |question| %>
         <tr id="<%= dom_id(question) %>" data-record-id="<%= question.id %>">
+=======
+    <tbody class="sortable" data-js-url="<%= polymorphic_path([@namespace, @poll, :questions], action: :order_questions) %>" >
+      <% @poll.questions.each do |question| %>
+        <tr id="<%= dom_id(question) %>" data-answer-id="<%= question.id %>">
+>>>>>>> afd658591a0760d75036d30ddec93c5a83bb0261
           <td>
             <strong><%= question.title %></strong>
             <% if question.allows_multiple_answers? %>
@@ -49,6 +59,7 @@
           </td>
           <td>
             <%= render Admin::TableActionsComponent.new(question) do |actions| %>
+<<<<<<< HEAD
               <% translation_for_action =
                 if question.bundle_question?
                   t("custom.admin.polls.show.edit_nested_questions")
@@ -56,6 +67,9 @@
                   t("admin.polls.show.edit_answers")
                 end %>
               <%= actions.link_to translation_for_action, admin_question_path(question),
+=======
+              <%= actions.link_to t("admin.polls.show.edit_answers"), polymorphic_path([@namespace, question]),
+>>>>>>> afd658591a0760d75036d30ddec93c5a83bb0261
                                                                       class: "answers-link" %>
             <% end %>
           </td>

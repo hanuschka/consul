@@ -1,5 +1,5 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "poll", "questions_controller").to_s
 class Admin::Poll::QuestionsController < Admin::Poll::BaseController
+<<<<<<< HEAD
   def order_questions
     ::Poll::Question.order_questions(params[:ordered_list])
     head :ok
@@ -72,4 +72,7 @@ class Admin::Poll::QuestionsController < Admin::Poll::BaseController
         votation_type_attributes: [:vote_type, :max_votes]
       )
     end
+=======
+  include AdminActions::Poll::Questions
+>>>>>>> afd658591a0760d75036d30ddec93c5a83bb0261
 end

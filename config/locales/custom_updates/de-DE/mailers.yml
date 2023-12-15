@@ -13,9 +13,9 @@ de:
       p2: Sollten Sie bereits abgestimmt haben, dann können Sie jetzt Ihre Stimmen in der Übersicht einsehen.
       p3: Sie können Ihre Stimmabgabe bis zum Ende des Verfahrens jederzeit ändern.
     reverification_failed:
-      subject: Ihre Verifizierung ist nicht länger gültigt
+      subject: Ihre Verifizierung ist nicht länger gültig
       p1: Sehr geehrte*r Nutzer*in von Consul,
-      p2_html: Ihre Verifizierung ist nicht länger gültigt - über %{account_link} können Sie Ihre Daten aktuallisieren und eine erneute Verifizierung beantragen.
+      p2_html: Ihre Verifizierung ist nicht länger gültig - über %{account_link} können Sie Ihre Daten aktualisieren und eine erneute Verifizierung beantragen.
       account_link: diesen Link
     formular_answer_confirmation:
       subject: Vielen Dank! Ihr Formular wurde erfolgreich eingereicht.

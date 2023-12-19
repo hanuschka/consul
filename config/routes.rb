@@ -28,10 +28,12 @@ Rails.application.routes.draw do
   draw :verification
   draw :projekt
   draw :projekt_management
+  draw :custom
 
   root "welcome#index"
   get "/welcome", to: "welcome#welcome"
   get "/consul.json", to: "installation#details"
+  get "/latest_activity", to: "welcome#latest_activity" #custom
 
   resources :stats, only: [:index]
   resources :images, only: [:destroy]
@@ -47,6 +49,7 @@ Rails.application.routes.draw do
       patch   :update_status
       patch   :update_category
       patch   :update_officer
+      patch   :notify_officer_about_new_comments
       patch   :update_official_answer
       patch   :approve_official_answer
       put     :flag
@@ -118,4 +121,6 @@ Rails.application.routes.draw do
   post "/admin/projekt/:projekt_id/projekt_arguments/send_notifications",   to: "admin/projekt_arguments#send_notifications", as: :send_notifications_admin_projekt_projekt_arguments
 
   resources :formular_answers, only: %i[create update]
+
+  get "/registered_addresses/find", to: "registered_addresses#find"
 end

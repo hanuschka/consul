@@ -10,6 +10,21 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
+  def new_comments_for_deficiency_report(deficiency_report, last_notified_time)
+    @deficiency_report = deficiency_report
+    @officer = @deficiency_report.officer
+    @new_comments = @deficiency_report.comments.where("created_at > ?", last_notified_time)
+
+    subject = t(
+      "custom.notification_service_mailers.new_comments_for_deficiency_report.subject",
+      deficiency_report_title: @deficiency_report.title.truncate(30)
+    )
+
+    with_user(@officer.user) do
+      mail(to: @officer.email, subject: subject)
+    end
+  end
+
   def not_assigned_deficiency_reports(admin_id, not_assigned_reports_ids)
     @admin = Administrator.find(admin_id)
     @not_assigned_reports = DeficiencyReport.where(id: not_assigned_reports_ids)
@@ -91,7 +106,7 @@ class NotificationServiceMailer < ApplicationMailer
   def projekt_questions(user_id, projekt_phase_id)
     @user = User.find(user_id)
     @projekt_phase = ProjektPhase.find(projekt_phase_id)
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.projekt_questions.subject")
 
@@ -103,7 +118,7 @@ class NotificationServiceMailer < ApplicationMailer
   def projekt_arguments(user_id, projekt_phase_id)
     @user = User.find(user_id)
     @projekt_phase = ProjektPhase.find(projekt_phase_id)
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.projekt_arguments.subject")
 
@@ -127,7 +142,7 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @projekt_notification = ProjektNotification.find(projekt_notification_id)
     @projekt_phase = @projekt_notification.projekt_phase
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.new_projekt_notification.subject")
 
@@ -140,7 +155,7 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @projekt_event = ProjektEvent.find(projekt_event_id)
     @projekt_phase = @projekt_event.projekt_phase
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.new_projekt_event.subject")
 
@@ -155,7 +170,7 @@ class NotificationServiceMailer < ApplicationMailer
 
     if @projekt_milestone.milestoneable.is_a?(ProjektPhase)
       @projekt_phase = @projekt_milestone.milestoneable
-      @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+      @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
     else
       return
     end
@@ -171,7 +186,7 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @projekt_livestream = ProjektLivestream.find(projekt_livestream_id)
     @projekt_phase = @projekt_livestream.projekt_phase
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.new_projekt_livestream.subject")
 

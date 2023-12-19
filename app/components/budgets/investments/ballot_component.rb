@@ -15,7 +15,7 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
     end
 
     def voted?
-      ballot.has_investment?(investment)
+      ballot&.has_investment?(investment)
     end
 
     def reason
@@ -52,6 +52,16 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
           my_heading: link_to_my_heading,
           change_ballot: link_to_change_ballot,
           heading_link: heading_link(assigned_heading, budget))
+      end
+    end
+
+    def voting_kind_klass
+      if investment.budget.knapsack_voting?
+        "-knapsack"
+      elsif investment.budget.approval_voting?
+        "-approval"
+      elsif investment.budget.distributed_voting?
+        "-distributed"
       end
     end
 end

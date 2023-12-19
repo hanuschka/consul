@@ -141,7 +141,8 @@ module Abilities
       can [:manage], ::DeficiencyReport::Officer
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
-      can [:index, :show, :new, :create, :destroy, :update_status, :update_category, :update_officer, :update_official_answer, :vote, :order_statuses], DeficiencyReport
+      can [:manage], ::DeficiencyReport::Area
+      can [:index, :show, :new, :create, :destroy, :update_status, :update_category, :update_officer, :notify_officer_about_new_comments, :update_official_answer, :vote, :order_statuses], DeficiencyReport
       can [:approve_official_answer], ::DeficiencyReport do |dr|
         Setting['deficiency_reports.admins_must_approve_officer_answer'].present? &&
           !dr.official_answer_approved? &&
@@ -150,7 +151,7 @@ module Abilities
 
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes], Poll::Question
-      can [:verify, :unverify], User
+      can [:update, :verify, :unverify], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
         investment.budget.phase == "selecting"

@@ -98,6 +98,16 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def budget_investment_feasible(investment)
+    @investment = investment
+    @author = investment.author
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail(to: @email_to, subject: t("mailers.budget_investment_feasible.subject", title: @investment.title))
+    end
+  end
+
   def budget_investment_selected(investment)
     @investment = investment
     @author = investment.author
@@ -121,7 +131,12 @@ class Mailer < ApplicationMailer
   def newsletter(newsletter, recipient_email)
     @newsletter = newsletter
     @email_to = recipient_email
-    manage_subscriptions_token(User.find_by(email: @email_to))
+
+    user = User.find_by(email: @email_to)
+
+    if user.present?
+      manage_subscriptions_token(user)
+    end
 
     mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject)
   end
@@ -191,6 +206,6 @@ class Mailer < ApplicationMailer
 
     def manage_subscriptions_token(user)
       user.add_subscriptions_token
-      @token = user.subscriptions_token
+      @subscriptions_token = user.subscriptions_token
     end
 end

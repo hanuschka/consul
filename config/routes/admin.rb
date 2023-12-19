@@ -116,6 +116,7 @@ namespace :admin do
       end
     end
     resources :settings, only: :index
+    resources :areas, except: :show
   end
 
   resources :deficiency_reports, only: [:index, :show] do
@@ -278,7 +279,9 @@ namespace :admin do
     get :search, on: :collection
   end
 
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show, :edit, :update] do
+    resources :audits, only: :show, controller: "user_audits"
+  end
 
   scope module: :poll do
     resources :polls do

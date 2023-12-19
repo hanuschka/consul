@@ -1,0 +1,116 @@
+// .horizontal-rating-scale-answers-new-design {
+//   display: inline-block;
+//
+//   .rating-scale-answer-container {
+//     flex-direction: row;
+//   }
+//
+//   .poll-answer-group {
+//     .rating-scale-button {
+//       margin-right: 0.8rem;
+//       margin-bottom: 0;
+//     }
+//
+//     &:last-child {
+//       .rating-scale-button {
+//         margin-right: 0;
+//         margin-bottom: 0;
+//       }
+//     }
+//   }
+//
+// }
+
+.custom-new-design  {
+  .rating-scale-label {
+    color: $white;
+    font-size: 16px;
+    line-height: 1;
+    position: absolute;
+
+    &--left {
+      left: 0;
+      bottom: -25px;
+    }
+
+    &--right {
+      margin: 0;
+      right: 0;
+      bottom: -25px;
+    }
+  }
+
+  .poll-question-answers.rating-scale {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+
+    .rating-scale-answer-container {
+      display: flex;
+    }
+
+    .poll-answer-group {
+      flex-basis: content;
+      margin-top: 0;
+      padding: 0;
+      width: unset;
+
+      &:last-child {
+        .rating-scale-button {
+          margin-right: 0;
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .rating-scale-button {
+      line-height: 1;
+      padding: 0.5rem 1rem !important;
+      border: 1px solid #003A71;
+      border-radius: 0.1875rem !important;
+      color: #003A71;
+      text-wrap: nowrap;
+
+      &--answered {
+        background: #207868;
+        border-color: #207868;
+        color: #fff;
+      }
+
+      &::before {
+        content: none;
+      }
+    }
+
+    .rating-scale-label {
+      position: absolute;
+      width: unset;
+      margin: 0;
+
+      .label.secondary {
+        padding: 0;
+        background: 0;
+        color: #003A71;
+      }
+    }
+
+    &.vertical-rating-scale-answers {
+      .rating-scale-button {
+        margin: 0;
+        margin-bottom: 0.8rem;
+      }
+
+      .rating-scale-label {
+        &--left {
+          top: -25px;
+          left: 0;
+        }
+
+        &--right {
+          bottom: -25px;
+          left: 0;
+        }
+      }
+    }
+  }
+}

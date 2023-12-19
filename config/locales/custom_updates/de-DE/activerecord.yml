@@ -90,6 +90,8 @@ de:
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
         on_behalf_of: Meldung im Namen von jemanden erstellen
+        category: Kategorie
+        status: Status
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:
@@ -153,6 +155,7 @@ de:
         multiple: Mehrere Stimmen
         multiple_with_weight: Mehrere gewichtete Stimmen
         rating_scale: Bewertungsskala
+
       poll/question:
         min_rating_scale_label: Linkes Label
         max_rating_scale_label: Rechtes Label
@@ -171,7 +174,7 @@ de:
         color: Farbe
         name: Name
       projekt_question:
-        show_answers_count: Anzahl der Stimmen im Frontend anzeigen    
+        show_answers_count: Anzahl der Stimmen im Frontend anzeigen
         comments_enabled: Offene Antwort aktiviert
       projekt_event:
         title: Veranstaltungstitel
@@ -207,3 +210,6 @@ de:
         subject: Betreff
         body: Text
         show_follow_up_button: Link zu Follow-up Formular integrieren
+      formular_answer_image:
+        title: Titel
+        attachment: Anhang

@@ -18,6 +18,10 @@ class Budget < ApplicationRecord
     ].compact
   end
 
+  def knapsack_voting?
+    voting_style == "knapsack"
+  end
+
   def distributed_voting?
     voting_style == "distributed"
   end
@@ -27,5 +31,18 @@ class Budget < ApplicationRecord
       .find_by(key: "feature.general.show_relative_ballotting_results")
       .value
       .present?
+  end
+
+  def find_or_create_stats_version
+    balloting_phase_ends_at = phases.find_by(kind: "balloting").ends_at
+
+    if balloting_phase_ends_at.present? &&
+        ((Time.zone.today - balloting_phase_ends_at.to_date).to_i <= 3) &&
+        stats_version &&
+        stats_version.created_at.to_date != Time.zone.today.to_date
+      stats_version.destroy
+    end
+
+    super
   end
 end

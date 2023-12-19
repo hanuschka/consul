@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "models", "poll").to_s
 
 class Poll < ApplicationRecord
   include Taggable
+  include ResourceBelongsToProjekt
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id" # TODO: remove column after data migration con1538
 
@@ -9,7 +10,6 @@ class Poll < ApplicationRecord
   belongs_to :projekt_phase
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
-
   validates :projekt_phase, presence: true
 
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
@@ -71,20 +71,17 @@ class Poll < ApplicationRecord
   end
 
   def find_or_create_stats_version
-    if !expired? && stats_version && stats_version.created_at.to_date != Date.today.to_date
+    if ends_at.present? &&
+        ((Time.zone.today - ends_at.to_date).to_i <= 3) &&
+        stats_version.present? &&
+        stats_version.created_at.to_date != Time.zone.today.to_date
       stats_version.destroy
     end
+
     super
   end
 
   def safe_to_delete_answer?
     voters.count == 0
-  end
-
-  def delete_voter_participation_if_no_votes(user, token)
-    poll_answer_count_by_current_user = questions.inject(0) { |sum, question| sum + question.answers.where(author: user).count }
-    if poll_answer_count_by_current_user == 0
-      Poll::Voter.find_by!(user: user, poll: self, origin: "web", token: token).destroy
-    end
   end
 end

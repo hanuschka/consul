@@ -9,7 +9,7 @@ class PollsController < ApplicationController
   before_action :set_geo_limitations, only: [:show, :results, :stats]
 
   helper_method :resource_model, :resource_name
-  has_filters %w[all current]
+  has_filters %w[all current expired]
 
   def index
     @resource_name = 'poll'
@@ -44,6 +44,9 @@ class PollsController < ApplicationController
         .where(sdg_relations: { relatable_type: "Projekt", relatable_id: related_projekt_ids })
     end
 
+    @resources = @resources.by_projekt_id(@scoped_projekt_ids)
+    @all_resources = @resources
+
     unless params[:search].present?
       take_by_tag_names(related_projekts)
       take_by_sdgs(related_projekts)
@@ -53,6 +56,58 @@ class PollsController < ApplicationController
     end
 
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
+
+    if Setting.new_design_enabled?
+      render :index_new
+    else
+      render :index
+    end
+  end
+
+  def show
+    @questions = @poll.questions.for_render.root_questions.sort_for_list
+    @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
+
+    @answers_by_question_id = {}
+
+    @questions.each do |question|
+      @answers_by_question_id[question.id] = []
+    end
+
+    poll_answers = ::Poll::Answer.by_question(@poll.question_ids).by_author(current_user&.id)
+    poll_answers.each do |answer|
+      @answers_by_question_id[answer.question_id] = @answers_by_question_id.has_key?(answer.question_id) ? @answers_by_question_id[answer.question_id].push(answer.answer) : [answer.answer]
+    end
+
+    @commentable = @poll
+    @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
+
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    elsif Setting.new_design_enabled?
+      render :show_new
+    else
+      render :show
+    end
+  end
+
+  def stats
+    @stats = Poll::Stats.new(@poll)
+
+    if Setting.new_design_enabled?
+      render :stats_new
+    else
+      render :stats
+    end
+  end
+
+  def results
+    if Setting.new_design_enabled?
+      render :results_new
+    else
+      render :results
+    end
   end
 
   def set_geo_limitations

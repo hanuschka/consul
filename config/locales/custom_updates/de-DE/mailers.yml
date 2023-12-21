@@ -9,10 +9,15 @@ de:
     manual_verification_confirmation:
       subject: Ihr Konto wurde soeben verifiziert.
       p1: Ihr Konto wurde soeben verifiziert.
-      p2: Sollten Sie bereits abgestimmt haben, dann können Sie jetzt Ihre Stimmen in der Übersicht einsehen.
-      p3: Sie können Ihre Stimmabgabe bis zum Ende des Verfahrens jederzeit ändern.
+      p2: Vielen Dank für Ihre Teilhabe.
     formular_answer_confirmation:
       subject: Vielen Dank! Ihr Formular wurde erfolgreich eingereicht.
       p1: Herzlichen Dank für die Einreichung Ihres Formulars. Wir werden die Daten jetzt intern prüfen und ggf. wieder auf Sie zukommen.
     formular_follow_up_letter:
       button_text: Zum Formular
+    budget_investment_feasible:
+      subject: "Ihr Ausgabenvorschlag '%{title}' wurde als durchführbar markiert"
+      hi: "Liebe*r Benutzer*in,"
+      accepted: "vielen Dank für die Einreichung Ihres Vorschlags \"%{title}\". Ihr Vorschlag wurde als durchführbar klassifiziert."
+      thank_you: Vielen Dank für Ihre Beteiligung!
+      sincerely: Mit freundlichen Grüßen

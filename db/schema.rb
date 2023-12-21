@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_01_094206) do
+ActiveRecord::Schema.define(version: 2023_12_20_121306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -745,6 +745,8 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.string "on_behalf_of"
     t.datetime "assigned_at"
     t.bigint "deficiency_report_area_id"
+    t.boolean "notify_officer_about_new_comments", default: false
+    t.datetime "notified_officer_about_new_comments_datetime"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -865,6 +867,8 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.bigint "formular_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "submitter_id"
+    t.string "original_submitter_email"
     t.index ["formular_id"], name: "index_formular_answers_on_formular_id"
   end
 
@@ -1499,6 +1503,7 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.boolean "most_voted", default: false
     t.boolean "open_answer", default: false
     t.string "more_info_link"
+    t.integer "next_question_id"
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -1532,7 +1537,11 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.boolean "multiple", default: false
     t.integer "given_order"
     t.boolean "show_hint_callout", default: true
+    t.integer "parent_question_id"
+    t.boolean "bundle_question", default: false
+    t.integer "next_question_id"
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
+    t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
     t.index ["tsv"], name: "index_poll_questions_on_tsv", using: :gin
@@ -1631,6 +1640,7 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.boolean "bam_street_restricted", default: false
     t.boolean "show_individual_stats_per_answer", default: false
     t.bigint "projekt_phase_id"
+    t.boolean "wizard_mode", default: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -1794,7 +1804,7 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "phase_tab_name"
-    t.text "new_resource_button_name"
+    t.text "cta_button_name"
     t.text "resource_form_title"
     t.text "projekt_selector_hint"
     t.string "labels_name"
@@ -2334,6 +2344,15 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.index ["hidden_at"], name: "index_topics_on_hidden_at"
   end
 
+  create_table "unregistered_newsletter_subscribers", force: :cascade do |t|
+    t.string "email"
+    t.boolean "confirmed", default: false
+    t.string "confirmation_token"
+    t.string "unsubscribe_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_individual_group_values", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "individual_group_value_id"
@@ -2431,6 +2450,7 @@ ActiveRecord::Schema.define(version: 2023_11_01_094206) do
     t.bigint "registered_address_id"
     t.string "street_number_extension"
     t.boolean "reverify", default: true
+    t.boolean "prefer_wide_resources_list_view_mode"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

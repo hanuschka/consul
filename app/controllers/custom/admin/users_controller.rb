@@ -24,6 +24,10 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
+  def show
+    @user = User.find(params[:id])
+  end
+
   def edit
     @user = User.find(params[:id])
     @registered_address_city = @user.registered_address_city
@@ -38,13 +42,16 @@ class Admin::UsersController < Admin::BaseController
   def update
     @user = User.find_by(id: params[:id])
     process_temp_attributes_for(@user)
+    set_address_objects_from_temp_attributes_for(@user)
 
-    if @user.errors.none? && @user.update(user_params)
+    if @user.extended_registration? && @user.errors.any?
+      render :edit
+
+    elsif @user.update(user_params)
       @user.unverify!
       redirect_to admin_users_path, notice: "Benutzer aktualisiert"
 
     else
-      set_address_objects_from_temp_attributes_for(@user)
       render :edit
     end
   end
@@ -62,7 +69,8 @@ class Admin::UsersController < Admin::BaseController
 
   def unverify
     @user = User.find(params[:id])
-    @user.update!(verified_at: nil, geozone: nil, unique_stamp: nil, reverify: true)
+    @user.unverify!
+    @user.update!(reverify: true)
   end
 
   def reverify

@@ -19,6 +19,13 @@ class Poll::Question < ApplicationRecord
     end
   end
 
+  def self.model_name
+    mname = super
+    mname.instance_variable_set(:@route_key, "questions")
+    mname.instance_variable_set(:@singular_route_key, "question")
+    mname
+  end
+
   def open_question_answer
     question_answers.where(open_answer: true).last
   end
@@ -35,5 +42,9 @@ class Poll::Question < ApplicationRecord
         errors.add(:base, "Parent question doesn't belong to the same poll")
       end
     end
+  end
+
+  def sibling_questions
+    (poll.questions.where(parent_question_id: nil).to_a - [self]).map { |question| [question.title, question.id] }
   end
 end

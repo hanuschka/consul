@@ -10,8 +10,7 @@ de:
     manual_verification_confirmation:
       subject: Ihr Konto wurde soeben verifiziert.
       p1: Ihr Konto wurde soeben verifiziert.
-      p2: Sollten Sie bereits abgestimmt haben, dann können Sie jetzt Ihre Stimmen in der Übersicht einsehen.
-      p3: Sie können Ihre Stimmabgabe bis zum Ende des Verfahrens jederzeit ändern.
+      p2: Vielen Dank für Ihre Teilhabe.
     reverification_failed:
       subject: Ihre Verifizierung ist nicht länger gültig
       p1: Sehr geehrte*r Nutzer*in von Consul,

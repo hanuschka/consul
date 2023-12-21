@@ -1,6 +1,10 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 class User < ApplicationRecord
+  audited only: [:username, :first_name, :last_name, :registered_address_id,
+                 :city_name, :plz, :street_name, :street_number, :street_number_extension,
+                 :unique_stamp, :verified_at]
+
   include Imageable
   has_one_attached :background_image
 
@@ -137,7 +141,7 @@ class User < ApplicationRecord
     return false unless stamp_unique?
 
     take_votes_from_erased_user
-    update_columns(
+    update!(
       verified_at: Time.current,
       unique_stamp: prepare_unique_stamp,
       geozone_id: geozone_with_plz&.id
@@ -145,7 +149,7 @@ class User < ApplicationRecord
   end
 
   def unverify!
-    update_columns(
+    update!(
       verified_at: nil,
       unique_stamp: nil,
       geozone_id: nil
@@ -360,5 +364,9 @@ class User < ApplicationRecord
       return true if organization?
 
       census_data.valid?
+    end
+
+    def remove_audits
+      audits.destroy_all
     end
 end

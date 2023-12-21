@@ -32,7 +32,10 @@ class MapLocation < ApplicationRecord
   def shape_json_data
     return {} if shape == {} || shape == "{}"
 
-    self.shape = JSON.parse(shape) if shape.is_a?(String)
+    if shape.is_a?(String)
+      Sentry.capture_message("MapJSONBug. Shape: #{shape}")
+      self.shape = {}
+    end
 
     shape.merge({
       investment_id: investment_id,
@@ -54,7 +57,7 @@ class MapLocation < ApplicationRecord
       proposal.sentiment.color
 
     elsif investment.present?
-      investment.projekt.color
+      investment.projekt&.color || "#004a83"
 
     elsif deficiency_report.present?
       deficiency_report.category.color

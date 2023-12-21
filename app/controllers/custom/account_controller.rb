@@ -3,6 +3,8 @@ require_dependency Rails.root.join("app", "controllers", "account_controller").t
 class AccountController < ApplicationController
   include ImageAttributes
 
+  respond_to :js, only: [:edit_username]
+
   def show
     @account_individial_groups_hard = IndividualGroup.hard
     @account_individial_groups_soft = IndividualGroup.soft
@@ -22,6 +24,30 @@ class AccountController < ApplicationController
   end
 
   def refresh_activities; end
+
+  def edit_username; end
+
+  def update_username
+    unless params["user"]["cancel_changes"] == "true"
+      @account.update(username: params["user"]["username"])
+    end
+  end
+
+  def update
+    if @account.update(account_params)
+      respond_to do |format|
+        format.html do
+          redirect_to account_path, notice: t("flash.actions.save_changes.notice")
+        end
+        format.js do
+          render
+        end
+      end
+    else
+      @account.errors.messages.delete(:organization)
+      render :show
+    end
+  end
 
   private
 

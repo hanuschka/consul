@@ -21,33 +21,47 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="small-12">
-      <%= f.fields_for :votation_type do |votation_f| %>
-        <%= render Admin::VotationTypes::FieldsComponent.new(form: votation_f) %>
-      <% end %>
+  <% unless bundle_question? %>
+    <div class="row">
+      <div class="small-12">
+        <%= f.fields_for :votation_type do |votation_f| %>
+          <%= render Admin::VotationTypes::FieldsComponent.new(form: votation_f) %>
+        <% end %>
+      </div>
     </div>
-  </div>
 
-  <div class="row" style='margin-bottom:2rem;'>
-    <div class="column small-12">
-      <%= f.check_box :show_hint_callout %>
-    </div>
-  </div>
+    <% unless nested_question? %>
+      <div class="row" style='margin-bottom:2rem;'>
+        <div class="column small-12">
+          <%= f.check_box :show_hint_callout %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if nested_question? %>
+      <%= f.hidden_field :parent_question_id, value: (params[:parent_question_id].presence || f.object.parent_question_id) %>
+    <% end %>
+  <% end %>
 
   <%= f.translatable_fields do |translations_form| %>
     <div class="row">
       <div class="column">
-        <%= translations_form.text_field :title %>
+        <% if bundle_question? %>
+          <%= translations_form.text_field :title, label: "Themenkomplex" %>
+        <% else %>
+          <%= translations_form.text_field :title %>
+        <% end %>
       </div>
     </div>
 
-    <div class="row">
-      <div class="column">
-        <%= translations_form.text_area :description,
-          class: "html-area #{ck_editor_class(current_user)}" %>
+    <% unless params[:parent_question_id].present? %>
+      <div class="row">
+        <div class="column">
+          <%= translations_form.text_area :description,
+            class: "html-area #{ck_editor_class(current_user)}" %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <div class="row rating-scale-labels <%= hide_rating_scale_labels_class(question.votation_type.vote_type) %>">
       <div class="column medium-6">
@@ -61,9 +75,21 @@
     </div>
   <% end %>
 
+  <% if bundle_question? %>
+    <%= f.hidden_field :bundle_question, value: true %>
+  <% end %>
+
+  <% unless bundle_question? %>
+    <div class="row">
+      <div class="small-12 column">
+        <%= f.check_box :show_images, label: t('custom.admin.polls.questions.show_images') %>
+      </div>
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="small-12 column">
-      <%= f.check_box :show_images, label: t('custom.admin.polls.questions.show_images') %>
+      <%= f.select :next_question_id, @question.sibling_questions, { include_blank: t("custom.shared.select"), label: t("custom.polls.questions.next_question") } %>
     </div>
   </div>
 

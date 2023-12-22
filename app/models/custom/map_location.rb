@@ -15,6 +15,9 @@ class MapLocation < ApplicationRecord
   #   self.fa_icon_class = get_fa_icon_class
   # end
 
+  audited associated_with: :deficiency_report,
+          only: %i[shape latitude longitude]
+
   def json_data
     {
       investment_id: investment_id,
@@ -32,7 +35,10 @@ class MapLocation < ApplicationRecord
   def shape_json_data
     return {} if shape == {} || shape == "{}"
 
-    self.shape = JSON.parse(shape) if shape.is_a?(String)
+    if shape.is_a?(String)
+      Sentry.capture_message("MapJSONBug. Shape: #{shape}")
+      return {}
+    end
 
     shape.merge({
       investment_id: investment_id,
@@ -54,7 +60,7 @@ class MapLocation < ApplicationRecord
       proposal.sentiment.color
 
     elsif investment.present?
-      investment.projekt.color
+      investment.projekt&.color || "#004a83"
 
     elsif deficiency_report.present?
       deficiency_report.category.color

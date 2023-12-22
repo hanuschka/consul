@@ -16,15 +16,13 @@
         display: grid;
         grid-template-columns: 265px 1fr;
         grid-template-rows: 45px 1fr;
-        grid-template-areas:
-          "image header-title"
-          "image body";
         max-width: 930px;
 
          .resource-image--main {
            position: absolute;
            top: 0;
            bottom: 0;
+           margin: auto;
          }
 
         .resource-item--body-wrapper {

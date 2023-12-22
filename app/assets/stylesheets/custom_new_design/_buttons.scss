@@ -23,6 +23,10 @@ $green-button-color: #00AA0B;
     border-radius: 7px;
     transition: background-color 0.1s ease;
 
+    &.-round {
+      border-radius: 38px !important;
+    }
+
     .icon {
       padding-right: 5px;
     }
@@ -131,5 +135,11 @@ $green-button-color: #00AA0B;
 
   .open-answer {
     background-color: #207868;
+  }
+}
+
+.custom-new-design {
+  .admin .featured-settings-form [aria-pressed][aria-pressed=true] {
+    background-color: $brand;
   }
 }

@@ -72,8 +72,8 @@ body.custom-new-design {
   }
 
   .notice-container {
-    z-index: 1000;
-    top: 85px;
+    z-index: 100;
+    top: 110px;
     right: 20px;
   }
 
@@ -238,4 +238,8 @@ body.custom-new-design {
   width: 100%;
   font-weight: 500;
   justify-content: space-between;
+
+  &:hover {
+    color: #4c5967;
+  }
 }

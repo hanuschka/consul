@@ -147,6 +147,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     display: none;
   }
 
+  .top-bar, .top-bar ul {
+    background-color: transparent;
+  }
+
   .header--navigation ul.main-menu .nav-flyout-block .projekt-name {
     color: black !important;
 
@@ -339,7 +343,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         margin-right: 30px;
         font-size: 20px;
         // font-size: 18px;
-        font-weight: 500;
+        // font-weight: 500;
         padding-top: 5px;
         padding-bottom: 5px;
         display: flex;
@@ -446,17 +450,17 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       // margin-right: 15px;
       margin-top: 2px;
     }
+  }
 
-    .button.sign-in-button, .button.sign-up-button {
-      margin-top: auto !important;
-      padding: 0.25rem 2.2em !important;
-      font-size: 18px !important;
-      font-weight: 500 !important;
-      width: 135px !important;
-      height: 50px !important;
-      border-radius: 38px !important;
-      background-color: #37847f;
-    }
+  .button.sign-in-button, .button.sign-up-button {
+    margin-top: auto !important;
+    padding: 0.25rem 2.2em !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    width: 135px !important;
+    height: 50px !important;
+    border-radius: 38px !important;
+    background-color: #37847f;
   }
 
   .header--responsive-menu-wrapper {
@@ -550,12 +554,12 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .header--responsive-menu-title {
-    color: #005A9F;
+    color: $brand;
   }
 
   .header--responsive-menu-sign-in-button {
     width: auto;
-    background: #073E8E !important;
+    background: $brand !important;
     color: white !important;
     border-radius: 5px !important;
     padding: 10px 20px;
@@ -589,7 +593,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       left: 0;
       right: 0;
       // top: 0;
-      top: 70px;
+      top: 60px;
       padding: 20px 30px;
       max-width: 320px;
     }

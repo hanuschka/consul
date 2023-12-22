@@ -35,9 +35,11 @@
           <% end %>
         <% end %>
 
-        <div class="resource-page--description new-card main-content-card">
-          <%= render "poll_header" %>
-        </div>
+        <% if @poll.summary.present? || @poll.description.present? %>
+          <div class="resource-page--description new-card main-content-card">
+            <%= render "poll_header" %>
+          </div>
+        <% end %>
 
         <%= render "callout" %>
 
@@ -57,6 +59,7 @@
                   <div
                       class="question-wizard-item js-question-wizard-item <%= additional_class %>"
                       data-question-id="<%= question.id %>"
+                      data-next-question-id="<%= question.next_question_id %>"
                       data-question-number="<%= index + 1 %>">
                       <%= render Polls::Questions::QuestionComponent.new(question: question) %>
                   </div>

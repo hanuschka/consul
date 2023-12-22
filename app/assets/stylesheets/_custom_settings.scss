@@ -1,12 +1,14 @@
 // brand_color
 $brand:                                           #818f45;
-$brand-secondary:                                 #002d50 !default;
+$brand-secondary:                                 #002d50;
 $secondary:                                       #e7e9b5;
 $accent:                                          lighten($brand, 50%);
 $dark:                                            #565a5c;
 $olive:                                           #818f45;
 $brand-lighter:                                   rgba($brand, 0.5);
 $text-over-brand:                                 $white;
+$dt-base:                                         #004a83;
+$dt-base-secondary:                               lighten($dt-base, 70%);
 
 // Menu variables
 

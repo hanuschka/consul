@@ -15,7 +15,7 @@ de:
         email_on_comment_reply: Antworten auf meine Kommentare
         email_on_direct_message: Private Nachrichten anderer Nutzer*innen
         newsletter: Newsletter und System-E-Mails
-        newsletter_on_home_page: Newsletter empfangen
+        newsletter_on_home_page: Jetzt abonnieren
         public_activity: Meine Aktivität veröffentlichen
         public_interests: Gefolgte Beiträge veröffentlichen
         adm_email_on_new_comment: Neue Kommentare
@@ -210,6 +210,9 @@ de:
         projekts: Projekte
         proposals: Vorschläge
         comments: Kommentare
+        debates: Diskussionen
+        polls: Abstimmungen
+
     welcome_launch:
       p1: Hier entsteht die neue Beteiligungsplattform der Stadt %{org_name}
       p2: Unser Go-Live ist am %{date}!

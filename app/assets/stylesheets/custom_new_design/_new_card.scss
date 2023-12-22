@@ -10,10 +10,22 @@
 
     &.-no-padding {
       padding: 0;
+    }
+
+    @media (max-width: $mobile-viewport-start) {
+      padding: 20px 20px;
+    }
+
+    &.-no-padding {
+      padding: 0;
 
       .new-card-body {
         padding: 0 25px;
         padding-bottom: 20px;
+
+        @media (max-width: $mobile-viewport-start) {
+          padding: 0 20px;
+        }
       }
     }
   }
@@ -26,16 +38,16 @@
     h1 {
       margin-top: 0;
     }
-  }
 
-  @media (max-width: 1365px) {
-    .main-content-card {
+    @media (max-width: 1365px) {
       padding: 25px 35px;
     }
-  }
 
-  @media (max-width: $mobile-viewport-start) {
-    .main-content-card {
+    @media(max-width: $small-tablet-viewport-start) {
+      padding: 20px 30px;
+    }
+
+    @media (max-width: $mobile-viewport-start) {
       padding: 18px 22px;
     }
   }

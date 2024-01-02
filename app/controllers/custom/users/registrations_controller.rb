@@ -66,10 +66,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if @user.citizen?
       if RegisteredAddress::City.any?
         set_related_params
-        set_registered_address_instance_variables
-        increase_error_count_for_registered_address_selectors
-      elsif update_user_details_params[:city_street_id].blank?
-        @user.errors.add :city_street_id, :blank
+        process_temp_attributes_for(@user)
+        set_address_objects_from_temp_attributes_for(@user)
       else
         @user.update(plz: @user.city_street.plz)
       end
@@ -137,7 +135,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       params[:user].delete(:redeemable_code) if params[:user].present? && params[:user][:redeemable_code].blank?
       params.require(:user).permit(:redeemable_code, :locale, :email, :password, :password_confirmation, :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general)
     end
-  
+
     def update_user_details_params
       params.require(:user).permit(
         :first_name, :last_name,
@@ -147,44 +145,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
         :document_type,
         :city_street_id,
         individual_group_value_ids: [])
-    end
-
-    # def sign_up_params
-    #   set_related_params
-    #   params[:user].delete(:redeemable_code) if params[:user].present? &&
-    #                                             params[:user][:redeemable_code].blank?
-    #   params.require(:user).permit(:username, :email,
-    #                                :first_name, :last_name,
-    #                                :city_name, :plz, :street_name, :street_number, :street_number_extension,
-    #                                :registered_address_id,
-    #                                :gender, :date_of_birth,
-    #                                :document_type, :document_last_digits,
-    #                                :password, :password_confirmation,
-    #                                :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general,
-    #                                :locale,
-    #                                :redeemable_code,
-    #                                individual_group_value_ids: [])
-    # end
-
-    def set_related_params
-      @user.form_registered_address_city_id = params[:form_registered_address_city_id]
-      @user.form_registered_address_street_id = params[:form_registered_address_street_id]
-      @user.form_registered_address_id = params[:form_registered_address_id]
-
-
-      # @registered_address_street = RegisteredAddress::Street.find(params[:form_registered_address_street_id]) if params[:form_registered_address_street_id].present?
-      # @registered_address = RegisteredAddress.find(params[:form_registered_address_id]) if params[:form_registered_address_id].present?
-
-      if params[:form_registered_address_id].present?
-        registered_address = RegisteredAddress.find(params[:form_registered_address_id])
-
-        @user.registered_address_id = registered_address.id
-
-        @user.city_name = registered_address.registered_address_city.name
-        @user.plz = registered_address.registered_address_street.plz
-        @user.street_name = registered_address.registered_address_street.name
-        @user.street_number = registered_address.street_number
-        @user.street_number_extension = registered_address.street_number_extension
-      end
     end
 end

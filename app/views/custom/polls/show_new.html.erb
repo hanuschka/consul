@@ -35,15 +35,21 @@
           <% end %>
         <% end %>
 
-        <div class="resource-page--description new-card main-content-card">
-          <%= render "poll_header" %>
-        </div>
+        <% if @poll.summary.present? || @poll.description.present? %>
+          <div class="resource-page--description new-card main-content-card">
+            <%= render "poll_header" %>
+          </div>
+        <% end %>
 
         <%= render "callout" %>
 
         <div class="margin-bottom">
           <% if @poll.wizard_mode? %>
             <div class="question-wizard js-question-wizard">
+              <div class="progress question-wizard--progress js-question-wizard--progress">
+                <span class="meter js-question-wizard--progress-bar"></span>
+              </div>
+
               <div class="question-wizard--questions">
                 <%# <% all_questions_answered = @questions.all? { |question| question.answers.present? } %>
                 <% first_question_shown = false %>
@@ -53,6 +59,7 @@
                   <div
                       class="question-wizard-item js-question-wizard-item <%= additional_class %>"
                       data-question-id="<%= question.id %>"
+                      data-next-question-id="<%= question.next_question_id %>"
                       data-question-number="<%= index + 1 %>">
                       <%= render Polls::Questions::QuestionComponent.new(question: question) %>
                   </div>
@@ -63,11 +70,6 @@
               </div>
 
               <div class="questions-navigation margin-bottom">
-                <div class="question-wizard--progress">
-                  <span class="js-question-wizard--progress-current-page">
-                    1
-                  </span>/<%= @questions.size %>
-                </div>
                 <div class="d-flex">
                   <button type="button" class="d-none button hollow question-wizard-prev js-question-wizard-prev">
                     <%= t("custom.polls.questions.prev_question") %>
@@ -85,7 +87,6 @@
             <%= render Polls::Questions::QuestionComponent.with_collection(@questions) %>
           <% end %>
         </div>
-
 
         <% @questions.each do |question| %>
           <% question.question_answers.each do |answer| %>
@@ -112,8 +113,7 @@
             title: @poll.name,
             url: poll_url(@poll),
             description: @poll.name,
-            mobile: @poll.name
-          %>
+            mobile: @poll.name %>
         </div>
       <% end %>
     </aside>

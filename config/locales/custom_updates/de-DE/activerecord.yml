@@ -93,6 +93,10 @@ de:
               format: muss 5 Ziffern enthalten
             first_name:
               uniqueness_check: die Kombination aus Vorname, Nachname, Geburtsdatum und PLZ wurde bereits verwendet
+        unregistered_newsletter_subscriber:
+          attributes:
+            email:
+              invalid: Bitte geben Sie ein gültiges E-Mail-Format ein
     attributes:
       projekt:
         total_duration_start: Anfangsdatum

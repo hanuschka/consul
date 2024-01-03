@@ -65,7 +65,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if @user.citizen?
       if RegisteredAddress::City.any?
-        set_related_params
         process_temp_attributes_for(@user)
         set_address_objects_from_temp_attributes_for(@user)
       else

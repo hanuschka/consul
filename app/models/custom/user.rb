@@ -53,10 +53,10 @@ class User < ApplicationRecord
   # validates :gender, presence: true, on: :create, if: :extended_registration?
   # validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
-  validates :city_name, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :plz, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :street_name, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :street_number, presence: true, on: :create, if: :regular_address_fields_visible?
+  # validates :city_name, presence: true, on: :create, if: :regular_address_fields_visible?
+  # validates :plz, presence: true, on: :create, if: :regular_address_fields_visible?
+  # validates :street_name, presence: true, on: :create, if: :regular_address_fields_visible?
+  # validates :street_number, presence: true, on: :create, if: :regular_address_fields_visible?
 
   # validates :document_type, presence: true, on: :create, if: :document_required?
   # validates :document_last_digits, presence: true, on: :create, if: :document_required?

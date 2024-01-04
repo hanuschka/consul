@@ -6,16 +6,28 @@
           Flag.flagged?(current_user, @proposal),
           "show_info"] do %>
 
-  <% if feature?(:map) && map_location_available?(@proposal) %>
-    <div class="margin-bottom not-print">
-      <%= render Shared::MapComponent.new(
-        mappable: @proposal,
-        map_location: @proposal.map_location || @proposal.projekt_phase.projekt.map_location_with_admin_shape,
-        parent_class: "proposal",
-        projekt: @proposal.projekt_phase.projekt,
-        show_admin_shape: @proposal.projekt_phase.projekt.map_location.show_admin_shape?
-      ) %>
-    </div>
+  <% if projekt_phase_feature?(@proposal.projekt_phase, "form.show_map") && map_location_available?(@proposal) %>
+    <% if @proposal.projekt.vc_map_enabled? %>
+      <div class="margin-bottom not-print">
+        <%= render Shared::VCMapComponent.new(
+          mappable: @proposal,
+          map_location: @proposal.map_location || @proposal.projekt_phase.map_location_with_admin_shape,
+          parent_class: "proposal",
+          projekt_phase: @proposal.projekt_phase,
+          show_admin_shape: @proposal.projekt_phase.map_location.show_admin_shape?
+        ) %>
+      </div>
+    <% else %>
+      <div class="margin-bottom not-print">
+        <%= render Shared::MapComponent.new(
+          mappable: @proposal,
+          map_location: @proposal.map_location || @proposal.projekt_phase.map_location_with_admin_shape,
+          parent_class: "proposal",
+          projekt_phase: @proposal.projekt_phase,
+          show_admin_shape: @proposal.projekt_phase.map_location.show_admin_shape?
+        ) %>
+      </div>
+    <% end %>
   <% end %>
 
   <div class="resource-taggings margin-bottom">
@@ -31,9 +43,9 @@
     <% end %>
   </div>
 
-  <% if projekt_phase_feature?(@proposal.projekt_phase, "form.enable_summary") && @proposal.summary.present? %>
-    <blockquote><%= @proposal.summary %></blockquote>
-  <% end %>
+  <%# <% if projekt_phase_feature?(@proposal.projekt_phase, "form.enable_summary") && @proposal.summary.present? %>
+  <%#   <blockquote><%= @proposal.summary %></blockquote>
+  <%# <% end %>
 
   <% if @proposal.image.present? && ( !@proposal.image.concealed? || params[:controller] == 'admin/proposals' ) %>
     <div class="image">
@@ -52,14 +64,9 @@
 
   <% if @proposal.description.present? %>
     <div class='margin-bottom'>
-      <h5><%= t('custom.proposals.show.description')  %></h5>
       <%= auto_link_already_sanitized_html wysiwyg(@proposal.description) %>
     </div>
   <% end %>
-
-  <div class='margin-top margin-bottom'>
-    <%= render "shared/tags", taggable: @proposal, limit: 5 %>
-  </div>
 
   <% if @proposal.video_url.present? %>
     <div class="video-link not-print">

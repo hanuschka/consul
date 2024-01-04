@@ -1,16 +1,18 @@
-<% projekt_links = Projekt.all.order(:id).map do |projekt|
-    next unless can?( :edit, projekt)
-    [projekt.name, edit_projekt_management_projekt_path(projekt), projekt == @projekt] 
-  end %>
+<ul class="admin-menu" data-accordion-menu data-multi-open="false">
+  <li class="<%= "is-active" if controller_name == "projekts" %>">
+    <%= link_to t("custom.admin.menu.projekts"), projekt_management_projekts_path, class: "projekts-link" %>
+  </li>
 
-<ul class='admin-menu' data-accordion-menu data-multi-open="false">
-  <li>
-    <a href="#" class="projekts-link"><%= t("custom.admin.menu.projekts") %></a>
-    <%= link_list(
-      *projekt_links,
-      id: "projekt_management_menu",
-      class: ('is-active' if true)
-    ) %>
+  <li class="<%= "is-active" if controller_name == "budgets" %>">
+    <%= link_to t("custom.admin.menu.budgets"), projekt_management_budgets_path, class: "budgets-link" %>
+  </li>
+
+  <li class="<%= "is-active" if controller_name == "polls" %>">
+    <%= link_to t("custom.admin.menu.polls"), projekt_management_polls_path, class: "polls-link" %>
+  </li>
+
+  <li class="<%= "is-active" if controller.class.parent == Admin::Legislation %>">
+    <%= link_to t("custom.admin.menu.legislation"), projekt_management_legislation_processes_path, class: "legislation-link" %>
   </li>
 
   <li class="<%= "is-active" if controller_name == "proposals" %>">

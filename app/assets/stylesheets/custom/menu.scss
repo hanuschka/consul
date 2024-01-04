@@ -17,7 +17,7 @@ body > header .locale.locale-custom,
     label {
       color: $dark
     }
-  
+
     .locale-switcher {
 
       &:focus {
@@ -326,7 +326,7 @@ span.icon-account {
 
 
   //  Height of the top menu
-  
+
   #navigation_bar .top-level-item > a,
   #navigation_bar .top-level-item > .flyout-item-name > a,
   #navigation_bar .top-level-item > .flyout-item-name,
@@ -412,7 +412,7 @@ span.icon-account {
     }
   }
 
-  // Styling notification 
+  // Styling notification
 
   .account-admin-items {
     li#notifications {
@@ -447,4 +447,16 @@ span.icon-account {
 .subnavigation a {
   padding-top: 0;
   padding-bottom: 0;
+}
+
+
+// Draft projekts
+
+.draft-projekt {
+  &:before {
+    content: "\f15c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    margin-right: 4px;
+  }
 }

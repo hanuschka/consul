@@ -1,0 +1,7 @@
+<% if @existing_unregistered_newsletter_subscriber&.confirmed? %>
+  <% text = t("custom.newsletters.subscription.already_subscribed", email: @subscriber_email) %>
+<% else %>
+    <% text = t("custom.newsletters.subscription.please_confirm", email: @subscriber_email) %>
+<% end %>
+
+$("#newsletter-subscribtion-form").html("<%= text %>")

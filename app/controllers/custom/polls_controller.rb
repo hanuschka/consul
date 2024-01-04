@@ -6,11 +6,10 @@ class PollsController < ApplicationController
   include ProjektControllerHelper
   include Takeable
 
-  before_action :load_categories, only: [:index]
   before_action :set_geo_limitations, only: [:show, :results, :stats]
 
   helper_method :resource_model, :resource_name
-  has_filters %w[all current]
+  has_filters %w[all current expired]
 
   def index
     @resource_name = 'poll'
@@ -28,20 +27,87 @@ class PollsController < ApplicationController
       .send(@current_filter)
       .includes(:geozones)
 
+    related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
+    related_projekts = Projekt.where(id: related_projekt_ids)
+
     @scoped_projekt_ids = Poll.scoped_projekt_ids_for_index(current_user)
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)
 
+    @categories = Tag.category.joins(:taggings)
+      .where(taggings: { taggable_type: "Projekt", taggable_id: related_projekt_ids }).order(:name).uniq
+
+    if params[:sdg_goals].present?
+      sdg_goal_ids = SDG::Goal.where(code: params[:sdg_goals].split(",")).ids
+      @sdg_targets = SDG::Target.where(goal_id: sdg_goal_ids).joins(:relations)
+        .where(sdg_relations: { relatable_type: "Projekt", relatable_id: related_projekt_ids })
+    end
+
+    @resources = @resources.by_projekt_id(@scoped_projekt_ids)
+    @all_resources = @resources
+
     unless params[:search].present?
-      take_by_tag_names
-      take_by_sdgs
+      take_by_tag_names(related_projekts)
+      take_by_sdgs(related_projekts)
       take_by_geozone_affiliations
       take_by_polls_geozone_restrictions
       take_by_projekts(@scoped_projekt_ids)
     end
 
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
+
+    if Setting.new_design_enabled?
+      render :index_new
+    else
+      render :index
+    end
+  end
+
+  def show
+    @questions = @poll.questions.for_render.root_questions.sort_for_list
+    @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
+
+    @answers_by_question_id = {}
+
+    @questions.each do |question|
+      @answers_by_question_id[question.id] = []
+    end
+
+    poll_answers = ::Poll::Answer.by_question(@poll.question_ids).by_author(current_user&.id)
+    poll_answers.each do |answer|
+      @answers_by_question_id[answer.question_id] = @answers_by_question_id.has_key?(answer.question_id) ? @answers_by_question_id[answer.question_id].push(answer.answer) : [answer.answer]
+    end
+
+    @commentable = @poll
+    @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
+
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    elsif Setting.new_design_enabled?
+      render :show_new
+    else
+      render :show
+    end
+  end
+
+  def stats
+    @stats = Poll::Stats.new(@poll)
+
+    if Setting.new_design_enabled?
+      render :stats_new
+    else
+      render :stats
+    end
+  end
+
+  def results
+    if Setting.new_design_enabled?
+      render :results_new
+    else
+      render :results
+    end
   end
 
   def set_geo_limitations

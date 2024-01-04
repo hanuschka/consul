@@ -1,0 +1,111 @@
+<div class="sidebar">
+  <div class="hide-on-small-tablet">
+    <% if render_custom_content_block?('home_page_sidebar') %>
+      <%= render Shared::SidebarCardComponent.new(title: "Information", icon_name: "info-circle") do |c| %>
+        <%= render_custom_block "home_page_sidebar" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if setting["welcomepage.usage_stats"].present? %>
+    <%= render Shared::SidebarCardComponent.new(title: "Nutzer*innen", icon_name: "users") do |c| %>
+      <div class="homepage-users-list">
+        <%= render(Sidebar::UsersListComponent.new(users: User.active)) %>
+
+        <% if setting["extended_feature.general.users_overview_page"].present? %>
+          <%= link_to users_path, class: "sidebar-users-list--count" do %>
+            +<%= number_with_delimiter(User.active.size, delimiter: ".") %>
+          <% end %>
+        <% end %>
+      </div>
+      <% if current_user.nil? %>
+        <div class="margin-top-20">
+          <%= link_to("Jetzt anmelden", new_user_session_path, class: "button sign-in-button") %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if setting["welcomepage.platform_activity"].present? %>
+    <%= render Shared::SidebarCardComponent.new(title: "Aktivität", icon_name: "tachometer-alt") do |c| %>
+      <% projekts_count = Projekt.regular.index_order_all.count %>
+      <% if projekts_count > 0 %>
+        <%= link_to projekts_path, class: "resources--info-count -no-default-style" do %>
+          <span>
+            <%= t("custom.general.resource_names.projekts") %>
+          </span>
+          <span>
+            <%= projekts_count %>
+          </span>
+        <% end %>
+      <% end %>
+
+      <% proposals_count = Proposal.for_public_render.count %>
+      <% if proposals_count > 0 %>
+        <%= link_to proposals_path, class: "resources--info-count -no-default-style" do %>
+          <span>
+            <%= t("custom.general.resource_names.proposals") %>
+          </span>
+          <span>
+            <%= proposals_count %>
+          </span>
+        <% end %>
+      <% end %>
+
+      <% debates_count = Debate.for_public_render.count %>
+      <% if debates_count > 0 %>
+        <%= link_to debates_path, class: "resources--info-count -no-default-style" do %>
+          <span>
+            <%= t("custom.general.resource_names.debates") %>
+          </span>
+          <span>
+            <%= debates_count %>
+          </span>
+        <% end %>
+      <% end %>
+
+      <% polls_count = Poll.for_public_render.count %>
+      <% if polls_count > 0 %>
+        <%= link_to polls_path, class: "resources--info-count -no-default-style" do %>
+          <span>
+            <%= t("custom.general.resource_names.polls") %>
+          </span>
+          <span>
+            <%= polls_count %>
+          </span>
+        <% end %>
+      <% end %>
+
+      <% comments_count = Comment.count %>
+      <% if comments_count > 0 %>
+        <div class="resources--info-count">
+          <span>
+            <%= t("custom.general.resource_names.comments") %>
+          </span>
+          <span>
+            <%= comments_count %>
+          </span>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if setting["welcomepage.newsletter_subscription"].present? %>
+    <div id="newsletter-subscribtion">
+      <%= render Shared::SidebarCardComponent.new(title: "Newsletter", icon_name: "envelope") do |c| %>
+        <% if current_user.present? %>
+          <div class="admin">
+          <%= render Admin::LivesubmitCheckbox::Component.new(
+            url: account_path,
+            resource_name: "account",
+            attribute_name: "newsletter",
+            current_value: current_user.newsletter
+          ) %>
+          </div>
+        <% else %>
+          <%= render "custom/unregistered_newsletter_subscribers/form", unregistered_email_subscriber: UnregisteredNewsletterSubscriber.new %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

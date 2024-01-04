@@ -3,6 +3,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title><%= content_for?(:title) ? yield(:title) : default_title %></title>
 <%= stylesheet_link_tag "application" %>
+
+<% if Setting.new_design_enabled? %>
+  <%= stylesheet_link_tag "custom_new_design" %>
+<% end %>
+
 <%= stylesheet_link_tag "print", media: 'print' %>
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
 <%= csrf_meta_tags %>
@@ -25,6 +30,8 @@
 
 <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
 <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+<script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
 
 <%= javascript_include_tag "klaro/config.js", defer: true %>
 <%= javascript_include_tag "klaro/klaro.js", defer: true %>

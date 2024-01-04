@@ -16,7 +16,13 @@ en:
         no_projekts: No projects
         title: Projects
         to_projekt: To the project
-      orders:
+        social_share:
+          title: Projekt overview
+          description:  Overview of all projekts
+        information_default_text: Be active and participate in our projects. Your contribution is very important!
+        count: Projects
+        welcome_default_text_html: In the project overview we list all projects that are currently being discussed. Use the filter to view all projects or display them according to recentness, activity, appointment or individually according to your preferences. The map also helps you locate the projects in the city.
+      filters:
         index_order_all: 'All Projects'
         index_order_all_title: 'All Projects'
         index_order_expired: Completed
@@ -29,6 +35,8 @@ en:
         index_order_upcoming_title: 'The "Future project plans" tab lists participation projects that will only take place in the future.'
         index_order_individual_list: "Individual list"
         index_order_individual_list_title: "Individual list"
+        index_order_drafts: "Entwürfe"
+        index_order_drafts_title: "Entwürfe"
       page:
         footer:
           sidebar:

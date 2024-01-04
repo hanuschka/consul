@@ -10,10 +10,14 @@ class Shared::NewButtonComponent < ApplicationComponent
   end
 
   def render?
+    return false if @projekt_phase&.selectable_by_admins_only? && (current_user.blank? || !(current_user.administrator? || current_user.projekt_manager&.allowed_to?("manage", @projekt_phase.projekt)))
     return true if current_user.blank?
     return true if @projekt_phase&.projekt&.overview_page? # projects overview page
-    return false if @projekt_phase&.selectable_by_admins_only? && !(current_user.administrator? || current_user.projekt_manager?) # if only admins can create resources
-    return Projekt.top_level.selectable_in_selector(@resources_name, current_user).any? if @resources_name.present? # resources index page
+
+    # resources index page
+    if @resources_name.present?
+      return Projekt.top_level.selectable_in_selector(@resources_name, current_user).any?
+    end
 
     if @projekt_phase.is_a?(ProjektPhase::BudgetPhase) # projekt page footer tab for budgets
       can? :create, Budget::Investment.new(budget: @projekt_phase.budget)
@@ -29,16 +33,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         @permission_problem_key ||= :not_logged_in
 
       elsif @projekt_phase.present?
-        if @projekt_phase.is_a?(ProjektPhase::BudgetPhase) || @projekt_phase.hide_projekt_selector?
-          @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
+        @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
 
-        elsif @projekt_phase.projekt.all_ids_in_tree.any? { |id| Projekt.find(id).selectable_in_selector?(@projekt_phase.resources_name, current_user) }
-          nil
-
-        else
-          @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
-
-        end
       end
     end
 
@@ -83,7 +79,7 @@ class Shared::NewButtonComponent < ApplicationComponent
     end
 
     def new_button_classes
-      classes = %w[button expanded new-resource-button]
+      classes = %w[button -orange new-resource-button]
 
       if @projekt_phase.class.name.in?(["ProjektPhase::ProposalPhase", "ProjektPhase::DebatePhase"]) ||
           @resources_name.in?(["proposals", "debates"])
@@ -95,18 +91,18 @@ class Shared::NewButtonComponent < ApplicationComponent
 
     def new_button_html
       if @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
-        button_text = @projekt_phase&.new_resource_button_name.presence || t("budgets.investments.index.sidebar.create")
+        button_text = @projekt_phase&.cta_button_name.presence || t("budgets.investments.index.sidebar.create")
         link_to button_text,
                 new_budget_investment_path(@projekt_phase.budget, projekt_phase_id: @projekt_phase, projekt_id: @projekt),
                 class: new_button_classes
 
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
-        button_text = @projekt_phase&.new_resource_button_name.presence || t("debates.index.start_debate")
+        button_text = @projekt_phase&.cta_button_name.presence || t("debates.index.start_debate")
         link_to button_text, new_debate_path(link_params_hash),
           class: new_button_classes
 
       elsif @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @resources_name == "proposals"
-        button_text = @projekt_phase&.new_resource_button_name.presence || t("proposals.index.start_proposal")
+        button_text = @projekt_phase&.cta_button_name.presence || t("proposals.index.start_proposal")
         link_to button_text, new_proposal_path(link_params_hash),
           class: new_button_classes,
           data: { turbolinks: false }

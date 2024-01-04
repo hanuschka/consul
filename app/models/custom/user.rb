@@ -1,12 +1,23 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 class User < ApplicationRecord
+  audited only: [:username, :first_name, :last_name, :registered_address_id,
+                 :city_name, :plz, :street_name, :street_number, :street_number_extension,
+                 :unique_stamp, :verified_at]
+
+  include Imageable
+  has_one_attached :background_image
+
+  SORTING_OPTIONS = { id: "id", name: "username", email: "email", city_name: "city_name",
+    created_at: "created_at", verified_at: "verified_at" }.freeze
+
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
+  delegate :registered_address_city, to: :registered_address, allow_nil: true
 
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
@@ -27,6 +38,9 @@ class User < ApplicationRecord
   belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
 
+  has_many :projekt_subscriptions, -> { where(active: true) }
+  has_many :projekt_phase_subscriptions
+
   scope :projekt_managers, -> { joins(:projekt_manager) }
 
   validate :email_should_not_be_used_by_hidden_user
@@ -36,10 +50,10 @@ class User < ApplicationRecord
   validates :gender, presence: true, on: :create, if: :extended_registration?
   validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
-  validates :city_name, presence: true, on: :create, if: :show_no_registered_address_field?
-  validates :plz, presence: true, on: :create, if: :show_no_registered_address_field?
-  validates :street_name, presence: true, on: :create, if: :show_no_registered_address_field?
-  validates :street_number, presence: true, on: :create, if: :show_no_registered_address_field?
+  validates :city_name, presence: true, on: :create, if: :regular_address_fields_visible?
+  validates :plz, presence: true, on: :create, if: :regular_address_fields_visible?
+  validates :street_name, presence: true, on: :create, if: :regular_address_fields_visible?
+  validates :street_number, presence: true, on: :create, if: :regular_address_fields_visible?
 
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
@@ -93,28 +107,55 @@ class User < ApplicationRecord
     puts "Not transferred user ids: #{not_transferred_user_ids - transferred_user_ids}"
   end
 
-  def show_no_registered_address_field?
-    return false unless extended_registration?
-    return true if RegisteredAddress::Street.none?
+  def self.order_filter(params)
+    sorting_key = params[:sort_by]&.downcase&.to_sym
+    allowed_sort_option = SORTING_OPTIONS[sorting_key]
+    direction = params[:direction] == "desc" ? "desc" : "asc"
 
-    form_registered_address_city_id == "0" ||
-      form_registered_address_street_id == "0" ||
-      form_registered_address_id == "0"
+    if allowed_sort_option.present?
+      order("#{allowed_sort_option} #{direction}")
+    elsif sorting_key == :roles
+      if direction == "asc"
+        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+      else
+        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+      end
+    else
+      order(id: :desc)
+    end
+  end
+
+  def regular_address_fields_visible?
+    return false unless extended_registration?
+    return true if RegisteredAddress.none?
+    return true if form_registered_address_city_id == "0"
+    return false if persisted? && registered_address_id.present?
+
+    false
   end
 
   def verify!
     return false unless stamp_unique?
 
     take_votes_from_erased_user
-    update_columns(
+    update!(
       verified_at: Time.current,
       unique_stamp: prepare_unique_stamp,
       geozone_id: geozone_with_plz&.id
     )
   end
 
+  def unverify!
+    update!(
+      verified_at: nil,
+      unique_stamp: nil,
+      geozone_id: nil
+    )
+  end
+
   def take_votes_from_erased_user
     return if erased?
+    return if unique_stamp.blank?
 
     erased_user = User.erased.find_by(unique_stamp: unique_stamp)
 
@@ -173,11 +214,11 @@ class User < ApplicationRecord
   end
 
   def extended_registration?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"]
+    !organization? && !erased? && Setting["extra_fields.registration.extended"].present?
   end
 
   def document_required?
-    !organization? && !erased? && Setting["extra_fields.registration.check_documents"]
+    !organization? && !erased? && Setting["extra_fields.registration.check_documents"].present?
   end
 
   def current_city_citizen?
@@ -200,6 +241,18 @@ class User < ApplicationRecord
     return registered_address.formatted_name if registered_address.present?
 
     "#{street_name} #{street_number}#{street_number_extension}"
+  end
+
+  def roles
+    roles = []
+    roles << :admin if administrator?
+    roles << :moderator if moderator?
+    roles << :valuator if valuator?
+    roles << :manager if manager?
+    roles << :poll_officer if poll_officer?
+    roles << :official if official?
+    roles << :organization if organization?
+    roles
   end
 
   def link_to_registered_address  #TODO remove after data migration
@@ -236,6 +289,22 @@ class User < ApplicationRecord
     end
   end
 
+  def full_name
+    if first_name.present? && last_name.present?
+      "#{first_name} #{last_name}"
+    else
+      name
+    end
+  end
+
+  def first_letter_of_name
+    (first_name || name)&.chars&.first&.upcase
+  end
+
+  def unread_notifications_count
+    notifications.where(read_at: nil).count
+  end
+
   private
 
     def geozone_with_plz
@@ -255,5 +324,9 @@ class User < ApplicationRecord
       if User.only_hidden.find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
       end
+    end
+
+    def remove_audits
+      audits.destroy_all
     end
 end

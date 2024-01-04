@@ -2,13 +2,13 @@
 <% preview = false unless local_assigns.has_key? :preview %>
 <% provide :title do %><%= @proposal.title %><% end %>
 <% content_for :meta_description do %>
-  <%= projekt_phase_feature?(@proposal.projekt_phase, "form.enable_summary") ? @proposal.summary : strip_tags(@proposal.description)[0..200] %>
+  <%= strip_tags(@proposal.description)[0..200] %>
 <% end %>
 <% provide :social_media_meta_tags do %>
   <%= render "shared/social_media_meta_tags",
               social_url: proposal_url(@proposal),
               social_title: @proposal.title,
-              social_description: projekt_phase_feature?(@proposal.projekt_phase, "form.enable_summary") ? @proposal.summary : strip_tags(@proposal.description)[0..200],
+              social_description: strip_tags(@proposal.description)[0..200],
               twitter_image_url: (@proposal.image.present? ? polymorphic_path(@proposal.image) : nil),
               og_image_url: (@proposal.image.present? ? polymorphic_path(@proposal.image) : nil) %>
 <% end %>
@@ -58,16 +58,18 @@
       <% unless preview %>
         <aside class="small-12 medium-3 column">
 
-          <% if can?(:dashboard, @proposal) %>
+          <% if can?(:dashboard, @proposal) || current_editable?(@proposal) %>
             <div class="sidebar-divider"></div>
             <h2><%= t("proposals.show.author") %></h2>
 
             <div class="show-actions-menu">
-              <%= link_to proposal_dashboard_path(@proposal),
-                          class: "button hollow expanded",
-                          id: "proposal-dashboard-#{@proposal.id}" do %>
-                <span class="icon-edit"></span>
-                <%= t("proposals.show.dashboard_proposal_link") %>
+              <% if can?(:dashboard, @proposal) %>
+                <%= link_to proposal_dashboard_path(@proposal),
+                            class: "button hollow expanded",
+                            id: "proposal-dashboard-#{@proposal.id}" do %>
+                  <span class="icon-edit"></span>
+                  <%= t("proposals.show.dashboard_proposal_link") %>
+                <% end %>
               <% end %>
 
               <% if current_editable?(@proposal) %>

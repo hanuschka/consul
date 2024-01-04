@@ -1,6 +1,6 @@
 <%= render "shared/globalize_locales", resource: @poll %>
 
-<%= translatable_form_for [:admin, @poll] do |f| %>
+<%= translatable_form_for [@namespace, @poll] do |f| %>
   <%= render "shared/errors", resource: @poll %>
 
   <div class="row">
@@ -51,27 +51,10 @@
     </div>
   </div>
 
-  <%if extended_feature?("modulewide.enable_categories") %>
-    <div class="row">
-      <hr>
-      <div class="small-12 column">
-        <h4><%= t("admin.tags.index.topic") %></h4>
-        <%Tag.category.order("name ASC").each_with_index do |t, i|%>
-          <%= f.check_box "tag", {class: "tag_checkbox", label: t.name, value: t.name, id: "tag_#{t.id}", checked: @poll.tag_list.include?(t.name) } %>
-        <%end%>
-      </div>
-    </div>
-    <%=f.hidden_field :tag_list%>
-  <%end%>
-
   <div class="row">
     <div class="small-12 column margin-top margin-bottom">
       <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @poll }  %>
     </div>
-  </div>
-
-  <div class="row">
-    <%= render SDG::RelatedListSelectorComponent.new(f) %>
   </div>
 
   <div class='row'>
@@ -91,7 +74,11 @@
       <%= f.check_box :show_on_index_page, label: t('custom.admin.polls.settings.show_on_index_page') %>
     </div>
   </div>
-
+  <div class='row'>
+    <div class='column'>
+      <%= f.check_box :wizard_mode, label: t('custom.admin.polls.settings.wizard_mode') %>
+    </div>
+  </div>
 
   <div class="row">
     <div class="clear">
@@ -101,22 +88,4 @@
       </div>
     </div>
   </div>
-
 <% end %>
-
-  <script>
-    function update_tags(){
-      var list = []
-      $(".tag_checkbox:checked").each(function(){
-        list.push($(this).closest("label")[0].innerText)
-      })
-      $("#poll_tag_list").val(list.join(","));
-
-    }
-    $(".tag_checkbox").on("change", function(){
-      update_tags();
-    })
-    $(function() {
-      update_tags();
-    })
-  </script>

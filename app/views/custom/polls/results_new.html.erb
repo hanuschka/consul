@@ -1,0 +1,59 @@
+<% provide :title do %><%= @poll.name %><% end %>
+
+<main>
+  <div id="<%= dom_id(@poll) %>">
+    <div class="flex-layout">
+      <div class="main-column">
+        <div class="resource-page--title-subline">
+          <%= render_custom_block("polls_show_welcome_text", custom_prefix: @poll.author&.name, default_content: t("custom.polls.show.welcome_default_text")) %>
+        </div>
+      </div>
+      <div class="sidebar-placeholder"></div>
+    </div>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= render ResourcePage::BannerComponent.new(resource: @poll) do |c| %>
+          <% c.links_section do %>
+             <%= render Polls::SubNavComponent.new(poll: @poll) %>
+          <% end %>
+        <% end %>
+
+        <% if @poll.summary.present? || @poll.description.present? %>
+          <div class="resource-page--description new-card main-content-card">
+            <%= render "poll_header" %>
+          </div>
+        <% end %>
+
+        <% if can? :csv_answers_votes, @poll %>
+          <%= link_to t("custom.polls.show.results.download_csv_answers_votes"), poll_csv_answers_votes_path(@poll, format: :csv), class: "button small float-right" %>
+        <% end %>
+
+        <div class="margin clear" data-equalizer data-equalize-on="medium">
+          <div class="small-12 medium-2 column" data-equalizer-watch>
+            <h4><strong><%= t("polls.show.results.title") %></strong></h4>
+            <ul class="menu vertical poll-results-menu">
+              <%- @poll.questions.root_questions.each do |question| %>
+                <li><%= link_to question.title, "##{question.title.parameterize}" %></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="small-12 medium-9 column" data-equalizer-watch>
+            <%- @poll.questions.root_questions.each do |question| %>
+              <%= render Polls::Questions::QuestionResultComponent.new(question: question) %>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+    <aside class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
+        <div class="margin-bottom-half">
+           <%= format_date_range(@poll.starts_at, @poll.ends_at, separator: t("custom.polls.poll.date.to")) %>
+        </div>
+      <% end %>
+    </aside>
+    </div>
+  </div>
+</main>

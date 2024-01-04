@@ -4,8 +4,19 @@ class MapLocation < ApplicationRecord
   belongs_to :projekt, touch: true
   belongs_to :deficiency_report, touch: true
   belongs_to :projekt_phase, touch: true
+  belongs_to :deficiency_report_area, class_name: "DeficiencyReport::Area",
+    foreign_key: :deficiency_report_area_id, touch: true, inverse_of: :map_location
 
   before_save :ensure_shape_is_json
+  # before_save :set_pin_styles
+
+  # def set_pin_styles
+  #   self.pin_color = get_pin_color
+  #   self.fa_icon_class = get_fa_icon_class
+  # end
+
+  audited associated_with: :deficiency_report,
+          only: %i[shape latitude longitude]
 
   def json_data
     {
@@ -15,6 +26,7 @@ class MapLocation < ApplicationRecord
       deficiency_report_id: deficiency_report_id,
       lat: latitude,
       long: longitude,
+      alt: altitude,
       color: get_pin_color,
       fa_icon_class: get_fa_icon_class
     }
@@ -22,6 +34,11 @@ class MapLocation < ApplicationRecord
 
   def shape_json_data
     return {} if shape == {} || shape == "{}"
+
+    if shape.is_a?(String)
+      Sentry.capture_message("MapJSONBug. Shape: #{shape}")
+      return {}
+    end
 
     shape.merge({
       investment_id: investment_id,
@@ -36,21 +53,19 @@ class MapLocation < ApplicationRecord
   private
 
   def get_pin_color
-    set_object
-
-    if @proposal.present? && @proposal.projekt_phase.projekt.overview_page?
+    if proposal.present? && proposal.projekt_phase.projekt.overview_page?
       "#009900"
 
-    elsif @proposal.present? && @proposal.sentiment.present?
-      @proposal.sentiment.color
+    elsif proposal.present? && proposal.sentiment.present?
+      proposal.sentiment.color
 
-    elsif @investment.present?
-      @investment.projekt.color
+    elsif investment.present?
+      investment.projekt&.color || "#004a83"
 
-    elsif @deficiency_report.present?
-      @deficiency_report.category.color
+    elsif deficiency_report.present?
+      deficiency_report.category.color
 
-    elsif @projekt.present?
+    elsif projekt.present?
       "red"
 
     else
@@ -59,33 +74,21 @@ class MapLocation < ApplicationRecord
   end
 
   def get_fa_icon_class
-    set_object
+    if proposal.present? && proposal.projekt_labels.any?
+      proposal.projekt_labels.size == 1 ? proposal.projekt_labels.first.icon : "tags"
 
-    if @proposal.present? && @proposal.projekt_phase.projekt.overview_page?
-      "user"
+    elsif investment.present? && investment.projekt.present?
+      investment.projekt.icon
 
-    elsif @proposal.present? && @proposal.projekt_labels.any?
-      @proposal.projekt_labels.count == 1 ? @proposal.projekt_labels.first.icon : "tags"
+    elsif deficiency_report.present?
+      deficiency_report.category.icon
 
-    elsif @investment.present? && @investment.projekt.present?
-      @investment.projekt.icon
-
-    elsif @deficiency_report.present?
-      @deficiency_report.category.icon
-
-    elsif @projekt.present?
-      @projekt.icon
+    elsif projekt.present?
+      projekt.icon
 
     else
       "circle"
     end
-  end
-
-  def set_object
-    @projekt = Projekt.find_by(id: projekt_id) if projekt_id.present?
-    @proposal = Proposal.find_by(id: proposal_id) if proposal_id.present?
-    @deficiency_report = DeficiencyReport.find_by(id: deficiency_report_id) if deficiency_report_id.present?
-    @investment = Budget::Investment.find_by(id: investment_id) if investment_id.present?
   end
 
   def ensure_shape_is_json

@@ -9,6 +9,13 @@ de:
       map_zoom_description: Zoomen, um die Kartenposition anzuzeigen
       map_color: Farbe der Kartenmarkierung ändern
       map_color_description: Bitte den Farbwert als HEX-code eingeben
+      welcomepage:
+        usage_stats: Nutzerstatistiken auf Homepage anzeigen
+        usage_stats_description: Zeigt erweiterte Nutzerstatistiken auf der Homepage an
+        newsletter_subscription: Newsletter-Funktion
+        newsletter_subscription_description: Fügt eine Box hinzu, die zur Newsletter-Anmeldung auffordert.
+        platform_activity: Plattform-Aktivität
+        platform_activity_description: Zeigt die Plattform-Aktivtät in einer Box an
       feature:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
@@ -25,8 +32,6 @@ de:
           extended_editor_for_users_description: Aktivieren Sie den erweiterten Editor für Inhalte, die im Frontend von Nutzern erstellt werden
           language_switcher_in_menu: Sprachumschalter in Navigation anbieten
           language_switcher_in_menu_description: Aktivieren Sie den Umschalter für weitere Sprachen in der Navigationsleiste
-          links_to_create_resources_in_menu: Button "+ Beitrag erstellen" in Navigation anzeigen
-          links_to_create_resources_in_menu_description: Zeigt den Button "+ Beitrag erstellen" in der Hauptnavigation an
           enable_projekt_events_page: Veranstaltungskalender anzeigen
           enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
           enable_google_translate: Google Translate aktivieren
@@ -91,6 +96,10 @@ de:
           subtitle_description: Fügt einen Untertitel zur Applikation hinzu.
           launch_date: Erscheinungsdatum
           launch_date_description: "Bitte geben Sie das Erscheinungsdatum im folgenden Format an: \"dd.mm.yyyy\". So sollte beispielsweise der 3. Oktober 1990 als 03.10.1990 geschrieben werden."
+          homepage_button_text: Homepage-Button-Text
+          homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen
+          homepage_button_link: Homepage-Button-Link
+          homepage_button_link_description: Link, der über den Button angesteuert werden soll
         gdpr:
           devise_timeout_min: Dauer von Nutzer-Sitzungen
           devise_timeout_min_description: Legen Sie fest, wie lange ein Nutzer pro Sitzung eingeloggt bleiben soll in Minuten
@@ -140,8 +149,8 @@ de:
         general:
           show_in_navigation: Projekt in Navigation hervorheben
           show_in_navigation_description: Zeigt das Projekt in der Top-Navigation der Webseite an (nur für Top-Level-Projekte)
-          show_in_overview_page: Projekt in Übersichtsseite und auf Homepage anzeigen
-          show_in_overview_page_description: Zeigt das Projekt in der Projektübersichtsseite und auf der Homepage an
+          show_in_overview_page: Projekt in Übersichtsseite anzeigen
+          show_in_overview_page_description: Zeigt das Projekt in der Projektübersichtsseite an
           show_in_overview_page_navigation: Projekt in Dropdown-Navigation anzeigen
           show_in_overview_page_navigation_description: Zeigt das Projekt in einer Dropdownliste im Navigationsmenü
           show_in_homepage: Projekt auf Homepage anzeigen
@@ -152,10 +161,10 @@ de:
           allow_downvoting_comments_description: Aktivieren Sie den "Daumen nach unten"-Button in den Kommentaren
           set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
           set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
-          enable_tags: Tags aktivieren
-          enable_tags_description: Aktivieren Sie Tags für dieses Projekt
-          enable_sdgs: SDGs aktivieren
-          enable_sdgs_description: Aktivieren Sie die UN-Nachhaltigkeitsziele für dieses Projekt
+          show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
+          show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf den übersichtsseiten an
+          vc_map_enabled: Virtual City 3D Maps aktivieren
+          vc_map_enabled_description: Aktiviert die 3D Karten von [Virtual City Systems]
         sidebar:
           show_notification_subscription_toggler: Benachrichtigungen
           show_notification_subscription_toggler_description: Aktivieren Sie die Projektbenachrichtigungen in der rechten Seitenleiste

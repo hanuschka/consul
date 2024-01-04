@@ -57,6 +57,8 @@ module ProjektPhaseAdminActions
   end
 
   def toggle_active_status
+    authorize!(:toggle_active_status, @projekt_phase)
+
     status_value = params[:projekt][:phase_attributes][:active]
     @projekt_phase.update!(active: status_value)
   end
@@ -108,7 +110,7 @@ module ProjektPhaseAdminActions
   end
 
   def map
-    authorize!(:sentiments, @projekt_phase)
+    authorize!(:map, @projekt_phase)
 
     @projekt_phase.create_map_location unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
@@ -151,6 +153,8 @@ module ProjektPhaseAdminActions
   end
 
   def milestones
+    authorize!(:milestones, @projekt_phase)
+    render "custom/admin/projekt_phases/milestones"
   end
 
   def projekt_notifications
@@ -168,6 +172,32 @@ module ProjektPhaseAdminActions
     @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons
 
     render "custom/admin/projekt_phases/projekt_arguments"
+  end
+
+  def formular
+    @formular = @projekt_phase.formular
+    @formular_fields_primary = @formular.formular_fields.primary.each(&:set_custom_attributes)
+    @formular_fields_follow_up = @formular.formular_fields.follow_up.each(&:set_custom_attributes)
+    authorize!(:formular, @projekt_phase)
+    render "custom/admin/projekt_phases/formular"
+  end
+
+  def formular_answers
+    authorize!(:formular, @projekt_phase)
+
+    @formular = @projekt_phase.formular
+    @formular_fields = @formular.formular_fields
+    @formular_answers = @formular.formular_answers
+    @formular_follow_up_letters = @formular.formular_follow_up_letters
+    @image_flag = @formular_answers.any? { |fa| fa.formular_answer_images.present? }
+
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/formular_answers" }
+      format.csv do
+        send_data CsvServices::FormularAnswersExporter.call(@formular),
+          filename: "formular_answers-#{@formular.id}-#{Time.zone.today}.csv"
+      end
+    end
   end
 
   private
@@ -232,10 +262,6 @@ module ProjektPhaseAdminActions
       unless action_name.in?(@projekt_phase.admin_nav_bar_items)
         redirect_to namespace_projekt_phase_path(action: @projekt_phase.admin_nav_bar_items.first)
       end
-    end
-
-    def should_authorize_projekt_manager?
-      current_user&.projekt_manager? && !current_user&.administrator?
     end
 
     # path helpers

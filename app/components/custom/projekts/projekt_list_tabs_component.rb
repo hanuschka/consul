@@ -23,7 +23,8 @@ class Projekts::ProjektListTabsComponent < ApplicationComponent
         "index_order_ongoing",
         "index_order_upcoming",
         "index_order_expired",
-        "index_order_individual_list"
+        "index_order_individual_list",
+        "index_order_drafts"
       ] & @current_active_orders
     end
 
@@ -40,11 +41,7 @@ class Projekts::ProjektListTabsComponent < ApplicationComponent
     end
 
     def link_path(order)
-      if params[:current_tab_path].present? && !@overview_page
-        url_for(action: params[:current_tab_path], controller: 'pages', order: order, page: 1, anchor: anchor, filter_projekt_ids: params[:filter_projekt_ids])
-      else
-        current_path_with_query_params(order: order, anchor: anchor)
-      end
+      current_path_with_query_params(order: order, anchor: anchor)
     end
 
     def title_for(order)

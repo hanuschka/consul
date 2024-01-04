@@ -3,12 +3,11 @@ require_dependency Rails.root.join("app", "controllers", "budgets", "ballot", "l
 module Budgets
   module Ballot
     class LinesController < ApplicationController
-      before_action :set_variables_for_sidebar_filter, only: %i[create destroy]
-
       def create
         load_investment
         load_heading
         load_map
+        set_filters
 
         if permission_problem.present?
           return
@@ -21,6 +20,7 @@ module Budgets
         @investment = @line.investment
         load_heading
         load_map
+        set_filters
 
         if permission_problem.present? &&
             !@investment.permission_problem_keys_allowing_ballot_line_deletion.include?(permission_problem)
@@ -38,18 +38,14 @@ module Budgets
           @ballot = Budget::Ballot.where(user: user, budget: @budget).first_or_create!
         end
 
-        def set_variables_for_sidebar_filter
-          debugger
-          @top_level_active_projekts = ::Projekt.where(id: params[:top_level_active_projekt_ids]).to_a
-          @top_level_archived_projekts = ::Projekt.where(id: params[:top_level_archived_projekt_ids]).to_a
-          @scoped_projekt_ids = params[:scoped_projekt_ids]
-          @current_tab_phase = @budget.projekt_phase
-          @valid_filters = @budget.investments_filters
-          params[:id] = @budget.projekt.page.slug
-        end
-
         def permission_problem
           @permission_problem = @investment.reason_for_not_being_ballotable_by(current_user, @line.ballot)
+        end
+
+        def set_filters
+          @valid_filters = @budget.investments_filters
+          params[:filter] ||= "all" if @budget.phase.in?(["publishing_prices", "balloting", "reviewing_ballots"])
+          @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
         end
     end
   end

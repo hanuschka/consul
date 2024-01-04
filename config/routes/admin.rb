@@ -18,6 +18,23 @@ namespace :admin do
       get :milestones
       get :projekt_notifications
       get :projekt_arguments
+      get :formular
+      get :formular_answers
+    end
+
+    resources :formular, only: [] do
+      resources :formular_fields, only: [:new, :create, :edit, :update, :destroy] do
+        collection do
+          post :order_formular_fields
+        end
+      end
+      resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
+        member do
+          post :send_emails
+          get :preview
+          get :restore_default_view
+        end
+      end
     end
 
     resources :projekt_labels, except: %i[index show]
@@ -99,9 +116,12 @@ namespace :admin do
       end
     end
     resources :settings, only: :index
+    resources :areas, except: :show
   end
 
-  resources :deficiency_reports, only: [:index, :show]
+  resources :deficiency_reports, only: [:index, :show] do
+    resources :audits, only: :show, controller: "deficiency_report_audits"
+  end
 
   # custom projekt managers
   resources :projekt_managers, only: [:index, :create, :destroy] do
@@ -259,12 +279,17 @@ namespace :admin do
     get :search, on: :collection
   end
 
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show, :edit, :update] do
+    resources :audits, only: :show, controller: "user_audits"
+  end
+
+  resources :unregistered_newsletter_subscribers, only: [:index, :destroy]
 
   scope module: :poll do
     resources :polls do
       get :booth_assignments, on: :collection
       patch :add_question, on: :member
+      post :send_notifications, on: :member
 
       resources :booth_assignments, only: [:index, :show, :create, :destroy] do
         get :search_booths, on: :collection
@@ -278,6 +303,10 @@ namespace :admin do
 
       resources :recounts, only: :index
       resources :results, only: :index
+
+      resources :questions, only: [] do
+        post :order_questions, on: :collection
+      end
     end
 
     resources :officers, only: [:index, :new, :create, :destroy] do
@@ -298,8 +327,8 @@ namespace :admin do
         resources :images, controller: "questions/answers/images"
         resources :videos, controller: "questions/answers/videos", shallow: false
         resources :documents, only: [:index, :create], controller: "questions/answers/documents"
+        post :order_answers, on: :collection
       end
-      post "/answers/order_answers", to: "questions/answers#order_answers"
     end
 
     resource :active_polls, only: [:create, :edit, :update]

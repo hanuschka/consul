@@ -80,6 +80,7 @@ class Mailer < ApplicationMailer
 
   def budget_investment_created(investment)
     @investment = investment
+    @projekt = investment.projekt
     @email_to = @investment.author.email
 
     with_user(@investment.author) do
@@ -94,6 +95,16 @@ class Mailer < ApplicationMailer
 
     with_user(@author) do
       mail(to: @email_to, subject: t("mailers.budget_investment_unfeasible.subject", title: @investment.title))
+    end
+  end
+
+  def budget_investment_feasible(investment)
+    @investment = investment
+    @author = investment.author
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail(to: @email_to, subject: t("mailers.budget_investment_feasible.subject", title: @investment.title))
     end
   end
 
@@ -120,7 +131,12 @@ class Mailer < ApplicationMailer
   def newsletter(newsletter, recipient_email)
     @newsletter = newsletter
     @email_to = recipient_email
-    manage_subscriptions_token(User.find_by(email: @email_to))
+
+    user = User.find_by(email: @email_to)
+
+    if user.present?
+      manage_subscriptions_token(user)
+    end
 
     mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject)
   end
@@ -162,6 +178,29 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def formular_answer_confirmation(email)
+    @email_to = email
+    mail(to: email, subject: t("mailers.formular_answer_confirmation.subject"))
+  end
+
+  def formular_follow_up_letter(follow_up_letter, recipient)
+    @follow_up_letter = follow_up_letter
+    @recipient = recipient
+    @projekt_phase = follow_up_letter.formular.projekt_phase
+
+    @email_to = @recipient.email
+    mail(to: @email_to, subject: @follow_up_letter.subject)
+  end
+
+  def newsletter_subscription_for_existing_user(user)
+    @email_to = user.email
+    @user = user
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.newsletter_subscription_for_existing_user.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)
@@ -176,6 +215,6 @@ class Mailer < ApplicationMailer
 
     def manage_subscriptions_token(user)
       user.add_subscriptions_token
-      @token = user.subscriptions_token
+      @subscriptions_token = user.subscriptions_token
     end
 end

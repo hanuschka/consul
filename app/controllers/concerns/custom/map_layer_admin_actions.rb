@@ -8,14 +8,15 @@ module MapLayerAdminActions
   end
 
   def new
-    @map_layer = @mappable.map_layers.new
-    authorize! :new, @map_layer
+    @map_layer = MapLayer.new
+    @map_layer.mappable = @mappable
+    authorize!(:new, @map_layer)
 
     render "custom/admin/map_layers/new"
   end
 
   def edit
-    authorize! :edit, @map_layer
+    authorize!(:edit, @map_layer)
 
     render "custom/admin/map_layers/edit"
   end
@@ -24,7 +25,7 @@ module MapLayerAdminActions
     @map_layer = MapLayer.new(map_layer_params)
     @map_layer.mappable = @mappable
 
-    authorize! :create, @map_layer
+    authorize!(:create, @map_layer)
 
     if @map_layer.save
       redirect_to params[:return_path], notice: t("admin.settings.index.map.flash.update")
@@ -34,7 +35,7 @@ module MapLayerAdminActions
   end
 
   def update
-    authorize! :update, @map_layer
+    authorize!(:update, @map_layer)
 
     if @map_layer.update(map_layer_params)
       redirect_to params[:return_path], notice: t("admin.settings.index.map.flash.update")
@@ -44,7 +45,7 @@ module MapLayerAdminActions
   end
 
   def destroy
-    authorize! :destroy, @map_layer
+    authorize!(:destroy, @map_layer)
 
     @map_layer.destroy!
     redirect_to params[:return_path]
@@ -55,7 +56,7 @@ module MapLayerAdminActions
     def map_layer_params
       params.require(:map_layer).permit(
         :name, :layer_names, :base, :show_by_default, :provider,
-        :attribution, :protocol, :format, :transparent
+        :attribution, :protocol, :format, :transparent, :opacity
       )
     end
 

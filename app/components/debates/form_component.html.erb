@@ -20,7 +20,7 @@
       </div>
     <% end %>
 
-    <legend class="margin-top tagging"><%= t("custom.debates.form.tagging") %></legend>
+    <legend class="margin-top tagging hide"><%= t("custom.debates.form.tagging") %></legend>
     <%= render partial: "shared/projekt_selector/projekt_labels", locals:	{ f: f, model: @debate } %>
     <%= render partial: "shared/projekt_selector/sentiments", locals:	{ f: f, model: @debate } %>
 
@@ -52,41 +52,18 @@
 
   <%= f.invisible_captcha :subtitle %>
 
-  <fieldset>
+  <fieldset class="additional-fields">
 
-    <legend><%= t("shared.optional") %></legend>
-
-    <% if current_user.administrator? || current_user.moderator? %>
-      <div>
-        <%= f.text_field :on_behalf_of %>
-      </div>
-    <% end %>
-
-    <% if (extended_feature?("modulewide.enable_categories") && categories.any?) ||
-        SDG::ProcessEnabled.new(f.object).enabled?    %>
-    <% end %>
-
-    <div>
-      <%if categories.any? %>
-        <div id="category_tags" class="tags">
-          <%= f.label :category_tag_list, t("proposals.form.tag_category_label") %>
-          <% categories.each do |tag| %>
-            <a class="js-add-tag-link" data-category-id="<%= tag.id %>"><%= tag.name %></a>
-          <% end %>
-        </div>
-        <br>
-      <%=f.hidden_field :tag_list_predefined, value: debate.tags.reject{|t| !['category'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined"%>
-      <%end%>
-    </div>
+    <legend id='additional-fields-title'><%= t("shared.optional") %></legend>
 
     <div class="documents" id="attach-documents">
       <%= render "documents/nested_documents", f: f %>
     </div>
 
-    <div id="sdgs-selector" class='row margin-top'>
-      <br>
-      <%= render SDG::RelatedListSelectorComponent.new(f) %>
+    <div id="create-on-behalf-of" class="hide">
+      <%= f.text_field :on_behalf_of %>
     </div>
+
   </fieldset>
 
   <div class="actions">

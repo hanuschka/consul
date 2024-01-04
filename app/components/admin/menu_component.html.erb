@@ -45,6 +45,7 @@
       deficiency_report_categories,
       deficiency_report_statuses,
       deficiency_report_settings,
+      deficiency_report_areas,
       id: "deficiency_reports_menu", class: ("is-active" if deficiency_reports?)
     ) %>
   </li>
@@ -116,6 +117,7 @@
       managers_link,
       (sdg_managers_link if feature?(:sdg)),
       users_link,
+      unregistered_newsletter_subscribers_link,
       class: ("is-active" if profiles?)
     ) %>
   </li>

@@ -216,6 +216,7 @@ GEM
       dry-equalizer (~> 0.2)
       dry-inflector (~> 0.1, >= 0.1.2)
       dry-logic (~> 0.4, >= 0.4.2)
+    e2mmap (0.1.0)
     elasticsearch (6.8.3)
       elasticsearch-api (= 6.8.3)
       elasticsearch-transport (= 6.8.3)
@@ -224,7 +225,6 @@ GEM
     elasticsearch-transport (6.8.3)
       faraday (~> 1)
       multi_json
-    e2mmap (0.1.0)
     email_spec (2.2.0)
       htmlentities (~> 4.3.3)
       launchy (~> 2.1)

@@ -9,8 +9,7 @@ de:
     manual_verification_confirmation:
       subject: Ihr Konto wurde soeben verifiziert.
       p1: Ihr Konto wurde soeben verifiziert.
-      p2: Sollten Sie bereits abgestimmt haben, dann können Sie jetzt Ihre Stimmen in der Übersicht einsehen.
-      p3: Sie können Ihre Stimmabgabe bis zum Ende des Verfahrens jederzeit ändern.
+      p2: Vielen Dank für Ihre Teilhabe.
     formular_answer_confirmation:
       subject: Vielen Dank! Ihr Formular wurde erfolgreich eingereicht.
       p1: Herzlichen Dank für die Einreichung Ihres Formulars. Wir werden die Daten jetzt intern prüfen und ggf. wieder auf Sie zukommen.
@@ -22,3 +21,6 @@ de:
       accepted: "vielen Dank für die Einreichung Ihres Vorschlags \"%{title}\". Ihr Vorschlag wurde als durchführbar klassifiziert."
       thank_you: Vielen Dank für Ihre Beteiligung!
       sincerely: Mit freundlichen Grüßen
+    newsletter_subscription_for_existing_user:
+      subject: Anmeldung zum Newsletter
+      p1_html: Es gab einen Versuch, sich mit Ihrer E-Mail-Adresse für unseren Newsletter anzumelden. Da Sie bereits über ein Consul-Konto verfügen, möchten wir Sie bitten, sich einzuloggen und die Option zum Empfang des Newsletters in Ihren <a href=%{link}>Konto-Einstellungen</a> zu aktivieren.

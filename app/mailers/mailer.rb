@@ -131,7 +131,12 @@ class Mailer < ApplicationMailer
   def newsletter(newsletter, recipient_email)
     @newsletter = newsletter
     @email_to = recipient_email
-    manage_subscriptions_token(User.find_by(email: @email_to))
+
+    user = User.find_by(email: @email_to)
+
+    if user.present?
+      manage_subscriptions_token(user)
+    end
 
     mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject)
   end
@@ -185,6 +190,15 @@ class Mailer < ApplicationMailer
 
     @email_to = @recipient.email
     mail(to: @email_to, subject: @follow_up_letter.subject)
+  end
+
+  def newsletter_subscription_for_existing_user(user)
+    @email_to = user.email
+    @user = user
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.newsletter_subscription_for_existing_user.subject"))
+    end
   end
 
   private

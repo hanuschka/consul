@@ -72,6 +72,10 @@ de:
           attributes:
             password:
               low_complexity: "muss mindestens drei der nachfolgenden Kriterien erfüllen: Großbuchstaben, Kleinbuchstaben, Ziffern, Sonderzeichen."
+        unregistered_newsletter_subscriber:
+          attributes:
+            email:
+              invalid: Bitte geben Sie ein gültiges E-Mail-Format ein
     attributes:
       projekt:
         total_duration_start: Anfangsdatum

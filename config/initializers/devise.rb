@@ -254,6 +254,7 @@ Devise.setup do |config|
   open_rathaus_config = Rails.application.secrets.open_rathaus_login
   config.omniauth :openid_connect, {
     name: :open_rathaus,
+    issuer: open_rathaus_config[:issuer],
     scope: [:openid, :profile, :email, :address, :phone, :birth_details, :stork_level],
     response_type: :code,
     uid_field: "sub",

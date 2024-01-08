@@ -302,6 +302,10 @@ de:
       sign_in: Anmelden mit Twitter
       sign_up: Registrierung mit Twitter
       name: Twitter
+    open_rathaus:
+      sign_in: Anmelden mit OpenR@thaus
+      sign_up: Registrierung mit OpenR@thaus
+      name: OpenR@thaus
     info:
       sign_in: "Anmelden mit:"
       sign_up: "Registrierung mit:"

@@ -2,8 +2,7 @@
 
 <% form_html = capture do %>
   <div class="auth-page-template--oauth no-column-padding">
-    <%= render "devise/omniauth_form", action: "sign_up" %>
-    <div class="auth-page-template--divider"></div>
+    <%= render "custom/shared/cli_service_konto", action: "sign_up" %>
   </div>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>

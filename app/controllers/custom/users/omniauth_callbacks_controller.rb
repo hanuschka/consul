@@ -1,10 +1,11 @@
 require_dependency Rails.root.join("app", "controllers", "users", "omniauth_callbacks_controller").to_s
 
-class Users::RegistrationsController < Devise::RegistrationsController
+class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def open_rathaus
     raise ActionController::RoutingError, "Not Found" unless Setting["feature.open_rathaus_login"]
 
     auth = request.env["omniauth.auth"]
+    provider = auth.provider.to_sym
 
     identity = Identity.first_or_create_from_oauth(auth)
     @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)

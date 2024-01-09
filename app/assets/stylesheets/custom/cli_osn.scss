@@ -92,3 +92,45 @@ h5 {
     }
   }
 }
+
+.cli-service-konto {
+  &__subtitle {
+    font-size: 1.2rem;
+
+    &--accented {
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+
+  &__subdiv {
+    margin-bottom: 1.5rem;
+
+    &--two-columns {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+
+  &__badge {
+    width: 48%;
+    background-color: $accent;
+    padding: 15px;
+    border: 1px solid #222;
+    border-radius: 5px;
+    position: relative;
+    color: #fff !important;
+    font-weight: normal !important;
+    text-decoration: none !important;
+    min-width: 240px;
+    margin-bottom: 20px;
+
+    img {
+      width: 45%;
+      position: absolute;
+      top: 0;
+      right: 5px;
+    }
+  }
+}

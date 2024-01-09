@@ -1,0 +1,42 @@
+<div class="cli-service-konto">
+  <div class='cli-service-konto__subdiv cli-service-konto__subtitle'>
+    <% if action == "sign_in" %>
+      Anmelden mit dem ServiceKonto Osnabrück
+    <% elsif action == "sign_up" %>
+      Registrieren mit dem ServiceKonto Osnabrück
+    <% end %>
+  </div>
+
+  <div class='cli-service-konto__subdiv cli-service-konto__subdiv--two-columns'>
+
+    <%= link_to '/users/auth/open_rathaus', data: { method: :post }, rel: 'nofollow', class: "cli-service-konto__badge" do %>
+      <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"]) %>
+      <div style="clear:right;margin-top:40px;">
+        <% if action == "sign_in" %>
+          Jetzt anmelden mit dem ServiceKonto
+        <% elsif action == "sign_up" %>
+          Jetzt registrieren mit dem ServiceKonto
+        <% end %>
+      </div>
+    <% end %>
+
+    <div style="width:48%;">
+      <ul>
+        <li>Nur einmal registrieren</li>
+        <li>Ein Konto für viele Online-Portale der Stadt Osnabrück</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cli-service-konto__subdiv cli-service-konto__subtitle cli-service-konto__subtitle--accented">
+    oder
+  </div>
+
+  <div class='cli-service-konto__subdiv'>
+    <% if action == "sign_in" %>
+      über das eigene Konto für das Dialog- und Beteiligungsportal:
+    <% elsif action == "sign_up" %>
+      eigenes Konto für das Dialog- und Beteiligungsportal erstellen
+    <% end %>
+  </div>
+</div>

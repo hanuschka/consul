@@ -12,6 +12,7 @@ en:
         hi: Dear Officer.
         p1_initial: You have just been assigned the following comment on a deficiency report for processing.
         p1_reminder: You were recently assigned a comment on a deficiency report that has not yet been processed.
+        p2: Please send your answer text to your colleagues in the Citizen Participation department via the function mailbox buerger participation@ush.bayern.de for posting on Consul.
         signature: Thank you and best regards
           Consul
       not_assigned_deficiency_reports:

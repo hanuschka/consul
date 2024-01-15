@@ -1,8 +1,9 @@
 module Verifications
   class CheckXML
     def self.check_verification_request(responce)
-
-      # responce = "/home/mike/verifications/21070212202033_1_"
+      if Rails.env.development?
+        responce = "/home/mike/tmp/validation/21070212202033_1_"
+      end
 
       file = File.open(responce + "AN.xml")
       doc = Nokogiri::XML(file)
@@ -40,10 +41,9 @@ module Verifications
     end
 
     def self.check_verification_request_in_booth(responce)
-      #
-      # responce = "/home/mike/verifications/21070212202033_1_"
-      #
-
+      if Rails.env.development?
+        responce = "/home/mike/tmp/validation/21070212202033_1_"
+      end
 
       return {result: 'no_response'} unless File.exist?(responce + "AN.xml")
       file = File.open(responce + "AN.xml")

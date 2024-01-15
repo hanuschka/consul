@@ -18,8 +18,7 @@ module Verifications
 
       current_time = Time.now.to_time.strftime("%Y%m%d%H%M%S%L")
 
-      file_path = '/home/deploy/consul/validation/'
-      # file_path = '/home/mike/verifications/'
+      file_path = Rails.application.secrets.bam_xml_dir
 
       filename = file_path + current_time + '_' + user_id.to_s + '_'
 
@@ -44,8 +43,7 @@ module Verifications
 
       current_time = Time.now.to_time.strftime("%Y%m%d%H%M%S%L")
 
-      file_path = '/home/deploy/consul/validation/'
-      # file_path = '/home/mike/verifications/'
+      file_path = Rails.application.secrets.bam_xml_dir
 
       filename = file_path + current_time + '_poll_officer_' + residence.officer.id.to_s + '_'
 
@@ -69,8 +67,7 @@ module Verifications
 
       current_time = Time.now.to_time.strftime("%Y%m%d%H%M%S%L")
 
-      file_path = '/home/deploy/consul/validation/code/'
-      # file_path = '/home/mike/verifications/code/'
+      file_path = Rails.application.secrets.bam_xml_code_dir
 
       filename = file_path + current_time + '_' + user.id.to_s
       File.open("#{filename}.xml",'w') {|f| f.write builder.to_xml}

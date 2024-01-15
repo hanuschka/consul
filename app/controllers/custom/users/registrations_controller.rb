@@ -136,6 +136,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     def update_user_details_params
+      set_address_attributes
+
       params.require(:user).permit(
         :first_name, :last_name,
         :city_name, :plz, :street_name, :street_number, :street_number_extension,

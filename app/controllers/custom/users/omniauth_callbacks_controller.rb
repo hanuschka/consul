@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "controllers", "users", "omniauth_call
 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def open_rathaus
+    Rails.logger.error "OpenRathaus login: #{request.env["omniauth.auth"].inspect}"
     raise ActionController::RoutingError, "Not Found" unless Setting["feature.open_rathaus_login"]
 
     auth = request.env["omniauth.auth"]
@@ -18,5 +19,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       session["devise.#{provider}_data"] = auth
       redirect_to new_user_registration_path
     end
+  end
+
+  def failure
+    Rails.logger.error "OpenRathaus failure: #{request.env["omniauth.auth"].inspect}"
+    super
   end
 end

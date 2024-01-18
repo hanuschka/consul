@@ -44,7 +44,7 @@ class User < ApplicationRecord
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
-  scope :to_reverify, -> { verified.where("verified_at < ?", 1.year.ago).where(reverify: true) }
+  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
 
   validate :email_should_not_be_used_by_hidden_user
 
@@ -342,11 +342,10 @@ class User < ApplicationRecord
     end
 
     def attempt_verification
+      return false if organization?
       return false unless residency_valid?
 
-      unless organization?
-        verify!
-      end
+      verify!
     end
 
     def census_data

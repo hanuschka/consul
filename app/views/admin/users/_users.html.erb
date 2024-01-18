@@ -5,7 +5,7 @@
 
   <% if @current_filter != "erased" %>
     <div class="float-right small clear">
-      <%= link_to t("custom.admin.users.reverify_button_text"), reverify_admin_users_path, style: "margin-right:2rem;" %>
+      <%= link_to t("custom.admin.users.reverify_button_text"), reverify_admin_users_path, style: "margin-right:2rem;", data: { confirm: "Sind Sie sicher?" } %>
       <%= link_to t("custom.shared.download"), admin_users_path(format: :csv) %>
     </div>
   <% end %>

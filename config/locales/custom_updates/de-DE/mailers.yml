@@ -11,11 +11,6 @@ de:
       subject: Ihr Konto wurde soeben verifiziert.
       p1: Ihr Konto wurde soeben verifiziert.
       p2: Vielen Dank für Ihre Teilhabe.
-    reverification_failed:
-      subject: Ihre Verifizierung ist nicht länger gültig
-      p1: Sehr geehrte*r Nutzer*in von Consul,
-      p2_html: Ihre Verifizierung ist nicht länger gültig - über %{account_link} können Sie Ihre Daten aktualisieren und eine erneute Verifizierung beantragen.
-      account_link: diesen Link
     formular_answer_confirmation:
       subject: Vielen Dank! Ihr Formular wurde erfolgreich eingereicht.
       p1: Herzlichen Dank für die Einreichung Ihres Formulars. Wir werden die Daten jetzt intern prüfen und ggf. wieder auf Sie zukommen.

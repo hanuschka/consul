@@ -251,10 +251,14 @@ class User < ApplicationRecord
   def reverify!
     return if organization?
 
+    initially_verified = verified?
     unverify!
+    verification_attempt_successful = attempt_verification
 
-    unless attempt_verification
-      Mailer.reverification_failed(self).deliver_later
+    if initially_verified && !verification_attempt_successful
+      NotificationServices::UserReverificationFailedNotifier.call(id)
+    elsif !initially_verified && verification_attempt_successful
+      # NotificationServices::UserReverificationSuccessfulNotifier.call(id)
     end
   end
 

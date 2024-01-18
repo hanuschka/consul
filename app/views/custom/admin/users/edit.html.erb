@@ -42,7 +42,8 @@
 
   <div class="row">
     <div class="column">
-      <%= f.submit %>
+      <%= f.submit "Speichern", class: "button primary" %>
+      <%= f.submit "Speichern & Einwohnermeldeamt-Abgleich durchführen", name: "reverify", class: "button alert", data: { confirm: "Sind Sie sicher?" } %>
     </div>
   </div>
 <% end %>

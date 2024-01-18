@@ -178,15 +178,6 @@ class Mailer < ApplicationMailer
     end
   end
 
-  def reverification_failed(user)
-    @email_to = user.email
-    @user = user
-
-    with_user(@user) do
-      mail(to: @email_to, subject: t("mailers.reverification_failed.subject"))
-    end
-  end
-
   def formular_answer_confirmation(email)
     @email_to = email
     mail(to: email, subject: t("mailers.formular_answer_confirmation.subject"))

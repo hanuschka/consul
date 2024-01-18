@@ -12,11 +12,6 @@ en:
       p1: Your account has just been verified.
       p2: If you have already voted, you can now view your votes in the overview.
       p3: You can change your vote at any time up to the end of the process.
-    reverification_failed:
-      subject: Your verification is no longer valid
-      p1: Dear Consul User,
-      p2_html: Your verification is no longer valid - you can update your details and request re-verification via %{account_link}.
-      account_link: this Link
     formular_follow_up_letter:
       button_text: To the form
     budget_investment_feasible:

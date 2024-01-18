@@ -48,7 +48,7 @@ class Admin::UsersController < Admin::BaseController
       render :edit
 
     elsif @user.update(user_params)
-      @user.unverify!
+      @user.reverify! if params[:reverify].present?
       redirect_to admin_users_path, notice: "Benutzer aktualisiert"
 
     else

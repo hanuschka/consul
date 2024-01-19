@@ -48,7 +48,11 @@ class Admin::UsersController < Admin::BaseController
       render :edit
 
     elsif @user.update(user_params)
-      @user.reverify! if params[:reverify].present?
+      if params[:reverify].present?
+        @user.reverify!
+        @user.update!(reverify: true)
+      end
+
       redirect_to admin_users_path, notice: "Benutzer aktualisiert"
 
     else
@@ -70,7 +74,7 @@ class Admin::UsersController < Admin::BaseController
   def unverify
     @user = User.find(params[:id])
     @user.unverify!
-    @user.update!(reverify: true)
+    @user.update!(reverify: false)
   end
 
   def reverify

@@ -22,6 +22,7 @@
     <td><%= user.unique_stamp %></td>
     <td><%= l(user.created_at, format: "%d %b %Y") %></td>
     <td><%= l(user.verified_at, format: "%d %b %Y") if user.verified_at %></td>
+    <td><%= t("shared.#{user.reverify ? 'yes' : 'no'}") %></td>
 
     <td>
       <div style="display:flex; gap:10px;">

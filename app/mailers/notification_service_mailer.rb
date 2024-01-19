@@ -206,6 +206,16 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
+  def user_reverification_succeeded(user_id)
+    @user = User.find(user_id)
+
+    subject = t("custom.notification_service_mailers.user_reverification_succeeded.subject")
+
+    with_user(@user) do
+      mail(to: @user.email, subject: subject)
+    end
+  end
+
   private
 
     def with_user(user)

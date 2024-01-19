@@ -258,7 +258,7 @@ class User < ApplicationRecord
     if initially_verified && !verification_attempt_successful
       NotificationServices::UserReverificationFailedNotifier.call(id)
     elsif !initially_verified && verification_attempt_successful
-      # NotificationServices::UserReverificationSuccessfulNotifier.call(id)
+      NotificationServices::UserReverificationSucceededNotifier.call(id)
     end
   end
 

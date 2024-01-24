@@ -12,6 +12,7 @@ _paq.push(['enableLinkTracking']);
       _paq.push(['setReferrerUrl', previousPageUrl]);
       _paq.push(['setCustomUrl', window.location.href]);
       _paq.push(['setDocumentTitle', document.title]);
+      _paq.push(['disableCookies']);
       _paq.push(['trackPageView']);
     }
 

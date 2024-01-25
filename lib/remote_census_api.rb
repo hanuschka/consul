@@ -45,23 +45,31 @@ class RemoteCensusApi
     end
 
     def house_number_matched?
-      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummer", "ns2" => "http://www.osci.de/xmeld30").text ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummer", "ns2" => "http://www.osci.de/xmeld30").text
+      request_house_number = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummer", "ns2" => "http://www.osci.de/xmeld30").text
+      registered_house_numbers = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummer", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+
+      request_house_number.in?(registered_house_numbers)
     end
 
     def postleitzahl_matched?
-      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl", "ns2" => "http://www.osci.de/xmeld30").text ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl", "ns2" => "http://www.osci.de/xmeld30").text
+      request_plz = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl", "ns2" => "http://www.osci.de/xmeld30").text
+      registered_plzs = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+
+      request_plz.in?(registered_plzs)
     end
 
     def street_matched?
-      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //strasse", "ns2" => "http://www.osci.de/xmeld30").text ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/strasse", "ns2" => "http://www.osci.de/xmeld30").text
+      request_street = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/strasse", "ns2" => "http://www.osci.de/xmeld30").text
+      registered_streets = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //strasse", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+
+      request_street.in?(registered_streets)
     end
 
     def city_matched?
-      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //wohnort", "ns2" => "http://www.osci.de/xmeld30").text ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/wohnort", "ns2" => "http://www.osci.de/xmeld30").text
+      request_city = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/wohnort", "ns2" => "http://www.osci.de/xmeld30").text
+      registered_cities = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //wohnort", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+
+      request_city.in?(registered_cities)
     end
   end
 

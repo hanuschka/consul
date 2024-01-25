@@ -145,11 +145,6 @@
       </p>
       <%= form_html %>
     <% end %>
-    <% c.after_card_container do %>
-      <p>
-      <%= link_to(t("custom.devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path) %>
-      </p>
-    <% end %>
   <% end %>
 <% else %>
   <h2><%= t("devise_views.users.registrations.new.title") %></h2>

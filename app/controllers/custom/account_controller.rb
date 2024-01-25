@@ -68,6 +68,8 @@ class AccountController < ApplicationController
     process_temp_attributes_for(@account)
     set_address_objects_from_temp_attributes_for(@account)
 
+    @account.update(reverify: true)
+
     if @account.extended_registration? && @account.errors.any?
       render :edit_details
     elsif @account.valid? && @account.update(user_params)

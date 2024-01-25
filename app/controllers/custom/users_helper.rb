@@ -53,4 +53,12 @@ module UsersHelper
 
     link_to user.name, user
   end
+
+  def last_sign_in_date_formatted(user)
+    if user.current_sign_in_at.present?
+      l(user.current_sign_in_at, format: "%d %b %Y")
+    else
+      l(user.created_at, format: "%d %b %Y")
+    end
+  end
 end

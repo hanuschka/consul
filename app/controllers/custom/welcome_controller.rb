@@ -40,6 +40,8 @@ class WelcomeController < ApplicationController
       @latest_items = []
     end
 
+    @subdomain = request.subdomain
+
     if Setting.new_design_enabled?
       render :index_new
     else

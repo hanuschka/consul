@@ -2,13 +2,13 @@
   <% if header.present? %>
     <%header_large = Widget::Card.header.find_by title: "header_large" %>
     <style>
-<%if header_large%>
-  .home-page .jumbo{
-    background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
-    background-size: cover;
-    background-position: center 25%;
-  }
-<%end%>
+      <%if header_large%>
+        .home-page .jumbo{
+          background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
+          background-size: cover;
+          background-position: center 25%;
+        }
+      <%end%>
     </style>
 
     <div class="jumbo not-print">
@@ -22,17 +22,26 @@
   <% if header.present? %>
     <% header_large = Widget::Card.header.find_by(title: "header_large") %>
     <style>
-<%if header_large %>
-  .home-page .homepage-image-header{
-    background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
-    background-size: cover;
-    background-position: top;
-  }
-
-  .top-bar-background-wrapper {
-    background: transparent;
-  }
-<%end%>
+      <% if @subdomain.present? %>
+        <% banner_file_path = asset_path("#{@subdomain}.png") %>
+        .home-page .homepage-image-header{
+          background-image: url("<%= banner_file_path %>");
+          background-size: cover;
+          background-position: top;
+        }
+        .top-bar-background-wrapper {
+          background: transparent;
+        }
+      <% elsif header_large %>
+        .home-page .homepage-image-header{
+          background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
+          background-size: cover;
+          background-position: top;
+        }
+        .top-bar-background-wrapper {
+          background: transparent;
+        }
+      <% end %>
     </style>
 
     <div class="homepage-image-header not-print">

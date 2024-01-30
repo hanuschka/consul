@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   get "/welcome", to: "welcome#welcome"
   get "/consul.json", to: "installation#details"
   get "/latest_activity", to: "welcome#latest_activity" #custom
+  get "/mitmachen-jugend", to: "welcome#mitmachen_jugend" #cli
 
   resources :stats, only: [:index]
   resources :images, only: [:destroy]

@@ -259,7 +259,7 @@
           $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[1]);
           $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0]);
           $(app.customMapOptions.altitudeInputSelector).val(wgs84coordinates[2]);
-          $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
+          $(app.customMapOptions.zoomInputSelector).val(app.customMapOptions.mapCenterZoom);
           $(app.customMapOptions.shapeInputSelector).val(JSON.stringify({}));
 
         } else if (geometry instanceof ol.geom.Polygon) {
@@ -281,7 +281,7 @@
 
           $(app.customMapOptions.latitudeInputSelector).val(wgs84coordinates[0][1]);
           $(app.customMapOptions.longitudeInputSelector).val(wgs84coordinates[0][0]);
-          $(app.customMapOptions.zoomInputSelector).val(10); // TODO: fix this line
+          $(app.customMapOptions.zoomInputSelector).val(app.customMapOptions.mapCenterZoom);
           $(app.customMapOptions.shapeInputSelector).val(shapeString);
         }
 

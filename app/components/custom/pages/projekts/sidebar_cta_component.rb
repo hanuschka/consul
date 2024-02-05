@@ -1,15 +1,11 @@
 class Pages::Projekts::SidebarCtaComponent < ApplicationComponent
-  delegate :projekt_feature?, to: :helpers
-
   def initialize(projekt_phase = nil)
     @projekt_phase = projekt_phase
   end
 
   def render?
-    return false unless projekt_feature?(@projekt_phase&.projekt, "sidebar.new_resource_button_in_sidebar")
-
     return false if @projekt_phase.nil?
-    return true if @projekt_phase.is_a?(ProjektPhase::BudgetPhase) && @projekt_phase.budget.phase.in?(%w[accepting selecting balloting])
+    return false if @projekt_phase.is_a?(ProjektPhase::BudgetPhase) && !@projekt_phase.budget.accepting?
 
     @projekt_phase.type.in?(phase_types_with_new_button + phase_types_with_link)
   end
@@ -20,6 +16,7 @@ class Pages::Projekts::SidebarCtaComponent < ApplicationComponent
       %w[
         ProjektPhase::DebatePhase
         ProjektPhase::ProposalPhase
+        ProjektPhase::BudgetPhase
       ]
     end
 
@@ -30,15 +27,7 @@ class Pages::Projekts::SidebarCtaComponent < ApplicationComponent
       ]
     end
 
-    def title_text
-      I18n.t("custom.projekt_phases.cta.title")
-    end
-
     def button_text
       @projekt_phase.cta_button_name.presence || I18n.t("custom.projekt_phases.cta.#{@projekt_phase.name}")
-    end
-
-    def budget_not_accepting?
-      @projekt_phase.type == "ProjektPhase::BudgetPhase" && @projekt_phase.budget.phase != "accepting"
     end
 end

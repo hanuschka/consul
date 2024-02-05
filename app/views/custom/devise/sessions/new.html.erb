@@ -6,8 +6,7 @@
       <h2><%= t("devise_views.sessions.new.title") %></h2>
 
       <div class="auth-page-template--oauth no-column-padding">
-        <%= render "devise/omniauth_form", action: "sign_in" %>
-        <div class="auth-page-template--divider"></div>
+        <%= render "custom/shared/cli_service_konto", action: "sign_in" %>
       </div>
 
       <% if SiteCustomization::ContentBlock.custom_block_for("sign_in_hint", I18n.locale)&.body&.present? %>

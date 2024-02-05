@@ -35,10 +35,10 @@ gem "jquery-rails", "~> 4.4.0"
 gem "jquery-ui-rails", "~> 6.0.1"
 gem "kaminari", "~> 1.2.1"
 gem "mini_magick", "~> 4.11.0"
-gem "omniauth", "~> 2.0.4"
-gem "omniauth-facebook", "~> 8.0.0"
-gem "omniauth-google-oauth2", "~> 1.0.0"
-gem "omniauth-rails_csrf_protection", "~> 1.0.0"
+gem "omniauth", "~> 2.1.1"
+gem "omniauth-facebook", "~> 9.0.0"
+gem "omniauth-google-oauth2", "~> 1.1.1"
+gem "omniauth-rails_csrf_protection", "~> 1.0.1"
 gem "omniauth-twitter", "~> 1.4.0"
 gem "paranoia", "~> 2.4.3"
 gem "pg", "~> 1.2.3"
@@ -99,13 +99,12 @@ group :development do
   gem "capistrano3-delayed-job", "~> 1.7.6"
   gem "capistrano3-puma", "~> 5.0.4"
   gem "erb_lint", "~> 0.0.37", require: false
-  gem "github_changelog_generator", "~> 1.15.2"
   gem "mdl", "~> 0.11.0", require: false
-  gem "pronto", "~> 0.11.0", require: false
-  gem "pronto-erb_lint", "~> 0.1.5", require: false
-  gem "pronto-eslint", "~> 0.11.0", require: false
-  gem "pronto-rubocop", "~> 0.11.1", require: false
-  gem "pronto-scss", "~> 0.11.0", require: false
+  # gem "pronto", "~> 0.11.0", require: false
+  # gem "pronto-erb_lint", "~> 0.1.5", require: false
+  # gem "pronto-eslint", "~> 0.11.0", require: false
+  # gem "pronto-rubocop", "~> 0.11.1", require: false
+  # gem "pronto-scss", "~> 0.11.0", require: false
   gem "rubocop", "~> 1.18.4", require: false
   gem "rubocop-performance", "~> 1.11.4", require: false
   gem "rubocop-rails", "~> 2.11.3", require: false

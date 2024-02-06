@@ -19,4 +19,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       redirect_to new_user_registration_path
     end
   end
+
+  def save_user
+    @user.save_requiring_finish_signup
+  end
 end

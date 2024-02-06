@@ -11,7 +11,7 @@
 
     <%= link_to '/users/auth/open_rathaus', data: { method: :post }, rel: 'nofollow', class: "cli-service-konto__badge" do %>
       <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"]) %>
-      <div style="clear:right;margin-top:40px;">
+      <div class="cli-service-konto__cta">
         <% if action == "sign_in" %>
           Jetzt anmelden mit dem ServiceKonto
         <% elsif action == "sign_up" %>

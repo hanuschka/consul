@@ -54,9 +54,15 @@
     </div>
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.users.settings"), icon_name: "cog") do |c| %>
-        <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow" %>
-        <% if @account.extended_registration? %>
-          <%= link_to t("custom.account.show.edit_details_link"), edit_details_account_path, class: "button hollow" %>
+        <% if Identity.find_by(user_id: @account.id).present? %>
+          <div style="margin-bottom:1rem;">
+            Zum Ändern Ihrer Daten wie z.B. E-Mail - Adresse gehen Sie bitte zum <a href="https://service.osnabrueck.de/anmeldung" target="_blank">ServicePortal Osnabrück</a>
+          </div>
+        <% else %>
+          <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow" %>
+          <% if @account.extended_registration? %>
+            <%= link_to t("custom.account.show.edit_details_link"), edit_details_account_path, class: "button hollow" %>
+          <% end %>
         <% end %>
         <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow delete alert" %>
       <% end %>

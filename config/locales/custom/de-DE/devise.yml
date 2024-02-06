@@ -29,8 +29,8 @@ de:
       unlock_instructions:
         subject: "Anleitung zur Entsperrung"
     omniauth_callbacks:
-      failure: "Es ist nicht gelungen, Sie als %{kind} zu autorisieren, weil \"%{reason}\"."
-      success: "Erfolgreich identifiziert als %{kind}."
+      failure: "Die Autorisierung über das ServiceKonto Osnabrück hat nicht funktioniert (Fehlermeldung: \"%{reason}\")."
+      success: "Die Autorisierung über das ServiceKonto Osnabrück hat funktioniert."
     passwords:
       no_token: "Sie können auf diese Seite nur über einen Link zum Zurücksetzen Ihres Passworts zugreifen. Falls Sie diesen Link verwendet haben, überprüfen Sie bitte, ob die URL vollständig ist."
       send_instructions: "In wenigen Minuten erhalten Sie eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts."

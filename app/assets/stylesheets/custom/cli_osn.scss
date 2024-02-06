@@ -115,9 +115,8 @@ h5 {
 
   &__badge {
     width: 48%;
-    background-color: $accent;
+    background-color: #37847f;
     padding: 15px;
-    border: 1px solid #222;
     border-radius: 5px;
     position: relative;
     color: #fff !important;
@@ -132,5 +131,16 @@ h5 {
       top: 0;
       right: 5px;
     }
+  }
+
+  &__cta {
+    text-align: center;
+    clear: right;
+    margin-top: 40px;
+    border-radius: 7px;
+    font-size: 20px;
+    padding: 10px;
+    background-color: $accent;
+    border: 1px solid #222;
   }
 }

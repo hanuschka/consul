@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_12_20_121306) do
+ActiveRecord::Schema.define(version: 2024_01_30_160508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -50,7 +50,14 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "activities", id: :serial, force: :cascade do |t|
@@ -849,6 +856,19 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.index ["user_id"], name: "index_follows_on_user_id"
   end
 
+  create_table "formular_answer_documents", force: :cascade do |t|
+    t.bigint "formular_answer_id"
+    t.string "formular_field_key"
+    t.string "title", limit: 80
+    t.string "attachment_file_name"
+    t.string "attachment_content_type"
+    t.bigint "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["formular_answer_id"], name: "index_formular_answer_documents_on_formular_answer_id"
+  end
+
   create_table "formular_answer_images", force: :cascade do |t|
     t.bigint "formular_answer_id"
     t.string "title", limit: 80
@@ -1504,6 +1524,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.boolean "open_answer", default: false
     t.string "more_info_link"
     t.integer "next_question_id"
+    t.string "more_info_iframe"
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -2530,6 +2551,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.integer "max_votes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_votes_per_answer"
   end
 
   create_table "votes", id: :serial, force: :cascade do |t|
@@ -2587,6 +2609,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
   add_foreign_key "bam_street_polls", "bam_streets"
   add_foreign_key "bam_street_polls", "polls"
@@ -2617,6 +2640,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
   add_foreign_key "failed_census_calls", "users"
   add_foreign_key "flags", "users"
   add_foreign_key "follows", "users"
+  add_foreign_key "formular_answer_documents", "formular_answers"
   add_foreign_key "formular_answer_images", "formular_answers"
   add_foreign_key "formular_answers", "formulars"
   add_foreign_key "formular_fields", "formulars"

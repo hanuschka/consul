@@ -20,7 +20,17 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def save_user
-    @user.save_requiring_finish_signup
+  def after_sign_in_path_for(resource)
+    if resource.registering_with_oauth && resource.username.blank?
+      finish_signup_path
+    else
+      super(resource)
+    end
   end
+
+  private
+
+    def save_user
+      @user.save_requiring_finish_signup
+    end
 end

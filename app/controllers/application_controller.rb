@@ -74,7 +74,7 @@ class ApplicationController < ActionController::Base
     end
 
     def ensure_signup_complete
-      if user_signed_in? && !devise_controller? && current_user.registering_with_oauth
+      if user_signed_in? && !devise_controller? && current_user.registering_with_oauth && current_user.username.blank? #cli
         redirect_to finish_signup_path
       end
     end

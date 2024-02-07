@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock "~> 3.16.0"
+lock "~> 3.17.3"
 
 def deploysecret(key)
   @deploy_secrets_yml ||= YAML.load_file("config/deploy-secrets/deploy-secrets-cli_demo.yml")[fetch(:stage).to_s]

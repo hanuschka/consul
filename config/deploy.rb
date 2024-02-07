@@ -44,6 +44,7 @@ set :puma_systemctl_user, :user
 
 set :delayed_job_workers, 2
 set :delayed_job_roles, :background
+set :delayed_job_service, :delayed_job2
 
 set :whenever_roles, -> { :app }
 

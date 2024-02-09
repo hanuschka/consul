@@ -3,10 +3,13 @@
     <% if valid_filters.any? %>
       <%= render Shared::ResourcesListComponent.new(list_params) do |c| %>
         <% if comments? %>
-          <% c.custom_body do %>
+          <% c.with_custom_body do %>
             <%= render Comments::UserCommentsComponent.new(comments: resources) %>
           <% end %>
         <% end %>
+      <% end %>
+      <% unless current_filter == "follows" %>
+        <%= paginate resources, remote: true, params: { action: "refresh_activities", filter: current_filter } %>
       <% end %>
     <% else %>
       <div class="callout primary">

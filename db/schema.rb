@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_12_20_121306) do
+ActiveRecord::Schema.define(version: 2024_01_30_160508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -50,7 +50,14 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "activities", id: :serial, force: :cascade do |t|
@@ -849,7 +856,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.index ["user_id"], name: "index_follows_on_user_id"
   end
 
-  create_table "formular_answer_images", force: :cascade do |t|
+  create_table "formular_answer_documents", force: :cascade do |t|
     t.bigint "formular_answer_id"
     t.string "formular_field_key"
     t.string "title", limit: 80
@@ -859,6 +866,19 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["formular_answer_id"], name: "index_formular_answer_documents_on_formular_answer_id"
+  end
+
+  create_table "formular_answer_images", force: :cascade do |t|
+    t.bigint "formular_answer_id"
+    t.string "title", limit: 80
+    t.string "attachment_file_name"
+    t.string "attachment_content_type"
+    t.bigint "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "formular_field_key"
     t.index ["formular_answer_id"], name: "index_formular_answer_images_on_formular_answer_id"
   end
 
@@ -1504,6 +1524,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.boolean "open_answer", default: false
     t.string "more_info_link"
     t.integer "next_question_id"
+    t.string "more_info_iframe"
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -2450,6 +2471,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.bigint "registered_address_id"
     t.string "street_number_extension"
     t.boolean "reverify", default: true
+    t.string "auth_image_link"
     t.boolean "prefer_wide_resources_list_view_mode"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
@@ -2529,6 +2551,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
     t.integer "max_votes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_votes_per_answer"
   end
 
   create_table "votes", id: :serial, force: :cascade do |t|
@@ -2586,6 +2609,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
   add_foreign_key "bam_street_polls", "bam_streets"
   add_foreign_key "bam_street_polls", "polls"
@@ -2616,6 +2640,7 @@ ActiveRecord::Schema.define(version: 2023_12_20_121306) do
   add_foreign_key "failed_census_calls", "users"
   add_foreign_key "flags", "users"
   add_foreign_key "follows", "users"
+  add_foreign_key "formular_answer_documents", "formular_answers"
   add_foreign_key "formular_answer_images", "formular_answers"
   add_foreign_key "formular_answers", "formulars"
   add_foreign_key "formular_fields", "formulars"

@@ -83,6 +83,7 @@ de:
         open_answer_text: Offene Antwort
       poll/question/answer:
         more_info_link: Erklärungslink
+        more_info_iframe: Iframe-Link
       widget/card:
         card_category: Kategorie
       deficiency_report:
@@ -212,5 +213,8 @@ de:
         body: Text
         show_follow_up_button: Link zu Follow-up Formular integrieren
       formular_answer_image:
+        title: Titel
+        attachment: Anhang
+      formular_answer_document:
         title: Titel
         attachment: Anhang

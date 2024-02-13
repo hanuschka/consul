@@ -11,7 +11,7 @@
               aria-haspopup="true"
               aria-expanded="false"
               aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
-              <span class="menu-icon dark" data-toggle></span>
+              <span class="menu-icon <%= 'dark' unless action_name == 'mitmachen_jugend' %>" style="<%= 'color:white' if action_name == 'mitmachen_jugend' %>"  data-toggle></span>
         </span>
 
         <div class="top-bar--title">

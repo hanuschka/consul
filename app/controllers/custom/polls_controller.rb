@@ -1,10 +1,10 @@
 require_dependency Rails.root.join("app", "controllers", "polls_controller").to_s
 
 class PollsController < ApplicationController
-
   include CommentableActions
   include ProjektControllerHelper
   include Takeable
+  include GuestUsers
 
   before_action :set_geo_limitations, only: [:show, :results, :stats]
 

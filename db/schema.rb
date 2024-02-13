@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_30_160508) do
+ActiveRecord::Schema.define(version: 2024_02_13_140309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2473,6 +2473,7 @@ ActiveRecord::Schema.define(version: 2024_01_30_160508) do
     t.boolean "reverify", default: true
     t.string "auth_image_link"
     t.boolean "prefer_wide_resources_list_view_mode"
+    t.boolean "guest", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

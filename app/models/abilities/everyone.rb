@@ -37,6 +37,12 @@ module Abilities
 
       can :toggle_subscription, ProjektSubscription
       can :toggle_subscription, ProjektPhase
+
+      if user&.guest?
+        can :answer, Poll
+        can :answer, Poll::Question
+        can :destroy, Poll::Answer, author_id: user.id
+      end
     end
   end
 end

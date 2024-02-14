@@ -34,7 +34,9 @@ class Users::RegisteredAddressFieldsComponent < ApplicationComponent
     def options_for_address_select
       return [] unless @registered_address_street.present?
 
-      @registered_address_street.registered_addresses.map { |adr| [adr.formatted_name, adr.id] }
+      @registered_address_street.registered_addresses
+        .sort_by { |adr| [adr.street_number.to_i, adr.street_number_extension.to_s] }
+        .map { |adr| [adr.formatted_name, adr.id] }
     end
 
     def selected_address

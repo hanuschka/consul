@@ -1,5 +1,7 @@
 class ProjektQuestionAnswersController < ApplicationController
-  before_action :authenticate_user!
+  include GuestUsers
+
+  before_action :authenticate_user!, unless: -> { current_user&.guest? }
 
   skip_authorization_check
   has_orders %w[most_voted newest oldest]

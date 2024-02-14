@@ -44,6 +44,9 @@ module Abilities
         can :destroy, Poll::Answer, author_id: user.id
         can [:create, :suggest, :vote, :flag, :unflag], Debate
         can [:create, :destroy], DirectUpload
+        can [:create, :vote], Comment do |comment|
+          comment.commentable.comments_allowed?(user)
+        end
       end
     end
   end

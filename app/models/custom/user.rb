@@ -125,6 +125,10 @@ class User < ApplicationRecord
     end
   end
 
+  def username
+    guest? ? "Gast" : read_attribute(:username)
+  end
+
   def regular_address_fields_visible?
     return false unless extended_registration?
     return true if RegisteredAddress.none?

@@ -10,5 +10,5 @@
 </h2>
 
 <div class="poll-question-answer-form">
-  <%= render "admin/poll/questions/answers/form", form_url: polymorphic_path([@namespace, @answer]) %>
+  <%= render "admin/poll/questions/answers/form", form_url: polymorphic_path([@namespace, @question, @answer]) %>
 </div>

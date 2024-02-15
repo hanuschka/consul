@@ -136,7 +136,7 @@
 
 <% if Setting.new_design_enabled? %>
   <%= render Auth::AuthPageTemplateComponent.new do |c| %>
-    <% c.form do %>
+    <% c.with_form do %>
       <h2><%= t("devise_views.users.registrations.new.title") %></h2>
       <p>
         <%= t("custom.devise_views.users.registrations.new.message") %>

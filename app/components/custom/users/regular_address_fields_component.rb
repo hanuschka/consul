@@ -3,4 +3,10 @@ class Users::RegularAddressFieldsComponent < ApplicationComponent
     @user = user
     @f = f
   end
+
+  private
+
+    def display_style
+      @user.validate_regular_address_fields? ? "block" : "none"
+    end
 end

@@ -140,8 +140,8 @@ class Projekt < ApplicationRecord
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) }
+      .includes(:projekt_phases, :projekt_settings)
+      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
   scope :index_order_ongoing, ->() {

@@ -38,6 +38,10 @@ de:
           officer_name: Sachbearbeiter*in
           officer_email: Email
           actions: Aktionen
+        update:
+          success_notice: Die Mängelmeldung wurde aktualisiert
+        destroy:
+          success_notice: Die Mängelmeldung wurde gelöscht
         categories:
           category:
             color: Farbe

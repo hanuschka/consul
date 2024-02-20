@@ -36,10 +36,17 @@ class Admin::DeficiencyReportsController < Admin::BaseController
     @deficiency_report = DeficiencyReport.find(params[:id])
 
     if @deficiency_report.update(deficiency_report_params)
-      redirect_to admin_deficiency_reports_path, notice: t("deficiency_reports.updated")
+      redirect_to admin_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.update.success_notice")
     else
       render :edit
     end
+  end
+
+  def destroy
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    @deficiency_report.destroy!
+
+    redirect_to admin_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.destroy.success_notice")
   end
 
   private

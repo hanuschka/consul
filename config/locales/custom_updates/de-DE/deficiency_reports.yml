@@ -39,6 +39,8 @@ de:
           title: Titel des Mangels
         new:
           submit_button: Mangel melden
+        edit:
+          submit_button: Mangel aktualisieren
       index:
         empty_list_text: "Keine Ergebnisse"
         title: Mängelmelder

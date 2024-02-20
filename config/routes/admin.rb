@@ -119,7 +119,7 @@ namespace :admin do
     resources :areas, except: :show
   end
 
-  resources :deficiency_reports, only: [:index, :show] do
+  resources :deficiency_reports, except: [:new, :create] do
     resources :audits, only: :show, controller: "deficiency_report_audits"
   end
 

@@ -18,13 +18,14 @@
     <thead>
       <tr>
         <th class="text-center"><%= t("admin.resources.index.id") %></th>
-        <th><%= t("admin.resources.index.title") %></th>
-        <th><%= t("admin.resources.index.author") %></th>
-        <th><%= t("admin.resources.index.official_answer") %></th>
-        <th><%= t("admin.resources.index.category_name") %></th>
-        <th><%= t("admin.resources.index.status_title") %></th>
-        <th><%= t("admin.resources.index.officer_name") %></th>
-        <th><%= t("admin.resources.index.officer_email") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.title") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.author") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.official_answer") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.category_name") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.status_title") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.officer_name") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.officer_email") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.actions") %></th>
       </tr>
     </thead>
 
@@ -39,6 +40,7 @@
           <td><%= deficiency_report.status&.title %></td>
           <td><%= deficiency_report.officer&.name %></td>
           <td><%= deficiency_report.officer&.email %></td>
+          <td><%= render Admin::TableActionsComponent.new(deficiency_report) %></td>
         </tr>
       <% end %>
     </tbody>

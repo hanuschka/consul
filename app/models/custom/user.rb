@@ -135,7 +135,7 @@ class User < ApplicationRecord
 
     [form_registered_address_city_id,
       form_registered_address_street_id,
-      form_registered_address_id].all? { |v| acceptable_values.exclude?(v) }
+      form_registered_address_id].none? { |v| acceptable_values.include?(v) }
   end
 
   def validate_regular_address_fields?

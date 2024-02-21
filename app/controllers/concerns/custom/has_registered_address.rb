@@ -8,11 +8,13 @@ module HasRegisteredAddress
       resource.form_registered_address_street_id = params[:form_registered_address_street_id]
       resource.form_registered_address_id = params[:form_registered_address_id]
 
-      acceptable_values = ["0", nil]
+      signal_values = ["0", ""]
 
-      resource.registered_address_id = nil if [params[:form_registered_address_city_id],
-                                                params[:form_registered_address_street_id],
-                                                params[:form_registered_address_id]].all? { |v| acceptable_values.exclude?(v) }
+      if [params[:form_registered_address_city_id],
+          params[:form_registered_address_street_id],
+          params[:form_registered_address_id]].any? { |v| v.in?(signal_values) }
+        resource.registered_address_id = nil
+      end
     end
 
     def set_address_attributes

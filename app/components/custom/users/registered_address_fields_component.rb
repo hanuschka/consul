@@ -23,10 +23,11 @@ class Users::RegisteredAddressFieldsComponent < ApplicationComponent
     end
 
     def options_for_street_select
-      return [] unless @selected_city_id.present?
+      return [] unless selected_city.present?
 
       selected_city.registered_address_streets
         .map { |str| [str.name_with_plz, str.id] }
+        .unshift([t("custom.helpers.select.not_in_list"), 0])
         .push([t("custom.helpers.select.not_in_list"), 0])
     end
 
@@ -40,6 +41,7 @@ class Users::RegisteredAddressFieldsComponent < ApplicationComponent
       selected_street.registered_addresses
         .sort_by { |adr| [adr.street_number.to_i, adr.street_number_extension.to_s] }
         .map { |adr| [adr.formatted_name, adr.id] }
+        .unshift([t("custom.helpers.select.not_in_list"), 0])
         .push([t("custom.helpers.select.not_in_list"), 0])
     end
 

@@ -134,7 +134,7 @@ module Abilities
 
       can [:index, :json_data], DeficiencyReport
       can [:show, :create, :vote], DeficiencyReport do |report|
-        report.in? DeficiencyReport.admin_accepted
+        report.in? DeficiencyReport.admin_accepted(user)
       end
       can :destroy, DeficiencyReport do |dr|
         dr.author_id == user.id &&

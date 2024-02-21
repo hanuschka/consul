@@ -35,7 +35,7 @@ module Abilities
 
       can [:index, :json_data], DeficiencyReport
       can [:show], DeficiencyReport do |report|
-        report.in? DeficiencyReport.admin_accepted
+        report.in? DeficiencyReport.admin_accepted(user)
       end
 
       can :toggle_subscription, ProjektSubscription

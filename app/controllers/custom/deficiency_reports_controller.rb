@@ -27,9 +27,9 @@ class DeficiencyReportsController < ApplicationController
     if params[:dr_area].present?
       @selected_area = DeficiencyReport::Area.find_by(id: params[:dr_area])
       @map_location = @selected_area.map_location
-      @all_deficiency_reports = DeficiencyReport.admin_accepted.where(deficiency_report_area_id: @selected_area&.id)
+      @all_deficiency_reports = DeficiencyReport.admin_accepted(current_user).where(deficiency_report_area_id: @selected_area&.id)
     else
-      @all_deficiency_reports = DeficiencyReport.admin_accepted
+      @all_deficiency_reports = DeficiencyReport.admin_accepted(current_user)
     end
 
     @deficiency_reports = @all_deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])

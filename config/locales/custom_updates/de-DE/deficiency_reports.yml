@@ -124,6 +124,9 @@ de:
           title: Video hinzufügen
         approve_official_answer: Antwort freigeben
         back_link: Zurück zu alle Meldungen
+        admin_accepted:
+          "true": Veröffentlicht
+          "false": Nicht veröffentlich
         official_answer:
           title: Offizielle Antwort
         sidebar:

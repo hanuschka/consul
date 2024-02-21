@@ -50,9 +50,9 @@ class DeficiencyReport < ApplicationRecord
     where(author_id: user_id)
   }
 
-  def self.admin_accepted
+  def self.admin_accepted(current_user)
     if Setting["deficiency_reports.admin_acceptance_required"].present?
-      where(admin_accepted: true)
+      where(admin_accepted: true).or(where(author: current_user))
     else
       all
     end

@@ -37,6 +37,7 @@ de:
           status_title: Status
           officer_name: Sachbearbeiter*in
           officer_email: Email
+          admin_accepted: Admin Bestätigung
           actions: Aktionen
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert

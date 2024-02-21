@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_30_160508) do
+ActiveRecord::Schema.define(version: 2024_02_20_144512) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -754,6 +754,7 @@ ActiveRecord::Schema.define(version: 2024_01_30_160508) do
     t.bigint "deficiency_report_area_id"
     t.boolean "notify_officer_about_new_comments", default: false
     t.datetime "notified_officer_about_new_comments_datetime"
+    t.boolean "admin_accepted", default: false
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1850,6 +1851,7 @@ ActiveRecord::Schema.define(version: 2024_01_30_160508) do
     t.integer "given_order"
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
+    t.boolean "guest_participation_allowed", default: false
     t.index ["age_restriction_id"], name: "index_projekt_phases_on_age_restriction_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2473,6 +2475,7 @@ ActiveRecord::Schema.define(version: 2024_01_30_160508) do
     t.boolean "reverify", default: true
     t.string "auth_image_link"
     t.boolean "prefer_wide_resources_list_view_mode"
+    t.boolean "guest", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

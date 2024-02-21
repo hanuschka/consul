@@ -52,27 +52,16 @@ class AccountController < ApplicationController
 
   def edit_details
     head :not_found unless @account.extended_registration?
-
-    @registered_address_city = @account.registered_address_city
-    @registered_address_street = @account.registered_address_street
-    @registered_address = @account.registered_address
-    if @registered_address_city.blank?
-      @selected_city_id = "0" if @registered_address_city.blank?
-      @account.form_registered_address_city_id = "0"
-    end
   end
 
   def update_details
     head :not_found unless @account.extended_registration?
 
     process_temp_attributes_for(@account)
-    set_address_objects_from_temp_attributes_for(@account)
 
     @account.update(reverify: true)
 
-    if @account.extended_registration? && @account.errors.any?
-      render :edit_details
-    elsif @account.valid? && @account.update(user_params)
+    if @account.update(user_params)
       @account.reverify!
       redirect_to account_path, notice: t("flash.actions.save_changes.notice")
     else

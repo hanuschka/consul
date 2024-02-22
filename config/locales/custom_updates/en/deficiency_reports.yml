@@ -39,6 +39,8 @@ en:
           title: Title of the deficiency
         new:
           submit_button: Submit deficiency
+        edit:
+          submit_button: Update deficiency
       index:
         title: Mängelmelder
         welcome_default_text_html: In every city there are deficiencies every now and then - it's good if they are reported by attentive citizens so that they can be rectified quickly.

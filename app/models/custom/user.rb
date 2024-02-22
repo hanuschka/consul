@@ -50,10 +50,12 @@ class User < ApplicationRecord
   validates :gender, presence: true, on: :create, if: :extended_registration?
   validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
-  validates :city_name, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :plz, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :street_name, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :street_number, presence: true, on: :create, if: :regular_address_fields_visible?
+  validates :registered_address_id, presence: true, if: :validate_registered_address?
+
+  validates :city_name, presence: true, if: :validate_regular_address_fields?
+  validates :plz, presence: true, if: :validate_regular_address_fields?
+  validates :street_name, presence: true, if: :validate_regular_address_fields?
+  validates :street_number, presence: true, if: :validate_regular_address_fields?
 
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
@@ -125,13 +127,24 @@ class User < ApplicationRecord
     end
   end
 
-  def regular_address_fields_visible?
+  def validate_registered_address?
+    return false unless extended_registration?
+    return false unless RegisteredAddress.present?
+
+    acceptable_values = ["0", nil]
+
+    [form_registered_address_city_id,
+      form_registered_address_street_id,
+      form_registered_address_id].none? { |v| acceptable_values.include?(v) }
+  end
+
+  def validate_regular_address_fields?
     return false unless extended_registration?
     return true if RegisteredAddress.none?
-    return true if form_registered_address_city_id == "0"
-    return false if persisted? && registered_address_id.present?
 
-    false
+    form_registered_address_city_id == "0" ||
+      form_registered_address_street_id == "0" ||
+      form_registered_address_id == "0"
   end
 
   def verify!

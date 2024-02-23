@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_13_140309) do
+ActiveRecord::Schema.define(version: 2024_02_15_084955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1850,6 +1850,7 @@ ActiveRecord::Schema.define(version: 2024_02_13_140309) do
     t.integer "given_order"
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
+    t.boolean "guest_participation_allowed", default: false
     t.index ["age_restriction_id"], name: "index_projekt_phases_on_age_restriction_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin

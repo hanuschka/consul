@@ -33,7 +33,10 @@ module Abilities
       can [:read, :help], ::SDG::Goal
       can :read, ::SDG::Phase
 
-      can [:read, :json_data], DeficiencyReport
+      can [:index, :json_data], DeficiencyReport
+      can [:show], DeficiencyReport do |report|
+        report.in? DeficiencyReport.admin_accepted(user)
+      end
 
       can :toggle_subscription, ProjektSubscription
       can :toggle_subscription, ProjektPhase

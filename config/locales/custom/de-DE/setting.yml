@@ -165,6 +165,8 @@ de:
           show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf den übersichtsseiten an
           vc_map_enabled: Virtual City 3D Maps aktivieren
           vc_map_enabled_description: Aktiviert die 3D Karten von [Virtual City Systems]
+          consider_underway: Projekt als aktive Beteiligung betrachten
+          consider_underway_description: Sortiert dieses Projekt in der Projektübersicht immer unter “Aktive Beteiligung”.
         sidebar:
           show_notification_subscription_toggler: Benachrichtigungen
           show_notification_subscription_toggler_description: Aktivieren Sie die Projektbenachrichtigungen in der rechten Seitenleiste
@@ -307,6 +309,8 @@ de:
         enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
         enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
         enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+        admin_acceptance_required: Bestätigung durch Administratoren
+        admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
 
       projekt_newsfeed:
         id: Newsfeed ID

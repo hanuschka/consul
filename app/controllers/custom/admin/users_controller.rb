@@ -30,27 +30,15 @@ class Admin::UsersController < Admin::BaseController
 
   def edit
     @user = User.find(params[:id])
-    @registered_address_city = @user.registered_address_city
-    @registered_address_street = @user.registered_address_street
-    @registered_address = @user.registered_address
-    if @registered_address_city.blank?
-      @selected_city_id = "0"
-      @user.form_registered_address_city_id = "0"
-    end
   end
 
   def update
     @user = User.find_by(id: params[:id])
     process_temp_attributes_for(@user)
-    set_address_objects_from_temp_attributes_for(@user)
 
-    if @user.extended_registration? && @user.errors.any?
-      render :edit
-
-    elsif @user.update(user_params)
+    if @user.update(user_params)
       @user.unverify!
       redirect_to admin_users_path, notice: "Benutzer aktualisiert"
-
     else
       render :edit
     end
@@ -79,8 +67,8 @@ class Admin::UsersController < Admin::BaseController
       params.require(:user).permit(:email,
                                    :first_name, :last_name,
                                    :city_name, :plz, :street_name, :street_number, :street_number_extension,
-                                   :registered_address_id)
-                                   # :gender, :date_of_birth,
+                                   :registered_address_id,
+                                   :gender, :date_of_birth)
                                    # :document_type, :document_last_digits,
                                    # :password, :password_confirmation)
     end

@@ -28,7 +28,7 @@
             <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
           </div>
 
-          <% if !launch_page && current_user.nil? %>
+          <% if !launch_page && !user_signed_in? %>
             <div class='header--account-buttons show-on-desktop hide-on-mobile'>
               <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'button sign-in-button -brand', role: 'button' %>
             </div>

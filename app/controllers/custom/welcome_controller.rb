@@ -3,6 +3,7 @@ require_dependency Rails.root.join("app", "controllers", "welcome_controller").t
 class WelcomeController < ApplicationController
   include Takeable
   include ProjektControllerHelper
+  include GuestUsers
 
   def welcome
     redirect_to root_path

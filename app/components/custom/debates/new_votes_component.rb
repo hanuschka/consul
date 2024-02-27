@@ -16,11 +16,6 @@ class Debates::NewVotesComponent < ApplicationComponent
       debate.votable_by?(current_user)
     end
 
-    # def cannot_vote_text
-    #   debugger
-    #   t("votes.anonymous", verify_account: link_to_verify_account) unless can_vote?
-    # end
-
     def permission_problem_key
       @permission_problem_key ||= @debate_phase.permission_problem(current_user, location: :votes_component)
     end

@@ -1,6 +1,6 @@
 class Shared::CommentsFormComponent < ApplicationComponent
   attr_reader :record
-  delegate :user_signed_in?, :link_to_signin, :link_to_signup,
+  delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_guest_signin,
            :link_to_verify_account, :current_user, :can?, to: :helpers
 
   def initialize(record)
@@ -26,21 +26,16 @@ class Shared::CommentsFormComponent < ApplicationComponent
     def cannot_vote_text
       return nil if permission_problem_key.blank?
 
-      if permission_problem_key == :not_logged_in
-        sanitize(t(path_to_key,
-                 sign_in: link_to_signin, sign_up: link_to_signup))
-
-      else
-        sanitize(t(path_to_key,
-                 verify: link_to_verify_account,
-                 city: Setting["org_name"],
-                 geozones: projekt_phase.geozone_restrictions_formatted,
-                 age_restriction: projekt_phase.age_restriction_formatted,
-                 restricted_streets: projekt_phase.street_restrictions_formatted,
-                 individual_group_values: projekt_phase.individual_group_value_restriction_formatted
-        ))
-
-      end
+      sanitize(t(path_to_key,
+               sign_in: link_to_signin, sign_up: link_to_signup,
+               guest_sign_in: link_to_guest_signin,
+               verify: link_to_verify_account,
+               city: Setting["org_name"],
+               geozones: projekt_phase.geozone_restrictions_formatted,
+               age_restriction: projekt_phase.age_restriction_formatted,
+               restricted_streets: projekt_phase.street_restrictions_formatted,
+               individual_group_values: projekt_phase.individual_group_value_restriction_formatted
+      ))
     end
 
     def path_to_key

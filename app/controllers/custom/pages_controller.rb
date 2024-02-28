@@ -8,6 +8,7 @@ class PagesController < ApplicationController
   include Takeable
   include RandomSeed
   include HasEmbeddableShortcodes
+  include GuestUsers
 
   has_orders %w[most_voted newest oldest], only: :show
 

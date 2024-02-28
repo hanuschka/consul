@@ -212,6 +212,7 @@ module ProjektPhaseAdminActions
         translation_params(ProjektPhase),
         :projekt_id, :type,
         :active, :start_date, :end_date,
+        :guest_participation_allowed,
         :verification_restricted, :age_restriction_id,
         :geozone_restricted, :registered_address_grouping_restriction,
         geozone_restriction_ids: [], registered_address_street_ids: [],

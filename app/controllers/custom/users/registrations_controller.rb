@@ -18,6 +18,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def sign_in_guest
+    unless session[:guest_user_id].present?
+      guest_key = "guest_#{SecureRandom.uuid}"
+      User.create_guest_user(guest_key)
+      session[:guest_user_id] = guest_key
+    end
+
+    redirect_back(fallback_location: root_path)
+  end
+
   private
 
     def sign_up_params

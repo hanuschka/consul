@@ -21,21 +21,5 @@ module GuestUsers
       if session[:guest_user_id]
         @guest_user = User.find_by(username: session[:guest_user_id], guest: true)
       end
-      @guest_user ||= create_guest_user
-    end
-
-    def create_guest_user
-      User.new do |user|
-        user.username = guest_key
-        user.email = "#{guest_key}@example.com"
-        user.guest = true
-        user.current_sign_in_at = Time.current
-        user.skip_confirmation!
-        user.save!(validate: false)
-      end
-    end
-
-    def guest_key
-      session[:guest_user_id] ||= "guest_#{SecureRandom.uuid}"
     end
 end

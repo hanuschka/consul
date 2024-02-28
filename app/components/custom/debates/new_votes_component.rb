@@ -1,5 +1,5 @@
 class Debates::NewVotesComponent < ApplicationComponent
-  delegate :user_signed_in?, :link_to_signin, :link_to_signup,
+  delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_guest_signin,
            :link_to_verify_account, :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
   attr_reader :debate
@@ -23,20 +23,16 @@ class Debates::NewVotesComponent < ApplicationComponent
     def cannot_vote_text
       return nil if permission_problem_key.blank?
 
-      if permission_problem_key == :not_logged_in
-        t(path_to_key,
-          sign_in: link_to_signin, sign_up: link_to_signup)
-
-      else
-        t(path_to_key,
-              verify: link_to_verify_account,
-              city: Setting["org_name"],
-              geozones: @debate_phase&.geozone_restrictions_formatted,
-              age_restriction: @debate_phase&.age_restriction_formatted,
-              restricted_streets: @debate_phase&.street_restrictions_formatted,
-              individual_group_values: @debate_phase&.individual_group_value_restriction_formatted
-        )
-      end
+      t(path_to_key,
+            sign_in: link_to_signin, sign_up: link_to_signup,
+            guest_sign_in: link_to_guest_signin,
+            verify: link_to_verify_account,
+            city: Setting["org_name"],
+            geozones: @debate_phase&.geozone_restrictions_formatted,
+            age_restriction: @debate_phase&.age_restriction_formatted,
+            restricted_streets: @debate_phase&.street_restrictions_formatted,
+            individual_group_values: @debate_phase&.individual_group_value_restriction_formatted
+      )
     end
 
     def path_to_key

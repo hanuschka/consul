@@ -9,11 +9,11 @@
       <%= f.radio_button :age_restriction_id, nil,
                          label: t("custom.admin.projekt_phases.restrictions.age.no_restriction"),
                          class: "projekt-phase-restriction-option",
-                         disabled: skip_user_verification? %>
+                         disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
     </div>
 
     <%= f.collection_radio_buttons(:age_restriction_id, AgeRestriction.all, :id, :name, {},
-                                   { class: "projekt-phase-restriction-option", disabled: skip_user_verification? }) do |b| %>
+                                   { class: "projekt-phase-restriction-option", disabled: (skip_user_verification? || @projekt_phase.guest_participation_allowed?) }) do |b| %>
       <div>
         <%= b.radio_button %>
         <%= b.label(style: "margin-left:4px;") %>

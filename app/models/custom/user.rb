@@ -127,6 +127,10 @@ class User < ApplicationRecord
     end
   end
 
+  def username
+    guest? ? "Gast" : read_attribute(:username)
+  end
+
   def validate_registered_address?
     return false unless extended_registration?
     return false unless RegisteredAddress.present?

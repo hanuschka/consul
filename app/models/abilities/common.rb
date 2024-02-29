@@ -132,8 +132,8 @@ module Abilities
         projekt_phase.selectable_by?(user)
       end
 
-      can [:index, :json_data], DeficiencyReport
-      can [:show, :create, :vote], DeficiencyReport do |report|
+      can [:index, :json_data, :create], DeficiencyReport
+      can [:show, :vote], DeficiencyReport do |report|
         report.in? DeficiencyReport.admin_accepted(user)
       end
       can :destroy, DeficiencyReport do |dr|

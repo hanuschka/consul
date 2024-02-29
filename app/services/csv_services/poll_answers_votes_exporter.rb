@@ -8,14 +8,24 @@ module CsvServices
 
     def call
       CSV.generate(headers: false, col_sep: ";") do |csv|
-        @poll.questions.each do |question|
-          csv << question_headers(question)
+        @poll.questions.root_questions.each do |root_question|
+          csv << question_headers(root_question)
 
-          question.question_answers.each do |question_answer|
+          root_question.question_answers.each do |question_answer|
             csv << row(question_answer)
           end
 
           csv << []
+
+          root_question.nested_questions.map do |nested_question|
+            csv << question_headers(nested_question)
+
+            nested_question.question_answers.each do |question_answer|
+              csv << row(question_answer)
+            end
+
+            csv << []
+          end
         end
       end
     end
@@ -25,8 +35,12 @@ module CsvServices
       def question_headers(question)
         headers = []
         headers.push(question.title)
-        headers.push("Stimmenanzahl")
-        headers.push("%")
+
+        if question.question_answers.any?
+          headers.push("Stimmenanzahl")
+          headers.push("%")
+        end
+
         headers
       end
 

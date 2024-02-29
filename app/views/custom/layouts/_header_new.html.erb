@@ -18,7 +18,7 @@
           <%= link_to root_path do %>
             <% if action_name == "mitmachen_jugend" %>
               <%= image_tag(image_path_for("logo_header_weiss.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
-              <%= image_tag(image_path_for("logo_header_weiss.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
+              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
             <% else %>
               <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
               <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
@@ -30,7 +30,9 @@
 
         <div class="header--navigation expanded not-print">
           <div class="hader--subnavigation-wrapper hide-for-small-only">
-            <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
+            <% unless action_name == "mitmachen_jugend" %>
+              <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
+            <% end %>
           </div>
 
           <% if !launch_page && current_user.nil? %>
@@ -81,7 +83,9 @@
           </div>
         <% end %>
 
-        <%= render partial: "shared/subnavigation_new", locals: { placement: 'mobile', launch_page: launch_page } %>
+        <% unless action_name == "mitmachen_jugend" %>
+          <%= render partial: "shared/subnavigation_new", locals: { placement: 'mobile', launch_page: launch_page } %>
+        <% end %>
         <div class="small-12 column">
           <%= render "shared/top_links" %>
         </div>

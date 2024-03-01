@@ -15,6 +15,8 @@ module CsvServices
             csv << row(question_answer)
           end
 
+          process_open_answers(root_question, csv)
+
           csv << []
 
           root_question.nested_questions.map do |nested_question|
@@ -23,6 +25,8 @@ module CsvServices
             nested_question.question_answers.each do |question_answer|
               csv << row(question_answer)
             end
+
+            process_open_answers(nested_question, csv)
 
             csv << []
           end
@@ -50,6 +54,15 @@ module CsvServices
         row.push question_answer.total_votes
         row.push question_answer.total_votes_percentage.round(2)
         row
+      end
+
+      def process_open_answers(question, csv)
+        open_answer = question.open_question_answer
+        return if open_answer.blank? || open_answer.all_open_answers.blank?
+
+        open_answer.all_open_answers.each do |user_open_answer|
+          csv << [user_open_answer.open_answer_text, "offene Antwort"]
+        end
       end
   end
 end

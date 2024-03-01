@@ -5,7 +5,7 @@ class Admin::DeficiencyReportsController < Admin::BaseController
   include DocumentAttributes
 
   def index
-    @deficiency_reports = DeficiencyReport.all.order(id: :asc)
+    @deficiency_reports = DeficiencyReport.all.order(id: :desc)
 
     unless params[:format] == "csv"
       @deficiency_reports = @deficiency_reports.page(params[:page].presence || 0).per(params[:limit].presence || 20)

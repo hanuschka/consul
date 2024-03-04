@@ -184,6 +184,7 @@ de:
         individual_groups: Individuelle Gruppen
         unregistered_newsletter_subscribers:
           list: Newsletter-Abonnenten
+        matomo: Matomo
       polls:
         show:
           edit_nested_questions: Verschachtelte Fragen

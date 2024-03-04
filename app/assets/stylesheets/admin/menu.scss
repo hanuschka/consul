@@ -111,6 +111,10 @@
       @include icon(pencil-alt, solid);
     }
 
+    &.matomo-link {
+      @include icon(chart-bar, solid);
+    }
+
     &.stats-link {
       @include icon(chart-line, solid);
     }

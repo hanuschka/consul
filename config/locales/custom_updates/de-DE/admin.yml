@@ -419,6 +419,7 @@ de:
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
+          age_ranges_for_stats: Altersgruppen für Statistiken
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
@@ -569,6 +570,8 @@ de:
             save_draft: Entwurf speichern
             send_email: E-Mail versenden
             create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
+        age_ranges_for_stats:
+          page_title: Altersgruppen für Statistiken
       modal_notifications:
         index:
           create: Erstellen

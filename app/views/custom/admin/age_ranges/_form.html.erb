@@ -24,11 +24,13 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="column medium-4">
-      <%= f.check_box :only_for_stats %>
+  <% if age_range.new_record? %>
+    <div class="row">
+      <div class="column medium-4">
+        <%= f.check_box :only_for_stats %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="row">
     <div class="column medium-6 large-4">

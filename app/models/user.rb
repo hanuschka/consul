@@ -117,9 +117,9 @@ class User < ApplicationRecord
   end
   scope :between_ages, ->(from, to) do
     where(
-      "date_of_birth > ? AND date_of_birth < ?",
-      to.years.ago.beginning_of_year,
-      from.years.ago.end_of_year
+      "date_of_birth BETWEEN ? AND ?",
+      to.years.ago - 1.year + 1.day,
+      from.years.ago
     )
   end
 

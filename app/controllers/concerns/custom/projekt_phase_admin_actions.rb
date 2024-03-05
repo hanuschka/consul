@@ -129,6 +129,10 @@ module ProjektPhaseAdminActions
       notice: t("admin.settings.index.map.flash.update")
   end
 
+  def age_ranges_for_stats
+    @age_ranges = AgeRange.for_stats
+  end
+
   def projekt_questions
     authorize!(:projekt_questions, @projekt_phase)
     @projekt_questions = @projekt_phase.questions
@@ -216,6 +220,7 @@ module ProjektPhaseAdminActions
         :geozone_restricted, :registered_address_grouping_restriction,
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
+        age_ranges_for_stat_ids: [],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params_to_permit)
     end
 

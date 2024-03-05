@@ -2,6 +2,9 @@ class AgeRange < ApplicationRecord
   translates :name, touch: true
   include Globalizable
 
+  has_many :age_range_projekt_phases, dependent: :destroy
+  has_many :projekt_phases, through: :age_range_projekt_phases
+
   has_many :age_restricted_projekt_phases, class_name: "ProjektPhase",
                                            inverse_of: :age_restriction, dependent: :nullify
 

@@ -12,6 +12,7 @@ namespace :admin do
       patch :update_map
       get :projekt_labels
       get :sentiments
+      get :age_ranges_for_stats
       get :projekt_questions
       get :projekt_livestreams
       get :projekt_events

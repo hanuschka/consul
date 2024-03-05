@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_05_110154) do
+ActiveRecord::Schema.define(version: 2024_03_05_140129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -95,6 +95,16 @@ ActiveRecord::Schema.define(version: 2024_03_05_110154) do
     t.integer "user_id"
     t.string "description"
     t.index ["user_id"], name: "index_administrators_on_user_id"
+  end
+
+  create_table "age_range_projekt_phases", force: :cascade do |t|
+    t.bigint "age_range_id"
+    t.bigint "projekt_phase_id"
+    t.string "used_for", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["age_range_id"], name: "index_age_range_projekt_phases_on_age_range_id"
+    t.index ["projekt_phase_id"], name: "index_age_range_projekt_phases_on_projekt_phase_id"
   end
 
   create_table "age_range_translations", force: :cascade do |t|
@@ -2615,6 +2625,8 @@ ActiveRecord::Schema.define(version: 2024_03_05_110154) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
+  add_foreign_key "age_range_projekt_phases", "age_ranges"
+  add_foreign_key "age_range_projekt_phases", "projekt_phases"
   add_foreign_key "bam_street_polls", "bam_streets"
   add_foreign_key "bam_street_polls", "polls"
   add_foreign_key "bam_street_projekt_phases", "bam_streets"

@@ -172,7 +172,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         legislation: Textbearbeitung
-        age_restrictions: Altersbeschränkungen
+        age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
         title_registered_addresses: Registrierte Adressen
         registered_addresses:
@@ -410,16 +410,6 @@ de:
             archived_projekt: Abgeschlossener Beteiligungsprozess
       flash:
         deleted: Gelöscht
-      age_restrictions:
-        name: Name
-        min_age: Mindestalter
-        max_age: Maximalalter
-        range: Altersbeschränkung
-        order: Reihenfolge
-        buttons:
-          new: Neu erstellen
-          edit: Bearbeiten
-          destroy: Löschen
       projekt_phases:
         nav_bar:
           duration: Laufzeit
@@ -616,6 +606,22 @@ de:
           title: Gruppenwert bearbeiten
         table:
           name: Name
+      age_ranges:
+        index:
+          title: Altersgruppen
+          new: Neue Altersgruppe erstellen
+          filters:
+            for_restrictions: Für Einschränkungen
+            for_stats: Für Statistiken
+        table:
+          name: Name
+          range: Altersgruppe
+        min_age: Mindestalter
+        max_age: Maximalalter
+        order: Reihenfolge
+        buttons:
+          edit: Bearbeiten
+          destroy: Löschen
       unregistered_newsletter_subscribers:
         index:
           title: Newsletter-Abonnenten

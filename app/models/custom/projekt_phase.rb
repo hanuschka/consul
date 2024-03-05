@@ -43,7 +43,7 @@ class ProjektPhase < ApplicationRecord
   has_many :projekt_labels, dependent: :destroy
   has_many :sentiments, dependent: :destroy
 
-  belongs_to :age_restriction
+  belongs_to :age_restriction, class_name: "AgeRange", foreign_key: :age_range_id, optional: true
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_affiliations, through: :projekt
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone,

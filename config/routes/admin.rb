@@ -102,7 +102,11 @@ namespace :admin do
   end
 
   # custom age restriction routes
-  resources :age_restrictions
+  resources :age_ranges do
+    collection do
+      post "order_records"
+    end
+  end
 
   # custom deficiency reports routes
   scope module: :deficiency_reports, path: :deficiency_reports, as: :deficiency_report do

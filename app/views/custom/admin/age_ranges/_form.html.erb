@@ -1,8 +1,8 @@
-<%= translatable_form_for([:admin, age_restriction]) do |f| %>
+<%= translatable_form_for([:admin, age_range]) do |f| %>
   <div class="row">
     <div class="column">
-      <%= render "shared/errors", resource: age_restriction %>
-      <%= render "shared/globalize_locales", resource: age_restriction %>
+      <%= render "shared/errors", resource: age_range %>
+      <%= render "shared/globalize_locales", resource: age_range %>
     </div>
   </div>
 
@@ -14,18 +14,19 @@
     </div>
   <% end %>
 
-
   <div class="row">
-    <div class="column medium-4">
+    <div class="column medium-6">
       <%= f.text_field :min_age %>
     </div>
 
-    <div class="column medium-4">
+    <div class="column medium-6">
       <%= f.text_field :max_age %>
     </div>
+  </div>
 
+  <div class="row">
     <div class="column medium-4">
-      <%= f.text_field :order %>
+      <%= f.check_box :only_for_stats %>
     </div>
   </div>
 

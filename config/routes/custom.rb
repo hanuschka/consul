@@ -17,3 +17,5 @@ controller :unregistered_newsletter_subscribers do
 end
 
 get "users", to: "users#index"
+
+get "admin/matomo", to: "admin/matomo#index"

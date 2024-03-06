@@ -1,4 +1,10 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %>">
+  <% if resource.is_a?(Proposal) %>
+    <%= helpers.render_custom_block "proposals_creation_recommendations" %>
+  <% elsif resource.is_a?(Debate)  %>
+    <%= helpers.render_custom_block "debates_creation_recommendations" %>
+  <% end %>
+
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
     <%= back_link %>
 

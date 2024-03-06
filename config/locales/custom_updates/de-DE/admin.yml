@@ -184,6 +184,7 @@ de:
         individual_groups: Individuelle Gruppen
         unregistered_newsletter_subscribers:
           list: Newsletter-Abonnenten
+        matomo: Matomo
       polls:
         show:
           edit_nested_questions: Verschachtelte Fragen
@@ -459,6 +460,7 @@ de:
           page_title: Benennungen
         restrictions:
           page_title: Einschränkungen
+          guest_participation_allowed: Gastteilnahme erlaubt
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.

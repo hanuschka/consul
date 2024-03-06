@@ -1,7 +1,7 @@
 class Shared::NewButtonComponent < ApplicationComponent
   delegate :can?, :current_user,
            :sanitize,
-           :link_to_signin, :link_to_signup, :link_to_verify_account, to: :helpers
+           :link_to_signin, :link_to_signup, :link_to_verify_account, :link_to_guest_signin, to: :helpers
 
   def initialize(projekt_phase: nil, resources_name: nil, query_params: nil)
     @projekt_phase = projekt_phase
@@ -30,10 +30,7 @@ class Shared::NewButtonComponent < ApplicationComponent
   private
 
     def permission_problem_key
-      if current_user.blank?
-        @permission_problem_key ||= :not_logged_in
-
-      elsif @projekt_phase.present?
+      if @projekt_phase.present?
         @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
 
       end
@@ -44,6 +41,7 @@ class Shared::NewButtonComponent < ApplicationComponent
         t(path_to_key(permission_problem_key),
               sign_in: link_to_signin,
               sign_up: link_to_signup,
+              guest_sign_in: link_to_guest_signin,
               verify: link_to_verify_account,
               city: Setting["org_name"],
               geozones: @projekt_phase&.geozone_restrictions_formatted,

@@ -190,4 +190,13 @@ class Admin::MenuComponent < ApplicationComponent
       %w[officers booths shifts booth_assignments officer_assignments].include?(controller_name) && controller.class.module_parent == Admin::Poll ||
         controller_name == "polls" && action_name == "booth_assignments"
     end
+
+    def matomo_link
+      [
+        t("custom.admin.menu.matomo"),
+        admin_matomo_path,
+        controller_name == "matomo",
+        class: "matomo-link"
+      ]
+    end
 end

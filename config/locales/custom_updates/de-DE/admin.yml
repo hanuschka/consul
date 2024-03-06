@@ -614,8 +614,8 @@ de:
           title: Altersgruppen
           new: Neue Altersgruppe erstellen
           filters:
-            for_restrictions: Für Einschränkungen
-            for_stats: Für Statistiken
+            for_restrictions: Altersbeschränkung
+            for_stats: Altersgruppen für Statistiken
         table:
           name: Name
           range: Altersgruppe

@@ -22,6 +22,7 @@
         var toolbar = "extended_admin";
       } else {
         var replaceBy = element.name;
+        var toolbar = "mini";
       }
 
       if (hasNewDesign) {

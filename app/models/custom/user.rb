@@ -42,6 +42,7 @@ class User < ApplicationRecord
   has_many :projekt_phase_subscriptions
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :not_guests, -> { where(guest: false) }
 
   validate :email_should_not_be_used_by_hidden_user
 

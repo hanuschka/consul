@@ -3,10 +3,9 @@
   <h4><%= t("stats.by_individual_group") %></h4>
 
   <% (stats.hard_individual_groups + stats.soft_individual_groups).each do |individual_group| %>
-    <h5><%= individual_group.name %></h5>
     <table>
       <tr>
-        <th><%= t("stats.individual_group_value_name") %></th>
+        <th><%= individual_group.name %></th>
         <th><%= t("stats.individual_group_value_count") %></th>
       </tr>
       <% individual_group.individual_group_values.each do |individual_group_value| %>

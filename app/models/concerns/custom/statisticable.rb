@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "models", "concerns", "statisticable").to_s
 
 module Statisticable
-  PARTICIPATIONS = %w[gender age geozone individual_group_value].freeze
+  PARTICIPATIONS = %w[gender age geozone individual_group].freeze
 
   class_methods do
     def gender_methods
@@ -32,7 +32,7 @@ module Statisticable
     false
   end
 
-  def individual_group_value?
+  def individual_group?
     hard_individual_groups.any? || soft_individual_groups.any?
   end
 
@@ -54,5 +54,10 @@ module Statisticable
   def total_individual_group_participants(individual_group)
     participants.joins(:individual_group_values)
       .where(individual_group_values: { individual_group_id: individual_group.id }).distinct.count
+  end
+
+  def percentage_individual_group_value_participants(individual_group_value)
+    total_individual_group_value_participants(individual_group_value) /
+      total_individual_group_participants(individual_group_value.individual_group).to_f * 100
   end
 end

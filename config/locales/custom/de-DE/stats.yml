@@ -5,6 +5,7 @@ de:
     total_participants: "Teilnehmer*innen"
     by_gender: "Teilnehmer*innen nach Geschlecht"
     by_age: "Teilnehmer*innen nach Alter"
+    by_individual_group: "Individuelle Gruppen" #custom
     by_geozone: "Teilnehmer*innen nach Gebiet"
     men_percentage: "%{percentage} Männer"
     women_percentage: "%{percentage} Frauen"
@@ -14,6 +15,8 @@ de:
     age_range: "%{start} - %{finish} Jahre alt"
     total: "Gesamt"
     geozone: "Gebiet"
+    individual_group_value_name: Gruppenwert
+    individual_group_value_count: Gesamt
     no_demographic_data:
       zero: ""
       one: "* Keine demographischen Daten vorhanden für 1 Teilnehmer*in."

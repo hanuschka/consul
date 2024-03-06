@@ -127,6 +127,21 @@ class User < ApplicationRecord
     end
   end
 
+  def self.create_guest_user(guest_key)
+    user = new(
+      username: guest_key,
+      email: "#{guest_key}@example.com",
+      guest: true,
+      confirmed_at: Time.now.utc
+    )
+
+    user.save!(validate: false)
+  end
+
+  def username
+    guest? ? "Gast" : read_attribute(:username)
+  end
+
   def validate_registered_address?
     return false unless extended_registration?
     return false unless RegisteredAddress.present?

@@ -22,6 +22,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
       session[:guest_user_id] = guest_key
     end
 
+    notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
+    flash[:notice] = notice
+
     unless request.headers["Referer"].include?(action_name)
       redirect_back(fallback_location: root_path)
     else

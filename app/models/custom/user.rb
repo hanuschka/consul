@@ -140,7 +140,7 @@ class User < ApplicationRecord
   end
 
   def username
-    guest? ? "Gast" : read_attribute(:username)
+    guest? ? read_attribute(:username)[0..12] : read_attribute(:username)
   end
 
   def validate_registered_address?

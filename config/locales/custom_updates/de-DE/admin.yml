@@ -172,7 +172,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         legislation: Textbearbeitung
-        age_restrictions: Altersbeschränkungen
+        age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
         title_registered_addresses: Registrierte Adressen
         registered_addresses:
@@ -410,16 +410,6 @@ de:
             archived_projekt: Abgeschlossener Beteiligungsprozess
       flash:
         deleted: Gelöscht
-      age_restrictions:
-        name: Name
-        min_age: Mindestalter
-        max_age: Maximalalter
-        range: Altersbeschränkung
-        order: Reihenfolge
-        buttons:
-          new: Neu erstellen
-          edit: Bearbeiten
-          destroy: Löschen
       projekt_phases:
         nav_bar:
           duration: Laufzeit
@@ -429,6 +419,7 @@ de:
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
+          age_ranges_for_stats: Altersgruppen für Statistiken
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
@@ -580,6 +571,8 @@ de:
             save_draft: Entwurf speichern
             send_email: E-Mail versenden
             create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
+        age_ranges_for_stats:
+          page_title: Altersgruppen für Statistiken
       modal_notifications:
         index:
           create: Erstellen
@@ -617,6 +610,22 @@ de:
           title: Gruppenwert bearbeiten
         table:
           name: Name
+      age_ranges:
+        index:
+          title: Altersgruppen
+          new: Neue Altersgruppe erstellen
+          filters:
+            for_restrictions: Altersbeschränkung
+            for_stats: Altersgruppen für Statistiken
+        table:
+          name: Name
+          range: Altersgruppe
+        min_age: Mindestalter
+        max_age: Maximalalter
+        order: Reihenfolge
+        buttons:
+          edit: Bearbeiten
+          destroy: Löschen
       unregistered_newsletter_subscribers:
         index:
           title: Newsletter-Abonnenten

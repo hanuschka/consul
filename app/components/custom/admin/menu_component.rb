@@ -18,7 +18,7 @@ class Admin::MenuComponent < ApplicationComponent
 
     def settings?
       controllers_names = ["settings", "tags", "geozones", "images", "content_blocks",
-                           "local_census_records", "imports", "age_restrictions", "individual_groups", "individual_group_values"]
+                           "local_census_records", "imports", "age_ranges", "individual_groups", "individual_group_values"]
       controllers_names.include?(controller_name) &&
         controller.class.module_parent != Admin::Poll::Questions::Answers &&
         controller.class != Admin::DeficiencyReports::SettingsController
@@ -153,11 +153,11 @@ class Admin::MenuComponent < ApplicationComponent
       ]
     end
 
-    def age_restrictions_link
+    def age_ranges_link
       [
-        t("custom.admin.menu.age_restrictions"),
-        admin_age_restrictions_path,
-        controller_name == "age_restrictions"
+        t("custom.admin.menu.age_ranges"),
+        admin_age_ranges_path,
+        controller_name == "age_ranges"
       ]
     end
 

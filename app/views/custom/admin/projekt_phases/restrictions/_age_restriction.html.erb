@@ -6,13 +6,13 @@
   <div class="projekt-phase-restriction-selector margin-bottom <%= "gray-labels" if skip_user_verification? %>">
 
     <div class="projekt-phase-restriction-block">
-      <%= f.radio_button :age_restriction_id, nil,
+      <%= f.radio_button :age_range_id, nil,
                          label: t("custom.admin.projekt_phases.restrictions.age.no_restriction"),
                          class: "projekt-phase-restriction-option",
                          disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
     </div>
 
-    <%= f.collection_radio_buttons(:age_restriction_id, AgeRestriction.all, :id, :name, {},
+    <%= f.collection_radio_buttons(:age_range_id, AgeRange.for_restrictions, :id, :name, {},
                                    { class: "projekt-phase-restriction-option", disabled: (skip_user_verification? || @projekt_phase.guest_participation_allowed?) }) do |b| %>
       <div>
         <%= b.radio_button %>

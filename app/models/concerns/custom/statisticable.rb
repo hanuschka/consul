@@ -60,4 +60,15 @@ module Statisticable
     total_individual_group_value_participants(individual_group_value) /
       total_individual_group_participants(individual_group_value.individual_group).to_f * 100
   end
+
+  private
+
+    def participation_methods
+      cached_participations = participations - not_cached_participations
+      cached_participations.map { |participation| self.class.send("#{participation}_methods") }.flatten
+    end
+
+    def not_cached_participations
+      %w[individual_group]
+    end
 end

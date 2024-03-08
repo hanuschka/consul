@@ -2,6 +2,7 @@ class Topic < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
   include Notifiable
+  include OnBehalfOfSubmittable
 
   belongs_to :community
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :topics

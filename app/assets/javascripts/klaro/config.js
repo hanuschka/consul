@@ -304,5 +304,17 @@ var klaroConfig = {
             optOut: false,
             required: true
         },
+        {
+          name: 'matomo',
+          title: 'Matomo/Piwik',
+          default: true,
+          purposes: ['analytics'],
+          cookies: [
+            [/^_pk_.*$/, '/', 'mitmachen.jena.de'],
+            [/^_pk_.*$/, '/', 'webopen5.jena.de'],
+            [/^_pk_.*$/, '/', 'localhost:3000'],
+            'piwik_ignore',
+          ],
+        }
     ],
 };

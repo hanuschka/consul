@@ -25,7 +25,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
     flash[:notice] = notice
 
-    unless request.headers["Referer"].include?(action_name)
+    unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
       redirect_back(fallback_location: root_path)
     else
       redirect_to root_path

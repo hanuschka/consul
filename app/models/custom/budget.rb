@@ -12,6 +12,7 @@ class Budget < ApplicationRecord
       ("winners" if finished?),
       ("selected" if publishing_prices_or_later? && !finished?),
       # ("unselected" if publishing_prices_or_later?),
+      ("unselected" if finished?),
       ("feasible" if selecting? || valuating?),
       ("unfeasible" if selecting? || valuating_or_later?),
       ("undecided" if selecting? || valuating?)
@@ -44,5 +45,9 @@ class Budget < ApplicationRecord
     end
 
     super
+  end
+
+  def stats_age_groups
+    projekt_phase.age_ranges_for_stats.map { |ar| [ar.min_age, ar.max_age] }
   end
 end

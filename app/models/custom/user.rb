@@ -45,6 +45,7 @@ class User < ApplicationRecord
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
+  scope :not_guests, -> { where(guest: false) }
 
   validate :email_should_not_be_used_by_hidden_user
 
@@ -128,6 +129,21 @@ class User < ApplicationRecord
     else
       order(id: :desc)
     end
+  end
+
+  def self.create_guest_user(guest_key)
+    user = new(
+      username: guest_key,
+      email: "#{guest_key}@example.com",
+      guest: true,
+      confirmed_at: Time.now.utc
+    )
+
+    user.save!(validate: false)
+  end
+
+  def username
+    guest? ? read_attribute(:username)[0..12] : read_attribute(:username)
   end
 
   def validate_registered_address?

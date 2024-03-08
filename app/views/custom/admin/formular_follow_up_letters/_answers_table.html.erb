@@ -32,12 +32,22 @@
         </td>
         <% @formular_fields.each do |ff| %>
           <% next if ff.kind.in?(["image", "document"]) %>
-          <td><%= fa.answers[ff.key] %></td>
+          <td style="<%= "min-width:450px" if ff.kind == "textarea" %>">
+            <% if ff.kind == "textarea" %>
+              <%= render Shared::CollapseTextComponent.new(size: :small) do |component| %>
+                <% component.with_inner_content do %>
+                  <%= fa.answers[ff.key] %>
+                <% end %>
+              <% end %>
+            <% else %>
+              <%= fa.answers[ff.key] %>
+            <% end %>
+          </td>
         <% end %>
         <% if @image_flag %>
           <td>
             <%= fa.formular_answer_images.map do |image| %>
-              <% link_to image.formular_field_key, url_for(image.variant(:large)), target: "_blank" %>
+              <% link_to image.formular_field_key || "image", url_for(image.variant(:large)), target: "_blank" %>
             <% end.join(", ").html_safe %>
           </td>
         <% end %>

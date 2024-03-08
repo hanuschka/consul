@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_20_144512) do
+ActiveRecord::Schema.define(version: 2024_03_05_140129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -97,22 +97,33 @@ ActiveRecord::Schema.define(version: 2024_02_20_144512) do
     t.index ["user_id"], name: "index_administrators_on_user_id"
   end
 
-  create_table "age_restriction_translations", force: :cascade do |t|
-    t.bigint "age_restriction_id", null: false
+  create_table "age_range_projekt_phases", force: :cascade do |t|
+    t.bigint "age_range_id"
+    t.bigint "projekt_phase_id"
+    t.string "used_for", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["age_range_id"], name: "index_age_range_projekt_phases_on_age_range_id"
+    t.index ["projekt_phase_id"], name: "index_age_range_projekt_phases_on_projekt_phase_id"
+  end
+
+  create_table "age_range_translations", force: :cascade do |t|
+    t.bigint "age_range_id", null: false
     t.string "locale", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
-    t.index ["age_restriction_id"], name: "index_age_restriction_translations_on_age_restriction_id"
-    t.index ["locale"], name: "index_age_restriction_translations_on_locale"
+    t.index ["age_range_id"], name: "index_age_range_translations_on_age_range_id"
+    t.index ["locale"], name: "index_age_range_translations_on_locale"
   end
 
-  create_table "age_restrictions", force: :cascade do |t|
+  create_table "age_ranges", force: :cascade do |t|
     t.integer "order"
     t.integer "min_age"
     t.integer "max_age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "only_for_stats", default: false
   end
 
   create_table "ahoy_events", force: :cascade do |t|
@@ -1845,14 +1856,14 @@ ActiveRecord::Schema.define(version: 2024_02_20_144512) do
     t.datetime "updated_at", null: false
     t.boolean "active"
     t.boolean "verification_restricted", default: false
-    t.bigint "age_restriction_id"
+    t.bigint "age_range_id"
     t.string "registered_address_grouping_restriction", default: ""
     t.jsonb "registered_address_grouping_restrictions", default: {}, null: false
     t.integer "given_order"
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
     t.boolean "guest_participation_allowed", default: false
-    t.index ["age_restriction_id"], name: "index_projekt_phases_on_age_restriction_id"
+    t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
   end
@@ -2614,6 +2625,8 @@ ActiveRecord::Schema.define(version: 2024_02_20_144512) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
+  add_foreign_key "age_range_projekt_phases", "age_ranges"
+  add_foreign_key "age_range_projekt_phases", "projekt_phases"
   add_foreign_key "bam_street_polls", "bam_streets"
   add_foreign_key "bam_street_polls", "polls"
   add_foreign_key "bam_street_projekt_phases", "bam_streets"
@@ -2705,7 +2718,7 @@ ActiveRecord::Schema.define(version: 2024_02_20_144512) do
   add_foreign_key "projekt_phase_settings", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "users"
-  add_foreign_key "projekt_phases", "age_restrictions"
+  add_foreign_key "projekt_phases", "age_ranges"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_questions", "projekt_phases"
   add_foreign_key "projekt_settings", "projekts"

@@ -4,7 +4,7 @@ class Admin::UsersController < Admin::BaseController
   include HasRegisteredAddress
 
   def index
-    @users = @users.send(@current_filter).order_filter(params)
+    @users = @users.not_guests.send(@current_filter).order_filter(params)
     @users = @users.by_username_email_or_document_number(params[:search]) if params[:search]
 
     unless params[:format] == "csv"

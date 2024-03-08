@@ -12,6 +12,7 @@ namespace :admin do
       patch :update_map
       get :projekt_labels
       get :sentiments
+      get :age_ranges_for_stats
       get :projekt_questions
       get :projekt_livestreams
       get :projekt_events
@@ -102,7 +103,11 @@ namespace :admin do
   end
 
   # custom age restriction routes
-  resources :age_restrictions
+  resources :age_ranges do
+    collection do
+      post "order_records"
+    end
+  end
 
   # custom deficiency reports routes
   scope module: :deficiency_reports, path: :deficiency_reports, as: :deficiency_report do

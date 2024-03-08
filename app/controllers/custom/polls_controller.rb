@@ -5,6 +5,7 @@ class PollsController < ApplicationController
   include CommentableActions
   include ProjektControllerHelper
   include Takeable
+  include GuestUsers
 
   before_action :set_geo_limitations, only: [:show, :results, :stats]
 

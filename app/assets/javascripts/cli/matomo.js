@@ -4,10 +4,11 @@ _paq.push(['trackPageView']);
 _paq.push(['enableLinkTracking']);
 
 (function() {
-  var u="https://report.datamints.com/consul/";
+  var u="https://demodemokratietoday.matomo.cloud/";
   var previousPageUrl = null;
 
   addEventListener('turbolinks:load', function(event) {
+
     if (previousPageUrl) {
       _paq.push(['setReferrerUrl', previousPageUrl]);
       _paq.push(['setCustomUrl', window.location.href]);
@@ -19,7 +20,7 @@ _paq.push(['enableLinkTracking']);
   });
 
   _paq.push(['setTrackerUrl', u+'matomo.php']);
-  _paq.push(['setSiteId', '1']);
+  _paq.push(['setSiteId', '3']);
   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-  g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  g.async=true; g.src='https://cdn.matomo.cloud/demodemokratietoday.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
 })();

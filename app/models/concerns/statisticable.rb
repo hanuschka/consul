@@ -1,6 +1,6 @@
 module Statisticable
   extend ActiveSupport::Concern
-  PARTICIPATIONS = %w[gender age geozone].freeze
+  # PARTICIPATIONS = %w[gender age geozone].freeze
 
   included do
     attr_reader :resource
@@ -148,6 +148,10 @@ module Statisticable
     end
 
     def age_groups
+      if @resource.respond_to?(:stats_age_groups) && @resource.stats_age_groups.present?
+        return @resource.stats_age_groups
+      end
+
       [[16, 19],
        [20, 24],
        [25, 29],

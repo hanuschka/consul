@@ -244,9 +244,9 @@
 
       $(".js-sidebar-label-section, #projekt_labels_selector").toggleClass("hide", hideTaggings);
 
-      if ( $("#projekt_labels_selector input[type=checkbox]:checked").length === 0 && labelIdsToShow.length ) {
-        $("#projekt_labels_selector input[type=checkbox][value=" + labelIdsToShow[0]  + "]").prop("checked", true);
-      }
+      // if ( $("#projekt_labels_selector input[type=checkbox]:checked").length === 0 && labelIdsToShow.length ) {
+      //   $("#projekt_labels_selector input[type=checkbox][value=" + labelIdsToShow[0]  + "]").prop("checked", true);
+      // }
 
       $("#projekt_labels_selector .projekt-label").each(function(_index, label) {
         var dontHaveLabel = !labelIdsToShow.includes($(label).data("labelId").toString());
@@ -278,9 +278,9 @@
 
       $(".js-sidebar-sentiment-section, #sentiment_selector").toggleClass("hide", hideSentimentsSection);
 
-      if ( $("#sentiment_selector input[type=radio]:checked").length === 0 && sentimentIdsToShow.length ) {
-        $("#sentiment_selector input[type=radio][value=" + sentimentIdsToShow[0] +"]").prop("checked", true);
-      }
+      // if ( $("#sentiment_selector input[type=radio]:checked").length === 0 && sentimentIdsToShow.length ) {
+      //   $("#sentiment_selector input[type=radio][value=" + sentimentIdsToShow[0] +"]").prop("checked", true);
+      // }
 
       $("#sentiment_selector .sentiment").each(function(_index, sentiment) {
         var dontHaveSentiment = !sentimentIdsToShow.includes($(sentiment).data("sentimentId").toString());

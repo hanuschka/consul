@@ -1,14 +1,12 @@
 <div id="<%= dom_id(formular_field) %>" class="formular-field margin-bottom" data-answer-id="<%= formular_field.id %>">
   <div class="controls">
-    <%= link_to "", polymorphic_path([@namespace, @projekt_phase, @formular, formular_field], action: :edit),
-      class: "edit-link",
-      remote: true %>
-
-    <%= link_to "", polymorphic_path([@namespace, @projekt_phase, @formular, formular_field]),
-      class: "destroy-link",
-      remote: true,
-      method: :delete,
-      data: { confirm: "Sind Sie sicher?" } %>
+    <%= render Admin::TableActionsComponent.new(formular_field,
+                                            actions: [:edit, :destroy],
+                                            edit_path: polymorphic_path([@namespace, @projekt_phase, @formular, formular_field], action: :edit),
+                                            edit_options: { remote: true },
+                                            destroy_path: polymorphic_path([@namespace, @projekt_phase, @formular, formular_field]),
+                                            destroy_options: { remote: true }
+                                           ) %>
   </div>
 
   <div>

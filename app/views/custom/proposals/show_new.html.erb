@@ -141,7 +141,7 @@
               <% end %>
             <% end %>
 
-            <% unless @proposal.retired? %>
+            <% if !@proposal.retired? && can?(:retire, @proposal) %>
               <%= link_to t("dashboard.index.retire"),
                 retire_form_proposal_path(@proposal),
                 class: "button hollow alert",
@@ -190,7 +190,7 @@
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") %>
+        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? %>
           <%= render(Shared::SidebarCardComponent.new(
               title: t("custom.proposals.show.community_section.title"),
               icon_name: "users")
@@ -244,14 +244,14 @@
           <% end %>
         <% end %>
 
-        <% if current_user && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_follow_button_in_proposal_sidebar") %>
+        <% if current_user && !current_user&.guest? && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_follow_button_in_proposal_sidebar") %>
           <%= render(Shared::SidebarCardComponent.new(title: t("shared.follow"), icon_name: "star")) do |c| %>
             <p><%= t("custom.shared.show.follow_text") %></p>
             <%= render "follows/follow_button", follow: find_or_build_follow(current_user, @proposal) %>
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_report_button_in_sidebar") && (show_flag_action?(@proposal) || show_unflag_action?(@proposal) )%>
+        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_report_button_in_sidebar") && (show_flag_action?(@proposal) || show_unflag_action?(@proposal)) && !current_user&.guest? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.report_title"), icon_name: "flag")) do  %>
             <%= render "shared/participation/flag", resource: @proposal %>
           <% end %>

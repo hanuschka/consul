@@ -107,8 +107,10 @@
         type: "GET",
         dataType: "html",
         success: function(data) {
-          $hintElement.html(data);
-          $(document).foundation();
+          if (data !== "") {
+            $hintElement.html(data);
+            $(document).foundation();
+          }
         }
       });
     },
@@ -241,7 +243,10 @@
       var hideTaggings = labelIdsToShow.join().length === 0;
 
       $(".js-sidebar-label-section, #projekt_labels_selector").toggleClass("hide", hideTaggings);
-      $("#projekt_labels_selector input[type=checkbox]").prop("checked", false);
+
+      if ( $("#projekt_labels_selector input[type=checkbox]:checked").length === 0 && labelIdsToShow.length ) {
+        $("#projekt_labels_selector input[type=checkbox][value=" + labelIdsToShow[0]  + "]").prop("checked", true);
+      }
 
       $("#projekt_labels_selector .projekt-label").each(function(_index, label) {
         var dontHaveLabel = !labelIdsToShow.includes($(label).data("labelId").toString());
@@ -272,7 +277,10 @@
       var hideSentimentsSection = sentimentIdsToShow.join().length === 0;
 
       $(".js-sidebar-sentiment-section, #sentiment_selector").toggleClass("hide", hideSentimentsSection);
-      $("#sentiment_selector input[type=radio]").prop("checked", false);
+
+      if ( $("#sentiment_selector input[type=radio]:checked").length === 0 && sentimentIdsToShow.length ) {
+        $("#sentiment_selector input[type=radio][value=" + sentimentIdsToShow[0] +"]").prop("checked", true);
+      }
 
       $("#sentiment_selector .sentiment").each(function(_index, sentiment) {
         var dontHaveSentiment = !sentimentIdsToShow.includes($(sentiment).data("sentimentId").toString());

@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
   $(document).on('turbolinks:load', function() {
-    if (window.location.pathname == "/matomo-consent") {
+    if (window.location.pathname == "/privacy") {
       var matomoExternalScript = document.createElement('script');
       matomoExternalScript.src = "<%= raw opt_out_script_url %>";
       document.head.appendChild(matomoExternalScript);

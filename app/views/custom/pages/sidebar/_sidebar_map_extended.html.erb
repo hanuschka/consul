@@ -7,6 +7,7 @@
         projekt: @current_projekt,
         show_admin_shape: @current_projekt.map_location.show_admin_shape?
       ) %>
+      <% reinitialize_map = "App.VCMap.initializeMap(document.querySelector('#footer-content *[data-vcmap]'));" %>
     <% else %>
       <%= render Shared::MapComponent.new(
         map_location: @current_projekt.map_location,
@@ -14,9 +15,10 @@
         projekt: @current_projekt,
         show_admin_shape: @current_projekt.map_location.show_admin_shape?
       ) %>
+      <% reinitialize_map = "" %>
     <% end %>
 
-    <button class="close-button" aria-label="Close modal" type="button" onclick="$('#extended-sidebar-map').html('');$('#extended-sidebar-map').css('position', 'relative');App.VCMap.initializeMap(document.querySelector('#footer-content *[data-vcmap]'));">
+    <button class="close-button" aria-label="Close modal" type="button" onclick="$('#extended-sidebar-map').html('');$('#extended-sidebar-map').css('position', 'relative');<%= reinitialize_map %>">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

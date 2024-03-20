@@ -310,11 +310,16 @@ var klaroConfig = {
           default: true,
           purposes: ['analytics'],
           cookies: [
-            [/^_pk_.*$/, '/', 'mitmachen.jena.de'],
-            [/^_pk_.*$/, '/', 'webopen5.jena.de'],
-            [/^_pk_.*$/, '/', 'localhost:3000'],
-            'piwik_ignore',
+            [/^_pk_.*$/]
           ],
+
+          callback: function(consent, service) {
+            if (consent) {
+              _paq.push(['rememberConsentGiven']);
+            } else {
+              _paq.push(['forgetConsentGiven']);
+            }
+          }
         }
     ],
 };

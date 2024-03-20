@@ -22,8 +22,9 @@
 
 <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
 
-<%= javascript_include_tag "cli/matomo-consent.js", defer: true %>
-<%= javascript_include_tag "cli/matomo.js", defer: true %>
+<% if Rails.application.secrets.matomo_site_id.present? %>
+  <%= render "layouts/matomo" %>
+<% end %>
 
 <%= javascript_include_tag "klaro/config.js", defer: true %>
 <%= javascript_include_tag "klaro/klaro.js", defer: true %>

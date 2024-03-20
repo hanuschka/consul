@@ -3,6 +3,7 @@ require_dependency Rails.root.join("app", "controllers", "welcome_controller").t
 class WelcomeController < ApplicationController
   include Takeable
   include ProjektControllerHelper
+  include GuestUsers
 
   def welcome
     redirect_to root_path
@@ -20,10 +21,10 @@ class WelcomeController < ApplicationController
     @affiliated_geozones = []
     @restricted_geozones = []
 
-    @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts : []
+    @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts(current_user) : []
     @active_projekts = @active_projekts.sort_by(&:created_at).reverse
 
-    @expired_projekts = @active_feeds.include?("expired_projekts") ? @feeds.find{ |feed| feed.kind == 'expired_projekts' }.expired_projekts : []
+    @expired_projekts = @active_feeds.include?("expired_projekts") ? @feeds.find{ |feed| feed.kind == 'expired_projekts' }.expired_projekts(current_user) : []
     @expired_projekts = @expired_projekts.sort_by(&:created_at).reverse
 
     @latest_polls = @active_feeds.include?("polls") ? filtered_items(@feeds.find { |feed| feed.kind == 'polls' }) : []
@@ -52,7 +53,11 @@ class WelcomeController < ApplicationController
   private
 
     def filtered_items(feed)
-      @resources = feed.items
+      if feed.kind.in?(["proposals", "debates"])
+        @resources = feed.items.where.not(author: current_user)
+      else
+        @resources = feed.items
+      end
 
       @resources = @resources.joins(projekt_phase: :projekt)
         .merge(Projekt.activated.with_active_feature("general.show_in_sidebar_filter"))

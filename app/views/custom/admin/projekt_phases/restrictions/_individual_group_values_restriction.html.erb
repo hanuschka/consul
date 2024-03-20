@@ -10,7 +10,9 @@
         <label><%= individual_group.name %></label>
 
         <%= f.collection_check_boxes :individual_group_value_ids, individual_group.individual_group_values, :id, :name do |cb| %>
-          <%= cb.label(class: "checkbox-label checkbox-label--inline") { cb.check_box + cb.text } %>
+          <%= cb.label(class: "checkbox-label checkbox-label--inline") do %>
+            <%= cb.check_box(disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed?) + cb.text %>
+          <% end %>
         <% end %>
       </div>
     <% end %>

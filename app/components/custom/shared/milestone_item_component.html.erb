@@ -1,5 +1,11 @@
 <div class="milestone-item milestone-content">
-  <% if milestone.publication_date.present? %>
+  <% if milestone.custom_date.present? %>
+    <span class="milestone-item--date">
+      <strong>
+        <%= milestone.custom_date %>
+      </strong>
+    </span>
+  <% elsif milestone.publication_date.present? %>
     <span class="milestone-item--date">
       <strong>
         <%= l(milestone.publication_date, format: :new_date_with_year) %>

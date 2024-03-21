@@ -1,4 +1,5 @@
 class ProjektQuestionsController < ApplicationController
+  include GuestUsers
   before_action :set_question, only: [:show]
 
   skip_authorization_check

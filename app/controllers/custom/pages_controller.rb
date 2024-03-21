@@ -8,6 +8,7 @@ class PagesController < ApplicationController
   include Takeable
   include RandomSeed
   include HasEmbeddableShortcodes
+  include GuestUsers
 
   has_orders %w[most_voted newest oldest], only: :show
 
@@ -38,6 +39,11 @@ class PagesController < ApplicationController
         attr: :content,
         projekt: @projekt,
       )
+
+      if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
+          @custom_page.content.include?("</iframe>")
+        @custom_page.content = process_iframe_embeds(@custom_page.content)
+      end
 
       render action: custom_page_name
 

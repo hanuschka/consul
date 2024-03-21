@@ -1,0 +1,19 @@
+<div id="participants_by_individual_group_value" class="stats-group">
+
+  <h4><%= t("stats.by_individual_group") %></h4>
+
+  <% (stats.hard_individual_groups + stats.soft_individual_groups).each do |individual_group| %>
+    <table>
+      <tr>
+        <th><%= individual_group.name %></th>
+        <th><%= t("stats.individual_group_value_count") %></th>
+      </tr>
+      <% individual_group.individual_group_values.each do |individual_group_value| %>
+        <tr>
+          <td><%= individual_group_value.name %></td>
+          <td><%= "#{stats.total_individual_group_value_participants(individual_group_value)} (#{number_to_percentage(stats.percentage_individual_group_value_participants(individual_group_value), strip_insignificant_zeros: true, precision: 2 )})" %></td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+</div>

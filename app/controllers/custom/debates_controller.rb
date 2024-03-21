@@ -7,7 +7,9 @@ class DebatesController < ApplicationController
   include Takeable
   include ProjektLabelAttributes
   include RandomSeed
+  include GuestUsers
 
+  before_action :authenticate_user!, except: [:index, :show], unless: -> { current_user&.guest? }
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
 

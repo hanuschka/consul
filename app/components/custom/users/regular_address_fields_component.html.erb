@@ -1,4 +1,4 @@
-<div id="user-regular-address-fields" style="display:<%= @user.regular_address_fields_visible? ? "block" : "none" %>">
+<div id="user-regular-address-fields" style="display:<%= display_style %>">
   <div class="row">
     <div class="small-12 medium-8 column">
       <%= @f.text_field :city_name,

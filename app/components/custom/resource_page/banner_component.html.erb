@@ -49,12 +49,18 @@
         </div>
         <div class="resource-page-banner--detail">
           <i class="fa fa-check-circle"></i>
-          <%= t("activerecord.attributes.deficiency_reports.status") + ": " %>
+          <%= t("activerecord.attributes.deficiency_report.status") + ": " %>
           <span class="deficiency-report-status" style="color:<%= @resource.status.color %>;">
             <i class="fas fa-<%= @resource.status.icon %>"></i>
             <%= @resource.status.title %>
           </span>
         </div>
+        <% if current_user == @resource.author && Setting["deficiency_reports.admin_acceptance_required"].present? %>
+          <div class="resource-page-banner--detail" style="align-items:baseline;">
+            <i class="fas fa-file-alt"></i>
+            <%= t("custom.deficiency_reports.show.admin_accepted.#{@resource.admin_accepted?}") %>
+          </div>
+        <% end %>
       <% end %>
     </div>
 

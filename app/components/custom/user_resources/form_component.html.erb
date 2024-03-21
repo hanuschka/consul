@@ -1,4 +1,5 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %>">
+
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
     <%= back_link %>
 
@@ -117,7 +118,7 @@
               opened_on_mobile: true,
               icon_name: "user")) do %>
               <p>
-              Dieses Feld sehen nur Admin. Sie können hier eine Diskussion im Namen von jemandem erstellen.
+              dieses Feld sehen nur Admin. Sie können hier eine Diskussion im Namen von jemandem erstellen.
               </p>
               <%= f.text_field :on_behalf_of, label: false, placeholder: "Namen eingeben...", class: "light-input" %>
             <% end %>
@@ -132,7 +133,13 @@
         </h1>
 
         <div class="user-resources-form--description">
-          <%= helpers.render_custom_block "user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description") %>
+          <% if resource.is_a?(Proposal) %>
+            <%= helpers.render_custom_block "proposals_creation_recommendations", default_content: t("custom.user_resources.form.page_description") %>
+          <% elsif resource.is_a?(Debate) %>
+            <%= helpers.render_custom_block "debates_creation_recommendations" %>
+          <% else %>
+            <%= helpers.render_custom_block "user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description") %>
+          <% end %>
         </div>
 
         <%= render "shared/errors", resource: resource %>

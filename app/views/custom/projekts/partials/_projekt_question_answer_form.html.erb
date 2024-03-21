@@ -9,7 +9,7 @@
       end
   %>
 
-  <%= form_for projekt_answer, url: path, remote: true, html: { class: "controls-stacked js-projekt-answer-form", data: { should_redirect: (!user_signed_in? || current_user&.unverified?), redirect_to: redirect_path } } do |f| %>
+  <%= form_for projekt_answer, url: path, remote: true, html: { class: "controls-stacked js-projekt-answer-form", data: { should_redirect: ((!user_signed_in? || current_user&.unverified?) && !current_user&.guest?), redirect_to: redirect_path } } do |f| %>
     <% projekt_question.question_options.each do |question_option| %>
       <label class="control radio <%= "is-active" if projekt_answer.question_option&.id == question_option.id %>">
         <% radio_button_disabled = projekt_question.permission_problem(current_user).present? %>

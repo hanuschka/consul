@@ -72,7 +72,7 @@
             <% if @question.votation_type.unique? &&  @question.votation_type.rating_scale? %>
               <%= 1 %>
             <% else %>
-              <%= @question.max_votes %>
+              <%= [@question.votation_type.max_votes_per_answer, @question.max_votes].compact.join(" / ") %>
             <% end %>
           </p>
         <% end %>
@@ -146,9 +146,9 @@
           <td>
             <%= render Admin::TableActionsComponent.new(answer,
               actions: [:edit, :destroy],
-              edit_path: polymorphic_path([@namespace, answer], action: :edit),
+              edit_path: polymorphic_path([@namespace, @question, answer], action: :edit),
               destroy_confirmation: t("custom.admin.polls.questions.answers.notice.delete.confirmation"),
-              destroy_path: polymorphic_path([@namespace, answer])
+              destroy_path: polymorphic_path([@namespace, @question, answer])
             ) %>
           </td>
         </tr>

@@ -5,7 +5,8 @@ module Abilities
     def initialize(user)
       merge Abilities::Everyone.new(user)
 
-      can [:read, :update, :refresh_activities, :edit_username, :update_username], User, id: user.id
+      can [:read, :update, :refresh_activities,
+           :edit_username, :update_username, :edit_details, :update_details], User, id: user.id
 
       can :read, Debate
       can :update, Debate do |debate|
@@ -131,7 +132,10 @@ module Abilities
         projekt_phase.selectable_by?(user)
       end
 
-      can [:read, :json_data, :create, :vote], DeficiencyReport
+      can [:index, :json_data, :create], DeficiencyReport
+      can [:show, :vote], DeficiencyReport do |report|
+        report.in? DeficiencyReport.admin_accepted(user)
+      end
       can :destroy, DeficiencyReport do |dr|
         dr.author_id == user.id &&
           dr.official_answer.blank?

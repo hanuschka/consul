@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "controllers", "polls", "questions_controller").to_s
 
 class Polls::QuestionsController < ApplicationController
+  include GuestUsers
+
   def answer
     @answer = @question.find_or_initialize_user_answer(current_user, params[:answer])
     @answer.answer_weight = params[:answer_weight].presence || 1

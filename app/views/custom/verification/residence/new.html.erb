@@ -22,13 +22,11 @@
         </div>
 
         <%= render Users::RegisteredAddressFieldsComponent.new(
-          user: @residence,
-          registered_address_city: @registered_address_city,
-          registered_address_street: @registered_address_street,
-          registered_address: @registered_address,
-          selected_city_id: @selected_city_id
+          resource: @residence,
+          selected_city_id: params[:form_registered_address_city_id].presence,
+          selected_street_id: params[:form_registered_address_street_id].presence,
+          selected_address_id: params[:form_registered_address_id].presence
         ) %>
-
         <%= render Users::RegularAddressFieldsComponent.new(f: f, user: @residence ) %>
 
         <div class="user-date-of-birth sign-up">
@@ -116,7 +114,7 @@
 
 <% if Setting.new_design_enabled? %>
   <%= render Auth::AuthPageTemplateComponent.new do |c| %>
-    <% c.form do %>
+    <% c.with_form do %>
       <%= base_form %>
     <% end %>
   <% end %>

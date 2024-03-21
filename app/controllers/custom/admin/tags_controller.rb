@@ -9,7 +9,7 @@ class Admin::TagsController < Admin::BaseController
   end
 
   def update
-    if @tag.update_attributes(tag_params)
+    if @tag.update(tag_params)
       redirect_to admin_tags_path
     else
       render action: :edit

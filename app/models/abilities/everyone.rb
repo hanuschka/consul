@@ -33,10 +33,38 @@ module Abilities
       can [:read, :help], ::SDG::Goal
       can :read, ::SDG::Phase
 
-      can [:read, :json_data], DeficiencyReport
+      can [:index, :json_data], DeficiencyReport
+      can [:show], DeficiencyReport do |report|
+        report.in? DeficiencyReport.admin_accepted(user)
+      end
 
       can :toggle_subscription, ProjektSubscription
       can :toggle_subscription, ProjektPhase
+
+      if user&.guest?
+        can [:create, :destroy], DirectUpload
+
+        can [:answer, :unanswer, :confirm_participation], Poll do |poll|
+          poll.answerable_by?(user)
+        end
+
+        can [:answer, :unanswer, :update_open_answer], Poll::Question do |question|
+          question.answerable_by?(user)
+        end
+
+        can :destroy, Poll::Answer do |answer|
+          answer.author == user && answer.question.answerable_by?(user)
+        end
+
+        can [:create, :suggest, :vote, :unvote], Proposal
+        can [:edit, :update, :retire, :retire_form], Proposal, author_id: user.id
+        can [:create, :suggest, :vote], Debate
+        can [:edit, :update], Debate, author_id: user.id
+
+        can [:create, :vote], Comment do |comment|
+          comment.commentable.comments_allowed?(user)
+        end
+      end
     end
   end
 end

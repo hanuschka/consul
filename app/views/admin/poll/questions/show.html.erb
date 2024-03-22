@@ -146,9 +146,9 @@
           <td>
             <%= render Admin::TableActionsComponent.new(answer,
               actions: [:edit, :destroy],
-              edit_path: polymorphic_path([@namespace, answer], action: :edit),
+              edit_path: polymorphic_path([@namespace, @question, answer], action: :edit),
               destroy_confirmation: t("custom.admin.polls.questions.answers.notice.delete.confirmation"),
-              destroy_path: polymorphic_path([@namespace, answer])
+              destroy_path: polymorphic_path([@namespace, @question, answer])
             ) %>
           </td>
         </tr>

@@ -140,8 +140,8 @@ class Projekt < ApplicationRecord
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) }
+      .includes(:projekt_phases, :projekt_settings)
+      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
   scope :index_order_ongoing, ->() {
@@ -292,7 +292,7 @@ class Projekt < ApplicationRecord
 
   def can_assign_resources?(controller_name, user)
     return false if user.nil?
-    return false unless activated?
+    return false unless activated? || controller_name == "polls"
 
     if controller_name == "proposals"
       if proposal_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)

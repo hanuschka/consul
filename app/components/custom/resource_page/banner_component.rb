@@ -2,6 +2,8 @@ class ResourcePage::BannerComponent < ApplicationComponent
   renders_one :links_section
   attr_reader :resource
 
+  delegate :current_user, to: :helpers
+
   def initialize(resource:, compact: false)
     @resource = resource
     @compact = compact

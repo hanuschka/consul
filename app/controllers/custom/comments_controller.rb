@@ -1,6 +1,10 @@
 require_dependency Rails.root.join("app", "controllers", "comments_controller").to_s
 
 class CommentsController < ApplicationController
+  include GuestUsers
+
+  before_action :authenticate_user!, only: [:create, :vote], unless: -> { current_user&.guest? }
+  before_action :authenticate_user!, only: [:hide]
   before_action :verify_user_can_comment, only: [:create, :vote]
 
   def index

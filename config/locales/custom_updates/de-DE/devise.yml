@@ -19,3 +19,5 @@ de:
             form_registered_address_street_label: Straße
             submit: Neues Konto erstellen
             organization_signup_link: Als Organisation oder Kollektiv registrieren
+          sign_in_guest:
+            success: Sie haben sich erfolgreich als Gast angemeldet

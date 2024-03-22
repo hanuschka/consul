@@ -463,10 +463,10 @@ class Admin::MenuComponent < ApplicationComponent
           settings_link,
           tags_link,
           geozones_link,
-					individual_groups_link,
-          age_restrictions_link,
-					images_link,
-					content_blocks_link,
+          individual_groups_link,
+          age_ranges_link,
+          images_link,
+          content_blocks_link,
           local_census_records_link,
           class: ("is-active" if settings?)
         )

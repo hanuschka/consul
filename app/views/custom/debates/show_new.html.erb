@@ -97,7 +97,7 @@
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@debate.projekt_phase, "resource.show_report_button_in_sidebar") && (show_flag_action?(@debate) || show_unflag_action?(@debate)) %>
+        <% if projekt_phase_feature?(@debate.projekt_phase, "resource.show_report_button_in_sidebar") && (show_flag_action?(@debate) || show_unflag_action?(@debate)) && !current_user&.guest? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.report_title"), icon_name: "flag")) do %>
             <%= render "shared/participation/flag", resource: @debate %>
           <% end %>

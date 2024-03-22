@@ -15,6 +15,23 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def sign_in_guest
+    unless session[:guest_user_id].present?
+      guest_key = "guest_#{SecureRandom.uuid}"
+      User.create_guest_user(guest_key)
+      session[:guest_user_id] = guest_key
+    end
+
+    notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
+    flash[:notice] = notice
+
+    unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
+      redirect_back(fallback_location: root_path)
+    else
+      redirect_to root_path
+    end
+  end
+
   private
 
     def sign_up_params

@@ -1,7 +1,9 @@
 <div id="participation_statistics">
 
+  <h3 class="section-title"><%= t("stats.title") %></h3>
+
   <% unless stats.show_percentage_values_only? %>
-    <h3 class="section-title"><%= t("stats.title") %></h3>
+    <small><%= t("stats.hint") %></small>
 
     <div id="total_participants" class="stats-group">
       <h4><%= t("stats.total_participants") %></h4>

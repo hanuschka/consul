@@ -46,4 +46,10 @@ class Budget < ApplicationRecord
 
     super
   end
+
+  def stats_age_groups
+    return [] unless projekt_phase.present?
+
+    projekt_phase.age_ranges_for_stats.map { |ar| [ar.min_age, ar.max_age] }
+  end
 end

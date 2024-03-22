@@ -10,9 +10,9 @@ de:
       projekt:
         one: Projekt
         other: Projekte
-      age_restriction:
-        one: Altersbeschränkung
-        other: Altersbeschränkungen
+      age_range:
+        one: Altersgruppe
+        other: Altersgruppen
       modal_notification:
         one: Popup Benachrichtigung
         other: Popup Benachrichtungen
@@ -139,10 +139,11 @@ de:
         date_of_birth: Geburtsdatum
         document_type: Dokument
         document_last_digits: Personalausweis / Passport (4 letzten Ziffern)
-      age_restriction:
+      age_range:
         min_age: Mindestalter
         max_age: Maximalalter
         order: Reihenfolge
+        only_for_stats: Nur für Statistiken
       modal_notification:
         title: Titel
         active_from: Von

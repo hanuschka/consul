@@ -7,7 +7,7 @@ class Users::RegularAddressFieldsComponent < ApplicationComponent
   private
 
     def display_style
-      return "none" if first_form_load? && RegisteredAddress.present? && (@user&.registered_address_id.present? || @user&.city_name.blank?)
+      return "none" if first_form_load? && RegisteredAddress.any? && (@user&.registered_address_id.present? || @user&.city_name.blank?)
 
       @user.validate_regular_address_fields? ? "block" : "none"
     end

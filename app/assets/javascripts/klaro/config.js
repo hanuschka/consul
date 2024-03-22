@@ -220,28 +220,28 @@ var klaroConfig = {
         //     default: true,
         //     purposes: ['marketing'],
         // },
-        {
+        // {
             // Each service should have a unique (and short) name.
-            name: 'matomo',
+            // name: 'matomo',
 
             // If "default" is set to true, the service will be enabled by default
             // Overwrites global "default" setting.
             // We recommend leaving this to "false" for services that collect
             // personal information.
-            default: true,
+            // default: true,
 
             // The title of your service as listed in the consent modal.
-            title: 'Statistik-Cookie',
+            // title: 'Statistik-Cookie',
 
             // The purpose(s) of this service. Will be listed on the consent notice.
             // Do not forget to add translations for all purposes you list here.
-            purposes: ['analytics'],
+            // purposes: ['analytics'],
 
             // A list of regex expressions or strings giving the names of
             // cookies set by this service. If the user withdraws consent for a
             // given service, Klaro will then automatically delete all matching
             // cookies.
-            cookies: [
+            // cookies: [
                // you can also explicitly provide a path and a domain for
                // a given cookie. This is necessary if you have services that
                // set cookies for a path that is not "/" or a domain that
@@ -251,9 +251,9 @@ var klaroConfig = {
                // Notice that it is not possible to delete cookies that were set
                // on a third-party domain! See the note at mdn:
                // https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie#new-cookie_domain
-               [/^_pk_.*$/],
-               'piwik_ignore'
-            ],
+               // [/^_pk_.*$/],
+               // 'piwik_ignore'
+            // ],
 
             // An optional callback function that will be called each time
             // the consent state for the service changes (true=consented). Passes
@@ -276,17 +276,17 @@ var klaroConfig = {
 
             // If "required" is set to true, Klaro will not allow this service to
             // be disabled by the user.
-            required: false,
+            // required: false,
 
             // If "optOut" is set to true, Klaro will load this service even before
             // the user gave explicit consent.
             // We recommend always leaving this "false".
-            optOut: false,
+            // optOut: false,
 
             // If "onlyOnce" is set to true, the service will only be executed
             // once regardless how often the user toggles it on and off.
-            onlyOnce: true,
-        },
+            // onlyOnce: true,
+        // },
 
         // The services will appear in the modal in the same order as defined here.
         // {
@@ -303,5 +303,23 @@ var klaroConfig = {
             optOut: false,
             required: true
         },
+        {
+            name: 'matomo',
+            title: 'Statistik-Cookie',
+            default: true,
+            purposes: ['analytics'],
+            cookies: [
+              [/^_pk_.*$/]
+            ],
+            callback: function(consent, service) {
+              if (consent) {
+                console.log('User consent for service ' + service.name + ': consent=' + consent);
+                _paq.push(['rememberConsentGiven']);
+              } else {
+                console.log('User consent for service ' + service.name + ': consent=' + consent);
+                _paq.push(['forgetConsentGiven']);
+              }
+            }
+        }
     ],
 };

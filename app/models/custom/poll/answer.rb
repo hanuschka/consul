@@ -6,6 +6,7 @@ class Poll::Answer < ApplicationRecord
     def max_votes
       return if !question || question&.unique? || question.votation_type&.rating_scale?
 
+      author.save! if author.guest? && author.changed == ["locale"]
       author.lock!
 
       available_weight = [ (question.max_votes - question.answers.by_author(author).where.not(answer: answer).sum(:answer_weight)), question.votation_type.max_votes_per_answer].compact.min

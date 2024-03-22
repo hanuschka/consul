@@ -7,11 +7,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     build_resource(sign_up_params)
     resource.registering_from_web = true
     process_temp_attributes_for(resource)
-    set_address_objects_from_temp_attributes_for(resource)
 
-    if resource.extended_registration? && resource.errors.any?
-      render :new
-    elsif resource.valid?
+    if resource.valid?
       validate_absolute_email_uniqueness
       if resource.errors.any?
         render :new
@@ -31,6 +28,23 @@ class Users::RegistrationsController < Devise::RegistrationsController
          @hidden_user_with_this_email_exists = true
          @user.errors.add(:email, :taken)
       end
+    end
+  end
+
+  def sign_in_guest
+    unless session[:guest_user_id].present?
+      guest_key = "guest_#{SecureRandom.uuid}"
+      User.create_guest_user(guest_key)
+      session[:guest_user_id] = guest_key
+    end
+
+    notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
+    flash[:notice] = notice
+
+    unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
+      redirect_back(fallback_location: root_path)
+    else
+      redirect_to root_path
     end
   end
 

@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "controllers", "polls", "answers_controller").to_s
 
 class Polls::AnswersController < ApplicationController
+  include GuestUsers
+
   def destroy
     updated_weight = params["answer_weight_poll_answer_#{@answer.id}"].to_i
 

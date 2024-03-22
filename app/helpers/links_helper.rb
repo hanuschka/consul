@@ -16,4 +16,8 @@ module LinksHelper
   def link_to_verify_account
     link_to t("users.verify_account"), verification_path
   end
+
+  def link_to_guest_signin
+    link_to "Gast teilnehmen", new_guest_user_registration_path
+  end
 end

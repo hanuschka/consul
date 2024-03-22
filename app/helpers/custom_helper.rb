@@ -76,4 +76,15 @@ module CustomHelper
       debate_path(resource)
     end
   end
+
+  def process_iframe_embeds(content)
+    doc = Nokogiri::HTML::DocumentFragment.parse(content)
+
+    doc.css("iframe").each do |iframe|
+      iframe["data-src"] = iframe["src"]
+      iframe["src"] = ""
+    end
+
+    doc.to_html
+  end
 end

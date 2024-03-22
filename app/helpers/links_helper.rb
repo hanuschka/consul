@@ -20,4 +20,8 @@ module LinksHelper
   def link_to_verify_account_short
     link_to t("custom.users.verify_account_link_short"), user_servicekonto_nrv_omniauth_authorize_path, method: :post
   end
+
+  def link_to_guest_signin
+    link_to "Gast teilnehmen", new_guest_user_registration_path
+  end
 end

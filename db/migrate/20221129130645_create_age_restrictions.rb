@@ -8,14 +8,15 @@ class CreateAgeRestrictions < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    reversible do |dir|
-      dir.up do
-        AgeRestriction.create_translation_table! name: :string
-      end
+    # replaced with db/migrate/20240304164551_rename_age_restriction.rb
+    # reversible do |dir|
+    #   dir.up do
+    #     AgeRestriction.create_translation_table! name: :string
+    #   end
 
-      dir.down do
-        AgeRestriction.drop_translation_table!
-      end
-    end
+    #   dir.down do
+    #     AgeRestriction.drop_translation_table!
+    #   end
+    # end
   end
 end

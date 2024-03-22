@@ -11,7 +11,7 @@
     <%= link_to t("custom.admin.menu.polls"), projekt_management_polls_path, class: "polls-link" %>
   </li>
 
-  <li class="<%= "is-active" if controller.class.parent == Admin::Legislation %>">
+  <li class="<%= "is-active" if controller.class.module_parent == ProjektManagement::Legislation %>">
     <%= link_to t("custom.admin.menu.legislation"), projekt_management_legislation_processes_path, class: "legislation-link" %>
   </li>
 

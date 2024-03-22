@@ -15,7 +15,7 @@
 
   <% unless launch_page %>
     <div class="account-admin-items">
-      <% if current_user.present? %>
+      <% if user_signed_in? %>
         <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
         <%= render partial: 'shared/subnavigation_konto_new', locals: { placement: placement } %>
       <% end %>

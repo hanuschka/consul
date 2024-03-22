@@ -177,6 +177,8 @@ class Setting < ApplicationRecord
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,
         "deficiency_reports.enable_geoman_controls_in_maps": true,
+        "deficiency_reports.admin_acceptance_required": false,
+
         "extended_feature.general.elasticsearch": false,
 
         "extended_feature.general.extended_editor_for_admins": true,

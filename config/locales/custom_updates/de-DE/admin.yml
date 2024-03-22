@@ -27,6 +27,22 @@ de:
         show:
           physical_votes_updated: Physical votes updated!
       deficiency_reports:
+        index:
+          entry_name: Mangel
+          no_deficiency_reports: Keine Mängelmeldungen
+          title: Titel
+          author: Autor
+          official_answer: Offizielle Antwort
+          category_name: Kategorie
+          status_title: Status
+          officer_name: Sachbearbeiter*in
+          officer_email: Email
+          admin_accepted: Admin Bestätigung
+          actions: Aktionen
+        update:
+          success_notice: Die Mängelmeldung wurde aktualisiert
+        destroy:
+          success_notice: Die Mängelmeldung wurde gelöscht
         categories:
           category:
             color: Farbe
@@ -50,10 +66,6 @@ de:
           officer: Sachbearbeiter*in
           status: Status
           title: Gemeldeter Mangel
-        index:
-          entry_name: Mangel
-          no_deficiency_reports: Keine Mängelmeldungen
-          title: Mängel zuweisen
         officers:
           index:
             search:
@@ -160,7 +172,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         legislation: Textbearbeitung
-        age_restrictions: Altersbeschränkungen
+        age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
         title_registered_addresses: Registrierte Adressen
         registered_addresses:
@@ -172,6 +184,7 @@ de:
         individual_groups: Individuelle Gruppen
         unregistered_newsletter_subscribers:
           list: Newsletter-Abonnenten
+        matomo: Matomo
       polls:
         show:
           edit_nested_questions: Verschachtelte Fragen
@@ -387,6 +400,7 @@ de:
           document_last_digits: Dokument (4 letzten Ziffern)
           unique_stamp: Unique Stamp
           created_at: Nutzer angelegt am
+          last_sign_in_date: letzter Login am
           verified_at: Verifiziert am
           actions: Aktionen
           action:
@@ -400,16 +414,6 @@ de:
             archived_projekt: Abgeschlossener Beteiligungsprozess
       flash:
         deleted: Gelöscht
-      age_restrictions:
-        name: Name
-        min_age: Mindestalter
-        max_age: Maximalalter
-        range: Altersbeschränkung
-        order: Reihenfolge
-        buttons:
-          new: Neu erstellen
-          edit: Bearbeiten
-          destroy: Löschen
       projekt_phases:
         nav_bar:
           duration: Laufzeit
@@ -419,6 +423,7 @@ de:
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
+          age_ranges_for_stats: Altersgruppen für Statistiken
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
@@ -450,6 +455,7 @@ de:
           page_title: Benennungen
         restrictions:
           page_title: Einschränkungen
+          guest_participation_allowed: Gastteilnahme erlaubt
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
@@ -549,11 +555,13 @@ de:
           follow_up_fields_title:  Follow-up Formularfelder
           dropdown_hint: Bitte geben Sie Ihre Antwortoptionen ein. Diese müssen durch ein Komma getrennt sein.
           kinds:
-            string: Text
+            string: kurzer Text
+            textarea: langer Text
             email: Email
             date: Datum
             dropdown: Dropdown
             image: Bild
+            document: Dokument
           update_field_button: Formularfeld aktualisieren
           add_field_button: Neues Formularfeld hinzufügen
         formular_answers:
@@ -567,6 +575,8 @@ de:
             save_draft: Entwurf speichern
             send_email: E-Mail versenden
             create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
+        age_ranges_for_stats:
+          page_title: Altersgruppen für Statistiken
       modal_notifications:
         index:
           create: Erstellen
@@ -604,6 +614,22 @@ de:
           title: Gruppenwert bearbeiten
         table:
           name: Name
+      age_ranges:
+        index:
+          title: Altersgruppen
+          new: Neue Altersgruppe erstellen
+          filters:
+            for_restrictions: Altersbeschränkung
+            for_stats: Altersgruppen für Statistiken
+        table:
+          name: Name
+          range: Altersgruppe
+        min_age: Mindestalter
+        max_age: Maximalalter
+        order: Reihenfolge
+        buttons:
+          edit: Bearbeiten
+          destroy: Löschen
       unregistered_newsletter_subscribers:
         index:
           title: Newsletter-Abonnenten

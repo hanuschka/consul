@@ -1,19 +1,22 @@
 en:
   stats:
     title: "Participation data"
+    hint: The statistics will be recreated after the participation has expired. Therefore, there may be shifts in individual cases. #custom
     advanced: "Advanced statistics"
     total_participants: "Participants"
     by_gender: "Participants by gender"
     by_age: "Participants by age"
+    by_individual_group: "Individual group" #custom
     by_geozone: "Participants by district"
     men_percentage: "%{percentage} Men"
     women_percentage: "%{percentage} Women"
-    other_percentage: "%{percentage} Other" #custom
+    other_gen_percentage: "%{percentage} Other" #custom
     age: "Age"
     age_more_than: "%{start} years old and older"
     age_range: "%{start} - %{finish} years old"
     total: "Total"
     geozone: "District"
+    individual_group_value_count: Total #custom
     no_demographic_data:
       one: "* There is no demographic data for 1 participant."
       other: "* There is no demographic data for %{count} participants."

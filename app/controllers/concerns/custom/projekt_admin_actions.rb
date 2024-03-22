@@ -44,7 +44,7 @@ module ProjektAdminActions
   def update
     authorize!(:update, @projekt)
 
-    if @projekt.update_attributes(projekt_params)
+    if @projekt.update(projekt_params)
       redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
         notice: t("custom.admin.projekts.edit.flash.update_notice")
     else

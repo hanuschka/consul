@@ -50,7 +50,15 @@ class DeficiencyReport < ApplicationRecord
     where(author_id: user_id)
   }
 
-  def audited_changes
+  def self.admin_accepted(current_user)
+    if Setting["deficiency_reports.admin_acceptance_required"].present?
+      where(admin_accepted: true).or(where(author: current_user))
+    else
+      all
+    end
+  end
+
+  def audited_changes(**options)
     if super.has_key?("deficiency_report_status_id")
       old_status_title = DeficiencyReport::Status.find_by(id: deficiency_report_status_id_was)&.title
       super.merge!("deficiency_report_status_id" => [old_status_title, status.title])

@@ -3,6 +3,7 @@ require_dependency Rails.root.join("app", "controllers", "welcome_controller").t
 class WelcomeController < ApplicationController
   include Takeable
   include ProjektControllerHelper
+  include GuestUsers
 
   def welcome
     redirect_to root_path
@@ -52,7 +53,11 @@ class WelcomeController < ApplicationController
   private
 
     def filtered_items(feed)
-      @resources = feed.items
+      if feed.kind.in?(["proposals", "debates"])
+        @resources = feed.items.where.not(author: current_user)
+      else
+        @resources = feed.items
+      end
 
       @resources = @resources.joins(projekt_phase: :projekt)
         .merge(Projekt.activated.with_active_feature("general.show_in_sidebar_filter"))

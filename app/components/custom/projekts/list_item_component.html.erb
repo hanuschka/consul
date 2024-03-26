@@ -22,6 +22,7 @@
   <% end %>
 
   <% c.with_footer_section do %>
-   <%= link_to("Zum Projekt", projekt.page.url, class: "button -grey") %>
+    <%= link_to("Zum Projekt", projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url, class: "button -grey",
+                 target: projekt_option(projekt, "general.external_participation_link").present? ? "_blank" : "_self") %>
   <% end %>
 <% end %>

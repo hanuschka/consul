@@ -3,6 +3,8 @@
 class Projekts::ListItemComponent < ApplicationComponent
   attr_reader :projekt
 
+  delegate :projekt_option, to: :helpers
+
   def initialize(projekt:)
     @projekt = projekt
   end

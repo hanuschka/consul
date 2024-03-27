@@ -224,11 +224,11 @@
                 <%= t("custom.proposals.show.community_section.particapated_users_count") %>
               </div>
               <div>
-                <%= @proposal.community.comments_count %>
+                <%= @proposal.community.topics.count %>
                 <%= t("custom.proposals.show.community_section.topics_count") %>
               </div>
               <div>
-                <%= @proposal.community.topics.count %>
+                <%= @proposal.community.comments_count %>
                 <%= t("custom.proposals.show.community_section.comments_count") %>
               </div>
               <%= render(Sidebar::UsersListComponent.new(users: @proposal.community.participants)) %>

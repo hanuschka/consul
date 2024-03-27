@@ -152,4 +152,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
 
     @map_coordinates.present? || @map_location.present? || @projekt_phase&.map_location.present?
   end
+
+  def hide_list_line_divider?
+    resource_type == Topic
+  end
 end

@@ -110,6 +110,26 @@
               </div>
             <% end %>
 
+            <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? && @proposal.community.topics.any? %>
+              <div class="proposal-resources-section">
+                <%= render Shared::CollapseComponent.new(opened_by_default: true) do |c| %>
+                  <% c.with_head do %>
+                    <h3>
+                      <%= t("custom.proposals.show.communities.topics.title", count: @proposal.community.topics.count) %>
+                    </h3>
+                  <% end %>
+                  <% c.with_body do %>
+                      <%= render(
+                        Shared::ResourcesListComponent.new(
+                          resources: @proposal.community.topics,
+                          resource_type: Topic,
+                          hide_view_mode_button: true
+                          )) %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+
             <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_comments") %>
               <div id="proposal-comments" class="proposal-resources-section">
                 <%= render Shared::NewCommentsComponent.new(@proposal, @comment_tree) %>

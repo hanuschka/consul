@@ -9,7 +9,7 @@
     <% end %>
   <% end %>
 
-  <% if projekt.current_phases.any? %>
+  <% if projekt.current_phases.any? && projekt_option(projekt, "general.external_participation_link").blank? %>
     <% c.with_additional_body_section do %>
       <div class="projekt-list-item--phases">
         <% projekt.current_phases.each do |phase| %>
@@ -22,7 +22,6 @@
   <% end %>
 
   <% c.with_footer_section do %>
-    <%= link_to("Zum Projekt", projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url, class: "button -grey",
-                 target: projekt_option(projekt, "general.external_participation_link").present? ? "_blank" : "_self") %>
+    <%= link_to("Zum Projekt", projekt_url, class: "button -grey", target: url_target) %>
   <% end %>
 <% end %>

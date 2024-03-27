@@ -16,8 +16,9 @@ class Projekts::ListItemComponent < ApplicationComponent
       description: strip_tags(projekt.page.subtitle),
       tags: projekt.tags,
       narrow_header: true,
-      url: projekt.page.url,
-      image_url: image_variant(:card_thumb),
+      url: projekt_url,
+      url_target: url_target,
+      image_url: image_variant(:card_thumb)
     }
   end
 
@@ -64,5 +65,13 @@ class Projekts::ListItemComponent < ApplicationComponent
     when ProjektPhase::ProjektNotificationPhase
       "fa-bell"
     end
+  end
+
+  def projekt_url
+    projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
+  end
+
+  def url_target
+    "_blank" if projekt_option(projekt, "general.external_participation_link").present?
   end
 end

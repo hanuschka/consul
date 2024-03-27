@@ -46,7 +46,7 @@
       </div>
     <% end %>
 
-    <%= link_to @url, class: 'resource-item--image-link' do %>
+    <%= link_to @url, class: 'resource-item--image-link', target: @url_target do %>
       <%= render(
         Shared::ResourceImageComponent.new(
           image_url: @image_url,
@@ -89,7 +89,7 @@
               <div class="resource-item--date"><%= date %></div>
             <% end %>
           </div>
-          <%= link_to(truncate(@title, length: 72), @url, class: "resource-item--title" ) %>
+          <%= link_to(truncate(@title, length: 72), @url, class: "resource-item--title", target: @url_target) %>
 
           <div class="resource-item--description">
             <%= truncate(strip_tags(@description), length: 160) %>

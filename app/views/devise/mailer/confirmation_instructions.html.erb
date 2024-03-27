@@ -5,16 +5,34 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("devise_views.mailer.confirmation_instructions.welcome") %> <strong><%= @email %></strong>
+    Guten Tag <%= @user.username || @email %>,
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("devise_views.mailer.confirmation_instructions.text") %>
+    herzlich willkommen bei der Themenwahl 2023 von ABSTIMMUNG21!
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= link_to t("devise_views.mailer.confirmation_instructions.confirm_link"),
+    Durch den Klick auf einen der nachfolgenden Links bestätigen Sie Ihre Registrierung und kommen auf unsere Themenwahlseite. Bitte melden Sie sich dort mit Ihrer Mailadresse und dem Passwort an und Sie können starten.
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    Wir möchten Sie auch zukünftig über die Abstimmung und Aktionen (Gesprächsrunden, Auszählung etc.) per E-Mail informieren. Unseren Newsletter können Sie jederzeit abbestellen. Bitte klicken Sie hier:
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= link_to "Ich bestätige meine Mail-Adresse zur Registrierung und möchte gleichzeitig den Newsletter von ABSTIMMUNG21 bestellen",
+                confirmation_url(@resource, confirmation_token: @token, newsletter: "true"),
+                style: css_for_mailer_link %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= link_to "Ich bestätige meine Mail-Adresse zur Registrierung und verzichte auf den Newsletter von ABSTIMMUNG21",
                 confirmation_url(@resource, confirmation_token: @token),
                 style: css_for_mailer_link %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    (Dieser Link ist aus Sicherheitsgründen nur 72 Stunden aktiv. Bitte melden Sie sich erneut an, falls Sie in dieser Zeitspanne Ihren Eintrag nicht erfolgreich bestätigen konnten.)
   </p>
 </td>

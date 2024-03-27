@@ -167,6 +167,10 @@
       color: $main-text-color;
     }
 
+    span.checkbox a {
+      text-decoration: underline;
+    }
+
     @media(max-width: $small-tablet-viewport-start) {
       width: 100%;
       max-width: 500px;

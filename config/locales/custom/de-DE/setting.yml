@@ -291,7 +291,10 @@ de:
           newest_first: Neueste Meilensteine zuerst anzeigen
           newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
 
-
+      projekt_option:
+        general:
+          external_participation_link: Alternativen Link in den Projektressourcen verwenden
+          external_participation_link_description: Anstatt zum Projekt zu verlinken wird auf eine (externe) Seite verlinkt
       deficiency_reports:
         show_in_main_menu: Mängelmelder in Navigation anzeigen
         show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an

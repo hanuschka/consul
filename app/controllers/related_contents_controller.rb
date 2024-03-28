@@ -31,6 +31,13 @@ class RelatedContentsController < ApplicationController
     score(:negative)
   end
 
+  def destroy
+    @related_content = RelatedContent.find(params[:id])
+
+    @related_content.opposite_related_content.destroy!
+    @related_content.destroy!
+  end
+
   private
 
     def score(action)

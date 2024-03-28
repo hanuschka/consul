@@ -2,7 +2,7 @@ class RelatedContent < ApplicationRecord
   RELATED_CONTENT_SCORE_THRESHOLD = Setting["related_content_score_threshold"].to_f
   RELATIONABLE_MODELS = %w[proposals debates budgets investments].freeze
 
-  acts_as_paranoid column: :hidden_at
+  # acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
 
   belongs_to :author, class_name: "User"

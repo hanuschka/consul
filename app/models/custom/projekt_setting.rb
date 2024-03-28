@@ -13,7 +13,7 @@ class ProjektSetting < ApplicationRecord
   end
 
   def type
-    if %w[projekt_feature projekt_newsfeed].include? prefix
+    if %w[projekt_feature projekt_option projekt_newsfeed].include? prefix
       prefix
     else
       "configuration"
@@ -48,6 +48,8 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.show_in_sidebar_filter": 'active',
         "projekt_feature.general.vc_map_enabled": '',
         "projekt_feature.general.consider_underway": "",
+
+        "projekt_option.general.external_participation_link": "",
 
         "projekt_feature.sidebar.show_notification_subscription_toggler": "active",
         "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": "active",

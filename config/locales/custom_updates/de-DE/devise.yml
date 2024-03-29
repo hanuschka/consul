@@ -21,3 +21,5 @@ de:
             organization_signup_link: Als Organisation oder Kollektiv registrieren
           sign_in_guest:
             success: Sie haben sich erfolgreich als Gast angemeldet
+          sign_out_guest:
+            success: Sie haben sich erfolgreich als Gast abgemeldet

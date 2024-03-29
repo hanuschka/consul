@@ -25,11 +25,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
     flash[:notice] = notice
 
-    unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
-      redirect_back(fallback_location: root_path)
-    else
-      redirect_to root_path
-    end
+    redirect_back_to_referer
+  end
+
+  def sign_out_guest
+    session.delete(:guest_user_id)
+
+    notice = t("custom.devise_views.users.registrations.sign_out_guest.success")
+    flash[:notice] = notice
+
+    redirect_back_to_referer
   end
 
   private
@@ -51,5 +56,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
                                    :locale,
                                    :redeemable_code,
                                    individual_group_value_ids: [])
+    end
+
+    def redirect_back_to_referer
+      unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
+        redirect_back(fallback_location: root_path)
+      else
+        redirect_to root_path
+      end
     end
 end

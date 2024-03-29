@@ -19,6 +19,7 @@ devise_scope :user do
   get "users/registrations/update_registered_address_field",
     to: "users/registrations#update_registered_address_field" # custom line
   get "users/registrations/sign_in_guest", to: "users/registrations#sign_in_guest", as: :new_guest_user_registration # custom line
+  get "users/registrations/sign_out_guest", to: "users/registrations#sign_out_guest", as: :destroy_guest_user_session # custom line
 end
 
 devise_for :organizations, class_name: "User",

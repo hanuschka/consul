@@ -100,7 +100,7 @@
          id="currentModalNotification"
          data-reveal data-modal-notification-id=<%= ModalNotification.current.id %>>
       <%= AdminWYSIWYGSanitizer.new.sanitize(ModalNotification.current.html_content) %>
-      <button class="close-button" data-close aria-label="Close modal" type="button">
+      <button class="close-button" data-close aria-label="Close modal" type="button" style="background-color:white;right:0;top:0;padding: 0 5px;">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

@@ -183,6 +183,8 @@ module Abilities
       can :manage, ProjektArgument
 
       can :read_stats, Budget, id: Budget.valuating_or_later.ids
+
+      can :destroy, RelatedContent
     end
   end
 end

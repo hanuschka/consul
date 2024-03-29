@@ -249,7 +249,7 @@
           <% end %>
         <% end %>
 
-        <% if !@proposal.selected? && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_related_content") %>
+        <% if show_related_contents_block?(@proposal) %>
           <%= render(Shared::SidebarCardComponent.new(title: t("related_content.title"), icon_name: "link")) do %>
             <p>
               <%= t("related_content.description") %>

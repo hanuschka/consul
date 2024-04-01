@@ -39,11 +39,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def sign_out_guest
     session.delete(:guest_user_id)
-
-    notice = t("custom.devise_views.users.registrations.sign_out_guest.success")
-    flash[:notice] = notice
-
-    redirect_back_to_referer
+    redirect_to root_path, notice: t("custom.devise_views.users.registrations.sign_out_guest.success")
   end
 
   private
@@ -68,7 +64,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     def initialize_guest_user(guest_key)
-      debugger
       User.new(
         username: params[:user][:username],
         terms_general: params[:user][:terms_general],

@@ -40,12 +40,11 @@
 
         <% if extended_feature?("general.show_guest_login_links") %>
           <% if current_user&.guest? %>
-            <li class="inline-block">&nbsp;|&nbsp;<%= link_to "Melden Sie sich als Gast ab", destroy_guest_user_session_path %></li>
+            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_out_as_guest"), destroy_guest_user_session_path, method: :delete %></li>
           <% elsif current_user.nil? %>
-            <li class="inline-block">&nbsp;|&nbsp;<%= link_to "Melden Sie sich als Gast an", new_guest_user_registration_path %></li>
+            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_in_as_guest"), new_guest_user_registration_path %></li>
           <% end %>
         <% end %>
-
       </ul>
     </div>
 

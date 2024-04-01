@@ -16,16 +16,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def sign_in_guest
-    unless session[:guest_user_id].present?
+    redirect_to root_path if current_user.present?
+
+    @guest_user = User.new(guest: true)
+  end
+
+  def create_guest
+    if current_user.present?
+      redirect_to after_sign_in_path_for(current_user), notice: t("custom.devise_views.users.registrations.sign_in_guest.success")
+    else
       guest_key = "guest_#{SecureRandom.uuid}"
-      User.create_guest_user(guest_key)
-      session[:guest_user_id] = guest_key
+      @guest_user = initialize_guest_user(guest_key)
+
+      if @guest_user.save
+        session[:guest_user_id] = guest_key
+        redirect_to after_sign_in_path_for(@guest_user), notice: t("custom.devise_views.users.registrations.sign_in_guest.success")
+      else
+        render :sign_in_guest
+      end
     end
-
-    notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
-    flash[:notice] = notice
-
-    redirect_back_to_referer
   end
 
   def sign_out_guest
@@ -58,11 +67,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
                                    individual_group_value_ids: [])
     end
 
-    def redirect_back_to_referer
-      unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
-        redirect_back(fallback_location: root_path)
-      else
-        redirect_to root_path
-      end
+    def initialize_guest_user(guest_key)
+      debugger
+      User.new(
+        username: params[:user][:username],
+        terms_general: params[:user][:terms_general],
+        email: "#{guest_key}@example.com",
+        guest: true,
+        confirmed_at: Time.now.utc,
+        skip_password_validation: true
+      )
     end
 end

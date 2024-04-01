@@ -20,6 +20,10 @@ en:
             submit: Create a new account
             organization_signup_link: Register as an organization or collective
           sign_in_guest:
+            title: Sign in as a guest
+            username_placeholder: username
+            username_hint: please enter your preferred username
+            submit: Sign in as a guest
             success: You have successfully signed in as Guest
           sign_out_guest:
             success: You have successfully signed out as Guest

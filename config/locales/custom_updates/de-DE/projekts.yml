@@ -33,8 +33,8 @@ de:
         index_order_underway_title: 'Im Reiter "Aktive Beteiligung" sind Projekte, bei denen man sich aktuell beteiligen kann.'
         index_order_upcoming: Zukünftige Projektvorhaben
         index_order_upcoming_title: 'Im Reiter "Zukünftige Projektvorhaben" sind Beteiligungsprojekte gelistet, die erst in der Zukunft stattfinden.'
-        index_order_individual_list: "Individuelle Liste"
-        index_order_individual_list_title: "Individuelle Liste"
+        index_order_individual_list: "Vorhabenliste"
+        index_order_individual_list_title: "Vorhabenliste"
         index_order_drafts: "Entwürfe"
         index_order_drafts_title: "Entwürfe"
       page:

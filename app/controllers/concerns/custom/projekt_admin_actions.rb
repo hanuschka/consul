@@ -24,6 +24,8 @@ module ProjektAdminActions
     @projekt_features_main = all_projekt_features["main"]
     @projekt_features_general = all_projekt_features["general"]
     @projekt_features_sidebar = all_projekt_features["sidebar"]
+    all_projekt_options = all_settings["projekt_option"].group_by(&:projekt_feature_type)
+    @projekt_options_general = all_projekt_options["general"]
 
     @default_footer_tab_setting = ProjektSetting.find_by(
       projekt: @projekt,
@@ -44,7 +46,7 @@ module ProjektAdminActions
   def update
     authorize!(:update, @projekt)
 
-    if @projekt.update_attributes(projekt_params)
+    if @projekt.update(projekt_params)
       redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
         notice: t("custom.admin.projekts.edit.flash.update_notice")
     else

@@ -110,6 +110,26 @@
               </div>
             <% end %>
 
+            <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? && @proposal.community.topics.any? %>
+              <div class="proposal-resources-section">
+                <%= render Shared::CollapseComponent.new(opened_by_default: true) do |c| %>
+                  <% c.with_head do %>
+                    <h3>
+                      <%= t("custom.proposals.show.communities.topics.title", count: @proposal.community.topics.count) %>
+                    </h3>
+                  <% end %>
+                  <% c.with_body do %>
+                      <%= render(
+                        Shared::ResourcesListComponent.new(
+                          resources: @proposal.community.topics,
+                          resource_type: Topic,
+                          hide_view_mode_button: true
+                          )) %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+
             <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_comments") %>
               <div id="proposal-comments" class="proposal-resources-section">
                 <%= render Shared::NewCommentsComponent.new(@proposal, @comment_tree) %>
@@ -141,7 +161,7 @@
               <% end %>
             <% end %>
 
-            <% unless @proposal.retired? %>
+            <% if !@proposal.retired? && can?(:retire, @proposal) %>
               <%= link_to t("dashboard.index.retire"),
                 retire_form_proposal_path(@proposal),
                 class: "button hollow alert",
@@ -190,7 +210,7 @@
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") %>
+        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? %>
           <%= render(Shared::SidebarCardComponent.new(
               title: t("custom.proposals.show.community_section.title"),
               icon_name: "users")
@@ -204,11 +224,11 @@
                 <%= t("custom.proposals.show.community_section.particapated_users_count") %>
               </div>
               <div>
-                <%= @proposal.community.comments_count %>
+                <%= @proposal.community.topics.count %>
                 <%= t("custom.proposals.show.community_section.topics_count") %>
               </div>
               <div>
-                <%= @proposal.community.topics.count %>
+                <%= @proposal.community.comments_count %>
                 <%= t("custom.proposals.show.community_section.comments_count") %>
               </div>
               <%= render(Sidebar::UsersListComponent.new(users: @proposal.community.participants)) %>
@@ -229,7 +249,7 @@
           <% end %>
         <% end %>
 
-        <% if !@proposal.selected? && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_related_content") %>
+        <% if show_related_contents_block?(@proposal) %>
           <%= render(Shared::SidebarCardComponent.new(title: t("related_content.title"), icon_name: "link")) do %>
             <p>
               <%= t("related_content.description") %>
@@ -244,14 +264,14 @@
           <% end %>
         <% end %>
 
-        <% if current_user && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_follow_button_in_proposal_sidebar") %>
+        <% if current_user && !current_user&.guest? && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_follow_button_in_proposal_sidebar") %>
           <%= render(Shared::SidebarCardComponent.new(title: t("shared.follow"), icon_name: "star")) do |c| %>
             <p><%= t("custom.shared.show.follow_text") %></p>
             <%= render "follows/follow_button", follow: find_or_build_follow(current_user, @proposal) %>
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_report_button_in_sidebar") && (show_flag_action?(@proposal) || show_unflag_action?(@proposal) )%>
+        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_report_button_in_sidebar") && (show_flag_action?(@proposal) || show_unflag_action?(@proposal)) && !current_user&.guest? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.report_title"), icon_name: "flag")) do  %>
             <%= render "shared/participation/flag", resource: @proposal %>
           <% end %>

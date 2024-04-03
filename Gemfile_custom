@@ -13,15 +13,7 @@ group :development do
   gem 'pg_query'
 end
 
-gem 'nokogiri', '~> 1.6', '>= 1.6.8'
 gem 'httparty'
 
 gem "sentry-ruby"
 gem "sentry-rails"
-
-source "https://rails-assets.org" do
-  gem "rails-assets-leaflet.markercluster"
-  gem 'rails-assets-leaflet.locatecontrol'
-end
-
-gem 'ffi', github: 'ffi/ffi', submodules: true

@@ -50,7 +50,7 @@ module Abilities
       end
 
       can(:update_map, MapLocation) do |p|
-        related_projekt = p.respond_to?(:projekt_phase) ? p.projekt_phase.projekt : p.projekt
+        related_projekt = p.respond_to?(:projekt_phase) && p.projekt_phase.present? ? p.projekt_phase.projekt : p.projekt
         can? :edit, related_projekt
       end
 
@@ -150,14 +150,10 @@ module Abilities
       can :publish, Budget, id: Budget.drafting.ids
       can :calculate_winners, Budget, &:reviewing_ballots?
       can :read_results, Budget do |budget|
-        user.projekt_manager.allowed_to?("manage", budget&.projekt) &&
-          budget.balloting_or_later?
+        budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
-      can :read_stats, Budget do |budget|
-        user.projekt_manager.allowed_to?("manage", budget&.projekt) &&
-          Budget.valuating_or_later.stats_enabled.ids.include?(budget.id)
-      end
+      can :read_stats, Budget, id: Budget.valuating_or_later.ids
 
       can :recalculate_winners, Budget, &:balloting_or_later?
 
@@ -196,6 +192,13 @@ module Abilities
 
       can [:manage], ::Legislation::DraftVersion do |draft_version|
         can?(:manage, draft_version&.process)
+      end
+
+      can :destroy, RelatedContent do |related_content|
+        return false unless related_content.parent_relationable.respond_to?(:projekt_phase) && related_content.child_relationable.respond_to?(:projekt_phase)
+
+        user.projekt_manager.allowed_to?("manage", related_content.parent_relationable.projekt_phase.projekt) ||
+          user.projekt_manager.allowed_to?("manage", related_content.child_relationable.projekt_phase.projekt)
       end
     end
   end

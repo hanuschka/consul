@@ -18,3 +18,5 @@ en:
             form_registered_address_label: Address
             form_registered_address_city_label: City/Town
             form_registered_address_street_label: Street
+          sign_in_guest:
+            success: You have successfully signed in as Guest

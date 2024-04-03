@@ -6,12 +6,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def create
   #   build_resource(sign_up_params)
   #   resource.registering_from_web = true
+  #   process_temp_attributes_for(resource)
 
   #   if resource.valid?
   #     super
   #   else
-  #     set_registered_address_instance_variables
-  #     increase_error_count_for_registered_address_selectors
   #     render :new
   #   end
   # end
@@ -66,7 +65,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if @user.citizen?
       if RegisteredAddress::City.any?
         process_temp_attributes_for(@user)
-        set_address_objects_from_temp_attributes_for(@user)
       else
         @user.update(plz: @user.city_street.plz)
       end
@@ -125,6 +123,23 @@ class Users::RegistrationsController < Devise::RegistrationsController
     else
       @user.errors.add(:bam_letter_verification_code, :not_valid)
       render :user_verification_code
+    end
+  end
+
+  def sign_in_guest
+    unless session[:guest_user_id].present?
+      guest_key = "guest_#{SecureRandom.uuid}"
+      User.create_guest_user(guest_key)
+      session[:guest_user_id] = guest_key
+    end
+
+    notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
+    flash[:notice] = notice
+
+    unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
+      redirect_back(fallback_location: root_path)
+    else
+      redirect_to root_path
     end
   end
 

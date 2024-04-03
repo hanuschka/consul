@@ -13,7 +13,7 @@ class ProjektSetting < ApplicationRecord
   end
 
   def type
-    if %w[projekt_feature projekt_newsfeed].include? prefix
+    if %w[projekt_feature projekt_option projekt_newsfeed].include? prefix
       prefix
     else
       "configuration"
@@ -47,12 +47,16 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.set_default_sorting_to_newest": "",
         "projekt_feature.general.show_in_sidebar_filter": 'active',
         "projekt_feature.general.vc_map_enabled": '',
+        "projekt_feature.general.consider_underway": "",
+
+        "projekt_option.general.external_participation_link": "",
 
         "projekt_feature.sidebar.show_notification_subscription_toggler": "active",
         "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar": "active",
         "projekt_feature.sidebar.show_map": "active",
         "projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar": "active",
         "projekt_feature.sidebar.projekt_page_sharing": "active",
+        "projekt_feature.sidebar.new_resource_button_in_sidebar": "active",
 
         "projekt_custom_feature.default_footer_tab": nil
       }

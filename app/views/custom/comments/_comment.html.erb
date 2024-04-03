@@ -95,24 +95,23 @@
           <%= render "comments/responses_count", count: comment.children.size, comment: comment %>
         </span>
 
-        <% if user_signed_in? %>
-          <% if @commentable&.comments_allowed?(current_user) %>
-            <span class="divider">&nbsp;|&nbsp;</span>
-            <%= button_tag(comment_link_text(comment),
-                        class: "js-add-comment-link link_to_button", data: { "id": dom_id(comment) }) %>
-          <% end %>
+        <% if @commentable&.comments_allowed?(current_user) %>
+          <span class="divider">&nbsp;|&nbsp;</span>
+          <%= button_tag(comment_link_text(comment),
+                      class: "js-add-comment-link link_to_button", data: { "id": dom_id(comment) }) %>
 
           <% unless valuation %>
             <%= render "comments/actions", { comment: comment } %>
           <% end %>
-
-          <% if !valuation || can?(:comment_valuation, comment.commentable) %>
-            <% #Renders reply_form instead of form %>
-            <%= render "comments/reply_form", { commentable: comment.commentable,
-                                         parent_id: comment.id,
-                                         valuation: valuation } %>
-          <% end %>
         <% end %>
+
+        <% if !valuation || can?(:comment_valuation, comment.commentable) %>
+          <% #Renders reply_form instead of form %>
+          <%= render "comments/reply_form", { commentable: comment.commentable,
+                                       parent_id: comment.id,
+                                       valuation: valuation } %>
+        <% end %>
+
       </div>
     <% end %>
   </div>

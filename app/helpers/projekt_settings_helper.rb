@@ -5,6 +5,6 @@ module ProjektSettingsHelper
   end
 
   def projekt_option(projekt, option)
-    ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.#{option}").value
+    ProjektSetting.find_by(projekt: projekt, key: "projekt_option.#{option}").value
   end
 end

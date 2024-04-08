@@ -54,6 +54,11 @@
 
     <div class="flex-layout">
       <div class="main-column">
+        <% if @proposal.official_answer.present? %>
+          <div class="main-content-card" style="background-color:#E3FCE7;">
+            <%= auto_link_already_sanitized_html wysiwyg(@proposal.official_answer) %>
+          </div>
+        <% end %>
         <%= render ResourcePage::BannerComponent.new(resource: @proposal) %>
 
         <div class="resource-page--description new-card main-content-card">

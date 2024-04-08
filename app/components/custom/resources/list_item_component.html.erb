@@ -36,6 +36,7 @@
   <% if header.present? %>
     <div class="resource-item--header <%= header_class %>" style="<%= @header_style %>">
       <%= header %>
+      <%= render Shared::FollowIconComponent.new(resource: @resource) %>
     </div>
   <% end %>
 

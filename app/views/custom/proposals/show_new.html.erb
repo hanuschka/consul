@@ -119,12 +119,15 @@
                     </h3>
                   <% end %>
                   <% c.with_body do %>
-                      <%= render(
-                        Shared::ResourcesListComponent.new(
-                          resources: @proposal.community.topics,
-                          resource_type: Topic,
-                          hide_view_mode_button: true
-                          )) %>
+                    <%= link_to t("community.show.sidebar.new_topic"),
+                                create_topic_link(@proposal.community),
+                                class: "button expanded" %>
+                    <%= render(
+                      Shared::ResourcesListComponent.new(
+                        resources: @proposal.community.topics,
+                        resource_type: Topic,
+                        hide_view_mode_button: true
+                        )) %>
                   <% end %>
                 <% end %>
               </div>

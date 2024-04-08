@@ -11,10 +11,19 @@ class Shared::FollowIconComponent < ApplicationComponent
   def render?
     current_user &&
       !current_user&.guest? &&
-      projekt_phase_feature?(@resource&.projekt_phase, "resource.show_follow_button_in_proposal_sidebar")
+      settings_allow?
   end
 
   private
+
+    def settings_allow?
+      case @resource
+      when Proposal
+        projekt_phase_feature?(@resource&.projekt_phase, "resource.show_follow_button_in_proposal_sidebar")
+      else
+        false
+      end
+    end
 
     def follow_obj
       @follow_obj ||= find_or_build_follow(current_user, @resource)

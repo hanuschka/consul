@@ -185,6 +185,8 @@ module Abilities
       can :read_stats, Budget, id: Budget.valuating_or_later.ids
 
       can :destroy, RelatedContent
+
+      can [:hide, :restore], Topic
     end
   end
 end

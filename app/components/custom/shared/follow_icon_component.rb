@@ -39,11 +39,11 @@ class Shared::FollowIconComponent < ApplicationComponent
     def unfollow_icon_html
       link_to follow_path(follow_obj, kind: "icon"), method: :delete, remote: true,
           title: unfollow_text(@resource), style: "color:#{icon_color}" do
-        helpers.content_tag(:i, nil, class: "far fa-bell-slash")
+        helpers.content_tag(:i, nil, class: "fas fa-bell")
       end
     end
 
     def icon_color
-      pick_text_color(@resource&.sentiment&.color)
+      pick_text_color(@resource&.sentiment&.color || "#004a83")
     end
 end

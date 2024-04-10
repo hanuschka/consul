@@ -52,12 +52,6 @@
           <%= render_custom_block('debate_show_welcome_text', default_content: t("custom.proposals.show.welcome_default_text", author: @proposal.author_name)) %>
         </div>
 
-        <% if @proposal.conflictive? %>
-          <div data-alert class="callout alert margin-top">
-            <strong><%= t("proposals.show.flag") %></strong>
-          </div>
-        <% end %>
-
       </div>
       <div class="sidebar-placeholder"></div>
     </div>

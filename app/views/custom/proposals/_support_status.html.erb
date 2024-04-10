@@ -19,7 +19,7 @@
             <div class="callout primary">
               <p class="text-center small"><strong><%= t("proposals.show.draft") %></strong></p>
             </div>
-          <% elsif proposal.successful? %>
+          <% elsif proposal.successful? && false # CON-1947 %>
             <div class="supports text-center">
               <%= render "proposals/supports", proposal: proposal %>
             </div>

@@ -169,6 +169,11 @@ module Abilities
       can :toggle_subscription, ProjektPhaseSubscription do |subscription|
         subscription.user == user
       end
+
+      can :create, RelatedContent
+      can :destroy, RelatedContent do |related_content|
+        related_content.author_id == user.id
+      end
     end
   end
 end

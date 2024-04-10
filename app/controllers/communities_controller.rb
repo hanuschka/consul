@@ -17,7 +17,11 @@ class CommunitiesController < ApplicationController
     end
 
     def load_topics
-      @topics = @community.topics.send("sort_by_#{@current_order}").page(params[:page])
+      if current_user&.administrator?
+        @topics = @community.topics.with_hidden.send("sort_by_#{@current_order}").page(params[:page])
+      else
+        @topics = @community.topics.send("sort_by_#{@current_order}").page(params[:page])
+      end
     end
 
     def load_participants

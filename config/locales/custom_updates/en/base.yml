@@ -95,6 +95,8 @@ en:
         impressum: Imprint
         statistic_cookies_settings: Cookie Settings
         contact_us: Contact us
+        sign_in_as_guest: Sign in as a guest
+        sign_out_as_guest: Sign out as a guest
       header:
         account_link: Account
         admin_link: Administration

@@ -100,6 +100,8 @@ de:
         impressum: Impressum
         statistic_cookies_settings: Cookie Einstellungen
         contact_us: Kontaktieren Sie uns
+        sign_in_as_guest: Melden Sie sich als Gast an
+        sign_out_as_guest: Melden Sie sich als Gast ab
       header:
         account_link: Konto
         admin_link: Administration

@@ -64,8 +64,8 @@ class User < ApplicationRecord
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
-  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create
-  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
+  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
+  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create, unless: :guest?
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
   def self.transfer_city_streets # TODO delete this method
@@ -129,21 +129,6 @@ class User < ApplicationRecord
     else
       order(id: :desc)
     end
-  end
-
-  def self.create_guest_user(guest_key)
-    user = new(
-      username: guest_key,
-      email: "#{guest_key}@example.com",
-      guest: true,
-      confirmed_at: Time.now.utc
-    )
-
-    user.save!(validate: false)
-  end
-
-  def username
-    guest? ? read_attribute(:username)[0..12] : read_attribute(:username)
   end
 
   def validate_registered_address?
@@ -246,13 +231,11 @@ class User < ApplicationRecord
   end
 
   def extended_registration?
-    return true # cli specific fix
-    !organization? && !erased? && Setting["extra_fields.registration.extended"].present?
+    !organization? && !erased? && !guest? && Setting["extra_fields.registration.extended"].present?
   end
 
   def document_required?
-    return false # cli specific fix
-    !organization? && !erased? && Setting["extra_fields.registration.check_documents"].present?
+    !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
   def current_city_citizen?

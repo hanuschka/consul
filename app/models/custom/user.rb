@@ -26,7 +26,7 @@ class User < ApplicationRecord
   before_validation :strip_whitespace
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
-  # after_create :attempt_verification
+  after_create :attempt_verification
   after_create :take_votes_from_erased_user
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author

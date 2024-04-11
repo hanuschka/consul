@@ -96,8 +96,6 @@ class RemoteCensusApi
 
       response = https.request(request)
       Nokogiri::XML(response.read_body)
-    rescue Net::ReadTimeout, Net::OpenTimeout
-      Nokogiri::XML("<error>error</error>")
     end
 
     def form_request_xml(first_name:, last_name:, street_name:, street_number:, plz:, city_name:, date_of_birth:, gender:)

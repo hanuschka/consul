@@ -28,6 +28,6 @@ de:
           debate_phase_expired: Die Diskussionsphase ist bereits abgeschlossen.
           proposal_phase_not_started: Die Vorschlagsphase ist noch nicht eröffnet.
           proposal_phase_expired: Die Vorschlagsphase ist bereits abgeschlossen.
-          no_proposals: Bislang wurden noch keine Vorschläge erstellt. Erstellen Sie als Erste(r) einen Vorschlag!
-          no_debates: Bislang wurden noch keine Diskussionen gestartet. Starten Sie als Erste(r) eine Diskussion!
+          no_proposals: Bislang wurden noch keine Vorschläge erstellt. Erstellen Sie als Erste oder Erster einen Vorschlag!
+          no_debates: Bislang wurden noch keine Diskussionen gestartet. Starten Sie als Erste oder Erster eine Diskussion!
           no_polls: Bislang wurden noch keine Abstimmungen durchgeführt. Schauen Sie doch bei Gelegenheit wieder vorbei, um an künftigen Abstimmungen teilzunehmen.

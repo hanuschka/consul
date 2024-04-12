@@ -1,10 +1,6 @@
 de:
   custom:
     topics:
-      hide:
-        success: Das Thema wurde ausgeblendet.
-      restore:
-        success: Das Thema wurde eingeblendet.
       list:
         empty_list_text: Keine Beiträge
         orders:

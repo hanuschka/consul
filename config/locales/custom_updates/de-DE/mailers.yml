@@ -2,7 +2,7 @@ de:
   mailers:
     budget_investment_unfeasible:
       subject: "Ihr Ausgabenvorschlag '%{title}' wurde als undurchführbar markiert"
-      hi: "Liebe*r Benutzer*in,"
+      hi: "Guten Tag,"
       rejected: "vielen Dank für die Einreichung Ihres Vorschlags \"%{title}\". Leider wurde Ihr Vorschlag mit folgender Begründung abgelehnt:"
       thank_you: Vielen Dank für Ihre Beteiligung!
       sincerely: Mit freundlichen Grüßen

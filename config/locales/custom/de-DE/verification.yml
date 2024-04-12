@@ -13,7 +13,7 @@ de:
         alert:
           failure: Der Bestätigungscode ist falsch
         flash:
-          success: Sie sind ein/e verifizierte/r Benutzer/in
+          success: Sie sind verifiziert
     letter:
       alert:
         unconfirmed_code: Sie haben den Bestätigungscode noch nicht eingegeben

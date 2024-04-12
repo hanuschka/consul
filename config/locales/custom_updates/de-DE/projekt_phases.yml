@@ -13,10 +13,10 @@ de:
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
-            only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-            only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-            only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-            only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+            only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+            only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+            only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+            only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
             only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
             phase_not_active: Diese Projektphase ist nicht aktiv
             phase_expired: Diese Projektphase ist bereits abgelaufen
@@ -30,15 +30,15 @@ de:
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
-            only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-            only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-            only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-            only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+            only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+            only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+            only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+            only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
             only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
             phase_not_active: Diese Projektphase ist nicht aktiv
             phase_expired: Diese Projektphase ist bereits abgelaufen
             phase_not_current: Diese Projektphase wurde noch nicht gestartet
-            only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+            only_admins: Die Beteiligung ist auf Admins beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
         ballot_component:
@@ -46,10 +46,10 @@ de:
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen an dieser Abstimmung teilnehmen.
-            only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-            only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-            only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-            only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+            only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+            only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+            only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+            only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
             only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
             phase_not_active: Diese Projektphase ist nicht aktiv
             phase_expired: Diese Projektphase ist bereits abgelaufen
@@ -59,7 +59,7 @@ de:
             different_heading_assigned: "Sie haben bereits für eine andere Rubrik gestimmt: %{heading_link}"
             casted_offline: Sie haben bereits offline abgestimmt
             not_enough_available_votes: Nicht genug verfügbare Stimmen
-            only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+            only_admins: Die Beteiligung ist auf Admins beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
             not_enough_money: "Sie haben bereits das gesamte verfügbare Budget zugewiesen."
@@ -69,15 +69,15 @@ de:
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
-            only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-            only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-            only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-            only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+            only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+            only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+            only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+            only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
             only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
             phase_not_active: Diese Projektphase ist nicht aktiv
             phase_expired: Diese Projektphase ist bereits abgelaufen
             phase_not_current: Diese Projektphase wurde noch nicht gestartet
-            only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+            only_admins: Die Beteiligung ist auf Admins beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
           budget_phase:
@@ -87,32 +87,32 @@ de:
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen nicht abstimmen.
-          only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-          only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-          only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-          only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+          only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+          only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+          only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+          only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
           only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
           phase_not_active: Diese Projektphase ist nicht aktiv
           phase_expired: Diese Projektphase ist bereits abgelaufen
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
           poll_expired: Diese Abstimmung ist bereits abgelaufen
           poll_not_current: Diese Abstimmung wurde noch nicht gestartet
-          only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+          only_admins: Die Beteiligung ist auf Admins beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
         legislation_annotations:
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.
-          only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-          only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-          only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-          only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+          only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+          only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+          only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+          only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
           only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
           phase_not_active: Diese Projektphase ist nicht aktiv
           phase_expired: Diese Projektphase ist bereits abgelaufen
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
-          only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+          only_admins: Die Beteiligung ist auf Admins beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
         projekt_questions:
@@ -120,15 +120,15 @@ de:
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.
-          only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-          only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-          only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-          only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+          only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+          only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+          only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+          only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
           only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
           phase_not_active: Diese Projektphase ist nicht aktiv
           phase_expired: Diese Projektphase ist bereits abgelaufen
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
-          only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+          only_admins: Die Beteiligung ist auf Admins beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
         projekt_livestreams:
@@ -136,23 +136,23 @@ de:
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.
-          only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
-          only_specific_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}."
-          only_specific_streets: "Die Beteiligung ist auf Anwohner*innen der folgenden Straßen beschränkt: %{restricted_streets}."
-          only_specific_ages: "Die Beteiligung ist auf Bürger*innen in folgenden Alterskategorien beschränkt: %{age_restriction}."
+          only_citizens: Die Beteiligung ist auf Teilnehmende der Stadt beschränkt.
+          only_specific_geozones: "Die Beteiligung ist auf Teilnehmende aus folgenden Gebieten beschränkt: %{geozones}."
+          only_specific_streets: "Die Beteiligung ist auf Teilnehmende der folgenden Straßen beschränkt: %{restricted_streets}."
+          only_specific_ages: "Die Beteiligung ist auf Teilnehmende in folgenden Alterskategorien beschränkt: %{age_restriction}."
           only_specific_individual_group_values: "Die Teilnahme ist beschränkt auf: %{individual_group_values}."
           phase_not_active: Diese Projektphase ist nicht aktiv
           phase_expired: Diese Projektphase ist bereits abgelaufen
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
-          only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+          only_admins: Die Beteiligung ist auf Admins beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
       restrictions:
-        hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
+        hint: Um die Partizipation einschränken zu können, müssen Nutzerinnen und Nutzer verifiziert werden.
         verification:
           title: Verifizierung
-          no_restriction: Alle Nutzer*innen
-          only_verified: Nur verifizierte Nutzer*innen
+          no_restriction: Alle Nutzerinnen und Nutzer
+          only_verified: Nur Verifizierte
         age:
           title: Alter
           no_restriction: Keine Beschränkung

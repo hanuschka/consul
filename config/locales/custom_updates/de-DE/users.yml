@@ -8,11 +8,11 @@ de:
       banner:
         registered_at: "Beigetreten am: %{date}"
       index:
-        title: Übersicht aller Nutzer*innen
-        users_count: Nutzer*innen
+        title: Übersicht aller Nutzerinnen und Nutzer
+        users_count: Nutzerinnen und Nutzer
       shared:
         auth_page:
-          legend: Gestalten Sie mit! Einmal registriert, haben Sie jederzeit Zugriff auf die Themen, die uns alle bewegen – und können sich aktiv beteiligen.
+          legend: Gestalten Sie mit! Einmal registriert, können Sie sich aktiv an den Themenwahlen beteiligen. Außerdem sind Sie damit auch für die regelmäßigen, selbstorganisierten Volksabstimmungen angemeldet.
     user_page:
       filters:
         proposals: Vorschläge

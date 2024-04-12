@@ -3,13 +3,12 @@ de:
     projekt_events:
       index:
         welcome_default_text_html:
-          "<p>Zu vielen Projekten gibt es Veranstaltungen, die dazu dienen, sich
+          "<p>Es gibt Veranstaltungen, die dazu dienen, sich
           zu informieren und sich auszutauschen. Sie können die Liste mit dem
           Filter nach vergangenen, nach kommenden oder nach allen
           Veranstaltungen sortieren. </p> <p>Wir laden Sie herzlich ein, die
           Veranstaltungen zu besuchen – entweder online oder vor Ort – und sich
-          einzubringen. Denn eine lebendige Stadt lebt vom Engagement ihrer
-          BürgerInnen."
+          einzubringen. Denn ABSTIMMUNG21 lebt vom Mitmachen.</p>"
 
       filters:
         all: Alle

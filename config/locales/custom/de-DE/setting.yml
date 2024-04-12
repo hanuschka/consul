@@ -20,15 +20,15 @@ de:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
         user:
-          skip_verification: Standardmäßige Partizipation für alle Nutzer:innen der Plattform
-          skip_verification_description: Nutzer:innen können ohne Verifizierung am Beteiligungsprozess teilnehmen
+          skip_verification: Standardmäßige Partizipation für alle Nutzerinnen und Nutzer der Plattform
+          skip_verification_description: Nutzerinnen und Nutzer können ohne Verifizierung am Beteiligungsprozess teilnehmen
       extended_feature:
         general:
           elasticsearch: "Elasticsearch"
           elasticsearch_description: "Elasticsearch ist die führende verteilte, RESTful, Open-Source-Such- und Analyse-Engine, die auf Geschwindigkeit, horizontale Skalierbarkeit, Zuverlässigkeit und einfache Verwaltung ausgelegt ist."
           extended_editor_for_admins: Erweiterter Editor für den Admin-Panel
           extended_editor_for_admins_description: Aktivieren Sie den erweiterten Editor für Inhalte, die im Admin-Panel erstellt werden
-          extended_editor_for_users: Erweiterter Editor für Nutzer im Frontend
+          extended_editor_for_users: Erweiterter Editor für Nutzende im Frontend
           extended_editor_for_users_description: Aktivieren Sie den erweiterten Editor für Inhalte, die im Frontend von Nutzern erstellt werden
           language_switcher_in_menu: Sprachumschalter in Navigation anbieten
           language_switcher_in_menu_description: Aktivieren Sie den Umschalter für weitere Sprachen in der Navigationsleiste
@@ -36,15 +36,13 @@ de:
           enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
           enable_google_translate: Google Translate aktivieren
           enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
-          show_guest_login_links: Show Guest login links
-          show_guest_login_links_description: Show Guest login links description
         gdpr:
           gdpr_conformity: DSGVO-konforme Voreinstellungen
           gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"
           show_cookie_banner: Cookies Banner anzeigen
-          show_cookie_banner_description: Aktivieren Sie den Cookie-Banner, um Nutzer:innen auf Tracking hinzuweisen
+          show_cookie_banner_description: Aktivieren Sie den Cookie-Banner, um Nutzerinnen und Nutzer auf Tracking hinzuweisen
           link_out_warning: Warnung für Linkouts
-          link_out_warning_description: Aktivieren Sie ein Popup, in dem der Nutzer bevor eines Linkouts zu einer externen Webseite gewarnt wird
+          link_out_warning_description: Aktivieren Sie ein Popup, in dem gewarnt wird, bevor eines Link zu einer externen Webseite
           two_click_iframe_solution: Zwei-Klick-Lösung für IFrames
           two_click_iframe_solution_description: Aktivieren Sie die Zwei-Klick-Lösung für IFrames, um einen Blur-Effekt hinzuzufügen
         modulewide:
@@ -70,8 +68,8 @@ de:
           enable_my_posts_filter: Meine Beiträge
           enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
         verification:
-          manual_verifications: Manuelle Nutzer*innen-Verifizierung
-          manual_verifications_description: Nutzer*innen müssen manuell verifiziert werden. Beteiligungsformate können auf Nutzer*innen-Gruppen eingeschränkt werden
+          manual_verifications: Manuelle Verifizierung
+          manual_verifications_description: Nutzerinnen und Nutzer müssen manuell verifiziert werden. Beteiligungsformate können auf Gruppen eingeschränkt werden
 
         proposals:
           intro_text_for_proposals: Einleitungstext für Vorschläge
@@ -99,7 +97,7 @@ de:
           launch_date: Erscheinungsdatum
           launch_date_description: "Bitte geben Sie das Erscheinungsdatum im folgenden Format an: \"dd.mm.yyyy\". So sollte beispielsweise der 3. Oktober 1990 als 03.10.1990 geschrieben werden."
           homepage_button_text: Homepage-Button-Text
-          homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen
+          homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen sein soll
           homepage_button_link: Homepage-Button-Link
           homepage_button_link_description: Link, der über den Button angesteuert werden soll
         gdpr:
@@ -177,7 +175,7 @@ de:
           show_map: Karte einblenden
           show_map_description: Zeigt eine erweiterbare Miniaturkarte in der rechten Seitenleiste der Projektseite
           show_navigator_in_projekts_page_sidebar: Projektverzeichnis
-          show_navigator_in_projekts_page_sidebar_description: Zeigt die Projektverzeichnis in der rechten Seitenleiste der Projektseiten an
+          show_navigator_in_projekts_page_sidebar_description: Zeigt das Projektverzeichnis in der rechten Seitenleiste der Projektseiten an
           projekt_page_sharing: Teilen-Funktion
           projekt_page_sharing_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste der Projektseite
           new_resource_button_in_sidebar: Beteiligungsbutton in der rechten Seitenleiste anzeigen
@@ -190,9 +188,9 @@ de:
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Diskussionsmodul
           allow_attached_documents: Zusätzliche Dokumente
-          allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente der Diskussion anzuhängen
+          allow_attached_documents_description: Ermöglicht es allen, Dokumente der Diskussion anzuhängen
           allow_attached_image: Titelbild hinzufügen
-          allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+          allow_attached_image_description: Ermöglicht es allen ein Titelbild hinzuzufügen.
           only_admins_create_debates: Nur Admins können neue Diskussionen erstellen
           only_admins_create_debates_description: Die Erstellung von neuen Diskussionen ist auf Admins beschränkt
           allow_downvoting: Downvotes aktivieren
@@ -209,7 +207,7 @@ de:
           enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen
           enable_proposal_support_withdrawal_description: Aktivieren Sie die Rücknahme der Vorschlagsunterstützung
           enable_proposal_notifications_tab: Benachrichtigungen des Autors zu Vorschlägen
-          enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
+          enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autorinnen und Autoren zu eigenen Vorschlägen
           enable_proposal_milestones_tab: Meilensteine in Vorschlägen
           enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
           show_report_button_in_proposal_sidebar: Vorschlag melden
@@ -223,9 +221,9 @@ de:
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
           allow_attached_documents: Zusätzliche Dokumente
-          allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+          allow_attached_documents_description: Ermöglicht es, Dokumente den Vorschlägen anzuhängen
           allow_attached_image: Titelbild hinzufügen
-          allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
+          allow_attached_image_description: Ermöglicht es allen, ein Titelbild hinzuzufügen.
           only_admins_create_proposals: Nur Admins können neue Vorschläge erstellen
           only_admins_create_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
           show_in_sidebar_filter: Projekt in der Projektseitenleiste anzeigen
@@ -237,9 +235,9 @@ de:
           allow_voting: Unterstützung von Vorschlägen
           allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
           enable_external_video: Externes Video einbinden
-          enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
-          enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
-          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+          enable_external_video_description: Ermöglicht es den Nutzerinnen und Nutzern externe Videos über YouTube und Vimeo einzubinden
+          enable_geoman_controls_in_maps: Ermöglicht es Figuren in die Karte einzuzeichnen.
+          enable_geoman_controls_in_maps_description: Ermöglicht es allen, Rechtecke, Kreise etc. einzuzeichnen.
           hide_projekt_selector: Projekt-Selektor ausblenden
           hide_projekt_selector_description: Blendet den Projektselektor in diesem Projekt aus
         proposal_options:
@@ -258,7 +256,7 @@ de:
           show_in_sidebar_filter_description: Zeigt das Projekt in der Projektseitenleiste auf der Abstimmungsübersichtsseite an
         budgets:
           remove_investments_supports: Zurückziehen von Unterstützungen für Investitionsvorschläge zulassen
-          remove_investments_supports_description: Ermöglicht es den Nutzern, in der Phase der Projektauswahl Unterstützungen für Investitionsvorschläge zurückzuziehen
+          remove_investments_supports_description: Ermöglicht, in der Phase der Projektauswahl Unterstützungen für Investitionsvorschläge zurückzuziehen
           show_report_button_in_sidebar: Investition melden
           show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Investitionen
           show_follow_button_in_sidebar: Investition folgen
@@ -276,7 +274,7 @@ de:
           enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
           enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
           allow_attached_documents: Zusätzliche Dokumente
-          allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+          allow_attached_documents_description: Ermöglicht den Nutzerinnen und Nutzern, Dokumente den Vorschlägen anzuhängen
           only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
           only_admins_create_investment_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
           show_map: Karte für Investitionsvorschläge anzeigen
@@ -285,8 +283,8 @@ de:
           show_results_after_first_vote_description: Zeigt in der Phase "Veröffentliching der Preise" nur ausgewählte Projekte als Ergebnisse an
           enable_summary: "\"Zusammenfassung\" anzeigen"
           enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
-          enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
-          enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+          enable_geoman_controls_in_maps: Allen ermöglichen, Figuren in die Karte einzuzeichnen.
+          enable_geoman_controls_in_maps_description: Ermöglicht, Rechtecke, Kreise etc. einzuzeichnen.
           show_relative_ballotting_results: Nur prozentuale Werte anzeigen
           show_relative_ballotting_results_description: Blendet die absoluten Zahlen in den Statistiken aus. Nur prozentuale Werte werden angezeigt
         milestones:
@@ -300,20 +298,20 @@ de:
       deficiency_reports:
         show_in_main_menu: Mängelmelder in Navigation anzeigen
         show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
-        admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
-        admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
-        admins_must_approve_officer_answer: Admins müssen Antwort der Sachbearbeiter*innen freigeben
-        admins_must_approve_officer_answer_description: Administratoren geben die Antwort der Sachbearbeiter*in vor Veröffentlichung frei
+        admins_must_assign_officer: Admins müssen Sachbearbeiterin oder Sachbearbeiter zuweisen
+        admins_must_assign_officer_description: Administratoren weisen Mangel bearbeitende Person zu
+        admins_must_approve_officer_answer: Admins müssen Antwort der sachbearbeitenden Person freigeben
+        admins_must_approve_officer_answer_description: Administratoren geben die Antwort der Sachbearbeiterin oder Sachbearbeiter vor Veröffentlichung frei
         allow_voting: Nutzer*innen Bewertung pro Mangel
-        allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
+        allow_voting_description: Aktiviert die Bewertung für den Mängelmelder
         enable_comments: Kommentarfunktion
-        enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
+        enable_comments_description: Kommentarfunktion unterhalb eines Mangels
         intro_text: Einleitungstext für den Mängelmelder
         intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
         enable_my_posts_filter: Meine Beiträge
         enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
-        enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
-        enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+        enable_geoman_controls_in_maps: Nutzerinnen und Nutzern ermöglichen, Figuren in die Karte einzuzeichnen.
+        enable_geoman_controls_in_maps_description: Ermöglicht es allen, Kreise etc. einzuzeichnen.
         admin_acceptance_required: Bestätigung durch Administratoren
         admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
 

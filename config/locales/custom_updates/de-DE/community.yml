@@ -3,10 +3,7 @@ de:
     community:
       show:
         participate: Beteiligen
-        participants: Teilnehmer*innen
+        participants: Teilnehmerinnen und Teilnehmer
       sidebar:
-        particapate: Mitmachen
-        be_first: Arbeitskreis erstellen
-        topic:
-          hide: Ausblenden
-          restore: Einblenden
+        particapate: Übersicht Gesprächskreise
+        be_first: Gesprächskreis eröffnen

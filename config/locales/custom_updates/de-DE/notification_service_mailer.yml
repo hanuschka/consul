@@ -3,13 +3,13 @@ de:
     notification_service_mailers:
       overdue_deficiency_reports:
         subject: Mangel wurde noch nicht bearbeitet
-        hi: Liebe/r Sachbearbeiter*in,
+        hi: Guten Tag,
         p1_s: Ihnen wurde vor zwei Woche ein Mangel zur Bearbeitung zugewiesen, welcher noch nicht bearbeitet wurde.
         p1_p: Ihnen wurde vor zwei Wochen mehrere Mängel zur Bearbeitung zugewiesen, die noch nicht bearbeitet wurden.
         signature_html: Viele Grüße</br>Consul
       new_comments_for_deficiency_report:
         subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
-        hi: Liebe/r SachbearbeiterIn,
+        hi: Guten Tag,
         p1_initial: "Ihnen wurde gerade folgender Kommentar zu einer Mangelmeldung zur Bearbeitung zugewiesen:"
         p1_reminder: Ihnen wurde kürzlich ein Kommentar zu einer Mangelmeldung zugewiesen, welcher noch nicht bearbeitet wurde.
         signature_html: Vielen Dank und viele Grüße</br>Consul

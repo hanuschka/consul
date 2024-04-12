@@ -96,7 +96,6 @@ de:
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:
-        official_answer: Offizielle Antwort
         on_behalf_of: Erstellen im Namen von
       budget:
         voting_style_distributed: "Mehrere Stimmen"

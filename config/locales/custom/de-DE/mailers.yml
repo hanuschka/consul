@@ -27,7 +27,7 @@ de:
       subject: Jemand hat auf Ihren Kommentar geantwortet
       title: Neue Antwort auf Ihren Kommentar
     proposal_notification_digest:
-      info: "Hier sind die neuen Benachrichtigungen, die von Autoren, für den Vorschlag von %{org_name}, den Sie unterstützen, veröffentlicht wurden."
+      info: "Hier sind die neuen Benachrichtigungen, die von Autorinnen und Autoren, für den Vorschlag von %{org_name}, den Sie unterstützen, veröffentlicht wurden."
       title: "Antrags-Benachrichtigungen von %{org_name}"
       share: Vorschlag teilen
       comment: Vorschlag kommentieren
@@ -44,7 +44,7 @@ de:
       title: "Sie haben eine neue persönliche Nachricht versendet an <strong>%{receiver}</strong> mit dem Inhalt:"
     user_invite:
       ignore: "Wenn Sie diese Einladung nicht angefordert haben, können Sie diese E-Mail einfach ignorieren."
-      text: "Danke für Ihre Anmeldung bei %{org}! In wenigen Sekunden können Sie beginnen Ihre Stadt mitzugestalten. Füllen Sie einfach vorher das untenstehende Formular aus:"
+      text: "Danke für Ihre Anmeldung bei %{org}! In wenigen Sekunden können Sie beginnen beim Themenvoting mitzumachen. Füllen Sie einfach vorher das untenstehende Formular aus:"
       thanks: "Vielen Dank."
       title: "Willkommen zu %{org}"
       button: Registrierung abschließen

@@ -35,7 +35,7 @@ de:
           official_answer: Offizielle Antwort
           category_name: Kategorie
           status_title: Status
-          officer_name: Sachbearbeiter*in
+          officer_name: Sachbearbeiterin oder Sachbearbeiter
           officer_email: Email
           admin_accepted: Admin Bestätigung
           actions: Aktionen
@@ -63,17 +63,17 @@ de:
             creating: Neue Mangelkategorie erstellen
         deficiency_report:
           category: Kategorie
-          officer: Sachbearbeiter*in
+          officer: Sachbearbeiterin oder Sachbearbeiter
           status: Status
           title: Gemeldeter Mangel
         officers:
           index:
             search:
-              email_placeholder: Benutzer*in via E-Mail suchen
-            title: Sachbearbeiter*innen
+              email_placeholder: Konto via E-Mail suchen
+            title: Sachbearbeitung
           officer:
             email: E-Mail
-            entry_name: Sachbearbeiter*in
+            entry_name: Sachbearbeiterin oder Sachbearbeiter
             name: Name
         settings:
           index:
@@ -85,7 +85,7 @@ de:
           description: Bezeichnung
           entry_name: Mangel
           no_deficiency_reports: Keine Mängelmeldungen
-          officer_name: Sachbearbeiter*in
+          officer_name: Sachbearbeiterin oder Sachbearbeiter
           official_answer: Offizielle Antwort
           status: Status
           summary: Zusammenfassung
@@ -113,7 +113,7 @@ de:
         areas:
           destroy:
             cannot_be_destroyed: Sie können dieses Gebiet nicht löschen, da er mindestens einem Mangel zugewiesen ist.
-            destroyed_successfully: Der Gebiet wurde erfolgreich gelöscht.
+            destroyed_successfully: Das Gebiet wurde erfolgreich gelöscht.
           edit:
             editing: Gebiet bearbeiten
           form:
@@ -209,7 +209,7 @@ de:
           show_on_home_page: Diese Abstimmung wird auf der Homepage angezeigt.
           show_on_index_page: Diese Abstimmung wird auf der Abstimmungsübersicht angezeigt
           wizard_mode: "Modus zusammenhängende Fragen"
-          show_open_answer_with_username: Offene Antworten mit Nutzer:innen-Name anzeigen
+          show_open_answer_with_username: Offene Antworten mit Konto-Name anzeigen
           show_open_answer_without_username: Offene Antworten anonym anzeigen
           show_summary_instead_of_questions: Zusammenfassung statt Liste aller Fragen in der Abstimmungsübersicht anzeigen
       questions:
@@ -274,15 +274,15 @@ de:
             select_an_element: auswählen
             sidebar_settings: Seitenleiste
           projekt_managers_tab:
-            name: Projektmanager*innen
-            main_block_title: Projektmanager*innen
+            name: Projektmanagerinnen und -manager
+            main_block_title: Projektmanagement 
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:
             name: SDGs & Tags
             sdgs: SDGs
             tags: Tags
-            tags_hint: Klicken Sie auf einen oder mehrere Tags, um Sie für dieses Projekt dem/der Nutzer:in anzubieten.
+            tags_hint: Klicken Sie auf einen oder mehrere Tags, um Sie für dieses Projekt der Nutzerin oder dem Nutzer anzubieten.
             refresh_page: Sollten Sie die Funktionen bereits aktiviert haben, sie werden aber hier nicht angezeigt, dann laden Sie diese Seite bitte neu.
           flash:
             update_notice: Projekt wurde erfolgreich aktualisiert.
@@ -343,10 +343,10 @@ de:
           overview_page: Projektübersichtseite
       projekt_managers:
         index:
-          title: Projektmanager*innen
-          no_projekt_managers: Keine Projektmanager*innen vorhanden.
+          title: Projektmanagement
+          no_projekt_managers: Keine Projektmanager oder Projektmanagerin vorhanden.
         search:
-          title: "Projektmanager*innen: Benutzer*innensuche"
+          title: "Projektmanagement: Kontensuche"
       settings:
         index:
           extended_features:
@@ -454,25 +454,25 @@ de:
           guest_participation_allowed: Gastteilnahme erlaubt
           age:
             title: Alter
-            hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer*innen
+            hint: Um die Partizipation einschränken zu können, müssen Nutzerinnen und Nutzer verifiziert werden.
+            no_restriction: Alle Konten
           extended_geo_restrictions:
             title: Zusatzliche individuelle Gebietsbeschränkungen
-            hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
+            hint: Um die Partizipation einschränken zu können, müssen Nutzerinnen und Nutzer verifiziert werden.
+            no_restriction: Alle Konten der Plattform
           geo_restrictions:
             title: Gebietsbeschränkung
-            hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
-            only_citizens: Nur Bürger:innen der Stadt
-            only_geozones: Nur Bürger:innen des Stadtteils
-            only_streets: Nur Bürger:innen aus Straße
+            hint: Um die Partizipation einschränken zu können, müssen Nutzerinnen und Nutzer verifiziert werden.
+            no_restriction: Alle Konten der Plattform
+            only_citizens: Nur Konten der Stadt
+            only_geozones: Nur Konten des Stadtteils
+            only_streets: Nur Konten aus Straße
           individual_group_values:
             title: Einschränkung auf Gruppen
           verification:
             title: Verifizierung
-            no_restriction: Alle Nutzer*innen
-            only_verified: Nur verifizierte Nutzer*innen
+            no_restriction: Alle Nutzerinnen und Nutzer
+            only_verified: Nur Verifizierte
         settings:
           block_title:
             general: Funktionen
@@ -523,7 +523,7 @@ de:
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           argument_pro: Pro
           argument_cons: Contra
-          button: Stimme erlstellen
+          button: Stimme erstellen
           argument_image: Bild
         projekt_events:
           button: Event erstellen
@@ -564,13 +564,13 @@ de:
           page_title: Posteingang & Follow-up E-Mails
           emails_title: Follow-up E-Mails
           subject_placeholder: E-Mail
-          recipients: "%{number} Empfänger"
+          recipients: "%{number} Kontakte"
           emails_sent: "%{number} E-Mails gesendet"
           new_email_title: Posteingang
           buttons:
             save_draft: Entwurf speichern
             send_email: E-Mail versenden
-            create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
+            create_email_draft: E-Mail-Entwurf an ausgewählte Kontakte erstellen
         age_ranges_for_stats:
           page_title: Altersgruppen für Statistiken
       modal_notifications:

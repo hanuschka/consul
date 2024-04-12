@@ -3,8 +3,8 @@ de:
     confirmations:
       new:
         email_label: E-Mail
-        submit: Erneut Anweisungen zusenden
-        title: Erneut Anweisungen zur Bestätigung zusenden
+        submit: Registrierungsmail anfordern
+        title: E-Mail zur Registrierung erneut zusenden lassen
       show:
         instructions: Das Konto per E-Mail %{email} bestätigen
         new_password_confirmation_label: Zugangspasswort wiederholen
@@ -67,7 +67,7 @@ de:
         title: Passwort vergessen?
     sessions:
       new:
-        login_label: E-Mail oder Benutzer*innenname
+        login_label: E-Mail oder Name
         password_label: Passwort
         remember_me: Passwort speichern
         submit: Anmelden
@@ -75,12 +75,12 @@ de:
     shared:
       links:
         login: Anmelden
-        new_confirmation: Aktivierungscode noch einmal zuschicken lassen
+        new_confirmation: E-Mail zur Registrierung erneut zusenden lassen
         new_password: Passwort vergessen?
         new_unlock: Haben Sie keine Anweisung zur Entsperrung erhalten?
         signin_with_provider: Anmelden mit %{provider}
         signup: Sie haben noch kein Konto? %{signup_link}
-        signup_link: Neues Konto erstellen
+        signup_link: Registrieren
     unlocks:
       new:
         email_label: E-Mail
@@ -90,7 +90,7 @@ de:
       registrations:
         delete_form:
           erase_reason_label: Grund
-          info: Diese Aktion kann nicht rückgängig gemacht werden. Bitte vergewissern Sie sich, dass sie dieses Konto wirklich löschen möchten.
+          info: Diese Aktion kann nicht rückgängig gemacht werden. Bitte vergewissern Sie sich, dass Sie dieses Konto wirklich löschen möchten.
           info_reason: Wenn Sie möchten, hinterlassen Sie uns einen Grund (optional)
           submit: Mein Konto löschen
           title: Konto löschen
@@ -117,9 +117,9 @@ de:
           terms_link: Allgemeine Nutzungsbedingungen
           terms_title: Mit Ihrer Registrierung akzeptieren Sie die Allgemeinen Nutzungsbedingungen
           title: Registrieren
-          username_is_available: Benutzer*innenname verfügbar
-          username_is_not_available: Benutzer*innenname bereits vergeben
-          username_label: Benutzer*innenname
+          username_is_available: Name verfügbar
+          username_is_not_available: Name bereits vergeben
+          username_label: Account-Name
           username_note: Name, der öffentlich neben ihren Beiträgen angezeigt wird
         success:
           back_to_index: Zurück zur Startseite

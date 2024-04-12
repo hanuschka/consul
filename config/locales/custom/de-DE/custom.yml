@@ -123,7 +123,7 @@ de:
                 confirmation: Sind Sie sicher?
               open_answer_saved: Vielen Dank! Ihre Antwort wurde erfolgreich gespeichert.
         settings:
-          show_open_answer_with_username: Offene Antworten mit Nutzer:innen-Name anzeigen
+          show_open_answer_with_username: Offene Antworten mit Name anzeigen
           show_open_answer_without_username: Offene Antworten anonym anzeigen
 
       menu:
@@ -273,7 +273,7 @@ de:
         no_active_projekt: Aktuell kein Beteiligungsverfahren
         show_larger_map: Mehr anzeigen
         show_smaller_map: Weniger anzeigen
-        max_number_reached: "Du hast die maximale Anzahl (%{max_number}) an Vorschlägen pro Nutzer erreicht. Bevor du einen weiteren Vorschlag erstellen kannst, musst du einen aktiven Vorschlag zurückziehen."
+        max_number_reached: "Du hast die maximale Anzahl (%{max_number}) an Vorschlägen pro Nutzerin oder Nutzer erreicht. Bevor du einen weiteren Vorschlag erstellen kannst, musst du einen aktiven Vorschlag zurückziehen."
         projekts: Projekte
       proposal:
         unsupport: Zurückziehen

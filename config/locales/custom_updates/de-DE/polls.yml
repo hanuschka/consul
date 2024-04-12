@@ -6,10 +6,9 @@ de:
         search_form:
           placeholder: "Suchen..."
         count: Abstimmungen
-        welcome_default_text_html: Sie finden auf dieser Seite alle Abstimmungen, die von der Stadtverwaltung initiiert wurden.
-          Die Abstimmungen lassen sich nach verschiedenen Kriterien sortieren und gezielt nach Projekten, Gebieten oder Schlagworten durchsuchen.
-          Manche Abstimmungen können auf bestimmte Gebiete oder Altersgruppen beschränkt sein.
-        sidebar_information_default_text: Sie möchten über selbst abstimmen? Suchen Sie einfach nach der gewünschten Abstimmung und klicken auf "Teilnehmen"
+        welcome_default_text_html: Sie finden auf dieser Seite alle Abstimmungen.
+          Die Abstimmungen lassen sich nach verschiedenen Kriterien sortieren und gezielt nach Schlagworten durchsuchen. 
+        sidebar_information_default_text: Sie möchten über ... selbst abstimmen? Suchen Sie einfach nach der gewünschten Abstimmung und klicken auf "Teilnehmen"
         empty_list_text: Derzeit keine verknüpften Abstimmungen
       poll:
         date:
@@ -31,7 +30,7 @@ de:
           update_open_answer: Antwort editieren
       results:
         open_answers: Offene Antworten
-        scoped_popup_callout: Die nachfolgende Auswertung zeigt, wie die Nutzer*innen, die für diese Antwortoption gestimmt haben, in den nachfolgenden Fragen geantwortet haben.
+        scoped_popup_callout: Die nachfolgende Auswertung zeigt, wie die Teilnehmenden, die für diese Antwortoption gestimmt haben, in den nachfolgenden Fragen geantwortet haben.
         question_street_details_tooltip: Teilnahmedaten
         question_street_details_csv_link: Straßenauswertung herunterladen
         question_answer_details_tooltip: Einzelauswertung

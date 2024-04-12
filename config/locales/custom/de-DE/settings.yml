@@ -2,18 +2,18 @@ de:
   settings:
     comments_body_max_length: "Maximale Länge der Kommentare"
     comments_body_max_length_description: "In Anzahl der Zeichen"
-    official_level_1_name: "Beamte*r Stufe 1"
+    official_level_1_name: "Offizielle Bezeichnung Stufe 1"
     official_level_1_name_description: "Tag, der auf Benutzern erscheint, die als offizielle Position der Stufe 1 markiert sind"
-    official_level_2_name: "Beamte*r Stufe 2"
+    official_level_2_name: "Offizielle Bezeichnung Stufe 2"
     official_level_2_name_description: "Tag, der auf Benutzern erscheint, die als offizielle Position der Stufe 2 markiert sind"
-    official_level_3_name: "Beamte*r Stufe 3"
+    official_level_3_name: "Offizielle Bezeichnung Stufe 3"
     official_level_3_name_description: "Tag, der auf Benutzern erscheint, die als offizielle Position der Stufe 3 markiert sind"
-    official_level_4_name: "Beamte*r Stufe 4"
+    official_level_4_name: "Offizielle Bezeichnung Stufe 4"
     official_level_4_name_description: "Tag, der auf Benutzern erscheint, die als offizielle Position der Stufe 4 markiert sind"
-    official_level_5_name: "Beamte*r Stufe 5"
+    official_level_5_name: "Offizielle Bezeichnung Stufe 5"
     official_level_5_name_description: "Tag, der auf Benutzern erscheint, die als offizielle Position der Stufe 5 markiert sind"
     max_ratio_anon_votes_on_debates: "Maximale Anzahl von anonymen Stimmen per Diskussion"
-    max_ratio_anon_votes_on_debates_description: "Anonyme Stimmen stammen von registrierten Benutzern mit einem nicht bestätigten Konto"
+    max_ratio_anon_votes_on_debates_description: "Anonyme Stimmen stammen von registrierten Benutzerinnen und Benutzern mit einem nicht bestätigten Konto"
     max_votes_for_proposal_edit: "Anzahl von Stimmen bei der ein Vorschlag nicht länger bearbeitet werden kann"
     max_votes_for_proposal_edit_description: "Ab dieser Anzahl von Unterstützungen kann der Autor eines Vorschlags diesen nicht mehr bearbeiten"
     max_votes_for_debate_edit: "Anzahl von Stimmen bei der eine Diskussion nicht länger bearbeitet werden kann"
@@ -26,13 +26,13 @@ de:
     votes_for_proposal_success_description: "Wenn ein Vorschlag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
     months_to_archive_proposals: "Anzahl der Monate, um Vorschläge zu archivieren"
     months_to_archive_proposals_description: "Nach dieser Anzahl von Monaten werden die Vorschläge archiviert und können keine Unterstützung mehr erhalten\""
-    email_domain_for_officials: "E-Mail-Domäne für Beamte"
-    email_domain_for_officials_description: "Alle Benutzer, die mit dieser Domain registriert sind, erhalten bei der Registrierung eine Bestätigung ihres Kontos"
+    email_domain_for_officials: "E-Mail-Domäne für Offizielle"
+    email_domain_for_officials_description: "Alle Nutzerinnen und Nutzer, die mit dieser Domain registriert sind, erhalten bei der Registrierung eine Bestätigung ihres Kontos"
     twitter_handle: "Twitter Benutzer*name"
     twitter_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
     twitter_hashtag: "Twitter hashtag"
     twitter_hashtag_description: "Hashtag, der erscheint, wenn Inhalt auf Twitter geteilt wird"
-    facebook_handle: "Facebook Benutzer*name"
+    facebook_handle: "Facebook Kontoname"
     facebook_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
     youtube_handle: "Benutzer*name für Youtube"
     youtube_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
@@ -45,7 +45,7 @@ de:
     org_name: "Name der Applikation"
     org_name_description: "Der Name wird u.a. im Browser-Tab angezeigt"
     related_content_score_threshold: "Schwellenwert für die Bewertung verwandter Inhalte"
-    related_content_score_threshold_description: "Blendet Inhalte aus, die von Nutzern als nicht verwandt markiert wurden, basierende auf den jeweiligen Bewertungen anderer Nutzer"
+    related_content_score_threshold_description: "Blendet Inhalte aus, die als nicht verwandt markiert wurden, basierend auf den jeweiligen Bewertungen anderer Nutzerinnen und Nutzer"
     hot_score_period_in_days: "Zeitrahmen (Tage), der für den Filter \"am Aktivsten\" verwendet wird"
     hot_score_period_in_days_description: "Der in mehreren Sektionen verwendete Filter \"Am Aktivsten\" basiert auf den Stimmen der letzten X Tage"
     mailer_from_name: "Absender E-Mail-Name"
@@ -59,7 +59,7 @@ de:
     meta_keywords: "Stichwörter (SEO)"
     meta_keywords_description: 'Stichwörter <meta name="keywords">, zur Verbesserung der Auffindbarkeit in Suchmaschinen'
     min_age_to_participate: erforderliches Mindestalter zur Teilnahme
-    min_age_to_participate_description: "Nutzer ab diesem Alter können an allen Prozessen teilnehmen"
+    min_age_to_participate_description: "Ab diesem Alter können Personen an allen Prozessen teilnehmen"
     postal_codes: "Postleitzahl"
     postal_codes_description: "Eine durch Komma getrennte Liste gültiger Postleitzahlen; Sie können auch durch einen Doppelpunkt getrennte Bereiche angeben. Beispiel: 00001:00010,00024,AB3 45FG,00031:00035 lässt Postleitzahlen zwischen 00001 und 00010, die Postleitzahl 00024, die Postleitzahl AB3 45FG und Postleitzahlen zwischen 00031 und 00035 zu. Wenn Sie das Feld leer lassen, sind alle Postleitzahlen gültig."
     proposals:
@@ -72,7 +72,7 @@ de:
       poll_link: Weitere Informationen Link
       poll_link_description: Füge einen zusätzlichen Informationslink zur Funktionaliät der Abstimmung in der Kontrollanzeige hinzu
       email_short_title: E-Mail
-      email_short_title_description: 'Kurze Beschreibung der E-Mail-Funktion. Ermöglicht Benutzern das Senden einer E-Mail zur Bewerbung ihres Vorschlags. Sie finden den gesamten Inhalt dieser E-Mail unter "/app/views/dashboard/mailer/forward.html.erb"'
+      email_short_title_description: 'Kurze Beschreibung der E-Mail-Funktion. Ermöglicht Teilnehmenden das Senden einer E-Mail zur Bewerbung ihres Vorschlags. Sie finden den gesamten Inhalt dieser E-Mail unter "/app/views/dashboard/mailer/forward.html.erb"'
       email_description: E-Mail Beschreibung
       email_description_description: Detaillierte Beschreibung der E-Mail-Funktion
       poster_short_title: Poster
@@ -101,7 +101,7 @@ de:
         recommendations: "Empfehlungen auf Startseite"
         recommendations_description: "Zeigt auf Basis des Nutzerverhaltens Empfehlungen zu Vorschlägen und Diskussionen auf der Startseite an"
         skip_verification: "Verifizierung von Benutzern überspringen"
-        skip_verification_description: "Die Verifizierung der Benutzer wird deaktiviert. Alle Benutzer können alle Module ohne Einschränkung nutzen."
+        skip_verification_description: "Die Verifizierung der Nutzerinnen und Nutzer wird deaktiviert. Alle Module können ohne Einschränkung genutzt werden."
         recommendations_on_debates: "Empfehlungen für Diskussionen"
         recommendations_on_debates_description: "Zeigt Diskussions-Empfehlungen auf der Diskussionsübersichtsseite an, basierend auf dem Nutzerverhalten."
         recommendations_on_proposals: "Empfehlungen für Vorschläge"

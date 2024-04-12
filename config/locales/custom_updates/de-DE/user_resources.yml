@@ -7,6 +7,6 @@ de:
         submit_button: Jetzt veröffentlichen
         map_location_instructions: "Wo soll Ihr Beitrag umgesetzt werden? Platzieren Sie einen „Pin“, um andere ins Bild zu setzen."
       image_upload:
-        top_line_default: Beiträge mit aussagekräftigem Bild erhalten durchschnittlich 34% mehr Unterstützung
+        top_line_default: Beiträge mit aussagekräftigem Bild erhalten mehr Unterstützung
         title_default: Bild hinzufügen
-        bottom_line_default: "Am besten eignet sich ein Bild im Format 490 x 290 Pixel"
+        bottom_line_default: "Am besten eignet sich ein Bild im Format 490 x 290 Pixel  (Dateiformat: jpg, png. Größe: bis 5 MB)."

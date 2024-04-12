@@ -1,6 +1,6 @@
 de:
   moderation:
-    show_only_with_flags: Nur von Nutzer*innen gemeldete anzeigen
+    show_only_with_flags: Nur Gemeldete anzeigen
     proposals:
       index:
         filters:

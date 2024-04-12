@@ -16,15 +16,15 @@ de:
       create_first_community_topic:
         first_theme_not_logged_in: Es ist kein Anliegen verfügbar, beteiligen Sie sich, indem Sie das erste erstellen.
         first_theme: Erstellen Sie das erste Community-Thema
-        sub_first_theme: "Um ein Thema zu erstellen, müssen Sie %{sign_in} o %{sign_up}."
+        sub_first_theme: "Um einen Gesprächskreis zu eröffnen, müssen Sie %{sign_in} o %{sign_up}."
       tab:
-        participants: Teilnehmer*innen
+        participants: Teilnehmerinnen und Teilnehmer
       sidebar:
         participate: Teilnehmen
-        new_topic: Thema erstellen
+        new_topic: Neuen Gesprächskreis eröffnen
       topic:
-        edit: Thema bearbeiten
-        destroy: Thema löschen
+        edit: bearbeiten
+        destroy: Gesprächskreis löschen
         comments:
           zero: Keine Kommentare
           one: 1 Kommentar
@@ -36,18 +36,18 @@ de:
       edit: Thema bearbeiten
       form:
         new:
-          submit_button: Thema erstellen
+          submit_button: Neuen Gesprächskreis eröffnen
         edit:
-          submit_button: Thema bearbeiten
+          submit_button: bearbeiten
         create:
-          submit_button: Thema erstellen
+          submit_button: Gesprächskreis eröffnen
         update:
-          submit_button: Thema aktualisieren
+          submit_button: Gesprächskreis aktualisieren
       show:
         tab:
           comments_tab: Kommentare
       sidebar:
-        recommendations_title: Empfehlungen zum Erstellen eines Themas
+        recommendations_title: Empfehlungen zum Erstellen eines Gesprächskreises
         recommendation_one: Schreiben Sie den Themen-Titel oder ganze Sätze nicht in Großbuchstaben. Im Internet wird dies als Geschrei betrachtet. Und niemand wird gerne angeschrien.
         recommendation_two: Themen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht. Auch diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
         recommendation_three: Genießen Sie diesen Ort, die Stimmen, die ihn füllen, sind auch Ihre.

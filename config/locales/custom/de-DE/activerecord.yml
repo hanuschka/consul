@@ -38,23 +38,23 @@ de:
         one: "Tag"
         other: "Tags"
       user:
-        one: "Benutzer*in"
-        other: "Benutzer*innen"
+        one: "Teilnehmerin oder Teilnehmerin"
+        other: "Teilnehmende"
       moderator:
-        one: "Moderator*in"
-        other: "Moderator*innen"
+        one: "Moderation"
+        other: "Moderation"
       administrator:
-        one: "Administrator*in"
-        other: "Administrator*innen"
+        one: "Administration"
+        other: "Administration"
       valuator:
-        one: "Gutachter*in"
-        other: "Gutachter*innen"
+        one: "Gutachterin oder Gutachter"
+        other: "Gutachterinnen oder Gutachter"
       valuator_group:
         one: "Gutachtungsgruppe"
         other: "Gutachtungsgruppen"
       manager:
-        one: "Verwalter*in"
-        other: "Verwalter*innen"
+        one: "Verwaltung"
+        other: "Verwaltung"
       newsletter:
         one: "Newsletter"
         other: "Newsletter"
@@ -68,8 +68,8 @@ de:
         one: "Wahlkabine"
         other: "Wahlkabinen"
       poll/officer:
-        one: "Offizielle(r) Vertreter*in"
-        other: "Offizielle(r) Vertreter*innen"
+        one: "Offizielle(r) Vertretung"
+        other: "Offizielle(r) Vertretung"
       poll/ballot_sheet:
         one: Stimmzettel
         other: Stimmzettel
@@ -83,8 +83,8 @@ de:
         one: "Lokales Unterziel"
         other: "Lokale Unterziele"
       sdg/manager:
-        one: "SDG Manager*in"
-        other: "SDG Manager*innen"
+        one: "SDG Verwaltung"
+        other: "SDG Verwaltung"
       sdg/target:
         one: "Unterziel"
         other: "Unterziele"
@@ -169,7 +169,7 @@ de:
         title: "Titel"
         description: "Beschreibung"
         external_url: "Link zur weiteren Dokumentation"
-        administrator_id: "Administrator*in"
+        administrator_id: "Administration"
         location: "Standort (optional)"
         organization_name: "Investitionsvorschlag erstellen im Namen von..."
         image: "Beschreibendes Bild zum Investitionsvorschlag"
@@ -265,9 +265,9 @@ de:
         description: "Ausführliche Beschreibung"
         retired_explanation: "Erläuterung"
       user:
-        login: "E-Mail oder Benutzer*innenname"
+        login: "E-Mail oder Kontoname"
         email: "E-Mail"
-        username: "Benutzer*innenname"
+        username: "Kontoname"
         password_confirmation: "Bestätigen Sie das Passwort "
         password: "Passwort"
         current_password: "Aktuelles Passwort"
@@ -276,7 +276,7 @@ de:
         email_on_comment_reply: "Benachrichtigen Sie mich per E-Mail, wenn jemand auf meine Kommentare antwortet"
         email_on_direct_message: "E-Mails über direkte Nachrichten empfangen"
         newsletter: "Per E-Mail Webseite relevante Informationen erhalten"
-        official_position: "Offizielle(r) Vertreter*in"
+        official_position: "Offizielle(r) Vertretung"
         official_position_badge: "Kennzeichen des Benutzertyps anzeigen"
         official_level: "Amtsebene"
         phone_number: "Telefonnummer"
@@ -459,12 +459,12 @@ de:
         title: Titel
         url: Externes Video
       newsletter:
-        segment_recipient: Empfänger*innen
+        segment_recipient: Empfängerinnen und Empfänger
         subject: Betreff
         from: "Von"
         body: Inhalt der E-Mail
       admin_notification:
-        segment_recipient: Empfänger*innen
+        segment_recipient: Empfängerinnen und Empfänger
         title: Titel
         link: Link
         body: Text
@@ -522,7 +522,7 @@ de:
         user:
           attributes:
             email:
-              password_already_set: "Diese*r Benutzer*in hat bereits ein Passwort"
+              password_already_set: "Ein Passwort wurde bereits festgelegt"
         debate:
           attributes:
             tag_list:
@@ -539,11 +539,11 @@ de:
         newsletter:
           attributes:
             segment_recipient:
-              invalid: "Das Empfänger*innensegment ist ungültig"
+              invalid: "Das ausgewählte Segment der Kontakte ist ungültig"
         admin_notification:
           attributes:
             segment_recipient:
-              invalid: "Das Benutzer*innensegment ist ungültig"
+              invalid: "Das Segment der Benutzerinnen und Benutzer ist ungültig"
         poll/voter:
           attributes:
             document_number:

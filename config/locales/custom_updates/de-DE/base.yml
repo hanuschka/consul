@@ -13,8 +13,8 @@ de:
         email_digest: E-Mail-Erinnerung bei ungelesenen Benachrichtigungen
         email_on_comment: Kommentare zu meinen Aktivitäten
         email_on_comment_reply: Antworten auf meine Kommentare
-        email_on_direct_message: Private Nachrichten anderer Nutzer*innen
-        newsletter: Newsletter und System-E-Mails
+        email_on_direct_message: Private Nachrichten
+        newsletter: System-E-Mails
         newsletter_on_home_page: Jetzt abonnieren
         public_activity: Meine Aktivität veröffentlichen
         public_interests: Gefolgte Beiträge veröffentlichen
@@ -67,14 +67,14 @@ de:
           no_affiliation: Keine Gebietszuordnung
           only_geozones: Zuordnung zu Stadtteil
         restrictions:
-          no_restriction: Alle Nutzer:innen
-          only_citizens: Nur Bürger:innen
-          only_geozones: Nur Bürger:innen des Stadtteils
+          no_restriction: Alle Nutzerinnen und Nutzer
+          only_citizens: Nur Bürgerinnen und Bürger
+          only_geozones: Nur Bürgerinnen und Bürger des Stadtteils
       sidebar_filter:
         affiliations:
           all_resources: Alle %{resource_name}
           entire_city: Stadtweite %{resource_name}
-          entire_city_short: Stadtweit
+          entire_city_short: Bundesweit
           filter_button: Nach Gebiete filtern
           no_affiliation: Keine Gebietszuordnung
           only_geozones: Zuordnung zu Stadtteil
@@ -82,10 +82,10 @@ de:
           title: Gebiete
         restrictions:
           filter_button: Nach Partizipation filtern
-          no_restriction: Alle Nutzer:innen der Plattform
-          only_citizens: Nur Bürger:innen der Stadt
-          only_geozones: Nur Bürger:innen des Stadtteils
-          only_streets: Nur Bürger:innen aus Straße
+          no_restriction: Alle Nutzerinnen und Nutzer der Plattform
+          only_citizens: Nur Personen der Stadt
+          only_geozones: Nur Personen des Stadtteils
+          only_streets: Nur Personen aus Straße
           show_more: Mehr anzeigen
           title: Gebiet
     images:
@@ -99,8 +99,6 @@ de:
         impressum: Impressum
         statistic_cookies_settings: Cookie Einstellungen
         contact_us: Kontaktieren Sie uns
-        sign_in_as_guest: Melden Sie sich als Gast an
-        sign_out_as_guest: Melden Sie sich als Gast ab
       header:
         account_link: Konto
         admin_link: Administration
@@ -141,8 +139,8 @@ de:
         one: Beitrag
         other: Beiträge
       warnings:
-        only_for_citizens: Die Beteiligung ist auf Bürger*innen der Stadt %{city} beschränkt.
-        only_for_geozones: "Die Beteiligung ist auf Bürger*innen aus folgenden Gebieten beschränkt: %{geozones}"
+        only_for_citizens: Die Beteiligung ist auf Personen der Stadt %{city} beschränkt.
+        only_for_geozones: "Die Beteiligung ist auf Personen aus folgenden Gebieten beschränkt: %{geozones}"
       dates:
         days_left:
           one: Noch 1 Tag
@@ -170,7 +168,7 @@ de:
         related_text: Sie können Links von anderen Vorschlägen und Diskussionen hinzufügen.
         related_title: Verwandte Inhalte
         report_button: Melden
-        report_text: Melden Sie uns diesen Beitrag bei unangebrachten Inhalt oder bei Urheberrechtsverletzungen.
+        report_text: Melden Sie uns diesen Beitrag bei Verstößen gegen unsere Richtlinien oder bei Urheberrechtsverletzungen.
         report_title: Melden
       download: Herunterladen
     tag_names:

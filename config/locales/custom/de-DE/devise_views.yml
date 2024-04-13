@@ -16,8 +16,8 @@ de:
       confirmation_instructions:
         confirm_link: Mein Konto bestätigen
         text: "Bestätigen Sie Ihre E-Mail-Adresse mithilfe des folgenden Links:"
-        title: Willkommen
-        welcome: Willkommen
+        title: Willkommen!
+        welcome: Willkommen!
       reset_password_instructions:
         change_link: Mein Passwort ändern
         hello: Hallo

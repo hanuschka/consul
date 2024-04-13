@@ -249,7 +249,7 @@
                 <%= t("custom.proposals.show.community_section.description_create_first") %>
                 <% participate_button_text = t("custom.community.sidebar.be_first") %>
             <% end %>
-            <%= link_to participate_button_text, community_path(@proposal.community), class: "button" %>
+            <%= link_to participate_button_text, new_community_topic_path(@proposal.community), class: "button" %>
           <% end %>
         <% end %>
 

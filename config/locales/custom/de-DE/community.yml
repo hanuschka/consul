@@ -32,7 +32,7 @@ de:
       author: Autor
       back: Zurück zu %{community} %{proposal}
     topic:
-      create: Neues Thema erstellen
+      create: Neuen Gesprächskreis eröffnen
       edit: Thema bearbeiten
       form:
         new:

@@ -7,7 +7,9 @@
     <div class="main-column">
       <h1><%= t("community.topic.create") %></h1>
       <div class="resource-page--intro-text">
-        Ein Arbeitskreis lebt von der Beteiligung seiner Teilnehmer. Sie möchten der Runde für das nachstehende Projekt ein neues Thema zur Diskussion bereitstellen? Dann beschreiben Sie anhand einer Überschrift und der Erläuterung Ihres Themas, worum es Ihnen geht. Jeder Beitrag ist wertvoll und hilft dabei, Klarheit über den Vorschlag zu gewinnen.
+        Der Themenvorschlag lebt und reift durch die Beteiligung interessierter Menschen. Sie möchten eine Verbesserungsidee zu einem bestimmten Bereich des Themenvorschlags zur Diskussion bereitstellen?<br><br>
+        Dann beschreiben Sie mit einem kurzen Titel, worum es Ihnen geht. In einem Anfangstext können Sie einen konkreten Änderungsvorschlag oder eine Frage formulieren. Danach können andere Interessierte dazu kommentieren.<br><br>
+        Jeder Beitrag ist wertvoll und ermöglicht es der Initiative, den Themenvorschlag weiterzuentwickeln.<br><br>
       </div>
       <div class="margin-bottom">
         <%= render ResourcePage::BannerComponent.new(resource: @community.proposal, compact: true) %>

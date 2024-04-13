@@ -104,10 +104,26 @@
 
         <%= f.check_box :terms_data_storage,
           title: t("custom.terms.data_storage.title"),
-          label: t("custom.terms.data_storage.label"),
+          label: "Mit der Registrierung akzeptieren Sie die <a href='/conditions'>Allgemeinen Nutzungsbedingungen</a>. Informationen zur Verarbeitung Ihrer Daten finden Sie in den <a href='/privacy'>Datenschutzhinweisen</a>.",
           class: "checkbox-label--aligned" %>
 
         <%= f.check_box :terms_data_protection,
+          label: false,
+          checked: true, style: "display: none;", onclick: "event.preventDefault();",
+          class: "checkbox-label--aligned" %>
+
+        <%= f.check_box :terms_general,
+          label: false,
+          checked: true, style: "display: none;", onclick: "event.preventDefault();",
+          class: "checkbox-label--aligned" %>
+
+
+        <%#= f.check_box :terms_data_storage,
+          title: t("custom.terms.data_storage.title"),
+          label: t("custom.terms.data_storage.label"),
+          class: "checkbox-label--aligned" %>
+
+        <%#= f.check_box :terms_data_protection,
           title: t("custom.terms.data_protection.title"),
           label: t("custom.terms.data_protection.label",
                    privacy_link: link_to(t("custom.terms.privacy_link.text"), "/privacy",
@@ -115,7 +131,7 @@
           checked: true, style: "visibility: hidden;", onclick: "event.preventDefault();",
           class: "checkbox-label--aligned" %>
 
-        <%= f.check_box :terms_general,
+        <%#= f.check_box :terms_general,
           title: t("custom.terms.general.title"),
           label: t("custom.terms.general.label",
                    terms_link: link_to(t("custom.terms.terms_link.text"), "/conditions",

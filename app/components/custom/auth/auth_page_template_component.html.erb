@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="auth-page-template--legend-text">
-        <%= t("custom.users.shared.auth_page.legend") %>
+         <%= @legend_text.presence || t("custom.users.shared.auth_page.legend") %>
       </div>
     </div>
     <div class="auth-page-template--form-section">

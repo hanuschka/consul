@@ -8,7 +8,7 @@ de:
       subject: Ihr Konto ist bereits bestätigt.
     comment:
       hi: Hallo
-      new_comment_by: Es gibt einen neuen Kommentar von <strong>%{commenter}</strong>
+      new_comment_by: es gibt einen neuen Kommentar von <strong>%{commenter}</strong> bei
       subject: Jemand hat Ihren Beitrag kommentiert.
       title: Neuer Kommentar
     config:

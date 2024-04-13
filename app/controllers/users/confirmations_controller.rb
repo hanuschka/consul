@@ -51,6 +51,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
 
       if resource.confirm
         update_newsletter_subscription(resource) # cli line
+        MarketplaceServices::BrevoContactExporter.call(resource.id) if resource.is_a?(User)
         set_flash_message(:notice, :confirmed) if is_flashing_format?
         respond_with_navigational(resource) { redirect_to after_confirmation_path_for(resource_name, resource) }
       else

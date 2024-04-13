@@ -7,3 +7,6 @@ de:
       sidebar:
         particapate: Übersicht Gesprächskreise
         be_first: Gesprächskreis eröffnen
+        topic:
+          hide: Ausblenden
+          restore: Einblenden

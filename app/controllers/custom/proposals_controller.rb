@@ -220,7 +220,11 @@ class ProposalsController
     Flag.flag(current_user, @proposal)
     @proposal.update!(ignored_flag_at: nil)
 
-    redirect_to @proposal
+    notice = "Vielen Dank für Ihre Meldung!<br>" \
+             "<a href='mailto:themenwahl@abstimmung21.de'>Können Sie uns hier bitte kurz den Grund Ihrer Meldung mitteilen?</a><br>" \
+             "Dies würde uns die Prüfung erheblich erleichtern. Vielen Dank im Voraus!"
+
+    redirect_to @proposal, notice: notice
   end
 
   def unflag

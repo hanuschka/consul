@@ -2,7 +2,7 @@ class TopicsController < ApplicationController
   include CommentableActions
 
   before_action :load_community
-  before_action :load_topic, only: [:show, :edit, :update, :destroy]
+  before_action :load_topic, only: [:show, :edit, :update, :destroy, :hide, :restore]
 
   has_orders %w[most_voted newest oldest], only: :show
 
@@ -11,6 +11,12 @@ class TopicsController < ApplicationController
 
   def new
     @topic = Topic.new
+
+    if Setting.new_design_enabled?
+      render :new_v2
+    else
+      render :new
+    end
   end
 
   def create
@@ -26,6 +32,12 @@ class TopicsController < ApplicationController
     @commentable = @topic
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
+
+    if Setting.new_design_enabled?
+      render :show_new
+    else
+      render :show
+    end
   end
 
   def edit
@@ -44,6 +56,16 @@ class TopicsController < ApplicationController
     redirect_to community_path(@community), notice: I18n.t("flash.actions.destroy.topic")
   end
 
+  def hide
+    @topic.hide
+    redirect_to community_path(@community), notice: I18n.t("custom.topics.hide.success")
+  end
+
+  def restore
+    @topic.restore
+    redirect_to community_topic_path(@community, @topic), notice: I18n.t("custom.topics.restore.success")
+  end
+
   private
 
     def topic_params
@@ -59,6 +81,10 @@ class TopicsController < ApplicationController
     end
 
     def load_topic
-      @topic = Topic.find(params[:id])
+      if current_user&.administrator?
+        @topic = Topic.with_hidden.find(params[:id])
+      else
+        @topic = Topic.find(params[:id])
+      end
     end
 end

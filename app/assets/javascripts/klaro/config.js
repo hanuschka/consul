@@ -113,8 +113,7 @@ var klaroConfig = {
         // bundled translations.
         de: {
             consentModal: {
-                description:
-                    'Hier können Sie einsehen und anpassen, welche Information wir über Sie sammeln. Einträge die als "Beispiel" gekennzeichnet sind dienen lediglich zu Demonstrationszwecken und werden nicht wirklich verwendet.',
+                description: 'Hier können Sie einsehen und anpassen, welche Informationen wir über Sie sammeln. Einträge, die als "Beispiel" gekennzeichnet sind, dienen lediglich zu Demonstrationszwecken und werden nicht wirklich verwendet.'
             },
             inlineTracker: {
                 description: 'Beispiel für ein Inline-Tracking Skript',

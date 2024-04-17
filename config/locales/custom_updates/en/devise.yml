@@ -4,6 +4,7 @@ en:
       users:
         registrations:
           new:
+            message: Fast. Simply. Secure
             first_name_label: First name
             last_name_label: Last name
             street_name_label: Street name
@@ -16,5 +17,13 @@ en:
             form_registered_address_label: Address
             form_registered_address_city_label: City/Town
             form_registered_address_street_label: Street
+            submit: Create a new account
+            organization_signup_link: Register as an organization or collective
           sign_in_guest:
+            title: Sign in as a guest
+            username_placeholder: username
+            username_hint: please enter your preferred username
+            submit: Sign in as a guest
             success: You have successfully signed in as Guest
+          sign_out_guest:
+            success: You have successfully signed out as Guest

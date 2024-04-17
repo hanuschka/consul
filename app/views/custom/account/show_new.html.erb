@@ -89,6 +89,9 @@
           <div>
             <%= f.check_box :email_on_direct_message, {label: t('custom.account.settings.email_on_direct_message'), class: "checkbox-label--aligned"} %>
           </div>
+          <div>
+            <%= f.check_box :show_in_users_overview, { label: t("custom.account.settings.show_in_users_overview"), class: "checkbox-label--aligned" } %>
+          </div>
           <%= f.submit t("custom.account.show.save_settings"), class: "button margin-top" %>
         <% end %>
       <% end %>

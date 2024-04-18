@@ -4,13 +4,6 @@ class Admin::MenuComponent < ApplicationComponent
 
   private
 
-    def deficiency_reports?
-      return true if controller_name == "deficiency_reports"
-
-      %w[officers categories statuses settings areas].include?(controller_name) &&
-        controller.class.module_parent == Admin::DeficiencyReports
-    end
-
     def profiles?
       %w[administrators projekt_managers organizations officials moderators valuators managers
          users unregistered_newsletter_subscribers].include?(controller_name)
@@ -39,67 +32,6 @@ class Admin::MenuComponent < ApplicationComponent
         admin_projekts_path,
         controller_name == "projekts",
         class: "projekts-link"
-      ]
-    end
-
-    def deficiency_reports_links
-      link_to(t("custom.admin.menu.deficiency_reports_title"), "#", class: "deficiency-reports-link") +
-        link_list(
-          deficiency_reports_list,
-          deficiency_report_officers,
-          deficiency_report_categories,
-          deficiency_report_statuses,
-          deficiency_report_settings,
-          deficiency_report_areas,
-          id: "deficiency_reports_menu", class: ("is-active" if deficiency_reports?)
-        )
-    end
-
-    def deficiency_reports_list
-      [
-        t("custom.admin.menu.deficiency_reports.list"),
-        admin_deficiency_reports_path,
-        controller_name == "deficiency_reports"
-      ]
-    end
-
-    def deficiency_report_officers
-      [
-        t("custom.admin.menu.deficiency_reports.officers"),
-        admin_deficiency_report_officers_path,
-        controller_name == "officers" && controller.class.module_parent == Admin::DeficiencyReports
-      ]
-    end
-
-    def deficiency_report_categories
-      [
-        t("custom.admin.menu.deficiency_reports.categories"),
-        admin_deficiency_report_categories_path,
-        controller_name == "categories" && controller.class.module_parent == Admin::DeficiencyReports
-      ]
-    end
-
-    def deficiency_report_statuses
-      [
-        t("custom.admin.menu.deficiency_reports.statuses"),
-        admin_deficiency_report_statuses_path,
-        controller_name == "statuses" && controller.class.module_parent == Admin::DeficiencyReports
-      ]
-    end
-
-    def deficiency_report_settings
-      [
-        t("custom.admin.menu.deficiency_reports.settings"),
-        admin_deficiency_report_settings_path,
-        controller_name == "settings" && controller.class.module_parent == Admin::DeficiencyReports
-      ]
-    end
-
-    def deficiency_report_areas
-      [
-        t("custom.admin.menu.deficiency_reports.areas"),
-        admin_deficiency_report_areas_path,
-        controller_name == "areas" && controller.class.module_parent == Admin::DeficiencyReports
       ]
     end
 

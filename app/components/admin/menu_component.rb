@@ -11,7 +11,6 @@ class Admin::MenuComponent < ApplicationComponent
       (legislation_link if feature?(:legislation)),
       (budgets_link if feature?(:budgets)),
       projekts_link,
-      deficiency_reports_links,
       booths_links,
       (signature_sheets_link if feature?(:signature_sheets)),
       messages_links,

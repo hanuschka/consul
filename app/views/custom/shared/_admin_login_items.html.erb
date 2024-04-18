@@ -26,6 +26,15 @@
     </li>
   <% end %>
 
+  <% if current_user.administrator? || current_user.manager?  %>
+    <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
+        tabindex="0"
+        aria-label='<%= t("deficiency_report_management.dashboard.index.title") %>'
+        >
+      <%= link_to t("deficiency_report_management.dashboard.index.title"), deficiency_report_management_root_path, tabindex: "-1", aria: { hidden: true } %>
+    </li>
+  <% end %>
+
   <% if feature?(:budgets) &&
         (current_user.administrator? || current_user.valuator?) %>
     <li class='nav-element flyout-item js-access-flyout-menu-item focusable'

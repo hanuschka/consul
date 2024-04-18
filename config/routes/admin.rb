@@ -109,29 +109,6 @@ namespace :admin do
     end
   end
 
-  # custom deficiency reports routes
-  scope module: :deficiency_reports, path: :deficiency_reports, as: :deficiency_report do
-    resources :officers, only: [:index, :create, :destroy] do
-      get :search, on: :collection
-    end
-    resources :categories,  only: %i[index new create edit update destroy]
-    resources :statuses,    only: %i[index new create edit update destroy] do
-      collection do
-        post "order_statuses"
-      end
-    end
-    resources :settings, only: :index
-    resources :areas, except: :show
-  end
-
-  resources :deficiency_reports, except: [:new, :create] do
-    resources :audits, only: :show, controller: "deficiency_report_audits"
-
-    member do
-      patch :accept
-    end
-  end
-
   # custom projekt managers
   resources :projekt_managers, only: [:index, :create, :destroy] do
     get :search, on: :collection

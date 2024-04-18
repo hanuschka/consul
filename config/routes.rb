@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   draw :verification
   draw :projekt
   draw :projekt_management
+  draw :deficiency_report_management
   draw :custom
 
   root "welcome#index"

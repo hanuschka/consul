@@ -76,7 +76,7 @@ class User < ApplicationRecord
   belongs_to :geozone
 
   validates :username, presence: true, if: :username_required?
-  validates :username, uniqueness: { scope: :registering_with_oauth }, if: :username_required?
+  validates :username, uniqueness: { scope: :registering_with_oauth }, if: :username_required?, allow_blank: :username_required?
   validates :document_number, uniqueness: { scope: :document_type }, allow_nil: true
 
   validate :validate_username_length
@@ -285,6 +285,7 @@ class User < ApplicationRecord
     identities.destroy_all
     remove_roles
     remove_audits #custom
+    remove_subscriptions #custom
   end
 
   def erased?

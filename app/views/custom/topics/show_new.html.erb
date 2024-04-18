@@ -23,9 +23,10 @@
       <%= render Shared::NewCommentsComponent.new(@topic, @comment_tree) %>
     </div>
 
-    <% if @topic.author == current_user %>
-      <aside class="sidebar">
-        <%= render Sidebar::ResourceAuthorComponent.new(resource: @topic) %>
+    <aside class="sidebar">
+      <%= render Sidebar::ResourceAuthorComponent.new(resource: @topic) %>
+
+      <% if @topic.author == current_user %>
         <%= render(Shared::SidebarCardComponent.new(title: t("community.show.author"), icon_name: "user", opened_on_mobile: true)) do |c| %>
           <%= link_to t("community.show.topic.edit"),
             edit_community_topic_path(@community.id, @topic),
@@ -35,8 +36,24 @@
                     community_topic_path(@community.id, @topic), method: :delete,
                     class: "button hollow expanded alert" %>
         <% end %>
-      </aside>
-    <% end %>
+      <% end %>
+
+      <% if can?(:hide, @topic) && can?(:restore, @topic) %>
+        <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.admin"), icon_name: "user-cog")) do |c| %>
+          <% if @topic.hidden? %>
+            <%= button_to t("custom.community.sidebar.topic.restore"),
+              restore_community_topic_path(@community.id, @topic),
+              class: "button hollow expanded" %>
+          <% else %>
+            <%= button_to t("custom.community.sidebar.topic.hide"),
+              hide_community_topic_path(@community.id, @topic),
+              data: { confirm: "Sind Sie sicher?" },
+              class: "button hollow expanded alert" %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+    </aside>
   </div>
 
 </main>

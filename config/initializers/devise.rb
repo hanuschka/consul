@@ -10,14 +10,22 @@ Devise.setup do |config|
   # by default. You can change it below and use your own secret key.
   config.secret_key = Rails.application.secrets.secret_key_base
 
+  # ==> Controller configuration
+  # Configure the parent class to the devise controllers.
+  # config.parent_controller = 'DeviseController'
+
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = proc { "'#{Setting["mailer_from_name"]}' <#{Setting["mailer_from_address"]}>" }
+  # We're not setting it here because it's set by the ApplicationMailer class
+  # config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
 
   # Configure the class responsible to send e-mails.
   config.mailer = "DeviseMailer"
+
+  # Configure the parent class responsible to send e-mails.
+  config.parent_mailer = "ApplicationMailer"
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and
@@ -117,7 +125,7 @@ Devise.setup do |config|
   # their account can't be confirmed with the token any more.
   # Default is nil, meaning there is no restriction on how long a user can take
   # before confirming their account.
-  config.confirm_within = Setting["extended_option.gdpr.devise_verification_token_validity_days"].to_i.days
+  config.confirm_within = Rails.application.secrets.security[:devise_confirm_within_days].to_i.days
 
   # If true, requires any email changes to be confirmed (exactly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
@@ -155,7 +163,7 @@ Devise.setup do |config|
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
 
-  config.timeout_in = Setting["extended_option.gdpr.devise_timeout_min"].to_i.minutes
+  config.timeout_in = Rails.application.secrets.security[:devise_timeout_in_minutes].to_i.minutes
 
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false

@@ -5,7 +5,7 @@ class Admin::MenuComponent < ApplicationComponent
   private
 
     def profiles?
-      %w[administrators projekt_managers organizations officials moderators valuators managers
+      %w[administrators projekt_managers deficiency_report_managers organizations officials moderators valuators managers
          users unregistered_newsletter_subscribers].include?(controller_name)
     end
 
@@ -74,6 +74,14 @@ class Admin::MenuComponent < ApplicationComponent
         t("custom.admin.menu.projekt_managers"),
         admin_projekt_managers_path,
         controller_name == "projekt_managers"
+      ]
+    end
+
+    def deficiency_report_managers_link
+      [
+        t("custom.admin.menu.deficiency_report_managers"),
+        admin_deficiency_report_managers_path,
+        controller_name == "deficiency_report_managers"
       ]
     end
 

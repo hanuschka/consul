@@ -379,6 +379,7 @@ class Admin::MenuComponent < ApplicationComponent
         link_list(
           administrators_link,
           projekt_managers_link,
+          deficiency_report_managers_link,
           organizations_link,
           officials_link,
           moderators_link,

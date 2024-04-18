@@ -114,6 +114,11 @@ namespace :admin do
     get :search, on: :collection
   end
 
+  # custom deficiency report managers
+  resources :deficiency_report_managers, only: [:index, :create, :destroy] do
+    get :search, on: :collection
+  end
+
   # custom modal notifications routes
   resources :modal_notifications, except: :show
 

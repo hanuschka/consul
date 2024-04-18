@@ -30,9 +30,10 @@
     <% end %>
   </div>
 
-  <% if projekt.sdg_goals.any? && false %>
-    <%= render Shared::SidebarCardComponent.new(title: 'SDGS', icon_name: "tag") do |c| %>
-      <%= render partial: 'pages/sidebar/sdgs', locals: { projekt: projekt } %>
+  <% if projekt.sdg_goals.any? %>
+    <%= render Shared::SidebarCardComponent.new(title: 'SDGs', icon_name: "tag") do |c| %>
+      <%#= render partial: 'pages/sidebar/sdgs', locals: { projekt: projekt } %>
+      <%= render SDG::TagListComponent.new(projekt) %>
     <% end %>
   <% end %>
 

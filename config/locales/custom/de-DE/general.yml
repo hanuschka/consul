@@ -462,7 +462,7 @@ de:
       flag: Dieser Vorschlag wurde von verschiedenen Benutzern als unangebracht gemeldet.
       notifications_tab: Benachrichtigungen
       milestones_tab: Meilensteine
-      retired_warning: "Der/Die Autor/in ist der Ansicht, dass dieser Vorschlag nicht mehr Unterstützung erhalten soll."
+      retired_warning: "Der/Die Autor/in hat den Vorschlag mit folgender Begründung zurückgezogen:"
       retired_warning_link_to_explanation: Lesen Sie die Erläuterung, bevor Sie abstimmen.
       retired: Vorschlag vom Autor zurückgezogen
       share: Teilen
@@ -684,7 +684,7 @@ de:
     description:
       unique: Sie dürfen bei dieser Frage eine Stimme vergeben.
       multiple: Sie dürfen %{maximum} Stimmen gleichmäßig auf die gegebenen Antworten verteilen.
-      multiple_with_weight: Sie dürfen %{maximum} Stimmen gewichtet auf mehrere Antworten verteilen.
+      multiple_with_weight: Sie dürfen %{maximum} Stimmen gewichtet auf mehrere Antworten verteilen. Maximum %{cap} pro Antwort.
       rating_scale: Sie dürfen eine Stimme pro Bewertungsskala abgeben.
   proposal_notifications:
     new:

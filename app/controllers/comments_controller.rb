@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :authenticate_user!, only: [:create, :hide, :vote]
+  # before_action :authenticate_user!, only: [:create, :hide, :vote]
   before_action :load_commentable, only: :create
   before_action :verify_resident_for_commentable!, only: :create
   before_action :verify_comments_open!, only: [:create, :vote]
@@ -36,6 +36,7 @@ class CommentsController < ApplicationController
   def flag
     Flag.flag(current_user, @comment)
     set_comment_flags(@comment)
+    @comment.subtree.update_all(ignored_flag_at: nil)
 
     render "shared/_refresh_flag_actions", locals: { flaggable: @comment, divider: true }
   end

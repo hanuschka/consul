@@ -19,3 +19,11 @@ de:
             form_registered_address_street_label: Straße
             submit: Neues Konto erstellen
             organization_signup_link: Als Organisation oder Kollektiv registrieren
+          sign_in_guest:
+            title: Melden Sie sich als Gast an
+            username_placeholder: Benutzer*innenname
+            username_hint: Bitte geben Sie Ihren bevorzugten Benutzer*innenname ein
+            submit: Sich als Gast anmelden
+            success: Sie haben sich erfolgreich als Gast angemeldet
+          sign_out_guest:
+            success: Sie haben sich erfolgreich als Gast abgemeldet

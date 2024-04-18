@@ -76,7 +76,7 @@ class User < ApplicationRecord
   belongs_to :geozone
 
   validates :username, presence: true, if: :username_required?
-  validates :username, uniqueness: { scope: :registering_with_oauth }, if: :username_required?
+  validates :username, uniqueness: { scope: :registering_with_oauth }, if: :username_required?, allow_blank: :username_required?
   validates :document_number, uniqueness: { scope: :document_type }, allow_nil: true
 
   validate :validate_username_length
@@ -117,9 +117,9 @@ class User < ApplicationRecord
   end
   scope :between_ages, ->(from, to) do
     where(
-      "date_of_birth > ? AND date_of_birth < ?",
-      to.years.ago.beginning_of_year,
-      from.years.ago.end_of_year
+      "date_of_birth BETWEEN ? AND ?",
+      (to.years.ago - 1.year + 1.day).beginning_of_day,
+      from.years.ago.end_of_day
     )
   end
 
@@ -267,6 +267,7 @@ class User < ApplicationRecord
     identities.destroy_all
     remove_roles
     remove_audits #custom
+    remove_subscriptions #custom
   end
 
   def erased?

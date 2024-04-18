@@ -30,7 +30,7 @@
     <div class="flex-layout">
       <div class="main-column">
         <%= render ResourcePage::BannerComponent.new(resource: @poll) do |c| %>
-          <% c.links_section do %>
+          <% c.with_links_section do %>
              <%= render Polls::SubNavComponent.new(poll: @poll) %>
           <% end %>
         <% end %>
@@ -92,6 +92,14 @@
           <% question.question_answers.each do |answer| %>
             <% if answer_with_description?(answer) %>
               <%= render partial: "polls/questions/answer_more_info_modal", locals: { answer: answer } %>
+            <% end %>
+          <% end %>
+
+          <% question.nested_questions.each do |question| %>
+            <% question.question_answers.each do |answer| %>
+              <% if answer_with_description?(answer) %>
+                <%= render partial: "polls/questions/answer_more_info_modal", locals: { answer: answer } %>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>

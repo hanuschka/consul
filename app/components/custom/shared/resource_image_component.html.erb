@@ -1,11 +1,11 @@
 <div class="resource-image">
-  <% if @image_url.present? %>
+  <% if @image_url.present? && show_image_thumbnail?(@resource) %>
     <%= image_tag(@image_url, class: "resource-image--main", alt: alt_text) %>
     <%= image_tag(@image_url, class: "resource-image--blur", alt: "") %>
   <% else %>
     <div class="resource-image--missing-image-placeholder">
       <div class="resource-image--missing-image-placeholder-text">
-        <%= resource_name %>
+        <%= resource_name unless @resource.is_a?(Topic) %>
       </div>
       <i class="resource-image--missing-image-placeholder-icon fa <%= @image_placeholder_icon_class %>"></i>
     </div>

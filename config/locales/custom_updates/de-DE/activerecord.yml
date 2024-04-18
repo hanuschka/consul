@@ -10,9 +10,9 @@ de:
       projekt:
         one: Projekt
         other: Projekte
-      age_restriction:
-        one: Altersbeschränkung
-        other: Altersbeschränkungen
+      age_range:
+        one: Altersgruppe
+        other: Altersgruppen
       modal_notification:
         one: Popup Benachrichtigung
         other: Popup Benachrichtungen
@@ -83,6 +83,7 @@ de:
         open_answer_text: Offene Antwort
       poll/question/answer:
         more_info_link: Erklärungslink
+        more_info_iframe: Iframe-Link
       widget/card:
         card_category: Kategorie
       deficiency_report:
@@ -95,6 +96,7 @@ de:
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:
+        official_answer: Offizielle Antwort
         on_behalf_of: Erstellen im Namen von
       budget:
         voting_style_distributed: "Mehrere Stimmen"
@@ -138,10 +140,11 @@ de:
         date_of_birth: Geburtsdatum
         document_type: Dokument
         document_last_digits: Personalausweis / Passport (4 letzten Ziffern)
-      age_restriction:
+      age_range:
         min_age: Mindestalter
         max_age: Maximalalter
         order: Reihenfolge
+        only_for_stats: Nur für Statistiken
       modal_notification:
         title: Titel
         active_from: Von
@@ -149,6 +152,7 @@ de:
         html_content: Inhalt
       votation_type:
         max_votes: Maximale Stimmanzahl
+        max_votes_per_answer: Maximale Stimmanzahl pro Antwort
         vote_type: Art der Abstimmung
       votation_type/vote_type:
         unique: Einzelne Stimme
@@ -211,5 +215,8 @@ de:
         body: Text
         show_follow_up_button: Link zu Follow-up Formular integrieren
       formular_answer_image:
+        title: Titel
+        attachment: Anhang
+      formular_answer_document:
         title: Titel
         attachment: Anhang

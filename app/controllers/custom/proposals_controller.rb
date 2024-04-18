@@ -6,9 +6,11 @@ class ProposalsController
   include Takeable
   include ProjektLabelAttributes
   include RandomSeed
+  include GuestUsers
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
+  before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data], unless: -> { current_user&.guest? }
 
   def index_customization
     if params[:order].nil?
@@ -84,6 +86,8 @@ class ProposalsController
     if params[:projekt_phase_id].present?
       @projekt_phase = ProjektPhase::ProposalPhase.find(params[:projekt_phase_id])
       @projekt = @projekt_phase.projekt
+
+      redirect_to proposals_path unless @projekt.in?(Projekt.selectable_in_selector("proposals", current_user))
     end
 
     @resource = resource_model.new
@@ -214,6 +218,8 @@ class ProposalsController
 
   def flag
     Flag.flag(current_user, @proposal)
+    @proposal.update!(ignored_flag_at: nil)
+
     redirect_to @proposal
   end
 

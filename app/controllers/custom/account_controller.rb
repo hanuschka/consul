@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "controllers", "account_controller").t
 
 class AccountController < ApplicationController
   include ImageAttributes
+  include HasRegisteredAddress
 
   respond_to :js, only: [:edit_username]
 
@@ -49,6 +50,23 @@ class AccountController < ApplicationController
     end
   end
 
+  def edit_details
+    head :not_found unless @account.extended_registration?
+  end
+
+  def update_details
+    head :not_found unless @account.extended_registration?
+
+    process_temp_attributes_for(@account)
+
+    if @account.update(user_params)
+      @account.unverify!
+      redirect_to account_path, notice: t("flash.actions.save_changes.notice")
+    else
+      render :edit_details
+    end
+  end
+
   private
 
     def account_params
@@ -73,6 +91,7 @@ class AccountController < ApplicationController
          :username, :public_activity, :public_interests, :email_on_comment,
          :email_on_comment_reply, :email_on_direct_message, :email_digest, :newsletter,
          :official_position_badge, :recommended_debates, :recommended_proposals,
+         :show_in_users_overview,
          :adm_email_on_new_comment, :adm_email_on_new_proposal,
          :adm_email_on_new_debate, :adm_email_on_new_deficiency_report,
          :adm_email_on_new_manual_verification,
@@ -81,5 +100,18 @@ class AccountController < ApplicationController
          image_attributes: image_attributes
         ]
       end
+    end
+
+    def user_params
+      set_address_attributes
+
+      params.require(:user).permit(
+        :username,
+        :first_name, :last_name,
+        :city_name, :plz, :street_name, :street_number, :street_number_extension,
+        :registered_address_id,
+        :gender, :date_of_birth,
+        :document_type, :document_last_digits
+      )
     end
 end

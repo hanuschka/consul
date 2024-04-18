@@ -14,6 +14,7 @@ de:
         email_on_comment: Kommentare zu meinen Aktivitäten
         email_on_comment_reply: Antworten auf meine Kommentare
         email_on_direct_message: Private Nachrichten anderer Nutzer*innen
+        show_in_users_overview: Konto in der Nutzerübersicht anzeigen
         newsletter: Newsletter und System-E-Mails
         newsletter_on_home_page: Jetzt abonnieren
         public_activity: Meine Aktivität veröffentlichen
@@ -99,6 +100,8 @@ de:
         impressum: Impressum
         statistic_cookies_settings: Cookie Einstellungen
         contact_us: Kontaktieren Sie uns
+        sign_in_as_guest: Melden Sie sich als Gast an
+        sign_out_as_guest: Melden Sie sich als Gast ab
       header:
         account_link: Konto
         admin_link: Administration

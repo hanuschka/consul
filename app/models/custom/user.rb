@@ -42,6 +42,7 @@ class User < ApplicationRecord
   has_many :projekt_phase_subscriptions
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :not_guests, -> { where(guest: false) }
 
   validate :email_should_not_be_used_by_hidden_user
 
@@ -50,16 +51,18 @@ class User < ApplicationRecord
   validates :gender, presence: true, on: :create, if: :extended_registration?
   validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
-  validates :city_name, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :plz, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :street_name, presence: true, on: :create, if: :regular_address_fields_visible?
-  validates :street_number, presence: true, on: :create, if: :regular_address_fields_visible?
+  validates :registered_address_id, presence: true, if: :validate_registered_address?
+
+  validates :city_name, presence: true, if: :validate_regular_address_fields?
+  validates :plz, presence: true, if: :validate_regular_address_fields?
+  validates :street_name, presence: true, if: :validate_regular_address_fields?
+  validates :street_number, presence: true, if: :validate_regular_address_fields?
 
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
-  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create
-  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
+  validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
+  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create, unless: :guest?
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
   def self.transfer_city_streets # TODO delete this method
@@ -125,13 +128,24 @@ class User < ApplicationRecord
     end
   end
 
-  def regular_address_fields_visible?
+  def validate_registered_address?
+    return false unless extended_registration?
+    return false unless RegisteredAddress.present?
+
+    acceptable_values = ["0", nil]
+
+    [form_registered_address_city_id,
+      form_registered_address_street_id,
+      form_registered_address_id].none? { |v| acceptable_values.include?(v) }
+  end
+
+  def validate_regular_address_fields?
     return false unless extended_registration?
     return true if RegisteredAddress.none?
-    return true if form_registered_address_city_id == "0"
-    return false if persisted? && registered_address_id.present?
 
-    false
+    form_registered_address_city_id == "0" ||
+      form_registered_address_street_id == "0" ||
+      form_registered_address_id == "0"
   end
 
   def verify!
@@ -214,11 +228,11 @@ class User < ApplicationRecord
   end
 
   def extended_registration?
-    !organization? && !erased? && Setting["extra_fields.registration.extended"].present?
+    !organization? && !erased? && !guest? && Setting["extra_fields.registration.extended"].present?
   end
 
   def document_required?
-    !organization? && !erased? && Setting["extra_fields.registration.check_documents"].present?
+    !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
   def current_city_citizen?
@@ -321,12 +335,17 @@ class User < ApplicationRecord
     end
 
     def email_should_not_be_used_by_hidden_user
-      if User.only_hidden.find_by(email: email).present?
+      if User.only_hidden.where.not(id: id).find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
       end
     end
 
     def remove_audits
       audits.destroy_all
+    end
+
+    def remove_subscriptions
+      projekt_subscriptions.destroy_all
+      projekt_phase_subscriptions.destroy_all
     end
 end

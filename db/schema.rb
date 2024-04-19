@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_17_133134) do
+ActiveRecord::Schema.define(version: 2024_04_19_124940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1987,7 +1987,9 @@ ActiveRecord::Schema.define(version: 2024_04_17_133134) do
     t.boolean "show_start_date_in_frontend", default: true
     t.boolean "show_end_date_in_frontend", default: true
     t.integer "top_level_projekt_id"
+    t.tsvector "tsv"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
+    t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|

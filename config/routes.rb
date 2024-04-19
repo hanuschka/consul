@@ -56,6 +56,10 @@ Rails.application.routes.draw do
       put     :flag
       put     :unflag
     end
+
+    collection do
+      get :suggest
+    end
   end
 
   # More info pages

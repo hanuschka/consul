@@ -4,6 +4,9 @@ de:
       deficiency_report:
         one: Mangelmeldung
         other: Mängelmeldungen
+      deficiency_report_manager:
+        one: Mängelmelder Admin
+        other: Mängelmelder Admins
       map_layer:
         one: Kartenebene
         other: Kartenebenen

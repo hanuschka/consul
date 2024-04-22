@@ -10,9 +10,18 @@
           </span>
         <% end %>
         <span class="related-content-title"><%= t("related_content.content_title.#{related.model_name.singular}") %></span><br>
-        <h3 class="inline-block">
-          <%= link_to related.title, polymorphic_path(related) %>
-        </h3>
+
+        <div style="display:flex;justify-content:space-between;">
+          <h3 class="inline-block">
+            <%= link_to related.title, polymorphic_path(related) %>
+          </h3>
+
+          <% if can?(:destroy, related_content) %>
+            <%= link_to related_content_path(related_content), method: :delete, remote: true, class: "js-remove-related-content" do %>
+              <i class="fas fa-times-circle" style="margin-top:10px;margin-left:10px;"></i>
+            <% end %>
+          <% end %>
+        </div>
       </div>
     </li>
   <% end %>

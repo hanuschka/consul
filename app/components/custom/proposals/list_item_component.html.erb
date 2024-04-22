@@ -16,7 +16,7 @@
   <% if helpers.show_proposal_votes? && (proposal.successful? || proposal.archived? ||  helpers.projekt_phase_feature?(proposal.projekt_phase, "resource.allow_voting")) %>
     <% c.with_footer_section do  %>
       <div id="<%= dom_id(proposal) %>_votes" class="small-12 xlarge-10 small-centered column supports-container">
-        <% if proposal.successful? %>
+        <% if proposal.successful? && false # CON-1947 %>
           <div class="supports text-center">
             <%= render "proposals/supports", proposal: proposal %>
           </div>

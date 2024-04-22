@@ -13,8 +13,7 @@ class Admin::MenuComponent < ApplicationComponent
       controllers_names = ["settings", "tags", "geozones", "images", "content_blocks",
                            "local_census_records", "imports", "age_ranges", "individual_groups", "individual_group_values"]
       controllers_names.include?(controller_name) &&
-        controller.class.module_parent != Admin::Poll::Questions::Answers &&
-        controller.class != Admin::DeficiencyReports::SettingsController
+        controller.class.module_parent != Admin::Poll::Questions::Answers
     end
 
     def customization?
@@ -105,8 +104,7 @@ class Admin::MenuComponent < ApplicationComponent
       [
         t("admin.menu.settings"),
         admin_settings_path,
-        controller_name == "settings" &&
-          controller.class != Admin::DeficiencyReports::SettingsController
+        controller_name == "settings"
       ]
     end
 

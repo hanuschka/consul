@@ -38,6 +38,8 @@ de:
         index_order_individual_list_title: "Individuelle Liste"
         index_order_drafts: "Entwürfe"
         index_order_drafts_title: "Entwürfe"
+      search_form:
+        placeholder: Suchen...
       page:
         footer:
           sidebar:

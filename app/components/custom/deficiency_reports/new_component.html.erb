@@ -64,9 +64,11 @@
           </div>
           <%= f.translatable_fields do |translations_form| %>
             <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
+
             <div class="user-resources-form--banner-editor js-user-resources-form--banner-editor -deficiency-report">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
+                  data: suggest_data(deficiency_report),
                   label: false,
                   class: "user-resources-form--banner-editor-title",
                   placeholder: t("custom.deficiency_reports.form.title_placeholder"),

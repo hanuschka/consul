@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_05_140129) do
+ActiveRecord::Schema.define(version: 2024_04_19_124940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -701,6 +701,13 @@ ActiveRecord::Schema.define(version: 2024_03_05_140129) do
     t.string "name"
     t.index ["deficiency_report_category_id"], name: "index_d61b31ba5bbffdea13be0cd92b8cb671cb6d18b5"
     t.index ["locale"], name: "index_deficiency_report_category_translations_on_locale"
+  end
+
+  create_table "deficiency_report_managers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_deficiency_report_managers_on_user_id"
   end
 
   create_table "deficiency_report_officers", force: :cascade do |t|
@@ -1980,7 +1987,9 @@ ActiveRecord::Schema.define(version: 2024_03_05_140129) do
     t.boolean "show_start_date_in_frontend", default: true
     t.boolean "show_end_date_in_frontend", default: true
     t.integer "top_level_projekt_id"
+    t.tsvector "tsv"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
+    t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
@@ -2036,6 +2045,7 @@ ActiveRecord::Schema.define(version: 2024_03_05_140129) do
     t.string "on_behalf_of"
     t.bigint "projekt_phase_id"
     t.bigint "sentiment_id"
+    t.text "official_answer", default: ""
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_up"], name: "index_proposals_on_cached_votes_up"
@@ -2487,6 +2497,7 @@ ActiveRecord::Schema.define(version: 2024_03_05_140129) do
     t.string "auth_image_link"
     t.boolean "prefer_wide_resources_list_view_mode"
     t.boolean "guest", default: false
+    t.boolean "show_in_users_overview", default: true
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -2646,6 +2657,7 @@ ActiveRecord::Schema.define(version: 2024_03_05_140129) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_areas"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"

@@ -74,13 +74,15 @@
     <div class="flex-layout">
       <div class="main-column">
         <div class="js-anchor-navigation-content" id="projekt-body">
-          <div class="main-content-card">
-            <% if @custom_page.content&.include?('template_projekt_library') %>
-              <%= render "projekt_library", projekt: @custom_page.projekt %>
-            <% else %>
-              <%= render "custom_page_content" %>
-            <% end %>
-          </div>
+          <% if @custom_page.content.present? %>
+            <div class="main-content-card">
+              <% if @custom_page.content&.include?('template_projekt_library') %>
+                <%= render "projekt_library", projekt: @custom_page.projekt %>
+              <% else %>
+                <%= render "custom_page_content" %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
       <div id="projekt-info">

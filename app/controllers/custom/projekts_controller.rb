@@ -1,6 +1,7 @@
 class ProjektsController < ApplicationController
   include CustomHelper
   include ProposalsHelper
+  include Search
 
   skip_authorization_check
   before_action :raise_flag_feature_disabled, except: [:map_html]
@@ -9,6 +10,8 @@ class ProjektsController < ApplicationController
 
   def index
     @projekts = Projekt.regular
+    @projekts = @projekts.search(@search_terms) if @search_terms.present?
+
     @all_projekts = @projekts.index_order_all
     @special_projekt = Projekt.unscoped.find_by(special: true, special_name: "projekt_overview_page")
 
@@ -21,21 +24,20 @@ class ProjektsController < ApplicationController
     @projekts = @projekts.send(@current_projekts_filter)
     convert_back_to_relation if @projekts.is_a?(Array)
 
-
     @geozones = Geozone.all
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
-    take_by_geozone_affiliations
+    take_by_geozone_affiliations unless @search_terms.present?
 
     @categories = @projekts.map { |p| p.tags.category }.flatten.uniq.compact.sort
     @tag_cloud = tag_cloud
-    take_only_by_tag_names
+    take_only_by_tag_names unless @search_terms.present?
 
     @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
     @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_targets = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
-    take_by_sdgs
+    take_by_sdgs unless @search_terms.present?
 
     @show_comments = Setting["extended_feature.projekts_overview_page_footer.show_in_#{@current_projekts_filter}"].present?
 

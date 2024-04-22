@@ -36,6 +36,7 @@ class User < ApplicationRecord
   has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
+  has_one :deficiency_report_manager
   belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
 
@@ -336,6 +337,10 @@ class User < ApplicationRecord
     notifications.where(read_at: nil).count
   end
 
+  def deficiency_report_manager?
+    deficiency_report_manager.present?
+  end
+
   private
 
     def geozone_with_plz
@@ -352,7 +357,7 @@ class User < ApplicationRecord
     end
 
     def email_should_not_be_used_by_hidden_user
-      if User.only_hidden.find_by(email: email).present?
+      if User.only_hidden.where.not(id: id).find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
       end
     end
@@ -383,5 +388,10 @@ class User < ApplicationRecord
 
     def remove_audits
       audits.destroy_all
+    end
+
+    def remove_subscriptions
+      projekt_subscriptions.destroy_all
+      projekt_phase_subscriptions.destroy_all
     end
 end

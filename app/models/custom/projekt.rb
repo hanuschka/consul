@@ -13,6 +13,7 @@ class Projekt < ApplicationRecord
   include ActiveModel::Dirty
   include SDG::Relatable
   include Taggable
+  include Searchable
 
   translates :description
   include Globalizable
@@ -264,6 +265,16 @@ class Projekt < ApplicationRecord
           end
         )
       end
+  end
+
+  def self.search(terms)
+    pg_search(terms)
+  end
+
+  def searchable_values
+    { page.title          => "A",
+      title               => "A",
+      page.content        => "C" }
   end
 
   def can_filter_proposals?

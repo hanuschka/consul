@@ -171,6 +171,7 @@ de:
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen
+        deficiency_report_managers: Mangelmeldungmanager*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
@@ -347,6 +348,12 @@ de:
           no_projekt_managers: Keine Projektmanager*innen vorhanden.
         search:
           title: "Projektmanager*innen: Benutzer*innensuche"
+      deficiency_report_managers:
+        index:
+          title: Mangelmeldunmanager*innen
+          no_projekt_managers: Keine Mangelmeldungmanager*innen vorhanden.
+        search:
+          title: "Mangelmeldungmanager*innen: Benutzer*innensuche"
       settings:
         index:
           extended_features:

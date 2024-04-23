@@ -13,12 +13,14 @@
       <div class="projekts-overview-page--projekts-list">
         <%= render Shared::ResourcesListComponent.new(
           resources: @projekts,
-          map_coordinates: @map_coordinates,
+          resource_type: Projekt,
           current_filter: @current_projekts_filter,
-          filters: @active_projekts_filters,
-          resource_type: Projekt) do |c| %>
+          map_coordinates: @map_coordinates,
+          text_search_enabled: true,
+          filters: @active_projekts_filters
+        ) do |c| %>
           <% c.with_items_remark do %>
-            <%= render_custom_block("projekts_index_filter_#{@active_projekts_filters}") %>
+            <%= render_custom_block("projekts_index_filter_#{@current_projekts_filter}") %>
           <% end %>
         <% end %>
       </div>

@@ -1,5 +1,5 @@
 class RelatedContentsController < ApplicationController
-  skip_authorization_check
+  # skip_authorization_check
 
   respond_to :html, :js
 
@@ -10,6 +10,8 @@ class RelatedContentsController < ApplicationController
       child_relationable_id: child_relationable_params[:id],
       child_relationable_type: child_relationable_params[:type]
     )
+
+    authorize! :create, related_content
 
     if related_content.save
       flash[:success] = t("related_content.success")
@@ -31,10 +33,20 @@ class RelatedContentsController < ApplicationController
     score(:negative)
   end
 
+  def destroy
+    @related_content = RelatedContent.find(params[:id])
+    authorize! :destroy, @related_content
+
+    @related_content.opposite_related_content.really_destroy!
+    @related_content.really_destroy!
+  end
+
   private
 
     def score(action)
       @related = RelatedContent.find params[:id]
+      authorize! :create, @related
+
       @related.send("score_#{action}", current_user)
 
       render template: "relationable/_refresh_score_actions"

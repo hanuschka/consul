@@ -38,15 +38,19 @@
         <%= resources_back_link(fallback_path: proposals_path) %>
 
         <h1 class="resource-page--title"><%= "Beitrag von #{@proposal.author_name}" %></h1>
+
+        <% if @proposal.retired? %>
+          <div class="callout alert margin-top proposal-retired">
+            <strong>
+              <%= t("proposals.show.retired_warning") %>
+            </strong><br>
+            <%= @proposal.retired_explanation %>
+          </div>
+        <% end %>
+
         <div class="common-page-description">
           <%= render_custom_block('debate_show_welcome_text', default_content: t("custom.proposals.show.welcome_default_text", author: @proposal.author_name)) %>
         </div>
-
-        <% if @proposal.conflictive? %>
-          <div data-alert class="callout alert margin-top">
-            <strong><%= t("proposals.show.flag") %></strong>
-          </div>
-        <% end %>
 
       </div>
       <div class="sidebar-placeholder"></div>
@@ -54,6 +58,11 @@
 
     <div class="flex-layout">
       <div class="main-column">
+        <% if @proposal.official_answer.present? %>
+          <div class="main-content-card" style="background-color:#E3FCE7;">
+            <%= auto_link_already_sanitized_html wysiwyg(@proposal.official_answer) %>
+          </div>
+        <% end %>
         <%= render ResourcePage::BannerComponent.new(resource: @proposal) %>
 
         <div class="resource-page--description new-card main-content-card">
@@ -119,12 +128,15 @@
                     </h3>
                   <% end %>
                   <% c.with_body do %>
-                      <%= render(
-                        Shared::ResourcesListComponent.new(
-                          resources: @proposal.community.topics,
-                          resource_type: Topic,
-                          hide_view_mode_button: true
-                          )) %>
+                    <%= link_to t("community.show.sidebar.new_topic"),
+                                create_topic_link(@proposal.community),
+                                class: "button expanded" %>
+                    <%= render(
+                      Shared::ResourcesListComponent.new(
+                        resources: @proposal.community.topics,
+                        resource_type: Topic,
+                        hide_view_mode_button: true
+                        )) %>
                   <% end %>
                 <% end %>
               </div>
@@ -224,11 +236,11 @@
                 <%= t("custom.proposals.show.community_section.particapated_users_count") %>
               </div>
               <div>
-                <%= @proposal.community.comments_count %>
+                <%= @proposal.community.topics.count %>
                 <%= t("custom.proposals.show.community_section.topics_count") %>
               </div>
               <div>
-                <%= @proposal.community.topics.count %>
+                <%= @proposal.community.comments_count %>
                 <%= t("custom.proposals.show.community_section.comments_count") %>
               </div>
               <%= render(Sidebar::UsersListComponent.new(users: @proposal.community.participants)) %>
@@ -249,7 +261,7 @@
           <% end %>
         <% end %>
 
-        <% if !@proposal.selected? && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_related_content") %>
+        <% if show_related_contents_block?(@proposal) %>
           <%= render(Shared::SidebarCardComponent.new(title: t("related_content.title"), icon_name: "link")) do %>
             <p>
               <%= t("related_content.description") %>

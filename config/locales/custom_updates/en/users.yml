@@ -7,6 +7,12 @@ en:
       contact: Contact
       banner:
         registered_at: "Entered at: %{date}"
+      index:
+        title: Overview of all users
+        users_count: Users
+      shared:
+        auth_page:
+          legend: Design the city according to your ideas! Once registered, you have access to the topics that concern us all at any time - and can actively participate in the projects.
     user_page:
       filters:
         proposals: Proposals

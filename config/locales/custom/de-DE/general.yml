@@ -462,7 +462,7 @@ de:
       flag: Dieser Vorschlag wurde von verschiedenen Benutzern als unangebracht gemeldet.
       notifications_tab: Benachrichtigungen
       milestones_tab: Meilensteine
-      retired_warning: "Der/Die Autor/in ist der Ansicht, dass dieser Vorschlag nicht mehr Unterstützung erhalten soll."
+      retired_warning: "Der/Die Autor/in hat den Vorschlag mit folgender Begründung zurückgezogen:"
       retired_warning_link_to_explanation: Lesen Sie die Erläuterung, bevor Sie abstimmen.
       retired: Vorschlag vom Autor zurückgezogen
       share: Teilen
@@ -765,6 +765,12 @@ de:
           one: "Es gibt einen Vorschlag mit dem Begriff '%{query}', Sie können an diesem mitwirken, anstatt einen neuen zu erstellen"
           other: "Es gibt Vorschläge mit dem Begriff '%{query}', Sie können an diesen mitwirken, anstatt einen neuen zu erstellen"
         message: "Sie sehen %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
+        see_all: "Alle anzeigen"
+      deficiency_report:
+        found:
+          one: "Es gibt eine Meldung mit dem Begriff '%{query}', Sie können an diesem mitwirken, anstatt einen neuen zu erstellen"
+          other: "Es gibt Meldungen mit dem Begriff '%{query}', Sie können an diesen mitwirken, anstatt einen neuen zu erstellen"
+        message: "Sie sehen %{limit} von %{count} Meldungen mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
     tags_cloud:
       districts: "Bereiche"

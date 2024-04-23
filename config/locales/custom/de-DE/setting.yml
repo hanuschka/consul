@@ -36,8 +36,8 @@ de:
           enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
           enable_google_translate: Google Translate aktivieren
           enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
-          show_guest_login_links: Show Guest login links
-          show_guest_login_links_description: Show Guest login links description
+          show_guest_login_links: Zeige Gast-Login an
+          show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
         gdpr:
           gdpr_conformity: DSGVO-konforme Voreinstellungen
           gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"

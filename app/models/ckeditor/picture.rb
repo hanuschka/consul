@@ -8,14 +8,14 @@ class Ckeditor::Picture < Ckeditor::Asset
 
   def url_content(editor_id: nil)
     if absolute_path?(editor_id)
-      Setting["url"] + rails_representation_url(storage_data.variant(resize: "800>"), only_path: true)
+      Setting["url"] + rails_representation_url(storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true)
     else
-      rails_representation_url(storage_data.variant(resize: "800>"), only_path: true)
+      rails_representation_url(storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true)
     end
   end
 
   def url_thumb
-    rails_representation_url(storage_data.variant(resize: "118x100"), only_path: true)
+    rails_representation_url(storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true)
   end
 
   private

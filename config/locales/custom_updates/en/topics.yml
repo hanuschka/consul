@@ -1,0 +1,14 @@
+en:
+  custom:
+    topics:
+      hide:
+        success: The topic has been hidden.
+      restore:
+        success: The topic has been restored.
+      list:
+        empty_list_text: No entries
+        orders:
+          most_voted: Most voted
+          newest: Newest
+          oldest: Oldest
+          most_commented: Most commented

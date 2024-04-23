@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Shared::ResourceImageComponent < ApplicationComponent
+  delegate :show_image_thumbnail?, to: :helpers
+
   def initialize(image_url:, resource:, image_placeholder_icon_class:)
     @image_url = image_url
     @resource = resource

@@ -3,7 +3,8 @@ class Sentiment < ApplicationRecord
   include Globalizable
 
   belongs_to :projekt_phase
-  has_many :resource_sentiments, dependent: :destroy
+  has_many :proposals, dependent: :nullify
+  has_many :debates, dependent: :nullify
 
   default_scope { order(:id) }
 end

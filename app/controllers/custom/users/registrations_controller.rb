@@ -16,20 +16,30 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def sign_in_guest
-    unless session[:guest_user_id].present?
-      guest_key = "guest_#{SecureRandom.uuid}"
-      User.create_guest_user(guest_key)
-      session[:guest_user_id] = guest_key
-    end
+    redirect_to root_path if current_user.present?
 
-    notice = t("custom.devise_views.users.registrations.sign_in_guest.success")
-    flash[:notice] = notice
+    @guest_user = User.new(guest: true)
+  end
 
-    unless request.headers["Referer"].present? && request.headers["Referer"].include?(action_name)
-      redirect_back(fallback_location: root_path)
+  def create_guest
+    if current_user.present?
+      redirect_to after_sign_in_path_for(current_user), notice: t("custom.devise_views.users.registrations.sign_in_guest.success")
     else
-      redirect_to root_path
+      guest_key = "guest_#{SecureRandom.uuid}"
+      @guest_user = initialize_guest_user(guest_key)
+
+      if @guest_user.save
+        session[:guest_user_id] = guest_key
+        redirect_to after_sign_in_path_for(@guest_user), notice: t("custom.devise_views.users.registrations.sign_in_guest.success")
+      else
+        render :sign_in_guest
+      end
     end
+  end
+
+  def sign_out_guest
+    session.delete(:guest_user_id)
+    redirect_to root_path, notice: t("custom.devise_views.users.registrations.sign_out_guest.success")
   end
 
   private
@@ -51,5 +61,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
                                    :locale,
                                    :redeemable_code,
                                    individual_group_value_ids: [])
+    end
+
+    def initialize_guest_user(guest_key)
+      User.new(
+        username: params[:user][:username],
+        terms_general: params[:user][:terms_general],
+        email: "#{guest_key}@example.com",
+        guest: true,
+        confirmed_at: Time.now.utc,
+        skip_password_validation: true
+      )
     end
 end

@@ -29,3 +29,11 @@
 <hr>
 
 <%= render "admin/milestones/milestones", milestoneable: @proposal %>
+
+<hr>
+
+<%= form_with(model: [:admin, @proposal], local: true) do |f| %>
+  <%= f.text_area :official_answer,
+                  class: "html-area #{ck_editor_class(current_user)}" %>
+  <%= f.submit "Offizielle Antwort aktualisieren" %>
+<% end %>

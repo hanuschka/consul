@@ -8,7 +8,7 @@ class UsersController < ApplicationController
       redirect_to root_path, alert: "Diese Funktion ist deaktiviert"
     end
 
-    @users = User.active.order(created_at: :desc).page(params[:page])
+    @users = User.active.where(show_in_users_overview: true).order(created_at: :desc).page(params[:page])
   end
 
   def show

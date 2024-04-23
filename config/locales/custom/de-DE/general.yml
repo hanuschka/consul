@@ -766,6 +766,12 @@ de:
           other: "Es gibt Vorschläge mit dem Begriff '%{query}'. Bitte prüfen Sie, ob Sie dort mitwirken möchten, bevor Sie einen neuen erstellen."
         message: "Sie sehen %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
+      deficiency_report:
+        found:
+          one: "Es gibt eine Meldung mit dem Begriff '%{query}', Sie können an diesem mitwirken, anstatt einen neuen zu erstellen"
+          other: "Es gibt Meldungen mit dem Begriff '%{query}', Sie können an diesen mitwirken, anstatt einen neuen zu erstellen"
+        message: "Sie sehen %{limit} von %{count} Meldungen mit dem Begriff \"%{query}\""
+        see_all: "Alle anzeigen"
     tags_cloud:
       districts: "Bereiche"
       districts_list: "Liste der Bereiche"

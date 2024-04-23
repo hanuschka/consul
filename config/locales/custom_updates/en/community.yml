@@ -1,0 +1,12 @@
+en:
+  custom:
+    community:
+      show:
+        participate: Participate
+        participants: Participants
+      sidebar:
+        particapate: Participate
+        be_first: Create a workgroup
+        topic:
+          hide: Hide
+          restore: Restore

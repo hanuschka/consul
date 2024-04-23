@@ -37,6 +37,8 @@ en:
         index_order_individual_list_title: "Individual list"
         index_order_drafts: "Entwürfe"
         index_order_drafts_title: "Entwürfe"
+      search_form:
+        placeholder: Search...
       page:
         footer:
           sidebar:

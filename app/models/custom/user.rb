@@ -35,6 +35,7 @@ class User < ApplicationRecord
   has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
+  has_one :deficiency_report_manager
   belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
 
@@ -317,6 +318,10 @@ class User < ApplicationRecord
 
   def unread_notifications_count
     notifications.where(read_at: nil).count
+  end
+
+  def deficiency_report_manager?
+    deficiency_report_manager.present?
   end
 
   private

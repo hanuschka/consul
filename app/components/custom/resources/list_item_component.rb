@@ -14,6 +14,7 @@ class Resources::ListItemComponent < ApplicationComponent
     image_url: nil,
     subline: nil,
     url: nil,
+    url_target: nil,
     tags: [],
     image_placeholder_icon_class: "fa-file",
     header_style: nil,
@@ -27,6 +28,7 @@ class Resources::ListItemComponent < ApplicationComponent
     @resource = resource
     @image_url = image_url
     @url = url
+    @url_target = url_target
     @subline = subline
     @tags = tags
     @image_placeholder_icon_class = image_placeholder_icon_class

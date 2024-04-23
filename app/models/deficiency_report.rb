@@ -33,6 +33,7 @@ class DeficiencyReport < ApplicationRecord
 
   validates :deficiency_report_category_id, :author, presence: true
   validates :deficiency_report_area_id, presence: true, if: -> { validate_area_presence? }
+  validates :map_location, presence: true, on: :create
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom

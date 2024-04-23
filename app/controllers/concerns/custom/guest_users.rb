@@ -19,7 +19,7 @@ module GuestUsers
       return @guest_user if @guest_user
 
       if session[:guest_user_id]
-        @guest_user = User.find_by(username: session[:guest_user_id], guest: true)
+        @guest_user = User.find_by(email: "#{session[:guest_user_id]}@example.com", guest: true)
       end
     end
 end

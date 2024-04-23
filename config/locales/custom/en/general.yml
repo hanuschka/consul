@@ -1,4 +1,12 @@
 en:
+  shared:
+    suggest:
+      deficiency_report:
+        found:
+          one: "There is a deficiency report with the term '%{query}', you can contribute to this instead of creating a new one"
+          other: "There are deficiency reports with the term '%{query}', you can contribute to these instead of creating a new one"
+        message: "You see %{limit} of %{count} DeficiencyReports with the term \"%{query}\""
+        see_all: "View all"
   search:
     go_to_discusstion: "open discussion..."
     search_form:

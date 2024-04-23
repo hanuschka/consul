@@ -1,0 +1,7 @@
+<div id="<%= dom_id(@resource, :follow_icon) %>">
+  <% if follow_obj.followable.followed_by?(current_user) %>
+    <%= unfollow_icon_html %>
+  <% else %>
+    <%= follow_icon_html %>
+  <% end %>
+</div>

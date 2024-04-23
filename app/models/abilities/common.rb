@@ -132,7 +132,7 @@ module Abilities
         projekt_phase.selectable_by?(user)
       end
 
-      can [:index, :json_data, :create], DeficiencyReport
+      can [:index, :json_data, :create, :suggest], DeficiencyReport
       can [:show, :vote], DeficiencyReport do |report|
         report.in? DeficiencyReport.admin_accepted(user)
       end
@@ -168,6 +168,11 @@ module Abilities
 
       can :toggle_subscription, ProjektPhaseSubscription do |subscription|
         subscription.user == user
+      end
+
+      can :create, RelatedContent
+      can :destroy, RelatedContent do |related_content|
+        related_content.author_id == user.id
       end
     end
   end

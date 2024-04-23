@@ -5,6 +5,7 @@ class Ability
     if user # logged-in users
       merge Abilities::Valuator.new(user) if user.valuator?
       merge Abilities::ProjektManager.new(user) if user.projekt_manager? && !user.administrator?
+      merge Abilities::DeficiencyReportManager.new(user) if user.deficiency_report_manager?
 
       if user.administrator?
         merge Abilities::Administrator.new(user)

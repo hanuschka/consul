@@ -3,15 +3,15 @@ class Image < ApplicationRecord
 
   def self.styles
     {
-      large: { resize: "x#{Setting["uploads.images.min_height"]}" },
-      projekt_image: { gravity: "center", resize: "620x390^", crop: "620x390+0+0" },
-      medium: { gravity: "center", resize: "300x300^", crop: "300x300+0+0" },
-      thumb: { gravity: "center", resize: "140x245^", crop: "140x245+0+0" },
-      thumb_wider: { gravity: "center", resize: "185x280^", crop: "185x280+0+0" },
-      banner: { gravity: "center", resize: "1920x250^", crop: "1920x250+0+0" },
-      popup: { gravity: "center", resize: "140x140^", crop: "140x140+0+0" },
-      thumb2: { gravity: "center", resize: "100x100^", crop: "100x100+0+0" },
-      card_thumb: { gravity: "center", resize: "300x300^" }
+      large: { coalesce: true, resize: "x#{Setting["uploads.images.min_height"]}", loader: { page: nil }},
+      projekt_image: { coalesce: true, gravity: "center", resize: "620x390^", crop: "620x390+0+0", loader: { page: nil }},
+      medium: { coalesce: true, gravity: "center", resize: "300x300^", crop: "300x300+0+0", loader: { page: nil }},
+      thumb: { coalesce: true, gravity: "center", resize: "140x245^", crop: "140x245+0+0", loader: { page: nil }},
+      thumb_wider: { coalesce: true, gravity: "center", resize: "185x280^", crop: "185x280+0+0", loader: { page: nil }},
+      banner: { coalesce: true, gravity: "center", resize: "1920x250^", crop: "1920x250+0+0", loader: { page: nil }},
+      popup: { coalesce: true, gravity: "center", resize: "140x140^", crop: "140x140+0+0", loader: { page: nil }},
+      thumb2: { coalesce: true, gravity: "center", resize: "100x100^", crop: "100x100+0+0", loader: { page: nil }},
+      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", loader: { page: nil }}
     }
   end
 

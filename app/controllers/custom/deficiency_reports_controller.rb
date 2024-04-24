@@ -15,6 +15,8 @@ class DeficiencyReportsController < ApplicationController
   has_orders ->(c) { DeficiencyReport.deficiency_report_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
 
+  helper_method :resource_model, :resource_name
+
   def index
     if params[:order].nil? &&
          Setting["projekts.set_default_sorting_to_newest"].present? &&
@@ -178,6 +180,11 @@ class DeficiencyReportsController < ApplicationController
     set_deficiency_report_votes(@deficiency_report)
   end
 
+  def suggest
+    @limit = 5
+    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted(current_user).search(@search_terms) : nil
+  end
+
   private
 
   def filter_by_my_posts
@@ -238,5 +245,14 @@ class DeficiencyReportsController < ApplicationController
 
   def set_view
     @view = (params[:view] == "minimal") ? "minimal" : "default"
+  end
+
+  def resource_name
+    "deficiency_report"
+    #@resource_name ||= resource_model.to_s.downcase
+  end
+
+  def resource_model
+    DeficiencyReport
   end
 end

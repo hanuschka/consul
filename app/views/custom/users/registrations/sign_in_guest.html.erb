@@ -1,0 +1,34 @@
+<% provide :title do %><%= t("custom.devise_views.users.registrations.sign_in_guest.title") %><% end %>
+
+<%= render Auth::AuthPageTemplateComponent.new do |c| %>
+  <% c.with_form do %>
+    <h2><%= t("custom.devise_views.users.registrations.sign_in_guest.title") %></h2>
+
+    <%= form_with(model: @guest_user, url: users_registrations_create_guest_path) do |f| %>
+      <%= render "shared/errors", resource: @guest_user %>
+
+      <div class="row">
+        <div class="small-12">
+
+          <%= f.text_field :username, autofocus: true, maxlength: User.username_max_length,
+            placeholder: t("custom.devise_views.users.registrations.sign_in_guest.username_placeholder"),
+            hint: t("custom.devise_views.users.registrations.sign_in_guest.username_hint") %>
+
+          <%= f.invisible_captcha :address %>
+
+          <%= f.check_box :terms_general,
+            title: t("custom.terms.general.title"),
+            label: t("custom.terms.general.label",
+                     terms_link: link_to(t("custom.terms.terms_link.text"), "/conditions",
+                                         title: t("shared.target_blank"), target: "_blank")),
+            class: "checkbox-label--aligned" %>
+
+          <div class="small-12 medium-6 small-centered margin-top">
+            <%= f.submit t("custom.devise_views.users.registrations.sign_in_guest.submit"), class: "button expanded -green" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+  <% end %>
+<% end %>

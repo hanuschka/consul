@@ -33,10 +33,10 @@ class Admin::ProjektsController < Admin::BaseController
   end
 
   def quick_update
-    @projekt.update(projekt_params)
+    @projekt.update!(projekt_params)
     Projekt.ensure_order_integrity
 
-    redirect_back(fallback_location: admin_projekts_path)
+    redirect_to admin_projekts_path
   end
 
   def update

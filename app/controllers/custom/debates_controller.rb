@@ -173,6 +173,8 @@ class DebatesController < ApplicationController
 
   def flag
     Flag.flag(current_user, @debate)
+    @debate.update!(ignored_flag_at: nil)
+
     redirect_to @debate
   end
 

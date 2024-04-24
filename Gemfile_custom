@@ -17,6 +17,7 @@ gem 'elasticsearch-model', github: 'elastic/elasticsearch-rails', branch: '6.x'
 gem 'elasticsearch-rails', github: 'elastic/elasticsearch-rails', branch: '6.x'
 
 gem 'httparty'
+gem 'sd_notify', '~> 0.1.1'
 
 gem "sentry-ruby"
 gem "sentry-rails"

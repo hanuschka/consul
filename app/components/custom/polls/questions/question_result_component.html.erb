@@ -20,8 +20,9 @@
         <%- question.question_answers.each do |answer| %>
           <tr>
             <td id="answer_<%= answer.id %>_result" class='results-column <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>' >
-              <%= answer.total_votes %>
-              (<%= answer.total_votes_percentage.round(2) %>%)
+              <span><%= answer.total_votes %></span>
+              <br>
+              <small>(<%= answer.total_votes_percentage.round(2) %>%)</small>
             </td>
             <td class='answers-column <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>' >
               <% if question.open_question_answer == answer %>

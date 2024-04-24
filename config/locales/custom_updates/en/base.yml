@@ -17,6 +17,7 @@ en:
         email_on_comment: Notify me by email when someone comments on my proposals or debates
         email_on_comment_reply: Notify me by email when someone replies to my comments
         email_on_direct_message: Receive emails about direct messages
+        show_in_users_overview: Show account in the users overview
         newsletter: Receive by email website relevant information
         public_activity: Keep my list of activities public
         public_interests: Keep the labels of the elements I follow public
@@ -98,6 +99,8 @@ en:
         impressum: Imprint
         statistic_cookies_settings: Cookie Settings
         contact_us: Contact us
+        sign_in_as_guest: Sign in as a guest
+        sign_out_as_guest: Sign out as a guest
       header:
         account_link: Account
         admin_link: Administration

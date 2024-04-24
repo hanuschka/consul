@@ -1,7 +1,9 @@
 <%= form.label :map_location, label %>
-<p class="help-text" id="tag-list-help-text"><%= help %></p>
 
 <% mappable = @proposal || @deficiency_report || @investment || nil %>
+
+<% help_text_class = mappable.errors[:map_location].present? ? "form-error is-visible" : "help-text" %>
+<p class="<%= help_text_class %>" id="tag-list-help-text"><%= help %></p>
 
 <% if mappable.present?  && !mappable.respond_to?(:projekt_phase) %>
   <%= render Shared::MapComponent.new(

@@ -10,6 +10,9 @@ de:
       index:
         title: Übersicht aller Nutzer*innen
         users_count: Nutzer*innen
+      shared:
+        auth_page:
+          legend: Gestalten Sie die Stadt nach Ihren Vorstellungen! Einmal registriert, haben Sie jederzeit Zugriff auf die Themen, die uns alle bewegen – und können sich aktiv an den Projekten beteiligen.
     user_page:
       filters:
         proposals: Vorschläge

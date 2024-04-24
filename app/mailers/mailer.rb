@@ -1,4 +1,6 @@
 class Mailer < ApplicationMailer
+  include ActionView::Helpers::TranslationHelper
+
   after_action :prevent_delivery_to_users_without_email
 
   helper :text_with_links

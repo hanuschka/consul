@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   draw :verification
   draw :projekt
   draw :projekt_management
+  draw :deficiency_report_management
   draw :custom
 
   root "welcome#index"
@@ -55,6 +56,10 @@ Rails.application.routes.draw do
       patch   :approve_official_answer
       put     :flag
       put     :unflag
+    end
+
+    collection do
+      get :suggest
     end
   end
 

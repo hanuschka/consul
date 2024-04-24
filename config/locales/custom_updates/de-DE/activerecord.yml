@@ -15,6 +15,9 @@ de:
       deficiency_report:
         one: Anliegen
         other: Anliegen
+      deficiency_report_manager:
+        one: Anliegen Admin
+        other: Anliegen Admins
       map_layer:
         one: Kartenebene
         other: Kartenebenen
@@ -126,6 +129,7 @@ de:
       projekt_phase:
         bam_street_id: Straße
       proposal:
+        official_answer: Offizielle Antwort
         on_behalf_of: Erstellen im Namen von
       budget:
         voting_style_distributed: "Mehrere Stimmen"

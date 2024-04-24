@@ -217,6 +217,8 @@ class ProposalsController
 
   def flag
     Flag.flag(current_user, @proposal)
+    @proposal.update!(ignored_flag_at: nil)
+
     redirect_to @proposal
   end
 

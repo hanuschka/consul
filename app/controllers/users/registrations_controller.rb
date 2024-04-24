@@ -6,7 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   ]
   before_action :configure_permitted_parameters
 
-  invisible_captcha only: [:create], honeypot: :address, scope: :user
+  invisible_captcha only: [:create, :create_guest], honeypot: :address, scope: :user
 
   def new
     super do |user|

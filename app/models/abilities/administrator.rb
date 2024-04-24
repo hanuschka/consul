@@ -54,6 +54,7 @@ module Abilities
 
       can [:search, :create, :index, :destroy, :update], ::Administrator
       can [:search, :create, :index, :destroy], ::ProjektManager # custom
+      can [:search, :create, :index, :destroy], ::DeficiencyReportManager # custom
       can [:search, :create, :index, :destroy], ::Moderator
       can [:search, :show, :update, :create, :index, :destroy, :summary], ::Valuator
       can [:search, :create, :index, :destroy], ::Manager
@@ -183,6 +184,10 @@ module Abilities
       can :manage, ProjektArgument
 
       can :read_stats, Budget, id: Budget.valuating_or_later.ids
+
+      can :destroy, RelatedContent
+
+      can [:hide, :restore], Topic
     end
   end
 end

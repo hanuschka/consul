@@ -636,6 +636,7 @@ GEM
       faraday (>= 0.17.3, < 3)
     scss_lint (0.60.0)
       sass (~> 3.5, >= 3.5.5)
+    sd_notify (0.1.1)
     selenium-webdriver (4.16.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -848,6 +849,7 @@ DEPENDENCIES
   sassc-rails (~> 2.1.2)
   savon (~> 2.14.0)
   scss_lint (~> 0.60.0)
+  sd_notify (~> 0.1.1)
   selenium-webdriver (~> 4.16.0)
   sentry-rails
   sentry-ruby

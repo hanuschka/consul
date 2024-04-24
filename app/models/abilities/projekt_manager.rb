@@ -193,6 +193,13 @@ module Abilities
       can [:manage], ::Legislation::DraftVersion do |draft_version|
         can?(:manage, draft_version&.process)
       end
+
+      can :destroy, RelatedContent do |related_content|
+        return false unless related_content.parent_relationable.respond_to?(:projekt_phase) && related_content.child_relationable.respond_to?(:projekt_phase)
+
+        user.projekt_manager.allowed_to?("manage", related_content.parent_relationable.projekt_phase.projekt) ||
+          user.projekt_manager.allowed_to?("manage", related_content.child_relationable.projekt_phase.projekt)
+      end
     end
   end
 end

@@ -136,6 +136,7 @@
 var initialize_modules = function() {
   "use strict";
 
+  App.RemoveOnMobileSections.initialize();
   App.Answers.initialize();
   App.Questions.initialize();
   App.Comments.initialize();

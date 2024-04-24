@@ -7,3 +7,6 @@ de:
       sidebar:
         particapate: Mitmachen
         be_first: Arbeitskreis erstellen
+        topic:
+          hide: Ausblenden
+          restore: Einblenden

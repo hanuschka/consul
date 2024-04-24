@@ -36,6 +36,7 @@ class CommentsController < ApplicationController
   def flag
     Flag.flag(current_user, @comment)
     set_comment_flags(@comment)
+    @comment.subtree.update_all(ignored_flag_at: nil)
 
     render "shared/_refresh_flag_actions", locals: { flaggable: @comment, divider: true }
   end

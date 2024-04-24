@@ -67,8 +67,11 @@
         ) %>
       <% end %>
 
-      <div class="items-list-line-divider">
-      </div>
+      <% unless hide_list_line_divider? %>
+        <div class="items-list-line-divider">
+        </div>
+      <% end %>
+
       <% if filters.present? %>
         <%= render(
           Shared::FilterDropdownComponent.new(

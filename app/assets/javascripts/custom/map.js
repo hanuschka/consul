@@ -51,7 +51,7 @@
 
       // biolerplate for marker
       var marker = null;
-      var markersGroup = L.markerClusterGroup();
+      var markersGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
 
       /* Create leaflet map start */

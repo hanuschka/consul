@@ -1,0 +1,38 @@
+<h2 class="inline-block"><%= t("custom.admin.deficiency_report_managers.index.title") %></h2>
+
+<%= render "admin/shared/user_search", url: search_admin_deficiency_report_managers_path %>
+
+<div id="deficiency_report_managers">
+  <% if @deficiency_report_managers.any? %>
+    <h3><%= page_entries_info @deficiency_report_managers %></h3>
+
+    <table>
+      <thead>
+        <th scope="col"><%= Moderator.human_attribute_name(:name) %></th>
+        <th scope="col" class="small-6"><%= Moderator.human_attribute_name(:email) %></th>
+        <th scope="col" class="small-3"><%= t("admin.shared.actions") %></th>
+      </thead>
+      <tbody>
+        <% @deficiency_report_managers.each do |deficiency_report_manager| %>
+          <tr>
+            <td>
+              <%= deficiency_report_manager.name %>
+            </td>
+            <td>
+              <%= deficiency_report_manager.email %>
+            </td>
+            <td>
+              <%= render Admin::Roles::TableActionsComponent.new(deficiency_report_manager) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate @deficiency_report_managers %>
+  <% else %>
+    <div class="callout primary">
+      <%= t("custom.admin.deficiency_report_managers.index.no_deficiency_report_managers") %>
+    </div>
+  <% end %>
+</div>

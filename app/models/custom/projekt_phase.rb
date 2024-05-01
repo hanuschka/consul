@@ -270,6 +270,13 @@ class ProjektPhase < ApplicationRecord
     true
   end
 
+  def regular_formular_cutoff_date
+    setting = settings.find_by(key: "option.general.primary_formular_cutoff_date")
+    setting&.value&.to_date
+  rescue
+    nil
+  end
+
   private
 
     def phase_specific_permission_problems(user)

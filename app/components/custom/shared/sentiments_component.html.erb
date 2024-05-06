@@ -6,7 +6,7 @@
         remote: true,
         class: "js-remote-link-push-state sentiment-link",
         "data-footer-tab-back-url": footer_tab_back_button_url(sentiment),
-        onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>
+        onclick: "$('#footer-content').addClass('show-loader');" do %>
         <span class="sentiment secondary <%= "selected" if sentiment_selected?(sentiment) %>" style="<%= button_styles %>">
           <%= sentiment.name %>
         </span>

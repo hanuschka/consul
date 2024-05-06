@@ -22,7 +22,7 @@ en:
       new_proposal:
         subject: New Proposal added to Consul
         hi: Hi %{username},
-        p1: New proposal has just been added to Consul.
+        p1: New proposal has just been added or edited.
         signature_html: Best regards</br>Consul
       new_debate:
         subject: New Debate added to Consul

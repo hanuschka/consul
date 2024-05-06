@@ -22,7 +22,7 @@ de:
       new_proposal:
         subject: Neuer Vorschlag auf Consul
         hi: Hallo %{username},
-        p1: es ist ein neuer Vorschlag auf Consul eingegangen.
+        p1: es ist ein neuer Vorschlag auf Consul eingegangen oder ein existierender Vorschlag wurde geändert.
         signature_html: Viele Grüße</br>Consul
       new_debate:
         subject: Neue Diskussionsbeitrag auf Consul

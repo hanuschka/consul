@@ -196,6 +196,18 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
+  def new_topic(user_id, community_id, topic_id)
+    @user = User.find(user_id)
+    @community = Community.find(community_id)
+    @topic = Topic.find(topic_id)
+
+    subject = t("custom.notification_service_mailers.new_topic.subject")
+
+    with_user(@user) do
+      mail(to: @user.email, subject: subject)
+    end
+  end
+
   private
 
     def with_user(user)

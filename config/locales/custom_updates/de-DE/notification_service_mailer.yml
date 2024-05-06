@@ -91,3 +91,8 @@ de:
         link: Livestream
         p1: es ist ein neue Livestream auf Consul eingegangen.
         signature_html: Viele Grüße</br>Consul
+      new_topic:
+        subject: Neues Thema auf Consul
+        hi: Hallo %{username},
+        p1: es ist ein neues Thema erstellt worden.
+        signature_html: Viele Grüße</br>Consul

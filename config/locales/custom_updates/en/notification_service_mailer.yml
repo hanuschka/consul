@@ -90,3 +90,8 @@ en:
         hi: Hello %{username},
         p1: New topic was added to Consul.
         signature_html: Best regards</br>Consul
+      new_proposal_notification:
+        subject: "New notification related to Proposal: %{proposal_title}"
+        hi: Hello %{username},
+        intro_html: "Author of the proposal %{proposal_link} added a new notification"
+        signature_html: Viele Grüße</br>Consul

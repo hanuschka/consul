@@ -96,3 +96,8 @@ de:
         hi: Hallo %{username},
         p1: es ist ein neues Thema erstellt worden.
         signature_html: Viele Grüße</br>Consul
+      new_proposal_notification:
+        subject: "Neue Benachrichtigung zum Vorschlag: %{proposal_title}"
+        hi: Hallo %{username},
+        intro_html: "Der Autor des Vorschlages %{proposal_link} hat eine neue Benachrichtigung erstellt:"
+        signature_html: Viele Grüße</br>Consul

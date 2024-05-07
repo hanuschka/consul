@@ -11,9 +11,7 @@ class ProposalNotificationsController < ApplicationController
     @notification = ProposalNotification.new(proposal_notification_params)
     @proposal = Proposal.find(proposal_notification_params[:proposal_id])
     if @notification.save
-      @proposal.users_to_notify.each do |user|
-        Notification.add(user, @notification)
-      end
+      NotificationServices::NewProposalNotificationNotifier.new(@notification.id).call
       redirect_to messages_proposal_dashboard_path(@proposal_notification.proposal), notice: I18n.t("flash.actions.create.proposal_notification")
     else
       render :new

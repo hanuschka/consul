@@ -111,6 +111,7 @@ class ProposalsController
     end
 
     if resource.update(custom_proposal_params)
+      NotificationServices::NewProposalNotifier.new(resource.id).call if resource.published?
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
       load_geozones

@@ -138,6 +138,12 @@
               <%= f.check_box :adm_email_on_new_manual_verification,
                 {label: t('custom.account.settings.adm_email_on_new_manual_verification'), class: "checkbox-label--aligned"} %>
             </div>
+
+            <div>
+              <%= f.check_box :adm_email_on_new_topic,
+                {label: t('custom.account.settings.adm_email_on_new_topic'), class: "checkbox-label--aligned"} %>
+            </div>
+
             <% if @account.official_level == 1 %>
               <div>
                 <%= f.check_box :official_position_badge, { class: "checkbox-label--aligned" } %>

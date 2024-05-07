@@ -23,7 +23,7 @@ de:
       new_proposal:
         subject: Neuer Vorschlag auf Consul
         hi: Hallo %{username},
-        p1: es ist ein neuer Vorschlag auf Consul eingegangen.
+        p1: es ist ein neuer Vorschlag auf Consul eingegangen oder ein existierender Vorschlag wurde geändert.
         signature_html: Viele Grüße</br>Consul
       new_debate:
         subject: Neue Diskussionsbeitrag auf Consul
@@ -91,4 +91,14 @@ de:
         hi: Hallo %{username},
         link: Livestream
         p1: es ist ein neue Livestream auf Consul eingegangen.
+        signature_html: Viele Grüße</br>Consul
+      new_topic:
+        subject: Neues Thema auf Consul
+        hi: Hallo %{username},
+        p1: es ist ein neues Thema erstellt worden.
+        signature_html: Viele Grüße</br>Consul
+      new_proposal_notification:
+        subject: "Neue Benachrichtigung zum Vorschlag: %{proposal_title}"
+        hi: Hallo %{username},
+        intro_html: "Der Autor des Vorschlages %{proposal_link} hat eine neue Benachrichtigung erstellt:"
         signature_html: Viele Grüße</br>Consul

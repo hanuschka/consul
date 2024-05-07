@@ -122,9 +122,15 @@ module Abilities
           can?(:moderate, investment.budget&.projekt)
       end
 
-      # Moderation: Budget::Investments
+      # Moderation: Comments
       can :moderate, Comment do |comment|
-        user.projekt_manager.allowed_to?("moderate", comment&.projekt)
+        if comment.commentable.is_a?(Projekt)
+          user.projekt_manager.allowed_to?("moderate", comment.commentable)
+        elsif comment.commentable&.respond_to?(:projekt)
+          user.projekt_manager.allowed_to?("moderate", comment.commentable.projekt)
+        else
+          false
+        end
       end
 
       can :hide, Comment do |comment|

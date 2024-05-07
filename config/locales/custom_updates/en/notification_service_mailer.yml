@@ -23,7 +23,7 @@ en:
       new_proposal:
         subject: New Proposal added to Consul
         hi: Hi %{username},
-        p1: New proposal has just been added to Consul.
+        p1: New proposal has just been added or edited.
         signature_html: Best regards</br>Consul
       new_debate:
         subject: New Debate added to Consul
@@ -86,3 +86,13 @@ en:
         link: Projekt livestream
         p1: New projekt livestream has just been added to Consul
         signature_html: Best regards</br>Consul
+      new_topic:
+        subject: New Topic added to Consul
+        hi: Hello %{username},
+        p1: New topic was added to Consul.
+        signature_html: Best regards</br>Consul
+      new_proposal_notification:
+        subject: "New notification related to Proposal: %{proposal_title}"
+        hi: Hello %{username},
+        intro_html: "Author of the proposal %{proposal_link} added a new notification"
+        signature_html: Viele Grüße</br>Consul

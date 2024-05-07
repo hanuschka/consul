@@ -96,7 +96,7 @@ class AccountController < ApplicationController
          :show_in_users_overview,
          :adm_email_on_new_comment, :adm_email_on_new_proposal,
          :adm_email_on_new_debate, :adm_email_on_new_deficiency_report,
-         :adm_email_on_new_manual_verification,
+         :adm_email_on_new_manual_verification, :adm_email_on_new_topic,
          :background_image,
          individual_group_value_ids: [],
          image_attributes: image_attributes

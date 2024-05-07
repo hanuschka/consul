@@ -66,7 +66,7 @@ class User < ApplicationRecord
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
-  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create, unless: :guest?
+  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
   def self.transfer_city_streets # TODO delete this method

@@ -22,7 +22,7 @@ de:
       new_proposal:
         subject: Neuer Vorschlag auf Consul
         hi: Hallo %{username},
-        p1: es ist ein neuer Vorschlag auf Consul eingegangen.
+        p1: es ist ein neuer Vorschlag auf Consul eingegangen oder ein existierender Vorschlag wurde geändert.
         signature_html: Viele Grüße</br>Consul
       new_debate:
         subject: Neue Diskussionsbeitrag auf Consul
@@ -104,3 +104,13 @@ de:
         hi: Sehr geehrte(r) Herr/Frau %{last_name},
         p1_html: die Verifizierung Ihres Nutzerkontos auf der Siegburger Mitmachen-Plattform wurde abgeschlossen. Somit können Sie an Beteiligungsprojekten teilnehmen, für die ein verifizierter Account erforderlich ist (beispielsweise Bürgerbudget).
         signature_html: Vielen Dank für Ihre Teilhabe.
+      new_topic:
+        subject: Neues Thema auf Consul
+        hi: Hallo %{username},
+        p1: es ist ein neues Thema erstellt worden.
+        signature_html: Viele Grüße</br>Consul
+      new_proposal_notification:
+        subject: "Neue Benachrichtigung zum Vorschlag: %{proposal_title}"
+        hi: Hallo %{username},
+        intro_html: "Der Autor des Vorschlages %{proposal_link} hat eine neue Benachrichtigung erstellt:"
+        signature_html: Viele Grüße</br>Consul

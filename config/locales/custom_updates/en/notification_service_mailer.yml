@@ -22,7 +22,7 @@ en:
       new_proposal:
         subject: New Proposal added to Consul
         hi: Hi %{username},
-        p1: New proposal has just been added to Consul.
+        p1: New proposal has just been added or edited.
         signature_html: Best regards</br>Consul
       new_debate:
         subject: New Debate added to Consul
@@ -98,3 +98,13 @@ en:
         hi: Dear Mr/Mrs %{last_name},
         p1_html: The verification of your user account on the Siegburger Participation platform has been completed. This means you can take part in participation projects that require a verified account (e.g. citizen budget).
         signature_html: Thank you for your participation.
+      new_topic:
+        subject: New Topic added to Consul
+        hi: Hello %{username},
+        p1: New topic was added to Consul.
+        signature_html: Best regards</br>Consul
+      new_proposal_notification:
+        subject: "New notification related to Proposal: %{proposal_title}"
+        hi: Hello %{username},
+        intro_html: "Author of the proposal %{proposal_link} added a new notification"
+        signature_html: Viele Grüße</br>Consul

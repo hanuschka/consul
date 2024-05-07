@@ -323,12 +323,12 @@ class PagesController < ApplicationController
 
       @formular_fields = @formular.formular_fields.follow_up.each(&:set_custom_attributes)
       @formular_answer = @recipient.formular_answer
-    else
+      @formular_answer.answer_errors ||= {}
+    elsif @projekt_phase.regular_formular_cutoff_date.nil? || @projekt_phase.regular_formular_cutoff_date >= Date.today
       @formular_fields = @formular.formular_fields.primary.each(&:set_custom_attributes)
       @formular_answer = @formular.formular_answers.new
+      @formular_answer.answer_errors ||= {}
     end
-
-    @formular_answer.answer_errors ||= {}
   end
 
   def get_default_projekt_phase(default_phase_id = nil)

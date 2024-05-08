@@ -50,7 +50,7 @@ class WelcomeController < ApplicationController
 
   def latest_activity; end
 
-  def mitmachen_jugend
+  def machmit_jugend
     @active_projekts = Projekt.show_in_homepage
       .joins(:tags).where(tags: { name: "Jugendbeteiligung" })
       .index_order_underway

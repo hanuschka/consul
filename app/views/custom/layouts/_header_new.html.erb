@@ -3,7 +3,7 @@
 <header>
   <div class="js-stiky-header top-bar-wrapper">
     <div class="top-bar-background-wrapper">
-      <div class="top-bar" data-white-text="<%= extended_feature?('general.use_white_top_navigation_text') || action_name == "mitmachen_jugend" %>">
+      <div class="top-bar" data-white-text="<%= extended_feature?('general.use_white_top_navigation_text') || action_name == "machmit_jugend" %>">
         <span data-responsive-toggle="responsive-menu"
               class="hamburger-menu header--mobile-hamburger-menu focusable js-toggle-mobile-menu js-prevent-key-scroll"
               role="button"
@@ -11,12 +11,12 @@
               aria-haspopup="true"
               aria-expanded="false"
               aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
-              <span class="menu-icon <%= 'dark' unless action_name == 'mitmachen_jugend' %>" style="<%= 'color:white' if action_name == 'mitmachen_jugend' %>"  data-toggle></span>
+              <span class="menu-icon <%= 'dark' unless action_name == 'machmit_jugend' %>" style="<%= 'color:white' if action_name == 'machmit_jugend' %>"  data-toggle></span>
         </span>
 
         <div class="top-bar--title">
           <%= link_to root_path do %>
-            <% if action_name == "mitmachen_jugend" %>
+            <% if action_name == "machmit_jugend" %>
               <%= image_tag(image_path_for("logo_header_weiss.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
               <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
             <% else %>
@@ -30,7 +30,7 @@
 
         <div class="header--navigation expanded not-print">
           <div class="hader--subnavigation-wrapper hide-for-small-only">
-            <% unless action_name == "mitmachen_jugend" %>
+            <% unless action_name == "machmit_jugend" %>
               <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
             <% end %>
           </div>
@@ -83,7 +83,7 @@
           </div>
         <% end %>
 
-        <% unless action_name == "mitmachen_jugend" %>
+        <% unless action_name == "machmit_jugend" %>
           <%= render partial: "shared/subnavigation_new", locals: { placement: 'mobile', launch_page: launch_page } %>
         <% end %>
         <div class="small-12 column">

@@ -26,12 +26,14 @@
     navigateToQuestionById: function(id) {
       var question = this.getQuestionById(id);
       this.navigateToQuestion(question);
+      this.scrollToWizardTop();
     },
 
     navigateToPrevQuestion: function() {
       var prevQuestion = $(this.currentQuestion()).prevAll(".js-question-wizard-item:not(.-disabled)").get(0);
 
       this.navigateToQuestion(prevQuestion);
+      this.scrollToWizardTop();
     },
 
     navigateToNextQuestion: function() {
@@ -53,6 +55,7 @@
 
       this.markQuestionsAsDisabledBetween(currentQuestion, nextQuestion);
       this.navigateToQuestion(nextQuestion);
+      this.scrollToWizardTop();
     },
 
     markQuestionsAsDisabledBetween: function(currentQuestion, nextQuestion) {
@@ -67,6 +70,7 @@
       var nextQuestion = this.firstQuestion();
 
       this.navigateToQuestion(nextQuestion);
+      this.scrollToWizardTop();
     },
 
     navigateToQuestion: function(nextQuestion) {
@@ -106,6 +110,13 @@
       var progressbarWidth = $(".js-question-wizard--progress").width();
       var width = progressbarWidth * (nextQuestion.dataset.questionNumber / totalQuestionsCount);
       $(".js-question-wizard .js-question-wizard--progress-bar").css("width", width);
+    },
+
+    scrollToWizardTop: function() {
+      var $questionWizardWrapper = $(".question-wizard").parent();
+      var wizardTop = $questionWizardWrapper.offset().top - 100;
+
+      $("html, body").animate({ scrollTop: wizardTop }, 500);
     }
   };
 }).call(this);

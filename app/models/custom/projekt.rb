@@ -303,6 +303,7 @@ class Projekt < ApplicationRecord
 
   def can_assign_resources?(controller_name, user, resource = nil)
     return false if user.nil?
+    return true if resource&.respond_to?(:author) && resource.author == user
     return false unless activated? || controller_name == "polls"
 
     if controller_name == "proposals"

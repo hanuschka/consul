@@ -133,7 +133,7 @@ class ApplicationController < ActionController::Base
 
     def set_back_path
       if params[:projekt_phase_id].present?
-        back_path = helpers.url_to_footer_tab
+        back_path = helpers.url_to_footer_tab(extras: { anchor: "filter-subnav" })
       else
         back_path = request.fullpath
       end

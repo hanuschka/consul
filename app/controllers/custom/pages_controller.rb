@@ -251,6 +251,8 @@ class PagesController < ApplicationController
       end
     end
 
+    @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+
     unless params[:section] == "results" && can?(:read_results, @budget)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
     end

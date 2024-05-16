@@ -19,3 +19,6 @@ end
 get "users", to: "users#index"
 
 get "admin/matomo", to: "admin/matomo#index"
+
+# BundId
+get "users/bund_id/send_request", to: "users/bund_id#send_request", as: :users_bund_id_send_request

@@ -1,23 +1,23 @@
 <%= puts @saml_second_post_request %>
 
 <script>
-  // document.addEventListener('turbolinks:load', function() {
-  //   var form = document.createElement('form');
-  //   form.action = "https://int.id.bund.de/idp/profile/SAML2/POST/SSO";
-  //   form.method = "post";
-  //   var relayStateInput = document.createElement('input');
-  //   relayStateInput.type = "hidden";
-  //   relayStateInput.name = "RelayState";
-  //   relayStateInput.value = "teststate";
-  //   var samlRequestInput = document.createElement('input');
-  //   samlRequestInput.type = "hidden";
-  //   samlRequestInput.name = "SAMLRequest";
-  //   samlRequestInput.value = "<%= @saml_second_post_request %>";
-  //   form.appendChild(relayStateInput);
-  //   form.appendChild(samlRequestInput);
-  //   document.body.appendChild(form);
-  //   form.submit();
-  // });
+  document.addEventListener('turbolinks:load', function() {
+    var form = document.createElement('form');
+    form.action = "https://int.id.bund.de/idp/profile/SAML2/POST/SSO";
+    form.method = "post";
+    var relayStateInput = document.createElement('input');
+    relayStateInput.type = "hidden";
+    relayStateInput.name = "RelayState";
+    relayStateInput.value = "teststate";
+    var samlRequestInput = document.createElement('input');
+    samlRequestInput.type = "hidden";
+    samlRequestInput.name = "SAMLRequest";
+    samlRequestInput.value = "<%= @saml_second_post_request %>";
+    form.appendChild(relayStateInput);
+    form.appendChild(samlRequestInput);
+    document.body.appendChild(form);
+    form.submit();
+  });
 </script>
 
 <!--

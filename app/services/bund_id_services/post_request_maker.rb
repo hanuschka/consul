@@ -1,10 +1,7 @@
 module BundIdServices
   class PostRequestMaker < ApplicationService
     def call
-      # encode(deflate(signed_xml_document.to_s))
-      # deflate(signed_xml_document.to_s)
-      # signed_xml_document.to_s
-      signed_xml_document
+      encode(deflate(signed_xml_document.to_s))
     end
 
     #private

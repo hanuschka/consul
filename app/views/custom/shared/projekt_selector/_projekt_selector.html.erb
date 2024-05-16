@@ -35,7 +35,7 @@
     </div>
 
     <% top_level_projekts.each do |projekt|  %>
-      <%= render partial: 'shared/projekt_selector/projekt_group', locals: { projekts: projekt.children.selectable_in_selector(controller_name, current_user, model), parent_id: projekt.id, resource: model } if projekt.children.selectable_in_selector(controller_name, current_user.model).any? %>
+      <%= render partial: 'shared/projekt_selector/projekt_group', locals: { projekts: projekt.children.selectable_in_selector(controller_name, current_user, model), parent_id: projekt.id, resource: model } if projekt.children.selectable_in_selector(controller_name, current_user, model).any? %>
     <% end %>
   </div>
 

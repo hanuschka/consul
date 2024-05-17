@@ -253,15 +253,15 @@ class Projekt < ApplicationRecord
       .where("projekt_manager_assignments.projekt_manager_id = ? AND ? = ANY(projekt_manager_assignments.permissions)", projekt_manager.id, permission)
   end
 
-  def self.selectable_in_selector(controller_name, current_user)
+  def self.selectable_in_selector(controller_name, current_user, resource = nil)
     includes(:individual_group_values, :projekt_settings, { proposal_phases: [:individual_group_values, :settings] })
       .includes_children_projekts_with(:individual_group_values, :proposal_phases, :individual_group_values, :projekt_settings, :hard_individual_group_values)
       .includes({ parent: :individual_group_values }, { top_level_projekt: :hard_individual_group_values })
       .select do |projekt|
         (!projekt.hidden_for?(current_user) || projekt.all_parent_projekts.none? { |p| p.hidden_for?(current_user) }) &&
-        (projekt.can_assign_resources?(controller_name, current_user) ||
+        (projekt.can_assign_resources?(controller_name, current_user, resource) ||
           projekt.all_children_projekts.any? do |p|
-            p.can_assign_resources?(controller_name, current_user)
+            p.can_assign_resources?(controller_name, current_user, resource)
           end
         )
       end
@@ -301,22 +301,23 @@ class Projekt < ApplicationRecord
     yield
   end
 
-  def can_assign_resources?(controller_name, user)
+  def can_assign_resources?(controller_name, user, resource = nil)
     return false if user.nil?
+    return true if resource&.respond_to?(:author) && resource.author == user
     return false unless activated? || controller_name == "polls"
 
     if controller_name == "proposals"
       if proposal_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
         false
       else
-        proposal_phases.any_selectable?(user)
+        proposal_phases.any_selectable?(user, resource)
       end
 
     elsif controller_name == "debates"
       if debate_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
         false
       else
-        debate_phases.any_selectable?(user)
+        debate_phases.any_selectable?(user, resource)
       end
 
     elsif controller_name == "polls"

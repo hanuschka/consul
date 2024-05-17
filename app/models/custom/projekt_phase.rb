@@ -102,11 +102,13 @@ class ProjektPhase < ApplicationRecord
     mname
   end
 
-  def self.any_selectable?(user)
-    any? { |phase| phase.selectable_by?(user) }
+  def self.any_selectable?(user, resource = nil)
+    any? { |phase| phase.selectable_by?(user, resource) }
   end
 
-  def selectable_by?(user)
+  def selectable_by?(user, resource = nil)
+    return true if resource&.respond_to?(:author) && resource.author == user
+
     permission_problem(user).blank?
   end
 
@@ -268,6 +270,13 @@ class ProjektPhase < ApplicationRecord
 
   def subscribable?
     true
+  end
+
+  def regular_formular_cutoff_date
+    setting = settings.find_by(key: "option.general.primary_formular_cutoff_date")
+    setting&.value&.to_date
+  rescue
+    nil
   end
 
   private

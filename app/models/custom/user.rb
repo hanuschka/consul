@@ -63,7 +63,7 @@ class User < ApplicationRecord
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
-  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create, unless: :guest?
+  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
   def self.first_or_initialize_for_servicekonto_oauth(auth)

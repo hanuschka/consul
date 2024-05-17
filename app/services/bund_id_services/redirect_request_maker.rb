@@ -1,7 +1,7 @@
 module BundIdServices
   class RedirectRequestMaker < ApplicationService
     def call
-      encode(deflate(signed_xml_document.to_s))
+      CGI.escape(encode(deflate(signed_xml_document.to_s)))
     end
 
     private

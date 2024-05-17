@@ -13,7 +13,7 @@ class Shared::NewButtonComponent < ApplicationComponent
     return true if current_user&.guest?
 
     # return false if @projekt_phase.present? && !@projekt_phase.projekt.in?(Projekt.selectable_in_selector(@projekt_phase.resources_name, current_user)) && !@projekt_phase.is_a?(ProjektPhase::BudgetPhase) && current_user.present?
-    return false if @projekt_phase&.selectable_by_admins_only? && (current_user.blank? || !(current_user.administrator? || current_user.projekt_manager&.allowed_to?("manage", @projekt_phase.projekt)))
+    return false if @projekt_phase&.selectable_by_admins_only? && !current_user&.has_pm_permission_to?("manage", @projekt_phase.projekt)
     return true if current_user.blank?
     return true if @projekt_phase&.projekt&.overview_page? # projects overview page
 
@@ -33,8 +33,7 @@ class Shared::NewButtonComponent < ApplicationComponent
 
     def permission_problem_key
       if @projekt_phase.present?
-        @permission_problem_key ||= @projekt_phase.permission_problem(current_user)
-
+        @permission_problem_key ||= @projekt_phase.permission_problem(current_user, location: "new_button_component")
       end
     end
 

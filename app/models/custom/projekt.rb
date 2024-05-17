@@ -307,18 +307,10 @@ class Projekt < ApplicationRecord
     return false unless activated? || controller_name == "polls"
 
     if controller_name == "proposals"
-      if proposal_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
-        false
-      else
-        proposal_phases.any_selectable?(user, resource)
-      end
+      proposal_phases.any_selectable?(user, resource)
 
     elsif controller_name == "debates"
-      if debate_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
-        false
-      else
-        debate_phases.any_selectable?(user, resource)
-      end
+      debate_phases.any_selectable?(user, resource)
 
     elsif controller_name == "polls"
       voting_phases.any_selectable?(user)

@@ -7,7 +7,6 @@ class Budget < ApplicationRecord
   delegate :projekt, to: :projekt_phase, allow_nil: true
 
   def investments_filters
-    debugger
     [
       ("all" if selecting? || valuating? || publishing_prices? || balloting? || reviewing_ballots?),
       ("winners" if finished?),

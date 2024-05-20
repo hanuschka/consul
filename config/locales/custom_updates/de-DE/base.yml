@@ -28,6 +28,7 @@ de:
         adm_email_on_new_debate: Neue Diskussionsbeiträge
         adm_email_on_new_deficiency_report: Neue Mangelmeldungen
         adm_email_on_new_manual_verification: Neue Nutzerverifizierungen
+        adm_email_on_new_topic: Neue Themen
       show:
         user_permission_votes: An Abstimmungen teilnehmen
         admin_notifications: Admin Benachrichtigungen

@@ -102,11 +102,13 @@ class ProjektPhase < ApplicationRecord
     mname
   end
 
-  def self.any_selectable?(user)
-    any? { |phase| phase.selectable_by?(user) }
+  def self.any_selectable?(user, resource = nil)
+    any? { |phase| phase.selectable_by?(user, resource) }
   end
 
-  def selectable_by?(user)
+  def selectable_by?(user, resource = nil)
+    return true if resource&.respond_to?(:author) && resource.author == user
+
     permission_problem(user).blank?
   end
 
@@ -140,6 +142,8 @@ class ProjektPhase < ApplicationRecord
     return :guest_not_logged_in if guest_participation_allowed? && !user
     return if guest_participation_allowed?
     return :not_logged_in if !user || user&.guest?
+    return if admin_permission?(user, location: location)
+    return :only_admins if selectable_by_admins_only?
     return :phase_not_active if not_active?
     return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
     return :phase_not_current if not_current?
@@ -157,6 +161,14 @@ class ProjektPhase < ApplicationRecord
     end
 
     nil
+  end
+
+  def admin_permission?(user, location: nil)
+    if location == "new_button_component"
+      user.has_pm_permission_to?("create_on_behalf_of", projekt)
+    else
+      user.administrator?
+    end
   end
 
   def geozone_allowed?(user)
@@ -268,6 +280,13 @@ class ProjektPhase < ApplicationRecord
 
   def subscribable?
     true
+  end
+
+  def regular_formular_cutoff_date
+    setting = settings.find_by(key: "option.general.primary_formular_cutoff_date")
+    setting&.value&.to_date
+  rescue
+    nil
   end
 
   private

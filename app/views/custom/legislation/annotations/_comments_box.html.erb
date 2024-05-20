@@ -9,8 +9,8 @@
   </div>
 
   <div class="comment-footer">
-    <% if annotation.comments.roots.count > Legislation::Annotation::COMMENTS_PAGE_SIZE && false %>
-      <%= link_to legislation_phase_footer_tab_page_path(@current_projekt.page.slug, section: 'annotations', annotation_id: annotation.id), remote: true, onclick: '$("#footer-content").addClass("show-loader");', class: "button" do %>
+    <% if annotation.comments.roots.count > Legislation::Annotation::COMMENTS_PAGE_SIZE %>
+      <%= link_to projekt_phase_footer_tab_page_path(@current_projekt.page, @legislation_phase, section: 'annotations', params: { annotation_id: annotation.id}), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader");' do %>
           <strong><%= t("legislation.annotations.comments.see_all") %></strong>
       <% end %>
     <% end %>

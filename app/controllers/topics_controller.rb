@@ -22,6 +22,7 @@ class TopicsController < ApplicationController
   def create
     @topic = Topic.new(topic_params.merge(author: current_user, community_id: params[:community_id]))
     if @topic.save
+      NotificationServices::NewTopicNotifier.new(@topic.id).call
       redirect_to community_path(@community), notice: I18n.t("flash.actions.create.topic")
     else
       render :new

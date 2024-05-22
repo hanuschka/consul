@@ -109,12 +109,18 @@ class ProjektPhase < ApplicationRecord
 
   def selectable_by?(user, resource = nil)
     return true if resource&.respond_to?(:author) && resource.author == user
+    return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
     permission_problem(user).blank?
   end
 
-  alias_method :votable_by?, :selectable_by?
-  alias_method :comments_allowed?, :selectable_by?
+  def votable_by?(user, resource = nil)
+    permission_problem(user).blank?
+  end
+
+  def comments_allowed?(user, resource = nil)
+    permission_problem(user).blank?
+  end
 
   def not_active?
     !active?
@@ -144,7 +150,6 @@ class ProjektPhase < ApplicationRecord
     return if guest_participation_allowed?
     return :not_logged_in if !user || user&.guest?
     return if admin_permission?(user, location: location)
-    return :only_admins if selectable_by_admins_only?
     return :phase_not_active if not_active?
     return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
     return :phase_not_current if not_current?

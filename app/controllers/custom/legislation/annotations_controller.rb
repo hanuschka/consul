@@ -3,6 +3,8 @@ require_dependency Rails.root.join("app", "controllers", "legislation", "annotat
 class Legislation::AnnotationsController < Legislation::BaseController
   def comments
     @annotation = Legislation::Annotation.find(params[:annotation_id])
+    @current_projekt = @annotation.draft_version.process.projekt
+    @legislation_phase = @annotation.draft_version.process.projekt_phase
     @comment = @annotation.comments.new
 
     params[:projekt_phase_id] = @annotation.draft_version.projekt_phase.id

@@ -6,15 +6,17 @@ module NotificationServices
     end
 
     def call
-      users_to_notify_ids.each do |user_id|
-        NotificationServiceMailer.new_proposal_notification(user_id, @proposal_notification.id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.new_proposal_notification(user.id, @proposal_notification.id).deliver_later
+        Notification.add(user, @proposal_notification)
+        Activity.log(user, "email", @proposal_notification)
       end
     end
 
     private
 
-      def users_to_notify_ids
-        @proposal.followers.email_digest.ids - [@proposal.author_id]
+      def users_to_notify
+        @proposal.followers.to_a.reject { |user| user.id == @proposal.author_id }
       end
   end
 end

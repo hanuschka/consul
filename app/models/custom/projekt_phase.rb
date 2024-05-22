@@ -3,6 +3,7 @@ class ProjektPhase < ApplicationRecord
   include Milestoneable
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
+  include Notifiable
 
   after_create :add_default_settings
 

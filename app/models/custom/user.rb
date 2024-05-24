@@ -382,7 +382,7 @@ class User < ApplicationRecord
       end
     end
 
-    def recalculate_ballot_line_weight_for_relevant_investments
+    def recalculate_ballot_line_weight_for_relevant_investments #CON-2085
       relevant_ballots = Budget::Ballot.where(user: self)
         .joins(:budget).where(budgets: { phase: "balloting" })
 

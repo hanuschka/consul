@@ -71,7 +71,8 @@ module Statisticable
   end
 
   def participants
-    @participants ||= User.unscoped.where(id: participant_ids)
+    # @participants ||= User.unscoped.where(id: participant_ids)
+    @participants ||= User.unscoped.where(id: participant_ids).where.not(verified_at: nil, geozone_id: nil) #CON-2085
   end
 
   def total_male_participants

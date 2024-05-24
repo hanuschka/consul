@@ -9,7 +9,7 @@ class Budget
       private
 
         def update_qualified_total_ballot_line_weight
-          new_qualified_total_ballot_line_weight = investment.calculate_qualified_total_ballot_line_weight
+          new_qualified_total_ballot_line_weight = investment.calculate_qualified_total_ballot_line_weight #CON-2085
           investment.update!(qualified_total_ballot_line_weight: new_qualified_total_ballot_line_weight)
         end
     end

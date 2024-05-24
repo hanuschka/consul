@@ -60,13 +60,13 @@ class Budget
       [:not_enough_available_votes, :not_enough_money]
     end
 
-    def calculate_qualified_total_ballot_line_weight
+    def calculate_qualified_total_ballot_line_weight #CON-2085
       budget_ballot_lines
         .joins(ballot: :user).where.not(users: { verified_at: nil, geozone_id: nil })
         .sum(:line_weight)
     end
 
-    def calculate_unqualified_total_ballot_line_weight
+    def calculate_unqualified_total_ballot_line_weight #CON-2085
       budget_ballot_lines
         .sum(:line_weight)
     end

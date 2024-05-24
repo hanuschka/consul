@@ -845,7 +845,7 @@ de:
     anonymous: Zu viele anonyme Stimmen, um die Wahl anzuerkennen %{verify_account}.
     disagree: Ich stimme nicht zu
     organizations: Organisationen ist es nicht erlaubt abzustimmen
-    supports: Unterstützer*innen
+    supports: Unterstützung
     verified_only: 'Nur verifizierte Benutzer können Vorschläge bewerten: %{verify_account}.'
     budget_investments:
       not_verified: Nur verifizierte Benutzer können über ein Investitionsprojekt abstimmen; %{verify_account}.

@@ -1,4 +1,3 @@
-<%= link_to "Login with BundId", users_bund_id_send_request_path, class: "button button-bundid button expanded" %>
 
 <% if oauth_logins.any? %>
   <div class="row">
@@ -7,6 +6,14 @@
         <strong><%= t("omniauth.info.#{action}") %></strong>
       </div>
     </div>
+
+    <% if feature?("bund_id_login") %>
+      <div class="small-12 medium-6 large-4 column end">
+        <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId" do %>
+          <%= image_tag "bund_id_logo.svg", alt: "BundId Logo", class: "bund-id-logo" %>
+        <% end %>
+      </div>
+    <% end %>
 
     <% oauth_logins.each do |login| %>
       <div class="small-12 medium-6 large-4 column end">

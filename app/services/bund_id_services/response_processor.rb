@@ -11,7 +11,7 @@ module BundIdServices
       decoded = Base64.decode64(@response)
       document = XMLSecurity::SignedDocument.new(decoded)
       @decrypted_document = decrypt_assertion_from_document(document)
-      formatted_attributes
+      OmniAuth::AuthHash.new(formatted_attributes)
     end
 
     private
@@ -25,6 +25,8 @@ module BundIdServices
             name: [attributes[:first_name], attributes[:last_name]].join(" "),
             first_name: attributes[:first_name],
             last_name: attributes[:last_name],
+            verified_email: attributes[:email_address],
+            identity_verified: attributes[:verification_level].in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
           },
           extra: {
             raw_info: {
@@ -36,7 +38,7 @@ module BundIdServices
               email: attributes[:email_address],
               auth_method: attributes[:auth_method],
               date_of_birth: attributes[:date_of_birth],
-              street_name: attributes[:street_name],
+              street_address: attributes[:street_address],
               locality_name: attributes[:locality_name],
               country: attributes[:country],
               postal_code: attributes[:postal_code],
@@ -78,7 +80,7 @@ module BundIdServices
           last_name: "urn:oid:2.5.4.4",
           date_of_birth: "urn:oid:1.2.40.0.10.2.1.1.55",
           gender: "urn:oid:1.3.6.1.4.1.33592.1.3.5",
-          street_name: "urn:oid:2.5.4.16",
+          street_address: "urn:oid:2.5.4.16",
           locality_name: "urn:oid:2.5.4.7",
           country: "urn:oid:1.2.40.0.10.2.1.1.225599",
           postal_code: "urn:oid:2.5.4.17",

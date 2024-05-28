@@ -1,4 +1,6 @@
 class NotificationServiceMailer < ApplicationMailer
+  helper TextWithLinksHelper
+
   def overdue_deficiency_reports(officer_id, overdue_reports_ids)
     @officer = DeficiencyReport::Officer.find(officer_id)
     @overdue_reports = DeficiencyReport.where(id: overdue_reports_ids)

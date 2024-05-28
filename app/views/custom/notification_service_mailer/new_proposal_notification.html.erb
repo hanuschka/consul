@@ -9,7 +9,9 @@
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <b><%= @proposal_notification.title %></b></br>
-    <%= auto_link_already_sanitized_html(wysiwyg(@proposal_notification.body)) %>
+    <p>
+      <%= auto_link_already_sanitized_html(wysiwyg(@proposal_notification.body)) %>
+    </p>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">

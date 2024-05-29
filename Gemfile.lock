@@ -108,6 +108,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
+    bigdecimal (3.1.8)
     bindex (0.8.1)
     bing_translator (6.2.0)
       json
@@ -174,6 +175,9 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.2.3)
+    crack (1.0.0)
+      bigdecimal
+      rexml
     crass (1.0.6)
     daemons (1.4.1)
     dalli (3.2.7)
@@ -264,6 +268,7 @@ GEM
     gyoku (1.4.0)
       builder (>= 2.1.2)
       rexml (~> 3.0)
+    hashdiff (1.1.0)
     hashery (2.1.2)
     hashie (5.0.0)
     highline (3.0.1)
@@ -721,6 +726,10 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webmock (3.23.1)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.1)
     websocket (1.2.10)
     websocket-driver (0.7.6)
@@ -850,6 +859,7 @@ DEPENDENCIES
   uuidtools (~> 2.2.0)
   view_component (~> 3.6.0)
   web-console (~> 4.2.1)
+  webmock
   whenever (~> 1.0.0)
   wicked_pdf (~> 2.7.0)
   wkhtmltopdf-binary (~> 0.12.6)

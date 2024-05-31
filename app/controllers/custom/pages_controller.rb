@@ -45,7 +45,11 @@ class PagesController < ApplicationController
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
 
+      time = Benchmark.measure do
       render action: custom_page_name
+      end
+
+      Rails.logger.warn("Benchmark: PagesController#show: #{time.real}")
 
     elsif @custom_page.present? && @custom_page.projekt.present?
       @individual_group_value_names = @custom_page.projekt.individual_group_values.pluck(:name)

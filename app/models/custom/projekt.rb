@@ -375,7 +375,7 @@ class Projekt < ApplicationRecord
   end
 
   def all_parent_projekts
-    [parent, top_level_projekt].compact
+    Projekt.where(id: [parent_id, top_level_projekt_id]).compact
   end
 
   def all_children_ids
@@ -383,8 +383,8 @@ class Projekt < ApplicationRecord
   end
 
   def all_children_projekts
-    # [*children, *third_level_children].compact
-    [*children, *children.map(&:children).flatten].compact
+    children_with_preloaded_grandchildren = children.includes(:children)
+    children_with_preloaded_grandchildren.flat_map { |child| [child, *child.children] }.compact
   end
 
   def has_active_phase?(controller_name)

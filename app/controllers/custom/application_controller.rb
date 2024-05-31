@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
       @projekts_for_overview_page_navigation =
         Projekt
           .sort_by_order_number
-          .includes({page: [:translations]}, :projekt_settings, { children_projekts_show_in_navigation: :projekt_settings })
+          .includes(:page, :children, :projekt_settings, :hard_individual_group_values)
           .joins(:projekt_settings)
           .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
           .select { |p| p.visible_for?(current_user) }
@@ -69,25 +69,8 @@ class ApplicationController < ActionController::Base
         Projekt
           .top_level
           .includes(
-            :individual_group_values,
-            { page: :translations }, :projekt_settings,
-
-            children_projekts_show_in_navigation: [
-            :individual_group_values,
-              :projekt_settings, { page: :translations },
-
-              {
-                children_projekts_show_in_navigation: [
-                  :projekt_settings,
-                  { page: :translations },
-
-                  {
-                    children_projekts_show_in_navigation: [
-                      :projekt_settings, { page: :translations }]
-                  }
-                ]
-              }
-            ]
+            :projekt_settings, :hard_individual_group_values,
+            page: [:translations]
           )
           .show_in_navigation
           .select { |p| p.visible_for?(current_user) }

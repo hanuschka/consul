@@ -4,7 +4,7 @@ class Pages::Projekts::SidebarBudgetPhasesComponent < ApplicationComponent
 
   def initialize(budget)
     @budget = budget
-    @phases = budget.published_phases
+    @phases = budget.published_phases.includes(:translations)
   end
 
   private

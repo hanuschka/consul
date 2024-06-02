@@ -41,6 +41,7 @@ class Setting < ApplicationRecord
         "feature.google_login": false,
         "feature.twitter_login": false,
         "feature.wordpress_login": false,
+        "feature.bund_id_login": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": false,

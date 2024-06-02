@@ -16,5 +16,7 @@ end
 gem 'httparty'
 gem 'sd_notify', '~> 0.1.1'
 
+gem 'ruby-saml', '~> 1.16'
+
 gem "sentry-ruby"
 gem "sentry-rails"

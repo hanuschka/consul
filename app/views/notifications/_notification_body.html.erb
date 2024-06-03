@@ -14,7 +14,7 @@
     <%= title %>
   </strong>
   <% if body %>
-    <p><%= body %></p>
+    <p><%= auto_link_already_sanitized_html(wysiwyg(body)) %></p>
   <% end %>
 </p>
 <p class="time">

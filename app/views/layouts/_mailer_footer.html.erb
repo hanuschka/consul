@@ -32,6 +32,8 @@
           <% unsubscribe_path = edit_subscriptions_url(token: @subscriptions_token) %>
         <% elsif @unregistered_newletter_unsubscribe_token.present? %>
           <% unsubscribe_path = unregistered_newsletter_subscribers_unsubscribe_url(unsubscribe_token: @unregistered_newletter_unsubscribe_token) %>
+        <% elsif controller.class.name == "NotificationServiceMailer" %>
+          <%= notification_service_mailer_unsubscribe_block(action_name, projekt_phase: @projekt_phase) %>
         <% end %>
 
         <% if unsubscribe_path.present? %>

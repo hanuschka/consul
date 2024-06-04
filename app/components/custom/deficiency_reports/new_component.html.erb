@@ -116,19 +116,23 @@
             <%= category_select_html %>
           </div>
 
-          <%= render Shared::SidebarCardComponent.new(
-                        title: t("custom.deficiency_reports.form.documents.title"),
-                        icon_name: "file"
-                     ) do |c| %>
-             <%= render "documents/nested_documents", documentable: deficiency_report, f: f %>
+          <% if Setting["deficiency_reports.document_upload"].present? %>
+            <%= render Shared::SidebarCardComponent.new(
+                          title: t("custom.deficiency_reports.form.documents.title"),
+                          icon_name: "file"
+                       ) do |c| %>
+               <%= render "documents/nested_documents", documentable: deficiency_report, f: f %>
+            <% end %>
           <% end %>
 
-          <%= render Shared::SidebarCardComponent.new(
-                        title: t("custom.deficiency_reports.form.video.title"),
-                        description: t("custom.deficiency_reports.form.video.description"),
-                        icon_name: "video"
-                     ) do |c| %>
-              <%= f.text_field :video_url, label: false, placeholder: t("custom.deficiency_reports.form.video.placeholder"), class: "light-input" %>
+          <% if Setting["deficiency_reports.external_video"].present? %>
+            <%= render Shared::SidebarCardComponent.new(
+                          title: t("custom.deficiency_reports.form.video.title"),
+                          description: t("custom.deficiency_reports.form.video.description"),
+                          icon_name: "video"
+                       ) do |c| %>
+                <%= f.text_field :video_url, label: false, placeholder: t("custom.deficiency_reports.form.video.placeholder"), class: "light-input" %>
+            <% end %>
           <% end %>
 
           <% if translations_interface_enabled? %>

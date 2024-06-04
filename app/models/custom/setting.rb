@@ -179,6 +179,8 @@ class Setting < ApplicationRecord
         "deficiency_reports.intro_text": false,
         "deficiency_reports.enable_geoman_controls_in_maps": true,
         "deficiency_reports.admin_acceptance_required": false,
+        "deficiency_reports.document_upload": true,
+        "deficiency_reports.external_video": true,
 
         # "extended_feature.general.elasticsearch": false,
 

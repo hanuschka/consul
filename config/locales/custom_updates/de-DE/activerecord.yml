@@ -28,9 +28,18 @@ de:
       individual_group_value:
         one: Gruppenwert
         other: Gruppenwerte
+      projekt_event:
+        one: Veranstaltung
+        other: Veranstaltungen
       projekt_label:
         one: Label
         other: Labels
+      projekt_livestream:
+        one: Livestream
+        other: Livestream
+      projekt_notification:
+        one: Projektbenachrichtigung
+        other: Projektbenachrichtigungen
       projekt_phase: Projektphase
       projekt_phase/comment_phase: Kommentare
       projekt_phase/debate_phase: Diskussionen

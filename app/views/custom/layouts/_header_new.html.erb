@@ -30,9 +30,7 @@
 
         <div class="header--navigation expanded not-print">
           <div class="hader--subnavigation-wrapper hide-for-small-only">
-            <% unless action_name == "machmit_jugend" %>
-              <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
-            <% end %>
+            <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
           </div>
 
           <% if !launch_page && !user_signed_in? %>
@@ -83,9 +81,7 @@
           </div>
         <% end %>
 
-        <% unless action_name == "machmit_jugend" %>
-          <%= render partial: "shared/subnavigation_new", locals: { placement: 'mobile', launch_page: launch_page } %>
-        <% end %>
+        <%= render partial: "shared/subnavigation_new", locals: { placement: 'mobile', launch_page: launch_page } %>
         <div class="small-12 column">
           <%= render "shared/top_links" %>
         </div>

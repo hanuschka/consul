@@ -41,6 +41,7 @@ class Setting < ApplicationRecord
         "feature.google_login": false,
         "feature.twitter_login": false,
         "feature.wordpress_login": false,
+        "feature.bund_id_login": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": false,
@@ -178,6 +179,8 @@ class Setting < ApplicationRecord
         "deficiency_reports.intro_text": false,
         "deficiency_reports.enable_geoman_controls_in_maps": true,
         "deficiency_reports.admin_acceptance_required": false,
+        "deficiency_reports.document_upload": true,
+        "deficiency_reports.external_video": true,
 
         # "extended_feature.general.elasticsearch": false,
 

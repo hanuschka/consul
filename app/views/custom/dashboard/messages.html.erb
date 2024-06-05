@@ -31,12 +31,14 @@
           </div>
         <% end %>
       </div>
-      <aside class="sidebar">
-        <%= render Shared::SidebarCardComponent.new(title: 'Autor', icon_name: "user") do |c| %>
-          <%= link_to "Neue Benachrichtigung",
-            new_proposal_notification_path(proposal_id: proposal.id), class: "button" %>
-        <% end %>
-      </aside>
+      <% if @proposal.projekt_phase.feature?("resource.enable_proposal_notifications_tab") %>
+        <aside class="sidebar">
+          <%= render Shared::SidebarCardComponent.new(title: 'Autor', icon_name: "user") do |c| %>
+            <%= link_to "Neue Benachrichtigung",
+              new_proposal_notification_path(proposal_id: proposal.id), class: "button" %>
+          <% end %>
+        </aside>
+      <% end %>
     </div>
   </main>
 <% else %>

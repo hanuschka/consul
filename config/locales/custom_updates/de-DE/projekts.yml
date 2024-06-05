@@ -27,10 +27,10 @@ de:
         index_order_all_title: 'Alle Projekte'
         index_order_expired: Abgeschlossen
         index_order_expired_title: 'Im Reiter "Abgeschlossen" sind Beteiligungsprojekte gelistet, die abgeschlossen sind. Sowohl die Beteiligungsphase, als auch das Projekt an sich.'
-        index_order_ongoing: Laufende Projekte
-        index_order_ongoing_title: 'Im Reiter "Laufende Projekte" sind Projekte die noch laufen, die Beteiligung aber schon abgeschlossen ist.'
-        index_order_underway: Aktuelle Projekte
-        index_order_underway_title: 'Im Reiter "Aktuelle Projekte" sind Projekte, bei denen man sich aktuell beteiligen kann.'
+        index_order_ongoing: Aktuelle Projekte
+        index_order_ongoing_title: 'Im Reiter "Aktuelle Projekte" sind Projekte die noch laufen, die Beteiligung aber schon abgeschlossen ist.'
+        index_order_underway: Aktive Beteiligung
+        index_order_underway_title: 'Im Reiter "Aktive Beteiligung" sind Projekte, bei denen man sich aktuell beteiligen kann.'
         index_order_upcoming: In Planung
         index_order_upcoming_title: 'Im Reiter "In Planung" sind Beteiligungsprojekte gelistet, die erst in der Zukunft stattfinden.'
         index_order_individual_list: "Individuelle Liste"

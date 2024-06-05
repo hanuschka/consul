@@ -145,12 +145,14 @@
             <% end %>
           <% end %>
 
-          <%= render Shared::SidebarCardComponent.new(
-                        title: t("custom.deficiency_reports.form.on_behalf_of.title"),
-                        description: t("custom.deficiency_reports.form.on_behalf_of.description"),
-                        icon_name: "user"
-                     ) do |c| %>
-              <%= f.text_field :on_behalf_of, label: false, placeholder: t("custom.deficiency_reports.form.on_behalf_of.placeholder"), class: "light-input" %>
+          <% if current_user.administrator? %>
+            <%= render Shared::SidebarCardComponent.new(
+                          title: t("custom.deficiency_reports.form.on_behalf_of.title"),
+                          description: t("custom.deficiency_reports.form.on_behalf_of.description"),
+                          icon_name: "user"
+                       ) do |c| %>
+                <%= f.text_field :on_behalf_of, label: false, placeholder: t("custom.deficiency_reports.form.on_behalf_of.placeholder"), class: "light-input" %>
+            <% end %>
           <% end %>
 
           <%= f.invisible_captcha :subtitle %>

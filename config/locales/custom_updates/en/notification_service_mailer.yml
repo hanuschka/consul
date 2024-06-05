@@ -1,90 +1,77 @@
 en:
   custom:
     notification_service_mailers:
+      shared:
+        unsubscribe_html: If you do not want to receive any further notifications about this, click <a href="%{url}" target="_blank">here</a> and click the notification bell (you must be logged in).
       overdue_deficiency_reports:
         subject: Deficiency report without an answer
         hi: Dear Officer,
         p1_s: Two weeks ago you were assigned a deficiency report, which was not processed yet.
         p1_p: Two weeks ago you were assigned multiple deficiency reports, which were not processed yet.
-        signature_html: Best regards</br>Consul
       new_comments_for_deficiency_report:
         subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
         hi: Dear Officer.
         p1_initial: You have just been assigned the following comment on a deficiency report for processing.
         p1_reminder: You were recently assigned a comment on a deficiency report that has not yet been processed.
-        signature_html: Thank you and best regards</br>Consul
       not_assigned_deficiency_reports:
         subject: Deficiency report not assigned yet
         hi: Dear Admin,
         p1_s: There is an outstanding deficiency report, which was not assigned yet.
         p1_p: There are multiple outstanding deficiency reports, which were not assigned yet.
-        signature_html: Best regards</br>Consul
       new_proposal:
         subject: New Proposal added to Consul
         hi: Hi %{username},
         p1: New proposal has just been added or edited.
-        signature_html: Best regards</br>Consul
       new_debate:
         subject: New Debate added to Consul
         hi: Hi %{username},
         p1: New Debate has just been added to Consul.
-        signature_html: Best regards</br>Consul
       new_comment:
         subject: New Comment added to Consul
         hi: Hi %{username},
         p1: New comment has just been added to Consul.
-        signature_html: Best regards</br>Consul
       new_deficiency_report:
         subject: New Deficiency Report %{identifier}
         hi: Hi %{username},
         p1: New deficiency report has just been added to Consul
-        signature_html: Best regards</br>Consul
       new_poll:
         subject: New Poll added to Consul
         hi: Hi %{username},
         p1: New poll has just been added to Consul
-        signature_html: Best regards</br>Consul
       projekt_questions:
         subject: New short survey added to Consul
         hi: Hi %{username},
         link: Short survey
         p1: New short survey has just been added to Consul
-        signature_html: Best regards</br>Consul
       projekt_arguments:
         subject: Arguments added to Consul
         hi: Hi %{username},
         link: Projekt arguments
         p1: Projekt arguments were just added to Consul
-        signature_html: Best regards</br>Consul
       new_budget_investment:
         subject: New Investment proposal added to Consul
         hi: Hi %{username},
         p1: New Investment proposal has just been added to Consul.
-        signature_html: Best regards</br>Consul
       new_projekt_notification:
         subject: New projekt notification added to Consul
         hi: Hi %{username},
         link: Projekt notification
         p1: New projekt notification has just been added to Consul
-        signature_html: Best regards</br>Consul
       new_projekt_event:
         subject: New projekt event added to Consul
         hi: Hi %{username},
         link: Projekt event
         p1: New projekt event has just been added to Consul
-        signature_html: Best regards</br>Consul
       new_projekt_milestone:
         subject: New projekt milestone added to Consul
         hi: Hi %{username},
         link: Projekt milestone
         p1: New projekt milestone has just been added to Consul
-        signature_html: Best regards</br>Consul
       new_projekt_livestream:
         subject: New projekt livestream added to Consul
         hi: Hi %{username},
         link: Projekt livestream
         p1: New projekt livestream has just been added to Consul
-        signature_html: Best regards</br>Consul
       user_reverification_failed:
         subject: Your account has been de-verified
         hi: Dear Mr/Mrs %{last_name},
@@ -102,9 +89,8 @@ en:
         subject: New Topic added to Consul
         hi: Hello %{username},
         p1: New topic was added to Consul.
-        signature_html: Best regards</br>Consul
       new_proposal_notification:
         subject: "New notification related to Proposal: %{proposal_title}"
         hi: Hello %{username},
         intro_html: "Author of the proposal %{proposal_link} added a new notification"
-        signature_html: Viele Grüße</br>Consul
+        unsubscribe_html: If you no longer wish to receive emails about this Proposal notifications, go to the <a href="%{url}" target="_blank">Proposal page</a> and click “Unfollow” (you must be logged in to do this).

@@ -775,7 +775,7 @@ de:
     tags_cloud:
       districts: "Bereiche"
       districts_list: "Liste der Bereiche"
-      categories: Tags
+      categories: Themen
       tags: Tags von Nutzern
       labels: Labels
     target_blank: " (Link öffnet im neuen Fenster)"

@@ -10,3 +10,28 @@ $mobile-side-padding: 20px;
 textarea{
   max-height: 50vh;
 }
+
+body.home-page .homepage-image-header {
+  @media(max-width: 850px) {
+    background-image: url("mobile-header.jpeg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 845px;
+  }
+
+  @media(max-width: 750px) {
+    height: 735px;
+  }
+
+  @media(max-width: 650px) {
+    height: 635px;
+  }
+
+  @media(max-width: 550px) {
+    height: 535px;
+  }
+
+  @media(max-width: 450px) {
+    height: 435px;
+  }
+}

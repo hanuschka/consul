@@ -45,12 +45,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       auth = auth_data || request.env["omniauth.auth"]
 
       identity = Identity.first_or_create_from_oauth(auth)
+      identity.update!(auth_data: auth)
       @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
 
       if save_user
         identity.update!(user: @user)
         update_user_address(auth) if auth.extra.raw_info.street_address.present?
-        @user.verify! if auth.info.identity_verified
+        @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
       else
@@ -65,7 +66,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     def update_user_address(auth_data)
       full_street_address = auth_data.extra.raw_info.street_address
-      regex = /(?<street_name>[\w\s,.äöüßÄÖÜ]*[^\d,])[, ]*\s?(?<street_number>\d+)(?<street_number_extension>[a-zA-Z\s]*)/
+      regex = /(?<street_name>[\p{L}\d\s,.\-äöüßÄÖÜ]+?)\s*(?<street_number>\d+)\s*(?<street_number_extension>[a-zA-Z\s]*)/
       match = full_street_address.match(regex)
 
       if match
@@ -74,7 +75,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         ).first
 
         registered_address_street = RegisteredAddress::Street.where(
-          "LOWER(name) = ?", match[:street_name].strip.downcase
+          "LOWER(name) = ? AND plz = ?",
+          match[:street_name].gsub(/[,\s]+$/, '').downcase,
+          auth_data.extra.raw_info.postal_code
         ).first
 
         if registered_address_city && registered_address_street
@@ -87,6 +90,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         end
 
         @user.update!(registered_address: registered_address) if registered_address
+
+        @user.update!(
+          street_name: match[:street_name].gsub(/[,\s]+$/, ''),
+          street_number: match[:street_number].strip,
+          street_number_extension: match[:street_number_extension].strip.presence,
+          city_name: auth_data.extra.raw_info.locality_name,
+          plz: auth_data.extra.raw_info.postal_code
+        )
       end
     end
 end

@@ -25,8 +25,7 @@ module BundIdServices
             name: [attributes[:first_name], attributes[:last_name]].join(" "),
             first_name: attributes[:first_name],
             last_name: attributes[:last_name],
-            verified_email: attributes[:email_address],
-            identity_verified: attributes[:verification_level].in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
+            verified_email: attributes[:email_address]
           },
           extra: {
             raw_info: {

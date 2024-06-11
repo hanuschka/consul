@@ -5,19 +5,22 @@ module NotificationServices
     end
 
     def call
-      users_to_notify_ids.each do |user_id|
-        NotificationServiceMailer.new_projekt_livestream(user_id, @projekt_livestream.id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.new_projekt_livestream(user.id, @projekt_livestream.id).deliver_later
+        Notification.add(user, @projekt_livestream)
+        Activity.log(user, "email", @projekt_livestream)
       end
     end
 
     private
 
-      def users_to_notify_ids
-        [projekt_phase_subscriber_ids].flatten.uniq
+      def users_to_notify
+        [projekt_phase_subscribers]
+          .flatten.uniq(&:id)
       end
 
-      def projekt_phase_subscriber_ids
-        @projekt_livestream.projekt_phase.subscribers.ids
+      def projekt_phase_subscribers
+        @projekt_livestream.projekt_phase.subscribers.to_a
       end
   end
 end

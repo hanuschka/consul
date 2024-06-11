@@ -261,8 +261,11 @@ class User < ApplicationRecord
     end
   end
 
-  def can_manage_projekt?(projekt)
-    projekt_manager?(projekt) || administrator?
+  def has_pm_permission_to?(permission, projekt)
+    return true if administrator?
+    return false unless projekt_manager?
+
+    projekt_manager.allowed_to?(permission, projekt)
   end
 
   def extended_registration?

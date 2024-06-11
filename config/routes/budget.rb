@@ -4,6 +4,7 @@ resources :budgets, only: [:show, :index] do
     member do
       put :flag
       put :unflag
+      get :read_stats
     end
 
     collection { get :suggest }

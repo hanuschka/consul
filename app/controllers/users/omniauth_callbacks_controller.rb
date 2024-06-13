@@ -48,12 +48,16 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       identity.update!(auth_data: auth)
       @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
 
+      update_email(auth)
+
       if save_user
         identity.update!(user: @user)
         update_user_address(auth) if auth.extra.raw_info.street_address.present?
         @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
         sign_in_and_redirect @user, event: :authentication
+        preexisting_flash = flash[:notice]
         set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
+        flash[:notice] += " #{preexisting_flash}" if preexisting_flash
       else
         session["devise.#{provider}_data"] = auth
         redirect_to new_user_registration_path
@@ -62,6 +66,18 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     def save_user
       @user.save || @user.save_requiring_finish_signup
+    end
+
+    def update_email(auth)
+      return if auth.info.email == @user.email
+
+      if User.find_by(email: auth.info.email).present?
+        flash[:notice] = "Email was taken. Please contact support."
+      else
+        @user.skip_reconfirmation!
+        @user.update!(email: auth.info.email)
+        flash[:notice] = "Your email has been updated."
+      end
     end
 
     def update_user_address(auth_data)

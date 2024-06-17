@@ -293,7 +293,7 @@
           <%= render "shared/social_share",
             share_title: t("proposals.show.share"),
             title: @proposal.title,
-            url: debate_url(@proposal),
+            url: proposal_url(@proposal),
             description: @proposal.title,
             mobile: @proposal.title %>
         <% end %>

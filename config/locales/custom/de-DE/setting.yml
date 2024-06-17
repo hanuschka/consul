@@ -316,6 +316,10 @@ de:
         enable_geoman_controls_in_maps_description: Ermöglicht es allen, Kreise etc. einzuzeichnen.
         admin_acceptance_required: Bestätigung durch Administratoren
         admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
+        document_upload: Zusätzliche Dokumente
+        document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+        external_video: Externes Video einbinden
+        external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
 
       projekt_newsfeed:
         id: Newsfeed ID

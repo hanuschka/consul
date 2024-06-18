@@ -8,6 +8,10 @@ class Sidebar::RadioFilterComponent < ApplicationComponent
     @icon = icon
   end
 
+  def render?
+    @options.any?
+  end
+
   private
 
     def selection

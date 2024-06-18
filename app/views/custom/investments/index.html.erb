@@ -34,8 +34,8 @@
       ) %>
 
       <%= render Sidebar::RadioFilterComponent.new(
-        identifier: :feasibility,
-        options: [[t("budgets.investments.index.filters.selected"), "selected"], [t("budgets.investments.index.filters.unfeasible"), "unfeasible"]],
+        identifier: :status,
+        options: @status_filter_options,
         title: t("custom.budgets.investments.index.filters.status.title")
       ) %>
     </div>

@@ -5,7 +5,7 @@
       <li class="<%= "selected-option" if selection == "all" %>">
         <%= label_tag "#{@identifier}_all" do %>
           <%= radio_button_tag @identifier, "all", selection == "all", { class: "js-sidebar-radio-filter" } %>
-          <%= "All" %>
+          <%= "Alle" %>
           <span class="checkmark"></span>
         <% end %>
       </li>

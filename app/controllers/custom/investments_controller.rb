@@ -13,8 +13,10 @@ class InvestmentsController < ApplicationController
     @investments = Budget::Investment.all
     @budgets = Budget.where(id: @investments.map(&:budget_id).uniq)
 
+    set_status_filter_options
+
     filter_by_budget
-    filter_by_feasibility
+    filter_by_status
     filter_by_searched
 
     @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
@@ -30,9 +32,9 @@ class InvestmentsController < ApplicationController
       @investments = @investments.where(budget_id: params[:budget_id])
     end
 
-    def filter_by_feasibility
-      @investments = @investments.feasible if params[:feasibility] == "feasible"
-      @investments = @investments.unfeasible if params[:feasibility] == "unfeasible"
+    def filter_by_status
+      @investments = @investments.selected if params[:status] == "selected"
+      @investments = @investments.unfeasible if params[:status] == "unfeasible"
     end
 
     def filter_by_searched
@@ -41,5 +43,12 @@ class InvestmentsController < ApplicationController
 
     def check_feature_flag
       raise FeatureFlags::FeatureDisabled, :investments_overview unless Setting["extended_feature.general.enable_investments_overview"]
+    end
+
+    def set_status_filter_options
+      @status_filter_options = []
+
+      @status_filter_options << [t("budgets.investments.index.filters.selected"), "selected"] if @investments.selected.any?
+      @status_filter_options << [t("budgets.investments.index.filters.unfeasible"), "unfeasible"] if @investments.unfeasible.any?
     end
 end

@@ -211,7 +211,7 @@ class Mailer < ApplicationMailer
 
     with_user(@user) do
       attachments[@file_name] = File.read(@file_path)
-      mail(to: @email_to, subject: t("mailers.newsletter_subscription_for_existing_user.subject"))
+      mail(to: @email_to, subject: t("mailers.file_ready.subject"))
     end
   end
 

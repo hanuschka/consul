@@ -257,6 +257,9 @@ en:
         replies_to:
           one: Someone replied to your comment on
           other: There are %{count} new replies to your comment on
+        new_resource:
+          one: New resource added
+          other: New resource added
       mark_as_read: Mark as read
       mark_as_unread: Mark as unread
       notifiable_hidden: This resource is not available anymore.

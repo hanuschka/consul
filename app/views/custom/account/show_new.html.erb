@@ -104,9 +104,11 @@
             <%= f.check_box :newsletter, {label: t('custom.account.settings.newsletter'), class: "checkbox-label--aligned"} %>
           </div>
 
+          <!--
           <div>
-            <%= f.check_box :email_digest, {label: t('custom.account.settings.email_digest'), class: "checkbox-label--aligned"} %>
+            <%#= f.check_box :email_digest, {label: t('custom.account.settings.email_digest'), class: "checkbox-label--aligned"} %>
           </div>
+          -->
           <%= f.submit t("custom.account.show.save_settings"), class: "button margin-top" %>
         <% end %>
       <% end %>
@@ -138,6 +140,12 @@
               <%= f.check_box :adm_email_on_new_manual_verification,
                 {label: t('custom.account.settings.adm_email_on_new_manual_verification'), class: "checkbox-label--aligned"} %>
             </div>
+
+            <div>
+              <%= f.check_box :adm_email_on_new_topic,
+                {label: t('custom.account.settings.adm_email_on_new_topic'), class: "checkbox-label--aligned"} %>
+            </div>
+
             <% if @account.official_level == 1 %>
               <div>
                 <%= f.check_box :official_position_badge, { class: "checkbox-label--aligned" } %>

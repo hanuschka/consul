@@ -47,6 +47,7 @@ class Setting < ApplicationRecord
         "feature.m_login_login": true,
         "feature.keycloak_google_login": true,
         #ENDE Ergänzung für Keycloak-Anbindung
+        "feature.bund_id_login": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": false,
@@ -184,6 +185,8 @@ class Setting < ApplicationRecord
         "deficiency_reports.intro_text": false,
         "deficiency_reports.enable_geoman_controls_in_maps": true,
         "deficiency_reports.admin_acceptance_required": false,
+        "deficiency_reports.document_upload": true,
+        "deficiency_reports.external_video": true,
 
         # "extended_feature.general.elasticsearch": false,
 
@@ -191,6 +194,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.extended_editor_for_users": true,
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
+        "extended_feature.general.enable_investments_overview": false,
         "extended_feature.general.enable_google_translate": false,
         "extended_feature.general.enable_old_design": true,
         "extended_feature.general.use_white_top_navigation_text": false,

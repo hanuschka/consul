@@ -132,7 +132,11 @@ class User < ApplicationRecord
     oauth_user            = User.find_by(email: oauth_email) if oauth_email_confirmed
 
     oauth_user || User.new(
-      username:  auth.info.name || auth.uid,
+      username:  auth.info.name || [auth.info&.first_name, auth.info&.last_name].join(" ") || auth.uid,
+      first_name: auth.info&.first_name,
+      last_name: auth.info&.last_name,
+      date_of_birth:  (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil),
+      plz: auth.extra.raw_info&.postal_code,
       email: oauth_email,
       oauth_email: oauth_email,
       password: Devise.friendly_token[0, 20],

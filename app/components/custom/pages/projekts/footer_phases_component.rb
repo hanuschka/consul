@@ -15,4 +15,8 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
     def phase_name(phase)
       t("custom.projekts.phase_name.#{phase.name}")
     end
+
+    def projekt_phases
+      projekt.projekt_phases.includes(:translations, :age_restriction)
+    end
 end

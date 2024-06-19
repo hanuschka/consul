@@ -19,7 +19,8 @@ class Admin::UsersController < Admin::BaseController
       format.html
       format.js
       format.csv do
-        send_data CsvServices::UsersExporter.call(@users), filename: "users-#{Time.zone.today}.csv"
+        CsvJobs::UsersJob.perform_later(current_user.id, @users.pluck(:id))
+        redirect_to admin_users_path, notice: "Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist."
       end
     end
   end

@@ -52,11 +52,15 @@ class Notification < ApplicationRecord
     when "ProposalNotification"
       "proposal_notification"
     when "Comment"
-      "replies_to"
+      # "replies_to"
+      nil
     when "AdminNotification"
       nil
+    when "ProjektPhase", "Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "Milestone", "ProjektNotification", "Topic", "DeficiencyReport"
+      nil
     else
-      "comments_on"
+      # "comments_on"
+      nil
     end
   end
 

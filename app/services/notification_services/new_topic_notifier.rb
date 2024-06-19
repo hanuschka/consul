@@ -6,19 +6,27 @@ module NotificationServices
     end
 
     def call
-      users_to_notify_ids.each do |user_id|
-        NotificationServiceMailer.new_topic(user_id, @community.id, @topic.id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.new_topic(user.id, @community.id, @topic.id).deliver_later
+        Notification.add(user, @topic)
+        Activity.log(user, "email", @topic)
       end
     end
 
     private
 
-      def users_to_notify_ids
-        administrator_ids = User.joins(:administrator).where(adm_email_on_new_topic: true).ids
-        projekt_manager_ids = User.joins(projekt_manager: :projekts).where(adm_email_on_new_topic: true)
-          .where(projekt_managers: { projekts: { id: @community.proposal&.projekt_phase&.projekt&.id }}).ids
+      def users_to_notify
+        [administrators, projekt_managers]
+          .flatten.uniq(&:id)
+      end
 
-        [administrator_ids, projekt_manager_ids].flatten.uniq
+      def administrators
+        User.joins(:administrator).where(adm_email_on_new_topic: true).to_a
+      end
+
+      def projekt_managers
+        User.joins(projekt_manager: :projekts).where(adm_email_on_new_topic: true)
+          .where(projekt_managers: { projekts: { id: @community.proposal&.projekt_phase&.projekt&.id }}).to_a
       end
   end
 end

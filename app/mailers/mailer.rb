@@ -203,6 +203,18 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def file_ready(user, file_name, file_path)
+    @email_to = user.email
+    @user = user
+    @file_name = file_name
+    @file_path = Rails.root.join(file_path)
+
+    with_user(@user) do
+      attachments[@file_name] = File.read(@file_path)
+      mail(to: @email_to, subject: t("mailers.file_ready.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)

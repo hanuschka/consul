@@ -27,3 +27,5 @@ end
 
 get "investments/:id/json_data", action: :json_data, controller: "budgets/investments"
 get "/budgets/:budget_id/investments/:id/json_data", action: :json_data, controller: "budgets/investments"
+
+resources :investments, only: [:index]

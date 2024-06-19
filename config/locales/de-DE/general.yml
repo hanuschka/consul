@@ -254,6 +254,9 @@ de:
         replies_to:
           one: Jemand hat auf Ihren Kommentar zu geantwortet
           other: Es gibt %{count} neue Antworten auf Ihren Kommentar zu
+        new_resource:
+          one: Neue Ressource hinzugefügt
+          other: Neue Ressourcen hinzugefügt
       mark_as_read: Als gelesen markieren
       mark_as_unread: Als ungelesen markieren
       notifiable_hidden: Diese Ressource ist nicht mehr verfügbar.

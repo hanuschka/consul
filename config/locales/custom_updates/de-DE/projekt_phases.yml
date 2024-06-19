@@ -24,6 +24,8 @@ de:
             only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+          formular_phase:
+            past_regular_formular_cutoff_date: Die Beteiligungsphase ist bereits abgeschlossen
         votes_component:
           shared:
             guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder als %{guest_sign_in}."

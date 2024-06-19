@@ -38,6 +38,10 @@ class NotificationsController < ApplicationController
     def linkable_resource_path(notification)
       if notification.linkable_resource.is_a?(AdminNotification)
         notification.linkable_resource.link || notifications_path
+      elsif notification.notifiable_type.in?(["ProjektQuestion", "ProjektEvent", "ProjektLivestream", "ProjektNotification"]) # custom
+        "/#{notification.notifiable.projekt.page.slug}?projekt_phase_id=#{notification.notifiable.projekt_phase.id}#filter-subnav"
+      elsif notification.notifiable_type.in?(["ProjektPhase"]) # custom
+        "/#{notification.notifiable.projekt.page.slug}?projekt_phase_id=#{notification.notifiable.id}#filter-subnav"
       else
         polymorphic_path(notification.linkable_resource)
       end

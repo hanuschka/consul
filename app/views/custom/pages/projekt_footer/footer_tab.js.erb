@@ -6,8 +6,12 @@ $("#footer-content").html("<%= j render("pages/#{footer_version}/#{@projekt_phas
 App.Projekts.toggleDefaultProjekts()
 App.Projekts.toggleProjektsInSidebarFilter();
 App.CollapseTextComponent.enableHoverButtons();
-App.Legislation.initialize();
 App.LivesteamLivequestion.initialize();
+
+<% if @projekt_phase.is_a?(ProjektPhase::LegislationPhase) %>
+  App.Legislation.initialize();
+  App.LegislationAnnotatable.initialize();
+<% end %>
 
 if ($(".legislation-annotatable").length) {
   App.LegislationAnnotatable.destroy();

@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "models", "topic").to_s
 
 class Topic < ApplicationRecord
+  include Notifiable
+
   def comments_allowed?(user)
     true
   end

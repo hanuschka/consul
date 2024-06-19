@@ -1,4 +1,6 @@
 class NotificationServiceMailer < ApplicationMailer
+  helper TextWithLinksHelper
+
   def overdue_deficiency_reports(officer_id, overdue_reports_ids)
     @officer = DeficiencyReport::Officer.find(officer_id)
     @overdue_reports = DeficiencyReport.where(id: overdue_reports_ids)
@@ -40,6 +42,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_proposal(user_id, proposal_id)
     @user = User.find(user_id)
     @proposal = Proposal.find(proposal_id)
+    @projekt_phase = @proposal&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_proposal.subject")
 
@@ -51,6 +54,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_debate(user_id, debate_id)
     @user = User.find(user_id)
     @debate = Debate.find(debate_id)
+    @projekt_phase = @debate&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_debate.subject")
 
@@ -62,6 +66,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_poll(user_id, poll_id)
     @user = User.find(user_id)
     @poll = Poll.find(poll_id)
+    @projekt_phase = @poll&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_poll.subject")
 
@@ -73,6 +78,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_comment(user_id, comment_id)
     @user = User.find(user_id)
     @comment = Comment.find(comment_id)
+    @projekt_phase = @comment&.commentable if @comment&.commentable.is_a?(ProjektPhase)
 
     subject = t("custom.notification_service_mailers.new_comment.subject")
 
@@ -131,6 +137,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_budget_investment(user_id, investment_id)
     @user = User.find(user_id)
     @investment = Budget::Investment.find(investment_id)
+    @projekt_phase = @investment&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_budget_investment.subject")
 

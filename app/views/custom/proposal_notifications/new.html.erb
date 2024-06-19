@@ -13,7 +13,7 @@
           <%= render "shared/errors", resource: @notification %>
 
           <%= f.text_field :title, label: false, placeholder: @notification.class.human_attribute_name(:title) %>
-          <%= f.text_area :body, rows: "3", label: false, placeholder: @notification.class.human_attribute_name(:body) %>
+          <%= f.text_area :body, rows: "3", label: false, placeholder: @notification.class.human_attribute_name(:body), class: "html-area regular" %>
           <% unless @notification.persisted? %>
             <%= f.hidden_field :proposal_id, value: @proposal.id %>
           <% end %>

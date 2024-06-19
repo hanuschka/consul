@@ -63,7 +63,7 @@ class User < ApplicationRecord
   validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
-  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create, unless: :guest?
+  validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
   def self.transfer_city_streets # TODO delete this method
@@ -224,8 +224,11 @@ class User < ApplicationRecord
     end
   end
 
-  def can_manage_projekt?(projekt)
-    projekt_manager?(projekt) || administrator?
+  def has_pm_permission_to?(permission, projekt)
+    return true if administrator?
+    return false unless projekt_manager?
+
+    projekt_manager.allowed_to?(permission, projekt)
   end
 
   def extended_registration?

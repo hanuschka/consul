@@ -22,6 +22,10 @@ devise_scope :user do
   get "users/registrations/sign_in_guest", to: "users/registrations#sign_in_guest", as: :new_guest_user_registration # custom line
   post "users/registrations/create_guest", to: "users/registrations#create_guest" # custom line
   delete "users/registrations/sign_out_guest", to: "users/registrations#sign_out_guest", as: :destroy_guest_user_session # custom line
+
+  #BundID
+  get  "users/send_bund_id_request",  to: "users/omniauth_callbacks#send_bund_id_request",      as: :users_bund_id_send_request
+  post "sp/SAML2/POST",               to: "users/omniauth_callbacks#process_bund_id_response",  as: :users_bund_id_process_response
 end
 
 devise_for :organizations, class_name: "User",

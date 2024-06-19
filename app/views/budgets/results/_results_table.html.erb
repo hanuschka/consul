@@ -53,6 +53,11 @@
                 <%= number_to_percentage(investment.total_ballot_votes_percentage, { strip_insignificant_zeros: true, precision: 2 }) %>
               <% else %>
                 <%= investment.total_ballot_votes %>
+                <% if can?(:read_stats, investment) %>
+                  <%= link_to read_stats_budget_investment_path(@budget, investment), remote: true, onclick: "$('#footer-content').addClass('show-loader');" do %>
+                    <i class="fas fa-chart-pie"></i>
+                  <% end %>
+                <% end %>
               <% end %>
             </td>
             <% if @budget.show_money? %>
@@ -75,4 +80,6 @@
       <% end %>
     </tbody>
   </table>
+
+  <div class="reveal" id="investment_stats" data-reveal></div>
 </div>

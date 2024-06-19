@@ -22,6 +22,10 @@ module ContentBlocksHelper
 
     res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
 
+    if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? && res.include?("</iframe>")
+      res = process_iframe_embeds(res)
+    end
+
     if edit_link || copy_link
       res << "<div class='custom-content-block-controls'>"
         res << edit_link if edit_link.present?

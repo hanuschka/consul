@@ -1,12 +1,13 @@
 de:
   custom:
     notification_service_mailers:
+      shared:
+        unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Beitrag bekommen möchten, dann klicken Sie <a href="%{url}" target="_blank">hier</a> und klicken auf die Benachrichtigungsglocke (Sie müssen eingeloggt sein).
       overdue_deficiency_reports:
         subject: Mangel wurde noch nicht bearbeitet
         hi: Liebe/r Sachbearbeiter*in,
         p1_s: Ihnen wurde vor zwei Woche ein Mangel zur Bearbeitung zugewiesen, welcher noch nicht bearbeitet wurde.
         p1_p: Ihnen wurde vor zwei Wochen mehrere Mängel zur Bearbeitung zugewiesen, die noch nicht bearbeitet wurden.
-        signature_html: Viele Grüße</br>Consul
       new_comments_for_deficiency_report:
         subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
         hi: Liebe/r SachbearbeiterIn,
@@ -19,86 +20,71 @@ de:
         hi: Lieber Admin,
         p1_s: es liegt ein Mangel vor, der noch nicht zugewiesen wurde.
         p1_p: es liegen mehrere Mängel vor, die noch nicht zugewiesen wurden.
-        signature_html: Viele Grüße</br>Consul
       new_proposal:
         subject: Neuer Vorschlag auf Consul
         hi: Hallo %{username},
         p1: es ist ein neuer Vorschlag auf Consul eingegangen oder ein existierender Vorschlag wurde geändert.
-        signature_html: Viele Grüße</br>Consul
       new_debate:
         subject: Neue Diskussionsbeitrag auf Consul
         hi: Hallo %{username},
         p1: es ist ein neuer Diskussionsbeitrag auf Consul erstellt worden.
-        signature_html: PViele Grüße</br>Consul
       new_comment:
         subject: Neuer Kommentar auf Consul
         hi: Hallo %{username},
         p1: es ist ein neuer Kommentar auf Consul veröffentlicht worden.
-        signature_html: Viele Grüße</br>Consul
       new_deficiency_report:
         subject: Neue Mangelmeldung %{identifier}
         hi: Hallo %{username},
         p1: es wurde ein neuer Mangel gemeldet.
-        signature_html: Viele Grüße</br>Consul
       new_manual_verification_request:
         subject: Neue Nutzerverifizierung
         hi: "Hallo %{user_to_notify_username},"
         p1: "%{user_to_verify_username} hat sich soeben verifiziert."
         link_text: Admin (demokratie.today)
-        signature_html: Viele Grüße</br>Consul
       new_poll:
         subject: Neue Abstimmung auf Consul
         hi: Hallo %{username},
         p1: es ist eine neue Abstimmung auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       projekt_questions:
         subject: Neue Kurzumfrage auf Consul
         hi: Hallo %{username},
         link: Kurzumfrage
         p1: es ist eine neue Kurzumfrage auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       projekt_arguments:
         subject: Pro und Contra Stimmen auf Consul
         hi: Hallo %{username},
         link: Pro und Contra Stimmen
         p1: es sind neue Pro und Contra Stimmen auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       new_budget_investment:
         subject: Neuer Investitionsvorschlag auf Consul
         hi: Hallo %{username},
         p1: es ist ein neuer Investitionsvorschlag auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       new_projekt_notification:
         subject: Neue Projektbenachrichtigung auf Consul
         hi: Hallo %{username},
         link: Projektbenachrichtigung
         p1: es ist eine neue Projektbenachrichtigung auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       new_projekt_event:
         subject: Neue Veranstaltung auf Consul
         hi: Hallo %{username},
         link: Veranstaltung
         p1: es ist eine neue Veranstaltung auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       new_projekt_milestone:
         subject: Neuer Meilenstein auf Consul
         hi: Hallo %{username},
         link: Meilenstein
         p1: es ist ein neuen Meilenstein auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       new_projekt_livestream:
         subject: Neue Livestream auf Consul
         hi: Hallo %{username},
         link: Livestream
         p1: es ist ein neue Livestream auf Consul eingegangen.
-        signature_html: Viele Grüße</br>Consul
       new_topic:
         subject: Neues Thema auf Consul
         hi: Hallo %{username},
         p1: es ist ein neues Thema erstellt worden.
-        signature_html: Viele Grüße</br>Consul
       new_proposal_notification:
         subject: "Neue Benachrichtigung zum Vorschlag: %{proposal_title}"
         hi: Hallo %{username},
         intro_html: "Der Autor des Vorschlages %{proposal_link} hat eine neue Benachrichtigung erstellt:"
-        signature_html: Viele Grüße</br>Consul
+        unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Vorschlag bekommen möchten, gehen Sie zur <a href="%{url}" target="_blank">Vorschlagsseite</a> und klicken Sie auf “Nicht länger folgen” (dafür müssen Sie eingeloggt sein).

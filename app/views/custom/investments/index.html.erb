@@ -1,0 +1,43 @@
+<main>
+  <h1 class="padding-on-mobile">
+    <%= t("custom.budgets.investments.index.title") %>
+  </h1>
+
+  <div class="resource-page--intro-text">
+    <%= render_custom_block("investments_index_welcome", default_content: t("custom.budgets.investments.index.welcome_default_text_html")) %>
+  </div>
+
+  <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
+    <div class="main-column">
+      <%= render "shared/loader_spinner" %>
+
+      <%= render(
+        Shared::ResourcesListComponent.new(
+          resources: @investments,
+          resource_type: Budget::Investment,
+          map_coordinates: @investment_coordinates,
+          current_filter: @current_order,
+          filter_param: "order",
+          text_search_enabled: true,
+          filters: @valid_orders
+        )) %>
+
+      <%= paginate @investments %>
+    </div>
+
+    <div id="investments-sidebar" class="sidebar">
+      <%= render Sidebar::RadioFilterComponent.new(
+        identifier: :budget_id,
+        options: @budgets.map { |budget| [budget.name, budget.id] },
+        title: t("custom.budgets.investments.index.filters.budget.title"),
+        icon: "euro-sign"
+      ) %>
+
+      <%= render Sidebar::RadioFilterComponent.new(
+        identifier: :status,
+        options: @status_filter_options,
+        title: t("custom.budgets.investments.index.filters.status.title")
+      ) %>
+    </div>
+  </div>
+</main>

@@ -5,7 +5,7 @@
   <%= render "shared/social_media_meta_tags",
               social_url: deficiency_report_url(@deficiency_report),
               social_title: @deficiency_report.title,
-              social_description: @deficiency_report.summary,
+              social_description: @deficiency_report.description,
               twitter_image_url: (@deficiency_report.image.present? ? polymorphic_path(@deficiency_report.image) : nil),
               og_image_url: (@deficiency_report.image.present? ? polymorphic_path(@deficiency_report.image) : nil) %>
 <% end %>

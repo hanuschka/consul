@@ -17,4 +17,13 @@
   .skiptranslate ~ .wrapper {
     margin-top: 38px !important;
   }
+
+  .button.button-bund-id {
+    background: #ebeef4;
+    display: block;
+
+    &:hover {
+      background: #d1d8e7;
+    }
+  }
 }

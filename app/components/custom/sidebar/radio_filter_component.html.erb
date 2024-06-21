@@ -1,0 +1,25 @@
+<%= render Shared::SidebarCardComponent.new(title: @title, icon_name: @icon) do %>
+
+  <div id="sidebar_radio_filter_<%= @identifier %>" class='sidebar-filter-radio'>
+    <ul data-identifier="<%= @identifier %>">
+      <li class="<%= "selected-option" if selection == "all" %>">
+        <%= label_tag "#{@identifier}_all" do %>
+          <%= radio_button_tag @identifier, "all", selection == "all", { class: "js-sidebar-radio-filter" } %>
+          <%= "Alle" %>
+          <span class="checkmark"></span>
+        <% end %>
+      </li>
+
+      <% @options.each do |option| %>
+        <li class="<%= "selected-option" if selection == option[1].to_s %>">
+          <%= label_tag "#{@identifier}_#{option[1]}" do %>
+            <%= radio_button_tag @identifier, option[1], selection == option[1].to_s, { class: "js-sidebar-radio-filter" } %>
+            <%= option[0] %>
+            <span class="checkmark"></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+<% end %>

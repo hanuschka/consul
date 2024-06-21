@@ -65,6 +65,10 @@ module Abilities
           comment.commentable.comments_allowed?(user)
         end
       end
+
+      can :read_stats, Budget::Investment do |investment|
+        can? :read_stats, investment.budget
+      end
     end
   end
 end

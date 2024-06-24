@@ -4,6 +4,7 @@ resources :budgets, only: [:show, :index] do
     member do
       put :flag
       put :unflag
+      get :read_stats
     end
 
     collection { get :suggest }
@@ -26,3 +27,5 @@ end
 
 get "investments/:id/json_data", action: :json_data, controller: "budgets/investments"
 get "/budgets/:budget_id/investments/:id/json_data", action: :json_data, controller: "budgets/investments"
+
+resources :investments, only: [:index]

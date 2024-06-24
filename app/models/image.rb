@@ -37,6 +37,29 @@ class Image < ApplicationRecord
     Setting.accepted_content_types_for("images").join(", ")
   end
 
+  def self.save_image_from_url(url)
+    whitelisted_urls = [
+      "http://graph.facebook.com/",
+      "https://graph.facebook.com/",
+      "https://demokratie.today/"
+    ]
+    return unless whitelisted_urls.any? { |whitelisted_url| url.start_with?(whitelisted_url) }
+
+    require "open-uri"
+
+    tmp_folder = Rails.root.join("tmp")
+    filename = "#{SecureRandom.hex(16)}.jpg"
+    destination_path = File.join(tmp_folder, filename)
+
+    open(destination_path, "wb") do |file|
+      URI.open(url, "rb") do |img|
+        file.write(img.read)
+      end
+    end
+
+    destination_path
+  end
+
   def max_file_size
     self.class.max_file_size
   end
@@ -73,6 +96,7 @@ class Image < ApplicationRecord
       if accepted_content_types.include?(attachment_content_type)
         return true if imageable_class == Widget::Card
         return true if imageable_class == SiteCustomization::Page
+        return true if imageable_class == User && title == "avatar" && imageable.new_record?
 
         unless attachment.analyzed?
           attachment_changes["attachment"].upload

@@ -7,7 +7,7 @@ module ProposalsHelper
 
     map_locations =
       MapLocation
-        .includes(proposal: [:projekt_labels, :projekt_phase])
+        .includes(proposal: [:projekt_labels, :projekt_phase, :sentiment])
         .includes(investment: [:projekt])
         .includes(deficiency_report: [:category])
         .includes(:projekt)

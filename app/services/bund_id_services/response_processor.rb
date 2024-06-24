@@ -11,7 +11,6 @@ module BundIdServices
       decoded = Base64.decode64(@response)
       document = XMLSecurity::SignedDocument.new(decoded)
       @decrypted_document = decrypt_assertion_from_document(document)
-      Rails.logger.fatal(@decrypted_document)
       OmniAuth::AuthHash.new(formatted_attributes)
     end
 

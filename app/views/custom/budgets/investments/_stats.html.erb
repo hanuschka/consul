@@ -1,0 +1,6 @@
+<div class='participation-stats'>
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <%= render "shared/stats/participation", stats: Budget::Investment::Stats.new(@investment) %>
+</div>

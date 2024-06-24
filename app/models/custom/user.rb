@@ -343,6 +343,8 @@ class User < ApplicationRecord
     end
 
     def email_should_not_be_used_by_hidden_user
+      return if email.blank?
+
       if User.only_hidden.where.not(id: id).find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
       end

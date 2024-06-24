@@ -73,6 +73,7 @@ class Image < ApplicationRecord
       if accepted_content_types.include?(attachment_content_type)
         return true if imageable_class == Widget::Card
         return true if imageable_class == SiteCustomization::Page
+        return true if imageable_class == User && title == "avatar" && imageable.new_record?
 
         unless attachment.analyzed?
           attachment_changes["attachment"].upload

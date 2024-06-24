@@ -32,6 +32,19 @@ en:
     budgets:
       investments:
         index:
+          title: Investments overview
+          welcome_default_text_html: In participation projects, citizens can create investment proposals and collect them on this page. Investment proposals can be filtered according to the respective budget and feasibility.
+          search_form:
+            placeholder: Search...
+          orders:
+            random: Random
+            ballot_line_weight: Votes
+            newest: Newest
+          filters:
+            budget:
+              title: Budgets
+            status:
+              title: Status
           sidebar:
             user_votes: "My votes: %{count}"
           empty_list_text: No results

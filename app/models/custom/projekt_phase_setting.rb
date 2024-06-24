@@ -126,7 +126,8 @@ class ProjektPhaseSetting < ApplicationRecord
         },
 
         "ProjektPhase::FormularPhase" => {
-          "feature.general.only_registered_users": ""
+          "feature.general.only_registered_users": "",
+          "option.general.primary_formular_cutoff_date": ""
         }
       }
     end

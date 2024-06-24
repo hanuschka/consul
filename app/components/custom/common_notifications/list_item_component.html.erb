@@ -5,7 +5,7 @@
     <%= l(@notification.created_at, format: :date_only) %>
     </p>
   </div>
-  <%= helpers.simple_format helpers.sanitize_and_auto_link(@notification.body), {}, sanitize: false %>
+  <%= helpers.auto_link_already_sanitized_html(helpers.wysiwyg(@notification.body)) %>
 
   <div class="reply">
     <% if @enable_moderation_actions %>

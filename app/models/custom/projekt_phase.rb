@@ -58,9 +58,6 @@ class ProjektPhase < ApplicationRecord
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
 
-  has_many :city_street_projekt_phases, dependent: :destroy     # TODO delete
-  has_many :city_streets, through: :city_street_projekt_phases  # TODO delete
-
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 

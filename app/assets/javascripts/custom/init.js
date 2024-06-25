@@ -16,6 +16,7 @@
       App.QuestionWizard.initialize();
       App.AutosubmitFormElement.initialize();
       App.NewSortable.initialize();
+      App.SidebarFilterComponent.initialize();
     }
   };
 }).call(this);

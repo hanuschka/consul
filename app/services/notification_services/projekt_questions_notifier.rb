@@ -5,21 +5,24 @@ module NotificationServices
     end
 
     def call
-      users_to_notify_ids.each do |user_id|
-        NotificationServiceMailer.projekt_questions(user_id, @projekt_phase.id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.projekt_questions(user.id, @projekt_phase.id).deliver_later
+        Notification.add(user, @projekt_phase)
+        Activity.log(user, "email", @projekt_phase)
       end
     end
 
     private
 
-      def users_to_notify_ids
-        [projekt_phase_subscriber_ids].flatten.uniq
+      def users_to_notify
+        [projekt_phase_subscribers]
+          .flatten.uniq(&:id)
       end
 
-      def projekt_phase_subscriber_ids
+      def projekt_phase_subscribers
         return [] unless @projekt_phase.questions.any?
 
-        @projekt_phase.subscribers.ids
+        @projekt_phase.subscribers.to_a
       end
   end
 end

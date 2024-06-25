@@ -30,12 +30,6 @@ class ProjektPhase::VotingPhase < ProjektPhase
     polls.empty?
   end
 
-  def selectable_by?(user)
-    return true if user.administrator?
-
-    permission_problem(user).blank?
-  end
-
   private
 
     def phase_specific_permission_problems(user, location)

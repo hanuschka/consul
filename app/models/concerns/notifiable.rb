@@ -3,6 +3,10 @@ module Notifiable
 
   def notifiable_title
     case self.class.name
+    when "Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "ProjektNotification", "Topic", "DeficiencyReport"
+      title
+    when "ProjektPhase::ArgumentPhase", "ProjektPhase::QuestionPhase", "ProjektPhase::MilestonePhase"
+      projekt.title
     when "ProposalNotification"
       proposal.title
     when "Comment"

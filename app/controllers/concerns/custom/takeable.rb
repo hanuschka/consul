@@ -45,7 +45,6 @@ module Takeable
     @resources = @resources
       .joins(:projekt_labels)
       .where(projekt_labels: { id: params[:projekt_label_ids] })
-      .distinct
   end
 
   def take_by_sentiment
@@ -53,7 +52,6 @@ module Takeable
 
     @resources = @resources
       .where(sentiment_id: params[:sentiment_id])
-      .distinct
   end
 
   def take_by_tag_names(related_projekts)

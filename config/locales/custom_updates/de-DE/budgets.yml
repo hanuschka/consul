@@ -33,10 +33,19 @@ de:
     budgets:
       investments:
         index:
+          title: Übersicht aller Vorschläge
+          welcome_default_text_html: In Beteiligungsprojekten können Bürger*innen Vorschläge erstellen und auf dieser Seite sammeln. Vorschläge können nach dem jeweiligen Budget und der Durchführbarkeit gefiltert werden.
+          search_form:
+            placeholder: Suchen...
           orders:
             random: Zufällig
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
+          filters:
+            budget:
+              title: Budgets
+            status:
+              title: Status
           sidebar:
             user_votes: "Abgegebene Stimmen: %{count}"
           empty_list_text: Keine Ergebnisse

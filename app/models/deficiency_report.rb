@@ -5,6 +5,7 @@ class DeficiencyReport < ApplicationRecord
   include Documentable
   include Searchable
   include OnBehalfOfSubmittable
+  include Notifiable
   translates :title, touch: true
   translates :description, touch: true
   translates :summary, touch: true

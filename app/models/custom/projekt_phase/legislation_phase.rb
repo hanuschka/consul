@@ -23,7 +23,7 @@ class ProjektPhase::LegislationPhase < ProjektPhase
   end
 
   def safe_to_destroy?
-    legislation_processes.empty?
+    legislation_process.blank?
   end
 
   private

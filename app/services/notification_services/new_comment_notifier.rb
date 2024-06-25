@@ -5,28 +5,38 @@ module NotificationServices
     end
 
     def call
-      users_to_notify_ids.each do |user_id|
-        NotificationServiceMailer.new_comment(user_id, @comment.id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.new_comment(user.id, @comment.id).deliver_later
+        Notification.add(user, @comment)
+        Activity.log(user, "email", @comment)
       end
     end
 
     private
 
-      def users_to_notify_ids
-        administrator_ids = User.joins(:administrator).where(adm_email_on_new_comment: true).ids
-        moderator_ids = User.joins(:moderator).where(adm_email_on_new_comment: true).ids
-        projekt_manager_ids = User.joins(projekt_manager: :projekts).where(adm_email_on_new_comment: true)
-          .where(projekt_managers: { projekts: { id: @comment&.projekt&.id }}).ids
-
-        [administrator_ids, moderator_ids, projekt_manager_ids, projekt_phase_subscriber_ids].flatten.uniq
-          .reject { |id| id == @comment.user_id }
+      def users_to_notify
+        [administrators, moderators, projekt_managers, projekt_phase_subscribers]
+          .flatten.uniq(&:id).reject { |user| user.id == @comment.user_id }
       end
 
-      def projekt_phase_subscriber_ids
+      def administrators
+        User.joins(:administrator).where(adm_email_on_new_comment: true).to_a
+      end
+
+      def moderators
+        User.joins(:moderator).where(adm_email_on_new_comment: true).to_a
+      end
+
+      def projekt_managers
+        User.joins(projekt_manager: :projekts).where(adm_email_on_new_comment: true)
+          .where(projekt_managers: { projekts: { id: @comment&.projekt&.id }}).to_a
+      end
+
+      def projekt_phase_subscribers
         if @comment.commentable.is_a?(ProjektPhase::CommentPhase)
-          @comment.commentable.subscribers.ids
+          @comment.commentable.subscribers.to_a
         elsif @comment.commentable.respond_to?(:projekt_phase)
-          @comment.commentable.projekt_phase.subscribers.ids
+          @comment.commentable.projekt_phase.subscribers.to_a
         else
           []
         end

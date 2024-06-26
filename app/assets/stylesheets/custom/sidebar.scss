@@ -1,3 +1,49 @@
+.custom-new-design {
+  .sidebar-filter-radio {
+    ul {
+      list-style-type: none;
+      margin-bottom: 0;
+    }
+
+    label {
+      cursor: pointer;
+      position: relative;
+      color: #878787;
+    }
+
+    .checkmark {
+      position: absolute;
+      left: -19px;
+      top: 0;
+    }
+
+    .checkmark::before {
+       content: "\f111";
+       font-family: 'Font Awesome 5 Free';
+       font-weight: normal;
+    }
+
+    .selected-option {
+      label {
+        color: $dt-base;
+        font-weight: bold;
+      }
+
+      .checkmark::before {
+        color: $dt-base;
+        content: "\f192";
+      }
+    }
+
+    input[type='checkbox'],
+    input[type='radio'] {
+      position: absolute;
+      opacity: 0;
+      z-index: -1;
+    }
+  }
+}
+
 .geozone-filter {
 
   ul {

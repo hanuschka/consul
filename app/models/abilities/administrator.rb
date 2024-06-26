@@ -188,6 +188,10 @@ module Abilities
       can :destroy, RelatedContent
 
       can [:hide, :restore], Topic
+
+      can :read_stats, Budget::Investment do |investment|
+        can? :read_stats, investment.budget
+      end
     end
   end
 end

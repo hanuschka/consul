@@ -1,6 +1,7 @@
 class Milestone < ApplicationRecord
   include Imageable
   include Documentable
+  include Notifiable
 
   translates :title, :description, :custom_date, touch: true
   include Globalizable

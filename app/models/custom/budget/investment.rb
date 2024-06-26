@@ -4,7 +4,7 @@ class Budget
   class Investment < ApplicationRecord
     include OnBehalfOfSubmittable
 
-    delegate :projekt, :projekt_phase, to: :budget
+    delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
 
     has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
 

@@ -5,18 +5,30 @@ module NotificationServices
     end
 
     def call
-      users_to_notify_ids.each do |user_id|
-        NotificationServiceMailer.new_deficiency_report(user_id, @deficiency_report.id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.new_deficiency_report(user.id, @deficiency_report.id).deliver_later
+        Notification.add(user, @deficiency_report)
+        Activity.log(user, "email", @deficiency_report)
       end
     end
 
     private
 
-      def users_to_notify_ids
-        administrator_ids = User.joins(:administrator).where(adm_email_on_new_deficiency_report: true).ids
-        moderator_ids = User.joins(:moderator).where(adm_email_on_new_deficiency_report: true).ids
+      def users_to_notify
+        [administrators, moderators, deficiency_report_administrators]
+          .flatten.uniq(&:id)
+      end
 
-        [administrator_ids, moderator_ids].flatten.uniq
+      def administrators
+        User.joins(:administrator).where(adm_email_on_new_deficiency_report: true).to_a
+      end
+
+      def moderators
+        User.joins(:moderator).where(adm_email_on_new_deficiency_report: true).to_a
+      end
+
+      def deficiency_report_administrators
+        User.joins(:deficiency_report_manager).to_a
       end
   end
 end

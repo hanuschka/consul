@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_06_105826) do
+ActiveRecord::Schema.define(version: 2024_06_24_093425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1001,6 +1001,7 @@ ActiveRecord::Schema.define(version: 2024_05_06_105826) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "auth_data", default: ""
     t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
@@ -1870,9 +1871,7 @@ ActiveRecord::Schema.define(version: 2024_05_06_105826) do
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
     t.boolean "guest_participation_allowed", default: false
-    t.jsonb "arbitrary_options", default: {}
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
-    t.index ["arbitrary_options"], name: "index_projekt_phases_on_arbitrary_options", using: :gin
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
   end

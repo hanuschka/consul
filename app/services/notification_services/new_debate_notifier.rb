@@ -5,27 +5,37 @@ module NotificationServices
     end
 
     def call
-      users_to_notify_ids.each do |user_id|
-        NotificationServiceMailer.new_debate(user_id, @debate.id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.new_debate(user.id, @debate.id).deliver_later
+        Notification.add(user, @debate)
+        Activity.log(user, "email", @debate)
       end
     end
 
     private
 
-      def users_to_notify_ids
-        administrator_ids = User.joins(:administrator).where(adm_email_on_new_debate: true).ids
-        moderator_ids = User.joins(:moderator).where(adm_email_on_new_debate: true).ids
-        projekt_manager_ids = User.joins(projekt_manager: :projekts).where(adm_email_on_new_debate: true)
-          .where(projekt_managers: { projekts: { id: @debate.projekt_phase.projekt.id }}).ids
-
-        [administrator_ids, moderator_ids, projekt_manager_ids, projekt_phase_subscriber_ids].flatten.uniq
-          .reject { |id| id == @debate.author_id }
+      def users_to_notify
+        [administrators, moderators, projekt_managers, projekt_phase_subscribers]
+          .flatten.uniq(&:id).reject { |user| user.id == @debate.author_id }
       end
 
-      def projekt_phase_subscriber_ids
+      def administrators
+        User.joins(:administrator).where(adm_email_on_new_debate: true).to_a
+      end
+
+      def moderators
+        User.joins(:moderator).where(adm_email_on_new_debate: true).to_a
+      end
+
+      def projekt_managers
+        User.joins(projekt_manager: :projekts).where(adm_email_on_new_debate: true)
+          .where(projekt_managers: { projekts: { id: @debate.projekt_phase.projekt.id }}).to_a
+      end
+
+      def projekt_phase_subscribers
         return [] unless @debate.projekt_phase.present?
 
-        @debate.projekt_phase.subscribers.ids
+        @debate.projekt_phase.subscribers.to_a
       end
   end
 end

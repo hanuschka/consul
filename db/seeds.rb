@@ -6,9 +6,10 @@ if Administrator.count == 0 && !Rails.env.test?
   admin.create_administrator
 end
 
+Setting.reset_defaults
+
 Projekt.find_or_create_by!(name: "Overview page", special_name: "projekt_overview_page", special: true)
 
-Setting.reset_defaults
 load Rails.root.join("db", "web_sections.rb")
 
 # Default custom pages

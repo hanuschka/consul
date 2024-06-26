@@ -26,8 +26,16 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
     @investment_status_callout ||= render partial: "budgets/investments/investment_status_callout", locals: { investment: budget_investment }
   end
 
+  def location_allows_votes?
+    !management_controller? &&
+      controller_name != "investments" &&
+      controller_name != "welcome" &&
+      controller_name != "account"
+  end
+
   def location_allows_ballots?
     !management_controller? &&
+      controller_name != "investments" &&
       controller_name != "welcome" &&
       controller_name != "account"
   end

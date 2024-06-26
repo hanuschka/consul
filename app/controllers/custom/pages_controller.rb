@@ -145,7 +145,7 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    @resources = @projekt_phase.proposals.for_public_render
+    @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
 
     if params[:search].present?
       @resources = @resources.search(params[:search])
@@ -255,6 +255,8 @@ class PagesController < ApplicationController
       end
     end
 
+    @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+
     unless params[:section] == "results" && can?(:read_results, @budget)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
     end
@@ -327,12 +329,12 @@ class PagesController < ApplicationController
 
       @formular_fields = @formular.formular_fields.follow_up.each(&:set_custom_attributes)
       @formular_answer = @recipient.formular_answer
-    else
+      @formular_answer.answer_errors ||= {}
+    elsif @projekt_phase.regular_formular_cutoff_date.nil? || @projekt_phase.regular_formular_cutoff_date >= Date.today
       @formular_fields = @formular.formular_fields.primary.each(&:set_custom_attributes)
       @formular_answer = @formular.formular_answers.new
+      @formular_answer.answer_errors ||= {}
     end
-
-    @formular_answer.answer_errors ||= {}
   end
 
   def get_default_projekt_phase(default_phase_id = nil)

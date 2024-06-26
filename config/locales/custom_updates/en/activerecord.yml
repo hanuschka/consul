@@ -13,9 +13,18 @@ en:
       modal_notification:
         one: Modal notification
         other: Modal notifications
+      projekt_event:
+        one: Veranstaltung
+        other: Veranstaltungen
       projekt_label:
         one: Label
         other: Labels
+      projekt_livestream:
+        one: Livestream
+        other: Livestream
+      projekt_notification:
+        one: Projektbenachrichtigung
+        other: Projektbenachrichtigungen
     errors:
       models:
         proposal:

@@ -34,6 +34,8 @@ de:
           language_switcher_in_menu_description: Aktivieren Sie den Umschalter für weitere Sprachen in der Navigationsleiste
           enable_projekt_events_page: Veranstaltungskalender anzeigen
           enable_projekt_events_page_description: Zeigt den Veranstaltungskalender in der Hauptnavigation an
+          enable_investments_overview: Budgetübersicht anzeigen
+          enable_investments_overview_description: Zeigt die Übersicht aller Budgetvorschläge in der Hauptnavigation an
           enable_google_translate: Google Translate aktivieren
           enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
           show_guest_login_links: Zeige Gast-Login an
@@ -316,6 +318,10 @@ de:
         enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
         admin_acceptance_required: Bestätigung durch Administratoren
         admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
+        document_upload: Zusätzliche Dokumente
+        document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+        external_video: Externes Video einbinden
+        external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
 
       projekt_newsfeed:
         id: Newsfeed ID

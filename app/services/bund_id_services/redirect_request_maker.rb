@@ -1,7 +1,7 @@
 module BundIdServices
   class RedirectRequestMaker < ApplicationService
     def call
-      base_url = "https://int.id.bund.de/idp/profile/SAML2/Redirect/SSO"
+      base_url = Rails.application.secrets.bund_id[:base_url]
       saml_request = CGI.escape(encode(deflate(signed_xml_document.to_s)))
 
       "#{base_url}?SAMLRequest=#{saml_request}"

@@ -2,7 +2,6 @@ class InvestmentsController < ApplicationController
   include Search
   include RandomSeed
 
-  before_action :check_feature_flag
   before_action :set_random_seed, only: :index
 
   skip_authorization_check only: [:index]
@@ -39,10 +38,6 @@ class InvestmentsController < ApplicationController
 
     def filter_by_searched
       @investments = @investments.search(@search_terms) if @search_terms.present?
-    end
-
-    def check_feature_flag
-      raise FeatureFlags::FeatureDisabled, :investments_overview unless Setting["extended_feature.general.enable_investments_overview"]
     end
 
     def set_status_filter_options

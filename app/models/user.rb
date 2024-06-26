@@ -128,11 +128,15 @@ class User < ApplicationRecord
   # Get the existing user by email if the provider gives us a verified email.
   def self.first_or_initialize_for_oauth(auth)
     oauth_email           = auth.info.email
-    oauth_email_confirmed = true #cli
+    oauth_email_confirmed = oauth_email.present?# && (auth.info.verified || auth.info.verified_email)
     oauth_user            = User.find_by(email: oauth_email) if oauth_email_confirmed
 
-    oauth_user || User.new(
-      username: nil, #cli
+    user = oauth_user || User.new(
+      username:  auth.info.name || [auth.info&.first_name, auth.info&.last_name].join(" ") || auth.uid,
+      first_name: auth.info&.first_name,
+      last_name: auth.info&.last_name,
+      date_of_birth:  (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil),
+      plz: auth.extra.raw_info&.postal_code,
       email: oauth_email,
       oauth_email: oauth_email,
       password: Devise.friendly_token[0, 20],
@@ -140,8 +144,22 @@ class User < ApplicationRecord
       terms_data_storage: "1", #custom
       terms_data_protection: "1", #custom
       terms_general: "1", #custom
+      auth_image_link: auth.info.image, #custom
       confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
+
+    if auth.info.image.present? && !user.image&.attached? #custom
+      image_path = Image.save_image_from_url(auth.info.image) #custom
+      image_file = File.open(image_path) #custom
+      image = Image.new(title: "avatar", imageable: user) #custom
+      image.attachment.attach(io: image_file, filename: "avatar.jpg", content_type: "image/jpg") #custom
+
+      if image.valid?
+        user.image = image #custom
+      end
+    end
+
+    user #custom
   end
 
   def name

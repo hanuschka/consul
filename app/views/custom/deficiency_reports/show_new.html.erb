@@ -1,11 +1,11 @@
 <%= content_for :body_class, "deficiency-reports-show" %>
 <% provide :title do %><%= @deficiency_report.title %><% end %>
-<% content_for :meta_description do %><%= @deficiency_report.summary %><% end %>
+<% content_for :meta_description do %><%= @deficiency_report.description %><% end %>
 <% provide :social_media_meta_tags do %>
   <%= render "shared/social_media_meta_tags",
               social_url: deficiency_report_url(@deficiency_report),
               social_title: @deficiency_report.title,
-              social_description: @deficiency_report.summary,
+              social_description: @deficiency_report.description,
               twitter_image_url: (@deficiency_report.image.present? ? polymorphic_path(@deficiency_report.image) : nil),
               og_image_url: (@deficiency_report.image.present? ? polymorphic_path(@deficiency_report.image) : nil) %>
 <% end %>

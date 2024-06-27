@@ -17,7 +17,3 @@ de:
           flash:
             success_manual: Vielen Dank, Ihre Daten wurden gespeichert
             error: Wir konnten Ihre Daten nicht verifizieren, bitte kontaktieren Sie uns.
-      servicekonto_nrv:
-        flash:
-          account_exist: "Die Email-Adresse, die im Servicekonto hinterlegt ist, wird bereits mit einem anderen Consul-Konto verwendet. Bitte loggen Sie sich mit dem anderen Konto ein."
-          success: "Erfolgreich identifiziert als Servicekonto_nrv."

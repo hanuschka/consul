@@ -66,23 +66,6 @@ class User < ApplicationRecord
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
-  def self.first_or_initialize_for_servicekonto_oauth(auth)
-    oauth_email           = auth.info.email
-    oauth_email_confirmed = oauth_email.present? && (auth.info.verified || auth.info.verified_email)
-    oauth_user            = User.find_by(email: oauth_email)
-
-    oauth_user || User.new(
-      username:  auth.info.name || auth.uid,
-      email: oauth_email,
-      oauth_email: oauth_email,
-      password: Devise.friendly_token[0, 20],
-      terms_data_storage: "1",
-      terms_data_protection: "1",
-      terms_general: "1",
-      confirmed_at: oauth_email_confirmed ? DateTime.current : nil
-    )
-  end
-
   def self.transfer_city_streets # TODO delete this method
     transferred_user_ids = []
     not_transferred_user_ids = []

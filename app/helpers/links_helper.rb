@@ -14,11 +14,7 @@ module LinksHelper
   end
 
   def link_to_verify_account
-    link_to t("users.verify_account"), user_servicekonto_nrv_omniauth_authorize_path, method: :post
-  end
-
-  def link_to_verify_account_short
-    link_to t("custom.users.verify_account_link_short"), user_servicekonto_nrv_omniauth_authorize_path, method: :post
+    link_to t("users.verify_account"), verification_path
   end
 
   def link_to_guest_signin

@@ -259,32 +259,6 @@ Devise.setup do |config|
                   strategy_class: OmniAuth::Strategies::Wordpress,
                   client_options: { site: Rails.application.secrets.wordpress_oauth2_site }
 
-  servicekonto_nrv = Rails.application.secrets.servicekonto_nrv_openid_login
-
-  config.omniauth :openid_connect, {
-    name: :servicekonto_nrv,
-    discovery: true,
-    issuer: servicekonto_nrv[:connect_issuer],
-    scope: ["profile", "name", "birthdate", "address", "phone", "email", "id", "artistic_name", "place_of_birth", "gender", "birthname", "additional_npa", "openid", "postbox"],
-    acr_values: 'substantial',
-    client_auth_method: 'basic',
-    # client_auth_method: 'jwks',
-    response_type: :code,
-    uid_field: "sub",
-    client_options: {
-      host: servicekonto_nrv[:connect_host],
-      identifier: servicekonto_nrv[:connect_key],
-      secret: servicekonto_nrv[:connect_secret],
-      authorization_endpoint: servicekonto_nrv[:authorization_endpoint],
-      token_endpoint: servicekonto_nrv[:token_endpoint],
-      token_endpoint_auth_method: 'client_secret_basic',
-      userinfo_endpoint: servicekonto_nrv[:userinfo_endpoint],
-      jwks_uri: servicekonto_nrv[:jwks_uri],
-      redirect_uri: servicekonto_nrv[:connect_redirect_uri]
-    },
-    strategy_class: OmniAuth::Strategies::OpenIDConnect
-  }
-
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

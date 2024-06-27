@@ -307,18 +307,10 @@ class Projekt < ApplicationRecord
     return false unless activated? || controller_name == "polls"
 
     if controller_name == "proposals"
-      if proposal_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
-        false
-      else
-        proposal_phases.any_selectable?(user, resource)
-      end
+      proposal_phases.any_selectable?(user, resource)
 
     elsif controller_name == "debates"
-      if debate_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
-        false
-      else
-        debate_phases.any_selectable?(user, resource)
-      end
+      debate_phases.any_selectable?(user, resource)
 
     elsif controller_name == "polls"
       voting_phases.any_selectable?(user)
@@ -383,7 +375,7 @@ class Projekt < ApplicationRecord
   end
 
   def all_parent_projekts
-    [parent, top_level_projekt].compact
+    Projekt.where(id: [parent_id, top_level_projekt_id]).compact
   end
 
   def all_children_ids
@@ -391,8 +383,8 @@ class Projekt < ApplicationRecord
   end
 
   def all_children_projekts
-    # [*children, *third_level_children].compact
-    [*children, *children.map(&:children).flatten].compact
+    children_with_preloaded_grandchildren = children.includes(:children)
+    children_with_preloaded_grandchildren.flat_map { |child| [child, *child.children] }.compact
   end
 
   def has_active_phase?(controller_name)

@@ -69,25 +69,8 @@ class ApplicationController < ActionController::Base
         Projekt
           .top_level
           .includes(
-            :individual_group_values,
-            { page: :translations }, :projekt_settings,
-
-            children_projekts_show_in_navigation: [
-            :individual_group_values,
-              :projekt_settings, { page: :translations },
-
-              {
-                children_projekts_show_in_navigation: [
-                  :projekt_settings,
-                  { page: :translations },
-
-                  {
-                    children_projekts_show_in_navigation: [
-                      :projekt_settings, { page: :translations }]
-                  }
-                ]
-              }
-            ]
+            :projekt_settings, :hard_individual_group_values,
+            page: [:translations]
           )
           .show_in_navigation
           .select { |p| p.visible_for?(current_user) }

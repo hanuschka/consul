@@ -36,7 +36,6 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
-  belongs_to :city_street, optional: true              # TODO delete this line
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -65,51 +64,6 @@ class User < ApplicationRecord
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
-
-  def self.transfer_city_streets # TODO delete this method
-    transferred_user_ids = []
-    not_transferred_user_ids = []
-
-    User.find_each do |user|
-      next if user.registered_address.present?
-
-      next if user.city_street.blank? && user.street_name.blank?
-
-      street_name_selector = if user.city_street.present?
-                               user.city_street.name.split()[0].downcase
-                             elsif user.street_name.present?
-                               user.street_name.split()[0].downcase
-                             end
-
-      matching_registered_addresses = RegisteredAddress.joins(:registered_address_street)
-        .where("LOWER(registered_address_streets.name) LIKE ? AND CONCAT(street_number,LOWER(street_number_extension)) = ?",
-               "#{street_name_selector}%", user.street_number&.downcase)
-
-      next if matching_registered_addresses.blank?
-
-      matching_registered_addresses.map do |ra|
-        puts "Processing user with id: #{user.id}"
-        puts "Transfer \"CityStreet: #{user.city_street&.name || user.street_name } #{user.street_number}\" to" \
-          " \"RegisteredAddress: #{ra.registered_address_street.name} #{ra.street_number}#{ra.street_number_extension}\"? (y/n)"
-        answer = gets.chomp
-
-        if answer == "y"
-          transferred_user_ids << user.id
-          user.update_columns(
-            registered_address_id: ra.id
-          )
-          break
-        elsif answer == "c"
-          break
-        else
-          not_transferred_user_ids << user.id
-        end
-      end
-    end
-
-    puts "Transferred user ids: #{transferred_user_ids}"
-    puts "Not transferred user ids: #{not_transferred_user_ids - transferred_user_ids}"
-  end
 
   def self.order_filter(params)
     sorting_key = params[:sort_by]&.downcase&.to_sym
@@ -224,8 +178,11 @@ class User < ApplicationRecord
     end
   end
 
-  def can_manage_projekt?(projekt)
-    projekt_manager?(projekt) || administrator?
+  def has_pm_permission_to?(permission, projekt)
+    return true if administrator?
+    return false unless projekt_manager?
+
+    projekt_manager.allowed_to?(permission, projekt)
   end
 
   def extended_registration?
@@ -270,40 +227,6 @@ class User < ApplicationRecord
     roles
   end
 
-  def link_to_registered_address  #TODO remove after data migration
-    if city_street.present?
-      old_street_address = "#{city_street.name} #{street_number}#{street_number_extension}"
-    elsif street_name.present?
-      old_street_address = "#{street_name} #{street_number}#{street_number_extension}"
-    else
-      return
-    end
-
-    ra_streets = RegisteredAddress::Street.where("lower(name) LIKE lower(?)", "#{old_street_address[0..5]}%")
-
-    ra_streets.each do |ras|
-      r_addresses = RegisteredAddress.where(registered_address_street_id: ras.id, street_number: street_number)
-
-      r_addresses.each do |ra|
-        puts "User ID: #{id}"
-        puts "Old street Address: #{old_street_address}"
-        puts "Registered Address: #{ra.formatted_name}"
-        puts "Is it a match? (y/n)"
-
-        answer = gets.chomp
-
-        if answer == "y"
-          update_columns(
-            registered_address_id: ra.id,
-          )
-
-          puts "Updated!"
-          return
-        end
-      end
-    end
-  end
-
   def full_name
     if first_name.present? && last_name.present?
       "#{first_name} #{last_name}"
@@ -340,6 +263,8 @@ class User < ApplicationRecord
     end
 
     def email_should_not_be_used_by_hidden_user
+      return if email.blank?
+
       if User.only_hidden.where.not(id: id).find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
       end

@@ -16,5 +16,7 @@ gem 'pry', '~> 0.13.0'
 gem 'httparty'
 gem 'sd_notify', '~> 0.1.1'
 
+gem 'ruby-saml', '~> 1.16'
+
 gem "sentry-ruby"
 gem "sentry-rails"

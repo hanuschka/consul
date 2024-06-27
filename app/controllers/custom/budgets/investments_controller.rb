@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "controllers", "budgets", "investments
 
 module Budgets
   class InvestmentsController < ApplicationController
+    respond_to :js, only: [:stats]
 
     def new
       if @budget.projekt_phase.permission_problem(current_user)
@@ -54,6 +55,10 @@ module Budgets
     def unflag
       Flag.unflag(current_user, @investment)
       redirect_to @investment
+    end
+
+    def read_stats
+      authorize! :read_stats, @investment
     end
 
     private

@@ -3,6 +3,7 @@ class ProjektPhase < ApplicationRecord
   include Milestoneable
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
+  include Notifiable
 
   after_create :add_default_settings
 
@@ -57,9 +58,6 @@ class ProjektPhase < ApplicationRecord
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
 
-  has_many :city_street_projekt_phases, dependent: :destroy     # TODO delete
-  has_many :city_streets, through: :city_street_projekt_phases  # TODO delete
-
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 
@@ -108,12 +106,18 @@ class ProjektPhase < ApplicationRecord
 
   def selectable_by?(user, resource = nil)
     return true if resource&.respond_to?(:author) && resource.author == user
+    return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
     permission_problem(user).blank?
   end
 
-  alias_method :votable_by?, :selectable_by?
-  alias_method :comments_allowed?, :selectable_by?
+  def votable_by?(user, resource = nil)
+    permission_problem(user).blank?
+  end
+
+  def comments_allowed?(user, resource = nil)
+    permission_problem(user).blank?
+  end
 
   def not_active?
     !active?
@@ -142,6 +146,7 @@ class ProjektPhase < ApplicationRecord
     return :guest_not_logged_in if guest_participation_allowed? && !user
     return if guest_participation_allowed?
     return :not_logged_in if !user || user&.guest?
+    return if admin_permission?(user, location: location)
     return :phase_not_active if not_active?
     return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
     return :phase_not_current if not_current?
@@ -159,6 +164,14 @@ class ProjektPhase < ApplicationRecord
     end
 
     nil
+  end
+
+  def admin_permission?(user, location: nil)
+    if location == "new_button_component"
+      user.has_pm_permission_to?("create_on_behalf_of", projekt)
+    else
+      user.administrator?
+    end
   end
 
   def geozone_allowed?(user)

@@ -206,6 +206,10 @@ module Abilities
         user.projekt_manager.allowed_to?("manage", related_content.parent_relationable.projekt_phase.projekt) ||
           user.projekt_manager.allowed_to?("manage", related_content.child_relationable.projekt_phase.projekt)
       end
+
+      can :read_stats, Budget::Investment do |investment|
+        can? :read_stats, investment.budget
+      end
     end
   end
 end

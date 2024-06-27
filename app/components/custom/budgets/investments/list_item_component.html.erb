@@ -31,7 +31,7 @@
       <% end %>
     <% end %>
 
-    <% if budget_investment.should_show_votes? %>
+    <% if budget_investment.should_show_votes? && location_allows_votes? %>
       <% c.with_footer_section do %>
         <div id="<%= dom_id(budget_investment) %>_votes"
              class="small-12 medium-3 column votes-section">

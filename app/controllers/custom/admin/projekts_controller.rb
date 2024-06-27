@@ -38,7 +38,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt.update!(projekt_params)
     Projekt.ensure_order_integrity
 
-    redirect_to admin_projekts_path
+    redirect_to admin_projekts_path(page: params[:page])
   end
 
   def update

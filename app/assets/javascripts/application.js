@@ -57,7 +57,6 @@
 //= require ckeditor/loader
 //= require_directory ./ckeditor
 //= require social-share-button
-//= require initial
 //= require ahoy
 //= require app
 //= require check_all_none
@@ -74,7 +73,6 @@
 //= require annotator
 //= require jquery.amsify.suggestags
 //= require tags
-//= require users
 //= require participation_not_allowed
 //= require advanced_search
 //= require registration_form

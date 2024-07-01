@@ -140,7 +140,6 @@ var initialize_modules = function() {
   App.Answers.initialize();
   App.Questions.initialize();
   App.Comments.initialize();
-  App.Users.initialize();
   App.ParticipationNotAllowed.initialize();
   App.Tags.initialize();
   App.FoundationExtras.initialize();

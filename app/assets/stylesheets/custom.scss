@@ -17,6 +17,10 @@ body.home-page .homepage-image-header {
     background-size: contain;
     background-repeat: no-repeat;
     height: 845px;
+
+    &.jugend {
+      background-image: url("mobile-header-jugend.jpeg");
+    }
   }
 
   @media(max-width: 750px) {

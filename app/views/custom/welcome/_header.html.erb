@@ -24,7 +24,7 @@
     <style>
       <% if header_large %>
         .home-page .homepage-image-header{
-          background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
+          background-image: url("<%= asset_path("welcome_narrow.jpg") %>");
           background-size: cover;
           background-position: top;
         }

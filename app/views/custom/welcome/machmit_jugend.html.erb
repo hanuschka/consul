@@ -26,7 +26,7 @@
   }
 </style>
 
-<div class="homepage-image-header not-print">
+<div class="homepage-image-header jugend not-print">
   <div class="homepage-image-header--title-wrapper">
   </div>
 </div>
@@ -97,7 +97,7 @@
       <div class="hide-on-small-tablet">
         <% if render_custom_content_block?('home_page_sidebar') %>
           <%= render Shared::SidebarCardComponent.new(title: "Information", icon_name: "info-circle") do |c| %>
-            <%= render_custom_block "home_page_sidebar" %>
+            <%= render_custom_block "machmit_jugend_page_sidebar" %>
           <% end %>
         <% end %>
       </div>

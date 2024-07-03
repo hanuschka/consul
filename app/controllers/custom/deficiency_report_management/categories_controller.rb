@@ -3,7 +3,7 @@ class DeficiencyReportManagement::CategoriesController < DeficiencyReportManagem
   load_and_authorize_resource :category, class: "DeficiencyReport::Category", except: :show
 
   def index
-    @categories = DeficiencyReport::Category.all.order(id: :asc)
+    @categories = DeficiencyReport::Category.all.order(given_order: :asc)
   end
 
   def new
@@ -37,6 +37,11 @@ class DeficiencyReportManagement::CategoriesController < DeficiencyReportManagem
     else
       redirect_to deficiency_report_management_categories_path, alert: t('custom.admin.deficiency_reports.categories.destroy.cannot_be_destroyed')
     end
+  end
+
+  def order_categories
+    DeficiencyReport::Category.order_categories(params[:ordered_list])
+    head :ok
   end
 
   private

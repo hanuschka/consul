@@ -3,7 +3,7 @@ class DeficiencyReportManagement::AreasController < DeficiencyReportManagement::
   load_and_authorize_resource :area, class: "DeficiencyReport::Area", except: :show
 
   def index
-    @areas = DeficiencyReport::Area.all.order(:id)
+    @areas = DeficiencyReport::Area.all.order(given_order: :asc)
   end
 
   def new
@@ -44,6 +44,11 @@ class DeficiencyReportManagement::AreasController < DeficiencyReportManagement::
       redirect_to deficiency_report_management_areas_path,
         alert: t("custom.admin.deficiency_reports.areas.destroy.cannot_be_destroyed")
     end
+  end
+
+  def order_areas
+    DeficiencyReport::Area.order_areas(params[:ordered_list])
+    head :ok
   end
 
   private

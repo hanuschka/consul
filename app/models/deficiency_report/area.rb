@@ -8,4 +8,10 @@ class DeficiencyReport::Area < ApplicationRecord
   def safe_to_destroy?
     deficiency_reports.none?
   end
+
+  def self.order_areas(ordered_array)
+    ordered_array.each_with_index do |area_id, order|
+      find(area_id).update_column(:given_order, (order + 1))
+    end
+  end
 end

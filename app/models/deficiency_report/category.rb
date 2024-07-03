@@ -9,4 +9,10 @@ class DeficiencyReport::Category < ApplicationRecord
   def safe_to_destroy?
     !deficiency_reports.exists?
   end
+
+  def self.order_categories(ordered_array)
+    ordered_array.each_with_index do |category_id, order|
+      find(category_id).update_column(:given_order, (order + 1))
+    end
+  end
 end

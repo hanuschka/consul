@@ -47,6 +47,10 @@ class DeficiencyReportManagement::CategoriesController < DeficiencyReportManagem
   private
 
   def category_params
-    params.require(:deficiency_report_category).permit(:color, :icon, translation_params(DeficiencyReport::Category))
+    params.require(:deficiency_report_category).permit(
+      :color, :icon,
+      :warning_text,
+      translation_params(DeficiencyReport::Category)
+    )
   end
 end

@@ -48,6 +48,7 @@ de:
             color: Farbe
             icon: Icon
             name: Name
+            warning_text: Popup test
           destroy:
             cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Mangel zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.
@@ -55,6 +56,7 @@ de:
             editing: Mangelkategorie bearbeiten
           form:
             color_placeholder: "HEX Code mit #"
+            warning_text_placeholder: Popup text
             submit_button: Speichern
           index:
             create: Kategorie erstellen

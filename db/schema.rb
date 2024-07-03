@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_03_120427) do
+ActiveRecord::Schema.define(version: 2024_07_03_123938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -693,6 +693,7 @@ ActiveRecord::Schema.define(version: 2024_07_03_120427) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "given_order"
+    t.string "warning_text", default: ""
   end
 
   create_table "deficiency_report_category_translations", force: :cascade do |t|

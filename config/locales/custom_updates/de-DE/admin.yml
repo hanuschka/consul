@@ -112,6 +112,7 @@ de:
             color: Farbe
             icon: Icon
             title: Name
+            notice_text: E-Mail-Benachrichtigungstext
         areas:
           destroy:
             cannot_be_destroyed: Sie können dieses Gebiet nicht löschen, da er mindestens einem Mangel zugewiesen ist.

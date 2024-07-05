@@ -5,6 +5,8 @@ class DeficiencyReport::Area < ApplicationRecord
 
   accepts_nested_attributes_for :map_location, update_only: true
 
+  default_scope { order(given_order: :asc) }
+
   def safe_to_destroy?
     deficiency_reports.none?
   end

@@ -3,7 +3,7 @@ class DeficiencyReportManagement::AreasController < DeficiencyReportManagement::
   load_and_authorize_resource :area, class: "DeficiencyReport::Area", except: :show
 
   def index
-    @areas = DeficiencyReport::Area.all.order(given_order: :asc)
+    @areas = DeficiencyReport::Area.all
   end
 
   def new

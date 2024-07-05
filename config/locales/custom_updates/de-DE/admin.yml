@@ -48,7 +48,7 @@ de:
             color: Farbe
             icon: Icon
             name: Name
-            warning_text: Popup test
+            warning_text: Popup
           destroy:
             cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Mangel zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.

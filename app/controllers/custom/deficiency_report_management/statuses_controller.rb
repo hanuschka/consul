@@ -3,7 +3,7 @@ class DeficiencyReportManagement::StatusesController < DeficiencyReportManagemen
   load_and_authorize_resource :status, class: "DeficiencyReport::Status", except: :show
 
   def index
-    @statuses = DeficiencyReport::Status.all.order(given_order: :asc)
+    @statuses = DeficiencyReport::Status.all
   end
 
   def new

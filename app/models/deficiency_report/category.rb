@@ -6,6 +6,8 @@ class DeficiencyReport::Category < ApplicationRecord
 
   has_many :deficiency_reports, foreign_key: :deficiency_report_category_id
 
+  default_scope { order(given_order: :asc) }
+
   def safe_to_destroy?
     !deficiency_reports.exists?
   end

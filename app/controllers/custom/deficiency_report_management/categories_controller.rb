@@ -3,7 +3,7 @@ class DeficiencyReportManagement::CategoriesController < DeficiencyReportManagem
   load_and_authorize_resource :category, class: "DeficiencyReport::Category", except: :show
 
   def index
-    @categories = DeficiencyReport::Category.all.order(given_order: :asc)
+    @categories = DeficiencyReport::Category.all
   end
 
   def new

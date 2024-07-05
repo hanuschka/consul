@@ -23,7 +23,7 @@ describe Users::OmniauthCallbacksController do
             first_name: "Asterix",
             last_name: "Gallier",
             gender: "male",
-            email: "michael+bundidtest_development@demokratie.today",
+            email: "bundidtest@demokratie.today",
             auth_method: "Benutzername",
             date_of_birth: "2000-01-01",
             street_address: "Strasse, 333",
@@ -182,6 +182,30 @@ describe Users::OmniauthCallbacksController do
             expect(flash[:notice]).to include("Email was taken. Please contact support.")
           end
         end
+      end
+    end
+
+    context "when user is verifying their account with BundID" do
+      context "user didn't log in with BundId in the past and is not verified" do
+        let(:user) { create(:user, email: "bundidtest@demokratie.today", verified_at: nil) }
+
+        before do
+          sign_in user
+        end
+
+        it "allows user to use BundID when Identity is not taken" do
+          expect { post users_bund_id_process_response_path, params: params }.to change(Identity, :count).by(1)
+        end
+
+        it "doesn't allow user to use BundID when Identity is taken" do
+          create(:identity, provider: "bund_id", uid: "IbGOjxZbiLRuntP_bK9vHcd6scbl8FGq23nR3MCPI-c")
+
+          post users_bund_id_process_response_path, params: params
+          expect(Identity.count).to eq(1)
+          expect(user.identities).to be_empty
+          expect(flash[:notice]).to eq("We could not verify your account. Please contact support.")
+        end
+
       end
     end
   end

@@ -92,7 +92,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
         registered_address_street = RegisteredAddress::Street.where(
           "LOWER(name) = ? AND plz = ?",
-          match[:street_name].gsub(/[,\s]+$/, '').downcase,
+          match[:street_name].downcase.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
           auth_data.extra.raw_info.postal_code
         ).first
 
@@ -108,10 +108,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.update!(registered_address: registered_address) if registered_address
 
         @user.update!(
-          street_name: match[:street_name].gsub(/[,\s]+$/, ''),
+          street_name: match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
           street_number: match[:street_number].strip,
           street_number_extension: match[:street_number_extension].strip.presence,
-          city_name: auth_data.extra.raw_info.locality_name,
+          city_name: auth_data.extra.raw_info.locality_name&.capitalize,
           plz: auth_data.extra.raw_info.postal_code
         )
       end

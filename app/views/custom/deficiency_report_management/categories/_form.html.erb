@@ -5,7 +5,7 @@
 
   <%= render "shared/globalize_locales", resource: @category %>
   <%= f.translatable_fields do |translations_form| %>
-    <div class="small-12 column">
+    <div class="small-12 medium-6 large-4 column" style="float:left;">
       <%= translations_form.text_field :name %>
     </div>
   <% end %>
@@ -25,6 +25,13 @@
           <%= rb.label { rb.radio_button + "<i class=\"fas fa-#{rb.object.first}\"></i>".html_safe } %>
         <% end %>
       </div>
+    </div>
+  </div>
+
+  <div class="clear">
+    <div class="small-12 medium-6 large-4 column">
+      <%= f.text_field :warning_text, label: t("custom.admin.deficiency_reports.categories.category.warning_text"),
+        placeholder: t("custom.admin.deficiency_reports.categories.form.warning_text_placeholder") %>
     </div>
   </div>
 

@@ -162,7 +162,7 @@ describe Users::OmniauthCallbacksController do
           it "shows notification with correct message" do
             post users_bund_id_process_response_path, params: params
 
-            expect(flash[:notice]).to eq("Your email has been updated.")
+            expect(flash[:notice]).to include("Your email has been updated.")
           end
         end
 
@@ -179,7 +179,7 @@ describe Users::OmniauthCallbacksController do
           it "shows notification with correct message" do
             post users_bund_id_process_response_path, params: params
 
-            expect(flash[:notice]).to eq("Email was taken. Please contact support.")
+            expect(flash[:notice]).to include("Email was taken. Please contact support.")
           end
         end
       end

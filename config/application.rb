@@ -115,6 +115,12 @@ module Consul
     config.time_zone = "Berlin"
     config.active_job.queue_adapter = :delayed_job
 
+    config.action_dispatch.cookies_same_site_protection = ->(request) do
+      allowed_paths = ["/users/send_bund_id_request"]
+
+      request.path.in?(allowed_paths) ? :none : :lax
+    end
+
     # CONSUL specific custom overrides
     # Read more on documentation:
     # * English: https://github.com/consul/consul/blob/master/CUSTOMIZE_EN.md

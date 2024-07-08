@@ -26,6 +26,8 @@ class Admin::ProjektsController < Admin::BaseController
 
     @map_configuration_settings = Setting.all.group_by(&:type)["map"]
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
+
+    @projekts = @projekts.page(params[:page]).per(5)
   end
 
   def show
@@ -36,7 +38,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt.update!(projekt_params)
     Projekt.ensure_order_integrity
 
-    redirect_to admin_projekts_path
+    redirect_to admin_projekts_path(page: params[:page])
   end
 
   def update

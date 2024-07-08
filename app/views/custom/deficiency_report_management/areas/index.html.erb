@@ -11,9 +11,9 @@
     </tr>
   </thead>
 
-  <tbody>
+  <tbody class="sortable" data-js-url=<%= order_areas_deficiency_report_management_areas_path %>>
     <% @areas.each do |area| %>
-      <tr>
+      <tr data-answer-id="<%= area.id %>">
         <td><%= area.name %></td>
         <td>
           <%= render Admin::TableActionsComponent.new(area,

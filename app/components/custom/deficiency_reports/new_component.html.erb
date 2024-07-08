@@ -30,8 +30,12 @@
             description: t("custom.deficiency_reports.form.category.description"),
             icon_name: "th-large"
           ) do |c| %>
-          <%= f.select :deficiency_report_category_id, DeficiencyReport::Category.all.map { |category| [category.name, category.id] },
-            { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false } %>
+
+          <%= f.select :deficiency_report_category_id,
+            DeficiencyReport::Category.all.map { |category| [category.name, category.id, category.warning_text.present? ? { "data-warning-popup" => dom_id(category, :warning_popup) } : {}] },
+            { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false },
+            { onChange: "var warningPopupId = this.options[this.selectedIndex].getAttribute('data-warning-popup'); if (warningPopupId) { $('#' + warningPopupId).foundation('open'); }" } %>
+
         <% end %>
         </div>
       <% end %>
@@ -181,14 +185,22 @@
                        target: "_blank"
                      )
                     ) %>
+        </div>
+        <% end %>
+
+        <%= f.submit(class: "button", value: t("custom.user_resources.form.submit_button")) %>
       </div>
     <% end %>
 
-    <%= f.submit(class: "button", value: t("custom.user_resources.form.submit_button")) %>
-    </div>
+    <% DeficiencyReport::Category.where.not(warning_text: "").each do |category| %>
+      <div class="reveal" id="<%= dom_id(category, :warning_popup) %>" data-reveal>
+        <p><%= category.warning_text %></p>
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
     <% end %>
   </main>
-
 
 <% else %>
   <main class="deficiency-report-new">

@@ -44,23 +44,28 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       auth = auth_data || request.env["omniauth.auth"]
 
-      identity = Identity.first_or_create_from_oauth(auth)
-      identity.update!(auth_data: auth)
-      @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
-
-      update_email(auth)
-
-      if save_user
-        identity.update!(user: @user)
-        update_user_address(auth) if auth.extra.raw_info.street_address.present?
-        @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
-        sign_in_and_redirect @user, event: :authentication
-        preexisting_flash = flash[:notice]
-        set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
-        flash[:notice] += " #{preexisting_flash}" if preexisting_flash
+      if prevent_verification_if_identity_taken?(auth, provider)
+        flash[:notice] = "We could not verify your account. Please contact support."
+        redirect_to account_path
       else
-        session["devise.#{provider}_data"] = auth
-        redirect_to new_user_registration_path
+        identity = Identity.first_or_create_from_oauth(auth)
+        identity.update!(auth_data: auth)
+        @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
+
+        update_email(auth)
+
+        if save_user
+          identity.update!(user: @user)
+          update_user_address(auth) if auth.extra.raw_info.street_address.present?
+          @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
+          sign_in_and_redirect @user, event: :authentication
+          preexisting_flash = flash[:notice]
+          set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
+          flash[:notice] += " #{preexisting_flash}" if preexisting_flash
+        else
+          session["devise.#{provider}_data"] = auth
+          redirect_to new_user_registration_path
+        end
       end
     end
 
@@ -71,7 +76,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     def update_email(auth)
       return if auth.info.email == @user.email
 
-      if User.find_by(email: auth.info.email).present?
+      if User.with_hidden.where.not(id: @user.id).find_by(email: auth.info.email).present?
         flash[:notice] = "Email was taken. Please contact support."
       else
         @user.skip_reconfirmation!
@@ -92,7 +97,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
         registered_address_street = RegisteredAddress::Street.where(
           "LOWER(name) = ? AND plz = ?",
-          match[:street_name].gsub(/[,\s]+$/, '').downcase,
+          match[:street_name].downcase.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
           auth_data.extra.raw_info.postal_code
         ).first
 
@@ -108,12 +113,21 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.update!(registered_address: registered_address) if registered_address
 
         @user.update!(
-          street_name: match[:street_name].gsub(/[,\s]+$/, ''),
+          street_name: match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
           street_number: match[:street_number].strip,
           street_number_extension: match[:street_number_extension].strip.presence,
-          city_name: auth_data.extra.raw_info.locality_name,
+          city_name: auth_data.extra.raw_info.locality_name&.capitalize,
           plz: auth_data.extra.raw_info.postal_code
         )
       end
+    end
+
+    def prevent_verification_if_identity_taken?(auth, provider)
+      return false unless current_user.present?
+
+      corresponding_identity = Identity.find_by(provider: provider, uid: auth.uid)
+      return false if corresponding_identity.blank?
+
+      corresponding_identity.user != current_user
     end
 end

@@ -45,7 +45,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       auth = auth_data || request.env["omniauth.auth"]
 
       if prevent_verification_if_identity_taken?(auth, provider)
-        flash[:notice] = "We could not verify your account. Please contact support."
+        flash[:notice] = t("custom.users.omniauth.identity_taken")
         redirect_to account_path
       else
         identity = Identity.first_or_create_from_oauth(auth)
@@ -60,7 +60,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
           sign_in_and_redirect @user, event: :authentication
           preexisting_flash = flash[:notice]
-          set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
+          set_flash_message(:notice, :success, kind: provider_name(provider)) if is_navigational_format?
           flash[:notice] += " #{preexisting_flash}" if preexisting_flash
         else
           session["devise.#{provider}_data"] = auth
@@ -77,11 +77,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       return if auth.info.email == @user.email
 
       if User.with_hidden.where.not(id: @user.id).find_by(email: auth.info.email).present?
-        flash[:notice] = "Email was taken. Please contact support."
+        flash[:notice] = t("custom.users.omniauth.email_taken_html")
       else
         @user.skip_reconfirmation!
         @user.update!(email: auth.info.email)
-        flash[:notice] = "Your email has been updated."
+        flash[:notice] = t("custom.users.omniauth.email_updated", email: auth.info.email)
       end
     end
 
@@ -129,5 +129,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       return false if corresponding_identity.blank?
 
       corresponding_identity.user != current_user
+    end
+
+    def provider_name(provider)
+      return "BundID" if provider == :bund_id
+
+      provider.to_s.capitalize
     end
 end

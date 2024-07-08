@@ -36,9 +36,9 @@
     <div class="main-column">
       <%= render "shared/loader_spinner" %>
       <div class="show-on-small-tablet standalone-sidebar-section margin-bottom">
-        <% if render_custom_content_block?('home_page_sidebar') %>
+        <% if render_custom_content_block?('machmit_jugend_page_sidebar') %>
           <%= render Shared::SidebarCardComponent.new(title: 'Information', icon_name: "info-circle") do |c| %>
-            <%= render_custom_block 'home_page_sidebar' %>
+            <%= render_custom_block 'machmit_jugend_page_sidebar' %>
           <% end %>
         <% end %>
       </div>
@@ -95,7 +95,7 @@
 
     <div class="sidebar">
       <div class="hide-on-small-tablet">
-        <% if render_custom_content_block?('home_page_sidebar') %>
+        <% if render_custom_content_block?('machmit_jugend_page_sidebar') %>
           <%= render Shared::SidebarCardComponent.new(title: "Information", icon_name: "info-circle") do |c| %>
             <%= render_custom_block "machmit_jugend_page_sidebar" %>
           <% end %>

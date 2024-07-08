@@ -20,7 +20,7 @@
         <td><%= "<i class=\"fas fa-#{category.icon}\" style=\"color:#{category.color}\"></i>".html_safe if category.icon %></td>
         <td><%= category.color %></td>
         <td><%= category.name %></td>
-        <td><%= category.warning_text %></td>
+        <td><%= auto_link_already_sanitized_html(wysiwyg(category.warning_text[0..200])) %></td>
         <td>
           <%= render Admin::TableActionsComponent.new(category,
                                                       actions: [:edit, :destroy],

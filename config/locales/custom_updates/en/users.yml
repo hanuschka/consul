@@ -13,6 +13,10 @@ en:
       shared:
         auth_page:
           legend: Design the city according to your ideas! Once registered, you have access to the topics that concern us all at any time - and can actively participate in the projects.
+      omniauth:
+        identity_taken: "We could not verify your account. Please contact us by email."
+        email_taken_html: "The email address stored with your BundID is already in use on Consul.<br>Please change your BundID email address or log in to your existing Consul account."
+        email_updated: "The email address stored with your BundID is different from your Consul email address. We have merged both accounts and changed your Consul email address. You can log in to Consul with this email address in the future: %{email}"
     user_page:
       filters:
         proposals: Proposals

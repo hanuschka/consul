@@ -1,3 +1,4 @@
+<% attrs ||= {} %>
 <li>
-  <%= link_to t("views.pagination.last"), url, remote: remote %>
+  <%= link_to t("views.pagination.last"), url, remote: remote, **attrs %>
 </li>

@@ -29,8 +29,7 @@
 <%= javascript_include_tag "klaro/config.js", defer: true %>
 <%= javascript_include_tag "klaro/klaro.js", defer: true %>
 
-
-<% if Setting["extended_feature.general.enable_google_translate"].present? %>
+<% if extended_feature?("general.enable_google_translate") %>
   <script>
     function loadGoogleTranslateScript() {
       var script = document.createElement('script');
@@ -44,12 +43,8 @@
     }
 
     $(document).on('turbolinks:load', function() {
-      if (!window.google || !window.google.translate) {
-        loadGoogleTranslateScript();
-      } else {
-        loadGoogleTranslateScript();
-        googleTranslateElementInit();
-      }
+      loadGoogleTranslateScript();
+      googleTranslateElementInit();
     });
   </script>
 <% end %>

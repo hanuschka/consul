@@ -1,9 +1,10 @@
 <tr class='projekt-row' aria-expanded=false>
-  <%= form_for(projekt,
+  <%= form_with(
+        model: projekt,
         url: quick_update_admin_projekt_path(projekt),
-        as: :projekt,
-        method: :patch,
-        html: { id: "edit_projekt_#{projekt.id}" }) do |f| %>
+        html: { id: "edit_projekt_#{projekt.id}" }
+    ) do |f| %>
+    <%= hidden_field_tag :page, params[:page] %>
 
     <td class='projekt-level'>
       <div class='projekt-level-title'>

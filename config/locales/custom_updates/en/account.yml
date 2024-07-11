@@ -6,8 +6,9 @@ en:
         edit_details_link: Update personal information
         erase_account_link: Delete account
         settings: Account settings
-        verification_tittle: Account verification
+        verification_title: Account verification
         verification_description: Some participation projects require user verification. By clicking on the button you can start the user verification.
+        verification_with_bund_id_description: Some participation projects require user verification. You can start the user verification by clicking on the button. You must verify yourself with the BundID using a high level of verification, such as an ID card or Elster. Other login methods such as a user name and password are not sufficient.
         personal_settings: Personal settings
         notifications: Notifications
         save_settings: Update

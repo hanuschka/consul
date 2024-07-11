@@ -282,6 +282,7 @@ class User < ApplicationRecord
       confirmed_phone: nil,
       unconfirmed_phone: nil
     )
+    unverify! if verified? #custom
     identities.destroy_all
     remove_roles
     remove_audits #custom

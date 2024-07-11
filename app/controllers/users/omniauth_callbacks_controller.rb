@@ -56,6 +56,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
         if save_user
           identity.update!(user: @user)
+          update_with_oauth_data(auth)
           update_user_address(auth) if auth.extra.raw_info.street_address.present?
           @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
           sign_in_and_redirect @user, event: :authentication
@@ -71,6 +72,16 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     def save_user
       @user.save || @user.save_requiring_finish_signup
+    end
+
+    def update_with_oauth_data(auth)
+      return unless @user.persisted?
+
+      @user.first_name = auth.info&.first_name&.capitalize || @user.first_name
+      @user.last_name = auth.info&.last_name&.capitalize || @user.last_name
+      @user.date_of_birth = (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil) || @user.date_of_birth
+      @user.plz = auth.extra.raw_info&.postal_code || @user.plz
+      @user.save!
     end
 
     def update_email(auth)

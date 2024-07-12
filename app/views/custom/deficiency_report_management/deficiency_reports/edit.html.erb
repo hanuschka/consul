@@ -14,14 +14,6 @@
       </div>
 
       <div>
-        <%= translations_form.text_area :summary,
-                                        rows: 4, maxlength: 200,
-                                        hint: t("proposals.form.proposal_summary_note"),
-                                        style: "margin-bottom: 1rem;",
-                                        label: t('custom.deficiency_reports.form.labels.summary') %>
-      </div>
-
-      <div>
         <%= translations_form.text_area :description,
               class: "html-area #{ck_editor_class(current_user)}",
               label: t('custom.deficiency_reports.form.labels.description')   %>

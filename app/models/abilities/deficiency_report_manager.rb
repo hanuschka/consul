@@ -14,6 +14,8 @@ module Abilities
           !dr.official_answer_approved? &&
           dr.official_answer.present?
       end
+
+      can [:index, :show, :new, :create, :destroy, :update_status, :update_category, :update_officer, :notify_officer_about_new_comments, :update_official_answer, :vote, :order_statuses], DeficiencyReport
     end
   end
 end

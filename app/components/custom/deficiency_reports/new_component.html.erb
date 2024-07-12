@@ -194,7 +194,7 @@
 
     <% DeficiencyReport::Category.where.not(warning_text: "").each do |category| %>
       <div class="reveal" id="<%= dom_id(category, :warning_popup) %>" data-reveal>
-        <p><%= category.warning_text %></p>
+        <p><%= auto_link_already_sanitized_html(wysiwyg(category.warning_text)) %></p>
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>

@@ -208,6 +208,15 @@ en:
       collapse_text:
         show_more: "Show more"
         show_less: "Show less"
+  date:
+    formats:
+      date_only: '%d.%m.%Y'
+      long: '%d. %B %Y'
+  time:
+    formats:
+      date_only: '%d.%m.%Y'
+      date_with_time: '%d.%m.%Y %H:%M'
+      new_date_with_year: "%d. %B %Y"
   tag_names:
     general: General
   formular_answer_images:

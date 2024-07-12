@@ -51,14 +51,15 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         identity = Identity.first_or_create_from_oauth(auth)
         identity.update!(auth_data: auth)
         @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
+        @user.last_stork_level = auth.extra&.raw_info&.verification_level
 
+        update_with_oauth_data(auth)
         update_email(auth)
+        update_user_address(auth) if auth.extra.raw_info.street_address.present?
 
         if save_user
           identity.update!(user: @user)
-          update_with_oauth_data(auth)
-          update_user_address(auth) if auth.extra.raw_info.street_address.present?
-          @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
+          @user.verify! if @user.errors.blank? && @user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
           sign_in_and_redirect @user, event: :authentication
           preexisting_flash = flash[:notice]
           set_flash_message(:notice, :success, kind: provider_name(provider)) if is_navigational_format?
@@ -81,7 +82,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user.last_name = auth.info&.last_name&.capitalize || @user.last_name
       @user.date_of_birth = (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil) || @user.date_of_birth
       @user.plz = auth.extra.raw_info&.postal_code || @user.plz
-      @user.save!
     end
 
     def update_email(auth)
@@ -121,15 +121,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           )
         end
 
-        @user.update!(registered_address: registered_address) if registered_address
-
-        @user.update!(
-          street_name: match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
-          street_number: match[:street_number].strip,
-          street_number_extension: match[:street_number_extension].strip.presence,
-          city_name: auth_data.extra.raw_info.locality_name&.capitalize,
-          plz: auth_data.extra.raw_info.postal_code
-        )
+        @user.registered_address = registered_address
+        @user.street_name = match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß")
+        @user.street_number = match[:street_number].strip
+        @user.street_number_extension = match[:street_number_extension].strip.presence
+        @user.city_name = auth_data.extra.raw_info.locality_name&.capitalize
+        @user.plz = auth_data.extra.raw_info.postal_code
       end
     end
 

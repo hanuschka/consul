@@ -298,27 +298,27 @@ var klaroConfig = {
         //     purposes: ['styling'],
         //     required: true,
         // },
-        // { // uncomment if translate widget is enabled
-        //   name: 'google_translate_accepted',
-        //   default: false,
-        //   purposes: ['translation'],
-        //   translations: {
-        //     en: {
-        //       title: 'Google Translate'
-        //     },
-        //     de: {
-        //       title: 'Google Übersetzer',
-        //     },
-        //   },
-        //   cookies: ['googtrans'],
-        //   callback: function(consent, service) {
-        //     if ( consent == false && document.getElementById("google_translate_element") ) {
-        //       location.reload();
-        //     } else if ( consent == true && !document.getElementById("google_translate_element") ) {
-        //       location.reload();
-        //     }
-        //   }
-        // },
+        { // uncomment if translate widget is enabled
+          name: 'google_translate_accepted',
+          default: false,
+          purposes: ['translation'],
+          translations: {
+            en: {
+              title: 'Google Translate'
+            },
+            de: {
+              title: 'Google Übersetzer',
+            },
+          },
+          cookies: ['googtrans'],
+          callback: function(consent, service) {
+            if ( consent == false && document.getElementById("google_translate_element") ) {
+              location.reload();
+            } else if ( consent == true && !document.getElementById("google_translate_element") ) {
+              location.reload();
+            }
+          }
+        },
         {
             name: 'system',
             title: 'Session cookie',

@@ -97,7 +97,7 @@
           <% end %>
         <% end %>
 
-        <% if current_user && ( current_user.administrator? || current_user.deficiency_report_officer? ) %>
+        <% if can? :update_officer, @deficiency_report %>
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.officer.title"),
             icon_name: "user-cog")) do |c| %>

@@ -2,3 +2,4 @@ de:
   custom:
     shared:
       select: Wählen
+      required: Pflichtfeld

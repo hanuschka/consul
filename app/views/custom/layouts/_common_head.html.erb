@@ -29,7 +29,7 @@
 <%= javascript_include_tag "klaro/config.js", defer: true %>
 <%= javascript_include_tag "klaro/klaro.js", defer: true %>
 
-<% if extended_feature?("general.enable_google_translate") %>
+<% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
   <script>
     function loadGoogleTranslateScript() {
       var script = document.createElement('script');

@@ -2,25 +2,26 @@
   <h2><%= t("omniauth.finish_signup.title") %></h2>
 
   <%= form_for current_user, as: :user, url: do_finish_signup_path, html: { role: "form" } do |f| %>
-    <%= render "shared/errors", resource: current_user %>
-
     <div class="callout" style="background-color:#ee7444;color:#fff;">
       Vielen Dank! Nun folgt der letzte Schritt. Auf diesem Portal benötigen Sie einen Benutzernamen. Dieser wird allen anderen Nutzerinnen und Nutzern angezeigt. Bitte geben Sie einen Benutzernamen in das Eingabefeld ein
     </div>
 
-    <%# if current_user.errors.include? :username %>
-      <%= f.text_field :username %>
-    <%# else %>
+    <% if current_user.errors.include? :username %>
+      <%= f.label :username, nil, style: "display:block" %>
+      <%= f.text_field :username, label: false %>
+    <% else %>
+      <%= Sentry.capture_message("Users::RegistrationsController#finish_signup: errors do not include username") %>
       <%#= f.hidden_field :username %>
-    <%# end %>
+    <% end %>
 
-    <%# if current_user.errors.include? :email %>
+    <% if current_user.errors.include? :email %>
+      <%= Sentry.capture_message("Users::RegistrationsController#finish_signup: erroris include email") %>
       <%#= f.email_field :email %>
-    <%# else %>
+    <% else %>
       <%#= f.hidden_field :email %>
-    <%# end %>
+    <% end %>
 
-    <%= f.submit t("devise_views.users.registrations.new.submit"), class: "button expanded" %>
+    <%= f.submit t("omniauth.finish_signup.submit"), class: "button expanded" %>
     <div class="text-center">
       <%= link_to t("devise_views.users.registrations.new.cancel"), destroy_user_session_path, class: "delete", method: :delete %>
     </div>

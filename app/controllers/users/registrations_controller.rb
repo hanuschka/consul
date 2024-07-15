@@ -45,6 +45,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if current_user.update(sign_up_params)
       # current_user.send_oauth_confirmation_instructions # cli
       flash[:notice] = "Vielen Dank! Sie können das Dialog- und Beteiligungsportal nun nutzen" # cli
+      current_user.verify! if current_user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
       sign_in_and_redirect current_user, event: :authentication
     else
       render :finish_signup

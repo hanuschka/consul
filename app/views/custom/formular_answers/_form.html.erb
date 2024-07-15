@@ -7,8 +7,11 @@
       <% label_class.push("is-invalid-label") if invalid_field_class %>
 
       <%= label_tag "formular_answer[answers][#{ff.key}]", ff.name, class: label_class.join(" ") %>
-      <%= content_tag(:small, t('custom.shared.required')) %>
-      <br>
+
+      <% if ff.required? %>
+        <%= content_tag(:small, t("custom.shared.required")) %>
+        <br>
+      <% end %>
       <span class="help-text"><%= ff.description %></span>
 
       <% if ff.kind.in? ["string", "email"] %>

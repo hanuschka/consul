@@ -3,7 +3,7 @@ class DeficiencyReportManagement::StatusesController < DeficiencyReportManagemen
   load_and_authorize_resource :status, class: "DeficiencyReport::Status", except: :show
 
   def index
-    @statuses = DeficiencyReport::Status.all.order(given_order: :asc)
+    @statuses = DeficiencyReport::Status.all
   end
 
   def new
@@ -47,6 +47,9 @@ class DeficiencyReportManagement::StatusesController < DeficiencyReportManagemen
   private
 
   def status_params
-    params.require(:deficiency_report_status).permit(:color, :icon, translation_params(DeficiencyReport::Status))
+    params.require(:deficiency_report_status).permit(
+      :color, :icon, :notice_text,
+      translation_params(DeficiencyReport::Status)
+    )
   end
 end

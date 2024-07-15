@@ -1,9 +1,7 @@
 namespace :deficiency_report_management do
   root to: "deficiency_reports#index"
 
-  resources :categories, only: %i[index new create edit update destroy]
   resources :settings, only: :index
-  resources :areas, except: :show
 
   resources :deficiency_reports, except: [:new, :create] do
     resources :audits, only: :show, controller: "deficiency_report_audits"
@@ -19,6 +17,18 @@ namespace :deficiency_report_management do
   resources :statuses, only: %i[index new create edit update destroy] do
     collection do
       post "order_statuses"
+    end
+  end
+
+  resources :categories, only: %i[index new create edit update destroy] do
+    collection do
+      post "order_categories"
+    end
+  end
+
+  resources :areas, except: :show do
+    collection do
+      post "order_areas"
     end
   end
 end

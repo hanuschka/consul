@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_12_102030) do
+ActiveRecord::Schema.define(version: 2024_07_16_130853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1340,6 +1340,7 @@ ActiveRecord::Schema.define(version: 2024_07_12_102030) do
     t.float "altitude"
     t.bigint "projekt_phase_id"
     t.bigint "deficiency_report_area_id"
+    t.jsonb "geocoder_data", default: {}
     t.index ["deficiency_report_area_id"], name: "index_map_locations_on_deficiency_report_area_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"

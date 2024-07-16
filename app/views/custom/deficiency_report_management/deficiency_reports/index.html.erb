@@ -17,17 +17,22 @@
   <table>
     <thead>
       <tr>
-        <th class="text-center"><%= t("admin.resources.index.id") %></th>
-        <th><%= t("custom.admin.deficiency_reports.index.title") %></th>
-        <th><%= t("custom.admin.deficiency_reports.index.author") %></th>
-        <th><%= t("custom.admin.deficiency_reports.index.official_answer") %></th>
-        <th><%= t("custom.admin.deficiency_reports.index.category_name") %></th>
-        <th><%= t("custom.admin.deficiency_reports.index.status_title") %></th>
-        <th><%= t("custom.admin.deficiency_reports.index.officer_name") %></th>
-        <th><%= t("custom.admin.deficiency_reports.index.officer_email") %></th>
+        <th class="text-center"><%= t("custom.admin.deficiency_reports.index.id") %></th>
         <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
           <th><%= t("custom.admin.deficiency_reports.index.admin_accepted") %></th>
         <% end %>
+        <th><%= t("custom.admin.deficiency_reports.index.created_at") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.title") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.author") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.status_title") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.approximater_location") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.category_name") %></th>
+        <th><%= t("custom.admin.deficiency_reports.index.officer_name") %></th>
+
+        <!--
+        <th><%#= t("custom.admin.deficiency_reports.index.official_answer") %></th>
+        <th><%#= t("custom.admin.deficiency_reports.index.officer_email") %></th>
+        -->
         <th><%= t("custom.admin.deficiency_reports.index.actions") %></th>
       </tr>
     </thead>

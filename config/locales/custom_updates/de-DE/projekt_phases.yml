@@ -6,6 +6,7 @@ de:
         voting_phase: An Abstimmung teilnehmen
         question_phase: An Kurzumfrage teilnehmen
         budget_phase: Jetzt mitmachen
+        formular_phase: Jetzt teilnehmen
       permission_problem:
         new_button_component:
           shared:

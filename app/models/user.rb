@@ -132,7 +132,6 @@ class User < ApplicationRecord
     oauth_user            = User.find_by(email: oauth_email) if oauth_email_confirmed
 
     user = oauth_user || User.new(
-      username:  auth.info.name.split.map(&:capitalize).join(" ") || [auth.info&.first_name&.capitalize , auth.info&.last_name&.capitalize].join(" ").presence || auth.uid,
       first_name: auth.info&.first_name&.capitalize,
       last_name: auth.info&.last_name&.capitalize,
       date_of_birth:  (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil),
@@ -282,6 +281,7 @@ class User < ApplicationRecord
       confirmed_phone: nil,
       unconfirmed_phone: nil
     )
+    unverify! if verified? #custom
     identities.destroy_all
     remove_roles
     remove_audits #custom

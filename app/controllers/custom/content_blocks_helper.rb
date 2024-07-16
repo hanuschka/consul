@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "helpers", "content_blocks_helper").to_s
 
 module ContentBlocksHelper
-  def render_custom_block(key, custom_prefix: nil, default_content: nil)
+  def render_custom_block(key, custom_prefix: nil, default_content: nil, return_path: nil)
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
     block_body = block&.body.presence || default_content || ""
@@ -11,9 +11,9 @@ module ContentBlocksHelper
     end
 
     if current_user&.administrator?
-      edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_admin_site_customization_content_block_path(block, return_to: request.path) )
+      edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_admin_site_customization_content_block_path(block, return_to: return_path || request.path) )
     elsif @custom_page&.projekt && current_user&.projekt_manager?(@custom_page&.projekt)
-      edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: request.path) )
+      edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: return_path || request.path) )
     end
 
     if block_body.present? && current_user && current_user.email.in?(@partner_emails)

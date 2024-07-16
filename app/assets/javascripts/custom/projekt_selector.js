@@ -454,14 +454,6 @@
       }
     },
 
-    selectProjektSentiment: function($projektSentiment) {
-      this.setBannerColor($projektSentiment.data('sentimentColor'));
-    },
-
-    setBannerColor: function(color) {
-      $(".js-user-resources-form--banner-editor").css("background-color", color);
-    },
-
     clearBannerColor: function() {
       $(".js-user-resources-form--banner-editor").css("background-color", "");
     },
@@ -487,10 +479,6 @@
 
       $("body").on("click", ".js-select-projekt-label", function(event) {
         App.ProjektSelector.selectLabel($(event.currentTarget));
-      });
-
-      $("body").on("click", ".js-select-projekt-sentiment", function(event) {
-        App.ProjektSelector.selectProjektSentiment($(event.currentTarget));
       });
 
       App.ProjektSelector.preselectProjektPhase();

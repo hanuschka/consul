@@ -9,6 +9,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def index
     @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
+    @deficiency_reports = @deficiency_reports.order(id: :desc)
 
     unless params[:format] == "csv"
       @deficiency_reports = @deficiency_reports.page(params[:page].presence || 0).per(params[:limit].presence || 20)

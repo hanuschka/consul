@@ -4,14 +4,14 @@
 
 <h2><%= t("admin.deficiency_reports.index.title") %></h2>
 
+<%= render(
+  Shared::TextSearchFormComponent.new(
+    i18n_namespace: "custom.deficiency_reports.index.search_form"
+  )
+) %>
+
 <% if @deficiency_reports.any? %>
   <h3><%= page_entries_info @deficiency_reports %></h3>
-
-  <%= render(
-    Shared::TextSearchFormComponent.new(
-      i18n_namespace: "custom.deficiency_reports.index.search_form"
-    )
-  ) %>
 
   <%= link_to t("custom.shared.download"),
         deficiency_report_management_deficiency_reports_path(csv_params),

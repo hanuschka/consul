@@ -3,9 +3,12 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   include MapLocationAttributes
   include ImageAttributes
   include DocumentAttributes
+  include Search
+
+  load_and_authorize_resource
 
   def index
-    @deficiency_reports = DeficiencyReport.all.order(id: :desc)
+    @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
 
     unless params[:format] == "csv"
       @deficiency_reports = @deficiency_reports.page(params[:page].presence || 0).per(params[:limit].presence || 20)

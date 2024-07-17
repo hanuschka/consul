@@ -1,5 +1,6 @@
 // Update styles of standard search form
 
+
 #proposals,
 #debates,
 #deficiency-reports {
@@ -31,6 +32,16 @@
 			height: 2.25rem;
 			line-height: 2.25rem;
 			padding-top: 0;
+    }
+  }
+}
+
+.admin-content {
+  #search_form {
+    width: 40%;
+
+    .input-group-button {
+      display: none;
     }
   }
 }

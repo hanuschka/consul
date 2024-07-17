@@ -176,6 +176,8 @@ de:
         report_text: Melden Sie uns diesen Beitrag bei unangebrachten Inhalt oder bei Urheberrechtsverletzungen.
         report_title: Melden
       download: Herunterladen
+      sort_by: Sortieren nach
+      filter_by: Filtern nach
     tag_names:
       projekt: Weitere %{resources} zu diesem Projekt
     tags:

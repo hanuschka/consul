@@ -2,6 +2,8 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   has_one :budget, foreign_key: :projekt_phase_id,
     dependent: :restrict_with_exception, inverse_of: :projekt_phase
 
+  after_create :create_map_location
+
   def phase_activated?
     # projekt.budget.present?
     active?
@@ -19,8 +21,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     5
   end
 
+  def resource_count
+    budget&.investments&.count
+  end
+
   def admin_nav_bar_items
-    %w[duration naming restrictions settings map]
+    %w[duration naming restrictions settings map age_ranges_for_stats]
   end
 
   def safe_to_destroy?

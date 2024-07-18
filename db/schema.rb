@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_28_130640) do
+ActiveRecord::Schema.define(version: 2024_07_12_102030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -50,7 +50,14 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "activities", id: :serial, force: :cascade do |t|
@@ -90,22 +97,33 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.index ["user_id"], name: "index_administrators_on_user_id"
   end
 
-  create_table "age_restriction_translations", force: :cascade do |t|
-    t.bigint "age_restriction_id", null: false
+  create_table "age_range_projekt_phases", force: :cascade do |t|
+    t.bigint "age_range_id"
+    t.bigint "projekt_phase_id"
+    t.string "used_for", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["age_range_id"], name: "index_age_range_projekt_phases_on_age_range_id"
+    t.index ["projekt_phase_id"], name: "index_age_range_projekt_phases_on_projekt_phase_id"
+  end
+
+  create_table "age_range_translations", force: :cascade do |t|
+    t.bigint "age_range_id", null: false
     t.string "locale", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
-    t.index ["age_restriction_id"], name: "index_age_restriction_translations_on_age_restriction_id"
-    t.index ["locale"], name: "index_age_restriction_translations_on_locale"
+    t.index ["age_range_id"], name: "index_age_range_translations_on_age_range_id"
+    t.index ["locale"], name: "index_age_range_translations_on_locale"
   end
 
-  create_table "age_restrictions", force: :cascade do |t|
+  create_table "age_ranges", force: :cascade do |t|
     t.integer "order"
     t.integer "min_age"
     t.integer "max_age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "only_for_stats", default: false
   end
 
   create_table "ahoy_events", force: :cascade do |t|
@@ -158,6 +176,15 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
   end
 
+  create_table "api_clients", force: :cascade do |t|
+    t.string "name"
+    t.integer "registration_status"
+    t.string "auth_token"
+    t.string "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "audits", id: :serial, force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
@@ -178,31 +205,6 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
-  end
-
-  create_table "bam_street_polls", force: :cascade do |t|
-    t.bigint "bam_street_id"
-    t.bigint "poll_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bam_street_id"], name: "index_bam_street_polls_on_bam_street_id"
-    t.index ["poll_id"], name: "index_bam_street_polls_on_poll_id"
-  end
-
-  create_table "bam_street_projekt_phases", force: :cascade do |t|
-    t.bigint "bam_street_id"
-    t.bigint "projekt_phase_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bam_street_id"], name: "index_bam_street_projekt_phases_on_bam_street_id"
-    t.index ["projekt_phase_id"], name: "index_bam_street_projekt_phases_on_projekt_phase_id"
-  end
-
-  create_table "bam_streets", force: :cascade do |t|
-    t.string "name"
-    t.integer "plz"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "banner_sections", id: :serial, force: :cascade do |t|
@@ -480,8 +482,8 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.text "description_informing"
     t.string "voting_style", default: "knapsack"
     t.boolean "published"
-    t.boolean "hide_money", default: false
     t.bigint "projekt_id"
+    t.boolean "hide_money", default: false
     t.integer "max_number_of_winners", default: 0
     t.bigint "projekt_phase_id"
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
@@ -645,6 +647,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.string "on_behalf_of"
     t.bigint "projekt_phase_id"
     t.bigint "sentiment_id"
+    t.string "video_url"
     t.index ["author_id", "hidden_at"], name: "index_debates_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_debates_on_author_id"
     t.index ["cached_votes_down"], name: "index_debates_on_cached_votes_down"
@@ -661,11 +664,20 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.index ["tsv"], name: "index_debates_on_tsv", using: :gin
   end
 
+  create_table "deficiency_report_areas", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "given_order"
+  end
+
   create_table "deficiency_report_categories", force: :cascade do |t|
     t.string "color"
     t.string "icon"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "given_order"
+    t.text "warning_text", default: ""
   end
 
   create_table "deficiency_report_category_translations", force: :cascade do |t|
@@ -676,6 +688,13 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.string "name"
     t.index ["deficiency_report_category_id"], name: "index_d61b31ba5bbffdea13be0cd92b8cb671cb6d18b5"
     t.index ["locale"], name: "index_deficiency_report_category_translations_on_locale"
+  end
+
+  create_table "deficiency_report_managers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_deficiency_report_managers_on_user_id"
   end
 
   create_table "deficiency_report_officers", force: :cascade do |t|
@@ -702,6 +721,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "given_order"
+    t.text "notice_text", default: ""
   end
 
   create_table "deficiency_report_translations", force: :cascade do |t|
@@ -737,11 +757,16 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.bigint "hot_score", default: 0
     t.string "on_behalf_of"
     t.datetime "assigned_at"
+    t.bigint "deficiency_report_area_id"
+    t.boolean "notify_officer_about_new_comments", default: false
+    t.datetime "notified_officer_about_new_comments_datetime"
+    t.boolean "admin_accepted", default: false
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
     t.index ["cached_votes_total"], name: "index_deficiency_reports_on_cached_votes_total"
     t.index ["cached_votes_up"], name: "index_deficiency_reports_on_cached_votes_up"
+    t.index ["deficiency_report_area_id"], name: "index_deficiency_reports_on_deficiency_report_area_id"
     t.index ["deficiency_report_category_id"], name: "index_deficiency_reports_on_deficiency_report_category_id"
     t.index ["deficiency_report_officer_id"], name: "index_deficiency_reports_on_deficiency_report_officer_id"
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
@@ -838,11 +863,39 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.index ["user_id"], name: "index_follows_on_user_id"
   end
 
+  create_table "formular_answer_documents", force: :cascade do |t|
+    t.bigint "formular_answer_id"
+    t.string "formular_field_key"
+    t.string "title", limit: 80
+    t.string "attachment_file_name"
+    t.string "attachment_content_type"
+    t.bigint "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["formular_answer_id"], name: "index_formular_answer_documents_on_formular_answer_id"
+  end
+
+  create_table "formular_answer_images", force: :cascade do |t|
+    t.bigint "formular_answer_id"
+    t.string "formular_field_key"
+    t.string "title", limit: 80
+    t.string "attachment_file_name"
+    t.string "attachment_content_type"
+    t.bigint "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["formular_answer_id"], name: "index_formular_answer_images_on_formular_answer_id"
+  end
+
   create_table "formular_answers", force: :cascade do |t|
     t.jsonb "answers", default: {}, null: false
     t.bigint "formular_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "submitter_id"
+    t.string "original_submitter_email"
     t.index ["formular_id"], name: "index_formular_answers_on_formular_id"
   end
 
@@ -936,6 +989,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "auth_data", default: ""
     t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
@@ -1248,7 +1302,6 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.boolean "show_by_default", default: false
     t.boolean "transparent", default: false
     t.integer "protocol", default: 0
-    t.string "layer_defs"
     t.string "mappable_type"
     t.bigint "mappable_id"
     t.decimal "opacity", precision: 2, scale: 1, default: "1.0"
@@ -1269,6 +1322,8 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
     t.bigint "projekt_phase_id"
+    t.bigint "deficiency_report_area_id"
+    t.index ["deficiency_report_area_id"], name: "index_map_locations_on_deficiency_report_area_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
@@ -1475,6 +1530,8 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.boolean "most_voted", default: false
     t.boolean "open_answer", default: false
     t.string "more_info_link"
+    t.integer "next_question_id"
+    t.string "more_info_iframe"
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -1508,7 +1565,11 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.boolean "multiple", default: false
     t.integer "given_order"
     t.boolean "show_hint_callout", default: true
+    t.integer "parent_question_id"
+    t.boolean "bundle_question", default: false
+    t.integer "next_question_id"
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
+    t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
     t.index ["tsv"], name: "index_poll_questions_on_tsv", using: :gin
@@ -1604,9 +1665,8 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.boolean "show_summary_instead_of_questions", default: false
     t.boolean "show_on_home_page", default: true
     t.boolean "show_on_index_page", default: true
-    t.boolean "bam_street_restricted", default: false
-    t.boolean "show_individual_stats_per_answer", default: false
     t.bigint "projekt_phase_id"
+    t.boolean "wizard_mode", default: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -1658,7 +1718,6 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.datetime "end_datetime"
-    t.string "summary"
     t.bigint "projekt_phase_id"
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
@@ -1770,7 +1829,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "phase_tab_name"
-    t.text "new_resource_button_name"
+    t.text "cta_button_name"
     t.text "resource_form_title"
     t.text "projekt_selector_hint"
     t.string "labels_name"
@@ -1789,13 +1848,14 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.datetime "updated_at", null: false
     t.boolean "active"
     t.boolean "verification_restricted", default: false
-    t.bigint "age_restriction_id"
+    t.bigint "age_range_id"
     t.string "registered_address_grouping_restriction", default: ""
     t.jsonb "registered_address_grouping_restrictions", default: {}, null: false
     t.integer "given_order"
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
-    t.index ["age_restriction_id"], name: "index_projekt_phases_on_age_restriction_id"
+    t.boolean "guest_participation_allowed", default: false
+    t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
   end
@@ -1911,7 +1971,13 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.string "special_name"
     t.boolean "show_start_date_in_frontend", default: true
     t.boolean "show_end_date_in_frontend", default: true
+    t.integer "top_level_projekt_id"
+    t.tsvector "tsv"
+    t.string "page_view_code"
+    t.json "cached_params_for_page_content"
+    t.boolean "new_content_block_mode"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
+    t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 
   create_table "proposal_notifications", id: :serial, force: :cascade do |t|
@@ -1967,6 +2033,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.string "on_behalf_of"
     t.bigint "projekt_phase_id"
     t.bigint "sentiment_id"
+    t.text "official_answer", default: ""
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_up"], name: "index_proposals_on_cached_votes_up"
@@ -2208,6 +2275,8 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key"
+    t.integer "projekt_id"
+    t.integer "position"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
   end
 
@@ -2309,6 +2378,15 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.index ["hidden_at"], name: "index_topics_on_hidden_at"
   end
 
+  create_table "unregistered_newsletter_subscribers", force: :cascade do |t|
+    t.string "email"
+    t.boolean "confirmed", default: false
+    t.string "confirmation_token"
+    t.string "unsubscribe_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_individual_group_values", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "individual_group_value_id"
@@ -2388,25 +2466,27 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.integer "plz"
     t.string "city_name"
     t.string "unique_stamp"
-    t.boolean "custom_newsletter", default: false
-    t.string "location"
-    t.integer "bam_letter_verification_code"
-    t.string "house_number"
-    t.datetime "bam_letter_verification_code_sent_at"
-    t.string "bam_unique_stamp"
-    t.bigint "bam_street_id"
-    t.string "keycloak_link"
     t.boolean "adm_email_on_new_comment", default: false
     t.boolean "adm_email_on_new_proposal", default: false
     t.boolean "adm_email_on_new_debate", default: false
     t.boolean "adm_email_on_new_deficiency_report", default: false
     t.bigint "city_street_id"
     t.boolean "adm_email_on_new_manual_verification", default: false
-    t.text "keycloak_id_token", default: ""
     t.bigint "registered_address_id"
     t.string "street_number_extension"
-    t.boolean "reverify", default: true
+    t.boolean "prefer_wide_resources_list_view_mode"
+    t.boolean "guest", default: false
+    t.boolean "show_in_users_overview", default: true
+    t.boolean "adm_email_on_new_topic", default: false
+<<<<<<< HEAD
+    t.string "temporary_auth_token"
+    t.datetime "temporary_auth_token_valid_until"
+    t.string "auth_image_link"
+=======
+    t.string "auth_redirect_path", default: ""
+    t.string "last_stork_level"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
+>>>>>>> setup_project
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -2484,6 +2564,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
     t.integer "max_votes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_votes_per_answer"
   end
 
   create_table "votes", id: :serial, force: :cascade do |t|
@@ -2541,11 +2622,10 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "administrators", "users"
-  add_foreign_key "bam_street_polls", "bam_streets"
-  add_foreign_key "bam_street_polls", "polls"
-  add_foreign_key "bam_street_projekt_phases", "bam_streets"
-  add_foreign_key "bam_street_projekt_phases", "projekt_phases"
+  add_foreign_key "age_range_projekt_phases", "age_ranges"
+  add_foreign_key "age_range_projekt_phases", "projekt_phases"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"
@@ -2561,7 +2641,9 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officers", "users"
+  add_foreign_key "deficiency_reports", "deficiency_report_areas"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
   add_foreign_key "deficiency_reports", "deficiency_report_statuses"
@@ -2570,6 +2652,8 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
   add_foreign_key "failed_census_calls", "users"
   add_foreign_key "flags", "users"
   add_foreign_key "follows", "users"
+  add_foreign_key "formular_answer_documents", "formular_answers"
+  add_foreign_key "formular_answer_images", "formular_answers"
   add_foreign_key "formular_answers", "formulars"
   add_foreign_key "formular_fields", "formulars"
   add_foreign_key "formular_follow_up_letter_recipients", "formular_answers"
@@ -2589,6 +2673,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
+  add_foreign_key "map_locations", "deficiency_report_areas"
   add_foreign_key "map_locations", "deficiency_reports"
   add_foreign_key "map_locations", "projekt_phases"
   add_foreign_key "map_locations", "projekts"
@@ -2629,7 +2714,7 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
   add_foreign_key "projekt_phase_settings", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "projekt_phases"
   add_foreign_key "projekt_phase_subscriptions", "users"
-  add_foreign_key "projekt_phases", "age_restrictions"
+  add_foreign_key "projekt_phases", "age_ranges"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_questions", "projekt_phases"
   add_foreign_key "projekt_settings", "projekts"
@@ -2651,7 +2736,6 @@ ActiveRecord::Schema.define(version: 2023_08_28_130640) do
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"
   add_foreign_key "user_individual_group_values", "users"
-  add_foreign_key "users", "bam_streets"
   add_foreign_key "users", "city_streets"
   add_foreign_key "users", "geozones"
   add_foreign_key "users", "registered_addresses"

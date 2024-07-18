@@ -8,7 +8,7 @@
 
   <%= render "shared/globalize_locales", resource: @projekt.page %>
 
-  <%= translatable_form_for [:admin, @projekt.page], html: { class: "edit_page" } do |f| %>
+  <%= translatable_form_for [@namespace, @projekt.page], html: { class: "edit_page" } do |f| %>
     <%= render "shared/errors", resource: @projekt.page %>
 
     <hr>
@@ -36,11 +36,14 @@
 
     <hr>
 
-    <%= render Images::NestedComponent.new(f, block_id: "projekt_page_banner") %>
+    <%= render Images::NestedComponent.new(f, block_id: "projekt_page") %>
 
     <%= f.translatable_fields do |translations_form| %>
       <div>
         <%= translations_form.text_field :title %>
+      </div>
+      <div>
+        <%= translations_form.text_field :subtitle %>
       </div>
       <div>
         <%= translations_form.text_area :content, class: "html-area tall-editor #{ck_editor_class(current_user)}" %>

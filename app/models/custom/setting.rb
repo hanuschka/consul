@@ -4,7 +4,7 @@ class Setting < ApplicationRecord
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type
-    if %w[feature process proposals map html homepage uploads projekts sdg].include? prefix
+    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage].include? prefix
       prefix
     elsif %w[remote_census].include? prefix
       key.rpartition(".").first
@@ -22,6 +22,17 @@ class Setting < ApplicationRecord
   end
 
   class << self
+    def all_settings_hash
+      unless Current.settings.present?
+        Current.settings = Setting.all.pluck(:key, :value).to_h
+      end
+
+      Current.settings
+    end
+
+    def [](key)
+      all_settings_hash[key]
+    end
 
     def defaults
       {
@@ -30,6 +41,7 @@ class Setting < ApplicationRecord
         "feature.google_login": false,
         "feature.twitter_login": false,
         "feature.wordpress_login": false,
+        "feature.bund_id_login": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": false,
@@ -48,6 +60,7 @@ class Setting < ApplicationRecord
         "feature.graphql_api": true,
         "feature.sdg": false,
         "feature.machine_learning": false,
+        "feature.matomo": false,
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
@@ -150,6 +163,10 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
+        "welcomepage.usage_stats": true,
+        "welcomepage.platform_activity": true,
+        "welcomepage.newsletter_subscription": false,
+
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
@@ -162,6 +179,9 @@ class Setting < ApplicationRecord
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,
         "deficiency_reports.enable_geoman_controls_in_maps": true,
+        "deficiency_reports.admin_acceptance_required": false,
+        "deficiency_reports.document_upload": true,
+        "deficiency_reports.external_video": true,
 
         # "extended_feature.general.elasticsearch": false,
 
@@ -169,10 +189,17 @@ class Setting < ApplicationRecord
         "extended_feature.general.extended_editor_for_users": true,
         "extended_feature.general.language_switcher_in_menu": false,
         "extended_feature.general.enable_projekt_events_page": false,
+        "extended_feature.general.enable_investments_overview": false,
         "extended_feature.general.enable_google_translate": false,
-        "extended_option.general.title": 'Öffentlichkeitsbeteiligung',
-        "extended_option.general.subtitle": 'in der Stadt CONSUL',
-        "extended_option.general.launch_date": '',
+        "extended_feature.general.enable_old_design": true,
+        "extended_feature.general.use_white_top_navigation_text": false,
+        "extended_feature.general.users_overview_page": true,
+        "extended_feature.general.show_guest_login_links": false,
+        "extended_option.general.title": "Öffentlichkeitsbeteiligung",
+        "extended_option.general.subtitle": "in der Stadt CONSUL",
+        "extended_option.general.launch_date": "",
+        "extended_option.general.homepage_button_text": "",
+        "extended_option.general.homepage_button_link": "",
 
         "extended_feature.gdpr.gdpr_conformity": true,
         "extended_feature.gdpr.link_out_warning": true,
@@ -226,7 +253,7 @@ class Setting < ApplicationRecord
 
         "extra_fields.registration.extended": false,
         "extra_fields.registration.check_documents": false,
-        "extra_fields.verification.check_documents": false,
+        "extra_fields.verification.check_documents": false
       }
     end
 
@@ -236,6 +263,18 @@ class Setting < ApplicationRecord
 
     def destroy_obsolete
       Setting.all.each{ |setting| setting.destroy unless defaults.keys.include?(setting.key.to_sym) }
+    end
+
+    def old_design_enabled?
+      enabled?("extended_feature.general.enable_old_design")
+    end
+
+    def new_design_enabled?
+      !old_design_enabled?
+    end
+
+    def enabled?(key)
+      self[key] == "active"
     end
   end
 end

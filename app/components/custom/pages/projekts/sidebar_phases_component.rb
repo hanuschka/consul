@@ -4,12 +4,12 @@ class Pages::Projekts::SidebarPhasesComponent < ApplicationComponent
 
   def initialize(projekt)
     @projekt = projekt
-    @phases = projekt.projekt_phases.active.sorted
+    @phases = projekt.projekt_phases.includes(:translations).active.sorted
     @milestone_phase = projekt.milestone_phases.first
   end
 
   def render?
-    phases.any?
+    @projekt.show_start_date_in_frontend? || @projekt.show_end_date_in_frontend?
   end
 
   private

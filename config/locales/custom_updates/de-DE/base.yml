@@ -1,23 +1,36 @@
 de:
   custom:
+    common:
+      information: Information
+      share: Teilen
+      back_to: "Zurück zu %{to}"
+      fixed_tabs:
+        content: Inhalt
+        comments: Kommentare
+        author: Autor
     account:
       settings:
-        email_digest: Erhalten Sie eine Zusammenfassung der Benachrichtigungen zu Vorschlägen
-        email_on_comment: E-Mail-Benachrichtigung erhalten, bei Kommentare zu meinen Aktivitäten
-        email_on_comment_reply: E-Mail-Benachrichtigung erhalten, bei Antworten auf meine Kommentare
-        email_on_direct_message: Private Nachrichten per Mail zulassen
-        newsletter: E-Mail-Benachrichtigung erhalten, bei wichtigen System-Infos
+        email_digest: E-Mail-Erinnerung bei ungelesenen Benachrichtigungen
+        email_on_comment: Kommentare zu meinen Aktivitäten
+        email_on_comment_reply: Antworten auf meine Kommentare
+        email_on_direct_message: Private Nachrichten anderer Nutzer*innen
+        show_in_users_overview: Konto in der Nutzerübersicht anzeigen
+        newsletter: Newsletter und System-E-Mails
+        newsletter_on_home_page: Jetzt abonnieren
         public_activity: Meine Aktivität veröffentlichen
-        public_interests: Vorschläge, denen ich folge, veröffentlichen
-        adm_email_on_new_comment: E-Mail-Benachrichtigung erhalten nach jedem neuen Kommentar
-        adm_email_on_new_proposal: E-Mail-Benachrichtigung erhalten nach jedem neuen Vorschlag
-        adm_email_on_new_debate: E-Mail-Benachrichtigung erhalten nach jedem neuen Diskussionsbeitrag
-        adm_email_on_new_deficiency_report: E-Mail-Benachrichtigung erhalten nach jeder neuen Mangelmeldung
-        adm_email_on_new_manual_verification: E-Mail-Benachrichtigung erhalten nach jeder neuen Nutzerverifizierung
+        public_interests: Gefolgte Beiträge veröffentlichen
+        adm_email_on_new_comment: Neue Kommentare
+        adm_email_on_new_proposal: Neue Vorschläge
+        adm_email_on_new_debate: Neue Diskussionsbeiträge
+        adm_email_on_new_deficiency_report: Neue Mangelmeldungen
+        adm_email_on_new_manual_verification: Neue Nutzerverifizierungen
+        adm_email_on_new_topic: Neue Themen
       show:
         user_permission_votes: An Abstimmungen teilnehmen
         admin_notifications: Admin Benachrichtigungen
         user_groups_title: Individuelle Gruppen
+        hard_user_groups_title: Starke Gruppen
+        soft_user_groups_title: Schwache Gruppen
     boolean:
       "yes": "ja"
       "no": "nein"
@@ -40,6 +53,9 @@ de:
     helpers:
       select:
         prompt: Bitte wählen
+        gender_prompt: Geschlecht (bitte wählen)
+        address_prompt: Wohnort (bitte wählen)
+        document_prompt: Offizielles Dokument (bitte wählen)
         not_in_list: Nicht in der Liste enthalten
     gdpr_notice:
       accept: Akzeptieren
@@ -73,7 +89,7 @@ de:
           only_geozones: Nur Bürger:innen des Stadtteils
           only_streets: Nur Bürger:innen aus Straße
           show_more: Mehr anzeigen
-          title: Partizipation
+          title: Gebiet
     images:
       form:
         image_name: Name des Titelbildes
@@ -85,12 +101,15 @@ de:
         impressum: Impressum
         statistic_cookies_settings: Cookie Einstellungen
         contact_us: Kontaktieren Sie uns
+        sign_in_as_guest: Melden Sie sich als Gast an
+        sign_out_as_guest: Melden Sie sich als Gast ab
       header:
         account_link: Konto
         admin_link: Administration
         home_link: Start Seite
         projekt_events_link: Veranstaltungen
         projekt_management: Projektmanager
+        deficiency_report_management: Mängelmelder
         notification_item:
           no_notifications: Keine Benachrichtigungen
         title_html: Öffentlichkeitsbeteiligung
@@ -100,6 +119,8 @@ de:
       debates: Diskussionen
       polls: Abstimmungen
       proposals: Vorschläge
+    milestones:
+      collapse_title: Meilensteine - von der Verwaltung gesetzt (%{count})
     pages:
       impressum:
         title: Impressum
@@ -155,8 +176,14 @@ de:
         report_text: Melden Sie uns diesen Beitrag bei unangebrachten Inhalt oder bei Urheberrechtsverletzungen.
         report_title: Melden
       download: Herunterladen
+      sort_by: Sortieren nach
+      filter_by: Filtern nach
     tag_names:
       projekt: Weitere %{resources} zu diesem Projekt
+    tags:
+      remaining_count:
+        one: "+%{count} Tag"
+        other: "+%{count} Tags"
     users:
       login_to_vote: Sie müssen sich %{signin} oder %{signup}, um teilnehmen zu können
       verify_account_link_short: verifizieren
@@ -175,8 +202,36 @@ de:
       current_polls: Laufende Abstimmungen
       start_debate: Diskussion starten
       start_entry: + Beitrag erstellen
-      start_proposal: Vorschlag erstellen
+      start_proposal: Eigenen Vorschlag erstellen
       user_entries: Neueste Beiträge
+      latest_activity:
+        title: Meine Aktivität
+        all_activity_link: Meine gesamte Aktivität anzeigen
+        filters:
+          proposals: Vorschläge
+          debates: Diskussionen
+          budget_investments: Investitionsvorschläge
+          comments: Kommentare
+          follows: Folge ich
+      resource_count:
+        projekts: Projekte
+        proposals: Vorschläge
+        comments: Kommentare
+        debates: Diskussionen
+        polls: Abstimmungen
+      sidebar:
+        information:
+          title: Information
+        users:
+          title: Nutzer*innen
+          sign_in: Jetzt anmelden
+        activity:
+          title: Aktivität
+        newsletter:
+          title: Newsletter
+          cta: Nicht registriert? Jetzt abonnieren
+          submit: Anmelden
+
     welcome_launch:
       p1: Hier entsteht die neue Beteiligungsplattform der Stadt %{org_name}
       p2: Unser Go-Live ist am %{date}!
@@ -186,6 +241,18 @@ de:
         show_less: "Zeige weniger"
   date:
     formats:
+      date_only: '%d.%m.%Y'
       long: '%d. %B %Y'
+  time:
+    formats:
+      date_only: '%d.%m.%Y'
+      date_with_time: '%d.%m.%Y %H:%M'
+      new_date_with_year: "%d. %B %Y"
   tag_names:
     general: General
+  formular_answer_images:
+    form:
+      add_new_image: Bild hinzufügen
+    errors:
+      messages:
+        in_between: muss zwischen %{min} und %{max} sein

@@ -1,4 +1,6 @@
 class ProjektEvent < ApplicationRecord
+  include Notifiable
+
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id" # TODO: remove column after data migration con1538
 
   delegate :projekt, to: :projekt_phase
@@ -7,7 +9,7 @@ class ProjektEvent < ApplicationRecord
   validates :title, presence: true
   validates :datetime, presence: true
 
-  default_scope { order(datetime: :asc) }
+  default_scope { order(datetime: :desc) }
 
   scope :sort_by_all, -> {
     all

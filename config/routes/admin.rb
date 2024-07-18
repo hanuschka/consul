@@ -12,6 +12,7 @@ namespace :admin do
       patch :update_map
       get :projekt_labels
       get :sentiments
+      get :age_ranges_for_stats
       get :projekt_questions
       get :projekt_livestreams
       get :projekt_events
@@ -102,28 +103,19 @@ namespace :admin do
   end
 
   # custom age restriction routes
-  resources :age_restrictions
-
-  # custom deficiency reports routes
-  scope module: :deficiency_reports, path: :deficiency_reports, as: :deficiency_report do
-    resources :officers, only: [:index, :create, :destroy] do
-      get :search, on: :collection
+  resources :age_ranges do
+    collection do
+      post "order_records"
     end
-    resources :categories,  only: %i[index new create edit update destroy]
-    resources :statuses,    only: %i[index new create edit update destroy] do
-      collection do
-        post "order_statuses"
-      end
-    end
-    resources :settings, only: :index
-  end
-
-  resources :deficiency_reports, only: [:index, :show] do
-    resources :audits, only: :show, controller: "deficiency_report_audits"
   end
 
   # custom projekt managers
   resources :projekt_managers, only: [:index, :create, :destroy] do
+    get :search, on: :collection
+  end
+
+  # custom deficiency report managers
+  resources :deficiency_report_managers, only: [:index, :create, :destroy] do
     get :search, on: :collection
   end
 
@@ -278,12 +270,17 @@ namespace :admin do
     get :search, on: :collection
   end
 
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show, :edit, :update] do
+    resources :audits, only: :show, controller: "user_audits"
+  end
+
+  resources :unregistered_newsletter_subscribers, only: [:index, :destroy]
 
   scope module: :poll do
     resources :polls do
       get :booth_assignments, on: :collection
       patch :add_question, on: :member
+      post :send_notifications, on: :member
 
       resources :booth_assignments, only: [:index, :show, :create, :destroy] do
         get :search_booths, on: :collection
@@ -297,6 +294,10 @@ namespace :admin do
 
       resources :recounts, only: :index
       resources :results, only: :index
+
+      resources :questions, only: [] do
+        post :order_questions, on: :collection
+      end
     end
 
     resources :officers, only: [:index, :new, :create, :destroy] do
@@ -317,8 +318,8 @@ namespace :admin do
         resources :images, controller: "questions/answers/images"
         resources :videos, controller: "questions/answers/videos", shallow: false
         resources :documents, only: [:index, :create], controller: "questions/answers/documents"
+        post :order_answers, on: :collection
       end
-      post "/answers/order_answers", to: "questions/answers#order_answers"
     end
 
     resource :active_polls, only: [:create, :edit, :update]

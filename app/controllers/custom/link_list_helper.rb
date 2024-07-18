@@ -4,8 +4,13 @@ module LinkListHelper
   def link_list_sdg_goals(*links, **options)
     return "" if links.select(&:present?).empty?
 
-    tag.ul(options) do
-      safe_join(links.select(&:present?).map do |text, url, current = false, **link_options|
+    tag.ul(**options) do
+      safe_join(links.select(&:present?).map do |text, url, current_or_options = false, **link_options|
+        if current_or_options.is_a?(Hash)
+          link_options = current_or_options
+        else
+          link_options ||= {}
+        end
 
         goal_code = link_options[:data].present? ? link_options[:data][:code] : nil
 
@@ -14,7 +19,7 @@ module LinkListHelper
         js_class = goal_code.class.name == "Integer" ? "js-sdg-custom-goal-filter" : "js-sdg-custom-target-filter"
 
         tag.li(class: "#{js_class} #{active_class}") do
-          link_to text, "", link_options
+          link_to( text, "#", link_options)
         end
       end, "\n")
     end

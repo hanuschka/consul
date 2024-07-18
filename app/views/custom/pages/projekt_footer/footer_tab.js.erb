@@ -1,16 +1,24 @@
 $("#filter-subnav li").removeClass("is-active")
 $("li#filter-subnav-<%= @projekt_phase.id %>").addClass("is-active")
 $("#footer-content").removeClass("show-loader");
-$("#footer-content").html("<%= j render("pages/projekt_footer/#{@projekt_phase.name}") %>");
+<% footer_version = Setting.new_design_enabled? ? 'projekt_footer_new' : 'projekt_footer'  %>
+$("#footer-content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");
 App.Projekts.toggleDefaultProjekts()
 App.Projekts.toggleProjektsInSidebarFilter();
 App.CollapseTextComponent.enableHoverButtons();
-App.Legislation.initialize();
 App.LivesteamLivequestion.initialize();
 
+<% if @projekt_phase.is_a?(ProjektPhase::LegislationPhase) %>
+  App.Legislation.initialize();
+  App.LegislationAnnotatable.initialize();
+<% end %>
+
 if ($(".legislation-annotatable").length) {
+  App.LegislationAnnotatable.destroy();
   App.LegislationAnnotatable.initialize();
 }
+
+$("#sidebar-cta").html("<%= j render Pages::Projekts::SidebarCtaComponent.new(@projekt_phase) %>");
 
 $('#footer-content').foundation();
 
@@ -21,3 +29,5 @@ $('#footer-content').foundation();
   App.Map.destroy();
   App.Map.initialize();
 <% end %>
+
+$("html, body").animate({ scrollTop: $("#footer-content").offset().top - 100 }, 500);

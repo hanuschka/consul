@@ -1,0 +1,49 @@
+.custom-new-design {
+  .top-bar[data-white-text="true"] #translate-widget #translate-widget-toggler {
+    color: #fff;
+  }
+
+  .sticky-header .top-bar[data-white-text="true"] #translate-widget #translate-widget-toggler {
+    color: #222;
+  }
+
+  #translate-widget {
+    align-self: center;
+    margin-right: 10px;
+    color: red;
+    font-size: 1.6rem;
+    cursor: pointer;
+
+    #translate-widget-toggler {
+      color: #222;
+    }
+
+    #google_translate_element {
+      align-self: center;
+      margin-right: 30px;
+
+      select.goog-te-combo {
+        width: 55px;
+      }
+    }
+  }
+
+  .skiptranslate + header {
+    .top-bar-wrapper {
+      top: 38px !important;
+    }
+  }
+
+  .skiptranslate ~ .wrapper {
+    margin-top: 38px !important;
+  }
+
+  .button.button-bund-id {
+    background: #ebeef4;
+    display: block;
+
+    &:hover {
+      background: #d1d8e7;
+    }
+  }
+}

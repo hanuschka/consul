@@ -3,6 +3,7 @@ class ProjektPhase < ApplicationRecord
   include Milestoneable
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
+  include Notifiable
 
   after_create :add_default_settings
 
@@ -29,7 +30,7 @@ class ProjektPhase < ApplicationRecord
   delegate :icon, :author, :author_id, to: :projekt
 
   translates :phase_tab_name, touch: true
-  translates :new_resource_button_name, touch: true
+  translates :cta_button_name, touch: true
   translates :resource_form_title, touch: true
   translates :projekt_selector_hint, touch: true
   translates :labels_name, touch: true
@@ -43,7 +44,12 @@ class ProjektPhase < ApplicationRecord
   has_many :projekt_labels, dependent: :destroy
   has_many :sentiments, dependent: :destroy
 
-  belongs_to :age_restriction
+  has_many :age_range_projekt_phases_for_stats, -> { where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
+  has_many :age_ranges_for_stats, through: :age_range_projekt_phases_for_stats, source: :age_range
+
+  belongs_to :age_restriction, class_name: "AgeRange", foreign_key: :age_range_id,
+                               optional: true, inverse_of: :age_restricted_projekt_phases
+
   has_many :projekt_phase_geozones, dependent: :destroy
   has_many :geozone_affiliations, through: :projekt
   has_many :geozone_restrictions, through: :projekt_phase_geozones, source: :geozone,
@@ -51,10 +57,6 @@ class ProjektPhase < ApplicationRecord
 
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
-
-
-  has_many :city_street_projekt_phases, dependent: :destroy     # TODO delete
-  has_many :city_streets, through: :city_street_projekt_phases  # TODO delete
 
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
@@ -98,12 +100,24 @@ class ProjektPhase < ApplicationRecord
     mname
   end
 
-  def selectable_by?(user)
+  def self.any_selectable?(user, resource = nil)
+    any? { |phase| phase.selectable_by?(user, resource) }
+  end
+
+  def selectable_by?(user, resource = nil)
+    return true if resource&.respond_to?(:author) && resource.author == user
+    return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
+
     permission_problem(user).blank?
   end
 
-  alias_method :votable_by?, :selectable_by?
-  alias_method :comments_allowed?, :selectable_by?
+  def votable_by?(user, resource = nil)
+    permission_problem(user).blank?
+  end
+
+  def comments_allowed?(user, resource = nil)
+    permission_problem(user).blank?
+  end
 
   def not_active?
     !active?
@@ -114,9 +128,14 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?
-    phase_activated? &&
-      ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
-      ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
+    # For Poll/VotingPhase we dont check the date
+    if is_a?(ProjektPhase::VotingPhase)
+      phase_activated?
+    else
+      phase_activated? &&
+        ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
+        ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
+    end
   end
 
   def not_current?
@@ -124,9 +143,12 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return :not_logged_in unless user
+    return :guest_not_logged_in if guest_participation_allowed? && !user
+    return if guest_participation_allowed?
+    return :not_logged_in if !user || user&.guest?
+    return if admin_permission?(user, location: location)
     return :phase_not_active if not_active?
-    return :phase_expired if expired?
+    return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
     return :phase_not_current if not_current?
     return :not_verified if verification_restricted && !user.level_three_verified?
 
@@ -142,6 +164,14 @@ class ProjektPhase < ApplicationRecord
     end
 
     nil
+  end
+
+  def admin_permission?(user, location: nil)
+    if location == "new_button_component"
+      user.has_pm_permission_to?("create_on_behalf_of", projekt)
+    else
+      user.administrator?
+    end
   end
 
   def geozone_allowed?(user)
@@ -162,10 +192,6 @@ class ProjektPhase < ApplicationRecord
 
   def individual_group_value_restriction_formatted
     individual_group_values.map(&:name).flatten.join(", ")
-  end
-
-  def hide_projekt_selector?
-    false
   end
 
   def resource_count
@@ -198,16 +224,28 @@ class ProjektPhase < ApplicationRecord
     phase_tab_name.presence || model_name.human
   end
 
+  def all_settings
+    @settings ||= settings.pluck(:key, :value)
+  end
+
   def feature?(key)
-    settings.find_by!(key: "feature.#{key}").value.present?
-  rescue ActiveRecord::RecordNotFound
-    raise StandardError, "Feature \"#{key}\" not found for projekt phase #{id}"
+    setting = settings.find { |s| s.key == "feature.#{key}" }
+
+    if setting.present?
+      setting.value.present?
+    else
+      false
+    end
   end
 
   def option(key)
-    settings.find_by!(key: "option.#{key}").value
-  rescue ActiveRecord::RecordNotFound
-    raise StandardError, "Option \"#{key}\" not found for projekt phase #{id}"
+    option = settings.find { |s| s.key == "option.#{key}" }
+
+    if option.present?
+      option.value.present?
+    else
+      nil
+    end
   end
 
   def create_map_location
@@ -245,6 +283,13 @@ class ProjektPhase < ApplicationRecord
 
   def subscribable?
     true
+  end
+
+  def regular_formular_cutoff_date
+    setting = settings.find_by(key: "option.general.primary_formular_cutoff_date")
+    setting&.value&.to_date
+  rescue
+    nil
   end
 
   private

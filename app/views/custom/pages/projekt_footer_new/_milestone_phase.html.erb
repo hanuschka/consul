@@ -1,0 +1,5 @@
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
+
+<div class="main-column">
+  <%= render Shared::MilestonesComponent.new(milestones: @projekt_phase.milestones, milestoneable: @projekt_phase) %>
+</div>

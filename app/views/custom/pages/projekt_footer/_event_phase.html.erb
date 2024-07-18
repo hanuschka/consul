@@ -1,3 +1,9 @@
-<%= render 'shared/loader_spinner' %>
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<%= render Projekts::ProjektEvents::List.new(projekt_events: @projekt_events) %>
+<div class="flex-layout">
+<div class="main-column">
+  <%= render Projekts::ProjektEvents::List.new(projekt_events: @projekt_events) %>
+</div>
+<div class="sidebar-placeholder"></div>
+</div>
+

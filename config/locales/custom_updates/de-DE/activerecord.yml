@@ -4,15 +4,18 @@ de:
       deficiency_report:
         one: Mangelmeldung
         other: Mängelmeldungen
+      deficiency_report_manager:
+        one: Mängelmelder Admin
+        other: Mängelmelder Admins
       map_layer:
         one: Kartenebene
         other: Kartenebenen
       projekt:
         one: Projekt
         other: Projekte
-      age_restriction:
-        one: Altersbeschränkung
-        other: Altersbeschränkungen
+      age_range:
+        one: Altersgruppe
+        other: Altersgruppen
       modal_notification:
         one: Popup Benachrichtigung
         other: Popup Benachrichtungen
@@ -25,9 +28,18 @@ de:
       individual_group_value:
         one: Gruppenwert
         other: Gruppenwerte
+      projekt_event:
+        one: Veranstaltung
+        other: Veranstaltungen
       projekt_label:
         one: Label
         other: Labels
+      projekt_livestream:
+        one: Livestream
+        other: Livestream
+      projekt_notification:
+        one: Projektbenachrichtigung
+        other: Projektbenachrichtigungen
       projekt_phase: Projektphase
       projekt_phase/comment_phase: Kommentare
       projekt_phase/debate_phase: Diskussionen
@@ -45,6 +57,15 @@ de:
       projekt_phase/formular_phase: Formular
       formular_field: Formularfeld
     errors:
+      messages:
+        file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
+        file_size_is_less_than: 'Dateigröße muss kleiner als %{count} sein'
+        file_size_is_less_than_or_equal_to: 'Dateigröße muss kleiner oder gleich %{count} sein'
+        file_size_is_greater_than: 'Dateigröße muss größer als %{count} sein'
+        file_size_is_greater_than_or_equal_to: 'Dateigröße muss größer oder gleich %{count} sein'
+        allowed_file_content_types: 'Datei muss einer von %{types} sein'
+        excluded_file_content_types: 'Datei kann nicht %{types} sein'
+
       models:
         proposal:
           attributes:
@@ -68,6 +89,10 @@ de:
           attributes:
             color:
               invalid: Bitte den Farbwert als HEX-code eingeben
+        unregistered_newsletter_subscriber:
+          attributes:
+            email:
+              invalid: Bitte geben Sie ein gültiges E-Mail-Format ein
     attributes:
       projekt:
         total_duration_start: Anfangsdatum
@@ -79,6 +104,7 @@ de:
         open_answer_text: Offene Antwort
       poll/question/answer:
         more_info_link: Erklärungslink
+        more_info_iframe: Iframe-Link
       widget/card:
         card_category: Kategorie
       deficiency_report:
@@ -86,9 +112,12 @@ de:
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
         on_behalf_of: Meldung im Namen von jemanden erstellen
+        category: Kategorie
+        status: Status
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:
+        official_answer: Offizielle Antwort
         on_behalf_of: Erstellen im Namen von
       budget:
         voting_style_distributed: "Mehrere Stimmen"
@@ -132,10 +161,11 @@ de:
         date_of_birth: Geburtsdatum
         document_type: Dokument
         document_last_digits: Personalausweis / Passport (4 letzten Ziffern)
-      age_restriction:
+      age_range:
         min_age: Mindestalter
         max_age: Maximalalter
         order: Reihenfolge
+        only_for_stats: Nur für Statistiken
       modal_notification:
         title: Titel
         active_from: Von
@@ -143,12 +173,14 @@ de:
         html_content: Inhalt
       votation_type:
         max_votes: Maximale Stimmanzahl
+        max_votes_per_answer: Maximale Stimmanzahl pro Antwort
         vote_type: Art der Abstimmung
       votation_type/vote_type:
         unique: Einzelne Stimme
         multiple: Mehrere Stimmen
         multiple_with_weight: Mehrere gewichtete Stimmen
         rating_scale: Bewertungsskala
+
       poll/question:
         min_rating_scale_label: Linkes Label
         max_rating_scale_label: Rechtes Label
@@ -167,7 +199,7 @@ de:
         color: Farbe
         name: Name
       projekt_question:
-        show_answers_count: Anzahl der Stimmen im Frontend anzeigen    
+        show_answers_count: Anzahl der Stimmen im Frontend anzeigen
         comments_enabled: Offene Antwort aktiviert
       projekt_event:
         title: Veranstaltungstitel
@@ -203,3 +235,9 @@ de:
         subject: Betreff
         body: Text
         show_follow_up_button: Link zu Follow-up Formular integrieren
+      formular_answer_image:
+        title: Titel
+        attachment: Anhang
+      formular_answer_document:
+        title: Titel
+        attachment: Anhang

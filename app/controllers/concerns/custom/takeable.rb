@@ -19,15 +19,24 @@ module Takeable
   end
 
   def take_by_projekts(scoped_projekts_ids)
-    @resources = @resources.joins(projekt_phase: :projekt)
-      .merge(Projekt.activated.with_active_feature("general.show_in_sidebar_filter"))
-    @resources = @resources.where(projekts: { id: scoped_projekts_ids }).distinct
+    # @resources =
+    #   @resources.merge(
+    #     Projekt
+    #       .activated
+    #       .show_in_sidebar_filter
+    #       .where(id: scoped_projekts_ids)
+    #     ).distinct
 
-    @all_resources = @resources
+    return if params[:filter_projekt_ids].blank?
 
-    if params[:filter_projekt_ids].present?
-      @resources = @resources.where(projekts: { id: params[:filter_projekt_ids].split(",") })
-    end
+    projekt_ids_to_filter = params[:filter_projekt_ids].map(&:to_i)
+    filtered_projekt_ids = projekt_ids_to_filter & scoped_projekts_ids
+
+    @resources =
+      @resources
+        .includes(projekt_phase: :projekt)
+        .references(:projekt)
+        .where(projekts: { id: filtered_projekt_ids })
   end
 
   def take_by_projekt_labels
@@ -36,7 +45,6 @@ module Takeable
     @resources = @resources
       .joins(:projekt_labels)
       .where(projekt_labels: { id: params[:projekt_label_ids] })
-      .distinct
   end
 
   def take_by_sentiment
@@ -44,7 +52,6 @@ module Takeable
 
     @resources = @resources
       .where(sentiment_id: params[:sentiment_id])
-      .distinct
   end
 
   def take_by_tag_names(related_projekts)
@@ -171,6 +178,7 @@ module Takeable
   end
 
   def load_featured
+    return if Setting.new_design_enabled?
     return unless !@advanced_search_terms && @search_terms.blank? && params[:retired].blank? && @current_order != "recommendations"
     return unless controller_name == 'proposals'
 

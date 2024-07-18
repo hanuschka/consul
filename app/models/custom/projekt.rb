@@ -1,5 +1,10 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
+  INDEX_FILTERS = %w[
+    index_order_underway index_order_all
+    index_order_ongoing index_order_upcoming
+    index_order_expired index_order_individual_list
+  ].freeze
 
   include Milestoneable
   acts_as_paranoid column: :hidden_at
@@ -8,14 +13,22 @@ class Projekt < ApplicationRecord
   include ActiveModel::Dirty
   include SDG::Relatable
   include Taggable
-  include Imageable
+  include Searchable
 
   translates :description
   include Globalizable
 
+  has_secure_token :page_view_code
+
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
+
+  has_many :children_projekts_show_in_navigation, -> { show_in_navigation }, class_name: "Projekt", foreign_key: "parent_id"
+
+  has_many :third_level_children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "top_level_projekt_id",
+    inverse_of: :top_level_projekt, dependent: :nullify
   belongs_to :parent, class_name: "Projekt", optional: true
+  belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
@@ -42,9 +55,11 @@ class Projekt < ApplicationRecord
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :individual_group_values,
     after_add: :touch_updated_at, after_remove: :touch_updated_at
+  has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
 
   has_many :debates, through: :debate_phases
   has_many :proposals, through: :proposal_phases
+  has_many :base_selection_proposals, through: :proposal_phases
   has_many :budgets, through: :budget_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
@@ -67,25 +82,41 @@ class Projekt < ApplicationRecord
     class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
   has_many :subscribers, through: :subscriptions, source: :user
 
+  has_many :content_blocks, class_name: "SiteCustomization::ContentBlock",
+    dependent: :destroy, inverse_of: :projekt
+
+  has_one_attached :greeting_image
+  has_many_attached :images
+
+  delegate :image, to: :page, allow_nil: true
+
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
-    :create_map_location
+    :create_map_location, :ensure_other_projekts_order_integrity
   around_update :update_page
   after_save do
-    Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
+    if parent_id_previously_changed?
+      Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
+    end
   end
+
+  before_save :assign_top_level_projekt_from_parent
   after_destroy :ensure_projekt_order_integrity
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
   validates :name, presence: true
 
-  scope :regular, -> { where(special: false) }
+  attribute :order_number, :integer, default: 0
+  attribute :new_content_block_mode, :boolean, default: false
 
+  scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
+  scope :sort_by_order_number, -> {
+    order(:level, :order_number)
+  }
 
   scope :top_level, -> {
-    regular
-      .with_order_number
+    with_order_number
       .where(parent: nil)
   }
 
@@ -105,6 +136,10 @@ class Projekt < ApplicationRecord
       .where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
   }
 
+  scope :current_for_import, ->(timestamp = Time.zone.today) {
+    where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
+  }
+
   scope :expired, ->(timestamp = Time.zone.today) {
     activated
       .where("total_duration_end < ?", timestamp)
@@ -121,8 +156,8 @@ class Projekt < ApplicationRecord
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) }
+      .includes(:projekt_phases, :projekt_settings)
+      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
   scope :index_order_ongoing, ->() {
@@ -173,18 +208,28 @@ class Projekt < ApplicationRecord
   scope :show_in_homepage, -> {
     joins("INNER JOIN projekt_settings sihp ON projekts.id = sihp.projekt_id")
       .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
+      .order(created_at: :desc)
   }
 
-  scope :visible_in_menu, ->(user = nil) {
+  scope :show_in_navigation, -> {
     joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
       .with_order_number
-      .select { |p| p.visible_for?(user) }
+  }
+
+  scope :visible_in_menu, ->(user) {
+    select { |p| p.visible_for?(user) }
+  }
+
+  scope :show_in_sidebar_filter, ->(user = nil) {
+    joins("INNER JOIN projekt_settings show_in_sidebar_filter_settings ON projekts.id = show_in_sidebar_filter_settings.projekt_id")
+      .where("show_in_sidebar_filter_settings.key": "projekt_feature.general.show_in_sidebar_filter", "show_in_sidebar_filter_settings.value": "active")
   }
 
   scope :with_active_feature, ->(projekt_feature_key) {
     joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
-      .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active") }
+      .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active")
+  }
 
   scope :by_my_posts, ->(my_posts_switch, current_user_id) {
     return unless my_posts_switch
@@ -203,6 +248,12 @@ class Projekt < ApplicationRecord
       .where(site_customization_pages: { status: "published" })
   }
 
+  def self.includes_children_projekts_with(*sub_relations)
+    includes(
+      children: [*sub_relations, {children: [*sub_relations]}]
+    )
+  end
+
   def self.overview_page
     find_by(
       special_name: "projekt_overview_page",
@@ -211,17 +262,42 @@ class Projekt < ApplicationRecord
   end
 
   def self.with_pm_permission_to(permission, projekt_manager)
+    return Projekt.none unless projekt_manager.present?
+
     joins(:projekt_manager_assignments)
       .where("projekt_manager_assignments.projekt_manager_id = ? AND ? = ANY(projekt_manager_assignments.permissions)", projekt_manager.id, permission)
   end
 
-  def self.selectable_in_selector(controller_name, current_user)
-    select do |projekt|
-      projekt.all_parent_projekts.unshift(projekt).none? { |p| p.hidden_for?(current_user) } &&
-      projekt.all_children_projekts.unshift(projekt).any? do |p|
-        p.selectable_in_selector?(controller_name, current_user)
+  def self.selectable_in_selector(controller_name, current_user, resource = nil)
+    includes(:individual_group_values, :projekt_settings, { proposal_phases: [:individual_group_values, :settings] })
+      .includes_children_projekts_with(:individual_group_values, :proposal_phases, :individual_group_values, :projekt_settings, :hard_individual_group_values)
+      .includes({ parent: :individual_group_values }, { top_level_projekt: :hard_individual_group_values })
+      .select do |projekt|
+        (!projekt.hidden_for?(current_user) || projekt.all_parent_projekts.none? { |p| p.hidden_for?(current_user) }) &&
+        (projekt.can_assign_resources?(controller_name, current_user, resource) ||
+          projekt.all_children_projekts.any? do |p|
+            p.can_assign_resources?(controller_name, current_user, resource)
+          end
+        )
       end
-    end
+  end
+
+  def self.search(terms)
+    pg_search(terms)
+  end
+
+  def searchable_values
+    { page.title          => "A",
+      title               => "A",
+      page.content        => "C" }
+  end
+
+  def can_filter_proposals?
+    proposal_phases.any?(&:current?) || base_selection_proposals.any?
+  end
+
+  def can_filter_debates?
+    debate_phases.any?(&:current?) || debates.any?
   end
 
   def projekt_phases_for(resource)
@@ -240,25 +316,19 @@ class Projekt < ApplicationRecord
     yield
   end
 
-  def selectable_in_selector?(controller_name, user)
+  def can_assign_resources?(controller_name, user, resource = nil)
     return false if user.nil?
+    return true if resource&.respond_to?(:author) && resource.author == user
+    return false unless activated? || controller_name == "polls"
 
     if controller_name == "proposals"
-      if proposal_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
-        false
-      else
-        proposal_phases.any? { |phase| phase.selectable_by?(user) }
-      end
+      proposal_phases.any_selectable?(user, resource)
 
     elsif controller_name == "debates"
-      if debate_phases.any?(&:selectable_by_admins_only?) && !user.can_manage_projekt?(self)
-        false
-      else
-        debate_phases.any? { |phase| phase.selectable_by?(user) }
-      end
+      debate_phases.any_selectable?(user, resource)
 
     elsif controller_name == "polls"
-      voting_phases.any? { |phase| phase.selectable_by?(user) }
+      voting_phases.any_selectable?(user)
 
     elsif controller_name == "processes"
       legislation_phases
@@ -271,13 +341,6 @@ class Projekt < ApplicationRecord
     order_number.present? && parent.blank?
   end
 
-  def activated?
-    projekt_settings.
-      find_by(projekt_settings: { key: "projekt_feature.main.activate" }).
-      value.
-      present?
-  end
-
   def current?(timestamp = Time.zone.today)
     activated? &&
      (total_duration_start.blank? || total_duration_start <= timestamp) &&
@@ -288,6 +351,20 @@ class Projekt < ApplicationRecord
     activated? &&
       total_duration_end.present? &&
       total_duration_end < timestamp
+  end
+
+  # def activated?
+  #   projekt_settings.
+  #     find_by(projekt_settings: { key: "projekt_feature.main.activate" }).
+  #     value.
+  #     present?
+  # end
+  def projekt_settings_hash
+    @projekt_settings ||= projekt_settings.reload.pluck(:key, :value).to_h
+  end
+
+  def activated?
+    projekt_settings_hash["projekt_feature.main.activate"].present?
   end
 
   def activated_children
@@ -308,44 +385,21 @@ class Projekt < ApplicationRecord
     breadcrumb_trail_ids
   end
 
-  def all_parent_ids(all_parent_ids = [])
-    if parent.present?
-      all_parent_ids.push(parent.id)
-      parent.all_parent_ids(all_parent_ids)
-    end
-
-    all_parent_ids
+  def all_parent_ids
+    all_parent_projekts.map(&:id)
   end
 
-  def all_parent_projekts(all_parent_projekts = [])
-    if parent.present?
-      all_parent_projekts.push(parent)
-      parent.all_parent_projekts(all_parent_projekts)
-    end
-
-    all_parent_projekts
+  def all_parent_projekts
+    Projekt.where(id: [parent_id, top_level_projekt_id]).compact
   end
 
-  def all_children_ids(all_children_ids = [])
-    if children.any?
-      children.each do |child|
-        all_children_ids.push(child.id)
-        child.all_children_ids(all_children_ids)
-      end
-    end
-
-    all_children_ids
+  def all_children_ids
+    all_children_projekts.map(&:id)
   end
 
-  def all_children_projekts(all_children_projekts = [])
-    if children.any?
-      children.each do |child|
-        all_children_projekts.push(child)
-        child.all_children_projekts(all_children_projekts)
-      end
-    end
-
-    all_children_projekts
+  def all_children_projekts
+    children_with_preloaded_grandchildren = children.includes(:children)
+    children_with_preloaded_grandchildren.flat_map { |child| [child, *child.children] }.compact
   end
 
   def has_active_phase?(controller_name)
@@ -387,6 +441,10 @@ class Projekt < ApplicationRecord
 
     swap_order_numbers_down
     ensure_projekt_order_integrity
+  end
+
+  def ensure_other_projekts_order_integrity
+    Projekt.ensure_order_integrity
   end
 
   def self.ensure_order_integrity
@@ -450,13 +508,13 @@ class Projekt < ApplicationRecord
 
   def visible_for?(user = nil)
     return true if user.present? && user.administrator?
-    return true if user.present? && user.projekt_manager?(self)
+    return true if user.present? && user.projekt_manager&.allowed_to?("manage", self)
     return false unless activated?
 
-    if individual_group_values.hard.empty?
+    if hard_individual_group_values.empty?
       true
     else
-      user.present? && (individual_group_values.hard.ids & user.individual_group_values.hard.ids).any?
+      user.present? && (hard_individual_group_values.ids & user.individual_group_values.ids).any?
     end
   end
 
@@ -472,20 +530,97 @@ class Projekt < ApplicationRecord
     projekt_settings.find_by(key: "projekt_feature.general.vc_map_enabled")&.enabled?
   end
 
+  def self.available_filters(all_projekts)
+    return [] if all_projekts.blank?
+
+    projekts_count_hash = {}
+    INDEX_FILTERS.each do |order|
+      projekts_count_hash[order] = all_projekts.send(order).count
+    end
+
+    projekts_count_hash.select { |_, value| value > 0 }.keys
+  end
+
+  def current_phases
+    projekt_phases.select(&:current?)
+  end
+
+  def self.transfer_description_to_page_subtitle
+    all.find_each do |p|
+      p.translations.each do |t|
+        next unless p.page.translations.find_by(locale: t.locale).present?
+
+        p.page.translations.find_by(locale: t.locale).update!(subtitle: t.description)
+      end
+    end
+  end
+
+  def self.transfer_image_to_page
+    all.find_each do |p|
+      projekt_image = p.image
+      next unless projekt_image.present?
+
+      p.page.image = projekt_image
+    end
+  end
+
+  def feature?(feature)
+    setting = projekt_settings.find { |setting| setting.key == "projekt_feature.#{feature}"}
+    (setting && (setting.value == 'active' || setting.value == 't'  )) ? true : false
+  end
+
+  def serialize
+    {
+      id: id,
+      name: name,
+      total_duration_start: total_duration_start,
+      total_duration_end: total_duration_end,
+      page_view_code: page_view_code,
+      show_map: feature?("show_map"),
+      show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),
+      show_notification_subscription_toggler: feature?("show_notification_subscription_toggler"),
+      show_phases_in_projekt_page_sidebar: feature?("show_phases_in_projekt_page_sidebar"),
+      projekt_page_sharing: feature?("projekt_page_sharing"),
+      page: {
+        title: page.title,
+        slug: page.slug,
+        subtitle: page.subtitle,
+        content: page.content
+      }
+    }
+  end
+
+  def update_setting(name, value)
+    value_to_set =
+      if (value == "true") || value == true || value == "active"
+        "active"
+      else
+        nil
+      end
+
+    find_setting(name)&.update(value: value_to_set)
+  end
+
+  def find_setting(name)
+    projekt_settings.find { |setting| setting.key == name}
+  end
+
+  def generate_page_view_code_if_nedded!
+    return if page_view_code.present?
+
+    regenerate_page_view_code
+    save!
+  end
+
   private
 
     def create_corresponding_page
-      page = SiteCustomization::Page.new(
+      create_page(
         title: name,
         slug: form_page_slug,
         status: "published",
-        projekt: self,
         content: ""
       )
-
-      if page.save
-        self.page = page
-      end
     end
 
     def update_corresponding_page
@@ -573,5 +708,13 @@ class Projekt < ApplicationRecord
 
     def touch_updated_at(geozone)
       touch if persisted?
+    end
+
+    def assign_top_level_projekt_from_parent
+      return unless parent_id_changed?
+
+      if parent&.parent_id.present?
+        self.top_level_projekt_id = parent.parent_id
+      end
     end
 end

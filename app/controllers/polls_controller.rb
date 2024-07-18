@@ -19,20 +19,14 @@ class PollsController < ApplicationController
   end
 
   def show
-    if !@poll.projekt.visible_for?(current_user)
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
-      render "custom/pages/forbidden", layout: false
-    end
-
     @questions = @poll.questions.for_render.sort_for_list
     @token = poll_voter_token(@poll, current_user)
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
-                                                    .with_content.order(:given_order)
 
     @answers_by_question_id = {}
 
     @questions.each do |question|
-     @answers_by_question_id[question.id] = []
+      @answers_by_question_id[question.id] = []
     end
 
     poll_answers = ::Poll::Answer.by_question(@poll.question_ids).by_author(current_user&.id)
@@ -42,6 +36,18 @@ class PollsController < ApplicationController
 
     @commentable = @poll
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
+
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+
+    elsif Setting.new_design_enabled?
+      render :show_new
+
+    else
+      render :show
+
+    end
   end
 
   def stats

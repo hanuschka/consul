@@ -1,4 +1,13 @@
 Rails.application.configure do
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.alert         = false
+    Bullet.bullet_logger = true
+    Bullet.console       = true
+    Bullet.rails_logger  = true
+    Bullet.add_footer    = true
+  end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -16,6 +25,7 @@ Rails.application.configure do
   # Run rails dev:cache to toggle caching.
   if Rails.root.join("tmp", "caching-dev.txt").exist?
     config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
@@ -69,8 +79,12 @@ Rails.application.configure do
       Bullet.rails_logger = true
       Bullet.add_footer = true
     end
+    # Prosopite.rails_logger = true
+    # Prosopite.min_n_queries = 4
   end
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  config.hosts << /[a-z0-9-]+\.ngrok-free\.app/
 end

@@ -59,7 +59,7 @@ de:
       most_voted: Am besten bewertet
       newest: Neueste zuerst
       oldest: Älteste zuerst
-      most_commented: meist kommentiert
+      most_commented: Meist kommentiert
     select_order: Sortieren nach
     show:
       return_to_commentable: "Zurück zu"
@@ -120,7 +120,7 @@ de:
           error: "Ein Fehler ist aufgetreten. Bitte gehen Sie zur 'Ihr Benutzerkonto'-Seite um Diskussionen-Empfehlungen manuell abzuschalten"
       search_form:
         button: Suche
-        placeholder: Suche Diskussionen...
+        placeholder: Suchen...
         title: Suche
       search_results:
         one: " enthält den Begriff <strong>'%{search_term}'</strong>"
@@ -172,7 +172,7 @@ de:
     direct_message: Private Nachricht
     error: Fehler
     errors: Fehler
-    not_saved: "verhinderte das Speichern dieser %{resource}. <br>Bitte überprüfen Sie die gekennzeichneten Felder, um herauszufinden wie diese korrigiert werden können:"
+    not_saved: "Fehler verhindern das Speichern. <br>Bitte überprüfen Sie die gekennzeichneten Felder."
     policy: Datenschutzbestimmungen
     banner: Banner
     proposal: Vorschlag
@@ -288,8 +288,9 @@ de:
       sign_up: Registrierung mit Facebook
       name: Facebook
     finish_signup:
-      title: "Weitere Details"
+      title: "Benutzername vergeben"
       username_warning: "Aufgrund einer Änderung in der Art und Weise, wie wir mit sozialen Netzwerken umgehen, ist es möglich, dass Ihr Benutzername nun als 'bereits in Verwendung' erscheint. Wenn dies der Fall ist, wählen Sie bitte einen anderen Benutzernamen."
+      submit: "Registrierung abschließen"
     google_oauth2:
       sign_in: Anmelden mit Google
       sign_up: Registrierung mit Google
@@ -394,7 +395,7 @@ de:
         other: Andere
       search_form:
         button: Suche
-        placeholder: Suche Vorschläge...
+        placeholder: Vorschläge durchsuchen...
         title: Suche
       search_results:
         one: " enthält den Begriff <strong>'%{search_term}'</strong>"
@@ -462,7 +463,7 @@ de:
       flag: Dieser Vorschlag wurde von verschiedenen Benutzern als unangebracht gemeldet.
       notifications_tab: Benachrichtigungen
       milestones_tab: Meilensteine
-      retired_warning: "Der/Die Autor/in ist der Ansicht, dass dieser Vorschlag nicht mehr Unterstützung erhalten soll."
+      retired_warning: "Der/Die Autor/in hat den Vorschlag mit folgender Begründung zurückgezogen:"
       retired_warning_link_to_explanation: Lesen Sie die Erläuterung, bevor Sie abstimmen.
       retired: Vorschlag vom Autor zurückgezogen
       share: Teilen
@@ -684,7 +685,7 @@ de:
     description:
       unique: Sie dürfen bei dieser Frage eine Stimme vergeben.
       multiple: Sie dürfen %{maximum} Stimmen gleichmäßig auf die gegebenen Antworten verteilen.
-      multiple_with_weight: Sie dürfen %{maximum} Stimmen gewichtet auf mehrere Antworten verteilen.
+      multiple_with_weight: Sie dürfen %{maximum} Stimmen gewichtet auf mehrere Antworten verteilen. Maximum %{cap} pro Antwort.
       rating_scale: Sie dürfen eine Stimme pro Bewertungsskala abgeben.
   proposal_notifications:
     new:
@@ -765,6 +766,12 @@ de:
           one: "Es gibt einen Vorschlag mit dem Begriff '%{query}', Sie können an diesem mitwirken, anstatt einen neuen zu erstellen"
           other: "Es gibt Vorschläge mit dem Begriff '%{query}', Sie können an diesen mitwirken, anstatt einen neuen zu erstellen"
         message: "Sie sehen %{limit} %{count} Vorschläge mit dem Begriff \"%{query}\""
+        see_all: "Alle anzeigen"
+      deficiency_report:
+        found:
+          one: "Es gibt eine Meldung mit dem Begriff '%{query}', Sie können an diesem mitwirken, anstatt einen neuen zu erstellen"
+          other: "Es gibt Meldungen mit dem Begriff '%{query}', Sie können an diesen mitwirken, anstatt einen neuen zu erstellen"
+        message: "Sie sehen %{limit} von %{count} Meldungen mit dem Begriff \"%{query}\""
         see_all: "Alle anzeigen"
     tags_cloud:
       districts: "Bereiche"
@@ -943,7 +950,10 @@ de:
     timestamp_error_message: "Entschuldigung, das war zu schnell! Bitte erneut senden."
   related_content:
     title: "Verwandte Inhalte"
-    add: "Verwandte Inhalte hinzufügen"
+    add: "+ Inhalt hinzufügen"
+    description: Existieren bereits Inhalte, die zu diesem Vorschlag passen, etwa
+      eine Diskussion oder ein anderer Vorschlag? Dann können Sie hier
+      darauf verweisen.
     label: "Link zu verwandten Inhalten"
     placeholder: "%{url}"
     help: "Sie können Links von %{models} innerhalb des %{org} hinzufügen."

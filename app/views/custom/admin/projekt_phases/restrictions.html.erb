@@ -1,5 +1,7 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
@@ -13,6 +15,10 @@
   <div class="row">
     <div class="column">
       <div class="phase-restrictions">
+        <div class="options-group">
+          <%= f.check_box :guest_participation_allowed, label: false %>
+          <%= f.label :guest_participation_allowed, t("custom.admin.projekt_phases.restrictions.guest_participation_allowed"), class: "checkbox-label checkbox-label--inline" %>
+        </div>
         <%= render "custom/admin/projekt_phases/restrictions/verified_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/geozone_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/extended_geozone_restriction", f: f %>

@@ -1,0 +1,3 @@
+<%= render Shared::SidebarCardComponent.new(title: t("custom.sdg.goals.filter.heading"), icon_name: "globe") do |c| %>
+  <%= render SDG::Goals::TagCloudComponent.new("Projekt", sdg_targets: @sdg_targets) %>
+<% end %>

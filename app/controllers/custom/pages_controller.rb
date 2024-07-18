@@ -1,25 +1,40 @@
 require_dependency Rails.root.join("app", "controllers", "pages_controller").to_s
 
 class PagesController < ApplicationController
+  include EmbeddedAuth
   include CommentableActions
   include HasOrders
   include CustomHelper
   include ProposalsHelper
   include Takeable
+  include RandomSeed
+  include HasEmbeddableShortcodes
+  include GuestUsers
 
   has_orders %w[most_voted newest oldest], only: :show
+
+  before_action :set_random_seed
+  before_action :authentificate_user_from_token!, only: [:show]
 
   def show
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
     set_resource_instance
+    custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
-    if @custom_page.present? && @custom_page.projekt.present? && @custom_page.projekt.visible_for?(current_user)
+    @custom_page_page_visible =
+      @custom_page&.projekt&.page_view_code == params[:code] ||
+      @custom_page.projekt.visible_for?(current_user)
+
+    if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
-      @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
+
+      if @projekt.feature?("sidebar.show_notification_subscription_toggler")
+        @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
+      end
 
       if @projekt.projekt_phases.active.any?
-        @default_projekt_phase = get_default_projekt_phase(params[:selected_phase_id])
+        @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
         @projekt_phase = @default_projekt_phase
         params[:projekt_phase_id] = @default_projekt_phase.id
         params[:projekt_id] ||= @projekt.id
@@ -28,7 +43,18 @@ class PagesController < ApplicationController
 
       @cards = @custom_page.cards
 
-      render action: :custom_page
+      @custom_page.content = process_shortcodes_for(
+        obj: @custom_page,
+        attr: :content,
+        projekt: @projekt,
+      )
+
+      if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
+          @custom_page.content.include?("</iframe>")
+        @custom_page.content = process_iframe_embeds(@custom_page.content)
+      end
+
+      render action: custom_page_name
 
     elsif @custom_page.present? && @custom_page.projekt.present?
       @individual_group_value_names = @custom_page.projekt.individual_group_values.pluck(:name)
@@ -36,7 +62,7 @@ class PagesController < ApplicationController
 
     elsif @custom_page.present?
       @cards = @custom_page.cards
-      render action: :custom_page
+      render action: custom_page_name
 
     else
       render action: params[:id]
@@ -56,6 +82,17 @@ class PagesController < ApplicationController
 
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
+      format.csv do
+        formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
+
+        if @projekt_phase.name == "debate_phase"
+          send_data Debates::CsvExporter.new(@debates.limit(nil)).to_csv,
+            filename: "debates1-#{formated_time}.csv"
+        elsif @projekt_phase.name == "proposal_phase"
+          send_data Proposals::CsvExporter.new(@proposals.limit(nil)).to_csv,
+            filename: "proposals1-#{formated_time}.csv"
+        end
+      end
     end
   end
 
@@ -90,10 +127,15 @@ class PagesController < ApplicationController
                      end
 
     @resources = @projekt_phase.debates.for_public_render
-    take_by_projekt_labels
-    take_by_sentiment
 
-    @debates = @resources.page(params[:page]).send("sort_by_#{@current_order}")
+    if params[:search].present?
+      @resources = @resources.search(params[:search])
+    else
+      take_by_projekt_labels
+      take_by_sentiment
+    end
+
+    @debates = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
   end
 
   def set_proposal_phase_footer_tab_variables
@@ -108,19 +150,28 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    @resources = @projekt_phase.proposals.for_public_render
-    take_by_projekt_labels
-    take_by_sentiment
+    @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
+
+    if params[:search].present?
+      @resources = @resources.search(params[:search])
+    else
+      take_by_projekt_labels
+      take_by_sentiment
+      take_by_my_posts
+    end
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
-    @proposals = @resources.page(params[:page]).send("sort_by_#{@current_order}")
+    @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
   end
 
   def set_voting_phase_footer_tab_variables
-    @valid_filters = %w[all current]
-    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
+    # @valid_filters = %w[all current]
+    # @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
 
-    @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
+    @valid_orders = nil
+
+    # @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
+    @resources = @projekt_phase.polls.for_public_render.all
     @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
   end
 
@@ -166,9 +217,10 @@ class PagesController < ApplicationController
 
     @valid_filters = @budget.investments_filters
     params[:filter] ||= "feasible" if @budget.phase.in?(["selecting", "valuating"])
-    params[:filter] ||= "all" if @budget.phase.in?(["publishing_prices", "balloting", "reviewing_ballots"])
+    params[:filter] ||= "selected" if @budget.phase.in?(["balloting"])
+    params[:filter] ||= "all" if @budget.phase.in?(["publishing_prices", "reviewing_ballots"])
     params[:filter] ||= "winners" if @budget.phase == "finished"
-    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
+    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
     @valid_orders = %w[random supports ballots ballot_line_weight newest]
     @valid_orders.delete("supports")
@@ -181,23 +233,22 @@ class PagesController < ApplicationController
     # con-1036
     if @budget.phase == "publishing_prices" &&
         @projekt_phase.settings.find_by(key: "feature.general.show_results_after_first_vote").value.present?
-      params[:filter] = "selected"
-      @current_filter = nil
+      @current_filter = "selected"
     end
     # con-1036
 
     @investments = @budget.investments
 
-    if params[:section] == "results"
+    if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.headings.first).investments
-    elsif params[:section] == "stats"
+    elsif params[:section] == "stats" && can?(:read_stats, @budget)
       @stats = Budget::Stats.new(@budget)
       @investments = @budget.investments
     else
       query = Budget::Ballot.where(user: current_user, budget: @budget)
       @ballot = @budget.balloting? ? query.first_or_create! : query.first_or_initialize
 
-      @investments = @budget.investments.send(params[:filter]) if params[:filter]
+      @investments = @budget.investments.send(@current_filter)
       @investment_ids = @budget.investments.ids
     end
 
@@ -209,7 +260,11 @@ class PagesController < ApplicationController
       end
     end
 
-    @investments = @investments.send("sort_by_#{@current_order}").page(params[:page]).per(20)
+    @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+
+    unless params[:section] == "results" && can?(:read_results, @budget)
+      @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
+    end
   end
 
   def set_milestone_phase_footer_tab_variables
@@ -233,7 +288,7 @@ class PagesController < ApplicationController
 
   def set_event_phase_footer_tab_variables
     @valid_filters = %w[all incoming past]
-    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
+    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
     @projekt_events = @projekt_phase.projekt_events.page(params[:page]).send("sort_by_#{@current_filter}")
   end
 
@@ -279,12 +334,12 @@ class PagesController < ApplicationController
 
       @formular_fields = @formular.formular_fields.follow_up.each(&:set_custom_attributes)
       @formular_answer = @recipient.formular_answer
-    else
+      @formular_answer.answer_errors ||= {}
+    elsif @projekt_phase.regular_formular_cutoff_date.nil? || @projekt_phase.regular_formular_cutoff_date >= Date.today
       @formular_fields = @formular.formular_fields.primary.each(&:set_custom_attributes)
       @formular_answer = @formular.formular_answers.new
+      @formular_answer.answer_errors ||= {}
     end
-
-    @formular_answer.answer_errors ||= {}
   end
 
   def get_default_projekt_phase(default_phase_id = nil)

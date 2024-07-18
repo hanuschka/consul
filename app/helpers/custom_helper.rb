@@ -67,4 +67,24 @@ module CustomHelper
 
     array
   end
+
+  def resource_show_url(resource)
+    case resource
+    when Proposal
+      proposal_path(resource)
+    when Debate
+      debate_path(resource)
+    end
+  end
+
+  def process_iframe_embeds(content)
+    doc = Nokogiri::HTML::DocumentFragment.parse(content)
+
+    doc.css("iframe").each do |iframe|
+      iframe["data-src"] = iframe["src"]
+      iframe["src"] = ""
+    end
+
+    doc.to_html
+  end
 end

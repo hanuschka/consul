@@ -9,10 +9,10 @@ class Verification::ResidenceController < ApplicationController
   end
 
   def create
-    @residence = Verification::Residence.new(residence_params.merge(user: current_user))
-    @residence.form_registered_address_city_id = params[:form_registered_address_city_id]
-    @residence.form_registered_address_street_id = params[:form_registered_address_street_id]
-    @residence.form_registered_address_id = params[:form_registered_address_id]
+    @residence = Verification::Residence.new(
+      residence_params.merge(user: current_user, registered_address_id: params[:form_registered_address_id])
+    )
+    process_temp_attributes_for(@residence)
 
     if @residence.save
       NotificationServices::NewManualVerificationRequestNotifier.call(current_user.id) # remove unless manual

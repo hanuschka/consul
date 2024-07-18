@@ -9,10 +9,14 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
   private
 
     def show_arrows?
-      projekt.projekt_phases.to_a.select(&:phase_activated?).size > 4
+      projekt.projekt_phases.to_a.select(&:phase_activated?).size >= 4
     end
 
     def phase_name(phase)
       t("custom.projekts.phase_name.#{phase.name}")
+    end
+
+    def projekt_phases
+      projekt.projekt_phases.includes(:translations, :age_restriction)
     end
 end

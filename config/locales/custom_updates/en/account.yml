@@ -1,0 +1,25 @@
+en:
+  custom:
+    account:
+      show:
+        change_credentials_link: Change login information
+        edit_details_link: Update personal information
+        erase_account_link: Delete account
+        settings: Account settings
+        verification_title: Account verification
+        verification_description: Some participation projects require user verification. By clicking on the button you can start the user verification.
+        verification_with_bund_id_description: Some participation projects require user verification. You can start the user verification by clicking on the button. You must verify yourself with the BundID using a high level of verification, such as an ID card or Elster. Other login methods such as a user name and password are not sufficient.
+        personal_settings: Personal settings
+        notifications: Notifications
+        save_settings: Update
+        not_verified_account: Account is not verified
+      subscriptions:
+        projekts:
+          title: Project related notifications
+          description1: "You have activated project notification for the following projects:"
+          description2: By clicking on the button below you can unsubscribe from all project notifications. If you only want to unsubscribe from individual project phases, please use the direct link to the projects.
+          cancel_projekts_subscriptions_button: Unsubscribe from all project notifications
+      edit_details:
+        title: Update personal information
+        documents_label: Document check
+        submit: Update

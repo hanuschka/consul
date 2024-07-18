@@ -2,7 +2,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   prepend_before_action :authenticate_scope!, only: [:edit, :update, :destroy, :finish_signup, :do_finish_signup]
   before_action :configure_permitted_parameters
 
-  invisible_captcha only: [:create], honeypot: :address, scope: :user
+  invisible_captcha only: [:create, :create_guest], honeypot: :address, scope: :user
 
   def new
     super do |user|
@@ -44,6 +44,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     current_user.registering_with_oauth = false
     if current_user.update(sign_up_params)
       current_user.send_oauth_confirmation_instructions
+      current_user.verify! if current_user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
       sign_in_and_redirect current_user, event: :authentication
     else
       render :finish_signup

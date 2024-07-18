@@ -26,6 +26,8 @@ class Admin::ProjektsController < Admin::BaseController
 
     @map_configuration_settings = Setting.all.group_by(&:type)["map"]
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
+
+    @projekts = @projekts.page(params[:page]).per(5)
   end
 
   def show
@@ -33,16 +35,15 @@ class Admin::ProjektsController < Admin::BaseController
   end
 
   def quick_update
-    @projekt.update_attributes!(projekt_params)
-    @projekt.touch
+    @projekt.update!(projekt_params)
     Projekt.ensure_order_integrity
 
-    redirect_back(fallback_location: admin_projekts_path)
+    redirect_to admin_projekts_path(page: params[:page])
   end
 
   def update
     if @projekt.overview_page?
-      if @projekt.update_attributes(projekt_params)
+      if @projekt.update(projekt_params)
         @projekt.touch
         redirect_to admin_projekts_path + "#tab-projekts-overview-page",
           notice: t("admin.settings.index.map.flash.update")
@@ -56,14 +57,12 @@ class Admin::ProjektsController < Admin::BaseController
   end
 
   def create
-    @projekts = Projekt.top_level.page(params[:page])
-    @projekt = Projekt.new(projekt_params.merge(color: "#073E8E"))
-    @projekt.order_number = 0
+    @projekt = Projekt.new(projekt_params)
 
     if @projekt.save
-      Projekt.ensure_order_integrity
       redirect_to admin_projekts_path
     else
+      @projekts = Projekt.top_level.page(params[:page])
       render :index
     end
   end

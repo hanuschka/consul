@@ -1,10 +1,70 @@
 require_dependency Rails.root.join("app", "controllers", "account_controller").to_s
 
 class AccountController < ApplicationController
+  include ImageAttributes
+  include HasRegisteredAddress
+
+  respond_to :js, only: [:edit_username]
+
   def show
     @account_individial_groups_hard = IndividualGroup.hard
     @account_individial_groups_soft = IndividualGroup.soft
     @account_individual_group_values = @account.individual_group_values
+    @notifications =
+      if params[:notifications] == "read"
+        current_user.notifications.read
+      else
+        current_user.notifications.unread
+      end
+
+    if Setting.new_design_enabled?
+      render :show_new
+    else
+      render :show
+    end
+  end
+
+  def refresh_activities; end
+
+  def edit_username; end
+
+  def update_username
+    unless params["user"]["cancel_changes"] == "true"
+      @account.update(username: params["user"]["username"])
+    end
+  end
+
+  def update
+    if @account.update(account_params)
+      respond_to do |format|
+        format.html do
+          redirect_to account_path, notice: t("flash.actions.save_changes.notice")
+        end
+        format.js do
+          render
+        end
+      end
+    else
+      @account.errors.messages.delete(:organization)
+      render :show
+    end
+  end
+
+  def edit_details
+    head :not_found unless @account.extended_registration?
+  end
+
+  def update_details
+    head :not_found unless @account.extended_registration?
+
+    process_temp_attributes_for(@account)
+
+    if @account.update(user_params)
+      @account.unverify!
+      redirect_to account_path, notice: t("flash.actions.save_changes.notice")
+    else
+      render :edit_details
+    end
   end
 
   private
@@ -15,8 +75,10 @@ class AccountController < ApplicationController
     end
 
     def process_individual_group_values_param
-      @account.individual_group_values.where(individual_group_id: IndividualGroup.hard).ids.each do |id|
-        params["account"]["individual_group_value_ids"].push(id)
+      if params["account"]["individual_group_value_ids"].present?
+        @account.individual_group_values.where(individual_group_id: IndividualGroup.hard).ids.each do |id|
+          params["account"]["individual_group_value_ids"].push(id)
+        end
       end
     end
 
@@ -29,11 +91,27 @@ class AccountController < ApplicationController
          :username, :public_activity, :public_interests, :email_on_comment,
          :email_on_comment_reply, :email_on_direct_message, :email_digest, :newsletter,
          :official_position_badge, :recommended_debates, :recommended_proposals,
+         :show_in_users_overview,
          :adm_email_on_new_comment, :adm_email_on_new_proposal,
          :adm_email_on_new_debate, :adm_email_on_new_deficiency_report,
-         :adm_email_on_new_manual_verification,
-         individual_group_value_ids: []
+         :adm_email_on_new_manual_verification, :adm_email_on_new_topic,
+         :background_image,
+         individual_group_value_ids: [],
+         image_attributes: image_attributes
         ]
       end
+    end
+
+    def user_params
+      set_address_attributes
+
+      params.require(:user).permit(
+        :username,
+        :first_name, :last_name,
+        :city_name, :plz, :street_name, :street_number, :street_number_extension,
+        :registered_address_id,
+        :gender, :date_of_birth,
+        :document_type, :document_last_digits
+      )
     end
 end

@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :authenticate_user!, only: [:create, :hide, :vote]
+  # before_action :authenticate_user!, only: [:create, :hide, :vote]
   before_action :load_commentable, only: :create
   before_action :verify_resident_for_commentable!, only: :create
   before_action :verify_comments_open!, only: [:create, :vote]
@@ -36,6 +36,7 @@ class CommentsController < ApplicationController
   def flag
     Flag.flag(current_user, @comment)
     set_comment_flags(@comment)
+    @comment.subtree.update_all(ignored_flag_at: nil)
 
     render "shared/_refresh_flag_actions", locals: { flaggable: @comment, divider: true }
   end
@@ -100,8 +101,6 @@ class CommentsController < ApplicationController
     def add_notification(comment)
       notifiable = comment.reply? ? comment.parent : comment.commentable
       notifiable_author_id = notifiable&.author_id
-      puts "Notifiable: #{notifiable}"
-      puts "Notifiable json : #{notifiable.as_json}"
 
       if notifiable_author_id.present? && notifiable_author_id != comment.author_id
         Notification.add(notifiable.author, notifiable)

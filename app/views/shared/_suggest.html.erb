@@ -1,4 +1,4 @@
-<div class="small-12 column">
+<div class="small-12">
   <% if @search_terms && @resources.any? %>
     <div class="callout warning" role="alert" aria-live="assertive">
       <p>
@@ -11,7 +11,7 @@
 
       <ul>
         <% @resources.limit(@limit).each do |resource| %>
-          <li><%= link_to resource.title, @resource_path_method.present? ? send(@resource_path_method, resource) : resource %></li>
+          <li><%= link_to resource.title, @resource_path_method.present? ? send(@resource_path_method, resource) : resource, target: "_blank" %></li>
         <% end %>
       </ul>
 
@@ -24,7 +24,7 @@
                 limit: @limit) %>
           </strong>
           <%= link_to t("shared.suggest.#{resource_name}.see_all"),
-                      polymorphic_path(resource_model, search: @search_terms) %>
+                      polymorphic_path(resource_model, search: @search_terms), target: "_blank" %>
         </p>
       <% end %>
 

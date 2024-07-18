@@ -5,13 +5,23 @@ class FollowsController < ApplicationController
   def create
     @follow.save!
     flash.now[:notice] = t("shared.followable.#{followable_translation_key(@follow.followable)}.create.notice")
-    render :refresh_follow_button
+
+    if params[:kind] == "icon"
+      render :refresh_follow_icon
+    else
+      render :refresh_follow_button
+    end
   end
 
   def destroy
     @follow.destroy!
     flash.now[:notice] = t("shared.followable.#{followable_translation_key(@follow.followable)}.destroy.notice")
-    render :refresh_follow_button
+
+    if params[:kind] == "icon"
+      render :refresh_follow_icon
+    else
+      render :refresh_follow_button
+    end
   end
 
   private

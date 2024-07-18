@@ -54,6 +54,7 @@ module Abilities
 
       can [:search, :create, :index, :destroy, :update], ::Administrator
       can [:search, :create, :index, :destroy], ::ProjektManager # custom
+      can [:search, :create, :index, :destroy], ::DeficiencyReportManager # custom
       can [:search, :create, :index, :destroy], ::Moderator
       can [:search, :show, :update, :create, :index, :destroy, :summary], ::Valuator
       can [:search, :create, :index, :destroy], ::Manager
@@ -141,7 +142,8 @@ module Abilities
       can [:manage], ::DeficiencyReport::Officer
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
-      can [:index, :show, :new, :create, :destroy, :update_status, :update_category, :update_officer, :update_official_answer, :vote, :order_statuses], DeficiencyReport
+      can [:manage], ::DeficiencyReport::Area
+      can [:index, :show, :new, :create, :destroy, :update_status, :update_category, :update_officer, :notify_officer_about_new_comments, :update_official_answer, :vote, :order_statuses], DeficiencyReport
       can [:approve_official_answer], ::DeficiencyReport do |dr|
         Setting['deficiency_reports.admins_must_approve_officer_answer'].present? &&
           !dr.official_answer_approved? &&
@@ -150,7 +152,7 @@ module Abilities
 
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes], Poll::Question
-      can [:verify, :unverify], User
+      can [:update, :verify, :unverify], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
         investment.budget.phase == "selecting"
@@ -162,6 +164,34 @@ module Abilities
       can [:index], RegisteredAddress::Street
 
       can [:results, :stats], Poll, projekt_phase: { settings: { key: "feature.resource.intermediate_poll_results_for_admins", value: "active" }}
+
+      can :manage, Projekt
+      can :manage, ProjektSetting
+      can :manage, ProjektPhaseSetting
+      can :manage, MapLayer
+      can :manage, MapLocation
+      can :manage, Milestone
+      can :manage, ProjektQuestion
+      can :manage, ProjektLivestream
+      can :manage, ProjektLabel
+      can :manage, ProjektPhase
+      can :manage, Sentiment
+      can :manage, ProjektNotification
+      can :manage, ProgressBar
+      can :manage, ProjektEvent
+      can :manage, FormularField
+      can :manage, FormularFollowUpLetter
+      can :manage, ProjektArgument
+
+      can :read_stats, Budget, id: Budget.valuating_or_later.ids
+
+      can :destroy, RelatedContent
+
+      can [:hide, :restore], Topic
+
+      can :read_stats, Budget::Investment do |investment|
+        can? :read_stats, investment.budget
+      end
     end
   end
 end

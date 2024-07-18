@@ -15,8 +15,10 @@ class Admin::ProposalsController < Admin::BaseController
     respond_to do |format|
       format.html
       format.csv do
+        formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
+
         send_data Proposals::CsvExporter.new(@resources.limit(nil)).to_csv,
-          filename: "proposals.csv"
+          filename: "proposals-#{formated_time}.csv"
       end
     end
   end
@@ -60,6 +62,6 @@ class Admin::ProposalsController < Admin::BaseController
     end
 
     def proposal_params
-      params.require(:proposal).permit(:selected, :tag_list, :projekt_id, :related_sdg_list )
+      params.require(:proposal).permit(:selected, :tag_list, :projekt_id, :related_sdg_list, :official_answer)
     end
 end

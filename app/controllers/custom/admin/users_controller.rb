@@ -1,8 +1,10 @@
 require_dependency Rails.root.join("app", "controllers", "admin", "users_controller").to_s
 
 class Admin::UsersController < Admin::BaseController
+  include HasRegisteredAddress
+
   def index
-    @users = @users.send(@current_filter).order_filter(params)
+    @users = @users.not_guests.send(@current_filter).order_filter(params)
     @users = @users.by_username_email_or_document_number(params[:search]) if params[:search]
 
     unless params[:format] == "csv"
@@ -17,8 +19,29 @@ class Admin::UsersController < Admin::BaseController
       format.html
       format.js
       format.csv do
-        send_data CsvServices::UsersExporter.call(@users), filename: "users-#{Time.zone.today}.csv"
+        CsvJobs::UsersJob.perform_later(current_user.id, @users.pluck(:id))
+        redirect_to admin_users_path, notice: "Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist."
       end
+    end
+  end
+
+  def show
+    @user = User.find(params[:id])
+  end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find_by(id: params[:id])
+    process_temp_attributes_for(@user)
+
+    if @user.update(user_params)
+      @user.unverify!
+      redirect_to admin_users_path, notice: "Benutzer aktualisiert"
+    else
+      render :edit
     end
   end
 
@@ -34,6 +57,20 @@ class Admin::UsersController < Admin::BaseController
 
   def unverify
     @user = User.find(params[:id])
-    @user.update!(verified_at: nil, geozone: nil, unique_stamp: nil)
+    @user.unverify!
   end
+
+  private
+
+    def user_params
+      set_address_attributes
+
+      params.require(:user).permit(:email,
+                                   :first_name, :last_name,
+                                   :city_name, :plz, :street_name, :street_number, :street_number_extension,
+                                   :registered_address_id,
+                                   :gender, :date_of_birth)
+                                   # :document_type, :document_last_digits,
+                                   # :password, :password_confirmation)
+    end
 end

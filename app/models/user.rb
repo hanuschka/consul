@@ -76,7 +76,7 @@ class User < ApplicationRecord
   belongs_to :geozone
 
   validates :username, presence: true, if: :username_required?
-  validates :username, uniqueness: { scope: :registering_with_oauth }, if: :username_required?
+  validates :username, uniqueness: { scope: :registering_with_oauth }, if: :username_required?, allow_blank: :username_required?
   validates :document_number, uniqueness: { scope: :document_type }, allow_nil: true
 
   validate :validate_username_length
@@ -117,9 +117,9 @@ class User < ApplicationRecord
   end
   scope :between_ages, ->(from, to) do
     where(
-      "date_of_birth > ? AND date_of_birth < ?",
-      to.years.ago.beginning_of_year,
-      from.years.ago.end_of_year
+      "date_of_birth BETWEEN ? AND ?",
+      (to.years.ago - 1.year + 1.day).beginning_of_day,
+      from.years.ago.end_of_day
     )
   end
 
@@ -128,11 +128,14 @@ class User < ApplicationRecord
   # Get the existing user by email if the provider gives us a verified email.
   def self.first_or_initialize_for_oauth(auth)
     oauth_email           = auth.info.email
-    oauth_email_confirmed = oauth_email.present? && (auth.info.verified || auth.info.verified_email)
+    oauth_email_confirmed = oauth_email.present?# && (auth.info.verified || auth.info.verified_email)
     oauth_user            = User.find_by(email: oauth_email) if oauth_email_confirmed
 
-    oauth_user || User.new(
-      username:  auth.info.name || auth.uid,
+    user = oauth_user || User.new(
+      first_name: auth.info&.first_name&.capitalize,
+      last_name: auth.info&.last_name&.capitalize,
+      date_of_birth:  (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil),
+      plz: auth.extra.raw_info&.postal_code,
       email: oauth_email,
       oauth_email: oauth_email,
       password: Devise.friendly_token[0, 20],
@@ -140,8 +143,22 @@ class User < ApplicationRecord
       terms_data_storage: "1", #custom
       terms_data_protection: "1", #custom
       terms_general: "1", #custom
+      auth_image_link: auth.info.image, #custom
       confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
+
+    if auth.info.image.present? && !user.image&.attached? #custom
+      image_path = Image.save_image_from_url(auth.info.image) #custom
+      image_file = File.open(image_path) #custom
+      image = Image.new(title: "avatar", imageable: user) #custom
+      image.attachment.attach(io: image_file, filename: "avatar.jpg", content_type: "image/jpg") #custom
+
+      if image.valid?
+        user.image = image #custom
+      end
+    end
+
+    user #custom
   end
 
   def name
@@ -264,8 +281,11 @@ class User < ApplicationRecord
       confirmed_phone: nil,
       unconfirmed_phone: nil
     )
+    unverify! if verified? #custom
     identities.destroy_all
     remove_roles
+    remove_audits #custom
+    remove_subscriptions #custom
   end
 
   def erased?

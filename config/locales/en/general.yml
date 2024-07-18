@@ -257,6 +257,9 @@ en:
         replies_to:
           one: Someone replied to your comment on
           other: There are %{count} new replies to your comment on
+        new_resource:
+          one: New resource added
+          other: New resource added
       mark_as_read: Mark as read
       mark_as_unread: Mark as unread
       notifiable_hidden: This resource is not available anymore.
@@ -272,6 +275,7 @@ en:
     finish_signup:
       title: "Additional details"
       username_warning: "Due to a change in the way we interact with social networks, it is possible that your username now appears as 'already in use'. If that is your case, please choose a different username."
+      submit: "Complete registration"
     google_oauth2:
       sign_in: Sign in with Google
       sign_up: Sign up with Google
@@ -655,7 +659,7 @@ en:
     description:
       unique: You can cast one vote for this question.
       multiple: You may cast %{maximum} votes evenly among the available answers.
-      multiple_with_weight: You may cast %{maximum} votes weighted across multiple answers.
+      multiple_with_weight: You may cast %{maximum} votes weighted across multiple answers. Maximum %{cap} per answer.
       rating_scale: You are allowed one vote per rating scale.
   proposal_notifications:
     new:

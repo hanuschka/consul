@@ -1,0 +1,12 @@
+$("#user-registered-address-fields").replaceWith("<%= j render Users::RegisteredAddressFieldsComponent.new(
+    selected_city_id: @selected_city_id,
+    selected_street_id: @selected_street_id,
+    selected_address_id: @selected_address_id
+  ) %>"
+);
+
+<% if @selected_city_id == "0" || @selected_street_id == "0" || @selected_address_id == "0" %>
+  $("#user-regular-address-fields").css("display", "block");
+<% else %>
+  $("#user-regular-address-fields").css("display", "none");
+<% end %>

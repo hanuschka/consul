@@ -11,10 +11,8 @@ class ProposalNotificationsController < ApplicationController
     @notification = ProposalNotification.new(proposal_notification_params)
     @proposal = Proposal.find(proposal_notification_params[:proposal_id])
     if @notification.save
-      @proposal.users_to_notify.each do |user|
-        Notification.add(user, @notification)
-      end
-      redirect_to @notification, notice: I18n.t("flash.actions.create.proposal_notification")
+      NotificationServices::NewProposalNotificationNotifier.new(@notification.id).call
+      redirect_to messages_proposal_dashboard_path(@proposal_notification.proposal), notice: I18n.t("flash.actions.create.proposal_notification")
     else
       render :new
     end
@@ -22,6 +20,27 @@ class ProposalNotificationsController < ApplicationController
 
   def show
     @notification = ProposalNotification.find(params[:id])
+  end
+
+  def edit
+  end
+
+  def update
+    if @proposal_notification.update(proposal_notification_params)
+      redirect_to messages_proposal_dashboard_path(@proposal_notification.proposal), notice: "Benachrichtigung aktualisiert"
+    else
+      render :new
+    end
+  end
+
+  def destroy
+    fallback_path = messages_proposal_dashboard_path(@proposal_notification.proposal)
+
+    if @proposal_notification.destroy
+      redirect_back fallback_location: fallback_path, notice: "Benachrichtigung gelöscht"
+    else
+      redirect_back fallback_location: fallback_path, alert: "Benachrichtigung nicht gelöscht"
+    end
   end
 
   private

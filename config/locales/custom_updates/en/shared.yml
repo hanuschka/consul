@@ -1,0 +1,5 @@
+en:
+  custom:
+    shared:
+      select: select
+      required: mandatory field

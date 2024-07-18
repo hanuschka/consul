@@ -1,9 +1,16 @@
 de:
   custom:
     projekt_phases:
+      cta:
+        title: Beteiligung
+        voting_phase: An Abstimmung teilnehmen
+        question_phase: An Kurzumfrage teilnehmen
+        budget_phase: Jetzt mitmachen
+        formular_phase: Jetzt teilnehmen
       permission_problem:
         new_button_component:
           shared:
+            guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder als %{guest_sign_in}."
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
@@ -18,8 +25,11 @@ de:
             only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+          formular_phase:
+            past_regular_formular_cutoff_date: Die Beteiligungsphase ist bereits abgeschlossen
         votes_component:
           shared:
+            guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder als %{guest_sign_in}."
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
@@ -55,8 +65,10 @@ de:
             only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
+            not_enough_money: "Sie haben bereits das gesamte verfügbare Budget zugewiesen."
         commenting:
           shared:
+            guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder als %{guest_sign_in}."
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
@@ -74,6 +86,7 @@ de:
           budget_phase:
             phase_expired: Diese Projektphase ist abgelaufen
         poll_votes:
+          guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder als %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen nicht abstimmen.
@@ -106,6 +119,7 @@ de:
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
         projekt_questions:
+          guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder als %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.
@@ -121,6 +135,7 @@ de:
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
         projekt_livestreams:
+          guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder als %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.

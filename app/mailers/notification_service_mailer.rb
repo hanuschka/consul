@@ -1,9 +1,27 @@
 class NotificationServiceMailer < ApplicationMailer
+  helper TextWithLinksHelper
+
   def overdue_deficiency_reports(officer_id, overdue_reports_ids)
     @officer = DeficiencyReport::Officer.find(officer_id)
     @overdue_reports = DeficiencyReport.where(id: overdue_reports_ids)
 
     subject = t("custom.notification_service_mailers.overdue_deficiency_reports.subject")
+
+    with_user(@officer.user) do
+      mail(to: @officer.email, subject: subject)
+    end
+  end
+
+  def new_comments_for_deficiency_report(deficiency_report, last_notified_time, initial: false)
+    @deficiency_report = deficiency_report
+    @officer = @deficiency_report.officer
+    @new_comments = @deficiency_report.comments.where("created_at > ?", last_notified_time)
+    @initial = initial
+
+    subject = t(
+      "custom.notification_service_mailers.new_comments_for_deficiency_report.subject",
+      deficiency_report_title: @deficiency_report.title.truncate(30)
+    )
 
     with_user(@officer.user) do
       mail(to: @officer.email, subject: subject)
@@ -24,6 +42,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_proposal(user_id, proposal_id)
     @user = User.find(user_id)
     @proposal = Proposal.find(proposal_id)
+    @projekt_phase = @proposal&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_proposal.subject")
 
@@ -35,6 +54,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_debate(user_id, debate_id)
     @user = User.find(user_id)
     @debate = Debate.find(debate_id)
+    @projekt_phase = @debate&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_debate.subject")
 
@@ -46,6 +66,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_poll(user_id, poll_id)
     @user = User.find(user_id)
     @poll = Poll.find(poll_id)
+    @projekt_phase = @poll&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_poll.subject")
 
@@ -57,6 +78,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_comment(user_id, comment_id)
     @user = User.find(user_id)
     @comment = Comment.find(comment_id)
+    @projekt_phase = @comment&.commentable if @comment&.commentable.is_a?(ProjektPhase)
 
     subject = t("custom.notification_service_mailers.new_comment.subject")
 
@@ -91,7 +113,7 @@ class NotificationServiceMailer < ApplicationMailer
   def projekt_questions(user_id, projekt_phase_id)
     @user = User.find(user_id)
     @projekt_phase = ProjektPhase.find(projekt_phase_id)
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.projekt_questions.subject")
 
@@ -103,7 +125,7 @@ class NotificationServiceMailer < ApplicationMailer
   def projekt_arguments(user_id, projekt_phase_id)
     @user = User.find(user_id)
     @projekt_phase = ProjektPhase.find(projekt_phase_id)
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.projekt_arguments.subject")
 
@@ -115,6 +137,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_budget_investment(user_id, investment_id)
     @user = User.find(user_id)
     @investment = Budget::Investment.find(investment_id)
+    @projekt_phase = @investment&.projekt_phase
 
     subject = t("custom.notification_service_mailers.new_budget_investment.subject")
 
@@ -127,7 +150,7 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @projekt_notification = ProjektNotification.find(projekt_notification_id)
     @projekt_phase = @projekt_notification.projekt_phase
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.new_projekt_notification.subject")
 
@@ -140,7 +163,7 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @projekt_event = ProjektEvent.find(projekt_event_id)
     @projekt_phase = @projekt_event.projekt_phase
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.new_projekt_event.subject")
 
@@ -155,7 +178,7 @@ class NotificationServiceMailer < ApplicationMailer
 
     if @projekt_milestone.milestoneable.is_a?(ProjektPhase)
       @projekt_phase = @projekt_milestone.milestoneable
-      @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+      @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
     else
       return
     end
@@ -171,9 +194,33 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @projekt_livestream = ProjektLivestream.find(projekt_livestream_id)
     @projekt_phase = @projekt_livestream.projekt_phase
-    @url = page_url(@projekt_phase.projekt.page.slug, selected_phase_id: @projekt_phase.id, anchor: "filter-subnav")
+    @url = page_url(@projekt_phase.projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "filter-subnav")
 
     subject = t("custom.notification_service_mailers.new_projekt_livestream.subject")
+
+    with_user(@user) do
+      mail(to: @user.email, subject: subject)
+    end
+  end
+
+  def new_topic(user_id, community_id, topic_id)
+    @user = User.find(user_id)
+    @community = Community.find(community_id)
+    @topic = Topic.find(topic_id)
+
+    subject = t("custom.notification_service_mailers.new_topic.subject")
+
+    with_user(@user) do
+      mail(to: @user.email, subject: subject)
+    end
+  end
+
+  def new_proposal_notification(user_id, proposal_notification_id)
+    @user = User.find(user_id)
+    @proposal_notification = ProposalNotification.find(proposal_notification_id)
+    @proposal = @proposal_notification.proposal
+
+    subject = t("custom.notification_service_mailers.new_proposal_notification.subject", proposal_title: @proposal.title)
 
     with_user(@user) do
       mail(to: @user.email, subject: subject)

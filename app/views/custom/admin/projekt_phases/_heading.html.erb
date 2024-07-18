@@ -1,6 +1,15 @@
 <div class="row">
   <div class="column">
-    <%= back_link_to edit_admin_projekt_path(@projekt_phase.projekt, anchor: "tab-projekt-phases") %>
+    <% if embedded? %>
+      <% if current_user.administrator? %>
+        <% back_url = admin_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
+      <% else %>
+        <% back_url = admin_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
+      <% end %>
+    <% else %>
+      <% back_url = polymorphic_path([@namespace, @projekt_phase.projekt], action: :edit, anchor: "tab-projekt-phases") %>
+    <% end %>
+    <%= back_link_to back_url %>
   </div>
 </div>
 

@@ -1,0 +1,14 @@
+de:
+  custom:
+    topics:
+      hide:
+        success: Das Thema wurde ausgeblendet.
+      restore:
+        success: Das Thema wurde eingeblendet.
+      list:
+        empty_list_text: Keine Beiträge
+        orders:
+          most_voted: Am besten bewertet
+          newest: Neueste zuerst
+          oldest: Älteste zuerst
+          most_commented: Meist kommentiert

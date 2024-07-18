@@ -1,13 +1,25 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
+  include IframeEmbeddedBehavior
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
-  before_action :show_launch_page, if: :show_launch_page?
+  before_action :set_partner_emails
+  after_action :set_back_path
   helper_method :set_comment_flags
 
-  private
+  # unless Rails.env.production?
+  #   around_action :n_plus_one_detection
+  #
+  #   def n_plus_one_detection
+  #     Prosopite.scan
+  #     yield
+  #   ensure
+  #     Prosopite.finish
+  #   end
+  # end
 
+  private
     def show_launch_page?
       launch_date_setting = Setting["extended_option.general.launch_date"]
       return false if launch_date_setting.blank?
@@ -45,27 +57,42 @@ class ApplicationController < ActionController::Base
     end
 
     def set_projekts_for_overview_page_navigation
-      @projekts_for_overview_page_navigation = Projekt.joins(:projekt_settings)
-        .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+      return if embedded?
+
+      @projekts_for_overview_page_navigation =
+        Projekt
+          .sort_by_order_number
+          .includes({page: [:translations]}, :projekt_settings, { children_projekts_show_in_navigation: :projekt_settings })
+          .joins(:projekt_settings)
+          .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+          .select { |p| p.visible_for?(current_user) }
+
+      @projekts_for_navigation =
+        Projekt
+          .top_level
+          .includes(
+            :projekt_settings, :hard_individual_group_values,
+            page: [:translations]
+          )
+          .show_in_navigation
+          .select { |p| p.visible_for?(current_user) }
     end
 
     def set_default_social_media_images
       return if params[:controller] == "ckeditor/pictures"
 
-      SiteCustomization::Image.all_images
+      social_media_icon = SiteCustomization::Image.find_by(name: "social_media_icon")
 
-      social_media_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon").image
-
-      if social_media_icon.attached?
-        @social_media_icon_path = polymorphic_path(social_media_icon, disposition: "attachment").split("?")[0].delete_prefix("/")
+      if social_media_icon&.image&.attached?
+        @social_media_icon_path = polymorphic_path(social_media_icon.image, disposition: "attachment").split("?")[0].delete_prefix("/")
       else
         @social_media_icon_path = nil
       end
 
-      twitter_icon = SiteCustomization::Image.all.find_by(name: "social_media_icon_twitter").image
+      twitter_icon = SiteCustomization::Image.find_by(name: "social_media_icon_twitter")
 
-      if twitter_icon.attached?
-        @social_media_icon_twitter_url = polymorphic_path(twitter_icon.attachment, disposition: "attachment")
+      if twitter_icon&.image&.attached?
+        @social_media_icon_twitter_url = polymorphic_path(twitter_icon.image.attachment, disposition: "attachment")
           .split("?")[0]
       else
         nil
@@ -83,5 +110,19 @@ class ApplicationController < ActionController::Base
     def set_partner_emails
       filename = File.join(Rails.root, "config", "secret_emails.yml")
       @partner_emails = File.exist?(filename) ? File.readlines(filename).map { |l| l.chomp.downcase } : []
+    end
+
+    def javascript_request?
+      request.format == "text/javascript"
+    end
+
+    def set_back_path
+      if params[:projekt_phase_id].present?
+        back_path = helpers.url_to_footer_tab(extras: { anchor: "filter-subnav" })
+      else
+        back_path = request.fullpath
+      end
+
+      session[:back_path] = back_path
     end
 end

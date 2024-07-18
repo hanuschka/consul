@@ -1,0 +1,130 @@
+<%= provide :title, t("social_share.polls_show.title_#{@poll.id}", default: @poll.title) %>
+<%= provide :meta_description, t("social_share.polls_show.description_#{@poll.id}", default: @poll.title) %>
+<%= provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: poll_url,
+              social_title: t("social_share.polls_show.title_#{@poll.id}", default: @poll.title),
+              social_description: t("social_share.polls_show.facebook_#{@poll.id}", default: @poll.title),
+              twitter_image_url:  "social_media_polls_twitter.jpg",
+              og_image_url: "social_media_polls.jpg" %>
+<% end %>
+
+<main>
+  <div id="<%= dom_id(@poll) %>">
+    <div class="flex-layout">
+      <div class="main-column">
+        <div class="margin-bottom">
+          <% fallback_path = @poll.related.present? ? proposal_path(@poll.related) : polls_path %>
+          <%= resources_back_link(fallback_path: fallback_path) %>
+        </div>
+        <div class="resource-page--title-subline">
+          <%= render_custom_block(
+            "polls_show_welcome_text",
+            custom_prefix: current_user&.username.present? ? "#{current_user&.username}," : nil,
+            default_content: t("custom.polls.show.welcome_default_text")) %>
+        </div>
+      </div>
+      <div class="sidebar-placeholder"></div>
+    </div>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= render ResourcePage::BannerComponent.new(resource: @poll) do |c| %>
+          <% c.with_links_section do %>
+             <%= render Polls::SubNavComponent.new(poll: @poll) %>
+          <% end %>
+        <% end %>
+
+        <% if @poll.summary.present? || @poll.description.present? %>
+          <div class="resource-page--description new-card main-content-card">
+            <%= render "poll_header" %>
+          </div>
+        <% end %>
+
+        <%= render "callout" %>
+
+        <div class="margin-bottom">
+          <% if @poll.wizard_mode? %>
+            <div class="question-wizard js-question-wizard">
+              <div class="progress question-wizard--progress js-question-wizard--progress">
+                <span class="meter js-question-wizard--progress-bar"></span>
+              </div>
+
+              <div class="question-wizard--questions">
+                <%# <% all_questions_answered = @questions.all? { |question| question.answers.present? } %>
+                <% first_question_shown = false %>
+                <% @questions.each.with_index do |question, index| %>
+                  <% show_question = (index == 0) %>
+                  <% additional_class = show_question ? "-visible" : "" %>
+                  <div
+                      class="question-wizard-item js-question-wizard-item <%= additional_class %>"
+                      data-question-id="<%= question.id %>"
+                      data-next-question-id="<%= question.next_question_id %>"
+                      data-question-number="<%= index + 1 %>">
+                      <%= render Polls::Questions::QuestionComponent.new(question: question) %>
+                  </div>
+                  <% if show_question %>
+                    <% first_question_shown = show_question %>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <div class="questions-navigation margin-bottom">
+                <div class="d-flex">
+                  <button type="button" class="d-none button hollow question-wizard-prev js-question-wizard-prev">
+                    <%= t("custom.polls.questions.prev_question") %>
+                  </button>
+                  <button type="button" class="button margin-left hollow js-question-wizard-next">
+                    <%= t("custom.polls.questions.next_question") %>
+                  </button>
+                </div>
+                <button type="button" class="d-none button hollow js-question-wizard-go-to-start">
+                  <%= t("custom.polls.questions.go_to_start") %>
+                </button>
+              </div>
+            </div>
+          <% else %>
+            <%= render Polls::Questions::QuestionComponent.with_collection(@questions) %>
+          <% end %>
+        </div>
+
+        <% @questions.each do |question| %>
+          <% question.question_answers.each do |answer| %>
+            <% if answer_with_description?(answer) %>
+              <%= render partial: "polls/questions/answer_more_info_modal", locals: { answer: answer } %>
+            <% end %>
+          <% end %>
+
+          <% question.nested_questions.each do |question| %>
+            <% question.question_answers.each do |answer| %>
+              <% if answer_with_description?(answer) %>
+                <%= render partial: "polls/questions/answer_more_info_modal", locals: { answer: answer } %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if projekt_phase_feature?(@poll.projekt_phase, "resource.show_comments") %>
+          <%= render Shared::NewCommentsComponent.new(@poll, @comment_tree) %>
+        <% end %>
+      </div>
+    <aside class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
+        <div class="margin-bottom-half">
+           <%= format_date_range(@poll.starts_at, @poll.ends_at, separator: t("custom.polls.poll.date.to")) %>
+        </div>
+      <% end %>
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.share"), icon_name: "share-alt") do |c| %>
+        <div class="margin-bottom-half">
+          <%= render "shared/social_share",
+            share_title: t("shared.share"),
+            title: @poll.name,
+            url: poll_url(@poll),
+            description: @poll.name,
+            mobile: @poll.name %>
+        </div>
+      <% end %>
+    </aside>
+    </div>
+  </div>
+</main>

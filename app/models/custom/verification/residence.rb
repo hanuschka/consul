@@ -14,10 +14,12 @@ class Verification::Residence
   validates :gender, presence: true
   validates :date_of_birth, presence: true
 
-  validates :city_name, presence: true, if: :show_no_registered_address_field?
-  validates :plz, presence: true, if: :show_no_registered_address_field?
-  validates :street_name, presence: true, if: :show_no_registered_address_field?
-  validates :street_number, presence: true, if: :show_no_registered_address_field?
+  validates :registered_address_id, presence: true, if: :validate_registered_address?
+
+  validates :city_name, presence: true, if: :validate_regular_address_fields?
+  validates :plz, presence: true, if: :validate_regular_address_fields?
+  validates :street_name, presence: true, if: :validate_regular_address_fields?
+  validates :street_number, presence: true, if: :validate_regular_address_fields?
 
   validates :document_type, presence: true, if: :document_required?
   validates :document_last_digits, presence: true, if: :document_required?
@@ -63,8 +65,18 @@ class Verification::Residence
     Setting["extra_fields.verification.check_documents"].present?
   end
 
-  def show_no_registered_address_field?
-    return true if RegisteredAddress::Street.none?
+  def validate_registered_address?
+    return false unless RegisteredAddress.present?
+
+    acceptable_values = ["0", nil]
+
+    [form_registered_address_city_id,
+      form_registered_address_street_id,
+      form_registered_address_id].all? { |v| acceptable_values.exclude?(v) }
+  end
+
+  def validate_regular_address_fields?
+    return true if RegisteredAddress.none?
 
     form_registered_address_city_id == "0" ||
       form_registered_address_street_id == "0" ||

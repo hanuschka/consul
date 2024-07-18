@@ -1,0 +1,46 @@
+<%= back_link_to admin_users_path %>
+
+<%= form_with model: @user, url: admin_user_path do |f| %>
+  <%= render "shared/errors", resource: @user %>
+
+  <div class="row">
+    <div class="column">
+      <%= f.text_field :first_name %>
+      <%= f.text_field :last_name %>
+    </div>
+  </div>
+
+  <%= render Users::RegisteredAddressFieldsComponent.new(
+    resource: @user,
+    selected_city_id: params[:form_registered_address_city_id].presence || @user.registered_address&.registered_address_city_id,
+    selected_street_id: params[:form_registered_address_street_id].presence || @user.registered_address&.registered_address_street_id,
+    selected_address_id: params[:form_registered_address_id].presence || @user.registered_address&.id
+  ) %>
+  <%= render Users::RegularAddressFieldsComponent.new(f: f, user: @user) %>
+
+  <div class="row">
+    <div class="column">
+      <div class="user-date-of-birth sign-up">
+        <%= f.date_select :date_of_birth,
+                          prompt: true,
+                          start_year: 1900, end_year: minimum_required_age.years.ago.year %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <div>
+        <%= f.select :gender, options_for_gender_select,
+          { prompt: t("custom.helpers.select.gender_prompt") },
+          { class: "show-arrow", style: "background-color:#f8f8f8;" } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <%= f.submit %>
+    </div>
+  </div>
+<% end %>

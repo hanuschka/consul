@@ -3,19 +3,22 @@ class Image < ApplicationRecord
 
   def self.styles
     {
-      large: { resize: "x#{Setting["uploads.images.min_height"]}" },
-      medium: { combine_options: { gravity: "center", resize: "300x300^", crop: "300x300+0+0" }},
-      thumb: { combine_options: { gravity: "center", resize: "140x245^", crop: "140x245+0+0" }},
-      thumb_wider: { combine_options: { gravity: "center", resize: "185x280^", crop: "185x280+0+0" }},
-      banner: { combine_options: { gravity: "center", resize: "1920x250^", crop: "1920x250+0+0" }},
-      popup: { combine_options: { gravity: "center", resize: "140x140^", crop: "140x140+0+0" }}
+      large: { coalesce: true, resize: "x#{Setting["uploads.images.min_height"]}", loader: { page: nil }},
+      projekt_image: { coalesce: true, gravity: "center", resize: "620x390^", crop: "620x390+0+0", loader: { page: nil }},
+      medium: { coalesce: true, gravity: "center", resize: "300x300^", crop: "300x300+0+0", loader: { page: nil }},
+      thumb: { coalesce: true, gravity: "center", resize: "140x245^", crop: "140x245+0+0", loader: { page: nil }},
+      thumb_wider: { coalesce: true, gravity: "center", resize: "185x280^", crop: "185x280+0+0", loader: { page: nil }},
+      banner: { coalesce: true, gravity: "center", resize: "1920x250^", crop: "1920x250+0+0", loader: { page: nil }},
+      popup: { coalesce: true, gravity: "center", resize: "140x140^", crop: "140x140+0+0", loader: { page: nil }},
+      thumb2: { coalesce: true, gravity: "center", resize: "100x100^", crop: "100x100+0+0", loader: { page: nil }},
+      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", loader: { page: nil }}
     }
   end
 
   belongs_to :user
   belongs_to :imageable, polymorphic: true, touch: true
 
-  validates :title, presence: true
+  # validates :title, presence: true
   validate :validate_title_length
   validates :user_id, presence: true
   validates :imageable_id, presence: true,         if: -> { persisted? }
@@ -34,6 +37,29 @@ class Image < ApplicationRecord
     Setting.accepted_content_types_for("images").join(", ")
   end
 
+  def self.save_image_from_url(url)
+    whitelisted_urls = [
+      "http://graph.facebook.com/",
+      "https://graph.facebook.com/",
+      "https://demokratie.today/"
+    ]
+    return unless whitelisted_urls.any? { |whitelisted_url| url.start_with?(whitelisted_url) }
+
+    require "open-uri"
+
+    tmp_folder = Rails.root.join("tmp")
+    filename = "#{SecureRandom.hex(16)}.jpg"
+    destination_path = File.join(tmp_folder, filename)
+
+    open(destination_path, "wb") do |file|
+      URI.open(url, "rb") do |img|
+        file.write(img.read)
+      end
+    end
+
+    destination_path
+  end
+
   def max_file_size
     self.class.max_file_size
   end
@@ -44,7 +70,9 @@ class Image < ApplicationRecord
 
   def variant(style)
     if style
-      attachment.variant(self.class.styles[style])
+      if attachment.attached?
+        attachment&.variant(self.class.styles[style])
+      end
     else
       attachment
     end
@@ -52,6 +80,10 @@ class Image < ApplicationRecord
 
   def attached?
     attachment.attached?
+  end
+
+  def title
+    super || ""
   end
 
   private
@@ -68,8 +100,12 @@ class Image < ApplicationRecord
       if accepted_content_types.include?(attachment_content_type)
         return true if imageable_class == Widget::Card
         return true if imageable_class == SiteCustomization::Page
+        return true if imageable_class == User && title == "avatar" && imageable.new_record?
 
-        attachment.analyze unless attachment.analyzed?
+        unless attachment.analyzed?
+          attachment_changes["attachment"].upload
+          attachment.analyze
+        end
 
         width = attachment.metadata[:width]
         height = attachment.metadata[:height]

@@ -5,7 +5,8 @@ module Abilities
     def initialize(user)
       merge Abilities::Everyone.new(user)
 
-      can [:read, :update], User, id: user.id
+      can [:read, :update, :refresh_activities,
+           :edit_username, :update_username, :edit_details, :update_details], User, id: user.id
 
       can :read, Debate
       can :update, Debate do |debate|
@@ -120,7 +121,7 @@ module Abilities
         can :show, DirectMessage, sender_id: user.id
       end
 
-      can [:create, :show], ProposalNotification, proposal: { author_id: user.id }
+      can [:create, :show, :edit, :update, :destroy], ProposalNotification, proposal: { author_id: user.id }
 
       can [:create], Topic
       can [:update, :destroy], Topic, author_id: user.id
@@ -131,7 +132,10 @@ module Abilities
         projekt_phase.selectable_by?(user)
       end
 
-      can [:read, :json_data, :create, :vote], DeficiencyReport
+      can [:index, :json_data, :create, :suggest], DeficiencyReport
+      can [:show, :vote], DeficiencyReport do |report|
+        report.in? DeficiencyReport.admin_accepted(user)
+      end
       can :destroy, DeficiencyReport do |dr|
         dr.author_id == user.id &&
           dr.official_answer.blank?
@@ -164,6 +168,11 @@ module Abilities
 
       can :toggle_subscription, ProjektPhaseSubscription do |subscription|
         subscription.user == user
+      end
+
+      can :create, RelatedContent
+      can :destroy, RelatedContent do |related_content|
+        related_content.author_id == user.id
       end
     end
   end

@@ -15,7 +15,7 @@
         <div class="items-list-line-divider"></div>
         <%= render(
           Shared::FilterDropdownComponent.new(
-            title: "Sortieren nach",
+            title: t("custom.shared.sort_by"),
             anchor: @anchor,
             options: helpers.valid_orders,
             selected_option: helpers.current_order,

@@ -176,6 +176,8 @@ de:
         report_text: Melden Sie uns diesen Beitrag bei unangebrachten Inhalt oder bei Urheberrechtsverletzungen.
         report_title: Melden
       download: Herunterladen
+      sort_by: Sortieren nach
+      filter_by: Filtern nach
     tag_names:
       projekt: Weitere %{resources} zu diesem Projekt
     tags:
@@ -217,6 +219,18 @@ de:
         comments: Kommentare
         debates: Diskussionen
         polls: Abstimmungen
+      sidebar:
+        information:
+          title: Information
+        users:
+          title: Nutzer*innen
+          sign_in: Jetzt anmelden
+        activity:
+          title: Aktivität
+        newsletter:
+          title: Newsletter
+          cta: Nicht registriert? Jetzt abonnieren
+          submit: Anmelden
 
     welcome_launch:
       p1: Hier entsteht die neue Beteiligungsplattform der Stadt %{org_name}

@@ -82,6 +82,10 @@ class Image < ApplicationRecord
     attachment.attached?
   end
 
+  def title
+    super || ""
+  end
+
   private
 
     def association_name

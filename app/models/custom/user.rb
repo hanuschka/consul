@@ -28,6 +28,8 @@ class User < ApplicationRecord
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
 
+  has_secure_token :temporary_auth_token
+
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -245,6 +247,16 @@ class User < ApplicationRecord
 
   def deficiency_report_manager?
     deficiency_report_manager.present?
+  end
+
+  def generate_expiring_temporary_auth_token!
+    regenerate_temporary_auth_token
+
+    update!(temporary_auth_token_valid_until: 3.hours.from_now)
+  end
+
+  def temporary_auth_token_valid?
+    temporary_auth_token_valid_until > Time.current
   end
 
   private

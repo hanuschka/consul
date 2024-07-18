@@ -1,6 +1,7 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
+  include IframeEmbeddedBehavior
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   before_action :set_partner_emails
@@ -19,7 +20,6 @@ class ApplicationController < ActionController::Base
   # end
 
   private
-
     def show_launch_page?
       launch_date_setting = Setting["extended_option.general.launch_date"]
       return false if launch_date_setting.blank?
@@ -57,6 +57,8 @@ class ApplicationController < ActionController::Base
     end
 
     def set_projekts_for_overview_page_navigation
+      return if embedded?
+
       @projekts_for_overview_page_navigation =
         Projekt
           .sort_by_order_number

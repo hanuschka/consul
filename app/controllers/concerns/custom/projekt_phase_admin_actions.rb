@@ -1,13 +1,18 @@
 module ProjektPhaseAdminActions
   extend ActiveSupport::Concern
+  include EmbeddedAuth
   include Translatable
   include MapLocationAttributes
 
   included do
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
 
-    before_action :set_projekt_phase, :authorize_nav_bar_action, except: [:create, :order_phases]
+    before_action :set_projekt_phase, :authorize_nav_bar_action, except: [:create, :order_phases, :phases_restrictions]
     before_action :set_namespace
+
+    prepend_before_action :authentificate_user_from_token!, only: [
+      :phases_restrictions, :restrictions, :update
+    ]
 
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
   end
@@ -27,8 +32,18 @@ module ProjektPhaseAdminActions
   def update
     authorize!(:create, @projekt_phase)
 
+    url_params = {}
+    if embedded?
+      url_params = {
+        embedded: "true"
+      }
+    end
+
     if @projekt_phase.update(projekt_phase_params)
-      redirect_to namespace_projekt_phase_path(action: params[:action_name] || "duration"),
+      redirect_to namespace_projekt_phase_path(
+        action: (params[:action_name] || "duration"),
+        url_params: url_params
+      ),
         notice: t("custom.admin.projekt_phases.notice.updated")
     end
   end
@@ -205,6 +220,13 @@ module ProjektPhaseAdminActions
     end
   end
 
+  def phases_restrictions
+    @projekt = Projekt.find(params[:projekt_id])
+    authorize!(:edit, @projekt)
+
+    render "custom/admin/projekt_phases/phases_restrictions"
+  end
+
   private
 
     def projekt_phase_params
@@ -273,7 +295,7 @@ module ProjektPhaseAdminActions
 
     # path helpers
 
-    def namespace_projekt_phase_path(action: "update")
-      url_for(controller: params[:controller], action: action, only_path: true)
+    def namespace_projekt_phase_path(action: "update", url_params: {})
+      url_for(controller: params[:controller], action: action, only_path: true, params: url_params)
     end
 end

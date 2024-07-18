@@ -2,7 +2,7 @@
   <% provide :title do %><%= @custom_page.title %><% end %>
 
 <style>
-  <% if @custom_page.image.present? %>
+  <% if @custom_page.image&.attached? %>
     .custom-page-banner {
       background-image: url("<%= url_for(@custom_page.image.attachment) %>");
       background-size: cover;
@@ -71,10 +71,13 @@
   <% end %>
 
   <% if @custom_page.projekt.present? %>
-    <div class="flex-layout">
+    <div class="flex-layout flex-reverse">
+      <div id="projekt-info">
+        <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "desktop" } %>
+      </div>
       <div class="main-column">
         <div class="js-anchor-navigation-content" id="projekt-body">
-          <% if @custom_page.content.present? %>
+          <% if @custom_page.content.present? || @custom_page&.projekt.new_content_block_mode? %>
             <div class="main-content-card">
               <% if @custom_page.content&.include?('template_projekt_library') %>
                 <%= render "projekt_library", projekt: @custom_page.projekt %>
@@ -84,9 +87,6 @@
             </div>
           <% end %>
         </div>
-      </div>
-      <div id="projekt-info">
-        <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "desktop" } %>
       </div>
     </div>
 

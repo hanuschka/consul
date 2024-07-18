@@ -1,6 +1,8 @@
 //= require custom/textarea_autoexpand
 //= require custom/mjAccordion.js
 //= require turbolinks
+//= require photoswipe/dist/umd/photoswipe-lightbox.umd.min.js
+//= require photoswipe/dist/umd/photoswipe.umd.min.js
 
 function initializeMjAccordion() {
   "use strict";
@@ -13,6 +15,7 @@ function initComponents() {
   initializeMjAccordion();
   App.LivesteamLivequestion.initialize();
   App.CollapseTextComponent.initialize();
+  App.ImageGallery.initialize();
 }
 
 $(function() {

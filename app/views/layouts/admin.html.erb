@@ -7,20 +7,24 @@
   </head>
 
   <body class="admin">
-    <%= render "layouts/admin_header" %>
+    <% unless embedded? %>
+      <%= render "layouts/admin_header" %>
+    <% end %>
 
     <div class="menu-and-content">
       <%= check_box_tag :show_menu, nil, false, role: "switch" %>
 
-      <nav id="side_menu" class="admin-sidebar">
-        <% if namespace == "admin" %>
-          <%= render Admin::MenuComponent.new %>
-        <% elsif namespace == "sdg_management" %>
-          <%= render SDGManagement::MenuComponent.new %>
-        <% else %>
-          <%= render "/#{namespace}/menu" %>
-        <% end %>
-      </nav>
+      <% unless embedded? %>
+        <nav id="side_menu" class="admin-sidebar">
+          <% if namespace == "admin" %>
+            <%= render Admin::MenuComponent.new %>
+          <% elsif namespace == "sdg_management" %>
+            <%= render SDGManagement::MenuComponent.new %>
+          <% else %>
+            <%= render "/#{namespace}/menu" %>
+          <% end %>
+        </nav>
+      <% end %>
 
       <div class="admin-content">
         <%= label_tag :show_menu, t("admin.menu.admin"),

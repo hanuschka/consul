@@ -33,37 +33,37 @@ module ProjektPhasesHelper
       link_to admin_legislation_processes_path(anchor: "tab-projekt-questions"), target: "_blank", class: "resources-link" do
         t("custom.admin.projekts.edit.projekt_phases_tab.link.legislation_phase")
       end
-  
+
     when ProjektPhase::ArgumentPhase
       link_to edit_admin_projekt_path(projekt, anchor: "tab-projekt-arguments"), target: "_blank", class: "resources-link" do
         t("custom.admin.projekts.edit.projekt_phases_tab.link.argument_phase")
       end
-  
+
     when ProjektPhase::ProjektNotificationPhase
       link_to edit_admin_projekt_path(projekt, anchor: "tab-projekt-notifications"), target: "_blank", class: "resources-link" do
         t("custom.admin.projekts.edit.projekt_phases_tab.link.notification_phase")
       end
-  
+
     when ProjektPhase::MilestonePhase
       link_to edit_admin_projekt_path(projekt, anchor: "tab-projekt-milestones"), target: "_blank", class: "resources-link" do
         t("custom.admin.projekts.edit.projekt_phases_tab.link.milestone_phase")
       end
-  
+
     when ProjektPhase::EventPhase
       link_to edit_admin_projekt_path(projekt, anchor: "tab-projekt-events"), target: "_blank", class: "resources-link" do
         t("custom.admin.projekts.edit.projekt_phases_tab.link.event_phase")
       end
-  
+
     when ProjektPhase::LivestreamPhase
       link_to edit_admin_projekt_path(projekt, anchor:   "tab-projekt-livestreams"), target: "_blank", class: "resources-link" do
         t("custom.admin.projekts.edit.projekt_phases_tab.link.livestream_phase")
       end
-  
+
     when ProjektPhase::NewsfeedPhase
       link_to edit_admin_projekt_path(projekt, anchor: "t  ab-projekt-newsfeeds"), target: "_blank", class: "resources-link" do
         t("custom.admin.projekts.edit.projekt_phases_tab.link.newsfeed_phase")
       end
-  
+
     end
   end
 end

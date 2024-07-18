@@ -60,6 +60,7 @@ class Setting < ApplicationRecord
         "feature.graphql_api": true,
         "feature.sdg": false,
         "feature.machine_learning": false,
+        "feature.matomo": false,
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,

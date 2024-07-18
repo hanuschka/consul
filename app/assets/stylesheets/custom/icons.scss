@@ -3077,3 +3077,24 @@
 .icon-chevron-down.-rotated {
   transform: rotate(180deg);
 }
+
+.fa-location-dot:before {
+  content: "\f3c5";
+}
+
+.fa-arrows-rotate:before {
+  content: "\f021";
+}
+
+.fa-up-down-left-right:before {
+  content: "\f0b2";
+}
+
+.dt-logo-small-icon {
+  background-image: url(custom/dt-logo-small.png);
+  width: 1.3em;
+  height: 1.3em;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  display: inline-block;
+}

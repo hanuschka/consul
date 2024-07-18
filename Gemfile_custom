@@ -20,3 +20,5 @@ gem 'ruby-saml', '~> 1.16'
 
 gem "sentry-ruby"
 gem "sentry-rails"
+
+gem "acts_as_list"

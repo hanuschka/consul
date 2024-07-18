@@ -18,6 +18,8 @@ class Projekt < ApplicationRecord
   translates :description
   include Globalizable
 
+  has_secure_token :page_view_code
+
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
 
@@ -80,14 +82,22 @@ class Projekt < ApplicationRecord
     class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
   has_many :subscribers, through: :subscriptions, source: :user
 
+  has_many :content_blocks, class_name: "SiteCustomization::ContentBlock",
+    dependent: :destroy, inverse_of: :projekt
+
+  has_one_attached :greeting_image
+  has_many_attached :images
+
   delegate :image, to: :page, allow_nil: true
 
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
-    :create_map_location
+    :create_map_location, :ensure_other_projekts_order_integrity
   around_update :update_page
   after_save do
-    Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
+    if parent_id_previously_changed?
+      Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
+    end
   end
 
   before_save :assign_top_level_projekt_from_parent
@@ -96,10 +106,11 @@ class Projekt < ApplicationRecord
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
   validates :name, presence: true
 
+  attribute :order_number, :integer, default: 0
+  attribute :new_content_block_mode, :boolean, default: false
+
   scope :regular, -> { where(special: false) }
-
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
-
   scope :sort_by_order_number, -> {
     order(:level, :order_number)
   }
@@ -123,6 +134,10 @@ class Projekt < ApplicationRecord
     activated
       .where("total_duration_start IS NULL OR total_duration_start <= ?", timestamp)
       .where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
+  }
+
+  scope :current_for_import, ->(timestamp = Time.zone.today) {
+    where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
   }
 
   scope :expired, ->(timestamp = Time.zone.today) {
@@ -428,6 +443,10 @@ class Projekt < ApplicationRecord
     ensure_projekt_order_integrity
   end
 
+  def ensure_other_projekts_order_integrity
+    Projekt.ensure_order_integrity
+  end
+
   def self.ensure_order_integrity
     all.find_each do |projekt|
       projekt.send(:ensure_projekt_order_integrity)
@@ -545,20 +564,63 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def feature?(feature)
+    setting = projekt_settings.find { |setting| setting.key == "projekt_feature.#{feature}"}
+    (setting && (setting.value == 'active' || setting.value == 't'  )) ? true : false
+  end
+
+  def serialize
+    {
+      id: id,
+      name: name,
+      total_duration_start: total_duration_start,
+      total_duration_end: total_duration_end,
+      page_view_code: page_view_code,
+      show_map: feature?("show_map"),
+      show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),
+      show_notification_subscription_toggler: feature?("show_notification_subscription_toggler"),
+      show_phases_in_projekt_page_sidebar: feature?("show_phases_in_projekt_page_sidebar"),
+      projekt_page_sharing: feature?("projekt_page_sharing"),
+      page: {
+        title: page.title,
+        slug: page.slug,
+        subtitle: page.subtitle,
+        content: page.content
+      }
+    }
+  end
+
+  def update_setting(name, value)
+    value_to_set =
+      if (value == "true") || value == true || value == "active"
+        "active"
+      else
+        nil
+      end
+
+    find_setting(name)&.update(value: value_to_set)
+  end
+
+  def find_setting(name)
+    projekt_settings.find { |setting| setting.key == name}
+  end
+
+  def generate_page_view_code_if_nedded!
+    return if page_view_code.present?
+
+    regenerate_page_view_code
+    save!
+  end
+
   private
 
     def create_corresponding_page
-      page = SiteCustomization::Page.new(
+      create_page(
         title: name,
         slug: form_page_slug,
         status: "published",
-        projekt: self,
         content: ""
       )
-
-      if page.save
-        self.page = page
-      end
     end
 
     def update_corresponding_page

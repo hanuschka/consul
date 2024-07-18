@@ -40,7 +40,7 @@
 
     <%= raw setting["html.per_page_code_body"] %>
 
-    <% if Setting.new_design_enabled? %>
+    <% if Setting.new_design_enabled? && !embedded? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
     <div class="wrapper <%= yield(:wrapper_class) %>">

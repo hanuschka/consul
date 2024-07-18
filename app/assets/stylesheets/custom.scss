@@ -2,10 +2,9 @@
 //
 // You can also create SCSS files in the app/assets/stylesheets/custom/
 // folder and they will be loaded automatically.
-$big-tablet-viewport-start: 1245px;
-$small-tablet-viewport-start: 970px;
-$mobile-viewport-start: 640px;
-$mobile-side-padding: 20px;
+
+
+@import "photoswipe/dist/photoswipe.css";
 
 textarea{
   max-height: 50vh;

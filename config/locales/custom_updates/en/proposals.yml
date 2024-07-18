@@ -31,13 +31,40 @@ en:
         projekts: Projects
         show_larger_map: Show more
         show_smaller_map: Show less
-        creation_only_for_citizens: Neue Vorschläge können in diesem Projekt nur von Bürgerinnen und Bürgern der Stadt %{city} eingereicht werden.
-        creation_only_for_specific_geozones: Vorschläge können nur von Bürger*innen aus dem Postleitzahlbereich %{geozones} eingebracht werden.
+        creation_only_for_citizens: New proposals in this project can only be submitted by citizens of the city of %{city}.
+        creation_only_for_specific_geozones: Proposals can only be submitted by citizens from the postcode area %{geozones}.
         empty_list_text: No connected proposals
         welcome_default_text_html: In participation projects, citizens can create suggestions and collect them on this page.
           Suggestions can be filtered by level of participation, publication date or approval. Individual suggestions can be supported, commented on or created yourself.
           In the right sidebar, the platform allows targeted filtering for suggestions for projects, in specific urban areas or by keywords.
         sidebar_information_default_text: Do you have your own suggestion for a specific project? You can submit it by clicking on the button.
+        empty_list_text: There are no proposals yet
+        participation_information: Participation info
+        search_form:
+          button: Search
+          placeholder: Search proposals...
+          title: Search
+        orders:
+          confidence_score: Most voted
+          confidence_score_title: Most voted
+          created_at: Newest first
+          created_at_title: Newest first
+          hot_score: Most active
+          hot_score_title: Most active
+          most_commented: Most commented
+          most_commented_title: Most commented
+          relevance: Relevance
+          relevance_title: Relevance
+          archival_date: Archived
+          archival_date_title: Archived
+          recommendations: Recommendations
+          recommendations_title: Recommendations
+          alphabet: Alphabetical
+          alphabet_title: Alphabetical
+          random: Randomly
+          random_title: Randomly
+          votes_up: Highest voted
+          votes_up_title: Highest voted
         proposal:
           by: by
       proposal:

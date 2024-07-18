@@ -95,6 +95,7 @@
       this.toggleExternalFieldsHeader($projektPhase);
       this.toggleTagging($projektPhase);
       this.changeResourceFormTitle($projektPhase);
+      this.changeResourceFormTitleHint($projektPhase);
     },
 
     updateProjektSelectorHint: function(projektPhaseId) {
@@ -306,6 +307,20 @@
       this.defaultFormTitle = $(".user-resources-form--title").text();
     },
 
+    changeResourceFormTitleHint: function($projektPhase) {
+      var resourceFormTitleHint = $projektPhase.data("resourceFormTitleHint");
+
+      if (resourceFormTitleHint && resourceFormTitleHint.length > 0) {
+        $(".user-resources-form--title-wrapper textarea:visible").attr("placeholder", resourceFormTitleHint);
+      } else {
+        $(".user-resources-form--title-wrapper textarea:visible").attr("placeholder", this.defaultFormTitleHint);
+      }
+    },
+
+    storeDefaultFormTitleHint: function() {
+      this.defaultFormTitleHint = $(".user-resources-form--title-wrapper textarea:visible").attr("placeholder");
+    },
+
     addNextProjektPlaceholder: function($nextProejektSelector, text) {
       var indexOfProjektSelector = $(".projekt-selector").index($nextProejektSelector);
 
@@ -499,6 +514,7 @@
       });
 
       this.storeDefaultFormTitle();
+      this.storeDefaultFormTitleHint();
       this.initialized = true;
     }
   };

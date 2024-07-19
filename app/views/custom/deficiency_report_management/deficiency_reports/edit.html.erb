@@ -1,6 +1,6 @@
 <% form_path = @deficiency_report.persisted? ? deficiency_report_management_deficiency_report_path(@deficiency_report) : deficiency_report_management_deficiency_reports_path(@deficiency_report) %>
 
-<%= translatable_form_for @deficiency_report, url: form_path, html: { class: "deficiency-report-form debate-form" } do |f| %>
+<%= translatable_form_for @deficiency_report, url: form_path, html: { class: "deficiency-report-form" } do |f| %>
   <%= render "shared/errors", resource: @deficiency_report %>
 
   <fieldset class="required-fields">
@@ -72,4 +72,8 @@
   <div class="actions">
     <%= f.submit(class: "button", value: t("custom.deficiency_reports.form.#{action_name}.submit_button")) %>
   </div>
+
 <% end %>
+
+<hr>
+<%= render "admin/milestones/milestones", milestoneable: @deficiency_report %>

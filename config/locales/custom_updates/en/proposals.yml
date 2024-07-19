@@ -38,12 +38,10 @@ en:
           Suggestions can be filtered by level of participation, publication date or approval. Individual suggestions can be supported, commented on or created yourself.
           In the right sidebar, the platform allows targeted filtering for suggestions for projects, in specific urban areas or by keywords.
         sidebar_information_default_text: Do you have your own suggestion for a specific project? You can submit it by clicking on the button.
-        empty_list_text: There are no proposals yet
-        participation_information: Participation info
         search_form:
-          button: Search
-          placeholder: Search proposals...
-          title: Search
+          button: search
+          placeholder: search proposals...
+          title: search
         orders:
           confidence_score: Most voted
           confidence_score_title: Most voted
@@ -53,16 +51,16 @@ en:
           hot_score_title: Most active
           most_commented: Most commented
           most_commented_title: Most commented
-          relevance: Relevance
-          relevance_title: Relevance
+          relevance: Most relevant
+          relevance_title: Most relevant
           archival_date: Archived
           archival_date_title: Archived
           recommendations: Recommendations
           recommendations_title: Recommendations
           alphabet: Alphabetical
           alphabet_title: Alphabetical
-          random: Randomly
-          random_title: Randomly
+          random: Random
+          random_title: Random
           votes_up: Highest voted
           votes_up_title: Highest voted
         proposal:

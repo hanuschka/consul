@@ -33,7 +33,7 @@ en:
         unlock_link: Mein Konto entsperren
     menu:
       login_items:
-        login: Anmelden
+        login: Sign in
         logout: Abmelden
         signup: Registrieren
     organizations:

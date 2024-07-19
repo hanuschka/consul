@@ -18,6 +18,7 @@
       App.NewSortable.initialize();
       App.DropdownMenuComponent.initialize();
       App.SidebarFilterComponent.initialize();
+      App.ImageGallery.initialize();
     }
   };
 }).call(this);

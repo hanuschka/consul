@@ -23,6 +23,7 @@ class Api::ImagesController < Api::BaseController
       name: picture.data_file_name,
       valid: picture.persisted?,
       url: url_for(picture.storage_data),
+      thumb_url: url_for(picture.storage_data.variant(resize_to_limit: [280, 140]).processed),
       errors: picture.errors.messages.values.flatten
     }
   end

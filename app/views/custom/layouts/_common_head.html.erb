@@ -24,11 +24,13 @@
 <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
 
 <% unless embedded? %>
-  <% if Rails.application.secrets.matomo_site_id.present? %>
-    <%= render "layouts/matomo" %>
+  <% unless Rails.env.development? %>
+    <% if Rails.application.secrets.matomo_site_id.present? %>
+      <%= render "layouts/matomo" %>
+    <% end %>
+    <%= javascript_include_tag "klaro/config.js", defer: true %>
+    <%= javascript_include_tag "klaro/klaro.js", defer: true %>
   <% end %>
-  <%= javascript_include_tag "klaro/config.js", defer: true %>
-  <%= javascript_include_tag "klaro/klaro.js", defer: true %>
 <% end %>
 
 <% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>

@@ -7,7 +7,6 @@ html{
 body.custom-new-design {
   font-family: $new-body-font-family;
   color: $main-text-color;
-  margin: 0;
 
   h1, h2, h3, h4, h5 {
     font-family: $new-header-font-family;
@@ -74,10 +73,10 @@ body.custom-new-design {
   }
 
   @media screen and (min-width: 75em) {
-    body.custom-new-design.public {
-      margin-left: 0;
-      margin-right: 0;
-    }
+    /* body.custom-new-design.public { */
+    /*   margin-left: 0; */
+    /*   margin-right: 0; */
+    /* } */
   }
 
   html {

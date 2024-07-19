@@ -2,14 +2,36 @@
   "use strict";
   App.ImageGallery = {
     initialize: function() {
-      var lightbox = new window.PhotoSwipeLightbox({
-        gallery: '.image-gallery-with-ligthbox',
-        children: 'a',
-        showAnimationDuration: 0,
-        hideAnimationDuration: 0,
-        pswpModule: window.PhotoSwipe
+      this.scrollbarWidth = this.getScrollbarWidth();
+
+      var lightbox = new GLightbox({
+        openEffect: "fade",
+        closeEffect: "fade",
+        preload: false
       });
-      lightbox.init();
+
+      lightbox.on('open', () => {
+        var stickyHeader = this.getStickyHeader();
+
+        if (stickyHeader) {
+          stickyHeader.style.paddingRight = this.scrollbarWidth + "px";
+        }
+      });
+      lightbox.on('close', () => {
+        var stickyHeader = this.getStickyHeader();
+
+        if (stickyHeader) {
+          stickyHeader.style.paddingRight = "0";
+        }
+      });
     },
+
+    getStickyHeader() {
+      return document.querySelector(".js-sticky-header")
+    },
+
+    getScrollbarWidth: function() {
+      return window.innerWidth - document.documentElement.clientWidth;
+    }
   };
 }).call(this);

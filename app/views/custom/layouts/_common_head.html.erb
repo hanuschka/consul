@@ -43,8 +43,11 @@
     }
 
     $(document).on('turbolinks:load', function() {
-      loadGoogleTranslateScript();
-      googleTranslateElementInit();
+      if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
+        loadGoogleTranslateScript();
+      } else {
+        googleTranslateElementInit();
+      }
     });
   </script>
 <% end %>

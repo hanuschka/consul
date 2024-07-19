@@ -2,69 +2,69 @@ en:
   devise_views:
     confirmations:
       new:
-        email_label: E-Mail
-        submit: Erneut Anweisungen zusenden
-        title: Erneut Anweisungen zur Bestätigung zusenden
+        email_label: Email
+        submit: Resend instructions
+        title: Resend confirmation instructions
       show:
-        instructions: Das Konto per E-Mail %{email} bestätigen
-        new_password_confirmation_label: Zugangspasswort wiederholen
-        new_password_label: Neues Zugangspasswort
-        please_set_password: Bitte wählen Sie Ihr neues Passwort (dieses ermöglicht Ihnen die Anmeldung mit der oben genannten E-Mail-Adresse)
-        submit: Bestätigen
-        title: Mein Konto bestätigen
+        instructions: Confirm account via email %{email}
+        new_password_confirmation_label: Repeat access password
+        new_password_label: New access password
+        please_set_password: Please choose your new password (this will allow you to log in with the email address above)
+        submit: Confirm
+        title: Confirm account
     mailer:
       confirmation_instructions:
-        confirm_link: Mein Konto bestätigen
-        text: "Bestätigen Sie Ihre E-Mail-Adresse mithilfe des folgenden Links:"
-        title: Willkommen
-        welcome: Willkommen
+        confirm_link: Confirm my account
+        text: "Confirm your email address using the following link:"
+        title: Welcome
+        welcome: Welcome
       reset_password_instructions:
-        change_link: Mein Passwort ändern
-        hello: Hallo
-        ignore_text: Wenn Sie keine Anfrage zum Ändern Ihres Passworts gestellt haben, können Sie diese E-Mail ignorieren.
-        info_text: Sie können Ihr Passwort nur ändern, wenn Sie den Link aufrufen und dann die notwendigen Schritte befolgen.
-        text: "Wir haben eine Anfrage zur Änderung Ihres Passwort erhalten. Sie können dafür den folgenden Link verwenden:"
-        title: Mein Passwort ändern
+        change_link: Change my password
+        hello: Hello
+        ignore_text: If you have not requested to change your password, you can ignore this email.
+        info_text: You can only change your password if you click on the link and then follow the necessary steps.
+        text: "We have received a request to change your password. You can do so using the following link:"
+        title: Change my password
       unlock_instructions:
-        hello: Hallo
-        info_text: Ihr Konto wurde aufgrund einer übermäßigen Anzahl fehlgeschlagener Anmeldeversuche gesperrt.
-        instructions_text: "Bitte klicken Sie auf folgenden Link, um Ihr Konto zu entsperren:"
-        title: Ihr Konto wurde gesperrt
-        unlock_link: Mein Konto entsperren
+        hello: Hello
+        info_text: Your account has been locked due to an excessive number of failed login attempts.
+        instructions_text: "Please click on the following link to unlock your account:"
+        title: Your account has been blocked
+        unlock_link: Unlock my account
     menu:
       login_items:
         login: Sign in
-        logout: Abmelden
-        signup: Registrieren
+        logout: Sign out
+        signup: Sign up
     organizations:
       registrations:
         new:
-          email_label: E-Mail
-          organization_name_label: Name der Organisation
-          password_confirmation_label: Passwort bestätigen
-          password_label: Passwort
-          phone_number_label: Telefonnummer
-          responsible_name_label: Vollständiger Name der Person, die die Gruppe/Organsiation repräsentiert
-          responsible_name_note: Dies wäre die Person, die den Verein oder das Kollektiv repräsentiert und in dessen Namen die Vorschläge präsentiert werden
-          submit: Registrieren
-          title: Als Organisation oder Gruppe registrieren
+          email_label: Email
+          organization_name_label: Organization name
+          password_confirmation_label: Confirm password
+          password_label: Password
+          phone_number_label: Phone number
+          responsible_name_label: Full name of the person representing the group/organization
+          responsible_name_note: This would be the person representing the association or collective and on whose behalf the proposals are presented
+          submit: Sign up
+          title: Register as an organization or group
         success:
-          back_to_index: Zurück zur Startseite
-          instructions_1: "<strong>Wir werden Sie bald kontaktieren,</strong> um zu verifizieren, dass Sie tatsächlich diese Gruppe/Organisation repräsentieren."
-          instructions_2: Während Ihre <strong>E-Mail überprüft wird</strong>, senden wir Ihnen einen<strong>Link, um Ihr Konto zu bestätigen</strong>.
-          instructions_3: Nach der Bestätigung können Sie anfangen, sich als ein ungeprüftes Kollektiv zu beteiligen.
-          thank_you: Vielen Dank für die Registrierung Ihres Kollektivs auf der Webseite. Die <strong> Verifizierung steht jetzt aus </strong>.
-          title: Als Organisation oder Gruppe registrieren
+          back_to_index: Back to home page
+          instructions_1: "<strong>We will contact you soon</strong> to verify that you actually represent this group/organization."
+          instructions_2: While your <strong>email is being verified</strong>, we will send you a <strong>link to confirm your account</strong>.
+          instructions_3: Once confirmed, you can start participating as an unverified collective.
+          thank_you: Thank you for registering your collective on the website. <strong>Verification is now pending</strong>.
+          title: Register as an organization or a group
     passwords:
       edit:
-        change_submit: Mein Passwort ändern
-        password_confirmation_label: Neues Passwort bestätigen
-        password_label: Neues Passwort
-        title: Mein Passwort ändern
+        change_submit: Change my password
+        password_confirmation_label: Confirm new password
+        password_label: New Password
+        title: Change my password
       new:
-        email_label: E-Mail
-        send_submit: Anweisung zusenden lassen
-        title: Passwort vergessen?
+        email_label: Email
+        send_submit: Submit
+        title: Forgot password?
     sessions:
       new:
         login_label: Email or username
@@ -74,56 +74,56 @@ en:
         title: Sign in
     shared:
       links:
-        login: Anmelden
-        new_confirmation: Resend activation code
+        login: Sign in
+        new_confirmation: Resend confirmation code
         new_password: Forgot your password?
-        new_unlock: Haben Sie keine Anweisung zur Entsperrung erhalten?
-        signin_with_provider: Anmelden mit %{provider}
-        signup: Sie haben noch kein Konto? %{signup_link}
+        new_unlock: Didn't receive unlock instructions
+        signin_with_provider: Login with %{provider}
+        signup: Don't have an account yet? %{signup_link}
         signup_link: Create new account
     unlocks:
       new:
-        email_label: E-Mail
-        submit: Senden Sie erneut Anweisungen zur Entsperrung
-        title: Senden Sie erneut Anweisungen zur Entsperrung
+        email_label: Email
+        submit: Resend unlock instructions
+        title: Resend unlock instructions
     users:
       registrations:
         delete_form:
-          erase_reason_label: Grund
-          info: Diese Aktion kann nicht rückgängig gemacht werden. Bitte vergewissern Sie sich, dass sie dieses Konto wirklich löschen möchten.
-          info_reason: Wenn Sie möchten, hinterlassen Sie uns einen Grund (optional)
-          submit: Mein Konto löschen
-          title: Konto löschen
+          erase_reason_label: Reason
+          info: This action cannot be undone. Please make sure you really want to delete this account.
+          info_reason: If you want, you can specify the reason (optional)
+          submit: Erase my account
+          title: Erase account
         edit:
-          current_password_label: Aktuelles Passwort
-          edit: Bearbeiten
-          email_label: E-Mail
-          leave_blank: Lassen Sie das Feld leer, wenn Sie keine Änderungen vornehmen möchten
-          need_current: Wir benötigen Ihr aktuelles Passwort, um die Änderungen zu bestätigen
-          password_confirmation_label: Neues Passwort bestätigen
-          password_label: Neues Passwort
-          update_submit: Aktualisieren
-          waiting_for: "Warten auf Bestätigung von:"
+          current_password_label: Current Password
+          edit: Edit
+          email_label: Email
+          leave_blank: Leave the field blank if you do not want to make any changes
+          need_current: We need your current password to confirm the changes
+          password_confirmation_label: Confirm new password
+          password_label: New password
+          update_submit: Update
+          waiting_for: "Waiting for confirmation from:"
         new:
-          cancel: Anmeldung abbrechen
-          email_label: E-Mail
-          organization_signup: Vertreten Sie eine Organisation oder ein Kollektiv? %{signup_link}
-          organization_signup_link: Registrieren Sie sich hier
-          password_confirmation_label: Passwort bestätigen
-          password_label: Passwort
-          redeemable_code: Bestätigungscode per E-Mail erhalten (optional)
-          submit: Registrieren
-          terms: Mit der Registrierung akzeptieren Sie die %{terms}
-          terms_link: Allgemeine Nutzungsbedingungen
-          terms_title: Mit Ihrer Registrierung akzeptieren Sie die Allgemeinen Nutzungsbedingungen
-          title: Registrieren
-          username_is_available: Benutzer*innenname verfügbar
-          username_is_not_available: Benutzer*innenname bereits vergeben
-          username_label: Benutzer*innenname
-          username_note: Name, der öffentlich neben ihren Beiträgen angezeigt wird
+          cancel: Cancel registration
+          email_label: Email
+          organization_signup: Do you represent an organization or collective? %{signup_link}
+          organization_signup_link: Register here
+          password_confirmation_label: Confirm Password
+          password_label: Password
+          redeemable_code: Receive confirmation code by email (optional)
+          submit: Sign up
+          terms: By registering you accept the %{terms}
+          terms_link: Terms and conditions
+          terms_title: By registering, you accept the General Terms and Conditions
+          title: Sign up
+          username_is_available: Username available
+          username_is_not_available: Username already taken
+          username_label: Username
+          username_note: Name that will be displayed publicly next to your posts
         success:
-          back_to_index: Zurück zur Startseite
-          instructions_1: Bitte <b>überprüfen Sie Ihren E-Mail-Eingang</b> - wir haben Ihnen einen <b>Link zur Bestätigung Ihres Kontos</b> geschickt.
-          instructions_2: Nach der Bestätigung können Sie beginnen sich zu beteiligen.
-          thank_you: Danke für Ihre Registrierung für diese Website. Sie müssen nun <b>Ihre E-Mail-Adresse bestätigen</b>.
-          title: E-Mail-Adresse bestätigen
+          back_to_index: Back to home page
+          instructions_1: Please <b>check your email</b> - we have sent you a <b>link to confirm your account</b>.
+          instructions_2: After confirmation, you can start participating.
+          thank_you: Thank you for registering on this website. You must now <b>confirm your email address</b>.
+          title: Confirm email address

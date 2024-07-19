@@ -297,7 +297,7 @@ var klaroConfig = {
         //     title: 'Google Fonts',
         //     purposes: ['styling'],
         //     required: true,
-        },
+        // },
         { // uncomment if translate widget is enabled
           name: 'google_translate_accepted',
           default: false,

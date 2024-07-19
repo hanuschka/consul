@@ -314,7 +314,7 @@ var klaroConfig = {
         //   callback: function(consent, service) {
         //     if ( consent == false && document.getElementById("google_translate_element") ) {
         //       location.reload();
-        //     } else if ( consent == true && !document.getElementById("google_translate_element") ) {
+        //     } else if ( consent == true && !document.getElementById("google_translate_element") && document.getElementById(".main-menu")) {
         //       location.reload();
         //     }
         //   }

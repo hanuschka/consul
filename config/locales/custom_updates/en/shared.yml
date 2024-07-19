@@ -3,3 +3,9 @@ en:
     shared:
       select: select
       required: mandatory field
+      new_comments_component:
+        comments: Comments
+    resource_page:
+      banner_component:
+        comments: Comments
+        related_projekt: "Related project:"

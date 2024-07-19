@@ -10,7 +10,7 @@ en:
       permission_problem:
         new_button_component:
           shared:
-            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or sign as %{guest_sign_in}."
+            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
             not_verified: "To continue, please %{verify}."
             organization: Organizations are not allowed to create content.
@@ -29,7 +29,7 @@ en:
             past_regular_formular_cutoff_date: The participation phase has already been completed
         votes_component:
           shared:
-            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or sign as %{guest_sign_in}."
+            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
             not_verified: "To continue, please %{verify}."
             organization: Organizations are not allowed to create content.
@@ -68,7 +68,7 @@ en:
             not_enough_money: "You have already allocated all available budget."
         commenting:
           shared:
-            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or sign as %{guest_sign_in}."
+            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
             not_verified: "To continue, please %{verify}."
             organization: Organizations are not allowed to create content.
@@ -86,7 +86,7 @@ en:
           budget_phase:
             phase_expired: This project phase has expired
         poll_votes:
-          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or sign as %{guest_sign_in}."
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to vote.
@@ -119,7 +119,7 @@ en:
           no_registered_address: A registered address could not be assigned to your account. Please update your account.
           only_specific_registered_address_groupings: Participation is limited to another area.
         projekt_questions:
-          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or sign as %{guest_sign_in}."
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to create content.
@@ -135,7 +135,7 @@ en:
           no_registered_address: A registered address could not be assigned to your account. Please update your account.
           only_specific_registered_address_groupings: Participation is limited to another area.
         projekt_livestreams:
-          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or sign as %{guest_sign_in}."
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to create content.

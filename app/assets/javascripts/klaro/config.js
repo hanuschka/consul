@@ -313,9 +313,11 @@ var klaroConfig = {
           cookies: ['googtrans'],
           callback: function(consent, service) {
             if ( consent == false && document.getElementById("google_translate_element") ) {
-              location.reload();
+              console.log("Google Translate is disabled, reloading1");
+              // location.reload();
             } else if ( consent == true && !document.getElementById("google_translate_element") ) {
-              location.reload();
+              console.log("Google Translate is enabled, reloading2");
+              // location.reload();
             }
           }
         },

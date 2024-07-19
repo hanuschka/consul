@@ -3090,11 +3090,6 @@
   content: "\f0b2";
 }
 
-.dt-logo-small-icon {
-  background-image: url(custom/dt-logo-small.png);
-  width: 1.3em;
-  height: 1.3em;
-  background-repeat: no-repeat;
-  background-size: 100%;
-  display: inline-block;
+.fa-xmark:before {
+  content: "\f00d";
 }

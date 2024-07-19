@@ -18,7 +18,6 @@
       // console.log("handleGlobalMessage 1")
       if (event.data) {
         var data = {};
-        console.log("window ivent", event, event.data)
 
         if (typeof event.data === "string") {
           data = JSON.parse(event.data);

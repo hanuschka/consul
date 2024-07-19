@@ -2,6 +2,7 @@
   "name": "consuldemocracy",
   "dependencies": {
     "@geoman-io/leaflet-geoman-free": "^2.15.0",
+    "glightbox": "^3.3.0",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.13.2",
     "jquery-ujs": "^1.2.3",
@@ -10,7 +11,6 @@
     "leaflet-gesture-handling": "^1.2.2",
     "Leaflet.Deflate": "^2.1.0",
     "leaflet.locatecontrol": "^0.79.0",
-    "leaflet.markercluster": "^1.5.3",
-    "photoswipe": "^5.4.4"
+    "leaflet.markercluster": "^1.5.3"
   }
 }

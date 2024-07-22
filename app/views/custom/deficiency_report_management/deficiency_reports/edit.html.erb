@@ -24,6 +24,12 @@
       <div class="images">
         <%= render "images/nested_image", imageable: @deficiency_report, f: f %>
       </div>
+
+      <% if can?(:toggle_image, @deficiency_report) %>
+        <%= link_to polymorphic_path([@namespace, @deficiency_report], action: :toggle_image), method: :patch, class: 'button hollow' do %>
+          <% @deficiency_report.image.concealed ? "Bild einblenden" : "Bild ausblenden" %>
+        <% end %>
+      <% end %>
     <% end %>
   </fieldset>
 
@@ -76,4 +82,7 @@
 <% end %>
 
 <hr>
+
+<hr>
+
 <%= render "admin/milestones/milestones", milestoneable: @deficiency_report %>

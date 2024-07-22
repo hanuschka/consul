@@ -62,6 +62,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     head :ok
   end
 
+  def toggle_image
+    @deficiency_report.image.toggle!(:concealed)
+    redirect_to polymorphic_path([@namespace, @deficiency_report], action: :edit)
+  end
+
   private
 
     def deficiency_report_params

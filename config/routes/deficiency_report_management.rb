@@ -9,6 +9,7 @@ namespace :deficiency_report_management do
     resources :progress_bars, except: :show, controller: "deficiency_report_progress_bars"
     member do
       patch :accept
+      patch :toggle_image
     end
   end
 

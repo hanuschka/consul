@@ -18,8 +18,8 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     respond_to do |format|
       format.html
       format.csv do
-        send_data DeficiencyReport::CsvExporter.new(@deficiency_reports).to_csv,
-          filename: "deficiency_reports.csv"
+        send_data CsvServices::DeficiencyReportsExporter.call(@deficiency_reports),
+          filename: "deficiency_reports-#{Time.zone.today}.csv"
       end
     end
   end

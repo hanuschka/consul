@@ -1,5 +1,5 @@
 <% provide(:title) do %>
-  <%= t("admin.header.title") %> - <%= t("admin.resources.index.title") %>
+  <%= t("admin.header.title") %> - <%= t("admin.deficiency_reports.index.title") %>
 <% end %>
 
 <h2><%= t("admin.deficiency_reports.index.title") %></h2>
@@ -13,10 +13,7 @@
 <% if @deficiency_reports.any? %>
   <h3><%= page_entries_info @deficiency_reports %></h3>
 
-  <%= link_to t("custom.shared.download"),
-        deficiency_report_management_deficiency_reports_path(csv_params),
-        target: "_blank",
-        class: "float-right small clear" %>
+  <%= link_to t("custom.shared.download"), deficiency_report_management_deficiency_reports_path(format: :csv), class: "float-right small clear" %>
 
   <table>
     <thead>
@@ -32,11 +29,6 @@
         <th><%= t("custom.admin.deficiency_reports.index.approximater_location") %></th>
         <th><%= t("custom.admin.deficiency_reports.index.category_name") %></th>
         <th><%= t("custom.admin.deficiency_reports.index.officer_name") %></th>
-
-        <!--
-        <th><%#= t("custom.admin.deficiency_reports.index.official_answer") %></th>
-        <th><%#= t("custom.admin.deficiency_reports.index.officer_email") %></th>
-        -->
         <th><%= t("custom.admin.deficiency_reports.index.actions") %></th>
       </tr>
     </thead>

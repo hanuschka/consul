@@ -9,6 +9,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def index
     @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
+    @deficiency_reports = @deficiency_reports.order(id: :desc)
 
     unless params[:format] == "csv"
       @deficiency_reports = @deficiency_reports.page(params[:page].presence || 0).per(params[:limit].presence || 20)
@@ -59,6 +60,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     deficiency_report.update!(admin_accepted: enabled)
 
     head :ok
+  end
+
+  def toggle_image
+    @deficiency_report.image.toggle!(:concealed)
+    redirect_to polymorphic_path([@namespace, @deficiency_report], action: :edit)
   end
 
   private

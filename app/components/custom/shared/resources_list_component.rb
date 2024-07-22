@@ -45,9 +45,9 @@ class Shared::ResourcesListComponent < ApplicationComponent
 
   def filter_title
     if @filter_param == "order"
-      "Sortieren nach"
+      t("custom.shared.sort_by")
     elsif @filter_param == "filter"
-      "Filtern nach"
+      t("custom.shared.filter_by")
     end
   end
 

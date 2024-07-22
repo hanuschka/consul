@@ -43,6 +43,15 @@
       </div>
     <% end %>
 
+    <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.resource_form_title_hint") %></strong>
+          <%= translations_form.text_field :resource_form_title_hint, label: false %>
+        </div>
+      </div>
+    <% end %>
+
     <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase"]) %>
       <div class="row">
         <div class="column large-8">

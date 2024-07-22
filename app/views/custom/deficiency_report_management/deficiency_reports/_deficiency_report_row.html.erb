@@ -17,16 +17,11 @@
     <small><%= link_to "Änderung Log", deficiency_report_management_deficiency_report_path(deficiency_report) %></small>
   </td>
   <td><%= link_to deficiency_report.title, deficiency_report_path(deficiency_report), target: "_blank" %></td>
-  <td><%= deficiency_report.author.username %></td>
+  <td><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank" %></td>
   <td><%= deficiency_report.status&.title %></td>
   <td><%= deficiency_report.map_location&.approximated_address %></td>
   <td><%= deficiency_report.category&.name %></td>
   <td><%= deficiency_report.officer&.name %></td>
-
-  <!--
-  <td><%#= deficiency_report.official_answer %></td>
-  <td><%#= deficiency_report.officer&.email %></td>
-  -->
   <td><%= render Admin::TableActionsComponent.new(deficiency_report,
                                                   edit_path: edit_deficiency_report_management_deficiency_report_path(deficiency_report),
                                                   destroy_path: deficiency_report_management_deficiency_report_path(deficiency_report)

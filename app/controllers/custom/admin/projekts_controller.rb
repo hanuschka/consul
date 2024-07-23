@@ -41,21 +41,6 @@ class Admin::ProjektsController < Admin::BaseController
     redirect_to admin_projekts_path(page: params[:page])
   end
 
-  def update
-    if @projekt.overview_page?
-      if @projekt.update(projekt_params)
-        @projekt.touch
-        redirect_to admin_projekts_path + "#tab-projekts-overview-page",
-          notice: t("admin.settings.index.map.flash.update")
-      else
-        redirect_to admin_projekts_path + "#tab-projekts-overview-page",
-          alert: @projekt.errors.messages.values.flatten.join("; ")
-      end
-    else
-      super
-    end
-  end
-
   def create
     @projekt = Projekt.new(projekt_params)
 

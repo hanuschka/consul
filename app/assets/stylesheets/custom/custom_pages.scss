@@ -125,6 +125,7 @@ span.sidebar-projekt-phases-title {
 .sidebar-projekt-map .map_location {
   height: 250px;
   cursor: pointer;
+  border-radius: 7px;
 
   .leaflet-control-container {
     .leaflet-control-zoom,

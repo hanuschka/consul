@@ -1,5 +1,9 @@
 class Api::ProjektsController < Api::BaseController
+  include MapLocationAttributes
+  include ImageAttributes
+
   before_action :find_projekt, only: [:update, :create_content_block, :destroy_content_block, :update_content_block, :update_content_block_position]
+  before_action :process_tags, only: [:update]
 
   skip_authorization_check
   skip_forgery_protection
@@ -27,8 +31,16 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
-  def update
+  def import_projekt_params
     if save_projekt(projekt: @projekt, projekt_params: projekt_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
+    else
+      render json: { message: "Error updating projekt" }
+    end
+  end
+
+  def update
+    if @projekt.update(projekt_params)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
     else
       render json: { message: "Error updating projekt" }
@@ -101,7 +113,28 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def projekt_params
+    params.require(:projekt).permit(
+      :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+      :show_start_date_in_frontend, :show_end_date_in_frontend,
+      :geozone_affiliated, :tag_list, :related_sdg_list,
+
+      geozone_affiliation_ids: [],
+      sdg_goal_ids: [],
+      individual_group_value_ids: [],
+      map_location_attributes: map_location_attributes,
+      image_attributes: image_attributes,
+      projekt_notifications: [:title, :body],
+      project_events: [:id, :title, :location, :datetime, :weblink],
+      projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
+    )
+  end
+
+  def import_projekt_params
     params.permit(
+      :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+      :show_start_date_in_frontend, :show_end_date_in_frontend,
+      :geozone_affiliated, :tag_list, :related_sdg_list,
+
       :title,
       :brief_description,
       :summary,
@@ -123,7 +156,30 @@ class Api::ProjektsController < Api::BaseController
       timeline: [:title, :description, :daterange],
       faq: [:title, :text],
       images: [],
-      documents: []
+      documents: [],
+
+      geozone_affiliation_ids: [], sdg_goal_ids: [],
+      individual_group_value_ids: [],
+      map_location_attributes: map_location_attributes,
+      image_attributes: image_attributes,
+      projekt_notifications: [:title, :body],
+      project_events: [:id, :title, :location, :datetime, :weblink],
+      projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
     )
+  end
+
+  def process_tags
+    # if params[:projekt].present? && params[:projekt][:tag_list_predefined].present?
+    #   params[:projekt][:tag_list] = (params[:projekt][:tag_list_predefined] || @projekt.tag_list.join(","))
+    #   params[:projekt].delete(:tag_list_predefined)
+    # end
+  end
+
+  def map_location_params
+    if params[:map_location]
+      params.require(:map_location).permit(map_location_attributes)
+    else
+      params.permit(map_location_attributes)
+    end
   end
 end

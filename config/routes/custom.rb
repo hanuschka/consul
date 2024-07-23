@@ -26,6 +26,9 @@ namespace :api do
   post "/auth/generate_temporary_auth_token", to: "auth#generate_temporary_auth_token"
 
   resources :projekts, only: [:index, :create, :update] do
+    member do
+      patch :import
+    end
     resources :projekt_phases, param: :codename, only: [:update] do
       member do
         patch :update

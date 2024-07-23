@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   include IframeEmbeddedBehavior
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
-  before_action :set_partner_emails
   after_action :set_back_path
   helper_method :set_comment_flags
 
@@ -64,7 +63,9 @@ class ApplicationController < ActionController::Base
           .sort_by_order_number
           .includes({page: [:translations]}, :projekt_settings, { children_projekts_show_in_navigation: :projekt_settings })
           .joins(:projekt_settings)
+          .includes(:projekt_settings)
           .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+          .lazy
           .select { |p| p.visible_for?(current_user) }
 
       @projekts_for_navigation =
@@ -74,7 +75,10 @@ class ApplicationController < ActionController::Base
             :projekt_settings, :hard_individual_group_values,
             page: [:translations]
           )
+          .order(created_at: :asc)
           .show_in_navigation
+          .limit(5)
+          .lazy
           .select { |p| p.visible_for?(current_user) }
     end
 

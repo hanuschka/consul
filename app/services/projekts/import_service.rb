@@ -56,11 +56,11 @@ class Projekts::ImportService < ApplicationService
     # projekt.update_setting("projekt_feature.general.set_default_sorting_to_newest")
     # projekt.update_setting("projekt_feature.general.show_in_sidebar_filter")
     # projekt.update_setting("projekt_feature.general.vc_map_enabled")
-    projekt.update_setting("projekt_feature.sidebar.show_notification_subscription_toggler", projekt_params[:show_notification_subscription_toggler])
-    projekt.update_setting("projekt_feature.sidebar.show_phases_in_projekt_page_sidebar", projekt_params[:show_phases_in_projekt_page_sidebar])
-    projekt.update_setting("projekt_feature.sidebar.show_map", projekt_params[:show_map])
-    projekt.update_setting("projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar", projekt_params[:show_navigator_in_projekts_page_sidebar])
-    projekt.update_setting("projekt_feature.sidebar.projekt_page_sharing", projekt_params[:projekt_page_sharing])
+    update_projekt_setting("projekt_feature.sidebar.show_notification_subscription_toggler", projekt_params[:show_notification_subscription_toggler])
+    update_projekt_setting("projekt_feature.sidebar.show_phases_in_projekt_page_sidebar", projekt_params[:show_phases_in_projekt_page_sidebar])
+    update_projekt_setting("projekt_feature.sidebar.show_map", projekt_params[:show_map])
+    update_projekt_setting("projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar", projekt_params[:show_navigator_in_projekts_page_sidebar])
+    update_projekt_setting("projekt_feature.sidebar.projekt_page_sharing", projekt_params[:projekt_page_sharing])
 
     projekt.page.update!(
       title: projekt_params[:title],
@@ -222,6 +222,12 @@ class Projekts::ImportService < ApplicationService
 
     content_block.update!(body: body)
     content_block.save!
+  end
+
+  def update_projekt_setting(key, value)
+    return if value.blank?
+
+    @projekt.update_setting(key, value)
   end
 
   def url_helpers

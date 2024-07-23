@@ -49,8 +49,10 @@
       <% end %>
       <%= wrapper_content %>
     </div>
-    <div class="footer">
-      <%= render "layouts/footer" %>
-    </div>
+    <% unless embedded? %>
+      <div class="footer">
+        <%= render "layouts/footer" %>
+      </div>
+    <% end %>
   </body>
 </html>

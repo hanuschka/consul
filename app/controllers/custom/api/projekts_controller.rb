@@ -169,10 +169,10 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def process_tags
-    # if params[:projekt].present? && params[:projekt][:tag_list_predefined].present?
-    #   params[:projekt][:tag_list] = (params[:projekt][:tag_list_predefined] || @projekt.tag_list.join(","))
-    #   params[:projekt].delete(:tag_list_predefined)
-    # end
+    if params[:projekt].present? && params[:projekt][:tag_list_predefined].present?
+      params[:projekt][:tag_list] = (params[:projekt][:tag_list_predefined] || @projekt.tag_list.join(","))
+      params[:projekt].delete(:tag_list_predefined)
+    end
   end
 
   def map_location_params

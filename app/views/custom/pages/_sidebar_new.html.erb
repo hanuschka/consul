@@ -47,9 +47,15 @@
     <% end %>
   <% end %>
 
-  <% if projekt.tags.category.any? %>
+  <% if projekt.tags.category.any? || show_admin_controlls_and_embeded %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.tags.title"), icon_name: "tag") do |c| %>
-      <%= render partial: 'pages/sidebar/tags', locals: { projekt: projekt } %>
+      <% if show_admin_controlls_and_embeded %>
+        <%= form_for(@projekt, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-resource-form"}) do |f| %>
+          <%= render Categories::SimpleEditSelectorComponent.new(f) %>
+        <% end %>
+      <% else %>
+        <%= render partial: 'pages/sidebar/tags', locals: { projekt: projekt } %>
+      <% end %>
     <% end %>
   <% end %>
 

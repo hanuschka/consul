@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_12_102030) do
+ActiveRecord::Schema.define(version: 2024_07_23_102756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1323,6 +1323,7 @@ ActiveRecord::Schema.define(version: 2024_07_12_102030) do
     t.float "altitude"
     t.bigint "projekt_phase_id"
     t.bigint "deficiency_report_area_id"
+    t.jsonb "geocoder_data", default: {}
     t.index ["deficiency_report_area_id"], name: "index_map_locations_on_deficiency_report_area_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
@@ -1834,6 +1835,7 @@ ActiveRecord::Schema.define(version: 2024_07_12_102030) do
     t.text "projekt_selector_hint"
     t.string "labels_name"
     t.string "sentiments_name"
+    t.string "resource_form_title_hint"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -1974,7 +1976,6 @@ ActiveRecord::Schema.define(version: 2024_07_12_102030) do
     t.integer "top_level_projekt_id"
     t.tsvector "tsv"
     t.string "page_view_code"
-    t.json "cached_params_for_page_content"
     t.boolean "new_content_block_mode"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2478,15 +2479,10 @@ ActiveRecord::Schema.define(version: 2024_07_12_102030) do
     t.boolean "guest", default: false
     t.boolean "show_in_users_overview", default: true
     t.boolean "adm_email_on_new_topic", default: false
-<<<<<<< HEAD
     t.string "temporary_auth_token"
     t.datetime "temporary_auth_token_valid_until"
     t.string "auth_image_link"
-=======
-    t.string "auth_redirect_path", default: ""
     t.string "last_stork_level"
-    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
->>>>>>> setup_project
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"

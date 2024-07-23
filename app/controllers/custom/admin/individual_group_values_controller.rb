@@ -65,6 +65,14 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
     redirect_to admin_individual_group_value_path(@individual_group_value.individual_group, @individual_group_value)
   end
 
+  def add_from_csv
+    @individual_group_value = IndividualGroupValue.find(params[:id])
+    CsvJobs::AddUsersToIndividualGroupValues.perform_later(current_user.id, @individual_group_value.id, params[:file].path)
+
+    redirect_to admin_individual_group_value_path(@individual_group_value.individual_group, @individual_group_value),
+      notice: "Ihre Daten werden nun eingelesen. Sobald die Daten vollständig hinzugefügt wurden, werden Sie per E-Mail benachrichtigt."
+  end
+
   def remove_user
     @individual_group_value = IndividualGroupValue.find(params[:id])
     @user = User.find(params[:user_id])

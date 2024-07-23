@@ -619,6 +619,7 @@ de:
           remove_user: Profil entfernen
       individual_group_values:
         show:
+          csv_hint_html: 'Sie können mit Hilfe des CSV-Uploaders mehrere Einträge auf einmal hinzufügen. Die CSV benötigt lediglich eine Spalte mit den gewünschten E-Mail-Adressen. Der Spaltenname muss "Email" lauten. Sie können sich zunächst die <a href="/samples/igv_sample.csv">Beispieldatei ansehen.</a>'
           related_users: verwandte Benutzer
         edit:
           title: Gruppenwert bearbeiten

@@ -451,6 +451,7 @@ de:
         phase_tab_name: Name in Tab
         cta_button_name: Text in Button
         resource_form_title: Text bei Erstellung
+        resource_form_title_hint: Platzhalter
         labels_name: Labels
         sentiments_name: Sentiments
         projekt_selector_hint: Hinweise zum Projekt

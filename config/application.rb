@@ -126,7 +126,7 @@ module Consul
       Rails.logger.info "REQUEST REFERER: #{request.referer}"
       Rails.logger.info '================================='
 
-      if request.referer == Rails.application.secrets.dt[:url]
+      if request.referer&.gsub(/\/$/, "") == Rails.application.secrets.dt[:url]
         :none
       else
         request.path.in?(general_allowed_paths) ? :none : :lax

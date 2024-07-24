@@ -477,6 +477,8 @@ GEM
     rack (2.2.8)
     rack-accept (0.4.5)
       rack (>= 0.4)
+    rack-cors (2.0.2)
+      rack (>= 2.0.0)
     rack-mini-profiler (3.3.0)
       rack (>= 1.2.0)
     rack-protection (3.2.0)
@@ -818,6 +820,7 @@ DEPENDENCIES
   pry-byebug (~> 3.9)
   pry-rails
   puma (~> 5.6.7)
+  rack-cors
   rack-mini-profiler
   rails (= 6.1.7.6)
   rails-assets-markdown-it (~> 9.0.1)!

@@ -118,7 +118,12 @@ module Consul
     config.action_dispatch.cookies_same_site_protection = ->(request) do
       general_allowed_paths = ["/users/send_bund_id_request"]
 
-      if request.domain ==  Rails.application.secrets.dt[:domain]
+      puts '================================='
+      puts "REQUEST DOMAIN: #{request.domain}"
+      puts "REQUEST HOST: #{request.host}"
+      puts '================================='
+
+      if request.domain == Rails.application.secrets.dt[:domain]
         :none
       else
         request.path.in?(general_allowed_paths) ? :none : :lax

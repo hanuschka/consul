@@ -34,6 +34,8 @@ namespace :api do
         patch :update
       end
     end
+
+    patch "projekt_settings", to: "projekt_settings#update"
   end
   resources :images, only: [:create, :destroy]
 
@@ -41,6 +43,7 @@ namespace :api do
   delete "projekts/:id/content_blocks/:content_block_id", to: "projekts#destroy_content_block"
   patch "projekts/:id/content_blocks/:content_block_id", to: "projekts#update_content_block"
   patch "projekts/:id/content_blocks/:content_block_id/update_position", to: "projekts#update_content_block_position"
+
 
   scope path: "settings" do
     patch "enable", to: "settings#enable"

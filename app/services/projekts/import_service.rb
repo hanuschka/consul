@@ -227,7 +227,7 @@ class Projekts::ImportService < ApplicationService
   def update_projekt_setting(key, value)
     return if value.blank?
 
-    @projekt.update_setting(key, value)
+    @projekt.update_bool_setting(key, value)
   end
 
   def url_helpers

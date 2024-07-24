@@ -590,7 +590,7 @@ class Projekt < ApplicationRecord
     }
   end
 
-  def update_setting(name, value)
+  def update_bool_setting(key, value)
     value_to_set =
       if (value == "true") || value == true || value == "active"
         "active"
@@ -598,11 +598,11 @@ class Projekt < ApplicationRecord
         nil
       end
 
-    find_setting(name)&.update(value: value_to_set)
+    find_setting(key)&.update(value: value_to_set)
   end
 
-  def find_setting(name)
-    projekt_settings.find { |setting| setting.key == name}
+  def find_setting(key)
+    projekt_settings.find { |setting| setting.key == key}
   end
 
   def generate_page_view_code_if_nedded!

@@ -67,7 +67,14 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
 
   def add_from_csv
     @individual_group_value = IndividualGroupValue.find(params[:id])
-    CsvJobs::AddUsersToIndividualGroupValues.perform_later(current_user.id, @individual_group_value.id, params[:file].path)
+
+    uploaded_file = params[:file]
+    new_file_path = "/tmp/#{SecureRandom.uuid}_#{uploaded_file.original_filename}"
+    File.open(new_file_path, "wb") do |file|
+      file.write(uploaded_file.read)
+    end
+
+    CsvJobs::AddUsersToIndividualGroupValues.perform_later(current_user.id, @individual_group_value.id, new_file_path)
 
     redirect_to admin_individual_group_value_path(@individual_group_value.individual_group, @individual_group_value),
       notice: "Ihre Daten werden nun eingelesen. Sobald die Daten vollständig hinzugefügt wurden, werden Sie per E-Mail benachrichtigt."

@@ -791,6 +791,7 @@ DEPENDENCIES
   initialjs-rails (~> 0.2.0.9)
   invisible_captcha (~> 2.1.0)
   jquery-fileupload-rails
+  jwt
   kaminari (~> 1.2.2)
   knapsack_pro (~> 5.7.0)
   launchy (~> 2.5.2)

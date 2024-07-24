@@ -22,3 +22,4 @@ gem "sentry-ruby"
 gem "sentry-rails"
 
 gem "acts_as_list"
+gem "jwt"

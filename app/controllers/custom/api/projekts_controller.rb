@@ -2,7 +2,7 @@ class Api::ProjektsController < Api::BaseController
   include MapLocationAttributes
   include ImageAttributes
 
-  before_action :find_projekt, only: [:update, :create_content_block, :destroy_content_block, :update_content_block, :update_content_block_position]
+  before_action :find_projekt, except: [:index]
   before_action :process_tags, only: [:update]
 
   skip_authorization_check
@@ -21,7 +21,7 @@ class Api::ProjektsController < Api::BaseController
   def create
     projekt = Projekt.new
 
-    if save_projekt(projekt: projekt, projekt_params: projekt_params)
+    if import_projekt(projekt: projekt, projekt_params: projekt_params)
       render json: {
         projekt: projekt.serialize,
         message: "Projekt created"
@@ -31,8 +31,8 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
-  def import_projekt_params
-    if save_projekt(projekt: @projekt, projekt_params: projekt_params)
+  def import
+    if import_projekt(projekt: @projekt, projekt_params: import_projekt_params)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
     else
       render json: { message: "Error updating projekt" }
@@ -106,7 +106,7 @@ class Api::ProjektsController < Api::BaseController
     @projekt = Projekt.find(params[:id])
   end
 
-  def save_projekt(projekt:, projekt_params:)
+  def import_projekt(projekt:, projekt_params:)
     Projekts::ImportService.call(
       projekt: projekt, projekt_params: projekt_params
     )

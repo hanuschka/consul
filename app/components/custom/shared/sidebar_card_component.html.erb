@@ -1,8 +1,8 @@
-<div class="sidebar-card <%= class_name %>">
+<div class="sidebar-card <%= class_name %>" <%= data_attribute %> >
   <% if @title.present? %>
     <h4 class="sidebar-card--title js-sidebar-card--title">
       <div class="d-flex sidebar-card--title-inner">
-        <i class="fas fa-<%= @icon_name %>"></i>
+        <i class="fas sidebar--icon fa-<%= @icon_name %>"></i>
         <div class="sidebar-card--title-text">
           <%= @title %>
         </div>

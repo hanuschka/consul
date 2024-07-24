@@ -109,8 +109,10 @@
     padding: 15px 25px;
   }
 
-  i {
+  .sidebar--icon {
     margin-right: 10px;
+  }
+  i {
     color: $dt-base;
   }
 }
@@ -140,4 +142,14 @@
 .sidebar-card--separator {
   position: relative;
   border-top: 1px solid $border-color;
+}
+
+.projekt-section-data-wrapper.-deactivated {
+  .sidebar-card {
+    border-color: white;
+  }
+  .sidebar-card--title, .sidebar-card--content {
+    opacity: 0.5;
+    filter: grayscale(1);
+  }
 }

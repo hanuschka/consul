@@ -5,7 +5,7 @@
 
   <% show_admin_controlls_and_embeded = show_admin_controlls && embedded? %>
 
-  <% if show_admin_controlls && !embedded? %>
+  <% if show_admin_controlls %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog") do |c| %>
       <%= render partial: 'pages/sidebar/admin_controls' %>
     <% end %>

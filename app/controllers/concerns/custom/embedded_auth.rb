@@ -10,18 +10,18 @@ module EmbeddedAuth
   private
 
     def authentificate_user_from_token!
-      return if params[:temp_token].blank?
-      return if current_user.present?
-
-      @user_authentificated_from_token = true
-
-      user = User.find_by(temporary_auth_token: params[:temp_token])
-
-      if user.present? && user.temporary_auth_token_valid?
-        sign_in user
-      else
-        raise "Invalid auth"
-      end
+      # return if params[:temp_token].blank?
+      # return if current_user.present?
+      #
+      # @user_authentificated_from_token = true
+      #
+      # user = User.find_by(temporary_auth_token: params[:temp_token])
+      #
+      # if user.present? && user.temporary_auth_token_valid?
+      #   sign_in user
+      # else
+      #   raise "Invalid auth"
+      # end
     end
 
     def default_url_options

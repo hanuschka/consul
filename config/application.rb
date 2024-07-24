@@ -121,6 +121,9 @@ module Consul
       Rails.logger.info '================================='
       Rails.logger.info "REQUEST DOMAIN: #{request.domain}"
       Rails.logger.info "REQUEST HOST: #{request.host}"
+      Rails.logger.info "REQUEST ORIGIN: #{request.origin}"
+      Rails.logger.info "REQUEST FROM: #{request.from}"
+      Rails.logger.info "REQUEST REFERER: #{request.referer}"
       Rails.logger.info '================================='
 
       if request.domain == Rails.application.secrets.dt[:domain]

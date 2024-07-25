@@ -98,6 +98,7 @@ namespace :admin do
     resources :individual_group_values, as: :values do
       get :search_user, on: :member
       post :add_user, on: :member
+      post :add_from_csv, on: :member
       delete :remove_user, on: :member
     end
   end

@@ -5,15 +5,22 @@
 
   <%= render "shared/globalize_locales", resource: status %>
   <%= f.translatable_fields do |translations_form| %>
-    <div class="small-12 column">
+    <div class="small-12 medium-6 column" style="float:left;">
       <%= translations_form.text_field :title%>
     </div>
   <% end %>
 
   <div class="clear">
-    <div class="small-12 medium-6 large-4 column">
+    <div class="small-12 medium-6 column">
       <%= f.text_field :color, label: t("custom.admin.deficiency_reports.statuses.status.color"),
         placeholder: t('custom.admin.deficiency_reports.statuses.form.color_placeholder') %>
+    </div>
+  </div>
+
+  <div class="clear">
+    <div class="small-12 medium-6 column">
+      <%= f.text_area :notice_text, label: t("custom.admin.deficiency_reports.statuses.status.notice_text"),
+        class: "html-area #{ck_editor_class(current_user)}" %>
     </div>
   </div>
 

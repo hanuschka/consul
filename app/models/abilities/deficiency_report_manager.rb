@@ -14,6 +14,8 @@ module Abilities
           !dr.official_answer_approved? &&
           dr.official_answer.present?
       end
+
+      can :manage, DeficiencyReport
     end
   end
 end

@@ -215,6 +215,16 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def individual_group_value_users_added(user_id, individual_group_value_id)
+    @user = User.find(user_id)
+    @individual_group_value = IndividualGroupValue.find(individual_group_value_id)
+    @individual_group = @individual_group_value.individual_group
+
+    with_user(@user) do
+      mail(to: @user.email, subject: t("mailers.individual_group_value_users_added.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)

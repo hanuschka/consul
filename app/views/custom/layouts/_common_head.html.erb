@@ -29,22 +29,25 @@
 <%= javascript_include_tag "klaro/config.js", defer: true %>
 <%= javascript_include_tag "klaro/klaro.js", defer: true %>
 
-<% if Setting["extended_feature.general.enable_google_translate"].present? %>
+<% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
+  <script>
+    function loadGoogleTranslateScript() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(script);
+    }
 
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  <script type="text/javascript">
-    var googleTranslateElementInit = function() {
+    function googleTranslateElementInit() {
       new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element');
     }
 
     $(document).on('turbolinks:load', function() {
-      // var googleTranslateScript = document.createElement('script');
-      // googleTranslateScript.type = 'text/javascript';
-      // googleTranslateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      // document.head.appendChild(googleTranslateScript);
-
-      googleTranslateElementInit();
+      if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
+				loadGoogleTranslateScript();
+      } else {
+				googleTranslateElementInit();
+      }
     });
   </script>
 <% end %>

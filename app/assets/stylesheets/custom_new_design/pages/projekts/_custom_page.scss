@@ -74,17 +74,13 @@
     width: calc(100% + 120px);
     height: 400px;
     border-radius: 10px;
-    background: #E1EDF7 0% 0% no-repeat padding-box;
+    background: $brand-lighter 0% 0% no-repeat padding-box;
     position: absolute;
     left: -60px;
     top: 0;
     right: 0;
     padding: 0 60px;
-    color: $dt-base;
-
-    h1 {
-      color: $dt-base;
-    }
+    color: $dark;
 
     @media(max-width: $big-tablet-viewport-start) {
       padding: 0 40px;
@@ -178,6 +174,7 @@
   .custom-page--banner-breadcrumbs {
     .custom-breadcrumbs .breadcrumbs-item, .custom-breadcrumbs .breadcrumbs-divider {
       font-size: 16px;
+      color: $brand;
     }
   }
 
@@ -186,7 +183,7 @@
       &:before {
         left: -20px;
         top: 2px;
-        color: black;
+        color: $brand;
       }
     }
 
@@ -209,7 +206,7 @@
       }
 
       &.is-active {
-        background: #E1EDF7;
+        background: $brand-lighter;
       }
 
       a {
@@ -221,7 +218,7 @@
       }
 
       h4 {
-        color: #073E8E;
+        color: $brand;
         font-size: 24px;
       }
     }

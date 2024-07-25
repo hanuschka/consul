@@ -1,4 +1,4 @@
-<div class="resource-page-banner <%= resource_class %>" style="<%= banner_inline_style %>">
+<div class="resource-page-banner <%= resource_class %>">
   <div class="resource-page-banner--text-section">
     <h2 class="resource-page-banner--title">
       <%= link_to resource do %>
@@ -14,14 +14,14 @@
       <div class="resource-page-banner--detail">
         <%= link_to('#comments') do %>
           <i class="fa fa-comment"></i>
-          <%= resource.comments.count %> Kommentare
+          <%= "#{resource.comments.count} #{t("custom.resource_page.banner_component.comments")}" %>
         <% end %>
       </div>
       <% if @resource.respond_to?(:projekt) %>
         <div class="resource-page-banner--detail">
           <%= link_to(projekt_path(resource.projekt)) do %>
             <i class="fa fa-code-branch"></i>
-            Zugehöriges Projekt:
+            <%= t("custom.resource_page.banner_component.related_projekt") %>
             <%= resource.projekt.name %>
           <% end %>
         </div>

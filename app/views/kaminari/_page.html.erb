@@ -1,3 +1,4 @@
+<% attrs ||= {} %>
 <% if page.current? %>
   <li class="current">
     <span class="show-for-sr"><%= t("views.pagination.current") %></span>
@@ -5,6 +6,6 @@
   </li>
 <% else %>
   <li>
-    <%= link_to page, url, { remote: remote, rel: page.next? ? "next" : page.prev? ? "prev" : nil } %>
+    <%= link_to page, url, { remote: remote, rel: page.next? ? "next" : page.prev? ? "prev" : nil, **attrs} %>
   </li>
 <% end %>

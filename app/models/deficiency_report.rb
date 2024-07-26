@@ -7,6 +7,7 @@ class DeficiencyReport < ApplicationRecord
   include OnBehalfOfSubmittable
   include Notifiable
   include Milestoneable
+  include Memoable
   translates :title, touch: true
   translates :description, touch: true
   translates :summary, touch: true

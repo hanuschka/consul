@@ -34,4 +34,6 @@ namespace :deficiency_report_management do
       post "order_areas"
     end
   end
+
+  resources :memos, only: %i[create destroy]
 end

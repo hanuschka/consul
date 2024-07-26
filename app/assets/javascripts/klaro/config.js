@@ -312,9 +312,11 @@ var klaroConfig = {
         //   },
         //   cookies: ['googtrans'],
         //   callback: function(consent, service) {
+        //     if ( !document.getElementById("translate-widget") ) { return; }
+
         //     if ( consent == false && document.getElementById("google_translate_element") ) {
         //       location.reload();
-        //     } else if ( consent == true && !document.getElementById("google_translate_element") ) {
+        //     } else if ( consent == true && !document.getElementById("google_translate_element")) {
         //       location.reload();
         //     }
         //   }

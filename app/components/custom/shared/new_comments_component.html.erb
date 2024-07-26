@@ -2,7 +2,8 @@
   <div class="new-comments-component">
     <% if @show_title %>
       <h3 class="new-comments-component--title">
-        Kommentare <span class="js-comments-count">(<%= record.comments_count %>)</span>
+        <%= t("custom.shared.new_comments_component.comments") %>
+        <span class="js-comments-count">(<%= record.comments_count %>)</span>
       </h3>
     <% end %>
 

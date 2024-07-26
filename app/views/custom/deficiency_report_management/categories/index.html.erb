@@ -1,3 +1,7 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("custom.admin.deficiency_reports.categories.index.title") %>
+<% end %>
+
 <%= link_to t("custom.admin.deficiency_reports.categories.index.create"),
               new_deficiency_report_management_category_path, class: "button float-right" %>
 

@@ -25,16 +25,18 @@
           data = event.data;
         }
 
+        var params = data.params;
+
         if (data.event_type === "load") {
           var s = document.createElement('script');
 
-          s.src = data.src;
+          s.src = params.src;
           s.type = 'text/javascript';
           document.body.appendChild(s);
         } else if (data.event_type === "load_st") {
           var l = document.createElement('link');
 
-          l.href = data.src;
+          l.href = params.src;
           l.rel = "stylesheet";
           document.head.appendChild(l);
         }

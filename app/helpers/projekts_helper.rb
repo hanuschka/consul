@@ -87,12 +87,12 @@ module ProjektsHelper
     # end
 
     if end_date.present? && end_date.to_date < Date.today
-      "Abgeschlossen am #{l(end_date.to_date, format: :long)}"
+      t("custom.shared.dates.ends_on", date: l(end_date.to_date, format: :long))
     elsif end_date.present?  && end_date.to_date > Date.today && start_date.present? && start_date.to_date <= Date.today
       days_left = (end_date.to_date - Date.today).to_i
       t('custom.shared.dates.days_left', count: days_left)
     elsif end_date.present? && end_date.to_date == Date.today && start_date.present? && start_date.to_date <= Date.today
-      "Endet heute"
+      t("custom.shared.dates.ends_today")
     elsif start_date.present? && start_date.to_date > Date.today
       days_left = (start_date.to_date - Date.today).to_i
       t('custom.shared.dates.starts_in_days', count: days_left)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_23_102756) do
+ActiveRecord::Schema.define(version: 2024_07_25_120510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1331,6 +1331,20 @@ ActiveRecord::Schema.define(version: 2024_07_23_102756) do
     t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
     t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
     t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
+  end
+
+  create_table "memos", force: :cascade do |t|
+    t.string "memoable_type"
+    t.bigint "memoable_id"
+    t.bigint "user_id"
+    t.text "text"
+    t.datetime "hidden_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hidden_at"], name: "index_memos_on_hidden_at"
+    t.index ["memoable_id", "memoable_type"], name: "index_memos_on_memoable_id_and_memoable_type"
+    t.index ["memoable_type", "memoable_id"], name: "index_memos_on_memoable"
+    t.index ["user_id"], name: "index_memos_on_user_id"
   end
 
   create_table "milestone_statuses", id: :serial, force: :cascade do |t|
@@ -2673,6 +2687,7 @@ ActiveRecord::Schema.define(version: 2024_07_23_102756) do
   add_foreign_key "map_locations", "deficiency_reports"
   add_foreign_key "map_locations", "projekt_phases"
   add_foreign_key "map_locations", "projekts"
+  add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "organizations", "users"

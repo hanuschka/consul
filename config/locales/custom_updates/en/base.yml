@@ -138,6 +138,8 @@ en:
         one: Input
         other: Inputs
       dates:
+        ends_on: Ends on %{date}
+        ends_today: Ends today
         days_left:
           one: 1 more day
           other: '%{count} more days'

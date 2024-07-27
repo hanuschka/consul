@@ -26,3 +26,50 @@
     }
   }
 }
+
+.resources-list--map {
+  .leaflet-container a.leaflet-popup-close-button {
+    top: 3px;
+    right: 2px;
+  }
+  .leaflet-popup-content-wrapper {
+    padding: 0;
+  }
+  .leaflet-popup-content {
+    padding: 0;
+    padding-bottom: 5px;
+    /* max-width: 221px; */
+
+    h4, h5 {
+      padding: 10px 10px;
+      padding-right: 5px;
+      padding-bottom: 8px;
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+    .resource-map-popup-image {
+      border-radius: 0;
+      width: 100%;
+    }
+
+    .projekt-sdg-goal {
+      img {
+        width: auto !important;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 0 !important;
+      }
+    }
+
+    .projekt-sdg-goals {
+      display: grid;
+      gap: 4px;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .projekt-sdg-goals, .tags {
+      padding: 0 10px;
+      padding-bottom: 5px;
+    }
+  }
+}

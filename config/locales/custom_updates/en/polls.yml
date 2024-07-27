@@ -40,6 +40,9 @@ en:
         results_menu: Results
         vote_counted: Your vote was counted!
         vote_uncounted: Your vote was withdrawn
+        results:
+          download_csv_answers_votes: Download poll results
+        welcome_default_text: we need your opinion! On this page you can take part in the poll(s) on the project. Click on the relevant button and your vote will be counted. You will also find statistical information here as well as results of the voting as soon as it is completed.
   polls:
     index:
       filters:

@@ -1,18 +1,9 @@
 .custom-new-design {
-  .resource-map-popup-image {
-    margin-bottom:10px;
-    height:170px !important;
-    border-radius: 5px;
-  }
-
   .leaflet-popup-content {
     padding-right: 0;
 
     h4, h5 {
       margin-bottom: 8px;
-      max-width: 170px;
-      max-width: 170px;
-      margin-right: 0;
     }
   }
 
@@ -29,27 +20,28 @@
 
 .resources-list--map {
   .leaflet-container a.leaflet-popup-close-button {
-    top: 3px;
+    top: 2px;
     right: 2px;
   }
   .leaflet-popup-content-wrapper {
     padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
   }
   .leaflet-popup-content {
     padding: 0;
-    padding-bottom: 5px;
     /* max-width: 221px; */
 
-    h4, h5 {
-      padding: 10px 10px;
-      padding-right: 5px;
-      padding-bottom: 8px;
+    h4, h5, h6, p {
+      padding: 8px 10px;
+      padding-right: 20px;
       margin-bottom: 0;
       margin-top: 0;
     }
-    .resource-map-popup-image {
-      border-radius: 0;
-      width: 100%;
+
+    p {
+      line-height: 1;
+      font-size: 14px;
     }
 
     .projekt-sdg-goal {
@@ -68,8 +60,32 @@
     }
 
     .projekt-sdg-goals, .tags {
-      padding: 0 10px;
-      padding-bottom: 5px;
+      margin-bottom: 5px;
     }
+  }
+}
+
+.resource-map-popup-image {
+  margin-bottom: 7px;
+  height:170px !important;
+  border-radius: 5px;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.resource-map-popup-details {
+  padding: 0 10px;
+  margin-top: 7px;
+  margin-bottom: 10px;
+
+  .projekt-labels {
+    margin-bottom: 2px;
+  }
+}
+
+
+.proposal-map-popup-content {
+  .resource-map-popup-image {
+    /* margin-bottom: 0; */
   }
 }

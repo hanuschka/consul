@@ -236,11 +236,13 @@
           popupHtml += "<h6><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
 
           if (data.image_url) {
-            popupHtml += "<img src='" + data.image_url + "' style='margin-bottom:10px;height:170px'>"; //image
+            popupHtml += "<a href='/proposals/" + data.proposal_id + "'>"
+            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+            popupHtml += "</a>";
           }
 
           if (data.labels.length || Object.keys(data.sentiment).length) {
-            popupHtml += "<div class='resource-taggings'>";
+            popupHtml += "<div class='resource-map-popup-details resource-taggings'>";
 
             if (data.labels.length) {
               var labels = "<div class='projekt-labels'>";
@@ -263,6 +265,7 @@
 
             popupHtml += "</div>";
           }
+          popupHtml = "<div class='proposal-map-popup-content'>" + popupHtml + "</div>"
 
           return popupHtml;
         }
@@ -277,7 +280,7 @@
           }
 
           if (data.sdg_goals.length || data.tags.length ) {
-             popupHtml += "<div style=''>";
+             popupHtml += "<div class='resource-map-popup-details'>";
 
              if (data.sdg_goals.length) {
                var sdg_goals = "<div class='projekt-sdg-goals'>";

@@ -273,7 +273,7 @@
           popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a></h5>"; //title
 
           if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' >"; //image
+            popupHtml += "<a href='/projekts/" + data.projekt_id + "'><img class='resource-map-popup-image' src='" + data.image_url + "' ></a>"; //image
           }
 
           if (data.sdg_goals.length || data.tags.length ) {
@@ -283,7 +283,7 @@
                var sdg_goals = "<div class='projekt-sdg-goals'>";
                data.sdg_goals.forEach(function(sdg_goal) {
                  sdg_goals += "<span class='projekt-sdg-goal'>"
-                 sdg_goals += "<img src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
+                 sdg_goals += "<img title='" + sdg_goal.title + "' src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
                  sdg_goals += "</span>";
                });
                sdg_goals += "</div>";

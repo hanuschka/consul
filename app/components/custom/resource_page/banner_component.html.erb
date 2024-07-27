@@ -71,7 +71,7 @@
     <%= link_to resource, class: "resource-page-banner--image" do %>
       <%= render(
         Shared::ResourceImageComponent.new(
-          image_url: resource.image&.variant(:large),
+          image_url: resource&.image.attachment.variant(resize_to_limit: [820, 520], saver: { quality: 90 }, format: 'jpeg'),
           image_placeholder_icon_class: "fa-comments",
           resource: resource
         )

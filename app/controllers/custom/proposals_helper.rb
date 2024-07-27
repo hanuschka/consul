@@ -37,11 +37,12 @@ module ProposalsHelper
       sentiment["color"] = helpers.pick_text_color(proposal.sentiment.color)
     end
 
-    image_url = proposal.image.present? ? url_for(proposal.image.variant(:popup)) : nil
+    image_url = proposal.image.present? ? url_for(proposal.image.attachment.variant(resize_to_fill: [250, 180], saver: { strip: true, interlace: "JPEG", quality: 90 })) : nil
 
     data = {
       proposal_id: proposal.id,
       proposal_title: proposal.title,
+      # description: ActionController::Base.helpers.truncate(ActionController::Base.helpers.strip_tags(proposal.description), length: 100),
       image_url: image_url,
       labels: labels,
       sentiment: sentiment

@@ -412,7 +412,6 @@ li.projekt-navigator[aria-expanded="false"] {
     }
 
     .phase-subscription {
-      color: #004a83;
       position: absolute;
       top: 17px;
       right: 45px;
@@ -422,6 +421,7 @@ li.projekt-navigator[aria-expanded="false"] {
         display: flex;
         justify-content: center;
         align-items: center;
+        color: $brand;
       }
 
       @media screen and (min-width: 64em) {

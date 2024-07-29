@@ -188,6 +188,10 @@ de:
       budgets_description: "Bei Bürgerhaushalten entscheiden die Bürger, welche von ihren Nachbarn vorgestellten Projekte einen Teil des Budgets erhalten"
       legislation: "Kollaborative Gesetzgebung"
       legislation_description: "In partizipativen Prozessen wird den Bürgern die Möglichkeit geboten, sich an der Ausarbeitung und Änderung von Vorschriften, die die Gesellschaft betreffen, zu beteiligen und ihre Meinung zu bestimmten geplanten Aktionen abzugeben"
+      projekts: Projekte
+      projekts_description: Innerhalb von Projekten können Beteiligungsprozesse übersichtlich dargestellt werden. Sämtliche Module können gebündelt genutzt werden.
+      deficiency_reports: Mängelmelder
+      deficiency_reports_description: Der Mängelmelder kann vom Bürger genutzt werden, um Mängel an die Verwaltung zu übermitteln
     html:
       per_page_code_head: "Code, der auf jeder Seite eingefügt wird (<head>)"
       per_page_code_head_description: "Dieser Code wird innerhalb des Labels <head> angezeigt. Nützlich für die Eingabe von benutzerdefinierten Skripten, Analysen..."

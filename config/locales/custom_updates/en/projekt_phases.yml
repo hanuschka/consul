@@ -1,0 +1,163 @@
+en:
+  custom:
+    projekt_phases:
+      cta:
+        title: Participation
+        voting_phase: Take part in the poll
+        question_phase: Take part in the short survey
+        budget_phase: Participate now
+        formular_phase: Participate now
+      permission_problem:
+        new_button_component:
+          shared:
+            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+            not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+            not_verified: "To continue, please %{verify}."
+            organization: Organizations are not allowed to create content.
+            only_citizens: Participation is limited to citizens of the city.
+            only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+            only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+            only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+            only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+            phase_not_active: This project phase is not active
+            phase_expired: This project phase has already expired
+            phase_not_current: This project phase has not yet started
+            only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+            no_registered_address: A registered address could not be assigned to your account. Please update your account.
+            only_specific_registered_address_groupings: Participation is limited to another area.
+          formular_phase:
+            past_regular_formular_cutoff_date: The participation phase has already been completed
+        votes_component:
+          shared:
+            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+            not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+            not_verified: "To continue, please %{verify}."
+            organization: Organizations are not allowed to create content.
+            only_citizens: Participation is limited to citizens of the city.
+            only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+            only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+            only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+            only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+            phase_not_active: This project phase is not active
+            phase_expired: This project phase has already expired
+            phase_not_current: This project phase has not yet started
+            only_admins: Participation is limited to admin users.
+            no_registered_address: A registered address could not be assigned to your account. Please update your account.
+            only_specific_registered_address_groupings: Participation is limited to another area.
+        ballot_component:
+          budget_phase:
+            not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+            not_verified: "To continue, please %{verify}."
+            organization: Organizations may participate in this vote.
+            only_citizens: Participation is limited to citizens of the city.
+            only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+            only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+            only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+            only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+            phase_not_active: This project phase is not active
+            phase_expired: This project phase has already expired
+            phase_not_current: This project phase has not yet started
+            not_selected: Voting is not possible for investment proposals that cannot be implemented
+            no_ballots_allowed: The selection phase is complete
+            different_heading_assigned: "You have already voted for another category: %{heading_link}"
+            casted_offline: You have already voted offline
+            not_enough_available_votes: Not enough votes available
+            only_admins: Participation is limited to admin users.
+            no_registered_address: A registered address could not be assigned to your account. Please update your account.
+            only_specific_registered_address_groupings: Participation is limited to another area.
+            not_enough_money: "You have already allocated all available budget."
+        commenting:
+          shared:
+            guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+            not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+            not_verified: "To continue, please %{verify}."
+            organization: Organizations are not allowed to create content.
+            only_citizens: Participation is limited to citizens of the city.
+            only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+            only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+            only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+            only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+            phase_not_active: This project phase is not active
+            phase_expired: This project phase has already expired
+            phase_not_current: This project phase has not yet started
+            only_admins: Participation is limited to admin users.
+            no_registered_address: A registered address could not be assigned to your account. Please update your account.
+            only_specific_registered_address_groupings: Participation is limited to another area.
+          budget_phase:
+            phase_expired: This project phase has expired
+        poll_votes:
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+          not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+          not_verified: "To continue, please %{verify}."
+          organization: Organizations are not allowed to vote.
+          only_citizens: Participation is limited to citizens of the city.
+          only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+          only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+          only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+          only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+          phase_not_active: This project phase is not active
+          phase_expired: This project phase has already expired
+          phase_not_current: This project phase has not yet started
+          poll_expired: This poll has already expired
+          poll_not_current: This poll has not yet started
+          only_admins: Participation is limited to admin users.
+          no_registered_address: A registered address could not be assigned to your account. Please update your account.
+          only_specific_registered_address_groupings: Participation is limited to another area.
+        legislation_annotations:
+          not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+          not_verified: "To continue, please %{verify}."
+          organization: Organizations are not allowed to create content.
+          only_citizens: Participation is limited to citizens of the city.
+          only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+          only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+          only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+          only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+          phase_not_active: This project phase is not active
+          phase_expired: This project phase has already expired
+          phase_not_current: This project phase has not yet started
+          only_admins: Participation is limited to admin users.
+          no_registered_address: A registered address could not be assigned to your account. Please update your account.
+          only_specific_registered_address_groupings: Participation is limited to another area.
+        projekt_questions:
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+          not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+          not_verified: "To continue, please %{verify}."
+          organization: Organizations are not allowed to create content.
+          only_citizens: Participation is limited to citizens of the city.
+          only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+          only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+          only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+          only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+          phase_not_active: This project phase is not active
+          phase_expired: This project phase has already expired
+          phase_not_current: This project phase has not yet started
+          only_admins: Participation is limited to admin users.
+          no_registered_address: A registered address could not be assigned to your account. Please update your account.
+          only_specific_registered_address_groupings: Participation is limited to another area.
+        projekt_livestreams:
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+          not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+          not_verified: "To continue, please %{verify}."
+          organization: Organizations are not allowed to create content.
+          only_citizens: Participation is limited to citizens of the city.
+          only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+          only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+          only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+          only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+          phase_not_active: This project phase is not active
+          phase_expired: This project phase has already expired
+          phase_not_current: This project phase has not yet started
+          only_admins: Participation is limited to admin users.
+          no_registered_address: A registered address could not be assigned to your account. Please update your account.
+          only_specific_registered_address_groupings: Participation is limited to another area.
+      restrictions:
+        hint: In order to restrict participation, users must be verified.
+        verification:
+          title: Verification
+          no_restriction: All users
+          only_verified: Only verified users
+        age:
+          title: Age
+          no_restriction: No restriction
+        individual_group_values:
+          title: Restriction to groups

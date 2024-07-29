@@ -93,11 +93,14 @@ namespace :admin do
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
 
+  resources :memos, only: %i[create destroy]
+
   # custom individual groups routes
   resources :individual_groups do
     resources :individual_group_values, as: :values do
       get :search_user, on: :member
       post :add_user, on: :member
+      post :add_from_csv, on: :member
       delete :remove_user, on: :member
     end
   end

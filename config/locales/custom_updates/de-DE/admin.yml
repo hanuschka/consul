@@ -30,15 +30,18 @@ de:
         index:
           entry_name: Mangel
           no_deficiency_reports: Keine Mängelmeldungen
+          id: ID
+          admin_accepted: Sichtbarkeit
+          created_at: Veröffentlichung
           title: Titel
           author: Autor
-          official_answer: Offizielle Antwort
-          category_name: Kategorie
           status_title: Status
+          approximater_location: Standort
+          category_name: Kategorie
           officer_name: Sachbearbeiter*in
-          officer_email: Email
-          admin_accepted: Admin Bestätigung
           actions: Aktionen
+          official_answer: Offizielle Antwort
+          officer_email: Email
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -48,6 +51,7 @@ de:
             color: Farbe
             icon: Icon
             name: Name
+            warning_text: Popup
           destroy:
             cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Mangel zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.
@@ -55,6 +59,7 @@ de:
             editing: Mangelkategorie bearbeiten
           form:
             color_placeholder: "HEX Code mit #"
+            warning_text_placeholder: Popup text
             submit_button: Speichern
           index:
             create: Kategorie erstellen
@@ -110,6 +115,7 @@ de:
             color: Farbe
             icon: Icon
             title: Name
+            notice_text: E-Mail-Benachrichtigungstext
         areas:
           destroy:
             cannot_be_destroyed: Sie können dieses Gebiet nicht löschen, da er mindestens einem Mangel zugewiesen ist.
@@ -445,6 +451,7 @@ de:
         phase_tab_name: Name in Tab
         cta_button_name: Text in Button
         resource_form_title: Text bei Erstellung
+        resource_form_title_hint: Platzhalter
         labels_name: Labels
         sentiments_name: Sentiments
         projekt_selector_hint: Hinweise zum Projekt
@@ -612,6 +619,7 @@ de:
           remove_user: Profil entfernen
       individual_group_values:
         show:
+          csv_hint_html: 'Sie können mit Hilfe des CSV-Uploaders mehrere Einträge auf einmal hinzufügen. Die CSV benötigt lediglich eine Spalte mit den gewünschten E-Mail-Adressen. Der Spaltenname muss "Email" lauten. Sie können sich zunächst die <a href="/samples/igv_sample.csv">Beispieldatei ansehen.</a>'
           related_users: verwandte Benutzer
         edit:
           title: Gruppenwert bearbeiten

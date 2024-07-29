@@ -3,9 +3,8 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt, only: [
-    :update, :create_content_block,
-    :destroy_content_block, :update_content_block,
-    :update_content_block_position
+    :update, :import, :create_content_block,
+    :destroy_content_block, :update_content_block, :update_content_block_position
   ]
   before_action :process_tags, only: [:update]
 

@@ -13,7 +13,8 @@
       vcsApp.maps.setTarget(element);
       // App.VCMap.loadModule(vcsApp, 'https://new.virtualcitymap.de/map.config.json');
       // App.VCMap.loadModule(vcsApp, 'https://demo.virtualcitymap.de/consul-kempten/config/kempten.config.json');
-      App.VCMap.loadModule(vcsApp, '/vcmap/kempten1.config.json');
+      // App.VCMap.loadModule(vcsApp, '/vcmap/kempten1.config.json');
+      App.VCMap.loadModule(vcsApp, '/vcmap/kempten2.config.json');
 
       // custom map options
       vcsApp.customMapOptions = {}

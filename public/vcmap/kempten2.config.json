@@ -1,0 +1,255 @@
+{
+  "name": "Kempten Illersteg",
+  "startingViewpointName": "Illersteg",
+  "startingMapName": "cesium",
+  "projection": {
+    "epsg": "25832",
+    "proj4": "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs"
+  },
+  "maps": [
+    {
+      "type": "CesiumMap",
+      "name": "cesium",
+      "properties": {
+        "attributions": {
+          "provider": "Cesium",
+          "url": "https://www.cesium.com/"
+        }
+      }
+    },
+    {
+      "type": "OpenlayersMap",
+      "name": "ol",
+      "properties": {
+        "attributions": {
+          "provider": "Open Layers",
+          "url": "https://openlayers.org/"
+        }
+      }
+    }
+  ],
+  "layers": [
+    {
+      "type": "GeoJSONLayer",
+      "name": "Illersteg-Modell",
+      "activeOnStartup": true,
+      "allowPicking": false,
+      "style": {
+        "image": {
+          "fill": {
+            "color": "rgb(255, 255, 255)"
+          },
+          "stroke": {
+            "color": "rgb(0, 0, 0)",
+            "width": 1
+          },
+          "radius": 5
+        },
+        "stroke": {
+          "color": "rgb(131, 245, 44)",
+          "width": 1.25
+        },
+        "fill": {
+          "color": "rgba(255, 255, 255, 0.4)"
+        }
+      },
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.31828,
+              47.72871,
+              651.89
+            ]
+          },
+          "properties": {
+            "olcs_modelUrl": "https://geoportal.kempten.de/consul/datasource/BFq7mFrS2h6XHJap.glb",
+            "olcs_modelScaleX": 1,
+            "olcs_modelScaleY": 1,
+            "olcs_modelScaleZ": 1,
+            "olcs_modelHeading": 56.1,
+            "olcs_modelPitch": 0,
+            "olcs_modelRoll": 0
+          },
+          "id": "z8yYqYftin2obPzBC"
+        }
+      ],
+      "vectorProperties": {
+        "altitudeMode": "absolute"
+      },
+      "attributions": {
+        "provider": "Stadt Kempten",
+        "url": "www.kempten.de",
+        "year": "2023"
+      }
+    },
+	{
+      "name": "Grenzen KE 25832",
+      "type": "vcs.vcm.layer.GeoJSON",
+      "activeOnStartup": true,
+      "allowPicking": false,
+      "url": "https://geoportal.kempten.de/consul/datasource/grenzen_ke_25832.geojson",
+      "projection": {
+        "epsg": "25832",
+        "proj4": "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
+      },
+      "style": {
+        "image": {
+          "fill": {
+            "color": "rgba(255, 255, 255, 0)"
+          },
+          "stroke": {
+            "color": "rgba(0, 0, 0, 0)",
+            "width": 1
+          },
+          "radius": 5
+        },
+        "stroke": {
+          "color": "rgb(41, 128, 185)",
+          "width": 5
+        },
+        "fill": {
+          "color": "rgba(255, 255, 255, 0)"
+        }
+      }
+    },
+    {
+      "type": "WMSLayer",
+      "name": "Orthofotos 20cm LDBV (WMS)",
+      "activeOnStartup": false,
+      "allowPicking": false,
+      "url": "https://geoservices.bayern.de/wms/v2/ogc_dop20.cgi?",
+      "parameters": "format=image/jpeg",
+      "tilingSchema": "geographic",
+      "attributions": {
+        "provider": "Bayerische Vermessungsverwaltung – https://www.geodaten.bayern.de",
+        "url": "https://www.geodaten.bayern.de"
+      },
+      "layers": "by_dop20c"
+    },
+    {
+      "name": "Gebäudemodell LoD2",
+      "url": "https://geoportal.kempten.de/datasource-data/cbcb2402-5e5f-4d8d-97b7-cb4d368c585b/tileset.json",
+      "type": "CesiumTilesetLayer",
+      "datasourceId": "WGfRbZj9Ns9fhBTaT",
+      "activeOnStartup": false,
+      "screenSpaceError": 16,
+      "screenSpaceErrorMobile": 32,
+      "attributions": {
+        "provider": "GTA GeoService GmbH",
+        "url": "http://www.gta-geoservice.de/",
+        "year": "2023"
+      }
+    },
+	{
+      "name": "Gebäudemodell LoD2 texturiert",
+      "url": "https://geoportal.kempten.de/datasource-data/bdf1fd2b-0199-4703-819e-709e90fed98b/tileset.json",
+      "type": "CesiumTilesetLayer",
+      "datasourceId": "L9ZCExDTRs9Y4cLC3",
+      "activeOnStartup": true,
+      "screenSpaceError": 16,
+      "screenSpaceErrorMobile": 32,
+      "attributions": {
+        "provider": "GTA GeoService GmbH; Aerowest GmbH",
+        "url": "http://www.gta-geoservice.de/ ; https://www.aerowest.de/",
+        "year": "2023"
+      }
+    },
+    {
+      "type": "WMSLayer",
+      "name": "Orthophotos Kempten 2023",
+      "activeOnStartup": true,
+      "url": "https://geoserver.kempten.de/geoserver/orthophotos/wms? ortho_2023&",
+      "tilingSchema": "geographic",
+      "version": "1.3.0",
+      "parameters": "format=image/png&TRANSPARENT=true",
+      "layers": "ortho_2023",
+      "attributions": {
+        "provider": "Aerowest GmbH",
+        "url": "https://www.aerowest.de/",
+        "year": "2023"
+      }
+    },
+	{
+      "name": "Sentinel",
+      "type": "vcs.vcm.layer.WMS",
+      "activeOnStartup": true,
+      "allowPicking": false,
+      "copyright": {
+        "provider": "Europäische Union, enthält veränderte Copernicus Sentinel-Daten (2024)"
+      },
+      "url": "https://sgx.geodatenzentrum.de/wms_sen2europe",
+      "layers": "sentinel2-de:rgb",
+      "tilingSchema": "geographic"
+    },
+    {
+      "type": "TerrainLayer",
+      "name": "Geländemodell DGM1",
+      "activeOnStartup": true,
+      "allowPicking": false,
+      "url": "https://geoportal.kempten.de/datasource-data/0e05bbac-efdd-4f23-9a81-a5bd763970f0",
+      "copyright": {
+        "provider": "Bayerische Vermessungsverwaltung – https://www.geodaten.bayern.de",
+        "url": "https://www.geodaten.bayern.de"
+      }
+    },
+    {
+      "name": "Openstreetmap layer",
+      "type": "OpenStreetMapLayer",
+      "properties": {
+        "showInOverviewMap": true
+      },
+      "activeOnStartup": false,
+      "zIndex": 0,
+      "attributions": {
+        "provider": "OpenStreetMap contributors",
+        "url": "http://www.openstreetmap.org/"
+      }
+    }
+  ],
+  "viewpoints": [
+    {
+      "name": "Illersteg",
+      "cameraPosition": [
+        10.31783370774436,
+        47.7309123672672,
+        700.2828680111153
+      ],
+      "groundPosition": [
+        10.318286448480945,
+        47.72904484159526,
+        661.1047113618615
+      ],
+      "distance": 214.0387066900626,
+      "heading": 170.7107585744776,
+      "pitch": -10.547987759934164,
+      "roll": 0.03144186570654938,
+      "animate": false
+    },
+    {
+      "name": "startview",
+      "distance": 3633363.7880712817,
+      "cameraPosition": [
+        5.776926448943548,
+        42.751943541928654,
+        3371626.169287266
+      ],
+      "groundPosition": [
+        5.0388067137140835,
+        52.59744870989806,
+        -105.80508784538544
+      ],
+      "heading": 357.38131311372115,
+      "pitch": -72.46583446703961,
+      "roll": 359.87249818903365,
+      "animate": false
+    }
+  ],
+  "security": {
+    "allowConfigOverride": "NONE",
+    "strict": false
+  },
+  "plugins": []
+}

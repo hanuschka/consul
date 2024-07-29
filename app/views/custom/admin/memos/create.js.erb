@@ -1,0 +1,8 @@
+$("#memos-container .memo-form textarea").val("");
+
+<% if @memoable.is_a?(Memo) %>
+  $("#<%= dom_id(@memoable) %> .memo-form").hide();
+  $("#<%= dom_id(@memoable, :tree) %>").append("<%= j render partial: "admin/memos/memo", locals: { memo: @memo, memoable: @memoable } %>");
+<% else %>
+  $("#memos_tree").append("<%= j render partial: "admin/memos/memo", locals: { memo: @memo, memoable: @memoable } %>");
+<% end %>

@@ -2,7 +2,11 @@ class Api::ProjektsController < Api::BaseController
   include MapLocationAttributes
   include ImageAttributes
 
-  before_action :find_projekt, except: [:index]
+  before_action :find_projekt, only: [
+    :update, :create_content_block,
+    :destroy_content_block, :update_content_block,
+    :update_content_block_position
+  ]
   before_action :process_tags, only: [:update]
 
   skip_authorization_check

@@ -118,7 +118,7 @@ class Api::ProjektsController < Api::BaseController
 
   def projekt_params
     params.require(:projekt).permit(
-      :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+      :title, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
       :show_start_date_in_frontend, :show_end_date_in_frontend,
       :geozone_affiliated, :tag_list, :related_sdg_list,
 
@@ -134,8 +134,8 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def import_projekt_params
-    params.permit(
-      :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+    params.require(:projekt).permit(
+      :title, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
       :show_start_date_in_frontend, :show_end_date_in_frontend,
       :geozone_affiliated, :tag_list, :related_sdg_list,
 

@@ -20,8 +20,10 @@
     </div>
 
     <div class="memo-controls">
-      <%= link_to "Löschen", polymorphic_path([namespace.to_sym, memo]), method: :delete, remote: true, class: "delete-comment" %>
-      <span aria-live="off">&nbsp;&bull;&nbsp;</span>
+      <% if memo.user == current_user %>
+        <%= link_to "Löschen", polymorphic_path([namespace.to_sym, memo]), method: :delete, remote: true, class: "delete-comment", data: { confirm: "Sind Sie sicher?" } %>
+        <span aria-live="off">&nbsp;&bull;&nbsp;</span>
+      <% end %>
       <%= link_to "Antworten", "#", onClick: "$(this).next().toggle(); return false;" %>
       <%= render "admin/memos/form", memoable: memo %>
     </div>

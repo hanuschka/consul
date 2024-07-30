@@ -32,6 +32,46 @@
 
 <hr>
 
+<div id="content-cards">
+  <h3 class="inline-block">Content Cards</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("custom.admin.deficiency_reports.statuses.status.id") %></th>
+        <th><%= t("custom.admin.deficiency_reports.statuses.status.id") %></th>
+        <th><%= t("admin.actions.actions") %></th>
+      </tr>
+    </thead>
+
+    <tbody class="sortable" data-js-url=<%= order_content_cards_admin_site_customization_content_cards_path %>>
+      <% @content_cards.each do |card| %>
+        <tr id="<%= dom_id(card) %>" data-answer-id="<%= card.id %>">
+          <td><%= card.id %></td>
+          <td><%= card.title %></td>
+          <td>
+            <%= render Admin::LivesubmitCheckbox::Component.new(
+              url: toggle_active_admin_site_customization_content_cards_path(card),
+              resource_name: "site_customization_content_card",
+              attribute_name: "active",
+              record_id: card.id,
+              current_value: card.active
+            ) %>
+          </td>
+
+          <td>
+            <%= render Admin::TableActionsComponent.new(card,
+                                                        actions: [:edit]
+                                                       ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
 <% @feeds.each do |feed| %>
   <%= render "feed", feed: feed %>
 <% end %>

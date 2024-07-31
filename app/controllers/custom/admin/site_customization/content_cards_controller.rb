@@ -45,7 +45,6 @@ class Admin::SiteCustomization::ContentCardsController < Admin::SiteCustomizatio
     end
 
     def set_content_card
-      debugger
       @content_card = SiteCustomization::ContentCard.find(params[:id])
     end
 

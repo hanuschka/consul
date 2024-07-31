@@ -1,16 +1,19 @@
 class SiteCustomization::ContentCard < ApplicationRecord
   KINDS = %w[
-    current_polls
     active_projekts
+    latest_user_activity
+    current_polls
     latest_resources
-    projekts_map
+    expired_projekts
     events
-    expired_polls
-    widget_cards
   ].freeze
 
   translates :title, touch: true
   include Globalizable
+
+  scope :active, -> { where(active: true) }
+
+  default_scope { order(:given_order) }
 
   def self.for_homepage
     KINDS.map do |kind|
@@ -29,25 +32,34 @@ class SiteCustomization::ContentCard < ApplicationRecord
 
   def self.default_titles
     {
-      "current_polls" => "Laufende Abstimmungen",
       "active_projekts" => "Aktive Projekte",
+      "latest_user_activity" => "Letzte Aktivitäten",
+      "current_polls" => "Laufende Abstimmungen",
       "latest_resources" => "Neueste Beiträge (Diskussionen, Vorschläge, Investitionsvorschläge)",
-      "projekts_map" => "Projektkarte",
-      "events" => "Veranstaltungen",
-      "expired_polls" => "Abgeschlossene Abstimmungen",
-      "widget_cards" => "Individuelle Kacheln"
+      "expired_projekts" => "Abgeschlossene Projekte",
+      "events" => "Veranstaltungen"
     }
   end
 
   def self.default_settings
     {
+      "active_projekts" => {
+        "limit" => 3
+      },
+      "latest_user_activity" => {},
       "current_polls" => {
-        "polls_limit" => 3
+        "limit" => 3
       },
       "latest_resources" => {
         "debates_limit" => 3,
         "proposals_limit" => 3,
         "investments_limit" => 3
+      },
+      "expired_projekts" => {
+        "limit" => 3
+      },
+      "events" => {
+        "limit" => 3
       }
     }
   end

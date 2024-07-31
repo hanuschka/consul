@@ -17,23 +17,8 @@
 
 <hr>
 
-<div id="cards">
-  <h3 class="inline-block"><%= t("admin.homepage.cards_title") %></h3>
-
-  <div class="float-right">
-    <%= link_to t("admin.homepage.create_card"), new_admin_widget_card_path, class: "button" %>
-  </div>
-
-  <%= render Admin::Widget::Cards::TableComponent.new(
-    @cards,
-    no_cards_message: t("admin.homepage.no_cards")
-  ) %>
-</div>
-
-<hr>
-
 <div id="content-cards">
-  <h3 class="inline-block">Content Cards</h3>
+  <h3 class="inline-block">Inhaltskarten</h3>
 
   <table>
     <thead>
@@ -72,9 +57,7 @@
 
 <hr>
 
-<% @feeds.each do |feed| %>
-  <%= render "feed", feed: feed %>
-<% end %>
+<h3 class="inline-block">Einstellungen</h3>
 
 <table>
   <thead>

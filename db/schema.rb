@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_25_120510) do
+ActiveRecord::Schema.define(version: 2024_07_29_151658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2309,6 +2309,25 @@ ActiveRecord::Schema.define(version: 2024_07_25_120510) do
     t.datetime "updated_at", null: false
     t.string "key"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
+  end
+
+  create_table "site_customization_content_card_translations", force: :cascade do |t|
+    t.bigint "site_customization_content_card_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "title"
+    t.index ["locale"], name: "index_site_customization_content_card_translations_on_locale"
+    t.index ["site_customization_content_card_id"], name: "index_6a35fd735afb61c8b9736c45c2156ce1e4ec47e6"
+  end
+
+  create_table "site_customization_content_cards", force: :cascade do |t|
+    t.integer "given_order"
+    t.boolean "active", default: false
+    t.jsonb "settings", default: {}
+    t.string "kind"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "site_customization_images", id: :serial, force: :cascade do |t|

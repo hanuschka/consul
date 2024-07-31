@@ -20,6 +20,7 @@ class SiteCustomization::ContentCard < ApplicationRecord
       find_or_create_by!(kind: kind) do |card|
         card.title = default_titles[kind]
         card.settings = default_settings[kind] || {}
+        card.given_order = KINDS.index(kind) + 1
       end
     end.sort_by(&:given_order)
   end
@@ -35,7 +36,7 @@ class SiteCustomization::ContentCard < ApplicationRecord
       "active_projekts" => "Aktive Projekte",
       "latest_user_activity" => "Letzte Aktivitäten",
       "current_polls" => "Laufende Abstimmungen",
-      "latest_resources" => "Neueste Beiträge (Diskussionen, Vorschläge, Investitionsvorschläge)",
+      "latest_resources" => "Neueste Beiträge (Diskussionen, Vorschläge, Investitionsvorschläge, Mangelmeldungen)",
       "expired_projekts" => "Abgeschlossene Projekte",
       "events" => "Veranstaltungen"
     }
@@ -53,7 +54,8 @@ class SiteCustomization::ContentCard < ApplicationRecord
       "latest_resources" => {
         "debates_limit" => 3,
         "proposals_limit" => 3,
-        "investments_limit" => 3
+        "investments_limit" => 3,
+        "deficiency_reports_limit" => 3
       },
       "expired_projekts" => {
         "limit" => 3

@@ -388,6 +388,14 @@ de:
               add_new_image: Banner hinzufügen
               note: "Der Banner sollte mindestens 200 Pixel hoch und 1920 Pixel breit sein. Sie können ein Bild des folgenden Formats hochladen: %{accepted_content_types}, bis zu %{max_file_size} MB."
               title: Seitenbanner
+        content_cards:
+          setting:
+            label:
+              limit: Anzahl an angezeigten Einträgen
+              debates_limit: Anzahl an angezeigten Diskussionen
+              proposals_limit: Anzahl an angezeigten Vorschläge
+              investments_limit: Anzahl an angezeigten Investitionsvorschläge
+              deficiency_reports_limit: Anzahl an angezeigten Mangelmeldungen
       users:
         columns:
           id: ID

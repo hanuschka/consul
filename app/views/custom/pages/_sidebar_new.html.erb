@@ -3,7 +3,7 @@
     current_user&.email.in?(@partner_emails) ||
     (current_user&.administrator? || (current_user&.projekt_manager? && can?(:edit, resource)))) %>
 
-  <% show_admin_controlls_and_embeded = show_admin_controlls && embedded? %>
+  <% show_embeded_controls = embedded? && frame_temp_token_valid? %>
 
   <% if show_admin_controlls %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
@@ -32,7 +32,7 @@
   <% if (projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar") &&
       other_conditions_for_phases_section_are_met)
     %>
-      <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_admin_controlls_and_embeded, setting_key: "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar", setting_active: projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar"), other_conditions_are_met: other_conditions_for_phases_section_are_met) do %>
+      <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar", setting_active: projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar"), other_conditions_are_met: other_conditions_for_phases_section_are_met) do %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.phases.title"), icon_name: "pager") do |c| %>
           <%= render Pages::Projekts::SidebarPhasesComponent.new(projekt) %>
         <% end %>
@@ -40,9 +40,9 @@
     <% end %>
   </div>
 
-  <% if projekt.sdg_goals.any? || show_admin_controlls_and_embeded %>
+  <% if projekt.sdg_goals.any? || show_embeded_controls %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.sdgs.title"), icon_name: "tag") do |c| %>
-      <% if show_admin_controlls_and_embeded %>
+      <% if show_embeded_controls %>
         <%= form_for(@projekt, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>
           <%= render SDG::SimpleEditSelectorComponent.new(f) %>
         <% end %>
@@ -54,9 +54,9 @@
     <% end %>
   <% end %>
 
-  <% if projekt.tags.category.any? || show_admin_controlls_and_embeded %>
+  <% if projekt.tags.category.any? || show_embeded_controls %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.tags.title"), icon_name: "tag") do |c| %>
-      <% if show_admin_controlls_and_embeded %>
+      <% if show_embeded_controls %>
         <%= form_for(@projekt, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>
           <%= render Categories::SimpleEditSelectorComponent.new(f) %>
         <% end %>
@@ -66,32 +66,32 @@
     <% end %>
   <% end %>
 
-  <% if projekt_feature?(projekt, 'sidebar.show_map') || show_admin_controlls_and_embeded %>
-    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_admin_controlls_and_embeded, setting_key: "projekt_feature.sidebar.show_map", setting_active: projekt_feature?(projekt, 'sidebar.show_map')) do %>
+  <% if projekt_feature?(projekt, 'sidebar.show_map') || show_embeded_controls %>
+    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.show_map", setting_active: projekt_feature?(projekt, 'sidebar.show_map')) do %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.map.title"), icon_name: "map", opened_on_mobile: true) do |c| %>
         <%= render Pages::Projekts::SidebarMapComponent.new(projekt, @default_phase_name) %>
       <% end %>
     <% end %>
   <% end %>
 
-  <% if projekt_feature?(projekt, "sidebar.show_navigator_in_projekts_page_sidebar") || show_admin_controlls_and_embeded %>
-    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_admin_controlls_and_embeded, setting_key: "projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar", setting_active: projekt_feature?(projekt, "sidebar.show_navigator_in_projekts_page_sidebar")) do %>
+  <% if projekt_feature?(projekt, "sidebar.show_navigator_in_projekts_page_sidebar") || show_embeded_controls %>
+    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar", setting_active: projekt_feature?(projekt, "sidebar.show_navigator_in_projekts_page_sidebar")) do %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.navigator.title"), icon_name: "list-alt") do |c| %>
         <%= render partial: 'pages/sidebar/projekt_list', locals: { projekts: Projekt.where(id: projekt.top_parent.id).includes([page: :translations], :projekt_settings), current_projekt: projekt } %>
       <% end %>
     <% end %>
   <% end %>
 
-  <% if @projekt_subscription.present? && projekt_feature?(@custom_page.projekt, "sidebar.show_notification_subscription_toggler") || show_admin_controlls_and_embeded %>
-    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_admin_controlls_and_embeded, setting_key: "projekt_feature.sidebar.show_notification_subscription_toggler", setting_active: projekt_feature?(@custom_page.projekt, "sidebar.show_notification_subscription_toggler")) do %>
+  <% if @projekt_subscription.present? && projekt_feature?(@custom_page.projekt, "sidebar.show_notification_subscription_toggler") || show_embeded_controls %>
+    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.show_notification_subscription_toggler", setting_active: projekt_feature?(@custom_page.projekt, "sidebar.show_notification_subscription_toggler")) do %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.phases_subscription.title"), icon_name: "bell") do |c| %>
         <%= render partial: "pages/sidebar/projekt_phase_subscriptions", locals: { projekt_subscription: @projekt_subscription } %>
       <% end %>
     <% end %>
   <% end %>
 
-  <% if projekt_feature?(projekt, "sidebar.projekt_page_sharing") || show_admin_controlls_and_embeded %>
-    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_admin_controlls_and_embeded, setting_key: "projekt_feature.sidebar.projekt_page_sharing", setting_active: projekt_feature?(projekt, "sidebar.projekt_page_sharing")) do %>
+  <% if projekt_feature?(projekt, "sidebar.projekt_page_sharing") || show_embeded_controls %>
+    <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.projekt_page_sharing", setting_active: projekt_feature?(projekt, "sidebar.projekt_page_sharing")) do %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.share.title"), icon_name: "share-alt") do |c| %>
         <%= render "shared/social_share",
           title: projekt.page.title,

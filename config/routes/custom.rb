@@ -23,6 +23,8 @@ post "/connect_dt_service", to: "api_clients#connect", as: :connect_api_clients
 
 namespace :api do
   patch "/api_clients_registration/mark_as_registered"
+
+  post "/auth/generate_frame_sign_in_token", to: "auth#generate_frame_sign_in_token"
   post "/auth/generate_temporary_auth_token", to: "auth#generate_temporary_auth_token"
 
   resources :projekts, only: [:index, :create, :update] do

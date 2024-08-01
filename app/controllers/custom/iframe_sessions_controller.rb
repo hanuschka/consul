@@ -4,9 +4,9 @@ class IframeSessionsController < ActionController::Base
   skip_forgery_protection
 
   def create
-    user = User.find_by(temporary_auth_token: params[:temporary_auth_token])
+    user = User.find_by(frame_sign_in_token: params[:frame_sign_in_token])
 
-    if user.present? && user.temporary_auth_token_valid?
+    if user.present? && user.frame_sign_in_token_valid?
       update_frame_session_data(
         user,
         gen_new_frame_csrf_token: true

@@ -3,7 +3,7 @@ module EmbeddedAuth
 
   included do
     before_action :set_iframe_content_security_policy
-    helper_method :embedded?
+    helper_method :embedded?, :frame_temp_token_valid?
   end
 
   private
@@ -113,5 +113,11 @@ module EmbeddedAuth
       (Rails.application.secrets.server_name || request.host) == url_domain
     # rescue URI::InvalidURIError
     #   return false
+    end
+
+    def frame_temp_token_valid?
+      user = User.find_by(temporary_auth_token: params[:temp_token])
+
+      user.present? && user.temporary_auth_token_valid?
     end
 end

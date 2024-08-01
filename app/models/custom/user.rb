@@ -29,6 +29,7 @@ class User < ApplicationRecord
   after_create :take_votes_from_erased_user
 
   has_secure_token :temporary_auth_token
+  has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
@@ -250,10 +251,20 @@ class User < ApplicationRecord
     deficiency_report_manager.present?
   end
 
+  def generate_frame_sign_in_token!
+    regenerate_frame_sign_in_token
+
+    update!(frame_sign_in_token_valid_until: 1.minute.from_now)
+  end
+
+  def frame_sign_in_token_valid?
+    frame_sign_in_token_valid_until > Time.current
+  end
+
   def generate_expiring_temporary_auth_token!
     regenerate_temporary_auth_token
 
-    update!(temporary_auth_token_valid_until: 1.minute.from_now)
+    update!(temporary_auth_token_valid_until: 30.minutes.from_now)
   end
 
   def temporary_auth_token_valid?

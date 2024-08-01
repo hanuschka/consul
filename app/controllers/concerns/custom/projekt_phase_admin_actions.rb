@@ -6,13 +6,18 @@ module ProjektPhaseAdminActions
 
   included do
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
+    skip_forgery_protection if: :frame_session_from_authorized_source?
 
-    before_action :set_projekt_phase, :authorize_nav_bar_action, except: [:create, :order_phases, :phases_restrictions]
+    before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
+      :create, :order_phases, :frame_phases_restrictions,
+      :frame_new_phase_selector
+    ]
     before_action :set_namespace
 
-    prepend_before_action :authentificate_user_from_token!, only: [
-      :phases_restrictions, :restrictions, :update
-    ]
+    # prepend_before_action :authentificate_frame_session_user!
+    #, only: [
+    #   :phases_restrictions, :restrictions, :update
+    # ]
 
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
   end
@@ -25,26 +30,30 @@ module ProjektPhaseAdminActions
 
     @projekt_phase.save!
 
-    redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
-      notice: t("custom.admin.projekt_phases.notice.created")
+    if embedded? && frame_session_from_authorized_source?
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :duration)
+    else
+      redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
+        notice: t("custom.admin.projekt_phases.notice.created")
+    end
   end
 
   def update
     authorize!(:create, @projekt_phase)
 
-    url_params = {}
-    if embedded?
-      url_params = {
-        embedded: "true"
-      }
-    end
-
     if @projekt_phase.update(projekt_phase_params)
-      redirect_to namespace_projekt_phase_path(
-        action: (params[:action_name] || "duration"),
-        url_params: url_params
-      ),
-        notice: t("custom.admin.projekt_phases.notice.updated")
+      next_action = next_action_after_update(@projekt_phase)
+
+      if next_action.present?
+        redirect_to(
+          namespace_projekt_phase_path(action: next_action),
+          notice: t("custom.admin.projekt_phases.notice.updated")
+        )
+      else
+        redirect_to(
+          @projekt_phase.projekt.private_url(embedded: true)
+        )
+      end
     end
   end
 
@@ -220,11 +229,24 @@ module ProjektPhaseAdminActions
     end
   end
 
-  def phases_restrictions
+  def frame_new_phase_selector
+    @projekt = Projekt.find(params[:projekt_id])
+
+    render
+  end
+
+  def frame_phases_restrictions
     @projekt = Projekt.find(params[:projekt_id])
     authorize!(:edit, @projekt)
 
-    render "custom/admin/projekt_phases/phases_restrictions"
+    render "custom/admin/projekt_phases/frame_phases_restrictions"
+  end
+
+  def frame_phase_edit
+    @projekt = Projekt.find(params[:projekt_id])
+    authorize!(:edit, @projekt)
+
+    render "custom/admin/projekt_phases/frame_phases_restrictions"
   end
 
   private
@@ -297,5 +319,22 @@ module ProjektPhaseAdminActions
 
     def namespace_projekt_phase_path(action: "update", url_params: {})
       url_for(controller: params[:controller], action: action, only_path: true, params: url_params)
+    end
+
+    def next_action_after_update(projekt_phase)
+      current_action = params[:action_name] || "duration"
+      return current_action unless embedded?
+
+      current_action_index = projekt_phase.admin_nav_bar_items.index(current_action)
+
+      return current_action if current_action_index.nil?
+
+      next_action_index = current_action_index + 1
+
+      if next_action_index >= projekt_phase.admin_nav_bar_items.size
+        return nil
+      end
+
+      projekt_phase.admin_nav_bar_items[next_action_index]
     end
 end

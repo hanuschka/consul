@@ -87,4 +87,8 @@ Rails.application.configure do
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.hosts << /[a-z0-9-]+\.ngrok-free\.app/
+
+  ENV["RAILS_DEV_HOSTS"]&.split(",")&.each do |host|
+    config.hosts << host
+  end
 end

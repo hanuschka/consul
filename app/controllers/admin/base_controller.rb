@@ -1,4 +1,5 @@
 class Admin::BaseController < ApplicationController
+  include EmbeddedAuth
   layout "admin"
   before_action :authenticate_user!
 

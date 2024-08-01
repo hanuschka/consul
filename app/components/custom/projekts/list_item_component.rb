@@ -18,16 +18,12 @@ class Projekts::ListItemComponent < ApplicationComponent
       narrow_header: true,
       url: projekt_url,
       url_target: url_target,
-      image_url: image_variant(:card_thumb)
+      image_url: image_url
     }
   end
 
   def projekt_phase_url_for(phase)
     "#{projekt.page.url}?projekt_phase_id=#{phase.id}#projekt-footer"
-  end
-
-  def image_variant(variant)
-    projekt.image&.variant(variant)
   end
 
   def date_formated
@@ -73,5 +69,9 @@ class Projekts::ListItemComponent < ApplicationComponent
 
   def url_target
     "_blank" if projekt_option(projekt, "general.external_participation_link").present?
+  end
+
+  def image_url
+    projekt.image&.attachment&.variant(resize_to_limit: [298, 180], saver: { quality: 85 }, format: 'jpeg')
   end
 end

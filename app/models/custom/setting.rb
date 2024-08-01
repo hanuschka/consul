@@ -192,7 +192,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.enable_projekt_events_page": false,
         "extended_feature.general.enable_investments_overview": false,
         "extended_feature.general.enable_google_translate": false,
-        "extended_feature.general.enable_old_design": true,
+        # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
@@ -267,11 +267,12 @@ class Setting < ApplicationRecord
     end
 
     def old_design_enabled?
-      enabled?("extended_feature.general.enable_old_design")
+      !new_design_enabled?
     end
 
     def new_design_enabled?
-      !old_design_enabled?
+      # !old_design_enabled?
+      true
     end
 
     def enabled?(key)

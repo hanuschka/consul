@@ -253,7 +253,7 @@ class User < ApplicationRecord
   def generate_expiring_temporary_auth_token!
     regenerate_temporary_auth_token
 
-    update!(temporary_auth_token_valid_until: 3.hours.from_now)
+    update!(temporary_auth_token_valid_until: 1.minute.from_now)
   end
 
   def temporary_auth_token_valid?

@@ -612,6 +612,19 @@ class Projekt < ApplicationRecord
     save!
   end
 
+  def private_url(url_params = {})
+    generate_page_view_code_if_nedded!
+
+    uri = URI.parse(page.url)
+
+    uri_params = URI.decode_www_form(uri.query || "")
+    uri_params << ["code", page_view_code]
+    uri_params += url_params.to_a
+
+    uri.query = URI.encode_www_form(uri_params)
+    uri.to_s
+  end
+
   private
 
     def create_corresponding_page

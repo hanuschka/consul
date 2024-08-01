@@ -1,0 +1,106 @@
+.frame-admin-layout {
+  .menu-and-content {
+    margin-top: 30px;
+    width: 745px;
+    margin-left: 50px;
+    flex-direction: column;
+    flex-grow: 0;
+  }
+}
+
+.frame-admin-layout .admin-content,
+.admin-frame-main-content-card {
+  background-color: white;
+  /* padding: 30px 50px; */
+  padding: 30px 35px;
+  overflow: visible;
+  min-height: 91px;
+  border-radius: 10px;
+  color: $main-text-color;
+  border: 1px solid $border-color;
+  /* width: 685px; */
+  width: 100%;
+
+
+  h1, h2 {
+    color: #292929;
+  }
+  h2 {
+    font-size: 25px;
+    margin-bottom: 30px;
+  }
+
+  form {
+    input:not([type="checkbox"],[type="radio"]) {
+      height: 50px !important;
+
+      &:focus {
+        border: 1px solid #d9d9d9;
+      }
+    }
+  }
+}
+
+.projekt-footer-phase-tab--add-new {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  min-width: 150px;
+  font-size: 40px !important;
+
+  &:after {
+    display: none;
+  }
+
+  i {
+    /* color: #b4b4b4; */
+  }
+}
+
+.admin-frame-phase-to-select {
+  height: 50px;
+  font-size: 21px;
+  display: flex;
+  justify-content: space-between;
+
+  button {
+  }
+}
+
+.admin-frame-phase-to-select--name-section {
+  display: flex;
+  align-items: center;
+}
+
+.admin-frame-phase-to-select--name {
+  margin-right: 10px;
+}
+
+.frame-as-ai-button {
+  font-size: 16px;
+  width: 22px;
+  height: 22px;
+}
+
+.frame-select-new-phase-button {
+  font-size: 28px;
+  /* width: 45px; */
+  /* height: 45px; */
+}
+
+.frame-explain-with-ai-button {
+  font-size: 18px;
+}
+
+.frame-phase-edit-navigation {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.frame-phase-navigate-settings {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}

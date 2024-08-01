@@ -2,12 +2,55 @@ $orange-button-color: #FFA42D;
 $grey-button-color: #cfd9e2;
 $green-button-color: #00AA0B;
 
-.custom-new-design {
-  // .button:not(div#page-content .button) {
-  button {
-    cursor: pointer;
+button {
+  cursor: pointer;
+
+  &.-round-icon-button {
+    border-radius: 50%;
+    color: #919dab;
+    width: 1.7em;
+    height: 1.7em;
+    transition: 50ms ease background-color;
+    background-color: $light-gray-2;
+
+    &:hover {
+      background-color: darken($light-gray-2, 2);
+    }
+
+    &:active {
+      background-color: #edebeb;
+    }
   }
 
+  &.-transparent-round-icon-button {
+    border-radius: 50%;
+    color: #919dab;
+    width: 1.7em;
+    height: 1.7em;
+    transition: 50ms ease background-color;
+
+    &:hover {
+      background-color: #ededed;
+    }
+
+    &:active {
+      background-color: #edebeb;
+    }
+  }
+
+  &.-delete {
+    i {
+      color: #de7070;
+    }
+
+    &:hover {
+      background-color: #feefef;
+    }
+  }
+}
+
+.custom-new-design {
+  // .button:not(div#page-content .button) {
   .button {
     background-color: $brand;
     margin-top: 10px;
@@ -29,11 +72,6 @@ $green-button-color: #00AA0B;
 
     .icon {
       padding-right: 5px;
-    }
-
-    &.-brand-color {
-      color: white;
-      background: $brand;
     }
 
     &:hover, &:focus {
@@ -92,9 +130,12 @@ $green-button-color: #00AA0B;
     &.hollow {
       background-color: transparent;
 
-      &:hover, &:focus, &:active {
-        background: #E1EDF7;
-        color: #004a83;
+      &:hover  {
+        background: rgba($brand, 0.1);
+        color: $brand;
+      }
+      &:focus, &:active {
+        background: rgba($brand, 0.3);
       }
 
       &.alert {
@@ -136,9 +177,13 @@ $green-button-color: #00AA0B;
   .open-answer {
     background-color: #207868;
   }
-}
 
-.custom-new-design {
+  @media(min-width: 40em) {
+    .menu-and-content [for="show_menu"] {
+      display: none !important;
+    }
+  }
+
   .admin .featured-settings-form [aria-pressed][aria-pressed=true] {
     background-color: $brand;
   }

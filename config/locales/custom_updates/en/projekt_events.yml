@@ -1,0 +1,12 @@
+de:
+  custom:
+    projekt_events:
+      index:
+        welcome_default_text_html:
+          "<p>There are events for many projects that serve to inform and exchange ideas. You can use the filter to sort the list by past, upcoming or all events. </p> <p>We warmly invite you to visit the events - either online or on site - and get involved. Because a lively city thrives on the commitment of its citizens.</p>"
+      filters:
+        all: All
+        incoming: Upcoming
+        past: Past
+      list_item_component:
+        cta_button: Show more

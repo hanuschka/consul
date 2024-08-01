@@ -9,27 +9,20 @@ class Shared::ContentCardComponent < ApplicationComponent
 
   private
 
-    def render_content_card_component(kind:, settings:)
-      case kind
+    def render_content_card_component
+      case @content_card.kind
       when "active_projekts"
-        render ContentCard::ActiveProjektsComponent.new(settings: settings)
+        render ContentCard::ActiveProjektsComponent.new(@content_card)
       when "latest_user_activity"
-        render ContentCard::LatestUserActivityComponent.new(settings: settings)
+        render ContentCard::LatestUserActivityComponent.new(@content_card)
       when "current_polls"
-        render ContentCard::CurrentPollsComponent.new(settings: settings)
+        render ContentCard::CurrentPollsComponent.new(@content_card)
       when "latest_resources"
-        render ContentCard::LatestResourcesComponent.new(settings: settings)
+        render ContentCard::LatestResourcesComponent.new(@content_card)
       when "expired_projekts"
-        render ContentCard::ExpiredProjektsComponent.new(settings: settings)
+        render ContentCard::ExpiredProjektsComponent.new(@content_card)
       when "events"
-        render ContentCard::EventsComponent.new(settings: settings)
+        render ContentCard::EventsComponent.new(@content_card)
       end
-    end
-
-    def render_content_card
-      settings = @content_card.settings
-      kind = @content_card.kind
-
-      render_content_card_component(kind: kind, settings: settings)
     end
 end

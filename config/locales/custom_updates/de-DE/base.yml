@@ -37,6 +37,20 @@ de:
     comments:
       reply_form:
         leave_comment: Schreiben Sie eine Antwort
+    content_cards:
+      active_projekts:
+        title: Aktive Beteiligung
+        all_projekts_link: Alle Projekte anzeigen
+      latest_user_activity:
+        title: Meine Aktivität
+      current_polls:
+        title: Laufende Abstimmungen
+      latest_resources:
+        title: Neueste Beiträge
+      expired_projekts:
+        title: Abgeschlossene Projekte
+      events:
+        title: Veranstaltungen
     devise_views:
       users:
         registrations:

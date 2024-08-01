@@ -534,6 +534,10 @@ de:
           new:
             title_livestream: Frage für Livestream erstellen
             title: Frage erstellen
+        map:
+          copy_from_projekt: vom Projekt übernehmen
+          map_layers:
+            title: Kartenebenen
         projekt_events:
           page_title: Veranstaltungen
         projekt_notifications:

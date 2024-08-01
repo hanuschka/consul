@@ -1,8 +1,8 @@
 class ContentCard::LatestUserActivityComponent < ApplicationComponent
   delegate :current_user, to: :helpers
 
-  def initialize(settings:)
-    @settings = settings
+  def initialize(content_card)
+    @content_card = content_card
   end
 
   def render?

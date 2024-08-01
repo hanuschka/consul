@@ -1,8 +1,9 @@
 class ContentCard::ActiveProjektsComponent < ApplicationComponent
   delegate :current_user, to: :helpers
 
-  def initialize(settings:)
-    @limit = settings["limit"]
+  def initialize(content_card)
+    @content_card = content_card
+    @limit = @content_card.settings["limit"]
   end
 
   def render?

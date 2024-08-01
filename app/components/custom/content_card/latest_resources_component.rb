@@ -1,11 +1,12 @@
 class ContentCard::LatestResourcesComponent < ApplicationComponent
   delegate :current_user, :current_ability, to: :helpers
 
-  def initialize(settings:)
-    @debates_limit = settings["debates_limit"]
-    @proposals_limit = settings["proposals_limit"]
-    @investments_limit = settings["investments_limit"]
-    @deficiency_reports_limit = settings["deficiency_reports_limit"]
+  def initialize(content_card)
+    @content_card = content_card
+    @debates_limit = @content_card.settings["debates_limit"]
+    @proposals_limit = @content_card.settings["proposals_limit"]
+    @investments_limit = @content_card.settings["investments_limit"]
+    @deficiency_reports_limit = @content_card.settings["deficiency_reports_limit"]
   end
 
   def render?

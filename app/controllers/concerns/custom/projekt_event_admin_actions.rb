@@ -2,6 +2,8 @@ module ProjektEventAdminActions
   extend ActiveSupport::Concern
 
   included do
+    include ImageAttributes
+
     before_action :set_projekt_phase, :set_namespace
     before_action :set_projekt_event, only: [:update, :destroy, :send_notifications]
   end
@@ -41,7 +43,10 @@ module ProjektEventAdminActions
     def projekt_event_params
       params
         .require(:projekt_event)
-        .permit(:projekt_phase_id, :title, :description, :location, :datetime, :end_datetime, :weblink)
+        .permit(
+          :projekt_phase_id, :title, :description, :location, :datetime, :end_datetime, :weblink,
+          image_attributes: image_attributes
+        )
     end
 
     def set_projekt_phase

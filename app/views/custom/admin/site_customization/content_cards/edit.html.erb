@@ -7,7 +7,8 @@
     <%= f.translatable_fields do |translations_form| %>
       <div class="row">
         <div class="small-12 medium-6 column">
-          <%= translations_form.text_field :title %>
+          <%= translations_form.label "Titel "%>
+          <%= translations_form.text_field :title, label: false %>
         </div>
       </div>
     <% end %>
@@ -16,7 +17,8 @@
 		  <div class="small-12 medium-6 column">
         <%= f.fields_for :settings do |settings_form| %>
           <% @default_settings.each do |key, value| %>
-            <%= settings_form.text_field key, value: @content_card.settings[key] %>
+            <strong><%= t("custom.admin.site_customization.content_cards.setting.label.#{key}") %></strong>
+            <%= settings_form.text_field key, value: @content_card.settings[key], label: false %>
           <% end %>
         <% end %>
       </div>

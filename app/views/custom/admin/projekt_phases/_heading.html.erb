@@ -2,9 +2,9 @@
   <div class="column">
     <% if embedded? %>
       <% if current_user.administrator? %>
-        <% back_url = admin_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
+        <% back_url = admin_frame_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
       <% else %>
-        <% back_url = admin_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
+        <% back_url = admin_frame_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
       <% end %>
     <% else %>
       <% back_url = polymorphic_path([@namespace, @projekt_phase.projekt], action: :edit, anchor: "tab-projekt-phases") %>

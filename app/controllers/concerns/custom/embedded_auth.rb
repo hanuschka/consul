@@ -4,24 +4,76 @@ module EmbeddedAuth
   included do
     before_action :set_iframe_content_security_policy
     helper_method :embedded?
-    helper_method :user_authentificated_from_token?
   end
 
   private
 
-    def authentificate_user_from_token!
-      return if params[:temp_token].blank?
-      return if current_user.present?
+    def set_iframe_content_security_policy
+      response.headers["Content-Security-Policy"] =
+        "frame-ancestors #{Rails.application.secrets.dt[:url]}"
+    end
 
-      @user_authentificated_from_token = true
+    def embedded?
+      @embedded ||=
+        (params[:embedded] == "true")
+    end
 
-      user = User.find_by(temporary_auth_token: params[:temp_token])
+    def frame_session_from_authorized_source?
+      Current.frame_session_from_authorized_source && Current.frame_current_user.present?
+    end
 
-      if user.present? && user.temporary_auth_token_valid?
-        sign_in user
-      else
-        raise "Invalid auth"
+    def authentificate_frame_session_user!
+      return if cookies[:frame_session].blank?
+
+      frame_session = JSON.parse(cookies.encrypted[:frame_session]).with_indifferent_access
+      Current.frame_csrf_token = frame_session[:frame_csrf_token]
+
+      user = User.find(frame_session["user_id"])
+
+      frame_session_from_authorized_source =
+        origin_allowed? &&
+          Current.frame_csrf_token.present? &&
+          Current.frame_csrf_token == params[:frame_csrf_token]
+
+      Current.frame_session_from_authorized_source = frame_session_from_authorized_source
+
+      if frame_session_from_authorized_source
+        if user.present?
+          update_frame_session_data(
+            user,
+            gen_new_frame_csrf_token: !request.xhr?
+          )
+        else
+          raise "Invalid auth"
+        end
       end
+    end
+
+    def update_frame_session_data(user, gen_new_frame_csrf_token: true)
+      active_frame_csrf_token =
+        if gen_new_frame_csrf_token
+          SecureRandom.base64(32)
+        elsif Current.frame_csrf_token.present?
+          Current.frame_csrf_token
+        end
+
+      new_frame_session = { user_id: user.id }
+
+      if active_frame_csrf_token.present?
+        new_frame_session[:frame_csrf_token] = active_frame_csrf_token
+      end
+
+      cookies.encrypted[:frame_session] = {
+        value: new_frame_session.to_json,
+        same_site: :none,
+        secure: true,
+        httponly: true,
+        expires: 1.hour
+      }
+
+      Current.new_frame_csrf_token = active_frame_csrf_token
+      Current.frame_current_user = user
+      request.env["warden"].set_user(user)
     end
 
     def default_url_options
@@ -29,17 +81,37 @@ module EmbeddedAuth
     end
 
     def gen_default_url_options(options)
-      if params[:temp_token].present?
-        options.merge({ temp_token: params[:temp_token] })
-      end
-      if params[:embedded].present?
-        options.merge({ embedded: params[:embedded] })
-      end
+      options =
+        if params[:embedded].present?
+          options.merge({ embedded: params[:embedded] })
+        else
+          {}
+        end
+
+      options =
+        # TODO move this to JS
+        if Current.new_frame_csrf_token.present? && Current.frame_session_from_authorized_source
+          options.merge({ frame_csrf_token: Current.new_frame_csrf_token })
+        else
+          options
+        end
 
       options
     end
 
-    def user_authentificated_from_token?
-      @user_authentificated_from_token
+    def origin_allowed?
+      return true if request.get?
+
+      frame_allowed_domain?(request.origin)
+    end
+
+    def frame_allowed_domain?(url)
+      return false if url.blank?
+
+      url_domain = URI.parse(url).host
+
+      (Rails.application.secrets.server_name || request.host) == url_domain
+    # rescue URI::InvalidURIError
+    #   return false
     end
 end

@@ -1,13 +1,19 @@
-<%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/heading" %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.naming.page_title") %></h2>
+    <% if embedded? %>
+      <h2>Wie möchten Sie einzelne Elemente benennen?</h2>
+    <% else %>
+      <h2><%= t("custom.admin.projekt_phases.naming.page_title") %></h2>
+    <% end %>
   </div>
 </div>
 
-<%= translatable_form_for(@projekt_phase, url: namespace_projekt_phase_path, as: :projekt_phase) do |f| %>
+<%= translatable_form_for(@projekt_phase, url: namespace_projekt_phase_path, as: :projekt_phase, html: { id: "phase-edit-form"}) do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
 
   <div class="row">
@@ -76,9 +82,17 @@
     <% end %>
   <% end %>
 
-  <div class='row'>
-    <div class='column large-8'>
-      <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
+  <% unless embedded? %>
+    <div class='row'>
+      <div class='column large-8'>
+        <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
+      </div>
     </div>
-  </div>
+  <% end %>
+<% end %>
+
+<% if embedded? %>
+  <%= content_for :admin_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new %>
+  <% end %>
 <% end %>

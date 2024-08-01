@@ -6,7 +6,7 @@
     <%= content_for :head %>
   </head>
 
-  <body class="admin">
+  <body class="admin <%= "frame-admin-layout custom-new-design" if Current.frame_session_from_authorized_source %>">
     <% unless embedded? %>
       <%= render "layouts/admin_header" %>
     <% end %>
@@ -34,6 +34,7 @@
         <%= render "layouts/officing_booth" if controller.class.module_parent == Officing && session[:booth_id].present? %>
         <%= yield %>
       </div>
+      <%= content_for(:admin_bottom_navigation) %>
     </div>
   </body>
 </html>

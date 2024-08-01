@@ -126,8 +126,8 @@ module Consul
       Rails.logger.info "REQUEST REFERER: #{request.referer}"
       Rails.logger.info '================================='
 
-      if request.referer&.gsub(/\/$/, "") == Rails.application.secrets.dt[:url]
-        :none
+      if request.params[:embedded] == "true" #Current.token_user.present?
+        :lax
       else
         request.path.in?(general_allowed_paths) ? :none : :lax
       end

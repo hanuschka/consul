@@ -1,7 +1,6 @@
 require_dependency Rails.root.join("app", "controllers", "pages_controller").to_s
 
 class PagesController < ApplicationController
-  include EmbeddedAuth
   include CommentableActions
   include HasOrders
   include CustomHelper
@@ -14,7 +13,6 @@ class PagesController < ApplicationController
   has_orders %w[most_voted newest oldest], only: :show
 
   before_action :set_random_seed
-  before_action :authentificate_user_from_token!, only: [:show]
 
   def show
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])

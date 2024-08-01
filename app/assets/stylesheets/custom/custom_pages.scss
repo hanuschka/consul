@@ -365,16 +365,36 @@ li.projekt-navigator[aria-expanded="false"] {
 
 .arrow-controls {
   display: none;
+  margin-bottom: 10px;
+
+  button {
+    i {
+      color: $brand;
+    }
+
+    &:hover {
+      i {
+        color: darken($brand, 3);
+      }
+    }
+    &:active {
+      color: darken($brand, 5);
+    }
+  }
 
   .disabled {
-    color: gray;
+    cursor: auto;
+    i {
+      /* color: #cbcbcb; */
+      opacity: 0.2;
+    }
   }
 }
 
-@media screen and (min-width: 64em) {
+@media screen and (min-width: $small-tablet-viewport-start) {
   .arrow-controls {
     display: flex;
-    font-size: 1.5rem;
+    font-size: 2rem;
     cursor: pointer;
 
     #left-arrow-control {
@@ -403,6 +423,8 @@ li.projekt-navigator[aria-expanded="false"] {
 // Phase subscriptions
 
 .footer-phases-filter-subnav {
+  display: flex;
+
   .page-subnav-tab {
     h4 {
       margin-right: 85px;

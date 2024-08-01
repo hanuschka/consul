@@ -63,6 +63,10 @@
       margin-bottom: 5px;
     }
   }
+  .leaflet-marker-icon.map-marker.leaflet-interactive:hover {
+    transition: 50ms ease filter;
+    filter: brightness(0.92);
+  }
 }
 
 .resource-map-popup-image {

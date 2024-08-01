@@ -2,6 +2,9 @@ require_dependency Rails.root.join("app", "controllers", "application_controller
 
 class ApplicationController < ActionController::Base
   include IframeEmbeddedBehavior
+  include EmbeddedAuth
+  prepend_before_action :authentificate_frame_session_user!
+
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   after_action :set_back_path

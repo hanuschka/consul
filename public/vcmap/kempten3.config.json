@@ -1,0 +1,1286 @@
+{
+  "_id": "487623f9-3660-4a14-b85b-588ea9937cb6",
+  "properties": {},
+  "name": "Basisdaten",
+  "createdAt": "2024-07-29T13:05:23.348Z",
+  "updatedAt": "2024-08-01T12:28:21.919Z",
+  "createdBy": "H25zfHEpLdEKSLqWg",
+  "updatedBy": "H25zfHEpLdEKSLqWg",
+  "projectId": "9MxaPmxYeKqagmSnQ",
+  "categories": [],
+  "contentTree": [
+    {
+      "type": "LayerContentTreeItem",
+      "name": "Orthophotos Kempten 2023",
+      "layerName": "Orthophotos Kempten 2023"
+    },
+    {
+      "type": "LayerContentTreeItem",
+      "name": "Sentinel",
+      "layerName": "Sentinel"
+    },
+    {
+      "type": "LayerContentTreeItem",
+      "name": "Ortho LDBV 20cm",
+      "layerName": "Ortho LDBV 20cm"
+    },
+    {
+      "type": "LayerContentTreeItem",
+      "name": "Grenzen KE",
+      "layerName": "Grenzen KE"
+    },
+    {
+      "type": "LayerContentTreeItem",
+      "name": "Gebäudemodell LoD2 texturiert",
+      "layerName": "Gebäudemodell LoD2 texturiert"
+    },
+    {
+      "type": "LayerContentTreeItem",
+      "name": "Gebäudemodell LoD2",
+      "layerName": "Gebäudemodell LoD2"
+    },
+    {
+      "type": "LayerContentTreeItem",
+      "name": "Geländemodell DGM1",
+      "layerName": "Geländemodell DGM1"
+    },
+    {
+      "type": "ViewpointContentTreeItem",
+      "name": "Kempten",
+      "viewpointName": "Kempten"
+    },
+    {
+      "type": "ViewpointContentTreeItem",
+      "name": "Kempten 2D",
+      "viewpointName": "Kempten 2D"
+    }
+  ],
+  "featureInfo": [],
+  "flights": [],
+  "hiddenObjects": [],
+  "i18n": [
+    {
+      "name": "Deutsch",
+      "de": {
+        "navbar": {
+          "maps": {
+            "CesiumMap": "3D-Karte aktivieren",
+            "OpenlayersMap": "2D-Karte aktivieren",
+            "ObliqueMap": "Schrägluftbildkarte aktivieren"
+          },
+          "menu": {
+            "tooltip": "Menü"
+          },
+          "share": {
+            "tooltip": "Aktuellen Kartenausschnitt teilen"
+          }
+        },
+        "content": {
+          "title": "Inhalte",
+          "empty": "Aktuell sind keine Einträge verfügbar.",
+          "search": {
+            "placeholder": "Elemente suchen"
+          },
+          "infoAction": {
+            "title": "Weitere Informationen"
+          },
+          "viewpointAction": {
+            "title": "Zur Ansicht springen"
+          },
+          "styleAction": {
+            "title": "Stilauswahl öffnen"
+          },
+          "layerExtentAction": {
+            "name": "Auf Ebene zoomen",
+            "title": "Auf Ebenenausdehnung zoomen"
+          }
+        },
+        "navigation": {
+          "obliqueLeftTooltip": "Ansicht nach links drehen",
+          "obliqueRightTooltip": "Ansicht nach rechts drehen",
+          "zoomInTooltip": "Hineinzoomen",
+          "zoomOutTooltip": "Herauszoomen",
+          "pitchTooltip": "Kameraneigung: {0}°",
+          "overviewMapTooltip": "Übersichtskarte",
+          "homeButton": "Zur Startansicht springen"
+        },
+        "categoryManager": {
+          "title": "Mein Arbeitsbereich",
+          "tooltip": "Mein Arbeitsbereich"
+        },
+        "collectionManager": {
+          "more": "Alle anzeigen...",
+          "less": "Weniger anzeigen...",
+          "empty": "Es gibt noch keine Einträge."
+        },
+        "components": {
+          "pin": "Fenster andocken",
+          "close": "Fenster schließen",
+          "add": "Hinzufügen",
+          "apply": "Anwenden",
+          "cancel": "Abbrechen",
+          "import": {
+            "submit": "Importieren",
+            "fileDrop": "Dateien hierher ziehen",
+            "failure": "Datei {fileName} konnte nicht gelesen werden.",
+            "predicateFailure": "{0} Feature entsprechen nicht den Anforderungen.",
+            "addFailure": "{0} Feature existieren bereits.",
+            "featuresAdded": "{0} Feature importiert.",
+            "nothingAdded": "Es konnten keine Feature importiert werden."
+          },
+          "vcsFormSection": {
+            "help": "Hilfe anzeigen"
+          },
+          "vcsTable": {
+            "key": "Name",
+            "value": "Wert"
+          },
+          "vcsDataTable": {
+            "searchbarPlaceholder": "Name, Wert, ...",
+            "itemsPerPage": "pro Seite",
+            "ofItems": "von",
+            "nextPage": "Nächste Seite",
+            "formerPage": "Vorherige Seite",
+            "noDataPlaceholder": "Keine Daten verfügbar",
+            "noResultsPlaceholder": "Keine übereinstimmenden Einträge gefunden"
+          },
+          "style": {
+            "fill": "Füllung",
+            "stroke": "Linie",
+            "reset": "Zurücksetzen",
+            "lineWidth": "Linienbreite",
+            "type": "Typ",
+            "points": "Points",
+            "radius": "Radius",
+            "radius2": "Radius2",
+            "angle": "Winkel",
+            "rotation": "Rotation",
+            "scale": "Skalierung",
+            "opacity": "Deckkraft",
+            "image": "Symbol",
+            "icon": "Icon",
+            "shape": "Form",
+            "presets": "Vorlagen",
+            "circle": "Kreis",
+            "square": "Quadrat",
+            "rectangle": "Rechteck",
+            "triangle": "Dreieck",
+            "star": "Stern",
+            "cross": "Kreuz",
+            "x": "X",
+            "custom": "Benutzerdefiniert",
+            "bold": "Fett",
+            "italic": "Kursiv",
+            "text": "Text",
+            "enterText": "Text hier eingeben",
+            "offset": "Versatz"
+          },
+          "flight": {
+            "general": "Flug Einstellungen",
+            "name": "Name (ID)",
+            "title": "Titel",
+            "titlePlaceholder": "Titel des Kameraflugs",
+            "interpolation": "Interpolation",
+            "duration": "Gesamtflugdauer",
+            "spline": "Spline",
+            "linear": "Linear",
+            "loop": "Schleife",
+            "anchors": "Stützpunkte",
+            "hidePath": "Flugpfadvisualisierung",
+            "addAnchor": "Aktuelle Ansicht als Stützpunkt hinzufügen",
+            "removeAnchor": "Stützpunkt entfernen",
+            "editAnchor": "Stützpunkt bearbeiten",
+            "zoomToAnchor": "Auf Stützpunkt zoomen",
+            "noAnchor": "Es sind noch keine Stützpunkte definiert.",
+            "invalidDuration": "Die Gesamtflugzeit muss größer als Null sein!"
+          },
+          "viewpoint": {
+            "name": "Name (ID)",
+            "title": "Titel",
+            "titlePlaceholder": "Titel der Ansicht",
+            "groundPosition": "Bodenposition",
+            "cameraPosition": "Kameraposition",
+            "distance": "Distanz",
+            "heading": "Azimut",
+            "pitch": "Neigung",
+            "roll": "Querneigung",
+            "animate": "Animation",
+            "duration": "Animationsdauer",
+            "general": "Allgemeine Einstellungen",
+            "positionAndOrientation": "Position & Orientierung",
+            "updateFromView": "Aktuelle Kartenposition übernehmen",
+            "sync": "Synchronisieren der Kamera einschalten",
+            "syncOff": "Synchronisation zum Editieren ausschalten",
+            "finiteNumber": "Nur finite Zahlen sind zulässig!",
+            "positiveNumber": "Nur positive Zahlen sind zulässig!"
+          },
+          "coordinate": {
+            "outOfRange": "Wert außerhalb des zulässigen Bereichs!"
+          },
+          "extent": {
+            "title": "Ausdehnung",
+            "projection": "Projektion",
+            "min": "Min",
+            "max": "Max",
+            "show": "Ausdehnung in Karte anzeigen",
+            "hide": "Ausdehnung in Karte ausblenden",
+            "create": "Neue Ausdehnung in Karte zeichnen",
+            "zoom": "Auf Ausdehnung zoomen",
+            "invalid": "Koordinaten ergeben keine valide Ausdehnung!",
+            "editVertices": "Ecken bearbeiten",
+            "translate": "Ausdehnung verschieben"
+          },
+          "editor": {
+            "translate": "Objekt verschieben",
+            "rotate": "Objekt rotieren",
+            "scale": "Objekt skalieren",
+            "extrude": "Objekt extrudieren",
+            "header": "Transformieren",
+            "placeOnTerrain": "Auf Gelände plazieren",
+            "cw": "90° rechtsherum drehen",
+            "ccw": "90° linksherum drehen",
+            "angle": "Winkel",
+            "edit": "Geometrie editieren",
+            "modifyHeader": "Editieren",
+            "modifyInfo": "Klicke die Symbole in der Überschrift um die selektierten Geometrien zu editieren.",
+            "styleHeader": "Stil"
+          },
+          "vectorProperties": {
+            "header": "Vektor Eigenschaften",
+            "altitudeMode": "Höhenmodus",
+            "clampToGround": "Auf Gelände legen",
+            "absolute": "Absolut",
+            "relativeToGround": "Relativ zum Gelände",
+            "groundLevel": "Geländehöhe",
+            "classificationType": "Klassifizierung",
+            "none": "Keine",
+            "both": "Beide",
+            "cesium3DTile": "3D Tiles",
+            "terrain": "Gelände",
+            "heightAboveGround": "Höhe über Gelände",
+            "allowPicking": "Auswahl erlauben",
+            "scaleByDistance": "Distanzskalierung",
+            "eyeOffset": "Blick Versatz",
+            "storeys": "Stockwerke",
+            "storeyHeights": "Stockwerkshöhe(n)",
+            "aboveGround": "Über Grund",
+            "belowGround": "Unter Grund",
+            "modelUrl": "Modell URL",
+            "modelHeading": "Modell Ausrichtung",
+            "modelPitch": "Modell Neigung",
+            "modelRoll": "Modell Rotation",
+            "baseUrl": "Basis URL",
+            "extrudedHeight": "Extrusion",
+            "skirt": "Skirts",
+            "modelScale": "Modell Skalierung"
+          },
+          "validation": {
+            "allowedRange": "Erlaubter Wertebereich",
+            "notValid": "Eingabe nicht gültig",
+            "required": "Eingabe ist erforderlich"
+          }
+        },
+        "settings": {
+          "title": "Einstellungen",
+          "tooltip": "Einstellungen",
+          "languageSelector": "Sprache",
+          "theme": {
+            "title": "Farbschema",
+            "dark": "Dunkel",
+            "light": "Hell"
+          }
+        },
+        "help": {
+          "title": "Hilfe",
+          "tooltip": "Externe Hilfeseite in neuem Browser Tab öffnen"
+        },
+        "featureInfo": {
+          "activateToolTitle": "Informationswerkzeug aktivieren",
+          "deactivateToolTitle": "Informationswerkzeug deaktivieren"
+        },
+        "legend": {
+          "title": "Legende",
+          "tooltip": "Legende",
+          "empty": "Aktuell sind keine Legendeneinträge verfügbar.",
+          "openInNew": "In neuem Browser Tab öffnen",
+          "defaultLabelText": "Text"
+        },
+        "search": {
+          "title": "Suche",
+          "tooltip": "Suche",
+          "select": "Suchergebnis auswählen",
+          "placeholder": "Suche nach Adresse oder Ort/Sehenswürdigkeit",
+          "zoomToFeatureAction": "Auf Ergebnis zoomen",
+          "zoomToAll": "Auf alle Ergebnisse zoomen"
+        },
+        "toolbox": {
+          "flight": "Flug",
+          "miscellaneous": "Verschiedenes"
+        },
+        "footer": {
+          "title": "Fußzeile",
+          "attributions": {
+            "title": "Attributionen",
+            "tooltip": "Öffne Attributionsfenster",
+            "empty": "Aktuell sind keine Attributionseinträge verfügbar."
+          },
+          "imprint": {
+            "title": "Impressum",
+            "tooltip": "Öffne Impressumsfenster"
+          },
+          "dataProtection": {
+            "title": "Datenschutz",
+            "tooltip": "Öffne Datenschutzfenster"
+          },
+          "positionDisplay": {
+            "title": "Positionsanzeige",
+            "projection": "Projektionsauswahl"
+          }
+        },
+        "notification": {
+          "error": "Fehler",
+          "warning": "Warnung",
+          "information": "Information",
+          "success": "Erfolg"
+        },
+        "datePicker": {
+          "today": "Heute"
+        },
+        "list": {
+          "selectAll": "Alle selektieren",
+          "clearSelection": "Selektion aufheben",
+          "renameItem": "Element umbenennen",
+          "deleteItem": "Element löschen",
+          "editItem": "Element editieren",
+          "import": "Importieren",
+          "export": "Selektion exportieren",
+          "delete": "Selektion löschen",
+          "edit": "Selektion editieren"
+        },
+        "flight": {
+          "player": "Player",
+          "playTooltip": "Diesen Flug abspielen",
+          "pauseTooltip": "Diesen Flug an dieser Stelle pausieren",
+          "stopTooltip": "Diesen Flug stoppen",
+          "forwardFastTooltip": "Schnelles Vorspulen",
+          "backwardFastTooltip": "Schnelles Zurückspulen",
+          "forwardStepTooltip": "Schritt vorwärts zur nächsten Position",
+          "backwardStepTooltip": "Schritt rückwärts zur letzten Position"
+        },
+        "appConfigurator": {
+          "title": "App Konfigurator",
+          "tooltip": "Plugin zur Anwendungskonfiguration",
+          "save": "Speichern",
+          "saveAll": "Anwendung speichern",
+          "apply": "Anwenden",
+          "reset": "Zurücksetzen",
+          "resetAll": "Anwendung zurücksetzen",
+          "cancel": "Abbrechen",
+          "module": {
+            "title": "Module",
+            "add": "Neues Modul hinzufügen",
+            "addFromProject": "Neues Modul aus dem Projekt hinzufügen",
+            "edit": "Name und Beschreibung bearbeiten",
+            "copy": "Duplizieren",
+            "remove": "Entfernen",
+            "saved": "Modul gespeichert.",
+            "help": "Bitte fügen Sie ein neues Modul hinzu oder wählen Sie ein vorhandenes Modul aus der Liste zum Bearbeiten aus."
+          },
+          "item": {
+            "add": "Neues Element hinzufügen",
+            "edit": "Element bearbeiten",
+            "copy": "Element duplizieren",
+            "remove": "Element entfernen",
+            "emptyKey": "Name ist erforderlich!",
+            "uniqueKey": "Name bereits vorhanden!",
+            "setActiveOnStartup": "Setze beim Start aktiv",
+            "setInactiveOnStartup": "Setze beim Start inaktiv",
+            "titlePlaceholder": "Titel der Ansicht",
+            "editor": "Editor",
+            "noAvailable": "Keine Elemente vorhanden",
+            "getDefaultOptions": "Standardeinstellungen herunterladen"
+          },
+          "report": {
+            "title": "Bericht",
+            "tooltip": "Bericht über die Bestandteile der Kartenanwendung erstellen",
+            "name": "Kategorie",
+            "number": "Anzahl",
+            "overridden": "Überschrieben",
+            "overriddenKeys": "Überschriebene IDs",
+            "overriddenKeysEmpty": "Keine überschriebenen Elemente",
+            "update": "Bericht aktualisieren",
+            "activeModules": "Aktive Module, die in den Bericht einfließen"
+          },
+          "collections": {
+            "edit": "Bestandteile bearbeiten",
+            "maps": {
+              "title": "Karten",
+              "OpenlayersMap": "2D-Karte",
+              "CesiumMap": "3D-Karte",
+              "ObliqueMap": "Schrägluftbildkarte"
+            },
+            "layers": {
+              "title": "Ebenen",
+              "OpenStreetMapLayer": "OpenStreetMap-Ebene",
+              "SingleImageLayer": "Einzelbildebene",
+              "TMSLayer": "TMS-Ebene",
+              "WMSLayer": "WMS-Ebene",
+              "WMTSLayer": "WMTS-Ebene",
+              "CesiumTilesetLayer": "3D-Objektebene",
+              "CzmlLayer": "CZML-Ebene",
+              "GeoJSONLayer": "GeoJSON-Ebene",
+              "PointCloudLayer": "Punktwolkenebene",
+              "VectorTileLayer": "Vektorkachelebene",
+              "WFSLayer": "WFS-Ebene",
+              "TerrainLayer": "Geländeebene"
+            },
+            "obliqueCollections": {
+              "title": "Schrägluftbilder",
+              "ObliqueCollection": "Schrägluftbildebene"
+            },
+            "styles": {
+              "title": "Ebenenstile",
+              "VectorStyleItem": "Vektorstil",
+              "DeclarativeStyleItem": "Deklarativer Stil"
+            },
+            "featureInfo": {
+              "title": "Feature Info",
+              "TableFeatureInfoView": "Tabellarische Darstellung",
+              "IframeFeatureInfoView": "Eingebettete Darstellung (Iframe)",
+              "BalloonFeatureInfoView": "Popup-Darstellung (Balloon)",
+              "AddressBalloonFeatureInfoView": "Popup-Darstellung (Balloon) für Adressen"
+            },
+            "plugins": {
+              "title": "Plugins"
+            },
+            "viewpoints": {
+              "title": "Ansichten",
+              "Viewpoint": "Ansicht"
+            },
+            "contentTree": {
+              "title": "Inhalte",
+              "LayerContentTreeItem": "Ebeneneintrag",
+              "LayerGroupContentTreeItem": "Ebenengruppeneintrag",
+              "ObliqueCollectionContentTreeItem": "Schrägluftbildeintrag",
+              "ViewpointContentTreeItem": "Ansichteneintrag",
+              "NodeContentTreeItem": "Ausklappbarer Gruppeneintrag",
+              "GroupContentTreeItem": "Ausklappbarer Gruppeneintrag, aktivierbar",
+              "SubContentTreeItem": "Inhaltebaum"
+            },
+            "uiConfig": {
+              "title": "Benutzeroberfläche"
+            },
+            "i18n": {
+              "title": "Internationalisierung",
+              "addLocale": "Sprache hinzufügen",
+              "addEntry": "Eintrag hinzufügen"
+            }
+          },
+          "dialogs": {
+            "searchName": "Suche nach Name...",
+            "preview": "Vorschau anzeigen",
+            "previewTooltip": "Ausgewählte Elemente werden der Karte temporär für eine Vorschau hinzugefügt",
+            "addTooltip": "Ausgewählte Elemente werden der Karte hinzugefügt",
+            "headers": {
+              "name": "Name",
+              "type": "Typ",
+              "description": "Beschreibung",
+              "createdAt": "Erstellungsdatum",
+              "updatedAt": "Letztes Update",
+              "createdBy": "Erstellt von",
+              "updatedBy": "Aktualisiert von"
+            },
+            "layerModal": {
+              "raster": "Raster",
+              "vector": "Vektor",
+              "terrain": "Gelände"
+            },
+            "contentTreeModal": {
+              "single": "Eintrag für",
+              "cluster": "Neue Gruppe",
+              "window": "Fenster",
+              "LayerContentTreeItem": "eine Ebene",
+              "LayerGroupContentTreeItem": "mehrere Ebenen vereint",
+              "ObliqueCollectionContentTreeItem": "Schrägluftbildebene",
+              "ViewpointContentTreeItem": "Ansicht",
+              "NodeContentTreeItem": "ausklappbar",
+              "GroupContentTreeItem": "ausklappbar und aktivierbar",
+              "SubContentTreeItem": "Neuer Inhaltebaum"
+            },
+            "vcsModuleTable": {
+              "add": "Module hinzufügen",
+              "standalone": "Anwendungsmodul",
+              "extension": "Erweiterungsmodul"
+            },
+            "layersTable": {
+              "title": "Neue Datensätze als Ebenen hinzufügen",
+              "add": "Layer hinzufügen",
+              "url": "URL"
+            },
+            "obliqueCollectionsTable": {
+              "title": "Neue Datensätze als Schrägluftbildebene hinzufügen",
+              "add": "Schrägluftbilder hinzufügen",
+              "url": "URL"
+            },
+            "pluginsTable": {
+              "title": "Neue Plugins hinzufügen",
+              "add": "Plugins hinzufügen",
+              "version": "Neueste Version",
+              "loadError": " konnte nicht geladen werden!"
+            },
+            "i18nAddLocale": {
+              "title": "Neue Sprache hinzufügen",
+              "locale": "Sprache",
+              "localeKey": "Sprachschlüssel",
+              "emptyLocale": "Bitte geben Sie eine Sprache an!",
+              "invalidLocaleKey": "Ungültiger Sprachschlüssel! Muss aus zwei Buchstaben bestehen.",
+              "duplicateLocale": "Einträge übernehmen von",
+              "none": "keiner Sprache"
+            }
+          },
+          "editors": {
+            "editor": "Editor",
+            "jsonEditor": "JSON Editor",
+            "emptyEditor": "Keine Konfigurationsmöglichkeiten verfügbar.",
+            "staticId": "Die Module ID kann nicht geändert werden!",
+            "maps": {
+              "general": {
+                "title": "Allgemeine Einstellungen",
+                "name": "Name (ID)",
+                "activeOnStartup": "Aktiv beim Start"
+              },
+              "cesium": {
+                "title": "Einstellungen 3D-Karte",
+                "useOriginalCesiumShader": "Original Cesium Shader verwenden",
+                "enableLightning": "Beleuchtung aktivieren",
+                "lightIntensity": "Licht Intensität",
+                "webGLaa": "WebGL Anti-Aliasing erzwingen",
+                "globeColor": "Farbe des Globes",
+                "cameraLimiter": {
+                  "enable": "Kamera einschränken (Höhe/Entfernung)",
+                  "mode": "Modus Kameraeinschränkung",
+                  "modes": {
+                    "height": "Höhe",
+                    "distance": "Entfernung"
+                  },
+                  "level": "Geländeebene",
+                  "terrainUrl": "Gelände URL",
+                  "terrainUrlRequired": "Bitte geben Sie eine Gelände URL an oder wählen Sie den Modus 'Höhe'!"
+                }
+              },
+              "oblique": {
+                "title": "Einstellungen Schrägluftbildkarte",
+                "changeOnMoveEnd": "Umschalten bei Bewegungsende",
+                "switchThreshold": "Umschalt-Grenzwert",
+                "switchOnEdge": "Umschalten an Bildgrenzen"
+              }
+            },
+            "layer": {
+              "general": {
+                "title": "Allgemeine Einstellungen",
+                "name": "Name (ID)",
+                "layerTitle": "Titel",
+                "url": "URL",
+                "emptyUrl": "URL ist erforderlich!",
+                "tileProvider": "Tile Provider",
+                "idProperty": "ID Feld",
+                "baseLevels": "Basis Levels",
+                "version": "WMS-Version",
+                "format": "Bildformat",
+                "layers": "WMS-Ebenen",
+                "layer": "WMS-Ebene",
+                "transparent": "Transparent",
+                "parameters": "WMS-Parameter",
+                "tileMatrixSetID": "TileMatrixSetID",
+                "tileMatrixPrefix": "TileMatrixPrefix",
+                "numberOfLevelZeroTiles": "Anzahl LevelZeroTiles",
+                "featureType": "Feature-Typ",
+                "featureNS": "Feature-Namensraum",
+                "featurePrefix": "Feature-Präfix",
+                "tilingSchema": "Kachelschema",
+                "tilingSchemas": {
+                  "geographic": "Geographisch",
+                  "mercator": "Mercator"
+                }
+              },
+              "extended": {
+                "title": "Erweiterte Einstellungen",
+                "showInOverviewMap": "In Übersichtskarte anzeigen"
+              },
+              "mapHandling": {
+                "title": "Handhabung in der Karte",
+                "exclusiveGroups": "Exklusivitätsgruppen",
+                "mapNames": "Zeige in",
+                "mapNamesPlaceholder": "allen unterstützten Karten",
+                "hiddenObjectIds": "Objekte verstecken",
+                "hiddenObjectIdsPlaceholder": "Objekt-ID",
+                "featureInfoResponseType": "WMS Feature Info Response Type",
+                "featureInfo": "Feature Info",
+                "nofeatureInfo": "keine",
+                "defaultViewpoint": "Ebenen-Ansicht",
+                "noDefaultViewpoint": "keine",
+                "maxLevel": "Max. Zoomlevel",
+                "zIndex": "Z-Index",
+                "classificationType": "Klassifizierung",
+                "none": "Keine",
+                "both": "Beide",
+                "cesium3DTile": "3D Tiles",
+                "terrain": "Gelände"
+              },
+              "display": {
+                "title": "Darstellung"
+              },
+              "feature": {
+                "title": "Feature-Eigenschaften",
+                "split": {
+                  "none": "keine",
+                  "left": "links",
+                  "right": "rechts"
+                }
+              },
+              "splitSettings": {
+                "splitDirection": "Split-Richtung"
+              },
+              "styleSettings": {
+                "availableStyles": "Verfügbare Stile",
+                "style": "Standardstil",
+                "highlightStyle": "Stil bei Selektion",
+                "inlineStyle": "Interner Stil",
+                "noStyle": "kein Stil"
+              },
+              "vector": {
+                "resolution": "Auflösung",
+                "highlightStyle": "Hervorhebungsstil",
+                "altitudeMode": {
+                  "title": "Höhenmodus",
+                  "none": "kein",
+                  "relativeToGround": "relativ zum Gelände",
+                  "clampToGround": "auf Gelände",
+                  "absolute": "absolut"
+                },
+                "heightAboveGround": "Höhe über Gelände",
+                "classification": {
+                  "title": "Klassifizierung",
+                  "none": "keine",
+                  "cesium3DTile": "Objekte",
+                  "terrain": "Gelände",
+                  "both": "Objekte & Gelände"
+                },
+                "allowPicking": "Feature-Auswahl zulassen"
+              },
+              "geojson": {
+                "features": "GeoJSON Features Array"
+              },
+              "vectorTile": {
+                "title": "Einstellungen Vektorkacheln",
+                "level": "Zoomstufen"
+              },
+              "tileset": {
+                "screenSpace": "Screenspace error",
+                "screenSpaceMobile": "Screenspace error für mobile Geräte",
+                "useSRGBColorFactors": "SRGBA-Farbwerte verwenden",
+                "offset": "Versatz",
+                "pointSize": "Punktgröße"
+              },
+              "tileProviderSettings": {
+                "tileCacheSize": "Größe Kachel-Cache",
+                "baseLevels": "Basisebenen",
+                "trackFeaturesToTiles": "Track Features",
+                "allowTileAggregation": "Kachel-Aggregation erlauben"
+              },
+              "raster": {
+                "opacity": "Transparenz"
+              },
+              "tms": {
+                "title": "Einstellungen TMS"
+              },
+              "wms": {
+                "singleImage2d": "Single image 2D",
+                "highResolution": "Hohe Auflösung"
+              },
+              "wmts": {
+                "layer": "Ebene",
+                "style": "Style"
+              },
+              "tileSizeSettings": {
+                "tileSize": "Kachelgröße"
+              },
+              "terrain": {
+                "requestVertexNormals": "Vertex-Normalen anfragen",
+                "requestWaterMask": "Wassermaske anfragen",
+                "endsWithLayerJson": "Bitte geben Sie die URL ohne 'layer.json' am Ende an!"
+              },
+              "properties": {
+                "featureInfo": "Feature Info",
+                "availableStyles": "Verfügbare Ebenenstile"
+              }
+            },
+            "oblique": {
+              "general": {
+                "title": "Allgemeine Einstellungen",
+                "name": "Name (ID)",
+                "activeOnStartup": "Aktiv beim Start",
+                "zoom": "Zoomstufen",
+                "hideLevels": "Zoomstufen nicht anzeigen",
+                "scaleFactor": "Skalierungsfaktor"
+              },
+              "properties": {
+                "title": "Schrägluftbild Eigenschaften",
+                "obliqueTitle": "Titel"
+              },
+              "dataset": {
+                "title": "Schrägluftbild Datensatz",
+                "url": "URL",
+                "terrainUrl": "Gelände URL",
+                "add": "Neuen Datensatz hinzufügen",
+                "remove": "Datensatz entfernen"
+              }
+            },
+            "style": {
+              "general": {
+                "title": "Allgemeine Einstellungen",
+                "name": "Name (ID)"
+              },
+              "vector": {
+                "title": "Einstellungen Vektorstil"
+              },
+              "declarative": {
+                "title": "Einstellungen Deklarativer Stil",
+                "invalid": "Die Stildefinition ist nicht valide!"
+              }
+            },
+            "featureInfo": {
+              "general": {
+                "title": "Allgemeine Einstellungen",
+                "name": "Name (ID)",
+                "attributeKeys": "Attributschlüssel",
+                "keyMapping": "Schlüsselzuweisung",
+                "valueMapping": "Wertzuweisung"
+              },
+              "table": {
+                "title": "Einstellungen Tabelle",
+                "itemsPerPage": "Elemente pro Seite",
+                "itemsPerPageArray": "Auswahl Elemente pro Seite",
+                "showSearchbar": "Suchleiste anzeigen",
+                "searchbarPlaceholder": "Suchleisten Platzhalter"
+              },
+              "balloon": {
+                "title": "Einstellungen Popup (Balloon)",
+                "balloonTitle": "Titel",
+                "balloonSubtitle": "Untertitel"
+              },
+              "addressBalloon": {
+                "addressName": "Adressenname",
+                "street": "Straße",
+                "number": "Hausnummer",
+                "city": "Stadt",
+                "zip": "Postleitzahl",
+                "country": "Land"
+              },
+              "iframe": {
+                "title": "Einstellungen Eingebettete Darstellung (Iframe)",
+                "iframeTitle": "Titel",
+                "src": "URL"
+              }
+            },
+            "viewpoint": {
+              "name": "Name (ID)",
+              "title": "Titel",
+              "startingViewpoint": "Als Startansicht festlegen",
+              "groundPosition": "Bodenposition",
+              "cameraPosition": "Kameraposition",
+              "distance": "Distanz",
+              "heading": "Azimut",
+              "pitch": "Neigung",
+              "roll": "Querneigung",
+              "animate": "Animation",
+              "duration": "Animationsdauer",
+              "general": "Allgemeine Einstellungen",
+              "positionAndOrientation": "Position & Orientierung",
+              "updateFromView": "Aktuelle Kartenposition übernehmen",
+              "sync": "Synchronisieren der Kamera einschalten",
+              "syncOff": "Synchronisation zum Editieren ausschalten",
+              "finiteNumber": "Nur finite Zahlen sind zulässig!",
+              "positiveNumber": "Nur positive Zahlen sind zulässig!"
+            },
+            "plugins": {
+              "name": "Name (ID)",
+              "version": "Version",
+              "editVersion": "Plugin Version ändern",
+              "showReadme": "Readme anzeigen",
+              "showChangelog": "Changelog anzeigen"
+            },
+            "uiConfig": {
+              "logo": "Logo",
+              "mobileLogo": "Mobiles Logo",
+              "appTitle": "Anwendungstitel",
+              "headerTitle": "Kopfzeilentitel",
+              "favicon": "Favicon",
+              "primaryColor": "Primärfarbe",
+              "startingFeatureInfo": "Starte Feature Info",
+              "helpBaseUrl": "URL zur Hilfehauptseite",
+              "imgAlt": "Bild kann nicht angezeigt werden. Überprüfen Sie die Eingabe!",
+              "imprint": "Impressum",
+              "imprintOptions": {
+                "title": "Titel für Fußleiste überschreiben",
+                "select": "Impressum Quelle",
+                "url": "Impressum URL",
+                "urlLabel": "URL zu Ihrem Impressum",
+                "text": "Impressum Text",
+                "textLabel": "Inhalt zu Ihrem Impressum"
+              },
+              "dataProtection": "Datenschutz",
+              "dataProtectionOptions": {
+                "title": "Titel für Fußleiste überschreiben",
+                "select": "Datenschutz Quelle",
+                "url": "Datenschutz URL",
+                "urlLabel": "URL zu Ihrem Datenschutz",
+                "text": "Datenschutz Text",
+                "textLabel": "Inhalt zu Ihrem Datenschutz"
+              },
+              "positionDisplayEventType": "Positionsanzeige",
+              "positionDisplayOptions": {
+                "undefined": "Undefiniert",
+                "move": "Bewegen",
+                "click": "Klicken",
+                "select": "Positionsaktualisierung bei"
+              }
+            },
+            "i18n": {
+              "general": {
+                "title": "Allgemeine Einstellungen",
+                "name": "Name (ID)",
+                "locale": "Sprache"
+              },
+              "entries": {
+                "title": "Einträge",
+                "key": "Schlüssel",
+                "value": "Übersetzung",
+                "addEntry": "Eintrag hinzufügen",
+                "newKey": "Neuer Schlüssel",
+                "newValue": "Neue Übersetzung",
+                "emptyKey": "Bitte geben Sie einen Schlüssel an!",
+                "showFilter": "Filter"
+              }
+            },
+            "content": {
+              "title": "Interaktiver Editor für Inhalte",
+              "showVisibleOnly": "Nur sichtbare anzeigen",
+              "contentTreeItem": {
+                "name": "Name (ID)",
+                "title": "Titel",
+                "emptyTitle": "Titel ist erforderlich!",
+                "titleOverride": "Titel überschreiben",
+                "tooltip": "Tooltip",
+                "tooltipOverride": "Tooltip überschreiben",
+                "icon": "Icon",
+                "iconOverride": "Icon überschreiben",
+                "infoUrl": "URL zu weiteren Informationen",
+                "infoUrlOverride": "Informationen URL überschreiben",
+                "weight": "Gewichtung",
+                "initOpen": "Geöffnet starten",
+                "layerName": "Ebene",
+                "layerNames": "Ebenen",
+                "defaultViewpoint": "Zugeordnete Ansicht",
+                "collectionName": "Schrägluftbilder",
+                "viewpointName": "Ansicht",
+                "selectLayer": "Ebene auswählen"
+              }
+            },
+            "settings": {
+              "attributions": {
+                "title": "Urheber",
+                "subtitle": "Fügen Sie neue Einträge zur Liste hinzu oder löschen Sie vorhandene.",
+                "placeholder": "Name",
+                "add": "Hinzufügen",
+                "clear": "Alle löschen",
+                "edit": "Urhebereintrag bearbeiten",
+                "remove": "Urhebereintrag löschen",
+                "provider": "Urheber",
+                "url": "Urheber URL",
+                "year": "Jahr",
+                "actions": "Aktionen",
+                "error": "Bitte geben Sie einen Namen an."
+              },
+              "projection": {
+                "title": "Projektion",
+                "epsg": "EPSG Code",
+                "proj4": "Proj4 Definition"
+              },
+              "extent": {
+                "title": "Ausdehnung",
+                "projection": "Projektion",
+                "min": "Min",
+                "max": "Max",
+                "show": "Ausdehnung in Karte anzeigen",
+                "create": "Neue Ausdehnung in Karte zeichnen",
+                "zoom": "Auf Ausdehnung zoomen"
+              },
+              "information": {
+                "title": "Objektinformationen",
+                "tooltip": "Tooltip",
+                "tooltipTooltip": "Kurzbeschreibung der Ebene",
+                "icon": "Icon",
+                "infoUrl": "URL zu weiteren Informationen"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "layers": [
+    {
+      "type": "WMSLayer",
+      "name": "Sentinel",
+      "properties": {
+        "attributions": {
+          "provider": "Europäische Union, enthält veränderte Copernicus Sentinel-Daten",
+          "url": "",
+          "year": 2024
+        }
+      },
+      "activeOnStartup": true,
+      "url": "https://sgx.geodatenzentrum.de/wms_sen2europe",
+      "layers": "sentinel2-de:rgb",
+      "parameters": {
+        "FORMAT": "image/png"
+      },
+      "zIndex": 0
+    },
+    {
+      "type": "WMSLayer",
+      "name": "Ortho LDBV 20cm",
+      "properties": {
+        "attributions": {
+          "provider": "Bayerische Vermessungsverwaltung – CC BY 4.0",
+          "url": "www.geodaten.bayern.de https://creativecommons.org/licenses/by/4.0/deed.de",
+          "year": 2024
+        }
+      },
+      "activeOnStartup": true,
+      "url": "https://geoservices.bayern.de/od/wms/dop/v1/dop20?",
+      "layers": "by_dop20c",
+      "parameters": {
+        "FORMAT": "image/png",
+        "TRANSPARENT": "true"
+      },
+      "zIndex": 0
+    },
+    {
+      "type": "WMSLayer",
+      "name": "Orthophotos Kempten 2023",
+      "properties": {
+        "infoUrl": "www.aerowest.de"
+      },
+      "url": "https://geoserver.kempten.de/geoserver/orthophotos/wms? ortho_2023&",
+      "layers": "ortho_2023",
+      "version": "1.3.0",
+      "parameters": {
+        "FORMAT": "image/png",
+        "TRANSPARENT": "true"
+      },
+      "zIndex": 0
+    },
+    {
+      "type": "GeoJSONLayer",
+      "name": "Grenzen KE",
+      "properties": {
+        "showInOverviewMap": true,
+        "availableStyles": [
+          "Style_Grenzen"
+        ]
+      },
+      "activeOnStartup": true,
+      "mapNames": [
+        "OpenlayersMap",
+        "CesiumMap"
+      ],
+      "url": "https://geoportal.kempten.de/consul/datasource/grenzen_ke_25832.geojson",
+      "style": "Style_Grenzen",
+      "projection": {
+        "type": "Projection",
+        "epsg": "EPSG:25832",
+        "proj4": "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
+      },
+      "highlightStyle": {
+        "type": "VectorStyleItem",
+        "name": "Style_Grenzen",
+        "fill": {
+          "color": [
+            255,
+            255,
+            255,
+            0
+          ]
+        },
+        "stroke": {
+          "color": [
+            51,
+            153,
+            204,
+            1
+          ],
+          "width": 5
+        }
+      },
+      "zIndex": 0
+    },
+    {
+      "type": "CesiumTilesetLayer",
+      "name": "Gebäudemodell LoD2 texturiert",
+      "properties": {
+        "attributions": {
+          "provider": "GTA GeoService GmbH; Aerowest GmbH",
+          "url": "http://www.gta-geoservice.de/ ; https://www.aerowest.de/",
+          "year": 2023
+        }
+      },
+      "activeOnStartup": true,
+      "url": "https://geoportal.kempten.de/datasource-data/bdf1fd2b-0199-4703-819e-709e90fed98b/tileset.json",
+      "tilesetOptions": {
+        "useSRGBColorFactors": true
+      },
+      "zIndex": 0
+    },
+    {
+      "type": "CesiumTilesetLayer",
+      "name": "Gebäudemodell LoD2",
+      "properties": {
+        "attributions": {
+          "provider": "GTA GeoService GmbH",
+          "url": "http://www.gta-geoservice.de/",
+          "year": 2023
+        }
+      },
+      "url": "https://geoportal.kempten.de/datasource-data/cbcb2402-5e5f-4d8d-97b7-cb4d368c585b/tileset.json",
+      "tilesetOptions": {
+        "useSRGBColorFactors": true
+      },
+      "zIndex": 0
+    },
+    {
+      "type": "TerrainLayer",
+      "name": "Geländemodell DGM1",
+      "properties": {
+        "attributions": {
+          "provider": "Bayerische Vermessungsverwaltung – CC BY 4.0",
+          "url": "https://www.geodaten.bayern.de",
+          "year": 2024
+        }
+      },
+      "activeOnStartup": true,
+      "url": "https://geoportal.kempten.de/datasource-data/0e05bbac-efdd-4f23-9a81-a5bd763970f0",
+      "zIndex": 0
+    },
+    {
+      "type": "GeoJSONLayer",
+      "name": "Neuer Illersteg",
+      "properties": {
+        "availableStyles": [
+          "Style_test"
+        ]
+      },
+      "activeOnStartup": true,
+      "mapNames": [
+        "CesiumMap"
+      ],
+      "style": "Style_test",
+      "highlightStyle": {
+        "type": "VectorStyleItem",
+        "name": "Style_test",
+        "fill": {
+          "color": [
+            236,
+            14,
+            14,
+            0.9934579724463347
+          ]
+        },
+        "stroke": {
+          "color": [
+            51,
+            153,
+            204,
+            1
+          ],
+          "width": 1.25
+        },
+        "image": {
+          "scale": 1,
+          "fill": {
+            "color": [
+              255,
+              255,
+              255,
+              0.4
+            ]
+          },
+          "radius": 5,
+          "stroke": {
+            "color": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "width": 1
+          }
+        }
+      },
+      "vectorProperties": {
+        "altitudeMode": "absolute",
+        "allowPicking": false,
+        "modelUrl": "",
+        "baseUrl": ""
+      },
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "olcs_modelUrl": "https://geoportal.kempten.de/consul/datasource/BFq7mFrS2h6XHJap.glb",
+            "olcs_modelScaleX": 1,
+            "olcs_modelScaleY": 1,
+            "olcs_modelScaleZ": 1,
+            "olcs_modelHeading": 56.1,
+            "olcs_modelPitch": 0,
+            "olcs_modelRoll": 0
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.318279999999998,
+              47.72871000000001,
+              651.89
+            ]
+          },
+          "id": "z8yYqYftin2obPzBC",
+          "vcsMeta": {
+            "version": "2.1"
+          }
+        }
+      ],
+      "zIndex": 0
+    }
+  ],
+  "maps": [
+    {
+      "type": "CesiumMap",
+      "name": "CesiumMap"
+    },
+    {
+      "type": "OpenlayersMap",
+      "name": "OpenlayersMap"
+    }
+  ],
+  "obliqueCollections": [],
+  "plugins": [],
+  "styles": [
+    {
+      "type": "VectorStyleItem",
+      "name": "Style_Grenzen",
+      "fill": {
+        "color": [
+          255,
+          255,
+          255,
+          0
+        ]
+      },
+      "stroke": {
+        "color": [
+          51,
+          153,
+          204,
+          1
+        ],
+        "width": 5
+      }
+    },
+    {
+      "type": "VectorStyleItem",
+      "name": "Style_test",
+      "fill": {
+        "color": [
+          236,
+          14,
+          14,
+          0.9934579724463347
+        ]
+      },
+      "stroke": {
+        "color": [
+          51,
+          153,
+          204,
+          1
+        ],
+        "width": 1.25
+      },
+      "image": {
+        "scale": 1,
+        "fill": {
+          "color": [
+            255,
+            255,
+            255,
+            0.4
+          ]
+        },
+        "radius": 5,
+        "stroke": {
+          "color": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "width": 1
+        }
+      }
+    }
+  ],
+  "uiConfig": [],
+  "viewpoints": [
+    {
+      "type": "Viewpoint",
+      "name": "Kempten 2D",
+      "properties": {
+        "title": "Kempten 2D"
+      },
+      "distance": 704.653097917639,
+      "groundPosition": [
+        10.31505010511339,
+        47.7271928844965
+      ],
+      "heading": 0,
+      "pitch": -90,
+      "roll": 0,
+      "animate": false
+    },
+    {
+      "type": "Viewpoint",
+      "name": "Kempten",
+      "properties": {
+        "title": "Kempten 3D"
+      },
+      "distance": 346.3781593013671,
+      "cameraPosition": [
+        10.320266038038708,
+        47.725929132909805,
+        731.9316965856259
+      ],
+      "groundPosition": [
+        10.315946811212578,
+        47.72684791268928,
+        664.6621557897473
+      ],
+      "heading": 287.5,
+      "pitch": -11.2,
+      "roll": 0,
+      "animate": false
+    }
+  ],
+  "startingMapName": "CesiumMap",
+  "startingViewpointName": "Kempten"
+}

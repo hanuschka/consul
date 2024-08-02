@@ -1,6 +1,19 @@
 <%= content_for :body_class, "custom-page" %>
   <% provide :title do %><%= @custom_page.title %><% end %>
 
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+    social_title: @custom_page.title,
+    social_description: strip_tags(@custom_page.content)[0..200],
+    og_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image.attachment) : nil),
+    social_url: page_url(@custom_page.slug),
+    twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
+<% end %>
+
+<% provide :vc_maps do %>
+  <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+<% end %>
+
 <style>
   <% if @custom_page.image&.attached? %>
     .custom-page-banner {

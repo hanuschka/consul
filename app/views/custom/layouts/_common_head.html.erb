@@ -26,7 +26,7 @@
 
 <meta name="turbolinks-cache-control" content="no-cache">
 
-<script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+<%= yield :vc_maps %>
 
 <% unless embedded? %>
   <% unless Rails.env.development? %>

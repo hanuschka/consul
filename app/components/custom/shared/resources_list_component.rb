@@ -128,13 +128,13 @@ class Shared::ResourcesListComponent < ApplicationComponent
     when Budget::Investment
       Budgets::Investments::ListItemComponent.new(
         budget_investment: resource,
-        budget_investment_ids: resources.ids,
+        budget_investment_ids: resources.pluck(:id),
         ballot: @additional_data[:ballot]
         # top_level_active_projekts: @additional_data[:top_level_active_projekts],
         # top_level_archived_projekts: @additional_data[:top_level_archived_projekts]
       )
     when ProjektEvent
-      ProjektEvents::ListItemComponent.new(projekt_event: resource)
+      Projekts::ProjektEvents::ListItemComponent.new(projekt_event: resource)
     when Topic
       Topics::ListItemComponent.new(topic: resource)
     end

@@ -12,7 +12,7 @@
     font-size: 14px;
     border: 1px solid $border-color;
 
-    a {
+    a, .no-link {
       color: $main-text-color;
       transition: color 100ms ease;
       text-decoration: none;

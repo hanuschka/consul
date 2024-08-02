@@ -119,7 +119,7 @@ en:
           title: Sign up
           username_is_available: Username available
           username_is_not_available: Username already taken
-          username_label: Username
+          username_label: Username (publicly visible)
           username_note: Name that will be displayed publicly next to your posts
         success:
           back_to_index: Back to home page

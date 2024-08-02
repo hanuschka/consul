@@ -5,48 +5,15 @@ $green-button-color: #00AA0B;
 button {
   cursor: pointer;
 
-  &.-round-icon-button {
-    border-radius: 50%;
-    color: #919dab;
-    width: 1.7em;
-    height: 1.7em;
-    transition: 50ms ease background-color;
-    background-color: $light-gray-2;
-
-    &:hover {
-      background-color: darken($light-gray-2, 2);
-    }
-
-    &:active {
-      background-color: #edebeb;
-    }
-  }
-
-  &.-transparent-round-icon-button {
-    border-radius: 50%;
-    color: #919dab;
-    width: 1.7em;
-    height: 1.7em;
-    transition: 50ms ease background-color;
-
-    &:hover {
-      background-color: #ededed;
-    }
-
-    &:active {
-      background-color: #edebeb;
-    }
-  }
-
-  &.-delete {
-    i {
-      color: #de7070;
-    }
-
-    &:hover {
-      background-color: #feefef;
-    }
-  }
+  /* &.-delete { */
+  /*   i { */
+  /*     color: #de7070; */
+  /*   } */
+  /**/
+  /*   &:hover { */
+  /*     background-color: #feefef; */
+  /*   } */
+  /* } */
 }
 
 .custom-new-design {
@@ -188,3 +155,42 @@ button {
     background-color: $brand;
   }
 }
+
+button {
+  &.-round-icon-button {
+    padding: 0 !important;
+    border-radius: 50%;
+    color: #919dab;
+    width: 1.7em;
+    height: 1.7em;
+    transition: 50ms ease background-color;
+    background-color: $light-gray-2;
+
+    &:hover {
+      background-color: darken($light-gray-2, 2);
+    }
+
+    &:active {
+      background-color: #edebeb;
+    }
+  }
+
+  &.-transparent-round-icon-button {
+    padding: 0 !important;
+    border-radius: 50%;
+    color: #919dab;
+    width: 1.7em;
+    height: 1.7em;
+    transition: 50ms ease background-color;
+    background: transparent;
+
+    &:hover {
+      background-color: #ededed;
+    }
+
+    &:active {
+      background-color: #edebeb;
+    }
+  }
+}
+

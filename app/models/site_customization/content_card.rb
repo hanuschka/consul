@@ -34,9 +34,9 @@ class SiteCustomization::ContentCard < ApplicationRecord
   def self.default_titles
     {
       "active_projekts" => "Aktive Projekte",
-      "latest_user_activity" => "Letzte Aktivitäten",
+      "latest_user_activity" => "Meine Aktivitäten",
       "current_polls" => "Laufende Abstimmungen",
-      "latest_resources" => "Neueste Beiträge (Diskussionen, Vorschläge, Investitionsvorschläge, Mangelmeldungen)",
+      "latest_resources" => "Neueste Beiträge",
       "expired_projekts" => "Abgeschlossene Projekte",
       "events" => "Veranstaltungen"
     }
@@ -55,7 +55,7 @@ class SiteCustomization::ContentCard < ApplicationRecord
         "debates_limit" => 3,
         "proposals_limit" => 3,
         "investments_limit" => 3,
-        "deficiency_reports_limit" => 3
+        "deficiency_reports_limit" => 0
       },
       "expired_projekts" => {
         "limit" => 3

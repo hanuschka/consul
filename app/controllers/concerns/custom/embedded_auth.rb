@@ -81,6 +81,10 @@ module EmbeddedAuth
     end
 
     def gen_default_url_options(options)
+      if params[:temp_token].present?
+        options.merge({ temp_token: params[:temp_token] })
+      end
+
       options =
         if params[:embedded].present?
           options.merge({ embedded: params[:embedded] })

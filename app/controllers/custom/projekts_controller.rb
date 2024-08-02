@@ -75,13 +75,14 @@ class ProjektsController < ApplicationController
 
   def json_data
     projekt = Projekt.find(params[:id])
-    image_url = projekt.image.present? ? url_for(projekt.image.variant(:popup)) : nil
+    image_url = projekt.image.present? ? url_for(projekt.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
     tags = projekt.tags.pluck(:name)
 
     sdg_goals = []
     projekt.sdg_goals.each do |goal|
       sdg_goals.push({
         code: goal.code,
+        title: goal.title,
         image: "sdg/goal_#{goal.code}.png"
       })
     end

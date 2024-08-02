@@ -62,6 +62,13 @@
         <% if can? :update_official_answer, @deficiency_report %>
           <%= render "custom/deficiency_reports/answer_form", deficiency_report: @deficiency_report %>
         <% end %>
+
+        <% if @deficiency_report.milestones.any? %>
+          <div class="proposal-resources-section">
+            <%= render Shared::MilestonesComponent.new(milestones: @deficiency_report.milestones, milestoneable: @deficiency_report) %>
+          </div>
+        <% end %>
+
       </div>
 
       <aside class="sidebar">
@@ -97,7 +104,7 @@
           <% end %>
         <% end %>
 
-        <% if current_user && ( current_user.administrator? || current_user.deficiency_report_officer? ) %>
+        <% if can? :update_officer, @deficiency_report %>
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.officer.title"),
             icon_name: "user-cog")) do |c| %>
@@ -106,19 +113,17 @@
         <% end %>
 
         <% if current_user&.administrator? %>
-          <div class="admin">
-            <%= render(Shared::SidebarCardComponent.new(
-              title: "Benachrichtigung für Sachbearbeiter*in",
-              icon_name: "envelope")) do |c| %>
-              <%= render Admin::LivesubmitCheckbox::Component.new(
-                url: notify_officer_about_new_comments_deficiency_report_path(@deficiency_report),
-                resource_name: "deficiency_report",
-                attribute_name: "notify_officer_about_new_comments",
-                record_id: @deficiency_report.id,
-                current_value: @deficiency_report.notify_officer_about_new_comments
-              ) %>
-            <% end %>
-          </div>
+          <%= render(Shared::SidebarCardComponent.new(
+            title: "Benachrichtigung für Sachbearbeiter*in",
+            icon_name: "envelope")) do |c| %>
+            <%= render Admin::LivesubmitCheckbox::Component.new(
+              url: notify_officer_about_new_comments_deficiency_report_path(@deficiency_report),
+              resource_name: "deficiency_report",
+              attribute_name: "notify_officer_about_new_comments",
+              record_id: @deficiency_report.id,
+              current_value: @deficiency_report.notify_officer_about_new_comments
+            ) %>
+          <% end %>
         <% end %>
 
         <% if current_user == @deficiency_report.author %>

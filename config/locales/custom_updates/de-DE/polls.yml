@@ -21,6 +21,7 @@ de:
         expired: Abstimmung abgelaufen
         expires_today: Läuft nur noch heute
         participate_button: Teilnehmen
+        phase_expired_button: Ergebnisse
       questions:
         prev_question: "Vorherige Frage"
         next_question: "Nächste Frage"

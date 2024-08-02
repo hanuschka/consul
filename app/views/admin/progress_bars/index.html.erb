@@ -5,7 +5,7 @@
 <% if @progressable.is_a?(ProjektPhase::MilestonePhase) %>
   <%= back_link_to namespaced_polymorphic_path(@namespace, @progressable, action: :milestones) %>
 <% else %>
-  <%= back_link_to admin_polymorphic_path(@progressable) %>
+  <%= back_link_to namespaced_polymorphic_path(@namespace, @progressable) %>
 <% end %>
 
 <div class="clear"></div>

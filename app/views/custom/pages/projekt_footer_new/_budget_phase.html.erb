@@ -1,8 +1,8 @@
-<%= render "shared/loader_spinner" %>
-
 <% if @budget.present? %>
   <%= render Pages::Projekts::BudgetsTabComponent.new(@budget, @ballot, current_user) %>
 <% end %>
+
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
 <div class="flex-layout">
   <div class="main-column">

@@ -3077,3 +3077,8 @@
 .icon-chevron-down.-rotated {
   transform: rotate(180deg);
 }
+
+.fa-magnifying-glass-plus::before {
+  content: "\f00e";
+}
+

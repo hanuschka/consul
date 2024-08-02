@@ -10,6 +10,10 @@
     twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
 <% end %>
 
+<% provide :vc_maps do %>
+  <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+<% end %>
+
 <style>
   <% if @custom_page.image.present? %>
     .custom-page-banner {

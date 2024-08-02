@@ -3,7 +3,7 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
 
   def initialize(content_card)
     @content_card = content_card
-    @limit = @content_card.settings["limit"]
+    @limit = @content_card.settings["limit"].to_i
   end
 
   def render?

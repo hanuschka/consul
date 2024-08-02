@@ -11,19 +11,21 @@
   }
 }
 
-.button.button-twitter {
-  //background: #ecf7fc;
-  background-color: black;
-  color: white;
-
-  &::before {
-    mask-image: image-url("x_icon.svg");
+.social-share-button {
+  .button.button-twitter {
+    //background: #ecf7fc;
+    background-color: black;
     color: white;
-  }
 
-  &:hover {
-    color: white !important;
-    background-color: #323232 !important;
+    &::before {
+      mask-image: image-url("x_icon.svg");
+      color: white;
+    }
+
+    &:hover {
+      color: white !important;
+      background-color: #000 !important;
+    }
   }
 }
 
@@ -42,16 +44,7 @@
 
   &:hover,
   &:focus {
-    background: #fff;
-  }
-}
-
-.ssb-twitter {
-  background: #000;
-
-  &:hover,
-  &:focus {
-    color: #000;
+    /* background: #fff; */
   }
 }
 
@@ -63,16 +56,6 @@
     color: #3b5998;
   }
 }
-
-.ssb-facebook {
-  background: #3b5998;
-
-  &:hover,
-  &:focus {
-    color: #354f88;
-  }
-}
-
 .button.button-google {
   background: #fcedea;
   border-left: 3px solid #de4c34;
@@ -91,20 +74,58 @@
   }
 }
 
-.ssb-telegram {
-  background: #08c;
-
-  &:hover,
-  &:focus {
-    color: #40a2d1;
+.social-share-button {
+  .ssb-icon {
+    transition: background-color 100ms ease;
   }
-}
 
-.ssb-whatsapp_app {
-  background: #43d854;
+  .ssb-twitter {
+    background: #000;
 
-  &:hover,
-  &:focus {
-    color: #43d854;
+    &:hover,
+    &:focus {
+      background:  lighten(#000, 18);
+    }
+  }
+
+  .ssb-facebook {
+    background: #3b5998;
+
+    &:hover,
+    &:focus {
+      background: lighten(#3b5998, 7);
+    }
+  }
+
+  .ssb-telegram {
+    background: #08c;
+
+    &:hover,
+    &:focus {
+      background: lighten(#08c, 2);
+    }
+  }
+
+  .ssb-whatsapp {
+    background: #43d854;
+
+    &:hover,
+    &:focus {
+      background: lighten(#43d854, 5);
+    }
+  }
+
+  .ssb-email {
+    &:hover,
+    &:focus {
+      background: lighten(red, 10);
+    }
+  }
+
+  .ssb-linkedin {
+    &:hover,
+    &:focus {
+      background: lighten(#0e76a8, 4);
+    }
   }
 }

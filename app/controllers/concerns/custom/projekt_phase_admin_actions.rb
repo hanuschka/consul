@@ -49,9 +49,12 @@ module ProjektPhaseAdminActions
           namespace_projekt_phase_path(action: next_action),
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
-      else
+      elsif frame_session_from_authorized_source?
         redirect_to(
-          @projekt_phase.projekt.private_url(embedded: true)
+          @projekt_phase.projekt.private_url(
+            embedded: true,
+            temp_token: params[:temp_token]
+          )
         )
       end
     end

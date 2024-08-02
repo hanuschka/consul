@@ -81,9 +81,14 @@ module EmbeddedAuth
     end
 
     def gen_default_url_options(options)
-      if params[:temp_token].present?
-        options.merge({ temp_token: params[:temp_token] })
-      end
+      options = options.presence || {}
+
+      options =
+        if params[:temp_token].present?
+          options.merge({ temp_token: params[:temp_token] })
+        else
+          {}
+        end
 
       options =
         if params[:embedded].present?
@@ -120,6 +125,8 @@ module EmbeddedAuth
     end
 
     def frame_temp_token_valid?
+      return false if params[:temp_token].blank?
+
       user = User.find_by(temporary_auth_token: params[:temp_token])
 
       user.present? && user.temporary_auth_token_valid?

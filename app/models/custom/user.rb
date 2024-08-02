@@ -268,6 +268,8 @@ class User < ApplicationRecord
   end
 
   def temporary_auth_token_valid?
+    return false if temporary_auth_token_valid_until.nil?
+
     temporary_auth_token_valid_until > Time.current
   end
 

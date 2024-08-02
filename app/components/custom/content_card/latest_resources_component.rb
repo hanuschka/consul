@@ -3,10 +3,10 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
 
   def initialize(content_card)
     @content_card = content_card
-    @debates_limit = @content_card.settings["debates_limit"]
-    @proposals_limit = @content_card.settings["proposals_limit"]
-    @investments_limit = @content_card.settings["investments_limit"]
-    @deficiency_reports_limit = @content_card.settings["deficiency_reports_limit"]
+    @debates_limit = @content_card.settings["debates_limit"].to_i
+    @proposals_limit = @content_card.settings["proposals_limit"].to_i
+    @investments_limit = @content_card.settings["investments_limit"].to_i
+    @deficiency_reports_limit = @content_card.settings["deficiency_reports_limit"].to_i
   end
 
   def render?

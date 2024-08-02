@@ -9,3 +9,7 @@ $main-text-color-hover: #c7d5e2;
 
 $dropdown-hover-color: #f2f2f2;
 $dropdown-active-color: darken(#f2f2f2, 2%);
+
+:root {
+  --brand-color: #{$brand};
+}

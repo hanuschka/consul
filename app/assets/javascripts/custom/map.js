@@ -221,14 +221,13 @@
           return proposalPopupContent(data);
 
         } else if ( process == "deficiency-reports" ) {
-          return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
+          return "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
 
         } else if ( process == "projekts" ) {
           return projektPopupContent(data);
 
         } else {
-          return "<a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a>";
-
+          return "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
         }
 
         function proposalPopupContent(data) {

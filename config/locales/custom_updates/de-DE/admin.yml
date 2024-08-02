@@ -26,7 +26,7 @@ de:
       budget_investments:
         index:
           list:
-            created_at: Veröffentlichung
+            created_at: Erstellungsdatum
         show:
           physical_votes_updated: Physical votes updated!
       deficiency_reports:

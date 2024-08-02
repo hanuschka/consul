@@ -13,13 +13,13 @@ module PollsHelper
     question.question_answers.pluck(:open_answer).count(true) < 1
   end
 
-  def link_to_poll(text, poll)
+  def link_to_poll(text, poll, class_name: "")
     if can?(:results, poll)
-      link_to text, results_poll_path(id: poll.slug || poll.id), data: { turbolinks: false }
+      link_to text, results_poll_path(id: poll.slug || poll.id), class: class_name, data: { turbolinks: false }
     elsif can?(:stats, poll)
-      link_to text, stats_poll_path(id: poll.slug || poll.id)
+      link_to text, stats_poll_path(id: poll.slug || poll.id), class: class_name
     else
-      link_to text, poll_path(id: poll.slug || poll.id)
+      link_to text, poll_path(id: poll.slug || poll.id), class: class_name
     end
   end
 

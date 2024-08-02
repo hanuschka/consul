@@ -1,6 +1,6 @@
 class Users::NewPublicActivityComponent < ApplicationComponent
   attr_reader :user
-  delegate :current_user, :current_path_with_query_params, to: :helpers
+  delegate :current_user, :current_ability, :current_path_with_query_params, to: :helpers
 
   def initialize(user)
     @user = user
@@ -23,6 +23,7 @@ class Users::NewPublicActivityComponent < ApplicationComponent
       ("proposals" if feature?(:proposals)),
       ("debates" if feature?(:debates)),
       ("budget_investments" if feature?(:budgets)),
+      ("deficiency_reports" if feature?(:deficiency_reports)),
       "comments",
       ("follows" if valid_interests_access?(user))
     ].compact.select { |filter| send(filter).any? }
@@ -43,6 +44,8 @@ class Users::NewPublicActivityComponent < ApplicationComponent
           proposals
         when "budget_investments"
           budget_investments
+        when "deficiency_reports"
+          deficiency_reports
         when "comments"
           comments
         end
@@ -72,6 +75,10 @@ class Users::NewPublicActivityComponent < ApplicationComponent
 
     def debates
       @debates ||= Debate.where(author_id: user.id)
+    end
+
+    def deficiency_reports
+      @deficiency_reports ||= DeficiencyReport.accessible_by(current_ability).where(author_id: user.id)
     end
 
     def comments

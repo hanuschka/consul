@@ -11,11 +11,11 @@
 
 <!-- Facebook OG -->
 <meta property="og:title" content="<%= local_assigns[:social_title] || setting["meta_title"] %>" id="ogtitle" />
-<meta property="og:image" content="<%= root_url + (local_assigns[:og_image_url] || @social_media_icon_path || "social_media_icon.png" ) %>" id="ogimage" />
 <meta property="og:description" content="<%= og_description %>" id="ogdescription" />
+<meta property="og:image" content="<%= root_url + (local_assigns[:og_image_url] || @social_media_icon_path || "social_media_icon.png") %>" id="ogimage" />
 <meta property="og:url" content="<%= local_assigns[:social_url] || request.original_url %>" id="ogurl" />
 
-<meta property="og:type" content="article" />
+<meta property="og:type" content="<%= request.path == "/" ? "website" : "article" %>" />
 <meta property="og:site_name" content="<%= setting["org_name"] %>" />
 <meta property="fb:app_id" content="<%= Rails.application.secrets.facebook_key %>" />
 <% if setting["url"] %>

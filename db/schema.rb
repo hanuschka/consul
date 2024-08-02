@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_08_110227) do
+ActiveRecord::Schema.define(version: 2024_07_29_151658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1340,6 +1340,7 @@ ActiveRecord::Schema.define(version: 2024_07_08_110227) do
     t.float "altitude"
     t.bigint "projekt_phase_id"
     t.bigint "deficiency_report_area_id"
+    t.jsonb "geocoder_data", default: {}
     t.index ["deficiency_report_area_id"], name: "index_map_locations_on_deficiency_report_area_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
@@ -1347,6 +1348,20 @@ ActiveRecord::Schema.define(version: 2024_07_08_110227) do
     t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
     t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
     t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
+  end
+
+  create_table "memos", force: :cascade do |t|
+    t.string "memoable_type"
+    t.bigint "memoable_id"
+    t.bigint "user_id"
+    t.text "text"
+    t.datetime "hidden_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hidden_at"], name: "index_memos_on_hidden_at"
+    t.index ["memoable_id", "memoable_type"], name: "index_memos_on_memoable_id_and_memoable_type"
+    t.index ["memoable_type", "memoable_id"], name: "index_memos_on_memoable"
+    t.index ["user_id"], name: "index_memos_on_user_id"
   end
 
   create_table "milestone_statuses", id: :serial, force: :cascade do |t|
@@ -1854,6 +1869,7 @@ ActiveRecord::Schema.define(version: 2024_07_08_110227) do
     t.text "projekt_selector_hint"
     t.string "labels_name"
     t.string "sentiments_name"
+    t.string "resource_form_title_hint"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -2295,6 +2311,25 @@ ActiveRecord::Schema.define(version: 2024_07_08_110227) do
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
   end
 
+  create_table "site_customization_content_card_translations", force: :cascade do |t|
+    t.bigint "site_customization_content_card_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "title"
+    t.index ["locale"], name: "index_site_customization_content_card_translations_on_locale"
+    t.index ["site_customization_content_card_id"], name: "index_6a35fd735afb61c8b9736c45c2156ce1e4ec47e6"
+  end
+
+  create_table "site_customization_content_cards", force: :cascade do |t|
+    t.integer "given_order"
+    t.boolean "active", default: false
+    t.jsonb "settings", default: {}
+    t.string "kind"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "site_customization_images", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.string "image_file_name"
@@ -2505,6 +2540,7 @@ ActiveRecord::Schema.define(version: 2024_07_08_110227) do
     t.boolean "show_in_users_overview", default: true
     t.boolean "adm_email_on_new_topic", default: false
     t.string "auth_redirect_path", default: ""
+    t.string "last_stork_level"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -2700,6 +2736,7 @@ ActiveRecord::Schema.define(version: 2024_07_08_110227) do
   add_foreign_key "map_locations", "deficiency_reports"
   add_foreign_key "map_locations", "projekt_phases"
   add_foreign_key "map_locations", "projekts"
+  add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "organizations", "users"

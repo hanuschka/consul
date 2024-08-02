@@ -10,6 +10,7 @@ namespace :admin do
       get :settings
       get :map
       patch :update_map
+      put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -93,11 +94,14 @@ namespace :admin do
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
 
+  resources :memos, only: %i[create destroy]
+
   # custom individual groups routes
   resources :individual_groups do
     resources :individual_group_values, as: :values do
       get :search_user, on: :member
       post :add_user, on: :member
+      post :add_from_csv, on: :member
       delete :remove_user, on: :member
     end
   end
@@ -399,6 +403,12 @@ namespace :admin do
       post :update, on: :collection
     end
     resources :documents, only: [:index, :new, :create, :destroy]
+    resources :content_cards, only: %i[edit update] do
+      collection do
+        post :order_content_cards
+        patch :toggle_active
+      end
+    end
   end
 
   resource :homepage, controller: :homepage, only: [:show]

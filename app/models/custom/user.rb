@@ -31,6 +31,7 @@ class User < ApplicationRecord
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
+  has_many :memos
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :user_individual_group_values, dependent: :destroy
   has_many :individual_group_values, through: :user_individual_group_values
@@ -54,12 +55,12 @@ class User < ApplicationRecord
   validates :gender, presence: true, on: :create, if: :extended_registration?
   validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
-  validates :registered_address_id, presence: true, if: :validate_registered_address?
+  validates :registered_address_id, presence: true, on: :create, if: :validate_registered_address?
 
-  validates :city_name, presence: true, if: :validate_regular_address_fields?
-  validates :plz, presence: true, if: :validate_regular_address_fields?
-  validates :street_name, presence: true, if: :validate_regular_address_fields?
-  validates :street_number, presence: true, if: :validate_regular_address_fields?
+  validates :city_name, presence: true, on: :create, if: :validate_regular_address_fields?
+  validates :plz, presence: true, on: :create, if: :validate_regular_address_fields?
+  validates :street_name, presence: true, on: :create, if: :validate_regular_address_fields?
+  validates :street_number, presence: true, on: :create, if: :validate_regular_address_fields?
 
   validates :document_type, presence: true, on: :create, if: :document_required?
   validates :document_last_digits, presence: true, on: :create, if: :document_required?

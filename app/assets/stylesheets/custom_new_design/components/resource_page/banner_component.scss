@@ -2,23 +2,23 @@
   .resource-page-banner {
     display: flex;
     justify-content: space-between;
-    background: #D9F0EB;
-    color: $dt-base;
+    background: $brand-lighter;
+    color: $dark;
     // padding: 40px 40px;
     padding: 35px 40px;
     border-radius: 10px;
     margin-bottom: 15px;
 
     &.-proposal, &.-investment {
-      background-color: #FFE9CC;
+      // background-color: #FFE9CC;
     }
 
     &.-poll {
-      background-color: #EAE4FB;
+      // background-color: #EAE4FB;
     }
 
     &.-deficiencyreport {
-      background-color: #fff;
+      // background-color: #fff;
     }
 
     a {

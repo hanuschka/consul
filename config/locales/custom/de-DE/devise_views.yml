@@ -119,7 +119,7 @@ de:
           title: Registrieren
           username_is_available: Benutzer*innenname verfügbar
           username_is_not_available: Benutzer*innenname bereits vergeben
-          username_label: Benutzer*innenname
+          username_label: Benutzer*innenname (öffentlich sichtbar)
           data_as_on_id_card: Bitte stellen Sie sicher, dass die eingegebenen Daten exakt so geschrieben sind wie auf Ihrem Personalausweis
           username_note: Name, der öffentlich neben ihren Beiträgen angezeigt wird
         success:

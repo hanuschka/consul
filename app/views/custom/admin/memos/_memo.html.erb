@@ -1,0 +1,33 @@
+<li class="memo-block" id="<%= dom_id(memo) %>">
+  <div class="memo-content">
+    <div class="memo-details">
+      <div>
+        <%= avatar_image(memo.user, seed: memo.user_id, size: 32, class: "float-left", aria: { live: "off" }) %>
+      </div>
+      <div>
+        <span class="user-name"><%= link_to memo.user.name, user_path(memo.user) %></span>
+        <% if memo.user.display_official_position_badge? %>
+          &nbsp;&bull;&nbsp;
+          <%= render Shared::OfficialPositionBadgeComponent.new(user: memo.user) %>
+        <% end %>
+        <span>&nbsp;&bull;&nbsp;</span>
+        <span><%= l memo.created_at.to_datetime, format: :datetime %></span>
+      </div>
+    </div>
+
+    <div class="memo-text">
+      <%= simple_format sanitize_and_auto_link(memo.text), {}, sanitize: false %>
+    </div>
+
+    <div class="memo-controls">
+      <% if memo.user == current_user %>
+        <%= link_to "Löschen", polymorphic_path([namespace.to_sym, memo]), method: :delete, remote: true, class: "delete-comment", data: { confirm: "Sind Sie sicher?" } %>
+        <span aria-live="off">&nbsp;&bull;&nbsp;</span>
+      <% end %>
+      <%= link_to "Antworten", "#", onClick: "$(this).next().toggle(); return false;" %>
+      <%= render "admin/memos/form", memoable: memo %>
+    </div>
+  </div>
+
+  <%= render "admin/memos/memos_tree", memos: memo.children, memoable: memo %>
+</li>

@@ -1,0 +1,53 @@
+.sl-image {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sl-overlay {
+  background-color: transparent;
+  /* background-color: #7e7e7e87; */
+  /* backdrop-filter: blur(22px); */
+}
+
+.gslide-image {
+  border-radius: 10px;
+  overflow: hidden;
+
+  img {
+    max-height: 850px;
+    max-width: 85vw;
+    /* background-image: image-url("custom/loading-spiner.svg"); */
+    /* background-repeat: no-repeat; */
+    /* background-position: center center; */
+    /* background-size: 35px 35px; */
+  }
+}
+
+@keyframes spinnerFadeIn {
+  0% {
+    opacity:0;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+.gloader {
+  animation: lightboxLoader .8s infinite linear, spinnerFadeIn 1s both;
+}
+
+.goverlay {
+  /* backdrop-filter: blur(15px); */
+}
+
+.glightbox-open {
+  /* padding-right: 15px; */
+  /* overflow: auto; */
+}
+
+.overflow-hidden {
+  /* overflow: hidden !important; */
+}

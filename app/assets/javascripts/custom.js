@@ -1,6 +1,7 @@
 //= require custom/textarea_autoexpand
 //= require custom/mjAccordion.js
 //= require turbolinks
+//= require glightbox/dist/js/glightbox.min.js
 
 function initializeMjAccordion() {
   "use strict";

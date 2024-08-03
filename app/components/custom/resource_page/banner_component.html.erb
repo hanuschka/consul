@@ -68,10 +68,10 @@
   </div>
 
   <% if resource.image.present? %>
-    <%= link_to big_image_url, target: "_blank", class: "resource-page-banner--image" do %>
-      <div class="resource-page-banner--image-maximize">
+    <%= link_to big_image_url, target: "_blank", class: "glightbox resource-page-banner--image" do %>
+      <span class="resource-page-banner--image-maximize">
         <i class="fas fa-magnifying-glass-plus"></i>
-      </div>
+      </span>
       <%= render(
         Shared::ResourceImageComponent.new(
           image_url: image_url,

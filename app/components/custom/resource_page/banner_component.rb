@@ -22,7 +22,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def big_image_url
     # resource.image&.variant(:large)
     polymorphic_path(resource.image.attachment.variant(
-      resize_to_limit: [1900, 2200],
+      resize_to_limit: [1750, 1500],
       saver: { quality: 80 },
       strip: true,
       format: "jpeg"

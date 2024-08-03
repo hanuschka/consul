@@ -69,7 +69,19 @@
 
         <% if @custom_page.image.present? %>
           <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
-          <div class="custom-page--banner-image">
+          <% big_projekt_image_url =
+            polymorphic_path(@custom_page.image.attachment.variant(
+              resize_to_limit: [1900, 1500],
+              saver: { quality: 80 },
+              strip: true,
+              format: "jpeg"
+            ))
+          %>
+
+          <%= link_to big_projekt_image_url, target: "_blank", class: "glightbox custom-page--banner-image" do %>
+            <span class="image-maximize-button">
+              <i class="fas fa-magnifying-glass-plus"></i>
+            </span>
             <%= render(
               Shared::ResourceImageComponent.new(
                 image_url: @custom_page.image&.variant(:projekt_image),
@@ -77,7 +89,7 @@
                 resource: @custom_page
               )
             ) %>
-          </div>
+          <% end %>
         <% end %>
       </div>
     </div>

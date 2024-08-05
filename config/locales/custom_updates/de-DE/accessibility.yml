@@ -7,6 +7,7 @@ de:
         konto_icon: Mein Konto Link
         admin_icon: Adminmenü Link
         notification_icon: Benachrichtigungen
+        all_projekts: Alle Projekte
         projekt_name_label: "Projekt Name: %{projekt_name} "
         archived_projekts_label: Archivierte Projekte
         deficiency_reports: Mängelmelder

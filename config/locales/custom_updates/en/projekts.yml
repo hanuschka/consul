@@ -59,26 +59,34 @@ en:
           title: Events
         sidebar:
           admin_controls:
-            title: Admin
+            title: Administration
             copy_code: Copy source code
             edit_projekt: Edit projekt
             edit_projekt_settings: Project settings
             edit_projekt_page: Edit projekt page
             create_newsletter_draft: Create newsletter
+          projekt_information:
+            title: Project information
           map:
-            title: District
+            title: Map
           navigator:
             title: Project index
           phases:
-            title: Project phases
+            title: Phases
             participate: Open for participation!
+          sdgs:
+            title: SDGs
           tags:
             title: Categories
+          navigator:
+            title: Composition
           projekt_start: Projekt start
           projekt_end: Planned completion
           phases_subscription:
             title: Notifications
             description: Would you like to stay current?
+          share:
+            title: Share
         tabs:
           budgets: Budgets
           comments: Comments

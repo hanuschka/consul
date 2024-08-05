@@ -18,29 +18,21 @@ class DeficiencyReportsController < ApplicationController
   helper_method :resource_model, :resource_name
 
   def index
-    if params[:order].nil? &&
-         Setting["projekts.set_default_sorting_to_newest"].present? &&
-         @valid_orders.include?("created_at")
-      @current_order = "created_at"
-    end
+    @deficiency_report_count = @deficiency_reports.count
 
-    @areas = DeficiencyReport::Area.all.order(created_at: :asc)
+    @areas = DeficiencyReport::Area.where(id: @deficiency_reports.pluck(:deficiency_report_area_id).uniq).order(created_at: :asc)
+    @selected_area = DeficiencyReport::Area.find_by(id: params[:dr_area]) if params[:dr_area].present?
+    @map_location = @selected_area&.map_location
+    @deficiency_reports = @deficiency_reports.where(deficiency_report_area_id: @selected_area&.id) if @selected_area.present?
 
-    if params[:dr_area].present?
-      @selected_area = DeficiencyReport::Area.find_by(id: params[:dr_area])
-      @map_location = @selected_area.map_location
-      @all_deficiency_reports = DeficiencyReport.admin_accepted(current_user).where(deficiency_report_area_id: @selected_area&.id)
-    else
-      @all_deficiency_reports = DeficiencyReport.admin_accepted(current_user)
-    end
-
-    @deficiency_reports = @all_deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
+    @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
     @categories = DeficiencyReport::Category.all.order(created_at: :asc)
-    @statuses = DeficiencyReport::Status.all.order(given_order: :asc)
-
     @selected_categories_ids = (params[:dr_categories] || '').split(',')
+
+    @statuses = DeficiencyReport::Status.all.order(given_order: :asc)
     @selected_status_id = (params[:dr_status] || '').split(',').first
+
     @selected_officer = params[:dr_officer]
 
     @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
@@ -48,7 +40,7 @@ class DeficiencyReportsController < ApplicationController
     filter_by_categories if @selected_categories_ids.present?
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
-    filter_by_approval_status if params[:approval_status].present?
+    filter_by_approval_status
     filter_by_my_posts
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
@@ -66,7 +58,7 @@ class DeficiencyReportsController < ApplicationController
 
       format.csv do
         formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
-        send_data DeficiencyReport::CsvExporter.new(@deficiency_reports.limit(nil)).to_csv,
+        send_data CsvServices::DeficiencyReportsExporter.call(@deficiency_reports),
           filename: "deficiency_reports-#{formated_time}.csv"
       end
     end
@@ -236,6 +228,8 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def filter_by_approval_status
+    return if params[:approval_status].blank?
+
     if params[:approval_status] == 'not_approved'
       @deficiency_reports = @deficiency_reports.
         where.not(official_answer: '').

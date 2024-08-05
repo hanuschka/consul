@@ -59,7 +59,7 @@ de:
           title: Kommende Veranstaltungen
         sidebar:
           admin_controls:
-            title: Admin
+            title: Administration
             copy_code: Quellcode kopieren
             edit_projekt: Projekteinstellungen
             edit_projekt_page: Projektseite
@@ -69,20 +69,28 @@ de:
             edit_projekt_map: Karteneinstellungen
             edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Newsletter-Entwurf
+          projekt_information:
+            title: Projektinformation
           map:
-            title: Gebiet
+            title: Karte
           navigator:
             title: Projektverzeichnis
           phases:
-            title: Projektphasen
+            title: Phasen
             participate: Offen für Beteiligung!
+          sdgs:
+            title: SDGs
           tags:
-            title: Kategorien
+            title: Tags
+          navigator:
+            title: Aufbau
           projekt_start: Projektstart
           projekt_end: Gepl. Fertigstellung
           phases_subscription:
             title: Benachrichtigungen
             description: Möchten Sie zu diesem Projekt auf dem Laufenden bleiben?
+          share:
+            title: Teilen
         tabs:
           budget: Budgets
           comments: Kommentare

@@ -12,14 +12,14 @@
       <%= render partial: 'shared/subnavigation_projekt_events', locals: { placement: placement } if Setting['extended_feature.general.enable_projekt_events_page'].present? && !launch_page %>
     </div>
   <% end%>
-  <% if extended_feature?("general.enable_google_translate") && placement == 'desktop' %>
-    <div id="google_translate_element"></div>
-  <% end %>
+
+  <%= render Shared::TranslateWidgetComponent.new(placement) %>
 
   <% unless launch_page %>
     <div class="account-admin-items">
+      <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
+
       <% if user_signed_in? %>
-        <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
         <%= render partial: 'shared/subnavigation_konto_new', locals: { placement: placement } %>
       <% end %>
     </div>

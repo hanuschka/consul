@@ -7,6 +7,8 @@ class DeficiencyReport::Status < ApplicationRecord
 
   has_many :deficiency_reports, foreign_key: :deficiency_report_status_id
 
+  default_scope { order(given_order: :asc) }
+
   def self.create_default_objects
     return if DeficiencyReport::Status.count > 0
     DeficiencyReport::Status.create(

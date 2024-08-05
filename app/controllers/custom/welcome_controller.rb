@@ -11,35 +11,7 @@ class WelcomeController < ApplicationController
 
   def index
     @header = Widget::Card.header.first
-    @feeds = Widget::Feed.active
-    @cards = Widget::Card.body.where(card_category: "")
-    @remote_translations = detect_remote_translations(@feeds,
-                                                      @recommended_debates,
-                                                      @recommended_proposals)
-
-    @active_feeds = @feeds.pluck(:kind)
-    @affiliated_geozones = []
-    @restricted_geozones = []
-
-    @active_projekts = @active_feeds.include?("active_projekts") ? @feeds.find{ |feed| feed.kind == 'active_projekts' }.active_projekts(current_user) : []
-    @active_projekts = @active_projekts.sort_by(&:created_at).reverse
-
-    @expired_projekts = @active_feeds.include?("expired_projekts") ? @feeds.find{ |feed| feed.kind == 'expired_projekts' }.expired_projekts(current_user) : []
-    @expired_projekts = @expired_projekts.sort_by(&:created_at).reverse
-
-    @latest_polls = @active_feeds.include?("polls") ? filtered_items(@feeds.find { |feed| feed.kind == 'polls' }) : []
-
-    @active_projekts_map_locations = all_projekts_map_locations(@active_projekts.pluck(:id))
-
-    if @active_feeds.include?("debates") || @active_feeds.include?("proposals") || @active_feeds.include?("investment_proposals")
-      @latest_items = @feeds
-        .select { |feed| feed.kind == 'proposals' || feed.kind == 'debates' }
-        .collect { |feed| filtered_items(feed).to_a }.flatten
-        # .collect { |feed| feed.items.to_a }.flatten
-        .sort_by(&:created_at).reverse
-    else
-      @latest_items = []
-    end
+    @content_cards = SiteCustomization::ContentCard.active.to_a
 
     if Setting.new_design_enabled?
       render :index_new
@@ -62,28 +34,4 @@ class WelcomeController < ApplicationController
       .select { |p| p.visible_for?(current_user) }
       .sort_by(&:created_at).reverse
   end
-
-  private
-
-    def filtered_items(feed)
-      if feed.kind.in?(["proposals", "debates"])
-        @resources = feed.items.where.not(author: current_user)
-      else
-        @resources = feed.items
-      end
-
-      @resources = @resources.joins(projekt_phase: :projekt)
-        .merge(Projekt.activated.with_active_feature("general.show_in_sidebar_filter"))
-      @resources = @resources.where(projekts: { id: scoped_projekts_ids_for_feed(feed) }).distinct.limit(feed.limit)
-    end
-
-    def scoped_projekts_ids_for_feed(feed)
-      if feed.kind == "proposals"
-        Proposal.scoped_projekt_ids_for_index(current_user)
-      elsif feed.kind == "debates"
-        Debate.scoped_projekt_ids_for_index(current_user)
-      elsif feed.kind == "polls"
-        Poll.scoped_projekt_ids_for_index(current_user)
-      end
-    end
 end

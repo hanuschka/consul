@@ -1,7 +1,8 @@
 class Users::LatestActivityComponent < ApplicationComponent
   delegate :current_user, to: :helpers
 
-  def initialize
+  def initialize(options = {})
+    @options = options
   end
 
   def render?
@@ -91,7 +92,7 @@ class Users::LatestActivityComponent < ApplicationComponent
 
     def list_params
       params = {
-        title: t("custom.welcome.latest_activity.title"),
+        title: @options[:title] || t("custom.welcome.latest_activity.title"),
         current_filter: current_filter,
         filters: valid_filters,
         remote_url: "latest_activity",

@@ -1,0 +1,57 @@
+.sl-image {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sl-overlay {
+  background-color: transparent;
+  /* background-color: #7e7e7e87; */
+  /* backdrop-filter: blur(22px); */
+}
+
+.gslide-image {
+  border-radius: 10px;
+  overflow: hidden;
+
+  img {
+    max-height: 95vh;
+    max-width: 90vw;
+  }
+}
+
+@keyframes spinnerFadeIn {
+  0% {
+    opacity:0;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+.gloader {
+  animation: lightboxLoader .8s infinite linear, spinnerFadeIn 1s both;
+}
+
+.glightbox-clean  {
+  .gclose {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.goverlay {
+  background-color: #000000e0;
+}
+
+.glightbox-open {
+  /* padding-right: 15px; */
+  /* overflow: auto; */
+}
+
+.overflow-hidden {
+  /* overflow: hidden !important; */
+}

@@ -24,7 +24,7 @@
     <style>
       <%if header_large %>
         .home-page .homepage-image-header{
-          background-image: url("<%= polymorphic_path(header_large.image.attachment.variant(resize_to_limit: [2000, 940], saver: { quality: 85 }, format: 'jpeg')) %>");
+          background-image: url("<%= polymorphic_path(header_large.image.attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 85 }, strip: true, format: 'jpeg')) %>");
           background-size: cover;
           background-position: top;
         }

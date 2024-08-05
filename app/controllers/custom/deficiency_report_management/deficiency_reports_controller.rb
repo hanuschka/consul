@@ -3,9 +3,13 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   include MapLocationAttributes
   include ImageAttributes
   include DocumentAttributes
+  include Search
+
+  load_and_authorize_resource
 
   def index
-    @deficiency_reports = DeficiencyReport.all.order(id: :desc)
+    @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
+    @deficiency_reports = @deficiency_reports.order(id: :desc)
 
     unless params[:format] == "csv"
       @deficiency_reports = @deficiency_reports.page(params[:page].presence || 0).per(params[:limit].presence || 20)
@@ -14,8 +18,8 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     respond_to do |format|
       format.html
       format.csv do
-        send_data DeficiencyReport::CsvExporter.new(@deficiency_reports).to_csv,
-          filename: "deficiency_reports.csv"
+        send_data CsvServices::DeficiencyReportsExporter.call(@deficiency_reports),
+          filename: "deficiency_reports-#{Time.zone.today}.csv"
       end
     end
   end
@@ -56,6 +60,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     deficiency_report.update!(admin_accepted: enabled)
 
     head :ok
+  end
+
+  def toggle_image
+    @deficiency_report.image.toggle!(:concealed)
+    redirect_to polymorphic_path([@namespace, @deficiency_report], action: :edit)
   end
 
   private

@@ -27,7 +27,7 @@
                 <%= translations_form.text_area :title,
                   label: false,
                   class: "user-resources-form--banner-editor-title",
-                  placeholder: t("custom.budgets.investments.form.title_placeholder"),
+                  placeholder: investment.projekt_phase&.resource_form_title_hint.presence || t("custom.budgets.investments.form.title_placeholder"),
                   autocomplete: "off" %>
               </div>
 

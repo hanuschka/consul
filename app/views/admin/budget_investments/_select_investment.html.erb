@@ -2,6 +2,10 @@
   <strong><%= investment.id %></strong>
 </td>
 
+<td>
+  <%= l(investment.created_at, format: "%d.%m.%Y") %>
+</td>
+
 <td data-field="title">
   <%= link_to investment.title,
               polymorphic_path([@namespace, @budget, investment], params: Budget::Investment.filter_params(params).to_h),

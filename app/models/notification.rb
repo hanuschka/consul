@@ -67,6 +67,8 @@ class Notification < ApplicationRecord
   def link
     if notifiable.is_a?(AdminNotification) && notifiable.link.blank?
       nil
+    elsif notifiable.is_a?(DirectMessage)
+      nil
     else
       self
     end

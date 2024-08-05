@@ -29,4 +29,4 @@ de:
       p1_html: Sie haben einen Export beantragt. Die Daten wurden nun exportiert und sind im Anhang anbei.
     individual_group_value_users_added:
       subject: Upload der CSV-Daten erfolgreich abgeschlossen.
-      p1_html: "Ihre Daten wurden erfolgreich hinzugefügt: %{url}"
+      p1_html: "Ihre Daten wurden erfolgreich hinzugefügt: <a href=\"%{url}\">%{url}</a>"

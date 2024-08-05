@@ -66,18 +66,18 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
   end
 
   def add_from_csv
-    @individual_group_value = IndividualGroupValue.find(params[:id])
+    @igv = IndividualGroupValue.find(params[:id])
 
-    uploaded_file = params[:file]
-    new_file_path = "/tmp/#{SecureRandom.uuid}_#{uploaded_file.original_filename}"
-    File.open(new_file_path, "wb") do |file|
-      file.write(uploaded_file.read)
+    if params[:file].nil?
+      notice = "Bitte wählen Sie eine Datei aus."
+    else
+      new_file_path = save_file_in_tmp(params[:file])
+      CsvJobs::AddUsersToIndividualGroupValues.perform_later(current_user.id, @igv.id, new_file_path)
+      notice = "Ihre Daten werden nun eingelesen. Sobald die Daten vollständig hinzugefügt wurden, werden Sie per E-Mail benachrichtigt."
     end
 
-    CsvJobs::AddUsersToIndividualGroupValues.perform_later(current_user.id, @individual_group_value.id, new_file_path)
-
-    redirect_to admin_individual_group_value_path(@individual_group_value.individual_group, @individual_group_value),
-      notice: "Ihre Daten werden nun eingelesen. Sobald die Daten vollständig hinzugefügt wurden, werden Sie per E-Mail benachrichtigt."
+    redirect_to admin_individual_group_value_path(@igv.individual_group, @igv),
+      notice: notice
   end
 
   def remove_user
@@ -92,5 +92,15 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
 
     def individual_group_value_params
       params.require(:individual_group_value).permit(:individual_group_id, :name)
+    end
+
+    def save_file_in_tmp(uploaded_file)
+      new_file_path = "/tmp/#{SecureRandom.uuid}_#{uploaded_file.original_filename}"
+
+      File.open(new_file_path, "wb") do |file|
+        file.write(uploaded_file.read)
+      end
+
+      new_file_path
     end
 end

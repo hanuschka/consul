@@ -108,7 +108,7 @@
           id = shape.feature.deficiency_report_id
         } else if (process == "projekts") {
           id = shape.feature.projekt_id
-        } else {
+        } else if (process == "budgets"){
           id = shape.feature.investment_id
         }
 
@@ -201,9 +201,11 @@
           route = "/deficiency_reports/" + e.target.options.id + "/json_data"
         } else if ( process == "projekts") {
           route = "/projekts/" + e.target.options.id + "/json_data"
-        } else {
+        } else if ( process == "budgets") {
           route = "/investments/" + e.target.options.id + "/json_data"
         }
+
+        if (!route) { return };
 
         marker = e.target;
         $.ajax(route, {
@@ -279,7 +281,14 @@
         }
 
         function budgetsPopupContent(data) {
-          return "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
+          var popupHtml = "";
+          popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
+
+          if (data.image_url) {
+            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+          }
+
+          return popupHtml;
         }
 
         function projektPopupContent(data) {

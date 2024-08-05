@@ -9,6 +9,26 @@ class ResourcePage::BannerComponent < ApplicationComponent
     @compact = compact
   end
 
+  def image_url
+    # resource.image&.variant(:large)
+    polymorphic_path(resource.image.attachment.variant(
+      resize_to_limit: [500, 500],
+      saver: { quality: 80 },
+      strip: true,
+      format: "jpeg"
+    ))
+  end
+
+  def big_image_url
+    # resource.image&.variant(:large)
+    polymorphic_path(resource.image.attachment.variant(
+      resize_to_limit: [1750, 1000],
+      saver: { quality: 80 },
+      strip: true,
+      format: "jpeg"
+    ))
+  end
+
   def resource_class
     base_class = "-#{@resource.class.name.split("::").last.downcase}"
 
@@ -21,11 +41,5 @@ class ResourcePage::BannerComponent < ApplicationComponent
     end
 
     base_class
-  end
-
-  def banner_inline_style
-    return "" unless @resource.respond_to?(:sentiment)
-
-    helpers.sentiment_color_style(@resource.sentiment)
   end
 end

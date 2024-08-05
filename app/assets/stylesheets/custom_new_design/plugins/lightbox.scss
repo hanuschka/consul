@@ -35,6 +35,12 @@
   animation: lightboxLoader .8s infinite linear, spinnerFadeIn 1s both;
 }
 
+.glightbox-clean  {
+  .gclose {
+    border-radius: 50%;
+  }
+}
+
 .goverlay {
   background-color: #000000e0;
 }

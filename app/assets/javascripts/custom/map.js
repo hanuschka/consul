@@ -221,14 +221,13 @@
           return proposalPopupContent(data);
 
         } else if ( process == "deficiency-reports" ) {
-          return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
+          return deficiencyReportPopupContent(data);
 
         } else if ( process == "projekts" ) {
           return projektPopupContent(data);
 
         } else {
-          return "<a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a>";
-
+          return budgetsPopupContent(data);
         }
 
         function proposalPopupContent(data) {
@@ -236,11 +235,11 @@
           popupHtml += "<h6><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
 
           if (data.image_url) {
-            popupHtml += "<img src='" + data.image_url + "' style='margin-bottom:10px;height:170px'>"; //image
+            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
           }
 
           if (data.labels.length || Object.keys(data.sentiment).length) {
-            popupHtml += "<div class='resource-taggings'>";
+            popupHtml += "<div class='resource-map-popup-details resource-taggings'>";
 
             if (data.labels.length) {
               var labels = "<div class='projekt-labels'>";
@@ -263,8 +262,24 @@
 
             popupHtml += "</div>";
           }
+          popupHtml = "<div class='proposal-map-popup-content'>" + popupHtml + "</div>"
 
           return popupHtml;
+        }
+
+        function deficiencyReportPopupContent(data) {
+          var popupHtml = "";
+          popupHtml += "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
+
+          if (data.image_url) {
+            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+          }
+
+          return popupHtml;
+        }
+
+        function budgetsPopupContent(data) {
+          return "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
         }
 
         function projektPopupContent(data) {
@@ -277,13 +292,13 @@
           }
 
           if (data.sdg_goals.length || data.tags.length ) {
-             popupHtml += "<div style=''>";
+             popupHtml += "<div class='resource-map-popup-details'>";
 
              if (data.sdg_goals.length) {
                var sdg_goals = "<div class='projekt-sdg-goals'>";
                data.sdg_goals.forEach(function(sdg_goal) {
                  sdg_goals += "<span class='projekt-sdg-goal'>"
-                 sdg_goals += "<img src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
+                 sdg_goals += "<img title='" + sdg_goal.title + "' src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
                  sdg_goals += "</span>";
                });
                sdg_goals += "</div>";

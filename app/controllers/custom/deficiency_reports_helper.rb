@@ -17,8 +17,12 @@ module DeficiencyReportsHelper
 
   def json_data
     deficiency_report = DeficiencyReport.find(params[:id])
+
+    image_url = deficiency_report.image.present? ? url_for(deficiency_report.image.attachment.variant(resize_to_fill: [221, nil], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+
     data = {
       deficiency_report_id: deficiency_report.id,
+      image_url: image_url,
       deficiency_report_title: deficiency_report.title
     }.to_json
 

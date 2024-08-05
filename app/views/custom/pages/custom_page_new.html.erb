@@ -71,7 +71,7 @@
           <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
           <% big_projekt_image_url =
             polymorphic_path(@custom_page.image.attachment.variant(
-              resize_to_limit: [1900, 1500],
+              resize_to_limit: [1750, 900],
               saver: { quality: 80 },
               strip: true,
               format: "jpeg"

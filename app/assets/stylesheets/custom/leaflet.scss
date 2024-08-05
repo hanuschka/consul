@@ -105,6 +105,13 @@
   right: 5px;
   top: 5px;
   padding: 0;
+  border-radius: 50%;
+  line-height: 1;
+  transition: background-color 50ms ease;
+
+  &:hover {
+    background: #e5e5e5;
+  }
 }
 
 .leaflet-popup-content {

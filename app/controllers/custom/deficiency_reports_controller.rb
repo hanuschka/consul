@@ -174,7 +174,7 @@ class DeficiencyReportsController < ApplicationController
 
   def suggest
     @limit = 5
-    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted(current_user).search(@search_terms) : nil
+    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted.search(@search_terms) : nil
   end
 
   private

@@ -1,5 +1,6 @@
 // Update styles of standard search form
 
+
 #proposals,
 #debates,
 .top-links,
@@ -196,4 +197,14 @@ main.grayed-out {
 
 a#js-main-menu-search-button {
   outline: none;
+}
+
+.admin-content {
+  #search_form {
+    width: 40%;
+
+    .input-group-button {
+      display: none;
+    }
+  }
 }

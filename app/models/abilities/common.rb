@@ -132,10 +132,9 @@ module Abilities
         projekt_phase.selectable_by?(user)
       end
 
-      can [:index, :json_data, :create, :suggest], DeficiencyReport
-      can [:show, :vote], DeficiencyReport do |report|
-        report.in? DeficiencyReport.admin_accepted(user)
-      end
+      can [:index, :show, :vote, :json_data, :suggest], DeficiencyReport,
+        id: DeficiencyReport.admin_accepted.or(DeficiencyReport.by_author(user)).ids
+      can [:create], DeficiencyReport
       can :destroy, DeficiencyReport do |dr|
         dr.author_id == user.id &&
           dr.official_answer.blank?

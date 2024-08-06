@@ -46,4 +46,10 @@ module CustomNewHelper
   def setting
     Setting.all_settings_hash
   end
+
+  def google_translate_accepted?
+    return false if cookies[:klaro].blank?
+
+    JSON.parse(cookies[:klaro])["google_translate_accepted"]
+  end
 end

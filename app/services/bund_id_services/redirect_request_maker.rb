@@ -1,7 +1,7 @@
 module BundIdServices
   class RedirectRequestMaker < ApplicationService
     def call
-      base_url = Rails.application.secrets.bund_id[:base_url]
+      base_url = Rails.application.secrets.bund_id[:idp_destination]
       saml_request = CGI.escape(encode(deflate(signed_xml_document.to_s)))
 
       "#{base_url}?SAMLRequest=#{saml_request}"

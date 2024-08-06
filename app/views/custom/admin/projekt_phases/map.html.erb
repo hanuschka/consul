@@ -1,8 +1,20 @@
-<%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/heading" %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
+    <%= link_to t("custom.admin.projekt_phases.map.copy_from_projekt"),
+                polymorphic_path([@namespace, @projekt_phase], action: :copy_map_settings_from_projekt),
+                remote: true, method: :put, class: "float-right small clear",
+                data: { confirm: "Sind Sie sicher?" } %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <h2><%= t("custom.admin.projekt_phases.map.map_layers.title") %></h2>
     <% @projekt_phase.map_layers.each do |layer| %>
       <%= render partial: "custom/admin/shared/map/map_layer", locals: { layer: layer, return_path: namespace_projekt_phase_path(action: :map) } %>
     <% end %>
@@ -54,3 +66,9 @@
     <%= render "custom/admin/shared/map/map_form", mappable: @projekt_phase, map_location: @projekt_phase.map_location %>
   </div>
 </div>
+
+<% if embedded? %>
+  <%= content_for :admin_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, use_link_for_next: true) %>
+  <% end %>
+<% end %>

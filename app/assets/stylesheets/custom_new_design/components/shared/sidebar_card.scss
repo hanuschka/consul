@@ -148,6 +148,10 @@
   border-top: 1px solid $border-color;
 }
 
+.projekt-section-data-wrapper {
+  position: relative;
+}
+
 .projekt-section-data-wrapper.-deactivated {
   .sidebar-card {
     border-color: white;

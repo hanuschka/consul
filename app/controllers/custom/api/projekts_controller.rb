@@ -14,7 +14,8 @@ class Api::ProjektsController < Api::BaseController
   def index
     projekts = Projekt.current_for_import.regular
 
-    projekts.each(&:generate_page_view_code_if_nedded!)
+    projekts.each(&:generate_preview_code_if_nedded!)
+    projekts.each(&:generate_frame_access_code_if_nedded!)
 
     render json: {
       projekts: projekts.map(&:serialize)

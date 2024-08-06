@@ -1,4 +1,3 @@
-
 <div class="column">
   <h2>Wählen Sie eine Beteiligungsmodul aus</h2>
   <% ProjektPhase::PROJEKT_PHASES_TYPES.each do |type| %>
@@ -28,3 +27,7 @@
     </div>
   <% end %>
 </div>
+
+<%= content_for :admin_bottom_navigation do %>
+  <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt: @projekt, hide_prev_next: true) %>
+<% end %>

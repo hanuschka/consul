@@ -10,6 +10,7 @@ namespace :admin do
       get :settings
       get :map
       patch :update_map
+      put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -401,6 +402,12 @@ namespace :admin do
       post :update, on: :collection
     end
     resources :documents, only: [:index, :new, :create, :destroy]
+    resources :content_cards, only: %i[edit update] do
+      collection do
+        post :order_content_cards
+        patch :toggle_active
+      end
+    end
   end
 
   resource :homepage, controller: :homepage, only: [:show]

@@ -1,0 +1,4 @@
+<%= render Shared::ResourcesListComponent.new(
+  resources: latest_resources,
+  title: @content_card.title || t("custom.content_cards.latest_resources.title")
+) %>

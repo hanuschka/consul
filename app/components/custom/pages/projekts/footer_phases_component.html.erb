@@ -16,11 +16,9 @@
 
       <div class='footer-phases-filter-subnav'>
         <% if helpers.embedded? %>
-          <div class="projekt-footer-phase-tab--add-new">
-            <button data-url="<%= admin_frame_new_phase_selector_url(projekt_id: @projekt.id) %>" class=" -round-icon-button js-frame-open-page" title="Neue Phase hinzufügen">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
+          <button data-url="<%= admin_frame_new_phase_selector_url(projekt_id: @projekt.id) %>" class="page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-frame-open-page" title="Neue Phase hinzufügen">
+            <i class="fas fa-plus"></i>
+          </button>
         <% end %>
         <ul id='filter-subnav' class='key-dates'>
           <% projekt_phases.each do |projekt_phase| %>

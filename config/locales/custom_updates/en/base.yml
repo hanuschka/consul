@@ -32,6 +32,20 @@ en:
     comments:
       reply_form:
         leave_comment: Write a reply
+    content_cards:
+      active_projekts:
+        title: Active participation
+        all_projekts_link: Show all projekts
+      latest_user_activity:
+        title: My activity
+      current_polls:
+        title: Current polls
+      latest_resources:
+        title: Latest resources
+      expired_projekts:
+        title: Expired projekts
+      events:
+        title: Events
     devise_views:
       users:
         registrations:

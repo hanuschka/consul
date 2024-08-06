@@ -21,7 +21,7 @@ class PagesController < ApplicationController
     custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
     @custom_page_page_visible =
-      @custom_page&.projekt&.page_view_code == params[:code] ||
+      @custom_page&.projekt&.preview_code == params[:code] ||
       @custom_page.projekt.visible_for?(current_user)
 
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible

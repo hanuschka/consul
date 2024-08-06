@@ -1,5 +1,7 @@
-<%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/heading" %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
@@ -20,17 +22,17 @@
         <div class='small-12 medium-7 projekt-notification' id="<%= dom_id(notification) %>">
           <%= check_box_tag "edit_projekt_notification_#{dom_id(notification)}" %>
           <%= label_tag nil, nil, for: "edit_projekt_notification_#{dom_id(notification)}", class: "edit-projekt-notification" %>
-    
+
           <div class='projekt-notification-content'>
             <h3><%= notification.title %></h3>
             <p class="more-info"><%= notification.created_at.to_date %></p>
             <p><%= notification.body %></p>
           </div>
-    
+
           <div class='edit-projekt-notification-form'>
             <%= render "custom/admin/projekt_phases/projekt_notifications/form", notification: notification %>
           </div>
-    
+
           <%= link_to "", polymorphic_path([@namespace, @projekt_phase, notification]), method: :delete, class: "delete-projekt-notification" %>
           <hr>
         </div>
@@ -38,3 +40,9 @@
     </div>
   </div>
 </div>
+
+<% if embedded? %>
+  <%= content_for :admin_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, use_link_for_next: true) %>
+  <% end %>
+<% end %>

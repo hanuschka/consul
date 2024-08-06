@@ -37,6 +37,20 @@ de:
     comments:
       reply_form:
         leave_comment: Schreiben Sie eine Antwort
+    content_cards:
+      active_projekts:
+        title: Aktive Beteiligung
+        all_projekts_link: Alle Projekte anzeigen
+      latest_user_activity:
+        title: Meine Aktivität
+      current_polls:
+        title: Laufende Abstimmungen
+      latest_resources:
+        title: Neueste Beiträge
+      expired_projekts:
+        title: Abgeschlossene Projekte
+      events:
+        title: Veranstaltungen
     devise_views:
       users:
         registrations:
@@ -145,6 +159,8 @@ de:
         only_for_citizens: Die Beteiligung ist auf Personen der Stadt %{city} beschränkt.
         only_for_geozones: "Die Beteiligung ist auf Personen aus folgenden Gebieten beschränkt: %{geozones}"
       dates:
+        ends_on: Abgeschlossen am %{date}
+        ends_today: Endet heute
         days_left:
           one: Noch 1 Tag
           other: Noch %{count} Tage
@@ -174,6 +190,8 @@ de:
         report_text: Melden Sie uns diesen Beitrag bei Verstößen gegen unsere Richtlinien oder bei Urheberrechtsverletzungen.
         report_title: Melden
       download: Herunterladen
+      sort_by: Sortieren nach
+      filter_by: Filtern nach
     tag_names:
       projekt: Weitere %{resources} zu diesem Projekt
     tags:
@@ -215,6 +233,18 @@ de:
         comments: Kommentare
         debates: Diskussionen
         polls: Abstimmungen
+      sidebar:
+        information:
+          title: Information
+        users:
+          title: Nutzer*innen
+          sign_in: Jetzt anmelden
+        activity:
+          title: Aktivität
+        newsletter:
+          title: Newsletter
+          cta: Nicht registriert? Jetzt abonnieren
+          submit: Anmelden
 
     welcome_launch:
       p1: Hier entsteht die neue Beteiligungsplattform der Stadt %{org_name}

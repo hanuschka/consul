@@ -9,8 +9,9 @@ de:
           Veranstaltungen sortieren. </p> <p>Wir laden Sie herzlich ein, die
           Veranstaltungen zu besuchen – entweder online oder vor Ort – und sich
           einzubringen. Denn ABSTIMMUNG21 lebt vom Mitmachen.</p>"
-
       filters:
         all: Alle
         incoming: Kommende
         past: Vergangene
+      list_item_component:
+        cta_button: Mehr anzeigen

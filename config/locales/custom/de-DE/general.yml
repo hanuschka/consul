@@ -288,8 +288,9 @@ de:
       sign_up: Registrierung mit Facebook
       name: Facebook
     finish_signup:
-      title: "Weitere Details"
+      title: "Benutzername vergeben"
       username_warning: "Aufgrund einer Änderung in der Art und Weise, wie wir mit sozialen Netzwerken umgehen, ist es möglich, dass Ihr Benutzername nun als 'bereits in Verwendung' erscheint. Wenn dies der Fall ist, wählen Sie bitte einen anderen Benutzernamen."
+      submit: "Registrierung abschließen"
     google_oauth2:
       sign_in: Anmelden mit Google
       sign_up: Registrierung mit Google

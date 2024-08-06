@@ -11,6 +11,7 @@ module BundIdServices
       decoded = Base64.decode64(@response)
       document = XMLSecurity::SignedDocument.new(decoded)
       @decrypted_document = decrypt_assertion_from_document(document)
+      validate_response
       OmniAuth::AuthHash.new(formatted_attributes)
     end
 
@@ -128,6 +129,12 @@ module BundIdServices
 
         doc = REXML::Document.new(elem_plaintext)
         doc.root[0]
+      end
+
+      def validate_response
+        idp_url = REXML::XPath.first(@decrypted_document, "/p:Response[@ID=$id]/a:Issuer",{ "p" => PROTOCOL, "a" => ASSERTION },{ "id" => @decrypted_document.signed_element_id }).text
+
+        raise "Invalid issuer in SAML assertion" unless idp_url == settings[:idp_url]
       end
 
       def format_private_key(key)

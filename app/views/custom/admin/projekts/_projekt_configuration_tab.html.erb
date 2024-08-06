@@ -26,8 +26,10 @@
     <th scope="col"><%= t("admin.actions.actions") %></th>
   </thead>
   <tbody>
-  <% @projekts.order(order_number: :asc).each do |projekt| %>
-    <%= render partial: projekt, locals: { projekt: projekt }  %>
-  <% end %>
+    <% @projekts.order(order_number: :asc).each do |projekt| %>
+      <%= render partial: projekt, locals: { projekt: projekt }  %>
+    <% end %>
   </tbody>
 </table>
+
+<%= paginate @projekts, attrs: { data: { turbolinks: false }} %>

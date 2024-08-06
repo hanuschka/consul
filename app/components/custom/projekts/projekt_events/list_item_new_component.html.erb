@@ -44,7 +44,7 @@
     <div class="projekt-event-item-new-body--details">
       <div class="projekt-event-item-new-body--details-row">
         <i class="fa fa-code-branch"></i>
-        <%= link_to projekt_event.projekt.page.url do %>
+        <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"} do %>
           <%= projekt_event.projekt.name %>
         <% end %>
       </div>

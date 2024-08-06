@@ -1,0 +1,8 @@
+<div class="memo-form" style="display:<%= memoable.is_a?(Memo) ? "none" : "block" %>;">
+  <%= form_with(model: Memo.new, url: polymorphic_path([namespace.to_sym, Memo.new]), method: :post, local: false) do |f| %>
+    <%= f.hidden_field :memoable_id, value: memoable.id %>
+    <%= f.hidden_field :memoable_type, value: memoable.class.name %>
+    <%= f.text_area :text %>
+    <%= f.submit "Speichern", class: "button" %>
+  <% end %>
+</div>

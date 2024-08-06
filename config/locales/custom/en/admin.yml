@@ -5,6 +5,7 @@ en:
         name: "Type the name of the tag"
   admin:
     actions:
+      hide_author: Hide author
       update: Update
     debates:
       update:

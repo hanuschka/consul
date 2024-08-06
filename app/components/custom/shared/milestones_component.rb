@@ -14,6 +14,6 @@ class Shared::MilestonesComponent < ApplicationComponent
   end
 
   def opened_by_default?
-    @milestoneable.is_a?(Proposal)
+    @milestoneable.class.name.in? %w[Proposal DeficiencyReport Budget::Investment]
   end
 end

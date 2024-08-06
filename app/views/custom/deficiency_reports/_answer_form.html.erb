@@ -17,6 +17,6 @@
   <% end %>
 
   <% if can? :approve_official_answer, deficiency_report %>
-    <%= button_to t("custom.deficiency_reports.show.approve_official_answer"), approve_official_answer_deficiency_report_path, class: "button success approve-defficiciency-report-button", method: :patch %>
+    <%= button_to t("custom.deficiency_reports.show.approve_official_answer"), approve_official_answer_deficiency_report_path, class: "button approve-defficiciency-report-button", method: :patch %>
   <% end %>
 <% end %>

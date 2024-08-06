@@ -6,6 +6,8 @@ class DeficiencyReport < ApplicationRecord
   include Searchable
   include OnBehalfOfSubmittable
   include Notifiable
+  include Milestoneable
+  include Memoable
   translates :title, touch: true
   translates :description, touch: true
   translates :summary, touch: true
@@ -33,7 +35,7 @@ class DeficiencyReport < ApplicationRecord
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
   validates :deficiency_report_category_id, :author, presence: true
-  validates :deficiency_report_area_id, presence: true, if: -> { validate_area_presence? }
+  validates :deficiency_report_area_id, presence: true, if: -> { validate_area_presence? }, on: :create
   validates :map_location, presence: true, on: :create
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
@@ -51,14 +53,7 @@ class DeficiencyReport < ApplicationRecord
 
     where(author_id: user_id)
   }
-
-  def self.admin_accepted(current_user)
-    if Setting["deficiency_reports.admin_acceptance_required"].present?
-      where(admin_accepted: true).or(where(author: current_user))
-    else
-      all
-    end
-  end
+  scope :admin_accepted, -> { Setting["deficiency_reports.admin_acceptance_required"].present? ? where(admin_accepted: true) : all }
 
   def audited_changes(**options)
     if super.has_key?("deficiency_report_status_id")

@@ -1,4 +1,6 @@
 class DeficiencyReportMailer < ApplicationMailer
+  helper TextWithLinksHelper
+
   def notify_administrators_about_answer_update(deficiency_report, admin_user)
     @deficiency_report = deficiency_report
     subject = t("custom.deficiency_reports.mailers.notify_administrators_about_answer_update.subject",

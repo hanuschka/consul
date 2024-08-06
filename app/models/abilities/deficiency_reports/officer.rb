@@ -31,7 +31,7 @@ module Abilities
           if Setting['deficiency_reports.admins_must_assign_officer'].present?
             dr.officer == dr_officer
           else
-            true
+            current_user&.administrator? || current_user&.deficiency_report_manager?
           end
         end
       end

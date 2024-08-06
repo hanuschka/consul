@@ -4,6 +4,7 @@
   aria-labeled-by="<%= "#{dom_id(projekt_phase)}_name" %>"
   data-projekt-phase-id="<%= projekt_phase.id %>"
   data-resource-form-title="<%= projekt_phase.resource_form_title %>"
+  <%= "data-resource-form-title-hint=\"#{projekt_phase.resource_form_title_hint}\"".html_safe if projekt_phase.resource_form_title_hint.present? %>
   <%= "data-vc-map=true" if projekt_phase.projekt.vc_map_enabled? %>
   <%= "data-default-color=#00ff00" if projekt_phase.projekt.vc_map_enabled? %>
   <%= "data-latitude=#{projekt_phase.map_location.latitude}" if projekt_phase.map_location.present? %>

@@ -30,6 +30,10 @@
 
       <%= render_custom_block 'home_page_1a' %>
 
+      <% if @cards.any? #cli %>
+        <%= render partial: "cards", locals: { cards: @cards, section_title: t("welcome.cards.title") } %>
+      <% end %>
+
       <%= render Shared::ContentCardComponent.new(@content_cards.shift) %>
 
       <%= render_custom_block "home_page_2" %>

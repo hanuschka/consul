@@ -12,6 +12,7 @@ class WelcomeController < ApplicationController
   def index
     @header = Widget::Card.header.first
     @content_cards = SiteCustomization::ContentCard.active.to_a
+    @cards = Widget::Card.body.where(card_category: "") # cli
 
     if Setting.new_design_enabled?
       render :index_new

@@ -18,6 +18,6 @@ module LinksHelper
   end
 
   def link_to_guest_signin
-    link_to "Gast teilnehmen", new_guest_user_registration_path
+    link_to t("custom.shared.participate_as_guest"), new_guest_user_registration_path
   end
 end

@@ -8,6 +8,7 @@ class MapLocation < ApplicationRecord
     foreign_key: :deficiency_report_area_id, touch: true, inverse_of: :map_location
 
   before_save :ensure_shape_is_json
+  after_save :update_geocoder_data
   # before_save :set_pin_styles
 
   # def set_pin_styles
@@ -48,6 +49,25 @@ class MapLocation < ApplicationRecord
       color: get_pin_color,
       fa_icon_class: get_fa_icon_class
     })
+  end
+
+  def approximated_address
+    return unless geocoder_data.present?
+
+    locality = [
+      geocoder_data["address"]["neighbourhood"],
+      geocoder_data["address"]["suburb"],
+      geocoder_data["address"]["village"],
+      geocoder_data["address"]["town"],
+      geocoder_data["address"]["city"]
+    ].compact.join(", ")
+
+    street_address = [
+      geocoder_data["address"]["road"],
+      geocoder_data["address"]["house_number"]
+    ].compact.join(" ")
+
+    "#{street_address}, #{geocoder_data["address"]["postcode"]} #{locality}"
   end
 
   private
@@ -101,5 +121,14 @@ class MapLocation < ApplicationRecord
     end
   rescue JSON::ParserError
     self.shape = {}
+  end
+
+  def update_geocoder_data
+    return unless latitude.present? && longitude.present?
+
+    update_column(:geocoder_data, Geocoder.search([latitude, longitude]).first&.data)
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    update_column(:geocoder_data, {}) unless geocoder_data.present?
   end
 end

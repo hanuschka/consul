@@ -4,8 +4,11 @@
   <% end %>
   <% c.with_footer_section do %>
     <div class="mb-5">
-      <%= link_to(t("custom.polls.poll.participate_button"), helpers.poll_path(poll), class: "button -purple") %>
+      <% if poll.expired? || poll.projekt_phase.expired? %>
+        <%= helpers.link_to_poll(t("custom.polls.poll.phase_expired_button"), poll, class_name: "button -purple") %>
+      <% else %>
+        <%= link_to(t("custom.polls.poll.participate_button"), helpers.poll_path(poll), class: "button -purple") %>
+      <% end %>
     </div>
-    <%# = helpers.poll_remaining_activity_days(poll) %>
   <% end %>
 <% end %>

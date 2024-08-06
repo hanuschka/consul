@@ -105,6 +105,7 @@ de:
         on_behalf_of: Meldung im Namen von jemanden erstellen
         category: Kategorie
         status: Status
+        notify_officer_about_new_comments: Benachrichtigung für Sachbearbeiter*in
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:

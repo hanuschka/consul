@@ -24,21 +24,27 @@ de:
           info:
             projekt_association: Projektzuordnung
       budget_investments:
+        index:
+          list:
+            created_at: Erstellungsdatum
         show:
           physical_votes_updated: Physical votes updated!
       deficiency_reports:
         index:
           entry_name: Mangel
           no_deficiency_reports: Keine Mängelmeldungen
+          id: ID
+          admin_accepted: Sichtbarkeit
+          created_at: Veröffentlichung
           title: Titel
           author: Autor
-          official_answer: Offizielle Antwort
-          category_name: Kategorie
           status_title: Status
+          approximater_location: Standort
+          category_name: Kategorie
           officer_name: Sachbearbeiter*in
-          officer_email: Email
-          admin_accepted: Admin Bestätigung
           actions: Aktionen
+          official_answer: Offizielle Antwort
+          officer_email: Email
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -385,6 +391,14 @@ de:
               add_new_image: Banner hinzufügen
               note: "Der Banner sollte mindestens 200 Pixel hoch und 1920 Pixel breit sein. Sie können ein Bild des folgenden Formats hochladen: %{accepted_content_types}, bis zu %{max_file_size} MB."
               title: Seitenbanner
+        content_cards:
+          setting:
+            label:
+              limit: Anzahl an angezeigten Einträgen
+              debates_limit: Anzahl an angezeigten Diskussionen
+              proposals_limit: Anzahl an angezeigten Vorschläge
+              investments_limit: Anzahl an angezeigten Investitionsvorschläge
+              deficiency_reports_limit: Anzahl an angezeigten Mangelmeldungen
       users:
         columns:
           id: ID
@@ -448,6 +462,7 @@ de:
         phase_tab_name: Name in Tab
         cta_button_name: Text in Button
         resource_form_title: Text bei Erstellung
+        resource_form_title_hint: Platzhalter
         labels_name: Labels
         sentiments_name: Sentiments
         projekt_selector_hint: Hinweise zum Projekt
@@ -522,6 +537,10 @@ de:
           new:
             title_livestream: Frage für Livestream erstellen
             title: Frage erstellen
+        map:
+          copy_from_projekt: vom Projekt übernehmen
+          map_layers:
+            title: Kartenebenen
         projekt_events:
           page_title: Veranstaltungen
         projekt_notifications:
@@ -615,6 +634,7 @@ de:
           remove_user: Profil entfernen
       individual_group_values:
         show:
+          csv_hint_html: 'Sie können mit Hilfe des CSV-Uploaders mehrere Einträge auf einmal hinzufügen. Die CSV benötigt lediglich eine Spalte mit den gewünschten E-Mail-Adressen. Der Spaltenname muss "Email" lauten. Sie können sich zunächst die <a href="/samples/igv_sample.csv">Beispieldatei ansehen.</a>'
           related_users: verwandte Benutzer
         edit:
           title: Gruppenwert bearbeiten

@@ -2,6 +2,20 @@
 
 <% if projekt_nesting_level <= 3 %>
   <ul class="nav-flyout-block">
+
+    <% if local_assigns[:called_from] == "subnavigation_projekts_overview" && projekts.any? %>
+      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'
+        <%= "tabindex=0" if placement == "desktop" %>
+          aria-label="<%= t("custom.links.menu.all_projekts") %>">
+
+        <div class='projekt-name-group'>
+          <div class='flyout-item-name projekt-name'>
+            <%= link_to t("custom.links.menu.all_projekts"), projekts_path %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+
     <% projekts.each do |projekt| %>
       <% projekt_nesting_level = 2 %>
       <% projekt_children_to_show_in_menu = projekt.children_projekts_show_in_navigation.select { |p| p.visible_for?(current_user) } %>

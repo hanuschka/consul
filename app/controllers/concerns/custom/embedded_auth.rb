@@ -4,6 +4,7 @@ module EmbeddedAuth
   included do
     before_action :set_iframe_content_security_policy
     helper_method :embedded? #, :frame_temp_token_valid?
+    helper_method :frame_access_code_valid? #, :frame_temp_token_valid?
     skip_forgery_protection if: :frame_session_from_authorized_source?
   end
 
@@ -17,6 +18,10 @@ module EmbeddedAuth
     def embedded?
       @embedded ||=
         (params[:embedded] == "true")
+    end
+
+    def frame_access_code_valid?(projekt)
+      params[:frame_code] = projekt.frame_access_code
     end
 
     def frame_session_from_authorized_source?

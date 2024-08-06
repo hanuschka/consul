@@ -109,7 +109,7 @@
     </div>
   <% end %>
 
-  <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? %>
+  <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || embedded? %>
     <div class="js-anchor-navigation-content" id="projekt-particapation">
       <div class="projekt-footer-anchor" id="projekt-footer"> </div>
       <div class="projekt-footer flex-layout">

@@ -74,7 +74,7 @@
       margin-top: 0;
 
       &:hover:not(.is-active) {
-        background: $highlight;
+        background: $brand-lighter;
       }
 
       &::after {
@@ -101,7 +101,7 @@
   }
 
   span {
-    color: $text-medium;
+    color: $brand;
     font-size: $small-font-size;
   }
 

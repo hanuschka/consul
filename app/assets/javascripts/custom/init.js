@@ -17,6 +17,7 @@
       App.AutosubmitFormElement.initialize();
       App.NewSortable.initialize();
       App.SidebarFilterComponent.initialize();
+      App.ImageGallery.initialize();
     }
   };
 }).call(this);

@@ -3,7 +3,7 @@
 # To ban all spiders from the entire site uncomment the next two lines:
 # Disallow: /
 
-User-agent: *
+User-agent: Googlebot
 Disallow: /users/
 Disallow: /comments/
 
@@ -13,3 +13,28 @@ Disallow: /*?*search
 Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: user_id
+
+User-agent: Bingbot
+Disallow: /users/
+Disallow: /comments/
+
+Disallow: /*?*locale
+Disallow: /*?*order
+Disallow: /*?*search
+Disallow: /*?*locale-switcher
+Disallow: /*?*filter
+Disallow: user_id
+
+User-agent: facebookexternalhit
+Disallow: /users/
+Disallow: /comments/
+
+Disallow: /*?*locale
+Disallow: /*?*order
+Disallow: /*?*search
+Disallow: /*?*locale-switcher
+Disallow: /*?*filter
+Disallow: user_id
+
+User-agent: *
+Disallow: /

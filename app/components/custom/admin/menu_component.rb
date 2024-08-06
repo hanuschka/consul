@@ -30,7 +30,8 @@ class Admin::MenuComponent < ApplicationComponent
         t("custom.admin.menu.projekts"),
         admin_projekts_path,
         controller_name == "projekts",
-        class: "projekts-link"
+        class: "projekts-link",
+        data: { turbolinks: false }
       ]
     end
 

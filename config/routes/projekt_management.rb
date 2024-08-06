@@ -9,6 +9,7 @@ namespace :projekt_management do
       get :settings
       get :map
       patch :update_map
+      put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
       get :projekt_questions

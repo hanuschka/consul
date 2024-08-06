@@ -7,4 +7,14 @@ class IndividualGroupValue < ApplicationRecord
 
   scope :hard, -> { joins(:individual_group).where(individual_groups: { kind: "hard" }) }
   scope :soft, -> { joins(:individual_group).where(individual_groups: { kind: "soft" }) }
+
+  def add_from_csv(file_path)
+    CSV.foreach(file_path, headers: true) do |row|
+      user = User.find_by(email: row["email"])
+      next unless user
+      next if users.include?(user)
+
+      users << user
+    end
+  end
 end

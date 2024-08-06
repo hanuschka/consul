@@ -1,0 +1,52 @@
+<%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_header do %>
+    <div>
+      <%= l(projekt_event.created_at) %>
+    </div>
+  <% end %>
+
+  <% c.with_image_overlay_item do %>
+    <div class="projekt-event-item-new-calendar">
+      <div class="projekt-event-item-new-calendar-dayname">
+        <%= l(projekt_event.datetime, format: "%b").upcase %>
+      </div>
+      <div class="projekt-event-item-new-calendar-daynumber">
+        <%= projekt_event.datetime.strftime("%d") %>
+      </div>
+      <% if projekt_event.end_datetime.present? && projekt_event.datetime.to_date != projekt_event.end_datetime.to_date %>
+        <div class="projekt-event-item-new-calendar--enddatetime">
+          <div class="projekt-event-item-new-calendar--separator">
+            -
+          </div>
+          <div class="projekt-event-item-new-calendar-dayname">
+            <%= l(projekt_event.end_datetime, format: "%b").upcase %>
+          </div>
+          <div class="projekt-event-item-new-calendar-daynumber">
+            <%= projekt_event.end_datetime.strftime("%d") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% c.with_footer_section do %>
+    <div style="align-self:baseline;">
+      <i class="fas fa-map"></i><span style="margin-left:5px;"><%= projekt_event&.location %></span>
+    </div>
+  <% end %>
+
+  <% c.with_footer_section do %>
+    <%= content_tag(:button, t("custom.projekt_events.list_item_component.cta_button"),
+          onclick: "$('##{dom_id(projekt_event, :modal)}').foundation('open');",
+          class: "button -grey") %>
+
+    <div class="reveal" id="<%= dom_id(projekt_event, :modal) %>" data-reveal>
+      <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <%= render Projekts::ProjektEvents::ListItemNewComponent.new(projekt_event: projekt_event) %>
+
+    </div>
+  <% end %>
+<% end %>

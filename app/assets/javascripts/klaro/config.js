@@ -2,6 +2,7 @@
 // You can change this by specifying the "data-config" attribute on your
 // script take, e.g. like this:
 // <script src="klaro.js" data-config="myConfigVariableName" />
+
 var klaroConfig = {
     // With the 0.7.0 release we introduce a 'version' paramter that will make
     // it easier for us to keep configuration files backwards-compatible in the future.
@@ -151,7 +152,8 @@ var klaroConfig = {
                 livechat: 'Live Chat',
                 advertising: 'Anzeigen von Werbung',
                 styling: 'Styling',
-                system: 'Plattformbetrieb'
+                system: 'Plattformbetrieb',
+                translation: 'Übersetzungsdienst'
             },
             ok: 'Alle akzeptieren',
             consentNotice: {
@@ -202,6 +204,7 @@ var klaroConfig = {
                 advertising: 'Advertising',
                 styling: 'Styling',
                 system: 'Plattform operation',
+                translation: 'Translation'
             },
         },
     },
@@ -294,6 +297,29 @@ var klaroConfig = {
         //     title: 'Google Fonts',
         //     purposes: ['styling'],
         //     required: true,
+        // },
+        // { // uncomment if translate widget is enabled
+        //   name: 'google_translate_accepted',
+        //   default: false,
+        //   purposes: ['translation'],
+        //   translations: {
+        //     en: {
+        //       title: 'Google Translate'
+        //     },
+        //     de: {
+        //       title: 'Google Übersetzer',
+        //     },
+        //   },
+        //   cookies: ['googtrans'],
+        //   callback: function(consent, service) {
+        //     if ( !document.getElementById("translate-widget") ) { return; }
+
+        //     if ( consent == false && document.getElementById("google_translate_element") ) {
+        //       location.reload();
+        //     } else if ( consent == true && !document.getElementById("google_translate_element")) {
+        //       location.reload();
+        //     }
+        //   }
         // },
         {
             name: 'system',

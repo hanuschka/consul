@@ -20,7 +20,7 @@
 
 <meta name="turbolinks-cache-control" content="no-cache">
 
-<script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+<%= yield :vc_maps %>
 
 <% if Rails.application.secrets.matomo_site_id.present? %>
   <%= render "layouts/matomo" %>
@@ -29,7 +29,7 @@
 <%= javascript_include_tag "klaro/config.js", defer: true %>
 <%= javascript_include_tag "klaro/klaro.js", defer: true %>
 
-<% if extended_feature?("general.enable_google_translate") %>
+<% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
   <script>
     function loadGoogleTranslateScript() {
       var script = document.createElement('script');
@@ -43,8 +43,11 @@
     }
 
     $(document).on('turbolinks:load', function() {
-      loadGoogleTranslateScript();
-      googleTranslateElementInit();
+      if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
+				loadGoogleTranslateScript();
+      } else {
+				googleTranslateElementInit();
+      }
     });
   </script>
 <% end %>

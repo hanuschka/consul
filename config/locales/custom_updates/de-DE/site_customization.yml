@@ -1,0 +1,11 @@
+de:
+  custom:
+    site_customization:
+      card_component:
+        setting:
+          label:
+            limit:
+              debates_limit:
+              proposals_limit:
+              investments_limit:
+              deficiency_reports_limit:

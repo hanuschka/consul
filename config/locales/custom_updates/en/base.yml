@@ -32,6 +32,20 @@ en:
     comments:
       reply_form:
         leave_comment: Write a reply
+    content_cards:
+      active_projekts:
+        title: Active participation
+        all_projekts_link: Show all projekts
+      latest_user_activity:
+        title: My activity
+      current_polls:
+        title: Current polls
+      latest_resources:
+        title: Latest resources
+      expired_projekts:
+        title: Expired projekts
+      events:
+        title: Events
     devise_views:
       users:
         registrations:
@@ -138,6 +152,8 @@ en:
         one: Input
         other: Inputs
       dates:
+        ends_on: Ends on %{date}
+        ends_today: Ends today
         days_left:
           one: 1 more day
           other: '%{count} more days'
@@ -167,6 +183,8 @@ en:
         report_text: Report this entry if it contains unacceptable content or infringes third party rights.
         report_title: Report
       download: Download
+      sort_by: Sort by
+      filter_by: Filter by
     tag_names:
       projekt: Additional %{resources} for this Project
     tags:
@@ -201,6 +219,21 @@ en:
         projekts: Projekts
         proposals: Proposals
         comments: Comments
+        debates: Debates
+        polls: Polls
+      sidebar:
+        information:
+          title: Information
+        users:
+          title: Users
+          sign_in: Sign in
+        activity:
+          title: Activity
+        newsletter:
+          title: Newsletter
+          cta: Not registered? Sign up now!
+          submit: Sign up
+
     welcome_launch:
       p1: We're building a new citizen participation platform for the city of %{org_name}
       p2: We'll go live on %{date}!

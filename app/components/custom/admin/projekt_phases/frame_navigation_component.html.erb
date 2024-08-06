@@ -1,10 +1,10 @@
 <div class="frame-phase-edit-navigation">
-  <%= link_to "Abbrechen", cancel_url, class: "button" %>
-  <div>
-    <div style="display:flex" class="frame-phase-navigate-settings">
-      <%= link_to("Zurück", previous_page_url, class: "button") %>
+  <% unless @hide_prev_next %>
+    <%= link_to "Abbrechen", cancel_url, class: "button" %>
+    <div>
+      <div style="display:flex" class="frame-phase-navigate-settings">
+        <%= link_to("Zurück", previous_page_url, class: "button") %>
 
-      <% unless @hide_prev_next %>
         <% if @use_link_for_next.present? %>
           <a href="<%= next_page_url %>" class="button">
             Weiter
@@ -14,8 +14,8 @@
             Weiter
           </button>
         <% end %>
-      <% end %>
     </div>
+  <% end %>
 
     <%= link_to "Projektphase sofort hinzufügen", projekt_url %>
     </div>

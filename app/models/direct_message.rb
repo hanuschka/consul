@@ -1,4 +1,6 @@
 class DirectMessage < ApplicationRecord
+  include Notifiable
+
   belongs_to :sender,   class_name: "User", inverse_of: :direct_messages_sent
   belongs_to :receiver, class_name: "User", inverse_of: :direct_messages_received
 

@@ -58,10 +58,10 @@
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
-  background-color: $brand-lighter;
+  background-color: rgba($brand, 0.5);
   color: $white;
 
   div {
-    background-color: $brand-lighter;
+    background-color: rgba($brand, 0.5);
   }
 }

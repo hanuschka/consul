@@ -20,6 +20,7 @@ en:
         expired: Poll expired
         expires_today: Expires today
         participate_button: Participate now!
+        phase_expired_button: Results
       questions:
         answers:
           more_info: More info

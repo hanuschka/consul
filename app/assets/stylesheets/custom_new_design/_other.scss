@@ -1,16 +1,14 @@
 .custom-new-design {
-  .top-bar[data-white-text="true"] #translate-widget #translate-widget-toggler {
+  &.home-page .top-bar[data-white-text="true"] #translate-widget #translate-widget-toggler {
     color: #fff;
   }
-
-  .sticky-header .top-bar[data-white-text="true"] #translate-widget #translate-widget-toggler {
+  &.home-page .sticky-header .top-bar #translate-widget #translate-widget-toggler {
     color: #222;
   }
 
   #translate-widget {
     align-self: center;
     margin-right: 10px;
-    color: red;
     font-size: 1.6rem;
     cursor: pointer;
 

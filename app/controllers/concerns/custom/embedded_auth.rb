@@ -3,7 +3,8 @@ module EmbeddedAuth
 
   included do
     before_action :set_iframe_content_security_policy
-    helper_method :embedded?, :frame_temp_token_valid?
+    helper_method :embedded? #, :frame_temp_token_valid?
+    skip_forgery_protection if: :frame_session_from_authorized_source?
   end
 
   private
@@ -124,11 +125,11 @@ module EmbeddedAuth
     #   return false
     end
 
-    def frame_temp_token_valid?
-      return false if params[:temp_token].blank?
-
-      user = User.find_by(temporary_auth_token: params[:temp_token])
-
-      user.present? && user.temporary_auth_token_valid?
-    end
+    # def frame_temp_token_valid?
+    #   return false if params[:temp_token].blank?
+    #
+    #   user = User.find_by(temporary_auth_token: params[:temp_token])
+    #
+    #   user.present? && user.temporary_auth_token_valid?
+    # end
 end

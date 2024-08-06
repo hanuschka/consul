@@ -3,7 +3,7 @@
     current_user&.email.in?(@partner_emails) ||
     (current_user&.administrator? || (current_user&.projekt_manager? && can?(:edit, resource)))) %>
 
-  <% show_embeded_controls = embedded? && frame_temp_token_valid? %>
+  <% show_embeded_controls = embedded? && true %>
 
   <% if show_admin_controlls %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>

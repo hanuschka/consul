@@ -1,5 +1,7 @@
-<%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/heading" %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="float-right">
   <%= link_to t("custom.admin.projekt_phases.projekt_arguments.send_notifications_button"), polymorphic_path([@namespace, @projekt_phase, @projekt_argument], action: :send_notifications), method: :post, class: "button" %>
@@ -41,4 +43,10 @@
       </div>
     </div>
   </div>
+<% end %>
+
+<% if embedded? %>
+  <%= content_for :admin_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, use_link_for_next: true) %>
+  <% end %>
 <% end %>

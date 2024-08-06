@@ -3,6 +3,7 @@ module ProjektPhaseAdminActions
   include EmbeddedAuth
   include Translatable
   include MapLocationAttributes
+  include ProjektPhaseControllerUtils
 
   included do
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
@@ -42,19 +43,17 @@ module ProjektPhaseAdminActions
     authorize!(:create, @projekt_phase)
 
     if @projekt_phase.update(projekt_phase_params)
-      next_action = next_action_after_update(@projekt_phase)
+      next_action = next_action_for_phase(@projekt_phase, params[:action_name])
 
       if next_action.present?
         redirect_to(
           namespace_projekt_phase_path(action: next_action),
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
-      elsif frame_session_from_authorized_source?
+      elsif embedded?
         redirect_to(
-          @projekt_phase.projekt.private_url(
-            embedded: true,
-            temp_token: params[:temp_token]
-          )
+          @projekt_phase.projekt.frame_url,
+          notice: t("custom.admin.projekt_phases.notice.updated")
         )
       end
     end
@@ -338,22 +337,5 @@ module ProjektPhaseAdminActions
 
     def namespace_projekt_phase_path(action: "update", url_params: {})
       url_for(controller: params[:controller], action: action, only_path: true, params: url_params)
-    end
-
-    def next_action_after_update(projekt_phase)
-      current_action = params[:action_name] || "duration"
-      return current_action unless embedded?
-
-      current_action_index = projekt_phase.admin_nav_bar_items.index(current_action)
-
-      return current_action if current_action_index.nil?
-
-      next_action_index = current_action_index + 1
-
-      if next_action_index >= projekt_phase.admin_nav_bar_items.size
-        return nil
-      end
-
-      projekt_phase.admin_nav_bar_items[next_action_index]
     end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_01_154144) do
+ActiveRecord::Schema.define(version: 2024_08_05_120842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1989,8 +1989,9 @@ ActiveRecord::Schema.define(version: 2024_08_01_154144) do
     t.boolean "show_end_date_in_frontend", default: true
     t.integer "top_level_projekt_id"
     t.tsvector "tsv"
-    t.string "page_view_code"
+    t.string "frame_access_code"
     t.boolean "new_content_block_mode"
+    t.string "preview_code"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
@@ -2518,6 +2519,8 @@ ActiveRecord::Schema.define(version: 2024_08_01_154144) do
     t.string "last_stork_level"
     t.string "frame_sign_in_token"
     t.datetime "frame_sign_in_token_valid_until"
+    t.string "keycloak_link"
+    t.text "keycloak_id_token", default: ""
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"

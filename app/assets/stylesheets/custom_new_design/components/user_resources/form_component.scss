@@ -32,7 +32,7 @@ $banner-mobile-layout-change-widthpoint: 720px;
 
 .user-resources-form--banner-editor {
   width: 100%;
-  background-color: #D9F0EB;
+  background-color: $brand-lighter;
   padding-top: 30px;
   padding-bottom: 30px;
   padding-left: 30px;
@@ -52,16 +52,15 @@ $banner-mobile-layout-change-widthpoint: 720px;
   }
 
   &.-proposal {
-    background-color: #FFE9CC;
+    // background-color: #FFE9CC;
   }
 
   &.-deficiency-report {
-    background-color: #fff;
+    // background-color: #fff;
   }
 
   &.-budget-investment {
-    // background-color: #fff;
-    background-color: #FFE9CC;
+    // background-color: #FFE9CC;
   }
 
   .translatable-fields {
@@ -136,7 +135,7 @@ textarea.user-resources-form--banner-editor-title {
   }
 
   &::placeholder  {
-    color: $brand;
+    color: $dark;
     opacity: 0.3;
   }
 

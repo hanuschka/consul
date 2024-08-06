@@ -1,0 +1,6 @@
+<%= tag.ul class: "memos-tree",
+           id: memoable.is_a?(Memo) ? dom_id(memoable, :tree) : "memos_tree" do %>
+  <% memos.each do |memo| %>
+    <%= render "admin/memos/memo", memo: memo %>
+  <% end %>
+<% end %>

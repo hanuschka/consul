@@ -2,15 +2,15 @@
   .resource-page-banner {
     display: flex;
     justify-content: space-between;
-    background: #D9F0EB;
-    color: $dt-base;
+    background: $brand-lighter;
+    color: $dark;
     // padding: 40px 40px;
     padding: 35px 40px;
     border-radius: 10px;
     margin-bottom: 15px;
 
     &.-proposal, &.-investment {
-      background-color: #FFE9CC;
+      // background-color: #FFE9CC;
     }
 
     &.-poll {
@@ -18,7 +18,7 @@
     }
 
     &.-deficiencyreport {
-      background-color: #fff;
+      // background-color: #fff;
     }
 
     a {
@@ -61,6 +61,8 @@
     max-height: 260px;
     border-radius: 8px;
     overflow: hidden;
+    cursor: zoom-in;
+    position: relative;
 
     @media(max-width: $small-tablet-viewport-start) {
       width: 100%;
@@ -104,4 +106,20 @@
       padding-right: 5px;
     }
   }
+}
+
+.image-maximize-button {
+  position: absolute;
+  bottom: 15px;
+  width: 40px;
+  height: 40px;
+  right: 15px;
+  z-index: 11;
+  font-size: 25px;
+  color: white;
+  background-color: #00000085;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }

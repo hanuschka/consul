@@ -462,6 +462,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     height: 50px !important;
     border-radius: 38px !important;
     background-color: #37847f;
+    white-space: nowrap;
   }
 
   .header--responsive-menu-wrapper {
@@ -504,7 +505,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       width: 300px;
       min-height: 45px;
       margin-right: 0 !important;
-      cursor: pointer;
 
       &:hover {
         background-color: $dropdown-hover-color;

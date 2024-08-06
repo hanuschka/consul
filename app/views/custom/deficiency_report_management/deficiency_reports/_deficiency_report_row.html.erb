@@ -1,16 +1,5 @@
 <tr id="<%= dom_id(deficiency_report) %>" class="deficiency_report">
   <td class="text-center"><%= deficiency_report.id %></td>
-  <td>
-    <%= link_to deficiency_report.title, deficiency_report_path(deficiency_report), target: "_blank" %>
-    <br>
-    <small><%= link_to "Änderung Log", deficiency_report_management_deficiency_report_path(deficiency_report) %></small>
-  </td>
-  <td><%= deficiency_report.author.username %></td>
-  <td><%= deficiency_report.official_answer %></td>
-  <td><%= deficiency_report.category&.name %></td>
-  <td><%= deficiency_report.status&.title %></td>
-  <td><%= deficiency_report.officer&.name %></td>
-  <td><%= deficiency_report.officer&.email %></td>
   <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
     <td>
       <%= render Admin::LivesubmitCheckbox::Component.new(
@@ -22,6 +11,17 @@
       ) %>
     </td>
   <% end %>
+  <td>
+    <%= l(deficiency_report.created_at, format: "%d.%m.%Y") %>
+    <br>
+    <small><%= link_to "Änderung Log", deficiency_report_management_deficiency_report_path(deficiency_report) %></small>
+  </td>
+  <td><%= link_to deficiency_report.title, deficiency_report_path(deficiency_report), target: "_blank" %></td>
+  <td><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank" %></td>
+  <td><%= deficiency_report.status&.title %></td>
+  <td><%= deficiency_report.map_location&.approximated_address %></td>
+  <td><%= deficiency_report.category&.name %></td>
+  <td><%= deficiency_report.officer&.name %></td>
   <td><%= render Admin::TableActionsComponent.new(deficiency_report,
                                                   edit_path: edit_deficiency_report_management_deficiency_report_path(deficiency_report),
                                                   destroy_path: deficiency_report_management_deficiency_report_path(deficiency_report)

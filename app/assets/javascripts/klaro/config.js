@@ -282,6 +282,13 @@ var klaroConfig = {
             onlyOnce: true,
             default: false,
         },
+        // The services will appear in the modal in the same order as defined here.
+        // {
+        //     name: 'googleFonts',
+        //     title: 'Google Fonts',
+        //     purposes: ['styling'],
+        //     required: true,
+        // },
         { // uncomment if translate widget is enabled
           name: 'google_translate_accepted',
           default: false,
@@ -296,9 +303,11 @@ var klaroConfig = {
           },
           cookies: ['googtrans'],
           callback: function(consent, service) {
+            if ( !document.getElementById("translate-widget") ) { return; }
+
             if ( consent == false && document.getElementById("google_translate_element") ) {
               location.reload();
-            } else if ( consent == true && !document.getElementById("google_translate_element") ) {
+            } else if ( consent == true && !document.getElementById("google_translate_element")) {
               location.reload();
             }
           }

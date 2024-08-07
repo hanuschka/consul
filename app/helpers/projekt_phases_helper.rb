@@ -4,8 +4,7 @@ module ProjektPhasesHelper
     category = action
     url_params = {}
 
-    if projekt_phase.respond_to?(:settings_categories) &&
-        projekt_phase.settings_categories.include?(action)
+    if projekt_phase.settings_categories.include?(action)
       url_params[:category] = action
       action = "settings"
 

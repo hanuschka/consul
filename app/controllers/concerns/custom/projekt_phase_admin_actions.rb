@@ -88,14 +88,20 @@ module ProjektPhaseAdminActions
     authorize!(:settings, @projekt_phase)
 
     if params[:category].present?
-      @projekt_phase_features, @projekt_phase_options =
+      projekt_phase_features, projekt_phase_options =
         get_all_settings_for_phase_and_category(
           @projekt_phase, params[:category]
         )
+      @projekt_phase_features = { params[:category] => projekt_phase_features }
+      @projekt_phase_options = { params[:category] => projekt_phase_options }
     else
-      all_settings = @projekt_phase.settings.group_by(&:kind)
-      @projekt_phase_features = all_settings["feature"]&.group_by(&:band) || []
-      @projekt_phase_options = all_settings["option"]&.group_by(&:band) || []
+      projekt_phase_features, projekt_phase_options =
+        get_all_settings_for_phase_and_category(
+          @projekt_phase, :base
+        )
+
+      @projekt_phase_features = projekt_phase_features&.group_by(&:band) || []
+      @projekt_phase_options = projekt_phase_options&.group_by(&:band) || []
     end
 
     render "custom/admin/projekt_phases/settings"
@@ -116,8 +122,8 @@ module ProjektPhaseAdminActions
 
     all_settings = setting_ordered.group_by(&:kind)
 
-    projekt_phase_features = { category => (all_settings["feature"] || []) }
-    projekt_phase_options = { category => (all_settings["option"] || []) }
+    projekt_phase_features = all_settings["feature"]
+    projekt_phase_options = all_settings["option"]
 
     [projekt_phase_features, projekt_phase_options]
   end

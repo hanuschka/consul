@@ -260,6 +260,10 @@ class ProjektPhase < ApplicationRecord
     )
   end
 
+  def settings_categories
+    []
+  end
+
   def admin_nav_bar_items
     []
   end

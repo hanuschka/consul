@@ -27,7 +27,7 @@
     },
 
     getStickyHeader() {
-      return document.querySelector(".js-sticky-header")
+      return document.querySelector(".top-bar-wrapper")
     },
 
     getScrollbarWidth: function() {

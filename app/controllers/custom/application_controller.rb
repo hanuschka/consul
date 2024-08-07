@@ -90,7 +90,7 @@ class ApplicationController < ActionController::Base
 
       social_media_icon = SiteCustomization::Image.find_by(name: "social_media_icon")
 
-      if social_media_icon.image.attached?
+      if social_media_icon&.image&.attached?
         @social_media_icon_path = polymorphic_path(social_media_icon.image)
       end
 

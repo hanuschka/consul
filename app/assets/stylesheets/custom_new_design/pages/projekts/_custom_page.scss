@@ -160,6 +160,20 @@
     position: relative;
     bottom: -50px;
     height: 390px !important;
+    cursor: zoom-in;
+
+    .image-maximize-button {
+      visibility: hidden;
+      opacity: 0;
+      transition: all 100ms ease;
+    }
+
+    &:hover {
+      .image-maximize-button {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
 
     & > .resource-image {
       border-radius: 10px;

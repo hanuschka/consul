@@ -275,6 +275,7 @@ en:
     finish_signup:
       title: "Additional details"
       username_warning: "Due to a change in the way we interact with social networks, it is possible that your username now appears as 'already in use'. If that is your case, please choose a different username."
+      submit: "Complete registration"
     google_oauth2:
       sign_in: Sign in with Google
       sign_up: Sign up with Google

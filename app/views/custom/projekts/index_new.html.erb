@@ -1,3 +1,9 @@
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+    social_title: t("custom.projekts.index.title"),
+    social_description: t("custom.projekts.index.welcome_default_text_html") %>
+<% end %>
+
 <main class="projekts-page projekts-overview-page">
   <div class="main-column projekts-overview-page--heading">
     <div class="padding-on-mobile">

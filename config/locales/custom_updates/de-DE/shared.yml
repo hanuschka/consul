@@ -2,3 +2,11 @@ de:
   custom:
     shared:
       select: Wählen
+      required: Pflichtfeld
+      new_comments_component:
+        comments: Kommentare
+      participate_as_guest: als Gast teilnehmen
+    resource_page:
+      banner_component:
+        comments: Kommentare
+        related_projekt: "Zugehöriges Projekt:"

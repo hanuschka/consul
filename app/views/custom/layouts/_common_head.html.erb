@@ -20,7 +20,7 @@
 
 <meta name="turbolinks-cache-control" content="no-cache">
 
-<script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+<%= yield :vc_maps %>
 
 <% if Rails.application.secrets.matomo_site_id.present? %>
   <%= render "layouts/matomo" %>
@@ -43,8 +43,11 @@
     }
 
     $(document).on('turbolinks:load', function() {
-      loadGoogleTranslateScript();
-      googleTranslateElementInit();
+      if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
+				loadGoogleTranslateScript();
+      } else {
+				googleTranslateElementInit();
+      }
     });
   </script>
 <% end %>

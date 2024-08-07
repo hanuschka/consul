@@ -53,8 +53,8 @@ body {
 
   &.public {
     @include breakpoint($global-width) {
-      margin-left: $body-margin;
-      margin-right: $body-margin;
+      /* margin-left: $body-margin; */
+      /* margin-right: $body-margin; */
     }
   }
 

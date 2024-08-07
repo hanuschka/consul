@@ -1,0 +1,7 @@
+<div id="memos-container">
+  <h1>Memos</h1>
+
+  <%= render "admin/memos/form", memoable: memoable %>
+
+  <%= render "admin/memos/memos_tree", memos: memoable.memos, memoable: memoable %>
+</div>

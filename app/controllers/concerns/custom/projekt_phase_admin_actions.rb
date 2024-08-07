@@ -129,6 +129,22 @@ module ProjektPhaseAdminActions
       notice: t("admin.settings.index.map.flash.update")
   end
 
+  def copy_map_settings_from_projekt
+    authorize!(:copy_map_settings_from_projekt, @projekt_phase)
+
+    unless @projekt_phase.map_location.latitude == @projekt_phase.projekt.map_location.latitude &&
+           @projekt_phase.map_location.longitude == @projekt_phase.projekt.map_location.longitude
+      @projekt_phase.map_location = @projekt_phase.projekt.map_location.dup
+    end
+
+    @projekt_phase.projekt.map_layers.each do |map_layer|
+      @projekt_phase.map_layers << map_layer.dup unless @projekt_phase.map_layers.any? { |ml| ml.name == map_layer.name }
+    end
+
+    redirect_to namespace_projekt_phase_path(action: "map"),
+      notice: t("admin.settings.index.map.flash.update")
+  end
+
   def age_ranges_for_stats
     @age_ranges = AgeRange.for_stats
   end

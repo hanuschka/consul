@@ -15,5 +15,8 @@
     >
     </div>
   <% end %>
-  <%= render partial: 'shared/subnavigation_flyout_projekts', locals: { projekts: @projekts_for_overview_page_navigation, placement: placement, skip_subprojekts: true } if @projekts_for_overview_page_navigation.present? %>
+  <% if @projekts_for_overview_page_navigation.present? %>
+    <%= render partial: 'shared/subnavigation_flyout_projekts',
+      locals: { projekts: @projekts_for_overview_page_navigation, placement: placement, skip_subprojekts: true, called_from: "subnavigation_projekts_overview" } %>
+  <% end %>
 </li>

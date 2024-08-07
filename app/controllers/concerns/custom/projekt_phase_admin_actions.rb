@@ -94,6 +94,51 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/settings"
   end
 
+  def proposal_form_author_settings
+    authorize!(:settings, @projekt_phase)
+
+    settings_time = Benchmark.realtime do
+      @projekt_phase_features, @projekt_phase_options =
+        get_all_settings_for_phase_and_category(
+          @projekt_phase, :form_author
+        )
+    end
+
+    render "custom/admin/projekt_phases/settings_single_page"
+  end
+
+  def proposal_user_function_settings
+    authorize!(:settings, @projekt_phase)
+
+    @projekt_phase_features, @projekt_phase_options =
+      get_all_settings_for_phase_and_category(
+        @projekt_phase, :user_functions
+      )
+
+    render "custom/admin/projekt_phases/settings_single_page"
+  end
+
+  def get_all_settings_for_phase_and_category(projekt_phase, category)
+    proposal_setting_key_ordered = ProjektPhaseSetting.defaults[projekt_phase.class.name][category].keys
+
+    projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
+      result[item.key] = item
+    end
+
+    setting_ordered = []
+    proposal_setting_key_ordered.each do |setting_key|
+      setting = projekt_phase_settings_by_key[setting_key.to_s]
+      setting_ordered.push(setting)
+    end
+
+    all_settings = setting_ordered.group_by(&:kind)
+
+    projekt_phase_features = all_settings["feature"] || []
+    projekt_phase_options = all_settings["option"] || []
+
+    [projekt_phase_features, projekt_phase_options]
+  end
+
   def projekt_labels
     authorize!(:projekt_labels, @projekt_phase)
 

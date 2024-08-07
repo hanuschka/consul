@@ -8,6 +8,8 @@ namespace :admin do
       get :naming
       get :restrictions
       get :settings
+      get :proposal_form_author_settings
+      get :proposal_user_function_settings
       get :map
       patch :update_map
       put :copy_map_settings_from_projekt

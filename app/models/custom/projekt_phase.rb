@@ -361,7 +361,7 @@ class ProjektPhase < ApplicationRecord
     end
 
     def add_default_settings
-      phase_settings = ProjektPhaseSetting.defaults[self.class.name] || {}
+      phase_settings = ProjektPhaseSetting.defaults[self.class.name].values.reduce(:merge) || {}
 
       phase_settings.each do |key, value|
         settings.create!(key: key, value: value)

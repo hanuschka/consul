@@ -30,8 +30,12 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     feature?("general.only_admins_create_proposals")
   end
 
+  def settings_categories
+    %w[form_author user_functions]
+  end
+
   def setting_pages
-    %w[duration naming restrictions proposal_form_author_settings proposal_user_function_settings]
+    %w[duration naming restrictions form_author user_functions]
   end
 
   def admin_nav_bar_items

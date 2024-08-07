@@ -68,10 +68,13 @@
   </div>
 
   <% if resource.image.present? %>
-    <%= link_to resource, class: "resource-page-banner--image" do %>
+    <%= link_to big_image_url, target: "_blank", class: "glightbox resource-page-banner--image" do %>
+      <span class="image-maximize-button">
+        <i class="fas fa-magnifying-glass-plus"></i>
+      </span>
       <%= render(
         Shared::ResourceImageComponent.new(
-          image_url: resource&.image.attachment.variant(resize_to_limit: [820, 520], saver: { quality: 90 }, format: 'jpeg'),
+          image_url: image_url,
           image_placeholder_icon_class: "fa-comments",
           resource: resource
         )

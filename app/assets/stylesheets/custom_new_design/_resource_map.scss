@@ -20,8 +20,8 @@
 
 .resources-list--map {
   .leaflet-container a.leaflet-popup-close-button {
-    top: 2px;
-    right: 2px;
+    top: 4px;
+    right: 3px;
   }
   .leaflet-popup-content-wrapper {
     padding: 0;
@@ -71,7 +71,10 @@
 
 .resource-map-popup-image {
   margin-bottom: 7px;
-  height:170px !important;
+  min-height:170px !important;
+  max-height: 280px;
+  object-fit: cover;
+  width: 100%;
   border-radius: 5px;
   border-radius: 0;
   margin-bottom: 0;

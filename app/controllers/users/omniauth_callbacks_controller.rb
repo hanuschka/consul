@@ -44,23 +44,30 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       auth = auth_data || request.env["omniauth.auth"]
 
-      identity = Identity.first_or_create_from_oauth(auth)
-      identity.update!(auth_data: auth)
-      @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
-
-      update_email(auth)
-
-      if save_user
-        identity.update!(user: @user)
-        update_user_address(auth) if auth.extra.raw_info.street_address.present?
-        @user.verify! if auth.extra.raw_info.verification_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
-        sign_in_and_redirect @user, event: :authentication
-        preexisting_flash = flash[:notice]
-        set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
-        flash[:notice] += " #{preexisting_flash}" if preexisting_flash
+      if prevent_verification_if_identity_taken?(auth, provider)
+        flash[:notice] = t("custom.users.omniauth.identity_taken")
+        redirect_to account_path
       else
-        session["devise.#{provider}_data"] = auth
-        redirect_to new_user_registration_path
+        identity = Identity.first_or_create_from_oauth(auth)
+        identity.update!(auth_data: auth)
+        @user = current_user || identity.user || User.first_or_initialize_for_oauth(auth)
+        @user.last_stork_level = auth.extra&.raw_info&.verification_level
+
+        update_with_oauth_data(auth)
+        update_email(auth)
+        update_user_address(auth) if auth.extra.raw_info.street_address.present?
+
+        if save_user
+          identity.update!(user: @user)
+          @user.verify! if @user.errors.blank? && @user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
+          sign_in_and_redirect @user, event: :authentication
+          preexisting_flash = flash[:notice]
+          set_flash_message(:notice, :success, kind: provider_name(provider)) if is_navigational_format?
+          flash[:notice] += " #{preexisting_flash}" if preexisting_flash
+        else
+          session["devise.#{provider}_data"] = auth
+          redirect_to new_user_registration_path
+        end
       end
     end
 
@@ -68,15 +75,24 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user.save || @user.save_requiring_finish_signup
     end
 
+    def update_with_oauth_data(auth)
+      return unless @user.persisted?
+
+      @user.first_name = auth.info&.first_name&.capitalize || @user.first_name
+      @user.last_name = auth.info&.last_name&.capitalize || @user.last_name
+      @user.date_of_birth = (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil) || @user.date_of_birth
+      @user.plz = auth.extra.raw_info&.postal_code || @user.plz
+    end
+
     def update_email(auth)
       return if auth.info.email == @user.email
 
-      if User.find_by(email: auth.info.email).present?
-        flash[:notice] = "Email was taken. Please contact support."
+      if User.with_hidden.where.not(id: @user.id).find_by(email: auth.info.email).present?
+        flash[:notice] = t("custom.users.omniauth.email_taken_html")
       else
         @user.skip_reconfirmation!
         @user.update!(email: auth.info.email)
-        flash[:notice] = "Your email has been updated."
+        flash[:notice] = t("custom.users.omniauth.email_updated", email: auth.info.email)
       end
     end
 
@@ -105,15 +121,27 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           )
         end
 
-        @user.update!(registered_address: registered_address) if registered_address
-
-        @user.update!(
-          street_name: match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
-          street_number: match[:street_number].strip,
-          street_number_extension: match[:street_number_extension].strip.presence,
-          city_name: auth_data.extra.raw_info.locality_name&.capitalize,
-          plz: auth_data.extra.raw_info.postal_code
-        )
+        @user.registered_address = registered_address
+        @user.street_name = match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß")
+        @user.street_number = match[:street_number].strip
+        @user.street_number_extension = match[:street_number_extension].strip.presence
+        @user.city_name = auth_data.extra.raw_info.locality_name&.capitalize
+        @user.plz = auth_data.extra.raw_info.postal_code
       end
+    end
+
+    def prevent_verification_if_identity_taken?(auth, provider)
+      return false unless current_user.present?
+
+      corresponding_identity = Identity.find_by(provider: provider, uid: auth.uid)
+      return false if corresponding_identity.blank?
+
+      corresponding_identity.user != current_user
+    end
+
+    def provider_name(provider)
+      return "BundID" if provider == :bund_id
+
+      provider.to_s.capitalize
     end
 end

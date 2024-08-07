@@ -1,6 +1,21 @@
 <%= content_for :body_class, "custom-page" %>
   <% provide :title do %><%= @custom_page.title %><% end %>
 
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+    social_title: @custom_page.title,
+    social_description: strip_tags(@custom_page.content)[0..200],
+    og_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image.attachment) : nil),
+    social_url: page_url(@custom_page.slug),
+    twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
+<% end %>
+
+<% if projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
+  <% provide :vc_maps do %>
+    <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+  <% end %>
+<% end %>
+
 <style>
   <% if @custom_page.image.present? %>
     .custom-page-banner {
@@ -56,7 +71,19 @@
 
         <% if @custom_page.image.present? %>
           <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
-          <div class="custom-page--banner-image">
+          <% big_projekt_image_url =
+            polymorphic_path(@custom_page.image.attachment.variant(
+              resize_to_limit: [1750, 900],
+              saver: { quality: 80 },
+              strip: true,
+              format: "jpeg"
+            ))
+          %>
+
+          <%= link_to big_projekt_image_url, target: "_blank", class: "glightbox custom-page--banner-image" do %>
+            <span class="image-maximize-button">
+              <i class="fas fa-magnifying-glass-plus"></i>
+            </span>
             <%= render(
               Shared::ResourceImageComponent.new(
                 image_url: @custom_page.image&.variant(:projekt_image),
@@ -64,7 +91,7 @@
                 resource: @custom_page
               )
             ) %>
-          </div>
+          <% end %>
         <% end %>
       </div>
     </div>

@@ -92,18 +92,13 @@ class ApplicationController < ActionController::Base
       social_media_icon = SiteCustomization::Image.find_by(name: "social_media_icon")
 
       if social_media_icon&.image&.attached?
-        @social_media_icon_path = polymorphic_path(social_media_icon.image, disposition: "attachment").split("?")[0].delete_prefix("/")
-      else
-        @social_media_icon_path = nil
+        @social_media_icon_path = polymorphic_path(social_media_icon.image)
       end
 
       twitter_icon = SiteCustomization::Image.find_by(name: "social_media_icon_twitter")
 
       if twitter_icon&.image&.attached?
-        @social_media_icon_twitter_url = polymorphic_path(twitter_icon.image.attachment, disposition: "attachment")
-          .split("?")[0]
-      else
-        nil
+        @social_media_icon_twitter_url = polymorphic_path(twitter_icon.image)
       end
     end
 

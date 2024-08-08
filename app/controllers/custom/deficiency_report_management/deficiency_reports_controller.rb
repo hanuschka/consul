@@ -73,6 +73,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       attributes = [:video_url, :on_behalf_of,
                     :deficiency_report_category_id,
                     :deficiency_report_area_id,
+                    :deficiency_report_officer_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]

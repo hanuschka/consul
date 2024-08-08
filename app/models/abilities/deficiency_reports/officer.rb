@@ -7,10 +7,12 @@ module Abilities
         merge Abilities::Common.new(user)
         dr_officer = user.deficiency_report_officer
 
+        can [:index, :show, :edit], DeficiencyReport, id: DeficiencyReport.where(officer: dr_officer).ids
+
         can [:update_official_answer], ::DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
             dr.officer == dr_officer && dr.official_answer_approved == false
-          elsif Setting['deficiency_reports.admins_must_assign_officer'].present?
+          elsif Setting["deficiency_reports.admins_must_assign_officer"].present?
             dr.officer == dr_officer
           else
             true
@@ -20,7 +22,7 @@ module Abilities
         can [:update_status], ::DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
             dr.officer == dr_officer && dr.official_answer_approved == false
-          elsif Setting['deficiency_reports.admins_must_assign_officer'].present?
+          elsif Setting["deficiency_reports.admins_must_assign_officer"].present?
             dr.officer == dr_officer
           else
             true
@@ -28,11 +30,7 @@ module Abilities
         end
 
         can [:update_officer], ::DeficiencyReport do |dr|
-          if Setting['deficiency_reports.admins_must_assign_officer'].present?
-            dr.officer == dr_officer
-          else
-            current_user&.administrator? || current_user&.deficiency_report_manager?
-          end
+          Setting["deficiency_reports.admins_must_assign_officer"].present? && dr.officer == dr_officer
         end
       end
     end

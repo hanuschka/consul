@@ -59,10 +59,6 @@
           <%= render Shared::NewCommentsComponent.new(@deficiency_report, @comment_tree) %>
         <% end %>
 
-        <% if can? :update_official_answer, @deficiency_report %>
-          <%= render "custom/deficiency_reports/answer_form", deficiency_report: @deficiency_report %>
-        <% end %>
-
         <% if @deficiency_report.milestones.any? %>
           <div class="proposal-resources-section">
             <%= render Shared::MilestonesComponent.new(milestones: @deficiency_report.milestones, milestoneable: @deficiency_report) %>
@@ -73,22 +69,6 @@
 
       <aside class="sidebar">
         <%= render Sidebar::ResourceAuthorComponent.new(resource: @deficiency_report) %>
-
-        <% if can? :update_status, @deficiency_report %>
-          <%= render(Shared::SidebarCardComponent.new(
-            title: t("custom.deficiency_reports.show.status.title"),
-            icon_name: "check-circle")) do |c| %>
-            <%= render "deficiency_reports/status", deficiency_report: @deficiency_report %>
-          <% end %>
-        <% end %>
-
-        <% if can? :update_category, @deficiency_report %>
-          <%= render(Shared::SidebarCardComponent.new(
-            title: t("custom.deficiency_reports.show.category.title"),
-            icon_name: "th-large")) do |c| %>
-            <%= render "deficiency_reports/category", deficiency_report: @deficiency_report %>
-          <% end %>
-        <% end %>
 
         <% if feature?(:allow_attached_documents) && @deficiency_report.documents.present? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("documents.title"), icon_name: "file")) do |c| %>
@@ -101,28 +81,6 @@
             <div class="video-link">
               <%= sanitize_and_auto_link @deficiency_report.video_url %>
             </div>
-          <% end %>
-        <% end %>
-
-        <% if can? :update_officer, @deficiency_report %>
-          <%= render(Shared::SidebarCardComponent.new(
-            title: t("custom.deficiency_reports.show.officer.title"),
-            icon_name: "user-cog")) do |c| %>
-            <%= render "deficiency_reports/officer", deficiency_report: @deficiency_report %>
-          <% end %>
-        <% end %>
-
-        <% if current_user&.administrator? %>
-          <%= render(Shared::SidebarCardComponent.new(
-            title: "Benachrichtigung für Sachbearbeiter*in",
-            icon_name: "envelope")) do |c| %>
-            <%= render Admin::LivesubmitCheckbox::Component.new(
-              url: notify_officer_about_new_comments_deficiency_report_path(@deficiency_report),
-              resource_name: "deficiency_report",
-              attribute_name: "notify_officer_about_new_comments",
-              record_id: @deficiency_report.id,
-              current_value: @deficiency_report.notify_officer_about_new_comments
-            ) %>
           <% end %>
         <% end %>
 

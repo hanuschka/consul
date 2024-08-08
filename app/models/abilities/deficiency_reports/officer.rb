@@ -7,7 +7,8 @@ module Abilities
         merge Abilities::Common.new(user)
         dr_officer = user.deficiency_report_officer
 
-        can [:index, :show, :edit], DeficiencyReport, id: DeficiencyReport.where(officer: dr_officer).ids
+        can [:index, :show, :edit, :update_category], DeficiencyReport,
+          id: DeficiencyReport.where(officer: dr_officer).ids
 
         can [:update_official_answer], ::DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
@@ -30,7 +31,7 @@ module Abilities
         end
 
         can [:update_officer], ::DeficiencyReport do |dr|
-          Setting["deficiency_reports.admins_must_assign_officer"].present? && dr.officer == dr_officer
+          Setting["deficiency_reports.admins_must_assign_officer"].present? ? dr.officer == dr_officer : true
         end
       end
     end

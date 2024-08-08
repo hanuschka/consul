@@ -13,11 +13,6 @@ module AdminActions::Memos
     render "admin/memos/create"
   end
 
-  def destroy
-    @memo.destroy!
-    render "admin/memos/destroy"
-  end
-
   private
 
     def memo_params

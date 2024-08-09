@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_29_151658) do
+ActiveRecord::Schema.define(version: 2024_08_09_065254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -395,7 +395,7 @@ ActiveRecord::Schema.define(version: 2024_07_29_151658) do
     t.datetime "ignored_flag_at"
     t.integer "flags_count", default: 0
     t.integer "original_heading_id"
-    t.integer "implementation_performer", default: 0
+    t.integer "implementation_performer", default: 1
     t.text "implementation_contribution"
     t.string "user_cost_estimate"
     t.string "on_behalf_of"

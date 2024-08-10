@@ -17,7 +17,8 @@ class MapLocation < ApplicationRecord
   # end
 
   audited associated_with: :deficiency_report,
-          only: %i[shape latitude longitude]
+    only: %i[shape latitude longitude],
+    if: :audit_changes?
 
   def json_data
     {
@@ -124,5 +125,11 @@ class MapLocation < ApplicationRecord
   rescue StandardError => e
     Sentry.capture_exception(e)
     update_column(:geocoder_data, {}) unless geocoder_data.present?
+  end
+
+  def audit_changes?
+    return false unless deficiency_report.present?
+
+    deficiency_report.previous_changes.any? { |k, _v| k.in?(%w(shape latitude longitude)) }
   end
 end

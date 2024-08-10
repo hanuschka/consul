@@ -77,6 +77,7 @@ class DebatesController < ApplicationController
   end
 
   def new
+    redirect_to debates_path unless params[:projekt_phase_id].present?
     redirect_to debates_path if Projekt.top_level.selectable_in_selector('debates', current_user).empty?
 
     @resource = resource_model.new

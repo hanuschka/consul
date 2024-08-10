@@ -7,7 +7,7 @@ module Abilities
         merge Abilities::Common.new(user)
         dr_officer = user.deficiency_report_officer
 
-        can [:index, :show, :edit, :update_category], DeficiencyReport,
+        can [:index, :show, :edit, :update_category, :add_memo], DeficiencyReport,
           id: DeficiencyReport.where(officer: dr_officer).ids
 
         can [:update_official_answer], ::DeficiencyReport do |dr|

@@ -18,6 +18,9 @@ class DeficiencyReportManagement::BaseController < ApplicationController
     end
 
     def perform_authorization?
-      controller_name == "deficiency_reports" && current_user&.deficiency_report_officer?
+      return false unless current_user&.deficiency_report_officer?
+
+      controllers = %w[deficiency_reports memos]
+      controller_name.in? controllers
     end
 end

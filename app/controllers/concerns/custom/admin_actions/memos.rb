@@ -9,14 +9,18 @@ module AdminActions::Memos
   end
 
   def create
-    @memo = @memoable.memos.create!(memo_params.merge(user: current_user))
+    @memo = @memoable.memos.new(memo_params.merge(user: current_user))
+    authorize! :add_memo, @memo.root_memoable
+
+    @memo.save!
+
     render "admin/memos/create"
   end
 
   private
 
     def memo_params
-      params.require(:memo).permit(:text, :memoable_id, :memoable_type)
+      params.require(:memo).permit(:text, :memoable_id, :memoable_type, :parent_id)
     end
 
     def set_memoable

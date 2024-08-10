@@ -128,6 +128,8 @@ class MapLocation < ApplicationRecord
   end
 
   def audit_changes?
+    return false unless deficiency_report.present?
+
     deficiency_report.previous_changes.any? { |k, _v| k.in?(%w(shape latitude longitude)) }
   end
 end

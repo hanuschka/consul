@@ -165,6 +165,7 @@ namespace :admin do
   resources :debates, only: [:index, :show, :update]
 
   resources :proposals, only: [:index, :show, :update] do
+    collection { get :comments }
     member { patch :toggle_selection }
     resources :milestones, controller: "proposal_milestones"
     resources :progress_bars, except: :show, controller: "proposal_progress_bars"

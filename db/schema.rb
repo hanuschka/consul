@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_09_065254) do
+ActiveRecord::Schema.define(version: 2024_08_10_071843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1358,6 +1358,8 @@ ActiveRecord::Schema.define(version: 2024_08_09_065254) do
     t.datetime "hidden_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "ancestry"
+    t.index ["ancestry"], name: "index_memos_on_ancestry"
     t.index ["hidden_at"], name: "index_memos_on_hidden_at"
     t.index ["memoable_id", "memoable_type"], name: "index_memos_on_memoable_id_and_memoable_type"
     t.index ["memoable_type", "memoable_id"], name: "index_memos_on_memoable"

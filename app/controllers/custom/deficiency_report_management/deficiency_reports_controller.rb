@@ -8,6 +8,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   load_and_authorize_resource
 
   def index
+    filter_assigned_reports_only
     @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
     @deficiency_reports = @deficiency_reports.order(id: :desc)
 
@@ -86,6 +87,13 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
       params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
+    end
+
+    def filter_assigned_reports_only
+      return if current_user.administrator? || current_user.deficiency_report_manager?
+      raise CanCan::AccessDenied unless current_user.deficiency_report_officer?
+
+      @deficiency_reports = @deficiency_reports.where(deficiency_report_officer_id: current_user.deficiency_report_officer.id)
     end
 
     def notify_new_officer(dr)

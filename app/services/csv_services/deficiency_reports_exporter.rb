@@ -30,7 +30,7 @@ module CsvServices
       def row(dr)
         [
           dr.id, dr.admin_accepted, dr.title, dr.author.username,
-          dr.status&.title, dr.map_location&.approximated_address, dr.category&.name, dr.admin_accepted,
+          dr.status&.title, dr.map_location&.approximated_address, dr.category&.name, dr.officer&.user&.username,
           dr.video_url, dr.on_behalf_of,
           I18n.l(dr.created_at, format: "%d.%m.%Y")
         ]

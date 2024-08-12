@@ -1,22 +1,25 @@
 <div class="frame-phase-edit-navigation">
-  <% unless @hide_prev_next %>
-    <%= link_to "Abbrechen", cancel_url, class: "button" %>
-    <div>
-      <div style="display:flex" class="frame-phase-navigate-settings">
-        <%= link_to("Zurück", previous_page_url, class: "button") %>
+  <div class="frame-phase-navigate-settings">
+    <% if @projekt_phase.present? %>
+      <%= link_to @projekt_phase.projekt.frame_url, class: "square-back-button" do %>
+        <i class="fas fa-chevron-left"></i>
+      <% end %>
+    <% end %>
 
-        <% if @use_link_for_next.present? %>
-          <a href="<%= next_page_url %>" class="button">
-            Weiter
-          </a>
-        <% else %>
-          <button name="test" value="redirect_url" type="submit" form="phase-edit-form" class="button">
-            Weiter
-          </button>
-        <% end %>
+    <div class='arrow-controls'>
+      <%= link_to(previous_page_url, id: "left-arrow-control", class: "js-left-arrow-control") do %>
+        <i class="fas fa-chevron-circle-left"></i>
+      <% end %>
+      <%= link_to(next_page_url, id: "right-arrow-control", class: "js-left-arrow-control") do %>
+        <i class="fas fa-chevron-circle-right"></i>
+      <% end %>
     </div>
+  </div>
+  <% if @show_title %>
+    <% if @projekt_phase.present? %>
+      <h1 class="admin-projekt-phase-title">
+        <%= @projekt_phase.title %>
+      </h1>
+    <% end %>
   <% end %>
-
-    <%= link_to "Projektphase sofort hinzufügen", projekt_url %>
-    </div>
 </div>

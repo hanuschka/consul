@@ -367,7 +367,7 @@ li.projekt-navigator[aria-expanded="false"] {
   display: none;
   margin-bottom: 10px;
 
-  button {
+  button, a {
     i {
       color: $brand;
     }

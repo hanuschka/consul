@@ -43,11 +43,10 @@ module ProjektPhaseAdminActions
     authorize!(:create, @projekt_phase)
 
     if @projekt_phase.update(projekt_phase_params)
-      next_action = next_action_for_phase(@projekt_phase, params[:action_name])
 
-      if next_action.present?
+      if params[:action_name].present?
         redirect_to(
-          namespace_projekt_phase_path(action: next_action),
+          namespace_projekt_phase_path(action: params[:action_name]),
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
       elsif embedded?

@@ -97,6 +97,8 @@ button {
 
     &.hollow {
       background-color: transparent;
+      border: 1px solid $brand;
+      color: $brand;
 
       &:hover  {
         background: rgba($brand, 0.1);
@@ -195,3 +197,13 @@ button {
   }
 }
 
+.square-back-button {
+  border-radius: 5px;
+  background-color: $brand;
+  color: white;
+
+  &:hover {
+    text-decoration: none;
+    color: white;
+  }
+}

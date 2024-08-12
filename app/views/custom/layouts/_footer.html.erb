@@ -29,6 +29,7 @@
         <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy") %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions") %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to "Barriere melden", "https://www.gelsenkirchen.de/de/_funktionsnavigation/Barriere_melden.aspx?barriere=https%3A%2F%2Fwww.gelsenkirchen.de%2Fde%2Fdefault.aspx", target: "_blank" %>&nbsp;|</li>
         <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %>&nbsp;|</li>
         <% if SiteCustomization::Page.find_by(slug: "netiquette", status: "published") %>
           <li class="inline-block"><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette") %>&nbsp;|</li>

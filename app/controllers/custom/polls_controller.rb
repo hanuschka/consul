@@ -66,6 +66,7 @@ class PollsController < ApplicationController
   end
 
   def show
+    @projekt_phase = @poll.projekt_phase
     @questions = @poll.questions.for_render.root_questions.sort_for_list
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 
@@ -95,6 +96,7 @@ class PollsController < ApplicationController
 
   def stats
     @stats = Poll::Stats.new(@poll)
+    @projekt_phase = @poll.projekt_phase
 
     if Setting.new_design_enabled?
       render :stats_new
@@ -104,6 +106,8 @@ class PollsController < ApplicationController
   end
 
   def results
+    @projekt_phase = @poll.projekt_phase
+
     if Setting.new_design_enabled?
       render :results_new
     else

@@ -36,6 +36,7 @@ class ProjektPhase < ApplicationRecord
   translates :labels_name, touch: true
   translates :sentiments_name, touch: true
   translates :resource_form_title_hint, touch: true
+  translates :description, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true

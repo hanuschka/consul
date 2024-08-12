@@ -35,11 +35,7 @@
           <% end %>
         <% end %>
 
-        <% if @poll.summary.present? || @poll.description.present? %>
-          <div class="resource-page--description new-card main-content-card">
-            <%= render "poll_header" %>
-          </div>
-        <% end %>
+        <%= render "poll_header", projekt_phase: @projekt_phase %>
 
         <%= render "callout" %>
 

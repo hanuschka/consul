@@ -6,6 +6,11 @@ def deploysecret(key)
   @deploy_secrets_yml.fetch(key.to_s, "undefined")
 end
 
+set :default_env, {
+  http_proxy:  ENV["phttp"],
+  https_proxy: ENV["phttps"]
+}
+
 set :rails_env, fetch(:stage)
 set :rvm1_map_bins, -> { fetch(:rvm_map_bins).to_a.concat(%w[rake gem bundle ruby]).uniq }
 

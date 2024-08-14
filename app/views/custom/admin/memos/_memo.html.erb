@@ -19,14 +19,12 @@
       <%= simple_format sanitize_and_auto_link(memo.text), {}, sanitize: false %>
     </div>
 
-    <div class="memo-controls">
-      <% if memo.user == current_user %>
-        <%= link_to "Löschen", polymorphic_path([namespace.to_sym, memo]), method: :delete, remote: true, class: "delete-comment", data: { confirm: "Sind Sie sicher?" } %>
-        <span aria-live="off">&nbsp;&bull;&nbsp;</span>
-      <% end %>
-      <%= link_to "Antworten", "#", onClick: "$(this).next().toggle(); return false;" %>
-      <%= render "admin/memos/form", memoable: memo %>
-    </div>
+    <% if can?(:add_memo, memo.root_memoable) %>
+      <div class="memo-controls">
+        <%= link_to "Antworten", "#", onClick: "$(this).next().toggle(); return false;" %>
+        <%= render "admin/memos/form", memoable: memo %>
+      </div>
+    <% end %>
   </div>
 
   <%= render "admin/memos/memos_tree", memos: memo.children, memoable: memo %>

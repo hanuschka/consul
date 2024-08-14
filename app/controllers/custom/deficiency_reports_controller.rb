@@ -131,6 +131,7 @@ class DeficiencyReportsController < ApplicationController
   def deficiency_report_params
     attributes = [:video_url, :on_behalf_of,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
+                  :deficiency_report_category_id,
                   :deficiency_report_area_id,
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,

@@ -69,6 +69,12 @@ class ProjektPhase < ApplicationRecord
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
+  enum user_status: {
+    guest: 0,
+    registered: 1,
+    verified: 2
+  }
+
   validates :projekt, presence: true
 
   default_scope { order(:given_order, :id) }

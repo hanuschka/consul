@@ -480,7 +480,6 @@ de:
           page_title: Benennungen
         restrictions:
           page_title: Einschränkungen
-          guest_participation_allowed: Gastteilnahme erlaubt
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
@@ -498,10 +497,11 @@ de:
             only_streets: Nur Bürger:innen aus Straße
           individual_group_values:
             title: Einschränkung auf Gruppen
-          verification:
-            title: Verifizierung
-            no_restriction: Alle Nutzer*innen
-            only_verified: Nur verifizierte Nutzer*innen
+          user_status:
+            title: Nutzerstatus
+            guest: Gastnutzer
+            registered: Registrierte Nutzer
+            verified: Verifizierte Nutzer
         settings:
           block_title:
             general: Funktionen

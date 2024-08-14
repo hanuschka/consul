@@ -9,7 +9,7 @@
                          label: t("custom.admin.projekt_phases.restrictions.extended_geo_restrictions.no_restriction"),
                          class: "projekt-phase-restriction-option projekt-phase-geo-restriction",
                          checked: (@projekt_phase.registered_address_grouping_restriction.blank? || @projekt_phase.registered_address_grouping_restriction == "no_restriction"),
-                         disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
+                         disabled: skip_user_verification? %>
     </div>
 
     <% @registered_address_groupings.each do |grouping| %>
@@ -17,14 +17,14 @@
         <%= f.radio_button :registered_address_grouping_restriction, grouping.key,
                            label: "#{grouping.name} (#{grouping.key})",
                            class: "projekt-phase-restriction-option projekt-phase-geo-restriction",
-                           disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
+                           disabled: skip_user_verification? %>
 
         <div class="projekt-phase-geo-restriction-selector">
           <%= f.fields_for :registered_address_grouping_restrictions do |ff| %>
             <%= ff.collection_check_boxes grouping.key, grouping.restriction_options, :to_s, :to_s do |b| %>
               <%= b.label { b.check_box(
                 checked: b.text.in?(@projekt_phase.registered_address_grouping_restrictions[grouping.key] || []),
-                disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed?
+                disabled: skip_user_verification?
               ) + b.text } %>
             <% end %>
           <% end %>

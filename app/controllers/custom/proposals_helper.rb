@@ -37,7 +37,7 @@ module ProposalsHelper
       sentiment["color"] = helpers.pick_text_color(proposal.sentiment.color)
     end
 
-    image_url = proposal.image.present? ? url_for(proposal.image.attachment.variant(resize_to_fill: [250, 180], saver: { strip: true, interlace: "JPEG", quality: 90 })) : nil
+    image_url = proposal.image.present? ? url_for(proposal.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
 
     data = {
       proposal_id: proposal.id,

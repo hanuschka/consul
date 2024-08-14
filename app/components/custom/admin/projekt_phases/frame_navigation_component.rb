@@ -1,9 +1,8 @@
 class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
-  def initialize(projekt_phase: nil, hide_prev_next: false, use_link_for_next: false, projekt: nil)
+  def initialize(projekt_phase: nil, projekt: nil, show_title: false)
     @projekt_phase = projekt_phase
-    @use_link_for_next = use_link_for_next
     @projekt = projekt
-    @hide_prev_next = hide_prev_next
+    @show_title = show_title
   end
 
   def next_page_url

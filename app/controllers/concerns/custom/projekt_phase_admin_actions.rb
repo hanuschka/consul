@@ -43,11 +43,10 @@ module ProjektPhaseAdminActions
     authorize!(:create, @projekt_phase)
 
     if @projekt_phase.update(projekt_phase_params)
-      next_action = next_action_for_phase(@projekt_phase, params[:action_name])
 
-      if next_action.present?
+      if params[:action_name].present?
         redirect_to(
-          namespace_projekt_phase_path(action: next_action),
+          namespace_projekt_phase_path(action: params[:action_name]),
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
       elsif embedded?
@@ -113,11 +112,45 @@ module ProjektPhaseAdminActions
   def settings
     authorize!(:settings, @projekt_phase)
 
-    all_settings = @projekt_phase.settings.group_by(&:kind)
-    @projekt_phase_features = all_settings["feature"]&.group_by(&:band) || []
-    @projekt_phase_options = all_settings["option"]&.group_by(&:band) || []
+    if params[:category].present?
+      projekt_phase_features, projekt_phase_options =
+        get_all_settings_for_phase_and_category(
+          @projekt_phase, params[:category]
+        )
+      @projekt_phase_features = { params[:category] => projekt_phase_features }
+      @projekt_phase_options = { params[:category] => projekt_phase_options }
+    else
+      projekt_phase_features, projekt_phase_options =
+        get_all_settings_for_phase_and_category(
+          @projekt_phase, :base
+        )
+
+      @projekt_phase_features = projekt_phase_features&.group_by(&:band) || []
+      @projekt_phase_options = projekt_phase_options&.group_by(&:band) || []
+    end
 
     render "custom/admin/projekt_phases/settings"
+  end
+
+  def get_all_settings_for_phase_and_category(projekt_phase, category)
+    proposal_setting_key_ordered = ProjektPhaseSetting.defaults[projekt_phase.class.name][category.to_sym].keys
+
+    projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
+      result[item.key] = item
+    end
+
+    setting_ordered = []
+    proposal_setting_key_ordered.each do |setting_key|
+      setting = projekt_phase_settings_by_key[setting_key.to_s]
+      setting_ordered.push(setting)
+    end
+
+    all_settings = setting_ordered.group_by(&:kind)
+
+    projekt_phase_features = all_settings["feature"]
+    projekt_phase_options = all_settings["option"]
+
+    [projekt_phase_features, projekt_phase_options]
   end
 
   def projekt_labels
@@ -328,7 +361,7 @@ module ProjektPhaseAdminActions
       possible_nab_bar_actions = @projekt_phase.projekt.projekt_phases.map(&:admin_nav_bar_items).flatten.uniq
       return unless action_name.in?(possible_nab_bar_actions)
 
-      unless action_name.in?(@projekt_phase.admin_nav_bar_items)
+      unless action_name.in?(@projekt_phase.admin_nav_bar_items) || action_name == "settings"
         redirect_to namespace_projekt_phase_path(action: @projekt_phase.admin_nav_bar_items.first)
       end
     end
@@ -336,6 +369,6 @@ module ProjektPhaseAdminActions
     # path helpers
 
     def namespace_projekt_phase_path(action: "update", url_params: {})
-      url_for(controller: params[:controller], action: action, only_path: true, params: url_params)
+      url_for(controller: params[:controller], action: action, params: url_params, only_path: true)
     end
 end

@@ -5,6 +5,7 @@ module EmbeddedAuth
     before_action :set_iframe_content_security_policy
     helper_method :embedded? #, :frame_temp_token_valid?
     helper_method :frame_access_code_valid? #, :frame_temp_token_valid?
+    helper_method :embedded_and_frame_access_code_valid?
     skip_forgery_protection if: :frame_session_from_authorized_source?
   end
 
@@ -24,6 +25,10 @@ module EmbeddedAuth
       params[:frame_code] = projekt.frame_access_code
     end
 
+    def embedded_and_frame_access_code_valid?(projekt)
+      embedded? && frame_access_code_valid?(projekt)
+    end
+
     def frame_session_from_authorized_source?
       Current.frame_session_from_authorized_source && Current.frame_current_user.present?
     end
@@ -37,9 +42,7 @@ module EmbeddedAuth
       user = User.find(frame_session["user_id"])
 
       frame_session_from_authorized_source =
-        origin_allowed? &&
-          Current.frame_csrf_token.present? &&
-          Current.frame_csrf_token == params[:frame_csrf_token]
+        origin_allowed? && frame_csrf_token_valid?
 
       Current.frame_session_from_authorized_source = frame_session_from_authorized_source
 
@@ -74,7 +77,7 @@ module EmbeddedAuth
         same_site: :none,
         secure: true,
         httponly: true,
-        expires: 1.hour
+        expires: 5.hour
       }
 
       Current.new_frame_csrf_token = active_frame_csrf_token
@@ -128,6 +131,15 @@ module EmbeddedAuth
       (Rails.application.secrets.server_name || request.host) == url_domain
     # rescue URI::InvalidURIError
     #   return false
+    end
+
+    def frame_csrf_token_valid?
+      if Rails.env.development? && ENV["TURN_ON_DEV_FRAME_CSRF_PROTECTION"] != "true"
+        return true
+      end
+
+      Current.frame_csrf_token.present? &&
+        Current.frame_csrf_token == params[:frame_csrf_token]
     end
 
     # def frame_temp_token_valid?

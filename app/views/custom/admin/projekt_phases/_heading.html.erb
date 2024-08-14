@@ -1,22 +1,18 @@
 <div class="row">
   <div class="column">
-    <% if embedded? %>
-      <% if current_user.administrator? %>
-        <% back_url = admin_frame_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
-      <% else %>
-        <% back_url = admin_frame_phase_restrictons_path(projekt_id: @projekt_phase.projekt.id) %>
-      <% end %>
-    <% else %>
+    <% unless embedded? %>
       <% back_url = polymorphic_path([@namespace, @projekt_phase.projekt], action: :edit, anchor: "tab-projekt-phases") %>
+      <%= back_link_to back_url %>
     <% end %>
-    <%= back_link_to back_url %>
   </div>
 </div>
 
-<div class="row">
-  <div class="column">
-    <h1>
-      <%= @projekt_phase.title %>
-    </h1>
+<% unless embedded? %>
+  <div class="row">
+    <div class="column">
+      <h1 class="admin-projekt-phase-title">
+        <%= @projekt_phase.title %>
+      </h1>
+    </div>
   </div>
-</div>
+<% end %>

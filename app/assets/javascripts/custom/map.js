@@ -108,7 +108,7 @@
           id = shape.feature.deficiency_report_id
         } else if (process == "projekts") {
           id = shape.feature.projekt_id
-        } else {
+        } else if (process == "budgets"){
           id = shape.feature.investment_id
         }
 
@@ -201,9 +201,11 @@
           route = "/deficiency_reports/" + e.target.options.id + "/json_data"
         } else if ( process == "projekts") {
           route = "/projekts/" + e.target.options.id + "/json_data"
-        } else {
+        } else if ( process == "budgets") {
           route = "/investments/" + e.target.options.id + "/json_data"
         }
+
+        if (!route) { return };
 
         marker = e.target;
         $.ajax(route, {
@@ -221,13 +223,13 @@
           return proposalPopupContent(data);
 
         } else if ( process == "deficiency-reports" ) {
-          return "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
+          return deficiencyReportPopupContent(data);
 
         } else if ( process == "projekts" ) {
           return projektPopupContent(data);
 
         } else {
-          return "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
+          return budgetsPopupContent(data);
         }
 
         function proposalPopupContent(data) {
@@ -235,9 +237,7 @@
           popupHtml += "<h6><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
 
           if (data.image_url) {
-            popupHtml += "<a href='/proposals/" + data.proposal_id + "'>"
             popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-            popupHtml += "</a>";
           }
 
           if (data.labels.length || Object.keys(data.sentiment).length) {
@@ -269,13 +269,35 @@
           return popupHtml;
         }
 
+        function deficiencyReportPopupContent(data) {
+          var popupHtml = "";
+          popupHtml += "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
+
+          if (data.image_url) {
+            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+          }
+
+          return popupHtml;
+        }
+
+        function budgetsPopupContent(data) {
+          var popupHtml = "";
+          popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
+
+          if (data.image_url) {
+            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+          }
+
+          return popupHtml;
+        }
+
         function projektPopupContent(data) {
           // return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
           var popupHtml = "";
           popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a></h5>"; //title
 
           if (data.image_url) {
-            popupHtml += "<a href='/projekts/" + data.projekt_id + "'><img class='resource-map-popup-image' src='" + data.image_url + "' ></a>"; //image
+            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' >"; //image
           }
 
           if (data.sdg_goals.length || data.tags.length ) {

@@ -452,6 +452,8 @@ de:
           projekt_arguments: Liste von Stimmen
           formular: Formular
           formular_answers: Posteingang & Follow-up E-Mails
+          form_author: Formular Autor
+          user_functions: Funktionen Nutzer
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -503,6 +505,8 @@ de:
             general: Funktionen
             form: Formularfelder
             resource: Individueller Beitrag
+            form_author: Formular Autor
+            user_functions: Funktionen Nutzer
         projekt_labels:
           name: Labels
           page_title: Labels

@@ -14,12 +14,8 @@
   overflow: hidden;
 
   img {
-    max-height: 850px;
-    max-width: 85vw;
-    /* background-image: image-url("custom/loading-spiner.svg"); */
-    /* background-repeat: no-repeat; */
-    /* background-position: center center; */
-    /* background-size: 35px 35px; */
+    max-height: 95vh;
+    max-width: 90vw;
   }
 }
 
@@ -39,8 +35,16 @@
   animation: lightboxLoader .8s infinite linear, spinnerFadeIn 1s both;
 }
 
+.glightbox-clean  {
+  .gclose {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+}
+
 .goverlay {
-  /* backdrop-filter: blur(15px); */
+  background-color: #000000e0;
 }
 
 .glightbox-open {

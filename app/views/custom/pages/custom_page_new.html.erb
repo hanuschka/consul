@@ -127,9 +127,11 @@
       <div class="projekt-footer flex-layout">
         <div class="full-width-column">
           <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase) %>
-          <div id="footer-content" class="js-projekt-footer-content">
-            <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
-          </div>
+          <% if @default_projekt_phase.present? %>
+            <div id="footer-content" class="js-projekt-footer-content">
+              <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

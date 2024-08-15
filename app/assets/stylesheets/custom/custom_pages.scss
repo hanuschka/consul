@@ -368,17 +368,19 @@ li.projekt-navigator[aria-expanded="false"] {
   margin-bottom: 10px;
 
   button, a {
-    i {
+    /* i { */
       color: $brand;
-    }
+    /* } */
 
     &:hover {
-      i {
+      /* i { */
         color: darken($brand, 3);
-      }
+      /* } */
     }
     &:active {
-      color: darken($brand, 5);
+      /* i { */
+        color: darken($brand, 5);
+      /* } */
     }
   }
 

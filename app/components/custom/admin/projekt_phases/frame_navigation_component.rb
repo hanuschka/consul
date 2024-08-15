@@ -8,10 +8,21 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
   def next_page_url
     return if @projekt_phase.nil?
 
-    next_action = helpers.next_action_for_phase(@projekt_phase, params[:action])
+    current_action = params[:category].presence || params[:action]
+    next_action = helpers.next_action_for_phase(@projekt_phase, current_action)
+
+    if @projekt_phase.settings_categories.include?(next_action)
+      original_action = next_action
+      next_action = "settings"
+    end
 
     if next_action.present?
-      url_for(action: next_action, action_name: next_action)
+      url_for(
+        action: next_action, action_name: next_action,
+        params: {
+          category: original_action
+        }
+      )
     else
       projekt_url
     end
@@ -20,12 +31,23 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
   def previous_page_url
     previous_action = nil
 
+    current_action = params[:category].presence || params[:action]
+
     if @projekt_phase.present?
-      previous_action = helpers.previous_action_for_phase(@projekt_phase, params[:action])
+      previous_action = helpers.previous_action_for_phase(@projekt_phase, current_action)
+    end
+
+    if @projekt_phase.settings_categories.include?(previous_action)
+      original_action = previous_action
+      previous_action = "settings"
     end
 
     if previous_action.present?
-      url_for(action: previous_action)
+      url_for(action: previous_action,
+        params: {
+          category: original_action
+        }
+      )
     else
       projekt_url
     end

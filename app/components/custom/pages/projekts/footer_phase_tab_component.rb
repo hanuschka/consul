@@ -14,7 +14,7 @@ class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
     def additional_classes
       base = ""
       base += " is-active" if phase.id == params[:projekt_phase_id]
-      base += " -activated" if phase.phase_activated?
+      base += " -deactivated" unless phase.phase_activated?
       base += " -default-phase" if @default_projekt_phase == phase
 
       base

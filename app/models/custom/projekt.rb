@@ -576,7 +576,7 @@ class Projekt < ApplicationRecord
       name: name,
       total_duration_start: total_duration_start,
       total_duration_end: total_duration_end,
-      frame_acess_code: frame_access_code,
+      frame_access_code: frame_access_code,
       preview_code: preview_code,
       show_map: feature?("show_map"),
       show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),

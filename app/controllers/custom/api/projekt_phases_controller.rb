@@ -18,16 +18,55 @@ class Api::ProjektPhasesController < Api::BaseController
     end
 
     if @projekt_phase.update!(projekt_phase_params)
-      render json: { projekt: @projekt.serialize, status: { message: "Projekt phase updated" }}
+      response_json = {}
+      if @projekt.present?
+        response_json[:projekt] = @projekt.serialize
+      end
+
+      render json: { **response_json, status: { message: "Projekt phase updated" }}
     else
       render json: { message: "Error updating projekt phase" }
     end
   end
 
+  def set_as_default
+    projekt = ProjektPhase.find(params[:id]).projekt
+
+    @default_footer_tab_setting = ProjektSetting.find_by(
+      projekt: projekt,
+      key: "projekt_custom_feature.default_footer_tab"
+    ).reload
+
+    # authorize!(:update_standard_phase, @default_footer_tab_setting)
+
+    if @default_footer_tab_setting.present?
+      value_to_set =
+        if params[:is_default] == "true"
+          params[:id]
+        else
+          nil
+        end
+
+      @default_footer_tab_setting.update!(value: value_to_set)
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def destroy
+    @projekt_phase = ProjektPhase.find(params[:id])
+
+    @projekt_phase.destroy!
+  end
+
   private
 
   def find_projekt
-    @projekt = Projekt.find(params[:projekt_id])
+    if params[:projekt_id].present?
+      @projekt = Projekt.find(params[:projekt_id])
+    end
   end
 
   def create_phase(projekt, phase_class_name)
@@ -35,13 +74,17 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def find_phase
-    phase_class_name = get_phase_class_name(params[:codename])
+    if params[:phase_id].present?
+      @projekt_phase = ProjektPhase.find(params[:phase_id])
+    elsif params[:phase_codename].present?
+      phase_class_name = get_phase_class_name(params[:phase_codename])
 
-    if ProjektPhase::PROJEKT_PHASES_TYPES.include?(phase_class_name)
-      @projekt_phase = ProjektPhase.find_or_initialize_by(
-        projekt_id: @projekt.id,
-        type: phase_class_name,
-      )
+      if ProjektPhase::PROJEKT_PHASES_TYPES.include?(phase_class_name)
+        @projekt_phase = ProjektPhase.find_or_initialize_by(
+          projekt_id: @projekt.id,
+          type: phase_class_name,
+        )
+      end
     end
   end
 
@@ -52,7 +95,7 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def projekt_phase_params
-    params.permit(
+    params.require(:projekt_phase).permit(
       :active,
       :start_date,
       :end_date,

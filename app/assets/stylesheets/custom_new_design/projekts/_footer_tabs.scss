@@ -7,6 +7,7 @@
     border: 1px solid #CFCECE;
     border-radius: 10px 10px 0px 0px;
     margin-right: 10px;
+    position: relative;
 
     &:hover {
       background-color: $brand-hover;
@@ -25,7 +26,8 @@
       background: $brand-lighter;
     }
 
-    a {
+    .projekt-footer-phase-link {
+      /* width: 270px; */
       width: 100% !important;
       height: 100%;
       padding-top: 17px;
@@ -36,6 +38,34 @@
     h4 {
       color: $brand;
       font-size: 24px;
+    }
+
+    .projekt-phase--actions {
+      opacity: 0;
+      backdrop-filter: blur(3px);
+      /* background-color: #ffffff8c; */
+      display: flex;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding-top: 3px;
+      padding-left: 19px;
+      padding-right: 12px;
+      padding-bottom: 8px;
+      transition: 50ms ease opacity;
+
+      .projekt-frame-js-action-button {
+        &:hover {
+          background-color: rgba($brand, 0.1);
+        }
+      }
+    }
+
+    &:hover {
+      .projekt-phase--actions {
+        opacity: 1;
+      }
     }
   }
 }

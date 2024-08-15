@@ -22,6 +22,8 @@ module EmbeddedAuth
     end
 
     def frame_access_code_valid?(projekt)
+      return false if params[:frame_code].blank?
+
       params[:frame_code] = projekt.frame_access_code
     end
 
@@ -77,7 +79,7 @@ module EmbeddedAuth
         same_site: :none,
         secure: true,
         httponly: true,
-        expires: 5.hour
+        expires: 5.hours
       }
 
       Current.new_frame_csrf_token = active_frame_csrf_token

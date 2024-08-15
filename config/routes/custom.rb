@@ -31,21 +31,25 @@ namespace :api do
     member do
       patch :import
     end
-    resources :projekt_phases, param: :codename, only: [:update] do
-      member do
-        patch :update
-      end
-    end
-
     patch "projekt_settings", to: "projekt_settings#update"
   end
+
+  resources :projekt_phases do
+    member do
+      patch :set_as_default
+    end
+
+    collection do
+      patch :update
+    end
+  end
+
   resources :images, only: [:create, :destroy]
 
   post "projekts/:id/content_blocks", to: "projekts#create_content_block"
   delete "projekts/:id/content_blocks/:content_block_id", to: "projekts#destroy_content_block"
   patch "projekts/:id/content_blocks/:content_block_id", to: "projekts#update_content_block"
   patch "projekts/:id/content_blocks/:content_block_id/update_position", to: "projekts#update_content_block_position"
-
 
   scope path: "settings" do
     patch "enable", to: "settings#enable"
@@ -55,5 +59,5 @@ end
 
 post "iframe_sessions", to: "iframe_sessions#create"
 
-get "/admin/projekts/:projekt_id/frame_phases_restrictions", to: "admin/projekt_phases#frame_phases_restrictions", as: :admin_frame_phase_restrictons
+# get "/admin/projekts/:projekt_id/frame_phases_restrictions", to: "admin/projekt_phases#frame_phases_restrictions", as: :admin_frame_phase_restrictons
 get "/admin/projekts/:projekt_id/frame_new_phase_selector", to: "admin/projekt_phases#frame_new_phase_selector", as: :admin_frame_new_phase_selector

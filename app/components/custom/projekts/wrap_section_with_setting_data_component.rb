@@ -7,7 +7,7 @@ class Projekts::WrapSectionWithSettingDataComponent < ViewComponent::Base
   end
 
   def disabled_class
-    return "-deactivated" if !@setting_active
+    @setting_active ? "" : "-deactivated"
   end
 
   def icon_class

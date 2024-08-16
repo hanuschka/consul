@@ -28,6 +28,13 @@ body.admin .tabs-title > a[aria-selected='true'],
   background: #e8e8e8;
 }
 
+.row.full-width {
+  max-width: 100%;
+
+  @media screen and (min-width: 40em) {
+    margin: 0 -0.9375rem;
+  }
+}
 
 main {
   margin-top: -25px;

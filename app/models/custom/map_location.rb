@@ -16,6 +16,8 @@ class MapLocation < ApplicationRecord
   #   self.fa_icon_class = get_fa_icon_class
   # end
 
+	reverse_geocoded_by :latitude, :longitude
+
   audited associated_with: :deficiency_report,
     only: %i[shape latitude longitude],
     if: :audit_changes?

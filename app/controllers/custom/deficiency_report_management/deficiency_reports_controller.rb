@@ -3,13 +3,13 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   include MapLocationAttributes
   include ImageAttributes
   include DocumentAttributes
-  include Search
+  include CustomSearch
 
   load_and_authorize_resource
 
   def index
     filter_assigned_reports_only
-    @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
+    @deficiency_reports = apply_filters(@deficiency_reports)
     @deficiency_reports = @deficiency_reports.order(id: :desc)
 
     unless params[:format] == "csv"

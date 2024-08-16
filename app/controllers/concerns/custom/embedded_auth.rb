@@ -6,7 +6,7 @@ module EmbeddedAuth
     helper_method :embedded? #, :frame_temp_token_valid?
     helper_method :frame_access_code_valid? #, :frame_temp_token_valid?
     helper_method :embedded_and_frame_access_code_valid?
-    skip_forgery_protection if: :frame_session_from_authorized_source?
+    skip_forgery_protection if: :frame_session_authentificated?
   end
 
   private
@@ -31,11 +31,17 @@ module EmbeddedAuth
       embedded? && frame_access_code_valid?(projekt)
     end
 
-    def frame_session_from_authorized_source?
-      return false if frame_session.nil?
+    def frame_session_authentificated?
+      @_frame_session_authentificated ||=
+        frame_session_from_authorized_source? &&
+          Current.frame_current_user.present?
+    end
 
-      @_frame_session_from_authorized_source =
-        origin_allowed? && frame_csrf_token_valid?(frame_session[:frame_csrf_token])
+    def frame_session_from_authorized_source?
+      @_frame_session_from_authorized_source ||=
+        frame_session.present? &&
+          # origin_allowed? &&
+          frame_csrf_token_valid?(frame_session[:frame_csrf_token])
     end
 
     def frame_session
@@ -52,9 +58,9 @@ module EmbeddedAuth
     def authentificate_frame_session_user!
       return unless embedded?
 
-      if !frame_session_from_authorized_source? && !request.get?
-        raise "Frame csrf token invalid/expired"
-      end
+      # if !frame_session_from_authorized_source? && !request.get?
+      #   raise "Frame csrf token invalid/expired"
+      # end
 
       if frame_session_from_authorized_source?
         user = User.find(frame_session["user_id"])

@@ -21,18 +21,24 @@ module CsvServices
       def headers
         [
           "ID", "Sichtbarkeit", "Title", "Autor",
-          "Status", "Standort", "Kategorie", "Sachbearbeiter*in",
+          "Status", "Standort", "Area",
+          "Kategorie",
+          "Sachbearbeiter*in", "Zugewiesen an",
           "Video URL", "Meldung im Namen von",
-          "Erstellt am"
+          "Erstellt am",
+          "Officielle Antwort genehmigt", "Officielle Antwort"
         ]
       end
 
       def row(dr)
         [
           dr.id, dr.admin_accepted, dr.title, dr.author.username,
-          dr.status&.title, dr.map_location&.approximated_address, dr.category&.name, dr.officer&.user&.username,
+          dr.status&.title, dr.map_location&.approximated_address, dr.area&.name,
+          dr.category&.name,
+          dr.officer&.user&.username, dr.assigned_at,
           dr.video_url, dr.on_behalf_of,
-          I18n.l(dr.created_at, format: "%d.%m.%Y")
+          dr.created_at,
+          dr.official_answer_approved, dr.official_answer
         ]
       end
   end

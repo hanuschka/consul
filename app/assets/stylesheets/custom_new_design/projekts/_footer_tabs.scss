@@ -23,8 +23,19 @@
       min-width: unset;
     }
 
+    $phase-tab-color: mix($main-background-color, $brand, 90%);
+
     &.is-active {
-      background: $brand-lighter;
+      /* background: $brand-lighter; */
+      background: $phase-tab-color;
+    }
+
+    &.ui-sortable-helper {
+      background: rgba($phase-tab-color, 0.7);
+
+      .projekt-phase--actions {
+        backdrop-filter: unset;
+      }
     }
 
     .projekt-footer-phase-link {
@@ -46,18 +57,21 @@
       backdrop-filter: blur(3px);
       /* background-color: #ffffff8c; */
       display: flex;
+      align-items: center;
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      padding-top: 3px;
+      padding-top: 2px;
       padding-left: 19px;
       padding-right: 12px;
-      padding-bottom: 8px;
+      padding-bottom: 3px;
       transition: 50ms ease opacity;
+      justify-content: space-between;
 
       .projekt-frame-js-action-button {
         &:hover {
+          cursor: pointer;
           background-color: rgba($brand, 0.1);
         }
       }

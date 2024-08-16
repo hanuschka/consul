@@ -20,7 +20,7 @@
             <i class="fas fa-plus"></i>
           </button>
         <% end %>
-        <ul id='filter-subnav' class='key-dates'>
+        <ul id='filter-subnav' class='key-dates js-phases-list'>
           <% projekt_phases.each do |projekt_phase| %>
             <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt_phase, @default_projekt_phase) %>
           <% end %>

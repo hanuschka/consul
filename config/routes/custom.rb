@@ -35,6 +35,9 @@ namespace :api do
   end
 
   resources :projekt_phases do
+    collection do
+      post :reorder
+    end
     member do
       patch :set_as_default
     end

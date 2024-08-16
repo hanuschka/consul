@@ -2,6 +2,7 @@
   id="filter-subnav-<%= phase.id %>"
   class="page-subnav-tab js-projekt-phase-tab projekt-footer-phase-tab  <%= additional_classes %>"
   data-projekt-phase-id="<%= phase.id %>"
+  data-record-id="<%= phase.id %>"
 >
   <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, phase),
     onclick: "$('#footer-content').addClass('show-loader');",
@@ -60,26 +61,32 @@
   <% end %>
   <% if helpers.embedded_and_frame_access_code_valid?(phase.projekt) %>
     <div class="projekt-phase--actions">
-      <button type="button" class="js-toggle-projekt-phase-visibility-button projekt-frame-js-action-button">
-        <i class="fas <%= phase.phase_activated? ? 'fa-eye-slash' : 'fa-eye' %>">
+      <div class="projekt-phase--actions-first-block d-flex">
+        <button type="button" class="js-toggle-projekt-phase-visibility-button projekt-frame-js-action-button">
+          <i class="fas <%= phase.phase_activated? ? 'fa-eye-slash' : 'fa-eye' %>">
+          </i>
+        </button>
+        <button type="button" class="js-toggle-projekt-phase-default projekt-frame-js-action-button">
+          <i class="fas <%= phase == @default_projekt_phase ? 'fa-gem' : 'fa-thumbtack' %>">
+          </i>
+        </button>
+        <button type="button" class="js-edit-text-projekt-content-block projekt-frame-js-action-button">
+          <i class="fas fa-envelope">
+          </i>
+        </button>
+        <button type="button" data-url="/projekt_phases/<%= phase.id %>/duration?embedded=true" class="js-frame-open-admin-page projekt-frame-js-action-button">
+          <i class="fas fa-edit">
+          </i>
+        </button>
+        <button type="button" class="js-delete-projekt-phase projekt-frame-js-action-button">
+          <i class="fas fa-trash-alt">
+          </i>
+        </button>
+      </div>
+      <div class="projekt-phase-move js-projekt-phase-move js-sortable-handle projekt-frame-js-action-button">
+        <i class="fas fa-up-down-left-right">
         </i>
-      </button>
-      <button type="button" class="js-toggle-projekt-phase-default projekt-frame-js-action-button">
-        <i class="fas <%= phase == @default_projekt_phase ? 'fa-gem' : 'fa-thumbtack' %>">
-        </i>
-      </button>
-      <button type="button" class="js-edit-text-projekt-content-block projekt-frame-js-action-button">
-        <i class="fas fa-envelope">
-        </i>
-      </button>
-      <button type="button" data-url="/projekt_phases/<%= phase.id %>/duration?embedded=true" class="js-frame-open-admin-page projekt-frame-js-action-button">
-        <i class="fas fa-edit">
-        </i>
-      </button>
-      <button type="button" class="js-delete-projekt-phase projekt-frame-js-action-button">
-        <i class="fas fa-trash-alt">
-        </i>
-      </button>
+      </div>
     </div>
   <% end %>
 </li>

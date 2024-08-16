@@ -7,7 +7,6 @@ module ProjektPhaseAdminActions
 
   included do
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
-    skip_forgery_protection if: :frame_session_from_authorized_source?
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
       :create, :order_phases, :frame_phases_restrictions,

@@ -16,6 +16,8 @@ module Abilities
       end
 
       can :manage, DeficiencyReport
+
+      can :get_coordinates_map_location, MapLocation
     end
   end
 end

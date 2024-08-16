@@ -33,6 +33,8 @@ module Abilities
         can [:update_officer], ::DeficiencyReport do |dr|
           Setting["deficiency_reports.admins_must_assign_officer"].present? ? dr.officer == dr_officer : true
         end
+
+        can :get_coordinates_map_location, MapLocation
       end
     end
   end

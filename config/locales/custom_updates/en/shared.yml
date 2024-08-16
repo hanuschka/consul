@@ -1,6 +1,7 @@
 en:
   custom:
     shared:
+      search: Search
       select: select
       required: mandatory field
       new_comments_component:

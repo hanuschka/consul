@@ -192,6 +192,8 @@ module Abilities
       can :read_stats, Budget::Investment do |investment|
         can? :read_stats, investment.budget
       end
+
+      can :get_coordinates_map_location, MapLocation
     end
   end
 end

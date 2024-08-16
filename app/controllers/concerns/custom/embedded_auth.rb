@@ -53,7 +53,7 @@ module EmbeddedAuth
       return unless embedded?
 
       if !frame_session_from_authorized_source? && !request.get?
-        raise "Frame access token invalid/expired"
+        raise "Frame csrf token invalid/expired"
       end
 
       if frame_session_from_authorized_source?
@@ -69,7 +69,7 @@ module EmbeddedAuth
       end
     end
 
-    def update_frame_session_data(user, gen_new_frame_csrf_token: true)
+    def update_frame_session_data(user, gen_new_frame_csrf_token: false)
       active_frame_csrf_token =
         if gen_new_frame_csrf_token
           SecureRandom.base64(32)

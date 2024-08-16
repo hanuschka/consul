@@ -39,6 +39,7 @@ namespace :api do
       post :reorder
     end
     member do
+      post :send_notifications
       patch :set_as_default
     end
 

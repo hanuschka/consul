@@ -69,6 +69,29 @@ class Api::ProjektPhasesController < Api::BaseController
     head :ok
   end
 
+  def send_notifications
+    projekt_phase = ProjektPhase.find(params[:id])
+    # authorize!(:send_notifications, projekt_phase)
+
+    case params[:resource_type]
+    # when "polls"
+    #   poll = Poll.find(params[:resource_id])
+    #   NotificationServices::NewPollNotifier.call(poll.id)
+    # when "projekt_livestreams"
+    #   projekt_livestream = ProjektLivestream.find_by(id: params[:resource_id])
+    #   # authorize!(:send_notifications, projekt_livestream)
+    #   NotificationServices::NewProjektLivestreamNotifier.call(projekt_livestream.id)
+    # when "projekt_events"
+    #   projekt_event = ProjektEvent.find(params[:resource_id])
+    #   # authorize!(:send_notifications, projekt_event)
+    #   NotificationServices::NewProjektEventNotifier.call(projekt_event.id)
+    when "projekt_arguments"
+      NotificationServices::ProjektArgumentsNotifier.call(projekt_phase.id)
+    when "projekt_questions"
+      NotificationServices::ProjektQuestionsNotifier.call(projekt_phase.id)
+    end
+  end
+
   private
 
   def find_projekt

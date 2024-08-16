@@ -20,6 +20,14 @@ class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
       base
     end
 
+    def resource_type
+      @phase.resources_name
+    end
+
+    def resource_id
+      ''
+    end
+
     def tab_title
       @phase.title
     end

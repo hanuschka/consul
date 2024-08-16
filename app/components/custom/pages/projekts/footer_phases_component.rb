@@ -10,7 +10,8 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
 
     def show_arrows?
       # projekt.projekt_phases.to_a.select(&:phase_activated?).size >= 4
-      projekt_phases.size >= 4
+      max_size = helpers.embedded? ? 3 : 4
+      projekt_phases.size >= max_size
     end
 
     def phase_name(phase)

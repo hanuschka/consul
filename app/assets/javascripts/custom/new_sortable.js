@@ -6,10 +6,10 @@
         scrollSpeed: 20,
         scrollSensitivity: 100,
         create: function(e) {
-          var handler = this.dataset.handler;
+          var handle = e.target.dataset.handle;
 
-          if (handler) {
-            $(e.target).sortable("option", "handle", handler);
+          if (handle) {
+            $(e.target).sortable("option", "handle", handle);
           }
         },
 

@@ -61,6 +61,14 @@ class Api::ProjektPhasesController < Api::BaseController
     @projekt_phase.destroy!
   end
 
+  def reorder
+    @projekt = Projekt.find(params[:projekt_id])
+    # authorize!(:order_phases, @projekt)
+
+    @projekt.projekt_phases.order_phases(params[:ordered_list])
+    head :ok
+  end
+
   private
 
   def find_projekt

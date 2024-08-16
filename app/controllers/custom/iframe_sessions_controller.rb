@@ -11,7 +11,7 @@ class IframeSessionsController < ActionController::Base
 
       update_frame_session_data(
         user,
-        gen_new_frame_csrf_token: frame_session.nil?
+        gen_new_frame_csrf_token: true
       )
     end
 

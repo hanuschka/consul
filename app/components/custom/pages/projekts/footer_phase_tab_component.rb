@@ -24,6 +24,10 @@ class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
       @phase.resources_name
     end
 
+    def show_send_notification_button?
+      [ProjektPhase::ArgumentPhase, ProjektPhase::QuestionPhase].include?(@phase.class)
+    end
+
     def resource_id
       ''
     end

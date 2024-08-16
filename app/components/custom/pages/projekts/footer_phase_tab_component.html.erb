@@ -70,15 +70,17 @@
           <i class="fas <%= phase == @default_projekt_phase ? 'fa-gem' : 'fa-thumbtack' %>">
           </i>
         </button>
-        <button
-          type="button"
-          class="js-send-notifications-for-projekt-phase projekt-frame-js-action-button"
-          data-resource-type="<%= resource_type %>"
-          data-resource-id="<%= resource_id %>"
-        >
-          <i class="fas fa-envelope">
-          </i>
-        </button>
+        <% if show_send_notification_button? %>
+          <button
+              type="button"
+              class="js-send-notifications-for-projekt-phase projekt-frame-js-action-button"
+              data-resource-type="<%= resource_type %>"
+              data-resource-id="<%= resource_id %>"
+              >
+              <i class="fas fa-envelope">
+              </i>
+          </button>
+        <% end %>
         <button type="button" data-url="/projekt_phases/<%= phase.id %>/duration?embedded=true" class="js-frame-open-admin-page projekt-frame-js-action-button">
           <i class="fas fa-edit">
           </i>

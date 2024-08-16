@@ -9,7 +9,7 @@
 <% if @deficiency_reports.any? %>
   <h3><%= page_entries_info @deficiency_reports %></h3>
 
-  <%= link_to t("custom.shared.download"), deficiency_report_management_deficiency_reports_path(format: :csv), class: "float-right small clear" %>
+  <%= link_to t("custom.shared.download"), deficiency_report_management_deficiency_reports_path(csv_params), class: "float-right small clear" %>
 
   <table>
     <thead>

@@ -31,8 +31,8 @@
 
     <div class="small-12 medium-4 columns">
       <div>
-        <%= label_tag :admin_accepted, t("custom.admin.deficiency_reports.index.admin_accepted") %>
-        <%= select_tag :admin_accepted,
+        <%= label_tag :approved, t("custom.admin.deficiency_reports.index.admin_accepted") %>
+        <%= select_tag :approved,
           options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
           prompt: t("custom.shared.select") %>
       </div>

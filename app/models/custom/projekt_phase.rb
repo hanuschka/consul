@@ -151,14 +151,14 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return :guest_not_logged_in if guest_participation_allowed? && !user
-    return if guest_participation_allowed?
+    return :guest_not_logged_in if user_status.guest? && !user
+    return if user_status.guest?
     return :not_logged_in if !user || user&.guest?
     return if admin_permission?(user, location: location)
     return :phase_not_active if not_active?
     return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
     return :phase_not_current if not_current?
-    return :not_verified if verification_restricted && !user.level_three_verified?
+    return :not_verified if user_status.verified? && !user.level_three_verified?
 
     if phase_specific_permission_problems(user, location).present?
       return phase_specific_permission_problems(user, location)

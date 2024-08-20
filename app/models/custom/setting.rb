@@ -47,7 +47,6 @@ class Setting < ApplicationRecord
         "feature.user.recommendations": false,
         # "feature.user.recommendations_on_debates": true,
         # "feature.user.recommendations_on_proposals": true,
-        "feature.user.skip_verification": "true",
         "feature.community": true,
         "feature.map": true,
         "feature.allow_attached_documents": true,

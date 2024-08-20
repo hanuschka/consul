@@ -11,7 +11,7 @@
 
         <%= f.collection_check_boxes :individual_group_value_ids, individual_group.individual_group_values, :id, :name do |cb| %>
           <%= cb.label(class: "checkbox-label checkbox-label--inline") do %>
-            <%= cb.check_box(disabled: skip_user_verification?) + cb.text %>
+            <%= cb.check_box + cb.text %>
           <% end %>
         <% end %>
       </div>

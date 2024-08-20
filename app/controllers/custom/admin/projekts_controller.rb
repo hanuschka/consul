@@ -8,8 +8,6 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt = Projekt.overview_page
 
     @projekts_settings = Setting.all.group_by(&:type)["projekts"]
-    skip_user_verification_setting = Setting.find_by(key: "feature.user.skip_verification")
-    @projekts_settings.push(skip_user_verification_setting)
 
     @projekts_overview_page_navigation_settings = Setting.all.select do |setting|
       setting.key.start_with?("extended_feature.projekts_overview_page_navigation")

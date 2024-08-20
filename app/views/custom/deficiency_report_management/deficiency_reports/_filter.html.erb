@@ -2,6 +2,20 @@
   <div class="row expanded full-width">
     <div class="small-12 medium-4 columns">
       <div>
+        <%= label_tag :search, t("custom.shared.search") %>
+        <%= text_field_tag :search, params[:search], autocomplete: "off" %>
+      </div>
+
+      <div>
+        <%= label_tag :date_min, t("shared.advanced_search.from") %>
+        <%= date_field_tag :date_min, params[:date_min], class: "datepicker", autocomplete: "off" %>
+        <%= label_tag :date_max, t("shared.advanced_search.to") %>
+        <%= date_field_tag :date_max, params[:date_max], class: "datepicker", autocomplete: "off" %>
+      </div>
+    </div>
+
+    <div class="small-12 medium-4 columns">
+      <div>
         <%= label_tag :status, t("custom.admin.deficiency_reports.index.status_title") %>
         <%= select_tag :status,
           options_for_select(
@@ -31,27 +45,11 @@
 
     <div class="small-12 medium-4 columns">
       <div>
-        <%= label_tag :admin_accepted, t("custom.admin.deficiency_reports.index.admin_accepted") %>
-        <%= select_tag :admin_accepted,
+        <%= label_tag :approved, t("custom.admin.deficiency_reports.index.admin_accepted") %>
+        <%= select_tag :approved,
           options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
           prompt: t("custom.shared.select") %>
       </div>
-
-      <div>
-        <%= label_tag :date_min, t("shared.advanced_search.from") %>
-        <%= date_field_tag :date_min, params[:date_min], class: "datepicker", autocomplete: "off" %>
-        <%= label_tag :date_max, t("shared.advanced_search.to") %>
-        <%= date_field_tag :date_max, params[:date_max], class: "datepicker", autocomplete: "off" %>
-      </div>
-    </div>
-
-    <div class="small-12 medium-4 columns">
-      <div>
-        <%= label_tag :search, t("custom.shared.search") %>
-        <%= text_field_tag :search, params[:search], autocomplete: "off" %>
-      </div>
-
-      <%= render Shared::CoordinatesSearchComponent.new %>
     </div>
   </div>
 

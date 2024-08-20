@@ -54,7 +54,7 @@ class MapLocation < ApplicationRecord
     })
   end
 
-  def approximated_address
+  def get_approximated_address
     return unless geocoder_data.present?
 
     locality = [
@@ -124,6 +124,7 @@ class MapLocation < ApplicationRecord
     return unless latitude.present? && longitude.present?
 
     update_column(:geocoder_data, Geocoder.search([latitude, longitude]).first&.data)
+    update_column(:approximated_address, get_approximated_address)
   rescue StandardError => e
     Sentry.capture_exception(e)
     update_column(:geocoder_data, {}) unless geocoder_data.present?

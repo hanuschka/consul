@@ -1,6 +1,7 @@
 module CsvServices
   class DeficiencyReportsExporter < ApplicationService
     require "csv"
+    include JsonExporter
 
     def initialize(deficiency_reports)
       @deficiency_reports = deficiency_reports
@@ -20,7 +21,8 @@ module CsvServices
 
       def headers
         [
-          "ID", "Sichtbarkeit", "Title", "Autor",
+          "ID", "Sichtbarkeit", "Autor",
+          "Titel", "Beschreibungstext",
           "Status", "Standort", "Area",
           "Kategorie",
           "Sachbearbeiter*in", "Zugewiesen an",
@@ -32,13 +34,14 @@ module CsvServices
 
       def row(dr)
         [
-          dr.id, dr.admin_accepted, dr.title, dr.author.username,
+          dr.id, dr.admin_accepted, dr.author.username,
+          dr.title, strip_tags(dr.description),
           dr.status&.title, dr.map_location&.approximated_address, dr.area&.name,
           dr.category&.name,
           dr.officer&.user&.username, dr.assigned_at,
           dr.video_url, dr.on_behalf_of,
           dr.created_at,
-          dr.official_answer_approved, dr.official_answer
+          dr.official_answer_approved, strip_tags(dr.official_answer)
         ]
       end
   end

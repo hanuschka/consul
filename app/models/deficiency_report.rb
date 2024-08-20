@@ -55,6 +55,21 @@ class DeficiencyReport < ApplicationRecord
   }
   scope :admin_accepted, -> { Setting["deficiency_reports.admin_acceptance_required"].present? ? where(admin_accepted: true) : all }
 
+  pg_search_scope :pg_search,
+    against: :on_behalf_of,
+    associated_against: {
+      translations: [:title, :description, :official_answer],
+      author: :username,
+      map_location: :approximated_address
+    },
+    using: {
+      trigram: {
+        threshold: 0.05
+      }
+    },
+    ignoring: :accents,
+    ranked_by: ":trigram"
+
   def audited_changes(**options)
     ch_attrs = {}
 
@@ -89,7 +104,6 @@ class DeficiencyReport < ApplicationRecord
 
   def searchable_translations_definitions
     { title       => "A",
-      summary     => "C",
       description => "D" }
   end
 

@@ -7,7 +7,6 @@ module ProjektPhaseAdminActions
 
   included do
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
-    skip_forgery_protection if: :frame_session_from_authorized_source?
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
       :create, :order_phases, :frame_phases_restrictions,
@@ -283,22 +282,24 @@ module ProjektPhaseAdminActions
   def frame_new_phase_selector
     @projekt = Projekt.find(params[:projekt_id])
 
+    authorize!(:edit, @projekt)
+
     render
   end
 
-  def frame_phases_restrictions
-    @projekt = Projekt.find(params[:projekt_id])
-    authorize!(:edit, @projekt)
-
-    render "custom/admin/projekt_phases/frame_phases_restrictions"
-  end
-
-  def frame_phase_edit
-    @projekt = Projekt.find(params[:projekt_id])
-    authorize!(:edit, @projekt)
-
-    render "custom/admin/projekt_phases/frame_phases_restrictions"
-  end
+  # def frame_phases_restrictions
+  #   @projekt = Projekt.find(params[:projekt_id])
+  #   authorize!(:edit, @projekt)
+  #
+  #   render "custom/admin/projekt_phases/frame_phases_restrictions"
+  # end
+  #
+  # def frame_phase_edit
+  #   @projekt = Projekt.find(params[:projekt_id])
+  #   authorize!(:edit, @projekt)
+  #
+  #   render "custom/admin/projekt_phases/frame_phases_restrictions"
+  # end
 
   private
 

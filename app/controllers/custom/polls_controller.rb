@@ -22,11 +22,13 @@ class PollsController < ApplicationController
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
-    @resources = Poll.where(show_on_index_page: true)
-      .created_by_admin
-      .not_budget
-      .send(@current_filter)
-      .includes(:geozones)
+    @resources =
+      Poll.where(show_on_index_page: true)
+        .search(@search_terms)
+        .created_by_admin
+        .not_budget
+        .send(@current_filter)
+        .includes(:geozones)
 
     related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)

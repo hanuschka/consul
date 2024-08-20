@@ -19,6 +19,7 @@
     input[type="text"] {
       height: 40px;
       margin-bottom: 0;
+      padding-right: 20px;
       border-radius: 10px;
       flex-grow: 1;
     }
@@ -87,7 +88,7 @@
       max-width: 320px;
       flex-grow: 1;
       width: 100%;
-      max-width: 298px;
+      max-width: 330px;
 
       label {
         flex-grow: 1;

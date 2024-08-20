@@ -45,7 +45,8 @@
   }
 }
 
-.frame-admin-layout .admin-content {
+.frame-admin-layout .admin-content,
+.frame-admin-layout .admin-frame-content-card {
   background-color: white;
   padding: 30px 35px;
   overflow: visible;
@@ -73,23 +74,6 @@
         border: 1px solid #d9d9d9;
       }
     }
-  }
-}
-
-.projekt-footer-phase-tab--add-new {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  min-width: 150px;
-  font-size: 40px !important;
-  color: #b4b4b4;
-
-  &:after {
-    display: none;
-  }
-
-  i {
-    /* color: #b4b4b4; */
   }
 }
 

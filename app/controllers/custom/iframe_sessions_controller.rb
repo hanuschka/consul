@@ -7,6 +7,8 @@ class IframeSessionsController < ActionController::Base
     user = User.find_by(frame_sign_in_token: params[:frame_sign_in_token])
 
     if user.present? && user.frame_sign_in_token_valid?
+      user.update_column(:frame_sign_in_token, nil)
+
       update_frame_session_data(
         user,
         gen_new_frame_csrf_token: true
@@ -20,7 +22,7 @@ class IframeSessionsController < ActionController::Base
       redirect_uri_params =
         URI.decode_www_form(redirect_uri.query || "")
 
-      redirect_uri_params << ["frame_csrf_token", Current.new_frame_csrf_token]
+      redirect_uri_params << ["frame_csrf_token", Current.active_frame_csrf_token]
 
       redirect_uri.query = URI.encode_www_form(redirect_uri_params)
 

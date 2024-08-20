@@ -368,17 +368,19 @@ li.projekt-navigator[aria-expanded="false"] {
   margin-bottom: 10px;
 
   button, a {
-    i {
+    /* i { */
       color: $brand;
-    }
+    /* } */
 
     &:hover {
-      i {
+      /* i { */
         color: darken($brand, 3);
-      }
+      /* } */
     }
     &:active {
-      color: darken($brand, 5);
+      /* i { */
+        color: darken($brand, 5);
+      /* } */
     }
   }
 
@@ -413,12 +415,8 @@ li.projekt-navigator[aria-expanded="false"] {
       display: none;
     }
 
-    .page-subnav-tab a {
-      width: 270px;
-    }
   }
 }
-
 
 // Phase subscriptions
 
@@ -427,29 +425,37 @@ li.projekt-navigator[aria-expanded="false"] {
 
   .page-subnav-tab {
     h4 {
-      margin-right: 85px;
+      margin-right: 30px;
 
-      @media screen and (min-width: 64em) {
-        margin-right: 30px;
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        margin-right: 85px;
       }
     }
 
     .phase-subscription {
       position: absolute;
-      top: 17px;
-      right: 45px;
+      top: 15px;
+      right: 5px;
 
       a {
-        width: 50px;
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
         display: flex;
+        padding: 10px;
+        border-radius: 50%;
         justify-content: center;
         align-items: center;
         color: $brand;
+
+        &:hover {
+          background-color: rgba($brand, 0.1);
+        }
       }
 
-      @media screen and (min-width: 64em) {
-        top: 5px;
-        right: 5px;
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        top: 17px;
+        right: 45px;
 
         a {
           width: auto !important;

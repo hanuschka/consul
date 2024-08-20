@@ -4,19 +4,17 @@
   <%= render "custom/admin/projekt_phases/nav_bar" %>
 <% end %>
 
-<div class="float-right">
-  <%= link_to t("custom.admin.projekt_phases.projekt_arguments.send_notifications_button"), polymorphic_path([@namespace, @projekt_phase, @projekt_argument], action: :send_notifications), method: :post, class: "button" %>
-</div>
-
 <div class="row">
-  <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.projekt_arguments.page_title") %></h2>
-  </div>
-</div>
-
-<div class="row">
-  <div class="column">
-    <%= render partial: "custom/admin/projekt_phases/projekt_arguments/form", locals: { projekt_argument: @projekt_argument } %>
+  <div class="d-flex">
+    <div class="column">
+      <h2><%= t("custom.admin.projekt_phases.projekt_arguments.page_title") %></h2>
+      <%= render partial: "custom/admin/projekt_phases/projekt_arguments/form", locals: { projekt_argument: @projekt_argument } %>
+    </div>
+    <div class="column">
+      <div class="float-right">
+        <%= link_to t("custom.admin.projekt_phases.projekt_arguments.send_notifications_button"), polymorphic_path([@namespace, @projekt_phase, @projekt_argument], action: :send_notifications), method: :post, class: "button" %>
+      </div>
+    </div>
   </div>
 </div>
 

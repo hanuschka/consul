@@ -16,13 +16,13 @@
 
       <div class='footer-phases-filter-subnav'>
         <% if helpers.embedded? %>
-          <button data-url="<%= admin_frame_new_phase_selector_url(projekt_id: @projekt.id) %>" class="page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-frame-open-page" title="Neue Phase hinzufügen">
+          <button data-url="/projekts/<%= @projekt.id %>/frame_new_phase_selector?embedded=true" class="page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-frame-open-admin-page" title="Neue Phase hinzufügen">
             <i class="fas fa-plus"></i>
           </button>
         <% end %>
-        <ul id='filter-subnav' class='key-dates'>
+        <ul id='filter-subnav' class='key-dates js-phases-list'>
           <% projekt_phases.each do |projekt_phase| %>
-            <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt_phase, default_phase_name) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt_phase, @default_projekt_phase) %>
           <% end %>
         </ul>
       </div>

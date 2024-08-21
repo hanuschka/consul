@@ -12,7 +12,7 @@ module Abilities
 
         can [:update_official_answer], ::DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
-            dr.officer == dr_officer && dr.official_answer_approved == false
+            false
           elsif Setting["deficiency_reports.admins_must_assign_officer"].present?
             dr.officer == dr_officer
           else
@@ -22,7 +22,7 @@ module Abilities
 
         can [:update_status], ::DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
-            dr.officer == dr_officer && dr.official_answer_approved == false
+            false
           elsif Setting["deficiency_reports.admins_must_assign_officer"].present?
             dr.officer == dr_officer
           else

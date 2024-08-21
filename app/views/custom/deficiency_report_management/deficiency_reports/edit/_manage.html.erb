@@ -39,10 +39,6 @@
     <% end %>
   <% end %>
 
-  <% if can? :approve_official_answer, deficiency_report %>
-    <%= f.check_box :official_answer_approved %>
-  <% end %>
-
   <div class="actions">
     <%= f.submit(class: "button", value: t("custom.deficiency_reports.form.edit.submit_button")) %>
   </div>

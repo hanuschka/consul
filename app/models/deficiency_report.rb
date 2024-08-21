@@ -18,7 +18,7 @@ class DeficiencyReport < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
 
-  audited only: %i[video_url on_behalf_of cached_votes_up cached_votes_down official_answer_approved
+  audited only: %i[video_url on_behalf_of cached_votes_up cached_votes_down
                    deficiency_report_area_id deficiency_report_status_id deficiency_report_officer_id deficiency_report_category_id]
   has_associated_audits
   translation_class.class_eval do
@@ -59,8 +59,7 @@ class DeficiencyReport < ApplicationRecord
     against: :on_behalf_of,
     associated_against: {
       translations: [:title, :description, :official_answer],
-      author: :username,
-      map_location: :approximated_address
+      author: :username
     },
     using: {
       trigram: {
@@ -70,22 +69,33 @@ class DeficiencyReport < ApplicationRecord
     ignoring: :accents,
     ranked_by: ":trigram"
 
+  pg_search_scope :address_search,
+    associated_against: {
+      map_location: :approximated_address
+    },
+    using: {
+      trigram: {
+        threshold: 0.08
+      }
+    },
+    ignoring: :accents
+
   def audited_changes(**options)
     ch_attrs = {}
 
     if super.has_key?("deficiency_report_status_id")
       old_status_title = DeficiencyReport::Status.find_by(id: deficiency_report_status_id_was)&.title
-      ch_attrs["deficiency_report_status_id"] = [old_status_title, status.title]
+      ch_attrs["deficiency_report_status_id"] = [old_status_title, status&.title]
     end
 
     if super.has_key?("deficiency_report_officer_id")
       old_officer_name = DeficiencyReport::Officer.find_by(id: deficiency_report_officer_id_was)&.name
-      ch_attrs["deficiency_report_officer_id"] = [old_officer_name, officer.name]
+      ch_attrs["deficiency_report_officer_id"] = [old_officer_name, officer&.name]
     end
 
     if super.has_key?("deficiency_report_category_id")
       old_category_name = DeficiencyReport::Category.find_by(id: deficiency_report_category_id_was)&.name
-      ch_attrs["deficiency_report_category_id"] = [old_category_name, category.name]
+      ch_attrs["deficiency_report_category_id"] = [old_category_name, category&.name]
     end
 
     super.merge!(ch_attrs)
@@ -113,14 +123,6 @@ class DeficiencyReport < ApplicationRecord
 
   def code
     "CONSUL-DF-#{created_at.strftime("%Y-%m")}-#{id}"
-  end
-
-  def can_be_published?
-    if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
-      official_answer.present? && official_answer_approved?
-    else
-      official_answer.present?
-    end
   end
 
   def total_votes

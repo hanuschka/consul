@@ -143,12 +143,7 @@ module Abilities
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
       can [:manage], ::DeficiencyReport::Area
-      can :manage, DeficiencyReport
-      can [:approve_official_answer], ::DeficiencyReport do |dr|
-        Setting['deficiency_reports.admins_must_approve_officer_answer'].present? &&
-          !dr.official_answer_approved? &&
-          dr.official_answer.present?
-      end
+      can [:manage], DeficiencyReport
 
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes], Poll::Question

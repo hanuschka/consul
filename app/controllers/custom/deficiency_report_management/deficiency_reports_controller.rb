@@ -82,7 +82,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
                     :deficiency_report_officer_id, :assigned_at,
                     :deficiency_report_status_id,
                     :notify_officer_about_new_comments, :notified_officer_about_new_comments_datetime,
-                    :official_answer_approved,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
@@ -124,10 +123,8 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     end
 
     def notify_administrators_about_official_answer_update(dr)
-      return unless dr.translations.any? { |tr| tr.official_answer_before_last_save != tr.official_answer }
+      return unless dr.translations.any? { |tr| tr.official_answer_was != tr.official_answer }
 
-      Administrator.all.find_each do |admin|
-        DeficiencyReportMailer.notify_administrators_about_answer_update(dr, admin.user).deliver_later
-      end
+      NotificationServices::DeficiencyReportOfficialAnswerUpdate.call(dr.id)
     end
 end

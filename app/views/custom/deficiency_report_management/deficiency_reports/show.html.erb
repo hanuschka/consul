@@ -6,6 +6,14 @@
 
 <hr>
 
-<% if can?(:administer, @deficiency_report) %>
-  <%= render "custom/deficiency_report_management/deficiency_reports/show/administer", deficiency_report: @deficiency_report %>
-<% end %>
+<div class="row expanded full-width">
+  <% if can?(:edit, @deficiency_report) %>
+    <div class="small-12 large-6 columns">
+      <%= render "custom/deficiency_report_management/deficiency_reports/show/administer", deficiency_report: @deficiency_report %>
+    </div>
+  <% end %>
+
+  <div class="small-12 large-6 columns">
+    <%= render "admin/memos/memos", memoable: @deficiency_report %>
+  </div>
+</div>

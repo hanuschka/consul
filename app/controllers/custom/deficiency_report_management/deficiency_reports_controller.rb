@@ -93,6 +93,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
     def filter_assigned_reports_only
       return if current_user.administrator? || current_user.deficiency_report_manager?
+      return unless Setting["deficiency_reports.admins_must_assign_officer"].present?
       raise CanCan::AccessDenied unless current_user.deficiency_report_officer?
 
       @deficiency_reports = @deficiency_reports.where(deficiency_report_officer_id: current_user.deficiency_report_officer.id)

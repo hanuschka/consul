@@ -55,19 +55,40 @@ class DeficiencyReport < ApplicationRecord
   }
   scope :admin_accepted, -> { Setting["deficiency_reports.admin_acceptance_required"].present? ? where(admin_accepted: true) : all }
 
+  pg_search_scope :pg_search,
+    against: :on_behalf_of,
+    associated_against: {
+      translations: [:title, :description, :official_answer],
+      author: :username,
+      map_location: :approximated_address
+    },
+    using: {
+      trigram: {
+        threshold: 0.05
+      }
+    },
+    ignoring: :accents,
+    ranked_by: ":trigram"
+
   def audited_changes(**options)
+    ch_attrs = {}
+
     if super.has_key?("deficiency_report_status_id")
       old_status_title = DeficiencyReport::Status.find_by(id: deficiency_report_status_id_was)&.title
-      super.merge!("deficiency_report_status_id" => [old_status_title, status.title])
-    elsif super.has_key?("deficiency_report_officer_id")
-      old_officer_name = DeficiencyReport::Officer.find_by(id: deficiency_report_officer_id_was)&.name
-      super.merge!("deficiency_report_officer_id" => [old_officer_name, officer.name])
-    elsif super.has_key?("deficiency_report_category_id")
-      old_category_name = DeficiencyReport::Category.find_by(id: deficiency_report_category_id_was)&.name
-      super.merge!("deficiency_report_category_id" => [old_category_name, category.name])
-    else
-      super
+      ch_attrs["deficiency_report_status_id"] = [old_status_title, status.title]
     end
+
+    if super.has_key?("deficiency_report_officer_id")
+      old_officer_name = DeficiencyReport::Officer.find_by(id: deficiency_report_officer_id_was)&.name
+      ch_attrs["deficiency_report_officer_id"] = [old_officer_name, officer.name]
+    end
+
+    if super.has_key?("deficiency_report_category_id")
+      old_category_name = DeficiencyReport::Category.find_by(id: deficiency_report_category_id_was)&.name
+      ch_attrs["deficiency_report_category_id"] = [old_category_name, category.name]
+    end
+
+    super.merge!(ch_attrs)
   end
 
   def self.search(terms)
@@ -83,7 +104,6 @@ class DeficiencyReport < ApplicationRecord
 
   def searchable_translations_definitions
     { title       => "A",
-      summary     => "C",
       description => "D" }
   end
 

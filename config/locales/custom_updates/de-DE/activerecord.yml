@@ -99,6 +99,7 @@ de:
       widget/card:
         card_category: Kategorie
       deficiency_report:
+        author: Autor
         deficiency_report_category_id: Kategorie
         deficiency_report_status_id: Status
         deficiency_report_officer_id: Sachbearbeiter*in
@@ -109,6 +110,7 @@ de:
         status: Status
         notify_officer_about_new_comments: Benachrichtigung für Sachbearbeiter*in
         official_answer_approved: Antwort freigeben
+        approximated_address: Addresse
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:

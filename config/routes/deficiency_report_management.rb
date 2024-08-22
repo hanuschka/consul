@@ -8,6 +8,7 @@ namespace :deficiency_report_management do
     resources :milestones, controller: "deficiency_report_milestones"
     resources :progress_bars, except: :show, controller: "deficiency_report_progress_bars"
     member do
+      get :audits
       patch :accept
       patch :toggle_image
     end

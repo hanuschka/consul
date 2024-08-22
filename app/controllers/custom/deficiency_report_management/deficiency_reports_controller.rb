@@ -59,6 +59,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.destroy.success_notice")
   end
 
+  def audits
+  end
+
   def accept
     enabled = ["1", "true"].include?(params[:deficiency_report][:admin_accepted])
     deficiency_report = DeficiencyReport.find(params[:deficiency_report][:id])

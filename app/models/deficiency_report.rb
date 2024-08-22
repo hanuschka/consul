@@ -34,6 +34,8 @@ class DeficiencyReport < ApplicationRecord
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
+  delegate :approximated_address, to: :map_location, allow_nil: true
+
   validates :deficiency_report_category_id, :author, presence: true
   validates :deficiency_report_area_id, presence: true, if: -> { validate_area_presence? }, on: :create
   validates :map_location, presence: true, on: :create

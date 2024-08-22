@@ -87,19 +87,19 @@ de:
           index:
             title: Funktionen
         show:
-          author: Autor
-          category: Kategorie
+          on_behalf_of: im Namen von
           created_at: Erstellt am
-          description: Bezeichnung
-          entry_name: Mangel
-          no_deficiency_reports: Keine Mängelmeldungen
-          officer_name: Sachbearbeiter*in
-          official_answer: Offizielle Antwort
-          status: Status
-          summary: Zusammenfassung
-          title: Mängel zuweisen
           updated_at: Aktualisiert am
-          video: Video
+          # category: Kategorie
+          # description: Bezeichnung
+          # entry_name: Mangel
+          # no_deficiency_reports: Keine Mängelmeldungen
+          # officer_name: Sachbearbeiter*in
+          # official_answer: Offizielle Antwort
+          # status: Status
+          # summary: Zusammenfassung
+          # title: Mängel zuweisen
+          # video: Video
         statuses:
           destroy:
             cannot_be_destroyed: Sie können diesen Status nicht löschen, da er mindestens einem Mangel zugewiesen ist.

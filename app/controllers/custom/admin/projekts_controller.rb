@@ -27,7 +27,7 @@ class Admin::ProjektsController < Admin::BaseController
     @map_configuration_settings = Setting.all.group_by(&:type)["map"]
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
 
-    @projekts = @projekts.page(params[:page]).per(5)
+    @projekts = @projekts.page(params[:page]).per(50)
   end
 
   def show

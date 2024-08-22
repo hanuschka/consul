@@ -111,6 +111,8 @@ de:
         notify_officer_about_new_comments: Benachrichtigung für Sachbearbeiter*in
         official_answer_approved: Antwort freigeben
         approximated_address: Addresse
+      deficiency_report/category:
+        default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:

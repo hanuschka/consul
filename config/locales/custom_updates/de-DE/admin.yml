@@ -55,6 +55,7 @@ de:
             icon: Icon
             name: Name
             warning_text: Popup
+            default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
           destroy:
             cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Mangel zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.

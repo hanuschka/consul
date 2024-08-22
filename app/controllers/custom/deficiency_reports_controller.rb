@@ -90,9 +90,11 @@ class DeficiencyReportsController < ApplicationController
     end
 
     @deficiency_report = DeficiencyReport.new(filtered_deficiency_report_params.merge(author: current_user, status: status))
+    @deficiency_report.officer = @deficiency_report.category.default_deficiency_report_officer
 
     if @deficiency_report.save
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
+      DeficiencyReportMailer.notify_officer(@deficiency_report).deliver_later
       redirect_to deficiency_report_path(@deficiency_report)
     else
       render :new

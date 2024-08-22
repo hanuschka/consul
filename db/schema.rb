@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_20_081145) do
+ActiveRecord::Schema.define(version: 2024_08_22_115744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -703,6 +703,8 @@ ActiveRecord::Schema.define(version: 2024_08_20_081145) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "warning_text", default: ""
+    t.bigint "deficiency_report_officer_id"
+    t.index ["deficiency_report_officer_id"], name: "index_dr_categories_on_dr_officer_id"
   end
 
   create_table "deficiency_report_category_translations", force: :cascade do |t|
@@ -2722,6 +2724,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_081145) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_categories", "deficiency_report_officers"
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_areas"

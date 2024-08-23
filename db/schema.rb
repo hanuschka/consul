@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_23_090849) do
+ActiveRecord::Schema.define(version: 2024_08_23_115048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -729,6 +729,13 @@ ActiveRecord::Schema.define(version: 2024_08_23_090849) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_deficiency_report_officers_on_user_id"
+  end
+
+  create_table "deficiency_report_official_answer_templates", force: :cascade do |t|
+    t.string "title"
+    t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_status_translations", force: :cascade do |t|

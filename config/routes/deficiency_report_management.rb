@@ -30,6 +30,8 @@ namespace :deficiency_report_management do
     end
   end
 
+  resources :official_answer_templates, except: :show
+
   resources :areas, except: :show do
     collection do
       post "order_areas"

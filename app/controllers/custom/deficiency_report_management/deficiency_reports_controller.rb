@@ -27,6 +27,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def show
     @deficiency_report = DeficiencyReport.find(params[:id])
+    @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
   end
 
   def edit

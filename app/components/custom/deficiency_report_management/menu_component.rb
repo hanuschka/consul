@@ -12,6 +12,7 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
       categories_link,
       statuses_link,
       settings_link,
+      official_answer_templates_link,
       areas_link
     ].compact
   end
@@ -65,6 +66,16 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
         t("custom.admin.menu.deficiency_reports.settings"),
         deficiency_report_management_settings_path,
         controller_name == "settings"
+      ]
+    end
+
+    def official_answer_templates_link
+      return unless can?(:index, DeficiencyReport::OfficialAnswerTemplate)
+
+      [
+        t("custom.admin.menu.deficiency_reports.official_answer_templates"),
+        deficiency_report_management_official_answer_templates_path,
+        controller_name == "official_answer_templates"
       ]
     end
 

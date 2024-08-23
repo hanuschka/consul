@@ -70,6 +70,17 @@ de:
             title: Kategorien
           new:
             creating: Neue Mangelkategorie erstellen
+        official_answer_templates:
+          index:
+            title: Offizielle Antwortvorlagen
+            button_new: Neue Vorlage erstellen
+          new:
+            title: Neue Vorlage erstellen
+          edit:
+            title: Vorlage bearbeiten
+          form:
+            text: Text
+            submit_button: Speichern
         deficiency_report:
           category: Kategorie
           officer: Sachbearbeiter*in
@@ -177,6 +188,7 @@ de:
           reports: Mängel zuweisen
           settings: Funktionen
           statuses: Status definieren
+          official_answer_templates: Offizielle Antwortvorlagen
           areas: Gebiete
         deficiency_reports_title: Mängelmelder
         projekts: Projekte

@@ -8,6 +8,7 @@ module Abilities
       can [:manage], ::DeficiencyReport::Officer
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
+      can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
       can [:manage], ::DeficiencyReport::Area
       can [:manage], DeficiencyReport
 

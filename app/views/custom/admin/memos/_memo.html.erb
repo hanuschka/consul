@@ -22,7 +22,12 @@
     <% if can?(:add_memo, memo.root_memoable) %>
       <div class="memo-controls">
         <%= link_to "Antworten", "#", onClick: "$(this).next().toggle(); return false;" %>
+        <%= " | " if can?(:send_notification, memo) %>
+        <%= link_to "Benachrichtigung senden", polymorphic_path([@namespace, memo], action: :send_notification), method: :post, remote: true if can?(:send_notification, memo) %>
         <%= render "admin/memos/form", memoable: memo %>
+        <% if memo.last_notification_sent_at.present? %>
+          <%= "(Letzte Benachrichtigung gesendet am #{l memo.last_notification_sent_at.to_datetime, format: :datetime})" %>
+        <% end %>
       </div>
     <% end %>
   </div>

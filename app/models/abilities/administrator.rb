@@ -189,6 +189,7 @@ module Abilities
       end
 
       can :get_coordinates_map_location, MapLocation
+      can :send_notification, Memo, user_id: user.id
     end
   end
 end

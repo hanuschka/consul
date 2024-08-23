@@ -94,7 +94,11 @@ namespace :admin do
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
 
-  resources :memos, only: %i[create]
+  resources :memos, only: %i[create] do
+    member do
+      post :send_notification
+    end
+  end
 
   # custom individual groups routes
   resources :individual_groups do

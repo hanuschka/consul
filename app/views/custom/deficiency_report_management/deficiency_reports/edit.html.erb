@@ -1,3 +1,5 @@
+<%= render "custom/deficiency_report_management/deficiency_reports/subnav", deficiency_report: @deficiency_report %>
+
 <div class="row expanded full-width">
   <div class="small-12 large-8 columns">
     <%= translatable_form_for @deficiency_report, url: deficiency_report_management_deficiency_report_path(@deficiency_report), html: { class: "deficiency-report-form" } do |f| %>

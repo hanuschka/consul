@@ -2,6 +2,8 @@
   <%= t("admin.header.title") %> - <%= t("admin.menu.proposals") %> - <%= @deficiency_report.title %>
 <% end %>
 
+<%= render "custom/deficiency_report_management/deficiency_reports/subnav", deficiency_report: @deficiency_report %>
+
 <%= render "custom/deficiency_report_management/deficiency_reports/show/basic_data", deficiency_report: @deficiency_report %>
 
 <hr>

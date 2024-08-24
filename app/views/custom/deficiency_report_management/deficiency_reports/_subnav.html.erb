@@ -1,0 +1,11 @@
+<% links = [
+  action_name == "show" ? content_tag(:span, "Administrieren") : link_to("Administrieren", polymorphic_path([@namespace, deficiency_report]), class: ""),
+  action_name == "edit" ? content_tag(:span, "Editieren") : link_to("Editieren", polymorphic_path([@namespace, deficiency_report], action: :edit), class: ""),
+  action_name == "audits" ? content_tag(:span, "Änderung Log") : link_to("Änderung Log", polymorphic_path([@namespace, deficiency_report], action: :audits), class: "")
+].join(" | ") %>
+
+<div class="row expanded full-width">
+  <div class="small-12 large-8 columns margin-bottom">
+    <%= links.html_safe %>
+  </div>
+</div>

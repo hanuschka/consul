@@ -42,6 +42,9 @@
   };
 
   document.addEventListener("turbolinks:load", function() {
+    if ($(".js-update-coordinates-selector").length === 0) {
+      return;
+    }
     App.CoordinatesSearchComponent.update_selector();
   });
 }).call(this);

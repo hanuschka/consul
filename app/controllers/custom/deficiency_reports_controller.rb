@@ -40,7 +40,6 @@ class DeficiencyReportsController < ApplicationController
     filter_by_categories if @selected_categories_ids.present?
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
-    filter_by_approval_status
     filter_by_my_posts
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
@@ -91,9 +90,11 @@ class DeficiencyReportsController < ApplicationController
     end
 
     @deficiency_report = DeficiencyReport.new(filtered_deficiency_report_params.merge(author: current_user, status: status))
+    @deficiency_report.officer = @deficiency_report.category.default_deficiency_report_officer
 
     if @deficiency_report.save
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
+      DeficiencyReportMailer.notify_officer(@deficiency_report).deliver_later
       redirect_to deficiency_report_path(@deficiency_report)
     else
       render :new
@@ -114,6 +115,32 @@ class DeficiencyReportsController < ApplicationController
   def suggest
     @limit = 5
     @resources = @search_terms.present? ? DeficiencyReport.admin_accepted.search(@search_terms) : nil
+  end
+
+  def notify_officer_about_new_comments
+    return unless @deficiency_report.officer.present?
+
+    enable = ["1", "true"].include?(deficiency_report_params[:notify_officer_about_new_comments])
+    datetime = enable ? Time.current : nil
+
+    if @deficiency_report.update!(
+      notify_officer_about_new_comments: deficiency_report_params[:notify_officer_about_new_comments],
+      notified_officer_about_new_comments_datetime: datetime
+    ) && enable && @deficiency_report.comments.any?
+      last_comment_date = @deficiency_report.comments.last.created_at
+      last_comment_date_expanded = last_comment_date - 5.minutes
+      new_comments = @deficiency_report.comments.created_after_date(last_comment_date_expanded)
+
+      if new_comments.any?
+        NotificationServiceMailer.new_comments_for_deficiency_report(
+          @deficiency_report,
+          last_comment_date_expanded,
+          initial: true
+        ).deliver_now
+      end
+    end
+
+    head :ok
   end
 
   private
@@ -160,16 +187,6 @@ class DeficiencyReportsController < ApplicationController
       @deficiency_reports = @deficiency_reports.joins(:officer).where(deficiency_report_officers: { user_id: current_user.id })
     else
       @deficiency_reports
-    end
-  end
-
-  def filter_by_approval_status
-    return if params[:approval_status].blank?
-
-    if params[:approval_status] == 'not_approved'
-      @deficiency_reports = @deficiency_reports.
-        where.not(official_answer: '').
-        where(official_answer_approved: false)
     end
   end
 

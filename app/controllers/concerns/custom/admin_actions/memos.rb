@@ -5,7 +5,7 @@ module AdminActions::Memos
     respond_to :js
 
     before_action :set_memoable, only: [:create]
-    before_action :set_memo, only: [:destroy]
+    before_action :set_memo, only: [:send_notification]
   end
 
   def create
@@ -15,6 +15,14 @@ module AdminActions::Memos
     @memo.save!
 
     render "admin/memos/create"
+  end
+
+  def send_notification
+    authorize! :send_notification, @memo
+
+    NotificationServices::MemoNotifier.call(@memo.id)
+    @memo.reload
+    render "admin/memos/send_notification"
   end
 
   private

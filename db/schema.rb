@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_20_081145) do
+ActiveRecord::Schema.define(version: 2024_08_23_115048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -703,6 +703,8 @@ ActiveRecord::Schema.define(version: 2024_08_20_081145) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "warning_text", default: ""
+    t.bigint "deficiency_report_officer_id"
+    t.index ["deficiency_report_officer_id"], name: "index_dr_categories_on_dr_officer_id"
   end
 
   create_table "deficiency_report_category_translations", force: :cascade do |t|
@@ -727,6 +729,13 @@ ActiveRecord::Schema.define(version: 2024_08_20_081145) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_deficiency_report_officers_on_user_id"
+  end
+
+  create_table "deficiency_report_official_answer_templates", force: :cascade do |t|
+    t.string "title"
+    t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_status_translations", force: :cascade do |t|
@@ -1369,6 +1378,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_081145) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "ancestry"
+    t.datetime "last_notification_sent_at"
     t.index ["ancestry"], name: "index_memos_on_ancestry"
     t.index ["hidden_at"], name: "index_memos_on_hidden_at"
     t.index ["memoable_id", "memoable_type"], name: "index_memos_on_memoable_id_and_memoable_type"
@@ -2722,6 +2732,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_081145) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_categories", "deficiency_report_officers"
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_areas"

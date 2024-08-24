@@ -28,7 +28,7 @@ module CsvServices
           "Sachbearbeiter*in", "Zugewiesen an",
           "Video URL", "Meldung im Namen von",
           "Erstellt am",
-          "Officielle Antwort genehmigt", "Officielle Antwort"
+          "Officielle Antwort"
         ]
       end
 
@@ -41,7 +41,7 @@ module CsvServices
           dr.officer&.user&.username, dr.assigned_at,
           dr.video_url, dr.on_behalf_of,
           dr.created_at,
-          dr.official_answer_approved, strip_tags(dr.official_answer)
+          strip_tags(dr.official_answer)
         ]
       end
   end

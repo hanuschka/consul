@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     member do
       get     :json_data
       post    :vote
+      patch   :notify_officer_about_new_comments
       put     :flag
       put     :unflag
     end

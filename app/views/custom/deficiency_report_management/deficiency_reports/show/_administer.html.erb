@@ -11,16 +11,6 @@
     { onchange: "$('#deficiency_report_assigned_at').val(new Date().toISOString());" } %>
   <%= f.hidden_field :assigned_at %>
 
-  <%= f.check_box :notify_officer_about_new_comments,
-    onchange: "
-      if(event.target.checked) {
-        $('#deficiency_report_notified_officer_about_new_comments_datetime').val(new Date().toISOString())
-      } else {
-        $('#deficiency_report_notified_officer_about_new_comments_datetime').val('')
-      }
-    " %>
-  <%= f.hidden_field :notified_officer_about_new_comments_datetime %>
-
   <%= f.select :deficiency_report_status_id, DeficiencyReport::Status.all.map { |df| [df.title, df.id] } %>
 
   <%= f.translatable_fields do |translations_form| %>

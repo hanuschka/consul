@@ -44,7 +44,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     if @deficiency_report.update(deficiency_report_params)
       notify_new_officer(@deficiency_report)
       notify_author_about_status_change(@deficiency_report)
-      notify_administrators_about_official_answer_update(@deficiency_report)
 
       redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.update.success_notice")
     else
@@ -108,11 +107,5 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
 
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
-    end
-
-    def notify_administrators_about_official_answer_update(dr)
-      return unless dr.translations.any? { |tr| tr.official_answer_was != tr.official_answer }
-
-      NotificationServices::DeficiencyReportOfficialAnswerUpdate.call(dr.id)
     end
 end

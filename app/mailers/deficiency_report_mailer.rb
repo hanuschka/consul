@@ -1,16 +1,6 @@
 class DeficiencyReportMailer < ApplicationMailer
   helper TextWithLinksHelper
 
-  def notify_administrators_about_answer_update(deficiency_report, admin_user)
-    @deficiency_report = deficiency_report
-    subject = t("custom.deficiency_reports.mailers.notify_administrators_about_answer_update.subject",
-                identifier: "#{deficiency_report.id}: #{deficiency_report.title.first(50)}")
-
-    with_user(admin_user) do
-      mail(to: admin_user.email, subject: subject)
-    end
-  end
-
   def notify_author_about_status_change(deficiency_report)
     @deficiency_report = deficiency_report
     subject = t("custom.deficiency_reports.mailers.notify_author_about_status_change.subject")

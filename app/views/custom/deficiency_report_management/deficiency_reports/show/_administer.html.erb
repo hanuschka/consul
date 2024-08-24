@@ -19,7 +19,7 @@
   <% end %>
 
   <% @official_answer_templates.each do |template| %>
-    <div class="margin-bottom" style="cursor:pointer;" onClick="for (var id in CKEDITOR.instances) CKEDITOR.instances[id].container.$.offsetParent !== null && CKEDITOR.instances[id].setData('<%= template.text %>');">
+    <div class="margin-bottom" style="cursor:pointer;border:1px solid #222;padding:3px;padding:5px;border-radius:7px;" onClick="for (var id in CKEDITOR.instances) CKEDITOR.instances[id].container.$.offsetParent !== null && CKEDITOR.instances[id].setData('<%= template.text %>');">
       <%= template.text %>
     </div>
   <% end %>

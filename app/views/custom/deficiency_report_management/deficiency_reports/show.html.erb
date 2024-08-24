@@ -8,12 +8,14 @@
 
 <div class="row expanded full-width">
   <% if can?(:edit, @deficiency_report) %>
-    <div class="small-12 large-6 columns">
+    <div class="small-12 large-8 columns margin-bottom">
       <%= render "custom/deficiency_report_management/deficiency_reports/show/administer", deficiency_report: @deficiency_report %>
     </div>
   <% end %>
+</div>
 
-  <div class="small-12 large-6 columns">
+<div class="row expanded full-width">
+  <div class="small-12 large-8 columns margin-bottom">
     <%= render "admin/memos/memos", memoable: @deficiency_report %>
   </div>
 </div>

@@ -160,6 +160,7 @@ class DeficiencyReportsController < ApplicationController
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
                   :deficiency_report_area_id,
+                  :notify_officer_about_new_comments,
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]

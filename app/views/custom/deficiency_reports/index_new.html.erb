@@ -95,14 +95,6 @@
       <% end %>
 
       <% if current_user &&
-          current_user.administrator? &&
-          Setting['deficiency_reports.admins_must_approve_officer_answer'].present? %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.deficiency_reports.index.sidebar.approval_status_filter.title"), icon_name: "user-cog") do |c| %>
-          <%= render "deficiency_reports/sidebar/not_approved_filter" %>
-        <% end %>
-      <% end %>
-
-      <% if current_user &&
           ( current_user.deficiency_report_officer? ||
           current_user.administrator? ) %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.deficiency_reports.index.sidebar.officer_filter.title"), icon_name: "highlighter") do |c| %>

@@ -1,6 +1,7 @@
 de:
   custom:
     shared:
+      search: Suchen
       select: Wählen
       required: Pflichtfeld
       new_comments_component:

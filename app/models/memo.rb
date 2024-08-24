@@ -12,7 +12,7 @@ class Memo < ApplicationRecord
   validates :memoable, presence: true
   validates :user, presence: true
 
-  alias_attribute :children, :memos
+  alias_attribute :author, :user
 
   def root_memoable
     root.memoable

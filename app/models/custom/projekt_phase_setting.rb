@@ -84,7 +84,6 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::VotingPhase" => {
           base: {
             "feature.resource.intermediate_poll_results_for_admins": "active",
-            "feature.resource.additional_information": "active",
             "feature.resource.additional_info_for_each_answer": "active",
             "feature.resource.show_comments": "active"
           }

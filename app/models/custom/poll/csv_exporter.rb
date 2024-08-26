@@ -35,8 +35,7 @@ class Poll::CsvExporter
         "budget_id",
         "related_type",
         "related_id",
-        "show_open_answer_author_name",
-        "show_summary_instead_of_questions",
+        "show_open_answer_author_name"
       ]
     end
 
@@ -57,8 +56,7 @@ class Poll::CsvExporter
         poll.budget_id,
         poll.related_type,
         poll.related_id,
-        poll.show_open_answer_author_name,
-        poll.show_summary_instead_of_questions
+        poll.show_open_answer_author_name
       ]
     end
 end

@@ -109,7 +109,7 @@ module AdminActions::Poll::Polls
     def poll_params
       attributes = [:name, :starts_at, :ends_at, :geozone_restricted, :budget_id, :projekt_phase_id,
                     :related_sdg_list, :show_open_answer_author_name, :wizard_mode,
-                    :show_summary_instead_of_questions, :show_on_home_page, :show_on_index_page,
+                    :show_on_home_page, :show_on_index_page,
                     :tag_list, geozone_ids: [], image_attributes: image_attributes]
 
       params.require(:poll).permit(*attributes, *report_attributes, translation_params(Poll))

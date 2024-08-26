@@ -45,6 +45,7 @@ de:
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
+          submit: Filter/Suche
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -55,6 +56,7 @@ de:
             icon: Icon
             name: Name
             warning_text: Popup
+            default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
           destroy:
             cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Mangel zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.
@@ -69,6 +71,16 @@ de:
             title: Kategorien
           new:
             creating: Neue Mangelkategorie erstellen
+        official_answer_templates:
+          index:
+            title: Antwortvorlagen
+            button_new: Neue Vorlage erstellen
+          new:
+            title: Neue Vorlage erstellen
+          edit:
+            title: Vorlage bearbeiten
+          form:
+            submit_button: Speichern
         deficiency_report:
           category: Kategorie
           officer: Sachbearbeiter*in
@@ -87,19 +99,19 @@ de:
           index:
             title: Funktionen
         show:
-          author: Autor
-          category: Kategorie
+          on_behalf_of: im Namen von
           created_at: Erstellt am
-          description: Bezeichnung
-          entry_name: Mangel
-          no_deficiency_reports: Keine Mängelmeldungen
-          officer_name: Sachbearbeiter*in
-          official_answer: Offizielle Antwort
-          status: Status
-          summary: Zusammenfassung
-          title: Mängel zuweisen
           updated_at: Aktualisiert am
-          video: Video
+          # category: Kategorie
+          # description: Bezeichnung
+          # entry_name: Mangel
+          # no_deficiency_reports: Keine Mängelmeldungen
+          # officer_name: Sachbearbeiter*in
+          # official_answer: Offizielle Antwort
+          # status: Status
+          # summary: Zusammenfassung
+          # title: Mängel zuweisen
+          # video: Video
         statuses:
           destroy:
             cannot_be_destroyed: Sie können diesen Status nicht löschen, da er mindestens einem Mangel zugewiesen ist.
@@ -176,6 +188,7 @@ de:
           reports: Mängel zuweisen
           settings: Funktionen
           statuses: Status definieren
+          official_answer_templates: Antwortvorlagen
           areas: Gebiete
         deficiency_reports_title: Mängelmelder
         projekts: Projekte

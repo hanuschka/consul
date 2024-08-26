@@ -6,6 +6,7 @@ module CustomSearch
   def apply_filters(resources)
     @filtered_resources = resources
     apply_search
+    apply_address_search
     apply_location_filter
     apply_date_filters
     apply_regular_filters
@@ -15,6 +16,10 @@ module CustomSearch
 
   def apply_search
     @filtered_resources = @filtered_resources.search(params[:search]) if params[:search].present?
+  end
+
+  def apply_address_search
+    @filtered_resources = @filtered_resources.address_search(params[:address_search]) if params[:address_search].present?
   end
 
   def apply_location_filter

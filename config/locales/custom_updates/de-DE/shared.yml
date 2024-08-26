@@ -2,6 +2,7 @@ de:
   custom:
     shared:
       search: Suchen
+      address_search: Adresse suchen
       select: Wählen
       required: Pflichtfeld
       new_comments_component:

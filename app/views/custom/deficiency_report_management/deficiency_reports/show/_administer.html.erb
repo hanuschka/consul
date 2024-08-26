@@ -1,4 +1,3 @@
-<h1>Administrieren</h1>
 <%= translatable_form_for deficiency_report, url: deficiency_report_management_deficiency_report_path(deficiency_report), html: { class: "deficiency-report-form" } do |f| %>
 
   <%= render "shared/globalize_locales", resource: deficiency_report %>
@@ -18,11 +17,11 @@
     <%= translations_form.text_area :official_answer, label: false, class: "html-area #{ck_editor_class(current_user)}" %>
   <% end %>
 
-  <% @official_answer_templates.each do |template| %>
-    <div class="margin-bottom" style="cursor:pointer;border:1px solid #222;padding:3px;padding:5px;border-radius:7px;" onClick="for (var id in CKEDITOR.instances) CKEDITOR.instances[id].container.$.offsetParent !== null && CKEDITOR.instances[id].setData('<%= template.text %>');">
-      <%= template.text %>
-    </div>
-  <% end %>
+  <select name="answer_template" id="answer_template" onChange="for (var id in CKEDITOR.instances) CKEDITOR.instances[id].container.$.offsetParent !== null && CKEDITOR.instances[id].setData(this.value);">
+    <% @official_answer_templates.each do |template| %>
+       <%= content_tag(:option, template.title, value: template.text) %>
+    <% end %>
+  </select>
 
   <div class="actions">
     <%= f.submit(class: "button", value: t("custom.deficiency_reports.form.edit.submit_button")) %>

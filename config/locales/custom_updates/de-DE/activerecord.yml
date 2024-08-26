@@ -113,6 +113,9 @@ de:
         approximated_address: Addresse
       deficiency_report/category:
         default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
+      deficiency_report/official_answer_template:
+        title: Titel
+        text: Text
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:

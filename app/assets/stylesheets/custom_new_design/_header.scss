@@ -141,10 +141,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 }
 
 .custom-new-design {
-  .top-bar--title-logo-stikcy {
-    display: none;
-  }
-
   .top-bar, .top-bar ul {
     background-color: transparent;
   }
@@ -189,6 +185,16 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     padding-top: 18px;
     justify-content: flex-start !important;
     background: transparent !important;
+
+    .top-logo {
+      &--regular {
+        display: block;
+      }
+
+      &--for-trasparent {
+        display: none;
+      }
+    }
   }
 
   &.home-page {
@@ -219,14 +225,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     background-color: white;
 
     .top-bar {
-      .top-bar--title-logo-top {
-        display: none;
-      }
-
-      .top-bar--title-logo-stikcy {
-        display: block;
-      }
-
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {
         color: black !important;
@@ -576,14 +574,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     header, .wrapper > header {
       height: 70px !important;
       max-width: auto;
-    }
-
-    .top-bar--title-logo-stikcy {
-      display: block;
-    }
-
-    .top-bar--title-logo-top {
-      display: none;
     }
 
     .subnavigation {

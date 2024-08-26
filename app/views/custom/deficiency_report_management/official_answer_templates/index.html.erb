@@ -11,7 +11,8 @@
   <tbody>
     <% @official_answer_templates.each do |official_answer_template| %>
       <tr id="<%= dom_id(official_answer_template) %>">
-        <td style="width:80%;"><%= official_answer_template.text %></td>
+        <td style="width:20%;"><%= official_answer_template.title%></td>
+        <td style="width:70%;"><%= official_answer_template.text %></td>
         <td>
           <%= render Admin::TableActionsComponent.new(official_answer_template,
                                                       actions: [:edit, :destroy],

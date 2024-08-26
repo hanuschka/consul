@@ -37,7 +37,7 @@ class DeficiencyReportManagement::OfficialAnswerTemplatesController < Deficiency
 
     def official_answer_template_params
       params.require(:deficiency_report_official_answer_template).permit(
-        :text
+        :title, :text
       )
     end
 end

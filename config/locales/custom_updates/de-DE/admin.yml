@@ -45,6 +45,7 @@ de:
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
+          submit: Filter/Suche
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -72,14 +73,13 @@ de:
             creating: Neue Mangelkategorie erstellen
         official_answer_templates:
           index:
-            title: Offizielle Antwortvorlagen
+            title: Antwortvorlagen
             button_new: Neue Vorlage erstellen
           new:
             title: Neue Vorlage erstellen
           edit:
             title: Vorlage bearbeiten
           form:
-            text: Text
             submit_button: Speichern
         deficiency_report:
           category: Kategorie
@@ -188,7 +188,7 @@ de:
           reports: Mängel zuweisen
           settings: Funktionen
           statuses: Status definieren
-          official_answer_templates: Offizielle Antwortvorlagen
+          official_answer_templates: Antwortvorlagen
           areas: Gebiete
         deficiency_reports_title: Mängelmelder
         projekts: Projekte

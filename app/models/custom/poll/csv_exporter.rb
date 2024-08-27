@@ -34,8 +34,7 @@ class Poll::CsvExporter
         "updated_at",
         "budget_id",
         "related_type",
-        "related_id",
-        "show_open_answer_author_name"
+        "related_id"
       ]
     end
 
@@ -55,8 +54,7 @@ class Poll::CsvExporter
         poll.updated_at,
         poll.budget_id,
         poll.related_type,
-        poll.related_id,
-        poll.show_open_answer_author_name
+        poll.related_id
       ]
     end
 end

@@ -96,4 +96,8 @@ class Poll < ApplicationRecord
   def advanced_stats_enabled?
     projekt_phase.feature?("resource.advanced_stats_enabled")
   end
+
+  def show_open_answer_author_name?
+    projekt_phase.feature?("resource.show_open_answer_author_name")
+  end
 end

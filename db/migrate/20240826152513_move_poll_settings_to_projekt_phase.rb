@@ -23,6 +23,9 @@ class MovePollSettingsToProjektPhase < ActiveRecord::Migration[6.1]
 
         advanced_stats_enabled = voting_phase.polls.joins(:report).last&.report&.advanced_stats ? "active" : ""
         voting_phase.settings.find_or_create_by!(key: "resource.advanced_stats_enabled").update!(value: advanced_stats_enabled)
+
+        show_open_answer_author_name = voting_phase.polls.last&.show_open_answer_author_name ? "active" : ""
+        voting_phase.settings.find_or_create_by!(key: "resource.show_open_answer_author_name").update!(value: show_open_answer_author_name)
       end
     end
   end

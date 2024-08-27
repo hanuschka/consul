@@ -23,7 +23,7 @@ class PollsController < ApplicationController
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
     @resources =
-      Poll.where(show_on_index_page: true)
+      Poll.with_phase_feature("resource.show_on_index_page")
         .search(@search_terms)
         .created_by_admin
         .not_budget

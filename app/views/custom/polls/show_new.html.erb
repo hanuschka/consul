@@ -40,7 +40,7 @@
         <%= render "callout" %>
 
         <div class="margin-bottom">
-          <% if @poll.wizard_mode? %>
+          <% if @poll.in_wizard_mode? %>
             <div class="question-wizard js-question-wizard">
               <div class="progress question-wizard--progress js-question-wizard--progress">
                 <span class="meter js-question-wizard--progress-bar"></span>

@@ -88,4 +88,8 @@ class Poll < ApplicationRecord
   def stats_age_groups
     projekt_phase.age_ranges_for_stats.map { |ar| [ar.min_age, ar.max_age] }
   end
+
+  def in_wizard_mode?
+    projekt_phase.feature?("resource.wizard_mode")
+  end
 end

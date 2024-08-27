@@ -87,7 +87,10 @@ class ProjektPhaseSetting < ApplicationRecord
             "feature.resource.show_comments": "active",
             "feature.resource.show_on_home_page": "active",
             "feature.resource.show_on_index_page": "active",
-            "feature.resource.wizard_mode": "active"
+            "feature.resource.wizard_mode": "active",
+            "feature.resource.results_enabled": "",
+            "feature.resource.stats_enabled": "",
+            "feature.resource.advanced_stats_enabled": ""
           }
         },
 

@@ -14,6 +14,15 @@ class MovePollSettingsToProjektPhase < ActiveRecord::Migration[6.1]
 
         wizard_mode = voting_phase.polls.last&.wizard_mode ? "active" : ""
         voting_phase.settings.find_or_create_by!(key: "resource.wizard_mode").update!(value: wizard_mode)
+
+        results_enabled = voting_phase.polls.joins(:report).last&.report&.results ? "active" : ""
+        voting_phase.settings.find_or_create_by!(key: "resource.results_enabled").update!(value: results_enabled)
+
+        stats_enabled = voting_phase.polls.joins(:report).last&.report&.stats ? "active" : ""
+        voting_phase.settings.find_or_create_by!(key: "resource.stats_enabled").update!(value: stats_enabled)
+
+        advanced_stats_enabled = voting_phase.polls.joins(:report).last&.report&.advanced_stats ? "active" : ""
+        voting_phase.settings.find_or_create_by!(key: "resource.advanced_stats_enabled").update!(value: advanced_stats_enabled)
       end
     end
   end

@@ -92,4 +92,8 @@ class Poll < ApplicationRecord
   def in_wizard_mode?
     projekt_phase.feature?("resource.wizard_mode")
   end
+
+  def advanced_stats_enabled?
+    projekt_phase.feature?("resource.advanced_stats_enabled")
+  end
 end

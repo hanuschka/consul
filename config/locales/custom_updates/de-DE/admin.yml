@@ -1,5 +1,7 @@
 de:
   admin:
+    actions:
+      actions: Aktion
     homepage:
       feeds:
         active_projekts: Aktive Beteiligung
@@ -197,6 +199,9 @@ de:
         matomo: Matomo
       polls:
         show:
+          table:
+            title: Fragen
+            type: Typ
           edit_nested_questions: Verschachtelte Fragen
           title: Fragetyp
         poll:
@@ -213,7 +218,8 @@ de:
                 error: Für diese Abstimmung wurden schon Stimmen abgegeben. Sie können die Antwort deshalb nicht mehr löschen.
                 success: Antwort erfolgreich gelöscht.
               open_answer_saved: Vielen Dank! Ihre Antwort wurde erfolgreich gespeichert.
-            open_answer_html: Offene Antwort <small><em>(Nur eine erlaubt)</em></small>
+            open_answer: Offene Antwort
+            open_answer_hint: (Nur eine pro Frage erlaubt, zusätzliche Infos wie Bilder oder Dokumente werden für diesen Antworttyp nicht im Frontend angezeigt)
           show_images: Bilder für Antworten anzeigen
         settings:
           show_on_home_page: Diese Abstimmung wird auf der Homepage angezeigt.

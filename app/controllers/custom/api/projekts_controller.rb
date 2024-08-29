@@ -22,6 +22,22 @@ class Api::ProjektsController < Api::BaseController
     }
   end
 
+  def overview
+    projekts =
+      Projekt
+        .activated
+        .with_published_custom_page
+        .show_in_overview_page
+        .regular
+        .includes(:page, :projekt_phases, :map_location)
+
+    render json: {
+      projekts: projekts.map { |projekt|
+        Projekts::SerializeForOverview.call(projekt)
+      }
+    }
+  end
+
   def create
     projekt = Projekt.new
 

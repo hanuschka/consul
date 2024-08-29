@@ -6,6 +6,8 @@ module EmbeddedAuth
     helper_method :embedded? #, :frame_temp_token_valid?
     helper_method :frame_access_code_valid? #, :frame_temp_token_valid?
     helper_method :embedded_and_frame_access_code_valid?
+    helper_method :frame_session_authentificated?, :frame_session_from_authorized_source?, :frame_session
+
     skip_forgery_protection if: :frame_session_authentificated?
   end
 
@@ -40,7 +42,7 @@ module EmbeddedAuth
     def frame_session_from_authorized_source?
       @_frame_session_from_authorized_source ||=
         frame_session.present? &&
-          # origin_allowed? &&
+          origin_allowed? &&
           frame_csrf_token_valid?(frame_session[:frame_csrf_token])
     end
 

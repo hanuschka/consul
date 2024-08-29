@@ -220,7 +220,7 @@ de:
               open_answer_saved: Vielen Dank! Ihre Antwort wurde erfolgreich gespeichert.
             open_answer: Offene Antwort
             open_answer_hint: (Nur eine pro Frage erlaubt, zusätzliche Infos wie Bilder oder Dokumente werden für diesen Antworttyp nicht im Frontend angezeigt)
-          show_images: Bilder für Antworten anzeigen
+          show_images: Antwortoptionen sollen als Bilder angezeigt werden
         settings:
           show_on_home_page: Diese Abstimmung wird auf der Homepage angezeigt.
           show_on_index_page: Diese Abstimmung wird auf der Abstimmungsübersicht angezeigt
@@ -235,11 +235,14 @@ de:
         new:
           bundle_question_title: Fragenbündel erstellen für %{poll}
         show:
-          add_nested_question: Verschachtelte Frage hinzufügen
-          vote_type: Art der Abstimmung
+          bundle_title: Möchten Sie eine Unterfrage hinzufügen?
+          add_nested_question: Neue Unterfrage hinzufügen
+          bundle_list_title: Dies ist die Liste aller Unterfrage
           answers:
             next_question: Nächste Frage
-
+          table:
+            nested_questions_title: Unterfragen
+            nested_questions_vote_type: Typ
       progress_bars:
         index:
           progress_bar: Fortschrittsbalken

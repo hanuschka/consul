@@ -115,13 +115,28 @@ en:
                 success: Answer successfully deleted.
               open_answer_saved: Thank you very much! Your answer was successfully saved.
             open_answer_html: Open answer  <small><em>(Only one allowed)</em></small>
-          show_images: Show preview images for answers
+          show_images: Answer options should be displayed as images
         settings:
           show_on_home_page: This poll will be visible on the home page.
           show_on_index_page: This poll will be visible on polls index page.
           show_open_answer_with_username: Show open answers with user name
           show_open_answer_without_username: Show open answers anonymously
           show_summary_instead_of_questions: Show summary instead of list of questions
+      questions:
+        index:
+          create_normal: Create regular question
+          create_bundle: Create questions bundle
+        new:
+          bundle_question_title: Create question bundle for %{poll}
+        show:
+          bundle_title: Would you like to add a subordinate question?
+          add_nested_question: Add new subordinate question
+          bundle_list_title: This is the list of all subordinate questions
+          answers:
+            next_question: Next question
+          table:
+            nested_questions_title: Subordinate questions
+            nested_questions_vote_type: Type
       progress_bars:
         index:
           progress_bar: Progress bar

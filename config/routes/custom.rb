@@ -16,6 +16,14 @@ controller :unregistered_newsletter_subscribers do
   end
 end
 
+get "users", to: "users#index"
+
+resources :map_locations, only: [] do
+  collection do
+    get :get_coordinates
+  end
+end
+
 get "admin/matomo", to: "admin/matomo#index"
 
 get "users", to: "users#index"
@@ -28,6 +36,9 @@ namespace :api do
   # post "/auth/generate_temporary_auth_token", to: "auth#generate_temporary_auth_token"
 
   resources :projekts, only: [:index, :create, :update] do
+    collection do
+      get :overview
+    end
     member do
       patch :import
     end

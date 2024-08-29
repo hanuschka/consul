@@ -13,8 +13,8 @@
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
 <%= csrf_meta_tags %>
 
-<% if embedded? && Current.active_frame_csrf_token.present? %>
-  <meta name="custom-csrf-token" content="<%= Current.active_frame_csrf_token %>">
+<% if embedded? %>
+  <meta name="frame-csrf-token" content="<%= Current.active_frame_csrf_token %>">
 <% end %>
 
 <%= favicon_link_tag "favicon.ico" %>

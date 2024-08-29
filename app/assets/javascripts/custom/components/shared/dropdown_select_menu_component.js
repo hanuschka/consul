@@ -9,7 +9,7 @@
       }
 
       window.addEventListener("click", function(e) {
-        if (e.target.closest(".dropdown-container") === null) {
+        if (e.target.closest(".dropdown-select-container") === null) {
           this.closeDropdown();
         }
       }.bind(this));
@@ -34,7 +34,7 @@
     },
 
     closeDropdown: function() {
-      $(".dropdown-container.dropdown-open").removeClass("dropdown-open");
+      $(".dropdown-select-container.dropdown-open").removeClass("dropdown-open");
     },
 
     selectOption: function(e) {

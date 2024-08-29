@@ -210,6 +210,8 @@ module Abilities
       can :read_stats, Budget::Investment do |investment|
         can? :read_stats, investment.budget
       end
+
+      can :send_notification, Memo, user_id: user.id
     end
   end
 end

@@ -285,6 +285,9 @@ module ProjektPhaseAdminActions
   end
 
   def poll_booth_assignments
+    @poll = @projekt_phase.polls.last
+    @booth_assignments = @poll.booth_assignments.includes(:booth).order("poll_booths.name")
+                              .page(params[:page]).per(50)
   end
 
   def poll_officer_assignments

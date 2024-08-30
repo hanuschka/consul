@@ -7,8 +7,8 @@ $light-gray-2: #ededed;
 $main-text-color: #67788A;
 $main-text-color-hover: #c7d5e2;
 
-$dropdown-hover-color: #f2f2f2;
-$dropdown-active-color: darken(#f2f2f2, 2%);
+$dropdown-hover-color: #ededed;
+$dropdown-active-color: darken($dropdown-hover-color, 4%);
 
 :root {
   --brand-color: #{$brand};

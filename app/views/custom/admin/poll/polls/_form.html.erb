@@ -3,17 +3,19 @@
 <%= translatable_form_for [@namespace, @poll] do |f| %>
   <%= render "shared/errors", resource: @poll %>
 
+  <!--
   <div class="row">
     <div class="clear">
       <div class="small-12 medium-6 column">
-        <%= f.date_field :starts_at %>
+        <%#= f.date_field :starts_at %>
       </div>
 
       <div class="small-12 medium-6 column">
-        <%= f.date_field :ends_at %>
+        <%#= f.date_field :ends_at %>
       </div>
     </div>
   </div>
+  -->
 
   <div class="row">
     <%= f.translatable_fields do |translations_form| %>

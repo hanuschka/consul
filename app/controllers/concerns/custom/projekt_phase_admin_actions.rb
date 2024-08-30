@@ -279,6 +279,23 @@ module ProjektPhaseAdminActions
     end
   end
 
+  def poll_questions
+    @poll = @projekt_phase.polls.last
+    @questions = @poll.questions
+  end
+
+  def poll_booth_assignments
+  end
+
+  def poll_officer_assignments
+  end
+
+  def poll_recounts
+  end
+
+  def poll_results
+  end
+
   def frame_new_phase_selector
     @projekt = Projekt.find(params[:projekt_id])
 

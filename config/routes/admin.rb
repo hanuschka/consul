@@ -22,6 +22,11 @@ namespace :admin do
       get :projekt_arguments
       get :formular
       get :formular_answers
+      get :poll_questions
+      get :poll_booth_assignments
+      get :poll_officer_assignments
+      get :poll_recounts
+      get :poll_results
     end
 
     resources :formular, only: [] do

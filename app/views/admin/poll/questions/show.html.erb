@@ -1,7 +1,7 @@
 <% if @question.parent_question.present? %>
   <%= back_link_to polymorphic_path([@namespace, @question.parent_question]) %>
 <% else %>
-  <%= back_link_to polymorphic_path([@namespace, @question.poll]) %>
+  <%= back_link_to polymorphic_path([@namespace, @question.poll.projekt_phase], action: :poll_questions) %>
 <% end %>
 
 <% if can?(:update, @question) %>
@@ -132,22 +132,13 @@
             <%= answer.next_question_id %>
           </td>
           <td class="align-top text-center">
-            (<%= answer.images.count %>)
-            <br>
-            <%= link_to t("admin.questions.show.answers.images_list"),
-                        polymorphic_path([@namespace, answer, :images]) %>
+            <%= answer.images.count %>
           </td>
           <td class="align-top text-center">
-            (<%= answer.documents.count rescue 0 %>)
-            <br>
-            <%= link_to t("admin.questions.show.answers.documents_list"),
-                        polymorphic_path([@namespace, answer, :documents]) %>
+            <%= answer.documents.count rescue 0 %>
           </td>
           <td class="align-top text-center">
-            (<%= answer.videos.count %>)
-            <br>
-            <%= link_to t("admin.questions.show.answers.video_list"),
-                        polymorphic_path([@namespace, answer, :videos]) %>
+            <%= answer.videos.count %>
           </td>
           <td>
             <%= render Admin::TableActionsComponent.new(answer,

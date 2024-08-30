@@ -466,6 +466,11 @@ de:
           formular_answers: Posteingang & Follow-up E-Mails
           form_author: Formular Autor
           user_functions: Funktionen Nutzer
+          poll_questions: Fragen
+          poll_booth_assignments: Wahlkabinen
+          poll_officer_assignments: Offizielle(r) Vertreter*innen
+          poll_recounts: Nachzählung
+          poll_results: Ergebnisse
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert

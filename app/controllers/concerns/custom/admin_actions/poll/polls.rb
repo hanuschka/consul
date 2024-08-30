@@ -15,7 +15,7 @@ module AdminActions::Poll::Polls
   end
 
   def index
-    @polls = Poll.not_budget.created_by_admin.order(starts_at: :desc)
+    @polls = Poll.not_budget.created_by_admin.joins(:projekt_phase).order("projekt_phases.start_date DESC")
 
     if @namespace == :projekt_management
       @projekts = Projekt.with_pm_permission_to("manage", current_user.projekt_manager)
@@ -107,7 +107,7 @@ module AdminActions::Poll::Polls
     end
 
     def poll_params
-      attributes = [:name, :starts_at, :ends_at, :geozone_restricted, :budget_id, :projekt_phase_id,
+      attributes = [:name, :geozone_restricted, :budget_id, :projekt_phase_id,
                     :related_sdg_list,
                     :tag_list, geozone_ids: [], image_attributes: image_attributes]
 

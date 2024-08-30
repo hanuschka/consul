@@ -77,7 +77,7 @@ module AdminActions::Poll::Questions::Answers
       attributes = [
         :title, :description, :given_order, :question_id, :open_answer, :more_info_link, :more_info_iframe,
         :next_question_id,
-        image_attributes: image_attributes,
+        images_attributes: image_attributes,
         documents_attributes: document_attributes,
         videos_attributes: [:title, :url, :id]
       ]

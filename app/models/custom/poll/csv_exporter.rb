@@ -42,8 +42,8 @@ class Poll::CsvExporter
       [
         poll.name,
         poll.projekt&.name,
-        poll.starts_at,
-        poll.ends_at,
+        poll.projekt_phase.start_date,
+        poll.projekt_phase.end_date,
         poll.published,
         poll.geozone_restricted,
         poll.comments_count,

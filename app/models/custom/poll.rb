@@ -71,6 +71,8 @@ class Poll < ApplicationRecord
   end
 
   def find_or_create_stats_version
+    ends_at = projekt_phase.end_date
+
     if ends_at.present? &&
         ((Time.zone.today - ends_at.to_date).to_i <= 3) &&
         stats_version.present? &&

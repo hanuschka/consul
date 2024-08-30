@@ -23,7 +23,9 @@ class ProjektPhase::VotingPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions settings age_ranges_for_stats]
+    %w[duration naming restrictions settings
+       poll_questions poll_booth_assignments poll_officer_assignments poll_recounts poll_results
+       age_ranges_for_stats]
   end
 
   def safe_to_destroy?

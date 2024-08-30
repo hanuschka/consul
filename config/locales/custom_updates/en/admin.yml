@@ -130,6 +130,7 @@ en:
           bundle_question_title: Create question bundle for %{poll}
         show:
           bundle_title: Would you like to add a subordinate question?
+          title: Would you like to add an answer?
           add_nested_question: Add new subordinate question
           bundle_list_title: This is the list of all subordinate questions
           answers:

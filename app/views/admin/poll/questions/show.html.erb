@@ -21,7 +21,13 @@
   <h3>
     <%= t("custom.admin.questions.show.bundle_title") %>
   </h3>
+<% else %>
+  <h3>
+    <%= t("custom.admin.questions.show.title") %>
+  </h3>
 <% end %>
+
+
 <% unless @question.bundle_question? %>
   <div class="small-12 medium-6">
     <div class="callout highlight">

@@ -230,12 +230,13 @@ de:
           show_summary_instead_of_questions: Zusammenfassung statt Liste aller Fragen in der Abstimmungsübersicht anzeigen
       questions:
         index:
-          create_normal: Normale Frage stellen
+          create_normal: Normale Frage erstellen
           create_bundle: Fragenbündel erstellen
         new:
           bundle_question_title: Fragenbündel erstellen für %{poll}
         show:
           bundle_title: Möchten Sie eine Unterfrage hinzufügen?
+          title: Möchten Sie eine Antwort hinzufügen?
           add_nested_question: Neue Unterfrage hinzufügen
           bundle_list_title: Dies ist die Liste aller Unterfrage
           answers:
@@ -494,7 +495,7 @@ de:
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
             no_restriction: Alle Nutzer*innen
           extended_geo_restrictions:
-            title: Zusatzliche individuelle Gebietsbeschränkungen
+            title: Individuelle Gebiete
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
             no_restriction: Alle Nutzer:innen der Plattform
           geo_restrictions:
@@ -505,7 +506,7 @@ de:
             only_geozones: Nur Bürger:innen des Stadtteils
             only_streets: Nur Bürger:innen aus Straße
           individual_group_values:
-            title: Einschränkung auf Gruppen
+            title: Gruppen
           user_status:
             title: Nutzerstatus
             guest: Gastnutzer

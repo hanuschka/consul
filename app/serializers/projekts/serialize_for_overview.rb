@@ -50,9 +50,9 @@ class Projekts::SerializeForOverview < ApplicationService
       ),
       popup_image_url: Rails.application.routes.url_helpers.polymorphic_url(
         @projekt.image.attachment.variant(
-          resize_to_fill: [221, 170],
+          resize_to_fill: [251, 185],
           format: "jpeg",
-          saver: { strip: true, interlace: "JPEG", quality: 85 }
+          saver: { strip: true, interlace: "JPEG", quality: 82 }
         ),
         only_path: true
       )

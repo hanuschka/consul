@@ -32,6 +32,10 @@ class ProjektPhase::VotingPhase < ProjektPhase
     polls.empty?
   end
 
+  def poll
+    polls.first
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

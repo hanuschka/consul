@@ -280,18 +280,18 @@ module ProjektPhaseAdminActions
   end
 
   def poll_questions
-    @poll = @projekt_phase.polls.last
+    @poll = @projekt_phase.poll
     @questions = @poll.questions
   end
 
   def poll_booth_assignments
-    @poll = @projekt_phase.polls.last
+    @poll = @projekt_phase.poll
     @booth_assignments = @poll.booth_assignments.includes(:booth).order("poll_booths.name")
                               .page(params[:page]).per(50)
   end
 
   def poll_officer_assignments
-    @poll = @projekt_phase.polls.last
+    @poll = @projekt_phase.poll
     @officers = ::Poll::Officer.
                   includes(:user).
                   order("users.username").
@@ -301,7 +301,7 @@ module ProjektPhaseAdminActions
   end
 
   def poll_recounts
-    @poll = @projekt_phase.polls.last
+    @poll = @projekt_phase.poll
     @stats = Poll::Stats.new(@poll)
     @booth_assignments = @poll.booth_assignments.
                               includes(:booth, :recounts, :voters).
@@ -310,7 +310,7 @@ module ProjektPhaseAdminActions
   end
 
   def poll_results
-    @poll = @projekt_phase.polls.last
+    @poll = @projekt_phase.poll
     @partial_results = @poll.partial_results
   end
 

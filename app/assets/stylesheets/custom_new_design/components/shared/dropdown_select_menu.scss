@@ -1,6 +1,12 @@
 .dropdown-select-container {
   margin: 0 auto;
   color: #292929;
+  padding: 5px 12px;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: $gray-1;
+  }
 }
 
 .dropdown-select-menu--list {

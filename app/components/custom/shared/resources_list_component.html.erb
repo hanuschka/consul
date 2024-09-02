@@ -67,10 +67,8 @@
         ) %>
       <% end %>
 
-      <% unless hide_list_line_divider? %>
-        <div class="items-list-line-divider">
-        </div>
-      <% end %>
+      <div class="items-list-line-divider">
+      </div>
 
       <% if filters.present? %>
         <%= render(

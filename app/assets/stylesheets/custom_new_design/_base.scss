@@ -162,7 +162,7 @@ body.custom-new-design {
   height: 1px;
   flex-grow: 1;
   background: #c7c7c7;
-  margin-top: 17px;
+  align-self: flex-end;
 
   @media(max-width: $small-tablet-viewport-start) {
     display: none;

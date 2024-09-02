@@ -19,11 +19,7 @@
           <% end %>
         <% end %>
 
-        <% if @poll.summary.present? || @poll.description.present? %>
-          <div class="resource-page--description new-card main-content-card">
-            <%= render "poll_header" %>
-          </div>
-        <% end %>
+        <%= render "poll_header", projekt_phase: @projekt_phase %>
 
         <% if can? :csv_answers_votes, @poll %>
           <%= link_to t("custom.polls.show.results.download_csv_answers_votes"), poll_csv_answers_votes_path(@poll, format: :csv), class: "button small float-right" %>
@@ -50,7 +46,7 @@
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
         <div class="margin-bottom-half">
-           <%= format_date_range(@poll.starts_at, @poll.ends_at, separator: t("custom.polls.poll.date.to")) %>
+          <%= format_date_range(@poll.projekt_phase.start_date, @poll.projekt_phase.end_date, separator: t("custom.polls.poll.date.to")) %>
         </div>
       <% end %>
     </aside>

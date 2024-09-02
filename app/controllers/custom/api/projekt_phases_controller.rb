@@ -131,9 +131,8 @@ class Api::ProjektPhasesController < Api::BaseController
       :start_date,
       :end_date,
       :phase_tab_name,
-      :guest_participation_allowed,
-      :verification_restricted,
       :geozone_restricted,
+      :user_status,
     )
   end
 end

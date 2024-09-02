@@ -83,10 +83,15 @@ class ProjektPhaseSetting < ApplicationRecord
 
         "ProjektPhase::VotingPhase" => {
           base: {
+            "feature.resource.wizard_mode": "active",
+            "feature.resource.show_on_home_page": "active",
+            "feature.resource.show_on_index_page": "active",
+            "feature.resource.results_enabled": "",
             "feature.resource.intermediate_poll_results_for_admins": "active",
-            "feature.resource.additional_information": "active",
-            "feature.resource.additional_info_for_each_answer": "active",
-            "feature.resource.show_comments": "active"
+            "feature.resource.stats_enabled": "",
+            "feature.resource.advanced_stats_enabled": "",
+            "feature.resource.show_comments": "active",
+            "feature.resource.show_open_answer_author_name": ""
           }
         },
 

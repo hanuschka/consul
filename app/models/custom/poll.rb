@@ -71,6 +71,8 @@ class Poll < ApplicationRecord
   end
 
   def find_or_create_stats_version
+    ends_at = projekt_phase.end_date
+
     if ends_at.present? &&
         ((Time.zone.today - ends_at.to_date).to_i <= 3) &&
         stats_version.present? &&
@@ -87,5 +89,17 @@ class Poll < ApplicationRecord
 
   def stats_age_groups
     projekt_phase.age_ranges_for_stats.map { |ar| [ar.min_age, ar.max_age] }
+  end
+
+  def in_wizard_mode?
+    projekt_phase.feature?("resource.wizard_mode")
+  end
+
+  def advanced_stats_enabled?
+    projekt_phase.feature?("resource.advanced_stats_enabled")
+  end
+
+  def show_open_answer_author_name?
+    projekt_phase.feature?("resource.show_open_answer_author_name")
   end
 end

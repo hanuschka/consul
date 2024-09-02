@@ -291,12 +291,27 @@ module ProjektPhaseAdminActions
   end
 
   def poll_officer_assignments
+    @poll = @projekt_phase.polls.last
+    @officers = ::Poll::Officer.
+                  includes(:user).
+                  order("users.username").
+                  where(
+                    id: @poll.officer_assignments.select(:officer_id).distinct.map(&:officer_id)
+                  ).page(params[:page]).per(50)
   end
 
   def poll_recounts
+    @poll = @projekt_phase.polls.last
+    @stats = Poll::Stats.new(@poll)
+    @booth_assignments = @poll.booth_assignments.
+                              includes(:booth, :recounts, :voters).
+                              order("poll_booths.name").
+                              page(params[:page]).per(50)
   end
 
   def poll_results
+    @poll = @projekt_phase.polls.last
+    @partial_results = @poll.partial_results
   end
 
   def frame_new_phase_selector

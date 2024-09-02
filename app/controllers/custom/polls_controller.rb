@@ -24,11 +24,12 @@ class PollsController < ApplicationController
 
     @resources =
       Poll.with_phase_feature("resource.show_on_index_page")
-        .search(@search_terms)
         .created_by_admin
         .not_budget
         .send(@current_filter)
         .includes(:geozones)
+
+    @resources = @resources.search(@search_terms) if @search_terms.present?
 
     related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)

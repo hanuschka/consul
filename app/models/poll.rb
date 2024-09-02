@@ -53,13 +53,13 @@ class Poll < ApplicationRecord
 
   def self.sort_for_list(user = nil)
     all.sort do |poll, another_poll|
-      [poll.weight(user), poll.projekt_phase.start_date, poll.name] <=> [another_poll.weight(user), another_poll.starts_at, another_poll.name]
+      [poll.weight(user), poll.projekt_phase.start_date || Date.new(9999, 12, 31), poll.name] <=> [another_poll.weight(user), another_poll.starts_at || Date.new(9999, 12, 31), another_poll.name]
     end
   end
 
   def self.overlaping_with(poll)
-    joins(:projekt_phase).where("? < projekt_phases.end_date and ? >= projekt_phases.start_date", poll.projekt_phase.start_date.beginning_of_day,
-                                                                                                  poll.projekt_phase.end_date.end_of_day).where.not(id: poll.id)
+    joins(:projekt_phase).where("? < projekt_phases.end_date and ? >= projekt_phases.start_date", poll.projekt_phase.start_date&.beginning_of_day,
+                                                                                                  poll.projekt_phase.end_date&.end_of_day).where.not(id: poll.id)
                                                                                                   .where(related: poll.related)
   end
 
@@ -68,14 +68,19 @@ class Poll < ApplicationRecord
   end
 
   def current?(timestamp = Date.current.beginning_of_day)
-    projekt_phase.start_date <= timestamp && timestamp <= projekt_phase.end_date
+    start_ok = projekt_phase.start_date.nil? || projekt_phase.start_date <= timestamp
+    end_ok = projekt_phase.end_date.nil? || timestamp <= projekt_phase.end_date
+
+    start_ok && end_ok
   end
 
   def expired?(timestamp = Date.current.beginning_of_day)
+    return false if projekt_phase.end_date.nil?
     projekt_phase.end_date < timestamp
   end
 
   def recounts_confirmed?
+    return false if projekt_phase.end_date.nil?
     projekt_phase.end_date < 1.month.ago
   end
 

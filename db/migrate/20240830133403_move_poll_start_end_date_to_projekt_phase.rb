@@ -3,10 +3,10 @@ class MovePollStartEndDateToProjektPhase < ActiveRecord::Migration[6.1]
     ProjektPhase::VotingPhase.find_each do |vp|
       next if vp.start_date.present? || vp.end_date.present?
 
-      last_poll = vp.polls&.last
-      next unless last_poll
+      first_poll = vp.polls&.first
+      next unless first_poll
 
-      vp.update_columns(start_date: last_poll.starts_at, end_date: last_poll.ends_at)
+      vp.update_columns(start_date: first_poll.starts_at, end_date: first_poll.ends_at)
     end
   end
 

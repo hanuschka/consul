@@ -1,7 +1,7 @@
 <% if @question.parent_question.present? %>
   <%= back_link_to polymorphic_path([@namespace, @question.parent_question]) %>
 <% else %>
-  <%= back_link_to polymorphic_path([@namespace, @question.poll]) %>
+  <%= back_link_to polymorphic_path([@namespace, @question.poll.projekt_phase], action: :poll_questions) %>
 <% end %>
 
 <% if can?(:update, @question) %>
@@ -19,9 +19,15 @@
 
 <% if @question.bundle_question? %>
   <h3>
-    <%= @question.title %>
+    <%= t("custom.admin.questions.show.bundle_title") %>
+  </h3>
+<% else %>
+  <h3>
+    <%= t("custom.admin.questions.show.title") %>
   </h3>
 <% end %>
+
+
 <% unless @question.bundle_question? %>
   <div class="small-12 medium-6">
     <div class="callout highlight">
@@ -126,22 +132,13 @@
             <%= answer.next_question_id %>
           </td>
           <td class="align-top text-center">
-            (<%= answer.images.count %>)
-            <br>
-            <%= link_to t("admin.questions.show.answers.images_list"),
-                        polymorphic_path([@namespace, answer, :images]) %>
+            <%= answer.images.count %>
           </td>
           <td class="align-top text-center">
-            (<%= answer.documents.count rescue 0 %>)
-            <br>
-            <%= link_to t("admin.questions.show.answers.documents_list"),
-                        polymorphic_path([@namespace, answer, :documents]) %>
+            <%= answer.documents.count rescue 0 %>
           </td>
           <td class="align-top text-center">
-            (<%= answer.videos.count %>)
-            <br>
-            <%= link_to t("admin.questions.show.answers.video_list"),
-                        polymorphic_path([@namespace, answer, :videos]) %>
+            <%= answer.videos.count %>
           </td>
           <td>
             <%= render Admin::TableActionsComponent.new(answer,
@@ -157,12 +154,15 @@
   </table>
 <% end %>
 <% if @question.nested_questions.present? %>
+  <h3>
+    <%= t("custom.admin.questions.show.bundle_list_title") %>
+  </h3>
   <table class="">
     <thead>
       <tr>
-        <th><%= t("admin.questions.show.nested_questions.title") %></th>
-        <th><%= t("custom.admin.questions.show.vote_type") %></th>
-        <th><%= t("admin.actions.actions") %></th>
+        <th><%= t("custom.admin.questions.show.table.nested_questions_title") %></th>
+        <th style="width:20%;"><%= t("custom.admin.questions.show.table.nested_questions_vote_type") %></th>
+        <th style="width:20%;"><%= t("admin.actions.actions") %></th>
       </tr>
     </thead>
     <tbody class="js-new-sortable" data-sort-url="<%= polymorphic_path([@namespace, @question.poll, :questions], action: :order_questions) %>">

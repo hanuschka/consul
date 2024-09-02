@@ -273,6 +273,41 @@ module ProjektPhaseAdminActions
     end
   end
 
+  def poll_questions
+    @poll = @projekt_phase.poll
+    @questions = @poll.questions
+  end
+
+  def poll_booth_assignments
+    @poll = @projekt_phase.poll
+    @booth_assignments = @poll.booth_assignments.includes(:booth).order("poll_booths.name")
+                              .page(params[:page]).per(50)
+  end
+
+  def poll_officer_assignments
+    @poll = @projekt_phase.poll
+    @officers = ::Poll::Officer.
+                  includes(:user).
+                  order("users.username").
+                  where(
+                    id: @poll.officer_assignments.select(:officer_id).distinct.map(&:officer_id)
+                  ).page(params[:page]).per(50)
+  end
+
+  def poll_recounts
+    @poll = @projekt_phase.poll
+    @stats = Poll::Stats.new(@poll)
+    @booth_assignments = @poll.booth_assignments.
+                              includes(:booth, :recounts, :voters).
+                              order("poll_booths.name").
+                              page(params[:page]).per(50)
+  end
+
+  def poll_results
+    @poll = @projekt_phase.poll
+    @partial_results = @poll.partial_results
+  end
+
   def frame_new_phase_selector
     @projekt = Projekt.find(params[:projekt_id])
 
@@ -306,8 +341,7 @@ module ProjektPhaseAdminActions
         translation_params(ProjektPhase),
         :projekt_id, :type,
         :active, :start_date, :end_date,
-        :guest_participation_allowed,
-        :verification_restricted, :age_range_id,
+        :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],

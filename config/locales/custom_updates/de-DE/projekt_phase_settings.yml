@@ -70,14 +70,24 @@ de:
       polls:
         feature:
           resource:
-            intermediate_poll_results_for_admins: Zwischenergebnisse von Abstimmungen für Admins
+            wizard_mode: Sequentielle Abstimmung
+            wizard_mode_description: Die Abstimmung wird im Modus von sequentiellen Fragen angezeigt
+            show_on_home_page: Sichtbarkeit Homepage
+            show_on_home_page_description: Zeigt die Abstimmung auf der Homepage an
+            show_on_index_page: Sichtbarkeit Übersichtsseite
+            show_on_index_page_description: Zeigt die Abstimmung auf der Übersichtsseite aller Abstimmungen an
+            results_enabled: Ergebnisse
+            results_enabled_description: Zeigt die Ergebnisse der Abstimmung am Ende der Abstimmung an
+            intermediate_poll_results_for_admins: Zwischenergebnisse (Admins / Projektmanager)
             intermediate_poll_results_for_admins_description: Aktivieren Sie die Einsicht in Zwischenergebnisse zu Abstimmungen für Administratoren
-            additional_information: Erweiterte Informationen
-            additional_information_description: Aktivieren Sie "Erweiterete Informationen" für das Abstimmungsmodul
-            additional_info_for_each_answer: Zusätzliche Informationen je Antwort
-            additional_info_for_each_answer_description: Zeigt die "Zusätzliche Informationen" je Antwort an
+            stats_enabled: Statistiken
+            stats_enabled_description: Zeigt die Statistiken zur Abstimmung am Ende der Abstimmung an
+            advanced_stats_enabled: Erweiterte Statistiken
+            advanced_stats_enabled_description: Zeit erweiterte Statistiken zur Abstimmung am Ende der Abstimmung an
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Abstimmungsmodul
+            show_open_answer_author_name: Name veröffentlichen
+            show_open_answer_author_name_description: Zeigt den Benutzername der offenen Antworten an
       budget:
         feature:
           general:

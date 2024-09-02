@@ -1,0 +1,17 @@
+<%= render "custom/admin/projekt_phases/heading" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
+
+<div class="row">
+  <div class="column">
+     <%= render "admin/poll/officer_assignments/search_officers" %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <%= render "admin/poll/officer_assignments/list" %>
+  </div>
+</div>

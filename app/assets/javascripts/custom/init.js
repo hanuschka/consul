@@ -20,6 +20,7 @@
       App.SidebarFilterComponent.initialize();
       App.ImageGallery.initialize();
       App.CoordinatesSearchComponent.initialize();
+      App.Shared.initialize();
     }
   };
 }).call(this);

@@ -1096,7 +1096,7 @@ de:
         recounts_tab: Nachzählung
         results_tab: Ergebnisse
         no_questions: "Dieser Abstimmung sind keine Fragen zugeordnet."
-        questions_title: "Liste der Fragen"
+        questions_title: Möchten Sie eine Frage hinzufügen?
         table_title: "Titel"
         edit_answers: Antworten bearbeiten
         see_proposal: "(Vorschlag anzeigen)"
@@ -1142,7 +1142,7 @@ de:
         question: Frage
         edit_question: Frage bearbeiten
         valid_answers: Gültige Antworten
-        add_answer: Antwort hinzufügen
+        add_answer: Neue Antwort erstellen
         video_url: Externes Video
         answers:
           title: Antwort

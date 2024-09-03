@@ -1,3 +1,7 @@
+.admin-content {
+  flex: 80%;
+  padding: 1.5rem;
+}
 .admin {
   .images {
     background: #e7f2fc;
@@ -115,6 +119,15 @@
 
     .controls {
       @include admin-action-icons;
+    }
+  }
+}
+
+.admin {
+  .api-clients-connect-to-client {
+    input[type="submit"] {
+      background-color: #14679e;
+      color: white;
     }
   }
 }

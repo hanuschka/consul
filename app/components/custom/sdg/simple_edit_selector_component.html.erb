@@ -1,0 +1,7 @@
+<fieldset class="big-sdgs-list sdg-simple-edit-selector">
+  <div class="sdg-goal-tag-list js-sdg-goal-tag-list">
+    <%= f.collection_check_boxes(:sdg_goal_ids, goals, :id, :code) do |checkbox_form| %>
+      <%= goal_field(checkbox_form) %>
+    <% end %>
+  </div>
+</fieldset>

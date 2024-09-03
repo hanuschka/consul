@@ -57,6 +57,15 @@ de:
       projekt_phase/formular_phase: Formular
       formular_field: Formularfeld
     errors:
+      messages:
+        file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
+        file_size_is_less_than: 'Dateigröße muss kleiner als %{count} sein'
+        file_size_is_less_than_or_equal_to: 'Dateigröße muss kleiner oder gleich %{count} sein'
+        file_size_is_greater_than: 'Dateigröße muss größer als %{count} sein'
+        file_size_is_greater_than_or_equal_to: 'Dateigröße muss größer oder gleich %{count} sein'
+        allowed_file_content_types: 'Datei muss einer von %{types} sein'
+        excluded_file_content_types: 'Datei kann nicht %{types} sein'
+
       models:
         proposal:
           attributes:
@@ -176,17 +185,15 @@ de:
       votation_type:
         max_votes: Maximale Stimmanzahl
         max_votes_per_answer: Maximale Stimmanzahl pro Antwort
-        vote_type: Art der Abstimmung
+        vote_type: Antwortoptionen
+        show_hint_callout: Informationstext der blauen Box im Frontend anzeigen
+        min_rating_scale_label: Linkes Label
+        max_rating_scale_label: Rechtes Label
       votation_type/vote_type:
         unique: Einzelne Stimme
         multiple: Mehrere Stimmen
         multiple_with_weight: Mehrere gewichtete Stimmen
         rating_scale: Bewertungsskala
-
-      poll/question:
-        min_rating_scale_label: Linkes Label
-        max_rating_scale_label: Rechtes Label
-        show_hint_callout: Diese Textbox im Frontend anzeigen
       individual_group:
         name: Name
         visible: sichtbar

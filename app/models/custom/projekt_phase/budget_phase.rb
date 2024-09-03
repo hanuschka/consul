@@ -22,7 +22,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   def resource_count
-    budget.investments.count
+    budget&.investments&.count
   end
 
   def admin_nav_bar_items

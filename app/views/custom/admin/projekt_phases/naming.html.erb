@@ -1,19 +1,28 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.naming.page_title") %></h2>
+    <% if embedded? %>
+      <h2>Wie möchten Sie einzelne Elemente benennen?</h2>
+    <% else %>
+      <h2><%= t("custom.admin.projekt_phases.naming.page_title") %></h2>
+    <% end %>
   </div>
 </div>
 
-<%= translatable_form_for(@projekt_phase, url: namespace_projekt_phase_path, as: :projekt_phase) do |f| %>
+<%= translatable_form_for(@projekt_phase, url: namespace_projekt_phase_path, as: :projekt_phase, html: { id: "phase-edit-form"}) do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
 
   <div class="row">
     <div class="column">
       <%= render "shared/errors", resource: @projekt_phase %>
-      <%= render "shared/globalize_locales", resource: @projekt_phase %>
+      <% unless embedded? %>
+        <%= render "shared/globalize_locales", resource: @projekt_phase %>
+      <% end %>
     </div>
   </div>
 
@@ -52,6 +61,17 @@
       </div>
     <% end %>
 
+    <% if @projekt_phase.name.in?(["voting_phase"]) %>
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.#{@projekt_phase.name}.description") %></strong>
+          <%= translations_form.text_area :description,
+            label: false,
+            class: "html-area #{ck_editor_class(current_user)}" %>
+        </div>
+      </div>
+    <% end %>
+
     <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase"]) %>
       <div class="row">
         <div class="column large-8">
@@ -81,4 +101,13 @@
       <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
     </div>
   </div>
+<% end %>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
 <% end %>

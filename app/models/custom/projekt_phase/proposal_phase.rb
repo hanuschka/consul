@@ -30,8 +30,16 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     feature?("general.only_admins_create_proposals")
   end
 
+  def settings_categories
+    %w[form_author user_functions]
+  end
+
+  def setting_pages
+    %w[duration naming restrictions form_author user_functions]
+  end
+
   def admin_nav_bar_items
-    %w[duration naming restrictions settings projekt_labels sentiments map]
+    setting_pages + %w[projekt_labels sentiments map]
   end
 
   def safe_to_destroy?

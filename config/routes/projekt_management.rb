@@ -166,6 +166,10 @@ namespace :projekt_management do
 
       resources :questions, only: [] do
         post :order_questions, on: :collection
+        member do
+          get :edit_votation_type
+          patch :update_votation_type
+        end
       end
     end
 

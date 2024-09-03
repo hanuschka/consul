@@ -9,4 +9,8 @@ module ProjektPhaseSettingsHelper
     # projekt_phase.settings.find_by(key: "option.#{option_key}").value
     projekt_phase.option(option_key)
   end
+
+  # def configure_link_for_phase_setting(projekt_phase, option_key)
+  #
+  # end
 end

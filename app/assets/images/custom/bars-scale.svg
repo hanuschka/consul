@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="bars-scale.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs5" />
+  <sodipodi:namedview
+     id="namedview5"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="33.541667"
+     inkscape:cx="12.014907"
+     inkscape:cy="12"
+     inkscape:window-width="1840"
+     inkscape:window-height="1011"
+     inkscape:window-x="80"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5" />
+  <style
+     id="style1">.spinner_jCIR{animation:spinner_B8Vq .9s linear infinite;animation-delay:-.9s}.spinner_upm8{animation-delay:-.8s}.spinner_2eL5{animation-delay:-.7s}.spinner_Rp9l{animation-delay:-.6s}.spinner_dy3W{animation-delay:-.5s}@keyframes spinner_B8Vq{0%,66.66%{animation-timing-function:cubic-bezier(0.36,.61,.3,.98);y:6px;height:12px}33.33%{animation-timing-function:cubic-bezier(0.36,.61,.3,.98);y:1px;height:22px}}</style>
+  <rect
+     class="spinner_jCIR"
+     x="1"
+     y="6"
+     width="2.8"
+     height="12"
+     id="rect1"
+     style="fill:#333333" />
+  <rect
+     class="spinner_jCIR spinner_upm8"
+     x="5.8"
+     y="6"
+     width="2.8"
+     height="12"
+     id="rect2"
+     style="fill:#333333" />
+  <rect
+     class="spinner_jCIR spinner_2eL5"
+     x="10.6"
+     y="6"
+     width="2.8"
+     height="12"
+     id="rect3"
+     style="fill:#333333" />
+  <rect
+     class="spinner_jCIR spinner_Rp9l"
+     x="15.4"
+     y="6"
+     width="2.8"
+     height="12"
+     id="rect4"
+     style="fill:#333333" />
+  <rect
+     class="spinner_jCIR spinner_dy3W"
+     x="20.2"
+     y="6"
+     width="2.8"
+     height="12"
+     id="rect5"
+     style="fill:#333333" />
+</svg>

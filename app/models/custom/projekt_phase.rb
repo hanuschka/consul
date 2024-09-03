@@ -36,6 +36,7 @@ class ProjektPhase < ApplicationRecord
   translates :labels_name, touch: true
   translates :sentiments_name, touch: true
   translates :resource_form_title_hint, touch: true
+  translates :description, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -67,6 +68,12 @@ class ProjektPhase < ApplicationRecord
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+
+  enum user_status: {
+    guest: 0,
+    registered: 1,
+    verified: 2
+  }
 
   validates :projekt, presence: true
 
@@ -144,25 +151,23 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return :guest_not_logged_in if guest_participation_allowed? && !user
-    return if guest_participation_allowed?
+    return :guest_not_logged_in if user_status == "guest" && !user
+    return if user_status == "guest"
     return :not_logged_in if !user || user&.guest?
     return if admin_permission?(user, location: location)
     return :phase_not_active if not_active?
     return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
     return :phase_not_current if not_current?
-    return :not_verified if verification_restricted && !user.level_three_verified?
+    return :not_verified if user_status == "verified" && !user.level_three_verified?
 
     if phase_specific_permission_problems(user, location).present?
       return phase_specific_permission_problems(user, location)
     end
 
-    unless Setting["feature.user.skip_verification"].present?
-      return age_permission_problem(user) if age_permission_problem(user).present?
-      return geozone_permission_problem(user) if geozone_permission_problem(user)
-      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
-      return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
-    end
+    return age_permission_problem(user) if age_permission_problem(user).present?
+    return geozone_permission_problem(user) if geozone_permission_problem(user)
+    return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
+    return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
 
     nil
   end
@@ -258,6 +263,10 @@ class ProjektPhase < ApplicationRecord
       zoom: Setting["map.zoom"],
       projekt_phase_id: id
     )
+  end
+
+  def settings_categories
+    []
   end
 
   def admin_nav_bar_items
@@ -361,7 +370,11 @@ class ProjektPhase < ApplicationRecord
     end
 
     def add_default_settings
-      phase_settings = ProjektPhaseSetting.defaults[self.class.name] || {}
+      phase_setting_categories = ProjektPhaseSetting.defaults[self.class.name]
+
+      return if phase_setting_categories.nil?
+
+      phase_settings = phase_setting_categories.values.reduce(:merge) || {}
 
       phase_settings.each do |key, value|
         settings.create!(key: key, value: value)

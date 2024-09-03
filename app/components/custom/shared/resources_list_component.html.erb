@@ -61,16 +61,14 @@
       <% if @text_search_enabled && i18n_namespace.present? %>
         <%= render(
           Shared::TextSearchFormComponent.new(
-            remote_url: remote_url,
+            url: @remote_url,
             i18n_namespace: "#{i18n_namespace}.search_form",
           )
         ) %>
       <% end %>
 
-      <% unless hide_list_line_divider? %>
-        <div class="items-list-line-divider">
-        </div>
-      <% end %>
+      <div class="items-list-line-divider">
+      </div>
 
       <% if filters.present? %>
         <%= render(

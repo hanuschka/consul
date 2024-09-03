@@ -22,6 +22,11 @@ namespace :admin do
       get :projekt_arguments
       get :formular
       get :formular_answers
+      get :poll_questions
+      get :poll_booth_assignments
+      get :poll_officer_assignments
+      get :poll_recounts
+      get :poll_results
     end
 
     resources :formular, only: [] do
@@ -306,6 +311,10 @@ namespace :admin do
 
       resources :questions, only: [] do
         post :order_questions, on: :collection
+        member do
+          get :edit_votation_type
+          patch :update_votation_type
+        end
       end
     end
 

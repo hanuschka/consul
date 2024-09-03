@@ -9,7 +9,7 @@ class Pages::Projekts::SidebarPhasesComponent < ApplicationComponent
   end
 
   def render?
-    phases.any?
+    @projekt.show_start_date_in_frontend? || @projekt.show_end_date_in_frontend?
   end
 
   private

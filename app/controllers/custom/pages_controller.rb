@@ -20,9 +20,17 @@ class PagesController < ApplicationController
     set_resource_instance
     custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
-    if @custom_page.present? && @custom_page.projekt.present? && @custom_page.projekt.visible_for?(current_user)
+    @custom_page_page_visible =
+      @custom_page&.projekt&.preview_code == params[:code] ||
+      @custom_page&.projekt&.frame_access_code == params[:frame_code] ||
+      @custom_page.projekt.visible_for?(current_user)
+
+    if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
-      @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
+
+      if @projekt.feature?("sidebar.show_notification_subscription_toggler")
+        @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
+      end
 
       if @projekt.projekt_phases.active.any?
         @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])

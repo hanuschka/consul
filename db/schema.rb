@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_23_115048) do
+ActiveRecord::Schema.define(version: 2024_08_30_133403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1618,7 +1618,6 @@ ActiveRecord::Schema.define(version: 2024_08_23_115048) do
     t.boolean "show_images", default: false
     t.boolean "multiple", default: false
     t.integer "given_order"
-    t.boolean "show_hint_callout", default: true
     t.integer "parent_question_id"
     t.boolean "bundle_question", default: false
     t.integer "next_question_id"
@@ -1912,8 +1911,7 @@ ActiveRecord::Schema.define(version: 2024_08_23_115048) do
     t.integer "given_order"
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
-    t.boolean "verification_restricted", default: false
-    t.boolean "guest_participation_allowed", default: false
+    t.integer "user_status", default: 1
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2644,6 +2642,17 @@ ActiveRecord::Schema.define(version: 2024_08_23_115048) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  create_table "votation_type_translations", force: :cascade do |t|
+    t.bigint "votation_type_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "min_rating_scale_label"
+    t.string "max_rating_scale_label"
+    t.index ["locale"], name: "index_votation_type_translations_on_locale"
+    t.index ["votation_type_id"], name: "index_votation_type_translations_on_votation_type_id"
+  end
+
   create_table "votation_types", force: :cascade do |t|
     t.integer "questionable_id"
     t.string "questionable_type"
@@ -2652,6 +2661,7 @@ ActiveRecord::Schema.define(version: 2024_08_23_115048) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "max_votes_per_answer"
+    t.boolean "show_hint_callout", default: false
   end
 
   create_table "votes", id: :serial, force: :cascade do |t|

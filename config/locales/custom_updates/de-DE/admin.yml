@@ -1,5 +1,7 @@
 de:
   admin:
+    actions:
+      actions: Aktion
     homepage:
       feeds:
         active_projekts: Aktive Beteiligung
@@ -210,6 +212,9 @@ de:
         matomo: Matomo
       polls:
         show:
+          table:
+            title: Fragen
+            type: Typ
           edit_nested_questions: Verschachtelte Fragen
           title: Fragetyp
         poll:
@@ -226,8 +231,9 @@ de:
                 error: Für diese Abstimmung wurden schon Stimmen abgegeben. Sie können die Antwort deshalb nicht mehr löschen.
                 success: Antwort erfolgreich gelöscht.
               open_answer_saved: Vielen Dank! Ihre Antwort wurde erfolgreich gespeichert.
-            open_answer_html: Offene Antwort <small><em>(Nur eine erlaubt)</em></small>
-          show_images: Bilder für Antworten anzeigen
+            open_answer: Offene Antwort
+            open_answer_hint: (Nur eine pro Frage erlaubt, zusätzliche Infos wie Bilder oder Dokumente werden für diesen Antworttyp nicht im Frontend angezeigt)
+          show_images: Antwortoptionen sollen als Bilder angezeigt werden
         settings:
           show_on_home_page: Diese Abstimmung wird auf der Homepage angezeigt.
           show_on_index_page: Diese Abstimmung wird auf der Abstimmungsübersicht angezeigt
@@ -237,16 +243,20 @@ de:
           show_summary_instead_of_questions: Zusammenfassung statt Liste aller Fragen in der Abstimmungsübersicht anzeigen
       questions:
         index:
-          create_normal: Normale Frage stellen
+          create_normal: Normale Frage erstellen
           create_bundle: Fragenbündel erstellen
         new:
           bundle_question_title: Fragenbündel erstellen für %{poll}
         show:
-          add_nested_question: Verschachtelte Frage hinzufügen
-          vote_type: Art der Abstimmung
+          bundle_title: Möchten Sie eine Unterfrage hinzufügen?
+          title: Möchten Sie eine Antwort hinzufügen?
+          add_nested_question: Neue Unterfrage hinzufügen
+          bundle_list_title: Dies ist die Liste aller Unterfrage
           answers:
             next_question: Nächste Frage
-
+          table:
+            nested_questions_title: Unterfragen
+            nested_questions_vote_type: Typ
       progress_bars:
         index:
           progress_bar: Fortschrittsbalken
@@ -448,6 +458,8 @@ de:
       flash:
         deleted: Gelöscht
       projekt_phases:
+        voting_phase:
+          description: Beschreibungstext auf der Abstimmungsseite
         nav_bar:
           duration: Laufzeit
           naming: Benennungen
@@ -465,6 +477,13 @@ de:
           projekt_arguments: Liste von Stimmen
           formular: Formular
           formular_answers: Posteingang & Follow-up E-Mails
+          form_author: Formular Autor
+          user_functions: Funktionen Nutzer
+          poll_questions: Fragen
+          poll_booth_assignments: Wahlkabinen
+          poll_officer_assignments: Offizielle(r) Vertreter*innen
+          poll_recounts: Nachzählung
+          poll_results: Ergebnisse
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -472,8 +491,8 @@ de:
           not_destroyed: Phase konnte nicht gelöscht werden, da sie bereits assoziierte Inhalte hat
         shared:
           update_button: Speichern
-        phase_tab_name: Name in Tab
-        cta_button_name: Text in Button
+        phase_tab_name: Name in Tab auf der Projektseite
+        cta_button_name: Buttontext auf der Projektseite
         resource_form_title: Text bei Erstellung
         resource_form_title_hint: Platzhalter
         labels_name: Labels
@@ -489,13 +508,12 @@ de:
           page_title: Benennungen
         restrictions:
           page_title: Einschränkungen
-          guest_participation_allowed: Gastteilnahme erlaubt
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
             no_restriction: Alle Nutzer*innen
           extended_geo_restrictions:
-            title: Zusatzliche individuelle Gebietsbeschränkungen
+            title: Individuelle Gebiete
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
             no_restriction: Alle Nutzer:innen der Plattform
           geo_restrictions:
@@ -506,16 +524,19 @@ de:
             only_geozones: Nur Bürger:innen des Stadtteils
             only_streets: Nur Bürger:innen aus Straße
           individual_group_values:
-            title: Einschränkung auf Gruppen
-          verification:
-            title: Verifizierung
-            no_restriction: Alle Nutzer*innen
-            only_verified: Nur verifizierte Nutzer*innen
+            title: Gruppen
+          user_status:
+            title: Nutzerstatus
+            guest: Gastnutzer
+            registered: Registrierte Nutzer
+            verified: Verifizierte Nutzer
         settings:
           block_title:
             general: Funktionen
             form: Formularfelder
             resource: Individueller Beitrag
+            form_author: Formular Autor
+            user_functions: Funktionen Nutzer
         projekt_labels:
           name: Labels
           page_title: Labels

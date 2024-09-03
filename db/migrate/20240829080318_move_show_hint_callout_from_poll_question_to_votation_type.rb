@@ -4,6 +4,8 @@ class MoveShowHintCalloutFromPollQuestionToVotationType < ActiveRecord::Migratio
       add_column :votation_types, :show_hint_callout, :boolean, default: false
 
       Poll::Question.all.find_each do |poll_question|
+        next unless poll_question.votation_type.present?
+
         poll_question.votation_type.update(show_hint_callout: poll_question.show_hint_callout)
       end
 

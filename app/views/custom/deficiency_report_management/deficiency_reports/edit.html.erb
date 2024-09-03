@@ -1,121 +1,85 @@
-<% form_path = @deficiency_report.persisted? ? deficiency_report_management_deficiency_report_path(@deficiency_report) : deficiency_report_management_deficiency_reports_path(@deficiency_report) %>
+<%= render "custom/deficiency_report_management/deficiency_reports/subnav", deficiency_report: @deficiency_report %>
 
-<%= translatable_form_for @deficiency_report, url: form_path, html: { class: "deficiency-report-form" } do |f| %>
-  <%= render "shared/errors", resource: @deficiency_report %>
+<div class="row expanded full-width">
+  <div class="small-12 large-8 columns">
+    <%= translatable_form_for @deficiency_report, url: deficiency_report_management_deficiency_report_path(@deficiency_report), html: { class: "deficiency-report-form" } do |f| %>
+      <%= render "shared/errors", resource: @deficiency_report %>
 
-  <fieldset class="required-fields">
+      <fieldset class="required-fields">
 
-    <%= render "shared/globalize_locales", resource: @deficiency_report %>
-    <%= f.translatable_fields do |translations_form| %>
-      <div>
-        <%= translations_form.text_field :title,
-            label: t('custom.deficiency_reports.form.labels.title'),
-            autocomplete: "off" %>
-      </div>
+        <%= render "shared/globalize_locales", resource: @deficiency_report %>
+        <%= f.translatable_fields do |translations_form| %>
+          <div>
+            <%= translations_form.text_field :title,
+                label: t("custom.deficiency_reports.form.labels.title"),
+                autocomplete: "off" %>
+          </div>
 
-      <div>
-        <%= translations_form.text_area :description,
-              class: "html-area #{ck_editor_class(current_user)}",
-              label: t('custom.deficiency_reports.form.labels.description')   %>
-      </div>
-    <% end %>
-
-    <% if feature?(:allow_images) %>
-      <div class="images">
-        <%= render "images/nested_image", imageable: @deficiency_report, f: f %>
-      </div>
-
-      <% if can?(:toggle_image, @deficiency_report) && @deficiency_report.image.present? %>
-        <%= link_to polymorphic_path([@namespace, @deficiency_report], action: :toggle_image), method: :patch, class: 'button hollow' do %>
-          <% @deficiency_report.image.concealed ? "Bild einblenden" : "Bild ausblenden" %>
+          <div>
+            <%= translations_form.text_area :description,
+                  class: "html-area #{ck_editor_class(current_user)}",
+                  label: t("custom.deficiency_reports.form.labels.description") %>
+          </div>
         <% end %>
-      <% end %>
-    <% end %>
-  </fieldset>
 
-  <fieldset>
-    <% if feature?(:allow_attached_documents) %>
-      <div class="documents">
-        <%= render "documents/nested_documents", documentable: @deficiency_report, f: f %>
+        <% if feature?(:allow_images) %>
+          <div class="images">
+            <%= render "images/nested_image", imageable: @deficiency_report, f: f %>
+          </div>
+
+          <% if can?(:toggle_image, @deficiency_report) && @deficiency_report.image.present? %>
+            <%= link_to polymorphic_path([@namespace, @deficiency_report], action: :toggle_image), method: :patch, class: "button hollow" do %>
+              <% @deficiency_report.image.concealed ? "Bild einblenden" : "Bild ausblenden" %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </fieldset>
+
+      <fieldset>
+        <% if feature?(:allow_attached_documents) %>
+          <div class="documents">
+            <%= render "documents/nested_documents", documentable: @deficiency_report, f: f %>
+          </div>
+        <% end %>
+
+        <div>
+          <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note") %>
+        </div>
+
+        <div>
+          <%= f.select :deficiency_report_area_id, @areas.map { |area| [area.name, area.id] },
+            { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: t("custom.deficiency_reports.form.area.title") },
+            { class: "js-dr-form-update-map",
+              data: {
+                all_area_map_coordinates: @map_coordinates_for_areas,
+                default_map_coordinates: [Setting["map.latitude"], Setting["map.longitude"]]
+              }
+            } %>
+        </div>
+
+        <div class="small-12 margin-bottom" id='map-for-new-deficiency_report'>
+          <%= render "map_locations/form_fields",
+                     form:     f,
+                     map_location: @deficiency_report.map_location || MapLocation.new,
+                     label:    t("proposals.form.map_location"),
+                     help:     t("proposals.form.map_location_instructions"),
+                     remove_marker_label: t("proposals.form.map_remove_marker"),
+                     parent_class: "proposal",
+                     i18n_namespace: "proposals" %>
+        </div>
+
+        <div>
+          <%= f.text_field :on_behalf_of %>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <%= f.submit(class: "button", value: t("custom.deficiency_reports.form.#{action_name}.submit_button")) %>
       </div>
+
     <% end %>
-
-    <div>
-      <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note") %>
-    </div>
-
-    <div>
-      <%= f.select :deficiency_report_area_id, @areas.map { |area| [area.name, area.id] },
-        { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: t("custom.deficiency_reports.form.area.title") },
-        { class: "js-dr-form-update-map",
-          data: { 
-            all_area_map_coordinates: @map_coordinates_for_areas,
-            default_map_coordinates: [Setting["map.latitude"], Setting["map.longitude"]]
-          } 
-        } %>
-    </div>
-
-    <div class="small-12 margin-bottom" id='map-for-new-deficiency_report'>
-      <%= render "map_locations/form_fields",
-                 form:     f,
-                 map_location: @deficiency_report.map_location || MapLocation.new,
-                 label:    t("proposals.form.map_location"),
-                 help:     t("proposals.form.map_location_instructions"),
-                 remove_marker_label: t("proposals.form.map_remove_marker"),
-                 parent_class: "proposal",
-                 i18n_namespace: "proposals" %>
-    </div>
-
-    <% if @deficiency_report.map_location&.approximated_address.present? %>
-      <div class="small-12 margin-bottom">
-        <strong><%= t("custom.deficiency_reports.form.labels.address") %></strong>
-        <br>
-        <%= @deficiency_report.map_location&.approximated_address %>
-      </div>
-    <% end %>
-
-    <div class="small-12">
-      <%= f.select :deficiency_report_category_id, DeficiencyReport::Category.all.collect{ |category| [category.name, category.id] },
-            { label: t("custom.deficiency_reports.show.category.title"), prompt: t("custom.helpers.select.prompt") } %>
-    </div>
-
-    <div class="small-12">
-      <%= f.select :deficiency_report_status_id, DeficiencyReport::Status.all.map { |df| [df.title, df.id] },
-            { label: t("custom.deficiency_reports.show.status.title"), prompt: t("custom.helpers.select.prompt") } %>
-    </div>
-
-    <div class="small-12 margin-bottom">
-      <strong>Autor</strong><br>
-      <%= @deficiency_report.author.full_name %><br>
-      <%= @deficiency_report.author.formatted_address %><br>
-      <%= "#{@deficiency_report.author.plz} #{@deficiency_report.author.city_name}" %><br> 
-      <%= @deficiency_report.author.email %>
-    </div>
-
-    <div>
-      <%= f.text_field :on_behalf_of %>
-    </div>
-
-    <div>
-      <%= f.select :deficiency_report_officer_id, DeficiencyReport::Officer.all.collect{ |df| [df.name, df.id] },
-         { label: t("custom.deficiency_reports.show.officer.title"), prompt: t("custom.helpers.select.prompt") } %>
-    </div>
-
-    <div>
-      <%= f.check_box :notify_officer_about_new_comments %>
-    </div>
-  </fieldset>
-
-  <div class="actions">
-    <%= f.submit(class: "button", value: t("custom.deficiency_reports.form.#{action_name}.submit_button")) %>
   </div>
-
-<% end %>
-
-<hr>
-
-<%= render "admin/memos/memos", memoable: @deficiency_report %>
+</div>
 
 <hr>
-
 <%= render "admin/milestones/milestones", milestoneable: @deficiency_report %>

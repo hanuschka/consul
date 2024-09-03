@@ -28,6 +28,18 @@ body.admin .tabs-title > a[aria-selected='true'],
   background: #e8e8e8;
 }
 
+.row.full-width {
+  max-width: 100%;
+
+  @media screen and (min-width: 40em) {
+    margin: 0 -0.9375rem;
+  }
+
+  .column:last-child:not(:first-child),
+  .columns:last-child:not(:first-child) {
+    float: left;
+  }
+}
 
 main {
   margin-top: -25px;

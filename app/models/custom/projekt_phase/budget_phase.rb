@@ -26,7 +26,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions settings map age_ranges_for_stats]
+    %w[duration naming restrictions settings map budget_phases age_ranges_for_stats]
   end
 
   def safe_to_destroy?

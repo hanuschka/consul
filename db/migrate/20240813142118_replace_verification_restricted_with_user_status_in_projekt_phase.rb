@@ -10,8 +10,8 @@ class ReplaceVerificationRestrictedWithUserStatusInProjektPhase < ActiveRecord::
             phase.update!(user_status: status)
           end
 
-          remove_column :projekt_phases, :verification_restricted
-          remove_column :projekt_phases, :guest_participation_allowed
+          remove_column :projekt_phases, :verification_restricted if column_exists?(:projekt_phases, :verification_restricted)
+          remove_column :projekt_phases, :guest_participation_allowed if column_exists?(:projekt_phases, :guest_participation_allowed)
         end
       end
 
@@ -24,7 +24,7 @@ class ReplaceVerificationRestrictedWithUserStatusInProjektPhase < ActiveRecord::
             phase.update!(verification_restricted: phase.user_status == 2, guest_participation_allowed: phase.user_status == 0)
           end
 
-          remove_column :projekt_phases, :user_status
+          remove_column :projekt_phases, :user_status if column_exists?(:projekt_phases, :user_status)
         end
       end
     end

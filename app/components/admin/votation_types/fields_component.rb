@@ -18,6 +18,10 @@ class Admin::VotationTypes::FieldsComponent < ApplicationComponent
     "hide" if !VotationType.allowing_multiple_answers.include?(votation_type_name)
   end
 
+  def hide_max_votes_per_answer_input_class(votation_type_name)
+    "hide" if "multiple_with_weight" != votation_type_name
+  end
+
   def hide_rating_scale_labels_class(votation_type_name)
     "hide" if votation_type_name != "rating_scale"
   end

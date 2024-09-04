@@ -4,12 +4,20 @@
   <%= render "custom/admin/projekt_phases/nav_bar" %>
 <% end %>
 
+<div class="row">
+  <div class="column">
+    <h2><%= t("custom.admin.projekt_phases.settings.page_title") %></h2>
+  </div>
+</div>
+
 <% @projekt_phase_features.each do |key, value| %>
+  <!--
   <div class="row">
     <div class="column">
-      <h2><%= t("custom.admin.projekt_phases.settings.block_title.#{key}") %></h2>
+      <h2><%#= t("custom.admin.projekt_phases.settings.block_title.#{key}") %></h2>
     </div>
   </div>
+  -->
 
   <% if value.present? %>
     <%= render "custom/admin/projekt_phases/settings/features_table", features: value %>

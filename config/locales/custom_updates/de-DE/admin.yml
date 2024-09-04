@@ -462,13 +462,13 @@ de:
           description: Beschreibungstext auf der Abstimmungsseite
         nav_bar:
           duration: Laufzeit
-          naming: Benennungen
-          restrictions: Einschränkungen
+          naming: Benennung
+          restrictions: Beschränkung (neu)
           settings: Funktionen
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
-          age_ranges_for_stats: Altersgruppen für Statistiken
+          age_ranges_for_stats: Alterskohorden (neu)
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
@@ -481,8 +481,8 @@ de:
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
           poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Offizielle(r) Vertreter*innen
-          poll_recounts: Nachzählung
+          poll_officer_assignments: Wahlhelfer (neu)
+          poll_recounts: Auszählung (neu)
           poll_results: Ergebnisse
         notice:
           created: Phase wurde erstellt
@@ -501,13 +501,13 @@ de:
         edit:
           title: Einstellung für Phase
         duration:
-          page_title: Laufzeit
+          page_title: Wie lange soll die Laufzeit dieser Projektphase sein?
           start_date: Anfangsdatum
           end_date: Enddatum
         naming:
-          page_title: Benennungen
+          page_title: Wie möchten Sie einzelne Elemente benennen?
         restrictions:
-          page_title: Einschränkungen
+          page_title: Möchten Sie die Beteiligung einschränken?
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
@@ -531,6 +531,7 @@ de:
             registered: Registrierte Nutzer
             verified: Verifizierte Nutzer
         settings:
+          page_title: Welche Funktionen wollen Sie den Nutzern zur Verfügung stellen?
           block_title:
             general: Funktionen
             form: Formularfelder

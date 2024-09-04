@@ -14,9 +14,6 @@
     <%= t("admin.polls.show.no_questions") %>
   </div>
 <% else %>
-  <h3>
-    <%= t("custom.admin.questions.show.bundle_list_title") %>
-  </h3>
   <table class="margin selectable">
     <thead>
       <tr>
@@ -26,7 +23,7 @@
       </tr>
     </thead>
     <tbody class="js-new-sortable" data-sort-url="<%= polymorphic_path([@namespace, @poll, :questions], action: :order_questions) %>">
-      <% @poll.questions.root_questions.each do |question| %>
+      <% @poll.questions.root_questions.order(:id).each do |question| %>
         <tr id="<%= dom_id(question) %>" data-record-id="<%= question.id %>">
           <td>
             <strong><%= question.title %></strong>

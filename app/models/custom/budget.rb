@@ -27,13 +27,6 @@ class Budget < ApplicationRecord
     voting_style == "distributed"
   end
 
-  def show_percentage_values_only?
-    projekt_phase.settings
-      .find_by(key: "feature.general.show_relative_ballotting_results")
-      .value
-      .present?
-  end
-
   def find_or_create_stats_version
     balloting_phase_ends_at = phases.find_by(kind: "balloting").ends_at
 

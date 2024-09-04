@@ -484,6 +484,7 @@ de:
           poll_officer_assignments: Offizielle(r) Vertreter*innen
           poll_recounts: Nachzählung
           poll_results: Ergebnisse
+          budget_edit: Budget editieren
           budget_phases: Budget Phasen
         notice:
           created: Phase wurde erstellt

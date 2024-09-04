@@ -99,7 +99,6 @@ class ProjektPhaseSetting < ApplicationRecord
           base: {
             "feature.general.only_admins_create_investment_proposals": "",
             "feature.general.show_results_after_first_vote": "",
-            "feature.general.show_relative_ballotting_results": "",
 
             "feature.form.allow_attached_image": "active",
             "feature.form.show_implementation_option_fields": "",

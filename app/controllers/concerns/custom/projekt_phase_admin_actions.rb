@@ -314,6 +314,10 @@ module ProjektPhaseAdminActions
     @partial_results = @poll.partial_results
   end
 
+  def budget_edit
+    @budget = @projekt_phase.budget
+  end
+
   def budget_phases
     @budget = @projekt_phase.budget
   end

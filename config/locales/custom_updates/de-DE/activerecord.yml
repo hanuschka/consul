@@ -131,6 +131,7 @@ de:
         official_answer: Offizielle Antwort
         on_behalf_of: Erstellen im Namen von
       budget:
+        show_percentage_values_only: Prozentuale Werte
         voting_style_distributed: "Mehrere Stimmen"
         hide_money: Geld ausblenden
         max_number_of_winners: maximale Anzahl an Gewinnern

@@ -29,7 +29,7 @@
 
     <div class="flex-layout">
       <div class="main-column">
-        <% if @deficiency_report.can_be_published? %>
+        <% if @deficiency_report.official_answer.present? %>
           <div class="resource-page--description new-card main-content-card" style="background-color:#E3FCE7">
             <h3><%= t("custom.deficiency_reports.show.official_answer.title") %></h3>
             <%= AdminWYSIWYGSanitizer.new.sanitize(@deficiency_report.official_answer) %>
@@ -81,6 +81,20 @@
             <div class="video-link">
               <%= sanitize_and_auto_link @deficiency_report.video_url %>
             </div>
+          <% end %>
+        <% end %>
+
+        <% if current_user&.administrator? %>
+          <%= render(Shared::SidebarCardComponent.new(
+            title: "Benachrichtigung für Sachbearbeiter*in",
+            icon_name: "envelope")) do |c| %>
+            <%= render Admin::LivesubmitCheckbox::Component.new(
+              url: notify_officer_about_new_comments_deficiency_report_path(@deficiency_report),
+              resource_name: "deficiency_report",
+              attribute_name: "notify_officer_about_new_comments",
+              record_id: @deficiency_report.id,
+              current_value: @deficiency_report.notify_officer_about_new_comments
+            ) %>
           <% end %>
         <% end %>
 

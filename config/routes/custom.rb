@@ -18,4 +18,10 @@ end
 
 get "users", to: "users#index"
 
+resources :map_locations, only: [] do
+  collection do
+    get :get_coordinates
+  end
+end
+
 get "admin/matomo", to: "admin/matomo#index"

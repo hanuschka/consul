@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_10_071843) do
+ActiveRecord::Schema.define(version: 2024_08_23_115048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -174,6 +174,15 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.datetime "started_at"
     t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
+  end
+
+  create_table "api_clients", force: :cascade do |t|
+    t.string "name"
+    t.integer "registration_status"
+    t.string "auth_token"
+    t.string "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -694,6 +703,8 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "warning_text", default: ""
+    t.bigint "deficiency_report_officer_id"
+    t.index ["deficiency_report_officer_id"], name: "index_dr_categories_on_dr_officer_id"
   end
 
   create_table "deficiency_report_category_translations", force: :cascade do |t|
@@ -718,6 +729,13 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_deficiency_report_officers_on_user_id"
+  end
+
+  create_table "deficiency_report_official_answer_templates", force: :cascade do |t|
+    t.string "title"
+    t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_status_translations", force: :cascade do |t|
@@ -1341,6 +1359,7 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.bigint "projekt_phase_id"
     t.bigint "deficiency_report_area_id"
     t.jsonb "geocoder_data", default: {}
+    t.string "approximated_address"
     t.index ["deficiency_report_area_id"], name: "index_map_locations_on_deficiency_report_area_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
@@ -1359,6 +1378,7 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "ancestry"
+    t.datetime "last_notification_sent_at"
     t.index ["ancestry"], name: "index_memos_on_ancestry"
     t.index ["hidden_at"], name: "index_memos_on_hidden_at"
     t.index ["memoable_id", "memoable_type"], name: "index_memos_on_memoable_id_and_memoable_type"
@@ -1872,6 +1892,7 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.string "labels_name"
     t.string "sentiments_name"
     t.string "resource_form_title_hint"
+    t.text "description"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -1885,13 +1906,13 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active"
-    t.boolean "verification_restricted", default: false
     t.bigint "age_range_id"
     t.string "registered_address_grouping_restriction", default: ""
     t.jsonb "registered_address_grouping_restrictions", default: {}, null: false
     t.integer "given_order"
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
+    t.boolean "verification_restricted", default: false
     t.boolean "guest_participation_allowed", default: false
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
@@ -2011,6 +2032,9 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.boolean "show_end_date_in_frontend", default: true
     t.integer "top_level_projekt_id"
     t.tsvector "tsv"
+    t.string "frame_access_code"
+    t.boolean "new_content_block_mode"
+    t.string "preview_code"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
@@ -2310,6 +2334,8 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key"
+    t.integer "projekt_id"
+    t.integer "position"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
   end
 
@@ -2543,6 +2569,10 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
     t.boolean "adm_email_on_new_topic", default: false
     t.string "auth_redirect_path", default: ""
     t.string "last_stork_level"
+    t.string "temporary_auth_token"
+    t.datetime "temporary_auth_token_valid_until"
+    t.string "frame_sign_in_token"
+    t.datetime "frame_sign_in_token_valid_until"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -2702,6 +2732,7 @@ ActiveRecord::Schema.define(version: 2024_08_10_071843) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_categories", "deficiency_report_officers"
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_areas"

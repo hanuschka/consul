@@ -7,32 +7,26 @@ module Abilities
         merge Abilities::Common.new(user)
         dr_officer = user.deficiency_report_officer
 
-        can [:index, :show, :edit, :update_category, :add_memo], DeficiencyReport,
-          id: DeficiencyReport.where(officer: dr_officer).ids
+        can :index, DeficiencyReport
 
-        can [:update_official_answer], ::DeficiencyReport do |dr|
-          if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
-            dr.officer == dr_officer && dr.official_answer_approved == false
-          elsif Setting["deficiency_reports.admins_must_assign_officer"].present?
+        can [:show, :add_memo], DeficiencyReport do |dr|
+          if Setting["deficiency_reports.admins_must_assign_officer"].present?
             dr.officer == dr_officer
           else
             true
           end
         end
 
-        can [:update_status], ::DeficiencyReport do |dr|
-          if Setting["deficiency_reports.admins_must_approve_officer_answer"].present?
-            dr.officer == dr_officer && dr.official_answer_approved == false
-          elsif Setting["deficiency_reports.admins_must_assign_officer"].present?
-            dr.officer == dr_officer
+        can :edit, DeficiencyReport do |dr|
+          if Setting["deficiency_reports.admins_must_assign_officer"].present?
+            dr.officer == dr_officer && Setting["deficiency_reports.officers_can_edit_assigned_reports"].present?
           else
-            true
+            Setting["deficiency_reports.officers_can_edit_assigned_reports"].present?
           end
         end
 
-        can [:update_officer], ::DeficiencyReport do |dr|
-          Setting["deficiency_reports.admins_must_assign_officer"].present? ? dr.officer == dr_officer : true
-        end
+        can :get_coordinates_map_location, MapLocation
+        can :send_notification, Memo, user_id: user.id
       end
     end
   end

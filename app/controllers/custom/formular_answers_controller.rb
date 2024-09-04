@@ -17,8 +17,7 @@ class FormularAnswersController < ApplicationController
     validate_answer(@formular_answer)
 
     if @formular_answer.answer_errors.none? && @formular_answer.save
-      email = @formular_answer.email_address
-      Mailer.formular_answer_confirmation(email).deliver_later if email.present?
+      Mailer.formular_answer_confirmation(@formular_answer).deliver_later
       @success_notification = t("custom.formular_answer.notifications.success")
       render :create_success
     else

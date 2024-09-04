@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Polls::ListItemComponent < ApplicationComponent
+  delegate :link_to_poll, to: :helpers
   attr_reader :poll
 
   def initialize(poll:)

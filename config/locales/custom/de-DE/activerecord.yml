@@ -223,7 +223,7 @@ de:
         longitude: "Längengrad (optional)"
         name: "Name der Rubrik"
         price: "Preis"
-        population: "Anzahl der Personen"
+        population: "Bevölkerungszahl (optional)"
         max_ballot_lines: "Stimmen erlaubt"
       budget/heading/translation:
         name: "Name der Rubrik"

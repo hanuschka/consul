@@ -98,7 +98,6 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::BudgetPhase" => {
           base: {
             "feature.general.only_admins_create_investment_proposals": "",
-            "feature.general.show_results_after_first_vote": "",
 
             "feature.form.allow_attached_image": "active",
             "feature.form.show_implementation_option_fields": "",

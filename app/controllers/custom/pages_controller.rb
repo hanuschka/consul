@@ -230,8 +230,7 @@ class PagesController < ApplicationController
     params[:section] ||= "results" if @budget.phase == "finished"
 
     # con-1036
-    if @budget.phase == "publishing_prices" &&
-        @projekt_phase.settings.find_by(key: "feature.general.show_results_after_first_vote").value.present?
+    if @budget.phase == "publishing_prices" && @budget.show_results_after_first_vote?
       @current_filter = "selected"
     end
     # con-1036

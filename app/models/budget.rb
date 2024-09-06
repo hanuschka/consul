@@ -67,7 +67,7 @@ class Budget < ApplicationRecord
   end
 
   def current_phase
-    phases.send(phase)
+    phases.published.where("starts_at < ? AND ends_at > ?", Time.zone.today, Time.zone.today).last || phases.published.last
   end
 
   def published_phases

@@ -463,12 +463,12 @@ de:
         nav_bar:
           duration: Laufzeit
           naming: Benennung
-          restrictions: Beschränkung (neu)
+          restrictions: Beschränkung
           settings: Funktionen
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
-          age_ranges_for_stats: Alterskohorden (neu)
+          age_ranges_for_stats: Alterskohorden
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
@@ -481,8 +481,8 @@ de:
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
           poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer (neu)
-          poll_recounts: Auszählung (neu)
+          poll_officer_assignments: Wahlhelfer
+          poll_recounts: Auszählung
           poll_results: Ergebnisse
           budget_edit: Budget editieren
           budget_phases: Budget Phasen
@@ -503,7 +503,7 @@ de:
         edit:
           title: Einstellung für Phase
         duration:
-          page_title: Wie lange soll die Laufzeit dieser Projektphase sein?
+          page_title: Wie soll die Laufzeit der Phase sein?
           start_date: Anfangsdatum
           end_date: Enddatum
         naming:

@@ -12,6 +12,7 @@ namespace :projekt_management do
       put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
+      get :age_ranges_for_stats
       get :projekt_questions
       get :projekt_livestreams
       get :projekt_events

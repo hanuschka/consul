@@ -2,6 +2,8 @@ class ProjektPhase::VotingPhase < ProjektPhase
   has_many :polls, foreign_key: :projekt_phase_id,
     dependent: :restrict_with_exception, inverse_of: :projekt_phase
 
+  accepts_nested_attributes_for :polls
+
   after_create(-> { create_poll })
 
   def phase_activated?
@@ -47,6 +49,6 @@ class ProjektPhase::VotingPhase < ProjektPhase
     def create_poll
       return if poll.present?
 
-      polls.create!(name: "poll_for_voting_phase_#{id}")
+      polls.create!(name: projekt.name)
     end
 end

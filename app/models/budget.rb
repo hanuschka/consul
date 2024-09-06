@@ -8,17 +8,17 @@ class Budget < ApplicationRecord
   translates :name, :main_link_text, :main_link_url, touch: true
   include Globalizable
 
-  class Translation
-    validate :name_uniqueness_by_budget
+  # class Translation
+  #   validate :name_uniqueness_by_budget
 
-    def name_uniqueness_by_budget
-      if Budget.joins(:translations)
-               .where(name: name)
-               .where.not("budget_translations.budget_id": budget_id).any?
-        errors.add(:name, I18n.t("errors.messages.taken"))
-      end
-    end
-  end
+  #   def name_uniqueness_by_budget
+  #     if Budget.joins(:translations)
+  #              .where(name: name)
+  #              .where.not("budget_translations.budget_id": budget_id).any?
+  #       errors.add(:name, I18n.t("errors.messages.taken"))
+  #     end
+  #   end
+  # end
 
   CURRENCY_SYMBOLS = %w[€ $ £ ¥].freeze
   VOTING_STYLES = %w[knapsack approval distributed].freeze

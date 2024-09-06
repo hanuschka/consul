@@ -25,9 +25,15 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget&.investments&.count
   end
 
+  def settings_categories
+    %w[form_author user_functions]
+  end
+
   def admin_nav_bar_items
     %w[
-      duration naming restrictions settings map budget_edit budget_phases age_ranges_for_stats
+      duration naming restrictions
+      form_author user_functions
+      map budget_edit budget_phases age_ranges_for_stats
       projekt_labels sentiments
     ]
   end

@@ -210,7 +210,7 @@ class PagesController < ApplicationController
     @budget = @projekt_phase.budget
     return if @budget.blank?
 
-    @heading = @budget.headings.first
+    @heading = @budget.heading
 
     @all_resources = []
 

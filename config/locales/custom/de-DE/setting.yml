@@ -272,8 +272,6 @@ de:
           show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
-          enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
-          enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
           allow_attached_documents: Zusätzliche Dokumente
           allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
           only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen

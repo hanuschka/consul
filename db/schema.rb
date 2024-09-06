@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_05_075159) do
+ActiveRecord::Schema.define(version: 2024_09_06_073058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -409,6 +409,8 @@ ActiveRecord::Schema.define(version: 2024_09_05_075159) do
     t.string "user_cost_estimate"
     t.string "on_behalf_of"
     t.integer "qualified_total_ballot_line_weight", default: 0
+    t.string "video_url"
+    t.bigint "sentiment_id"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -417,6 +419,7 @@ ActiveRecord::Schema.define(version: 2024_09_05_075159) do
     t.index ["heading_id"], name: "index_budget_investments_on_heading_id"
     t.index ["incompatible"], name: "index_budget_investments_on_incompatible"
     t.index ["selected"], name: "index_budget_investments_on_selected"
+    t.index ["sentiment_id"], name: "index_budget_investments_on_sentiment_id"
     t.index ["tsv"], name: "index_budget_investments_on_tsv", using: :gin
   end
 
@@ -2732,6 +2735,7 @@ ActiveRecord::Schema.define(version: 2024_09_05_075159) do
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"
+  add_foreign_key "budget_investments", "sentiments"
   add_foreign_key "budget_valuators", "budgets"
   add_foreign_key "budget_valuators", "valuators"
   add_foreign_key "budgets", "projekt_phases"

@@ -117,8 +117,6 @@ de:
             show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Community” für Investitionsvorschläge
             show_related_content: Verwandte Inhalte
             show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
-            enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
-            enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
       projekt_questions:

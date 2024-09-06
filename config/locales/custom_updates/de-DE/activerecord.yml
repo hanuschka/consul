@@ -93,6 +93,12 @@ de:
           attributes:
             email:
               invalid: Bitte geben Sie ein gültiges E-Mail-Format ein
+        budget_investment:
+          attributes:
+            projekt_labels:
+              blank: Bitte wählen Sie mindestens ein Label
+            sentiment:
+              blank: Bitte wählen Sie ein Sentiment
     attributes:
       projekt:
         total_duration_start: Anfangsdatum

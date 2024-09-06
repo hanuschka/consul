@@ -163,15 +163,17 @@ class Budget < ApplicationRecord
   end
 
   def single_group?
-    groups.one?
+    # groups.one?
+    true
   end
 
   def single_heading?
-    single_group? && headings.one?
+    # single_group? && headings.one?
+    true
   end
 
   def heading_price(heading)
-    heading_ids.include?(heading.id) ? heading.price : -1
+    heading.price || -1
   end
 
   def formatted_amount(amount)

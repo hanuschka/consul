@@ -116,14 +116,19 @@
           <% end %>
         <% end %>
 
+        <% if @investment.video_url.present? && !projekt_phase_feature?(@investment.projekt_phase, "resource.show_video_as_link") %>
+          <div class="proposal-resources-section">
+            <%= render(Shared::ExternalVideoPlayer.new(url: @investment.video_url)) %>
+          </div>
+        <% end %>
+
         <div id="comments" class="footer-anchor">
         </div>
 
         <div class="proposal-resources-sections">
-          <% if projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") ||
-                projekt_phase_feature?(@investment&.projekt_phase, "resource.enable_investment_milestones_tab") %>
+          <% if @milestones.present? || projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") %>
 
-            <% if projekt_phase_feature?(@investment.projekt_phase, "resource.enable_investment_milestones_tab") && @milestones.present? %>
+            <% if @milestones.present? %>
               <div class="proposal-resources-section">
                 <%= render Shared::MilestonesComponent.new(milestones: @milestones, milestoneable: @investment) %>
               </div>
@@ -176,6 +181,14 @@
               </div>
             <% end %>
 
+          <% end %>
+        <% end %>
+
+        <% if @investment.video_url.present? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_video_as_link") %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.title_video_url"), icon_name: "video")) do %>
+            <div class="video-link">
+              <%= sanitize_and_auto_link @investment.video_url %>
+            </div>
           <% end %>
         <% end %>
 

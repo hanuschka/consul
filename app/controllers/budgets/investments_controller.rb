@@ -168,7 +168,7 @@ module Budgets
           @heading = @budget.headings.find_by_slug_or_id! params[:heading_id]
           @assigned_heading = @ballot&.heading_for_group(@heading.group)
         elsif @budget.single_heading?
-          @heading = @budget.headings.first
+          @heading = @budget.heading
         end
       end
 

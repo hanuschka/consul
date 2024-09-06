@@ -22,6 +22,18 @@
     </div>
   </div>
 
+  <% if @projekt_phase.name == "voting_phase" %>
+    <%= f.fields_for :polls do |polls_form| %>
+      <%= polls_form.translatable_fields do |poll_translations_form| %>
+        <div class="row">
+          <div class="column large-8">
+            <%= poll_translations_form.text_field :name %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <%= f.translatable_fields do |translations_form| %>
     <div class="row">
       <div class="column large-8">

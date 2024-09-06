@@ -277,17 +277,24 @@ module ProjektPhaseAdminActions
   end
 
   def poll_questions
+    authorize!(:poll_questions, @projekt_phase)
     @poll = @projekt_phase.poll
     @questions = @poll.questions
+
+    render "custom/admin/projekt_phases/poll_questions"
   end
 
   def poll_booth_assignments
+    authorize!(:poll_booth_assignments, @projekt_phase)
     @poll = @projekt_phase.poll
     @booth_assignments = @poll.booth_assignments.includes(:booth).order("poll_booths.name")
                               .page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_booth_assignments"
   end
 
   def poll_officer_assignments
+    authorize!(:poll_officer_assignments, @projekt_phase)
     @poll = @projekt_phase.poll
     @officers = ::Poll::Officer.
                   includes(:user).
@@ -295,20 +302,28 @@ module ProjektPhaseAdminActions
                   where(
                     id: @poll.officer_assignments.select(:officer_id).distinct.map(&:officer_id)
                   ).page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_officer_assignments"
   end
 
   def poll_recounts
+    authorize!(:poll_recounts, @projekt_phase)
     @poll = @projekt_phase.poll
     @stats = Poll::Stats.new(@poll)
     @booth_assignments = @poll.booth_assignments.
                               includes(:booth, :recounts, :voters).
                               order("poll_booths.name").
                               page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_recounts"
   end
 
   def poll_results
+    authorize!(:poll_results, @projekt_phase)
     @poll = @projekt_phase.poll
     @partial_results = @poll.partial_results
+
+    render "custom/admin/projekt_phases/poll_results"
   end
 
   def budget_edit
@@ -363,6 +378,7 @@ module ProjektPhaseAdminActions
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
+        polls_attributes: [:id, :show_open_answer_author_name, translation_params(Poll)],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params_to_permit)
     end
 

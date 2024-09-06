@@ -25,8 +25,17 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget&.investments&.count
   end
 
+  def settings_categories
+    %w[form_author user_functions]
+  end
+
   def admin_nav_bar_items
-    %w[duration naming restrictions settings map age_ranges_for_stats]
+    %w[
+      duration naming restrictions
+      form_author user_functions
+      map budget_edit budget_phases age_ranges_for_stats
+      projekt_labels sentiments
+    ]
   end
 
   def safe_to_destroy?

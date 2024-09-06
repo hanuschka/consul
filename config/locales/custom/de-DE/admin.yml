@@ -212,7 +212,7 @@ de:
         title: "%{budget} / %{group} Rubriken"
     budget_phases:
       edit:
-        title: "Phase editieren"
+        title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
         description_help_text: Dieser Text erscheint in der Kopfzeile, wenn die Phase aktiv ist
         duration: "Dauer der Phase"
         duration_description: "Der Zeitraum, in dem diese Phase aktiv sein wird."

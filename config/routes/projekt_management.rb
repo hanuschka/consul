@@ -12,6 +12,7 @@ namespace :projekt_management do
       put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
+      get :age_ranges_for_stats
       get :projekt_questions
       get :projekt_livestreams
       get :projekt_events
@@ -20,6 +21,13 @@ namespace :projekt_management do
       get :projekt_arguments
       get :formular
       get :formular_answers
+      get :poll_questions
+      get :poll_booth_assignments
+      get :poll_officer_assignments
+      get :poll_recounts
+      get :poll_results
+      get :budget_edit
+      get :budget_phases
     end
 
     resources :formular, only: [] do

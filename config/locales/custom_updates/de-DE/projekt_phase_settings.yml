@@ -93,10 +93,6 @@ de:
           general:
             only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
             only_admins_create_investment_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
-            show_results_after_first_vote: Ergebnisliste nach erster Beteiligungsphase anzeigen
-            show_results_after_first_vote_description: Zeigt in der Phase "Veröffentliching der Preise" nur ausgewählte Projekte als Ergebnisse an
-            show_relative_ballotting_results: Nur prozentuale Werte anzeigen
-            show_relative_ballotting_results_description: Blendet die absoluten Zahlen in den Statistiken aus. Nur prozentuale Werte werden angezeigt
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -121,8 +117,6 @@ de:
             show_community_button_in_sidebar_description: Aktivieren Sie die Funktion “Community” für Investitionsvorschläge
             show_related_content: Verwandte Inhalte
             show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
-            enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
-            enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
       projekt_questions:

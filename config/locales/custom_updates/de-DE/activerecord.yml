@@ -93,6 +93,12 @@ de:
           attributes:
             email:
               invalid: Bitte geben Sie ein gültiges E-Mail-Format ein
+        budget_investment:
+          attributes:
+            projekt_labels:
+              blank: Bitte wählen Sie mindestens ein Label
+            sentiment:
+              blank: Bitte wählen Sie ein Sentiment
     attributes:
       projekt:
         total_duration_start: Anfangsdatum
@@ -131,9 +137,13 @@ de:
         official_answer: Offizielle Antwort
         on_behalf_of: Erstellen im Namen von
       budget:
+        show_results_after_first_vote: Ergebnisse nach Unterstützungsphase
+        show_percentage_values_only: Prozentuale Werte
         voting_style_distributed: "Mehrere Stimmen"
         hide_money: Geld ausblenden
         max_number_of_winners: maximale Anzahl an Gewinnern
+      budget/heading:
+        price: Gesamtbudget
       budget/investment:
         implementation_performer: Umsetzung des Investitionsvorschlages
         implementation_performers:

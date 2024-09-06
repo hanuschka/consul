@@ -198,7 +198,10 @@ module ProjektPhaseAdminActions
   end
 
   def age_ranges_for_stats
+    authorize!(:age_ranges_for_stats, @projekt_phase)
     @age_ranges = AgeRange.for_stats
+
+    render "custom/admin/projekt_phases/age_ranges_for_stats"
   end
 
   def projekt_questions
@@ -306,6 +309,20 @@ module ProjektPhaseAdminActions
   def poll_results
     @poll = @projekt_phase.poll
     @partial_results = @poll.partial_results
+  end
+
+  def budget_edit
+    authorize!(:budget_edit, @projekt_phase)
+    @budget = @projekt_phase.budget
+
+    render "custom/admin/projekt_phases/budget_edit"
+  end
+
+  def budget_phases
+    authorize!(:budget_phases, @projekt_phase)
+    @budget = @projekt_phase.budget
+
+    render "custom/admin/projekt_phases/budget_phases"
   end
 
   def frame_new_phase_selector

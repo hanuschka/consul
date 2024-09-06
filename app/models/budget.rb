@@ -32,8 +32,8 @@ class Budget < ApplicationRecord
 
   has_many :investments, dependent: :destroy
   has_many :ballots, dependent: :destroy
-  has_many :groups, dependent: :destroy
-  has_many :headings, through: :groups
+  # has_many :groups, dependent: :destroy
+  # has_many :headings, through: :groups
   has_many :lines, through: :ballots, class_name: "Budget::Ballot::Line"
   has_many :phases, class_name: "Budget::Phase"
   has_many :budget_administrators, dependent: :destroy
@@ -67,7 +67,7 @@ class Budget < ApplicationRecord
   end
 
   def current_phase
-    phases.send(phase)
+    phases.published.where("starts_at < ? AND ends_at > ?", Time.zone.today, Time.zone.today).last || phases.published.last
   end
 
   def published_phases
@@ -163,15 +163,17 @@ class Budget < ApplicationRecord
   end
 
   def single_group?
-    groups.one?
+    # groups.one?
+    true
   end
 
   def single_heading?
-    single_group? && headings.one?
+    # single_group? && headings.one?
+    true
   end
 
   def heading_price(heading)
-    heading_ids.include?(heading.id) ? heading.price : -1
+    heading.price || -1
   end
 
   def formatted_amount(amount)

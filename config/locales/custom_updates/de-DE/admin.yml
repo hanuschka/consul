@@ -463,12 +463,12 @@ de:
         nav_bar:
           duration: Laufzeit
           naming: Benennung
-          restrictions: Beschränkung (neu)
+          restrictions: Beschränkung
           settings: Funktionen
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
-          age_ranges_for_stats: Alterskohorden (neu)
+          age_ranges_for_stats: Alterskohorden
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
@@ -481,9 +481,11 @@ de:
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
           poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer (neu)
-          poll_recounts: Auszählung (neu)
+          poll_officer_assignments: Wahlhelfer
+          poll_recounts: Auszählung
           poll_results: Ergebnisse
+          budget_edit: Budget editieren
+          budget_phases: Budget Phasen
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -493,15 +495,15 @@ de:
           update_button: Speichern
         phase_tab_name: Name in Tab auf der Projektseite
         cta_button_name: Buttontext auf der Projektseite
-        resource_form_title: Text bei Erstellung
-        resource_form_title_hint: Platzhalter
-        labels_name: Labels
-        sentiments_name: Sentiments
+        resource_form_title: Überschrift des Erstellungsformulars
+        resource_form_title_hint: Text des Platzhalters im Erstellungsformular
+        labels_name: Alternativtext zu Labels
+        sentiments_name: Alternativtext zu Sentimente
         projekt_selector_hint: Hinweise zum Projekt
         edit:
           title: Einstellung für Phase
         duration:
-          page_title: Wie lange soll die Laufzeit dieser Projektphase sein?
+          page_title: Wie soll die Laufzeit der Phase sein?
           start_date: Anfangsdatum
           end_date: Enddatum
         naming:
@@ -511,18 +513,18 @@ de:
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer*innen
+            no_restriction: Keine Beschränkung
           extended_geo_restrictions:
             title: Individuelle Gebiete
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
+            no_restriction: Keine Beschränkung
           geo_restrictions:
             title: Gebietsbeschränkung
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
-            only_citizens: Nur Bürger:innen der Stadt
-            only_geozones: Nur Bürger:innen des Stadtteils
-            only_streets: Nur Bürger:innen aus Straße
+            no_restriction: Keine Beschränkung
+            only_citizens: Bürger:innen der Stadt
+            only_geozones: Bürger:innen des Stadtteils
+            only_streets: Bürger:innen aus Straße
           individual_group_values:
             title: Gruppen
           user_status:

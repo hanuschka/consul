@@ -137,9 +137,9 @@ class Projekt < ApplicationRecord
       .where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
   }
 
-  scope :current_for_import, ->(timestamp = Time.zone.today) {
-    where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
-  }
+  # scope :current_for_import, ->(timestamp = Time.zone.today) {
+  #   where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
+  # }
 
   scope :expired, ->(timestamp = Time.zone.today) {
     activated

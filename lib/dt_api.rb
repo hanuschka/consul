@@ -20,13 +20,23 @@ class DtApi
 
     post(
       "/clients/connect",
-      # headers: { "Content-Type" => "application/json" },
       multipart: true,
+      **base_headers,
       body: {
         **params,
         logo: File.open(Rails.root.join("app", "assets", "images", "logo_header.png").to_s)
       },
       **additional_settings
     )
+  end
+
+  def self.base_headers
+    if Rails.env.development?
+      {
+        headers: { "X-Consul-Development-Domain" => Rails.application.secrets.server_name }
+      }
+    else
+      {}
+    end
   end
 end

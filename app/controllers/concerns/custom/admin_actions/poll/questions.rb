@@ -40,8 +40,6 @@ module AdminActions::Poll::Questions
     if @question.save
       if @question.parent_question.present?
         redirect_to polymorphic_path([@namespace, @question.parent_question])
-      elsif @question.bundle_question?
-        redirect_to polymorphic_path([@namespace, @question])
       else
         redirect_to polymorphic_path([@namespace, @question.poll, @question], action: :edit_votation_type)
       end
@@ -62,8 +60,6 @@ module AdminActions::Poll::Questions
     if @question.update(question_params)
       if @question.parent_question.present?
         redirect_to polymorphic_path([@namespace, @question.parent_question]), notice: t("flash.actions.save_changes.notice")
-      elsif @question.bundle_question?
-        redirect_to polymorphic_path([@namespace, @question])
       else
         redirect_to polymorphic_path([@namespace, @question.poll, @question], action: :edit_votation_type), notice: t("flash.actions.save_changes.notice")
       end

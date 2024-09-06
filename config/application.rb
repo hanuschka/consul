@@ -118,14 +118,6 @@ module Consul
     config.action_dispatch.cookies_same_site_protection = ->(request) do
       general_allowed_paths = ["/users/send_bund_id_request"]
 
-      Rails.logger.info '================================='
-      Rails.logger.info "REQUEST DOMAIN: #{request.domain}"
-      Rails.logger.info "REQUEST HOST: #{request.host}"
-      Rails.logger.info "REQUEST ORIGIN: #{request.origin}"
-      Rails.logger.info "REQUEST FROM: #{request.from}"
-      Rails.logger.info "REQUEST REFERER: #{request.referer}"
-      Rails.logger.info '================================='
-
       if request.params[:embedded] == "true" #Current.token_user.present?
         :lax
       else

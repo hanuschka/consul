@@ -13,12 +13,6 @@ module ProjektPhaseAdminActions
       :frame_new_phase_selector
     ]
     before_action :set_namespace
-
-    # prepend_before_action :authentificate_frame_session_user!
-    #, only: [
-    #   :phases_restrictions, :restrictions, :update
-    # ]
-
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
   end
 

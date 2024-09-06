@@ -4,7 +4,7 @@
 <% provide :social_media_meta_tags do %>
   <%= render "shared/social_media_meta_tags",
     social_title: @custom_page.title,
-    social_description: strip_tags(@custom_page.content)[0..200],
+    social_description: strip_tags(@custom_page.content).to_s[0..200],
     og_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image.attachment) : nil),
     social_url: page_url(@custom_page.slug),
     twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
@@ -26,7 +26,7 @@
   <% end %>
 </style>
 
-<main class="projekt-page js-projekt-page">
+<main class="projekt-page js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
   <% if @custom_page.projekt.present? %>
     <div class="custom-fixed-tabs margin-bottom">
       <div class="custom-fixed-tabs--content">

@@ -25,6 +25,14 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget&.investments&.count
   end
 
+  def selectable_by_users?
+    feature?("resource.users_can_create_investment_proposals")
+  end
+
+  def selectable_by_admins_only?
+    !selectable_by_users?
+  end
+
   def settings_categories
     %w[form_author user_functions]
   end
@@ -32,8 +40,9 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   def admin_nav_bar_items
     %w[
       duration naming restrictions
+      budget_edit budget_phases
       form_author user_functions
-      map budget_edit budget_phases age_ranges_for_stats
+      map age_ranges_for_stats
       projekt_labels sentiments
     ]
   end

@@ -15,7 +15,7 @@ class Pages::Projekts::SidebarPhasesComponent < ApplicationComponent
   private
 
     def show_cta?
-      return true if projekt.budget_phases.any?(&:current?) && projekt.budgets.any?{ |budget| budget.phase.in?(%w[accepting selecting balloting]) }
+      return true if projekt.budget_phases.any?(&:current?) && projekt.budgets.any?{ |budget| budget.current_phase.kind.in?(%w[accepting selecting balloting]) }
 
       phases.any? { |phase| phase.type != "ProjektPhase::BudgetPhase" && phase.current? }
     end

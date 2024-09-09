@@ -17,14 +17,12 @@
         <div class="top-bar--title">
           <%= link_to root_path do %>
             <% if action_name == "machmit_jugend" %>
-              <%= image_tag(image_path_for("logo_header_weiss.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
-              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
+              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
+              <%= image_tag(image_path_for("logo_header_weiss.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
             <% else %>
-              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
-              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
+              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
+              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
             <% end %>
-            <%#= image_tag(topbar_image_path, alt: Setting["org_name"], class: 'top-bar--title-logo-top') %>
-            <%#= image_tag(image_path_for("logo_header_new.png"), alt: Setting["org_name"], class: 'top-bar--title-logo-stikcy') %>
           <% end %>
         </div>
 

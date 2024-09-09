@@ -94,7 +94,11 @@ namespace :admin do
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
 
-  resources :memos, only: %i[create destroy]
+  resources :memos, only: %i[create] do
+    member do
+      post :send_notification
+    end
+  end
 
   # custom individual groups routes
   resources :individual_groups do
@@ -165,6 +169,7 @@ namespace :admin do
   resources :debates, only: [:index, :show, :update]
 
   resources :proposals, only: [:index, :show, :update] do
+    collection { get :comments }
     member { patch :toggle_selection }
     resources :milestones, controller: "proposal_milestones"
     resources :progress_bars, except: :show, controller: "proposal_progress_bars"

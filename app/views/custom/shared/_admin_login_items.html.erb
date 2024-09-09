@@ -26,7 +26,7 @@
     </li>
   <% end %>
 
-  <% if current_user.administrator? || current_user.deficiency_report_manager?  %>
+  <% if current_user.administrator? || current_user.deficiency_report_manager? || current_user.deficiency_report_officer? %>
     <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
         tabindex="0"
         aria-label='<%= t("custom.layouts.header.deficiency_report_management") %>'

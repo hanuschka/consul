@@ -146,7 +146,10 @@ module ProjektPhaseAdminActions
   end
 
   def age_ranges_for_stats
+    authorize!(:age_ranges_for_stats, @projekt_phase)
     @age_ranges = AgeRange.for_stats
+
+    render "custom/admin/projekt_phases/age_ranges_for_stats"
   end
 
   def projekt_questions

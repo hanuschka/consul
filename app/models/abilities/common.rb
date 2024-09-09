@@ -141,15 +141,10 @@ module Abilities
       end
 
       can :create, Budget::Investment do |investment|
-        investment.budget.phase == "accepting" &&
-          (
-            (investment.projekt_phase.settings.find_by(
-              key: "feature.general.only_admins_create_investment_proposals").value.present? &&
-            (user.administrator? || user.projekt_manager?)) ||
+        projekt_phase = investment.budget.projekt_phase
 
-            investment.projekt_phase.settings.find_by(
-              key: "feature.general.only_admins_create_investment_proposals").value.blank?
-          )
+        investment.budget.current_phase.kind == "accepting" &&
+          (projekt_phase.selectable_by_users? || user.has_pm_permission_to?("manage", projekt_phase.projekt))
       end
 
       can [:create, :vote], Comment do |comment|

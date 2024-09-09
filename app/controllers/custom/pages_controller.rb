@@ -219,22 +219,22 @@ class PagesController < ApplicationController
     @all_resources = []
 
     @valid_filters = @budget.investments_filters
-    params[:filter] ||= "feasible" if @budget.phase.in?(["selecting", "valuating"])
-    params[:filter] ||= "selected" if @budget.phase.in?(["balloting"])
-    params[:filter] ||= "all" if @budget.phase.in?(["publishing_prices", "reviewing_ballots"])
-    params[:filter] ||= "winners" if @budget.phase == "finished"
+    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting", "valuating"])
+    params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["balloting"])
+    params[:filter] ||= "all" if @budget.current_phase.kind.in?(["publishing_prices", "reviewing_ballots"])
+    params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
     @valid_orders = %w[random supports ballots ballot_line_weight newest]
     @valid_orders.delete("supports")
     @valid_orders.delete("ballots")
-    @valid_orders.delete("ballot_line_weight") unless @budget.phase == "balloting"
+    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
-    params[:section] ||= "results" if @budget.phase == "finished"
+    params[:section] ||= "results" if @budget.current_phase.kind == "finished"
 
     # con-1036
-    if @budget.phase == "publishing_prices" && @budget.show_results_after_first_vote?
+    if @budget.current_phase.kind == "publishing_prices" && @budget.show_results_after_first_vote?
       @current_filter = "selected"
     end
     # con-1036
@@ -254,7 +254,7 @@ class PagesController < ApplicationController
       @investment_ids = @budget.investments.ids
     end
 
-    if @budget.phase == "finished"
+    if @budget.current_phase.kind == "finished"
       if @budget.voting_style == "distributed"
         @current_order = "ballot_line_weight"
       elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"

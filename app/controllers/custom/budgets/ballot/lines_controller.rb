@@ -44,7 +44,7 @@ module Budgets
 
         def set_filters
           @valid_filters = @budget.investments_filters
-          params[:filter] ||= "all" if @budget.phase.in?(["publishing_prices", "balloting", "reviewing_ballots"])
+          params[:filter] ||= "all" if @budget.current_phase.kind.in?(["publishing_prices", "balloting", "reviewing_ballots"])
           @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
         end
     end

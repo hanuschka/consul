@@ -32,6 +32,10 @@ de:
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
             enable_summary: "\"Zusammenfassung\" anzeigen"
             enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
+            labels: Labels
+            labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
+            sentiments: Sentiments
+            sentiments_description: Aktivieren Sie Sentimente, um den Nutzer zu ermöglichen Gefühle auszurücken
             show_map: Karte für Vorschläge anzeigen
             show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
             enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
@@ -90,23 +94,28 @@ de:
             show_open_answer_author_name_description: Zeigt den Benutzername der offenen Antworten an
       budget:
         feature:
-          general:
-            only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
-            only_admins_create_investment_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
-            show_implementation_option_fields: Umsetzung
-            show_implementation_option_fields_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Umsetzung” hinzu
-            show_user_cost_estimate: Preisliche Einschätzung
-            show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+            labels: Labels
+            labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
+            sentiments: Sentiments
+            sentiments_description: Aktivieren Sie Sentimente, um den Nutzer zu ermöglichen Gefühle auszurücken
             show_map: Karte für Investitionsvorschläge anzeigen
             show_map_description: Zeigt die Karte für Investitionsvorschläge in diesem Projekt an
             enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
             enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
             allow_attached_documents: Zusätzliche Dokumente
             allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+            enable_external_video: Externes Video einbinden
+            enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+            show_implementation_option_fields: Umsetzung
+            show_implementation_option_fields_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Umsetzung” hinzu
+            show_user_cost_estimate: Preisliche Einschätzung
+            show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           resource:
+            users_can_create_investment_proposals: Vorschläge einreichen
+            users_can_create_investment_proposals_description: Nutzer können Vorschläge erstellen
             remove_investments_supports: Zurückziehen von Unterstützungen für Investitionsvorschläge zulassen
             remove_investments_supports_description: Ermöglicht es den Nutzern, in der Phase der Projektauswahl Unterstützungen für Investitionsvorschläge zurückzuziehen
             show_report_button_in_sidebar: Investition melden
@@ -119,6 +128,8 @@ de:
             show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
+            show_video_as_link: Videos als Link anzeigen
+            show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
       projekt_questions:
         feature:
           general:

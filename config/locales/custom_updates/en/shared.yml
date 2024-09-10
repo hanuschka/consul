@@ -8,6 +8,7 @@ en:
       new_comments_component:
         comments: Comments
       participate_as_guest: participate as a guest
+      save_form: Save
     resource_page:
       banner_component:
         comments: Comments

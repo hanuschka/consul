@@ -426,13 +426,13 @@ de:
         title: Titel der Fassung
         body: Text
         changelog: Änderungen
-        status: Status
+        status: Status dieser Version
         status_draft: "Entwurf"
         status_published: "Veröffentlicht"
         final_version: Endgültige Version
       legislation/draft_version/translation:
-        title: Titel der Fassung
-        body: Text
+        title: Titel dieser Version
+        body: Text dieser Version
         changelog: Änderungen
       legislation/question:
         title: Titel

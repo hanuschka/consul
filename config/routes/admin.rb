@@ -29,6 +29,7 @@ namespace :admin do
       get :poll_results
       get :budget_edit
       get :budget_phases
+      get :legislation_process_draft_versions
     end
 
     resources :formular, only: [] do

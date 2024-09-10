@@ -340,6 +340,13 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/budget_phases"
   end
 
+  def legislation_process_draft_versions
+    authorize!(:legislation_process_draft_versions, @projekt_phase)
+    @process = @projekt_phase.legislation_process
+
+    render "custom/admin/projekt_phases/legislation_process_draft_versions"
+  end
+
   def frame_new_phase_selector
     @projekt = Projekt.find(params[:projekt_id])
 

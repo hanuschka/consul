@@ -486,6 +486,7 @@ de:
           poll_results: Ergebnisse
           budget_edit: Editieren
           budget_phases: Phasen
+          legislation_process_draft_versions: Entwurfsfassungen
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -641,6 +642,9 @@ de:
           page_title: Altersgruppen für Statistiken
         budget_edit:
           page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
+        legislation_process_draft_versions:
+          new_block_title: Möchten Sie eine Version hinzufügen?
+          list_title: Dies ist die Lister aller Textversionen
       modal_notifications:
         index:
           create: Erstellen

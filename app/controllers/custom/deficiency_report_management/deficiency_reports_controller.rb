@@ -112,8 +112,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     end
 
     def unassign_deficiency_report_officer
-      return unless @deficiency_report.deficiency_report_officer_id.blank?
-
       @deficiency_report.update_column(:deficiency_report_officer_id, nil)
     end
 end

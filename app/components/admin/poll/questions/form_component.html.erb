@@ -32,14 +32,12 @@
       </div>
     </div>
 
-    <% unless params[:parent_question_id].present? %>
-      <div class="row">
-        <div class="column">
-          <%= translations_form.text_area :description,
-            class: "html-area #{ck_editor_class(current_user)}" %>
-        </div>
+    <div class="row">
+      <div class="column">
+        <%= translations_form.text_area :description,
+          class: "html-area #{ck_editor_class(current_user)}" %>
       </div>
-    <% end %>
+    </div>
   <% end %>
 
   <% unless bundle_question? %>

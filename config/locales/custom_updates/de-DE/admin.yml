@@ -1,7 +1,8 @@
 de:
   admin:
     actions:
-      actions: Aktion
+      action: Aktion
+      actions: Aktionen
     homepage:
       feeds:
         active_projekts: Aktive Beteiligung

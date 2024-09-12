@@ -7,6 +7,8 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   load_and_authorize_resource
 
+  after_action :unassign_deficiency_report_officer, only: :destroy
+
   def index
     filter_assigned_reports_only
     @deficiency_reports = apply_filters(@deficiency_reports)
@@ -107,5 +109,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
 
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
+    end
+
+    def unassign_deficiency_report_officer
+      return unless @deficiency_report.deficiency_report_officer_id.blank?
+
+      @deficiency_report.update_column(:deficiency_report_officer_id, nil)
     end
 end

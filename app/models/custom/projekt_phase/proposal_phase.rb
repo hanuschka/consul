@@ -26,8 +26,12 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     proposals.for_public_render.count
   end
 
+  def selectable_by_users?
+    feature?("feature.general.users_can_create_proposals")
+  end
+
   def selectable_by_admins_only?
-    feature?("general.only_admins_create_proposals")
+    !selectable_by_users?
   end
 
   def settings_categories

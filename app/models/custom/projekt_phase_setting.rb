@@ -64,20 +64,24 @@ class ProjektPhaseSetting < ApplicationRecord
             "feature.form.enable_external_video": "",
             "feature.resource.show_video_as_link": "",
             "feature.resource.enable_proposal_notifications_tab": "",
-            "feature.resource.enable_proposal_milestones_tab": "",
+            "feature.resource.enable_proposal_milestones_tab": ""
           },
 
           user_functions: {
-            "feature.general.only_admins_create_proposals": "",
+            "feature.general.users_can_create_proposals": "active",
             "feature.resource.allow_voting": "active",
-            "feature.resource.enable_proposal_support_withdrawal": "active",
             "feature.resource.quorum_for_proposals": "",
+            "feature.resource.enable_proposal_support_withdrawal": "active",
             "feature.resource.show_report_button_in_sidebar": "active",
             "feature.resource.show_follow_button_in_proposal_sidebar": "",
             "feature.resource.show_community_button_in_proposal_sidebar": "",
             "feature.resource.show_related_content": "",
             "feature.resource.show_comments": "active",
             "option.resource.votes_for_proposal_success": 100
+          },
+
+          old: {
+            "feature.general.only_admins_create_proposals": ""
           }
         },
 

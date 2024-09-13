@@ -28,7 +28,7 @@ de:
             only_admins_create_proposals: Nur Admins können neue Vorschläge erstellen
             only_admins_create_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
           form:
-            allow_attached_image: Titelbild hinzufügen
+            allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
             enable_summary: "\"Zusammenfassung\" anzeigen"
             enable_summary_description: "Zeigt das Feld \"Zusammenfassung\" in den Vorschlägen an"
@@ -36,36 +36,36 @@ de:
             labels_description: Aktivieren Sie Labels, um Ihr Projekt zusätzlich zu strukturieren
             sentiments: Sentiments
             sentiments_description: Aktivieren Sie Sentimente, um den Nutzer zu ermöglichen Gefühle auszurücken
-            show_map: Karte für Vorschläge anzeigen
+            show_map: Karte
             show_map_description: Zeigt die Karte für Vorschläge in diesem Projekt an
-            enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+            enable_geoman_controls_in_maps: Polygone in Karte
             enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
-            allow_attached_documents: Zusätzliche Dokumente
+            allow_attached_documents: Dokumente
             allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
-            enable_external_video: Externes Video einbinden
+            enable_external_video: Video
             enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
           resource:
-            allow_voting: Unterstützung von Vorschlägen
+            allow_voting: Unterstützung
             allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
             enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen
             enable_proposal_support_withdrawal_description: Aktivieren Sie die Rücknahme der Vorschlagsunterstützung
-            quorum_for_proposals: Quorum für Vorschläge
+            quorum_for_proposals: Quorum
             quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
-            show_report_button_in_sidebar: Vorschlag melden
+            show_report_button_in_sidebar: Melden
             show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Vorschläge
-            show_follow_button_in_proposal_sidebar: Vorschlag folgen
+            show_follow_button_in_proposal_sidebar: Folgen
             show_follow_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion “Vorschlag folgen”
             show_community_button_in_proposal_sidebar: Arbeitskreise
             show_community_button_in_proposal_sidebar_description: Aktivieren Sie die Funktion “Arbeitskreise” für Vorschläge
             show_related_content: Verwandte Inhalte
             show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Vorschläge
-            enable_proposal_notifications_tab: Benachrichtigungen des Autors zu Vorschlägen
+            enable_proposal_notifications_tab: Benachrichtigungen
             enable_proposal_notifications_tab_description: Aktivieren Sie die Benachrichtigungen von Autoren zu eigenen Vorschlägen
-            enable_proposal_milestones_tab: Meilensteine in Vorschlägen
+            enable_proposal_milestones_tab: Meilensteine
             enable_proposal_milestones_tab_description: Aktivieren Sie "Meilensteine" in Vorschlägen, die von der Verwaltung angelegt werden müssen
             show_comments: Kommentare
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
-            show_video_as_link: Videos als Link anzeigen
+            show_video_as_link: Videos als Link
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
         option:
           resource:

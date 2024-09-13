@@ -543,15 +543,16 @@ de:
             form_author: Formular Autor
             user_functions: Funktionen Nutzer
         projekt_labels:
-          name: Labels
-          page_title: Labels
-          create_button: Label erstellen
+          new_block_title: Möchten Sie ein Label hinzufügen?
+          list_title: Hier ist die Liste aller Labels
+          create_button: Neues Label erstellen
           no_labels: Für dieses Projekt sind noch keine Labels hinterlegt
           table:
             icon: Icon
             color: Farbe
             name: Name
           form:
+            title: Welchen Namen und welches Icon soll Ihr Label haben?
             color_placeholder: "HEX Code mit #"
         sentiments:
           page_title: Sentiments

@@ -22,6 +22,8 @@ de:
         expires_today: Läuft nur noch heute
         participate_button: Teilnehmen
         phase_expired_button: Ergebnisse
+        phase_current_button: Teilnehmen
+        phase_not_started_button: Vorschau
       questions:
         prev_question: "Vorherige Frage"
         next_question: "Nächste Frage"

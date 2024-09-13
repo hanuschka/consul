@@ -7,6 +7,7 @@ namespace :projekt_management do
       get :naming
       get :restrictions
       get :settings
+      get :age_ranges_for_stats
       get :map
       patch :update_map
       put :copy_map_settings_from_projekt

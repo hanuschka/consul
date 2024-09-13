@@ -21,6 +21,8 @@ en:
         expires_today: Expires today
         participate_button: Participate now!
         phase_expired_button: Results
+        phase_current_button: Participate
+        phase_not_started_button: Preview
       questions:
         answers:
           more_info: More info

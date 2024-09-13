@@ -555,13 +555,15 @@ de:
             title: Welchen Namen und welches Icon soll Ihr Label haben?
             color_placeholder: "HEX Code mit #"
         sentiments:
-          page_title: Sentiments
-          create_button: Sentiment erstellen
+          new_block_title: Möchten Sie ein Sentiment hinzufügen?
+          list_title: Hier ist die Liste aller Sentimente
+          create_button: Neues Sentiment erstellen
           no_sentiments: Für dieses Projekt sind noch keine Sentiments hinterlegt
           table:
             color: Farbe
             name: Name
           form:
+            title: Welchen Namen und welche Farbe soll Ihr Sentiment haben?
             color_placeholder: "HEX Code mit #"
           notice:
             destroy: Sentiment erfolgreich gelöscht

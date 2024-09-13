@@ -213,6 +213,10 @@ de:
           soft: schwache Gruppe
       individual_group_value:
         name: Name
+      sentiment:
+        color: Farbe des Sentiments
+      sentiment/translation:
+        name: Name des Sentiments
       projekt_label:
         icon: Icon des Labels
       projekt_label/translation:

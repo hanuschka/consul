@@ -23,7 +23,9 @@ class Polls::ListItemComponent < ApplicationComponent
   private
 
     def button_text
-      if poll.current? || poll.expired?
+      if poll.current?
+        t("custom.polls.poll.phase_current_button")
+      elsif poll.expired?
         t("custom.polls.poll.phase_expired_button")
       else
         t("custom.polls.poll.phase_not_started_button")

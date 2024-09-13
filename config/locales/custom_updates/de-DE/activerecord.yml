@@ -218,8 +218,8 @@ de:
         color: Farbe
         name: Name
       projekt_question:
-        show_answers_count: Anzahl der Stimmen im Frontend anzeigen
-        comments_enabled: Offene Antwort aktiviert
+        show_answers_count: Stimmenanzahl veröffentlichen
+        comments_enabled: Offene Antworten
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort

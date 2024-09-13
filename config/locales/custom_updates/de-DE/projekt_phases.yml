@@ -8,6 +8,8 @@ de:
         budget_phase: Jetzt mitmachen
         formular_phase: Jetzt teilnehmen
         legislation_phase: Jetzt mitmachen
+        comment_phase: Jetzt mitmachen
+        livestream_phase: Jetzt mitmachen
       permission_problem:
         new_button_component:
           shared:

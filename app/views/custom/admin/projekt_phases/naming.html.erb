@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase", "voting_phase", "question_phase", "formular_phase", "legislation_phase"]) %>
+    <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase", "voting_phase", "question_phase", "formular_phase", "legislation_phase", "comment_phase", "livestream_phase"]) %>
       <div class="row">
         <div class="column large-8">
           <strong><%= t("custom.admin.projekt_phases.cta_button_name") %></strong>

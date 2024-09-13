@@ -55,7 +55,7 @@ namespace :admin do
         post :send_notifications
       end
     end
-    resources :projekt_livestreams, only: [:create, :update, :destroy] do
+    resources :projekt_livestreams, only: [:new, :edit, :create, :update, :destroy] do
       member do
         post :send_notifications
       end

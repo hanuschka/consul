@@ -574,7 +574,7 @@ de:
             answers_count: Anzahl der Antworten
             comments_count: Anzahl der Kommentare
           new:
-            title_livestream: Frage für Livestream erstellen
+            title_livestream: Welche Frage wollen Sie stellen und welche Antwortoptionen möchten Sie beiten?
             title: Frage erstellen
         map:
           copy_from_projekt: vom Projekt übernehmen
@@ -607,12 +607,17 @@ de:
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
         projekt_livestreams:
-          page_title: Livestreams
-          all_livestreams: Alle Livestreams
+          new_block_title: Möchten Sie einen Livestream hinzufügen?
+          new_button_title: Livestream hinzufügen
+          all_livestreams: Dies ist die Liste aller Livestreams
           add_question: Frage hinzufügen
           questions: Kurzumfragen
+          edit_livestream: Kurzumfrage editieren
+          delete_livestream: Kurzumfrage löschen
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
+          new:
+            title: Welche URL hat Ihr Livestream?
         formular:
           page_title: Formular
           primary_fields_title: Reguläre Formularfelder

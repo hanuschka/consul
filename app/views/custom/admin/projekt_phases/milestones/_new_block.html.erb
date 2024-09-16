@@ -1,0 +1,5 @@
+<h2><%= t("custom.admin.projekt_phases.milestones.new_block_title") %></h2>
+
+<%= link_to t("custom.admin.projekt_phases.milestones.create_button"),
+            polymorphic_path([@namespace, milestoneable, milestoneable.milestones.new], action: :new),
+            class: "button hollow" %>

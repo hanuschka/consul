@@ -474,6 +474,7 @@ de:
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
           milestones: Liste der Meilensteine
+          progress_bars: Fortschrittsbalken
           projekt_notifications: Benachrichtigungen
           projekt_arguments: Liste von Stimmen
           formular: Formular
@@ -567,6 +568,14 @@ de:
             color_placeholder: "HEX Code mit #"
           notice:
             destroy: Sentiment erfolgreich gelöscht
+        milestones:
+          new_block_title: Möchten Sie einen Meilenstein setzen?
+          new_button: Meilenstein hinzufügen
+          list_title: Dies ist die Liste aller Meilensteine
+        progress_bars:
+          new_block_title: Möchten Sie einen Fortschrittsbalken hinzufügen?
+          new_button: Fortschrittsbalken hinzufügen / vewalten
+          list_title: Dies ist die Ihr aktueller Fortschrittsbalken
         projekt_questions:
           new_block_title: Möchten Sie eine Frage hinzufügen?
           create_button: Frage erstellen

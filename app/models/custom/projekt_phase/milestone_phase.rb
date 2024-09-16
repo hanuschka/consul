@@ -20,7 +20,7 @@ class ProjektPhase::MilestonePhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[naming settings milestones]
+    %w[naming settings milestones progress_bars]
   end
 
   def safe_to_destroy?

@@ -355,7 +355,7 @@ de:
         table_id: "ID"
         table_title: "Titel"
         table_description: "Beschreibung"
-        table_publication_date: "Datum der Veröffentlichung"
+        table_publication_date: "Veröffentlichung"
         table_status: Status
         table_actions: "Aktionen"
         no_milestones: "Keine Meilensteine definiert"

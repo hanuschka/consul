@@ -1,0 +1,7 @@
+<h2><%= t("custom.admin.projekt_phases.projekt_questions.new_block_title") %></h2>
+
+<%= link_to t("custom.admin.projekt_phases.projekt_questions.create_button"), polymorphic_path([@namespace, @projekt_phase, ProjektQuestion.new], action: :new), class: "button" %>
+
+<% unless embedded? %>
+  <%= link_to t("custom.admin.projekt_phases.projekt_questions.send_notifications_button"), polymorphic_path([@namespace, @projekt_phase, ProjektQuestion.new], action: :send_notifications), method: :post, class: "button margin-right" %>
+<% end %>

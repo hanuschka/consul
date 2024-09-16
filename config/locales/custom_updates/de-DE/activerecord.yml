@@ -226,8 +226,10 @@ de:
       projekt_label/translation:
         name: Name des Labels
       projekt_question:
-        show_answers_count: Stimmenanzahl veröffentlichen
-        comments_enabled: Offene Antworten
+        show_answers_count: Anzahl der Stimmen im Frontend anzeigen
+        comments_enabled: Offene Antwort aktiviert
+      projekt_question/translation:
+        title: Frage
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort

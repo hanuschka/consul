@@ -68,7 +68,7 @@ class ProjektPhaseSetting < ApplicationRecord
           },
 
           user_functions: {
-            "feature.general.users_can_create_proposals": "active",
+            "feature.resource.users_can_create_proposals": "active",
             "feature.resource.allow_voting": "active",
             "feature.resource.quorum_for_proposals": "",
             "feature.resource.enable_proposal_support_withdrawal": "active",

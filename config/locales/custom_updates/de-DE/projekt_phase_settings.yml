@@ -24,9 +24,6 @@ de:
             show_comments_description: Aktivieren Sie "Kommentare" für das Diskussionsmodul
       proposals:
         feature:
-          general:
-            only_admins_create_proposals: Nur Admins können neue Vorschläge erstellen
-            only_admins_create_proposals_description: Die Erstellung von neuen Vorschlägen ist auf Admins beschränkt
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -45,6 +42,8 @@ de:
             enable_external_video: Video
             enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
           resource:
+            users_can_create_proposals: Vorschläge einreichen
+            users_can_create_proposals_description: Nutzer können Vorschläge erstellen
             allow_voting: Unterstützung
             allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
             enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen

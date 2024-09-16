@@ -568,14 +568,16 @@ de:
           notice:
             destroy: Sentiment erfolgreich gelöscht
         projekt_questions:
-          page_title: Kurzumfrage
+          new_block_title: Möchten Sie eine Frage hinzufügen?
           create_button: Frage erstellen
           send_notifications_button: Benachrichtigungen senden
+          list_title: Dies ist die Liste aller Fragen
           table:
-            title: Kurzumfrage
-            question_options: Antwortmöglichkeiten
-            answers_count: Anzahl der Antworten
-            comments_count: Anzahl der Kommentare
+            title: Fragen
+            question_options: Antworten
+            comments_count: Kommentare
+          form:
+            question_options: Mögliche Antwortoptionen
           new:
             title_livestream: Welche Frage wollen Sie stellen und welche Antwortoptionen möchten Sie beiten?
             title: Frage erstellen

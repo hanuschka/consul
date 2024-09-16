@@ -27,7 +27,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def selectable_by_users?
-    feature?("feature.general.users_can_create_proposals")
+    feature?("feature.resource.users_can_create_proposals")
   end
 
   def selectable_by_admins_only?

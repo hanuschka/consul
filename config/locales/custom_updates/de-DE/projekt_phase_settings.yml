@@ -143,9 +143,9 @@ de:
         option:
           general:
             newsfeed_id: Newsfeed ID
-            newsfeed_id_description:
+            newsfeed_id_description: Bitte geben Sie hier die ID des News-Feeds ein
             newsfeed_type: Newsfeed Type
-            newsfeed_type_description:
+            newsfeed_type_description: Bitte geben Sie hier den Typ des News-Feeds an
       formular:
         feature:
           general:

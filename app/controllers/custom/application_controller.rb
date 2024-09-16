@@ -80,7 +80,6 @@ class ApplicationController < ActionController::Base
           )
           .order(created_at: :asc)
           .show_in_navigation
-          .limit(5)
           .lazy
           .select { |p| p.visible_for?(current_user) }
     end

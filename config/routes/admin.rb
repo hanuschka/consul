@@ -18,6 +18,7 @@ namespace :admin do
       get :projekt_livestreams
       get :projekt_events
       get :milestones
+      get :progress_bars
       get :projekt_notifications
       get :projekt_arguments
       get :formular
@@ -55,7 +56,7 @@ namespace :admin do
         post :send_notifications
       end
     end
-    resources :projekt_livestreams, only: [:create, :update, :destroy] do
+    resources :projekt_livestreams, only: [:new, :edit, :create, :update, :destroy] do
       member do
         post :send_notifications
       end

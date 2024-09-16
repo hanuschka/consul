@@ -26,6 +26,8 @@ class Pages::Projekts::SidebarCtaComponent < ApplicationComponent
         ProjektPhase::QuestionPhase
         ProjektPhase::FormularPhase
         ProjektPhase::LegislationPhase
+        ProjektPhase::CommentPhase
+        ProjektPhase::LivestreamPhase
       ]
     end
 

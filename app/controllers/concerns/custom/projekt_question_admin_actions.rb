@@ -12,7 +12,7 @@ module ProjektQuestionAdminActions
     @projekt_question = @projekt_phase.questions.new
     authorize!(:new, @projekt_question)
 
-    render "custom/admin/projekt_questions/edit"
+    render "custom/admin/projekt_questions/new"
   end
 
   def create

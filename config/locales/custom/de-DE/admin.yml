@@ -355,7 +355,7 @@ de:
         table_id: "ID"
         table_title: "Titel"
         table_description: "Beschreibung"
-        table_publication_date: "Datum der Veröffentlichung"
+        table_publication_date: "Veröffentlichung"
         table_status: Status
         table_actions: "Aktionen"
         no_milestones: "Keine Meilensteine definiert"
@@ -676,9 +676,9 @@ de:
           title: "\"%{question_title}\" bearbeiten"
           submit_button: Änderungen speichern
         form:
-          add_option: Antwortmöglichkeit hinzufügen
+          add_option: Antwort hinzufügen
           value_placeholder: Geschlossene Antwort hinzufügen
-          question_options: "Mögliche Antworten (optional, standardmäßig offene Antworten)"
+          question_options: Antworten
         index:
           back: Zurück
           title: Fragen, die mit diesem Beteiligungsverfahren zusammenhängen
@@ -687,7 +687,7 @@ de:
         new:
           back: Zurück
           title: Neue Frage erstellen
-          submit_button: Frage erstellen
+          submit_button: Speichern
         table:
           title: Titel
           question_options: Antwortmöglichkeiten

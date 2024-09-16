@@ -83,22 +83,6 @@
   }
 }
 
-// Formular
-
-.admin-content .formular-fields {
-  .formular-field {
-    position: relative;
-    cursor: move;
-
-    .controls {
-      @include admin-action-icons;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-  }
-}
-
 // Formular answers
 
 .admin-content .formular-follow-up-letters {

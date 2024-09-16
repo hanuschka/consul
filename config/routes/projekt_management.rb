@@ -17,6 +17,7 @@ namespace :projekt_management do
       get :projekt_livestreams
       get :projekt_events
       get :milestones
+      get :progress_bars
       get :projekt_notifications
       get :projekt_arguments
       get :formular

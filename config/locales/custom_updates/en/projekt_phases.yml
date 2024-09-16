@@ -8,6 +8,8 @@ en:
         budget_phase: Participate now
         formular_phase: Participate now
         legislation_phase: Participate now
+        comment_phase: Participate now
+        livestream_phase: Participate now
       permission_problem:
         new_button_component:
           shared:

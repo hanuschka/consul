@@ -232,6 +232,11 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/milestones"
   end
 
+  def progress_bars
+    authorize!(:progress_bars, @projekt_phase)
+    render "custom/admin/projekt_phases/progress_bars"
+  end
+
   def projekt_notifications
     authorize!(:projekt_notifications, @projekt_phase)
     @projekt_notification = ProjektNotification.new

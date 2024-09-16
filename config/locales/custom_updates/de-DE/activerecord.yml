@@ -100,6 +100,10 @@ de:
             sentiment:
               blank: Bitte wählen Sie ein Sentiment
     attributes:
+      map_location:
+        latitude: Breitengrad
+        longitude: Längengrad
+        zoom: Zoom
       projekt:
         total_duration_start: Anfangsdatum
         total_duration_end: Enddatum
@@ -213,13 +217,19 @@ de:
           soft: schwache Gruppe
       individual_group_value:
         name: Name
+      sentiment:
+        color: Farbe des Sentiments
+      sentiment/translation:
+        name: Name des Sentiments
       projekt_label:
-        icon: Icon
-        color: Farbe
-        name: Name
+        icon: Icon des Labels
+      projekt_label/translation:
+        name: Name des Labels
       projekt_question:
         show_answers_count: Anzahl der Stimmen im Frontend anzeigen
         comments_enabled: Offene Antwort aktiviert
+      projekt_question/translation:
+        title: Frage
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort
@@ -252,7 +262,7 @@ de:
         drop_down_options: Dropdown-Optionen
       formular_follow_up_letter:
         subject: Betreff
-        body: Text
+        body: E-Mail-Text
         show_follow_up_button: Link zu Follow-up Formular integrieren
       formular_answer_image:
         title: Titel

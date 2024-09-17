@@ -1,8 +1,5 @@
 <aside class="sidebar">
-  <% show_admin_controlls = (
-    current_user&.email.in?(@partner_emails) ||
-    (current_user&.administrator? || (current_user&.projekt_manager? && can?(:edit, resource)))) %>
-
+  <% show_admin_controlls = current_user&.email.in?(@partner_emails) || current_user&.has_pm_permission_to?(:manage, @projekt) %>
   <% show_embeded_controls = embedded_and_frame_access_code_valid?(@projekt) %>
 
   <% if show_admin_controlls %>

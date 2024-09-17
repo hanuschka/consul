@@ -72,7 +72,7 @@
   <td>
     <%= render Admin::TableActionsComponent.new(projekt_phase,
                                                 actions: [:edit, :destroy],
-                                                edit_path: polymorphic_path([@namespace, projekt_phase], action: :duration),
+                                                edit_path: polymorphic_path([@namespace, projekt_phase], action: projekt_phase.admin_nav_bar_items.first),
                                                 destroy_path: polymorphic_path([@namespace, projekt_phase])
                                                ) %>
   </td>

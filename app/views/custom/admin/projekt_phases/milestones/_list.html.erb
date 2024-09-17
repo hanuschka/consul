@@ -1,6 +1,6 @@
-<h2><%= t("custom.admin.projekt_phases.milestones.list_title") %></h2>
-
 <% if milestoneable.milestones.any? %>
+  <h2><%= t("custom.admin.projekt_phases.milestones.list_title") %></h2>
+
   <table>
     <thead>
       <tr>
@@ -52,5 +52,7 @@
     </tbody>
   </table>
 <% else %>
-  <p><%= t("admin.milestones.index.no_milestones") %></p>
+  <div class="callout primary">
+    <%= t("admin.milestones.index.no_milestones") %>
+  </div>
 <% end %>

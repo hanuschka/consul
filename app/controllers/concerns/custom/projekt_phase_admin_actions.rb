@@ -122,6 +122,9 @@ module ProjektPhaseAdminActions
       @projekt_phase_options = projekt_phase_options&.group_by(&:band) || []
     end
 
+    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }}
+    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }}
+
     render "custom/admin/projekt_phases/settings"
   end
 
@@ -390,6 +393,7 @@ module ProjektPhaseAdminActions
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
+        settings_attributes: [:id, :value],
         polls_attributes: [:id, :show_open_answer_author_name, translation_params(Poll)],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params_to_permit)
     end

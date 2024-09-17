@@ -104,10 +104,10 @@ module ProjektQuestionAdminActions
     end
 
     def redirect_path(projekt_id)
-      if @projekt_livestream.present?
-        polymorphic_path([@namespace, @projekt_phase, ProjektLivestream.new])
+      if @projekt_phase.is_a?(ProjektPhase::LivestreamPhase)
+        polymorphic_path([@namespace, @projekt_phase], action: :projekt_livestreams)
       else
-        polymorphic_path([@namespace, @projekt_phase, ProjektQuestion.new])
+        polymorphic_path([@namespace, @projekt_phase], action: :projekt_questions)
       end
     end
 end

@@ -153,5 +153,5 @@ de:
             only_registered_users_description: Das Formular steht nur registrierten Nutzer*innen zur Verfügung.
         option:
           general:
-            primary_formular_cutoff_date: Ende der regulären Phase
+            primary_formular_cutoff_date: Ende der 1. Phase
             primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"

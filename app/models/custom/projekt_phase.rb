@@ -69,6 +69,8 @@ class ProjektPhase < ApplicationRecord
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
+  accepts_nested_attributes_for :settings
+
   enum user_status: {
     guest: 0,
     registered: 1,
@@ -271,6 +273,14 @@ class ProjektPhase < ApplicationRecord
 
   def admin_nav_bar_items
     []
+  end
+
+  def settings_in_tabs
+    {}
+  end
+
+  def settings_in_duration_tab
+    {}
   end
 
   def safe_to_destroy?

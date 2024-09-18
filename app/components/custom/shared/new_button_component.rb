@@ -1,7 +1,8 @@
 class Shared::NewButtonComponent < ApplicationComponent
   delegate :can?, :current_user,
            :sanitize,
-           :link_to_signin, :link_to_signup, :link_to_verify_account, :link_to_guest_signin, to: :helpers
+           :link_to_signin, :link_to_signup, :link_to_verify_account,
+           :link_to_guest_signin, :link_to_enter_missing_user_data, to: :helpers
 
   def initialize(projekt_phase: nil, resources_name: nil, query_params: nil)
     @projekt_phase = projekt_phase
@@ -43,6 +44,7 @@ class Shared::NewButtonComponent < ApplicationComponent
               sign_in: link_to_signin,
               sign_up: link_to_signup,
               guest_sign_in: link_to_guest_signin,
+              enter_missing_user_data: link_to_enter_missing_user_data,
               verify: link_to_verify_account,
               city: Setting["org_name"],
               geozones: @projekt_phase&.geozone_restrictions_formatted,

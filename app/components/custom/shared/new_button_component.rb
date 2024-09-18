@@ -48,7 +48,8 @@ class Shared::NewButtonComponent < ApplicationComponent
               geozones: @projekt_phase&.geozone_restrictions_formatted,
               age_restriction: @projekt_phase&.age_restriction_formatted,
               restricted_streets: @projekt_phase&.street_restrictions_formatted,
-              individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted
+              individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted,
+              proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"]
         )
       )
     end

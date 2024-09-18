@@ -46,7 +46,6 @@ class ProjektPhaseSetting < ApplicationRecord
             "feature.form.allow_attached_documents": "",
 
             "feature.resource.allow_voting": "active",
-            "feature.resource.allow_downvoting": "active",
             "feature.resource.show_report_button_in_sidebar": "active",
             "feature.resource.show_related_content": "active",
             "feature.resource.show_comments": "active"
@@ -71,7 +70,7 @@ class ProjektPhaseSetting < ApplicationRecord
             "feature.resource.users_can_create_proposals": "active",
             "feature.resource.allow_voting": "active",
             "feature.resource.quorum_for_proposals": "",
-            "feature.resource.enable_proposal_support_withdrawal": "active",
+            "feature.resource.enable_up_and_down_voting": "",
             "feature.resource.show_report_button_in_sidebar": "active",
             "feature.resource.show_follow_button_in_proposal_sidebar": "",
             "feature.resource.show_community_button_in_proposal_sidebar": "",

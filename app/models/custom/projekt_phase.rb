@@ -18,7 +18,6 @@ class ProjektPhase < ApplicationRecord
 
   PROJEKT_PHASES_TYPES = [
     "ProjektPhase::CommentPhase",
-    "ProjektPhase::DebatePhase",
     "ProjektPhase::ProposalPhase",
     "ProjektPhase::QuestionPhase",
     "ProjektPhase::VotingPhase",

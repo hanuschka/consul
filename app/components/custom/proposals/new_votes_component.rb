@@ -22,7 +22,7 @@ class Proposals::NewVotesComponent < ApplicationComponent
       if @voted == true || @voted == false
         @voted
       else
-        current_user&.voted_for?(proposal)
+        current_user&.voted_up_for?(proposal)
       end
     end
 

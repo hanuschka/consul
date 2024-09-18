@@ -203,8 +203,14 @@ class ProposalsController
   end
 
   def vote
-    @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
-    @voted =  @proposal.register_vote(current_user, "yes")
+    if params[:value] == "no"
+      @follow = Follow.find_by(user: current_user, followable: @proposal)
+      @follow&.destroy!
+      @voted = !@proposal.register_vote(current_user, "no")
+    else
+      @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
+      @voted = @proposal.register_vote(current_user, "yes")
+    end
   end
 
   def unvote

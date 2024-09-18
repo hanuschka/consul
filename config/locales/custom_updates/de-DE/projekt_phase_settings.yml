@@ -50,6 +50,8 @@ de:
             enable_proposal_support_withdrawal_description: Aktivieren Sie die Rücknahme der Vorschlagsunterstützung
             quorum_for_proposals: Quorum
             quorum_for_proposals_description: Aktivieren Sie ein Quorum für Vorschläge
+            enable_up_and_down_voting: Daumen hoch | runter
+            enable_up_and_down_voting_description: Aktivieren Sie Daumen hoch | runter
             show_report_button_in_sidebar: Melden
             show_report_button_in_sidebar_description: Aktivieren Sie die Melden-Funktion für Vorschläge
             show_follow_button_in_proposal_sidebar: Folgen

@@ -20,4 +20,8 @@ module LinksHelper
   def link_to_guest_signin
     link_to t("custom.shared.participate_as_guest"), new_guest_user_registration_path
   end
+
+  def link_to_enter_missing_user_data
+    link_to t("custom.shared.enter_missing_user_data"), verification_path
+  end
 end

@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "components", "budgets", "investments", "ballot_component").to_s
 
 class Budgets::Investments::BallotComponent < ApplicationComponent
-  delegate :link_to_signin, :link_to_signup, :link_to_verify_account, to: :helpers
+  delegate :link_to_signin, :link_to_signup, :link_to_verify_account, :link_to_enter_missing_user_data, to: :helpers
 
   def initialize(investment:, investment_ids:, ballot:,
                  top_level_active_projekts:, top_level_archived_projekts:)
@@ -48,6 +48,7 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
       elsif reason.present?
         t(path_to_key,
           verify: link_to_verify_account,
+          enter_missing_user_data: link_to_enter_missing_user_data,
           city: Setting["org_name"],
           geozones: @investment.budget.projekt_phase.geozone_restrictions_formatted,
           age_restriction: @investment.budget.projekt_phase.age_restriction_formatted,

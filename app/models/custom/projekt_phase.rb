@@ -314,11 +314,21 @@ class ProjektPhase < ApplicationRecord
       when "no_restriction" || nil
         nil
       when "only_citizens"
+        return :missing_user_data if user.plz.blank?
+
         :only_citizens if user.not_current_city_citizen?
       when "only_geozones"
-        :only_specific_geozones if !geozone_restrictions.include?(user.geozone)
+        if user.plz.blank?
+          :missing_user_data
+        elsif !geozone_restrictions.include?(user.geozone)
+          :only_specific_geozones if !geozone_restrictions.include?(user.geozone)
+        end
       when "only_streets"
-        :only_specific_streets if !registered_address_streets.include?(user.registered_address_street)
+        if user.registered_address_street.blank?
+          :no_registered_address
+        elsif !registered_address_streets.include?(user.registered_address_street)
+          :only_specific_streets
+        end
       end
     end
 
@@ -337,8 +347,9 @@ class ProjektPhase < ApplicationRecord
     end
 
     def age_permission_problem(user)
-      return nil if age_restriction.nil?
-      return nil if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
+      return if age_restriction.nil?
+      return :missing_user_data if user.age.blank?
+      return if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
 
       :only_specific_ages
     end

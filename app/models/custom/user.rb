@@ -27,6 +27,7 @@ class User < ApplicationRecord
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
+  after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
 
   # has_secure_token :temporary_auth_token
   has_secure_token :frame_sign_in_token
@@ -113,16 +114,14 @@ class User < ApplicationRecord
     take_votes_from_erased_user
     update!(
       verified_at: Time.current,
-      unique_stamp: prepare_unique_stamp,
-      geozone_id: geozone_with_plz&.id
+      unique_stamp: prepare_unique_stamp
     )
   end
 
   def unverify!
     update!(
       verified_at: nil,
-      unique_stamp: nil,
-      geozone_id: nil
+      unique_stamp: nil
     )
   end
 
@@ -211,6 +210,11 @@ class User < ApplicationRecord
 
   def verified?
     !unverified?
+  end
+
+  def data_complete?
+    first_name.present? && last_name.present? && date_of_birth.present? &&
+      city_name.present? && plz.present? && street_name.present? && street_number.present?
   end
 
   def formatted_address

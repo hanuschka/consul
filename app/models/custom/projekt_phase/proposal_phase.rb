@@ -54,5 +54,12 @@ class ProjektPhase::ProposalPhase < ProjektPhase
 
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization? && location == :votes_component
+
+      :proposals_limit_exceeded if proposal_limit_exceeded?(user)
+    end
+
+    def proposal_limit_exceeded?(user)
+      max_active_proposals_per_user = Setting["extended_option.proposals.max_active_proposals_per_user"].to_i
+      user.proposals.where(retired_at: nil).count >= max_active_proposals_per_user
     end
 end

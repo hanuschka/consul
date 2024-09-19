@@ -11,7 +11,7 @@
           <div class="admin-frame-phase-to-select--name">
             <%= type.constantize.model_name.human %>
           </div>
-          <button title="Ask AI" type="button frame-explain-with-ai-button">
+          <button title="Ask AI" type="button frame-explain-with-ai-button js-explain-with-ai" data-explain="<%= type.constantize.model_name.human %> phase">
             <i class="dt-logo-small-icon">
             </i>
           </button>

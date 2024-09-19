@@ -3,8 +3,7 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt, only: [
-    :update, :import, :create_content_block,
-    :destroy_content_block, :update_content_block, :update_content_block_position
+    :update, :import
   ]
   before_action :process_tags, only: [:update]
 
@@ -67,58 +66,6 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
-  def create_content_block
-    @content_block = @projekt.content_blocks.build(
-      name: "custom",
-      body: params[:html],
-      key: "projekt_content_block_#{@projekt.id}_#{@projekt.content_blocks.count + 1}_#{DateTime.now.to_i}",
-      locale: "de"
-    )
-
-    if @content_block.save
-      if params[:previous_content_block_id].present?
-        @previous_content_block = @projekt.content_blocks.find(params[:previous_content_block_id])
-        @content_block.insert_at(@previous_content_block.position + 1)
-      else
-        @content_block.move_to_top
-      end
-
-      render json: { content_block: {id: @content_block.id}, status: { message: "Content block updated" }}
-    else
-      render json: { message: "Error updating content_block" }
-    end
-  end
-
-  def update_content_block
-    # TODO add authorization
-    content_block = @projekt.content_blocks.find(params[:content_block_id])
-
-    if content_block.update(body: params[:html])
-      render json: { status: { message: "Content block updated" }}
-    else
-      render json: { message: "Error updating content_block" }
-    end
-  end
-
-  def destroy_content_block
-    @content_block = @projekt.content_blocks.find(params[:content_block_id])
-
-    if @content_block.destroy
-      render json: { status: { message: "Content block destroyed" }}
-    else
-      render json: { message: "Error destroying content_block" }
-    end
-  end
-
-  def update_content_block_position
-    content_block = @projekt.content_blocks.find(params[:content_block_id])
-
-    if content_block.insert_at(params[:position].to_i)
-      render json: { status: { message: "Content block updated" }}
-    else
-      render json: { message: "Error updating content_block" }
-    end
-  end
 
   private
 

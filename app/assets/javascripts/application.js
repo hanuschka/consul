@@ -219,6 +219,7 @@ var initialize_modules = function() {
   if ($("#projekt-selector-fields").length) {
     App.ProjektSelector.initialize();
   }
+  App.Loader.pageLoaded();
 };
 
 var destroy_non_idempotent_modules = function() {

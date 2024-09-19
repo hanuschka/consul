@@ -3,7 +3,7 @@ de:
     account:
       show:
         data_complete: Nutzerdaten sind vollständig
-        data_missing: Nutzerdaten sind nicht volllständig
+        data_missing: Nutzerdaten sind nicht vollständig
         change_credentials_link: Anmeldeinformationen ändern
         edit_details_link: Daten aktualisieren
         erase_account_link: Konto löschen

@@ -81,7 +81,6 @@ class ProposalsController
 
   def new
     redirect_to proposals_path unless params[:projekt_phase_id].present?
-    redirect_to proposals_path if proposal_limit_exceeded?(current_user)
     redirect_to proposals_path if Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
 
     if params[:projekt_phase_id].present?
@@ -203,8 +202,14 @@ class ProposalsController
   end
 
   def vote
-    @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
-    @voted =  @proposal.register_vote(current_user, "yes")
+    if params[:value] == "no"
+      @follow = Follow.find_by(user: current_user, followable: @proposal)
+      @follow&.destroy!
+      @voted = !@proposal.register_vote(current_user, "no")
+    else
+      @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
+      @voted = @proposal.register_vote(current_user, "yes")
+    end
   end
 
   def unvote
@@ -248,12 +253,5 @@ class ProposalsController
                     map_location_attributes: map_location_attributes]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
-    end
-
-    def proposal_limit_exceeded?(user)
-      projekt = Projekt.find_by(id: params[:projekt_id])
-      return false if user.administrator? || user.projekt_manager?(projekt)
-
-      user.proposals.where(retired_at: nil).count >= Setting["extended_option.proposals.max_active_proposals_per_user"].to_i
     end
 end

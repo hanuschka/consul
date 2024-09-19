@@ -169,7 +169,7 @@ module Abilities
 
       can :edit_physical_votes, Budget::Investment do |investment|
         can?(:create, investment.budget) &&
-          investment.budget.phase == "selecting"
+          investment.budget.current_phase.kind == "selecting"
       end
 
       can :manage, Poll do |poll|

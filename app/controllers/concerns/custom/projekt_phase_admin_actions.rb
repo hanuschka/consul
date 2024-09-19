@@ -122,6 +122,9 @@ module ProjektPhaseAdminActions
       @projekt_phase_options = projekt_phase_options&.group_by(&:band) || []
     end
 
+    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.values.compact.present?
+    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.values.compact.present?
+
     render "custom/admin/projekt_phases/settings"
   end
 
@@ -198,7 +201,10 @@ module ProjektPhaseAdminActions
   end
 
   def age_ranges_for_stats
+    authorize!(:age_ranges_for_stats, @projekt_phase)
     @age_ranges = AgeRange.for_stats
+
+    render "custom/admin/projekt_phases/age_ranges_for_stats"
   end
 
   def projekt_questions
@@ -227,6 +233,11 @@ module ProjektPhaseAdminActions
   def milestones
     authorize!(:milestones, @projekt_phase)
     render "custom/admin/projekt_phases/milestones"
+  end
+
+  def progress_bars
+    authorize!(:progress_bars, @projekt_phase)
+    render "custom/admin/projekt_phases/progress_bars"
   end
 
   def projekt_notifications
@@ -274,17 +285,24 @@ module ProjektPhaseAdminActions
   end
 
   def poll_questions
+    authorize!(:poll_questions, @projekt_phase)
     @poll = @projekt_phase.poll
     @questions = @poll.questions
+
+    render "custom/admin/projekt_phases/poll_questions"
   end
 
   def poll_booth_assignments
+    authorize!(:poll_booth_assignments, @projekt_phase)
     @poll = @projekt_phase.poll
     @booth_assignments = @poll.booth_assignments.includes(:booth).order("poll_booths.name")
                               .page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_booth_assignments"
   end
 
   def poll_officer_assignments
+    authorize!(:poll_officer_assignments, @projekt_phase)
     @poll = @projekt_phase.poll
     @officers = ::Poll::Officer.
                   includes(:user).
@@ -292,20 +310,49 @@ module ProjektPhaseAdminActions
                   where(
                     id: @poll.officer_assignments.select(:officer_id).distinct.map(&:officer_id)
                   ).page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_officer_assignments"
   end
 
   def poll_recounts
+    authorize!(:poll_recounts, @projekt_phase)
     @poll = @projekt_phase.poll
     @stats = Poll::Stats.new(@poll)
     @booth_assignments = @poll.booth_assignments.
                               includes(:booth, :recounts, :voters).
                               order("poll_booths.name").
                               page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_recounts"
   end
 
   def poll_results
+    authorize!(:poll_results, @projekt_phase)
     @poll = @projekt_phase.poll
     @partial_results = @poll.partial_results
+
+    render "custom/admin/projekt_phases/poll_results"
+  end
+
+  def budget_edit
+    authorize!(:budget_edit, @projekt_phase)
+    @budget = @projekt_phase.budget
+
+    render "custom/admin/projekt_phases/budget_edit"
+  end
+
+  def budget_phases
+    authorize!(:budget_phases, @projekt_phase)
+    @budget = @projekt_phase.budget
+
+    render "custom/admin/projekt_phases/budget_phases"
+  end
+
+  def legislation_process_draft_versions
+    authorize!(:legislation_process_draft_versions, @projekt_phase)
+    @process = @projekt_phase.legislation_process
+
+    render "custom/admin/projekt_phases/legislation_process_draft_versions"
   end
 
   def frame_new_phase_selector
@@ -346,6 +393,8 @@ module ProjektPhaseAdminActions
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
+        settings_attributes: [:id, :value],
+        polls_attributes: [:id, :show_open_answer_author_name, translation_params(Poll)],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params_to_permit)
     end
 

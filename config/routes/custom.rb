@@ -43,6 +43,14 @@ namespace :api do
       patch :import
     end
     patch "projekt_settings", to: "projekt_settings#update"
+
+    resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+    end
   end
 
   resources :projekt_phases do
@@ -60,11 +68,6 @@ namespace :api do
   end
 
   resources :images, only: [:create, :destroy]
-
-  post "projekts/:id/content_blocks", to: "projekts#create_content_block"
-  delete "projekts/:id/content_blocks/:content_block_id", to: "projekts#destroy_content_block"
-  patch "projekts/:id/content_blocks/:content_block_id", to: "projekts#update_content_block"
-  patch "projekts/:id/content_blocks/:content_block_id/update_position", to: "projekts#update_content_block_position"
 
   scope path: "settings" do
     patch "enable", to: "settings#enable"

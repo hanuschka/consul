@@ -46,7 +46,6 @@ class ProjektPhaseSetting < ApplicationRecord
             "feature.form.allow_attached_documents": "",
 
             "feature.resource.allow_voting": "active",
-            "feature.resource.allow_downvoting": "active",
             "feature.resource.show_report_button_in_sidebar": "active",
             "feature.resource.show_related_content": "active",
             "feature.resource.show_comments": "active"
@@ -64,20 +63,24 @@ class ProjektPhaseSetting < ApplicationRecord
             "feature.form.enable_external_video": "",
             "feature.resource.show_video_as_link": "",
             "feature.resource.enable_proposal_notifications_tab": "",
-            "feature.resource.enable_proposal_milestones_tab": "",
+            "feature.resource.enable_proposal_milestones_tab": ""
           },
 
           user_functions: {
-            "feature.general.only_admins_create_proposals": "",
+            "feature.resource.users_can_create_proposals": "active",
             "feature.resource.allow_voting": "active",
-            "feature.resource.enable_proposal_support_withdrawal": "active",
             "feature.resource.quorum_for_proposals": "",
+            "feature.resource.enable_up_and_down_voting": "",
             "feature.resource.show_report_button_in_sidebar": "active",
             "feature.resource.show_follow_button_in_proposal_sidebar": "",
             "feature.resource.show_community_button_in_proposal_sidebar": "",
             "feature.resource.show_related_content": "",
             "feature.resource.show_comments": "active",
             "option.resource.votes_for_proposal_success": 100
+          },
+
+          old: {
+            "feature.general.only_admins_create_proposals": ""
           }
         },
 
@@ -96,25 +99,31 @@ class ProjektPhaseSetting < ApplicationRecord
         },
 
         "ProjektPhase::BudgetPhase" => {
-          base: {
-            "feature.general.only_admins_create_investment_proposals": "",
-            "feature.general.show_results_after_first_vote": "",
-            "feature.general.show_relative_ballotting_results": "",
-
+          form_author: {
             "feature.form.allow_attached_image": "active",
-            "feature.form.show_implementation_option_fields": "",
-            "feature.form.show_user_cost_estimate": "",
+            "feature.form.labels": "",
+            "feature.form.sentiments": "",
             "feature.form.show_map": "active",
             "feature.form.enable_geoman_controls_in_maps": "active",
             "feature.form.allow_attached_documents": "",
+            "feature.form.enable_external_video": "",
+            "feature.resource.show_video_as_link": "",
+            "feature.form.show_implementation_option_fields": "",
+            "feature.form.show_user_cost_estimate": ""
+          },
 
+          user_functions: {
+            "feature.resource.users_can_create_investment_proposals": "",
             "feature.resource.remove_investments_supports": "active",
             "feature.resource.show_report_button_in_sidebar": "active",
             "feature.resource.show_follow_button_in_sidebar": "",
             "feature.resource.show_community_button_in_sidebar": "",
             "feature.resource.show_related_content": "",
-            "feature.resource.enable_investment_milestones_tab": "",
             "feature.resource.show_comments": "active"
+          },
+
+          old: {
+            "feature.general.only_admins_create_investment_proposals": ""
           }
         },
 

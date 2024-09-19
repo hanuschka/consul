@@ -21,7 +21,7 @@ class PagesController < ApplicationController
     custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 
     @custom_page_page_visible =
-      @custom_page&.projekt&.preview_code == params[:code] ||
+      @custom_page&.projekt&.preview_code == params[:preview_code] ||
       @custom_page&.projekt&.frame_access_code == params[:frame_code] ||
       @custom_page.projekt.visible_for?(current_user)
 
@@ -210,28 +210,27 @@ class PagesController < ApplicationController
     @budget = @projekt_phase.budget
     return if @budget.blank?
 
-    @heading = @budget.headings.first
+    @heading = @budget.heading
 
     @all_resources = []
 
     @valid_filters = @budget.investments_filters
-    params[:filter] ||= "feasible" if @budget.phase.in?(["selecting", "valuating"])
-    params[:filter] ||= "selected" if @budget.phase.in?(["balloting"])
-    params[:filter] ||= "all" if @budget.phase.in?(["publishing_prices", "reviewing_ballots"])
-    params[:filter] ||= "winners" if @budget.phase == "finished"
+    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting", "valuating"])
+    params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["balloting"])
+    params[:filter] ||= "all" if @budget.current_phase.kind.in?(["publishing_prices", "reviewing_ballots"])
+    params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
     @valid_orders = %w[random supports ballots ballot_line_weight newest]
     @valid_orders.delete("supports")
     @valid_orders.delete("ballots")
-    @valid_orders.delete("ballot_line_weight") unless @budget.phase == "balloting"
+    @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
-    params[:section] ||= "results" if @budget.phase == "finished"
+    params[:section] ||= "results" if @budget.current_phase.kind == "finished"
 
     # con-1036
-    if @budget.phase == "publishing_prices" &&
-        @projekt_phase.settings.find_by(key: "feature.general.show_results_after_first_vote").value.present?
+    if @budget.current_phase.kind == "publishing_prices" && @budget.show_results_after_first_vote?
       @current_filter = "selected"
     end
     # con-1036
@@ -239,7 +238,7 @@ class PagesController < ApplicationController
     @investments = @budget.investments
 
     if params[:section] == "results" && can?(:read_results, @budget)
-      @investments = Budget::Result.new(@budget, @budget.headings.first).investments
+      @investments = Budget::Result.new(@budget, @budget.heading).investments
     elsif params[:section] == "stats" && can?(:read_stats, @budget)
       @stats = Budget::Stats.new(@budget)
       @investments = @budget.investments
@@ -251,7 +250,7 @@ class PagesController < ApplicationController
       @investment_ids = @budget.investments.ids
     end
 
-    if @budget.phase == "finished"
+    if @budget.current_phase.kind == "finished"
       if @budget.voting_style == "distributed"
         @current_order = "ballot_line_weight"
       elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"

@@ -18,7 +18,7 @@ module Budgets
       end
 
       @investment.author = current_user
-      @investment.heading = @budget.headings.first if @budget.single_heading?
+      @investment.heading = @budget.heading
 
       if @investment.save
         Mailer.budget_investment_created(@investment).deliver_later
@@ -64,9 +64,11 @@ module Budgets
     private
 
       def investment_params
-        attributes = [:heading_id, :tag_list, :organization_name, :location, :on_behalf_of,
+        attributes = [:heading_id, :tag_list, :organization_name, :location, :on_behalf_of, :video_url,
                       :related_sdg_list, :implementation_performer, :implementation_contribution, :user_cost_estimate,
                       :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
+                      :sentiment_id,
+                      projekt_label_ids: [],
                       image_attributes: image_attributes,
                       documents_attributes: document_attributes,
                       map_location_attributes: map_location_attributes]

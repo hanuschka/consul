@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_30_133403) do
+ActiveRecord::Schema.define(version: 2024_09_17_135701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -409,6 +409,8 @@ ActiveRecord::Schema.define(version: 2024_08_30_133403) do
     t.string "user_cost_estimate"
     t.string "on_behalf_of"
     t.integer "qualified_total_ballot_line_weight", default: 0
+    t.string "video_url"
+    t.bigint "sentiment_id"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -417,6 +419,7 @@ ActiveRecord::Schema.define(version: 2024_08_30_133403) do
     t.index ["heading_id"], name: "index_budget_investments_on_heading_id"
     t.index ["incompatible"], name: "index_budget_investments_on_incompatible"
     t.index ["selected"], name: "index_budget_investments_on_selected"
+    t.index ["sentiment_id"], name: "index_budget_investments_on_sentiment_id"
     t.index ["tsv"], name: "index_budget_investments_on_tsv", using: :gin
   end
 
@@ -511,6 +514,8 @@ ActiveRecord::Schema.define(version: 2024_08_30_133403) do
     t.bigint "projekt_id"
     t.integer "max_number_of_winners", default: 0
     t.bigint "projekt_phase_id"
+    t.boolean "show_percentage_values_only", default: false
+    t.boolean "show_results_after_first_vote", default: false
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_budgets_on_projekt_phase_id"
   end
@@ -2091,8 +2096,10 @@ ActiveRecord::Schema.define(version: 2024_08_30_133403) do
     t.bigint "projekt_phase_id"
     t.bigint "sentiment_id"
     t.text "official_answer", default: ""
+    t.integer "cached_votes_down", default: 0
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
+    t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
     t.index ["cached_votes_up"], name: "index_proposals_on_cached_votes_up"
     t.index ["community_id"], name: "index_proposals_on_community_id"
     t.index ["confidence_score"], name: "index_proposals_on_confidence_score"
@@ -2730,6 +2737,7 @@ ActiveRecord::Schema.define(version: 2024_08_30_133403) do
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
   add_foreign_key "budget_investments", "communities"
+  add_foreign_key "budget_investments", "sentiments"
   add_foreign_key "budget_valuators", "budgets"
   add_foreign_key "budget_valuators", "valuators"
   add_foreign_key "budgets", "projekt_phases"

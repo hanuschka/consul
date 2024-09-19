@@ -10,7 +10,7 @@
     twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
 <% end %>
 
-<% if projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
+<% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
   <% provide :vc_maps do %>
     <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
   <% end %>

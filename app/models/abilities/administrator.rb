@@ -151,7 +151,7 @@ module Abilities
       can [:update, :verify, :unverify], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
-        investment.budget.phase == "selecting"
+        investment.budget.current_phase.kind == "selecting"
       end
 
       can :manage, ModalNotification

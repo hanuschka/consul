@@ -14,6 +14,9 @@
       <div class="max-votes">
         <%= f.number_field :max_votes, min: 2, max: 999, class: "votation-type-max-votes" %>
       </div>
+    </div>
+
+    <div id="votation_max_votes_per_answer" class="small-12 medium-6 column end <%= hide_max_votes_per_answer_input_class(@votation_type.vote_type) %>">
       <div class="max-votes-per-answer">
         <%= f.number_field :max_votes_per_answer, class: "votation-type-max-votes-per-answer" %>
       </div>

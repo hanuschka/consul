@@ -38,6 +38,7 @@ module Abilities
       can(:manage, ProjektPhase) do |pp|
         can? :edit, pp.projekt
       end
+      cannot :comment_as_moderator, ProjektPhase
 
       can(:update, ProjektPhaseSetting) do |pps|
         can? :edit, pps.projekt_phase.projekt

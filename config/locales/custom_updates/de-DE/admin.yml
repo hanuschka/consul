@@ -1,7 +1,8 @@
 de:
   admin:
     actions:
-      actions: Aktion
+      action: Aktion
+      actions: Aktionen
     homepage:
       feeds:
         active_projekts: Aktive Beteiligung
@@ -463,16 +464,17 @@ de:
         nav_bar:
           duration: Laufzeit
           naming: Benennung
-          restrictions: Beschränkung (neu)
+          restrictions: Beschränkung
           settings: Funktionen
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
-          age_ranges_for_stats: Alterskohorden (neu)
+          age_ranges_for_stats: Alterskohorden
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
           milestones: Liste der Meilensteine
+          progress_bars: Fortschrittsbalken
           projekt_notifications: Benachrichtigungen
           projekt_arguments: Liste von Stimmen
           formular: Formular
@@ -481,9 +483,12 @@ de:
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
           poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer (neu)
-          poll_recounts: Auszählung (neu)
+          poll_officer_assignments: Wahlhelfer
+          poll_recounts: Auszählung
           poll_results: Ergebnisse
+          budget_edit: Editieren
+          budget_phases: Phasen
+          legislation_process_draft_versions: Entwurfsfassungen
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -493,15 +498,15 @@ de:
           update_button: Speichern
         phase_tab_name: Name in Tab auf der Projektseite
         cta_button_name: Buttontext auf der Projektseite
-        resource_form_title: Text bei Erstellung
-        resource_form_title_hint: Platzhalter
-        labels_name: Labels
-        sentiments_name: Sentiments
+        resource_form_title: Überschrift des Erstellungsformulars
+        resource_form_title_hint: Text des Platzhalters im Erstellungsformular
+        labels_name: Alternativtext zu Labels
+        sentiments_name: Alternativtext zu Sentimente
         projekt_selector_hint: Hinweise zum Projekt
         edit:
           title: Einstellung für Phase
         duration:
-          page_title: Wie lange soll die Laufzeit dieser Projektphase sein?
+          page_title: Wie soll die Laufzeit der Phase sein?
           start_date: Anfangsdatum
           end_date: Enddatum
         naming:
@@ -511,18 +516,18 @@ de:
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer*innen
+            no_restriction: Keine Beschränkung
           extended_geo_restrictions:
             title: Individuelle Gebiete
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
+            no_restriction: Keine Beschränkung
           geo_restrictions:
             title: Gebietsbeschränkung
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
-            only_citizens: Nur Bürger:innen der Stadt
-            only_geozones: Nur Bürger:innen des Stadtteils
-            only_streets: Nur Bürger:innen aus Straße
+            no_restriction: Keine Beschränkung
+            only_citizens: Bürger:innen der Stadt
+            only_geozones: Bürger:innen des Stadtteils
+            only_streets: Bürger:innen aus Straße
           individual_group_values:
             title: Gruppen
           user_status:
@@ -539,38 +544,51 @@ de:
             form_author: Formular Autor
             user_functions: Funktionen Nutzer
         projekt_labels:
-          name: Labels
-          page_title: Labels
-          create_button: Label erstellen
+          new_block_title: Möchten Sie ein Label hinzufügen?
+          list_title: Hier ist die Liste aller Labels
+          create_button: Neues Label erstellen
           no_labels: Für dieses Projekt sind noch keine Labels hinterlegt
           table:
             icon: Icon
             color: Farbe
             name: Name
           form:
+            title: Welchen Namen und welches Icon soll Ihr Label haben?
             color_placeholder: "HEX Code mit #"
         sentiments:
-          page_title: Sentiments
-          create_button: Sentiment erstellen
+          new_block_title: Möchten Sie ein Sentiment hinzufügen?
+          list_title: Hier ist die Liste aller Sentimente
+          create_button: Neues Sentiment erstellen
           no_sentiments: Für dieses Projekt sind noch keine Sentiments hinterlegt
           table:
             color: Farbe
             name: Name
           form:
+            title: Welchen Namen und welche Farbe soll Ihr Sentiment haben?
             color_placeholder: "HEX Code mit #"
           notice:
             destroy: Sentiment erfolgreich gelöscht
+        milestones:
+          new_block_title: Möchten Sie einen Meilenstein setzen?
+          new_button: Meilenstein hinzufügen
+          list_title: Dies ist die Liste aller Meilensteine
+        progress_bars:
+          new_block_title: Möchten Sie einen Fortschrittsbalken hinzufügen?
+          new_button: Fortschrittsbalken hinzufügen / vewalten
+          list_title: Dies ist die Ihr aktueller Fortschrittsbalken
         projekt_questions:
-          page_title: Kurzumfrage
+          new_block_title: Möchten Sie eine Frage hinzufügen?
           create_button: Frage erstellen
           send_notifications_button: Benachrichtigungen senden
+          list_title: Dies ist die Liste aller Fragen
           table:
-            title: Kurzumfrage
-            question_options: Antwortmöglichkeiten
-            answers_count: Anzahl der Antworten
-            comments_count: Anzahl der Kommentare
+            title: Fragen
+            question_options: Antworten
+            comments_count: Kommentare
+          form:
+            question_options: Mögliche Antwortoptionen
           new:
-            title_livestream: Frage für Livestream erstellen
+            title_livestream: Welche Frage wollen Sie stellen und welche Antwortoptionen möchten Sie beiten?
             title: Frage erstellen
         map:
           copy_from_projekt: vom Projekt übernehmen
@@ -603,12 +621,17 @@ de:
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
         projekt_livestreams:
-          page_title: Livestreams
-          all_livestreams: Alle Livestreams
+          new_block_title: Möchten Sie einen Livestream hinzufügen?
+          new_button_title: Livestream hinzufügen
+          all_livestreams: Dies ist die Liste aller Livestreams
           add_question: Frage hinzufügen
           questions: Kurzumfragen
+          edit_livestream: Kurzumfrage editieren
+          delete_livestream: Kurzumfrage löschen
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
+          new:
+            title: Welche URL hat Ihr Livestream?
         formular:
           page_title: Formular
           primary_fields_title: Reguläre Formularfelder
@@ -637,6 +660,11 @@ de:
             create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
         age_ranges_for_stats:
           page_title: Altersgruppen für Statistiken
+        budget_edit:
+          page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
+        legislation_process_draft_versions:
+          new_block_title: Möchten Sie eine Version hinzufügen?
+          list_title: Dies ist die Lister aller Textversionen
       modal_notifications:
         index:
           create: Erstellen

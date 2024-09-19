@@ -6,13 +6,7 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.projekt_livestreams.page_title") %></h2>
-  </div>
-</div>
-
-<div class="row">
-  <div class="column">
-    <%= render partial: "custom/admin/projekt_phases/projekt_livestreams/form", locals: { livestream: @projekt_livestream } %>
+    <%= render partial: "custom/admin/projekt_phases/projekt_livestreams/new_button" %>
   </div>
 </div>
 
@@ -20,7 +14,10 @@
   <div class="column">
     <div class='margin-top'>
       <% if @projekt_livestreams.present? %>
-        <h3 class="projekt-all-livestream-list"><%= t("custom.admin.projekt_phases.projekt_livestreams.all_livestreams") %></h2>
+        <h2 id="projekt-all-livestream-list">
+          <%= t("custom.admin.projekt_phases.projekt_livestreams.all_livestreams") %>
+        </h2>
+
         <%= render partial: "custom/admin/projekt_phases/projekt_livestreams/projekt_livestream",
                    collection: @projekt_livestreams,
                    as: :livestream %>

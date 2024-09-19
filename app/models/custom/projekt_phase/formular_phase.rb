@@ -24,6 +24,16 @@ class ProjektPhase::FormularPhase < ProjektPhase
     %w[duration naming settings formular formular_answers]
   end
 
+  def settings_in_tabs
+    settings_in_duration_tab
+  end
+
+  def settings_in_duration_tab
+    {
+      "option.general.primary_formular_cutoff_date" => :date_field
+    }
+  end
+
   def safe_to_destroy?
     formular.blank?
   end

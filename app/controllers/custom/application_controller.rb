@@ -73,6 +73,7 @@ class ApplicationController < ActionController::Base
             page: [:translations]
           )
           .show_in_navigation
+          .sort_by_order_number
           .select { |p| p.visible_for?(current_user) }
     end
 

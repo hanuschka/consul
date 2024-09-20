@@ -1,0 +1,66 @@
+<%= form_tag(deficiency_report_management_deficiency_reports_path, method: :get) do %>
+  <div class="row expanded full-width">
+    <div class="small-12 medium-4 columns">
+      <div>
+        <%= label_tag :search, t("custom.shared.search") %>
+        <%= text_field_tag :search, params[:search], autocomplete: "off" %>
+      </div>
+
+      <div>
+        <%= label_tag :address_search, t("custom.shared.address_search") %>
+        <%= text_field_tag :address_search, params[:address_search], autocomplete: "off" %>
+      </div>
+
+      <div>
+        <%= label_tag :approved, t("custom.admin.deficiency_reports.index.admin_accepted") %>
+        <%= select_tag :approved,
+          options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
+          prompt: t("custom.shared.select") %>
+      </div>
+    </div>
+
+    <div class="small-12 medium-4 columns">
+      <div>
+        <%= label_tag :status, t("custom.admin.deficiency_reports.index.status_title") %>
+        <%= select_tag :status,
+          options_for_select(
+            DeficiencyReport::Status.all.map { |drs| [drs.title, drs.id] }, params[:status]
+          ),
+          prompt: t("custom.shared.select") %>
+      </div>
+
+      <div>
+        <%= label_tag :category, t("custom.admin.deficiency_reports.index.category_name") %>
+        <%= select_tag :category,
+          options_for_select(
+            DeficiencyReport::Category.all.map { |drc| [drc.name, drc.id] }, params[:category]
+          ),
+          prompt: t("custom.shared.select") %>
+      </div>
+
+      <div>
+        <%= label_tag :officer, t("custom.admin.deficiency_reports.index.officer_name") %>
+        <%= select_tag :officer,
+          options_for_select(
+            DeficiencyReport::Officer.all.map { |dro| [dro.name, dro.id] }, params[:officer]
+          ),
+          prompt: t("custom.shared.select") %>
+      </div>
+    </div>
+
+    <div class="small-12 medium-4 columns">
+      <div>
+        <%= label_tag :date_min, t("shared.advanced_search.from") %>
+        <%= date_field_tag :date_min, params[:date_min], class: "datepicker", autocomplete: "off" %>
+        <%= label_tag :date_max, t("shared.advanced_search.to") %>
+        <%= date_field_tag :date_max, params[:date_max], class: "datepicker", autocomplete: "off" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row full-width">
+    <div class="small-12 medium-3 columns">
+      <%= submit_tag t("custom.admin.deficiency_reports.index.submit"), class: "button expanded" %>
+    </div>
+  </div>
+<% end %>

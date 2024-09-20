@@ -70,7 +70,15 @@
                           icon_name: "hands-helping"
                        ) do |c| %>
               <div>
-                <%= f.select :implementation_performer, options_for_implementation_select, {label: false}, { class: 'implementation-performer show-arrow', style: "width:100%;", onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
+                <%= f.select :implementation_performer, options_for_implementation_select,
+                  {
+                    label: false,
+                    selected: investment.implementation_performer
+                  },
+                  {
+                    class: 'implementation-performer show-arrow',
+                    style: "width:100%;", onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')"
+                  } %>
               </div>
 
               <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">

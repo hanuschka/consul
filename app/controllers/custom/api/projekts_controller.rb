@@ -40,7 +40,7 @@ class Api::ProjektsController < Api::BaseController
   def create
     projekt = Projekt.new
 
-    if import_projekt(projekt: projekt, projekt_params: projekt_params)
+    if import_projekt(projekt: projekt)
       render json: {
         projekt: projekt.serialize,
         message: "Projekt created"
@@ -51,7 +51,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def import
-    if import_projekt(projekt: @projekt, projekt_params: import_projekt_params)
+    if import_projekt(projekt: @projekt)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
     else
       render json: { message: "Error updating projekt" }
@@ -73,9 +73,9 @@ class Api::ProjektsController < Api::BaseController
     @projekt = Projekt.find(params[:id])
   end
 
-  def import_projekt(projekt:, projekt_params:)
+  def import_projekt(projekt:)
     Projekts::ImportService.call(
-      projekt: projekt, projekt_params: projekt_params
+      projekt: projekt, projekt_params: import_projekt_params
     )
   end
 
@@ -98,10 +98,6 @@ class Api::ProjektsController < Api::BaseController
 
   def import_projekt_params
     params.require(:projekt).permit(
-      :title, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
-      :show_start_date_in_frontend, :show_end_date_in_frontend,
-      :geozone_affiliated, :tag_list, :related_sdg_list,
-
       :title,
       :brief_description,
       :summary,
@@ -120,13 +116,12 @@ class Api::ProjektsController < Api::BaseController
       :projekt_page_sharing,
       :title_image,
       :greeting_image,
-      timeline: [:title, :description, :daterange],
-      faq: [:title, :text],
       images: [],
       documents: [],
-
       geozone_affiliation_ids: [], sdg_goal_ids: [],
       individual_group_value_ids: [],
+      timeline: [:title, :description, :daterange],
+      faq: [:title, :text],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
       projekt_notifications: [:title, :body],

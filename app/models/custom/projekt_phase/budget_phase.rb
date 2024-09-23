@@ -64,7 +64,8 @@ class ProjektPhase::BudgetPhase < ProjektPhase
         projekt_phase: self,
         name: projekt.name,
         currency_symbol: "€",
-        slug: projekt.name
+        slug: "#{projekt.name.to_s.parameterize}-#{Budget.last.id + 1}",
+        published: true
       )
 
       group = Budget::Group.create!(

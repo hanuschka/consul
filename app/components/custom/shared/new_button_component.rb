@@ -43,7 +43,7 @@ class Shared::NewButtonComponent < ApplicationComponent
         t(path_to_key(permission_problem_key),
               sign_in: link_to_signin,
               sign_up: link_to_signup,
-              guest_sign_in: link_to_guest_signin,
+              guest_sign_in: link_to_guest_signin(intended_path: CGI::escape(link_path)),
               enter_missing_user_data: link_to_enter_missing_user_data,
               verify: link_to_verify_account,
               city: Setting["org_name"],
@@ -92,24 +92,23 @@ class Shared::NewButtonComponent < ApplicationComponent
       classes.join(" ")
     end
 
-    def new_button_html
+    def button_text
       if @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
-        button_text = @projekt_phase&.cta_button_name.presence || t("budgets.investments.index.sidebar.create")
-        link_to button_text,
-                new_budget_investment_path(@projekt_phase.budget, projekt_phase_id: @projekt_phase, projekt_id: @projekt),
-                class: new_button_classes
-
-      elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
-        button_text = @projekt_phase&.cta_button_name.presence || t("debates.index.start_debate")
-        link_to button_text, new_debate_path(link_params_hash),
-          class: new_button_classes
-
+        @projekt_phase&.cta_button_name.presence || t("budgets.investments.index.sidebar.create")
       elsif @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @resources_name == "proposals"
-        button_text = @projekt_phase&.cta_button_name.presence || t("proposals.index.start_proposal")
-        link_to button_text, new_proposal_path(link_params_hash),
-          class: new_button_classes,
-          data: { turbolinks: false }
-
+        @projekt_phase&.cta_button_name.presence || t("proposals.index.start_proposal")
       end
+    end
+
+    def link_path
+      if @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+        new_budget_investment_path(@projekt_phase.budget, projekt_phase_id: @projekt_phase, projekt_id: @projekt)
+      elsif @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @resources_name == "proposals"
+        new_proposal_path(link_params_hash)
+      end
+    end
+
+    def new_button_html
+      link_to button_text, link_path, class: new_button_classes, data: { turbolinks: false }
     end
 end

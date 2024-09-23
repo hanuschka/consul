@@ -43,11 +43,6 @@
                    { prompt: t("admin.budget_investments.index.valuator_filter_all") } %>
   </div>
   <div class="small-12 medium-3 column">
-    <%= select_tag :heading_id,
-                   options_for_select(budget_heading_select_options(@budget), params[:heading_id]),
-                   { prompt: t("admin.budget_investments.index.heading_filter_all") } %>
-  </div>
-  <div class="small-12 medium-3 column">
     <%= select_tag :tag_name,
                    options_for_select(investment_tags_select_options(@budget, "valuation_tags"), params[:tag_name]),
                    { prompt: t("admin.budget_investments.index.tags_filter_all") } %>

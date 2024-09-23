@@ -28,6 +28,7 @@ namespace :projekt_management do
       get :poll_recounts
       get :poll_results
       get :budget_edit
+      get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
     end

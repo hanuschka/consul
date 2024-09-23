@@ -40,7 +40,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   def admin_nav_bar_items
     %w[
       duration naming restrictions
-      budget_edit budget_phases
+      budget_edit budget_investments budget_phases
       form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments

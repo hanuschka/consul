@@ -1,5 +1,5 @@
 <% init_advanced_menu %>
-<%= form_tag(admin_budget_budget_investments_path(budget: @budget), method: :get, enforce_utf8: false) do %>
+<%= form_tag(polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_investments), method: :get, enforce_utf8: false) do %>
   <div class="small-12 column">
     <%= link_to "#advanced_filters_content",
                 data: { toggle: "advanced_filters" },

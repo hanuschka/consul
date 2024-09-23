@@ -66,6 +66,8 @@ class PollsController < ApplicationController
   end
 
   def show
+    auto_sign_in_guest_for(@poll.projekt_phase)
+
     @questions = @poll.questions.for_render.root_questions.sort_for_list
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 

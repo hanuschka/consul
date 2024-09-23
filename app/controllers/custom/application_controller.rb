@@ -134,6 +134,8 @@ class ApplicationController < ActionController::Base
       @guest_user = initialize_guest_user(guest_key)
       @guest_user.save!
       session[:guest_user_id] = guest_key
+
+      @current_ability = Ability.new(current_user)
     rescue StandardError => e
       Sentry.capture_exception(e)
     end

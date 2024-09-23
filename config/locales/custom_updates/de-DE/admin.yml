@@ -487,6 +487,7 @@ de:
           poll_recounts: Auszählung
           poll_results: Ergebnisse
           budget_edit: Editieren
+          budget_investments: Vorschläge
           budget_phases: Phasen
           legislation_process_draft_versions: Entwurfsfassungen
         notice:
@@ -662,6 +663,8 @@ de:
           page_title: Altersgruppen für Statistiken
         budget_edit:
           page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
+        budget_investments:
+          page_title: Investitionsvorschläge
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen

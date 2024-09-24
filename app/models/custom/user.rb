@@ -55,7 +55,7 @@ class User < ApplicationRecord
   # validates :gender, presence: true, on: :create, if: :extended_registration?
   # validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
-  validates :registered_address_id, presence: true, on: :create, if: :validate_registered_address?
+  # validates :registered_address_id, presence: true, on: :create, if: :validate_registered_address?
 
   validates :city_name, presence: true, on: :create, if: :validate_regular_address_fields?
   validates :plz, presence: true, on: :create, if: :validate_regular_address_fields?

@@ -52,6 +52,8 @@ en:
       poll/question/answer:
         more_info_link: Explanation link
         more_info_iframe: iFrame link
+      poll/translation:
+        closing_note: Text of the closing page
       widget/card:
         card_category: Category
       deficiency_report:

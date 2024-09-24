@@ -96,6 +96,8 @@ de:
       poll/question/answer:
         more_info_link: Erklärungslink
         more_info_iframe: Iframe-Link
+      poll/translation:
+        closing_note: Text der Abschlussseite
       widget/card:
         card_category: Kategorie
       deficiency_report:

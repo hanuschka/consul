@@ -38,6 +38,8 @@
               <% if event.end_datetime.present? %>
                 —
                 <%= event.end_datetime.strftime("%d.%m.%y %H:%m") %>
+              <% elsif event.open_ended? %>
+                (<%= t("custom.admin.projekt_phases.projekt_events.open_ended") %>)
               <% end %>
             </p>
             <% if event.weblink.present? %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_24_085322) do
+ActiveRecord::Schema.define(version: 2024_09_25_080022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1777,6 +1777,7 @@ ActiveRecord::Schema.define(version: 2024_09_24_085322) do
     t.datetime "end_datetime"
     t.string "summary"
     t.bigint "projekt_phase_id"
+    t.boolean "open_ended", default: false
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 

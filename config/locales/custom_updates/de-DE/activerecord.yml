@@ -210,6 +210,7 @@ de:
         location: Veranstaltungsort
         datetime: Datum
         end_datetime: Endtermin
+        open_ended: Offenes Ende
         weblink: Weblink
       projekt_notification:
         title: Titel

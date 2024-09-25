@@ -125,6 +125,7 @@ en:
         title: Event title
         location: Event location
         datetime: Date
+        open_ended: Open ended
         end_datetime: Ending
         weblink: Link
       projekt_notification:

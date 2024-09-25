@@ -15,7 +15,7 @@ module AdminActions::Poll::Polls
   end
 
   def index
-    @polls = Poll.not_budget.created_by_admin.joins(:projekt_phase).order("projekt_phases.start_date DESC")
+    @polls = Poll.not_budget.joins(:projekt_phase).order("projekt_phases.start_date DESC")
 
     if @namespace == :projekt_management
       @projekts = Projekt.with_pm_permission_to("manage", current_user.projekt_manager)

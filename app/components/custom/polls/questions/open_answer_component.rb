@@ -9,7 +9,7 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
   end
 
   def render?
-    question.open_question_answer.present?
+    question.open_question_answer.present? && question.can_accept_open_answer?
   end
 
   def can_answer?

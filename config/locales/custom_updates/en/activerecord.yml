@@ -48,6 +48,8 @@ en:
       poll/question/answer:
         more_info_link: Explanation link
         more_info_iframe: iFrame link
+      poll/translation:
+        closing_note: Text of the closing page
       widget/card:
         card_category: Category
       deficiency_report:
@@ -123,6 +125,7 @@ en:
         title: Event title
         location: Event location
         datetime: Date
+        open_ended: Open ended
         end_datetime: Ending
         weblink: Link
       projekt_notification:

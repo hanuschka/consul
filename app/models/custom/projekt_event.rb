@@ -10,7 +10,7 @@ class ProjektEvent < ApplicationRecord
   validates :title, presence: true
   validates :datetime, presence: true
 
-  default_scope { order(datetime: :desc) }
+  default_scope { order(datetime: :asc) }
 
   scope :sort_by_all, -> {
     all

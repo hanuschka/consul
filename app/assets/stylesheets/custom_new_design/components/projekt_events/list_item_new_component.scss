@@ -1,5 +1,6 @@
 .projekt-event-item-new {
   display: flex;
+  flex-wrap: wrap;
   border-bottom: 1px solid #dcdcdc;
   padding-top: 20px;
   padding-bottom: 25px;
@@ -44,6 +45,10 @@ h4.projekt-event-item-new-body--title {
   background: transparent linear-gradient(180deg, #FFFFFF 0%, #EDEDED 100%) 0% 0% no-repeat padding-box;
 }
 
+.projekt-event-item-new-calendar-column {
+  margin-bottom: 20px;
+}
+
 .projekt-event-item-new-calendar--separator {
   line-height: 0.5;
 }
@@ -54,6 +59,7 @@ h4.projekt-event-item-new-body--title {
 
 .projekt-event-item-new--description-text-wrapper {
   margin-bottom: 20px;
+  max-width: 750px;
 }
 
 .projekt-event-item-new-body--details {

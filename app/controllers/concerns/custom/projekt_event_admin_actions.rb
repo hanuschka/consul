@@ -45,6 +45,7 @@ module ProjektEventAdminActions
         .require(:projekt_event)
         .permit(
           :projekt_phase_id, :title, :description, :location, :datetime, :end_datetime, :weblink,
+          :open_ended,
           image_attributes: image_attributes
         )
     end

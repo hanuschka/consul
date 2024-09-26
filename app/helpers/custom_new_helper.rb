@@ -18,7 +18,7 @@ module CustomNewHelper
 
   def resources_back_link(fallback_path:)
     if params[:origin] == "projekt" && params[:projekt_phase_id].present?
-      link_to(url_to_footer_tab, class: "back") do
+      link_to(url_to_footer_tab, class: "back", data: { turbolinks: false }) do
         tag.span(class: "icon-angle-left") + t("shared.back")
       end
     else

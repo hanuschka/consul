@@ -13,7 +13,7 @@
     <% c.with_additional_body_section do %>
       <div class="projekt-list-item--phases">
         <% projekt.current_phases.each do |phase| %>
-          <a href="<%= projekt_phase_url_for(phase) %>" class="projekt-phase-link <%= phase_icon_class(phase) %>">
+          <a href="<%= projekt_phase_url_for(phase) %>" class="projekt-phase-link <%= phase_icon_class(phase) %>" data-turbolinks="false">
             <%= phase.title %>
           </a>
         <% end %>

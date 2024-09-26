@@ -26,23 +26,23 @@
     <div class="small-12 medium-8 column">
       <%= t("layouts.footer.copyright", year: Time.current.year) %>&nbsp;|
       <ul class="no-bullet inline-block">
-        <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy"), data: { turbolinks: false } %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions"), data: { turbolinks: false } %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility"), data: { turbolinks: false } %>&nbsp;|</li>
+        <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum"), data: { turbolinks: false } %>&nbsp;|</li>
         <% if SiteCustomization::Page.find_by(slug: "netiquette", status: "published") %>
-          <li class="inline-block"><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette") %>&nbsp;|</li>
+          <li class="inline-block"><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette"), data: { turbolinks: false } %>&nbsp;|</li>
         <% end %>
         <% if SiteCustomization::Page.find_by(slug: "contact_us", status: "published") %>
-          <li class="inline-block"><%= link_to t("custom.layouts.footer.contact_us"), page_path("contact_us") %>&nbsp;|</li>
+          <li class="inline-block"><%= link_to t("custom.layouts.footer.contact_us"), page_path("contact_us"), data: { turbolinks: false } %>&nbsp;|</li>
         <% end %>
         <li class="inline-block"><%= link_to t("custom.layouts.footer.statistic_cookies_settings"), '#', onClick: "klaro.show();return false;"  %></li>
 
         <% if extended_feature?("general.show_guest_login_links") %>
           <% if current_user&.guest? %>
-            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_out_as_guest"), destroy_guest_user_session_path, method: :delete %></li>
+            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_out_as_guest"), destroy_guest_user_session_path, method: :delete, data: { turbolinks: false } %></li>
           <% elsif current_user.nil? %>
-            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_in_as_guest"), new_guest_user_registration_path %></li>
+            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_in_as_guest"), new_guest_user_registration_path, data: { turbolinks: false } %></li>
           <% end %>
         <% end %>
       </ul>

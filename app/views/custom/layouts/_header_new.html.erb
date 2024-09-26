@@ -28,7 +28,7 @@
 
           <% if !launch_page && !user_signed_in? %>
             <div class='header--account-buttons show-on-desktop hide-on-mobile'>
-              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'button sign-in-button -brand', role: 'button' %>
+              <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'button sign-in-button -brand', role: 'button', data: { turbolinks: false } %>
             </div>
           <% end %>
         </div>
@@ -70,7 +70,7 @@
 
         <% if !launch_page && !user_signed_in? %>
           <div class='show-on-mobile header--responsive-menu-sign-in-section'>
-            <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'header--responsive-menu-sign-in-button', role: 'button' %>
+            <%= link_to t('devise_views.menu.login_items.login'), new_user_session_path, class: 'header--responsive-menu-sign-in-button', role: 'button', data: { turbolinks: false } %>
           </div>
         <% end %>
 

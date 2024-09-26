@@ -45,6 +45,8 @@ en:
         show_end_date_in_frontend: Visible in front end
       poll/answer:
         open_answer_text: Open Answer
+      poll/question:
+        answer_mandatory: answer mandatory
       poll/question/answer:
         more_info_link: Explanation link
         more_info_iframe: iFrame link

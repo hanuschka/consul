@@ -59,7 +59,7 @@
               </p>
             </div>
             <div class="column medium-6">
-              <%= render_image(event.image, :large, true) if event.image.present? %>
+              <%= image_tag event.image.variant(:projekt_event_thumb) if event.image.present? %>
             </div>
 
           </div>

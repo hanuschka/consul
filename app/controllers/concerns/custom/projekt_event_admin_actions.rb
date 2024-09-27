@@ -16,11 +16,10 @@ module ProjektEventAdminActions
 
   def create
     @projekt_event = ProjektEvent.new(projekt_event_params)
-    @projekt_event.projekt_phase = @projekt_phase
     authorize!(:create, @projekt_event)
 
     @projekt_event.save!
-    redirect_to polymorphic_path([@namespace, @projekt_phase], action: :projekt_events), notice: t("admin.settings.flash.updated")
+    redirect_to polymorphic_path([@namespace, @projekt_event.projekt_phase], action: :projekt_events), notice: t("admin.settings.flash.updated")
   end
 
   def update

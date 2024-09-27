@@ -1,5 +1,6 @@
 <%= form_for(event, url: polymorphic_path([@namespace, event])) do |f| %>
   <%= render "shared/errors", resource: f.object %>
+  <%= f.hidden_field :projekt_phase_id, value: @projekt_phase.id %>
 
   <div class="row">
     <div class='column small-12 medium-6'>

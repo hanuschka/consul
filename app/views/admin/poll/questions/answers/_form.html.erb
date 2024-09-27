@@ -20,23 +20,29 @@
         <div class="column">
           <%= translations_form.text_area :description, maxlength: Poll::Question.description_max_length, class: "html-area #{ck_editor_class(current_user)}" %>
         </div>
-        <div class="column">
-          <%= f.text_field :more_info_link %>
-        </div>
-        <div class="column">
-          <%= f.text_field :more_info_iframe %>
-        </div>
       </div>
     <% end %>
-    <% if @question.votation_type.unique? || @question.votation_type.multiple? %>
-      <div class="row">
-        <div class="small-6 column">
-          <%= f.check_box :open_answer,
-            label: t('custom.admin.polls.questions.answers.open_answer_html'),
-            disabled: !can_answer_be_open?(@answer.question || @question) && !@answer.open_answer? %>
-        </div>
+  <% end %>
+
+  <% if @question.votation_type.unique? || @question.votation_type.multiple? || @question.votation_type.multiple_with_weight? %>
+    <div class="row">
+      <div class="column">
+        <%= f.text_field :more_info_link %>
       </div>
-    <% end %>
+      <div class="column">
+        <%= f.text_field :more_info_iframe %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @question.votation_type.unique? || @question.votation_type.multiple? %>
+    <div class="row">
+      <div class="small-6 column">
+        <%= f.check_box :open_answer,
+          label: t('custom.admin.polls.questions.answers.open_answer_html'),
+          disabled: !can_answer_be_open?(@answer.question || @question) && !@answer.open_answer? %>
+      </div>
+    </div>
   <% end %>
 
   <% if @question.poll.wizard_mode? && @question.votation_type.vote_type == "unique" && @question.parent_question.blank? %>

@@ -62,16 +62,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
                                    :redeemable_code,
                                    individual_group_value_ids: [])
     end
-
-    def initialize_guest_user(guest_key)
-      User.new(
-        username: params[:user][:username],
-        terms_data_protection: params[:user][:terms_data_protection],
-        terms_general: params[:user][:terms_general],
-        email: "#{guest_key}@example.com",
-        guest: true,
-        confirmed_at: Time.now.utc,
-        skip_password_validation: true
-      )
-    end
 end

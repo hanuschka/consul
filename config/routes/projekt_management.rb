@@ -51,11 +51,6 @@ namespace :projekt_management do
         post :send_notifications
       end
     end
-    resources :projekt_events, only: [:create, :update, :destroy] do
-      member do
-        post :send_notifications
-      end
-    end
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
@@ -120,6 +115,12 @@ namespace :projekt_management do
   end
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
+
+  resources :projekt_events, except: %i[index show new] do
+    member do
+      post :send_notifications
+    end
+  end
 
   resources :proposals, only: :index do
     put :hide, on: :member

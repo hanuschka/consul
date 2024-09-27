@@ -17,9 +17,9 @@ module PollsHelper
     if can?(:results, poll)
       link_to text, results_poll_path(poll.id), class: class_name, data: { turbolinks: false }
     elsif can?(:stats, poll)
-      link_to text, stats_poll_path(poll.id), class: class_name
+      link_to text, stats_poll_path(poll.id), class: class_name, data: { turbolinks: false }
     else
-      link_to text, poll_path(poll.id), class: class_name
+      link_to text, poll_path(poll.id), class: class_name, data: { turbolinks: false }
     end
   end
 
@@ -27,9 +27,9 @@ module PollsHelper
     if can?(:results, poll)
       link_to(results_poll_path(poll.id), data: { turbolinks: false }, &block)
     elsif can?(:stats, poll)
-      link_to(stats_poll_path(poll.id), &block)
+      link_to(stats_poll_path(poll.id), data: { turbolinks: false }, &block)
     else
-      link_to(poll_path(poll.id), &block)
+      link_to(poll_path(poll.id), data: { turbolinks: false }, &block)
     end
   end
 

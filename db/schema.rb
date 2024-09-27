@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_23_115048) do
+ActiveRecord::Schema.define(version: 2024_09_26_105234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1622,6 +1622,7 @@ ActiveRecord::Schema.define(version: 2024_08_23_115048) do
     t.integer "parent_question_id"
     t.boolean "bundle_question", default: false
     t.integer "next_question_id"
+    t.boolean "answer_mandatory", default: false
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
@@ -1670,6 +1671,7 @@ ActiveRecord::Schema.define(version: 2024_08_23_115048) do
     t.text "summary"
     t.text "description"
     t.datetime "hidden_at"
+    t.text "closing_note"
     t.index ["hidden_at"], name: "index_poll_translations_on_hidden_at"
     t.index ["locale"], name: "index_poll_translations_on_locale"
     t.index ["poll_id"], name: "index_poll_translations_on_poll_id"
@@ -1776,6 +1778,7 @@ ActiveRecord::Schema.define(version: 2024_08_23_115048) do
     t.datetime "end_datetime"
     t.string "summary"
     t.bigint "projekt_phase_id"
+    t.boolean "open_ended", default: false
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 

@@ -52,11 +52,6 @@ namespace :admin do
         post :send_notifications
       end
     end
-    resources :projekt_events, only: [:create, :update, :destroy] do
-      member do
-        post :send_notifications
-      end
-    end
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
@@ -89,6 +84,12 @@ namespace :admin do
       member do
         patch :update_default_projekt_footer_tab
       end
+    end
+  end
+
+  resources :projekt_events, except: %i[index show new] do
+    member do
+      post :send_notifications
     end
   end
 

@@ -286,17 +286,6 @@ de:
               default_tab: Standard
               activated: Aktiviert
               edit_link: Bearbeiten
-            link:
-              question_phase: Zu den Kurzumfragen
-              voting_phase: Zu den Abstimmungen
-              budget_phase: Zu den Budgets
-              legislation_phase: Zur Textbearbeitung
-              argument_phase: Zu den Stimmen
-              notification_phase: Zu den Benachrichtigungen
-              milestone_phase: Zu den Meilensteinen
-              event_phase: Zu den Veranstaltungen
-              livestream_phase: Zu den Livestreams
-              newsfeed_phase: Zu den News-Feeds
             restriction_names:
               age: Alter
               geo: Geo
@@ -458,6 +447,9 @@ de:
             archived_projekt: Abgeschlossener Beteiligungsprozess
       flash:
         deleted: Gelöscht
+      projekt_events:
+        edit:
+          title: Veranstaltung bearbeiten
       projekt_phases:
         voting_phase:
           description: Beschreibungstext auf der Abstimmungsseite
@@ -613,6 +605,7 @@ de:
           event_created_at: Hergestellt in
           event_datetime: Datum
           event_end_datetime: Endtermin
+          open_ended: Offenes Ende
           event_location: Veranstaltungsort
           event_title: Veranstaltungstitel
           event_weblink: Weblink

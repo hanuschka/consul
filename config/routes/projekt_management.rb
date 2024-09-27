@@ -7,6 +7,7 @@ namespace :projekt_management do
       get :naming
       get :restrictions
       get :settings
+      get :age_ranges_for_stats
       get :map
       patch :update_map
       put :copy_map_settings_from_projekt
@@ -57,11 +58,6 @@ namespace :projekt_management do
       end
     end
     resources :projekt_livestreams, only: [:create, :update, :destroy] do
-      member do
-        post :send_notifications
-      end
-    end
-    resources :projekt_events, only: [:create, :update, :destroy] do
       member do
         post :send_notifications
       end
@@ -130,6 +126,12 @@ namespace :projekt_management do
   end
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
+
+  resources :projekt_events, except: %i[index show new] do
+    member do
+      post :send_notifications
+    end
+  end
 
   resources :proposals, only: :index do
     put :hide, on: :member

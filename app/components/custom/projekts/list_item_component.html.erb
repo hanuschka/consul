@@ -22,6 +22,6 @@
   <% end %>
 
   <% c.with_footer_section do %>
-    <%= link_to("Zum Projekt", projekt_url, class: "button -grey", target: url_target) %>
+    <%= link_to("Zum Projekt", projekt_url, class: "button -grey", target: url_target, data: { turbolinks: false }) %>
   <% end %>
 <% end %>

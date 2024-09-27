@@ -12,3 +12,7 @@ $("#<%= dom_id(@question) %>_answers").html("<%= j render Polls::Questions::Answ
 
   setTimeout(nextAnserTimeoutFunction, 550);
 <% end %>
+
+<% if @question.poll.wizard_mode? %>
+    App.QuestionWizard.mandatoryQuestionActions();
+<% end %>

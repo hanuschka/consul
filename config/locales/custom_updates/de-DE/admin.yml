@@ -436,6 +436,9 @@ de:
             archived_projekt: Abgeschlossener Beteiligungsprozess
       flash:
         deleted: Gelöscht
+      projekt_events:
+        edit:
+          title: Veranstaltung bearbeiten
       projekt_phases:
         nav_bar:
           duration: Laufzeit

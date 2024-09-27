@@ -5,6 +5,6 @@ class Sidebar::SdgsCardComponent < ApplicationComponent
   end
 
   def render?
-    Setting["feature.sdg"] && @sdgs.present? && @sdg_targets.present?
+    Setting["feature.sdg"].present? && (@sdgs.present? || @sdg_targets.present?)
   end
 end

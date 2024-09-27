@@ -80,8 +80,7 @@ class ApplicationController < ActionController::Base
           )
           .order(created_at: :asc)
           .show_in_navigation
-          .limit(5)
-          .lazy
+          .sort_by_order_number
           .select { |p| p.visible_for?(current_user) }
     end
 
@@ -126,5 +125,37 @@ class ApplicationController < ActionController::Base
       end
 
       session[:back_path] = back_path
+    end
+
+    def auto_sign_in_guest_for(projekt_phase)
+      return if current_user.present?
+      return if projekt_phase.blank?
+      return unless projekt_phase.guest_participation_allowed?
+
+      guest_key = "guest_#{SecureRandom.uuid}"
+      params[:user] = {}
+      params[:user][:username] = guest_key
+      params[:user][:terms_data_protection] = true
+      params[:user][:terms_general] = true
+
+      @guest_user = initialize_guest_user(guest_key)
+      @guest_user.save!
+      session[:guest_user_id] = guest_key
+
+      @current_ability = Ability.new(current_user)
+    rescue StandardError => e
+      Sentry.capture_exception(e)
+    end
+
+    def initialize_guest_user(guest_key)
+      User.new(
+        username: params[:user][:username],
+        terms_data_protection: params[:user][:terms_data_protection],
+        terms_general: params[:user][:terms_general],
+        email: "#{guest_key}@example.com",
+        guest: true,
+        confirmed_at: Time.now.utc,
+        skip_password_validation: true
+      )
     end
 end

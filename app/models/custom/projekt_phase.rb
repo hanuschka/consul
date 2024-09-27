@@ -114,7 +114,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def selectable_by?(user, resource = nil)
-    return true if resource&.respond_to?(:author) && resource.author == user
+    # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
     permission_problem(user).blank?

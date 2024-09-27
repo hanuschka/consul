@@ -209,13 +209,11 @@ class Projekt < ApplicationRecord
   scope :show_in_homepage, -> {
     joins("INNER JOIN projekt_settings sihp ON projekts.id = sihp.projekt_id")
       .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
-      .order(created_at: :desc)
   }
 
   scope :show_in_navigation, -> {
     joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
-      .with_order_number
   }
 
   scope :visible_in_menu, ->(user) {

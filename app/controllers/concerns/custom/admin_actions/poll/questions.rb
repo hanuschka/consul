@@ -110,6 +110,7 @@ module AdminActions::Poll::Questions
         :show_images,
         :parent_question_id,
         :bundle_question,
+        :answer_mandatory,
         :next_question_id,
         translation_params(Poll::Question)
       )

@@ -112,9 +112,16 @@ de:
         description: Projektbeschreibung
       poll/answer:
         open_answer_text: Offene Antwort
+      poll/question:
+        answer_mandatory: Antwort obligatorisch
+        min_rating_scale_label: Linkes Label
+        max_rating_scale_label: Rechtes Label
+        show_hint_callout: Diese Textbox im Frontend anzeigen
       poll/question/answer:
         more_info_link: Erklärungslink
         more_info_iframe: Iframe-Link
+      poll/translation:
+        closing_note: Text der Abschlussseite
       widget/card:
         card_category: Kategorie
       deficiency_report:
@@ -235,6 +242,7 @@ de:
         location: Veranstaltungsort
         datetime: Datum
         end_datetime: Endtermin
+        open_ended: Offenes Ende
         weblink: Weblink
       projekt_notification:
         title: Titel

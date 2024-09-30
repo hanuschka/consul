@@ -138,19 +138,22 @@ class Projekts::ImportService < ApplicationService
   end
 
   def faq_items
-    @projekt_params[:faq]
+    # @projekt_params[:faq]
+    parse_json_list(@projekt_params[:faq_json])
   end
 
   def timeline_items
-    return if @projekt_params[:timeline].blank?
+    return if @projekt_params[:timeline_json].blank?
 
-    @projekt_params[:timeline]
+    timeline = parse_json_list(@projekt_params[:timeline_json])
+
+    timeline
       .reject { |e| e[:title].blank? }
       .map.with_index do |entry, index|
         {
           title: "#{entry[:title]} - #{entry[:daterange]}",
           text: entry[:description],
-          style: timeline_entry_style(index, @projekt_params[:timeline].size)
+          style: timeline_entry_style(index, timeline.size)
         }
       end
   end
@@ -161,6 +164,16 @@ class Projekts::ImportService < ApplicationService
     else
       "background-color:#014779;color:white;"
     end
+  end
+
+  def parse_json_list(json_string)
+    if json_string.present?
+      JSON.parse(json_string).map(&:with_indifferent_access)
+    else
+      []
+    end
+  rescue StandardError
+    []
   end
 
   def save_documents

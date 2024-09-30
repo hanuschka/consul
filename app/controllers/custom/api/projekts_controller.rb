@@ -27,13 +27,14 @@ class Api::ProjektsController < Api::BaseController
         .activated
         .with_published_custom_page
         .show_in_overview_page
+        .not_in_individual_list
         .regular
         .includes(:page, :projekt_phases, :map_location)
 
     render json: {
-      projekts: projekts.map { |projekt|
+      projekts: projekts.map do |projekt|
         Projekts::SerializeForOverview.call(projekt)
-      }
+      end
     }
   end
 
@@ -116,18 +117,20 @@ class Api::ProjektsController < Api::BaseController
       :projekt_page_sharing,
       :title_image,
       :greeting_image,
+      :faq_json,
+      :timeline_json,
       images: [],
       documents: [],
       geozone_affiliation_ids: [], sdg_goal_ids: [],
       individual_group_value_ids: [],
-      timeline: [:title, :description, :daterange],
-      faq: [:title, :text],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
       projekt_notifications: [:title, :body],
       project_events: [:id, :title, :location, :datetime, :weblink],
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
     )
+      # timeline: [:title, :description, :daterange],
+      # faq: [:title, :text],
   end
 
   def process_tags

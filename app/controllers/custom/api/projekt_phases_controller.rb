@@ -5,29 +5,31 @@ class Api::ProjektPhasesController < Api::BaseController
   skip_authorization_check
   skip_forgery_protection
 
-  # def update
-  #   if params[:geozone_restricted_street]
-  #     street = RegisteredAddress::Street.by_user_input(
-  #       name: params[:geozone_restricted_street][:street_name],
-  #       plz: params[:geozone_restricted_street][:plz]
-  #     )
-  #
-  #     if street.present?
-  #       @projekt_phase.registered_address_streets << street
-  #     end
-  #   end
-  #
-  #   if @projekt_phase.update!(projekt_phase_params)
-  #     response_json = {}
-  #     if @projekt.present?
-  #       response_json[:projekt] = @projekt.serialize
-  #     end
-  #
-  #     render json: { **response_json, status: { message: "Projekt phase updated" }}
-  #   else
-  #     render json: { message: "Error updating projekt phase" }
-  #   end
-  # end
+  # Do not comment
+  # In use
+  def update
+    if params[:geozone_restricted_street]
+      street = RegisteredAddress::Street.by_user_input(
+        name: params[:geozone_restricted_street][:street_name],
+        plz: params[:geozone_restricted_street][:plz]
+      )
+
+      if street.present?
+        @projekt_phase.registered_address_streets << street
+      end
+    end
+
+    if @projekt_phase.update!(projekt_phase_params)
+      response_json = {}
+      if @projekt.present?
+        response_json[:projekt] = @projekt.serialize
+      end
+
+      render json: { **response_json, status: { message: "Projekt phase updated" }}
+    else
+      render json: { message: "Error updating projekt phase" }
+    end
+  end
 
   def set_as_default
     projekt = ProjektPhase.find(params[:id]).projekt

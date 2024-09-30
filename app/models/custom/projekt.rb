@@ -167,7 +167,9 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.regular_phases.all? { |phase| !phase.current? } }
+      .select do |p|
+        p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
+      end
   }
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
@@ -633,6 +635,18 @@ class Projekt < ApplicationRecord
 
     uri.query = URI.encode_www_form(uri_params)
     uri.to_s
+  end
+
+  def should_be_exported_for_overview?
+    # TODO
+    # Here the conditions to check if projekt exported intially
+    # They should be used here as well in context of individual projekt
+    # Projekt
+    #   .activated
+    #   .with_published_custom_page
+    #   .show_in_overview_page
+    #   .not_in_individual_list
+    #   .regular
   end
 
   private

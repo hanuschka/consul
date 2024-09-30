@@ -7,7 +7,7 @@
       <div class="flex-layout">
         <div class="main-column">
           <h1 class="user-resources-form--title">
-            <%= t("custom.budgets.investments.form.start_new") %>
+            <%= investment.projekt_phase.resource_form_title.presence || t("custom.budgets.investments.form.start_new") %>
           </h1>
 
           <div class="user-resources-form--description">
@@ -101,7 +101,7 @@
           <% end %>
 
           <% if projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any? %>
-            <%= render Shared::SidebarCardComponent.new(title: "Labels", opened_on_mobile: true, icon_name: "tag", class_name: "js-sidebar-label-section js-projekt-labels-selector") do |c| %>
+            <%= render Shared::SidebarCardComponent.new(title: (investment.projekt_phase.labels_name.presence || "Labels"), opened_on_mobile: true, icon_name: "tag", class_name: "js-sidebar-label-section js-projekt-labels-selector") do |c| %>
               <div id="projekt_labels_selector" class="projekt-labels">
                 <%= f.label :projekt_labels, t("custom.shared.form.projekt_labels_label"), class: "required" %>
                 <p class="small" style="margin-bottom:0.25rem;"><%= t("custom.shared.form.projekt_labels_hint") %></p>
@@ -125,7 +125,7 @@
           <% end %>
 
           <% if projekt_phase_feature?(investment.projekt_phase, "form.sentiments") && investment.projekt_phase.sentiments.any? %>
-            <%= render Shared::SidebarCardComponent.new(title: "Sentiments", opened_on_mobile: true, icon_name: "heart", class_name: "js-sidebar-sentiment-section js-sentiments-selector") do |c| %>
+            <%= render Shared::SidebarCardComponent.new(title: (investment.projekt_phase.sentiments_name.presence || "Sentiments"), opened_on_mobile: true, icon_name: "heart", class_name: "js-sidebar-sentiment-section js-sentiments-selector") do |c| %>
               <div id="sentiment_selector" class="sentiments">
                 <%= f.label :sentiment_id, t("custom.shared.form.sentiment_label"), class: "required" %>
                 <p class="small" style="margin-bottom:0.25rem;"><%= t("custom.shared.form.sentiment_hint") %></p>

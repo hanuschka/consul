@@ -47,7 +47,7 @@ module Budgets
 
     def flag
       Flag.flag(current_user, @investment)
-      @debate.update!(ignored_flag_at: nil)
+      @investment.update!(ignored_flag_at: nil)
 
       redirect_to @investment
     end

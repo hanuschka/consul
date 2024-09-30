@@ -114,7 +114,6 @@ class ProjektPhaseSetting < ApplicationRecord
 
           user_functions: {
             "feature.resource.users_can_create_investment_proposals": "",
-            "feature.resource.remove_investments_supports": "active",
             "feature.resource.show_report_button_in_sidebar": "active",
             "feature.resource.show_follow_button_in_sidebar": "",
             "feature.resource.show_community_button_in_sidebar": "",

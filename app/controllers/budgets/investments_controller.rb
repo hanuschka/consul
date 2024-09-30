@@ -69,6 +69,8 @@ module Budgets
       @investment_ids = [@investment.id]
       @remote_translations = detect_remote_translations([@investment], @comment_tree.comments)
       @milestones = @investment.milestones
+      @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
+                                  .page(params[:page]).per(5)
 
       if !@investment.projekt.visible_for?(current_user)
         @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)

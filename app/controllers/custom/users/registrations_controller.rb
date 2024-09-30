@@ -57,7 +57,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user.errors.add :first_name, :blank if update_user_details_params[:first_name].blank?
     @user.errors.add :last_name, :blank if update_user_details_params[:last_name].blank?
 
-    if [params[:form_registered_address_city_id], params[:form_registered_address_street_id], params[:form_registered_address_id]].none? { |v| ["0", nil].include?(v) }
+    if [params[:form_registered_address_city_id], params[:form_registered_address_street_id], params[:form_registered_address_id]].none? { |v| ["0", nil].include?(v) } && update_user_details_params[:registered_address_id].blank?
       @user.errors.add :registered_address_id, :blank
     end
 

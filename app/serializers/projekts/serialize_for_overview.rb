@@ -12,13 +12,15 @@ class Projekts::SerializeForOverview < ApplicationService
       }
     )
 
-    base.merge!(filter_categories: get_projekt_filter_categories)
+    base[:activated] = @projekt.activated?
+    base[:custom_page_published] = @projekt.page.status == "published"
+    base[:show_in_overview_page] = @projekt.feature?("general.show_in_overview_page")
 
     if @projekt.map_location.present?
       base.merge!(serialize_map_location)
     end
 
-    if @projekt.current_phases.present?
+    if @projekt.projekt_phases.present?
       base.merge!(serialize_phases)
     end
 
@@ -61,12 +63,17 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def serialize_phases
     {
-      current_phases: @projekt.current_phases.map do |current_phase|
+      phases: @projekt.projekt_phases.map do |phase|
         {
-          id: current_phase.id,
-          type: current_phase.type,
-          title: current_phase.title,
-          fa_icon: ApplicationController.helpers.phase_icon_class(current_phase)
+          id: phase.id,
+          type: phase.type,
+          start_date: phase.start_date,
+          end_date: phase.end_date,
+          active: phase.active,
+          regular: ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.class.to_s),
+          given_order: phase.given_order,
+          title: phase.title,
+          fa_icon: ApplicationController.helpers.phase_icon_class(phase)
         }
       end
     }

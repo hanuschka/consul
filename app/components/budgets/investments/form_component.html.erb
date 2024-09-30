@@ -2,7 +2,7 @@
 
   <main class="user-resources-form <%= " -no-image" unless projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>">
     <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form" }) do |f| %>
-      <%= budgets_back_link_path %>
+      <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
       <div class="flex-layout">
         <div class="main-column">
@@ -100,7 +100,7 @@
             <% end %>
           <% end %>
 
-          <% if investment.projekt_phase.projekt_labels.any? %>
+          <% if projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any? %>
             <%= render Shared::SidebarCardComponent.new(title: "Labels", opened_on_mobile: true, icon_name: "tag", class_name: "js-sidebar-label-section js-projekt-labels-selector") do |c| %>
               <div id="projekt_labels_selector" class="projekt-labels">
                 <%= f.label :projekt_labels, t("custom.shared.form.projekt_labels_label"), class: "required" %>
@@ -124,7 +124,7 @@
             <% end %>
           <% end %>
 
-          <% if investment.projekt_phase.sentiments.any? %>
+          <% if projekt_phase_feature?(investment.projekt_phase, "form.sentiments") && investment.projekt_phase.sentiments.any? %>
             <%= render Shared::SidebarCardComponent.new(title: "Sentiments", opened_on_mobile: true, icon_name: "heart", class_name: "js-sidebar-sentiment-section js-sentiments-selector") do |c| %>
               <div id="sentiment_selector" class="sentiments">
                 <%= f.label :sentiment_id, t("custom.shared.form.sentiment_label"), class: "required" %>
@@ -168,16 +168,17 @@
             <% end %>
           <% end %>
 
-          <%= render(Shared::SidebarCardComponent.new(
-            title: "Video hinzufügen",
-            class_name: (projekt_phase_feature?(investment.projekt_phase, "form.enable_external_video") ? "" : "d-none"),
+          <% if projekt_phase_feature?(investment.projekt_phase, "form.enable_external_video") %>
+            <%= render(Shared::SidebarCardComponent.new(
+              title: "Video hinzufügen",
               opened_on_mobile: true,
-            icon_name: "video")) do %>
-            <p>
-            Gibt es Videos, die Ihre Argumentation und Sichtweise stützen?
-            Dann fügen Sie diese über einen Link hinzu.
-            </p>
-            <%= f.text_field :video_url, label: false, placeholder: "YouTube oder Vimeo-Link eingeben", class: "light-input" %>
+              icon_name: "video")) do %>
+              <p>
+              Gibt es Videos, die Ihre Argumentation und Sichtweise stützen?
+              Dann fügen Sie diese über einen Link hinzu.
+              </p>
+              <%= f.text_field :video_url, label: false, placeholder: "YouTube oder Vimeo-Link eingeben", class: "light-input" %>
+            <% end %>
           <% end %>
 
           <% if current_user.administrator? || current_user.moderator? %>

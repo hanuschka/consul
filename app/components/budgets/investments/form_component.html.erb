@@ -1,6 +1,6 @@
 <% if Setting.new_design_enabled? %>
 
-  <main class="user-resources-form <%= " -no-image" unless feature?(:allow_images) %>">
+  <main class="user-resources-form <%= " -no-image" unless projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>">
     <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form" }) do |f| %>
       <%= budgets_back_link_path %>
 
@@ -31,7 +31,7 @@
                   autocomplete: "off" %>
               </div>
 
-              <% if feature?(:allow_images) %>
+              <% if projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>
                 <div class="banner-editor-image-attachment js-banner-editor-image-attachment">
                   <% if f.object.image.blank? %>
                     <% f.object.build_image %>
@@ -49,16 +49,18 @@
               class: "html-area #{ck_editor_class(current_user)}" %>
           <% end %>
 
-          <div class="new-card" id='map-container'>
-            <%= render "map_locations/form_fields",
-              form:     f,
-              map_location: investment.map_location || MapLocation.new,
-              label: t("proposals.form.map_location"),
-              help:     t("custom.budgets.investments.form.map.hint"),
-              parent_class: "budget_investments",
-              projekt_phase: investment.projekt_phase,
-              i18n_namespace: "budgets.investments" %>
-          </div>
+          <% if projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
+            <div class="new-card" id='map-container'>
+              <%= render "map_locations/form_fields",
+                form:     f,
+                map_location: investment.map_location || MapLocation.new,
+                label: t("proposals.form.map_location"),
+                help:     t("custom.budgets.investments.form.map.hint"),
+                parent_class: "budget_investments",
+                projekt_phase: investment.projekt_phase,
+                i18n_namespace: "budgets.investments" %>
+            </div>
+          <% end %>
         </div>
 
         <aside class="sidebar">
@@ -147,12 +149,14 @@
             <% end %>
           <% end %>
 
-          <%= render Shared::SidebarCardComponent.new(
-                        title: t("custom.budgets.investments.form.documents.title"),
-                        icon_name: "file"
-                     ) do |c| %>
-             <%= render "documents/nested_documents", documentable: investment, f: f %>
-          <% end %>
+          <% if projekt_phase_feature?(investment.projekt_phase, "form.allow_attached_documents") %>
+            <%= render Shared::SidebarCardComponent.new(
+                          title: t("custom.budgets.investments.form.documents.title"),
+                          icon_name: "file"
+                       ) do |c| %>
+               <%= render "documents/nested_documents", documentable: investment, f: f %>
+            <% end %>
+          <% end  %>
 
           <% if translations_interface_enabled? %>
             <%= render Shared::SidebarCardComponent.new(

@@ -305,7 +305,7 @@ class ProjektPhase < ApplicationRecord
 
   private
 
-    def phase_specific_permission_problems(user)
+    def phase_specific_permission_problems(user, location)
       nil
     end
 

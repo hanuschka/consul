@@ -153,7 +153,6 @@ class ProjektPhaseSetting < ApplicationRecord
 
         "ProjektPhase::FormularPhase" => {
           base: {
-            "feature.general.only_registered_users": "",
             "option.general.primary_formular_cutoff_date": ""
           }
         }

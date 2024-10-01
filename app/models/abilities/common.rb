@@ -168,6 +168,8 @@ module Abilities
       can :destroy, RelatedContent do |related_content|
         related_content.author_id == user.id
       end
+
+      can [:create, :update], FormularAnswer
     end
   end
 end

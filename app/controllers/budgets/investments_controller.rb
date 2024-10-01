@@ -11,7 +11,7 @@ module Budgets
 
     PER_PAGE = 10
 
-    before_action :authenticate_user!, except: [:index, :show, :json_data]
+    before_action :authenticate_user!, except: [:index, :show, :json_data], unless: -> { current_user&.guest? }
     before_action :load_budget, except: :json_data
 
     authorize_resource :budget, except: :json_data

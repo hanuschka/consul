@@ -18,7 +18,7 @@ class ProjektEventsController < ApplicationController
 
     order = @current_filter == "incoming" ? :asc : :desc
 
-    @projekt_events = @projekt_events.order(datetime: order)
+    @projekt_events = @projekt_events.reorder(datetime: order)
 
     if Setting.new_design_enabled?
       render :index_new

@@ -15,3 +15,9 @@
     <%= render Admin::BudgetPhases::PhasesComponent.new(@budget) %>
   </div>
 </div>
+
+<div class="row">
+  <div class="column">
+    <%= render Admin::Budgets::CalculateWinnersButtonComponent.new(@budget, from_investments: true) %>
+  </div>
+</div>

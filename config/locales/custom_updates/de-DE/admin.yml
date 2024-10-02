@@ -655,6 +655,8 @@ de:
             create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
         age_ranges_for_stats:
           page_title: Altersgruppen für Statistiken
+        budget_phases:
+          page_title: Wie soll die Laufzeit der Phasen sein?
         budget_edit:
           page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
         budget_investments:

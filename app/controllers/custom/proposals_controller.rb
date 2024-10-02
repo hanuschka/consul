@@ -80,10 +80,11 @@ class ProposalsController
   end
 
   def new
-    if proposal_limit_exceeded?(current_user) || Projekt.top_level.selectable_in_selector("proposals", current_user).empty? || !params[:projekt_phase_id].present?
+    @projekt_phase = ProjektPhase::ProposalPhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
+
+    if @projekt_phase.blank? || @projekt_phase.proposal_limit_exceeded?(current_user) || Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
       redirect_to proposals_path
-    elsif params[:projekt_phase_id].present?
-      @projekt_phase = ProjektPhase::ProposalPhase.find(params[:projekt_phase_id])
+    elsif @projekt_phase.present?
       @projekt = @projekt_phase.projekt
 
       if @projekt_phase.selectable_by?(current_user)

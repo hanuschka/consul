@@ -62,6 +62,12 @@ module Abilities
         can [:create, :vote], Comment do |comment|
           comment.commentable.comments_allowed?(user)
         end
+
+        can [:new, :create], Budget::Investment do |investment|
+          projekt_phase = investment.budget.projekt_phase
+
+          investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?
+        end
       end
 
       can :read_stats, Budget::Investment do |investment|

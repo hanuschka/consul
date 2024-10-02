@@ -2,7 +2,6 @@ class FormularAnswersController < ApplicationController
   include ImageAttributes
   include DocumentAttributes
 
-  skip_authorization_check
   respond_to :js
 
   invisible_captcha only: [:create], honeypot: :subtitle
@@ -11,7 +10,8 @@ class FormularAnswersController < ApplicationController
     submitter_hash = { submitter_id: current_user&.id, original_submitter_email: current_user&.email }
     @formular_answer = FormularAnswer.new(formular_answer_params.merge(submitter_hash))
     @formular_answer.answer_errors = {}
-    authenticate_user! if @formular_answer.formular.requires_login?
+
+    authorize! :create, @formular_answer
 
     @formular_fields = @formular_answer.formular.formular_fields.primary.each(&:set_custom_attributes)
     validate_answer(@formular_answer)
@@ -28,7 +28,8 @@ class FormularAnswersController < ApplicationController
   def update
     @formular_answer = FormularAnswer.find(params[:id])
     @formular_answer.answer_errors = {}
-    authenticate_user! if @formular_answer.formular.requires_login?
+
+    authorize! :update, @formular_answer
 
     @formular_answer.answers = @formular_answer.answers.merge(formular_answer_params["answers"].to_h)
 

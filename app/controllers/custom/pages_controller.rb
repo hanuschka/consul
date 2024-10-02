@@ -337,7 +337,7 @@ class PagesController < ApplicationController
       @formular_fields = @formular.formular_fields.follow_up.each(&:set_custom_attributes)
       @formular_answer = @recipient.formular_answer
       @formular_answer.answer_errors ||= {}
-    elsif @projekt_phase.regular_formular_cutoff_date.nil? || @projekt_phase.regular_formular_cutoff_date >= Date.today
+    elsif !@formular.past_cutoff_date?
       @formular_fields = @formular.formular_fields.primary.each(&:set_custom_attributes)
       @formular_answer = @formular.formular_answers.new
       @formular_answer.answer_errors ||= {}

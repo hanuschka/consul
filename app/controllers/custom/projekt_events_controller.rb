@@ -4,11 +4,10 @@ class ProjektEventsController < ApplicationController
   include ProjektControllerHelper
 
   skip_authorization_check
-  has_filters %w[all incoming past], only: [:index]
+  has_filters %w[incoming past], only: [:index]
 
   def index
-    @valid_filters = %w[all incoming past]
-    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
+    @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
 
     @projekt_events =
       ProjektEvent
@@ -16,6 +15,10 @@ class ProjektEventsController < ApplicationController
         .includes(projekt_phase: :projekt)
         .page(params[:page])
         .per(10).send("sort_by_#{@current_filter}")
+
+    order = @current_filter == "incoming" ? :asc : :desc
+
+    @projekt_events = @projekt_events.order(datetime: order)
 
     if Setting.new_design_enabled?
       render :index_new

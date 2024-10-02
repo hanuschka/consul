@@ -77,6 +77,12 @@
     <%= f.hidden_field :bundle_question, value: true %>
   <% end %>
 
+  <div class="row">
+    <div class="column">
+      <%= f.check_box :answer_mandatory %>
+    </div>
+  </div>
+
   <% unless bundle_question? %>
     <div class="row">
       <div class="small-12 column">

@@ -5,21 +5,27 @@
   padding-top: 20px;
   padding-bottom: 25px;
   font-size: 16px;
+  flex-wrap: nowrap;
+  flex-direction: column;
 
-  &:last-child {
-    border-bottom: none;
+  @media screen and (min-width: 40em) {
+    flex-direction: row;
   }
 }
 
-.projekt-event-item-new--description-text {
-  // font-size: 15px;
+.projekt-event-item-new-body {
+  flex-grow: 1;
+  margin-bottom: 20px;
+}
+
+.projekt-event-item-new-image {
+  min-width: 300px;
 }
 
 h4.projekt-event-item-new-body--title {
   font-size: 20px;
   padding-bottom: 0;
   font-weight: 500;
-  max-width: 750px;
 
   a {
     color: inherit;
@@ -60,7 +66,6 @@ h4.projekt-event-item-new-body--title {
 
 .projekt-event-item-new--description-text-wrapper {
   margin-bottom: 20px;
-  max-width: 750px;
 }
 
 .projekt-event-item-new-body--details {

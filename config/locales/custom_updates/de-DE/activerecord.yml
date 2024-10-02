@@ -93,6 +93,11 @@ de:
         description: Projektbeschreibung
       poll/answer:
         open_answer_text: Offene Antwort
+      poll/question:
+        answer_mandatory: Antwort obligatorisch
+        min_rating_scale_label: Linkes Label
+        max_rating_scale_label: Rechtes Label
+        show_hint_callout: Diese Textbox im Frontend anzeigen
       poll/question/answer:
         more_info_link: Erklärungslink
         more_info_iframe: Iframe-Link
@@ -184,11 +189,6 @@ de:
         multiple: Mehrere Stimmen
         multiple_with_weight: Mehrere gewichtete Stimmen
         rating_scale: Bewertungsskala
-
-      poll/question:
-        min_rating_scale_label: Linkes Label
-        max_rating_scale_label: Rechtes Label
-        show_hint_callout: Diese Textbox im Frontend anzeigen
       individual_group:
         name: Name
         visible: sichtbar

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_25_080022) do
+ActiveRecord::Schema.define(version: 2024_09_26_105234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1622,6 +1622,7 @@ ActiveRecord::Schema.define(version: 2024_09_25_080022) do
     t.integer "parent_question_id"
     t.boolean "bundle_question", default: false
     t.integer "next_question_id"
+    t.boolean "answer_mandatory", default: false
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"

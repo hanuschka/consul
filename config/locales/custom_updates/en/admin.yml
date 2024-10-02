@@ -386,6 +386,9 @@ en:
             archived_projekt: Completed participation process
       flash:
         deleted: Deleted
+      projekt_events:
+        edit:
+          title: Edit event
       projekt_phases:
         nav_bar:
           duration: Duration

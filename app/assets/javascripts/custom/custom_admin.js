@@ -109,10 +109,6 @@
           $(".drop-down-options").addClass("hide");
         }
       })
-
-      $(document).on("click", ".js-admin-edit-projekt-event", function(e) {
-        App.HTMLEditor.initialize();
-      })
     }
   };
 

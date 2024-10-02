@@ -29,7 +29,6 @@
         App.Shared.toggleElementsWithClass($(this));
       });
 
-      console.log("initialize");
       $(".js-class-toggler").each(function() {
         console.log("each");
         App.Shared.toggleElementsWithClass($(this));

@@ -49,6 +49,11 @@ class ProjektPhase::VotingPhase < ProjektPhase
     def create_poll
       return if poll.present?
 
-      polls.create!(name: projekt.name)
+      name_extension = projekt.polls.count > 0 ? projekt.polls.count + 1 : nil
+
+      polls.create!(
+        name: [projekt.name, name_extension].compact.join(" "),
+        slug: [projekt.name.parameterize, name_extension].compact.join("-")
+      )
     end
 end

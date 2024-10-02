@@ -108,6 +108,8 @@ module ProjektPhasesHelper
       "fa-video"
     when ProjektPhase::ProjektNotificationPhase
       "fa-bell"
+    when ProjektPhase::FormularPhase
+      "fa-file-alt"
     end
   end
 end

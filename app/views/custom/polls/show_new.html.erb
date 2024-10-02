@@ -65,13 +65,20 @@
                 <% end %>
               </div>
 
+              <%= render partial: "polls/poll/closing_note", locals: { poll: @poll } %>
+
               <div class="questions-navigation margin-bottom">
                 <div class="d-flex">
                   <button type="button" class="d-none button hollow question-wizard-prev js-question-wizard-prev">
                     <%= t("custom.polls.questions.prev_question") %>
                   </button>
+
                   <button type="button" class="button margin-left hollow js-question-wizard-next">
                     <%= t("custom.polls.questions.next_question") %>
+                  </button>
+
+                  <button type="button" class="d-none button margin-left js-poll-closing-note">
+                    <%= t("custom.polls.questions.closing_note") %>
                   </button>
                 </div>
                 <button type="button" class="d-none button hollow js-question-wizard-go-to-start">
@@ -81,6 +88,12 @@
             </div>
           <% else %>
             <%= render Polls::Questions::QuestionComponent.with_collection(@questions) %>
+
+            <button type="button" class="button js-poll-closing-note float-right">
+              <%= t("custom.polls.questions.closing_note") %>
+            </button>
+
+            <%= render partial: "polls/poll/closing_note", locals: { poll: @poll } %>
           <% end %>
         </div>
 

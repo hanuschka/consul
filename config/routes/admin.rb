@@ -29,6 +29,7 @@ namespace :admin do
       get :poll_recounts
       get :poll_results
       get :budget_edit
+      get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
     end
@@ -57,11 +58,6 @@ namespace :admin do
       end
     end
     resources :projekt_livestreams, only: [:new, :edit, :create, :update, :destroy] do
-      member do
-        post :send_notifications
-      end
-    end
-    resources :projekt_events, only: [:create, :update, :destroy] do
       member do
         post :send_notifications
       end
@@ -98,6 +94,12 @@ namespace :admin do
       member do
         patch :update_default_projekt_footer_tab
       end
+    end
+  end
+
+  resources :projekt_events, except: %i[index show new] do
+    member do
+      post :send_notifications
     end
   end
 

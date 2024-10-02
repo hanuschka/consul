@@ -39,8 +39,9 @@ class ProjektPhase::BudgetPhase < ProjektPhase
 
   def admin_nav_bar_items
     %w[
-      duration naming restrictions
-      budget_edit budget_phases
+      budget_phases
+      naming restrictions
+      budget_edit budget_investments
       form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
@@ -60,11 +61,14 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     def create_budget
       return if budget.present?
 
+      name_extension = projekt.budgets.count > 0 ? projekt.budgets.count + 1 : nil
+
       budget = Budget.create!(
         projekt_phase: self,
-        name: projekt.name,
+        name: [projekt.name, name_extension].compact.join(" "),
         currency_symbol: "€",
-        slug: projekt.name
+        slug: "#{projekt.name.to_s.parameterize}-#{Budget.last.id + 1}",
+        published: true
       )
 
       group = Budget::Group.create!(

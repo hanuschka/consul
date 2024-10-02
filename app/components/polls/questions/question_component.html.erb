@@ -1,4 +1,4 @@
-<div id="<%= dom_id(question) %>" class="poll-question">
+<div id="<%= dom_id(question) %>" class="poll-question js-poll-question" data-answer-mandatory="<%= question.answer_mandatory? ? 'true' : 'false' %>">
   <h3 class="poll-question--title">
     <%= question.title %>
   </h3>
@@ -23,6 +23,11 @@
         <div class="poll-question--nested-question-title">
           <%= nested_question.title %>
         </div>
+
+        <p class="poll-question--description">
+          <%= auto_link_already_sanitized_html wysiwyg(nested_question.description) %>
+        </p>
+
         <div id="<%= dom_id(nested_question) %>_answers" class="">
           <%= render Polls::Questions::AnswersComponent.new(nested_question) %>
         </div>

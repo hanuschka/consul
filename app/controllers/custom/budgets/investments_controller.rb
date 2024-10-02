@@ -2,6 +2,8 @@ require_dependency Rails.root.join("app", "controllers", "budgets", "investments
 
 module Budgets
   class InvestmentsController < ApplicationController
+    include GuestUsers
+
     respond_to :js, only: [:stats]
 
     def new
@@ -47,7 +49,7 @@ module Budgets
 
     def flag
       Flag.flag(current_user, @investment)
-      @debate.update!(ignored_flag_at: nil)
+      @investment.update!(ignored_flag_at: nil)
 
       redirect_to @investment
     end

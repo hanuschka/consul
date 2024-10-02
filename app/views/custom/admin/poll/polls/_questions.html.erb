@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody class="js-new-sortable" data-sort-url="<%= polymorphic_path([@namespace, @poll, :questions], action: :order_questions) %>">
-      <% @poll.questions.root_questions.order(:id).each do |question| %>
+      <% @poll.questions.root_questions.each do |question| %>
         <tr id="<%= dom_id(question) %>" data-record-id="<%= question.id %>">
           <td>
             <strong><%= question.title %></strong>

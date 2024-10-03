@@ -278,7 +278,7 @@ de:
           incompatible: Inkompatibel
           price: Preis
           author: Autor
-        cannot_calculate_winners: Das Budget muss in einer der Phasen "Finale Abstimmung", "Abstimmung beendet" oder "Ergebnisse" stehen, um Gewinnervorschläge berechnen zu können
+        cannot_calculate_winners: Das Budget muss in Phase „%{phase}“ stehen, um Gewinnervorschläge berechnen zu können
         see_results: "Ergebnisse anzeigen"
         milestone_tags_filter_all: "Status aller Investitionsvorschläge"
       show:

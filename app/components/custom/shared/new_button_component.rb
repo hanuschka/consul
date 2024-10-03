@@ -41,7 +41,7 @@ class Shared::NewButtonComponent < ApplicationComponent
     def permission_problem_message(permission_problem_key)
       sanitize(
         t(path_to_key(permission_problem_key),
-              sign_in: link_to_signin,
+              sign_in: link_to_signin(intended_path: CGI::escape(link_path)),
               sign_up: link_to_signup,
               guest_sign_in: link_to_guest_signin(intended_path: CGI::escape(link_path)),
               enter_missing_user_data: link_to_enter_missing_user_data,

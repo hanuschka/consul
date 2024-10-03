@@ -40,8 +40,8 @@ module AdminActions::Budgets
   end
 
   def calculate_winners
-    @budget.headings.each { |heading| Budget::Result.new(@budget, heading).delay.calculate_winners }
-    redirect_to polymorphic_path([@namespace, @budget, :budget_investments], advanced_filters: ["winners"]),
+    Budget::Result.new(@budget, @budget.heading).delay.calculate_winners
+    redirect_to polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_investments, advanced_filters: ["winners"]),
       notice: I18n.t("admin.budgets.winners.calculated")
   end
 

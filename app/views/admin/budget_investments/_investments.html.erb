@@ -3,7 +3,9 @@
             class: "float-right small clear" %>
 
 <% if params[:advanced_filters].include?("winners") %>
-  <%= render Admin::Budgets::CalculateWinnersButtonComponent.new(@budget, from_investments: true) %>
+  <div class="margin-bottom">
+    <%= render Admin::Budgets::CalculateWinnersButtonComponent.new(@budget, from_investments: true) %>
+  </div>
 <% end %>
 
 <% if @investments.any? %>

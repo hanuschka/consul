@@ -19,6 +19,10 @@
       <%= f.fields_for :heading do |heading_form| %>
         <%= heading_form.text_field :price %>
         <%= heading_form.text_field :population %>
+
+        <div id="max_ballot_lines" class="<%= hide_money_style %>">
+          <%= heading_form.number_field :max_ballot_lines, hint: t("admin.budget_headings.form.max_ballot_lines_info") %>
+        </div>
       <% end %>
     </div>
   </div>

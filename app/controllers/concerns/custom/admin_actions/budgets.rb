@@ -85,7 +85,7 @@ module AdminActions::Budgets
                           :show_percentage_values_only,
                           :hide_money,
                           :max_number_of_winners,
-                          heading_attributes: [:id, :price, :population],
+                          heading_attributes: [:id, :price, :population, :max_ballot_lines],
                           administrator_ids: [],
                           valuator_ids: []
       ] + descriptions

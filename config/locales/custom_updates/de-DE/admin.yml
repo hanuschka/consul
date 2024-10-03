@@ -286,17 +286,6 @@ de:
               default_tab: Standard
               activated: Aktiviert
               edit_link: Bearbeiten
-            link:
-              question_phase: Zu den Kurzumfragen
-              voting_phase: Zu den Abstimmungen
-              budget_phase: Zu den Budgets
-              legislation_phase: Zur Textbearbeitung
-              argument_phase: Zu den Stimmen
-              notification_phase: Zu den Benachrichtigungen
-              milestone_phase: Zu den Meilensteinen
-              event_phase: Zu den Veranstaltungen
-              livestream_phase: Zu den Livestreams
-              newsfeed_phase: Zu den News-Feeds
             restriction_names:
               age: Alter
               geo: Geo
@@ -458,6 +447,9 @@ de:
             archived_projekt: Abgeschlossener Beteiligungsprozess
       flash:
         deleted: Gelöscht
+      projekt_events:
+        edit:
+          title: Veranstaltung bearbeiten
       projekt_phases:
         voting_phase:
           description: Beschreibungstext auf der Abstimmungsseite
@@ -469,7 +461,7 @@ de:
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
-          age_ranges_for_stats: Alterskohorden
+          age_ranges_for_stats: Alterskohorten
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
@@ -487,6 +479,7 @@ de:
           poll_recounts: Auszählung
           poll_results: Ergebnisse
           budget_edit: Editieren
+          budget_investments: Vorschläge
           budget_phases: Phasen
           legislation_process_draft_versions: Entwurfsfassungen
         notice:
@@ -597,10 +590,11 @@ de:
         projekt_events:
           page_title: Veranstaltungen
         projekt_notifications:
-          page_title: Nachricht senden
+          page_title: Möchten Sie eine Benachrichtigung senden?
           button: Nachricht senden
         projekt_arguments:
-          page_title: Stimmen
+          projekt_phase_default_title: Stimmen / Meinungen
+          page_title: Möchten Sie eine Stimme / Meinung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           argument_pro: Pro
@@ -612,12 +606,13 @@ de:
           event_created_at: Hergestellt in
           event_datetime: Datum
           event_end_datetime: Endtermin
+          open_ended: Offenes Ende
           event_location: Veranstaltungsort
           event_title: Veranstaltungstitel
           event_weblink: Weblink
           event_description: Beschreibung
           name: Veranstaltungen
-          page_title: Veranstaltungen
+          page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
         projekt_livestreams:
@@ -633,7 +628,7 @@ de:
           new:
             title: Welche URL hat Ihr Livestream?
         formular:
-          page_title: Formular
+          page_title: Welche Formularfelder soll Ihr Formular enthalten?
           primary_fields_title: Reguläre Formularfelder
           follow_up_fields_title:  Follow-up Formularfelder
           dropdown_hint: Bitte geben Sie Ihre Antwortoptionen ein. Diese müssen durch ein Komma getrennt sein.
@@ -649,7 +644,7 @@ de:
           add_field_button: Neues Formularfeld hinzufügen
         formular_answers:
           page_title: Posteingang & Follow-up E-Mails
-          emails_title: Follow-up E-Mails
+          emails_title: Möchten Sie Follow-Up-E-Mails versenden?
           subject_placeholder: E-Mail
           recipients: "%{number} Empfänger"
           emails_sent: "%{number} E-Mails gesendet"
@@ -662,6 +657,8 @@ de:
           page_title: Altersgruppen für Statistiken
         budget_edit:
           page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
+        budget_investments:
+          page_title: Investitionsvorschläge
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen

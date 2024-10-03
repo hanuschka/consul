@@ -21,7 +21,7 @@ class ProjektPhase::FormularPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming settings formular formular_answers]
+    %w[duration naming restrictions formular formular_answers]
   end
 
   def settings_in_tabs
@@ -38,11 +38,17 @@ class ProjektPhase::FormularPhase < ProjektPhase
     formular.blank?
   end
 
-  def create_formular
-    Formular.create!(projekt_phase: self)
-  end
-
   def subscribable?
     false
   end
+
+  private
+
+    def phase_specific_permission_problems(user, location)
+      :past_regular_formular_cutoff_date if formular.past_cutoff_date?
+    end
+
+    def create_formular
+      Formular.create!(projekt_phase: self)
+    end
 end

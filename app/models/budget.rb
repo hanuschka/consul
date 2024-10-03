@@ -48,16 +48,16 @@ class Budget < ApplicationRecord
 
   scope :published, -> { where(published: true) }
   scope :drafting,  -> { where.not(id: published) }
-  scope :informing, -> { where(phase: "informing") }
-  scope :accepting, -> { where(phase: "accepting") }
-  scope :reviewing, -> { where(phase: "reviewing") }
-  scope :selecting, -> { where(phase: "selecting") }
-  scope :valuating, -> { where(phase: "valuating") }
-  scope :valuating_or_later, -> { where(phase: Budget::Phase.kind_or_later("valuating")) }
-  scope :publishing_prices, -> { where(phase: "publishing_prices") }
-  scope :balloting, -> { where(phase: "balloting") }
-  scope :reviewing_ballots, -> { where(phase: "reviewing_ballots") }
-  scope :finished, -> { where(phase: "finished") }
+  scope :informing, -> { select(&:informing?) }
+  scope :accepting, -> { select(&:accepting?) }
+  scope :reviewing, -> { select(&:reviewing?) }
+  scope :selecting, -> { select(&:selecting?) }
+  scope :valuating, -> { select(&:valuating?) }
+  scope :valuating_or_later, -> { select(&:valuating_or_later?) }
+  scope :publishing_prices, -> { select(&:publishing_prices?) }
+  scope :balloting, -> { select(&:balloting?) }
+  scope :reviewing_ballots, -> { select(&:reviewing_ballots?) }
+  scope :finished, -> { select(&:finished?) }
 
   class << self; undef :open; end
   scope :open, -> { where.not(phase: "finished") }
@@ -107,39 +107,39 @@ class Budget < ApplicationRecord
   end
 
   def informing?
-    phase == "informing"
+    current_phase.kind == "informing"
   end
 
   def accepting?
-    phase == "accepting"
+    current_phase.kind == "accepting"
   end
 
   def reviewing?
-    phase == "reviewing"
+    current_phase.kind == "reviewing"
   end
 
   def selecting?
-    phase == "selecting"
+    current_phase.kind == "selecting"
   end
 
   def valuating?
-    phase == "valuating"
+    current_phase.kind == "valuating"
   end
 
   def publishing_prices?
-    phase == "publishing_prices"
+    current_phase.kind == "publishing_prices"
   end
 
   def balloting?
-    phase == "balloting"
+    current_phase.kind == "balloting"
   end
 
   def reviewing_ballots?
-    phase == "reviewing_ballots"
+    current_phase.kind == "reviewing_ballots"
   end
 
   def finished?
-    phase == "finished"
+    current_phase.kind == "finished"
   end
 
   def published_prices?

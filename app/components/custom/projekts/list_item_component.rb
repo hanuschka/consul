@@ -23,6 +23,8 @@ class Projekts::ListItemComponent < ApplicationComponent
   end
 
   def projekt_phase_url_for(phase)
+    return poll_url(phase.poll) if phase.is_a?(ProjektPhase::VotingPhase) && phase.poll.present?
+
     "#{projekt.page.url}?projekt_phase_id=#{phase.id}#projekt-footer"
   end
 

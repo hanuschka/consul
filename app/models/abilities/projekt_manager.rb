@@ -38,6 +38,7 @@ module Abilities
       can(:manage, ProjektPhase) do |pp|
         can? :edit, pp.projekt
       end
+      cannot :comment_as_moderator, ProjektPhase
 
       can(:update, ProjektPhaseSetting) do |pps|
         can? :edit, pps.projekt_phase.projekt
@@ -153,13 +154,13 @@ module Abilities
       can [:read, :create, :update, :destroy], Budget do |budget|
         user.projekt_manager.allowed_to?("manage", budget&.projekt)
       end
-      can :publish, Budget, id: Budget.drafting.ids
+      can :publish, Budget, id: Budget.where(id: Budget.drafting.pluck(:id)).ids
       can :calculate_winners, Budget, &:reviewing_ballots?
       can :read_results, Budget do |budget|
         budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
-      can :read_stats, Budget, id: Budget.valuating_or_later.ids
+      can :read_stats, Budget, id: Budget.where(id: Budget.valuating_or_later.pluck(:id)).ids
 
       can :recalculate_winners, Budget, &:balloting_or_later?
 

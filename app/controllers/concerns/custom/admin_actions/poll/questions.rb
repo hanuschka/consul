@@ -37,6 +37,8 @@ module AdminActions::Poll::Questions
       @question.votation_type = VotationType.new(vote_type: :unique)
     end
 
+    @question.given_order ||= @question.poll.questions.maximum(:given_order).to_i + 1
+
     if @question.save
       if @question.bundle_question?
         redirect_to polymorphic_path([@namespace, @question])
@@ -108,6 +110,7 @@ module AdminActions::Poll::Questions
         :show_images,
         :parent_question_id,
         :bundle_question,
+        :answer_mandatory,
         :next_question_id,
         translation_params(Poll::Question)
       )

@@ -5,11 +5,11 @@
 }
 
 
-body.-embedded {
-  .projekt-content-block {
-    padding-bottom: 84px;
-  }
-}
+/* body.-embedded { */
+/*   .projekt-content-block { */
+/*     padding-bottom: 84px; */
+/*   } */
+/* } */
 
 .image-gallery-with-ligthbox {
   margin-bottom: 25px;
@@ -28,4 +28,8 @@ body.-embedded {
 
 .accordion-title {
   border-radius: 5px;
+}
+
+.projekt-content-block {
+  margin-bottom: 35px;
 }

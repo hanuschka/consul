@@ -6,7 +6,12 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.naming.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.naming.page_title") %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "phase naming"
+      ) %>
+    </h2>
   </div>
 </div>
 

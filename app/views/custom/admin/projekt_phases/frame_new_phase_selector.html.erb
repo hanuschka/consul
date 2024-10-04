@@ -11,10 +11,7 @@
           <div class="admin-frame-phase-to-select--name">
             <%= type.constantize.model_name.human %>
           </div>
-          <button title="Ask AI" type="button" class="frame-explain-with-ai-button js-explain-with-ai" data-feature="<%= type.constantize.model_name.human %> phase">
-            <i class="dt-logo-small-icon">
-            </i>
-          </button>
+          <%= render Shared::ExplainButtonComponent.new(explain: type.constantize.model_name.human) %>
         </div>
 
         <%= form_with(

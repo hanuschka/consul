@@ -82,16 +82,12 @@ class ProposalsController
   def new
     @projekt_phase = ProjektPhase::ProposalPhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
 
-    if @projekt_phase.blank? || @projekt_phase.proposal_limit_exceeded?(current_user) || Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
+    if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
       redirect_to proposals_path
-    elsif @projekt_phase.present?
-      @projekt = @projekt_phase.projekt
-
-      if @projekt_phase.selectable_by?(current_user)
-        redirect_to proposals_path unless @projekt.in?(Projekt.selectable_in_selector("proposals", current_user))
-      else
-        redirect_to new_proposal_path
-      end
+    elsif @projekt_phase.present? && !@projekt_phase.selectable_by?(current_user)
+      redirect_to page_path(@projekt_phase.projekt.page.slug,
+                            projekt_phase_id: @projekt_phase.id,
+                            anchor: "filter-subnav")
     end
 
     @resource = resource_model.new

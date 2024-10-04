@@ -169,6 +169,10 @@ button {
     transition: 50ms ease background-color;
     background-color: $light-gray-2;
 
+    i {
+      width: 1.3em;
+    }
+
     &:hover {
       background-color: darken($light-gray-2, 2);
     }
@@ -186,6 +190,10 @@ button {
     height: 1.7em;
     transition: 50ms ease background-color;
     background: transparent;
+
+    i {
+      width: 1.3em;
+    }
 
     &:hover {
       background-color: #ededed;

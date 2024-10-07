@@ -21,16 +21,18 @@
       var $questionElement = $(this.currentQuestion()).find(".js-poll-question");
       var $nestedQuestions = $questionElement.find(".poll-question--nested-question");
 
+      $(".js-question-wizard-next").prop("disabled", false);
+
       if ($questionElement.data("answerMandatory") && $questionElement.find(".js-question-answered").length === 0) {
         $(".js-question-wizard-next").prop("disabled", true);
-      } else if ($nestedQuestions.length > 0) {
+      }
+
+      if ($nestedQuestions.length > 0) {
         $nestedQuestions.each(function(index, nestedQuestion) {
           if ( $(nestedQuestion).data("answerMandatory") && $(nestedQuestion).find(".js-question-answered").length === 0 ) {
             $(".js-question-wizard-next").prop("disabled", true);
           }
         });
-      } else {
-        $(".js-question-wizard-next").prop("disabled", false);
       }
     },
 

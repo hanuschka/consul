@@ -64,8 +64,10 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
     end
 
     def conditional_ballot?
+      return false unless current_user.present?
+
       @projekt_phase.user_status == "verified" &&
-        !user.verified? &&
+        current_user.verified_at.nil? &&
         projekt_phase_feature?(@projekt_phase, "resource.conditional_balloting")
     end
 end

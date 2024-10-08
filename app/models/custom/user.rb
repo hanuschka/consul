@@ -116,6 +116,9 @@ class User < ApplicationRecord
       verified_at: Time.current,
       unique_stamp: prepare_unique_stamp
     )
+
+    update_conditional_ballots_for_relevant_budgets
+    true
   end
 
   def unverify!
@@ -307,5 +310,14 @@ class User < ApplicationRecord
     def remove_subscriptions
       projekt_subscriptions.destroy_all
       projekt_phase_subscriptions.destroy_all
+    end
+
+    def update_conditional_ballots_for_relevant_budgets
+      Budget::Ballot.where(user_id: id).joins(:budget).select { |b| b.budget.balloting? }.each do |ballot|
+        permission_problem_present = ballot.budget.projekt_phase.permission_problem?(self).present?
+        next if permission_problem_present
+
+        ballot.update!(conditional: false)
+      end
     end
 end

@@ -314,7 +314,7 @@ class User < ApplicationRecord
 
     def update_conditional_ballots_for_relevant_budgets
       Budget::Ballot.where(user_id: id).joins(:budget).select { |b| b.budget.balloting? }.each do |ballot|
-        permission_problem_present = ballot.budget.projekt_phase.permission_problem?(self).present?
+        permission_problem_present = ballot.budget.projekt_phase.permission_problem(self).present?
         next if permission_problem_present
 
         ballot.update!(conditional: false)

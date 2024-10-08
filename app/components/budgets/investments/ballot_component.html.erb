@@ -30,7 +30,7 @@
           <%= t("budgets.ballots.show.remove") %>
         <% end %>
 
-        <% if current_user.verified_at.nil? %>
+        <% if conditional_ballot? %>
           <div class='callout warning'>
             <%= t("custom.budgets.investments.investment.unverified_note") %>
           </div>

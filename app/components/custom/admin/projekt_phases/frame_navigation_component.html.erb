@@ -1,9 +1,7 @@
 <div class="frame-phase-edit-navigation">
   <div class="frame-phase-navigate-settings">
     <% if @projekt_phase.present? %>
-      <%= link_to @projekt_phase.projekt.frame_url, class: "square-back-button" do %>
-        <i class="fas fa-chevron-left"></i>
-      <% end %>
+      <%= link_to "Zurück zum Projekt", @projekt_phase.projekt.frame_url, class: "" %>
     <% end %>
 
     <div class='arrow-controls'>
@@ -17,9 +15,11 @@
   </div>
   <% if @show_title %>
     <% if @projekt_phase.present? %>
-      <h1 class="admin-projekt-phase-title">
-        <%= @projekt_phase.title %>
-      </h1>
+      <div class="column">
+        <h1 class="admin-projekt-phase-title">
+          <%= @projekt_phase.title %>
+        </h1>
+      </div>
     <% end %>
   <% end %>
 </div>

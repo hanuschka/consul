@@ -17,19 +17,19 @@
         <% end %>
 
         <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase", "voting_phase", "question_phase", "formular_phase", "legislation_phase", "comment_phase", "livestream_phase"]) %>
-          <% fields_to_explain << "cta_button_name" %>
+          <% fields_to_explain << "cta button name" %>
         <% end %>
 
         <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
-          <% fields_to_explain += ["labels_name", "sentiments_name"] %>
+          <% fields_to_explain += ["labels name", "sentiments name"] %>
         <% end %>
 
         <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase"]) %>
-          <% fields_to_explain << "projekt_selector_hint" %>
+          <% fields_to_explain << "projekt selector hint" %>
         <% end %>
 
         <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
-          <% fields_to_explain += ["projekt_selector_hint", "resource_form_title", "resource_form_title_hint"] %>
+          <% fields_to_explain += ["projekt selector hint", "resource form title", "resource form title hint"] %>
         <% end %>
         <% if @projekt_phase.name.in?(["voting_phase"]) %>
           <% fields_to_explain << "description" %>
@@ -42,6 +42,8 @@
     </h2>
   </div>
 </div>
+
+<% naming_column_class = embedded? ? "" : "large-8" %>
 
 <%= translatable_form_for(@projekt_phase, url: namespace_projekt_phase_path, as: :projekt_phase, html: { id: "phase-edit-form"}) do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
@@ -59,7 +61,7 @@
     <%= f.fields_for :polls do |polls_form| %>
       <%= polls_form.translatable_fields do |poll_translations_form| %>
         <div class="row">
-          <div class="column large-8">
+          <div class="column <%= naming_column_class %>">
             <%= poll_translations_form.text_field :name %>
           </div>
         </div>
@@ -69,7 +71,7 @@
 
   <%= f.translatable_fields do |translations_form| %>
     <div class="row">
-      <div class="column large-8">
+      <div class="column <%= naming_column_class %>">
         <strong><%= t("custom.admin.projekt_phases.phase_tab_name") %></strong>
         <%= translations_form.text_field :phase_tab_name, label: false %>
       </div>
@@ -77,7 +79,7 @@
 
     <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase", "voting_phase", "question_phase", "formular_phase", "legislation_phase", "comment_phase", "livestream_phase"]) %>
       <div class="row">
-        <div class="column large-8">
+        <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.cta_button_name") %></strong>
           <%= translations_form.text_field :cta_button_name, label: false %>
         </div>
@@ -86,14 +88,14 @@
 
     <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
       <div class="row">
-        <div class="column large-8">
+        <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.labels_name") %></strong>
           <%= translations_form.text_field :labels_name, label: false %>
         </div>
       </div>
 
       <div class="row">
-        <div class="column large-8">
+        <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.sentiments_name") %></strong>
           <%= translations_form.text_field :sentiments_name, label: false %>
         </div>
@@ -102,7 +104,7 @@
 
     <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
       <div class="row">
-        <div class="column large-8">
+        <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.resource_form_title") %></strong>
           <%= translations_form.text_field :resource_form_title, label: false %>
         </div>
@@ -120,7 +122,7 @@
 
     <% if @projekt_phase.name.in?(["voting_phase"]) %>
       <div class="row">
-        <div class="column large-8">
+        <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.#{@projekt_phase.name}.description") %></strong>
           <%= translations_form.text_area :description,
             label: false,
@@ -131,7 +133,7 @@
 
     <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase"]) %>
       <div class="row">
-        <div class="column large-8">
+        <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.projekt_selector_hint") %></strong>
           <%= translations_form.text_area :projekt_selector_hint,
             label: false,
@@ -142,7 +144,7 @@
   <% end %>
 
   <div class='row'>
-    <div class='column large-8'>
+    <div class='column <%= naming_column_class %>'>
       <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
     </div>
   </div>

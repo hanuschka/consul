@@ -8,9 +8,25 @@
   <div class="column">
     <h2>
       <%= t("custom.admin.projekt_phases.settings.page_title") %>
-      <%= render Shared::ExplainButtonComponent.new(
-        explain: "#{@projekt_phase.class.model_name.human} phase settings: #{@projekt_phase_features.values.flatten.map(&:translated_name).join(', ')}"
-      ) %>
+
+      <% if embedded? %>
+        <% if @projekt_phase_features.is_a?(Hash) %>
+          <% features_list = @projekt_phase_features.values.flatten.map(&:translated_name) %>
+        <% else %>
+          <% features_list = [] %>
+        <% end %>
+        <% if @projekt_phase_options.is_a?(Hash) %>
+          <% options_list = @projekt_phase_options.values.flatten.map(&:translated_name) || []%>
+        <% else %>
+          <% options_list = [] %>
+        <% end %>
+
+        <% features_and_options = features_list + options_list %>
+
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "#{@projekt_phase.class.model_name.human} phase settings: #{features_and_options.join(', ')}"
+        ) %>
+      <% end %>
     </h2>
   </div>
 </div>

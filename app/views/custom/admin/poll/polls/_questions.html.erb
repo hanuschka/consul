@@ -1,5 +1,13 @@
 <div>
-  <h3 class="inline-block"><%= t("admin.polls.show.questions_title") %></h3>
+  <h3 class="inline-block">
+    <%= t("admin.polls.show.questions_title") %>
+
+    <% if embedded? %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "poll questions"
+      ) %>
+    <% end %>
+  </h3>
 
   <div>
     <%= link_to t("custom.admin.questions.index.create_normal"), polymorphic_path([@namespace, :question], action: :new, poll_id: @poll.id), class: "button" %>

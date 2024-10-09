@@ -11,12 +11,12 @@
 
       <% if embedded? %>
         <% if @projekt_phase_features.is_a?(Hash) %>
-          <% features_list = @projekt_phase_features.values.flatten.map(&:translated_name) %>
+          <% features_list = @projekt_phase_features.values&.flatten&.compact.map(&:translated_name) %>
         <% else %>
           <% features_list = [] %>
         <% end %>
         <% if @projekt_phase_options.is_a?(Hash) %>
-          <% options_list = @projekt_phase_options.values.flatten.map(&:translated_name) || []%>
+          <% options_list = @projekt_phase_options.values&.flatten&.compact.map(&:translated_name) || []%>
         <% else %>
           <% options_list = [] %>
         <% end %>

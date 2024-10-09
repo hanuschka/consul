@@ -98,7 +98,10 @@ class PollsController < ApplicationController
   def stats
     @stats = Poll::Stats.new(@poll)
 
-    if Setting.new_design_enabled?
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    elsif Setting.new_design_enabled?
       render :stats_new
     else
       render :stats
@@ -106,7 +109,10 @@ class PollsController < ApplicationController
   end
 
   def results
-    if Setting.new_design_enabled?
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    elsif Setting.new_design_enabled?
       render :results_new
     else
       render :results

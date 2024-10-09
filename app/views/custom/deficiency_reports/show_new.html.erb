@@ -106,7 +106,7 @@
           <% end %>
         <% end %>
 
-        <% if can?(:edit, @deficiency_report) %>
+        <% if can?(:edit, @deficiency_report) || can?(:audits, @deficiency_report) %>
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.admin_actions.title"),
             icon_name: "user-edit")) do |c| %>

@@ -8,9 +8,37 @@
   <div class="column">
     <h2>
       <%= t("custom.admin.projekt_phases.naming.page_title") %>
-      <%= render Shared::ExplainButtonComponent.new(
-        explain: "phase naming"
-      ) %>
+
+      <% if embedded? %>
+        <% fields_to_explain = %w( name phase_tab_name) %>
+
+        <% if @projekt_phase.name.in?(["voting_phase"]) %>
+          <% fields_to_explain << "phase description" %>
+        <% end %>
+
+        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase", "voting_phase", "question_phase", "formular_phase", "legislation_phase", "comment_phase", "livestream_phase"]) %>
+          <% fields_to_explain << "cta_button_name" %>
+        <% end %>
+
+        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
+          <% fields_to_explain += ["labels_name", "sentiments_name"] %>
+        <% end %>
+
+        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase"]) %>
+          <% fields_to_explain << "projekt_selector_hint" %>
+        <% end %>
+
+        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
+          <% fields_to_explain += ["projekt_selector_hint", "resource_form_title", "resource_form_title_hint"] %>
+        <% end %>
+        <% if @projekt_phase.name.in?(["voting_phase"]) %>
+          <% fields_to_explain << "description" %>
+        <% end %>
+
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "phase naming. Fields: #{fields_to_explain&.join(', ')}"
+        ) %>
+      <% end %>
     </h2>
   </div>
 </div>

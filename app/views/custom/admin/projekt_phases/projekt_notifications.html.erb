@@ -6,7 +6,14 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.projekt_notifications.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.projekt_notifications.page_title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "projekt notifications"
+        ) %>
+      <% end %>
+    </h2>
   </div>
 </div>
 

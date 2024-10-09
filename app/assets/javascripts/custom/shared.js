@@ -29,10 +29,12 @@
         App.Shared.toggleElementsWithClass($(this));
       });
 
-      console.log("initialize");
       $(".js-class-toggler").each(function() {
-        console.log("each");
         App.Shared.toggleElementsWithClass($(this));
+      });
+
+      $("body").on("click", ".js-reload-page-on-click", function() {
+        setTimeout(function() { location.reload(); }, 500);
       });
     }
   };

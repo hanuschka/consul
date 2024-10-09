@@ -5,6 +5,7 @@ class Budget
     include OnBehalfOfSubmittable
     include Labelable
     include Sentimentable
+    include Memoable
 
     delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
 

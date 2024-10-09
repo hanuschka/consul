@@ -82,7 +82,9 @@
 .frame-admin-layout .admin-content,
 .frame-admin-layout .admin-frame-content-card {
   background-color: white;
-  padding: 30px 35px;
+  /* padding: 30px 35px; */
+  padding: 20px 25px;
+  padding-left: 20px;
   overflow: visible;
   min-height: 91px;
   border-radius: 10px;
@@ -166,6 +168,11 @@
   align-items: center;
   justify-content: space-between;
 
+  a {
+    width: 100%;
+    text-wrap: nowrap;
+  }
+
   .arrow-controls {
     font-size: 38px;
     align-items: center;
@@ -195,9 +202,9 @@
 
 .frame-admin-layout {
   .admin-projekt-phase-title {
-    font-size: 20px;
+    font-size: 32px;
+    margin-left: 20px;
     color: inherit;
-    font-weight: bold;
     margin-top: 0;
   }
 }

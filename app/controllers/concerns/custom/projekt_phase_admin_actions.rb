@@ -225,7 +225,7 @@ module ProjektPhaseAdminActions
   def projekt_events
     authorize!(:projekt_events, @projekt_phase)
     @projekt_event = ProjektEvent.new
-    @projekt_events = @projekt_phase.projekt_events
+    @projekt_events = @projekt_phase.projekt_events.order(datetime: :desc)
 
     render "custom/admin/projekt_phases/projekt_events"
   end

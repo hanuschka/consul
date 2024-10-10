@@ -10,6 +10,13 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="column medium-9 margin-bottom">
+    <p><%= t("custom.admin.projekt_phases.restrictions.intro.p1_html") %></p>
+    <p><%= t("custom.admin.projekt_phases.restrictions.intro.p2_html") %></p>
+  </div>
+</div>
+
 <%= form_with model: @projekt_phase, url: namespace_projekt_phase_path, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
 

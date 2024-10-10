@@ -144,3 +144,18 @@
     color: #cc4b37;
   }
 }
+
+// Phases
+
+.restriction-title {
+  font-size: 24px;
+  font-weight: bold;
+
+  span.restriction-hint {
+    display: block;
+    font-size: small;
+    font-weight: normal;
+    position: relative;
+    top: -5px;
+  }
+}

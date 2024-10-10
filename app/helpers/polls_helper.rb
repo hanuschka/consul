@@ -1,9 +1,9 @@
 module PollsHelper
   def poll_dates(poll)
-    if poll.starts_at.blank? || poll.ends_at.blank?
+    if poll.projekt_phase.start_date.blank? || poll.projekt_phase.end_date.blank?
       I18n.t("polls.no_dates")
     else
-      I18n.t("polls.dates", open_at: l(poll.starts_at.to_date), closed_at: l(poll.ends_at.to_date))
+      I18n.t("polls.dates", open_at: l(poll.projekt_phase.start_date.to_date), closed_at: l(poll.projekt_phase.end_date.to_date))
     end
   end
 

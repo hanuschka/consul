@@ -1,37 +1,7 @@
-
 html{
   -moz-text-size-adjust: none !important;
   -webkit-text-size-adjust: none !important;
   text-size-adjust: none !important;
-}
-
-@media screen and (min-width: 75em) {
-  body.custom-new-design {
-    .wrapper, .footer, .top-bar {
-      width: 100%;
-      margin: auto;
-    }
-
-    main {
-      margin: auto;
-    }
-
-    .wrapper {
-      margin-bottom: 80px;
-    }
-
-    main, .top-bar {
-      max-width: 1245px;
-    }
-
-    .footer {
-      max-width: 1920px;
-    }
-
-    .header {
-      margin-bottom: 50px;
-    }
-  }
 }
 
 body.custom-new-design {
@@ -140,14 +110,6 @@ body.custom-new-design {
     line-height: 1.5;
   }
 
-  .resources-list {
-    margin-bottom: 40px;
-
-    // @media(max-width: $small-tablet-viewport-start) {
-    //   margin-bottom: 30px;
-    // }
-  }
-
   .u-flex-container {
     display: flex;
     justify-content: space-between;
@@ -200,7 +162,7 @@ body.custom-new-design {
   height: 1px;
   flex-grow: 1;
   background: #c7c7c7;
-  margin-top: 17px;
+  align-self: flex-end;
 
   @media(max-width: $small-tablet-viewport-start) {
     display: none;

@@ -8,7 +8,7 @@ body.admin ul.tabs,
 body.admin .top-bar,
 body.admin .tabs-title > a[aria-selected='true'],
 .admin-top-bar {
-  background-color: #F4F4F4 !important;
+  background-color: $main-background-color !important;
 }
 
 .help-header {

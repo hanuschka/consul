@@ -7,6 +7,16 @@ class RegisteredAddress::Street < ApplicationRecord
 
   default_scope { order(:name) }
 
+  scope :by_user_input, ->(name:, plz:) {
+    name_normalized = name.downcase.gsub(/(\s{2,}|\-)/i, "\s")
+
+    where(
+      "translate(lower(name), '-', ' ') ILIKE ?",
+      "%#{name_normalized}%"
+    )
+      .where(plz: plz)
+  }
+
   validates :name, presence: true
   validates :plz, presence: true
   validates :name, uniqueness: { scope: :plz }

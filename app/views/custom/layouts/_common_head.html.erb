@@ -9,8 +9,14 @@
 <% end %>
 
 <%= stylesheet_link_tag "print", media: 'print' %>
+
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
 <%= csrf_meta_tags %>
+
+<% if embedded? %>
+  <meta name="frame-csrf-token" content="<%= Current.active_frame_csrf_token %>">
+<% end %>
+
 <%= favicon_link_tag "favicon.ico" %>
 
 <meta name="external-links" content=<%= Setting["extended_feature.gdpr.link_out_warning"] %> />
@@ -22,12 +28,15 @@
 
 <%= yield :vc_maps %>
 
-<% if Rails.application.secrets.matomo_site_id.present? %>
-  <%= render "layouts/matomo" %>
+<% unless embedded? %>
+  <% unless Rails.env.development? %>
+    <% if Rails.application.secrets.matomo_site_id.present? %>
+      <%= render "layouts/matomo" %>
+    <% end %>
+    <%= javascript_include_tag "klaro/config.js", defer: true %>
+    <%= javascript_include_tag "klaro/klaro.js", defer: true %>
+  <% end %>
 <% end %>
-
-<%= javascript_include_tag "klaro/config.js", defer: true %>
-<%= javascript_include_tag "klaro/klaro.js", defer: true %>
 
 <% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
   <script>

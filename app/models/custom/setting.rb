@@ -47,7 +47,6 @@ class Setting < ApplicationRecord
         "feature.user.recommendations": false,
         # "feature.user.recommendations_on_debates": true,
         # "feature.user.recommendations_on_proposals": true,
-        "feature.user.skip_verification": "true",
         "feature.community": true,
         "feature.map": true,
         "feature.allow_attached_documents": true,
@@ -60,6 +59,7 @@ class Setting < ApplicationRecord
         "feature.graphql_api": true,
         "feature.sdg": false,
         "feature.machine_learning": false,
+        "feature.matomo": false,
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
@@ -191,7 +191,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.enable_projekt_events_page": false,
         "extended_feature.general.enable_investments_overview": false,
         "extended_feature.general.enable_google_translate": false,
-        "extended_feature.general.enable_old_design": true,
+        # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
@@ -266,11 +266,12 @@ class Setting < ApplicationRecord
     end
 
     def old_design_enabled?
-      enabled?("extended_feature.general.enable_old_design")
+      !new_design_enabled?
     end
 
     def new_design_enabled?
-      !old_design_enabled?
+      # !old_design_enabled?
+      true
     end
 
     def enabled?(key)

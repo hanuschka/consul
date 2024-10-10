@@ -251,7 +251,12 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @memo = Memo.find(memo_id)
     @root_memoable = @memo.root_memoable
-    @root_memoable_url = polymorphic_url([namespace, @root_memoable])
+
+    @root_memoable_url = if @root_memoable.is_a?(Budget::Investment)
+                           polymorphic_url([namespace, @root_memoable.budget, @root_memoable])
+                         else
+                           polymorphic_url([namespace, @root_memoable])
+                         end
 
     subject = t("custom.notification_service_mailers.memo.subject")
 

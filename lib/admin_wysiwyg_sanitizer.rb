@@ -36,6 +36,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       data-map data-map-center-latitude data-map-center-longitude data-map-zoom data-admin-editor data-show-admin-shape data-admin-shape data-parent-class data-map-layers
       data-src
       data-show-more-text data-show-less-text
+      data-pswp-width data-pswp-height
     ]
   end
 end

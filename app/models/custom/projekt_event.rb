@@ -24,6 +24,10 @@ class ProjektEvent < ApplicationRecord
     where("COALESCE(end_datetime, datetime) < ?", Time.zone.now)
   }
 
+  scope :with_active_projekt, -> {
+    joins(projekt_phase: :projekt).merge(Projekt.activated).merge(ProjektPhase.active)
+  }
+
   def self.scoped_projekt_ids_for_footer(projekt)
     projekt
       .top_parent

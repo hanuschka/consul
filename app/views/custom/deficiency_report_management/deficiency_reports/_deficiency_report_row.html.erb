@@ -13,10 +13,11 @@
   <% end %>
   <td>
     <%= l(deficiency_report.created_at, format: "%d.%m.%Y") %>
-    <br>
-    <small><%= link_to "Änderung Log", deficiency_report_management_deficiency_report_path(deficiency_report) %></small>
   </td>
-  <td><%= link_to deficiency_report.title, deficiency_report_path(deficiency_report), target: "_blank" %></td>
+  <td>
+    <%= link_to deficiency_report.title, deficiency_report_management_deficiency_report_path(deficiency_report), target: "_blank" %>
+    <small><%= link_to "Front-end", deficiency_report_path(deficiency_report), target: "_blank" %></small>
+  </td>
   <td><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank" %></td>
   <td><%= deficiency_report.status&.title %></td>
   <td><%= deficiency_report.map_location&.approximated_address %></td>

@@ -1,4 +1,5 @@
 class Management::BaseController < ActionController::Base
+  include IframeEmbeddedBehavior
   include GlobalizeFallbacks
   layout "management"
   default_form_builder ConsulFormBuilder

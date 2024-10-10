@@ -3,7 +3,9 @@
             class: "float-right small clear" %>
 
 <% if params[:advanced_filters].include?("winners") %>
-  <%= render Admin::Budgets::CalculateWinnersButtonComponent.new(@budget, from_investments: true) %>
+  <div class="margin-bottom">
+    <%= render Admin::Budgets::CalculateWinnersButtonComponent.new(@budget, from_investments: true) %>
+  </div>
 <% end %>
 
 <% if @investments.any? %>
@@ -29,7 +31,6 @@
           <%= t("admin.budget_investments.index.list.valuation_group") %> /
           <%= t("admin.budget_investments.index.list.valuator") %>
         </th>
-        <th data-field="geozone"><%= t("admin.budget_investments.index.list.geozone") %></th>
         <th data-field="feasibility"><%= t("admin.budget_investments.index.list.feasibility") %></th>
         <% if @budget.show_money? %>
           <th data-field="price"><%= t("admin.budget_investments.index.list.price") %></th>

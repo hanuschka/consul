@@ -80,18 +80,14 @@ class ProposalsController
   end
 
   def new
-    redirect_to proposals_path if proposal_limit_exceeded?(current_user)
-    redirect_to proposals_path if Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
+    @projekt_phase = ProjektPhase::ProposalPhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
 
-    if params[:projekt_phase_id].present?
-      @projekt_phase = ProjektPhase::ProposalPhase.find(params[:projekt_phase_id])
-      @projekt = @projekt_phase.projekt
-
-      if @projekt_phase.selectable_by?(current_user)
-        redirect_to proposals_path unless @projekt.in?(Projekt.selectable_in_selector("proposals", current_user))
-      else
-        redirect_to new_proposal_path
-      end
+    if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
+      redirect_to proposals_path
+    elsif @projekt_phase.present? && !@projekt_phase.selectable_by?(current_user)
+      redirect_to page_path(@projekt_phase.projekt.page.slug,
+                            projekt_phase_id: @projekt_phase.id,
+                            anchor: "filter-subnav")
     end
 
     @resource = resource_model.new
@@ -202,8 +198,14 @@ class ProposalsController
   end
 
   def vote
-    @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
-    @voted =  @proposal.register_vote(current_user, "yes")
+    if params[:value] == "no"
+      @follow = Follow.find_by(user: current_user, followable: @proposal)
+      @follow&.destroy!
+      @voted = !@proposal.register_vote(current_user, "no")
+    else
+      @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
+      @voted = @proposal.register_vote(current_user, "yes")
+    end
   end
 
   def unvote
@@ -247,12 +249,5 @@ class ProposalsController
                     map_location_attributes: map_location_attributes]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
-    end
-
-    def proposal_limit_exceeded?(user)
-      projekt = Projekt.find_by(id: params[:projekt_id])
-      return false if user.administrator? || user.projekt_manager?(projekt)
-
-      user.proposals.where(retired_at: nil).count >= Setting["extended_option.proposals.max_active_proposals_per_user"].to_i
     end
 end

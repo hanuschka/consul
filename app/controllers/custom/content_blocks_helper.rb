@@ -63,4 +63,30 @@ module ContentBlocksHelper
       )
     )
   end
+
+  def render_projekt_content_block(block)
+    block_body = block&.body
+    key = block.key
+
+    if current_user&.administrator?
+      edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_admin_site_customization_content_block_path(block, return_to: request.path) )
+    elsif @custom_page&.projekt && current_user&.projekt_manager?(@custom_page&.projekt)
+      edit_link = link_to('<i class="fas fa-edit"></i>'.html_safe, edit_projekt_management_site_customization_content_block_path(block, return_to: request.path) )
+    end
+
+    if block_body.present? && current_user && current_user.email.in?(@partner_emails)
+      copy_link = link_to '<i class="fas fa-code"></i>'.html_safe, '#', class: 'js-copy-source-button', style: "#{'margin-left:10px' if edit_link.present?}", data: { target: key }
+    end
+
+    res = "<div id=#{key} class=#{ 'custom-content-block-body' if block_body.present? }>#{block_body}</div>"
+
+    if edit_link || copy_link
+      res << "<div class='custom-content-block-controls'>"
+        res << edit_link if edit_link.present?
+        res << copy_link if copy_link.present?
+      res << "</div>"
+    end
+
+    res.html_safe
+  end
 end

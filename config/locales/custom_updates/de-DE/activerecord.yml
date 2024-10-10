@@ -57,6 +57,15 @@ de:
       projekt_phase/formular_phase: Formular
       formular_field: Formularfeld
     errors:
+      messages:
+        file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
+        file_size_is_less_than: 'Dateigröße muss kleiner als %{count} sein'
+        file_size_is_less_than_or_equal_to: 'Dateigröße muss kleiner oder gleich %{count} sein'
+        file_size_is_greater_than: 'Dateigröße muss größer als %{count} sein'
+        file_size_is_greater_than_or_equal_to: 'Dateigröße muss größer oder gleich %{count} sein'
+        allowed_file_content_types: 'Datei muss einer von %{types} sein'
+        excluded_file_content_types: 'Datei kann nicht %{types} sein'
+
       models:
         proposal:
           attributes:
@@ -84,7 +93,17 @@ de:
           attributes:
             email:
               invalid: Bitte geben Sie ein gültiges E-Mail-Format ein
+        budget_investment:
+          attributes:
+            projekt_labels:
+              blank: Bitte wählen Sie mindestens ein Label
+            sentiment:
+              blank: Bitte wählen Sie ein Sentiment
     attributes:
+      map_location:
+        latitude: Breitengrad
+        longitude: Längengrad
+        zoom: Zoom
       projekt:
         total_duration_start: Anfangsdatum
         total_duration_end: Enddatum
@@ -93,28 +112,49 @@ de:
         description: Projektbeschreibung
       poll/answer:
         open_answer_text: Offene Antwort
+      poll/question:
+        answer_mandatory: Antwort obligatorisch
+        min_rating_scale_label: Linkes Label
+        max_rating_scale_label: Rechtes Label
+        show_hint_callout: Diese Textbox im Frontend anzeigen
       poll/question/answer:
         more_info_link: Erklärungslink
         more_info_iframe: Iframe-Link
+      poll/translation:
+        closing_note: Text der Abschlussseite
       widget/card:
         card_category: Kategorie
       deficiency_report:
+        author: Autor
         deficiency_report_category_id: Kategorie
+        deficiency_report_status_id: Status
+        deficiency_report_officer_id: Sachbearbeiter*in
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
         on_behalf_of: Meldung im Namen von jemanden erstellen
         category: Kategorie
         status: Status
         notify_officer_about_new_comments: Benachrichtigung für Sachbearbeiter*in
+        official_answer_approved: Antwort freigeben
+        approximated_address: Addresse
+      deficiency_report/category:
+        default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
+      deficiency_report/official_answer_template:
+        title: Titel
+        text: Text
       debate:
         on_behalf_of: Erstellen im Namen von
       proposal:
         official_answer: Offizielle Antwort
         on_behalf_of: Erstellen im Namen von
       budget:
+        show_results_after_first_vote: Ergebnisse nach Unterstützungsphase
+        show_percentage_values_only: Prozentuale Werte
         voting_style_distributed: "Mehrere Stimmen"
         hide_money: Geld ausblenden
         max_number_of_winners: maximale Anzahl an Gewinnern
+      budget/heading:
+        price: Gesamtbudget
       budget/investment:
         implementation_performer: Umsetzung des Investitionsvorschlages
         implementation_performers:
@@ -166,17 +206,15 @@ de:
       votation_type:
         max_votes: Maximale Stimmanzahl
         max_votes_per_answer: Maximale Stimmanzahl pro Antwort
-        vote_type: Art der Abstimmung
+        vote_type: Antwortoptionen
+        show_hint_callout: Informationstext der blauen Box im Frontend anzeigen
+        min_rating_scale_label: Linkes Label
+        max_rating_scale_label: Rechtes Label
       votation_type/vote_type:
         unique: Einzelne Stimme
         multiple: Mehrere Stimmen
         multiple_with_weight: Mehrere gewichtete Stimmen
         rating_scale: Bewertungsskala
-
-      poll/question:
-        min_rating_scale_label: Linkes Label
-        max_rating_scale_label: Rechtes Label
-        show_hint_callout: Diese Textbox im Frontend anzeigen
       individual_group:
         name: Name
         visible: sichtbar
@@ -186,18 +224,25 @@ de:
           soft: schwache Gruppe
       individual_group_value:
         name: Name
+      sentiment:
+        color: Farbe des Sentiments
+      sentiment/translation:
+        name: Name des Sentiments
       projekt_label:
-        icon: Icon
-        color: Farbe
-        name: Name
+        icon: Icon des Labels
+      projekt_label/translation:
+        name: Name des Labels
       projekt_question:
         show_answers_count: Anzahl der Stimmen im Frontend anzeigen
         comments_enabled: Offene Antwort aktiviert
+      projekt_question/translation:
+        title: Frage
       projekt_event:
         title: Veranstaltungstitel
         location: Veranstaltungsort
         datetime: Datum
         end_datetime: Endtermin
+        open_ended: Offenes Ende
         weblink: Weblink
       projekt_notification:
         title: Titel
@@ -225,7 +270,7 @@ de:
         drop_down_options: Dropdown-Optionen
       formular_follow_up_letter:
         subject: Betreff
-        body: Text
+        body: E-Mail-Text
         show_follow_up_button: Link zu Follow-up Formular integrieren
       formular_answer_image:
         title: Titel

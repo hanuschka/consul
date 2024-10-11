@@ -189,6 +189,8 @@ module Abilities
         can? :read_stats, investment.budget
       end
 
+      can :add_memo, Budget::Investment
+
       can :get_coordinates_map_location, MapLocation
       can :send_notification, Memo, user_id: user.id
     end

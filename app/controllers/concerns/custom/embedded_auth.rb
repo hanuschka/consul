@@ -47,6 +47,7 @@ module EmbeddedAuth
     end
 
     def frame_session
+      return @_frame_session if @_frame_session.present?
       return if cookies.encrypted[:frame_session].nil?
 
       @_frame_session ||=

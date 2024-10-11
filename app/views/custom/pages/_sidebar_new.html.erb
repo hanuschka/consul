@@ -8,6 +8,16 @@
     <% end %>
   <% end %>
 
+  <% if show_embeded_controls %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
+      <button type="button" data-path="/projekts/<%= @projekt.id %>/edit?embedded=true" class="button hollow expanded left-aligned js-frame-open-admin-page">
+        <i class="fas fa-cog"></i>
+        <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt") %>
+      </button>
+    <% end %>
+  <% end %>
+
+
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
   <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.projekt_information.title"), icon_name: "info-circle", class_name: "js-sidebar-projekt-info") do |c| %>

@@ -1,4 +1,25 @@
-.frame-admin-layout {
+body.frame-admin-layout {
+  .config-block {
+    border-radius: 10px;
+  }
+  thead {
+    border: 2px solid #ecf1f6;
+    border-radius: 0 !important;
+  }
+  .config-block {
+    border: 1px solid #d6d6d6 !important
+  }
+  .tabs-content ul.tabs,
+  .tabs-content,
+  .tabs-title > a[aria-selected='true'],
+  .tabs-title > a[aria-selected='true']
+  {
+    background-color: white !important;
+  }
+
+  .tabs-title {
+    padding: 0 10px;
+  }
   form input[type=file] {
     display: block;
   }

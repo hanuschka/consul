@@ -129,6 +129,8 @@ de:
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
             show_video_as_link: Videos als Link
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+            conditional_balloting: Vereinfachte Stimmabgabe
+            conditional_balloting_description: Stimmen werden vor der Verifizierung aufgenommen, aber erst nach der Verifizierung gezählt
       projekt_questions:
         feature:
           general:

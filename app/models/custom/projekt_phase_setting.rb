@@ -122,7 +122,8 @@ class ProjektPhaseSetting < ApplicationRecord
             "feature.resource.show_follow_button_in_sidebar": "",
             "feature.resource.show_community_button_in_sidebar": "",
             "feature.resource.show_related_content": "",
-            "feature.resource.show_comments": "active"
+            "feature.resource.show_comments": "active",
+            "feature.resource.conditional_balloting": ""
           },
 
           old: {

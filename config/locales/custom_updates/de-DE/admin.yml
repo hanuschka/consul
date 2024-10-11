@@ -31,7 +31,39 @@ de:
           list:
             created_at: Erstellungsdatum
         show:
+          not_defined: undefiniert
+          state_block_title: Status des Vorschlags
           physical_votes_updated: Physical votes updated!
+          feasibility: Durchführbarkeit
+          price: Preisliche Einschätzung der Verwaltung (€)
+          price_first_year: Preisliche Einschätzung der laufende Kosten im ersten Jahr (€)
+          price_explanation: Erläuterung der Verwaltung
+          duration: Zeitrahmen
+          valuation_finished_label: Gutachten
+          valuation_finished:
+            "true": abgeschlossen
+            "false": noch nicht abgeschlossen
+          selected_label: Für Unterstützungsphase ausgewählt
+          selected:
+            "true": ja
+            "false": nein
+          compatible_label: Zur Gewinnerliste zugelassen
+          compatible:
+            "true": ja
+            "false": nein
+          winner_label: Gewinner
+          winner:
+            "true": ja
+            "false": nein
+          state_block_action_button_title: Bearbeiten
+          details_block_title: Weitere Infos
+          author: Autor
+          created_at: Erstellungsdatum
+          implementation_performer_label: Umsetzung
+          implementation_performer:
+            city: Autor unterstützt bei der Umsetzung nicht
+            user: Autor unterstützt bei der Umsetzung
+          user_cost_estimate: Preisliche Einschätzung des Nutzers (€)
       deficiency_reports:
         index:
           entry_name: Mangel
@@ -506,6 +538,9 @@ de:
           page_title: Wie möchten Sie einzelne Elemente benennen?
         restrictions:
           page_title: Möchten Sie die Beteiligung einschränken?
+          intro:
+            p1_html: Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.
+            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet. 
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.

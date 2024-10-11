@@ -1,7 +1,9 @@
 <div id="phase-user-status-restrictions">
-  <strong><%= t("custom.admin.projekt_phases.restrictions.user_status.title") %></strong>
-  <div class="projekt-phase-restriction-selector margin-bottom">
+  <div class="restriction-title">
+    <%= t("custom.admin.projekt_phases.restrictions.user_status.title") %>
+  </div>
 
+  <div class="projekt-phase-restriction-selector margin-bottom">
     <% ProjektPhase.user_statuses.keys.each do |status| %>
       <div class="projekt-phase-restriction-block">
         <%= f.radio_button :user_status, status,

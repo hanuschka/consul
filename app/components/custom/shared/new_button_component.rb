@@ -97,6 +97,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         @projekt_phase&.cta_button_name.presence || t("budgets.investments.index.sidebar.create")
       elsif @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @resources_name == "proposals"
         @projekt_phase&.cta_button_name.presence || t("proposals.index.start_proposal")
+      elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
+        @projekt_phase&.cta_button_name.presence || t("debates.index.start_debate")
       end
     end
 
@@ -105,6 +107,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         new_budget_investment_path(@projekt_phase.budget, projekt_phase_id: @projekt_phase, projekt_id: @projekt)
       elsif @projekt_phase.is_a?(ProjektPhase::ProposalPhase) || @resources_name == "proposals"
         new_proposal_path(link_params_hash)
+      elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
+        new_debate_path(link_params_hash)
       end
     end
 

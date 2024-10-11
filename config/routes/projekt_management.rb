@@ -101,6 +101,10 @@ namespace :projekt_management do
       member do #custom
         patch :toggle_selection
         patch :edit_physical_votes
+        get :people
+        get :milestones
+        get :progress_bars
+        get :audits
       end
 
       resources :audits, only: :show, controller: "budget_investment_audits"

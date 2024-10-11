@@ -1,6 +1,5 @@
 module ProjektPhaseAdminActions
   extend ActiveSupport::Concern
-  include EmbeddedAuth
   include Translatable
   include MapLocationAttributes
   include ProjektPhaseControllerUtils

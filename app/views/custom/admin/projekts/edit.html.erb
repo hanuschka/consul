@@ -1,4 +1,8 @@
-<%= back_link_to params[:controller].include?("projekt_management") ? projekt_management_projekts_path : admin_projekts_path %>
+<% if embedded? %>
+  <%= back_link_to @projekt.frame_url %>
+<% else %>
+  <%= back_link_to params[:controller].include?("projekt_management") ? projekt_management_projekts_path : admin_projekts_path %>
+<% end %>
 
 <h2><%= @projekt.name %>  </h2>
 

@@ -69,7 +69,7 @@
       transition: 50ms ease opacity;
       justify-content: space-between;
 
-      .projekt-frame-js-action-button {
+      .projekt-frame-icon-action-button {
         &:hover {
           cursor: pointer;
           background-color: rgba($brand, 0.1);
@@ -83,7 +83,7 @@
       }
     }
 
-    .projekt-frame-js-action-button {
+    .projekt-frame-icon-action-button {
       color: $brand;
     }
   }

@@ -19,6 +19,17 @@
       }
     },
 
+    pageLoaded: function() {
+      if (window.parent) {
+        window.parent.postMessage(
+          JSON.stringify({
+            event_type: "consul_page_loaded",
+          }),
+          '*'
+        );
+      }
+    },
+
     handleIframeGlobalEvents: function(event) {
       if (event.data) {
         var data = {};

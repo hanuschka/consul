@@ -1,10 +1,21 @@
 body.frame-admin-layout {
   .config-block {
     border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem !important;
   }
+
   thead {
     border: 2px solid #ecf1f6;
     border-radius: 0 !important;
+  }
+
+  // Overide foundation styles that break tables on smaller screens
+  table.stack tr {
+    display: table-row !important;
+  }
+  table.stack th, table.stack td {
+    display: table-cell !important;
   }
   .config-block {
     border: 1px solid #d6d6d6 !important
@@ -123,10 +134,6 @@ body.frame-admin-layout {
   }
   h2 {
     font-size: 24px;
-    margin-bottom: 25px;
-
-    @media(max-width: $big-tablet-viewport-start) {
-    }
 
     @media(max-width: $small-tablet-viewport-start) {
       font-size: 22px;

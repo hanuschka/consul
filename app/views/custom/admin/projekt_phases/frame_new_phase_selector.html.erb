@@ -1,5 +1,7 @@
 <% content_for :admin_frame_top_navigation do %>
-  <%= back_link_to @projekt.frame_url, "Zurück zum Projekt" %>
+  <%= link_to @projekt.frame_url, class: "back", data: { turbolinks: false } do %>
+    <span class="icon-angle-left"></span>Zurück zum Projekt
+  <% end %>
 <% end %>
 
 <div class="admin-card-content row">

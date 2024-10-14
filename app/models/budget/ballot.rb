@@ -27,8 +27,9 @@ class Budget
     end
 
     def different_heading_assigned?(heading)
-      other_heading_ids = heading.group.heading_ids - [heading.id]
-      lines.where(heading_id: other_heading_ids).exists?
+      return false
+      # other_heading_ids = heading.group.heading_ids - [heading.id]
+      # lines.where(heading_id: other_heading_ids).exists?
     end
 
     def valid_heading?(heading)

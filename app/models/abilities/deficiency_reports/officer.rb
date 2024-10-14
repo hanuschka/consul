@@ -9,7 +9,7 @@ module Abilities
 
         can :index, DeficiencyReport
 
-        can [:show, :add_memo], DeficiencyReport do |dr|
+        can [:show, :add_memo, :audits], DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_assign_officer"].present?
             dr.officer == dr_officer
           else
@@ -17,7 +17,7 @@ module Abilities
           end
         end
 
-        can :edit, DeficiencyReport do |dr|
+        can [:edit, :update], DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_assign_officer"].present?
             dr.officer == dr_officer && Setting["deficiency_reports.officers_can_edit_assigned_reports"].present?
           else

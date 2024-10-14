@@ -126,6 +126,10 @@
 
   .users-profile-banner--info-line {
     margin-bottom: 2px;
+
+    .icon-x {
+      color: $delete;
+    }
   }
 
   .users-profile-banner--edit-button {

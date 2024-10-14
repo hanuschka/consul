@@ -20,7 +20,7 @@ class ProjektPhase::MilestonePhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[naming].push(resources_name) + %w[settings]
+    %w[naming settings milestones progress_bars]
   end
 
   def safe_to_destroy?
@@ -30,6 +30,6 @@ class ProjektPhase::MilestonePhase < ProjektPhase
   private
 
     def phase_specific_permission_problems(user, location)
-      return :organization if user.organization?
+      :organization if user.organization?
     end
 end

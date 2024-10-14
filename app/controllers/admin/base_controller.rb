@@ -1,9 +1,15 @@
 class Admin::BaseController < ApplicationController
+  include EmbeddedAuth
   layout "admin"
   before_action :authenticate_user!
 
   skip_authorization_check
   before_action :verify_administrator, :set_namespace
+
+  skip_before_action(
+    :set_projekts_for_overview_page_navigation,
+    :set_default_social_media_images, :set_partner_emails
+  )
 
   private
 

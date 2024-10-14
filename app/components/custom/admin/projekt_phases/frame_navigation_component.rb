@@ -3,6 +3,8 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
     @projekt_phase = projekt_phase
     @projekt = projekt
     @show_title = show_title
+    @previous_page_is_projekt_page = false
+    @next_page_is_projekt_page = false
   end
 
   def next_page_url
@@ -24,6 +26,7 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
         }
       )
     else
+      @next_page_is_projekt_page = true
       projekt_url
     end
   end
@@ -49,6 +52,7 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
         }
       )
     else
+      @previous_page_is_projekt_page = true
       projekt_url
     end
   end

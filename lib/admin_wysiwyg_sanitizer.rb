@@ -9,6 +9,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
 
   def allowed_attributes
     super + %w[
+      gap
       min-height longdesc scrolling title allow value
       dir action
       role tabindex type for name title

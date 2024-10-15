@@ -6,24 +6,41 @@
 
 <div class="row">
   <div class="column">
-    <% if embedded? %>
-      <h2>Wie lange soll die Laufzeit dieser Projektphase sein?</h2>
-    <% else %>
-      <h2><%= t("custom.admin.projekt_phases.duration.page_title") %></h2>
-    <% end %>
+    <h2>
+      <%= t("custom.admin.projekt_phases.duration.page_title") %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "phase duration settings, which includes fields: start date, end date, #{@projekt_phase.settings_in_duration_tab.values.join(',')}"
+      ) %>
+    </h2>
   </div>
 </div>
 
 <%= form_with model: @projekt_phase, url: namespace_projekt_phase_path, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
+
   <div class="row">
     <div class="column large-4 small-6">
-      <div class="">
-        <%= f.date_field :start_date, label: t("custom.admin.projekt_phases.duration.start_date"), style: "" %>
-      </div>
-      <div class="">
-        <%= f.date_field :end_date, label: t("custom.admin.projekt_phases.duration.end_date"), style: "" %>
-      </div>
+      <%= f.date_field :start_date, label: t("custom.admin.projekt_phases.duration.start_date"), style: "" %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column large-4 small-6">
+      <%= f.date_field :end_date, label: t("custom.admin.projekt_phases.duration.end_date"), style: "" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column large-4 small-6">
+      <%= f.fields_for :settings do |settings_form| %>
+        <% setting_key = settings_form.object.key %>
+        <% next unless setting_key.in?(@projekt_phase.settings_in_duration_tab.keys) %>
+
+        <% setting_label = t("custom.projekt_phase_settings.#{settings_form.object.projekt_phase.resources_name}.#{setting_key}") %>
+        <% setting_field_type = @projekt_phase.settings_in_duration_tab[setting_key] %>
+
+        <%= settings_form.label :value, setting_label %>
+        <%= settings_form.send(setting_field_type, :value, value: settings_form.object.value, label: false) %>
+      <% end %>
     </div>
   </div>
 
@@ -42,4 +59,3 @@
     <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
   <% end %>
 <% end %>
-

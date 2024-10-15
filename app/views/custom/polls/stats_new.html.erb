@@ -1,4 +1,3 @@
-
 <% provide :title do %><%= @poll.name %><% end %>
 
 <main>
@@ -6,7 +5,7 @@
     <div class="flex-layout">
       <div class="main-column">
         <div class="resource-page--title-subline">
-          <%= render_custom_block("polls_show_welcome_text", custom_prefix: @poll.author.name, default_content: t("custom.polls.show.welcome_default_text")) %>
+          <%= render_custom_block("polls_show_welcome_text", default_content: t("custom.polls.show.welcome_default_text")) %>
         </div>
       </div>
       <div class="sidebar-placeholder"></div>
@@ -20,11 +19,7 @@
           <% end %>
         <% end %>
 
-        <% if @poll.summary.present? || @poll.description.present? %>
-          <div class="resource-page--description new-card main-content-card">
-            <%= render "poll_header" %>
-          </div>
-        <% end %>
+        <%= render "poll_header", projekt_phase: @projekt_phase %>
 
         <div class="participation-stats polls-results-stats">
           <div class="row margin">
@@ -50,7 +45,7 @@
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
         <div class="margin-bottom-half">
-           <%= format_date_range(@poll.starts_at, @poll.ends_at, separator: t("custom.polls.poll.date.to")) %>
+          <%= format_date_range(@poll.projekt_phase.start_date, @poll.projekt_phase.end_date, separator: t("custom.polls.poll.date.to")) %>
         </div>
       <% end %>
     </aside>

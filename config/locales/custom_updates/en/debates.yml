@@ -25,5 +25,29 @@ en:
         welcome_default_text: Debates are essential in order to obtain a differentiated opinion on the individual projects. View all discussions or filter for specific projects, areas or keywords on the right-hand side. By clicking on the respective topic you can follow the discussions and take part in them yourself.
         sidebar_information_default_text: Do you want to stimulate and move things? Then start your own discussion.  
         count: Debates
+        participation_information: Participation information
+        search_form:
+          button: search
+          placeholder: search debates...
+          title: search
+        orders:
+          confidence_score: Most voted
+          confidence_score_title: Most voted
+          created_at: Newest first
+          created_at_title: Newest first
+          hot_score: Most active
+          hot_score_title: Most active
+          most_commented: Most commented
+          most_commented_title: Most commented
+          relevance: Most relevant
+          relevance_title: Most relevant
+          recommendations: Recommendations
+          recommendations_title: Recommendations
+          alphabet: Alphabetical
+          alphabet_title: Alphabetical
+          random: Random
+          random_title: Random
+          votes_up: Highest voted
+          votes_up_title: Highest voted
       show:
         welcome_default_text: "started a discussion about a project. You can support the discussion on the right sidebar by giving it a thumbs up. But you can also express your disapproval by clicking thumbs down. You also have the opportunity to join the discussion yourself using the comment function at the bottom."

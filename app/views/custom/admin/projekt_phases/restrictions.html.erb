@@ -6,11 +6,19 @@
 
 <div class="row">
   <div class="column">
-    <% if embedded? %>
-      <h2>Möchten Sie die Beteiligung beschränken?</h2>
-    <% else %>
-      <h2><%= t("custom.admin.projekt_phases.restrictions.page_title") %></h2>
-    <% end %>
+    <h2>
+      <%= t("custom.admin.projekt_phases.restrictions.page_title") %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "phase restrictions"
+      ) %>
+    </h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column medium-9 margin-bottom">
+    <p><%= t("custom.admin.projekt_phases.restrictions.intro.p1_html") %></p>
+    <p><%= t("custom.admin.projekt_phases.restrictions.intro.p2_html") %></p>
   </div>
 </div>
 
@@ -20,11 +28,7 @@
   <div class="row">
     <div class="column">
       <div class="phase-restrictions">
-        <div class="options-group">
-          <%= f.check_box :guest_participation_allowed, label: false %>
-          <%= f.label :guest_participation_allowed, t("custom.admin.projekt_phases.restrictions.guest_participation_allowed"), class: "checkbox-label checkbox-label--inline" %>
-        </div>
-        <%= render "custom/admin/projekt_phases/restrictions/verified_restriction", f: f %>
+        <%= render "custom/admin/projekt_phases/restrictions/user_status_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/geozone_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/extended_geozone_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/age_restriction", f: f %>

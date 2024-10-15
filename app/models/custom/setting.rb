@@ -47,7 +47,6 @@ class Setting < ApplicationRecord
         "feature.user.recommendations": false,
         # "feature.user.recommendations_on_debates": true,
         # "feature.user.recommendations_on_proposals": true,
-        "feature.user.skip_verification": "true",
         "feature.community": true,
         "feature.map": true,
         "feature.allow_attached_documents": true,
@@ -175,7 +174,7 @@ class Setting < ApplicationRecord
 
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
-        "deficiency_reports.admins_must_approve_officer_answer": false,
+        "deficiency_reports.officers_can_edit_assigned_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,

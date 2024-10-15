@@ -26,8 +26,12 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     proposals.for_public_render.count
   end
 
+  def selectable_by_users?
+    feature?("resource.users_can_create_proposals")
+  end
+
   def selectable_by_admins_only?
-    feature?("general.only_admins_create_proposals")
+    !selectable_by_users?
   end
 
   def settings_categories
@@ -46,9 +50,16 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     proposals.empty?
   end
 
+  def proposal_limit_exceeded?(user)
+    max_active_proposals_per_user = Setting["extended_option.proposals.max_active_proposals_per_user"].to_i
+    user.proposals.where(retired_at: nil).count >= max_active_proposals_per_user
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization? && location == :votes_component
+
+      :proposals_limit_exceeded if proposal_limit_exceeded?(user)
     end
 end

@@ -5,7 +5,5 @@ class Current < ActiveSupport::CurrentAttributes
   attribute :i18n_content_translations
 
   attribute :frame_current_user
-  attribute :frame_csrf_token
-  attribute :new_frame_csrf_token
-  attribute :frame_session_from_authorized_source
+  attribute :active_frame_csrf_token
 end

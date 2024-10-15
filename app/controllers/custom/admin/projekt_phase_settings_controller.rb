@@ -1,7 +1,4 @@
 class Admin::ProjektPhaseSettingsController < Admin::BaseController
-  include EmbeddedAuth
-  skip_forgery_protection if: :frame_session_from_authorized_source?
-
   def update
     @projekt_phase_setting = ProjektPhaseSetting.find_by(id: params[:id])
       # above line is a workaround to avoid editing FeaturedSettingsComponent

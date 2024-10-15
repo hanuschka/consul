@@ -137,9 +137,9 @@ class Projekt < ApplicationRecord
       .where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
   }
 
-  scope :current_for_import, ->(timestamp = Time.zone.today) {
-    where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
-  }
+  # scope :current_for_import, ->(timestamp = Time.zone.today) {
+  #   where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
+  # }
 
   scope :expired, ->(timestamp = Time.zone.today) {
     activated
@@ -167,7 +167,9 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.regular_phases.all? { |phase| !phase.current? } }
+      .select do |p|
+        p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
+      end
   }
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
@@ -209,13 +211,11 @@ class Projekt < ApplicationRecord
   scope :show_in_homepage, -> {
     joins("INNER JOIN projekt_settings sihp ON projekts.id = sihp.projekt_id")
       .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
-      .order(created_at: :desc)
   }
 
   scope :show_in_navigation, -> {
     joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
-      .with_order_number
   }
 
   scope :visible_in_menu, ->(user) {
@@ -576,7 +576,7 @@ class Projekt < ApplicationRecord
       name: name,
       total_duration_start: total_duration_start,
       total_duration_end: total_duration_end,
-      frame_acess_code: frame_access_code,
+      frame_access_code: frame_access_code,
       preview_code: preview_code,
       show_map: feature?("show_map"),
       show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),
@@ -633,6 +633,18 @@ class Projekt < ApplicationRecord
 
     uri.query = URI.encode_www_form(uri_params)
     uri.to_s
+  end
+
+  def should_be_exported_for_overview?
+    # TODO
+    # Here the conditions to check if projekt exported intially
+    # They should be used here as well in context of individual projekt
+    # Projekt
+    #   .activated
+    #   .with_published_custom_page
+    #   .show_in_overview_page
+    #   .not_in_individual_list
+    #   .regular
   end
 
   private

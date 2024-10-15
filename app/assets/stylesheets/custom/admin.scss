@@ -30,9 +30,9 @@
 .show-projekt-dates-in-frontend-checkbox {
   margin-bottom: 20px;
 
-  input[type=checkbox] {
-    margin-top: 0;
-  }
+  /* input[type=checkbox] { */
+  /*   margin-top: 0; */
+  /* } */
 }
 
 
@@ -83,22 +83,6 @@
   }
 }
 
-// Formular
-
-.admin-content .formular-fields {
-  .formular-field {
-    position: relative;
-    cursor: move;
-
-    .controls {
-      @include admin-action-icons;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-  }
-}
-
 // Formular answers
 
 .admin-content .formular-follow-up-letters {
@@ -129,5 +113,49 @@
       background-color: #14679e;
       color: white;
     }
+  }
+}
+
+// Control icons
+
+.edit-icon,
+.destroy-icon {
+  cursor: pointer;
+  margin-left: 0.5rem;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.edit-icon {
+  &::before {
+    content: "\f044";
+    font-weight: normal;
+    font-family: "Font Awesome 5 Free";
+  }
+}
+
+.destroy-icon {
+  &::before {
+    content: "\f2ed";
+    font-weight: normal;
+    font-family: "Font Awesome 5 Free";
+    color: #cc4b37;
+  }
+}
+
+// Phases
+
+.restriction-title {
+  font-size: 24px;
+  font-weight: bold;
+
+  span.restriction-hint {
+    display: block;
+    font-size: small;
+    font-weight: normal;
+    position: relative;
+    top: -5px;
   }
 }

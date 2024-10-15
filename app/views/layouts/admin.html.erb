@@ -20,6 +20,8 @@
             <%= render Admin::MenuComponent.new %>
           <% elsif namespace == "sdg_management" %>
             <%= render SDGManagement::MenuComponent.new %>
+          <% elsif namespace == "deficiency_report_management" %>
+            <%= render DeficiencyReportManagement::MenuComponent.new %>
           <% else %>
             <%= render "/#{namespace}/menu" %>
           <% end %>

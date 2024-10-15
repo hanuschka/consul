@@ -110,14 +110,6 @@ body.custom-new-design {
     line-height: 1.5;
   }
 
-  .resources-list {
-    margin-bottom: 40px;
-
-    // @media(max-width: $small-tablet-viewport-start) {
-    //   margin-bottom: 30px;
-    // }
-  }
-
   .u-flex-container {
     display: flex;
     justify-content: space-between;
@@ -170,7 +162,7 @@ body.custom-new-design {
   height: 1px;
   flex-grow: 1;
   background: #c7c7c7;
-  margin-top: 17px;
+  align-self: flex-end;
 
   @media(max-width: $small-tablet-viewport-start) {
     display: none;

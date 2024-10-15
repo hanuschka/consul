@@ -1,7 +1,8 @@
 <% if @enable %>
   <div
-    class="js-projekt-section-data-wrapper <% disabled_class %> projekt-section-data-wrapper"
+    class="js-projekt-section-data-wrapper <%= disabled_class %> projekt-section-data-wrapper"
     data-projekt-setting-key="<%= @setting_key %>"
+    data-projekt-setting-active="<%= @setting_active %>"
     data-other-conditions-are-met="<%= @other_conditions_are_met %>"
   >
     <%= content %>

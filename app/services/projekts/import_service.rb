@@ -30,7 +30,7 @@ class Projekts::ImportService < ApplicationService
 
     @projekt.save!
 
-    # generate_content_blocks!
+    create_content_blocks!
 
     if projekt_params[:title_image].present?
       image = Image.new(
@@ -68,89 +68,92 @@ class Projekts::ImportService < ApplicationService
     )
   end
 
-  # def generate_content_blocks!
-  #   rendered_sections = content_block_components.map do |content_block_component|
-  #     ApplicationController.render(
-  #       content_block_component,
-  #       layout: false
-  #     ).strip
-  #   end
-  #
-  #   rendered_sections
-  #     .reject(&:blank?)
-  #     .map.with_index do |section, index|
-  #       content_block = SiteCustomization::ContentBlock.find_or_initialize_by(
-  #         name: "custom",
-  #         key: "projekt_content_block_#{@projekt.id}_#{index}",
-  #         position: index + 1,
-  #         locale: "de"
-  #       )
-  #
-  #       content_block.update!(
-  #         body: section,
-  #         projekt_id: @projekt.id
-  #       )
-  #     end
-  # end
-  #
-  # # def content_block_components
-  #   [
-  #     Projekts::ContentBlockTemplates::TextWithTitleComponent.new(
-  #       title: @projekt_params[:summary_title],
-  #       text: @projekt_params[:summary]
-  #     ),
-  #     Projekts::ContentBlockTemplates::GreetingComponent.new(
-  #       title: (@projekt_params[:greeting_title] || "Grußwort Akkordeon"),
-  #       text: @projekt_params[:greeting],
-  #       quote: @projekt_params[:greeting_quote],
-  #       image_url: @projekt.greeting_image.variant(resize_to_fill: [500, 500])
-  #     ),
-  #     Projekts::ContentBlockTemplates::ImageGalleryComponent.new(
-  #       title: "Projektrelevante Medien",
-  #       images: @projekt.images.map {|i|
-  #         {
-  #           url:
-  #             url_helpers.rails_representation_url(
-  #               i.variant(resize_to_fill: [1500, 750]),
-  #               only_path: true
-  #             ),
-  #           thumb_url:
-  #             url_helpers.rails_representation_url(
-  #               i.variant(resize_to_fill: [426, 212]),
-  #               only_path: true
-  #             )
-  #         }
-  #       }
-  #     ),
-  #     Projekts::ContentBlockTemplates::AccordionComponent.new(
-  #       title: "Häufige Fragen",
-  #       items: faq_items
-  #     ),
-  #     Projekts::ContentBlockTemplates::DocumentsComponent.new(
-  #       title: "Projektrelevante Dokumente",
-  #       documents: @documents
-  #     ),
-  #     Projekts::ContentBlockTemplates::AccordionComponent.new(
-  #       title: "Häufige Fragen",
-  #       items: timeline_items
-  #     )
-  #   ].compact
-  # end
+  def create_content_blocks!
+    rendered_sections = content_block_components.map do |content_block_component|
+      ApplicationController.render(
+        content_block_component,
+        layout: false
+      ).strip
+    end
+
+    rendered_sections
+      .reject(&:blank?)
+      .map.with_index do |section, index|
+        content_block = SiteCustomization::ContentBlock.find_or_initialize_by(
+          name: "custom",
+          key: "projekt_content_block_#{@projekt.id}_#{index}",
+          position: index + 1,
+          locale: "de"
+        )
+
+        content_block.update!(
+          body: section,
+          projekt_id: @projekt.id
+        )
+      end
+  end
+
+  def content_block_components
+    [
+      Projekts::ContentBlockTemplates::TextWithTitleComponent.new(
+        title: @projekt_params[:summary_title],
+        text: @projekt_params[:summary]
+      ),
+      Projekts::ContentBlockTemplates::GreetingComponent.new(
+        title: (@projekt_params[:greeting_title] || "Grußwort Akkordeon"),
+        text: @projekt_params[:greeting],
+        quote: @projekt_params[:greeting_quote],
+        image_url: @projekt.greeting_image.variant(resize_to_fill: [500, 500])
+      ),
+      Projekts::ContentBlockTemplates::ImageGalleryComponent.new(
+        title: "Projektrelevante Medien",
+        images: @projekt.images.map {|i|
+          {
+            url:
+              url_helpers.rails_representation_url(
+                i.variant(resize_to_fill: [1500, 750]),
+                only_path: true
+              ),
+            thumb_url:
+              url_helpers.rails_representation_url(
+                i.variant(resize_to_fill: [426, 212]),
+                only_path: true
+              )
+          }
+        }
+      ),
+      Projekts::ContentBlockTemplates::AccordionComponent.new(
+        title: "Häufige Fragen",
+        items: faq_items
+      ),
+      Projekts::ContentBlockTemplates::DocumentsComponent.new(
+        title: "Projektrelevante Dokumente",
+        documents: @documents
+      ),
+      Projekts::ContentBlockTemplates::AccordionComponent.new(
+        title: "Häufige Fragen",
+        items: timeline_items
+      )
+    ].compact
+  end
 
   def faq_items
-    @projekt_params[:faq]
+    # @projekt_params[:faq]
+    parse_json_list(@projekt_params[:faq_json])
   end
 
   def timeline_items
-    return if @projekt_params[:timeline].blank?
+    return if @projekt_params[:timeline_json].blank?
 
-    @projekt_params[:timeline]
+    timeline = parse_json_list(@projekt_params[:timeline_json])
+
+    timeline
       .reject { |e| e[:title].blank? }
       .map.with_index do |entry, index|
         {
           title: "#{entry[:title]} - #{entry[:daterange]}",
           text: entry[:description],
-          style: timeline_entry_style(index, @projekt_params[:timeline].size)
+          style: timeline_entry_style(index, timeline.size)
         }
       end
   end
@@ -161,6 +164,16 @@ class Projekts::ImportService < ApplicationService
     else
       "background-color:#014779;color:white;"
     end
+  end
+
+  def parse_json_list(json_string)
+    if json_string.present?
+      JSON.parse(json_string).map(&:with_indifferent_access)
+    else
+      []
+    end
+  rescue StandardError
+    []
   end
 
   def save_documents

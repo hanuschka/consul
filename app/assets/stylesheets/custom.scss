@@ -7,3 +7,15 @@
 textarea{
   max-height: 50vh;
 }
+
+.label-with-hint {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1rem;
+
+  span {
+    font-size: 0.8rem;
+    font-style: italic;
+    font-weight: normal;
+  }
+}

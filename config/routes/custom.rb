@@ -16,6 +16,14 @@ controller :unregistered_newsletter_subscribers do
   end
 end
 
+get "users", to: "users#index"
+
+resources :map_locations, only: [] do
+  collection do
+    get :get_coordinates
+  end
+end
+
 get "admin/matomo", to: "admin/matomo#index"
 
 get "users", to: "users#index"
@@ -28,24 +36,38 @@ namespace :api do
   # post "/auth/generate_temporary_auth_token", to: "auth#generate_temporary_auth_token"
 
   resources :projekts, only: [:index, :create, :update] do
+    collection do
+      get :overview
+    end
     member do
       patch :import
     end
-    resources :projekt_phases, param: :codename, only: [:update] do
-      member do
-        patch :update
-      end
+    patch "projekt_settings", to: "projekt_settings#update"
+
+    resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+    end
+  end
+
+  resources :projekt_phases do
+    collection do
+      post :reorder
+    end
+    member do
+      post :send_notifications
+      patch :set_as_default
     end
 
-    patch "projekt_settings", to: "projekt_settings#update"
+    collection do
+      patch :update
+    end
   end
+
   resources :images, only: [:create, :destroy]
-
-  post "projekts/:id/content_blocks", to: "projekts#create_content_block"
-  delete "projekts/:id/content_blocks/:content_block_id", to: "projekts#destroy_content_block"
-  patch "projekts/:id/content_blocks/:content_block_id", to: "projekts#update_content_block"
-  patch "projekts/:id/content_blocks/:content_block_id/update_position", to: "projekts#update_content_block_position"
-
 
   scope path: "settings" do
     patch "enable", to: "settings#enable"
@@ -55,5 +77,5 @@ end
 
 post "iframe_sessions", to: "iframe_sessions#create"
 
-get "/admin/projekts/:projekt_id/frame_phases_restrictions", to: "admin/projekt_phases#frame_phases_restrictions", as: :admin_frame_phase_restrictons
+# get "/admin/projekts/:projekt_id/frame_phases_restrictions", to: "admin/projekt_phases#frame_phases_restrictions", as: :admin_frame_phase_restrictons
 get "/admin/projekts/:projekt_id/frame_new_phase_selector", to: "admin/projekt_phases#frame_new_phase_selector", as: :admin_frame_new_phase_selector

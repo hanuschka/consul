@@ -4,7 +4,7 @@
   data-projekt-phase-id="<%= phase.id %>"
   data-record-id="<%= phase.id %>"
 >
-  <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, phase),
+  <%= link_to tab_url,
     onclick: "$('#footer-content').addClass('show-loader');",
     class: "projekt-footer-phase-link js-remote-link-push-state",
     data: {
@@ -86,7 +86,7 @@
               </i>
           </button>
         <% end %>
-        <button type="button" data-path="/projekt_phases/<%= phase.id %>/duration?embedded=true" class="js-frame-open-admin-page projekt-frame-icon-action-button">
+        <button type="button" data-path="/projekt_phases/<%= phase.id %>/duration" class="js-frame-open-admin-page projekt-frame-icon-action-button">
           <i class="fas fa-edit">
           </i>
         </button>

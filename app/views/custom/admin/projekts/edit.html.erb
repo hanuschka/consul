@@ -48,7 +48,7 @@
   <% back_url = @projekt.frame_url %>
 
   <% content_for :admin_frame_top_navigation do %>
-    <%= render Admin::Frame::NavigationComponent.new(title: @projekt.name) do |c| %>
+    <%= render Admin::Frame::NavigationComponent.new(title: "Projekteinstellungen") do |c| %>
       <% c.with_navigation_content do %>
         <%= link_to "Zurück", back_url, class: "", data: {turbolinks: false} %>
       <% end %>

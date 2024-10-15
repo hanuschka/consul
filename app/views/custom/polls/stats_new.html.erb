@@ -54,29 +54,7 @@
         </div>
       <% end %>
 
-      <%= render Shared::SidebarCardComponent.new do |c| %>
-        <div class="margin">
-          <p>Please fill in this survey too!</p>
-
-          <p>
-            <a href="https://ec.europa.eu/eusurvey/runner/CERV_2021-2027" style="word-break:break-word;" target="_blank">
-              https://ec.europa.eu/eusurvey/runner/CERV_2021-2027
-            </a>
-          </p>
-
-          <p>
-            Here is some information you will need to fill it out:
-
-            <ul>
-              <li>Reference of the project: 10114784</li>
-              <li>Type of activity: Mutual Learning</li>
-              <li>Title of the event: Online Consultation</li>
-              <li>Date of the event: the date you complete it</li>
-              <li>Online event</li>
-            </ul>
-          </p>
-        </div>
-      <% end %>
+      <%= render "custom/polls/sidebar_poll_3" if @poll.id == 3 %>
     </aside>
     </div>
   </div>

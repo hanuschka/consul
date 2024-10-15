@@ -30,6 +30,8 @@
     <% end %>
   </div>
 
+  <%= render "custom/polls/sidebar_poll_3" if projekt.id == 4 %>
+
   <% if projekt.sdg_goals.any? %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.sdgs.title"), icon_name: "tag") do |c| %>
       <%#= render partial: 'pages/sidebar/sdgs', locals: { projekt: projekt } %>

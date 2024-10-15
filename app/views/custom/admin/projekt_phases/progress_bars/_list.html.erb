@@ -1,5 +1,12 @@
 <% if progressable.progress_bars.any? %>
-  <h2><%= t("custom.admin.projekt_phases.progress_bars.list_title") %></h2>
+  <h2>
+    <%= t("custom.admin.projekt_phases.progress_bars.list_title") %>
+    <% if embedded? %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "progress bars"
+      ) %>
+    <% end %>
+  </h2>
 
   <table>
     <thead>

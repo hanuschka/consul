@@ -35,6 +35,10 @@ class ProjektPhaseSetting < ApplicationRecord
     end
   end
 
+  def translated_name
+    I18n.t("custom.projekt_phase_settings.#{projekt_phase.resources_name}.#{key}")
+  end
+
   class << self
     def defaults
       {

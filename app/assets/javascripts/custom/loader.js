@@ -3,19 +3,34 @@
   App.Loader = {
     initialized: false,
     initialize: function() {
-      if (this.initialized) {
-        return
-      }
-      window.addEventListener('message', this.handleGlobalMessage.bind(this));
-      this.initialized = true;
-      if (window.parent) { window.parent.postMessage(JSON.stringify({
-        event_type: "initialized",
-      }), '*'); }
+      if (this.initialized) return
 
+      this.initialized = true;
+
+      if (window.parent) {
+        window.addEventListener('message', this.handleIframeGlobalEvents.bind(this));
+
+        window.parent.postMessage(
+          JSON.stringify({
+            event_type: "consul_initialized",
+          }),
+          '*'
+        );
+      }
     },
 
-    handleGlobalMessage: function(event) {
-      // console.log("handleGlobalMessage 1")
+    pageLoaded: function() {
+      if (window.parent) {
+        window.parent.postMessage(
+          JSON.stringify({
+            event_type: "consul_page_loaded",
+          }),
+          '*'
+        );
+      }
+    },
+
+    handleIframeGlobalEvents: function(event) {
       if (event.data) {
         var data = {};
 
@@ -27,18 +42,18 @@
 
         var params = data.params;
 
-        if (data.event_type === "load") {
-          var s = document.createElement('script');
+        if (data.event_type === "load_script") {
+          var script = document.createElement('script');
 
-          s.src = params.src;
-          s.type = 'text/javascript';
-          document.body.appendChild(s);
-        } else if (data.event_type === "load_st") {
-          var l = document.createElement('link');
+          script.src = params.src;
+          script.type = 'text/javascript';
+          document.body.appendChild(script);
+        } else if (data.event_type === "load_style") {
+          var link = document.createElement('link');
 
-          l.href = params.src;
-          l.rel = "stylesheet";
-          document.head.appendChild(l);
+          link.href = params.src;
+          link.rel = "stylesheet";
+          document.head.appendChild(link);
         }
       }
     },

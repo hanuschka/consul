@@ -2,6 +2,7 @@
 
 class Shared::SidebarCardComponent < ApplicationComponent
   renders_many :additional_sections
+  renders_one :edit_link
 
   def initialize(
     title: nil, description: nil, icon_name: "info",

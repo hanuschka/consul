@@ -342,7 +342,8 @@ li.projekt-navigator[aria-expanded="false"] {
 // Footer
 
 .tab-info-summary {
-  height: 2.75rem;
+  // Temporary disable. It results in graphical bug when sorting phases
+  /* height: 2.75rem; */
   overflow: hidden;
 
   span.time-icon,

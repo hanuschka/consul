@@ -6,7 +6,14 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.age_ranges_for_stats.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.age_ranges_for_stats.page_title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "age ranges for stats"
+        ) %>
+    <% end %>
+    </h2>
   </div>
 </div>
 

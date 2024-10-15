@@ -1,4 +1,11 @@
-<h3><%= t("admin.poll_officer_assignments.index.officers_title") %></h3>
+<h3>
+  <%= t("admin.poll_officer_assignments.index.officers_title") %>
+  <% if embedded? %>
+    <%= render Shared::ExplainButtonComponent.new(
+      explain: "poll officers assignments"
+    ) %>
+  <% end %>
+</h3>
 
 <% if @officers.empty? %>
   <div class="callout primary margin-top">

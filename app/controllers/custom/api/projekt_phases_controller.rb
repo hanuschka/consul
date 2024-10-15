@@ -5,6 +5,8 @@ class Api::ProjektPhasesController < Api::BaseController
   skip_authorization_check
   skip_forgery_protection
 
+  # Do not comment
+  # In use
   def update
     if params[:geozone_restricted_street]
       street = RegisteredAddress::Street.by_user_input(

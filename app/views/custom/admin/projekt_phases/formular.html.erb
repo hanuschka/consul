@@ -3,7 +3,12 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.formular.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.formular.page_title") %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "projekt formular"
+      ) %>
+    </h2>
   </div>
 </div>
 

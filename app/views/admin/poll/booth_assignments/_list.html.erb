@@ -1,4 +1,11 @@
-<h3 class="inline-block"><%= t("admin.poll_booth_assignments.index.booths_title") %></h3>
+<h3 class="inline-block">
+  <%= t("admin.poll_booth_assignments.index.booths_title") %>
+  <% if embedded? %>
+    <%= render Shared::ExplainButtonComponent.new(
+      explain: "poll booth assignments"
+    ) %>
+  <% end %>
+</h3>
 
 <%= link_to t("admin.booth_assignments.manage_assignments"),
             polymorphic_path([@namespace, @poll, :booth_assignments], action: :manage),

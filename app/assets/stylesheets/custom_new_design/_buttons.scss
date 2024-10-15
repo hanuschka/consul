@@ -5,15 +5,10 @@ $green-button-color: #00AA0B;
 button {
   cursor: pointer;
 
-  /* &.-delete { */
-  /*   i { */
-  /*     color: #de7070; */
-  /*   } */
-  /**/
-  /*   &:hover { */
-  /*     background-color: #feefef; */
-  /*   } */
-  /* } */
+}
+
+.link-button {
+  color: #004a83;
 }
 
 .custom-new-design {
@@ -25,7 +20,7 @@ button {
     margin-bottom: 10px;
     // padding: 0 20px 0;
     padding: 10px 20px !important;
-    max-width: 300px;
+    // max-width: 300px;
     // display: flex !important;
     display: flex;
     justify-content: center;

@@ -11,6 +11,16 @@ class Pages::Projekts::FooterPhaseTabComponent < ApplicationComponent
 
   private
 
+    def tab_url
+      additional_params = {}
+
+      if embedded_and_frame_access_code_valid?(phase.projekt)
+        additional_params = { frame_code: params[:frame_code] }
+      end
+
+      projekt_phase_footer_tab_page_path(@projekt.page, phase, **additional_params)
+    end
+
     def additional_classes
       base = ""
       base += " is-active" if phase.id == params[:projekt_phase_id]

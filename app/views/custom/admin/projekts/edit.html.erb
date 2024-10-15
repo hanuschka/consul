@@ -1,8 +1,4 @@
-<% if embedded? %>
-  <%= link_to @projekt.frame_url, class: "back", data: { turbolinks: false } do %>
-    <span class="icon-angle-left"></span>Zurück zum Projekt
-  <% end %>
-<% else %>
+<% unless embedded? %>
   <%= back_link_to params[:controller].include?("projekt_management") ? projekt_management_projekts_path : admin_projekts_path %>
 <% end %>
 
@@ -47,3 +43,22 @@
     </div>
   <% end %>
 </div>
+
+<% if embedded? %>
+  <% back_url = @projekt.frame_url %>
+
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::Frame::NavigationComponent.new(title: @projekt.name) do |c| %>
+      <% c.with_navigation_content do %>
+        <%= link_to "Zurück", back_url, class: "", data: {turbolinks: false} %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::Frame::NavigationComponent.new do |c| %>
+      <% c.with_navigation_content do %>
+        <%= link_to "Zurück", back_url, class: "", data: {turbolinks: false} %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

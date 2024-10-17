@@ -7,6 +7,9 @@ en:
         question_phase: Take part in the short survey
         budget_phase: Participate now
         formular_phase: Participate now
+        legislation_phase: Participate now
+        comment_phase: Participate now
+        livestream_phase: Participate now
       permission_problem:
         new_button_component:
           shared:

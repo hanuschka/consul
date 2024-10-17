@@ -1,14 +1,12 @@
-<div class="dropdown-container js-dropdown" data-name="<%= @name %>">
-  <div class="dropdown-toggle js-dropdown-toggle click-dropdown">
-    <%= selected_option.presence || options.first %>
+<div class="dropdown-menu-container js-dropdown-menu">
+  <div class="js-dropdown-menu-toggle">
+    <%= trigger_button %>
   </div>
-  <div class="dropdown-menu">
-    <div>
-      <% options.each do |option| %>
-        <div class="js-dropdown-item dropdown-item <%= @item_css_class %>" >
-          <%= option %>
-        </div>
-      <% end %>
-    </div>
+  <div class="dropdown-menu-list">
+    <% options.each do |option| %>
+      <div class="js-dropdown-menu-item dropdown-menu-item <%= @item_css_class %>" >
+        <%= option %>
+      </div>
+    <% end %>
   </div>
 </div>

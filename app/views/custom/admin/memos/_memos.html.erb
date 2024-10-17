@@ -1,7 +1,9 @@
 <div id="memos-container">
   <h1>Memos</h1>
 
-  <%= render "admin/memos/form", memoable: memoable %>
+  <% if can?(:add_memo, memoable) %>
+    <%= render "admin/memos/form", memoable: memoable %>
+  <% end %>
 
   <%= render "admin/memos/memos_tree", memos: memoable.memos, memoable: memoable %>
 </div>

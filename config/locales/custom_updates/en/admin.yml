@@ -115,19 +115,80 @@ en:
                 success: Answer successfully deleted.
               open_answer_saved: Thank you very much! Your answer was successfully saved.
             open_answer_html: Open answer  <small><em>(Only one allowed)</em></small>
-          show_images: Show preview images for answers
+          show_images: Answer options should be displayed as images
         settings:
           show_on_home_page: This poll will be visible on the home page.
           show_on_index_page: This poll will be visible on polls index page.
           show_open_answer_with_username: Show open answers with user name
           show_open_answer_without_username: Show open answers anonymously
           show_summary_instead_of_questions: Show summary instead of list of questions
+      questions:
+        index:
+          create_normal: Create regular question
+          create_bundle: Create questions bundle
+        new:
+          bundle_question_title: Create question bundle for %{poll}
+        show:
+          bundle_title: Would you like to add a subordinate question?
+          title: Would you like to add an answer?
+          add_nested_question: Add new subordinate question
+          bundle_list_title: This is the list of all subordinate questions
+          answers:
+            next_question: Next question
+          table:
+            nested_questions_title: Subordinate questions
+            nested_questions_vote_type: Type
       progress_bars:
         index:
           progress_bar: Progress bar
       projekts:
         destroy: Delete
         edit:
+          projekt_configuration_tab:
+            name: Configuration
+            main_block_title: Status
+            information_block_title: Information
+            duration_block_title: Duration
+            geo_affiliation_block_title: Geozones
+            individual_groups_block_title: Visibility restriction to strong groups
+          projekt_page_tab:
+            name: Project page
+            main_block_title: Project page
+          projekt_phases_tab:
+            type: Select phase
+            name: Phases
+            phases_block_title: Projekt phases
+            table_headings:
+              phase_name: Phase
+              start_date: Starting at
+              end_date: Ending at
+              limitations: Limitations
+              default_tab: Standard
+              activated: Activated
+              edit_link: Edit
+            restriction_names:
+              age: Age
+              geo: Geo
+              verification: Verification
+            copy_phase_link: Link für Tab abrufen
+          projekt_settings_tab:
+            name: Settings
+            general_settings: General
+            select_an_element: select
+            sidebar_settings: Sidebar
+          projekt_managers_tab:
+            name: Projekt managers
+            main_block_title: Projekt managers
+          projekt_map_tab:
+            name: Ind. map configuration
+          projekt_sdg_tab:
+            name: SDGs & Tags
+            sdgs: SDGs
+            tags: Tags
+            tags_hint: Click on one or more tags to make them available to the user in this project.
+            refresh_page: If you have already activated the functions but they are not displayed here, please reload this page.
+          flash:
+            update_notice: Projekt was successfully updated
           description: Projekt description
           design:
             icon: Icon
@@ -146,10 +207,6 @@ en:
             event_weblink: Weblink
             name: Events
             page_title: Create notification
-          projekt_managers_tab:
-            name: Project managers
-          projekt_map_tab:
-            name: Ind. card configuration
           projekt_milestones_tab:
             name: Progress & Milestones
           projekt_news_tab:
@@ -193,39 +250,6 @@ en:
           projekt_page: Project page
           projekt_phase_limitation: Restriction
           projekt_phases: Project phases
-          projekt_phases_tab:
-            actions: Actions
-            activate: Enabled
-            affiliation: Area allocation
-            beginning: Start date
-            budget_phase: Budget phase
-            copy_phase_link: Copy link to phase
-            comment_phase: Commenting phase
-            debate_phase: Discussion phase
-            end_date: End date
-            ending: End date
-            event_phase: Eventsphase
-            information_block_title: Project information
-            link:
-              budget_phase: Budgets
-              voting_phase: Polls
-            main_block_title: Project status
-            milestone_phase: Execution phase
-            name: Project settings
-            newsfeed_phase: News-Feed
-            page_block_title: Project page
-            phase_name: Phase
-            phases_block_title: Project phases
-            projekt_duration: Project information
-            projekt_notification_phase: Notificationsphase
-            proposal_phase: Proposal phase
-            livestream_phase: Livestreams
-            restriction: Participation restriction
-            start_date: Start date
-            standard_element: Standart element
-            voting_manage: Manage polls
-            voting_phase: Voting phase
-            legislation_phase: Text drafting phase
           projekt_questions_tab:
             phases_label: Phases
             name: Short survey
@@ -241,24 +265,6 @@ en:
             page_title: Labels
             create_button: Create label
             no_labels: This project doesn't have any labels
-          projekt_settings_tab:
-            budget_settings: Budgets
-            debates_settings: Debates
-            event_phase: Events
-            event_phase_description: Enable Events in the footer of a project
-            general_settings: General
-            milestone_phase: Milestones
-            milestone_phase_description: Activates the milestone function in the footer of a project
-            milestone_settings: Settings
-            name: Project functions
-            newsfeed_phase: News-Feed
-            newsfeed_phase_description: Activates the news feed in the footer of a project
-            polls_settings: Polls
-            projekt_notification_phase: Notifications
-            projekt_notification_phase_description: Activates the notifications in the footer of a project
-            proposals_settings: Proposals
-            select_an_element: select
-            sidebar_settings: Sidebar
           projekt_status: Project status
           setting_indicator:
             "no": "No"
@@ -353,11 +359,220 @@ en:
               add_new_image: Add banner
               note: "The banner should be at least 200 pixels high and 1920 pixels wide. You can upload an image of the following format: %{accepted_content_types}, up to %{max_file_size} MB."
               title: Banner for the website
+        content_cards:
+          setting:
+            label:
+              limit: Number of entries displayed
+              debates_limit: Number of displayed debates
+              proposals_limit: Number of displayed proposals
+              investments_limit: Number of displayed investment proposals
+              deficiency_reports_limit: Number of displayed deficiency reports
+      users:
+        columns:
+          id: ID
+          erase_reason: Erase reason
+          name: Name
+          email: E-Mail
+          document_number: Document number
+          roles: Roles
+          verification_level: Verification level
+          first_name: First name
+          last_name: Last name
+          street_address: Address
+          plz: ZIP code
+          geozone: Geozone
+          city_name: City
+          gender: Gender
+          date_of_birth: Date of birth
+          document_type: Document
+          document_last_digits: Document (4 last digits)
+          unique_stamp: Unique Stamp
+          created_at: Created at
+          last_sign_in_date: Last login at
+          verified_at: Verified at
+          actions: Actions
+          action:
+            verify: Verify
+            unverify: Unverify
+            edit_user: Edit
       widget:
         card:
           category_options:
             active_projekt: Active participation process
             archived_projekt: Completed participation process
+      flash:
+        deleted: Deleted
+      projekt_events:
+        edit:
+          title: Edit event
+      projekt_phases:
+        nav_bar:
+          duration: Duration
+          naming: Naming
+          restrictions: Restrictions
+          settings: Settings
+          map: Map
+          projekt_labels: Labels
+          sentiments: Sentiments
+          age_ranges_for_stats: Age ranges for stats
+          projekt_questions: Projekt questions
+          projekt_livestreams: Livestreams
+          projekt_events: Events
+          milestones: Milestones
+          projekt_notifications: Projekt notifications
+          projekt_arguments: Arguments
+          formular: Formular
+          formular_answers: Formular answers
+        notice:
+          created: Phase created
+          updated: Phase updated
+          destroyed: Phase destroyed
+          not_destroyed: Phase could not be deleted because it already has associated content
+        shared:
+          update_button: Update
+        phase_tab_name: Name in Tab
+        cta_button_name: Text in Button
+        resource_form_title: Resource form title
+        resource_form_title_hint: Resource form title placeholder
+        labels_name: Labels
+        sentiments_name: Sentiments
+        projekt_selector_hint: Project tips
+        edit:
+          title: Phase settings
+        duration:
+          page_title: Duration
+          start_date: Starts at
+          end_date: Ends at
+        naming:
+          page_title: Naming
+        restrictions:
+          page_title: Restrictions
+          guest_participation_allowed: Guest particioation allowed
+          age:
+            title: In order to restrict participation, users must be verified.
+            hint: In order to restrict participation, users must be verified.
+            no_restriction: All users
+          extended_geo_restrictions:
+            title: Additional individual area restrictions
+            hint: In order to restrict participation, users must be verified.
+            no_restriction: All users of the platform
+          geo_restrictions:
+            title: Geo restrictions
+            hint: In order to restrict participation, users must be verified.
+            no_restriction: All users of the platform
+            only_citizens: Only citizens of the city
+            only_geozones: Only citizens of the district
+            only_streets: Only citizens from street
+          individual_group_values:
+            title: Restriction to groups
+          verification:
+            title: Verification
+            no_restriction: All users
+            only_verified: Only verified users
+        settings:
+          block_title:
+            general: Settings
+            form: Formularfelder
+            resource: Individueller Beitrag
+        projekt_labels:
+          name: Labels
+          page_title: Labels
+          create_button: Create Label
+          no_labels: No labels have been added for this project yet
+          table:
+            icon: Icon
+            color: Color
+            name: Name
+          form:
+            color_placeholder: "HEX Code with #"
+        sentiments:
+          page_title: Sentiments
+          create_button: Create Sentiment
+          no_sentiments: No sentiments have been stored for this project yet
+          table:
+            color: Color
+            name: Name
+          form:
+            color_placeholder: "HEX Code with #"
+          notice:
+            destroy: Sentiment successfully destroyed
+        projekt_questions:
+          page_title: Projekt Questions
+          create_button: Create question
+          send_notifications_button: Send motifications
+          table:
+            title: Projekt Questions
+            question_options: Available answers
+            answers_count: Answer count
+            comments_count: Comments count
+          new:
+            title_livestream: Create question for Livestream
+            title: Create question
+        map:
+          copy_from_projekt: copy from projekts
+          map_layers:
+            title: Map layers
+        projekt_events:
+          page_title: Events
+        projekt_notifications:
+          page_title: Projekt notifications
+          button: Send notification
+        projekt_arguments:
+          page_title: Arguments
+          send_notifications_button: Send notifications
+          notifications_sent_notice: Notifications sent successfully
+          argument_pro: Pro
+          argument_cons: Contra
+          button: Create argument
+          argument_image: Image
+        projekt_events:
+          button: Create event
+          event_created_at: Created at
+          event_datetime: Date
+          event_end_datetime: Ends at
+          event_location: Location
+          event_title: Title
+          event_weblink: Weblink
+          event_description: Description
+          name: Events
+          page_title: Events
+          send_notifications_button: Send notifications
+          notifications_sent_notice: Notifications sent sucessfully
+        projekt_livestreams:
+          page_title: Livestreams
+          all_livestreams: All Livestreams
+          add_question: Add question
+          questions: Questions
+          send_notifications_button: Send notifications
+          notifications_sent_notice: Notifications sent successfully
+        formular:
+          page_title: Formular
+          primary_fields_title: Regular Formular fields
+          follow_up_fields_title:  Follow-up Formular fields
+          dropdown_hint: Please enter your answer options. They must be separated by a comma.
+          kinds:
+            string: short Text
+            textarea: long Text
+            email: Email
+            date: Date
+            dropdown: Dropdown
+            image: Image
+            document: Document
+          update_field_button: Update Formular field
+          add_field_button: Add new Formular field
+        formular_answers:
+          page_title: Posteingang & Follow-up E-Mails
+          emails_title: Follow-up E-Mails
+          subject_placeholder: E-Mail
+          recipients: "%{number} Empfänger"
+          emails_sent: "%{number} E-Mails gesendet"
+          new_email_title: Posteingang
+          buttons:
+            save_draft: Save draft
+            send_email: Send E-Mail
+            create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
+        age_ranges_for_stats:
+          page_title: Age ranges for stats
       modal_notifications:
         index:
           create: Create

@@ -10,7 +10,7 @@ class ProjektEvent < ApplicationRecord
   validates :title, presence: true
   validates :datetime, presence: true
 
-  default_scope { order(datetime: :desc) }
+  default_scope { order(datetime: :asc) }
 
   scope :sort_by_all, -> {
     all
@@ -22,6 +22,10 @@ class ProjektEvent < ApplicationRecord
 
   scope :sort_by_past, -> {
     where("COALESCE(end_datetime, datetime) < ?", Time.zone.now)
+  }
+
+  scope :with_active_projekt, -> {
+    joins(projekt_phase: :projekt).merge(Projekt.activated).merge(ProjektPhase.active)
   }
 
   def self.scoped_projekt_ids_for_footer(projekt)

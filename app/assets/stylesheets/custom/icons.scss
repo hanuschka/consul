@@ -3078,7 +3078,26 @@
   transform: rotate(180deg);
 }
 
+.fa-location-dot:before {
+  content: "\f3c5";
+}
+
+.fa-arrows-rotate:before {
+  content: "\f021";
+}
+
+.fa-up-down-left-right:before {
+  content: "\f0b2";
+}
+
+.fa-xmark:before {
+  content: "\f00d";
+}
+
 .fa-magnifying-glass-plus::before {
   content: "\f00e";
 }
 
+.fa-thumbtack-slash:before {
+  content: "\e68f";
+}

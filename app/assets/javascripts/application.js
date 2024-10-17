@@ -136,6 +136,7 @@
 var initialize_modules = function() {
   "use strict";
 
+  App.Loader.pageLoaded();
   App.RemoveOnMobileSections.initialize();
   App.Answers.initialize();
   App.Questions.initialize();
@@ -232,5 +233,7 @@ var destroy_non_idempotent_modules = function() {
   App.SocialShare.destroy();
 };
 
+
+App.Loader.initialize();
 $(document).on("turbolinks:load", initialize_modules);
 $(document).on("turbolinks:before-cache", destroy_non_idempotent_modules);

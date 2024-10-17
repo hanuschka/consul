@@ -57,17 +57,6 @@
       </aside>
     </div>
 
-    <% if projekt_phase_feature?(@poll&.projekt_phase, "resource.additional_information") %>
-      <div class="expanded poll-more-info">
-        <div class="row margin">
-          <div class="small-12 medium-9 column">
-            <h3><%= t("polls.show.more_info_title") %></h3>
-            <%= auto_link_already_sanitized_html simple_format(@poll.description) %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-
     <% unless projekt_phase_feature?(@poll&.projekt_phase, "resource.additional_info_for_each_answer") %>
       <div id="poll_more_info_answers" class="expanded poll-more-info-answers">
         <div class="row padding">

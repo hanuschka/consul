@@ -6,7 +6,7 @@
     text: text, method: :put, class: html_class
   ) %>
 <% elsif from_investments %>
-  <span class="button hollow disabled float-right clear">
+  <span class="<%= html_class %> disabled">
     <%= t("admin.budgets.winners.calculate") %>
   </span>
   <div class="callout warning clear">

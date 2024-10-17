@@ -2,10 +2,7 @@
 //
 // You can also create SCSS files in the app/assets/stylesheets/custom/
 // folder and they will be loaded automatically.
-$big-tablet-viewport-start: 1245px;
-$small-tablet-viewport-start: 970px;
-$mobile-viewport-start: 640px;
-$mobile-side-padding: 20px;
+
 
 textarea{
   max-height: 50vh;
@@ -37,5 +34,17 @@ body.home-page .homepage-image-header {
 
   @media(max-width: 450px) {
     height: 435px;
+  }
+}
+
+.label-with-hint {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1rem;
+
+  span {
+    font-size: 0.8rem;
+    font-style: italic;
+    font-weight: normal;
   }
 }

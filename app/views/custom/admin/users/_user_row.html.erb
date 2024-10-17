@@ -26,7 +26,7 @@
 
     <td>
       <div style="display:flex; gap:10px;">
-        <% unless skip_user_verification? || user.organization? %>
+        <% unless user.organization? %>
           <% if user.verified_at.blank? %>
             <%= link_to(t("custom.admin.users.columns.action.verify"), verify_admin_user_path(user), class: 'button', remote: true, method: :put, data: {confirm: 'Sind Sie sicher?'}) %>
           <% else %>

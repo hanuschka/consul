@@ -74,12 +74,12 @@ class CommentsController < ApplicationController
     end
 
     def check_for_special_comments
-      if administrator_comment?
+      if administrator_comment? && current_user.administrator?
         @comment.administrator_id = current_user.administrator.id
+      elsif administrator_comment? && current_user.projekt_manager?
+        @comment.administrator_id = 0
       elsif moderator_comment? && current_user.moderator?
-        @comment.moderator_id = current_user.moderator&.id
-      elsif moderator_comment? && current_user.projekt_manager?
-        @comment.moderator_id = current_user.projekt_manager&.id
+        @comment.moderator_id = current_user.moderator.id
       end
     end
 

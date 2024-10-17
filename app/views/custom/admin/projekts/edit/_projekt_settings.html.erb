@@ -1,6 +1,10 @@
-<h2 class=''><%= t('custom.admin.projekts.edit.projekt_settings_tab.general_settings') %></h2>
+<% unless embedded? %>
+  <h2 class=''><%= t('custom.admin.projekts.edit.projekt_settings_tab.general_settings') %></h2>
+<% end %>
 <%= render partial: "admin/projekts/edit/projekt_settings/features_table", locals: { features: @projekt_features_general } %>
 <%= render partial: "admin/projekts/edit/projekt_settings/options_table", locals: { options: @projekt_options_general, tab: "#tab-projekt-settings" } %>
 
-<h2 class='margin-top-25'><%= t('custom.admin.projekts.edit.projekt_settings_tab.sidebar_settings') %></h2>
-<%= render partial: "admin/projekts/edit/projekt_settings/features_table", locals: { features: @projekt_features_sidebar } %>
+<% unless embedded? %>
+  <h2 class='margin-top-25'><%= t('custom.admin.projekts.edit.projekt_settings_tab.sidebar_settings') %></h2>
+  <%= render partial: "admin/projekts/edit/projekt_settings/features_table", locals: { features: @projekt_features_sidebar } %>
+<% end %>

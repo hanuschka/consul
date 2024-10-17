@@ -1,5 +1,9 @@
 <%= content_for :body_class, "js-new-resource" %>
 
+<% provide :vc_maps do %>
+  <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+<% end %>
+
 <% if Setting.new_design_enabled? %>
   <% title =
        if @projekt_phase&.resource_form_title.present?

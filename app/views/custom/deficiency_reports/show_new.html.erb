@@ -104,11 +104,13 @@
             icon_name: "user-edit")) do |c| %>
             <%= render "deficiency_reports/author_actions", deficiency_report: @deficiency_report %>
           <% end %>
-        <% elsif can?(:edit, @deficiency_report) %>
+        <% end %>
+
+        <% if can?(:edit, @deficiency_report) || can?(:audits, @deficiency_report) %>
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.admin_actions.title"),
             icon_name: "user-edit")) do |c| %>
-              <%= link_to "Bearbeiten", edit_deficiency_report_management_deficiency_report_path(@deficiency_report), class: "button hollow alert" %>
+              <%= link_to "Administrieren", deficiency_report_management_deficiency_report_path(@deficiency_report), class: "button hollow alert" %>
           <% end %>
         <% end %>
 

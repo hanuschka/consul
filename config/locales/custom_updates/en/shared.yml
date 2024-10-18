@@ -8,6 +8,9 @@ en:
       new_comments_component:
         comments: Comments
       participate_as_guest: participate as a guest
+      enter_missing_user_data: additional data to your account
+      save_form: Save
+      destroy_confirmation: Are you sure?
     resource_page:
       banner_component:
         comments: Comments

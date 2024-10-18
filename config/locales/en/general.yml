@@ -30,6 +30,7 @@ en:
       author: Author
       deleted: This comment has been deleted
       moderator: Moderator
+      projekt_manager: Projektmanager*in
       responses:
         one: 1 response
         other: "%{count} responses"

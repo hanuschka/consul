@@ -41,11 +41,10 @@ module NotificationServices
       def namespace(user, memo)
         return :deficiency_report_management if memo.root_memoable.is_a?(DeficiencyReport)
 
-        case user
-        when administrator?
-          "admin"
-        when projekt_manager?
-          "projekt_management"
+        if user.administrator?
+          :admin
+        elsif user.projekt_manager?
+          :projekt_management
         end
       end
   end

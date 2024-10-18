@@ -1,0 +1,14 @@
+<div class="dropdown-select-container js-dropdown-select-menu" data-name="<%= @name %>">
+  <div class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown">
+    <%= selected_option.presence || options.first %>
+  </div>
+  <div class="dropdown-select-menu--list">
+    <div>
+      <% options.each do |option| %>
+        <div class="js-dropdown-select-menu-item dropdown-select-menu-item <%= @item_css_class %>" >
+          <%= option %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

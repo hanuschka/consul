@@ -646,10 +646,10 @@ en:
           close_text_editor: Close text editor
           use_markdown: Use Markdown to format the text
           hints:
-            final_version: This version will be published as Final Result for this process. Comments won't be allowed in this version.
+            final_version: (comments won't be allowed)
             status:
-              draft: You can preview as admin, no one else can see it
-              published: Visible for everybody
+              draft: (only visible internally)
+              published: (visible for everybody)
           changelog_placeholder: Add the main changes from the previous version
         index:
           title: Draft versions

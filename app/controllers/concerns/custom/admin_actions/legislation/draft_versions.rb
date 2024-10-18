@@ -21,7 +21,7 @@ module AdminActions::Legislation::DraftVersions
     if @draft_version.save
       link = legislation_process_draft_version_path(@process, @draft_version)
       notice = t("admin.legislation.draft_versions.create.notice", link: link)
-      redirect_to polymorphic_path([@namespace, @process, :draft_versions]), notice: notice
+      redirect_to polymorphic_path([@namespace, @process.projekt_phase], action: :legislation_process_draft_versions), notice: notice
     else
       flash.now[:error] = t("admin.legislation.draft_versions.create.error")
       render "admin/legislation/draft_versions/new"
@@ -36,7 +36,7 @@ module AdminActions::Legislation::DraftVersions
     if @draft_version.update(draft_version_params)
       link = legislation_process_draft_version_path(@process, @draft_version)
       notice = t("admin.legislation.draft_versions.update.notice", link: link)
-      edit_path = polymorphic_path([@namespace, @process, @draft_version], action: :edit)
+      edit_path = polymorphic_path([@namespace, @process.projekt_phase], action: :legislation_process_draft_versions)
       redirect_to edit_path, notice: notice
     else
       flash.now[:error] = t("admin.legislation.draft_versions.update.error")
@@ -47,7 +47,7 @@ module AdminActions::Legislation::DraftVersions
   def destroy
     @draft_version.destroy!
     notice = t("admin.legislation.draft_versions.destroy.notice")
-    redirect_to polymorphic_path([@namespace, @process, :draft_versions]), notice: notice
+    redirect_to polymorphic_path([@namespace, @process.projekt_phase], action: :legislation_process_draft_versions), notice: notice
   end
 
   private

@@ -6,21 +6,22 @@ class Budget
     include Globalizable
     translation_class_delegate :budget
 
-    class Translation
-      validate :name_uniqueness_by_budget
+    # class Translation
+    #   validate :name_uniqueness_by_budget
 
-      def name_uniqueness_by_budget
-        if budget.groups.joins(:translations)
-                        .where(name: name)
-                        .where.not("budget_group_translations.budget_group_id": budget_group_id).any?
-          errors.add(:name, I18n.t("errors.messages.taken"))
-        end
-      end
-    end
+    #   def name_uniqueness_by_budget
+    #     if budget.group.translations
+    #                    .where(name: name)
+    #                    .where.not("budget_group_translations.budget_group_id": budget_group_id).any?
+    #       errors.add(:name, I18n.t("errors.messages.taken"))
+    #     end
+    #   end
+    # end
 
     belongs_to :budget
 
-    has_many :headings, dependent: :destroy
+    # has_many :headings, dependent: :destroy
+    has_one :heading, dependent: :destroy
 
     validates_translation :name, presence: true
     validates :budget_id, presence: true

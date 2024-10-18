@@ -1,0 +1,8 @@
+<div class="js-content-block-template-content">
+  <div>
+    <h3><%= @title %></h3>
+    <p>
+    <%= sanitize(@text.strip, tags: %w(b p strong)) %>
+    </p>
+  </div>
+</div>

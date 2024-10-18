@@ -1481,7 +1481,7 @@ $font-awesome-icons: (
   youtube-square: $fa-var-youtube-square,
   zhihu: $fa-var-zhihu
 );
-
+/**/
 @mixin has-fa-icon($icon, $style, $position: "before") {
 
   &::#{$position} {

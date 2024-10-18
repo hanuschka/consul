@@ -1,7 +1,7 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
   <% c.with_header do %>
     <div>
-      <%= l(projekt_event.created_at) %>
+      <%= ProjektEvent.model_name.human %>
     </div>
   <% end %>
 

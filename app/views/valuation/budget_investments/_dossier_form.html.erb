@@ -1,6 +1,13 @@
 <% budget = investment.budget %>
 <%= form_for(investment, url: valuate_valuation_budget_budget_investment_path(budget, investment), html: { id: "valuation_budget_investment_edit_form" }) do |f| %>
+
+  <%= hidden_field_tag :origin, origin if local_assigns[:origin] %>
+  <%= hidden_field_tag :namespace, @namespace if @namespace %>
+
   <%= render "shared/errors", resource: investment %>
+
+  <h3>Einschätzung der Verwaltung / der Gutachter</h3>
+
   <div class="row">
     <div class="small-12 column">
       <fieldset class="fieldset">
@@ -81,6 +88,20 @@
           id: "js-investment-report-alert",
           "data-alert": t("valuation.budget_investments.edit.valuation_finished_alert"),
           "data-not-feasible-alert": t("valuation.budget_investments.edit.not_feasible_alert") %>
+    </div>
+  </div>
+
+  <h3>Entscheidungen der Verwaltung</h3>
+
+  <div class="row expanded">
+    <div class="small-12 medium-8 column">
+      <%= f.check_box :incompatible, title: t("admin.budget_investments.edit.compatibility") %>
+    </div>
+  </div>
+
+  <div class="row expanded">
+    <div class="small-12 medium-8 column">
+      <%= f.check_box :selected, title: t("admin.budget_investments.edit.selection") %>
     </div>
   </div>
 

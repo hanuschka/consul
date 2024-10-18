@@ -3,17 +3,15 @@
 <% end %>
 
 <div class="legislation-draft-versions-edit legislation-draft-versions-form">
-  <div class="small-12 column">
-    <%= back_link_to polymorphic_path([@namespace, @process, :draft_versions]),
-                     t("admin.legislation.draft_versions.edit.back") %>
-
-    <h2><%= @process.title %></h2>
-
-    <%= render "admin/legislation/processes/subnav", process: @process, active: "draft_versions" %>
-
+  <div class="row">
     <div class="small-12 column">
-      <h3 class="inline-block"><%= @draft_version.title %></h3>
+      <%= back_link_to polymorphic_path([@namespace, @process, :draft_versions]),
+                     t("admin.legislation.draft_versions.edit.back") %>
+    </div>
+  </div>
 
+  <div class="row">
+    <div class="small-12 column">
       <div class="float-right">
         <%= link_to t("admin.legislation.draft_versions.index.delete"),
                     polymorphic_path([@namespace, @process, @draft_version]),
@@ -21,7 +19,7 @@
                     class: "button hollow alert" %>
       </div>
     </div>
-
-    <%= render "admin/legislation/draft_versions/form", url: polymorphic_path([@namespace, @process, @draft_version]) %>
   </div>
+
+  <%= render "admin/legislation/draft_versions/form", url: polymorphic_path([@namespace, @process, @draft_version]) %>
 </div>

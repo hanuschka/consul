@@ -1,0 +1,25 @@
+<% form_path = official_answer_template.persisted? ? deficiency_report_management_official_answer_template_path(official_answer_template) : deficiency_report_management_official_answer_templates_path(official_answer_template) %>
+
+<%= form_with model: official_answer_template, url: form_path do |f| %>
+  <%= render "shared/errors", resource: official_answer_template %>
+
+  <div class="row expanded full-width">
+    <div class="small-12 medium-6 column">
+      <%= f.text_field :title %>
+    </div>
+  </div>
+
+  <div class="row expanded full-width">
+    <div class="small-12 medium-6 column">
+      <%= f.text_area :text,
+        class: "html-area #{ck_editor_class(current_user)}" %>
+    </div>
+  </div>
+
+  <div class="row expanded full-width">
+    <div class="small-12 column">
+      <%= f.submit(value: t("custom.admin.deficiency_reports.official_answer_templates.form.submit_button"),
+                  class: "button success") %>
+    </div>
+  </div>
+<% end %>

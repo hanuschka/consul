@@ -212,7 +212,7 @@ de:
         title: "%{budget} / %{group} Rubriken"
     budget_phases:
       edit:
-        title: "Phase editieren"
+        title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
         description_help_text: Dieser Text erscheint in der Kopfzeile, wenn die Phase aktiv ist
         duration: "Dauer der Phase"
         duration_description: "Der Zeitraum, in dem diese Phase aktiv sein wird."
@@ -278,7 +278,7 @@ de:
           incompatible: Inkompatibel
           price: Preis
           author: Autor
-        cannot_calculate_winners: Das Budget muss in einer der Phasen "Finale Abstimmung", "Abstimmung beendet" oder "Ergebnisse" stehen, um Gewinnervorschläge berechnen zu können
+        cannot_calculate_winners: Das Budget muss in Phase „%{phase}“ stehen, um Gewinnervorschläge berechnen zu können
         see_results: "Ergebnisse anzeigen"
         milestone_tags_filter_all: "Status aller Investitionsvorschläge"
       show:
@@ -355,7 +355,7 @@ de:
         table_id: "ID"
         table_title: "Titel"
         table_description: "Beschreibung"
-        table_publication_date: "Datum der Veröffentlichung"
+        table_publication_date: "Veröffentlichung"
         table_status: Status
         table_actions: "Aktionen"
         no_milestones: "Keine Meilensteine definiert"
@@ -642,14 +642,14 @@ de:
           close_text_editor: Textbearbeitung schließen
           use_markdown: Verwenden Sie Markdown, um den Text zu formatieren
           hints:
-            final_version: Diese Version wird als Endergebnis dieses Beteiligungsverfahrens veröffenlicht. Kommentare sind daher in dieser Fassung nicht erlaubt.
+            final_version: (Kommentierung nicht mehr möglich)
             status:
-              draft: Als Admin können Sie eine Vorschau anzeigen lassen, die niemand sonst sehen kann
-              published: Für alle sichtbar
+              draft: (nur intern sichtbar)
+              published: (für alle Nutzer sichtbar)
           changelog_placeholder: Beschreiben Sie alle relevanten Änderungen der vorherigen Version
         index:
           title: Entwurfsfassungen
-          create: Version erstellen
+          create: Neue Version erstellen
           delete: Löschen
           preview: Vorschau
         new:
@@ -658,7 +658,7 @@ de:
           submit_button: Version erstellen
         table:
           title: Titel
-          created_at: Erstellt am
+          created_at: Datum
           comments: Kommentare
           final_version: Endgültige Fassung
           status: Status
@@ -676,9 +676,9 @@ de:
           title: "\"%{question_title}\" bearbeiten"
           submit_button: Änderungen speichern
         form:
-          add_option: Antwortmöglichkeit hinzufügen
+          add_option: Antwort hinzufügen
           value_placeholder: Geschlossene Antwort hinzufügen
-          question_options: "Mögliche Antworten (optional, standardmäßig offene Antworten)"
+          question_options: Antworten
         index:
           back: Zurück
           title: Fragen, die mit diesem Beteiligungsverfahren zusammenhängen
@@ -687,7 +687,7 @@ de:
         new:
           back: Zurück
           title: Neue Frage erstellen
-          submit_button: Frage erstellen
+          submit_button: Speichern
         table:
           title: Titel
           question_options: Antwortmöglichkeiten
@@ -1096,7 +1096,7 @@ de:
         recounts_tab: Nachzählung
         results_tab: Ergebnisse
         no_questions: "Dieser Abstimmung sind keine Fragen zugeordnet."
-        questions_title: "Liste der Fragen"
+        questions_title: Möchten Sie eine Frage hinzufügen?
         table_title: "Titel"
         edit_answers: Antworten bearbeiten
         see_proposal: "(Vorschlag anzeigen)"
@@ -1130,7 +1130,7 @@ de:
       edit:
         title: "Frage bearbeiten"
       new:
-        title: "Erstelle Frage für Abstimmung %{poll}"
+        title: "Welche Fragen möchten Sie stellen?"
         title_proposal: "Erstelle Frage"
       answers:
         images:
@@ -1142,7 +1142,7 @@ de:
         question: Frage
         edit_question: Frage bearbeiten
         valid_answers: Gültige Antworten
-        add_answer: Antwort hinzufügen
+        add_answer: Neue Antwort erstellen
         video_url: Externes Video
         answers:
           title: Antwort

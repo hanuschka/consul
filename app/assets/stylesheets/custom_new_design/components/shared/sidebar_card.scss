@@ -76,6 +76,10 @@
 .sidebar-card--section {
   padding: 18px 25px;
 
+  .sdg-target-tag-list {
+    margin-top: 10px;
+  }
+
   &:first-child {
     padding-top: 0;
   }
@@ -109,8 +113,10 @@
     padding: 15px 25px;
   }
 
-  i {
+  .sidebar--icon {
     margin-right: 10px;
+  }
+  i {
     color: $dt-base;
   }
 }
@@ -141,3 +147,19 @@
   position: relative;
   border-top: 1px solid $border-color;
 }
+
+.projekt-section-data-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.projekt-section-data-wrapper.-deactivated {
+  .sidebar-card {
+    border-color: white;
+  }
+  .sidebar-card--title, .sidebar-card--content {
+    opacity: 0.5;
+    filter: grayscale(1);
+  }
+}
+

@@ -1,9 +1,11 @@
-<% matomo_base_url = Rails.application.secrets.matomo_base_url %>
-<% matomo_site_id = Rails.application.secrets.matomo_site_id %>
-<% matomo_access_token = Rails.application.secrets.matomo_access_token %>
+<% if feature?("matomo") %>
+  <% matomo_base_url = Rails.application.secrets.matomo_base_url %>
+  <% matomo_site_id = Rails.application.secrets.matomo_site_id %>
+  <% matomo_access_token = Rails.application.secrets.matomo_access_token %>
 
-<% if matomo_base_url.present? && matomo_site_id.present? && matomo_access_token.present? %>
-  <iframe src="https://<%= matomo_base_url %>/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&idSite=<%= matomo_site_id %>&period=week&date=yesterday&token_auth=<%= matomo_access_token %>" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"></iframe>
-<% else %>
-  <p>Matomo ist nicht konfiguriert</p>
+  <% if matomo_base_url.present? && matomo_site_id.present? && matomo_access_token.present? %>
+    <iframe src="https://<%= matomo_base_url %>/index.php?module=Widgetize&action=iframe&moduleToWidgetize=Dashboard&actionToWidgetize=index&idSite=<%= matomo_site_id %>&period=week&date=yesterday&token_auth=<%= matomo_access_token %>" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"></iframe>
+  <% else %>
+    <p>Matomo ist nicht konfiguriert</p>
+  <% end %>
 <% end %>

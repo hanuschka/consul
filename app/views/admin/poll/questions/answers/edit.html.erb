@@ -1,13 +1,10 @@
 <%= back_link_to %>
 
-<ul class="breadcrumbs margin-top">
-  <li><%= @answer.title %></li>
-  <li><%= t("admin.answers.edit.title") %></li>
-</ul>
-
-<h2 class="margin-top">
-  <%= t("admin.answers.edit.title") %>
-</h2>
+<div class="row">
+  <div class="column">
+    <h2 class="margin-top"><%= t("admin.answers.edit.title") %></h2>
+  </div>
+</div>
 
 <div class="poll-question-answer-form">
   <%= render "admin/poll/questions/answers/form", form_url: polymorphic_path([@namespace, @question, @answer]) %>

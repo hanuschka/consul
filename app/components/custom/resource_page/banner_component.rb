@@ -2,7 +2,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   renders_one :links_section
   attr_reader :resource
 
-  delegate :current_user, to: :helpers
+  delegate :current_user, :projekt_phase_feature?, to: :helpers
 
   def initialize(resource:, compact: false)
     @resource = resource

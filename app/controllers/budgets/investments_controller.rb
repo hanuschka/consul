@@ -11,7 +11,7 @@ module Budgets
 
     PER_PAGE = 10
 
-    before_action :authenticate_user!, except: [:index, :show, :json_data]
+    before_action :authenticate_user!, except: [:index, :show, :json_data], unless: -> { current_user&.guest? }
     before_action :load_budget, except: :json_data
 
     authorize_resource :budget, except: :json_data
@@ -69,6 +69,8 @@ module Budgets
       @investment_ids = [@investment.id]
       @remote_translations = detect_remote_translations([@investment], @comment_tree.comments)
       @milestones = @investment.milestones
+      @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
+                                  .page(params[:page]).per(5)
 
       if !@investment.projekt.visible_for?(current_user)
         @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)
@@ -168,7 +170,7 @@ module Budgets
           @heading = @budget.headings.find_by_slug_or_id! params[:heading_id]
           @assigned_heading = @ballot&.heading_for_group(@heading.group)
         elsif @budget.single_heading?
-          @heading = @budget.headings.first
+          @heading = @budget.heading
         end
       end
 

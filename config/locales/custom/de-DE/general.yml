@@ -20,7 +20,7 @@ de:
       user_permission_verify_info: Nur verifizierte Nutzer*innen
       user_permission_votes: An finaler Abstimmung teilnehmen
       verified_account: Konto verifiziert
-      verify_my_account: Mein Konto verifizieren
+      verify_my_account: Daten abgleichen | verifizieren
   application:
     close: Schließen
     menu: Menü
@@ -34,6 +34,7 @@ de:
       author: Verfasser*in
       deleted: Dieser Kommentar wurde gelöscht
       moderator: Moderator*in
+      projekt_manager: Projektmanager*in
       responses:
         zero: Keine Antworten
         one: 1 Antwort
@@ -720,7 +721,7 @@ de:
       target: "Nach Unterziel"
       target_blank: "Unterziel wählen"
       title: "Erweiterte Suche"
-      to: "An"
+      to: "Bis"
     author_info:
       author_deleted: Benutzer*in gelöscht
       email_deleted: E-Mail gelöscht

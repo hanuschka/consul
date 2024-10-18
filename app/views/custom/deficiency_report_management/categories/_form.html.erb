@@ -19,6 +19,15 @@
 
   <div class="clear">
     <div class="small-12 column">
+      <%= f.label :default_deficiency_report_officer, t("custom.admin.deficiency_reports.categories.category.default_deficiency_report_officer") %>
+      <%= f.collection_radio_buttons :deficiency_report_officer_id, @df_officers, :id, :name do |rb| %>
+        <%= rb.radio_button + rb.label(style: "margin-right:1rem;") { rb.text } %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="clear">
+    <div class="small-12 column">
       <%= f.label :icon, t("custom.admin.deficiency_reports.categories.category.icon")  %>
       <div class='admin-deficiency-report-category-icons-selector'>
         <%= f.collection_radio_buttons :icon, Iconable::AVAILABLE_ICONS_SHORT, :first, :first do |rb| %>

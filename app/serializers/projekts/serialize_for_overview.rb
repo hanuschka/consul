@@ -5,7 +5,14 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def call
     base = @projekt.as_json(
-      only: [:id, :name, :total_duration_start, :total_duration_end],
+      only: [
+        :id,
+        :name,
+        :total_duration_start,
+        :total_duration_end,
+        :level,
+        :order_number
+      ],
       include: {
         page: { only: [:title, :subtitle, :slug] },
         map_location: { only: [:latitude, :longitude] }

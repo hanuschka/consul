@@ -11,7 +11,7 @@
         <i class="fa fa-calendar"></i>
         <%= l(resource.created_at, format: :new_date_with_year) %>
       </div>
-      <% if projekt_phase_feature?(resource&.projekt_phase, "resource.show_comments") %>
+      <% if !resource.respond_to?(:projekt_phase) || projekt_phase_feature?(resource&.projekt_phase, "resource.show_comments") %>
         <div class="resource-page-banner--detail">
           <%= link_to('#comments') do %>
             <i class="fa fa-comment"></i>

@@ -27,6 +27,9 @@ class ApiClientsController < ApplicationController
       DtApi.connect(
         name: Setting["org_name"],
         auth_token: api_client.auth_token,
+        latitude: Setting["map.latitude"],
+        longitude: Setting["map.longitude"],
+        zoom: Setting["map.zoom"],
         user_email: current_user.email,
         user_first_name: current_user.first_name,
         user_last_name: current_user.last_name,

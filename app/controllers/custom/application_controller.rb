@@ -130,7 +130,7 @@ class ApplicationController < ActionController::Base
     def auto_sign_in_guest_for(projekt_phase)
       return if current_user.present?
       return if projekt_phase.blank?
-      return unless projekt_phase.guest_participation_allowed?
+      return unless projekt_phase.user_status == "guest"
 
       guest_key = "guest_#{SecureRandom.uuid}"
       params[:user] = {}

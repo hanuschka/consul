@@ -158,7 +158,8 @@ class ProjektPhaseSetting < ApplicationRecord
 
         "ProjektPhase::FormularPhase" => {
           base: {
-            "option.general.primary_formular_cutoff_date": ""
+            "option.general.primary_formular_cutoff_date": "",
+            "option.general.submissions_limit": "1"
           }
         }
       }

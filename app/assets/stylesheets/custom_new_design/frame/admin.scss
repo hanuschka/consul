@@ -6,9 +6,6 @@ body.frame-admin-layout {
     margin-bottom: 0.35rem;
   }
 
-  table tr td {
-    padding: 0.5rem 0.375rem;
-  }
   .tabs-panel {
 
     h2 {
@@ -228,6 +225,7 @@ body.frame-admin-layout {
     align-items: center;
     height: 38px;
     margin-bottom: 0;
+    display: flex !important;
 
     padding-left: 10px;
     border-left: 2px solid #b4b4b4;

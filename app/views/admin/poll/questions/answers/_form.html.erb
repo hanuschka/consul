@@ -37,17 +37,7 @@
           <%= translations_form.text_area :description, maxlength: Poll::Question.description_max_length, class: "html-area #{ck_editor_class(current_user)}" %>
         </div>
       </div>
-    </div>
-  <% end %>
-
-  <% if @question.votation_type.unique? || @question.votation_type.multiple? %>
-    <div class="row">
-      <div class="small-6 column">
-        <%= f.check_box :open_answer,
-          label: t('custom.admin.polls.questions.answers.open_answer_html'),
-          disabled: !can_answer_be_open?(@answer.question || @question) && !@answer.open_answer? %>
-      </div>
-    </div>
+    <% end %>
   <% end %>
 
   <% if @question.allows_additional_info? %>

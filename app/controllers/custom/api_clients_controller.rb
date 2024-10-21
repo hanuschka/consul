@@ -33,7 +33,7 @@ class ApiClientsController < ApplicationController
         user_email: current_user.email,
         user_first_name: current_user.first_name,
         user_last_name: current_user.last_name,
-        consul_id: current_user.id,
+        user_id: current_user.id,
         role: user_role,
         projekt_manager_projekt_ids: projekt_manager_projekt_ids
       )

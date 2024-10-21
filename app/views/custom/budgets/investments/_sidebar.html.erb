@@ -1,6 +1,6 @@
 <aside class='margin-bottom' id='sidebar'>
 
-  <% if @budget.phase == "accepting" %>
+  <% if @budget.current_phase.kind == "accepting" %>
     <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
   <% end %>
 
@@ -8,7 +8,7 @@
 
   <%= render "pages/projekt_footer/budget/my_ballot" %>
 
-  <% unless @budget.phase == 'publishing_prices' && projekt_phase_feature?(@projekt_phase, 'general.show_results_after_first_vote')  # con-1036 %>
+  <% unless @budget.current_phase.kind == 'publishing_prices' && @budget.show_results_after_first_vote? # con-1036 %>
     <% if params[:section].blank? || params[:section] == 'overview' %>
       <%= render Budgets::Investments::FiltersComponent.new %>
     <% end %>

@@ -340,8 +340,7 @@ class User < ApplicationRecord
   end
 
   def show_welcome_screen?
-    verification = Setting["feature.user.skip_verification"].present? ? true : unverified?
-    sign_in_count == 1 && verification && !organization && !administrator?
+    sign_in_count == 1 && unverified? && !organization && !administrator?
   end
 
   def password_required?

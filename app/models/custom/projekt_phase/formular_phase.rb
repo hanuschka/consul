@@ -21,7 +21,7 @@ class ProjektPhase::FormularPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions formular formular_answers]
+    %w[duration naming restrictions formular settings formular_answers]
   end
 
   def settings_in_tabs
@@ -45,7 +45,9 @@ class ProjektPhase::FormularPhase < ProjektPhase
   private
 
     def phase_specific_permission_problems(user, location)
-      :past_regular_formular_cutoff_date if formular.past_cutoff_date?
+      return :past_regular_formular_cutoff_date if formular.past_cutoff_date?
+
+      :submissions_limit_reached if formular.submissions_limit_reached_for?(user)
     end
 
     def create_formular

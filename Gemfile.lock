@@ -79,6 +79,9 @@ GEM
       zeitwerk (~> 2.3)
     acts-as-taggable-on (9.0.1)
       activerecord (>= 6.0, < 7.1)
+    acts_as_list (1.2.1)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
     acts_as_votable (0.14.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
@@ -497,6 +500,8 @@ GEM
     rack (2.2.8)
     rack-accept (0.4.5)
       rack (>= 0.4)
+    rack-cors (2.0.2)
+      rack (>= 2.0.0)
     rack-mini-profiler (3.3.0)
       rack (>= 1.2.0)
     rack-protection (3.2.0)
@@ -764,6 +769,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on (~> 9.0.1)
+  acts_as_list
   acts_as_votable (~> 0.14.0)
   ahoy_matey (~> 4.2.1)
   airbrake (~> 13.0.2)
@@ -813,6 +819,7 @@ DEPENDENCIES
   initialjs-rails (~> 0.2.0.9)
   invisible_captcha (~> 2.1.0)
   jquery-fileupload-rails
+  jwt
   kaminari (~> 1.2.2)
   knapsack_pro (~> 5.7.0)
   launchy (~> 2.5.2)
@@ -839,6 +846,7 @@ DEPENDENCIES
   pry-byebug (~> 3.9)
   pry-rails
   puma (~> 5.6.7)
+  rack-cors
   rack-mini-profiler
   rails (= 6.1.7.6)
   rails-assets-markdown-it (~> 9.0.1)!

@@ -1,9 +1,19 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.age_ranges_for_stats.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.age_ranges_for_stats.page_title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "age ranges for stats"
+        ) %>
+    <% end %>
+    </h2>
   </div>
 </div>
 
@@ -26,5 +36,13 @@
       <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
     </div>
   </div>
+<% end %>
 
+<% if embedded? %>
+  <% provide :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
 <% end %>

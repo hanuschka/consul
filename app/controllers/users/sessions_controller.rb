@@ -1,4 +1,9 @@
 class Users::SessionsController < Devise::SessionsController
+  def new
+    store_location_for(:user, CGI::unescape(params[:intended_path])) if params[:intended_path].present?
+    super
+  end
+
   def destroy
     @stored_location = stored_location_for(:user)
     super

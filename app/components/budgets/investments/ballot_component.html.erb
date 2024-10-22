@@ -29,6 +29,13 @@
                       "aria-label": remove_vote_aria_label do %>
           <%= t("budgets.ballots.show.remove") %>
         <% end %>
+
+        <% if conditional_ballot? %>
+          <div class='callout warning'>
+            <%= t("custom.budgets.investments.investment.unverified_note") %>
+          </div>
+        <% end %>
+
       <% end %>
     </div>
   <% else %>
@@ -52,6 +59,7 @@
                                                       investments_ids: investment_ids,
                                                       filter: params[:filter],
                                                       projekt_phase_id: params[:projekt_phase_id],
+                                                      conditional_ballot: conditional_ballot?,
                                                       top_level_active_projekt_ids: (@top_level_active_projekts || []).pluck(:id),
                                                       top_level_archived_projekt_ids: (@top_level_archived_projekts || []).pluck(:id)),
                         local: false do |f| %>
@@ -72,6 +80,7 @@
                                                  user_id: params[:user_id],
                                                  filter: params[:filter],
                                                  projekt_phase_id: params[:projekt_phase_id],
+                                                 conditional_ballot: conditional_ballot?,
                                                  top_level_active_projekt_ids: (@top_level_active_projekts || []).pluck(:id),
                                                  top_level_archived_projekt_ids: (@top_level_archived_projekts || []).pluck(:id)),
                         class: "button button-support expanded",
@@ -86,5 +95,7 @@
     </div>
   <% end %>
 
-  <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
+  <% unless conditional_ballot? %>
+    <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
+  <% end %>
 </div>

@@ -13,14 +13,25 @@ namespace :projekt_management do
       put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
+      get :age_ranges_for_stats
       get :projekt_questions
       get :projekt_livestreams
       get :projekt_events
       get :milestones
+      get :progress_bars
       get :projekt_notifications
       get :projekt_arguments
       get :formular
       get :formular_answers
+      get :poll_questions
+      get :poll_booth_assignments
+      get :poll_officer_assignments
+      get :poll_recounts
+      get :poll_results
+      get :budget_edit
+      get :budget_investments
+      get :budget_phases
+      get :legislation_process_draft_versions
     end
 
     resources :formular, only: [] do
@@ -90,6 +101,10 @@ namespace :projekt_management do
       member do #custom
         patch :toggle_selection
         patch :edit_physical_votes
+        get :people
+        get :milestones
+        get :progress_bars
+        get :audits
       end
 
       resources :audits, only: :show, controller: "budget_investment_audits"
@@ -168,6 +183,10 @@ namespace :projekt_management do
 
       resources :questions, only: [] do
         post :order_questions, on: :collection
+        member do
+          get :edit_votation_type
+          patch :update_votation_type
+        end
       end
     end
 

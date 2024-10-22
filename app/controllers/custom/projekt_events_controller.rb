@@ -11,8 +11,7 @@ class ProjektEventsController < ApplicationController
 
     @projekt_events =
       ProjektEvent
-        .all
-        .includes(projekt_phase: :projekt)
+        .with_active_projekt
         .page(params[:page])
         .per(10).send("sort_by_#{@current_filter}")
 

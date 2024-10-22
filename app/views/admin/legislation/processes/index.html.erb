@@ -4,7 +4,7 @@
 
 <h2 class="inline-block"><%= t("custom.admin.legislation.processes.index.title") %></h2>
 
-<%= link_to t("admin.legislation.processes.index.create"), polymorphic_path([@namespace, :legislation_process], action: :new),
+<%#= link_to t("admin.legislation.processes.index.create"), polymorphic_path([@namespace, :legislation_process], action: :new),
             class: "button float-right" %>
 
 <% if @processes.any? %>

@@ -1,3 +1,5 @@
+<h2><%= t("custom.admin.projekt_phases.sentiments.form.title") %></h2>
+
 <%= translatable_form_for @sentiment, url: polymorphic_path([@namespace, @projekt_phase, @sentiment]) do |f| %>
   <%= render "shared/errors", resource: @sentiment %>
   <%= render "shared/globalize_locales", resource: @sentiment %>
@@ -18,7 +20,7 @@
 
   <div class="row">
     <div class="small-12 column">
-      <%= f.submit class: "button success" %>
+      <%= f.submit t("custom.shared.save_form"), class: "button success" %>
     </div>
   </div>
 <% end %>

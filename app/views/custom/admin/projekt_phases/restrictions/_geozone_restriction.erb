@@ -1,33 +1,31 @@
 <div class="phase-geo-restriction">
-  <strong class='geo-restriction-title'>
-    <span class='geo-restriction-icon'><%= t("custom.admin.projekt_phases.restrictions.geo_restrictions.title") %></span>
+  <div class="restriction-title">
+    <%= t("custom.admin.projekt_phases.restrictions.geo_restrictions.title") %>
     <span class='restriction-hint'><%= t("custom.admin.projekt_phases.restrictions.geo_restrictions.hint") %></span>
-  </strong>
-  <div class="margin-bottom <%= "gray-labels" if skip_user_verification? %>">
+  </div>
+
+  <div class="margin-bottom">
     <div class="projekt-phase-restriction-block">
       <%= f.radio_button :geozone_restricted, "no_restriction",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.no_restriction"),
                          class: "projekt-phase-restriction-option projekt-phase-geo-restriction",
-                         checked: (@projekt_phase.geozone_restricted.blank? || @projekt_phase.geozone_restricted == "no_restriction"),
-                         disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
+                         checked: (@projekt_phase.geozone_restricted.blank? || @projekt_phase.geozone_restricted == "no_restriction") %>
     </div>
 
     <div class="projekt-phase-restriction-block">
       <%= f.radio_button :geozone_restricted, "only_citizens",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.only_citizens"),
-                         class: "projekt-phase-restriction-option projekt-phase-geo-restriction",
-                         disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
+                         class: "projekt-phase-restriction-option projekt-phase-geo-restriction" %>
     </div>
 
     <div class="projekt-phase-restriction-block">
       <%= f.radio_button :geozone_restricted, "only_geozones",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.only_geozones"),
-                         class: "projekt-phase-restriction-option projekt-phase-geo-restriction",
-                         disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
+                         class: "projekt-phase-restriction-option projekt-phase-geo-restriction" %>
 
       <div class="projekt-phase-geo-restriction-selector">
-        <%= f.collection_check_boxes(:geozone_restriction_ids, Geozone.all, :id, :name, {}, { disabled: skip_user_verification? }) do |b| %>
-          <%= b.label(style: "display:inline-block;cursor:pointer;") { b.check_box(style: "margin-top:0;", disabled: (skip_user_verification? || @projekt_phase.guest_participation_allowed?)) + b.text } %>
+        <%= f.collection_check_boxes(:geozone_restriction_ids, Geozone.all, :id, :name, {}) do |b| %>
+          <%= b.label(style: "display:inline-block;cursor:pointer;") { b.check_box(style: "margin-top:0;") + b.text } %>
         <% end %>
       </div>
     </div>
@@ -35,8 +33,7 @@
     <div class="projekt-phase-restriction-block">
       <%= f.radio_button :geozone_restricted, "only_streets",
                          label: t("custom.admin.projekt_phases.restrictions.geo_restrictions.only_streets"),
-                         class: "projekt-phase-restriction-option projekt-phase-geo-restriction",
-                         disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
+                         class: "projekt-phase-restriction-option projekt-phase-geo-restriction" %>
 
       <div class="projekt-phase-street-selector projekt-phase-geo-restriction-selector" style="column-count: 1;">
         <div id="projekt-phase-selected-streets">
@@ -49,7 +46,7 @@
         </div>
 
         <%= select_tag :streets, options_from_collection_for_select(RegisteredAddress::Street.all, :id, :name_with_plz),
-          class: "js-select-street", prompt: "Bitte wählen", disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed? %>
+          class: "js-select-street", prompt: "Bitte wählen" %>
 
         <div class='hide'>
           <%= f.collection_check_boxes :registered_address_street_ids, RegisteredAddress::Street.all, :id, :name %>

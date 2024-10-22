@@ -1,1 +1,5 @@
-<%= AdminWYSIWYGSanitizer.new.sanitize (@poll.summary.presence || @poll.description) %>
+<% if @poll.projekt_phase.description.present? %>
+  <div class="resource-page--description new-card main-content-card">
+    <%= AdminWYSIWYGSanitizer.new.sanitize(@poll.projekt_phase.description) %>
+  </div>
+<% end %>

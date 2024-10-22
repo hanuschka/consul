@@ -14,8 +14,21 @@ class FormularAnswer < ApplicationRecord
   attr_accessor :answer_errors
 
   def email_address
-    email_key = formular.formular_fields
-      .where(kind: "email").where("options ->> 'email_for_confirmation' = ?", "1").first&.key
-    answers[email_key]
+    answers[email_formular_field&.key]
   end
+
+  def email_subject
+    email_formular_field.options["email_for_confirmation_subject"]
+  end
+
+  def email_text
+    email_formular_field.options["email_for_confirmation_text"]
+  end
+
+  private
+
+    def email_formular_field
+      @email_formular_field ||= formular.formular_fields
+        .where(kind: "email").where("options ->> 'email_for_confirmation' = ?", "1").first
+    end
 end

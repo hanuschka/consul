@@ -19,14 +19,20 @@
       <%= simple_format sanitize_and_auto_link(memo.text), {}, sanitize: false %>
     </div>
 
-    <div class="memo-controls">
-      <% if memo.user == current_user %>
-        <%= link_to "Löschen", polymorphic_path([namespace.to_sym, memo]), method: :delete, remote: true, class: "delete-comment", data: { confirm: "Sind Sie sicher?" } %>
-        <span aria-live="off">&nbsp;&bull;&nbsp;</span>
-      <% end %>
-      <%= link_to "Antworten", "#", onClick: "$(this).next().toggle(); return false;" %>
-      <%= render "admin/memos/form", memoable: memo %>
-    </div>
+    <% if can?(:add_memo, memo.root_memoable) %>
+      <div class="memo-controls">
+        <%= link_to "Antworten", "#", onClick: "$(this).siblings('.memo-form').toggle(); return false;" %>
+
+        <% if can?(:send_notification, memo) %>
+          <%= link_to " | Benachrichtigung senden", polymorphic_path([@namespace, memo], action: :send_notification), method: :post, remote: true %>
+          <% if memo.last_notification_sent_at.present? %>
+            <%= "(Letzte Benachrichtigung gesendet am #{l memo.last_notification_sent_at.to_datetime, format: :datetime})" %>
+          <% end %>
+        <% end %>
+
+        <%= render "admin/memos/form", memoable: memo %>
+      </div>
+    <% end %>
   </div>
 
   <%= render "admin/memos/memos_tree", memos: memo.children, memoable: memo %>

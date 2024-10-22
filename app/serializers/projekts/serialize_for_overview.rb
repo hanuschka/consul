@@ -5,7 +5,14 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def call
     base = @projekt.as_json(
-      only: [:id, :name, :total_duration_start, :total_duration_end],
+      only: [
+        :id,
+        :name,
+        :total_duration_start,
+        :total_duration_end,
+        :level,
+        :order_number
+      ],
       include: {
         page: { only: [:title, :subtitle, :slug] },
         map_location: { only: [:latitude, :longitude] }
@@ -15,6 +22,7 @@ class Projekts::SerializeForOverview < ApplicationService
     base[:activated] = @projekt.activated?
     base[:custom_page_published] = @projekt.page.status == "published"
     base[:show_in_overview_page] = @projekt.feature?("general.show_in_overview_page")
+    base[:mark_as_underway] = @projekt.feature?("general.consider_underway")
 
     if @projekt.map_location.present?
       base.merge!(serialize_map_location)

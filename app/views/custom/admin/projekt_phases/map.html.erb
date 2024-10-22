@@ -1,5 +1,8 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
@@ -12,7 +15,14 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.map.map_layers.title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.map.map_layers.title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "#{@projekt_phase.name} map"
+        ) %>
+      <% end %>
+    </h2>
     <% @projekt_phase.map_layers.each do |layer| %>
       <%= render partial: "custom/admin/shared/map/map_layer", locals: { layer: layer, return_path: namespace_projekt_phase_path(action: :map) } %>
     <% end %>
@@ -30,32 +40,17 @@
 <div class="row">
   <div class="column">
     <h2><%= t("admin.settings.index.map.title") %></h2>
-  </div>
-</div>
+      <%= form_for(@projekt_phase.map_location, url: namespace_mappable_path(action: :update_map)) do |f| %>
+        <%= render partial: "custom/admin/projekt_phases/map/form", locals: { map_location_form: f, attribute: :latitude} %>
+      <% end %>
 
-<div class="row">
-  <div class="column">
-    <table>
-      <thead>
-        <tr>
-          <th><%= t("admin.settings.setting") %></th>
-          <th><%= t("admin.settings.setting_value") %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= form_for(@projekt_phase.map_location, url: namespace_mappable_path(action: :update_map)) do |f| %>
-          <%= render partial: "custom/admin/shared/map/map_settings_form", locals: { map_location_form: f, attribute: :latitude } %>
-          <%= render partial: "custom/admin/shared/map/map_settings_form", locals: { map_location_form: f, attribute: :longitude } %>
-          <%= render partial: "custom/admin/shared/map/map_settings_form", locals: { map_location_form: f, attribute: :zoom } %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
+      <%= form_for(@projekt_phase.map_location, url: namespace_mappable_path(action: :update_map)) do |f| %>
+        <%= render partial: "custom/admin/projekt_phases/map/form", locals: { map_location_form: f, attribute: :longitude } %>
+      <% end %>
 
-<div class="row">
-  <div class="column">
-    <p><%= t("admin.settings.index.map.help") %></p>
+      <%= form_for(@projekt_phase.map_location, url: namespace_mappable_path(action: :update_map)) do |f| %>
+        <%= render partial: "custom/admin/projekt_phases/map/form", locals: { map_location_form: f, attribute: :zoom } %>
+      <% end %>
   </div>
 </div>
 
@@ -64,3 +59,12 @@
     <%= render "custom/admin/shared/map/map_form", mappable: @projekt_phase, map_location: @projekt_phase.map_location %>
   </div>
 </div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

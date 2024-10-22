@@ -12,17 +12,17 @@ module Admin::BudgetPhasesActions
 
   def edit
     authorize!(:create, @budget) if @namespace.to_s.start_with?("projekt_management")
-
-    render "admin/budgets_wizard/phases/edit"
+    render "admin/budget_phases/edit"
   end
 
   def update
     authorize!(:create, @budget) if @namespace.to_s.start_with?("projekt_management")
 
     if @phase.update(budget_phase_params)
-      redirect_to phases_index, notice: t("flash.actions.save_changes.notice")
+      redirect_to polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_phases),
+        notice: t("flash.actions.save_changes.notice")
     else
-      render "admin/budgets_wizard/phases/edit"
+      render "admin/budget_phases/edit"
     end
   end
 

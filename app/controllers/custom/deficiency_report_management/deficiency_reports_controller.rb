@@ -7,6 +7,8 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   load_and_authorize_resource
 
+  after_action :unassign_deficiency_report_officer, only: :destroy
+
   def index
     filter_assigned_reports_only
     @deficiency_reports = apply_filters(@deficiency_reports)
@@ -27,6 +29,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def show
     @deficiency_report = DeficiencyReport.find(params[:id])
+    @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
   end
 
   def edit
@@ -43,8 +46,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     if @deficiency_report.update(deficiency_report_params)
       notify_new_officer(@deficiency_report)
       notify_author_about_status_change(@deficiency_report)
-      notify_officer_about_new_comments(@deficiency_report)
-      notify_administrators_about_official_answer_update(@deficiency_report)
 
       redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.update.success_notice")
     else
@@ -57,6 +58,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     @deficiency_report.destroy!
 
     redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.destroy.success_notice")
+  end
+
+  def audits
   end
 
   def accept
@@ -81,8 +85,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
                     :deficiency_report_area_id,
                     :deficiency_report_officer_id, :assigned_at,
                     :deficiency_report_status_id,
-                    :notify_officer_about_new_comments, :notified_officer_about_new_comments_datetime,
-                    :official_answer_approved,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
@@ -91,6 +93,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
     def filter_assigned_reports_only
       return if current_user.administrator? || current_user.deficiency_report_manager?
+      return unless Setting["deficiency_reports.admins_must_assign_officer"].present?
       raise CanCan::AccessDenied unless current_user.deficiency_report_officer?
 
       @deficiency_reports = @deficiency_reports.where(deficiency_report_officer_id: current_user.deficiency_report_officer.id)
@@ -108,26 +111,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
     end
 
-    def notify_officer_about_new_comments(dr)
-      return unless dr.officer.present?
-
-      if deficiency_report_params[:notify_officer_about_new_comments] == "1" &&
-        dr.notify_officer_about_new_comments_before_last_save != "1" &&
-        dr.comments.any?
-
-        NotificationServiceMailer.new_comments_for_deficiency_report(
-          dr,
-          dr.created_at,
-          initial: true
-        ).deliver_now
-      end
-    end
-
-    def notify_administrators_about_official_answer_update(dr)
-      return unless dr.translations.any? { |tr| tr.official_answer_before_last_save != tr.official_answer }
-
-      Administrator.all.find_each do |admin|
-        DeficiencyReportMailer.notify_administrators_about_answer_update(dr, admin.user).deliver_later
-      end
+    def unassign_deficiency_report_officer
+      @deficiency_report.update_column(:deficiency_report_officer_id, nil)
     end
 end

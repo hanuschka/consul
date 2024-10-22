@@ -8,7 +8,7 @@ body.admin ul.tabs,
 body.admin .top-bar,
 body.admin .tabs-title > a[aria-selected='true'],
 .admin-top-bar {
-  background-color: #F4F4F4 !important;
+  background-color: $main-background-color !important;
 }
 
 .help-header {
@@ -33,6 +33,11 @@ body.admin .tabs-title > a[aria-selected='true'],
 
   @media screen and (min-width: 40em) {
     margin: 0 -0.9375rem;
+  }
+
+  .column:last-child:not(:first-child),
+  .columns:last-child:not(:first-child) {
+    float: left;
   }
 }
 

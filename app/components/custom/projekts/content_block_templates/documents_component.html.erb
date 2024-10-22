@@ -1,0 +1,20 @@
+<div class="js-content-block-template-content">
+  <div class="row" style="margin-left:0px;">
+    <h3 id="download"><%= @title %></h3>
+    <% @documents.each do |document| %>
+      <div class="card-section" style="float:left;0px;border-radius: 5px;text-align:left;display:flex;vertical-align:middle;margin:auto;padding:10px;background-color:#d8e5f2;color:#004a8f;width:273px;height:70px;font-size:14px;font-weight:bold;margin-top:5px;margin-right:10px;">
+        <div style="width:50px">
+          <% if document.attachment.image? %>
+            <%= image_tag url_for(document.attachment.variant(resize_to_limit: [50, 50]))  %>
+          <% elsif document.attachment.previewable? %>
+            <%= image_tag url_for(document.attachment.preview(resize_to_limit: [50, 50]))  %>
+          <% end %>
+        </div>
+
+        <%= link_to rails_blob_path(document.attachment, disposition: "attachment"), style: "display:flex; align-items: center;margin-left: 10px;" do %>
+          <%= document.title %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

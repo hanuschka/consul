@@ -7,11 +7,15 @@ de:
         question_phase: An Kurzumfrage teilnehmen
         budget_phase: Jetzt mitmachen
         formular_phase: Jetzt teilnehmen
+        legislation_phase: Jetzt mitmachen
+        comment_phase: Jetzt mitmachen
+        livestream_phase: Jetzt mitmachen
       permission_problem:
         new_button_component:
           shared:
             guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+            missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
             only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
@@ -27,10 +31,14 @@ de:
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
           formular_phase:
             past_regular_formular_cutoff_date: Die Beteiligungsphase ist bereits abgeschlossen
+            submissions_limit_reached: Sie haben die maximale Zahl der erlaubten Einreichungen pro Nutzer erreicht.
+          proposal_phase:
+            proposals_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Vorschlägen pro Tag %{proposals_limit} erreicht
         votes_component:
           shared:
             guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+            missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
             only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
@@ -47,6 +55,7 @@ de:
         ballot_component:
           budget_phase:
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+            missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen an dieser Abstimmung teilnehmen.
             only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
@@ -70,6 +79,7 @@ de:
           shared:
             guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+            missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
             not_verified: "Um fortzufahren, bitte %{verify}."
             organization: Organisationen dürfen keine Inhalte erstellen.
             only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
@@ -88,6 +98,7 @@ de:
         poll_votes:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+          missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen nicht abstimmen.
           only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
@@ -105,6 +116,7 @@ de:
           only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
         legislation_annotations:
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+          missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.
           only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
@@ -121,6 +133,7 @@ de:
         projekt_questions:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+          missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.
           only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.
@@ -137,6 +150,7 @@ de:
         projekt_livestreams:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."
+          missing_user_data: "Um fortzufahren, stellen Sie bitte %{enter_missing_user_data}."
           not_verified: "Um fortzufahren, bitte %{verify}."
           organization: Organisationen dürfen keine Inhalte erstellen.
           only_citizens: Die Beteiligung ist auf Bürger*innen der Stadt beschränkt.

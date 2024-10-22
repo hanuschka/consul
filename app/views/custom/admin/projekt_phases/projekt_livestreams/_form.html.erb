@@ -14,8 +14,8 @@
       <%= f.datetime_field :starts_at, { id: dom_id(livestream, :starts_at) } %>
     </div>
 
-    <div class='small-12 medium-12'>
-      <%= f.text_area :description, { id: dom_id(livestream, :description) } %>
+    <div class='small-12 medium-7 margin-bottom'>
+      <%= f.text_area :description, id: dom_id(livestream, :description), rows: 4 %>
     </div>
   <% end %>
 

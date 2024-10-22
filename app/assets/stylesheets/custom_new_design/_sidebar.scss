@@ -1,6 +1,6 @@
 .custom-new-design {
   .sidebar {
-    min-width: 300px;
+    min-width: 280px;
     max-width: 300px;
 
     .required-fields {
@@ -102,8 +102,11 @@
     }
   }
 
-  .globalize-languages.highlight .column {
-    padding: 0 !important;
+  .sidebar {
+    .globalize-languages.highlight .column {
+      padding: 0 !important;
+      border-radius: 0;
+    }
   }
 
   @media (max-width: $small-tablet-viewport-start) {

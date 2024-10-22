@@ -41,6 +41,22 @@
         margin-left: 0;
       }
     }
+
+    &.open-answer-image-mode {
+      flex-direction: column;
+      padding-left: 10px;
+      padding-right: 10px;
+      float: left;
+
+      textarea {
+        height: 150px;
+      }
+
+      input[type="submit"] {
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
   }
 
   .poll-question--nested-question {

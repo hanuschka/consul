@@ -7,7 +7,7 @@ class ProjektPhase < ApplicationRecord
 
   after_create :add_default_settings
 
-  REGULAR_PROJEKT_PHASES = [
+  SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
@@ -18,14 +18,13 @@ class ProjektPhase < ApplicationRecord
 
   PROJEKT_PHASES_TYPES = [
     "ProjektPhase::CommentPhase",
-    "ProjektPhase::DebatePhase",
     "ProjektPhase::ProposalPhase",
     "ProjektPhase::QuestionPhase",
     "ProjektPhase::VotingPhase",
     "ProjektPhase::BudgetPhase",
     "ProjektPhase::LegislationPhase",
     "ProjektPhase::FormularPhase"
-  ] + REGULAR_PROJEKT_PHASES
+  ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
 
@@ -36,6 +35,7 @@ class ProjektPhase < ApplicationRecord
   translates :labels_name, touch: true
   translates :sentiments_name, touch: true
   translates :resource_form_title_hint, touch: true
+  translates :description, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -68,12 +68,20 @@ class ProjektPhase < ApplicationRecord
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
+  accepts_nested_attributes_for :settings
+
+  enum user_status: {
+    guest: 0,
+    registered: 1,
+    verified: 2
+  }
+
   validates :projekt, presence: true
 
   default_scope { order(:given_order, :id) }
 
-  scope :regular_phases, -> { where.not(type: REGULAR_PROJEKT_PHASES) }
-  scope :special_phases, -> { where(type: REGULAR_PROJEKT_PHASES) }
+  scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
+  scope :special_phases, -> { where(type: SPECIAL_PROJEKT_PHASES) }
 
   scope :active, -> { where(active: true) }
   scope :current, ->(timestamp = Time.zone.today) {
@@ -106,7 +114,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def selectable_by?(user, resource = nil)
-    return true if resource&.respond_to?(:author) && resource.author == user
+    # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
     permission_problem(user).blank?
@@ -144,35 +152,25 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return :guest_not_logged_in if guest_participation_allowed? && !user
-    return if guest_participation_allowed?
+    return :guest_not_logged_in if user_status == "guest" && !user
+    return if user_status == "guest"
     return :not_logged_in if !user || user&.guest?
-    return if admin_permission?(user, location: location)
+    return if user.has_pm_permission_to?("manage", projekt)
     return :phase_not_active if not_active?
     return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
     return :phase_not_current if not_current?
-    return :not_verified if verification_restricted && !user.level_three_verified?
+    return :not_verified if user_status == "verified" && !user.level_three_verified?
 
     if phase_specific_permission_problems(user, location).present?
       return phase_specific_permission_problems(user, location)
     end
 
-    unless Setting["feature.user.skip_verification"].present?
-      return age_permission_problem(user) if age_permission_problem(user).present?
-      return geozone_permission_problem(user) if geozone_permission_problem(user)
-      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
-      return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
-    end
+    return age_permission_problem(user) if age_permission_problem(user).present?
+    return geozone_permission_problem(user) if geozone_permission_problem(user)
+    return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
+    return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
 
     nil
-  end
-
-  def admin_permission?(user, location: nil)
-    if location == "new_button_component"
-      user.has_pm_permission_to?("create_on_behalf_of", projekt)
-    else
-      user.administrator?
-    end
   end
 
   def geozone_allowed?(user)
@@ -260,8 +258,20 @@ class ProjektPhase < ApplicationRecord
     )
   end
 
+  def settings_categories
+    []
+  end
+
   def admin_nav_bar_items
     []
+  end
+
+  def settings_in_tabs
+    {}
+  end
+
+  def settings_in_duration_tab
+    {}
   end
 
   def safe_to_destroy?
@@ -295,7 +305,7 @@ class ProjektPhase < ApplicationRecord
 
   private
 
-    def phase_specific_permission_problems(user)
+    def phase_specific_permission_problems(user, location)
       nil
     end
 
@@ -304,20 +314,18 @@ class ProjektPhase < ApplicationRecord
       when "no_restriction" || nil
         nil
       when "only_citizens"
-        if !user.level_three_verified?
-          :not_verified
-        elsif user.not_current_city_citizen?
-          :only_citizens
-        end
+        return :missing_user_data if user.plz.blank?
+
+        :only_citizens if user.not_current_city_citizen?
       when "only_geozones"
-        if !user.level_three_verified?
-          :not_verified
+        if user.plz.blank?
+          :missing_user_data
         elsif !geozone_restrictions.include?(user.geozone)
-          :only_specific_geozones
+          :only_specific_geozones if !geozone_restrictions.include?(user.geozone)
         end
       when "only_streets"
-        if !user.level_three_verified?
-          :not_verified
+        if user.registered_address_street.blank?
+          :no_registered_address
         elsif !registered_address_streets.include?(user.registered_address_street)
           :only_specific_streets
         end
@@ -329,8 +337,6 @@ class ProjektPhase < ApplicationRecord
 
       if user.registered_address.blank?
         :no_registered_address
-      elsif !user.level_three_verified?
-        :not_verified
       elsif !user_registered_address_permitted?(user)
         :only_specific_registered_address_groupings
       end
@@ -341,10 +347,9 @@ class ProjektPhase < ApplicationRecord
     end
 
     def age_permission_problem(user)
-      return nil if user.age.blank?
-      return nil if age_restriction.blank?
-      return :not_verified if !user.level_three_verified?
-      return nil if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
+      return if age_restriction.nil?
+      return :missing_user_data if user.age.blank?
+      return if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
 
       :only_specific_ages
     end
@@ -361,7 +366,11 @@ class ProjektPhase < ApplicationRecord
     end
 
     def add_default_settings
-      phase_settings = ProjektPhaseSetting.defaults[self.class.name] || {}
+      phase_setting_categories = ProjektPhaseSetting.defaults[self.class.name]
+
+      return if phase_setting_categories.nil?
+
+      phase_settings = phase_setting_categories.values.reduce(:merge) || {}
 
       phase_settings.each do |key, value|
         settings.create!(key: key, value: value)

@@ -3,24 +3,23 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt, only: [
-    :update, :import, :create_content_block,
-    :destroy_content_block, :update_content_block, :update_content_block_position
+    :update, :update_page, :import
   ]
   before_action :process_tags, only: [:update]
 
   skip_authorization_check
   skip_forgery_protection
 
-  def index
-    projekts = Projekt.current_for_import.regular
-
-    projekts.each(&:generate_preview_code_if_nedded!)
-    projekts.each(&:generate_frame_access_code_if_nedded!)
-
-    render json: {
-      projekts: projekts.map(&:serialize)
-    }
-  end
+  # def index
+  #   projekts = Projekt.current_for_import.regular
+  #
+  #   projekts.each(&:generate_preview_code_if_nedded!)
+  #   projekts.each(&:generate_frame_access_code_if_nedded!)
+  #
+  #   render json: {
+  #     projekts: projekts.map(&:serialize)
+  #   }
+  # end
 
   def overview
     projekts =
@@ -28,20 +27,21 @@ class Api::ProjektsController < Api::BaseController
         .activated
         .with_published_custom_page
         .show_in_overview_page
+        .not_in_individual_list
         .regular
         .includes(:page, :projekt_phases, :map_location)
 
     render json: {
-      projekts: projekts.map { |projekt|
+      projekts: projekts.map do |projekt|
         Projekts::SerializeForOverview.call(projekt)
-      }
+      end
     }
   end
 
   def create
     projekt = Projekt.new
 
-    if import_projekt(projekt: projekt, projekt_params: projekt_params)
+    if import_projekt(projekt: projekt)
       render json: {
         projekt: projekt.serialize,
         message: "Projekt created"
@@ -52,7 +52,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def import
-    if import_projekt(projekt: @projekt, projekt_params: import_projekt_params)
+    if import_projekt(projekt: @projekt)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
     else
       render json: { message: "Error updating projekt" }
@@ -67,56 +67,11 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
-  def create_content_block
-    @content_block = @projekt.content_blocks.build(
-      name: "custom",
-      body: params[:html],
-      key: "projekt_content_block_#{@projekt.id}_#{@projekt.content_blocks.count + 1}_#{DateTime.now.to_i}",
-      locale: "de"
-    )
-
-    if @content_block.save
-      if params[:previous_content_block_id].present?
-        @previous_content_block = @projekt.content_blocks.find(params[:previous_content_block_id])
-        @content_block.insert_at(@previous_content_block.position + 1)
-      else
-        @content_block.move_to_top
-      end
-
-      render json: { content_block: {id: @content_block.id}, status: { message: "Content block updated" }}
+  def update_page
+    if @projekt.page.update!(projekt_page_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
     else
-      render json: { message: "Error updating content_block" }
-    end
-  end
-
-  def update_content_block
-    # TODO add authorization
-    content_block = @projekt.content_blocks.find(params[:content_block_id])
-
-    if content_block.update(body: params[:html])
-      render json: { status: { message: "Content block updated" }}
-    else
-      render json: { message: "Error updating content_block" }
-    end
-  end
-
-  def destroy_content_block
-    @content_block = @projekt.content_blocks.find(params[:content_block_id])
-
-    if @content_block.destroy
-      render json: { status: { message: "Content block destroyed" }}
-    else
-      render json: { message: "Error destroying content_block" }
-    end
-  end
-
-  def update_content_block_position
-    content_block = @projekt.content_blocks.find(params[:content_block_id])
-
-    if content_block.insert_at(params[:position].to_i)
-      render json: { status: { message: "Content block updated" }}
-    else
-      render json: { message: "Error updating content_block" }
+      render json: { message: "Error updating projekt page" }
     end
   end
 
@@ -126,9 +81,9 @@ class Api::ProjektsController < Api::BaseController
     @projekt = Projekt.find(params[:id])
   end
 
-  def import_projekt(projekt:, projekt_params:)
+  def import_projekt(projekt:)
     Projekts::ImportService.call(
-      projekt: projekt, projekt_params: projekt_params
+      projekt: projekt, projekt_params: import_projekt_params
     )
   end
 
@@ -138,6 +93,7 @@ class Api::ProjektsController < Api::BaseController
       :show_start_date_in_frontend, :show_end_date_in_frontend,
       :geozone_affiliated, :tag_list, :related_sdg_list,
 
+      site_customization_page: [:title],
       geozone_affiliation_ids: [],
       sdg_goal_ids: [],
       individual_group_value_ids: [],
@@ -149,12 +105,14 @@ class Api::ProjektsController < Api::BaseController
     )
   end
 
+  def projekt_page_params
+    params.require(:site_customization_page).permit(
+      :title, :subtitle, :image
+    )
+  end
+
   def import_projekt_params
     params.require(:projekt).permit(
-      :title, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
-      :show_start_date_in_frontend, :show_end_date_in_frontend,
-      :geozone_affiliated, :tag_list, :related_sdg_list,
-
       :title,
       :brief_description,
       :summary,
@@ -173,11 +131,10 @@ class Api::ProjektsController < Api::BaseController
       :projekt_page_sharing,
       :title_image,
       :greeting_image,
-      timeline: [:title, :description, :daterange],
-      faq: [:title, :text],
+      :faq_json,
+      :timeline_json,
       images: [],
       documents: [],
-
       geozone_affiliation_ids: [], sdg_goal_ids: [],
       individual_group_value_ids: [],
       map_location_attributes: map_location_attributes,
@@ -186,6 +143,8 @@ class Api::ProjektsController < Api::BaseController
       project_events: [:id, :title, :location, :datetime, :weblink],
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
     )
+      # timeline: [:title, :description, :daterange],
+      # faq: [:title, :text],
   end
 
   def process_tags

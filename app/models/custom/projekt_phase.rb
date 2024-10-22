@@ -7,7 +7,7 @@ class ProjektPhase < ApplicationRecord
 
   after_create :add_default_settings
 
-  REGULAR_PROJEKT_PHASES = [
+  SPECIAL_PROJEKT_PHASES = [
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
@@ -24,7 +24,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::BudgetPhase",
     "ProjektPhase::LegislationPhase",
     "ProjektPhase::FormularPhase"
-  ] + REGULAR_PROJEKT_PHASES
+  ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
 
@@ -80,8 +80,8 @@ class ProjektPhase < ApplicationRecord
 
   default_scope { order(:given_order, :id) }
 
-  scope :regular_phases, -> { where.not(type: REGULAR_PROJEKT_PHASES) }
-  scope :special_phases, -> { where(type: REGULAR_PROJEKT_PHASES) }
+  scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
+  scope :special_phases, -> { where(type: SPECIAL_PROJEKT_PHASES) }
 
   scope :active, -> { where(active: true) }
   scope :current, ->(timestamp = Time.zone.today) {

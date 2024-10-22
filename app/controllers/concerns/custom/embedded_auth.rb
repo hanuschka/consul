@@ -47,6 +47,7 @@ module EmbeddedAuth
     end
 
     def frame_session
+      return @_frame_session if @_frame_session.present?
       return if cookies.encrypted[:frame_session].nil?
 
       @_frame_session ||=
@@ -68,9 +69,7 @@ module EmbeddedAuth
         user = User.find(frame_session["user_id"])
 
         if user.present?
-          update_frame_session_data(
-            user
-          )
+          update_frame_session_data(user)
         else
           raise "Invalid auth"
         end

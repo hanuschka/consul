@@ -6,7 +6,14 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.budget_phases.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.budget_phases.page_title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "budget phases"
+        ) %>
+      <% end %>
+    </h2>
   </div>
 </div>
 
@@ -21,3 +28,12 @@
     <%= render Admin::Budgets::CalculateWinnersButtonComponent.new(@budget, from_investments: true) %>
   </div>
 </div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

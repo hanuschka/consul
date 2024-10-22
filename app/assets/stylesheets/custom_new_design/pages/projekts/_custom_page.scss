@@ -119,6 +119,11 @@
     font-size: 32px;
     font-weight: 400;
     margin-top: 0;
+    margin-bottom: 0 !important;
+  }
+
+  .custom-page--banner-title-wrapper {
+    margin-bottom: 10px;
   }
 
   .custom-page--banner-description {
@@ -321,8 +326,9 @@
       margin-bottom: 0.6rem;
       margin-top: 1.3rem;
 
-      /* h3:first-child { */
-      /* } */
+      @media(max-width: $big-tablet-viewport-start) {
+        margin-top: 1rem;
+      }
     }
 
     img {

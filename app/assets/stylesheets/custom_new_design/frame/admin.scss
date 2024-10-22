@@ -1,10 +1,94 @@
-.frame-admin-layout {
+body.frame-admin-layout {
+  label > [type='checkbox'], label > [type='radio'] {
+    margin-bottom: 0;
+  }
+  .tabs {
+    margin-bottom: 0.35rem;
+  }
+
+  .tabs-panel {
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+  }
+  .config-block {
+    border-radius: 10px;
+    padding: 0.8rem 1.3rem;
+    margin-bottom: 20px !important;
+
+    input[type="submit"] {
+      margin-bottom: 0;
+    }
+  }
+
+  thead {
+    border: 2px solid #ecf1f6;
+    border-radius: 0 !important;
+  }
+
+  // Overide foundation styles that break tables on smaller screens
+  table.stack tr {
+    display: table-row !important;
+  }
+  table.stack th, table.stack td {
+    display: table-cell !important;
+  }
+  .config-block {
+    border: 1px solid #d6d6d6 !important
+  }
+  .tabs-content ul.tabs,
+  .tabs-content,
+  .tabs-title > a[aria-selected='true'],
+  .tabs-title > a[aria-selected='true']
+  {
+    background-color: white !important;
+  }
+
+  .tabs-title {
+    padding: 0 10px;
+  }
+  form input[type=file] {
+    display: block;
+  }
+  h2  {
+    button {
+      display: inline-block;
+    }
+    .frame-explain-button {
+      margin-top: 2px;
+    }
+  }
+
+  h3 {
+    .frame-explain-button {
+      margin-top: 1px;
+    }
+  }
+  .button {
+    margin-top: 0;
+  }
   .menu-and-content {
     margin-top: 30px;
-    width: 745px;
+    max-width: 745px;
     margin-left: 50px;
     flex-direction: column;
     flex-grow: 0;
+
+    @media(max-width: $big-tablet-viewport-start) {
+      max-width: 700px;
+      margin-left: 30px;
+    }
+
+    @media(max-width: $small-tablet-viewport-start) {
+      max-width: 645px;
+      margin-left: 20px;
+
+      label[for="show_menu"] {
+        display: none;
+      }
+    }
   }
   .back {
     font-size: 20px;
@@ -12,14 +96,14 @@
     color: #67788A;
   }
 
-  .frame-phase-edit-navigation {
+  .frame-navigation {
     display: flex;
     justify-content: space-between;
     flex-direction: row-reverse;
     align-items: center;
     margin-bottom: 20px;
 
-    .admin-projekt-phase-title {
+    .frame-navigation-title {
       margin-bottom: 0;
     }
   }
@@ -48,7 +132,9 @@
 .frame-admin-layout .admin-content,
 .frame-admin-layout .admin-frame-content-card {
   background-color: white;
-  padding: 30px 35px;
+  /* padding: 30px 35px; */
+  padding: 20px 25px;
+  padding-left: 20px;
   overflow: visible;
   min-height: 91px;
   border-radius: 10px;
@@ -57,13 +143,20 @@
   /* width: 685px; */
   width: 100%;
 
+  @media(max-width: $small-tablet-viewport-start) {
+    padding: 25px 20px;
+  }
 
   h1, h2 {
     color: #292929;
   }
   h2 {
-    font-size: 25px;
-    margin-bottom: 30px;
+    font-size: 24px;
+
+    @media(max-width: $small-tablet-viewport-start) {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
   }
 
   form {
@@ -78,13 +171,12 @@
 }
 
 .admin-frame-phase-to-select {
-  height: 50px;
-  font-size: 21px;
+  /* height: 50px; */
+  height: 43px;
+  font-size: 20px;
+  /* font-size: 18px; */
   display: flex;
   justify-content: space-between;
-
-  button {
-  }
 }
 
 .admin-frame-phase-to-select--name-section {
@@ -108,24 +200,32 @@
   /* height: 45px; */
 }
 
-.frame-explain-with-ai-button {
+.frame-explain-button {
   font-size: 18px;
+  margin-left: 5px;
 }
 
 .admin-top-navigation {
 
 }
 
-.frame-phase-navigate-settings {
+.frame-navigate-settings {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 15px;
+
+  a {
+    width: 100%;
+    text-wrap: nowrap;
+  }
 
   .arrow-controls {
     font-size: 38px;
     align-items: center;
     height: 38px;
     margin-bottom: 0;
+    display: flex !important;
 
     padding-left: 10px;
     border-left: 2px solid #b4b4b4;
@@ -141,18 +241,11 @@
   }
 }
 
-.frame-phase-navigate-settings {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 15px;
-}
-
 .frame-admin-layout {
-  .admin-projekt-phase-title {
-    font-size: 20px;
+  .frame-navigation-title {
+    font-size: 32px;
+    margin-left: 20px;
     color: inherit;
-    font-weight: bold;
     margin-top: 0;
   }
 }

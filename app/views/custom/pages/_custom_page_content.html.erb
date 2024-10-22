@@ -1,17 +1,13 @@
 <div class="custom-page-content" id='page-content'>
   <% if @custom_page&.projekt&.new_content_block_mode? %>
+    <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
 
     <div class="custom-page-content-inner">
-      <div
-      class="content-blocks-container">
+      <div class="content-blocks-container">
         <% if @custom_page.projekt.content_blocks.any? %>
           <% @custom_page.projekt.content_blocks.order(:position).each do |content_block| %>
-            <div class="projekt-content-block-wrapper">
-              <div class="relative">
-                <div class="projekt-content-block " data-id="<%= content_block.id %>">
-                  <%= content_block&.body&.html_safe %>
-                </div>
-              </div>
+            <div class="projekt-content-block " data-id="<%= content_block.id %>">
+              <%= content_block&.body&.html_safe %>
             </div>
           <% end %>
         <% end %>

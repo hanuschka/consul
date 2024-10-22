@@ -8,10 +8,20 @@
     <% end %>
   <% end %>
 
+  <% if show_embeded_controls %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
+      <button type="button" data-path="/projekts/<%= @projekt.id %>/edit" class="button hollow expanded left-aligned js-frame-open-admin-page">
+        <i class="fas fa-cog"></i>
+        <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt") %>
+      </button>
+    <% end %>
+  <% end %>
+
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
-  <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) %>
+  <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) || show_embeded_controls %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.projekt_information.title"), icon_name: "info-circle", class_name: "js-sidebar-projekt-info") do |c| %>
-      <%= render_custom_block content_block_sidebar_name %>
+      <% return_path = show_embeded_controls ? URI.encode_www_form_component(projekt.frame_url) : nil  %>
+      <%= render_custom_block(content_block_sidebar_name, show_controlls_on_embedded: show_embeded_controls, return_path: return_path) %>
     <% end %>
   <% end %>
 
@@ -26,8 +36,8 @@
         projekt.total_duration_start.present? || projekt.total_duration_end.present?) &&
        projekt.projekt_phases.active.any?
     %>
-  <% if (projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar") &&
-      other_conditions_for_phases_section_are_met)
+  <% if ((projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar") &&
+      other_conditions_for_phases_section_are_met)) || (other_conditions_for_phases_section_are_met && show_embeded_controls)
     %>
       <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar", setting_active: projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar"), other_conditions_are_met: other_conditions_for_phases_section_are_met) do %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.phases.title"), icon_name: "pager") do |c| %>
@@ -67,6 +77,15 @@
     <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.show_map", setting_active: projekt_feature?(projekt, 'sidebar.show_map')) do %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.map.title"), icon_name: "map", opened_on_mobile: true) do |c| %>
         <%= render Pages::Projekts::SidebarMapComponent.new(projekt, @default_phase_name) %>
+
+        <% if show_embeded_controls %>
+          <% c.with_edit_link do %>
+            <button type="button" data-path="/projekts/<%= @projekt.id %>/edit#tab-projekt-map" class="button hollow expanded margin-top-0-force left-aligned js-frame-open-admin-page">
+              <i class="fas fa-cog"></i>
+              <%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>
+            </button>
+          <% end %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

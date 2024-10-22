@@ -1,8 +1,8 @@
 module ProjektPhaseAdminActions
   extend ActiveSupport::Concern
-  include EmbeddedAuth
   include Translatable
   include MapLocationAttributes
+  include ImageAttributes
   include ProjektPhaseControllerUtils
 
   included do
@@ -407,7 +407,7 @@ module ProjektPhaseAdminActions
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
         settings_attributes: [:id, :value],
-        polls_attributes: [:id, :show_open_answer_author_name, translation_params(Poll)],
+        polls_attributes: [:id, :show_open_answer_author_name, { image_attributes: image_attributes }, translation_params(Poll)],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params_to_permit)
     end
 

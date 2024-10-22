@@ -1,5 +1,7 @@
 <% content_for :admin_frame_top_navigation do %>
-  <%= back_link_to @projekt.frame_url, "Zurück zum Projekt" %>
+  <%= link_to @projekt.frame_url, class: "back", data: { turbolinks: false } do %>
+    <span class="icon-angle-left"></span>Zurück zum Projekt
+  <% end %>
 <% end %>
 
 <div class="admin-card-content row">
@@ -11,10 +13,7 @@
           <div class="admin-frame-phase-to-select--name">
             <%= type.constantize.model_name.human %>
           </div>
-          <button title="Ask AI" type="button frame-explain-with-ai-button">
-            <i class="dt-logo-small-icon">
-            </i>
-          </button>
+          <%= render Shared::ExplainButtonComponent.new(explain: type.constantize.model_name.human) %>
         </div>
 
         <%= form_with(

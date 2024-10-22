@@ -1,6 +1,4 @@
 class Admin::ProjektPhaseSettingsController < Admin::BaseController
-  include EmbeddedAuth
-
   def update
     @projekt_phase_setting = ProjektPhaseSetting.find_by(id: params[:id])
       # above line is a workaround to avoid editing FeaturedSettingsComponent

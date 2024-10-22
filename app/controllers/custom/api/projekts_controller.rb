@@ -3,7 +3,7 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt, only: [
-    :update, :import
+    :update, :update_page, :import
   ]
   before_action :process_tags, only: [:update]
 
@@ -67,6 +67,13 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
+  def update_page
+    if @projekt.page.update!(projekt_page_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
+    else
+      render json: { message: "Error updating projekt page" }
+    end
+  end
 
   private
 
@@ -86,6 +93,7 @@ class Api::ProjektsController < Api::BaseController
       :show_start_date_in_frontend, :show_end_date_in_frontend,
       :geozone_affiliated, :tag_list, :related_sdg_list,
 
+      site_customization_page: [:title],
       geozone_affiliation_ids: [],
       sdg_goal_ids: [],
       individual_group_value_ids: [],
@@ -94,6 +102,12 @@ class Api::ProjektsController < Api::BaseController
       projekt_notifications: [:title, :body],
       project_events: [:id, :title, :location, :datetime, :weblink],
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
+    )
+  end
+
+  def projekt_page_params
+    params.require(:site_customization_page).permit(
+      :title, :subtitle, :image
     )
   end
 

@@ -26,6 +26,7 @@ class ApiClientsController < ApplicationController
     dt_response =
       DtApi.connect(
         name: Setting["org_name"],
+        domain: Setting["url"],
         auth_token: api_client.auth_token,
         latitude: Setting["map.latitude"],
         longitude: Setting["map.longitude"],

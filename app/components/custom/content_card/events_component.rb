@@ -3,6 +3,7 @@ class ContentCard::EventsComponent < ApplicationComponent
 
   def initialize(content_card)
     @content_card = content_card
+    @limit = @content_card.settings['limit'].to_i
   end
 
   def render?
@@ -12,6 +13,6 @@ class ContentCard::EventsComponent < ApplicationComponent
   private
 
     def events
-      @events ||= ProjektEvent.sort_by_incoming
+      @events ||= ProjektEvent.with_active_projekt.sort_by_incoming.first(@limit)
     end
 end

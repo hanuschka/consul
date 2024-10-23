@@ -11,7 +11,7 @@ module BudgetInvestmentsHelper
 
     link_to(
       safe_join([translation, tag.span(class: "icon-sortable #{icon}")]),
-      admin_budget_budget_investments_path(sort_by: column, direction: direction)
+      admin_budget_budget_investments_path(sort_by: column, direction: direction, budget_id: @budget.id)
     )
   end
 

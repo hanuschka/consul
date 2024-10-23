@@ -7,14 +7,18 @@
   </head>
 
   <body class="admin">
-    <%= render "layouts/admin_header" %>
+    <% unless embedded? %>
+      <%= render "layouts/admin_header" %>
+    <% end %>
 
     <div class="menu-and-content">
       <%= check_box_tag :show_menu, nil, false, role: "switch" %>
 
-      <nav class="admin-sidebar">
-        <%= render "/projekt_management/menu" %>
-      </nav>
+      <% unless embedded? %>
+        <nav class="admin-sidebar">
+          <%= render "/projekt_management/menu" %>
+        </nav>
+      <% end %>
 
       <main class="admin-content">
         <%= label_tag :show_menu, t("admin.menu.admin"),

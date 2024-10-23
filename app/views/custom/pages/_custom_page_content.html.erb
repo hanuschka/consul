@@ -1,5 +1,21 @@
-<div id='page-content'>
-  <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>
+<div class="custom-page-content" id='page-content'>
+  <% if @custom_page&.projekt&.new_content_block_mode? %>
+    <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+
+    <div class="custom-page-content-inner">
+      <div class="content-blocks-container">
+        <% if @custom_page.projekt.content_blocks.any? %>
+          <% @custom_page.projekt.content_blocks.order(:position).each do |content_block| %>
+            <div class="projekt-content-block " data-id="<%= content_block.id %>">
+              <%= content_block&.body&.html_safe %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>
+  <% end %>
 </div>
 
 <% if @custom_page.print_content_flag %>

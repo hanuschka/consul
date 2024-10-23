@@ -40,7 +40,6 @@ class DeficiencyReportsController < ApplicationController
     filter_by_categories if @selected_categories_ids.present?
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
-    filter_by_approval_status
     filter_by_my_posts
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
@@ -91,9 +90,11 @@ class DeficiencyReportsController < ApplicationController
     end
 
     @deficiency_report = DeficiencyReport.new(filtered_deficiency_report_params.merge(author: current_user, status: status))
+    @deficiency_report.officer = @deficiency_report.category&.default_deficiency_report_officer
 
     if @deficiency_report.save
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
+      DeficiencyReportMailer.notify_officer(@deficiency_report).deliver_later
       redirect_to deficiency_report_path(@deficiency_report)
     else
       render :new
@@ -106,26 +107,14 @@ class DeficiencyReportsController < ApplicationController
     redirect_to deficiency_reports_path
   end
 
-  def update_status
-    if @deficiency_report.update(deficiency_report_status_id: deficiency_report_params[:deficiency_report_status_id])
-      DeficiencyReportMailer.notify_author_about_status_change(@deficiency_report).deliver_later
-    end
-    redirect_to deficiency_report_path(@deficiency_report)
+  def vote
+    @deficiency_report.register_vote(current_user, params[:value])
+    set_deficiency_report_votes(@deficiency_report)
   end
 
-  def update_category
-    @deficiency_report.update(deficiency_report_category_id: deficiency_report_params[:deficiency_report_category_id])
-    redirect_to deficiency_report_path(@deficiency_report)
-  end
-
-  def update_officer
-    if @deficiency_report.update(
-      deficiency_report_officer_id: deficiency_report_params[:deficiency_report_officer_id],
-      assigned_at: Time.zone.now
-    )
-      DeficiencyReportMailer.notify_officer(@deficiency_report).deliver_later
-    end
-    redirect_to deficiency_report_path(@deficiency_report)
+  def suggest
+    @limit = 5
+    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted.search(@search_terms) : nil
   end
 
   def notify_officer_about_new_comments
@@ -154,29 +143,6 @@ class DeficiencyReportsController < ApplicationController
     head :ok
   end
 
-  def update_official_answer
-    @deficiency_report.update(deficiency_report_params)
-    Administrator.all.each do |admin|
-      DeficiencyReportMailer.notify_administrators_about_answer_update(@deficiency_report, admin.user).deliver_later
-    end
-    redirect_to deficiency_report_path(@deficiency_report), notice: t("custom.deficiency_reports.notifications.official_answer_updated")
-  end
-
-  def approve_official_answer
-    @deficiency_report.update(official_answer_approved: true)
-    redirect_to deficiency_report_path(@deficiency_report)
-  end
-
-  def vote
-    @deficiency_report.register_vote(current_user, params[:value])
-    set_deficiency_report_votes(@deficiency_report)
-  end
-
-  def suggest
-    @limit = 5
-    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted.search(@search_terms) : nil
-  end
-
   private
 
   def filter_by_my_posts
@@ -192,9 +158,7 @@ class DeficiencyReportsController < ApplicationController
   def deficiency_report_params
     attributes = [:video_url, :on_behalf_of,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
-                  :deficiency_report_status_id,
                   :deficiency_report_category_id,
-                  :deficiency_report_officer_id,
                   :deficiency_report_area_id,
                   :notify_officer_about_new_comments,
                   map_location_attributes: map_location_attributes,
@@ -224,16 +188,6 @@ class DeficiencyReportsController < ApplicationController
       @deficiency_reports = @deficiency_reports.joins(:officer).where(deficiency_report_officers: { user_id: current_user.id })
     else
       @deficiency_reports
-    end
-  end
-
-  def filter_by_approval_status
-    return if params[:approval_status].blank?
-
-    if params[:approval_status] == 'not_approved'
-      @deficiency_reports = @deficiency_reports.
-        where.not(official_answer: '').
-        where(official_answer_approved: false)
     end
   end
 

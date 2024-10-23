@@ -62,14 +62,14 @@
       <% end %>
 
       <% if !current_user.level_three_verified? && Setting["feature.bund_id_login"] %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title"), description: t("custom.account.show.verification_with_bund_id_description"), icon_name: "check") do |c| %>
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_with_bund_id_description"), icon_name: "check") do |c| %>
           <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId", style: "width: 150px" do %>
             <%= image_tag "bund_id_logo.svg", alt: "BundId Logo", class: "bund-id-logo" %>
           <% end %>
         <% end %>
 
       <% elsif !current_user.level_three_verified? %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_tittle"), description: t("custom.account.show.verification_description"),  icon_name: "check") do |c| %>
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description"),  icon_name: "check") do |c| %>
           <div class="verify-account">
             <% if current_user.level_two_verified? %>
               <%= link_to t("account.show.finish_verification"), verification_path, class: "button" %>

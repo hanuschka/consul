@@ -22,6 +22,7 @@ class Projekts::SerializeForOverview < ApplicationService
     base[:activated] = @projekt.activated?
     base[:custom_page_published] = @projekt.page.status == "published"
     base[:show_in_overview_page] = @projekt.feature?("general.show_in_overview_page")
+    base[:mark_as_underway] = @projekt.feature?("general.consider_underway")
 
     if @projekt.map_location.present?
       base.merge!(serialize_map_location)
@@ -73,14 +74,13 @@ class Projekts::SerializeForOverview < ApplicationService
       phases: @projekt.projekt_phases.map do |phase|
         {
           id: phase.id,
+          title: phase.title,
           type: phase.type,
           start_date: phase.start_date,
           end_date: phase.end_date,
           active: phase.active,
           regular: ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.class.to_s),
-          given_order: phase.given_order,
-          title: phase.title,
-          fa_icon: ApplicationController.helpers.phase_icon_class(phase)
+          given_order: phase.given_order
         }
       end
     }

@@ -635,6 +635,14 @@ class Projekt < ApplicationRecord
     uri.to_s
   end
 
+  def preview_code_valid?(code)
+    preview_code.present? && preview_code == code
+  end
+
+  def frame_access_code_valid?(code)
+    frame_access_code.present? && frame_access_code == code
+  end
+
   def should_be_exported_for_overview?
     # TODO
     # Here the conditions to check if projekt exported intially

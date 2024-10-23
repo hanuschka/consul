@@ -1,4 +1,6 @@
-<%= link_to polymorphic_path([@namespace, @budget, :budget_investments]),
+<% back_link_path = @budget.projekt_phase.present? ? polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_investments) : polymorphic_path([@namespace, @budget, :budget_investments]) %>
+
+<%= link_to back_link_path,
             class: "back", data: { turbolinks: false } do %>
   <span class="icon-angle-left"></span><%= t("shared.back") %>
 <% end %>

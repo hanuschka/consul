@@ -1,0 +1,14 @@
+<%= render Admin::Frame::NavigationComponent.new(title: @show_title ? @projekt_phase.title : nil) do |c| %>
+  <% c.with_navigation_content do %>
+    <%= link_to "Zurück zum Projekt", @projekt_phase.projekt.frame_url, class: "", data: {turbolinks: false} %>
+
+    <div class='arrow-controls'>
+      <%= link_to(previous_page_url, id: "left-arrow-control", class: "js-left-arrow-control", data: {turbolinks: !@previous_page_is_projekt_page}) do %>
+        <i class="fas fa-chevron-circle-left"></i>
+      <% end %>
+      <%= link_to(next_page_url, id: "right-arrow-control", class: "js-left-arrow-control", data: {turbolinks: !@next_page_is_projekt_page} ) do %>
+        <i class="fas fa-chevron-circle-right"></i>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

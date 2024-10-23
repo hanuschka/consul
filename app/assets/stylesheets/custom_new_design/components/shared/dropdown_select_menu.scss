@@ -1,0 +1,110 @@
+.dropdown-select-container {
+  margin: 0 auto;
+  color: #292929;
+  padding: 5px 12px;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: $gray-1;
+  }
+}
+
+.dropdown-select-menu--list {
+  z-index: 1000;
+  position: relative;
+  width: 107%;
+  border: 1px solid #d9d9d9b3;
+
+  a {
+    width: 100%;
+    display: block;
+  }
+}
+
+.dropdown-select-container {
+  position: relative;
+
+  .dropdown-select-menu-toggle {
+    // font-size: 16px;
+    padding-right: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: all ease-in-out 0.3s;
+    user-select: none;
+  }
+
+  .dropdown-select-menu--list {
+    width: max-content;
+    border-radius: 10px;
+    box-shadow: 0px 0px 4px -2px rgba(58, 58, 58, 0), 3px 2px 7px 0px rgba(0, 0, 0, 0.09);
+    margin-top: 5px;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    display: none;
+    background-color: #ffffff;
+    z-index: 100;
+    user-select: none;
+
+    .dropdown-select-menu-item {
+      text-decoration: none;
+      display: block;
+      transition: all ease-in-out 0.1s;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $dropdown-hover-color;
+      }
+
+      &:active, &:focus {
+        background-color: $dropdown-active-color;
+      }
+
+      & > * {
+        padding: 8px 12px;
+      }
+    }
+
+    a {
+      color: inherit;
+
+      &:hover {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.dropdown-select-menu-toggle {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    border: 5px solid;
+    border-top-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    margin-top: -2.5px;
+    background-color: rgba(0, 0, 0, 0);
+    transition: all ease-in-out 0.2s;
+  }
+}
+
+.dropdown-open {
+  .dropdown-select-menu--list {
+    display: block;
+  }
+}
+
+.dropdown-select-container.dropdown-open {
+  .dropdown-toggle {
+    &:before {
+      transform: rotate(-135deg);
+    }
+  }
+}

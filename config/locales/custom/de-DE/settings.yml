@@ -100,8 +100,6 @@ de:
       user:
         recommendations: "Empfehlungen auf Startseite"
         recommendations_description: "Zeigt auf Basis des Nutzerverhaltens Empfehlungen zu Vorschlägen und Diskussionen auf der Startseite an"
-        skip_verification: "Verifizierung von Benutzern überspringen"
-        skip_verification_description: "Die Verifizierung der Benutzer wird deaktiviert. Alle Benutzer können alle Module ohne Einschränkung nutzen."
         recommendations_on_debates: "Empfehlungen für Diskussionen"
         recommendations_on_debates_description: "Zeigt Diskussions-Empfehlungen auf der Diskussionsübersichtsseite an, basierend auf dem Nutzerverhalten."
         recommendations_on_proposals: "Empfehlungen für Vorschläge"

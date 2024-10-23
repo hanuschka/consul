@@ -1,0 +1,33 @@
+<%= translatable_form_for deficiency_report, url: deficiency_report_management_deficiency_report_path(deficiency_report), html: { class: "deficiency-report-form" } do |f| %>
+
+  <%= render "shared/globalize_locales", resource: deficiency_report %>
+  <%= render "shared/errors", resource: deficiency_report %>
+
+  <%= f.select :deficiency_report_category_id, DeficiencyReport::Category.all.map { |df| [df.name, df.id] } %>
+
+  <%= f.select :deficiency_report_officer_id, DeficiencyReport::Officer.all.map { |df| [df.name, df.id] },
+    { prompt: t("custom.deficiency_reports.show.sidebar.select_officer") },
+    { onchange: "$('#deficiency_report_assigned_at').val(new Date().toISOString());" } %>
+  <%= f.hidden_field :assigned_at %>
+
+  <%= f.select :deficiency_report_status_id, DeficiencyReport::Status.all.map { |df| [df.title, df.id] } %>
+
+  <%= f.translatable_fields do |translations_form| %>
+    <%= translations_form.label :official_answer, t("custom.deficiency_reports.show.official_answer.title") %>
+    <%= translations_form.text_area :official_answer, label: false, class: "html-area #{ck_editor_class(current_user)}" %>
+  <% end %>
+
+  <% if @official_answer_templates.any? %>
+    <label for="answer_template">Antwortvorlagen (optional)</label>
+    <select name="answer_template" id="answer_template" onChange="for (var id in CKEDITOR.instances) CKEDITOR.instances[id].container.$.offsetParent !== null && CKEDITOR.instances[id].setData(this.value);">
+      <%= content_tag(:option, "Wählen") %>
+      <% @official_answer_templates.each do |template| %>
+         <%= content_tag(:option, template.title, value: template.text) %>
+      <% end %>
+    </select>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit(class: "button", value: t("custom.deficiency_reports.form.edit.submit_button")) %>
+  </div>
+<% end %>

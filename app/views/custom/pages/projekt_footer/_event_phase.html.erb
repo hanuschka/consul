@@ -1,9 +1,11 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<div class="flex-layout">
-<div class="main-column">
-  <%= render Projekts::ProjektEvents::List.new(projekt_events: @projekt_events) %>
-</div>
-<div class="sidebar-placeholder"></div>
-</div>
-
+<% unless embedded? %>
+  <div class="flex-layout">
+    <div class="main-column">
+      <%= render Projekts::ProjektEvents::List.new(projekt_events: @projekt_events) %>
+    </div>
+    <div class="sidebar-placeholder">
+    </div>
+  </div>
+<% end %>

@@ -1,17 +1,25 @@
 .projekt-event-item-new {
   display: flex;
+  flex-wrap: wrap;
   border-bottom: 1px solid #dcdcdc;
   padding-top: 20px;
   padding-bottom: 25px;
   font-size: 16px;
+  flex-wrap: nowrap;
+  flex-direction: column;
 
-  &:last-child {
-    border-bottom: none;
+  @media screen and (min-width: 40em) {
+    flex-direction: row;
   }
 }
 
-.projekt-event-item-new--description-text {
-  // font-size: 15px;
+.projekt-event-item-new-body {
+  flex-grow: 1;
+  margin-bottom: 20px;
+}
+
+.projekt-event-item-new-image {
+  min-width: 300px;
 }
 
 h4.projekt-event-item-new-body--title {
@@ -42,6 +50,10 @@ h4.projekt-event-item-new-body--title {
   border-radius: 10px;
   box-shadow: inset 0px 3px 6px #0000000F, 0px 3px 6px #00000024;
   background: transparent linear-gradient(180deg, #FFFFFF 0%, #EDEDED 100%) 0% 0% no-repeat padding-box;
+}
+
+.projekt-event-item-new-calendar-column {
+  margin-bottom: 20px;
 }
 
 .projekt-event-item-new-calendar--separator {

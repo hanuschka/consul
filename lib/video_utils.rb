@@ -24,6 +24,8 @@ module VideoUtils
   end
 
   def self.embed_url(url)
+    return if url.blank?
+
     video_info = extract_info(url)
 
     case video_info.platform

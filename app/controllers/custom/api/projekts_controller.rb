@@ -22,19 +22,25 @@ class Api::ProjektsController < Api::BaseController
   # end
 
   def overview
-    # old logic
-    # .activated
-    # .with_published_custom_page
-    # .show_in_overview_page
-
-    projekts =
+    current_visible_projekts =
       Projekt
+        .activated
+        .with_published_custom_page
         .not_in_individual_list
+        .show_in_overview_page
         .regular
+
+    current_visible_projekts
+      .where(for_global_overview: false)
+      .update_all(for_global_overview: true)
+
+    overview_projekts =
+      Projekt
+        .where(for_global_overview: true)
         .includes(:page, :projekt_phases, :map_location)
 
     render json: {
-      projekts: projekts.map do |projekt|
+      projekts: overview_projekts.map do |projekt|
         Projekts::SerializeForOverview.call(projekt)
       end
     }

@@ -71,7 +71,7 @@ de:
         community_section:
           title: Beteiligen Sie sich
           description: Für diesen Vorschlag gibt es bereits einen Arbeitskreis, der sich mit der Umsetzung des Vorschlags beschäftigt.
-          description_create_first:  Erstellen Sie einen Arbeitskreis, der sich mit der Umsetzung des Vorschlags beschäftigt.
+          description_create_first: Hier kannst du deine Bereitschaft zum Mitmachen signalisieren. Du wirst dann in die Projektgruppe aufgenommen und kannst den Vorschlag mitgestalten.
           comments_count: Kommentare
           topics_count: Themen
           particapated_users_count: Teilnehmende

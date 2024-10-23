@@ -16,14 +16,14 @@ class DtApi
 
   def projekt_updated(projekt_id, serialized_projekt)
     patch_with_auth(
-      "/consul_projekts/#{projekt_id}/projekt_updated",
+      "/projekts/#{projekt_id}/projekt_updated",
       body: { projekt: serialized_projekt }
     )
   end
 
   def projekt_destroyed(projekt_id)
     delete_with_auth(
-      "/consul_projekts/#{projekt_id}/projekt_destroyed"
+      "/projekts/#{projekt_id}/projekt_destroyed"
     )
   end
 

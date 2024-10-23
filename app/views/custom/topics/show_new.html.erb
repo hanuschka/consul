@@ -15,7 +15,7 @@
   <div class="flex-layout">
     <div class="main-column">
 
-      <%= render ResourcePage::BannerComponent.new(resource: @community.proposal, compact: true) %>
+      <%= render ResourcePage::BannerComponent.new(resource: @community.proposal || @community.investment, compact: true) %>
       <div class="new-card main-content-card margin-bottom">
         <h3><%= @topic.title %></h1>
         <p><%= @topic.description %></p>

@@ -116,9 +116,13 @@ module Consul
     config.active_job.queue_adapter = :delayed_job
 
     config.action_dispatch.cookies_same_site_protection = ->(request) do
-      allowed_paths = ["/users/send_bund_id_request"]
+      general_allowed_paths = ["/users/send_bund_id_request"]
 
-      request.path.in?(allowed_paths) ? :none : :lax
+      if request.params[:embedded] == "true" #Current.token_user.present?
+        :lax
+      else
+        request.path.in?(general_allowed_paths) ? :none : :lax
+      end
     end
 
     # CONSUL specific custom overrides

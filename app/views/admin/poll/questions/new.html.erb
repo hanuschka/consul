@@ -1,22 +1,30 @@
 <% parent_question_id = (params[:parent_question_id].presence || @question&.parent_question_id) %>
 
-<% if parent_question_id.present? %>
-  <%= back_link_to(admin_question_path(id: parent_question_id)) %>
-<% else %>
-  <%= back_link_to %>
-<% end %>
-
-<h2 class="margin-top">
-  <% if @poll.present? %>
-    <% if params[:bundle_question] %>
-      <%= t("custom.admin.questions.new.bundle_question_title", poll: @poll.name) %>
+<div class="row">
+  <div class="column">
+    <% if parent_question_id.present? %>
+      <%= back_link_to(admin_question_path(id: parent_question_id)) %>
     <% else %>
-      <%= t("admin.questions.new.title", poll: @poll.name) %>
+      <%= back_link_to %>
     <% end %>
-  <% else %>
-    <%= t("admin.questions.new.title_proposal") %>
-  <% end %>
-</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <h2 class="margin-top">
+      <% if @poll.present? %>
+        <% if params[:bundle_question] %>
+          <%= t("custom.admin.questions.new.bundle_question_title", poll: @poll.name) %>
+        <% else %>
+          <%= t("admin.questions.new.title", poll: @poll.name) %>
+        <% end %>
+      <% else %>
+        <%= t("admin.questions.new.title_proposal") %>
+      <% end %>
+    </h2>
+  </div>
+</div>
 
 <div class="poll-question-form">
   <%= render "admin/poll/questions/form", form_url: polymorphic_path([@namespace, :questions]) %>

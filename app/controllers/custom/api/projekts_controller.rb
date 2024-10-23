@@ -22,11 +22,13 @@ class Api::ProjektsController < Api::BaseController
   # end
 
   def overview
+    # old logic
+    # .activated
+    # .with_published_custom_page
+    # .show_in_overview_page
+
     projekts =
       Projekt
-        .activated
-        .with_published_custom_page
-        .show_in_overview_page
         .not_in_individual_list
         .regular
         .includes(:page, :projekt_phases, :map_location)

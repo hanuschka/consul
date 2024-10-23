@@ -24,9 +24,9 @@ class ApiClientsController < ApplicationController
       end
 
     dt_response =
-      DtApi.connect(
+      DtApi.new.connect(
         name: Setting["org_name"],
-        domain: Setting["url"],
+        platform_url: Setting["url"],
         auth_token: api_client.auth_token,
         latitude: Setting["map.latitude"],
         longitude: Setting["map.longitude"],
@@ -35,7 +35,7 @@ class ApiClientsController < ApplicationController
         user_first_name: current_user.first_name,
         user_last_name: current_user.last_name,
         user_id: current_user.id,
-        role: user_role,
+        user_role: user_role,
         projekt_manager_projekt_ids: projekt_manager_projekt_ids
       )
 

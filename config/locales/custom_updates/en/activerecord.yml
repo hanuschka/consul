@@ -4,15 +4,24 @@ en:
       deficiency_report:
         one: Deficiency report
         other: Deficiency reports
+      deficiency_report_manager:
+        one: Deficiency reporting admin
+        other: Deficiency reporting admins
       map_layer:
         one: Map Layer
         other: Map Layers
       projekt:
         one: Project
         other: Projects
+      age_range:
+        one: Age group
+        other: Age groups
       modal_notification:
         one: Modal notification
         other: Modal notifications
+      votation_type:
+        one: Votation type
+        other: Votation types
       projekt_event:
         one: Veranstaltung
         other: Veranstaltungen
@@ -45,9 +54,13 @@ en:
         show_end_date_in_frontend: Visible in front end
       poll/answer:
         open_answer_text: Open Answer
+      poll/question:
+        answer_mandatory: answer mandatory
       poll/question/answer:
         more_info_link: Explanation link
         more_info_iframe: iFrame link
+      poll/translation:
+        closing_note: Text of the closing page
       widget/card:
         card_category: Category
       deficiency_report:
@@ -103,6 +116,18 @@ en:
         active_from: From
         active_to: To
         html_content: HTML-Code of the notification
+      votation_type:
+        max_votes: Maximum votes
+        max_votes_per_answer: Maximum votes per answer
+        vote_type: Vote type
+        show_hint_callout: Show this hint in front-end
+        min_rating_scale_label: Left label
+        max_rating_scale_label: Right label
+      votation_type/vote_type:
+        unique: Single vote
+        multiple: Multiple votes
+        multiple_with_weight: Multople votes with weight
+        rating_scale: Rating scale
       individual_group:
         name: Name
         visible: Visible
@@ -123,6 +148,7 @@ en:
         title: Event title
         location: Event location
         datetime: Date
+        open_ended: Open ended
         end_datetime: Ending
         weblink: Link
       projekt_notification:

@@ -1,0 +1,32 @@
+<% template_content_html = capture do %>
+  <% if @images.present? %>
+    <% if @title.present? %>
+      <h3><%= @title %></h3>
+    <% end %>
+
+    <div class="image-gallery-with-ligthbox" style="display:grid;grid-template-columns: repeat(2, 1fr);gap:5px">
+      <% @images.each do |image| %>
+        <%= link_to(image[:url], class: "glightbox", target: "_blank") do %>
+          <%= image_tag(image[:thumb_url] || image[:url], referrerpolicy: "no-referer", style: "aspect-ratio: 1 / 0.5") %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+
+<% if @template_mode %>
+  <div class="js-content-block-template-content" data-enter-ai-mode="true">
+    <%= template_content_html %>
+  </div>
+  <div class="content-block-template-hints">
+    <div class="content-block-template-hint">
+      AI will add as much images as you attached in dialog
+    </div>
+    <div class="content-block-template-hint">
+      You also can ask AI to change count of images displayed per one row (by default there is 2 images per row)
+    </div>
+  </div>
+<% else %>
+  <%= template_content_html %>
+<% end %>

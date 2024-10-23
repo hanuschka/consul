@@ -404,6 +404,10 @@ span.toggle-arrow {
   justify-content: flex-start;
 }
 
+.d-flex-align-center {
+  align-items: center;
+}
+
 .show-on-desktop {
   @media screen and (max-width: 650px) {
     display: none;

@@ -1,9 +1,19 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
-    <h3><%= t("custom.admin.projekt_phases.formular_answers.emails_title") %></h3>
+    <h3>
+      <%= t("custom.admin.projekt_phases.formular_answers.emails_title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "projekt formular answers"
+        ) %>
+      <% end %>
+    </h3>
 
     <div id="formular-follow-up-letters" class="formular-follow-up-letters">
       <%= render partial: "custom/admin/formular_follow_up_letters/letter", collection: @formular_follow_up_letters, as: :letter %>
@@ -31,3 +41,12 @@
     <% end %>
   </div>
 </div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

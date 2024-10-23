@@ -10,13 +10,20 @@
       $(visibleHintId).removeClass('hide')
     },
 
-    toggleVotationTypeMaxVotesField: function(newVotationTypeName) {
+    toggleVotationTypeMultipleVotesField: function(newVotationTypeName) {
       var typesAllowingMultipleAnswers = ['multiple', 'multiple_with_weight']
+      var typesAllowingMultipleWeightedAnswers = ['multiple_with_weight']
 
       if ( typesAllowingMultipleAnswers.includes(newVotationTypeName) ) {
         $('#votation_max_votes').removeClass('hide')
       } else {
         $('#votation_max_votes').addClass('hide')
+      }
+
+      if ( typesAllowingMultipleWeightedAnswers.includes(newVotationTypeName) ) {
+        $('#votation_max_votes_per_answer').removeClass('hide')
+      } else {
+        $('#votation_max_votes_per_answer').addClass('hide')
       }
     },
 
@@ -49,7 +56,7 @@
       $("body").on("click", ".js-update-votation-type-hint", function() {
         var newVotationTypeName = event.target.value;
         App.CustomAdmin.updateVotationTypeHint(newVotationTypeName);
-        App.CustomAdmin.toggleVotationTypeMaxVotesField(newVotationTypeName);
+        App.CustomAdmin.toggleVotationTypeMultipleVotesField(newVotationTypeName);
         App.CustomAdmin.toggleRatingScaleLabels(newVotationTypeName);
       })
 
@@ -108,10 +115,6 @@
         } else {
           $(".drop-down-options").addClass("hide");
         }
-      })
-
-      $(document).on("click", ".js-admin-edit-projekt-event", function(e) {
-        App.HTMLEditor.initialize();
       })
     }
   };

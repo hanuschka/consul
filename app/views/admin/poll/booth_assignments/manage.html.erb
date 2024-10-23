@@ -1,4 +1,4 @@
-<%= back_link_to polymorphic_path([@namespace, :polls], action: :booth_assignments) %>
+<%= back_link_to polymorphic_path([@namespace, @poll.projekt_phase], action: :poll_booth_assignments) %>
 
 <h2><%= t("admin.booth_assignments.manage.assignments_list", poll: @poll.name) %></h2>
 

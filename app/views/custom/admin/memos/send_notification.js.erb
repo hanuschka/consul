@@ -1,0 +1,1 @@
+$("#<%= dom_id(@memo) %>").replaceWith("<%= j render partial: "admin/memos/memo", locals: { memo: @memo, memoable: @memo.memoable } %>");

@@ -1,8 +1,8 @@
-<div class="sidebar-card <%= class_name %>">
+<div class="sidebar-card js-sidebar-card <%= class_name %>" >
   <% if @title.present? %>
     <h4 class="sidebar-card--title js-sidebar-card--title">
       <div class="d-flex sidebar-card--title-inner">
-        <i class="fas fa-<%= @icon_name %>"></i>
+        <i class="fas sidebar--icon fa-<%= @icon_name %>"></i>
         <div class="sidebar-card--title-text">
           <%= @title %>
         </div>
@@ -19,6 +19,12 @@
     <% end %>
 
     <div class="sidebar-card--section">
+      <% if edit_link? %>
+        <div class="js-sidebar-card-edit-link margin-bottom-10">
+          <%= edit_link %>
+        </div>
+      <% end %>
+
       <%= content %>
     </div>
     <% if additional_sections.present? %>

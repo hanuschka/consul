@@ -13,6 +13,6 @@ class ContentCard::EventsComponent < ApplicationComponent
   private
 
     def events
-      @events ||= ProjektEvent.sort_by_incoming.first(@limit)
+      @events ||= ProjektEvent.with_active_projekt.sort_by_incoming.first(@limit)
     end
 end

@@ -3,36 +3,44 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt, only: [
-    :update, :import
+    :update, :update_page, :import
   ]
   before_action :process_tags, only: [:update]
 
   skip_authorization_check
   skip_forgery_protection
 
-  def index
-    projekts = Projekt.current_for_import.regular
-
-    projekts.each(&:generate_preview_code_if_nedded!)
-    projekts.each(&:generate_frame_access_code_if_nedded!)
-
-    render json: {
-      projekts: projekts.map(&:serialize)
-    }
-  end
+  # def index
+  #   projekts = Projekt.current_for_import.regular
+  #
+  #   projekts.each(&:generate_preview_code_if_nedded!)
+  #   projekts.each(&:generate_frame_access_code_if_nedded!)
+  #
+  #   render json: {
+  #     projekts: projekts.map(&:serialize)
+  #   }
+  # end
 
   def overview
-    projekts =
+    current_visible_projekts =
       Projekt
         .activated
         .with_published_custom_page
-        .show_in_overview_page
         .not_in_individual_list
+        .show_in_overview_page
         .regular
+
+    current_visible_projekts
+      .where(for_global_overview: false)
+      .update_all(for_global_overview: true)
+
+    overview_projekts =
+      Projekt
+        .where(for_global_overview: true)
         .includes(:page, :projekt_phases, :map_location)
 
     render json: {
-      projekts: projekts.map do |projekt|
+      projekts: overview_projekts.map do |projekt|
         Projekts::SerializeForOverview.call(projekt)
       end
     }
@@ -67,6 +75,13 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
+  def update_page
+    if @projekt.page.update!(projekt_page_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
+    else
+      render json: { message: "Error updating projekt page" }
+    end
+  end
 
   private
 
@@ -86,6 +101,7 @@ class Api::ProjektsController < Api::BaseController
       :show_start_date_in_frontend, :show_end_date_in_frontend,
       :geozone_affiliated, :tag_list, :related_sdg_list,
 
+      site_customization_page: [:title],
       geozone_affiliation_ids: [],
       sdg_goal_ids: [],
       individual_group_value_ids: [],
@@ -94,6 +110,12 @@ class Api::ProjektsController < Api::BaseController
       projekt_notifications: [:title, :body],
       project_events: [:id, :title, :location, :datetime, :weblink],
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []],
+    )
+  end
+
+  def projekt_page_params
+    params.require(:site_customization_page).permit(
+      :title, :subtitle, :image
     )
   end
 

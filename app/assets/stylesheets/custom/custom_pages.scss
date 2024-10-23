@@ -386,15 +386,17 @@ li.projekt-navigator[aria-expanded="false"] {
   }
 }
 
+.arrow-controls {
+  font-size: 2rem;
+
+  #left-arrow-control {
+    margin-right: 10px;
+  }
+}
+
 @media screen and (min-width: $small-tablet-viewport-start) {
   .arrow-controls {
     display: flex;
-    font-size: 2rem;
-    cursor: pointer;
-
-    #left-arrow-control {
-      margin-right: 10px;
-    }
   }
 
   .footer-phases-filter-subnav #filter-subnav {

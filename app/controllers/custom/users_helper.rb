@@ -18,10 +18,6 @@ module UsersHelper
     end
   end
 
-  def skip_user_verification?
-    Setting["feature.user.skip_verification"].present?
-  end
-
   def user_document_types
     [
       [t("custom.devise_views.users.document_type.card"), "card"],

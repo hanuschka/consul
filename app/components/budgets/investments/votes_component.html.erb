@@ -20,15 +20,13 @@
           <div class="callout success" style="margin-bottom:15px;width:230px;">
             <%= t("budgets.investments.votes.already_supported") %>
           </div>
-          <% if projekt_phase_feature?(investment.projekt_phase, "resource.remove_investments_supports") %>
-            <%= button_to remove_support_path,
-                class: "button button-remove-support expanded",
-                style: "margin-top:15px;",
-                method: "delete",
-                remote: true,
-                "aria-label": remove_support_aria_label do %>
-              <%= t("budgets.investments.votes.remove_support") %>
-            <% end %>
+          <%= button_to remove_support_path,
+              class: "button button-remove-support expanded",
+              style: "margin-top:15px;",
+              method: "delete",
+              remote: true,
+              "aria-label": remove_support_aria_label do %>
+            <%= t("budgets.investments.votes.remove_support") %>
           <% end %>
         </div>
       <% else %>

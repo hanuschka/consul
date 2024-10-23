@@ -1,0 +1,22 @@
+.image-gallery-with-ligthbox {
+  margin-bottom: 25px;
+  max-width: 100%;
+
+  img {
+    max-width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    width:100%;
+    /* aspect-ratio: 1 / 0.5; */
+    object-fit:cover
+    /* margin-bottom: 5px; */
+  }
+}
+
+.accordion-title {
+  border-radius: 5px;
+}
+
+.projekt-content-block {
+  margin-bottom: 35px;
+}

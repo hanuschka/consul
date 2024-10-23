@@ -1,0 +1,46 @@
+<h2><%= deficiency_report.title %></h2>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <strong><%= t("custom.admin.deficiency_reports.show.created_at") %>:</strong>
+    <%= l(deficiency_report.created_at, format: "%d %b %Y") %>,
+
+    <strong><%= t("custom.admin.deficiency_reports.show.updated_at") %>:</strong>
+    <%= l(deficiency_report.updated_at, format: "%d %b %Y") %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <%= auto_link_already_sanitized_html wysiwyg(deficiency_report.description) %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns">
+    <% if deficiency_report.approximated_address.present? %>
+      <div class='margin-bottom'>
+        <strong><%= DeficiencyReport.human_attribute_name(:approximated_address) %>:</strong>
+        <%= deficiency_report.approximated_address %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns">
+    <div class='margin-bottom'>
+      <div class="small-12 margin-bottom">
+        <strong><%= "#{DeficiencyReport.human_attribute_name(:author)}:" %></strong>
+        <%= deficiency_report.author.username %>
+        <%= deficiency_report.author.full_name %><br>
+        <% if deficiency_report.on_behalf_of.present? %>
+          <%= "(#{t("custom.admin.deficiency_reports.show.on_behalf_of")} #{deficiency_report.on_behalf_of})" %>
+        <% end %>
+        <%= "#{deficiency_report.author.formatted_address}, " if deficiency_report.author.formatted_address.present? %>
+        <%= [deficiency_report.author.plz, deficiency_report.author.city_name].join(", ") %><br>
+        <%= deficiency_report.author.email %>
+      </div>
+    </div>
+  </div>
+</div>

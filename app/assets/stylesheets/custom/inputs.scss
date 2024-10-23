@@ -8,3 +8,9 @@
     background-color: $dt-base;
   }
 }
+
+input[type="date"] {
+  background: #f8f8f8;
+  height: $input-height;
+  margin-bottom: rem-calc(16);
+}

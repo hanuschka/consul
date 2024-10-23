@@ -90,6 +90,33 @@ module AdminActions::BudgetInvestments
     render "admin/budget_investments/edit_physical_votes"
   end
 
+  def people
+    @investment = Budget::Investment.find(params[:id])
+
+    load_staff
+    load_valuator_groups
+
+    render "custom/admin/budget_investments/people"
+  end
+
+  def milestones
+    @investment = Budget::Investment.find(params[:id])
+
+    render "custom/admin/budget_investments/milestones"
+  end
+
+  def progress_bars
+    @investment = Budget::Investment.find(params[:id])
+
+    render "custom/admin/budget_investments/progress_bars"
+  end
+
+  def audits
+    @investment = Budget::Investment.find(params[:id])
+
+    render "custom/admin/budget_investments/audits"
+  end
+
   private
 
     def load_comments

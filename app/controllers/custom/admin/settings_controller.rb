@@ -27,15 +27,6 @@ class Admin::SettingsController < Admin::BaseController
     end
 
     @extra_fields_verification = all_settings["extra_fields.verification"]
-    extra_fields_verification_check_documents = @extra_fields_verification.find { |setting| setting.key == "extra_fields.verification.check_documents" }
-    skip_verification_setting = Setting.find_by(key: "feature.user.skip_verification")
-    skip_verification_setting.dependent_setting_ids = extra_fields_verification_check_documents.id
-    skip_verification_setting.dependent_setting_action = "disable-when-enabled"
-    if skip_verification_setting.enabled?
-      extra_fields_verification_check_documents.form_field_disabled = true
-    end
-    @extra_fields_verification.unshift(skip_verification_setting)
-
     @participation_processes_settings = all_settings["process"]
     @map_configuration_settings = all_settings["map"]
     @proposals_settings = all_settings["proposals"]

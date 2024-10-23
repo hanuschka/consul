@@ -102,10 +102,10 @@ class Projekt < ApplicationRecord
   end
 
   before_save :assign_top_level_projekt_from_parent
-  after_update :note_updated_for_global_overview #, on: :update
-  after_touch :note_updated_for_global_overview
+  # after_update :note_updated_for_global_overview #, on: :update
+  # after_touch :note_updated_for_global_overview
 
-  after_destroy :ensure_projekt_order_integrity
+  # after_destroy :ensure_projekt_order_integrity
   after_destroy :note_destroy_for_global_overview
 
   def should_be_exported?

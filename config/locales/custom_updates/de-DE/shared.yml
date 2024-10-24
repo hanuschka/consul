@@ -1,11 +1,16 @@
 de:
   custom:
     shared:
+      search: Suchen
+      address_search: Adresse suchen
       select: Wählen
       required: Pflichtfeld
       new_comments_component:
         comments: Kommentare
       participate_as_guest: als Gast teilnehmen
+      enter_missing_user_data: zusätzliche Daten zu Ihrem Konto bereit
+      save_form: Speichern
+      destroy_confirmation: Sind Sie sicher?
     resource_page:
       banner_component:
         comments: Kommentare

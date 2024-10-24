@@ -2,8 +2,8 @@
   <td><strong><%= poll.name %></strong></td>
   <td><%= poll.projekt.name if poll.projekt %> </td>
   <td><%= poll.tag_list %></td>
-  <td class="text-center"><%= l poll.starts_at.to_date %></td>
-  <td class="text-center"><%= l poll.ends_at.to_date %></td>
+  <td class="text-center"><%= l poll.projekt_phase.start_date.to_date if poll.projekt_phase.start_date %></td>
+  <td class="text-center"><%= l poll.projekt_phase.end_date.to_date if poll.projekt_phase.end_date %></td>
   <td class="text-center"><%= poll.sdg_goal_list %></td>
   <td class="text-center"><%= poll.sdg_target_list %></td>
   <td>

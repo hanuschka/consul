@@ -1,4 +1,4 @@
-<%= form_for([:admin, feature], remote: remote?, html: { class: "featured-settings-form", id: dom_id(feature, tab.present? ? tab.delete('#') : '') }) do |f| %>
+<%= form_for([:admin, feature], remote: remote?, html: { class: "admin-switch-button featured-settings-form", id: dom_id(feature, tab.present? ? tab.delete('#') : '') }) do |f| %>
   <%= f.hidden_field :tab, id: dom_id(feature, :tab), value: tab if tab %>
   <%= f.hidden_field :describedby, id: dom_id(feature, :describedby), value: describedby if describedby %>
   <%= f.hidden_field :value, id: dom_id(feature, :value), value: (enabled? ? "" : "active") %>

@@ -4,6 +4,9 @@ class Budget
   class Investment < ApplicationRecord
     include Search::Generic
     include OnBehalfOfSubmittable
+    include Labelable
+    include Sentimentable
+    include Memoable
 
     delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
 
@@ -19,8 +22,11 @@ class Budget
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
     validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
-    def self.sort_by_ballot_line_weight(budget = nil)
-      order(qualified_total_ballot_line_weight: :desc)
+    def self.sort_by_ballot_line_weight
+      left_joins(:budget_ballot_lines)
+        .group("budget_investments.id")
+        .select("budget_investments.*, COALESCE(SUM(budget_ballot_lines.line_weight), 0) AS total_ballot_line_weight")
+        .order("total_ballot_line_weight DESC")
     end
 
     def register_selection(user, vote_weight = 1)
@@ -40,7 +46,7 @@ class Budget
     end
 
     def total_ballot_votes
-      qualified_total_ballot_line_weight
+      budget_ballot_lines.joins(:ballot).where(budget_ballots: { conditional: false }).sum(:line_weight)
     end
 
     def total_ballot_votes_percentage

@@ -1,29 +1,65 @@
-<div class="small-12 medium-6 column">
-  <%= form.enum_select :vote_type, {}, class: "votation-type-vote-type js-update-votation-type-hint" %>
-</div>
+<div class="row margin-top">
+  <div class="column">
+    <h2>Welche Einstellungen für die Antworten möchten Sie treffen?</h2>
+  </div>
 
-<div class="small-12 column">
-  <div class="callout primary">
-    <span class="votation-type-hint <%= hide_hint_class('unique') %>" id="votation-type-unique">
-      <%= t("admin.polls.votation_type.unique_description") %>
-    </span>
-    <span class="votation-type-hint <%= hide_hint_class('multiple') %>" id="votation-type-multiple">
-      <%= t("admin.polls.votation_type.multiple_description") %>
-    </span>
-    <span class="votation-type-hint <%= hide_hint_class('rating_scale') %>" id="votation-type-rating_scale">
-      <%= t("admin.polls.votation_type.rating_scale_description") %>
-    </span>
-    <span class="votation-type-hint <%= hide_hint_class('multiple_with_weight') %>" id="votation-type-multiple_with_weight">
-      <%= t("admin.polls.votation_type.multiple_with_weight_description") %>
-    </span>
-  </div>
-</div>
+  <%= translatable_form_for(@question.votation_type, url: polymorphic_path([namespace, @question.poll, @question], action: :update_votation_type)) do |f| %>
+    <div class="small-12 medium-6 column">
+      <%= f.enum_select :vote_type, {}, class: "votation-type-vote-type js-update-votation-type-hint" %>
+    </div>
 
-<div id="votation_max_votes" class="small-12 medium-6 column end <%= hide_max_votes_input_class(@votation_type.vote_type) %>">
-  <div class="max-votes">
-    <%= form.number_field :max_votes, min: 2, max: 999, class: "votation-type-max-votes" %>
-  </div>
-  <div class="max-votes-per-answer">
-    <%= form.number_field :max_votes_per_answer, class: "votation-type-max-votes-per-answer" %>
-  </div>
+    <div style="clear:both;"></div>
+
+    <div id="votation_max_votes" class="small-12 medium-6 column end <%= hide_max_votes_input_class(@votation_type.vote_type) %>">
+      <div class="max-votes">
+        <%= f.number_field :max_votes, min: 2, max: 999, class: "votation-type-max-votes" %>
+      </div>
+    </div>
+
+    <div id="votation_max_votes_per_answer" class="small-12 medium-6 column end <%= hide_max_votes_per_answer_input_class(@votation_type.vote_type) %>">
+      <div class="max-votes-per-answer">
+        <%= f.number_field :max_votes_per_answer, class: "votation-type-max-votes-per-answer" %>
+      </div>
+    </div>
+
+    <div class="rating-scale-labels <%= hide_rating_scale_labels_class(@votation_type.vote_type) %>">
+      <%= f.translatable_fields do |translations_form| %>
+        <div class="column medium-6">
+          <%= translations_form.label :min_rating_scale_label, t("activerecord.attributes.votation_type.min_rating_scale_label") %>
+          <%= translations_form.text_field :min_rating_scale_label, label: false %>
+        </div>
+        <div class="column medium-6">
+          <%= translations_form.label :max_rating_scale_label, t("activerecord.attributes.votation_type.max_rating_scale_label") %>
+          <%= translations_form.text_field :max_rating_scale_label, label: false %>
+        </div>
+      <% end %>
+    </div>
+
+    <% unless @question.parent_question_id.present? %>
+      <div class="column small-12">
+        <%= f.check_box :show_hint_callout %>
+      </div>
+    <% end %>
+
+    <div class="small-12 column">
+      <div class="callout primary">
+        <span class="votation-type-hint <%= hide_hint_class("unique") %>" id="votation-type-unique">
+          <%= t("admin.polls.votation_type.unique_description") %>
+        </span>
+        <span class="votation-type-hint <%= hide_hint_class("multiple") %>" id="votation-type-multiple">
+          <%= t("admin.polls.votation_type.multiple_description") %>
+        </span>
+        <span class="votation-type-hint <%= hide_hint_class("rating_scale") %>" id="votation-type-rating_scale">
+          <%= t("admin.polls.votation_type.rating_scale_description") %>
+        </span>
+        <span class="votation-type-hint <%= hide_hint_class("multiple_with_weight") %>" id="votation-type-multiple_with_weight">
+          <%= t("admin.polls.votation_type.multiple_with_weight_description") %>
+        </span>
+      </div>
+    </div>
+
+    <div class="small-12 medium-4 large-2 margin-top column">
+      <%= f.submit(class: "button success expanded", value: t("shared.save")) %>
+    </div>
+  <% end %>
 </div>

@@ -12,7 +12,7 @@
         Jeder Beitrag ist wertvoll und ermöglicht es der Initiative, den Themenvorschlag weiterzuentwickeln.<br><br>
       </div>
       <div class="margin-bottom">
-        <%= render ResourcePage::BannerComponent.new(resource: @community.proposal, compact: true) %>
+        <%= render ResourcePage::BannerComponent.new(resource: @community.proposal || @community.investment, compact: true) %>
       </div>
       <div class="new-card main-content-card">
         <%= render "form_new" %>

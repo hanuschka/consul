@@ -275,8 +275,6 @@ de:
           show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
-          enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
-          enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
           allow_attached_documents: Zusätzliche Dokumente
           allow_attached_documents_description: Ermöglicht den Nutzerinnen und Nutzern, Dokumente den Vorschlägen anzuhängen
           only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
@@ -306,6 +304,8 @@ de:
         admins_must_assign_officer_description: Administratoren weisen Mangel bearbeitende Person zu
         admins_must_approve_officer_answer: Admins müssen Antwort der sachbearbeitenden Person freigeben
         admins_must_approve_officer_answer_description: Administratoren geben die Antwort der Sachbearbeiterin oder Sachbearbeiter vor Veröffentlichung frei
+        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
+        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
         allow_voting: Nutzer*innen Bewertung pro Mangel
         allow_voting_description: Aktiviert die Bewertung für den Mängelmelder
         enable_comments: Kommentarfunktion

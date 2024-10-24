@@ -15,21 +15,21 @@ module PollsHelper
 
   def link_to_poll(text, poll, class_name: "")
     if can?(:results, poll)
-      link_to text, results_poll_path(id: poll.slug || poll.id), class: class_name, data: { turbolinks: false }
+      link_to text, results_poll_path(poll.id), class: class_name, data: { turbolinks: false }
     elsif can?(:stats, poll)
-      link_to text, stats_poll_path(id: poll.slug || poll.id), class: class_name
+      link_to text, stats_poll_path(poll.id), class: class_name, data: { turbolinks: false }
     else
-      link_to text, poll_path(id: poll.slug || poll.id), class: class_name
+      link_to text, poll_path(poll.id), class: class_name, data: { turbolinks: false }
     end
   end
 
   def link_to_poll_with_block(poll, &block)
     if can?(:results, poll)
-      link_to(results_poll_path(id: poll.slug || poll.id), data: { turbolinks: false }, &block)
+      link_to(results_poll_path(poll.id), data: { turbolinks: false }, &block)
     elsif can?(:stats, poll)
-      link_to(stats_poll_path(id: poll.slug || poll.id), &block)
+      link_to(stats_poll_path(poll.id), data: { turbolinks: false }, &block)
     else
-      link_to(poll_path(id: poll.slug || poll.id), &block)
+      link_to(poll_path(poll.id), data: { turbolinks: false }, &block)
     end
   end
 
@@ -51,6 +51,7 @@ module PollsHelper
     sanitize(t("custom.projekt_phases.permission_problem.poll_votes.#{permission_problem_key}",
              sign_in: link_to_signin, sign_up: link_to_signup,
              guest_sign_in: link_to_guest_signin,
+             enter_missing_user_data: link_to_enter_missing_user_data,
              verify: link_to_verify_account,
              city: Setting["org_name"],
              geozones: voting_phase.geozone_restrictions_formatted,

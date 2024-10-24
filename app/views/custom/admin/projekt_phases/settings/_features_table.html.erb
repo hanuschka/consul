@@ -1,6 +1,6 @@
 <div class="row">
   <div class="column">
-    <table>
+    <table class="admin-settings-table">
       <thead>
         <tr>
           <th class="small-6"><%= t("admin.settings.setting") %></th>
@@ -13,17 +13,21 @@
             <td class='small-9'>
               <strong id="<%= dom_id(feature, :title) %>"><%= t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}") %></strong>
               <br>
-              <span class="small">
+              <span class="small admin-setting-description">
                 <%= t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}_description", default: t("admin.settings.no_description")) %>
               </span>
             </td>
 
             <td>
-              <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature) %>
+              <div class="admin-projekt-phase-switch">
+                <% if embedded_and_frame_access_code_valid?(@projekt) %>
+                  <%= link_to "konfigurieren", '#' %>
+                <% end %>
+                <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature) %>
+              </div>
             </td>
           </tr>
         <% end %>
-
       </tbody>
     </table>
   </div>

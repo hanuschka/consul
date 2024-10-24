@@ -7,7 +7,6 @@
       }.bind(this));
 
       $('body').on('change', '.js-projekt-answer-form input', this.debounce(this.submitForm.bind(this), 500))
-      $('body').on('click', '.js-projekt-answer-form label', this.handleCheckboxClick.bind(this))
     },
 
     debounce: function(func, duration, immediate) {
@@ -38,16 +37,6 @@
       $elementLabel.siblings('label').removeClass('is-active')
       $elementLabel.addClass('is-active')
       $(".js-projekt-question-section").addClass("show-loader");
-    },
-
-    handleCheckboxClick: function(e) {
-      var $elementForm = $(e.currentTarget).closest('form')
-      var shouldRedirect = $elementForm.attr('data-should-redirect')
-      var redirectTo = $elementForm.attr('data-redirect-to')
-
-      if (shouldRedirect === 'true') {
-        Turbolinks.visit(redirectTo)
-      }
     }
   }
 }).call(this);

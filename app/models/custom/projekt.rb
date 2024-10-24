@@ -102,7 +102,16 @@ class Projekt < ApplicationRecord
   end
 
   before_save :assign_top_level_projekt_from_parent
+
+  after_update :note_updated_for_global_overview #, on: :update
+  after_touch :note_updated_for_global_overview
+  after_destroy :note_destroy_for_global_overview
+
   after_destroy :ensure_projekt_order_integrity
+
+  def should_be_exported?
+    ApiClient.active_dt? && for_global_overview?
+  end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
   validates :name, presence: true
@@ -635,6 +644,14 @@ class Projekt < ApplicationRecord
     uri.to_s
   end
 
+  def preview_code_valid?(code)
+    preview_code.present? && preview_code == code
+  end
+
+  def frame_access_code_valid?(code)
+    frame_access_code.present? && frame_access_code == code
+  end
+
   def should_be_exported_for_overview?
     # TODO
     # Here the conditions to check if projekt exported intially
@@ -750,6 +767,24 @@ class Projekt < ApplicationRecord
 
       if parent&.parent_id.present?
         self.top_level_projekt_id = parent.parent_id
+      end
+    end
+
+    def note_updated_for_global_overview
+      if should_be_exported?
+        if hidden_at.present?
+          note_destroy_for_global_overview
+        else
+          Projekts::OverviewProjektUpdatedJob.perform_later(
+            self
+          )
+        end
+      end
+    end
+
+    def note_destroy_for_global_overview
+      if should_be_exported?
+        Projekts::OverviewProjektDestroyedJob.perform_later(id)
       end
     end
 end

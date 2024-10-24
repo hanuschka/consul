@@ -5,7 +5,14 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def call
     base = @projekt.as_json(
-      only: [:id, :name, :total_duration_start, :total_duration_end],
+      only: [
+        :id,
+        :name,
+        :total_duration_start,
+        :total_duration_end,
+        :level,
+        :order_number
+      ],
       include: {
         page: { only: [:title, :subtitle, :slug] },
         map_location: { only: [:latitude, :longitude] }
@@ -13,8 +20,11 @@ class Projekts::SerializeForOverview < ApplicationService
     )
 
     base[:activated] = @projekt.activated?
-    base[:custom_page_published] = @projekt.page.status == "published"
-    base[:show_in_overview_page] = @projekt.feature?("general.show_in_overview_page")
+    base[:page_published] = @projekt.page.status == "published"
+    # base[:show_in_overview_page] = @projekt.feature?("general.show_in_overview_page")
+    base[:mark_as_underway] = @projekt.feature?("general.consider_underway")
+    base[:has_hard_individual_groups] = @projekt.hard_individual_group_values.any?
+    base[:in_individual_list] = @projekt.feature?("general.show_in_individual_list")
 
     if @projekt.map_location.present?
       base.merge!(serialize_map_location)
@@ -66,14 +76,13 @@ class Projekts::SerializeForOverview < ApplicationService
       phases: @projekt.projekt_phases.map do |phase|
         {
           id: phase.id,
+          title: phase.title,
           type: phase.type,
           start_date: phase.start_date,
           end_date: phase.end_date,
           active: phase.active,
           regular: ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.class.to_s),
-          given_order: phase.given_order,
-          title: phase.title,
-          fa_icon: ApplicationController.helpers.phase_icon_class(phase)
+          given_order: phase.given_order
         }
       end
     }
@@ -86,28 +95,6 @@ class Projekts::SerializeForOverview < ApplicationService
         longitude: @projekt.map_location.longitude
       }
     }
-  end
-
-  def get_projekt_filter_categories
-    categories = ["all"]
-
-    if projekt_underway?
-      categories.push("underway")
-    end
-
-    if projekt_ongoing?
-      categories.push("ongoing")
-    end
-
-    if projekt_upcoming?
-      categories.push("upcoming")
-    end
-
-    if projekt_expired?
-      categories.push("expired")
-    end
-
-    categories
   end
 
   def projekt_current?

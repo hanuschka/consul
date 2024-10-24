@@ -6,7 +6,20 @@ class ApiClient < ApplicationRecord
     self.registration_status = :registration_in_progress
   end
 
+  def self.dt
+    registered.find_by(name: "DT")
+  end
+
   def self.active_dt?
-    registered.where(name: "DT").any?
+    client = dt
+
+    client.present? && client.service_api_token.present?
+  end
+
+  def mark_as_registered!(service_api_token)
+    update!(
+      registration_status: :registered,
+      service_api_token: service_api_token
+    )
   end
 end

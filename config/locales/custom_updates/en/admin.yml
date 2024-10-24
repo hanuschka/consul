@@ -445,6 +445,9 @@ en:
           end_date: Ends at
         naming:
           page_title: Naming
+          intro:
+            p1_html: The advanced participation restrictions, such as restrictions based on geographic areas or age groups, are only available to registered and verified users. Guest user status does not allow for such restrictions.
+            p2_html: In order to apply these extended restrictions, the relevant data, such as place of residence or date of birth, must be available. This data can either be collected during registration or only requested during participation in the respective phase. Users who have not yet provided the necessary data will be asked to provide it before participating. Participation will only be activated if the information provided meets the restriction criteria.
         restrictions:
           page_title: Restrictions
           guest_participation_allowed: Guest particioation allowed

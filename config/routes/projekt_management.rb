@@ -131,6 +131,12 @@ namespace :projekt_management do
 
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
 
+  resources :memos, only: %i[create] do
+    member do
+      post :send_notification
+    end
+  end
+
   resources :projekt_events, except: %i[index show new] do
     member do
       post :send_notifications

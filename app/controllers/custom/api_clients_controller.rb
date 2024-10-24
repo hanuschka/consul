@@ -40,9 +40,9 @@ class ApiClientsController < ApplicationController
       )
 
     if dt_response.present? && dt_response.code != 200
-      3.times { puts "" }
+      2.times { puts "" }
       Rails.logger.error("Error connection to server. HTTP code: #{dt_response.code}, message: #{dt_response.message}, response: #{dt_response.response}, url: #{dt_response.request.uri}")
-      3.times { puts "" }
+      2.times { puts "" }
     end
 
     redirect_url = dt_response["redirect_url"]
@@ -50,7 +50,11 @@ class ApiClientsController < ApplicationController
     if redirect_url.present?
       redirect_to redirect_url
     else
-      flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, message: #{dt_response.message}"
+      if dt_response.code == 404
+        flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, error: #{dt_response['error']}"
+      else
+        flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, http message: #{dt_response.message}"
+      end
       redirect_back(fallback_location: root_path)
     end
   end

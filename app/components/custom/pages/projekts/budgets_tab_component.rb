@@ -6,7 +6,7 @@ class Pages::Projekts::BudgetsTabComponent < ApplicationComponent
     @budget = budget
     @ballot = ballot
     @current_user = current_user
-    @heading = @budget.headings.first
+    @heading = @budget.heading
   end
 
   private

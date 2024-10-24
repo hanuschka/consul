@@ -8,8 +8,6 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt = Projekt.overview_page
 
     @projekts_settings = Setting.all.group_by(&:type)["projekts"]
-    skip_user_verification_setting = Setting.find_by(key: "feature.user.skip_verification")
-    @projekts_settings.push(skip_user_verification_setting)
 
     @projekts_overview_page_navigation_settings = Setting.all.select do |setting|
       setting.key.start_with?("extended_feature.projekts_overview_page_navigation")
@@ -41,30 +39,13 @@ class Admin::ProjektsController < Admin::BaseController
     redirect_to admin_projekts_path(page: params[:page])
   end
 
-  def update
-    if @projekt.overview_page?
-      if @projekt.update(projekt_params)
-        @projekt.touch
-        redirect_to admin_projekts_path + "#tab-projekts-overview-page",
-          notice: t("admin.settings.index.map.flash.update")
-      else
-        redirect_to admin_projekts_path + "#tab-projekts-overview-page",
-          alert: @projekt.errors.messages.values.flatten.join("; ")
-      end
-    else
-      super
-    end
-  end
-
   def create
-    @projekts = Projekt.top_level.page(params[:page])
-    @projekt = Projekt.new(projekt_params.merge(color: "#073E8E"))
-    @projekt.order_number = 0
+    @projekt = Projekt.new(projekt_params)
 
     if @projekt.save
-      Projekt.ensure_order_integrity
       redirect_to admin_projekts_path
     else
+      @projekts = Projekt.top_level.page(params[:page])
       render :index
     end
   end

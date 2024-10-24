@@ -2,7 +2,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   renders_one :links_section
   attr_reader :resource
 
-  delegate :current_user, to: :helpers
+  delegate :current_user, :projekt_phase_feature?, to: :helpers
 
   def initialize(resource:, compact: false)
     @resource = resource
@@ -22,7 +22,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def big_image_url
     # resource.image&.variant(:large)
     polymorphic_path(resource.image.attachment.variant(
-      resize_to_limit: [1750, 1000],
+      resize_to_limit: [1750, 900],
       saver: { quality: 80 },
       strip: true,
       format: "jpeg"

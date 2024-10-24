@@ -1,0 +1,16 @@
+<div class="js-content-block-template-content">
+  <h3><%= @title %></h3>
+  <ul class="accordion" data-allow-all-closed="true" role="tablist" data-accordion>
+    <% @items&.each do |item| %>
+      <li class="accordion-item" data-accordion-item="" role="presentation" style="border:2px solid #f0f5f9;">
+        <a aria-selected="false"
+           class="accordion-title" role="tab" style="background-color:#eeeeee;color:#3c3c3c;font-size:18px;font-weight:bold;<%= item[:style] %>" aria-controls="k44441-accordion" id="k44441-accordion-label" aria-expanded="false">
+           <%= item[:title] %>
+        </a>
+        <div aria-hidden="true" class="accordion-content" data-tab-content="" role="tabpanel" style="display: none;" aria-labelledby="k44441-accordion-label" id="k44441-accordion">
+          <%= sanitize item[:text], tags: %w(b p strong) %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>

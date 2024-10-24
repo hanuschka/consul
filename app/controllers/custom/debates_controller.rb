@@ -77,7 +77,15 @@ class DebatesController < ApplicationController
   end
 
   def new
-    redirect_to debates_path if Projekt.top_level.selectable_in_selector('debates', current_user).empty?
+    @projekt_phase = ProjektPhase::DebatePhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
+
+    if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("debates", current_user).empty?
+      redirect_to debates_path
+    elsif @projekt_phase.present? && !@projekt_phase.selectable_by?(current_user)
+      redirect_to page_path(@projekt_phase.projekt.page.slug,
+                            projekt_phase_id: @projekt_phase.id,
+                            anchor: "filter-subnav")
+    end
 
     @resource = resource_model.new
     set_geozone

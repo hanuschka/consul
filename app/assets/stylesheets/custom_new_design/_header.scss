@@ -141,10 +141,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 }
 
 .custom-new-design {
-  .top-bar--title-logo-stikcy {
-    display: none;
-  }
-
   .top-bar, .top-bar ul {
     background-color: transparent;
   }
@@ -189,6 +185,16 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     padding-top: 18px;
     justify-content: flex-start !important;
     background: transparent !important;
+
+    .top-logo {
+      &--regular {
+        display: block;
+      }
+
+      &--for-trasparent {
+        display: none;
+      }
+    }
   }
 
   &.home-page {
@@ -219,14 +225,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     background-color: white;
 
     .top-bar {
-      .top-bar--title-logo-top {
-        display: none;
-      }
-
-      .top-bar--title-logo-stikcy {
-        display: block;
-      }
-
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {
         color: black !important;
@@ -578,14 +576,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       max-width: auto;
     }
 
-    .top-bar--title-logo-stikcy {
-      display: block;
-    }
-
-    .top-bar--title-logo-top {
-      display: none;
-    }
-
     .subnavigation {
       left: 0;
       right: 0;
@@ -622,6 +612,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .homepage-image-header--button.button {
       font-size: 20px;
       padding: 5px 20px;
+      max-width: 300px;
     }
 
     .homepage-image-header--title-wrapper {
@@ -702,7 +693,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     i {
-      font-size: 20px;
+      /* font-size: 20px; */
     }
 
     .subnavigation ul.main-menu {

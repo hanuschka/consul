@@ -3,28 +3,70 @@
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.formular.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.formular.page_title") %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "projekt formular"
+      ) %>
+    </h2>
   </div>
 </div>
 
-<div class="row">
+<div class="row margin-bottom">
   <div class="column">
-    <% if @formular_fields_primary.any? %>
-      <h4><%= t("custom.admin.projekt_phases.formular.primary_fields_title") %></h4>
-    <% end %>
-    <div id="formular-fields-primary" class="formular-fields sortable margin-bottom" data-js-url="<%= polymorphic_path([@namespace, @projekt_phase, @formular, FormularField.new], action: :order_formular_fields) %>">
-      <%= render partial: "custom/admin/formular_fields/formular_field", collection: @formular_fields_primary, as: :formular_field %>
-    </div>
-
-    <% if @formular_fields_follow_up.any? %>
-      <h4><%= t("custom.admin.projekt_phases.formular.follow_up_fields_title") %></h4>
-    <% end %>
-    <div id="formular-fields-follow-up" class="formular-fields sortable margin-bottom" data-js-url="<%= polymorphic_path([@namespace, @projekt_phase, @formular, FormularField.new], action: :order_formular_fields) %>">
-      <%= render partial: "custom/admin/formular_fields/formular_field", collection: @formular_fields_follow_up, as: :formular_field %>
-    </div>
-
     <div id="new_formular_field">
       <%= render "custom/admin/formular_fields/new_formular_field_button" %>
     </div>
   </div>
 </div>
+
+<div class="row margin-bottom">
+  <div class="column">
+    <% if @formular_fields_primary.any? %>
+      <h4><%= t("custom.admin.projekt_phases.formular.primary_fields_title") %></h4>
+
+      <table id="formular-fields-primary" class="margin-bottom">
+        <thead>
+          <tr>
+            <th style="width:15%"><%= t("activerecord.attributes.formular_field.name") %></th>
+            <th style="width:35%"><%= t("activerecord.attributes.formular_field.description") %></th>
+            <th style="width:15%"><%= t("activerecord.attributes.formular_field.kind") %></th>
+            <th style="width:15%"><%= t("activerecord.attributes.formular_field.required") %></th>
+            <th style="width:20%"><%= t("admin.actions.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="sortable" data-js-url="<%= polymorphic_path([@namespace, @projekt_phase, @formular, FormularField.new], action: :order_formular_fields) %>">
+          <%= render partial: "custom/admin/formular_fields/formular_field", collection: @formular_fields_primary, as: :formular_field %>
+        </tbody>
+      </table>
+    <% end %>
+
+    <% if @formular_fields_follow_up.any? %>
+      <h4><%= t("custom.admin.projekt_phases.formular.follow_up_fields_title") %></h4>
+
+      <table id="formular-fields-follow-up" class="margin-bottom">
+        <thead>
+          <tr>
+            <th style="width:15%"><%= t("activerecord.attributes.formular_field.name") %></th>
+            <th style="width:35%"><%= t("activerecord.attributes.formular_field.description") %></th>
+            <th style="width:15%"><%= t("activerecord.attributes.formular_field.kind") %></th>
+            <th style="width:15%"><%= t("activerecord.attributes.formular_field.required") %></th>
+            <th style="width:20%"><%= t("admin.actions.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="sortable" data-js-url="<%= polymorphic_path([@namespace, @projekt_phase, @formular, FormularField.new], action: :order_formular_fields) %>">
+          <%= render partial: "custom/admin/formular_fields/formular_field", collection: @formular_fields_follow_up, as: :formular_field %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

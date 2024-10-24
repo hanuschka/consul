@@ -1,0 +1,93 @@
+<h1>Phase restrictions</h1>
+
+<% if @projekt.projekt_phases.any? %>
+  <table class='edit-projekt margin-top'>
+    <thead>
+      <tr class="projekt_phase_settings" style='vertical-align:top;' >
+        <th style="width:195px;">
+          <%= t("custom.admin.projekts.edit.projekt_phases_tab.table_headings.phase_name") %>
+        </th>
+        <th>
+          <%= t("custom.admin.projekts.edit.projekt_phases_tab.table_headings.start_date") %>
+        </th>
+        <th>
+          <%= t("custom.admin.projekts.edit.projekt_phases_tab.table_headings.end_date") %>
+        </th>
+
+        <th>
+          <%= t("custom.admin.projekts.edit.projekt_phases_tab.table_headings.limitations") %>
+        </th>
+
+        <th>
+          <%= t("custom.admin.projekts.edit.projekt_phases_tab.table_headings.edit_link") %>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @projekt.projekt_phases.each do |projekt_phase| %>
+        <tr class="projekt_phase_settings" data-answer-id="<%= projekt_phase.id %>" style="vertical-align:top;">
+          <td style="width:195px;">
+            <strong>
+              <%= projekt_phase.model_name.human %>
+            </strong>
+            <% if projekt_phase.phase_tab_name.present? %>
+              <div>
+                <%= "(#{projekt_phase.phase_tab_name})" %>
+              </div>
+            <% end %>
+            <div class='margin-bottom'>
+              <div id="<%= dom_id(projekt_phase, :copy_phase_link) %>" class="hide">
+                <% if @projekt.overview_page? %>
+                  <%= request.base_url + projekts_path(projekt_phase_id: projekt_phase.id, anchor: "filter-subnav") %>
+                <% else %>
+                  <%= request.base_url + "/#{@projekt.page.slug}?projekt_phase_id=#{projekt_phase.id}#filter-subnav" %>
+                <% end %>
+              </div>
+              <small>
+              </small>
+            </div>
+          </td>
+
+          <td>
+            <%= projekt_phase.start_date %>
+          </td>
+
+          <td>
+            <%= projekt_phase.end_date %>
+          </td>
+
+          <td>
+            <% if projekt_phase.age_restriction.present? %>
+              <span class='age-restriction-icon'>
+                <%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction_names.age") %>
+              </span>
+            <% end %>
+
+            <% if projekt_phase.geozone_restricted != "no_restriction" && projekt_phase.geozone_restricted != nil %>
+              <span class='geo-restriction-icon'>
+                <%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction_names.geo") %>
+              </span>
+            <% end %>
+
+            <% if projekt_phase.user_status == "verified" %>
+              <span class='verification-restriction-icon'>
+                <%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction_names.verification") %>
+              </span>
+            <% end %>
+          </td>
+
+          <td>
+            <div class="table-actions">
+              <% if current_user.administrator? %>
+                <% restrictions_url = restrictions_admin_projekt_phase_path(projekt_phase) %>
+              <% else %>
+                <% restrictions_url = restrictions_projekt_management_projekt_phase_path(projekt_phase) %>
+              <% end %>
+              <%= link_to "Edit restrictions", restrictions_url %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

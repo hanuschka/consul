@@ -3,19 +3,5 @@
 <div id="poll-resources">
   <%= render "/admin/poll/polls/subnav" %>
 
-  <h3><%= t("admin.results.index.title") %></h3>
-
-  <% if @partial_results.empty? && @poll.voters.empty? %>
-    <div class="callout primary margin-top">
-      <%= t("admin.results.index.no_results") %>
-    </div>
-  <% end %>
-
-  <% if @partial_results.present? %>
-    <%= render "admin/poll/results/recount", resource: @poll %>
-    <%= render "admin/poll/results/result" %>
-    <%= render "admin/poll/results/results_by_booth" %>
-  <% end %>
-
-  <%= render "admin/poll/results/show_results", resource: @poll %>
+  <%= render "admin/poll/results/list" %>
 </div>

@@ -1,0 +1,26 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("custom.admin.deficiency_reports.official_answer_templates.index.title") %>
+<% end %>
+
+<%= link_to t("custom.admin.deficiency_reports.official_answer_templates.index.button_new"),
+              new_deficiency_report_management_official_answer_template_path, class: "button float-right" %>
+
+<h2 class="inline-block"><%= t("custom.admin.deficiency_reports.official_answer_templates.index.title") %></h2>
+
+<table>
+  <tbody>
+    <% @official_answer_templates.each do |official_answer_template| %>
+      <tr id="<%= dom_id(official_answer_template) %>">
+        <td style="width:20%;"><%= official_answer_template.title%></td>
+        <td style="width:70%;"><%= official_answer_template.text %></td>
+        <td>
+          <%= render Admin::TableActionsComponent.new(official_answer_template,
+                                                      actions: [:edit, :destroy],
+                                                      edit_path: edit_deficiency_report_management_official_answer_template_path(official_answer_template),
+                                                      destroy_path: deficiency_report_management_official_answer_template_path(official_answer_template)
+                                                     ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

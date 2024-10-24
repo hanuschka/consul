@@ -27,6 +27,10 @@ class User < ApplicationRecord
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
+  after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
+
+  # has_secure_token :temporary_auth_token
+  has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
@@ -110,30 +114,17 @@ class User < ApplicationRecord
     take_votes_from_erased_user
     update!(
       verified_at: Time.current,
-      unique_stamp: prepare_unique_stamp,
-      geozone_id: geozone_with_plz&.id
+      unique_stamp: prepare_unique_stamp
     )
 
-    recalculate_ballot_line_weight_for_relevant_investments
-    true
-  end
-
-  def unverify!
-    update_columns(
-      verified_at: nil,
-      unique_stamp: nil,
-      geozone_id: nil
-    )
-
-    recalculate_ballot_line_weight_for_relevant_investments
+    update_conditional_ballots_for_relevant_budgets
     true
   end
 
   def unverify!
     update!(
       verified_at: nil,
-      unique_stamp: nil,
-      geozone_id: nil
+      unique_stamp: nil
     )
   end
 
@@ -155,29 +146,6 @@ class User < ApplicationRecord
 
   def prepare_unique_stamp
     return nil if first_name.blank? || last_name.blank? || date_of_birth.blank? || plz.blank?
-
-    first_name.downcase + "_" +
-      last_name.downcase + "_" +
-      date_of_birth.to_date.strftime("%Y_%m_%d") + "_" +
-      plz.to_s
-  end
-
-  before_create { self.unique_stamp = prepare_unique_stamp }
-  after_create :take_votes_from_erased_user
-
-  def take_votes_from_erased_user
-    return if erased?
-
-    erased_user = User.erased.find_by(unique_stamp: unique_stamp)
-
-    if erased_user.present?
-      take_votes_from(erased_user)
-      erased_user.update!(unique_stamp: nil)
-    end
-  end
-
-  def prepare_unique_stamp
-    return nil unless first_name.present? && last_name.present? && date_of_birth.present? && plz.present?
 
     first_name.downcase + "_" +
       last_name.downcase + "_" +
@@ -247,6 +215,11 @@ class User < ApplicationRecord
     !unverified?
   end
 
+  def data_complete?
+    first_name.present? && last_name.present? && date_of_birth.present? &&
+      city_name.present? && plz.present? && street_name.present? && street_number.present?
+  end
+
   def formatted_address
     return registered_address.formatted_name if registered_address.present?
 
@@ -285,6 +258,28 @@ class User < ApplicationRecord
     deficiency_report_manager.present?
   end
 
+  def generate_frame_sign_in_token!
+    regenerate_frame_sign_in_token
+
+    update!(frame_sign_in_token_valid_until: 1.minute.from_now)
+  end
+
+  def frame_sign_in_token_valid?
+    frame_sign_in_token_valid_until > Time.current
+  end
+
+  # def generate_temporary_auth_token!
+  #   regenerate_temporary_auth_token
+  #
+  #   update!(temporary_auth_token_valid_until: 1.hour.from_now)
+  # end
+  #
+  # def temporary_auth_token_valid?
+  #   return false if temporary_auth_token_valid_until.nil?
+  #
+  #   temporary_auth_token_valid_until > Time.current
+  # end
+
   private
 
     def geozone_with_plz
@@ -308,20 +303,6 @@ class User < ApplicationRecord
       end
     end
 
-    def recalculate_ballot_line_weight_for_relevant_investments #CON-2085
-      relevant_ballots = Budget::Ballot.where(user: self)
-        .joins(:budget).where(budgets: { phase: "balloting" })
-
-      return unless relevant_ballots.present?
-
-      relevant_ballots.each do |ballot|
-        ballot.investments.each do |investment|
-          new_qualified_total_ballot_line_weight = investment.calculate_qualified_total_ballot_line_weight
-          investment.update!(qualified_total_ballot_line_weight: new_qualified_total_ballot_line_weight)
-        end
-      end
-    end
-
     def remove_audits
       audits.destroy_all
     end
@@ -329,5 +310,14 @@ class User < ApplicationRecord
     def remove_subscriptions
       projekt_subscriptions.destroy_all
       projekt_phase_subscriptions.destroy_all
+    end
+
+    def update_conditional_ballots_for_relevant_budgets
+      Budget::Ballot.where(user_id: id).joins(:budget).select { |b| b.budget.balloting? }.each do |ballot|
+        permission_problem_present = ballot.budget.projekt_phase.permission_problem(self).present?
+        next if permission_problem_present
+
+        ballot.update!(conditional: false)
+      end
     end
 end

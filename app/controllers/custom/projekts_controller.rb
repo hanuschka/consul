@@ -47,7 +47,7 @@ class ProjektsController < ApplicationController
 
     @projekts = @projekts.sort_by_order_number.select { |p| p.visible_for?(current_user) }
     @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id))
-    @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(25)
+    @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(24)
 
     if Setting.new_design_enabled?
       render :index_new

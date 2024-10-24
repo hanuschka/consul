@@ -19,7 +19,6 @@
         <%= f.text_field :login, autofocus: true, label: false, placeholder: t("devise_views.sessions.new.login_label") %>
 
         <%= f.password_field :password, autocomplete: "off", label: false, placeholder: t("devise_views.sessions.new.password_label") %>
-
         <%= f.submit(t("devise_views.sessions.new.submit"), class: "button expanded") %>
 
         <% if devise_mapping.rememberable? -%>
@@ -50,7 +49,7 @@
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
     <div class="row">
       <div class="small-12 column">
-        <%= f.text_field :login, autofocus: true %>
+        <%= f.text_field :login, autofocus: true, autocomplete: "email" %>
       </div>
 
       <div class="small-12 column">

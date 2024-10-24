@@ -1,0 +1,12 @@
+<div class="frame-navigation">
+  <div class="frame-navigate-settings">
+    <%= navigation_content %>
+  </div>
+  <% if @title.present? %>
+    <div class="column">
+      <h1 class="frame-navigation-title">
+        <%= @title %>
+      </h1>
+    </div>
+  <% end %>
+</div>

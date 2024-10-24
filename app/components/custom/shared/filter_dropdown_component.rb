@@ -58,7 +58,7 @@ class Shared::FilterDropdownComponent < ApplicationComponent
     else
       params = {}
       params[@url_param_name] = option
-      current_path_with_query_params(anchor: anchor, **params)
+      current_path_with_query_params(anchor: anchor, **params, page: nil)
     end
   end
 

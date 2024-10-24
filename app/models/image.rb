@@ -12,7 +12,7 @@ class Image < ApplicationRecord
       popup: { coalesce: true, gravity: "center", resize: "140x140^", crop: "140x140+0+0", loader: { page: nil }},
       thumb2: { coalesce: true, gravity: "center", resize: "100x100^", crop: "100x100+0+0", loader: { page: nil }},
       projekt_event_thumb: { coalesce: true, gravity: "center", resize: "300x200^", crop: "300x200+0+0", loader: { page: nil }},
-      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", loader: { page: nil }}
+      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", saver: { quality: 85 }, format: "jpeg", loader: { page: nil }}
     }
   end
 
@@ -81,6 +81,10 @@ class Image < ApplicationRecord
 
   def attached?
     attachment.attached?
+  end
+
+  def title
+    super || ""
   end
 
   private

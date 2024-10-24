@@ -18,6 +18,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_in_guest
     redirect_to root_path if current_user.present?
 
+    store_location_for(:user, CGI::unescape(params[:intended_path])) if params[:intended_path].present?
     @guest_user = User.new(guest: true)
   end
 

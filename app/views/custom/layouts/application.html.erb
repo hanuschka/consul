@@ -12,7 +12,7 @@
 
     <%= raw setting["html.per_page_code_head"] %>
   </head>
-  <body class="<%= yield(:body_class) %> public <%= custom_new_design_body_class %>">
+  <body class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>">
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>
       <!--[if lt IE 9]>
@@ -40,7 +40,7 @@
 
     <%= raw setting["html.per_page_code_body"] %>
 
-    <% if Setting.new_design_enabled? %>
+    <% if Setting.new_design_enabled? && !embedded? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
     <div class="wrapper <%= yield(:wrapper_class) %>">
@@ -49,8 +49,10 @@
       <% end %>
       <%= wrapper_content %>
     </div>
-    <div class="footer">
-      <%= render "layouts/footer" %>
-    </div>
+    <% unless embedded? %>
+      <div class="footer">
+        <%= render "layouts/footer" %>
+      </div>
+    <% end %>
   </body>
 </html>

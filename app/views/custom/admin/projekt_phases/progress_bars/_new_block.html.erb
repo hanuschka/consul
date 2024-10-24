@@ -1,0 +1,12 @@
+<h2>
+  <%= t("custom.admin.projekt_phases.progress_bars.new_block_title") %>
+  <% if embedded? %>
+    <%= render Shared::ExplainButtonComponent.new(
+      explain: "projekt progress bars"
+    ) %>
+  <% end %>
+</h2>
+
+<%= link_to t("custom.admin.projekt_phases.progress_bars.new_button"),
+            polymorphic_path([@namespace, progressable, :progress_bar], action: :new),
+            class: "button" %>

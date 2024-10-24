@@ -111,7 +111,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? || current_user.moderator? %>
+          <% if projekt_phase.present? && current_user.has_pm_permission_to?("manage", projekt_phase.projekt) %>
             <%= render(Shared::SidebarCardComponent.new(
               title: "Veröffentlichen für",
               class_name: "js-sidebar-behalf-of",

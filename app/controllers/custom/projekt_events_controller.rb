@@ -8,17 +8,14 @@ class ProjektEventsController < ApplicationController
 
   def index
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : @valid_filters.first
+    order = @current_filter == "incoming" ? :asc : :desc
 
     @projekt_events =
       ProjektEvent
-        .all
-        .includes(projekt_phase: :projekt)
-        .page(params[:page])
-        .per(10).send("sort_by_#{@current_filter}")
-
-    order = @current_filter == "incoming" ? :asc : :desc
-
-    @projekt_events = @projekt_events.reorder(datetime: order)
+        .with_active_projekt
+        .send("sort_by_#{@current_filter}")
+        .reorder(datetime: order)
+        .page(params[:page]).per(10)
 
     if Setting.new_design_enabled?
       render :index_new

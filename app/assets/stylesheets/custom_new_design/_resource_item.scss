@@ -63,7 +63,7 @@
   }
 
   .resource-item--additional-body-section {
-    padding: 12px 25px;
+    padding: 10px 25px;
     border-top: 1px solid #d9d9d9;
   }
 
@@ -84,11 +84,12 @@
   }
 
   .resource-item--image-overlay-item {
+    display: flex;
     position: absolute;
     width: 100%;
     z-index: 100;
     bottom: 0;
-    padding: 10px 15px;
+    padding: 7px 10px;
 
     .projekt-labels .projekt-label {
       margin-right: 0.2rem;
@@ -546,6 +547,7 @@
     justify-content: space-between;
     color: white;
     font-size: 15px;
+    margin-bottom: 0;
 
     &.-narrow {
       padding-right: 10px;

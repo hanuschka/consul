@@ -24,3 +24,7 @@ gem 'geocoder', '~> 1.8', '>= 1.8.3'
 
 gem "sentry-ruby"
 gem "sentry-rails"
+
+gem "acts_as_list"
+gem "jwt"
+gem 'rack-cors'

@@ -47,12 +47,7 @@ Rails.application.routes.draw do
     member do
       get     :json_data
       post    :vote
-      patch   :update_status
-      patch   :update_category
-      patch   :update_officer
       patch   :notify_officer_about_new_comments
-      patch   :update_official_answer
-      patch   :approve_official_answer
       put     :flag
       put     :unflag
     end

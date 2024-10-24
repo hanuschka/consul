@@ -61,7 +61,9 @@
     <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_phase_name) %>
 
     <div id='footer-content'>
-      <%= render "pages/projekt_footer/#{@default_projekt_phase.name}" %>
+      <% if @default_projekt_phase.present? %>
+        <%= render "pages/projekt_footer/#{@default_projekt_phase.name}" %>
+      <% end %>
     </div>
   <% end %>
 </main>

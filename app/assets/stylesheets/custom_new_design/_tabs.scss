@@ -51,6 +51,12 @@
     }
   }
 
+  &.-embedded {
+    .custom-fixed-tabs--content {
+      top: 0;
+    }
+  }
+
   $gray-1: #D9D9D9;
 
   .custom-tab {

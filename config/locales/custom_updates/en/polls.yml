@@ -21,7 +21,13 @@ en:
         expires_today: Expires today
         participate_button: Participate now!
         phase_expired_button: Results
+        phase_current_button: Participate
+        phase_not_started_button: Preview
       questions:
+        prev_question: "Previous question"
+        next_question: "Next question"
+        closing_note: Complete
+        go_to_start: "To the beginning"
         answers:
           more_info: More info
           save_open_answer: Save answer
@@ -45,6 +51,11 @@ en:
         results:
           download_csv_answers_votes: Download poll results
         welcome_default_text: we need your opinion! On this page you can take part in the poll(s) on the project. Click on the relevant button and your vote will be counted. You will also find statistical information here as well as results of the voting as soon as it is completed.
+        closing_note_default_text_html:
+          <p><strong>Done!</strong></p>
+          <p>Thank you for participation.</p>
+          <p>You have the opportunity to edit your answers until the participation deadline expires.
+          Your information will then be transmitted to the system automatically and anonymously.</p>
   polls:
     index:
       filters:

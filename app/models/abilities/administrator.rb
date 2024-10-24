@@ -64,7 +64,7 @@ module Abilities
       can :manage, Dashboard::Action
 
       can [:index, :read, :create, :update, :destroy], Budget
-      can :publish, Budget, id: Budget.drafting.ids
+      can :publish, Budget, id: Budget.where(id: Budget.drafting.pluck(:id)).ids
       can :calculate_winners, Budget, &:reviewing_ballots?
       can :read_results, Budget do |budget|
         budget.balloting_or_later?
@@ -77,7 +77,7 @@ module Abilities
       can [:hide, :admin_update, :toggle_selection], Budget::Investment
       can [:valuate, :comment_valuation], Budget::Investment
       cannot [:admin_update, :toggle_selection, :valuate, :comment_valuation],
-        Budget::Investment, budget: { phase: "finished" }
+        Budget::Investment, budget: { id: Budget.finished.pluck(:id) }
 
       can :create, Budget::ValuatorAssignment
 
@@ -142,20 +142,16 @@ module Abilities
       can [:manage], ::DeficiencyReport::Officer
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
+      can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
       can [:manage], ::DeficiencyReport::Area
-      can :manage, DeficiencyReport
-      can [:approve_official_answer], ::DeficiencyReport do |dr|
-        Setting['deficiency_reports.admins_must_approve_officer_answer'].present? &&
-          !dr.official_answer_approved? &&
-          dr.official_answer.present?
-      end
+      can [:manage], DeficiencyReport
 
       can [:csv_answers_votes], Poll
-      can [:order_questions, :csv_answers_streets, :csv_answers_votes, :csv_open_answers], Poll::Question
+      can [:order_questions, :csv_answers_streets, :csv_answers_votes, :csv_open_answers, :edit_votation_type, :update_votation_type], Poll::Question
       can [:update, :verify, :unverify], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
-        investment.budget.phase == "selecting"
+        investment.budget.current_phase.kind == "selecting"
       end
 
       can :manage, ModalNotification
@@ -183,7 +179,7 @@ module Abilities
       can :manage, FormularFollowUpLetter
       can :manage, ProjektArgument
 
-      can :read_stats, Budget, id: Budget.valuating_or_later.ids
+      can :read_stats, Budget, id: Budget.where(id: Budget.valuating_or_later.pluck(:id)).ids
 
       can :destroy, RelatedContent
 
@@ -192,6 +188,11 @@ module Abilities
       can :read_stats, Budget::Investment do |investment|
         can? :read_stats, investment.budget
       end
+
+      can :add_memo, Budget::Investment
+
+      can :get_coordinates_map_location, MapLocation
+      can :send_notification, Memo, user_id: user.id
     end
   end
 end

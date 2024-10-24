@@ -22,9 +22,12 @@ de:
         expires_today: Läuft nur noch heute
         participate_button: Teilnehmen
         phase_expired_button: Ergebnisse
+        phase_current_button: Teilnehmen
+        phase_not_started_button: Vorschau
       questions:
         prev_question: "Vorherige Frage"
         next_question: "Nächste Frage"
+        closing_note: Abschließen
         go_to_start: "Zum Anfang"
         answers:
           more_info: Mehr Infos
@@ -49,6 +52,11 @@ de:
         results:
           download_csv_answers_votes: Abstimmungsergebnisse herunterladen
         welcome_default_text: Ihre Meinung ist gefragt! Auf dieser Seite können Sie sich an der oder den Abstimmung/en zum Projekt beteiligen. Klicken Sie auf die jeweilige Schaltfläche – und schon wird Ihre Stimme gezählt. Außerdem finden Sie hier statistische Angaben sowie das Ergebnis der Abstimmung, sobald diese abgeschlossen ist.
+        closing_note_default_text_html:
+          <p><strong>Geschafft!</strong></p>
+          <p>Vielen Dank für Ihre Beteiligung.</p>
+          <p>Bis zum Ablauf der Teilnahmefrist haben Sie die Möglichkeit, Ihre Antworten zu bearbeiten.
+          Danach werden Ihre Angaben automatisch und anonym an das System übermittelt.</p>
   polls:
     index:
       filters:

@@ -3,6 +3,10 @@ class DtApi
 
   base_uri "#{Rails.application.secrets.dt[:url]}/api"
 
+  def initialize(api_token = nil)
+    @api_token = api_token
+  end
+
   def connect(**params)
     post_with_auth(
       "/clients/connect",
@@ -58,7 +62,10 @@ class DtApi
   def base_headers
     if Rails.env.development?
       {
-        headers: { "X-Consul-Development-Domain" => Rails.application.secrets.server_name }
+        headers: {
+          "X-Consul-Development-Domain" => Rails.application.secrets.server_name,
+          Authorization: "Bearer #{@api_token}"
+        }
       }
     else
       {}

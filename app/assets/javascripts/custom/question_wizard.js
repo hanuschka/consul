@@ -2,6 +2,8 @@
   "use strict";
   App.QuestionWizard = {
     initialize: function() {
+      App.QuestionWizard.mandatoryQuestionActions();
+
       var $questionWizard = $(".js-question-wizard");
 
       $questionWizard.on("click", ".js-question-wizard-prev", this.navigateToPrevQuestion.bind(this));
@@ -10,6 +12,27 @@
 
       if ($questionWizard.length > 0) {
         this.updateProgress($questionWizard.find(".js-question-wizard-item").get(0));
+      }
+
+      $("body").on("click", ".js-poll-closing-note", this.showClosingNote.bind(this));
+    },
+
+    mandatoryQuestionActions: function() {
+      var $questionElement = $(this.currentQuestion()).find(".js-poll-question");
+      var $nestedQuestions = $questionElement.find(".poll-question--nested-question");
+
+      $(".js-question-wizard-next").prop("disabled", false);
+
+      if ($questionElement.data("answerMandatory") && $questionElement.find(".js-question-answered").length === 0) {
+        $(".js-question-wizard-next").prop("disabled", true);
+      }
+
+      if ($nestedQuestions.length > 0) {
+        $nestedQuestions.each(function(index, nestedQuestion) {
+          if ( $(nestedQuestion).data("answerMandatory") && $(nestedQuestion).find(".js-question-answered").length === 0 ) {
+            $(".js-question-wizard-next").prop("disabled", true);
+          }
+        });
       }
     },
 
@@ -30,6 +53,7 @@
     },
 
     navigateToPrevQuestion: function() {
+      $("#closing-note").hide();
       var prevQuestion = $(this.currentQuestion()).prevAll(".js-question-wizard-item:not(.-disabled)").get(0);
 
       this.navigateToQuestion(prevQuestion);
@@ -43,7 +67,6 @@
       );
       var nextQuestion;
 
-      console.log(currentQuestion)
       if (alreadyAnsweredOption && alreadyAnsweredOption.dataset.nextQuestionId) {
         nextQuestion = this.getQuestionById(alreadyAnsweredOption.dataset.nextQuestionId);
       }
@@ -73,6 +96,15 @@
       this.scrollToWizardTop();
     },
 
+    showClosingNote: function() {
+      $(".poll-question").hide();
+      $("#closing-note").show();
+      $(".js-poll-closing-note").hide();
+      $(".js-question-wizard-prev").hide();
+      $(".js-question-wizard-go-to-start").hide();
+      $(".js-question-wizard--progress").hide();
+    },
+
     navigateToQuestion: function(nextQuestion) {
       if (nextQuestion) {
         this.currentQuestion().classList.remove("-visible");
@@ -83,11 +115,14 @@
         this.updateProgress(nextQuestion);
 
         var $nextButton = $(".js-question-wizard-next");
+        var $closingNoteButton = $(".js-poll-closing-note");
 
         if (nextQuestion.nextElementSibling) {
           $nextButton.show();
+          $closingNoteButton.hide();
         } else {
           $nextButton.hide();
+          $closingNoteButton.show();
         }
 
         var $previousButton = $(".js-question-wizard-prev");
@@ -103,6 +138,8 @@
       } else {
         $(".js-question-wizard-go-to-start").show();
       }
+
+      App.QuestionWizard.mandatoryQuestionActions();
     },
 
     updateProgress: function(nextQuestion) {

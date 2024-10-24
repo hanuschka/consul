@@ -5,6 +5,7 @@ module ProjektQuestionsHelper
     sanitize(t("custom.projekt_phases.permission_problem.#{projekt_phase.resources_name}.#{permission_problem_key}",
              sign_in: link_to_signin, sign_up: link_to_signup,
              guest_sign_in: link_to_guest_signin,
+             enter_missing_user_data: link_to_enter_missing_user_data,
              verify: link_to_verify_account,
              city: Setting["org_name"],
              geozones: projekt_phase.geozone_restrictions_formatted,

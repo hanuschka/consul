@@ -1,14 +1,16 @@
 <p>
-  <% if notification && notification.notifiable_action %>
-    <em><%= t("notifications.notification.action.#{notification.notifiable_action}", count: notification.counter) %></em>
-  <% elsif notification.notifiable.class.name == "DeficiencyReport" %>
-    <%= "Neue #{notification.notifiable.class.model_name.human}: " %>
-  <% elsif notification.notifiable.is_a?(Comment) && notification.notifiable.parent.present? %>
-    <%= "Kommentarantwort: "  %>
-  <% elsif notification.notifiable.class.name.in?(["Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "ProjektNotification", "Topic", "Comment"]) %>
-    <%= "#{notification.notifiable.class.model_name.human}: " %>
-  <% elsif notification.notifiable.class.name.in?(["ProjektPhase::ArgumentPhase", "ProjektPhase::QuestionPhase", "ProjektPhase::MilestonePhase"]) %>
-    <%= "#{notification.notifiable.title}: " %>
+  <% if notification.present? %>
+    <% if notification.notifiable_action %>
+      <em><%= t("notifications.notification.action.#{notification.notifiable_action}", count: notification.counter) %></em>
+    <% elsif notification.notifiable.class.name == "DeficiencyReport" %>
+      <%= "Neue #{notification.notifiable.class.model_name.human}: " %>
+    <% elsif notification.notifiable.is_a?(Comment) && notification.notifiable.parent.present? %>
+      <%= "Kommentarantwort: "  %>
+    <% elsif notification.notifiable.class.name.in?(["Proposal", "Debate", "Budget::Investment", "Poll", "ProjektEvent", "ProjektLivestream", "ProjektNotification", "Topic", "Comment"]) %>
+      <%= "#{notification.notifiable.class.model_name.human}: " %>
+    <% elsif notification.notifiable.class.name.in?(["ProjektPhase::ArgumentPhase", "ProjektPhase::QuestionPhase", "ProjektPhase::MilestonePhase"]) %>
+      <%= "#{notification.notifiable.title}: " %>
+    <% end %>
   <% end %>
   <strong id="<%= dom_id(notification) if notification %>_title">
     <%= title %>

@@ -3,12 +3,15 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   include MapLocationAttributes
   include ImageAttributes
   include DocumentAttributes
-  include Search
+  include CustomSearch
 
   load_and_authorize_resource
 
+  after_action :unassign_deficiency_report_officer, only: :destroy
+
   def index
-    @deficiency_reports = @deficiency_reports.search(@search_terms) if @search_terms.present?
+    filter_assigned_reports_only
+    @deficiency_reports = apply_filters(@deficiency_reports)
     @deficiency_reports = @deficiency_reports.order(id: :desc)
 
     unless params[:format] == "csv"
@@ -26,6 +29,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def show
     @deficiency_report = DeficiencyReport.find(params[:id])
+    @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
   end
 
   def edit
@@ -40,6 +44,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     @deficiency_report = DeficiencyReport.find(params[:id])
 
     if @deficiency_report.update(deficiency_report_params)
+      notify_new_officer(@deficiency_report)
+      notify_author_about_status_change(@deficiency_report)
+
       redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.update.success_notice")
     else
       render :edit
@@ -51,6 +58,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     @deficiency_report.destroy!
 
     redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.destroy.success_notice")
+  end
+
+  def audits
   end
 
   def accept
@@ -73,9 +83,35 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       attributes = [:video_url, :on_behalf_of,
                     :deficiency_report_category_id,
                     :deficiency_report_area_id,
+                    :deficiency_report_officer_id, :assigned_at,
+                    :deficiency_report_status_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
       params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
+    end
+
+    def filter_assigned_reports_only
+      return if current_user.administrator? || current_user.deficiency_report_manager?
+      return unless Setting["deficiency_reports.admins_must_assign_officer"].present?
+      raise CanCan::AccessDenied unless current_user.deficiency_report_officer?
+
+      @deficiency_reports = @deficiency_reports.where(deficiency_report_officer_id: current_user.deficiency_report_officer.id)
+    end
+
+    def notify_new_officer(dr)
+      return if dr.deficiency_report_officer_id_before_last_save == dr.deficiency_report_officer_id
+
+      DeficiencyReportMailer.notify_officer(dr).deliver_later
+    end
+
+    def notify_author_about_status_change(dr)
+      return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
+
+      DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
+    end
+
+    def unassign_deficiency_report_officer
+      @deficiency_report.update_column(:deficiency_report_officer_id, nil)
     end
 end

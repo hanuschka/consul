@@ -65,6 +65,9 @@
     .ballot-section, .price-section, .votes-section, .show-votes-count-section {
       width: 100%;
       min-height: unset !important;
+    }
+
+    .ballot-section, .votes-section, .show-votes-count-section {
       margin-bottom: 10px;
     }
 

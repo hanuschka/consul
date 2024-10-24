@@ -1,0 +1,29 @@
+<h3><%= t("custom.admin.budget_investments.show.details_block_title") %></h3>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.author")}: " %></strong>
+  <%= t("valuation.budget_investments.show.#{investment.author.username}") %>
+</p>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.created_at")}: " %></strong>
+  <%= l investment.created_at.to_date %>
+</p>
+
+<% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>
+  <p>
+    <strong><%= "#{t("custom.admin.budget_investments.show.implementation_performer_label")}: " %></strong>
+    <% if investment.implementation_contribution.present? %>
+      <%= "#{t("custom.admin.budget_investments.show.implementation_performer.#{investment.implementation_performer}")}: #{investment.implementation_contribution}" %>
+    <% else %>
+      <%= t("custom.admin.budget_investments.show.implementation_performer.#{investment.implementation_performer}") %>
+    <% end %>
+  </p>
+<% end %>
+
+<% if projekt_phase_feature?(investment.projekt_phase, "form.show_user_cost_estimate") && investment.user_cost_estimate.present? %>
+  <p>
+    <strong><%= "#{t("custom.admin.budget_investments.show.user_cost_estimate")}: " %></strong>
+    <%= investment.user_cost_estimate %>
+  </p>
+<% end %>

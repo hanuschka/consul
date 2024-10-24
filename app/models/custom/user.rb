@@ -28,6 +28,10 @@ class User < ApplicationRecord
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
   after_create :take_votes_from_erased_user
   around_update :reset_verification_status #cli
+  after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
+
+  # has_secure_token :temporary_auth_token
+  has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
@@ -113,16 +117,17 @@ class User < ApplicationRecord
     take_votes_from_erased_user
     update!(
       verified_at: Time.current,
-      unique_stamp: prepare_unique_stamp,
-      geozone_id: geozone_with_plz&.id
+      unique_stamp: prepare_unique_stamp
     )
+
+    update_conditional_ballots_for_relevant_budgets
+    true
   end
 
   def unverify!
     update!(
       verified_at: nil,
-      unique_stamp: nil,
-      geozone_id: nil
+      unique_stamp: nil
     )
   end
 
@@ -214,6 +219,11 @@ class User < ApplicationRecord
     !unverified?
   end
 
+  def data_complete?
+    first_name.present? && last_name.present? && date_of_birth.present? &&
+      city_name.present? && plz.present? && street_name.present? && street_number.present?
+  end
+
   def formatted_address
     return registered_address.formatted_name if registered_address.present?
 
@@ -232,13 +242,13 @@ class User < ApplicationRecord
     roles
   end
 
-  def full_name
-    if first_name.present? && last_name.present?
-      "#{first_name} #{last_name}"
-    else
-      name
-    end
-  end
+  # def full_name
+  #   if first_name.present? && last_name.present?
+  #     "#{first_name} #{last_name}"
+  #   else
+  #     name
+  #   end
+  # end
 
   def first_letter_of_name
     (first_name || name)&.chars&.first&.upcase
@@ -279,6 +289,29 @@ class User < ApplicationRecord
 
     yield
   end
+  # cli_methods
+
+  def generate_frame_sign_in_token!
+    regenerate_frame_sign_in_token
+
+    update!(frame_sign_in_token_valid_until: 1.minute.from_now)
+  end
+
+  def frame_sign_in_token_valid?
+    frame_sign_in_token_valid_until > Time.current
+  end
+
+  # def generate_temporary_auth_token!
+  #   regenerate_temporary_auth_token
+  #
+  #   update!(temporary_auth_token_valid_until: 1.hour.from_now)
+  # end
+  #
+  # def temporary_auth_token_valid?
+  #   return false if temporary_auth_token_valid_until.nil?
+  #
+  #   temporary_auth_token_valid_until > Time.current
+  # end
 
   private
 
@@ -310,5 +343,14 @@ class User < ApplicationRecord
     def remove_subscriptions
       projekt_subscriptions.destroy_all
       projekt_phase_subscriptions.destroy_all
+    end
+
+    def update_conditional_ballots_for_relevant_budgets
+      Budget::Ballot.where(user_id: id).joins(:budget).select { |b| b.budget.balloting? }.each do |ballot|
+        permission_problem_present = ballot.budget.projekt_phase.permission_problem(self).present?
+        next if permission_problem_present
+
+        ballot.update!(conditional: false)
+      end
     end
 end

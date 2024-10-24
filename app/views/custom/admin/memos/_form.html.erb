@@ -2,7 +2,8 @@
   <%= form_with(model: Memo.new, url: polymorphic_path([namespace.to_sym, Memo.new]), method: :post, local: false) do |f| %>
     <%= f.hidden_field :memoable_id, value: memoable.id %>
     <%= f.hidden_field :memoable_type, value: memoable.class.name %>
-    <%= f.text_area :text %>
+    <%= f.hidden_field :parent_id, value: memoable.is_a?(Memo) ? memoable.id : nil %>
+    <%= f.text_area :text, label: false %>
     <%= f.submit "Speichern", class: "button" %>
   <% end %>
 </div>

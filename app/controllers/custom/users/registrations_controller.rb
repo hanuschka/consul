@@ -134,6 +134,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_in_guest
     redirect_to root_path if current_user.present?
 
+    store_location_for(:user, CGI::unescape(params[:intended_path])) if params[:intended_path].present?
     @guest_user = User.new(guest: true)
   end
 
@@ -176,17 +177,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
         :document_type,
         :city_street_id,
         individual_group_value_ids: [])
-    end
-
-    def initialize_guest_user(guest_key)
-      User.new(
-        username: params[:user][:username],
-        terms_data_protection: params[:user][:terms_data_protection],
-        terms_general: params[:user][:terms_general],
-        email: "#{guest_key}@example.com",
-        guest: true,
-        confirmed_at: Time.now.utc,
-        skip_password_validation: true
-      )
     end
 end

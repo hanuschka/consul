@@ -48,9 +48,9 @@ class Proposal < ApplicationRecord
   validates_translation :retired_explanation, presence: true, unless: -> { retired_at.blank? }
 
   validates :author, presence: true
-  validates :responsible_name, presence: true, unless: :skip_user_verification?
+  validates :responsible_name, presence: true
 
-  validates :responsible_name, length: { in: 6..Proposal.responsible_name_max_length }, unless: :skip_user_verification?
+  validates :responsible_name, length: { in: 6..Proposal.responsible_name_max_length }
   validates :retired_reason, presence: true, inclusion: { in: ->(*) { RETIRE_OPTIONS }}, unless: -> { retired_at.blank? }
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
@@ -159,7 +159,11 @@ class Proposal < ApplicationRecord
   end
 
   def total_votes
-    cached_votes_up
+    if up_and_down_voting_enabled?
+      cached_votes_up + cached_votes_down
+    else
+      cached_votes_up
+    end
   end
 
   def voters
@@ -217,7 +221,7 @@ class Proposal < ApplicationRecord
   end
 
   def successful?
-    total_votes >= Proposal.votes_needed_for_success
+    cached_votes_up >= Proposal.votes_needed_for_success
   end
 
   def archived?
@@ -236,10 +240,6 @@ class Proposal < ApplicationRecord
     orders = %w[hot_score confidence_score created_at relevance archival_date]
     orders << "recommendations" if Setting["feature.user.recommendations_on_proposals"] && user&.recommended_proposals
     orders
-  end
-
-  def skip_user_verification?
-    Setting["feature.user.skip_verification"].present?
   end
 
   def send_new_actions_notification_on_create
@@ -264,5 +264,11 @@ class Proposal < ApplicationRecord
       if author&.document_number?
         self.responsible_name = author.document_number
       end
+    end
+
+  private
+
+    def up_and_down_voting_enabled?
+      projekt_phase.settings.find_by(key: "feature.resource.enable_up_and_down_voting").value.present?
     end
 end

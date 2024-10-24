@@ -46,7 +46,7 @@
       </span>
     <% end %>
 
-    <% if projekt_phase.verification_restricted %>
+    <% if projekt_phase.user_status == "verified" %>
       <span class='verification-restriction-icon'>
         <%= t("custom.admin.projekts.edit.projekt_phases_tab.restriction_names.verification") %>
       </span>
@@ -72,7 +72,7 @@
   <td>
     <%= render Admin::TableActionsComponent.new(projekt_phase,
                                                 actions: [:edit, :destroy],
-                                                edit_path: polymorphic_path([@namespace, projekt_phase], action: :duration),
+                                                edit_path: polymorphic_path([@namespace, projekt_phase], action: projekt_phase.admin_nav_bar_items.first),
                                                 destroy_path: polymorphic_path([@namespace, projekt_phase])
                                                ) %>
   </td>

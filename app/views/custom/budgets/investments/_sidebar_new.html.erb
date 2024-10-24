@@ -3,7 +3,7 @@
 
   <%= render "pages/projekt_footer_new/budget/my_ballot" %>
 
-  <% unless @budget.phase == 'publishing_prices' && projekt_phase_feature?(@projekt_phase, 'general.show_results_after_first_vote')  # con-1036 %>
+  <% unless @budget.current_phase.kind == 'publishing_prices' && @budget.show_results_after_first_vote? # con-1036 %>
     <% if params[:section].blank? || params[:section] == 'overview' %>
       <% if valid_filters&.any? %>
         <%= render Shared::SidebarCardComponent.new(title: "Filter", icon_name: "filter") do |c| %>

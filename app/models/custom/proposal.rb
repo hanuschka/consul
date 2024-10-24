@@ -86,7 +86,7 @@ class Proposal < ApplicationRecord
   end
 
   def successful?
-    total_votes >= custom_votes_needed_for_success
+    cached_votes_up >= custom_votes_needed_for_success
   end
 
   def self.successful
@@ -120,9 +120,18 @@ class Proposal < ApplicationRecord
   def editable_by?(user)
     return false unless user
     return false unless editable?
+    return false unless projekt_phase.present? && projekt_phase.selectable_by?(user)
     return true if author_id == user.id
 
     author.official_level > 0 && (author.official_level == user.official_level)
+  end
+
+  def likes
+    cached_votes_up
+  end
+
+  def dislikes
+    cached_votes_down
   end
 
   protected

@@ -1,5 +1,6 @@
 // brand_color
 $brand:                                           #003d90;
+$brand-hover:                                     rgba($brand, 0.05);
 $brand-secondary:                                 #002d50 !default;
 $secondary:                                       lighten($brand, 70%);
 $accent:                                          lighten($brand, 50%);
@@ -8,8 +9,7 @@ $brand-lighter:                                   rgba($brand, 0.1);
 $text-over-brand:                                 $white;
 $dt-base:                                         #004a83;
 $dt-base-secondary:                               lighten($dt-base, 70%);
-
-
+$main-background-color: #F4F4F4;
 // Menu variables
 
 $dark:                                            #222;
@@ -51,7 +51,6 @@ $dropdowntextcolor:           $black;
 $welcometextpositionmedium:   rem-calc(20);
 $welcometextpositionlarge:    rem-calc(25);
 $welcomespan:                 $brand;
-
 
 
 // fonts

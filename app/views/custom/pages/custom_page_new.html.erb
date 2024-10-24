@@ -4,20 +4,20 @@
 <% provide :social_media_meta_tags do %>
   <%= render "shared/social_media_meta_tags",
     social_title: @custom_page.title,
-    social_description: strip_tags(@custom_page.content)[0..200],
+    social_description: strip_tags(@custom_page.content).to_s[0..200],
     og_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image.attachment) : nil),
     social_url: page_url(@custom_page.slug),
     twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
 <% end %>
 
-<% if projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
+<% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
   <% provide :vc_maps do %>
     <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
   <% end %>
 <% end %>
 
 <style>
-  <% if @custom_page.image.present? %>
+  <% if @custom_page.image&.attached? %>
     .custom-page-banner {
       background-image: url("<%= url_for(@custom_page.image.attachment) %>");
       background-size: cover;
@@ -26,7 +26,7 @@
   <% end %>
 </style>
 
-<main class="projekt-page">
+<main class="projekt-page js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
   <% if @custom_page.projekt.present? %>
     <div class="custom-fixed-tabs margin-bottom">
       <div class="custom-fixed-tabs--content">
@@ -51,14 +51,32 @@
       <div class="custom-page--banner">
         <div class="custom-page--banner-text-section-wrapper">
           <div class="custom-page--banner-text-section">
-            <h1 class="custom-page--banner-title">
-              <%= @custom_page.title %>
-            </h1>
+            <div class="custom-page--banner-title-wrapper">
+              <% if embedded_and_frame_access_code_valid?(@projekt) %>
+                <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
+                  <h1 class="custom-page--banner-title">
+                    <%= @custom_page.title %>
+                  </h1>
+                <% end %>
+              <% else %>
+                <h1 class="custom-page--banner-title">
+                  <%= @custom_page.title %>
+                </h1>
+              <% end %>
+            </div>
 
             <% if @custom_page.subtitle.present? %>
-              <div class="custom-page--banner-description">
-                <%= @custom_page.subtitle %>
-              </div>
+              <% if embedded_and_frame_access_code_valid?(@projekt) %>
+                <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
+                  <div class="custom-page--banner-description">
+                    <%= @custom_page.subtitle %>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="custom-page--banner-description">
+                  <%= @custom_page.subtitle %>
+                </div>
+              <% end %>
             <% end %>
           </div>
 
@@ -86,7 +104,7 @@
             </span>
             <%= render(
               Shared::ResourceImageComponent.new(
-                image_url: @custom_page.image&.variant(:projekt_image),
+                image_url: @custom_page.image&.attachment.variant(coalesce: true, gravity: "center", resize_to_fill: [620, 390] ),
                 image_placeholder_icon_class: "fa-comments",
                 resource: @custom_page
               )
@@ -101,7 +119,7 @@
     <div class="flex-layout">
       <div class="main-column">
         <div class="js-anchor-navigation-content" id="projekt-body">
-          <% if @custom_page.content.present? %>
+          <% if @custom_page.content.present? || @custom_page&.projekt.new_content_block_mode? %>
             <div class="main-content-card">
               <% if @custom_page.content&.include?('template_projekt_library') %>
                 <%= render "projekt_library", projekt: @custom_page.projekt %>
@@ -123,15 +141,17 @@
     </div>
   <% end %>
 
-  <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? %>
+  <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || embedded? %>
     <div class="js-anchor-navigation-content" id="projekt-particapation">
       <div class="projekt-footer-anchor" id="projekt-footer"> </div>
       <div class="projekt-footer flex-layout">
         <div class="full-width-column">
-          <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_phase_name) %>
-          <div id="footer-content" class="js-projekt-footer-content">
-            <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
-          </div>
+          <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase) %>
+          <% if @default_projekt_phase.present? %>
+            <div id="footer-content" class="js-projekt-footer-content">
+              <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

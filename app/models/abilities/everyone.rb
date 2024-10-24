@@ -7,17 +7,17 @@ module Abilities
       can [:read, :map, :summary, :share, :json_data], Proposal
       can :read, Comment
       can :read, Poll
-      can :results, Poll, id: Poll.expired.results_enabled.not_budget.ids
-      can :stats, Poll, id: Poll.expired.stats_enabled.not_budget.ids
+      can :results, Poll, id: Poll.expired.with_phase_feature("resource.results_enabled").not_budget.ids
+      can :stats, Poll, id: Poll.expired.with_phase_feature("resource.stats_enabled").not_budget.ids
       can :read, Poll::Question
       can [:read, :refresh_activities], User
       can [:read, :welcome], Budget
       can [:read], Budget
       can [:read], Budget::Group
       can [:read, :print, :json_data], Budget::Investment
-      can :read_results, Budget, id: Budget.finished.results_enabled.ids
-      can :read_stats, Budget, id: Budget.finished.stats_enabled.ids
-      can :read_executions, Budget, phase: "finished"
+      can :read_results, Budget, id: Budget.where(id: Budget.finished.pluck(:id)).results_enabled.ids
+      can :read_stats, Budget, id: Budget.where(id: Budget.finished.pluck(:id)).stats_enabled.ids
+      can :read_executions, Budget, id: Budget.finished.pluck(:id)
       can :new, DirectMessage
       can [:read, :debate, :draft_publication, :allegations, :result_publication,
            :proposals, :milestones], Legislation::Process, published: true
@@ -61,6 +61,12 @@ module Abilities
 
         can [:create, :vote], Comment do |comment|
           comment.commentable.comments_allowed?(user)
+        end
+
+        can [:new, :create], Budget::Investment do |investment|
+          projekt_phase = investment.budget.projekt_phase
+
+          investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?
         end
       end
 

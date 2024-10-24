@@ -90,11 +90,6 @@ de:
             title: Meine Beiträge
         start_deficiency_report: Ihr Anliegen melden
       mailers:
-        notify_administrators_about_answer_update:
-          hi: Lieber Admin,
-          p1: ein/e Sachbearbeiter*in hat eine neue offizielle Antwort gespeichert.
-          signature_html: Viele Grüße</br>Consul
-          subject: Neue offizielle Antwort von einem/einer Sachbearbeiter*in %{identifier}
         notify_author_about_status_change:
           hi: Hallo
           p1: der Status des von Ihnen eingereichten Anliegens wurde geändert.

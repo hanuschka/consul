@@ -19,7 +19,8 @@
         </div>
 
       <% elsif permission_problem_key.present? %>
-        <% locale_namespace = permission_problem_key == :past_regular_formular_cutoff_date ? "formular_phase" : "shared" %>
+        <% specific_problems = %i[past_regular_formular_cutoff_date submissions_limit_reached] %>
+        <% locale_namespace = permission_problem_key.in?(specific_problems) ? "formular_phase" : "shared" %>
 
         <%= sanitize(
           t("custom.projekt_phases.permission_problem.new_button_component.#{locale_namespace}.#{permission_problem_key}",

@@ -143,6 +143,23 @@
     <% end %>
   <% end %>
 
+  <% if @projekt_phase.name.in?(["voting_phase"]) %>
+    <div class="row">
+      <div class="column <%= naming_column_class %>">
+        <div class="polls-form">
+          <%= f.fields_for :polls, @projekt_phase.poll do |polls_form| %>
+            <%= polls_form.translatable_fields do |poll_translations_form| %>
+              <%= poll_translations_form.text_area :closing_note,
+                class: "html-area #{ck_editor_class(current_user)}" %>
+            <% end %>
+
+            <%= render "images/nested_image", f: polls_form %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <div class='row'>
     <div class='column <%= naming_column_class %>'>
       <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>

@@ -198,6 +198,18 @@ button {
       background-color: #edebeb;
     }
   }
+  &.-transparent-round-icon-button-black {
+    @extend .-transparent-round-icon-button;
+    color: black;
+
+    &:hover {
+      background-color: #00000012;
+    }
+
+    &:active {
+      background-color: #00000012;
+    }
+  }
 }
 
 .square-back-button {

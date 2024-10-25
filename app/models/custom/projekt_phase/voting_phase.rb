@@ -37,7 +37,7 @@ class ProjektPhase::VotingPhase < ProjektPhase
   end
 
   def poll
-    polls.first
+    polls.order(:id).first
   end
 
   private

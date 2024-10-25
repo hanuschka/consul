@@ -31,6 +31,7 @@ de:
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
           formular_phase:
             past_regular_formular_cutoff_date: Die Beteiligungsphase ist bereits abgeschlossen
+            submissions_limit_reached: Sie haben die maximale Zahl der erlaubten Einreichungen pro Nutzer erreicht.
           proposal_phase:
             proposals_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Vorschlägen pro Tag %{proposals_limit} erreicht
         votes_component:

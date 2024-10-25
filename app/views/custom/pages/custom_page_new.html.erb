@@ -51,14 +51,32 @@
       <div class="custom-page--banner">
         <div class="custom-page--banner-text-section-wrapper">
           <div class="custom-page--banner-text-section">
-            <h1 class="custom-page--banner-title">
-              <%= @custom_page.title %>
-            </h1>
+            <div class="custom-page--banner-title-wrapper">
+              <% if embedded_and_frame_access_code_valid?(@projekt) %>
+                <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
+                  <h1 class="custom-page--banner-title">
+                    <%= @custom_page.title %>
+                  </h1>
+                <% end %>
+              <% else %>
+                <h1 class="custom-page--banner-title">
+                  <%= @custom_page.title %>
+                </h1>
+              <% end %>
+            </div>
 
             <% if @custom_page.subtitle.present? %>
-              <div class="custom-page--banner-description">
-                <%= @custom_page.subtitle %>
-              </div>
+              <% if embedded_and_frame_access_code_valid?(@projekt) %>
+                <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
+                  <div class="custom-page--banner-description">
+                    <%= @custom_page.subtitle %>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="custom-page--banner-description">
+                  <%= @custom_page.subtitle %>
+                </div>
+              <% end %>
             <% end %>
           </div>
 

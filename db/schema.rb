@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_10_07_101637) do
+ActiveRecord::Schema.define(version: 2024_10_24_065406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -183,6 +183,8 @@ ActiveRecord::Schema.define(version: 2024_10_07_101637) do
     t.string "domain"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "service_api_token"
+    t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -2042,6 +2044,8 @@ ActiveRecord::Schema.define(version: 2024_10_07_101637) do
     t.string "frame_access_code"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
+    t.boolean "for_global_overview", default: false
+    t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end

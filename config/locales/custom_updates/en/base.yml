@@ -63,7 +63,9 @@ en:
       select:
         prompt: Please select
         gender_prompt: Gender (please select)
-        address_prompt: Address (please select)
+        prompt_city: City (bitte wählen)
+        prompt_street: Street (bitte wählen)
+        prompt_address: Address (bitte wählen)
         document_prompt: Document type (please select)
         not_in_list: Not in the list
     gdpr_notice:

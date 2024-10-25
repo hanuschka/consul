@@ -11,12 +11,14 @@
         <i class="fa fa-calendar"></i>
         <%= l(resource.created_at, format: :new_date_with_year) %>
       </div>
-      <div class="resource-page-banner--detail">
-        <%= link_to('#comments') do %>
-          <i class="fa fa-comment"></i>
-          <%= "#{resource.comments.count} #{t("custom.resource_page.banner_component.comments")}" %>
-        <% end %>
-      </div>
+      <% if !resource.respond_to?(:projekt_phase) || projekt_phase_feature?(resource&.projekt_phase, "resource.show_comments") %>
+        <div class="resource-page-banner--detail">
+          <%= link_to('#comments') do %>
+            <i class="fa fa-comment"></i>
+            <%= "#{resource.comments.count} #{t("custom.resource_page.banner_component.comments")}" %>
+          <% end %>
+        </div>
+      <% end %>
       <% if @resource.respond_to?(:projekt) %>
         <div class="resource-page-banner--detail">
           <%= link_to(projekt_path(resource.projekt)) do %>

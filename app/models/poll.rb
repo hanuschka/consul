@@ -14,6 +14,7 @@ class Poll < ApplicationRecord
   translates :name,        touch: true
   translates :summary,     touch: true
   translates :description, touch: true
+  translates :closing_note, touch: true
   include Globalizable
 
   RECOUNT_DURATION = 1.week
@@ -36,15 +37,15 @@ class Poll < ApplicationRecord
   belongs_to :budget
 
   validates_translation :name, presence: true
-  validate :date_range
-  validate :only_one_active, unless: :public?
+  # validate :date_range
+  # validate :only_one_active, unless: :public?
 
   accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
 
   scope :for, ->(element) { where(related: element) }
-  scope :current,  -> { where("starts_at <= ? and ? <= ends_at", Date.current.beginning_of_day, Date.current.beginning_of_day) }
-  scope :expired,  -> { where("ends_at < ?", Date.current.beginning_of_day) }
-  scope :recounting, -> { where(ends_at: (Date.current.beginning_of_day - RECOUNT_DURATION)..Date.current.beginning_of_day) }
+  scope :current,  -> { joins(:projekt_phase).where("projekt_phases.start_date <= ? and ? <= projekt_phases.end_date", Date.current.beginning_of_day, Date.current.beginning_of_day) }
+  scope :expired,  -> { joins(:projekt_phase).where("projekt_phases.end_date < ?", Date.current.beginning_of_day) }
+  scope :recounting, -> { joins(:projekt_phase).where( projekt_phase: { end_date: (Date.current.beginning_of_day - RECOUNT_DURATION)..Date.current.beginning_of_day } ) }
   scope :published, -> { where(published: true) }
   scope :by_geozone_id, ->(geozone_id) { where(geozones: { id: geozone_id }.joins(:geozones)) }
   scope :public_for_api, -> { all }
@@ -53,14 +54,14 @@ class Poll < ApplicationRecord
 
   def self.sort_for_list(user = nil)
     all.sort do |poll, another_poll|
-      [poll.weight(user), poll.starts_at, poll.name] <=> [another_poll.weight(user), another_poll.starts_at, another_poll.name]
+      [poll.weight(user), poll.projekt_phase.start_date || Date.new(9999, 12, 31), poll.name] <=> [another_poll.weight(user), another_poll.starts_at || Date.new(9999, 12, 31), another_poll.name]
     end
   end
 
   def self.overlaping_with(poll)
-    where("? < ends_at and ? >= starts_at", poll.starts_at.beginning_of_day,
-                                            poll.ends_at.end_of_day).where.not(id: poll.id)
-                                            .where(related: poll.related)
+    joins(:projekt_phase).where("? < projekt_phases.end_date and ? >= projekt_phases.start_date", poll.projekt_phase.start_date&.beginning_of_day,
+                                                                                                  poll.projekt_phase.end_date&.end_of_day).where.not(id: poll.id)
+                                                                                                  .where(related: poll.related)
   end
 
   def title
@@ -68,15 +69,20 @@ class Poll < ApplicationRecord
   end
 
   def current?(timestamp = Date.current.beginning_of_day)
-    starts_at <= timestamp && timestamp <= ends_at
+    start_ok = projekt_phase.start_date.nil? || projekt_phase.start_date <= timestamp
+    end_ok = projekt_phase.end_date.nil? || timestamp <= projekt_phase.end_date
+
+    start_ok && end_ok
   end
 
   def expired?(timestamp = Date.current.beginning_of_day)
-    ends_at < timestamp
+    return false if projekt_phase.end_date.nil?
+    projekt_phase.end_date < timestamp
   end
 
   def recounts_confirmed?
-    ends_at < 1.month.ago
+    return false if projekt_phase.end_date.nil?
+    projekt_phase.end_date < 1.month.ago
   end
 
   def self.current_or_recounting
@@ -137,23 +143,23 @@ class Poll < ApplicationRecord
     Poll::Voter.where(poll: self, user: user, origin: "web").exists?
   end
 
-  def date_range
-    unless starts_at.present? && ends_at.present? && starts_at <= ends_at
-      errors.add(:starts_at, I18n.t("errors.messages.invalid_date_range"))
-    end
-  end
+  # def date_range
+  #   unless starts_at.present? && ends_at.present? && starts_at <= ends_at
+  #     errors.add(:starts_at, I18n.t("errors.messages.invalid_date_range"))
+  #   end
+  # end
 
   def generate_slug?
     slug.nil?
   end
 
-  def only_one_active
-    return unless starts_at.present?
-    return unless ends_at.present?
-    return unless Poll.overlaping_with(self).any?
+  # def only_one_active
+  #   return unless starts_at.present?
+  #   return unless ends_at.present?
+  #   return unless Poll.overlaping_with(self).any?
 
-    errors.add(:starts_at, I18n.t("activerecord.errors.messages.another_poll_active"))
-  end
+  #   errors.add(:starts_at, I18n.t("activerecord.errors.messages.another_poll_active"))
+  # end
 
   def public?
     related.nil?

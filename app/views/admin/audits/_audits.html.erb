@@ -17,7 +17,13 @@
     </thead>
     <tbody>
       <% resource.own_and_associated_audits.order(:created_at).each do |audit| %>
-        <% audit.audited_changes.each do |field, (old_value, new_value)| %>
+        <% audit.audited_changes.each do |field, value| %>
+          <% if value.is_a?(Array) || audit.action == "destroy" %>
+            <% old_value, new_value = value %>
+          <% else %>
+            <% old_value, new_value = [nil, value] %>
+          <% end %>
+
           <tr>
             <td class="text-center"><%= audit.id %></td>
             <td class="small"><%= sanitize(resource.class.human_attribute_name(field)) %></td>

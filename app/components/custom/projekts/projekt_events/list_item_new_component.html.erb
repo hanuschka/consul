@@ -1,4 +1,5 @@
 <div id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
+
   <div class="projekt-event-item-new-calendar-column">
     <div class="projekt-event-item-new-calendar">
       <div class="projekt-event-item-new-calendar-dayname">
@@ -22,6 +23,7 @@
       <% end %>
     </div>
   </div>
+
   <div class="projekt-event-item-new-body">
     <h4 class="projekt-event-item-new-body--title">
       <% if @show_projekt_link && projekt_event.projekt.published? %>
@@ -42,17 +44,21 @@
       </div>
     <% end %>
     <div class="projekt-event-item-new-body--details">
-      <div class="projekt-event-item-new-body--details-row">
-        <i class="fa fa-code-branch"></i>
-        <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"} do %>
-          <%= projekt_event.projekt.name %>
-        <% end %>
-      </div>
+      <% if projekt_event.projekt.page.published? %>
+        <div class="projekt-event-item-new-body--details-row">
+          <i class="fa fa-code-branch"></i>
+          <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"} do %>
+            <%= projekt_event.projekt.name %>
+          <% end %>
+        </div>
+      <% end %>
       <div class="projekt-event-item-new-body--details-row">
         <i class="fa fa-map"></i><%= l(projekt_event.datetime, format: "%d. %B %Y %H:%M") %>
         <% if projekt_event.end_datetime.present? %>
           -
           <%= l(projekt_event.end_datetime, format: "%d. %B %Y %H:%M") %>
+        <% elsif projekt_event.open_ended? %>
+          (<%= projekt_event.class.human_attribute_name(:open_ended) %>)
         <% end %>
       </div>
       <% if projekt_event.location.present? %>
@@ -63,4 +69,10 @@
       <% end %>
     </div>
   </div>
+
+  <% if projekt_event.image.present? %>
+    <div class="projekt-event-item-new-image">
+      <%= image_tag projekt_event.image.variant(:projekt_event_thumb) %>
+    </div>
+  <% end %>
 </div>

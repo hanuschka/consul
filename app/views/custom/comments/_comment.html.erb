@@ -33,11 +33,15 @@
         <div class="comment-info">
           <% if comment.as_administrator? %>
             <span class="user-name">
-              <%= t("comments.comment.admin") %>
-              <% if valuation %>
-                <%= Administrator.find(comment.administrator_id).description_or_name %>
-              <% else %>
-                #<%= comment.administrator_id %>
+              <% if comment.administrator_id.to_i > 0 %>
+                <%= t("comments.comment.admin") %>
+                <% if valuation %>
+                  <%= Administrator.find(comment.administrator_id).description_or_name %>
+                <% else %>
+                  #<%= comment.administrator_id %>
+                <% end %>
+              <% elsif comment.administrator_id.to_i == 0 %>
+                <%= t("comments.comment.projekt_manager") %>
               <% end %>
             </span>
           <% elsif comment.as_moderator? %>

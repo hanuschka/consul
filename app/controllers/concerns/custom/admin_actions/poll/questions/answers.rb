@@ -2,6 +2,7 @@ module AdminActions::Poll::Questions::Answers
   extend ActiveSupport::Concern
 
   include Translatable
+  include ImageAttributes
   include DocumentAttributes
 
   included do
@@ -11,6 +12,7 @@ module AdminActions::Poll::Questions::Answers
 
   def new
     @answer = ::Poll::Question::Answer.new
+    @answer.videos.build unless @answer.videos.any?
     @question = ::Poll::Question.find_by(id: params[:question_id])
 
     render "admin/poll/questions/answers/new"
@@ -33,6 +35,7 @@ module AdminActions::Poll::Questions::Answers
   end
 
   def edit
+    @answer.videos.build unless @answer.videos.any?
     @question = @answer.question
 
     render "admin/poll/questions/answers/edit"
@@ -73,7 +76,11 @@ module AdminActions::Poll::Questions::Answers
     def answer_params
       attributes = [
         :title, :description, :given_order, :question_id, :open_answer, :more_info_link, :more_info_iframe,
-        :next_question_id, documents_attributes: document_attributes]
+        :next_question_id,
+        images_attributes: image_attributes,
+        documents_attributes: document_attributes,
+        videos_attributes: [:title, :url, :id]
+      ]
 
       params.require(:poll_question_answer).permit(
         *attributes, translation_params(Poll::Question::Answer)

@@ -8,7 +8,9 @@
 
   <% if Setting.new_design_enabled? %>
     <body class="<%= yield(:body_class) %> custom-new-design public">
-      <%= render "layouts/header", with_subnavigation: true %>
+      <% unless embedded? %>
+        <%= render "layouts/header", with_subnavigation: true %>
+      <% end %>
       <%= render "layouts/flash" %>
       <div class="wrapper">
         <%= yield %>

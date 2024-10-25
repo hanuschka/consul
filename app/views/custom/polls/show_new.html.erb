@@ -35,16 +35,12 @@
           <% end %>
         <% end %>
 
-        <% if @poll.summary.present? || @poll.description.present? %>
-          <div class="resource-page--description new-card main-content-card">
-            <%= render "poll_header" %>
-          </div>
-        <% end %>
+        <%= render "poll_header", projekt_phase: @projekt_phase %>
 
         <%= render "callout" %>
 
         <div class="margin-bottom">
-          <% if @poll.wizard_mode? %>
+          <% if @poll.in_wizard_mode? %>
             <div class="question-wizard js-question-wizard">
               <div class="progress question-wizard--progress js-question-wizard--progress">
                 <span class="meter js-question-wizard--progress-bar"></span>
@@ -69,13 +65,20 @@
                 <% end %>
               </div>
 
+              <%= render partial: "polls/poll/closing_note", locals: { poll: @poll } %>
+
               <div class="questions-navigation margin-bottom">
                 <div class="d-flex">
                   <button type="button" class="d-none button hollow question-wizard-prev js-question-wizard-prev">
                     <%= t("custom.polls.questions.prev_question") %>
                   </button>
+
                   <button type="button" class="button margin-left hollow js-question-wizard-next">
                     <%= t("custom.polls.questions.next_question") %>
+                  </button>
+
+                  <button type="button" class="d-none button margin-left js-poll-closing-note">
+                    <%= t("custom.polls.questions.closing_note") %>
                   </button>
                 </div>
                 <button type="button" class="d-none button hollow js-question-wizard-go-to-start">
@@ -85,6 +88,12 @@
             </div>
           <% else %>
             <%= render Polls::Questions::QuestionComponent.with_collection(@questions) %>
+
+            <button type="button" class="button js-poll-closing-note float-right">
+              <%= t("custom.polls.questions.closing_note") %>
+            </button>
+
+            <%= render partial: "polls/poll/closing_note", locals: { poll: @poll } %>
           <% end %>
         </div>
 
@@ -111,7 +120,7 @@
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
         <div class="margin-bottom-half">
-           <%= format_date_range(@poll.starts_at, @poll.ends_at, separator: t("custom.polls.poll.date.to")) %>
+          <%= format_date_range(@poll.projekt_phase.start_date, @poll.projekt_phase.end_date, separator: t("custom.polls.poll.date.to")) %>
         </div>
       <% end %>
       <%= render Shared::SidebarCardComponent.new(title: t("custom.common.share"), icon_name: "share-alt") do |c| %>

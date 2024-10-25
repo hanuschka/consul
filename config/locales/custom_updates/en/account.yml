@@ -2,11 +2,13 @@ en:
   custom:
     account:
       show:
+        data_complete: User data complete
+        data_missing: User data not complete
         change_credentials_link: Change login information
         edit_details_link: Update personal information
         erase_account_link: Delete account
         settings: Account settings
-        verification_title: Account verification
+        verification_title_html: Personal data |<br>Account verification
         verification_description: Some participation projects require user verification. By clicking on the button you can start the user verification.
         verification_with_bund_id_description: Some participation projects require user verification. You can start the user verification by clicking on the button. You must verify yourself with the BundID using a high level of verification, such as an ID card or Elster. Other login methods such as a user name and password are not sufficient.
         personal_settings: Personal settings

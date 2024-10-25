@@ -7,6 +7,9 @@ en:
         question_phase: Take part in the short survey
         budget_phase: Participate now
         formular_phase: Participate now
+        legislation_phase: Participate now
+        comment_phase: Participate now
+        livestream_phase: Participate now
       permission_problem:
         new_button_component:
           shared:
@@ -27,6 +30,7 @@ en:
             only_specific_registered_address_groupings: Participation is limited to another area.
           formular_phase:
             past_regular_formular_cutoff_date: The participation phase has already been completed
+            submissions_limit_reached: You have reached the maximum number of submissions allowed per user
         votes_component:
           shared:
             guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."

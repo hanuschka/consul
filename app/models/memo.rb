@@ -3,6 +3,8 @@ class Memo < ApplicationRecord
   include ActsAsParanoidAliases
   include Memoable
 
+  has_ancestry touch: true
+
   belongs_to :memoable, -> { with_hidden }, polymorphic: true
   belongs_to :user, -> { with_hidden }, inverse_of: :memos
 
@@ -10,5 +12,9 @@ class Memo < ApplicationRecord
   validates :memoable, presence: true
   validates :user, presence: true
 
-  alias_attribute :children, :memos
+  alias_attribute :author, :user
+
+  def root_memoable
+    root.memoable
+  end
 end

@@ -9,8 +9,8 @@
   transition: background 0.2s ease-in-out;
   border-radius: 10px;
   padding-top: 40px;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 35px;
+  padding-right: 35px;
 
   &:hover {
     background: #dcdcdc;
@@ -44,6 +44,7 @@
   color: $dark;
   opacity: 0.5;
   line-height: 1.25;
+  text-align: center;
 
   @media(max-width: $mobile-viewport-start) {
     font-size: 14px;

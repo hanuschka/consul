@@ -9,11 +9,16 @@
         $(this).next(".js-new-image-link").removeClass("hide");
       });
       $(".js-nested-image").on("cocoon:before-insert", function() {
-        $(this).find(".js-image-attachment").closest(".image").remove();
+        if ( $(this).parents(".js-multiple-images-allowed").length === 0) {
+          $(this).find(".js-image-attachment").closest(".image").remove();
+        }
       });
+
       $(".js-nested-image").on("cocoon:after-insert", function(e, nested_image) {
         var input;
-        $(this).next(".js-new-image-link").addClass("hide");
+        if ( $(this).parents(".js-multiple-images-allowed").length === 0) {
+          $(this).next(".js-new-image-link").addClass("hide");
+        }
         input = $(nested_image).find(".js-image-attachment");
         App.Imageable.initializeDirectUploadInput(input);
       });

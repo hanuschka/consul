@@ -1,0 +1,9 @@
+<div id="closing-note" class="poll-question" style="display:none">
+  <div class="padding">
+    <% if poll.closing_note.present? %>
+      <%= AdminWYSIWYGSanitizer.new.sanitize(poll.closing_note) %>
+    <% else %>
+      <%= t("custom.polls.show.closing_note_default_text_html") %>
+    <% end %>
+  </div>
+</div>

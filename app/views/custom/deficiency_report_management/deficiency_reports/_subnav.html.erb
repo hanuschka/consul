@@ -1,0 +1,13 @@
+<div class="row expanded full-width">
+  <div class="small-12 columns margin-bottom">
+    <div class="static-subnav">
+      <%= link_to("Administrieren", polymorphic_path([@namespace, deficiency_report]), class: ["static-subnav-link", static_subnav_link_current?("show")].reject(&:blank?).join(" ")) %>
+      <% if can?(:edit, deficiency_report) %>
+        <%= link_to("Editieren", polymorphic_path([@namespace, deficiency_report], action: :edit), class: ["static-subnav-link", static_subnav_link_current?("edit")].reject(&:blank?).join(" ")) %>
+      <% end %>
+      <% if can?(:audits, deficiency_report) %>
+        <%= link_to("Änderung Log", polymorphic_path([@namespace, deficiency_report], action: :audits), class: ["static-subnav-link", static_subnav_link_current?("audits")].reject(&:blank?).join(" ")) %>
+      <% end %>
+    </div>
+  </div>
+</div>

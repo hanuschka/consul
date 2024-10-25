@@ -1,13 +1,15 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<div class="projekt-livestream-section">
-  <div class="column">
-    <% if @current_projekt_livestream.present? %>
-      <%= render(ProjektLivestreams::ShowSection.new(current_projekt_livestream: @current_projekt_livestream, other_livestreams: @other_livestreams)) %>
-    <% else %>
-      <h3>
-        <%= t('custom.projekts.projekt_livestreams.no_livestreams') %>
-      </h3>
-    <% end %>
+<% unless embedded? %>
+  <div class="projekt-livestream-section">
+    <div class="column">
+      <% if @current_projekt_livestream.present? %>
+        <%= render(ProjektLivestreams::ShowSection.new(current_projekt_livestream: @current_projekt_livestream, other_livestreams: @other_livestreams)) %>
+      <% else %>
+        <h3>
+          <%= t('custom.projekts.projekt_livestreams.no_livestreams') %>
+        </h3>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>

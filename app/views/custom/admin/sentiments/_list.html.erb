@@ -1,0 +1,34 @@
+<% if @sentiments.empty? %>
+  <p><%= t("custom.admin.projekt_phases.sentiments.no_sentiments") %></p>
+
+<% else %>
+  <h2><%= t("custom.admin.projekt_phases.sentiments.list_title") %></h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("custom.admin.projekt_phases.sentiments.table.color") %></th>
+        <th><%= t("custom.admin.projekt_phases.sentiments.table.name") %></th>
+        <th><%= t("admin.actions.actions") %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @sentiments.each do |sentiment| %>
+        <tr id="<%= dom_id(sentiment) %>">
+          <td><%= sentiment.color %></td>
+          <td><%= sentiment.name %></td>
+          <td>
+            <%= render Admin::TableActionsComponent.new(sentiment,
+                                                        actions: [:edit, :destroy],
+                                                        edit_path: polymorphic_path([@namespace, @projekt_phase, sentiment], action: :edit),
+                                                        destroy_path: polymorphic_path([@namespace, @projekt_phase, sentiment]),
+                                                        edit_options: { remote: true, data: { "turbolinks-scroll": "false" }},
+                                                        destroy_options: { remote: true }
+                                                       ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

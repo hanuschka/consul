@@ -1,5 +1,5 @@
 class Proposals::NewVotesComponent < ApplicationComponent
-  delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_guest_signin,
+  delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_guest_signin, :link_to_enter_missing_user_data,
            :link_to_verify_account, :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
   attr_reader :proposal, :vote_url
@@ -22,7 +22,7 @@ class Proposals::NewVotesComponent < ApplicationComponent
       if @voted == true || @voted == false
         @voted
       else
-        current_user&.voted_for?(proposal)
+        current_user&.voted_up_for?(proposal)
       end
     end
 
@@ -44,6 +44,7 @@ class Proposals::NewVotesComponent < ApplicationComponent
       t(path_to_key,
             sign_in: link_to_signin, sign_up: link_to_signup,
             guest_sign_in: link_to_guest_signin,
+            enter_missing_user_data: link_to_enter_missing_user_data,
             verify: link_to_verify_account,
             city: Setting["org_name"],
             geozones: @proposal_phase&.geozone_restrictions_formatted,

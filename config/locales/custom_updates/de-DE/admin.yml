@@ -1,5 +1,8 @@
 de:
   admin:
+    actions:
+      action: Aktion
+      actions: Aktionen
     homepage:
       feeds:
         active_projekts: Aktive Beteiligung
@@ -28,7 +31,39 @@ de:
           list:
             created_at: Erstellungsdatum
         show:
+          not_defined: undefiniert
+          state_block_title: Status des Vorschlags
           physical_votes_updated: Physical votes updated!
+          feasibility: Durchführbarkeit
+          price: Preisliche Einschätzung der Verwaltung (€)
+          price_first_year: Preisliche Einschätzung der laufende Kosten im ersten Jahr (€)
+          price_explanation: Erläuterung der Verwaltung
+          duration: Zeitrahmen
+          valuation_finished_label: Gutachten
+          valuation_finished:
+            "true": abgeschlossen
+            "false": noch nicht abgeschlossen
+          selected_label: Für Unterstützungsphase ausgewählt
+          selected:
+            "true": ja
+            "false": nein
+          compatible_label: Zur Gewinnerliste zugelassen
+          compatible:
+            "true": ja
+            "false": nein
+          winner_label: Gewinner
+          winner:
+            "true": ja
+            "false": nein
+          state_block_action_button_title: Bearbeiten
+          details_block_title: Weitere Infos
+          author: Autor
+          created_at: Erstellungsdatum
+          implementation_performer_label: Umsetzung
+          implementation_performer:
+            city: Autor unterstützt bei der Umsetzung nicht
+            user: Autor unterstützt bei der Umsetzung
+          user_cost_estimate: Preisliche Einschätzung des Nutzers (€)
       deficiency_reports:
         index:
           entry_name: Mangel
@@ -45,6 +80,7 @@ de:
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
+          submit: Filter/Suche
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -55,6 +91,7 @@ de:
             icon: Icon
             name: Name
             warning_text: Popup
+            default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
           destroy:
             cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einem Mangel zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.
@@ -69,6 +106,16 @@ de:
             title: Kategorien
           new:
             creating: Neue Mangelkategorie erstellen
+        official_answer_templates:
+          index:
+            title: Antwortvorlagen
+            button_new: Neue Vorlage erstellen
+          new:
+            title: Neue Vorlage erstellen
+          edit:
+            title: Vorlage bearbeiten
+          form:
+            submit_button: Speichern
         deficiency_report:
           category: Kategorie
           officer: Sachbearbeiter*in
@@ -87,19 +134,19 @@ de:
           index:
             title: Funktionen
         show:
-          author: Autor
-          category: Kategorie
+          on_behalf_of: im Namen von
           created_at: Erstellt am
-          description: Bezeichnung
-          entry_name: Mangel
-          no_deficiency_reports: Keine Mängelmeldungen
-          officer_name: Sachbearbeiter*in
-          official_answer: Offizielle Antwort
-          status: Status
-          summary: Zusammenfassung
-          title: Mängel zuweisen
           updated_at: Aktualisiert am
-          video: Video
+          # category: Kategorie
+          # description: Bezeichnung
+          # entry_name: Mangel
+          # no_deficiency_reports: Keine Mängelmeldungen
+          # officer_name: Sachbearbeiter*in
+          # official_answer: Offizielle Antwort
+          # status: Status
+          # summary: Zusammenfassung
+          # title: Mängel zuweisen
+          # video: Video
         statuses:
           destroy:
             cannot_be_destroyed: Sie können diesen Status nicht löschen, da er mindestens einem Mangel zugewiesen ist.
@@ -176,6 +223,7 @@ de:
           reports: Mängel zuweisen
           settings: Funktionen
           statuses: Status definieren
+          official_answer_templates: Antwortvorlagen
           areas: Gebiete
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
@@ -197,6 +245,9 @@ de:
         matomo: Matomo
       polls:
         show:
+          table:
+            title: Fragen
+            type: Typ
           edit_nested_questions: Verschachtelte Fragen
           title: Fragetyp
         poll:
@@ -213,8 +264,9 @@ de:
                 error: Für diese Abstimmung wurden schon Stimmen abgegeben. Sie können die Antwort deshalb nicht mehr löschen.
                 success: Antwort erfolgreich gelöscht.
               open_answer_saved: Vielen Dank! Ihre Antwort wurde erfolgreich gespeichert.
-            open_answer_html: Offene Antwort <small><em>(Nur eine erlaubt)</em></small>
-          show_images: Bilder für Antworten anzeigen
+            open_answer: Offene Antwort
+            open_answer_hint: (Nur eine pro Frage erlaubt, zusätzliche Infos wie Bilder oder Dokumente werden für diesen Antworttyp nicht im Frontend angezeigt)
+          show_images: Antwortoptionen sollen als Bilder angezeigt werden
         settings:
           show_on_home_page: Diese Abstimmung wird auf der Homepage angezeigt.
           show_on_index_page: Diese Abstimmung wird auf der Abstimmungsübersicht angezeigt
@@ -224,16 +276,20 @@ de:
           show_summary_instead_of_questions: Zusammenfassung statt Liste aller Fragen in der Abstimmungsübersicht anzeigen
       questions:
         index:
-          create_normal: Normale Frage stellen
+          create_normal: Normale Frage erstellen
           create_bundle: Fragenbündel erstellen
         new:
           bundle_question_title: Fragenbündel erstellen für %{poll}
         show:
-          add_nested_question: Verschachtelte Frage hinzufügen
-          vote_type: Art der Abstimmung
+          bundle_title: Möchten Sie eine Unterfrage hinzufügen?
+          title: Möchten Sie eine Antwort hinzufügen?
+          add_nested_question: Neue Unterfrage hinzufügen
+          bundle_list_title: Dies ist die Liste aller Unterfrage
           answers:
             next_question: Nächste Frage
-
+          table:
+            nested_questions_title: Unterfragen
+            nested_questions_vote_type: Typ
       progress_bars:
         index:
           progress_bar: Fortschrittsbalken
@@ -262,17 +318,6 @@ de:
               default_tab: Standard
               activated: Aktiviert
               edit_link: Bearbeiten
-            link:
-              question_phase: Zu den Kurzumfragen
-              voting_phase: Zu den Abstimmungen
-              budget_phase: Zu den Budgets
-              legislation_phase: Zur Textbearbeitung
-              argument_phase: Zu den Stimmen
-              notification_phase: Zu den Benachrichtigungen
-              milestone_phase: Zu den Meilensteinen
-              event_phase: Zu den Veranstaltungen
-              livestream_phase: Zu den Livestreams
-              newsfeed_phase: Zu den News-Feeds
             restriction_names:
               age: Alter
               geo: Geo
@@ -434,24 +479,41 @@ de:
             archived_projekt: Abgeschlossener Beteiligungsprozess
       flash:
         deleted: Gelöscht
+      projekt_events:
+        edit:
+          title: Veranstaltung bearbeiten
       projekt_phases:
+        voting_phase:
+          description: Beschreibungstext auf der Abstimmungsseite
         nav_bar:
           duration: Laufzeit
-          naming: Benennungen
-          restrictions: Einschränkungen
+          naming: Benennung
+          restrictions: Beschränkung
           settings: Funktionen
           map: Karte
           projekt_labels: Labels
           sentiments: Sentimente
-          age_ranges_for_stats: Altersgruppen für Statistiken
+          age_ranges_for_stats: Alterskohorten
           projekt_questions: Liste der Kurzumfragen
           projekt_livestreams: Liste der Livestreams
           projekt_events: Liste von Veranstaltungen
           milestones: Liste der Meilensteine
+          progress_bars: Fortschrittsbalken
           projekt_notifications: Benachrichtigungen
           projekt_arguments: Liste von Stimmen
-          formular: Formular
+          formular: Formularfelder
           formular_answers: Posteingang & Follow-up E-Mails
+          form_author: Formular Autor
+          user_functions: Funktionen Nutzer
+          poll_questions: Fragen
+          poll_booth_assignments: Wahlkabinen
+          poll_officer_assignments: Wahlhelfer
+          poll_recounts: Auszählung
+          poll_results: Ergebnisse
+          budget_edit: Editieren
+          budget_investments: Vorschläge
+          budget_phases: Phasen
+          legislation_process_draft_versions: Entwurfsfassungen
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -459,83 +521,102 @@ de:
           not_destroyed: Phase konnte nicht gelöscht werden, da sie bereits assoziierte Inhalte hat
         shared:
           update_button: Speichern
-        phase_tab_name: Name in Tab
-        cta_button_name: Text in Button
-        resource_form_title: Text bei Erstellung
-        resource_form_title_hint: Platzhalter
-        labels_name: Labels
-        sentiments_name: Sentiments
+        phase_tab_name: Name in Tab auf der Projektseite
+        cta_button_name: Buttontext auf der Projektseite
+        resource_form_title: Überschrift des Erstellungsformulars
+        resource_form_title_hint: Text des Platzhalters im Erstellungsformular
+        labels_name: Alternativtext zu Labels
+        sentiments_name: Alternativtext zu Sentimente
         projekt_selector_hint: Hinweise zum Projekt
         edit:
           title: Einstellung für Phase
         duration:
-          page_title: Laufzeit
+          page_title: Wie soll die Laufzeit der Phase sein?
           start_date: Anfangsdatum
           end_date: Enddatum
         naming:
-          page_title: Benennungen
+          page_title: Wie möchten Sie einzelne Elemente benennen?
         restrictions:
-          page_title: Einschränkungen
-          guest_participation_allowed: Gastteilnahme erlaubt
+          page_title: Möchten Sie die Beteiligung einschränken?
+          intro:
+            p1_html: Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.
+            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet. 
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer*innen
+            no_restriction: Keine Beschränkung
           extended_geo_restrictions:
-            title: Zusatzliche individuelle Gebietsbeschränkungen
+            title: Individuelle Gebiete
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
+            no_restriction: Keine Beschränkung
           geo_restrictions:
             title: Gebietsbeschränkung
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
-            no_restriction: Alle Nutzer:innen der Plattform
-            only_citizens: Nur Bürger:innen der Stadt
-            only_geozones: Nur Bürger:innen des Stadtteils
-            only_streets: Nur Bürger:innen aus Straße
+            no_restriction: Keine Beschränkung
+            only_citizens: Bürger:innen der Stadt
+            only_geozones: Bürger:innen des Stadtteils
+            only_streets: Bürger:innen aus Straße
           individual_group_values:
-            title: Einschränkung auf Gruppen
-          verification:
-            title: Verifizierung
-            no_restriction: Alle Nutzer*innen
-            only_verified: Nur verifizierte Nutzer*innen
+            title: Gruppen
+          user_status:
+            title: Nutzerstatus
+            guest: Gastnutzer
+            registered: Registrierte Nutzer
+            verified: Verifizierte Nutzer
         settings:
+          page_title: Welche Funktionen wollen Sie den Nutzern zur Verfügung stellen?
           block_title:
             general: Funktionen
             form: Formularfelder
             resource: Individueller Beitrag
+            form_author: Formular Autor
+            user_functions: Funktionen Nutzer
         projekt_labels:
-          name: Labels
-          page_title: Labels
-          create_button: Label erstellen
+          new_block_title: Möchten Sie ein Label hinzufügen?
+          list_title: Hier ist die Liste aller Labels
+          create_button: Neues Label erstellen
           no_labels: Für dieses Projekt sind noch keine Labels hinterlegt
           table:
             icon: Icon
             color: Farbe
             name: Name
           form:
+            title: Welchen Namen und welches Icon soll Ihr Label haben?
             color_placeholder: "HEX Code mit #"
         sentiments:
-          page_title: Sentiments
-          create_button: Sentiment erstellen
+          new_block_title: Möchten Sie ein Sentiment hinzufügen?
+          list_title: Hier ist die Liste aller Sentimente
+          create_button: Neues Sentiment erstellen
           no_sentiments: Für dieses Projekt sind noch keine Sentiments hinterlegt
           table:
             color: Farbe
             name: Name
           form:
+            title: Welchen Namen und welche Farbe soll Ihr Sentiment haben?
             color_placeholder: "HEX Code mit #"
           notice:
             destroy: Sentiment erfolgreich gelöscht
+        milestones:
+          new_block_title: Möchten Sie einen Meilenstein setzen?
+          new_button: Meilenstein hinzufügen
+          list_title: Dies ist die Liste aller Meilensteine
+        progress_bars:
+          new_block_title: Möchten Sie einen Fortschrittsbalken hinzufügen?
+          new_button: Fortschrittsbalken hinzufügen / vewalten
+          list_title: Dies ist die Ihr aktueller Fortschrittsbalken
         projekt_questions:
-          page_title: Kurzumfrage
+          new_block_title: Möchten Sie eine Frage hinzufügen?
           create_button: Frage erstellen
           send_notifications_button: Benachrichtigungen senden
+          list_title: Dies ist die Liste aller Fragen
           table:
-            title: Kurzumfrage
-            question_options: Antwortmöglichkeiten
-            answers_count: Anzahl der Antworten
-            comments_count: Anzahl der Kommentare
+            title: Fragen
+            question_options: Antworten
+            comments_count: Kommentare
+          form:
+            question_options: Mögliche Antwortoptionen
           new:
-            title_livestream: Frage für Livestream erstellen
+            title_livestream: Welche Frage wollen Sie stellen und welche Antwortoptionen möchten Sie beiten?
             title: Frage erstellen
         map:
           copy_from_projekt: vom Projekt übernehmen
@@ -544,10 +625,11 @@ de:
         projekt_events:
           page_title: Veranstaltungen
         projekt_notifications:
-          page_title: Nachricht senden
+          page_title: Möchten Sie eine Benachrichtigung senden?
           button: Nachricht senden
         projekt_arguments:
-          page_title: Stimmen
+          projekt_phase_default_title: Stimmen / Meinungen
+          page_title: Möchten Sie eine Stimme / Meinung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           argument_pro: Pro
@@ -559,23 +641,29 @@ de:
           event_created_at: Hergestellt in
           event_datetime: Datum
           event_end_datetime: Endtermin
+          open_ended: Offenes Ende
           event_location: Veranstaltungsort
           event_title: Veranstaltungstitel
           event_weblink: Weblink
           event_description: Beschreibung
           name: Veranstaltungen
-          page_title: Veranstaltungen
+          page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
         projekt_livestreams:
-          page_title: Livestreams
-          all_livestreams: Alle Livestreams
+          new_block_title: Möchten Sie einen Livestream hinzufügen?
+          new_button_title: Livestream hinzufügen
+          all_livestreams: Dies ist die Liste aller Livestreams
           add_question: Frage hinzufügen
           questions: Kurzumfragen
+          edit_livestream: Kurzumfrage editieren
+          delete_livestream: Kurzumfrage löschen
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
+          new:
+            title: Welche URL hat Ihr Livestream?
         formular:
-          page_title: Formular
+          page_title: Welche Formularfelder soll Ihr Formular enthalten?
           primary_fields_title: Reguläre Formularfelder
           follow_up_fields_title:  Follow-up Formularfelder
           dropdown_hint: Bitte geben Sie Ihre Antwortoptionen ein. Diese müssen durch ein Komma getrennt sein.
@@ -591,7 +679,7 @@ de:
           add_field_button: Neues Formularfeld hinzufügen
         formular_answers:
           page_title: Posteingang & Follow-up E-Mails
-          emails_title: Follow-up E-Mails
+          emails_title: Möchten Sie Follow-Up-E-Mails versenden?
           subject_placeholder: E-Mail
           recipients: "%{number} Empfänger"
           emails_sent: "%{number} E-Mails gesendet"
@@ -602,6 +690,15 @@ de:
             create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
         age_ranges_for_stats:
           page_title: Altersgruppen für Statistiken
+        budget_phases:
+          page_title: Wie soll die Laufzeit der Phasen sein?
+        budget_edit:
+          page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
+        budget_investments:
+          page_title: Investitionsvorschläge
+        legislation_process_draft_versions:
+          new_block_title: Möchten Sie eine Version hinzufügen?
+          list_title: Dies ist die Lister aller Textversionen
       modal_notifications:
         index:
           create: Erstellen

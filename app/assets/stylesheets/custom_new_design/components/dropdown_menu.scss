@@ -1,4 +1,4 @@
-.dropdown-container {
+.dropdown-select-container {
   margin: 0 auto;
   color: #292929;
 }
@@ -15,7 +15,7 @@
   }
 }
 
-.dropdown-container {
+.dropdown-select-container {
   position: relative;
 
   .dropdown-toggle {
@@ -95,7 +95,8 @@
   }
 }
 
-.dropdown-container.dropdown-open {
+.dropdown-select-container.dropdown-open {
+
   .dropdown-toggle {
     &:before {
       transform: rotate(-135deg);

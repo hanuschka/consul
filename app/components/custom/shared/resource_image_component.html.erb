@@ -4,9 +4,6 @@
     <%= image_tag(@image_url, class: "resource-image--blur", alt: "") %>
   <% else %>
     <div class="resource-image--missing-image-placeholder">
-      <div class="resource-image--missing-image-placeholder-text">
-        <%= resource_name unless @resource.is_a?(Topic) %>
-     </div>
       <i class="resource-image--missing-image-placeholder-icon fa <%= @image_placeholder_icon_class %>"></i>
     </div>
   <% end %>

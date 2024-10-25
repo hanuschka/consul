@@ -7,7 +7,10 @@
       "aria-label": strip_tags(t("settings.#{setting.key}")),
       "aria-describedby": dom_id(setting, :description) %>
   </div>
-  <div class="small-12 medium-6 large-4 column">
-    <%= f.submit(t("admin.settings.index.update_setting"), class: "button hollow expanded") %>
-  </div>
+
+  <% unless embedded_and_frame_access_code_valid?(@projekt) %>
+    <div class="small-12 medium-6 large-4 column">
+      <%= f.submit(t("admin.settings.index.update_setting"), class: "button hollow expanded") %>
+    </div>
+  <% end %>
 <% end %>

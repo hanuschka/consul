@@ -4,7 +4,7 @@ class Poll::Question::Answer::Video < ApplicationRecord
   VIMEO_REGEX = /vimeo.*(staffpicks\/|channels\/|videos\/|video\/|\/)([^#\&\?]*).*/.freeze
   YOUTUBE_REGEX = /youtu.*(be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/.freeze
 
-  validates :title, presence: true
+  validates :title, presence: true, if: -> { url.present? }
   validate :valid_url?
 
   def self.model_name

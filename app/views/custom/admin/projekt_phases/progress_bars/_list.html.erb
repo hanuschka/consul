@@ -1,0 +1,52 @@
+<% if progressable.progress_bars.any? %>
+  <h2>
+    <%= t("custom.admin.projekt_phases.progress_bars.list_title") %>
+    <% if embedded? %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "progress bars"
+      ) %>
+    <% end %>
+  </h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("admin.progress_bars.index.table_id") %></th>
+        <th><%= t("admin.progress_bars.index.table_kind") %></th>
+        <th><%= t("admin.progress_bars.index.table_title") %></th>
+        <th class="text-center"><%= t("admin.progress_bars.index.table_percentage") %></th>
+        <th><%= t("admin.actions.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% progressable.progress_bars.each do |progress_bar| %>
+        <tr id="<%= dom_id(progress_bar) %>" class="progress-bar">
+          <td>
+            <%= progress_bar.id %>
+          </td>
+          <td><%= ProgressBar.human_attribute_name("kind.#{progress_bar.kind}") %></td>
+          <td>
+            <% if progress_bar.title.present? %>
+              <%= progress_bar.title %>
+            <% else %>
+              <strong><%= t("admin.progress_bars.index.primary") %></strong>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <%= number_to_percentage(progress_bar.percentage, strip_insignificant_zeros: true) %>
+          </td>
+          <td>
+            <%= render Admin::TableActionsComponent.new(progress_bar,
+                                                        edit_path: polymorphic_path([@namespace, progressable, progress_bar], action: :edit),
+                                                        destroy_path: polymorphic_path([@namespace, progressable, progress_bar])
+                                                       ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="callout primary">
+    <%= t("admin.progress_bars.index.no_progress_bars") %>
+  </div>
+<% end %>

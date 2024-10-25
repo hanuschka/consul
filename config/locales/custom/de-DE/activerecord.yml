@@ -1,9 +1,9 @@
 de:
   attributes:
     geozone_id: "Rahmen des Vorschlags"
-    results_enabled: "Ergebnisse anzeigen"
-    stats_enabled: "Statistiken anzeigen"
-    advanced_stats_enabled: "Erweiterte Statistiken anzeigen"
+    results_enabled: "Ergebnisse"
+    stats_enabled: "Statistiken"
+    advanced_stats_enabled: "Erweiterte Statistiken"
     name: Name
     email: Email
     description: Beschreibung
@@ -157,7 +157,7 @@ de:
         description_finished: "Beschreibung, wenn das Budget beschlossen ist"
         phase: "Phase"
         currency_symbol: "Währung"
-        voting_style: "Stil der Abstimmungen"
+        voting_style: "Abstimmungsstil"
         voting_style_knapsack: "Knapsack (Mehrere Stimmen bis Budget aufgebraucht ist)"
         voting_style_approval: "Zustimmung (Eine Stimme)"
       budget/translation:
@@ -223,7 +223,7 @@ de:
         longitude: "Längengrad (optional)"
         name: "Name der Rubrik"
         price: "Preis"
-        population: "Anzahl der Personen"
+        population: "Bevölkerungszahl (optional)"
         max_ballot_lines: "Stimmen erlaubt"
       budget/heading/translation:
         name: "Name der Rubrik"
@@ -426,13 +426,13 @@ de:
         title: Titel der Fassung
         body: Text
         changelog: Änderungen
-        status: Status
+        status: Status dieser Version
         status_draft: "Entwurf"
         status_published: "Veröffentlicht"
         final_version: Endgültige Version
       legislation/draft_version/translation:
-        title: Titel der Fassung
-        body: Text
+        title: Titel dieser Version
+        body: Text dieser Version
         changelog: Änderungen
       legislation/question:
         title: Titel
@@ -456,8 +456,8 @@ de:
         title: Antwort
         description: Beschreibung
       poll/question/answer/video:
-        title: Titel
-        url: Externes Video
+        title: Externes Video Titel
+        url: Externes Video URL
       newsletter:
         segment_recipient: Empfänger*innen
         subject: Betreff

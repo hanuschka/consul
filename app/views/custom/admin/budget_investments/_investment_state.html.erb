@@ -1,0 +1,56 @@
+<h3><%= t("custom.admin.budget_investments.show.state_block_title") %></h3>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.feasibility")}: " %></strong>
+  <%= t("valuation.budget_investments.show.#{investment.feasibility}") %>
+</p>
+
+<% if investment.price.present? %>
+  <p>
+    <strong><%= "#{t("custom.admin.budget_investments.show.price")}: " %></strong>
+    <%= investment.price %>
+  </p>
+<% end %>
+
+<% if investment.price_first_year %>
+  <p>
+    <strong><%= "#{t("custom.admin.budget_investments.show.price_first_year")}: " %></strong>
+    <%= investment.price_first_year %>
+  </p>
+<% end %>
+
+<% if investment.price_explanation.present? %>
+  <p><%= "#{t("custom.admin.budget_investments.show.price_explanation")}: #{explanation_field(investment.price_explanation)}" %></p>
+<% end %>
+
+<% if investment.duration.present? %>
+  <p>
+    <strong><%= "#{t("custom.admin.budget_investments.show.duration")}: " %></strong>
+    <%= investment.duration %>
+  </p>
+<% else %>
+  <p>
+    <strong><%= "#{t("custom.admin.budget_investments.show.duration")}: " %> </strong>
+    <%= t("custom.admin.budget_investments.show.not_defined") %>
+  </p>
+<% end %>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.valuation_finished_label")}: " %></strong>
+  <%= t("custom.admin.budget_investments.show.valuation_finished.#{investment.valuation_finished}") %>
+</p>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.selected_label")}: " %></strong>
+  <%= t("custom.admin.budget_investments.show.selected.#{investment.selected}") %>
+</p>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.compatible_label")}: " %></strong>
+  <%= t("custom.admin.budget_investments.show.compatible.#{!investment.incompatible}") %>
+</p>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.winner_label")}: " %></strong>
+  <%= t("custom.admin.budget_investments.show.winner.#{investment.winner}") %>
+</p>

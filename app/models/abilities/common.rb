@@ -101,17 +101,17 @@ module Abilities
       end
 
       # can :create, Budget::Investment,               budget: { phase: "accepting" }
-      can :edit, Budget::Investment,                 budget: { phase: "accepting" }, author_id: user.id
-      can :update, Budget::Investment,               budget: { phase: "accepting" }, author_id: user.id
-      can :suggest, Budget::Investment,              budget: { phase: "accepting" }
-      can :destroy, Budget::Investment,              budget: { phase: ["accepting", "reviewing"] }, author_id: user.id
+      can :edit, Budget::Investment,                 budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id
+      can :update, Budget::Investment,               budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id
+      can :suggest, Budget::Investment,              budget: { id: Budget.accepting.pluck(:id) }
+      can :destroy, Budget::Investment,              budget: { id: (Budget.accepting.pluck(:id) + Budget.reviewing.pluck(:id)) }, author_id: user.id
       can [:create, :destroy], ActsAsVotable::Vote,
         voter_id: user.id,
         votable_type: "Budget::Investment",
-        votable: { budget: { phase: "selecting" }}
+        votable: { budget: { id: Budget.selecting.pluck(:id) }}
 
-      can [:show, :create], Budget::Ballot,          budget: { phase: "balloting" }
-      can [:create, :destroy], Budget::Ballot::Line, budget: { phase: "balloting" }
+      can [:show, :create], Budget::Ballot,          budget: { id: Budget.balloting.pluck(:id) }
+      can [:create, :destroy], Budget::Ballot::Line, budget: { id: Budget.balloting.pluck(:id) }
 
       if user.level_two_or_three_verified?
         can :vote, Legislation::Proposal
@@ -141,15 +141,10 @@ module Abilities
       end
 
       can :create, Budget::Investment do |investment|
-        investment.budget.phase == "accepting" &&
-          (
-            (investment.projekt_phase.settings.find_by(
-              key: "feature.general.only_admins_create_investment_proposals").value.present? &&
-            (user.administrator? || user.projekt_manager?)) ||
+        projekt_phase = investment.budget.projekt_phase
 
-            investment.projekt_phase.settings.find_by(
-              key: "feature.general.only_admins_create_investment_proposals").value.blank?
-          )
+        investment.budget.current_phase.kind == "accepting" &&
+          (projekt_phase.selectable_by_users? || user.has_pm_permission_to?("manage", projekt_phase.projekt))
       end
 
       can [:create, :vote], Comment do |comment|
@@ -173,6 +168,8 @@ module Abilities
       can :destroy, RelatedContent do |related_content|
         related_content.author_id == user.id
       end
+
+      can [:create, :update], FormularAnswer
     end
   end
 end

@@ -2,6 +2,7 @@ de:
   custom:
     notification_service_mailers:
       shared:
+        hi: Hallo %{username},
         unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Beitrag bekommen möchten, dann klicken Sie <a href="%{url}" target="_blank">hier</a> und klicken auf die Benachrichtigungsglocke (Sie müssen eingeloggt sein).
       overdue_deficiency_reports:
         subject: Mangel wurde noch nicht bearbeitet
@@ -86,3 +87,6 @@ de:
         hi: Hallo %{username},
         intro_html: "Der Autor des Vorschlages %{proposal_link} hat eine neue Benachrichtigung erstellt:"
         unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Vorschlag bekommen möchten, gehen Sie zur <a href="%{url}" target="_blank">Vorschlagsseite</a> und klicken Sie auf “Nicht länger folgen” (dafür müssen Sie eingeloggt sein).
+      memo:
+        subject: Neuer Memo-Beitrag
+        intro_html: "Eine neue Memo-Benachrichtigung im Mangel %{root_momoable_link} wurde für Sie hinterlegt:"

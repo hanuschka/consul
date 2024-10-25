@@ -1,5 +1,5 @@
 <% init_advanced_menu %>
-<%= form_tag(admin_budget_budget_investments_path(budget: @budget), method: :get, enforce_utf8: false) do %>
+<%= form_tag(polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_investments), method: :get, enforce_utf8: false) do %>
   <div class="small-12 column">
     <%= link_to "#advanced_filters_content",
                 data: { toggle: "advanced_filters" },
@@ -41,11 +41,6 @@
     <%= select_tag :valuator_or_group_id,
                    options_for_select(valuator_or_group_select_options(@budget), params[:valuator_or_group_id]),
                    { prompt: t("admin.budget_investments.index.valuator_filter_all") } %>
-  </div>
-  <div class="small-12 medium-3 column">
-    <%= select_tag :heading_id,
-                   options_for_select(budget_heading_select_options(@budget), params[:heading_id]),
-                   { prompt: t("admin.budget_investments.index.heading_filter_all") } %>
   </div>
   <div class="small-12 medium-3 column">
     <%= select_tag :tag_name,

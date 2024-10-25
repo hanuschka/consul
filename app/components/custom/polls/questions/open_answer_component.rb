@@ -9,7 +9,7 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
   end
 
   def render?
-    question.open_question_answer.present?
+    question.open_question_answer.present? && question.can_accept_open_answer?
   end
 
   def can_answer?
@@ -23,8 +23,11 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
   end
 
   def additional_form_class
-    if open_answer.open_answer_text.present?
-      "js-question-answered"
-    end
+    classes = []
+
+    classes << "js-question-answered" if open_answer.open_answer_text.present?
+    classes << "column medium-4 open-answer-image-mode" if question.show_images?
+
+    classes.join(" ")
   end
 end

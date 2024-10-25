@@ -18,10 +18,20 @@ namespace :admin do
       get :projekt_livestreams
       get :projekt_events
       get :milestones
+      get :progress_bars
       get :projekt_notifications
       get :projekt_arguments
       get :formular
       get :formular_answers
+      get :poll_questions
+      get :poll_booth_assignments
+      get :poll_officer_assignments
+      get :poll_recounts
+      get :poll_results
+      get :budget_edit
+      get :budget_investments
+      get :budget_phases
+      get :legislation_process_draft_versions
     end
 
     resources :formular, only: [] do
@@ -47,12 +57,7 @@ namespace :admin do
         post :send_notifications
       end
     end
-    resources :projekt_livestreams, only: [:create, :update, :destroy] do
-      member do
-        post :send_notifications
-      end
-    end
-    resources :projekt_events, only: [:create, :update, :destroy] do
+    resources :projekt_livestreams, only: [:new, :edit, :create, :update, :destroy] do
       member do
         post :send_notifications
       end
@@ -92,9 +97,19 @@ namespace :admin do
     end
   end
 
+  resources :projekt_events, except: %i[index show new] do
+    member do
+      post :send_notifications
+    end
+  end
+
   resources :map_layers, only: [:update, :create, :edit, :new, :destroy]
 
-  resources :memos, only: %i[create destroy]
+  resources :memos, only: %i[create] do
+    member do
+      post :send_notification
+    end
+  end
 
   # custom individual groups routes
   resources :individual_groups do
@@ -165,6 +180,7 @@ namespace :admin do
   resources :debates, only: [:index, :show, :update]
 
   resources :proposals, only: [:index, :show, :update] do
+    collection { get :comments }
     member { patch :toggle_selection }
     resources :milestones, controller: "proposal_milestones"
     resources :progress_bars, except: :show, controller: "proposal_progress_bars"
@@ -200,6 +216,10 @@ namespace :admin do
       member do #custom
         patch :toggle_selection
         patch :edit_physical_votes
+        get :people
+        get :milestones
+        get :progress_bars
+        get :audits
       end
 
       resources :audits, only: :show, controller: "budget_investment_audits"
@@ -301,6 +321,10 @@ namespace :admin do
 
       resources :questions, only: [] do
         post :order_questions, on: :collection
+        member do
+          get :edit_votation_type
+          patch :update_votation_type
+        end
       end
     end
 

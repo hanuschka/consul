@@ -1,9 +1,19 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.projekt_notifications.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.projekt_notifications.page_title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "projekt notifications"
+        ) %>
+      <% end %>
+    </h2>
   </div>
 </div>
 
@@ -20,17 +30,17 @@
         <div class='small-12 medium-7 projekt-notification' id="<%= dom_id(notification) %>">
           <%= check_box_tag "edit_projekt_notification_#{dom_id(notification)}" %>
           <%= label_tag nil, nil, for: "edit_projekt_notification_#{dom_id(notification)}", class: "edit-projekt-notification" %>
-    
+
           <div class='projekt-notification-content'>
             <h3><%= notification.title %></h3>
             <p class="more-info"><%= notification.created_at.to_date %></p>
             <p><%= notification.body %></p>
           </div>
-    
+
           <div class='edit-projekt-notification-form'>
             <%= render "custom/admin/projekt_phases/projekt_notifications/form", notification: notification %>
           </div>
-    
+
           <%= link_to "", polymorphic_path([@namespace, @projekt_phase, notification]), method: :delete, class: "delete-projekt-notification" %>
           <hr>
         </div>
@@ -38,3 +48,12 @@
     </div>
   </div>
 </div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

@@ -1,5 +1,6 @@
 <%= render "shared/loader_spinner" %>
 
 <div class="margin-bottom">
-  <%= render_custom_block("projekt_footer_tab_explainer_#{projekt_phase.id}", return_path: url_to_footer_tab) %>
+  <% return_path = embedded_and_frame_access_code_valid?(projekt_phase.projekt) ? URI.encode_www_form_component(projekt_phase.projekt.frame_url) : url_to_footer_tab %>
+  <%= render_custom_block("projekt_footer_tab_explainer_#{projekt_phase.id}", return_path: return_path, show_controlls_on_embedded: embedded_and_frame_access_code_valid?(projekt_phase.projekt)) %>
 </div>

@@ -1,0 +1,12 @@
+<div id="create-or-edit-projekt-label">
+  <h2>
+    <%= t("custom.admin.projekt_phases.projekt_labels.new_block_title") %>
+    <% if embedded? %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "projekt labels"
+      ) %>
+    <% end %>
+  </h2>
+  <%= link_to t("custom.admin.projekt_phases.projekt_labels.create_button"),
+    polymorphic_path([@namespace, @projekt_phase, ProjektLabel.new], action: :new), class: "button", remote: true, data: { "turbolinks-scroll": "false" } %>
+</div>

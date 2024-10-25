@@ -1,7 +1,7 @@
-<% if question.min_rating_scale_label.present? %>
+<% if question.votation_type.min_rating_scale_label.present? %>
   <div class="rating-scale-label rating-scale-label--left">
     <div class="label secondary">
-      <%= question.min_rating_scale_label %>
+      <%= question.votation_type.min_rating_scale_label %>
     </div>
   </div>
 <% end %>
@@ -14,10 +14,10 @@
   <% end %>
 </div>
 
-<% if question.max_rating_scale_label.present? %>
+<% if question.votation_type.max_rating_scale_label.present? %>
   <div class="rating-scale-label rating-scale-label--right">
     <div class="label secondary">
-      <%= question.max_rating_scale_label %>
+      <%= question.votation_type.max_rating_scale_label %>
     </div>
   </div>
 <% end %>

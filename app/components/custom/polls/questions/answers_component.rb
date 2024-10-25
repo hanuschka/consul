@@ -18,8 +18,8 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
       count_of_rating_scale_cells = question.question_answers.count
 
       if Setting.new_design_enabled?
-        count_of_rating_scale_cells += 1 if question.min_rating_scale_label.present?
-        count_of_rating_scale_cells += 1 if question.max_rating_scale_label.present?
+        count_of_rating_scale_cells += 1 if question.votation_type.min_rating_scale_label.present?
+        count_of_rating_scale_cells += 1 if question.votation_type.max_rating_scale_label.present?
       end
 
       if count_of_rating_scale_cells >= 8
@@ -63,15 +63,13 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   def show_additional_info_images?
     return if question&.votation_type&.rating_scale?
 
-    projekt_phase_feature?(question.poll&.projekt_phase, "resource.additional_info_for_each_answer") &&
-      question.show_images?
+    question.show_images?
   end
 
   def show_additional_info_description?(question_answer)
     return if question&.votation_type&.rating_scale?
 
-    projekt_phase_feature?(question.poll&.projekt_phase, "resource.additional_info_for_each_answer") &&
-      answer_with_description?(question_answer)
+    answer_with_description?(question_answer)
   end
 
   def should_show_answer_weight?

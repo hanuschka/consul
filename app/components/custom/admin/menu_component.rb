@@ -40,7 +40,7 @@ class Admin::MenuComponent < ApplicationComponent
         link_list(
           registered_addresses_list,
           registered_address_groupings_list,
-          registered_address_streets_list, 
+          registered_address_streets_list,
           id: "registered-addresses-link", class: ("is-active" if registered_addresses?)
         )
     end
@@ -131,6 +131,8 @@ class Admin::MenuComponent < ApplicationComponent
     end
 
     def matomo_link
+      return unless feature?("matomo")
+
       [
         t("custom.admin.menu.matomo"),
         admin_matomo_path,

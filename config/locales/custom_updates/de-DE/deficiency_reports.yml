@@ -90,11 +90,6 @@ de:
             title: Meine Beiträge
         start_deficiency_report: Mangel melden
       mailers:
-        notify_administrators_about_answer_update:
-          hi: Lieber Admin,
-          p1: ein/e Sachbearbeiter*in hat eine neue offizielle Antwort gespeichert.
-          signature_html: Viele Grüße</br>Consul
-          subject: Neue offizielle Antwort von einem/einer Sachbearbeiter*in %{identifier}
         notify_author_about_status_change:
           hi: Hallo
           p1: der Status des von Ihnen eingereichten Mangels wurde geändert.
@@ -122,7 +117,6 @@ de:
           Außerdem können Sie mit einem eigenen Kommentar Ihre Meinung äußern. Und nachdem der Mangel geschlossen wurde, finden Sie hier das offizielle Statement der Stadt.
         video:
           title: Video hinzufügen
-        approve_official_answer: Antwort freigeben
         back_link: Zurück zu alle Meldungen
         admin_accepted:
           "true": Veröffentlicht

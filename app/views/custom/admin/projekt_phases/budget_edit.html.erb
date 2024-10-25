@@ -1,0 +1,33 @@
+<%= render "custom/admin/projekt_phases/heading" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
+
+<div class="row">
+  <div class="column">
+    <h2>
+      <%= t("custom.admin.projekt_phases.budget_edit.page_title") %>
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(
+          explain: "budget edit"
+        ) %>
+      <% end %>
+    </h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <%= render Admin::Budgets::FormComponent.new(@budget) %>
+  </div>
+</div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

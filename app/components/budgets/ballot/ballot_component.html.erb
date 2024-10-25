@@ -43,17 +43,4 @@
       </div>
     </div>
   <% end %>
-
-  <% no_balloted_groups.each do |group| %>
-    <div id="<%= dom_id(group) %>" class="small-12 medium-6 column end">
-      <div class="margin-top ballot-content">
-        <div class="subtitle">
-          <h3>
-            <%= group.name %>
-          </h3>
-          <%= link_to t("budgets.ballots.show.no_balloted_group_yet"), budget_phase_link %>
-        </div>
-      </div>
-    </div>
-  <% end %>
 </div>

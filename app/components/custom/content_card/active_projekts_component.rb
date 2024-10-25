@@ -14,6 +14,7 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
 
     def active_projekts
       @active_projekts = Projekt.show_in_homepage
+        .sort_by_order_number
         .index_order_underway
         .select { |p| p.visible_for?(current_user) }
         .first(@limit)

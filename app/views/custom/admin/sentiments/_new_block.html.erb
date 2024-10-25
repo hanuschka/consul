@@ -1,0 +1,12 @@
+<div id="create-or-edit-sentiment">
+  <h2>
+    <%= t("custom.admin.projekt_phases.sentiments.new_block_title") %>
+    <% if embedded? %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "projekt sentiments"
+      ) %>
+    <% end %>
+  </h2>
+  <%= link_to t("custom.admin.projekt_phases.sentiments.create_button"),
+    polymorphic_path([@namespace, @projekt_phase, Sentiment.new], action: :new), class: "button", remote: true, data: { "turbolinks-scroll": "false" } %>
+</div>

@@ -18,6 +18,9 @@ class Projekt < ApplicationRecord
   translates :description
   include Globalizable
 
+  has_secure_token :preview_code
+  has_secure_token :frame_access_code
+
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
 
@@ -80,26 +83,44 @@ class Projekt < ApplicationRecord
     class_name: "ProjektSubscription", dependent: :destroy, inverse_of: :projekt
   has_many :subscribers, through: :subscriptions, source: :user
 
+  has_many :content_blocks, class_name: "SiteCustomization::ContentBlock",
+    dependent: :destroy, inverse_of: :projekt
+
+  has_one_attached :greeting_image
+  has_many_attached :images
+
   delegate :image, to: :page, allow_nil: true
 
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
-    :create_map_location
+    :create_map_location, :ensure_other_projekts_order_integrity
   around_update :update_page
   after_save do
-    Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
+    if parent_id_previously_changed?
+      Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
+    end
   end
 
   before_save :assign_top_level_projekt_from_parent
+
+  after_update :note_updated_for_global_overview #, on: :update
+  after_touch :note_updated_for_global_overview
+  after_destroy :note_destroy_for_global_overview
+
   after_destroy :ensure_projekt_order_integrity
+
+  def should_be_exported?
+    ApiClient.active_dt? && for_global_overview?
+  end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
   validates :name, presence: true
 
+  attribute :order_number, :integer, default: 0
+  attribute :new_content_block_mode, :boolean, default: false
+
   scope :regular, -> { where(special: false) }
-
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
-
   scope :sort_by_order_number, -> {
     order(:level, :order_number)
   }
@@ -124,6 +145,10 @@ class Projekt < ApplicationRecord
       .where("total_duration_start IS NULL OR total_duration_start <= ?", timestamp)
       .where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
   }
+
+  # scope :current_for_import, ->(timestamp = Time.zone.today) {
+  #   where("total_duration_end IS NULL OR total_duration_end >= ?", timestamp)
+  # }
 
   scope :expired, ->(timestamp = Time.zone.today) {
     activated
@@ -151,7 +176,9 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .includes(:projekt_phases)
-      .select { |p| p.projekt_phases.regular_phases.all? { |phase| !phase.current? } }
+      .select do |p|
+        p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
+      end
   }
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
@@ -193,13 +220,11 @@ class Projekt < ApplicationRecord
   scope :show_in_homepage, -> {
     joins("INNER JOIN projekt_settings sihp ON projekts.id = sihp.projekt_id")
       .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
-      .order(created_at: :desc)
   }
 
   scope :show_in_navigation, -> {
     joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
-      .with_order_number
   }
 
   scope :visible_in_menu, ->(user) {
@@ -428,6 +453,10 @@ class Projekt < ApplicationRecord
     ensure_projekt_order_integrity
   end
 
+  def ensure_other_projekts_order_integrity
+    Projekt.ensure_order_integrity
+  end
+
   def self.ensure_order_integrity
     all.find_each do |projekt|
       projekt.send(:ensure_projekt_order_integrity)
@@ -545,20 +574,105 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def feature?(feature)
+    setting = projekt_settings.find { |setting| setting.key == "projekt_feature.#{feature}"}
+    (setting && (setting.value == 'active' || setting.value == 't'  )) ? true : false
+  end
+
+  def serialize
+    {
+      id: id,
+      name: name,
+      total_duration_start: total_duration_start,
+      total_duration_end: total_duration_end,
+      frame_access_code: frame_access_code,
+      preview_code: preview_code,
+      show_map: feature?("show_map"),
+      show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),
+      show_notification_subscription_toggler: feature?("show_notification_subscription_toggler"),
+      show_phases_in_projekt_page_sidebar: feature?("show_phases_in_projekt_page_sidebar"),
+      projekt_page_sharing: feature?("projekt_page_sharing"),
+      page: {
+        title: page.title,
+        slug: page.slug,
+        subtitle: page.subtitle,
+        content: page.content
+      }
+    }
+  end
+
+  def update_bool_setting(key, value)
+    value_to_set =
+      if (value == "true") || value == true || value == "active"
+        "active"
+      else
+        nil
+      end
+
+    find_setting(key)&.update(value: value_to_set)
+  end
+
+  def find_setting(key)
+    projekt_settings.find { |setting| setting.key == key}
+  end
+
+  def generate_preview_code_if_nedded!
+    return if preview_code.present?
+
+    regenerate_preview_code
+    save!
+  end
+
+  def generate_frame_access_code_if_nedded!
+    return if frame_access_code.present?
+
+    regenerate_frame_access_code
+    save!
+  end
+
+  def frame_url
+    gen_projekt_url(embedded: true, frame_code: frame_access_code)
+  end
+
+  def gen_projekt_url(url_params = {})
+    uri = URI.parse(page.url)
+
+    uri_params = URI.decode_www_form(uri.query || "")
+    uri_params += url_params.to_a
+
+    uri.query = URI.encode_www_form(uri_params)
+    uri.to_s
+  end
+
+  def preview_code_valid?(code)
+    preview_code.present? && preview_code == code
+  end
+
+  def frame_access_code_valid?(code)
+    frame_access_code.present? && frame_access_code == code
+  end
+
+  def should_be_exported_for_overview?
+    # TODO
+    # Here the conditions to check if projekt exported intially
+    # They should be used here as well in context of individual projekt
+    # Projekt
+    #   .activated
+    #   .with_published_custom_page
+    #   .show_in_overview_page
+    #   .not_in_individual_list
+    #   .regular
+  end
+
   private
 
     def create_corresponding_page
-      page = SiteCustomization::Page.new(
+      create_page(
         title: name,
         slug: form_page_slug,
         status: "published",
-        projekt: self,
         content: ""
       )
-
-      if page.save
-        self.page = page
-      end
     end
 
     def update_corresponding_page
@@ -653,6 +767,24 @@ class Projekt < ApplicationRecord
 
       if parent&.parent_id.present?
         self.top_level_projekt_id = parent.parent_id
+      end
+    end
+
+    def note_updated_for_global_overview
+      if should_be_exported?
+        if hidden_at.present?
+          note_destroy_for_global_overview
+        else
+          Projekts::OverviewProjektUpdatedJob.perform_later(
+            self
+          )
+        end
+      end
+    end
+
+    def note_destroy_for_global_overview
+      if should_be_exported?
+        Projekts::OverviewProjektDestroyedJob.perform_later(id)
       end
     end
 end

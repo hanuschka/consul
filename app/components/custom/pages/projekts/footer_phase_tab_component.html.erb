@@ -1,59 +1,104 @@
-<% if phase.phase_activated? %>
-  <li id="filter-subnav-<%= phase.id %>" class="page-subnav-tab <%= 'is-active' if phase.id == params[:projekt_phase_id] %>">
-    <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, phase),
-      onclick: "$('#footer-content').addClass('show-loader');",
-      class: "js-remote-link-push-state",
-      data: {
-        remote: true,
-        "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
-      } do %>
-      <h4>
-        <%= tab_title %>
-        <%= "(#{phase.resource_count})" if phase.resource_count.present? %>
-      </h4>
-      <div class='tab-info-summary'>
-        <% if phase.is_a?(ProjektPhase::MilestonePhase) && phase.milestones.any?  %>
-          <span>
-            <i class="far fa-calendar"></i>
-            <%= format_date(phase.milestones.last.publication_date.to_date) %>
-          </span>
+<li
+  id="filter-subnav-<%= phase.id %>"
+  class="page-subnav-tab js-projekt-phase-tab projekt-footer-phase-tab  <%= additional_classes %>"
+  data-projekt-phase-id="<%= phase.id %>"
+  data-record-id="<%= phase.id %>"
+>
+  <%= link_to tab_url,
+    onclick: "$('#footer-content').addClass('show-loader');",
+    class: "projekt-footer-phase-link js-remote-link-push-state",
+    data: {
+      remote: true,
+      "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
+    } do %>
+    <h4>
+      <%= tab_title %>
+      <%= "(#{phase.resource_count})" if phase.resource_count.present? %>
+    </h4>
+    <div class='tab-info-summary'>
+      <% if phase.is_a?(ProjektPhase::MilestonePhase) && phase.milestones.any?  %>
+        <span>
+          <i class="far fa-calendar"></i>
+          <%= format_date(phase.milestones.last.publication_date.to_date) %>
+        </span>
 
-        <% elsif phase.is_a?(ProjektPhase::ProjektNotificationPhase) && phase.projekt_notifications.any? %>
-          <span>
-            <i class="far fa-calendar"></i>
-            <%= format_date(phase.projekt_notifications.last.updated_at.to_date) %>
-          </span>
+      <% elsif phase.is_a?(ProjektPhase::ProjektNotificationPhase) && phase.projekt_notifications.any? %>
+        <span>
+          <i class="far fa-calendar"></i>
+          <%= format_date(phase.projekt_notifications.last.updated_at.to_date) %>
+        </span>
 
-        <% elsif phase.is_a?(ProjektPhase::EventPhase) && phase.projekt_events.sort_by_incoming.any? %>
-          <span>
-            <i class="far fa-calendar"></i>
-            <%= format_date(phase.projekt_events.sort_by_incoming.first.datetime.to_date) %>
-          </span>
+      <% elsif phase.is_a?(ProjektPhase::EventPhase) && phase.projekt_events.sort_by_incoming.any? %>
+        <span>
+          <i class="far fa-calendar"></i>
+          <%= format_date(phase.projekt_events.sort_by_incoming.first.datetime.to_date) %>
+        </span>
 
-        <% elsif phase.is_a?(ProjektPhase::LivestreamPhase) && phase.projekt_livestreams.any? %>
-          <span>
-            <i class="far fa-calendar"></i>
-            <%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %>
-          </span>
+      <% elsif phase.is_a?(ProjektPhase::LivestreamPhase) && phase.projekt_livestreams.any? %>
+        <span>
+          <i class="far fa-calendar"></i>
+          <%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %>
+        </span>
 
-        <% elsif phase.start_date.present? && phase.end_date.present? %>
-          <span class='time-icon'><%= format_date_range(phase.start_date, phase.end_date) %></span>
+      <% elsif phase.is_a?(ProjektPhase::BudgetPhase) && phase.budget.present? %>
+        <span>
+          <span class='time-icon'><%= format_date_range(phase.budget.phases.published.first.starts_at, phase.budget.phases.published.last.ends_at) %></span>
+        </span>
+
+      <% elsif phase.start_date.present? %>
+        <span class='time-icon'><%= format_date_range(phase.start_date, phase.end_date) %></span>
+      <% end %>
+
+      <% unless get_projekt_phase_restriction_name(phase, nil, true) == 'no_restriction' %>
+        <span class='geo-restriction-icon'><%= get_projekt_phase_restriction_name(phase) %></span>
+      <% end %>
+
+      <% if phase.age_restriction.present? %>
+        <span class='age-restriction-icon'><%= phase.age_restriction.name %></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if phase.subscribable? && projekt_feature?(phase.projekt, "sidebar.show_notification_subscription_toggler") %>
+    <div class="phase-subscription">
+      <%= render "custom/projekts/partials/phase_subscription", phase: phase %>
+    </div>
+  <% end %>
+  <% if helpers.embedded_and_frame_access_code_valid?(phase.projekt) %>
+    <div class="projekt-phase--actions">
+      <div class="projekt-phase--actions-first-block d-flex">
+        <button type="button" class="js-toggle-projekt-phase-visibility-button projekt-frame-icon-button">
+          <i class="fas <%= phase.phase_activated? ? 'fa-eye-slash' : 'fa-eye' %>">
+          </i>
+        </button>
+        <button type="button" class="js-toggle-projekt-phase-default projekt-frame-icon-button">
+          <i class="fas <%= phase == @default_projekt_phase ? 'fa-gem' : 'fa-thumbtack' %>">
+          </i>
+        </button>
+        <% if show_send_notification_button? %>
+          <button
+              type="button"
+              class="js-send-notifications-for-projekt-phase projekt-frame-icon-button"
+              data-resource-type="<%= resource_type %>"
+              data-resource-id="<%= resource_id %>"
+              >
+              <i class="fas fa-envelope">
+              </i>
+          </button>
         <% end %>
-
-        <% unless get_projekt_phase_restriction_name(phase, nil, true) == 'no_restriction' %>
-          <span class='geo-restriction-icon'><%= get_projekt_phase_restriction_name(phase) %></span>
-        <% end %>
-
-        <% if phase.age_restriction.present? %>
-          <span class='age-restriction-icon'><%= phase.age_restriction.name %></span>
-        <% end %>
+        <button type="button" data-path="/projekt_phases/<%= phase.id %>/duration" class="js-frame-open-admin-page projekt-frame-icon-button">
+          <i class="fas fa-edit">
+          </i>
+        </button>
+        <button type="button" class="js-delete-projekt-phase projekt-frame-icon-button">
+          <i class="fas fa-trash-alt">
+          </i>
+        </button>
       </div>
-    <% end %>
-
-    <% if phase.subscribable? && projekt_feature?(phase.projekt, "sidebar.show_notification_subscription_toggler") %>
-      <div class="phase-subscription">
-        <%= render "custom/projekts/partials/phase_subscription", phase: phase %>
+      <div class="projekt-phase-move js-projekt-phase-move js-sortable-handle projekt-frame-icon-button">
+        <i class="fas fa-up-down-left-right">
+        </i>
       </div>
-    <% end %>
-  </li>
-<% end %>
+    </div>
+  <% end %>
+</li>

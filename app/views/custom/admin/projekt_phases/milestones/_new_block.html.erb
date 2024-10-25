@@ -1,0 +1,12 @@
+<h2>
+  <%= t("custom.admin.projekt_phases.milestones.new_block_title") %>
+  <% if embedded? %>
+    <%= render Shared::ExplainButtonComponent.new(
+      explain: "projekt milestones"
+    ) %>
+  <% end %>
+</h2>
+
+<%= link_to t("custom.admin.projekt_phases.milestones.new_button"),
+            polymorphic_path([@namespace, milestoneable, :milestone], action: :new),
+            class: "button hollow" %>

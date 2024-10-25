@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="column">
+    <h2><%= @investment.title %></h2>
+  </div>
+</div>
+
+<%= render "custom/admin/budget_investments/nav_bar" %>
+
+<div class="row margin-bottom">
+  <div class="column">
+    <%= render "admin/progress_bars/progress_bars", progressable: @investment %>
+  </div>
+</div>

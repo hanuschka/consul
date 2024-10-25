@@ -2,7 +2,7 @@
   .poll-answer-group {
     flex-direction: row;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     flex-wrap: nowrap;
 
     &.column:last-child:not(:first-child), .columns:last-child:not(:first-child) {

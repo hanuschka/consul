@@ -11,6 +11,10 @@ module NotificationServiceMailerHelper
     end
   end
 
+  def css_for_mailer_quote
+    "border-left: 2px solid #DEE0E3;font-style: italic;margin-left: 20px;padding:0px 10px;"
+  end
+
   private
 
     def unsubscribe_from_new_proposal_notification

@@ -1,0 +1,9 @@
+<div class="categories--simple-selector js-categories--simple-selector">
+  <div id="category_tags" class="tags">
+    <h2><%= t("custom.admin.projekts.edit.projekt_sdg_tab.tags") %></h2>
+    <% Tag.category.order(:name).each do |tag| %>
+      <a class="js-add-tag-link"><%= tag.name %></a>
+    <% end %>
+  </div>
+  <%= f.hidden_field :tag_list_predefined, value: f.object.tags.reject { |t| !["category"].include?(t.kind) }.map(&:name).join(","), class: "js-tag-list list-tags predefined" %>
+</div>

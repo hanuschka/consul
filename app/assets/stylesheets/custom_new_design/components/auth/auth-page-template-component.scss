@@ -206,12 +206,8 @@
       display: none;
     }
 
-    input[type='text'], input[type='password'], input[type='date'],
-    input[type='datetime'], input[type='datetime-local'], input[type='month'],
-    input[type='week'], input[type='email'], input[type='number'], input[type='search'],
-    input[type='tel'], input[type='time'], input[type='url'], textarea, form [type]:not([type="button"], [type=checkbox], [type=file], [type=radio], [type=submit]),
-    select {
-      height: 45px;
+    input:not([type="checkbox"]), select {
+      height: 45px !important;
       max-height: 45px;
       padding-left: 15px;
       padding-right: 15px;
@@ -219,9 +215,9 @@
     }
 
     .options-group {
-      label {
-        display: block;
-      }
+      /* label { */
+      /*   display: block; */
+      /* } */
     }
   }
   .auth-page-template--after-card-container {

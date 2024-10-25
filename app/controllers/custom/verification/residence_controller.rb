@@ -5,6 +5,13 @@ class Verification::ResidenceController < ApplicationController
 
   def new
     current_user_attributes = current_user.attributes.transform_keys(&:to_sym).slice(*allowed_params)
+
+    if current_user.registered_address.present?
+      params[:form_registered_address_city_id] = current_user.registered_address.registered_address_city_id
+      params[:form_registered_address_street_id] = current_user.registered_address.registered_address_street_id
+      params[:form_registered_address_id] = current_user.registered_address.id
+    end
+
     @residence = Verification::Residence.new(current_user_attributes)
   end
 

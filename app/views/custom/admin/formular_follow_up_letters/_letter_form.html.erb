@@ -1,4 +1,5 @@
-<div id="<%= dom_id(letter) %>" class="formular-follow-up-letter">
+<div id="<%= dom_id(letter) %>" class="formular-follow-up-letter margin-top margin-bottom">
+  <h2>Wie möchten Sie Ihr Formularfeld gestalten?</h2>
   <div class="margin-top">
     <%= form_with model: letter, url: polymorphic_path([@namespace, @projekt_phase, @formular, letter]), local: false do |f| %>
       <%= f.text_field :subject %>

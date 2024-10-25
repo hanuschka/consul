@@ -22,11 +22,14 @@ class PollsController < ApplicationController
     @selected_geozone_restriction = params[:geozone_restriction] || 'no_restriction'
     @restricted_geozones = (params[:restricted_geozones] || '').split(',').map(&:to_i)
 
-    @resources = Poll.where(show_on_index_page: true)
-      .created_by_admin
-      .not_budget
-      .send(@current_filter)
-      .includes(:geozones)
+    @resources =
+      Poll.with_phase_feature("resource.show_on_index_page")
+        .created_by_admin
+        .not_budget
+        .send(@current_filter)
+        .includes(:geozones)
+
+    @resources = @resources.search(@search_terms) if @search_terms.present?
 
     related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
@@ -66,6 +69,9 @@ class PollsController < ApplicationController
   end
 
   def show
+    auto_sign_in_guest_for(@poll.projekt_phase)
+
+    @projekt_phase = @poll.projekt_phase
     @questions = @poll.questions.for_render.root_questions.sort_for_list
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 
@@ -96,7 +102,10 @@ class PollsController < ApplicationController
   def stats
     @stats = Poll::Stats.new(@poll)
 
-    if Setting.new_design_enabled?
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    elsif Setting.new_design_enabled?
       render :stats_new
     else
       render :stats
@@ -104,7 +113,10 @@ class PollsController < ApplicationController
   end
 
   def results
-    if Setting.new_design_enabled?
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      render "custom/pages/forbidden", layout: false
+    elsif Setting.new_design_enabled?
       render :results_new
     else
       render :results

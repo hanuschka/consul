@@ -3,16 +3,13 @@
 <% end %>
 
 <div class="legislation-draft-versions-new legislation-draft-versions-form">
-  <div class="small-12 column">
-    <%= back_link_to polymorphic_path([@namespace, @process, :draft_versions]),
-                     t("admin.legislation.draft_versions.new.back") %>
-
-    <h2><%= @process.title %></h2>
-
-    <%= render "admin/legislation/processes/subnav", process: @process, active: "draft_versions" %>
-
-    <h3><%= t("admin.legislation.draft_versions.new.title") %></h3>
-
-    <%= render "admin/legislation/draft_versions/form", url: polymorphic_path([@namespace, @process, :draft_versions]) %>
+  <div class="row">
+    <div class="small-12 column">
+      <%= back_link_to polymorphic_path([@namespace, @process.projekt_phase], action: :legislation_process_draft_versions),
+                       t("admin.legislation.draft_versions.new.back") %>
+      <h3><%= t("admin.legislation.draft_versions.new.title") %></h3>
+    </div>
   </div>
+
+  <%= render "admin/legislation/draft_versions/form", url: polymorphic_path([@namespace, @process, :draft_versions]) %>
 </div>

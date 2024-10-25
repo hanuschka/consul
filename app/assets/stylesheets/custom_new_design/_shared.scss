@@ -112,3 +112,10 @@ ul.deficiency-reports-sidebar-filter input::checked ~ .checkmark::before {
 
      content: "\f192";
 }
+
+.download-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+  margin-bottom: .5rem;
+}

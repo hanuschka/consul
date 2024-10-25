@@ -116,14 +116,19 @@
           <% end %>
         <% end %>
 
+        <% if @investment.video_url.present? && !projekt_phase_feature?(@investment.projekt_phase, "resource.show_video_as_link") %>
+          <div class="proposal-resources-section">
+            <%= render(Shared::ExternalVideoPlayer.new(url: @investment.video_url)) %>
+          </div>
+        <% end %>
+
         <div id="comments" class="footer-anchor">
         </div>
 
         <div class="proposal-resources-sections">
-          <% if projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") ||
-                projekt_phase_feature?(@investment&.projekt_phase, "resource.enable_investment_milestones_tab") %>
+          <% if @milestones.present? || projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") %>
 
-            <% if projekt_phase_feature?(@investment.projekt_phase, "resource.enable_investment_milestones_tab") && @milestones.present? %>
+            <% if @milestones.present? %>
               <div class="proposal-resources-section">
                 <%= render Shared::MilestonesComponent.new(milestones: @milestones, milestoneable: @investment) %>
               </div>
@@ -179,6 +184,14 @@
           <% end %>
         <% end %>
 
+        <% if @investment.video_url.present? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_video_as_link") %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.title_video_url"), icon_name: "video")) do %>
+            <div class="video-link">
+              <%= sanitize_and_auto_link @investment.video_url %>
+            </div>
+          <% end %>
+        <% end %>
+
         <% if @investment.documents.present? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("documents.title"), icon_name: "file")) do |c| %>
             <%= render(Sidebar::DocumentListComponent.new(documents: @investment.documents)) %>
@@ -197,6 +210,59 @@
             mobile: t("budgets.investments.share.message",
                        title: @investment.title,
                        handle: setting["twitter_handle"]) %>
+        <% end %>
+
+        <% if projekt_phase_feature?(@investment&.projekt_phase, 'resource.show_report_button_in_sidebar') && (show_flag_action?(@investment) || show_unflag_action?(@investment)) %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.shared.show.report_title"), icon_name: "flag")) do %>
+            <%= render "shared/participation/flag", resource: @investment %>
+          <% end %>
+        <% end %>
+
+        <% if current_user && !current_user.guest? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_follow_button_in_sidebar") %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("shared.follow"), icon_name: "star")) do |c| %>
+            <p><%= t("custom.shared.show.follow_text") %></p>
+            <%= render "follows/follow_button", follow: find_or_build_follow(current_user, @investment) %>
+          <% end %>
+        <% end %>
+
+        <% if current_user && !current_user.guest? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_community_button_in_sidebar") %>
+          <%= render(Shared::SidebarCardComponent.new(
+              title: t("custom.proposals.show.community_section.title"),
+              icon_name: "users")
+            ) do |c| %>
+            <% if @investment.community.topics.count > 0 %>
+              <div class="margin-bottom-10">
+                <%= t("custom.proposals.show.community_section.description") %>
+              </div>
+              <div>
+                <%= @investment.community.participants_count %>
+                <%= t("custom.proposals.show.community_section.particapated_users_count") %>
+              </div>
+              <div>
+                <%= @investment.community.topics.count %>
+                <%= t("custom.proposals.show.community_section.topics_count") %>
+              </div>
+              <div>
+                <%= @investment.community.comments_count %>
+                <%= t("custom.proposals.show.community_section.comments_count") %>
+              </div>
+              <%= render(Sidebar::UsersListComponent.new(users: @investment.community.participants)) %>
+              <% participate_button_text = t("custom.community.sidebar.particapate") %>
+            <% else %>
+                <%= t("custom.proposals.show.community_section.description_create_first") %>
+                <% participate_button_text = t("custom.community.sidebar.be_first") %>
+            <% end %>
+            <%= link_to participate_button_text, community_path(@investment.community), class: "button" %>
+          <% end %>
+        <% end %>
+
+        <% if show_related_contents_block?(@investment) %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("related_content.title"), icon_name: "link")) do %>
+            <p>
+              <%= t("related_content.description") %>
+            </p>
+            <%= render "relationable/related_content", relationable: @investment %>
+          <% end %>
         <% end %>
 
         <% if current_user&.administrator? %>

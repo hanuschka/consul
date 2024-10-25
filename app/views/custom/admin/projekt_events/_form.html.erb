@@ -1,0 +1,49 @@
+<%= form_for(event, url: polymorphic_path([@namespace, event])) do |f| %>
+  <%= render "shared/errors", resource: f.object %>
+  <%= f.hidden_field :projekt_phase_id, value: @projekt_phase.id %>
+
+  <div class="row">
+    <div class='column small-12 medium-6'>
+      <%= f.text_field :title, { required: true } %>
+    </div>
+
+    <div class='column small-12 medium-6'>
+      <%= f.text_field :location %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='column small-12 medium-6'>
+      <%= f.datetime_field :datetime, { required: true } %>
+    </div>
+
+    <div class='column small-12 medium-6'>
+      <%= f.datetime_field :end_datetime %>
+      <%= f.check_box :open_ended %>
+    </div>
+  </div>
+
+  <div class="row margin-bottom">
+    <div class='column small-12'>
+      <%= f.text_field :weblink %>
+    </div>
+  </div>
+
+  <div class="row margin-bottom">
+    <div class="column images small-12">
+      <%= render "images/nested_image", imageable: event, f: f %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column small-12">
+      <%= f.text_area :description, rows: 10, id: "projekt-event-description-#{event.id}", class: "html-area #{ck_editor_class(current_user)}" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column small-12">
+      <%= f.submit(t("custom.admin.projekt_phases.projekt_events.button"), class: "button") %>
+    </div>
+  </div>
+<% end %>

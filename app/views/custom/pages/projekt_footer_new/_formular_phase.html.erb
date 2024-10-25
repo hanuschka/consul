@@ -1,27 +1,48 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<div class='row'>
-  <div id="formular-sidebar" class="small-12 medium-3 column">
-    <aside class="margin-bottom">
-      <% if current_user&.administrator? || ( current_user&.projekt_manager? && current_user.projekt_manager.allowed_to?(:manage, @projekt_phase.projekt) ) %>
-        <%= link_to "Zu den Antworten", formular_answers_admin_projekt_phase_path(@projekt_phase), target: "_blank", class: "button" %>
-      <% end %>
-    </aside>
-  </div>
+<% unless embedded? %>
+  <div class='row'>
+    <div id="formular-sidebar" class="small-12 medium-3 column">
+      <aside class="margin-bottom">
+        <% if current_user&.administrator? || ( current_user&.projekt_manager? && current_user.projekt_manager.allowed_to?(:manage, @projekt_phase.projekt) ) %>
+          <%= link_to "Zu den Antworten", formular_answers_admin_projekt_phase_path(@projekt_phase), target: "_blank", class: "button" %>
+        <% end %>
+      </aside>
+    </div>
 
-  <div id="formular" class='spinner-placeholder small-12 medium-9 column'>
-    <% if @projekt_phase.expired? %>
-      <%= t("custom.projekt_phases.permission_problem.new_button_component.shared.phase_expired") %>
-    <% elsif @projekt_phase.not_current? %>
-      <%= t("custom.projekt_phases.permission_problem.new_button_component.shared.phase_not_current") %>
-    <% elsif current_user.nil? && projekt_phase_feature?(@projekt_phase, "general.only_registered_users") %>
-      <%= sanitize t("custom.projekt_phases.permission_problem.new_button_component.shared.not_logged_in", sign_in: link_to_signin, sign_up: link_to_signup) %>
-    <% elsif @formular_fields.nil? %>
-      <%= t("custom.projekt_phases.permission_problem.new_button_component.formular_phase.past_regular_formular_cutoff_date") %>
-    <% else %>
+    <div id="formular" class='spinner-placeholder small-12 medium-9 column'>
+      <% permission_problem_key = @projekt_phase.permission_problem(current_user) %>
+
+      <% if params[:token].present? %>
+        <div class="column medium-6">
+          <%= render "custom/formular_answers/form", formular_answer: @formular_answer, formular_fields: @formular_fields %>
+        </div>
+
+      <% elsif permission_problem_key.present? %>
+        <% specific_problems = %i[past_regular_formular_cutoff_date submissions_limit_reached] %>
+        <% locale_namespace = permission_problem_key.in?(specific_problems) ? "formular_phase" : "shared" %>
+
+        <%= sanitize(
+          t("custom.projekt_phases.permission_problem.new_button_component.#{locale_namespace}.#{permission_problem_key}",
+            sign_in: link_to_signin,
+            sign_up: link_to_signup,
+            guest_sign_in: link_to_guest_signin,
+            enter_missing_user_data: link_to_enter_missing_user_data,
+            verify: link_to_verify_account,
+            city: Setting["org_name"],
+            geozones: @projekt_phase&.geozone_restrictions_formatted,
+            age_restriction: @projekt_phase&.age_restriction_formatted,
+            restricted_streets: @projekt_phase&.street_restrictions_formatted,
+            individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted
+           )
+        ) %>
+
+    <% elsif @formular_fields.present? %>
       <div class="column medium-6">
         <%= render "custom/formular_answers/form", formular_answer: @formular_answer, formular_fields: @formular_fields %>
       </div>
+
     <% end %>
+    </div>
   </div>
-</div>
+<% end %>

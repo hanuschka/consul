@@ -34,13 +34,6 @@ class ProjektPhase::DebatePhase < ProjektPhase
     debates.empty?
   end
 
-  def downvoting_allowed?
-    settings
-      .find_by(key: "feature.resource.allow_downvoting")
-      .value
-      .present?
-  end
-
   private
 
     def phase_specific_permission_problems(user, location)

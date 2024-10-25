@@ -19,9 +19,6 @@ de:
       feature:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
-        user:
-          skip_verification: Standardmäßige Partizipation für alle Nutzer:innen der Plattform
-          skip_verification_description: Nutzer:innen können ohne Verifizierung am Beteiligungsprozess teilnehmen
       extended_feature:
         general:
           elasticsearch: "Elasticsearch"
@@ -275,8 +272,6 @@ de:
           show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
-          enable_investment_milestones_tab: Meilensteine in Investitionsvorschlägen
-          enable_investment_milestones_tab_description: Aktivieren Sie "Meilensteine" in Investitionsvorschlägen, die von der Verwaltung angelegt werden müssen
           allow_attached_documents: Zusätzliche Dokumente
           allow_attached_documents_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
           only_admins_create_investment_proposals: Nur Admins können neue Investitionsvorschläge erstellen
@@ -304,8 +299,8 @@ de:
         show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
         admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
         admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
-        admins_must_approve_officer_answer: Admins müssen Antwort der Sachbearbeiter*innen freigeben
-        admins_must_approve_officer_answer_description: Administratoren geben die Antwort der Sachbearbeiter*in vor Veröffentlichung frei
+        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
+        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
         allow_voting: Nutzer*innen Bewertung pro Mangel
         allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
         enable_comments: Kommentarfunktion

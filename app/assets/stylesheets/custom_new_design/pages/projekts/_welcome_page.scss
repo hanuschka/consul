@@ -5,6 +5,18 @@
         background-color: transparent;
       }
     }
+
+    .top-bar-wrapper:not(.sticky-header) {
+      .top-logo {
+        &--regular {
+          display: none;
+        }
+
+        &--for-trasparent {
+          display: block;
+        }
+      }
+    }
   }
 
   .welcome-page {

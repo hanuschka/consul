@@ -1,23 +1,34 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.restrictions.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.restrictions.page_title") %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "phase restrictions"
+      ) %>
+    </h2>
   </div>
 </div>
 
-<%= form_with model: @projekt_phase, url: namespace_projekt_phase_path, scope: :projekt_phase do |f| %>
+<div class="row">
+  <div class="column medium-9 margin-bottom">
+    <p><%= t("custom.admin.projekt_phases.restrictions.intro.p1_html") %></p>
+    <p><%= t("custom.admin.projekt_phases.restrictions.intro.p2_html") %></p>
+  </div>
+</div>
+
+<%= form_with model: @projekt_phase, url: namespace_projekt_phase_path, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
 
   <div class="row">
     <div class="column">
       <div class="phase-restrictions">
-        <div class="options-group">
-          <%= f.check_box :guest_participation_allowed, label: false %>
-          <%= f.label :guest_participation_allowed, t("custom.admin.projekt_phases.restrictions.guest_participation_allowed"), class: "checkbox-label checkbox-label--inline" %>
-        </div>
-        <%= render "custom/admin/projekt_phases/restrictions/verified_restriction", f: f %>
+        <%= render "custom/admin/projekt_phases/restrictions/user_status_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/geozone_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/extended_geozone_restriction", f: f %>
         <%= render "custom/admin/projekt_phases/restrictions/age_restriction", f: f %>
@@ -31,4 +42,13 @@
       <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
     </div>
   </div>
+<% end %>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
 <% end %>

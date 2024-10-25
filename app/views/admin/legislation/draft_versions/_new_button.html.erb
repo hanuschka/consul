@@ -1,0 +1,11 @@
+<div class="margin-bottom">
+  <h2>
+    <%= t("custom.admin.projekt_phases.legislation_process_draft_versions.new_block_title") %>
+    <% if embedded? %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "texts phase"
+      ) %>
+    <% end %>
+  </h2>
+  <%= link_to t("admin.legislation.draft_versions.index.create"), polymorphic_path([@namespace, @process, :draft_version], action: :new), class: "button" %>
+</div>

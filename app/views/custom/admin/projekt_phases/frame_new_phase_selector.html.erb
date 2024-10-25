@@ -1,0 +1,34 @@
+<% content_for :admin_frame_top_navigation do %>
+  <%= link_to @projekt.frame_url, class: "back", data: { turbolinks: false } do %>
+    <span class="icon-angle-left"></span>Zurück zum Projekt
+  <% end %>
+<% end %>
+
+<div class="admin-card-content row">
+  <div class="column">
+    <h2>Wählen Sie eine Beteiligungsmodul aus</h2>
+    <% ProjektPhase::PROJEKT_PHASES_TYPES.each do |type| %>
+      <div class="admin-frame-phase-to-select">
+        <div class="admin-frame-phase-to-select--name-section">
+          <div class="admin-frame-phase-to-select--name">
+            <%= type.constantize.model_name.human %>
+          </div>
+          <%= render Shared::ExplainButtonComponent.new(explain: type.constantize.model_name.human) %>
+        </div>
+
+        <%= form_with(
+          model: ProjektPhase.new,
+          url: polymorphic_path([@namespace, @projekt, ProjektPhase.new]),
+          method: :post
+        ) do |f| %>
+        <%= f.hidden_field :projekt_id, value: @projekt.id %>
+        <%= f.hidden_field :type, value: type %>
+        <button type="submit" class="-transparent-round-icon-button frame-select-new-phase-button">
+          <i class="fas fa-arrow-right">
+          </i>
+        </button>
+      <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

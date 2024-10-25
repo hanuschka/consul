@@ -26,7 +26,6 @@ class Api::ProjektsController < Api::BaseController
       Projekt
         .activated
         .with_published_custom_page
-        .not_in_individual_list
         .show_in_overview_page
         .regular
 

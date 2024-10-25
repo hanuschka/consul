@@ -30,6 +30,7 @@ en:
             only_specific_registered_address_groupings: Participation is limited to another area.
           formular_phase:
             past_regular_formular_cutoff_date: The participation phase has already been completed
+            submissions_limit_reached: You have reached the maximum number of submissions allowed per user
         votes_component:
           shared:
             guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."

@@ -67,18 +67,18 @@
   <% if helpers.embedded_and_frame_access_code_valid?(phase.projekt) %>
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">
-        <button type="button" class="js-toggle-projekt-phase-visibility-button projekt-frame-icon-action-button">
+        <button type="button" class="js-toggle-projekt-phase-visibility-button projekt-frame-icon-button">
           <i class="fas <%= phase.phase_activated? ? 'fa-eye-slash' : 'fa-eye' %>">
           </i>
         </button>
-        <button type="button" class="js-toggle-projekt-phase-default projekt-frame-icon-action-button">
+        <button type="button" class="js-toggle-projekt-phase-default projekt-frame-icon-button">
           <i class="fas <%= phase == @default_projekt_phase ? 'fa-gem' : 'fa-thumbtack' %>">
           </i>
         </button>
         <% if show_send_notification_button? %>
           <button
               type="button"
-              class="js-send-notifications-for-projekt-phase projekt-frame-icon-action-button"
+              class="js-send-notifications-for-projekt-phase projekt-frame-icon-button"
               data-resource-type="<%= resource_type %>"
               data-resource-id="<%= resource_id %>"
               >
@@ -86,16 +86,16 @@
               </i>
           </button>
         <% end %>
-        <button type="button" data-path="/projekt_phases/<%= phase.id %>/duration" class="js-frame-open-admin-page projekt-frame-icon-action-button">
+        <button type="button" data-path="/projekt_phases/<%= phase.id %>/duration" class="js-frame-open-admin-page projekt-frame-icon-button">
           <i class="fas fa-edit">
           </i>
         </button>
-        <button type="button" class="js-delete-projekt-phase projekt-frame-icon-action-button">
+        <button type="button" class="js-delete-projekt-phase projekt-frame-icon-button">
           <i class="fas fa-trash-alt">
           </i>
         </button>
       </div>
-      <div class="projekt-phase-move js-projekt-phase-move js-sortable-handle projekt-frame-icon-action-button">
+      <div class="projekt-phase-move js-projekt-phase-move js-sortable-handle projekt-frame-icon-button">
         <i class="fas fa-up-down-left-right">
         </i>
       </div>

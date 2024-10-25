@@ -149,11 +149,9 @@ de:
             newsfeed_type: Newsfeed Type
             newsfeed_type_description: Bitte geben Sie hier den Typ des News-Feeds an
       formular:
-        feature:
-          general:
-            only_registered_users: Nur registrierte Nutzer*innen können teilnehmen
-            only_registered_users_description: Das Formular steht nur registrierten Nutzer*innen zur Verfügung.
         option:
           general:
             primary_formular_cutoff_date: Ende der 1. Phase
             primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"
+            submissions_limit: Beschränkung der erlaubten Einreichungen pro Nutzer
+            submissions_limit_description: Limitieren Sie die Anzahl der erlaubten Formulareinreichungen pro Nutzer

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Proposals::ListItemComponent < ApplicationComponent
+  delegate :projekt_phase_feature?, to: :helpers
   attr_reader :proposal
 
   def initialize(proposal:, voted: nil)

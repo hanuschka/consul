@@ -11,30 +11,34 @@
     <% end %>
   </li>
 
-  <li class="tabs-title" id="projekt-page-tab">
-    <%= link_to "#tab-projekt-page" do %>
-      <%= t("custom.admin.projekts.edit.projekt_page_tab.name") %>
-    <% end %>
-  </li>
-
-  <li class="tabs-title" id="projekt-phases-tab">
-    <%= link_to "#tab-projekt-phases" do %>
-      <%= t("custom.admin.projekts.edit.projekt_phases_tab.name") %>
-    <% end %>
-  </li>
-
-  <li class="tabs-title" id="projekt-settings-tab">
-    <%= link_to "#tab-projekt-settings" do %>
-      <%= t("custom.admin.projekts.edit.projekt_settings_tab.name") %>
-    <% end %>
-  </li>
-
-  <% if current_user&.administrator? %>
-    <li class="tabs-title" id="projekt-managers-tab">
-      <%= link_to "#tab-projekt-managers" do %>
-        <%= t("custom.admin.projekts.edit.projekt_managers_tab.name") %>
+  <% unless embedded? %>
+    <li class="tabs-title" id="projekt-page-tab">
+      <%= link_to "#tab-projekt-page" do %>
+        <%= t("custom.admin.projekts.edit.projekt_page_tab.name") %>
       <% end %>
     </li>
+
+    <li class="tabs-title" id="projekt-phases-tab">
+      <%= link_to "#tab-projekt-phases" do %>
+        <%= t("custom.admin.projekts.edit.projekt_phases_tab.name") %>
+      <% end %>
+    </li>
+  <% end %>
+
+    <li class="tabs-title" id="projekt-settings-tab">
+      <%= link_to "#tab-projekt-settings" do %>
+        <%= t("custom.admin.projekts.edit.projekt_settings_tab.name") %>
+      <% end %>
+    </li>
+
+  <% unless embedded? %>
+    <% if current_user&.administrator? %>
+      <li class="tabs-title" id="projekt-managers-tab">
+        <%= link_to "#tab-projekt-managers" do %>
+          <%= t("custom.admin.projekts.edit.projekt_managers_tab.name") %>
+        <% end %>
+      </li>
+    <% end %>
   <% end %>
 
   <li class="tabs-title" id="projekt-map-tab">
@@ -43,9 +47,11 @@
     <% end %>
   </li>
 
-  <li class="tabs-title" id="projekts-sdg-tab">
-    <%= link_to "#tab-projekt-sdg" do %>
-      <%= t("custom.admin.projekts.edit.projekt_sdg_tab.name") %>
-    <% end %>
-  </li>
+  <% unless embedded? %>
+    <li class="tabs-title" id="projekts-sdg-tab">
+      <%= link_to "#tab-projekt-sdg" do %>
+        <%= t("custom.admin.projekts.edit.projekt_sdg_tab.name") %>
+      <% end %>
+    </li>
+  <% end %>
 </ul>

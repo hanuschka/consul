@@ -1,4 +1,5 @@
 class BudgetsController < ApplicationController
+  include GuestUsers
   include FeatureFlags
   include BudgetsHelper
   feature_flag :budgets

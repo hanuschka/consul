@@ -1,6 +1,8 @@
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
+  # cache_control: "public, max-age=3600"
+  cache_control: 'public, max-age=31536000'
 
 test:
   service: Disk

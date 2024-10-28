@@ -1,0 +1,25 @@
+<%= render "shared/globalize_locales", resource: investment %>
+
+<%= translatable_form_for investment, url: polymorphic_path([@namespace, investment.budget, investment]) do |f| %>
+
+  <%= render "shared/errors", resource: investment %>
+
+  <div class="row expanded">
+    <%= f.translatable_fields do |translations_form| %>
+      <div class="small-12 column">
+        <%= translations_form.text_field :title,
+              maxlength: Budget::Investment.title_max_length %>
+      </div>
+
+      <div class="small-12 column">
+        <%= translations_form.text_area :description,
+              maxlength: Budget::Investment.description_max_length,
+              class: "html-area" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="small-12 column margin-top">
+    <%= f.submit(class: "button", value: t("admin.budget_investments.edit.submit_button")) %>
+  </div>
+<% end %>

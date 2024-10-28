@@ -1,0 +1,9 @@
+<div class="row">
+  <div class="column">
+    <h2><%= @investment.title %></h2>
+  </div>
+</div>
+
+<%= render "custom/admin/budget_investments/nav_bar" %>
+
+<%= render "custom/admin/budget_investments/people_form", investment: @investment %>

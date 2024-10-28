@@ -1,3 +1,5 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<%= render Shared::NewCommentsComponent.new(@commentable, @comment_tree, show_title: false, remote_url: projekt_footer_phase_filter_url(@projekt_phase), anchor: 'footer-content') %>
+<% unless embedded? %>
+  <%= render Shared::NewCommentsComponent.new(@commentable, @comment_tree, show_title: false, remote_url: projekt_footer_phase_filter_url(@projekt_phase), anchor: 'footer-content') %>
+<% end %>

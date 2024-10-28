@@ -1,14 +1,10 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
   <% c.with_header do %>
-    <%= helpers.format_date_range(@poll.starts_at, @poll.ends_at, separator: t("custom.polls.poll.date.to")) %>
+    <%= helpers.format_date_range(@poll.projekt_phase.start_date, @poll.projekt_phase.end_date, separator: t("custom.polls.poll.date.to")) %>
   <% end %>
   <% c.with_footer_section do %>
     <div class="mb-5">
-      <% if poll.expired? || poll.projekt_phase.expired? %>
-        <%= helpers.link_to_poll(t("custom.polls.poll.phase_expired_button"), poll, class_name: "button -purple") %>
-      <% else %>
-        <%= link_to(t("custom.polls.poll.participate_button"), helpers.poll_path(poll), class: "button -purple") %>
-      <% end %>
+      <%= link_to_poll(button_text, poll, class_name: "button -purple") %>
     </div>
   <% end %>
 <% end %>

@@ -20,7 +20,7 @@
     },
 
     header() {
-      return document.querySelector(".js-stiky-header");
+      return document.querySelector(".js-sticky-header");
     },
 
     handleScroll: function() {

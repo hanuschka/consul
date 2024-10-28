@@ -180,9 +180,13 @@ class Mailer < ApplicationMailer
     end
   end
 
-  def formular_answer_confirmation(email)
-    @email_to = email
-    mail(to: email, subject: t("mailers.formular_answer_confirmation.subject"))
+  def formular_answer_confirmation(formular_answer)
+    @email_to = formular_answer.email_address
+    return if @email_to.blank?
+
+    @email_subject = formular_answer.email_subject || t("mailers.formular_answer_confirmation.subject")
+    @email_text = formular_answer.email_text
+    mail(to: @email_to, subject: @email_subject)
   end
 
   def formular_follow_up_letter(follow_up_letter, recipient)

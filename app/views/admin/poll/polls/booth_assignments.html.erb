@@ -12,7 +12,7 @@
         <tr id="<%= dom_id(poll) %>" class="poll">
           <td><%= poll.name %></td>
           <td>
-            <%= l poll.starts_at.to_date %> - <%= l poll.ends_at.to_date %>
+            <%= l poll.projekt_phase.start_date&.to_date %> - <%= l poll.projekt_phase.end_date&.to_date %>
           </td>
           <td>
             <%= render Admin::TableActionsComponent.new(poll, actions: []) do |actions| %>

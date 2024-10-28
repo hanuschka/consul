@@ -1,5 +1,7 @@
 Geocoder.configure(
-  http_headers: { "User-Agent" => "Demokratie Today" }
+  http_headers: { "User-Agent" => "Demokratie Today" },
+  language: :de,
+  logger: Logger.new(STDOUT)
 
   # Geocoding options
   # timeout: 3,                 # geocoding service timeout (secs)

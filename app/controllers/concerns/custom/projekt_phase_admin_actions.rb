@@ -2,13 +2,17 @@ module ProjektPhaseAdminActions
   extend ActiveSupport::Concern
   include Translatable
   include MapLocationAttributes
+  include ImageAttributes
+  include ProjektPhaseControllerUtils
 
   included do
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
 
-    before_action :set_projekt_phase, :authorize_nav_bar_action, except: [:create, :order_phases]
+    before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
+      :create, :order_phases, :frame_phases_restrictions,
+      :frame_new_phase_selector
+    ]
     before_action :set_namespace
-
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
   end
 
@@ -20,16 +24,30 @@ module ProjektPhaseAdminActions
 
     @projekt_phase.save!
 
-    redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
-      notice: t("custom.admin.projekt_phases.notice.created")
+    if embedded? && frame_session_from_authorized_source?
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :duration)
+    else
+      redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
+        notice: t("custom.admin.projekt_phases.notice.created")
+    end
   end
 
   def update
     authorize!(:create, @projekt_phase)
 
     if @projekt_phase.update(projekt_phase_params)
-      redirect_to namespace_projekt_phase_path(action: params[:action_name] || "duration"),
-        notice: t("custom.admin.projekt_phases.notice.updated")
+
+      if params[:action_name].present?
+        redirect_to(
+          namespace_projekt_phase_path(action: params[:action_name]),
+          notice: t("custom.admin.projekt_phases.notice.updated")
+        )
+      elsif embedded?
+        redirect_to(
+          @projekt_phase.projekt.frame_url,
+          notice: t("custom.admin.projekt_phases.notice.updated")
+        )
+      end
     end
   end
 
@@ -87,11 +105,48 @@ module ProjektPhaseAdminActions
   def settings
     authorize!(:settings, @projekt_phase)
 
-    all_settings = @projekt_phase.settings.group_by(&:kind)
-    @projekt_phase_features = all_settings["feature"]&.group_by(&:band) || []
-    @projekt_phase_options = all_settings["option"]&.group_by(&:band) || []
+    if params[:category].present?
+      projekt_phase_features, projekt_phase_options =
+        get_all_settings_for_phase_and_category(
+          @projekt_phase, params[:category]
+        )
+      @projekt_phase_features = { params[:category] => projekt_phase_features }
+      @projekt_phase_options = { params[:category] => projekt_phase_options }
+    else
+      projekt_phase_features, projekt_phase_options =
+        get_all_settings_for_phase_and_category(
+          @projekt_phase, :base
+        )
+
+      @projekt_phase_features = projekt_phase_features&.group_by(&:band) || []
+      @projekt_phase_options = projekt_phase_options&.group_by(&:band) || []
+    end
+
+    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
+    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
 
     render "custom/admin/projekt_phases/settings"
+  end
+
+  def get_all_settings_for_phase_and_category(projekt_phase, category)
+    proposal_setting_key_ordered = ProjektPhaseSetting.defaults[projekt_phase.class.name][category.to_sym].keys
+
+    projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
+      result[item.key] = item
+    end
+
+    setting_ordered = []
+    proposal_setting_key_ordered.each do |setting_key|
+      setting = projekt_phase_settings_by_key[setting_key.to_s]
+      setting_ordered.push(setting)
+    end
+
+    all_settings = setting_ordered.group_by(&:kind)
+
+    projekt_phase_features = all_settings["feature"]
+    projekt_phase_options = all_settings["option"]
+
+    [projekt_phase_features, projekt_phase_options]
   end
 
   def projekt_labels
@@ -146,7 +201,10 @@ module ProjektPhaseAdminActions
   end
 
   def age_ranges_for_stats
+    authorize!(:age_ranges_for_stats, @projekt_phase)
     @age_ranges = AgeRange.for_stats
+
+    render "custom/admin/projekt_phases/age_ranges_for_stats"
   end
 
   def projekt_questions
@@ -167,7 +225,7 @@ module ProjektPhaseAdminActions
   def projekt_events
     authorize!(:projekt_events, @projekt_phase)
     @projekt_event = ProjektEvent.new
-    @projekt_events = @projekt_phase.projekt_events
+    @projekt_events = @projekt_phase.projekt_events.order(datetime: :desc)
 
     render "custom/admin/projekt_phases/projekt_events"
   end
@@ -175,6 +233,11 @@ module ProjektPhaseAdminActions
   def milestones
     authorize!(:milestones, @projekt_phase)
     render "custom/admin/projekt_phases/milestones"
+  end
+
+  def progress_bars
+    authorize!(:progress_bars, @projekt_phase)
+    render "custom/admin/projekt_phases/progress_bars"
   end
 
   def projekt_notifications
@@ -221,6 +284,112 @@ module ProjektPhaseAdminActions
     end
   end
 
+  def poll_questions
+    authorize!(:poll_questions, @projekt_phase)
+    @poll = @projekt_phase.poll
+    @questions = @poll.questions
+
+    render "custom/admin/projekt_phases/poll_questions"
+  end
+
+  def poll_booth_assignments
+    authorize!(:poll_booth_assignments, @projekt_phase)
+    @poll = @projekt_phase.poll
+    @booth_assignments = @poll.booth_assignments.includes(:booth).order("poll_booths.name")
+                              .page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_booth_assignments"
+  end
+
+  def poll_officer_assignments
+    authorize!(:poll_officer_assignments, @projekt_phase)
+    @poll = @projekt_phase.poll
+    @officers = ::Poll::Officer.
+                  includes(:user).
+                  order("users.username").
+                  where(
+                    id: @poll.officer_assignments.select(:officer_id).distinct.map(&:officer_id)
+                  ).page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_officer_assignments"
+  end
+
+  def poll_recounts
+    authorize!(:poll_recounts, @projekt_phase)
+    @poll = @projekt_phase.poll
+    @stats = Poll::Stats.new(@poll)
+    @booth_assignments = @poll.booth_assignments.
+                              includes(:booth, :recounts, :voters).
+                              order("poll_booths.name").
+                              page(params[:page]).per(50)
+
+    render "custom/admin/projekt_phases/poll_recounts"
+  end
+
+  def poll_results
+    authorize!(:poll_results, @projekt_phase)
+    @poll = @projekt_phase.poll
+    @partial_results = @poll.partial_results
+
+    render "custom/admin/projekt_phases/poll_results"
+  end
+
+  def budget_edit
+    authorize!(:budget_edit, @projekt_phase)
+    @budget = @projekt_phase.budget
+
+    render "custom/admin/projekt_phases/budget_edit"
+  end
+
+  def budget_investments
+    authorize!(:budget_investments, @projekt_phase)
+    @budget = @projekt_phase.budget
+
+    @investments = @budget.investments
+                          .scoped_filter(params.merge(budget_id: @budget.id), "all")
+                          .order_filter(params.merge(budget_id: @budget.id))
+    @investments = Kaminari.paginate_array(@investments) if @investments.is_a?(Array)
+    @investments = @investments.page(params[:page]) unless request.format.csv?
+
+    render "custom/admin/projekt_phases/budget_investments"
+  end
+
+  def budget_phases
+    authorize!(:budget_phases, @projekt_phase)
+    @budget = @projekt_phase.budget
+
+    render "custom/admin/projekt_phases/budget_phases"
+  end
+
+  def legislation_process_draft_versions
+    authorize!(:legislation_process_draft_versions, @projekt_phase)
+    @process = @projekt_phase.legislation_process
+
+    render "custom/admin/projekt_phases/legislation_process_draft_versions"
+  end
+
+  def frame_new_phase_selector
+    @projekt = Projekt.find(params[:projekt_id])
+
+    authorize!(:edit, @projekt)
+
+    render
+  end
+
+  # def frame_phases_restrictions
+  #   @projekt = Projekt.find(params[:projekt_id])
+  #   authorize!(:edit, @projekt)
+  #
+  #   render "custom/admin/projekt_phases/frame_phases_restrictions"
+  # end
+  #
+  # def frame_phase_edit
+  #   @projekt = Projekt.find(params[:projekt_id])
+  #   authorize!(:edit, @projekt)
+  #
+  #   render "custom/admin/projekt_phases/frame_phases_restrictions"
+  # end
+
   private
 
     def projekt_phase_params
@@ -232,12 +401,13 @@ module ProjektPhaseAdminActions
         translation_params(ProjektPhase),
         :projekt_id, :type,
         :active, :start_date, :end_date,
-        :guest_participation_allowed,
-        :verification_restricted, :age_range_id,
+        :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],
+        settings_attributes: [:id, :value],
+        polls_attributes: [:id, :show_open_answer_author_name, { image_attributes: image_attributes }, translation_params(Poll)],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params_to_permit)
     end
 
@@ -282,14 +452,14 @@ module ProjektPhaseAdminActions
       possible_nab_bar_actions = @projekt_phase.projekt.projekt_phases.map(&:admin_nav_bar_items).flatten.uniq
       return unless action_name.in?(possible_nab_bar_actions)
 
-      unless action_name.in?(@projekt_phase.admin_nav_bar_items)
+      unless action_name.in?(@projekt_phase.admin_nav_bar_items) || action_name == "settings"
         redirect_to namespace_projekt_phase_path(action: @projekt_phase.admin_nav_bar_items.first)
       end
     end
 
     # path helpers
 
-    def namespace_projekt_phase_path(action: "update")
-      url_for(controller: params[:controller], action: action, only_path: true)
+    def namespace_projekt_phase_path(action: "update", url_params: {})
+      url_for(controller: params[:controller], action: action, params: url_params, only_path: true)
     end
 end

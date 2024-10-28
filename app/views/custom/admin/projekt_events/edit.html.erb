@@ -1,0 +1,13 @@
+<div class="row expanded">
+  <div class="column medium-8">
+    <div class="column">
+      <h2 class="inline-block"><%= t("custom.admin.projekt_events.edit.title") %></h2>
+    </div>
+  </div>
+</div>
+
+<div class="row expanded">
+  <div class="column medium-8">
+    <%= render partial: "custom/admin/projekt_events/form", locals: { event: @projekt_event } %>
+  </div>
+</div>

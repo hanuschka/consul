@@ -1,8 +1,26 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
 
-<div class="row">
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
+
+<div class="row margin-bottom">
   <div class="column">
-    <%= render "admin/milestones/milestones", milestoneable: @projekt_phase %>
+    <%= render "custom/admin/projekt_phases/milestones/new_block", milestoneable: @projekt_phase %>
   </div>
 </div>
+
+<div class="row margin-bottom">
+  <div class="column">
+    <%= render "custom/admin/projekt_phases/milestones/list", milestoneable: @projekt_phase %>
+  </div>
+</div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

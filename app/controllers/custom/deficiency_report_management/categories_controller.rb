@@ -7,9 +7,11 @@ class DeficiencyReportManagement::CategoriesController < DeficiencyReportManagem
   end
 
   def new
+    @df_officers = DeficiencyReport::Officer.all
   end
 
   def edit
+    @df_officers = DeficiencyReport::Officer.all
   end
 
   def create
@@ -50,6 +52,7 @@ class DeficiencyReportManagement::CategoriesController < DeficiencyReportManagem
     params.require(:deficiency_report_category).permit(
       :color, :icon,
       :warning_text,
+      :deficiency_report_officer_id,
       translation_params(DeficiencyReport::Category)
     )
   end

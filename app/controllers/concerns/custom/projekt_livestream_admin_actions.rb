@@ -3,7 +3,16 @@ module ProjektLivestreamAdminActions
 
   included do
     before_action :set_projekt_phase, :set_namespace
-    before_action :set_projekt_livestream, only: [:update, :destroy, :send_notifications]
+    before_action :set_projekt_livestream, only: [:edit, :update, :destroy, :send_notifications]
+
+    respond_to :js, only: [:new, :edit]
+  end
+
+  def new
+    @projekt_livestream = ProjektLivestream.new(projekt_phase: @projekt_phase)
+    authorize!(:new, @projekt_livestream)
+
+    render "custom/admin/projekt_phases/projekt_livestreams/new"
   end
 
   def create
@@ -13,6 +22,12 @@ module ProjektLivestreamAdminActions
 
     @projekt_livestream.save!
     redirect_to polymorphic_path([@namespace, @projekt_phase, ProjektLivestream]), notice: t("admin.settings.flash.updated")
+  end
+
+  def edit
+    authorize!(:edit, @projekt_livestream)
+
+    render "custom/admin/projekt_phases/projekt_livestreams/edit"
   end
 
   def update

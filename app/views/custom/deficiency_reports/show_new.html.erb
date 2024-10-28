@@ -29,7 +29,7 @@
 
     <div class="flex-layout">
       <div class="main-column">
-        <% if @deficiency_report.can_be_published? %>
+        <% if @deficiency_report.official_answer.present? %>
           <div class="resource-page--description new-card main-content-card" style="background-color:#E3FCE7">
             <h3><%= t("custom.deficiency_reports.show.official_answer.title") %></h3>
             <%= AdminWYSIWYGSanitizer.new.sanitize(@deficiency_report.official_answer) %>
@@ -59,10 +59,6 @@
           <%= render Shared::NewCommentsComponent.new(@deficiency_report, @comment_tree) %>
         <% end %>
 
-        <% if can? :update_official_answer, @deficiency_report %>
-          <%= render "custom/deficiency_reports/answer_form", deficiency_report: @deficiency_report %>
-        <% end %>
-
         <% if @deficiency_report.milestones.any? %>
           <div class="proposal-resources-section">
             <%= render Shared::MilestonesComponent.new(milestones: @deficiency_report.milestones, milestoneable: @deficiency_report) %>
@@ -73,22 +69,6 @@
 
       <aside class="sidebar">
         <%= render Sidebar::ResourceAuthorComponent.new(resource: @deficiency_report) %>
-
-        <% if can? :update_status, @deficiency_report %>
-          <%= render(Shared::SidebarCardComponent.new(
-            title: t("custom.deficiency_reports.show.status.title"),
-            icon_name: "check-circle")) do |c| %>
-            <%= render "deficiency_reports/status", deficiency_report: @deficiency_report %>
-          <% end %>
-        <% end %>
-
-        <% if can? :update_category, @deficiency_report %>
-          <%= render(Shared::SidebarCardComponent.new(
-            title: t("custom.deficiency_reports.show.category.title"),
-            icon_name: "th-large")) do |c| %>
-            <%= render "deficiency_reports/category", deficiency_report: @deficiency_report %>
-          <% end %>
-        <% end %>
 
         <% if feature?(:allow_attached_documents) && @deficiency_report.documents.present? %>
           <%= render(Shared::SidebarCardComponent.new(title: t("documents.title"), icon_name: "file")) do |c| %>
@@ -101,14 +81,6 @@
             <div class="video-link">
               <%= sanitize_and_auto_link @deficiency_report.video_url %>
             </div>
-          <% end %>
-        <% end %>
-
-        <% if can? :update_officer, @deficiency_report %>
-          <%= render(Shared::SidebarCardComponent.new(
-            title: t("custom.deficiency_reports.show.officer.title"),
-            icon_name: "user-cog")) do |c| %>
-            <%= render "deficiency_reports/officer", deficiency_report: @deficiency_report %>
           <% end %>
         <% end %>
 
@@ -132,11 +104,13 @@
             icon_name: "user-edit")) do |c| %>
             <%= render "deficiency_reports/author_actions", deficiency_report: @deficiency_report %>
           <% end %>
-        <% elsif current_user&.administrator? %>
+        <% end %>
+
+        <% if can?(:edit, @deficiency_report) || can?(:audits, @deficiency_report) %>
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.admin_actions.title"),
             icon_name: "user-edit")) do |c| %>
-            <%= render "deficiency_reports/author_actions", deficiency_report: @deficiency_report %>
+              <%= link_to "Administrieren", deficiency_report_management_deficiency_report_path(@deficiency_report), class: "button hollow alert" %>
           <% end %>
         <% end %>
 

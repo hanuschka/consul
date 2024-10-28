@@ -27,16 +27,13 @@ class Poll::CsvExporter
         "published",
         "geozone_restricted",
         "comments_count",
-        "author_username",
         "hidden_at",
         "slug",
         "created_at",
         "updated_at",
         "budget_id",
         "related_type",
-        "related_id",
-        "show_open_answer_author_name",
-        "show_summary_instead_of_questions",
+        "related_id"
       ]
     end
 
@@ -44,21 +41,18 @@ class Poll::CsvExporter
       [
         poll.name,
         poll.projekt&.name,
-        poll.starts_at,
-        poll.ends_at,
+        poll.projekt_phase.start_date,
+        poll.projekt_phase.end_date,
         poll.published,
         poll.geozone_restricted,
         poll.comments_count,
-        poll.author&.username,
         poll.hidden_at,
         poll.slug,
         poll.created_at,
         poll.updated_at,
         poll.budget_id,
         poll.related_type,
-        poll.related_id,
-        poll.show_open_answer_author_name,
-        poll.show_summary_instead_of_questions
+        poll.related_id
       ]
     end
 end

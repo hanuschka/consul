@@ -88,11 +88,6 @@ en:
             title: My contributions
         start_deficiency_report: Report a deficiency
       mailers:
-        notify_administrators_about_answer_update:
-          hi: Dear Admin,
-          p1: Officer has updated official answer.
-          signature_html: Best regards,</br>Consul
-          subject: New official answer to deficiency report %{identifier}
         notify_author_about_status_change:
           hi: Hi
           p1: Status of your a deficiency report you submitted earlier, was changed.
@@ -118,7 +113,6 @@ en:
            You can also express your opinion with your own comment. And after the deficiency has been closed, you can find the city's official statement here.
         video:
           title: Video
-        approve_official_answer: Publish reply
         official_answer:
           title: Official reply
         sidebar:

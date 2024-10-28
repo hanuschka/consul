@@ -1,7 +1,7 @@
 <h2 class="inline-block"><%= t("admin.progress_bars.index.title") %></h2>
 
 <%= link_to t("admin.progress_bars.index.new_progress_bar"),
-            polymorphic_path([@namespace, progressable, ProgressBar.new(progressable: progressable)], action: :new),
+            namespaced_polymorphic_path(@namespace, ProgressBar.new(progressable: progressable), action: :new),
             class: "button float-right" %>
 
 <% if progressable.progress_bars.any? %>
@@ -34,8 +34,8 @@
           </td>
           <td>
             <%= render Admin::TableActionsComponent.new(progress_bar,
-                                                        edit_path: polymorphic_path([@namespace, progressable, progress_bar], action: :edit),
-                                                        destroy_path: polymorphic_path([@namespace, progressable, progress_bar])
+                                                        edit_path: namespaced_polymorphic_path(@namespace, progress_bar, action: :edit),
+                                                        destroy_path: namespaced_polymorphic_path(@namespace, progress_bar)
                                                        ) %>
           </td>
         </tr>

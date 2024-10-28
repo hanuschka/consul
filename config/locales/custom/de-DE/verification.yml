@@ -60,8 +60,8 @@ de:
         form_errors: haben die Überprüfung Ihres Wohnsitzes verhindert
         postal_code_note: Um Ihr Benutzerkonto zu verifizieren, müssen Sie registriert sein
         terms: Allgemeine Nutzungsbedingungen
-        title: Wohnsitz bestätigen
-        verify_residence: Wohnsitz bestätigen
+        title: Datenabgleich | Verifizierung
+        verify_residence: Daten abgleichen | verifizieren
     sms:
       create:
         flash:

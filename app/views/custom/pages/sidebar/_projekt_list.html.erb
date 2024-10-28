@@ -1,12 +1,13 @@
 <% projekts.each do |projekt| %>
   <% current_projekt_class = current_projekt == projekt ? 'current-projekt' : '' %>
   <% toggle_projekt = projekt.all_children_ids.push(projekt.id).include?(current_projekt.id) ? true : false  %>
+  <% activated_child_projekts = projekt.children.with_order_number.activated.includes(:page) %>
 
   <ul class='projekt-navigator'>
     <li class="projekt-navigator <%= current_projekt_class %>" aria-expanded=<%= toggle_projekt %>>
       <%= prepare_projekt_name(projekt, 'mobile') %>
 
-      <% if projekt.children.with_order_number.activated.any? %>
+      <% if activated_child_projekts.any? %>
         <span class='js-icon-toggle-child-projekts toggle-arrow focusable js-prevent-key-scroll'
               role="button"
               tabindex="0"

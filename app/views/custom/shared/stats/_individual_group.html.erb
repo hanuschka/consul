@@ -2,7 +2,7 @@
 
   <h4><%= t("stats.by_individual_group") %></h4>
 
-  <% (stats.hard_individual_groups + stats.soft_individual_groups).each do |individual_group| %>
+  <% stats.soft_individual_groups.each do |individual_group| %>
     <table>
       <tr>
         <th><%= individual_group.name %></th>

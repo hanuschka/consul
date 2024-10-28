@@ -6,7 +6,7 @@ class Admin::ProposalsController < Admin::BaseController
 
   has_orders %w[created_at]
 
-  before_action :load_proposal, except: :index
+  before_action :load_proposal, except: [:index, :comments]
   before_action :set_projekts_for_selector, only: [:update, :show]
 
   def index
@@ -43,6 +43,17 @@ class Admin::ProposalsController < Admin::BaseController
   def toggle_image
     @proposal.image.toggle!(:concealed)
     redirect_to admin_proposal_path(@proposal)
+  end
+
+  def comments
+    @comments = Comment.not_valuations.where(commentable_type: "Proposal").sort_by_newest
+
+    respond_to do |format|
+      format.csv do
+        CsvJobs::CommentsJob.perform_later(current_user.id, @comments.ids, "proposals")
+        redirect_to admin_proposals_path, notice: "Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist."
+      end
+    end
   end
 
   private

@@ -33,12 +33,7 @@ module Statisticable
   end
 
   def individual_group?
-    hard_individual_groups.any? || soft_individual_groups.any?
-  end
-
-  def hard_individual_groups
-    @hard_individual_groups ||= IndividualGroup.joins(individual_group_values: :users)
-      .where(kind: "hard", users: { id: participants.ids }).distinct
+    soft_individual_groups.any?
   end
 
   def soft_individual_groups

@@ -1,4 +1,8 @@
 .custom-new-design {
+  .resources-list {
+    margin-bottom: 40px;
+  }
+
   @media (max-width: 970px) {
     .resources-list {
       .resources-list--switch-view-button {
@@ -19,6 +23,7 @@
     input[type="text"] {
       height: 40px;
       margin-bottom: 0;
+      padding-right: 20px;
       border-radius: 10px;
       flex-grow: 1;
     }
@@ -81,13 +86,14 @@
     align-items: flex-end;
     justify-content: space-between;
     margin-bottom: 20px;
+    align-items: center;
 
     .search-form-header {
       margin-right: 20px;
       max-width: 320px;
       flex-grow: 1;
       width: 100%;
-      max-width: 298px;
+      max-width: 330px;
 
       label {
         flex-grow: 1;
@@ -104,7 +110,7 @@
     }
   }
 
-  .resources-list--sort {
+  .resources-list--filter {
     display: flex;
     white-space: nowrap;
     margin-left: 17px;
@@ -120,12 +126,14 @@
     }
   }
 
-  .resources-list--sort-title {
+  .resources-list--filter-title {
     color: #919191;
     margin-right: 12px;
+    display: flex;
+    align-items: center;
   }
 
-  .resources-list--sort-label {
+  .resources-list--filter-label {
     color: #919191;
   }
 

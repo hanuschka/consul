@@ -1,5 +1,6 @@
 <iframe
-  src="<%= VideoUtils.embed_url(@url) %>"
+  src="<%= Setting["extended_feature.gdpr.two_click_iframe_solution"].present? ? "" : VideoUtils.embed_url(@url) %>"
+  data-src="<%= Setting["extended_feature.gdpr.two_click_iframe_solution"].present? ? VideoUtils.embed_url(@url) : "" %>"
   frameborder="0"
   allow="<%= allow_attribute %>"
   class="external-video-player"

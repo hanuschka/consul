@@ -37,11 +37,13 @@ module AdminActions::Poll::Questions
       @question.votation_type = VotationType.new(vote_type: :unique)
     end
 
+    @question.given_order ||= @question.poll.questions.maximum(:given_order).to_i + 1
+
     if @question.save
-      if @question.parent_question.present?
-        redirect_to polymorphic_path([@namespace, @question.parent_question])
-      else
+      if @question.bundle_question?
         redirect_to polymorphic_path([@namespace, @question])
+      else
+        redirect_to polymorphic_path([@namespace, @question.poll, @question], action: :edit_votation_type)
       end
     else
       render "admin/poll/questions/new"
@@ -58,10 +60,10 @@ module AdminActions::Poll::Questions
 
   def update
     if @question.update(question_params)
-      if @question.parent_question.present?
-        redirect_to polymorphic_path([@namespace, @question.parent_question]), notice: t("flash.actions.save_changes.notice")
+      if @question.bundle_question?
+        redirect_to polymorphic_path([@namespace, @question]), notice: t("flash.actions.save_changes.notice")
       else
-        redirect_to polymorphic_path([@namespace, @question.poll]), notice: t("flash.actions.save_changes.notice")
+        redirect_to polymorphic_path([@namespace, @question.poll, @question], action: :edit_votation_type), notice: t("flash.actions.save_changes.notice")
       end
     else
       render "admin/poll/questions/edit"
@@ -75,10 +77,22 @@ module AdminActions::Poll::Questions
       if @question.parent_question.present?
         polymorphic_path([@namespace, @question.parent_question])
       else
-        polymorphic_path([@namespace, @question.poll])
+        polymorphic_path([@namespace, @question.poll.projekt_phase], action: :poll_questions)
       end
 
     redirect_to destroy_path, notice: t("admin.questions.destroy.notice")
+  end
+
+  def edit_votation_type; end
+
+  def update_votation_type
+    @votation_type = @question.votation_type
+
+    if @votation_type.update(votation_type_params)
+      redirect_to polymorphic_path([@namespace, @question.poll.projekt_phase], action: :poll_questions)
+    else
+      render "admin/poll/questions/edit_votation_type"
+    end
   end
 
   def order_questions # custom
@@ -93,13 +107,22 @@ module AdminActions::Poll::Questions
         :poll_id,
         :question,
         :proposal_id,
-        :show_hint_callout,
         :show_images,
         :parent_question_id,
         :bundle_question,
+        :answer_mandatory,
         :next_question_id,
-        translation_params(Poll::Question),
-        votation_type_attributes: [:vote_type, :max_votes, :max_votes_per_answer]
+        translation_params(Poll::Question)
+      )
+    end
+
+    def votation_type_params
+      params.require(:votation_type).permit(
+        :vote_type,
+        :max_votes,
+        :max_votes_per_answer,
+        :show_hint_callout,
+        translation_params(VotationType)
       )
     end
 

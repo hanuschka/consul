@@ -47,4 +47,12 @@ class Poll::Question < ApplicationRecord
   def sibling_questions
     (poll.questions.where(parent_question_id: nil).to_a - [self]).map { |question| [question.title, question.id] }
   end
+
+  def allows_additional_info?
+    votation_type.unique? || votation_type.multiple? || votation_type.multiple_with_weight?
+  end
+
+  def can_accept_open_answer?
+    votation_type.unique? || votation_type.multiple?
+  end
 end

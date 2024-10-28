@@ -6,10 +6,6 @@
     <%= back_link_to projekt_questions_admin_projekt_phase_path(@projekt_phase), t("admin.legislation.questions.new.back") %>
   <% end %>
 
-  <% if @projekt_livestream.present? %>
-    <h2><%= @projekt_livestream.title %></h2>
-  <% end %>
-
   <div class="row">
     <div class="small-12 column">
       <% if @projekt_livestream.present? %>

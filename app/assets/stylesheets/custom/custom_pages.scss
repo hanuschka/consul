@@ -125,6 +125,7 @@ span.sidebar-projekt-phases-title {
 .sidebar-projekt-map .map_location {
   height: 250px;
   cursor: pointer;
+  border-radius: 7px;
 
   .leaflet-control-container {
     .leaflet-control-zoom,
@@ -285,14 +286,6 @@ span.geo-affiliation-icon:before {
   content: "\f279";
 }
 
-span.restriction-hint {
-  font-size: small;
-  font-weight: normal;
-  position: relative;
-  top: -5px;
-  left: 23px;
-}
-
 // Toggling projekt lists in page sidebar
 
 li.projekt-navigator {
@@ -349,7 +342,8 @@ li.projekt-navigator[aria-expanded="false"] {
 // Footer
 
 .tab-info-summary {
-  height: 2.75rem;
+  // Temporary disable. It results in graphical bug when sorting phases
+  /* height: 2.75rem; */
   overflow: hidden;
 
   span.time-icon,
@@ -364,21 +358,45 @@ li.projekt-navigator[aria-expanded="false"] {
 
 .arrow-controls {
   display: none;
+  margin-bottom: 10px;
+
+  button, a {
+    /* i { */
+      color: $brand;
+    /* } */
+
+    &:hover {
+      /* i { */
+        color: darken($brand, 3);
+      /* } */
+    }
+    &:active {
+      /* i { */
+        color: darken($brand, 5);
+      /* } */
+    }
+  }
 
   .disabled {
-    color: gray;
+    cursor: auto;
+    i {
+      /* color: #cbcbcb; */
+      opacity: 0.2;
+    }
   }
 }
 
-@media screen and (min-width: 64em) {
+.arrow-controls {
+  font-size: 2rem;
+
+  #left-arrow-control {
+    margin-right: 10px;
+  }
+}
+
+@media screen and (min-width: $small-tablet-viewport-start) {
   .arrow-controls {
     display: flex;
-    font-size: 1.5rem;
-    cursor: pointer;
-
-    #left-arrow-control {
-      margin-right: 10px;
-    }
   }
 
   .footer-phases-filter-subnav #filter-subnav {
@@ -392,41 +410,47 @@ li.projekt-navigator[aria-expanded="false"] {
       display: none;
     }
 
-    .page-subnav-tab a {
-      width: 270px;
-    }
   }
 }
-
 
 // Phase subscriptions
 
 .footer-phases-filter-subnav {
+  display: flex;
+
   .page-subnav-tab {
     h4 {
-      margin-right: 85px;
+      margin-right: 30px;
 
-      @media screen and (min-width: 64em) {
-        margin-right: 30px;
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        margin-right: 85px;
       }
     }
 
     .phase-subscription {
       position: absolute;
-      top: 17px;
-      right: 45px;
+      top: 15px;
+      right: 5px;
 
       a {
-        width: 50px;
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
         display: flex;
+        padding: 10px;
+        border-radius: 50%;
         justify-content: center;
         align-items: center;
         color: $brand;
+
+        &:hover {
+          background-color: rgba($brand, 0.1);
+        }
       }
 
-      @media screen and (min-width: 64em) {
-        top: 5px;
-        right: 5px;
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        top: 17px;
+        right: 45px;
 
         a {
           width: auto !important;

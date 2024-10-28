@@ -8,6 +8,7 @@ namespace :deficiency_report_management do
     resources :milestones, controller: "deficiency_report_milestones"
     resources :progress_bars, except: :show, controller: "deficiency_report_progress_bars"
     member do
+      get :audits
       patch :accept
       patch :toggle_image
     end
@@ -29,11 +30,17 @@ namespace :deficiency_report_management do
     end
   end
 
+  resources :official_answer_templates, except: :show
+
   resources :areas, except: :show do
     collection do
       post "order_areas"
     end
   end
 
-  resources :memos, only: %i[create destroy]
+  resources :memos, only: %i[create] do
+    member do
+      post :send_notification
+    end
+  end
 end

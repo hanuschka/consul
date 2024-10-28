@@ -11,9 +11,40 @@
         margin-right: 5px;
       }
     }
+  }
+}
 
-    .sdg-goal-icon {
-      border-radius: 3px;
-    }
+.sdg-goal-icon {
+  border-radius: 3px;
+}
+
+.sdg-simple-edit-selector {
+  input[type="checkbox"] {
+    display: none;
+  }
+}
+
+.big-sdgs-list, .sidebar-card .sdg-related-list-selector {
+  padding: 0;
+
+  fieldset {
+    padding: 0;
+  }
+
+  .sdg-goal-icon {
+    width: auto;
+    min-width: auto;
+  }
+  .selected-goal {
+    margin: 0;
+  }
+
+  .sdg-goal-tag-list {
+    margin: 0;
+    display: flex;
+    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
   }
 }

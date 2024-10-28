@@ -6,6 +6,10 @@ class ProjektPhase::ArgumentPhase < ProjektPhase
     active?
   end
 
+  def title
+    phase_tab_name.presence || I18n.t("custom.admin.projekt_phases.projekt_arguments.projekt_phase_default_title")
+  end
+
   def name
     "argument_phase"
   end

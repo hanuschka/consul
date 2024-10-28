@@ -1,6 +1,6 @@
 class Shared::CommentsFormComponent < ApplicationComponent
   attr_reader :record
-  delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_guest_signin,
+  delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_guest_signin, :link_to_enter_missing_user_data,
            :link_to_verify_account, :current_user, :can?, to: :helpers
 
   def initialize(record)
@@ -29,6 +29,7 @@ class Shared::CommentsFormComponent < ApplicationComponent
       sanitize(t(path_to_key,
                sign_in: link_to_signin, sign_up: link_to_signup,
                guest_sign_in: link_to_guest_signin,
+               enter_missing_user_data: link_to_enter_missing_user_data,
                verify: link_to_verify_account,
                city: Setting["org_name"],
                geozones: projekt_phase.geozone_restrictions_formatted,

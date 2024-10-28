@@ -1,0 +1,14 @@
+<td style="padding-bottom: 20px; padding-left: 10px;">
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.notification_service_mailers.shared.hi", username: @user.username) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.notification_service_mailers.memo.intro_html", root_momoable_link: link_to(@root_memoable&.title, @root_memoable_url)) %>
+  </p>
+
+  <div style="<%= css_for_mailer_quote %>">
+    <%= @memo.text %>
+  </div>
+</td>

@@ -28,6 +28,7 @@
 
   form label {
     font-size: inherit;
+    color: $main-text-color;
   }
 
   form .checkbox, form .radio {
@@ -102,9 +103,9 @@
 
   form .checkbox-label--inline {
     font-weight: normal !important;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    /* display: flex; */
+    /* justify-content: flex-start; */
+    /* align-items: center; */
 
     input[type="checkbox"] {
       margin-right: 0.5rem;
@@ -126,7 +127,15 @@
   }
 }
 
+form .checkbox-label {
+  margin-bottom: 0.5rem;
+}
+
 .proposal-form .required-fields, .debate-form .required-fields, .budget-investment-form .required-fields {
   padding-top: 0;
   background: none;
+}
+
+.globalize-languages {
+  border-radius: 10px;
 }

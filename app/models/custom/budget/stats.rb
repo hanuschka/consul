@@ -8,11 +8,9 @@ class Budget::Stats
   end
 
   def total_votes
-    if budget.distributed_voting?
-      budget.investments.pluck(:qualified_total_ballot_line_weight).sum
-    else
-      budget.ballots.pluck(:ballot_lines_count).sum
-    end
+    Budget::Ballot::Line.joins(:ballot)
+                        .where(budget_ballots: { budget_id: budget.id, conditional: false })
+                        .sum(:line_weight)
   end
 
   private

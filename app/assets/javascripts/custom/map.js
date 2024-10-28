@@ -303,7 +303,7 @@
           if (data.sdg_goals.length || data.tags.length ) {
              popupHtml += "<div class='resource-map-popup-details'>";
 
-             if (data.sdg_goals.length) {
+             if (data.sdg_goals && data.sdg_goals.length) {
                var sdg_goals = "<div class='projekt-sdg-goals'>";
                data.sdg_goals.forEach(function(sdg_goal) {
                  sdg_goals += "<span class='projekt-sdg-goal'>"
@@ -314,7 +314,7 @@
                popupHtml += sdg_goals;
              }
 
-             if (data.tags.length) {
+             if (data.tags && data.tags.length) {
                var tags = "<div class='tags'>";
                data.tags.forEach(function(tag) {
                  tags += "<span class='tag' style='font-size:0.75rem;padding:0.33333rem 0.5rem;margin-bottom:4px;'>" + tag + "</span>";

@@ -27,13 +27,11 @@
       </div>
 
       <div class="users-profile-banner--info-line">
-        <% unless skip_user_verification? %>
-          <% if user.level_three_verified? %>
-            <span class="icon-check"></span>
-            <%= t("account.show.verified_account") %>
-          <% else %>
-            <%= t("custom.account.show.not_verified_account") %>
-          <% end %>
+        <% if user.level_three_verified? %>
+          <span class="icon-check"></span>
+          <%= t("account.show.verified_account") %>
+        <% else %>
+          <%= t("custom.account.show.not_verified_account") %>
         <% end %>
       </div>
 

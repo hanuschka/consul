@@ -1,0 +1,34 @@
+<% if @projekt_questions.any? %>
+  <h2><%= t("custom.admin.projekt_phases.projekt_questions.list_title") %></h2>
+
+  <table class="stack margin-bottom">
+   <thead>
+      <tr>
+        <th style="width:45%"><%= t("custom.admin.projekt_phases.projekt_questions.table.title") %></th>
+        <th style="width:25%"><%= t("custom.admin.projekt_phases.projekt_questions.table.question_options") %></th>
+        <th style="width:15%;" class="text-center"><%= t("custom.admin.projekt_phases.projekt_questions.table.comments_count") %></th>
+        <th style="width:15%"><%= t("admin.actions.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @projekt_questions.root_questions.each do |question| %>
+      <tr id="<%= dom_id(question) %>">
+        <td>
+          <%= question.title %>
+        </td>
+        <td>
+          <ul>
+            <% question.question_options.each do |question_option| %>
+              <li><%= "#{question_option.value} (#{question_option.answers_count})" %></li>
+            <% end %>
+          </ul>
+        </td>
+        <td class="text-center"><%= question.comments.count %></td>
+        <td><%= render Admin::TableActionsComponent.new(question,
+                                                        edit_path: polymorphic_path([@namespace, @projekt_phase, question], action: :edit),
+                                                        destroy_path: polymorphic_path([@namespace, @projekt_phase, question])) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

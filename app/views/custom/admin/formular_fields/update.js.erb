@@ -1,1 +1,5 @@
-$("#<%= dom_id(@formular_field) %>").html("<%= j render("custom/admin/formular_fields/formular_field", formular_field: @formular_field) %>");
+<% if @formular_field.follow_up_previously_changed? %>
+  location.reload();
+<% else %>
+  $("#<%= dom_id(@formular_field) %>").replaceWith("<%= j render("custom/admin/formular_fields/formular_field", formular_field: @formular_field) %>");
+<% end %>

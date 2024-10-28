@@ -4,38 +4,5 @@
   <%= render "/admin/poll/polls/subnav" %>
   <%= render "/admin/poll/booth_assignments/search_booths" %>
 
-  <h3 class="inline-block"><%= t("admin.poll_booth_assignments.index.booths_title") %></h3>
-
-  <%= link_to t("admin.booth_assignments.manage_assignments"),
-              polymorphic_path([@namespace, @poll, :booth_assignments], action: :manage),
-              class: "button hollow float-right" %>
-
-  <% if @booth_assignments.empty? %>
-    <div class="callout primary margin-top clear">
-      <%= t("admin.poll_booth_assignments.index.no_booths") %>
-    </div>
-  <% else %>
-    <table id="assigned_booths_list" class="fixed margin">
-      <thead>
-        <th><%= t("admin.poll_booth_assignments.index.table_name") %></th>
-        <th><%= t("admin.poll_booth_assignments.index.table_location") %></th>
-      </thead>
-      <tbody>
-        <% @booth_assignments.each do |booth_assignment| %>
-          <tr id="<%= dom_id(booth_assignment) %>" class="booth">
-            <td>
-              <strong>
-                <%= link_to booth_assignment.booth.name, polymorphic_path([@namespace, @poll, booth_assignment]) %>
-              </strong>
-            </td>
-            <td>
-              <%= booth_assignment.booth.location || t("admin.booths.index.no_location") %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-
-    <%= paginate @booth_assignments %>
-  <% end %>
+  <%= render "/admin/poll/booth_assignments/list" %>
 </div>

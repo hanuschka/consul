@@ -21,18 +21,36 @@ class ProjektPhase::FormularPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming settings formular formular_answers]
+    %w[duration naming restrictions formular settings formular_answers]
+  end
+
+  def settings_in_tabs
+    settings_in_duration_tab
+  end
+
+  def settings_in_duration_tab
+    {
+      "option.general.primary_formular_cutoff_date" => :date_field
+    }
   end
 
   def safe_to_destroy?
     formular.blank?
   end
 
-  def create_formular
-    Formular.create!(projekt_phase: self)
-  end
-
   def subscribable?
     false
   end
+
+  private
+
+    def phase_specific_permission_problems(user, location)
+      return :past_regular_formular_cutoff_date if formular.past_cutoff_date?
+
+      :submissions_limit_reached if formular.submissions_limit_reached_for?(user)
+    end
+
+    def create_formular
+      Formular.create!(projekt_phase: self)
+    end
 end

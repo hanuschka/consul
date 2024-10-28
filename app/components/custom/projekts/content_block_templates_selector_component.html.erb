@@ -1,0 +1,66 @@
+<template class="js-projekt-content-block-templates-selector">
+  <div class="projekt-content-block-templates-selector">
+    <div class="projekt-content-block-templates-selector--inner">
+      <ul class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
+        <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
+          <a href="" aria-selected="true">Projektbeschreibung</a>
+        </li>
+        <li class="tabs-title projekt-content-block-templates-selector--tab">
+          <a data-tabs-target="" href="">Media</a>
+        </li>
+        <li class="tabs-title projekt-content-block-templates-selector--tab">
+          <a data-tabs-target="" href="">Karten</a>
+        </li>
+        <li class="tabs-title projekt-content-block-templates-selector--tab">
+          <a data-tabs-target="" href="">Andere</a>
+        </li>
+      </ul>
+      <div class="tabs-content" data-tabs-content="projekt-content-block-templates-tabs">
+        <div class="tabs-panel is-active">
+          <% description_content_block_templates.each do |component| %>
+            <div class="custom-content-template--item js-add-new-projekt-content-block">
+              <div class="custom-content-template--item-overlay">
+              </div>
+              <div class="content-block-template">
+                <%= render component %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="tabs-panel">
+          <% media_content_block_templates.each do |component| %>
+            <div class="custom-content-template--item js-add-new-projekt-content-block">
+              <div class="custom-content-template--item-overlay">
+              </div>
+              <div class="content-block-template">
+                <%= render component %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="tabs-panel">
+          <% card_content_block_templates.each do |component| %>
+            <div class="custom-content-template--item js-add-new-projekt-content-block">
+              <div class="custom-content-template--item-overlay">
+              </div>
+              <div class="content-block-template">
+                <%= render component %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="tabs-panel">
+          <% other_conent_block_templates.each do |component| %>
+            <div class="custom-content-template--item js-add-new-projekt-content-block">
+              <div class="custom-content-template--item-overlay">
+              </div>
+              <div class="content-block-template">
+                <%= render component %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

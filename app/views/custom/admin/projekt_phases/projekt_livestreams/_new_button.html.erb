@@ -1,0 +1,11 @@
+<div id="new-projekt-livestream" class="margin-bottom">
+  <h2>
+    <%= t("custom.admin.projekt_phases.projekt_livestreams.new_block_title") %>
+    <% if embedded? %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "projekt livestreams"
+      ) %>
+    <% end %>
+  </h2>
+  <%= link_to t("custom.admin.projekt_phases.projekt_livestreams.new_button_title"), polymorphic_path([@namespace, @projekt_phase, @projekt_livestream], action: :new), class: "button", remote: true %>
+</div>

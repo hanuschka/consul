@@ -1,60 +1,62 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<div class="flex-layout flex-layout-reverse-on-mobile">
-  <div class="main-column">
+<% unless embedded? %>
+  <div class="flex-layout flex-layout-reverse-on-mobile">
+    <div class="main-column">
 
-    <div class="hide-on-small-tablet">
-      <div class="new-resource-cta">
+      <div class="hide-on-small-tablet">
+        <div class="new-resource-cta">
+          <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+        </div>
+      </div>
+
+      <% proposal_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
+      <%= render(
+        Shared::ResourcesListComponent.new(
+          resources: @proposals,
+          resource_type: Proposal,
+          remote_url: projekt_footer_phase_filter_url(@projekt_phase),
+          map_coordinates: @proposals_coordinates,
+          current_filter: @current_order,
+          filter_param: "order",
+          filters: @valid_orders,
+          text_search_enabled: true,
+          projekt_phase: @projekt_phase,
+        )) %>
+      <%= paginate @proposals, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
+    </div>
+
+    <aside id="proposals-sidebar" class="sidebar">
+      <% content_block_sidebar_name = "projekt_phase_footer_sidebar_#{@projekt_phase.id}" %>
+      <% if render_custom_projekt_content_block?(content_block_sidebar_name, @projekt_phase.projekt) %>
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.proposals.index.participation_information"), icon_name: "info-circle") do |c| %>
+          <%= render_custom_block content_block_sidebar_name %>
+        <% end %>
+      <% end %>
+
+      <% if @projekt_phase.projekt_labels.any? %>
+        <%= render Shared::SidebarCardComponent.new(title: @projekt_phase.projekt_labels_label_text, icon_name: "tags") do |c| %>
+          <%= render Shared::ProjektLabelsComponent.new(projekt_phase_id: @projekt_phase.id) %>
+        <% end %>
+      <% end %>
+
+      <% if @projekt_phase.sentiments.any? %>
+        <%= render Shared::SidebarCardComponent.new(title: @projekt_phase.sentiment_label_text, icon_name: "heart") do |c| %>
+          <%= render Shared::SentimentsComponent.new(projekt_phase_id: @projekt_phase.id) %>
+        <% end %>
+      <% end %>
+
+      <% if current_user.present? && extended_feature?('proposals.enable_my_posts_filter') %>
+        <%= render Sidebar::Filters::MyPostsCardComponent.new %>
+      <% end %>
+
+      <%= render Sidebar::ExportListComponent.new(
+        path: projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase, **request.query_parameters, format: :csv)
+      ) %>
+
+      <div class="new-resource-cta <%= projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') ? 'hide' : 'hide-on-desktop' %>" style="width:100%;margin:2rem 0;">
         <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
       </div>
-    </div>
-
-    <% proposal_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
-    <%= render(
-      Shared::ResourcesListComponent.new(
-        resources: @proposals,
-        resource_type: Proposal,
-        remote_url: projekt_footer_phase_filter_url(@projekt_phase),
-        map_coordinates: @proposals_coordinates,
-        current_filter: @current_order,
-        filter_param: "order",
-        filters: @valid_orders,
-        text_search_enabled: true,
-        projekt_phase: @projekt_phase,
-      )) %>
-    <%= paginate @proposals, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
+    </aside>
   </div>
-
-  <aside id="proposals-sidebar" class="sidebar">
-    <% content_block_sidebar_name = "projekt_phase_footer_sidebar_#{@projekt_phase.id}" %>
-    <% if render_custom_projekt_content_block?(content_block_sidebar_name, @projekt_phase.projekt) %>
-      <%= render Shared::SidebarCardComponent.new(title: t("custom.proposals.index.participation_information"), icon_name: "info-circle") do |c| %>
-        <%= render_custom_block content_block_sidebar_name %>
-      <% end %>
-    <% end %>
-
-    <% if @projekt_phase.projekt_labels.any? %>
-      <%= render Shared::SidebarCardComponent.new(title: @projekt_phase.projekt_labels_label_text, icon_name: "tags") do |c| %>
-        <%= render Shared::ProjektLabelsComponent.new(projekt_phase_id: @projekt_phase.id) %>
-      <% end %>
-    <% end %>
-
-    <% if @projekt_phase.sentiments.any? %>
-      <%= render Shared::SidebarCardComponent.new(title: @projekt_phase.sentiment_label_text, icon_name: "heart") do |c| %>
-        <%= render Shared::SentimentsComponent.new(projekt_phase_id: @projekt_phase.id) %>
-      <% end %>
-    <% end %>
-
-    <% if current_user.present? && extended_feature?('proposals.enable_my_posts_filter') %>
-      <%= render Sidebar::Filters::MyPostsCardComponent.new %>
-    <% end %>
-
-    <%= render Sidebar::ExportListComponent.new(
-      path: projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase, **request.query_parameters, format: :csv)
-    ) %>
-
-    <div class="new-resource-cta <%= projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') ? 'hide' : 'hide-on-desktop' %>" style="width:100%;margin:2rem 0;">
-      <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
-    </div>
-  </aside>
-</div>
+<% end %>

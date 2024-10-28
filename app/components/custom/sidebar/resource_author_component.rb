@@ -1,8 +1,6 @@
 class Sidebar::ResourceAuthorComponent < ApplicationComponent
   attr_reader :resource, :user
 
-  delegate :skip_user_verification?, to: :helpers
-
   def initialize(resource:)
     @resource = resource
     @user = resource.author

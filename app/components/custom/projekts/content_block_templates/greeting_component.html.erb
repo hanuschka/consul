@@ -1,0 +1,49 @@
+<div class="js-content-block-template-content">
+  <div class="projekt-content-block-greeting">
+    <h3>
+      <%= @title %>
+    </h3>
+    <div class="row">
+      <div class="column small-12 medium-4">
+        <% if @image_url&.attached? %>
+          <%= image_tag(@image_url, style: "width:500px;border-radius:3px") %>
+        <% else %>
+          <img src="https://via.placeholder.com/269" style="width:500px;">
+        <% end %>
+      </div>
+      <div class="column small-12 medium-8" style="padding:30px;padding-bottom:0px">
+        <% if @quote.present? %>
+          <div class="row">
+            <div class="column small-11">
+              <blockquote style="color:#67788A">
+                <p style="color:#67788A">
+                <%= @quote %>
+                </p>
+              </blockquote>
+            </div>
+          </div>
+        <% end %>
+
+        <ul class="accordion" data-accordion data-allow-all-closed="true" role="tablist">
+          <li class="accordion-item" data-accordion-item="" role="presentation">
+            <a aria-selected="false"
+               class="accordion-title"
+               href="#"
+               role="tab"
+               style="color:#67788A;font-size:16px;border-radius:5px"
+               aria-expanded="false"
+               aria-controls="4tov08-accordion"
+               >
+               <%= "Volles Grußwort lesen" %>
+            </a>
+            <div style="color:rgb(103, 120, 138);" aria-hidden="true" class="accordion-content" data-tab-content=""
+              <p>
+              <%= @text %>
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

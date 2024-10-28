@@ -3,17 +3,19 @@
 <%= translatable_form_for [@namespace, @poll] do |f| %>
   <%= render "shared/errors", resource: @poll %>
 
+  <!--
   <div class="row">
     <div class="clear">
       <div class="small-12 medium-6 column">
-        <%= f.date_field :starts_at %>
+        <%#= f.date_field :starts_at %>
       </div>
 
       <div class="small-12 medium-6 column">
-        <%= f.date_field :ends_at %>
+        <%#= f.date_field :ends_at %>
       </div>
     </div>
   </div>
+  -->
 
   <div class="row">
     <%= f.translatable_fields do |translations_form| %>
@@ -27,7 +29,7 @@
       </div>
 
       <div class="small-12 column">
-        <%= translations_form.text_area :description,
+        <%= translations_form.text_area :closing_note,
             class: "html-area #{ck_editor_class(current_user)}" %>
       </div>
     <% end %>
@@ -54,29 +56,6 @@
   <div class="row">
     <div class="small-12 column margin-top margin-bottom">
       <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @poll }  %>
-    </div>
-  </div>
-
-  <div class='row'>
-    <div class='column'>
-      <%= f.check_box :show_summary_instead_of_questions, label: t('custom.admin.polls.settings.show_summary_instead_of_questions') %>
-    </div>
-  </div>
-
-  <div class='row'>
-    <div class='column'>
-      <%= f.check_box :show_on_home_page, label: t('custom.admin.polls.settings.show_on_home_page') %>
-    </div>
-  </div>
-
-  <div class='row'>
-    <div class='column'>
-      <%= f.check_box :show_on_index_page, label: t('custom.admin.polls.settings.show_on_index_page') %>
-    </div>
-  </div>
-  <div class='row'>
-    <div class='column'>
-      <%= f.check_box :wizard_mode, label: t('custom.admin.polls.settings.wizard_mode') %>
     </div>
   </div>
 

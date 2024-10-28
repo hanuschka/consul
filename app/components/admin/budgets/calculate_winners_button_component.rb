@@ -18,6 +18,6 @@ class Admin::Budgets::CalculateWinnersButtonComponent < ApplicationComponent
     end
 
     def html_class
-      "button hollow float-right clear" if from_investments
+      "button hollow margin-top"
     end
 end

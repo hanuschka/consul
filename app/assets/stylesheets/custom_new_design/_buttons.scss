@@ -2,19 +2,25 @@ $orange-button-color: #FFA42D;
 $grey-button-color: #cfd9e2;
 $green-button-color: #00AA0B;
 
+button {
+  cursor: pointer;
+
+}
+
+.link-button {
+  color: #004a83;
+}
+
 .custom-new-design {
   // .button:not(div#page-content .button) {
-  button {
-    cursor: pointer;
-  }
-
   .button {
     background-color: $brand;
+    color: white;
     margin-top: 10px;
     margin-bottom: 10px;
     // padding: 0 20px 0;
     padding: 10px 20px !important;
-    max-width: 300px;
+    // max-width: 300px;
     // display: flex !important;
     display: flex;
     justify-content: center;
@@ -29,11 +35,6 @@ $green-button-color: #00AA0B;
 
     .icon {
       padding-right: 5px;
-    }
-
-    &.-brand-color {
-      color: white;
-      background: $brand;
     }
 
     &:hover, &:focus {
@@ -91,10 +92,15 @@ $green-button-color: #00AA0B;
 
     &.hollow {
       background-color: transparent;
+      border: 1px solid $brand;
+      color: $brand;
 
-      &:hover, &:focus, &:active {
-        background: #E1EDF7;
-        color: #004a83;
+      &:hover  {
+        background: rgba($brand, 0.1);
+        color: $brand;
+      }
+      &:focus, &:active {
+        background: rgba($brand, 0.3);
       }
 
       &.alert {
@@ -136,10 +142,83 @@ $green-button-color: #00AA0B;
   .open-answer {
     background-color: #207868;
   }
-}
 
-.custom-new-design {
+  @media(min-width: 40em) {
+    .menu-and-content [for="show_menu"] {
+      display: none !important;
+    }
+  }
+
   .admin .featured-settings-form [aria-pressed][aria-pressed=true] {
     background-color: $brand;
+  }
+}
+
+button {
+  &.-round-icon-button {
+    padding: 0 !important;
+    border-radius: 50%;
+    color: #919dab;
+    width: 1.7em;
+    height: 1.7em;
+    transition: 50ms ease background-color;
+    background-color: $light-gray-2;
+
+    i {
+      width: 1.3em;
+    }
+
+    &:hover {
+      background-color: darken($light-gray-2, 2);
+    }
+
+    &:active {
+      background-color: #edebeb;
+    }
+  }
+
+  &.-transparent-round-icon-button {
+    padding: 0 !important;
+    border-radius: 50%;
+    color: #919dab;
+    width: 1.7em;
+    height: 1.7em;
+    transition: 50ms ease background-color;
+    background: transparent;
+
+    i {
+      width: 1.3em;
+    }
+
+    &:hover {
+      background-color: #ededed;
+    }
+
+    &:active {
+      background-color: #edebeb;
+    }
+  }
+  &.-transparent-round-icon-button-black {
+    @extend .-transparent-round-icon-button;
+    color: black;
+
+    &:hover {
+      background-color: #00000012;
+    }
+
+    &:active {
+      background-color: #00000012;
+    }
+  }
+}
+
+.square-back-button {
+  border-radius: 5px;
+  background-color: $brand;
+  color: white;
+
+  &:hover {
+    text-decoration: none;
+    color: white;
   }
 }

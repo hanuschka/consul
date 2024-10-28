@@ -1,6 +1,6 @@
 <%= render "shared/globalize_locales", resource: @progress_bar %>
 
-<%= translatable_form_for @progress_bar, url: polymorphic_path([@namespace, @progressable, @progress_bar]) do |f| %>
+<%= translatable_form_for @progress_bar, url: namespaced_polymorphic_path(@namespace, @progress_bar) do |f| %>
 
   <div class="row">
     <div class="small-12 medium-6 column">
@@ -23,7 +23,7 @@
       <%= f.text_field :percentage, { type: :range,
                                       id: "percentage_range",
                                       label: false,
-                                      class: "column" }.merge(progress_options) %>
+                                      class: "" }.merge(progress_options) %>
     </div>
 
     <div class="small-12 medium-6 large-2 column">

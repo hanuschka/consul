@@ -13,6 +13,7 @@
       <th><%= t("custom.admin.deficiency_reports.categories.category.icon") %></th>
       <th><%= t("custom.admin.deficiency_reports.categories.category.color") %></th>
       <th><%= t("custom.admin.deficiency_reports.categories.category.name") %></th>
+      <th><%= t("custom.admin.deficiency_reports.categories.category.default_deficiency_report_officer") %></th>
       <th><%= t("custom.admin.deficiency_reports.categories.category.warning_text") %></th>
       <th><%= t("admin.actions.actions") %></th>
     </tr>
@@ -24,6 +25,7 @@
         <td><%= "<i class=\"fas fa-#{category.icon}\" style=\"color:#{category.color}\"></i>".html_safe if category.icon %></td>
         <td><%= category.color %></td>
         <td><%= category.name %></td>
+        <td><%= category.default_deficiency_report_officer&.name %></td>
         <td><%= auto_link_already_sanitized_html(wysiwyg(category.warning_text[0..200])) %></td>
         <td>
           <%= render Admin::TableActionsComponent.new(category,

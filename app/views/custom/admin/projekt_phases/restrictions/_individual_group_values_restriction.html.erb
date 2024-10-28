@@ -1,8 +1,7 @@
 <% if @individual_groups.any? %>
   <div>
-    <div class="option-group-title">
-      <i class="fas fa-users-cog"></i>
-      <span><%= t("custom.admin.projekt_phases.restrictions.individual_group_values.title") %></span>
+    <div class="restriction-title">
+      <%= t("custom.admin.projekt_phases.restrictions.individual_group_values.title") %>
     </div>
 
     <% @individual_groups.each do |individual_group| %>
@@ -11,7 +10,7 @@
 
         <%= f.collection_check_boxes :individual_group_value_ids, individual_group.individual_group_values, :id, :name do |cb| %>
           <%= cb.label(class: "checkbox-label checkbox-label--inline") do %>
-            <%= cb.check_box(disabled: skip_user_verification? || @projekt_phase.guest_participation_allowed?) + cb.text %>
+            <%= cb.check_box + cb.text %>
           <% end %>
         <% end %>
       </div>

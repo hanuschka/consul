@@ -65,7 +65,6 @@ class Shared::NewCommentsComponent < ApplicationComponent
 
   def add_poll_specific_keys(keys)
     keys.push(record.geozones)
-    keys.push(helpers.change_of_current_state(record.starts_at, record.ends_at))
     keys.push(record)
   end
 

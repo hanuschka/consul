@@ -40,8 +40,8 @@ module AdminActions::Budgets
   end
 
   def calculate_winners
-    @budget.headings.each { |heading| Budget::Result.new(@budget, heading).delay.calculate_winners }
-    redirect_to polymorphic_path([@namespace, @budget, :budget_investments], advanced_filters: ["winners"]),
+    Budget::Result.new(@budget, @budget.heading).delay.calculate_winners
+    redirect_to polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_investments, advanced_filters: ["winners"]),
       notice: I18n.t("admin.budgets.winners.calculated")
   end
 
@@ -53,7 +53,7 @@ module AdminActions::Budgets
 
   def update
     if @budget.update(budget_params)
-      redirect_to polymorphic_path([@namespace, @budget]), notice: t("admin.budgets.update.notice")
+      redirect_to polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_edit), notice: t("admin.budgets.update.notice")
     else
       render "admin/budgets/edit"
     end
@@ -78,14 +78,16 @@ module AdminActions::Budgets
 
     def allowed_params
       descriptions = Budget::Phase::PHASE_KINDS.map { |p| "description_#{p}" }.map(&:to_sym)
-      valid_attributes = [:phase,
+      valid_attributes = [
                           :currency_symbol,
                           :voting_style,
+                          :show_results_after_first_vote,
+                          :show_percentage_values_only,
                           :hide_money,
                           :max_number_of_winners,
+                          heading_attributes: [:id, :price, :population, :max_ballot_lines],
                           administrator_ids: [],
-                          valuator_ids: [],
-                          image_attributes: image_attributes
+                          valuator_ids: []
       ] + descriptions
 
       [*valid_attributes, *report_attributes, translation_params(Budget)]

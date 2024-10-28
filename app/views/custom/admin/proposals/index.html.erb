@@ -9,12 +9,10 @@
 
   <h3><%= page_entries_info @proposals %></h3>
 
-  <%=
-    link_to t("custom.shared.download"),
-    admin_proposals_path(csv_params),
-    target: '_blank',
-    class: "float-right small clear"
-  %>
+  <div class="download-links">
+    <%= link_to "Vorschläge herunterladen", admin_proposals_path(format: :csv), target: "_blank", class: "small" %>
+    <%= link_to "Kommentare herunterladen", comments_admin_proposals_path(format: :csv), class: "small" %>
+  </div>
 
   <table>
     <thead>

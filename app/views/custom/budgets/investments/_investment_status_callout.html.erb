@@ -3,12 +3,12 @@
     <%= t("custom.budgets.investments.investment.unfeasible_html") %>
   </div>
 
-<% elsif investment.budget.phase.in?(['accepting', 'valuating', 'reviewing_ballots']) %>
+<% elsif investment.budget.current_phase.kind.in?(['accepting', 'valuating', 'reviewing_ballots']) %>
   <div class="callout warning">
-    <%= t("custom.budgets.investments.statuses.phases.#{investment.budget.phase}") %>
+    <%= t("custom.budgets.investments.statuses.phases.#{investment.budget.current_phase.kind}") %>
   </div>
 
-<% elsif investment.budget.phase == 'reviewing' %>
+<% elsif investment.budget.current_phase.kind == 'reviewing' %>
   <% if investment.undecided? || !investment.valuation_finished? %>
     <div class="callout warning">
       <%= t("custom.budgets.investments.statuses.phases.reviewing") %>
@@ -19,18 +19,18 @@
     </div>
   <% end %>
 
-<% elsif investment.undecided? && investment.budget.phase == 'selecting' %>
+<% elsif investment.undecided? && investment.budget.current_phase.kind == 'selecting' %>
   <div class='callout warning'>
-    <%= t("custom.budgets.investments.show.callouts.#{investment.budget.phase}.#{investment.feasibility}") %>
+    <%= t("custom.budgets.investments.show.callouts.#{investment.budget.current_phase.kind}.#{investment.feasibility}") %>
   </div>
 
-<% elsif investment.undecided? && investment.budget.phase == 'publishing_prices' %>
+<% elsif investment.undecided? && investment.budget.current_phase.kind == 'publishing_prices' %>
   <div class='callout warning'>
-    <%= t("custom.budgets.investments.show.callouts.#{investment.budget.phase}.#{investment.feasibility}") %>
+    <%= t("custom.budgets.investments.show.callouts.#{investment.budget.current_phase.kind}.#{investment.feasibility}") %>
   </div>
 
-<% elsif investment.unfeasible? && investment.budget.phase == 'publishing_prices' && controller_name != 'investments' %>
+<% elsif investment.unfeasible? && investment.budget.current_phase.kind == 'publishing_prices' && controller_name != 'investments' %>
   <div class='callout warning'>
-    <%= t("custom.budgets.investments.show.callouts.#{investment.budget.phase}.#{investment.feasibility}") %>
+    <%= t("custom.budgets.investments.show.callouts.#{investment.budget.current_phase.kind}.#{investment.feasibility}") %>
   </div>
 <% end %>

@@ -2,9 +2,7 @@
   "use strict";
   App.Tags = {
     initialize: function() {
-
-      var $tag_input;
-      $tag_input = $("input.js-tag-list.predefined");
+      var $tag_input = $("input.js-tag-list.predefined");
       var current_tags;
       current_tags = ($tag_input.val() || "").split(",").filter(Boolean);
 
@@ -28,7 +26,10 @@
           $(this).addClass("selected")
           current_tags.push(name);
         }
-        t_input.val(current_tags.join(","));
+        t_input
+          .val(current_tags.join(","))
+          .trigger("change");
+
         return false;
       });
     }

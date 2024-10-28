@@ -43,7 +43,7 @@
           e.preventDefault();
           e.stopPropagation();
           editor.toggleClass("fullscreen");
-          $(".fullscreen-container").toggleClass("medium-8", "medium-12");
+          $(".fullscreen-container").toggleClass("medium-9", "medium-12");
           span = $(this).find("span");
           if (span.text() === span.data("open-text")) {
             span.text(span.data("closed-text"));

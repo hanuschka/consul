@@ -1,0 +1,6 @@
+<%= label_tag :address_query, t("custom.map_locations.address.label") %>
+<%= text_field_tag :address_query, params[:address_query], class: "js-update-coordinates-selector", autocomplete: "off", placeholder: t("custom.map_locations.address.placeholder") %>
+
+<div id="coordinates-selector">
+  <%= select_tag :coordinates, options_for_select([]), style: "display:none" %>
+</div>

@@ -36,15 +36,19 @@ module Budgets
         def load_ballot
           user = User.find_by(id: params[:user_id]) || current_user
           @ballot = Budget::Ballot.where(user: user, budget: @budget).first_or_create!
+          @ballot.update!(conditional: params[:conditional_ballot] == "true")
         end
 
         def permission_problem
-          @permission_problem = @investment.reason_for_not_being_ballotable_by(current_user, @line.ballot)
+          permission_problem = @investment.reason_for_not_being_ballotable_by(current_user, @line.ballot)
+          return if permission_problem.nil?
+
+          permission_problem == :not_verified && params[:conditional_ballot] == "true" ? nil : @permission_problem
         end
 
         def set_filters
           @valid_filters = @budget.investments_filters
-          params[:filter] ||= "all" if @budget.phase.in?(["publishing_prices", "balloting", "reviewing_ballots"])
+          params[:filter] ||= "all" if @budget.current_phase.kind.in?(["publishing_prices", "balloting", "reviewing_ballots"])
           @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : nil
         end
     end

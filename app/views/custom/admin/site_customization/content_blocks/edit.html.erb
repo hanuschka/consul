@@ -2,15 +2,39 @@
   <%= t("admin.header.title") %> - <%= t("admin.menu.site_customization.content_blocks") %> - <%= @content_block.try(:name) || @content_block.heading.try(:name) %> (<%= @content_block.locale %>)
 <% end %>
 
-<%= back_link_to admin_site_customization_content_blocks_path %>
+<% unless embedded? %>
+  <%= back_link_to admin_site_customization_content_blocks_path %>
 
 <%= link_to t("admin.site_customization.content_blocks.index.delete"),
-            (@is_heading_content_block ? admin_site_customization_delete_heading_content_block_path(@content_block.id) : admin_site_customization_content_block_path(@content_block)),
+            (@is_heading_content_block ? admin_site_customization_delete_heading_content_block_path(@content_block.id) : admin_site_customization_content_block_path(@content_block, return_to: (params[:return_to]))),
             method: :delete,
-            class: "delete float-right" %>
+            class: "delete float-right margin-bottom" %>
+<% end %>
 
-<div class="small-12 column">
-  <h2><%= t("admin.site_customization.content_blocks.edit.title") %></h2>
-</div>
+
+<% unless embedded? %>
+  <div class="small-12 column">
+    <h2><%= t("admin.site_customization.content_blocks.edit.title") %></h2>
+  </div>
+<% end %>
 
 <%= render "custom/admin/site_customization/content_blocks/form_content_block" %>
+
+<% if embedded? %>
+  <% back_url = params[:return_to] %>
+
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::Frame::NavigationComponent.new(title: t("admin.site_customization.content_blocks.edit.title")) do |c| %>
+      <% c.with_navigation_content do %>
+        <%= link_to "Zurück", back_url, class: "", data: {turbolinks: false} %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::Frame::NavigationComponent.new do |c| %>
+      <% c.with_navigation_content do %>
+        <%= link_to "Zurück", back_url, class: "", data: {turbolinks: false} %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

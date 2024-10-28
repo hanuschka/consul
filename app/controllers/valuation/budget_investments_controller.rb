@@ -35,7 +35,11 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
 
       Activity.log(current_user, :valuate, @investment)
       notice = t("valuation.budget_investments.notice.valuate")
-      redirect_to valuation_budget_budget_investment_path(@budget, @investment), notice: notice
+      if params[:namespace].present?
+        redirect_to polymorphic_path([params[:namespace].to_sym, @budget, @investment]), notice: notice
+      else
+        redirect_to valuation_budget_budget_investment_path(@budget, @investment), notice: notice
+      end
     else
       render action: :edit
     end
@@ -107,7 +111,8 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
       [
         :price, :price_first_year, :price_explanation,
         :feasibility, :unfeasibility_explanation,
-        :duration, :valuation_finished
+        :duration, :valuation_finished,
+        :incompatible, :selected
       ]
     end
 

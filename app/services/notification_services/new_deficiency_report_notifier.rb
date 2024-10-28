@@ -15,16 +15,12 @@ module NotificationServices
     private
 
       def users_to_notify
-        [administrators, moderators, deficiency_report_administrators]
+        [administrators, deficiency_report_administrators]
           .flatten.uniq(&:id)
       end
 
       def administrators
         User.joins(:administrator).where(adm_email_on_new_deficiency_report: true).to_a
-      end
-
-      def moderators
-        User.joins(:moderator).where(adm_email_on_new_deficiency_report: true).to_a
       end
 
       def deficiency_report_administrators

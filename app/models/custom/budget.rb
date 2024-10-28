@@ -1,10 +1,13 @@
 require_dependency Rails.root.join("app", "models", "budget").to_s
 
 class Budget < ApplicationRecord
-  belongs_to :old_projekt, foreign_key: :projekt_id, class_name: "Projekt", optional: true # TODO: remove column after data migration con1538
-
   belongs_to :projekt_phase, optional: true
   delegate :projekt, to: :projekt_phase, allow_nil: true
+
+  has_one :group, dependent: :destroy
+  has_one :heading, through: :group
+
+  accepts_nested_attributes_for :heading
 
   def investments_filters
     [
@@ -25,13 +28,6 @@ class Budget < ApplicationRecord
 
   def distributed_voting?
     voting_style == "distributed"
-  end
-
-  def show_percentage_values_only?
-    projekt_phase.settings
-      .find_by(key: "feature.general.show_relative_ballotting_results")
-      .value
-      .present?
   end
 
   def find_or_create_stats_version

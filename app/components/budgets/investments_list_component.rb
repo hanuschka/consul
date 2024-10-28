@@ -6,7 +6,7 @@ class Budgets::InvestmentsListComponent < ApplicationComponent
   end
 
   def investments(limit: 9)
-    case budget.phase
+    case budget.current_phase.kind
     when "accepting", "reviewing"
       budget.investments.sample(limit)
     when "selecting", "valuating", "publishing_prices"

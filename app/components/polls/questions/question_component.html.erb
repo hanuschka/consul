@@ -1,13 +1,14 @@
-<div id="<%= dom_id(question) %>" class="poll-question">
+<div id="<%= dom_id(question) %>" class="poll-question js-poll-question" data-answer-mandatory="<%= question.answer_mandatory? ? 'true' : 'false' %>">
   <h3 class="poll-question--title">
     <%= question.title %>
+    <%= "*" if question.answer_mandatory? %>
   </h3>
 
   <p class="poll-question--description">
   <%= auto_link_already_sanitized_html wysiwyg(question.description) %>
   </p>
 
-  <% if question.show_hint_callout? && question.votation_type.present? && !question.bundle_question? %>
+  <% if question.votation_type&.show_hint_callout? && !question.bundle_question? %>
     <div class="callout primary">
       <%= t("poll_questions.description.#{question.vote_type}", maximum: question.max_votes, cap: (question.votation_type.max_votes_per_answer || question.max_votes)) %>
     </div>
@@ -19,10 +20,16 @@
     </div>
 
     <% question.nested_questions.each do |nested_question| %>
-      <div class="poll-question--nested-question <%= nested_question.votation_type.rating_scale? ? "-rating-scale" : "" %>">
+      <div class="poll-question--nested-question <%= nested_question.votation_type.rating_scale? ? "-rating-scale" : "" %>" data-answer-mandatory="<%= nested_question.answer_mandatory? ? 'true' : 'false' %>">
         <div class="poll-question--nested-question-title">
           <%= nested_question.title %>
+          <%= "*" if nested_question.answer_mandatory? %>
         </div>
+
+        <p class="poll-question--description">
+          <%= auto_link_already_sanitized_html wysiwyg(nested_question.description) %>
+        </p>
+
         <div id="<%= dom_id(nested_question) %>_answers" class="">
           <%= render Polls::Questions::AnswersComponent.new(nested_question) %>
         </div>

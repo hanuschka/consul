@@ -1,39 +1,46 @@
 <%= render "custom/admin/projekt_phases/heading" %>
-<%= render "custom/admin/projekt_phases/nav_bar" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
 
 <div class="row">
   <div class="column">
-    <h2><%= t("custom.admin.projekt_phases.duration.page_title") %></h2>
+    <h2>
+      <%= t("custom.admin.projekt_phases.duration.page_title") %>
+      <%= render Shared::ExplainButtonComponent.new(
+        explain: "phase duration settings, which includes fields: start date, end date, #{@projekt_phase.settings_in_duration_tab.values.join(',')}"
+      ) %>
+    </h2>
   </div>
 </div>
 
-<%= form_with model: @projekt_phase, url: namespace_projekt_phase_path, scope: :projekt_phase do |f| %>
+<%= form_with model: @projekt_phase, url: namespace_projekt_phase_path, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
 
   <div class="row">
-    <div class="column">
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <strong style="margin-left:1rem;"><%= t("custom.admin.projekt_phases.duration.start_date") %></strong>
-            </th>
-            <th>
-              <strong style="margin-left:1rem;"><%= t("custom.admin.projekt_phases.duration.end_date") %></strong>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <%= f.date_field :start_date, label: false, style: "margin-bottom:0 !important" %>
-            </td>
-            <td>
-              <%= f.date_field :end_date, label: false, style: "margin-bottom:0 !important" %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="column large-4 small-6">
+      <%= f.date_field :start_date, label: t("custom.admin.projekt_phases.duration.start_date"), style: "" %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column large-4 small-6">
+      <%= f.date_field :end_date, label: t("custom.admin.projekt_phases.duration.end_date"), style: "" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column large-4 small-6">
+      <%= f.fields_for :settings do |settings_form| %>
+        <% setting_key = settings_form.object.key %>
+        <% next unless setting_key.in?(@projekt_phase.settings_in_duration_tab.keys) %>
+
+        <% setting_label = t("custom.projekt_phase_settings.#{settings_form.object.projekt_phase.resources_name}.#{setting_key}") %>
+        <% setting_field_type = @projekt_phase.settings_in_duration_tab[setting_key] %>
+
+        <%= settings_form.label :value, setting_label %>
+        <%= settings_form.send(setting_field_type, :value, value: settings_form.object.value, label: false) %>
+      <% end %>
     </div>
   </div>
 
@@ -42,5 +49,13 @@
       <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
     </div>
   </div>
+<% end %>
 
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
 <% end %>

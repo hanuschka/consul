@@ -1,9 +1,12 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
+  include IframeEmbeddedBehavior
+  include EmbeddedAuth
+  prepend_before_action :authentificate_frame_session_user!
+
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
-  before_action :set_partner_emails
   after_action :set_back_path
   helper_method :set_comment_flags
 
@@ -19,7 +22,6 @@ class ApplicationController < ActionController::Base
   # end
 
   private
-
     def show_launch_page?
       launch_date_setting = Setting["extended_option.general.launch_date"]
       return false if launch_date_setting.blank?
@@ -57,12 +59,16 @@ class ApplicationController < ActionController::Base
     end
 
     def set_projekts_for_overview_page_navigation
+      return if embedded?
+
       @projekts_for_overview_page_navigation =
         Projekt
           .sort_by_order_number
           .includes({page: [:translations]}, :projekt_settings, { children_projekts_show_in_navigation: :projekt_settings })
           .joins(:projekt_settings)
+          .includes(:projekt_settings)
           .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+          .lazy
           .select { |p| p.visible_for?(current_user) }
 
       @projekts_for_navigation =
@@ -72,7 +78,9 @@ class ApplicationController < ActionController::Base
             :projekt_settings, :hard_individual_group_values,
             page: [:translations]
           )
+          .order(created_at: :asc)
           .show_in_navigation
+          .sort_by_order_number
           .select { |p| p.visible_for?(current_user) }
     end
 
@@ -117,5 +125,37 @@ class ApplicationController < ActionController::Base
       end
 
       session[:back_path] = back_path
+    end
+
+    def auto_sign_in_guest_for(projekt_phase)
+      return if current_user.present?
+      return if projekt_phase.blank?
+      return unless projekt_phase.user_status == "guest"
+
+      guest_key = "guest_#{SecureRandom.uuid}"
+      params[:user] = {}
+      params[:user][:username] = guest_key
+      params[:user][:terms_data_protection] = true
+      params[:user][:terms_general] = true
+
+      @guest_user = initialize_guest_user(guest_key)
+      @guest_user.save!
+      session[:guest_user_id] = guest_key
+
+      @current_ability = Ability.new(current_user)
+    rescue StandardError => e
+      Sentry.capture_exception(e)
+    end
+
+    def initialize_guest_user(guest_key)
+      User.new(
+        username: params[:user][:username],
+        terms_data_protection: params[:user][:terms_data_protection],
+        terms_general: params[:user][:terms_general],
+        email: "#{guest_key}@example.com",
+        guest: true,
+        confirmed_at: Time.now.utc,
+        skip_password_validation: true
+      )
     end
 end

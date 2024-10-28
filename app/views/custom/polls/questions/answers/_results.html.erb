@@ -38,7 +38,7 @@
                         <div class='open-answer-info'>
                             <%= avatar_image(open_answer.author, size: 32, class: "float-left user-avatar") %>
                             <span class='user-name'>
-                              <% if @question.poll.show_open_answer_author_name %>
+                              <% if @question.poll.show_open_answer_author_name? %>
                                 <%= open_answer.author.username %></span>
                               <% else %>
                                 <%= 'anonymisiert' %></span>
@@ -70,67 +70,10 @@
 
       <hr style="border-width:3px;margin-bottom:3rem;">
 
-      <%- @poll.questions.each do |question| %>
-        <% next if question == @question %>
-        <% most_voted_answer_votes = question.most_voted_answer_votes %>
-        <h3 id="<%= question.title.parameterize %>">
-          <%= question.title %>
-        </h3>
-        <% if question.votation_type.present? && VotationType.allowing_multiple_answers.include?(question.votation_type.vote_type) %>
-          <small>
-            (<%= t("poll_questions.show.question.multiple") %>)
-          </small>
-        <% end %>
-        <p><%= AdminWYSIWYGSanitizer.new.sanitize(question.description) %></p>
-        <table id="question_<%= question.id %>_results_table" class='results-table'>
-          <tbody>
-            <%- question.question_answers.each do |answer| %>
-              <tr>
-                <td id="answer_<%= answer.id %>_result" class='results-column <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>' >
-                  <%= answer.total_connected_votes_to(@question_answer) %>
-                </td>
-                <td class='answers-column <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>' >
-                  <% if question.open_question_answer == answer %>
-                    <% open_answers = answer.all_open_answers %>
-                    <div class='poll-results-open-answers' id='<%= dom_id(answer, :open_answers)  %>'>
-                      <div class='open-answers-title js-show-open-answers <%= "no-open-answers" if open_answers.count == 0 %>'>
-                        <%= answer.title %>
-                      </div>
+      <%- @poll.questions.root_questions.each do |root_question| %>
+        <% next if root_question == @question %>
 
-                      <% if open_answers.count > 0 %>
-                      <div class='poll-results-open-answers-list'  style="display:none;">
-                        <% page_name = ("page_a" + answer.id.to_s).to_sym %>
-                        <% open_answers.page(params[page_name]).per(5).each do |open_answer| %>
-                          <div class='poll-results-open-answer'>
-                            <div class='open-answer-info'>
-                                <%= avatar_image(open_answer.author, size: 32, class: "float-left user-avatar") %>
-                                <span class='user-name'>
-                                  <% if question.poll.show_open_answer_author_name %>
-                                    <%= open_answer.author.username %></span>
-                                  <% else %>
-                                    <%= 'anonymisiert' %></span>
-                                  <% end %>
-                                &nbsp;&bull;&nbsp;
-                              <span><%= open_answer.created_at.localtime.strftime '%Y-%m-%d %H:%M:%S'%></span>
-                            </div>
-                            <div class='open-answer-text'>
-                              <%= open_answer.open_answer_text %>
-                            </div>
-                          </div>
-                        <% end %>
-                        <%= paginate open_answers.page(params[page_name]).per(5), param_name: page_name %>
-                      </div>
-                      <% end %>
-
-                    </div>
-                  <% else %>
-                    <%= answer.title %>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+        <%= render "custom/polls/questions/answers/question_results", question: root_question, question_answer: @question_answer %>
       <% end %>
 
     </div>

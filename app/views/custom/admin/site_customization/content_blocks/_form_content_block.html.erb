@@ -3,10 +3,13 @@
   <%= render "shared/errors", resource: @content_block %>
 
   <%if @content_block.custom?%>
-    <div class="small-12 medium-6 column">
-      <%=t("admin.site_customization.content_blocks.content_block.key") %>
-      <strong><%=@content_block.key%></strong>
-    </div>
+    <% unless embedded? %>
+      <div class="small-12 medium-6 column">
+        <%=t("admin.site_customization.content_blocks.content_block.key") %>
+        <strong><%=@content_block.key%></strong>
+      </div>
+    <% end %>
+
     <%=f.hidden_field :name%>
     <%=hidden_field_tag :return_to, params[:return_to]%>
     <%=f.hidden_field :locale%>
@@ -20,10 +23,9 @@
   <%end%>
 
   <div class="small-12 column">
-    <%= f.text_area :body, rows: 10, class: @content_block.custom? ? "html-area #{ck_editor_class(current_user)}" : "" %>
-    <div class="small-12 medium-6 large-3">
-      <%= f.submit class: "button success expanded" %>
+    <%= f.text_area :body, rows: 10, label: false, class: @content_block.custom? ? "html-area #{ck_editor_class(current_user)}" : "" %>
+    <div class="small-12 medium-12 large-12">
+      <%= f.submit class: "button success" %>
     </div>
   </div>
-
 <% end %>

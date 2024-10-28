@@ -31,7 +31,7 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
     end
 
     def latest_investment_proposals
-      Budget::Investment.joins(:budget).where.not(budgets: { projekt_id: nil })
+      Budget::Investment.joins(:budget).where.not(budgets: { projekt_phase_id: nil })
         .sort_by_created_at.limit(@investments_limit)
     end
 

@@ -1,0 +1,13 @@
+<div class="js-content-block-template-content" data-enter-ai-mode="true">
+  <% if @image.present? %>
+    <% if @title.present? %>
+      <h3><%= @title %></h3>
+    <% end %>
+
+    <div class="image-gallery-with-ligthbox">
+      <%= link_to(@image[:url], class: "glightbox", target: "_blank") do %>
+        <%= image_tag(@image[:thumb_url] || @image[:url], referrerpolicy: "no-referer", style: "width:100%;aspect-ratio: 1 / 0.5;object-fit:cover") %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

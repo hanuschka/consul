@@ -1,5 +1,11 @@
-<%= render Shared::ResourcesListComponent.new(
-  resources: events,
-  resource_type: ProjektEvent,
-  title: @content_card.title || t("custom.content_cards.events.title")
-) %>
+<div class="resources-list">
+  <h3 class="resources-list--title">
+    <%= @content_card.title || t("custom.content_cards.events.title") %>
+  </h3>
+
+  <div class="resources-list--actions">
+    <div class="items-list-line-divider"></div>
+  </div>
+
+  <%= render Projekts::ProjektEvents::List.new(projekt_events: events, show_projekt_link: true) %>
+</div>

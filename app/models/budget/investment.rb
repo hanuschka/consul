@@ -60,7 +60,7 @@ class Budget
 
     validates :author, presence: true
     validates :heading_id, presence: true
-    validates :unfeasibility_explanation, presence: { if: :unfeasibility_explanation_required? }
+    validates :valuator_explanation, presence: { if: :valuator_explanation_required? }
     validates :price, presence: { if: :price_required? }
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
 
@@ -228,7 +228,7 @@ class Budget
       feasibility == "unfeasible"
     end
 
-    def unfeasibility_explanation_required?
+    def valuator_explanation_required?
       unfeasible? && valuation_finished?
     end
 
@@ -337,7 +337,7 @@ class Budget
     end
 
     def should_show_price_explanation?
-      should_show_price? && price_explanation.present?
+      should_show_price? && valuator_explanation.present?
     end
 
     def should_show_unfeasibility_explanation?

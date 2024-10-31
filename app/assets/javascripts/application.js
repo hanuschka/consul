@@ -56,6 +56,8 @@
 //= require turbolinks_anchors
 //= require ckeditor/loader
 //= require_directory ./ckeditor
+//= require ckeditor5/loader
+//= require_directory ./ckeditor5
 //= require social-share-button
 //= require initial
 //= require ahoy

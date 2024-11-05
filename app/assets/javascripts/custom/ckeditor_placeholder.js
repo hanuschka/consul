@@ -14,8 +14,8 @@
         event.preventDefault();
 
         // Get the current content of the CKEditor
-        for (var key in CKEDITOR.instances) {
-          var editor = CKEDITOR.instances[key];
+        for (var key in CKKEDITOR.instances) {
+          var editor = CKKEDITOR.instances[key];
           var existingPlaceholderElement = editor.document.$.querySelector("p[data-cke-placeholdertext]");
 
           if (existingPlaceholderElement) {

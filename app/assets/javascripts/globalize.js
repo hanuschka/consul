@@ -46,8 +46,8 @@
       }
     },
     resetEditor: function(element) {
-      if (CKEDITOR.instances[$(element).attr("id")]) {
-        CKEDITOR.instances[$(element).attr("id")].setData("");
+      if (CKKEDITOR.instances[$(element).attr("id")]) {
+        CKKEDITOR.instances[$(element).attr("id")].setData("");
       }
     },
     enable_locale: function(locale) {

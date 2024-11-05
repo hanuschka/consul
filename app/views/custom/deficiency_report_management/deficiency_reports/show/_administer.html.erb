@@ -19,7 +19,7 @@
 
   <% if @official_answer_templates.any? %>
     <label for="answer_template">Antwortvorlagen (optional)</label>
-    <select name="answer_template" id="answer_template" onChange="for (var id in CKEDITOR.instances) CKEDITOR.instances[id].container.$.offsetParent !== null && CKEDITOR.instances[id].setData(this.value);">
+    <select name="answer_template" id="answer_template" onChange="for (var id in CKKEDITOR.instances) CKEDITOR.instances[id].container.$.offsetParent !== null && CKEDITOR.instances[id].setData(this.value);">
       <%= content_tag(:option, "Wählen") %>
       <% @official_answer_templates.each do |template| %>
          <%= content_tag(:option, template.title, value: template.text) %>

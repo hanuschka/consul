@@ -92,6 +92,7 @@
             </div>
 
             <%= translations_form.text_area :description,
+              id: "editor",
               label: false,
               data: {placeholder: t("custom.deficiency_reports.form.description_placeholder_html")},
               class: "html-area #{ck_editor_class(current_user)}" %>

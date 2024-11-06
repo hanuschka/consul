@@ -38,7 +38,7 @@ class Officing::OfflineBallotsController < Officing::BaseController
   def investments
     @user = User.find(params[:user_id])
     @budget = Budget.find(params[:budget_id])
-    @heading = @budget.headings.sort_by_name.first
+    @heading = @budget.heading
     @ballot = Budget::Ballot.where(user: @user, budget: @budget).first_or_create!
     @investments = @budget.investments
     @investment_ids = @investments.ids

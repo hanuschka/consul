@@ -5,8 +5,8 @@ module NotificationServices
     end
 
     def call
-      users_to_notify.each do |user_id|
-        NotificationServiceMailer.new_manual_verification_request(user_id, @user_to_verify_id).deliver_later
+      users_to_notify.each do |user|
+        NotificationServiceMailer.new_manual_verification_request(user.id, @user_to_verify_id).deliver_later
       end
     end
 

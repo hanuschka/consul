@@ -216,8 +216,7 @@ class PagesController < ApplicationController
 
     @valid_filters = @budget.investments_filters
     params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting", "valuating"])
-    params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["balloting"])
-    params[:filter] ||= "all" if @budget.current_phase.kind.in?(["publishing_prices", "reviewing_ballots"])
+    params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["publishing_prices", "balloting", "reviewing_ballots"])
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 

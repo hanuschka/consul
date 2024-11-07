@@ -332,7 +332,7 @@ var klaroConfig = {
         {
           name: 'matomo',
           title: 'Matomo/Piwik',
-          default: true,
+          default: false,
           purposes: ['analytics'],
           cookies: [
             [/^_pk_.*$/]

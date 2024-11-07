@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_10_24_065406) do
+ActiveRecord::Schema.define(version: 2024_10_30_133754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -414,6 +414,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.integer "qualified_total_ballot_line_weight", default: 0
     t.string "video_url"
     t.bigint "sentiment_id"
+    t.text "valuator_explanation"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"

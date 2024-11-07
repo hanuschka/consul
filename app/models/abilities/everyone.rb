@@ -16,7 +16,10 @@ module Abilities
       can [:read], Budget::Group
       can [:read, :print, :json_data], Budget::Investment
       can :read_results, Budget, id: Budget.where(id: Budget.finished.pluck(:id)).results_enabled.ids
-      can :read_stats, Budget, id: Budget.where(id: Budget.finished.pluck(:id)).stats_enabled.ids
+      can :read_stats, Budget, id: (
+        Budget.where(id: Budget.finished.pluck(:id)).stats_enabled.ids +
+        Budget.where(id: Budget.valuating_or_later.pluck(:id), show_results_after_first_vote: true).ids
+      ).uniq
       can :read_executions, Budget, id: Budget.finished.pluck(:id)
       can :new, DirectMessage
       can [:read, :debate, :draft_publication, :allegations, :result_publication,

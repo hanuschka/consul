@@ -137,14 +137,9 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?
-    # For Poll/VotingPhase we dont check the date
-    if is_a?(ProjektPhase::VotingPhase)
-      phase_activated?
-    else
-      phase_activated? &&
-        ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
-        ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
-    end
+    phase_activated? &&
+      ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
+      ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
   end
 
   def not_current?
@@ -157,7 +152,7 @@ class ProjektPhase < ApplicationRecord
     return :not_logged_in if !user || user&.guest?
     return if user.has_pm_permission_to?("manage", projekt)
     return :phase_not_active if not_active?
-    return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
+    return :phase_expired if expired?
     return :phase_not_current if not_current?
     return :not_verified if user_status == "verified" && !user.level_three_verified?
 

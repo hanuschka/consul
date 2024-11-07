@@ -1,21 +1,40 @@
-class Ckeditor::Picture < Ckeditor::Asset
-  EDITORS_WITH_FULL_URL = %w[newsletter_body].freeze
+class Ckeditor::Picture < ApplicationRecord
+  include Rails.application.routes.url_helpers
 
-  attr_accessor :data
+  self.table_name = "ckeditor_assets"
+
+  EDITORS_WITH_FULL_URL = %w[newsletter_body].freeze
+  ALLOWED_CONTENT_TYPES = %w[image/jpg image/jpeg image/png image/gif].freeze
+  MAX_FILE_SIZE = 2.megabytes
+
   has_one_attached :storage_data
 
-  validates :storage_data, file_content_type: { allow: /^image\/.*/ }, file_size: { less_than: 2.megabytes }
+  validates :storage_data, file_content_type: { allow: ALLOWED_CONTENT_TYPES },
+                           file_size: { less_than: MAX_FILE_SIZE }
 
   def url_content(editor_id: nil)
-    if absolute_path?(editor_id)
-      Setting["url"] + rails_representation_url(storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true)
-    else
-      rails_representation_url(storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true)
-    end
+    file_path = rails_representation_url(
+      storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true
+    )
+
+    absolute_path?(editor_id) ? Setting["url"] + file_path : file_path
   end
 
   def url_thumb
-    rails_representation_url(storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true)
+    rails_representation_url(
+      storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
+    )
+  end
+
+  def attach_uploaded_file(data)
+    return unless data.is_a?(ActionDispatch::Http::UploadedFile)
+
+    storage_data.attach(io: data, filename: data.original_filename, content_type: data.content_type)
+
+    self.data_file_name = data.original_filename
+    self.data_content_type = data.content_type
+    self.data_file_size = data.size
+    self.type = "Ckeditor::Picture"
   end
 
   private

@@ -309,11 +309,12 @@
 
     changeResourceFormTitleHint: function($projektPhase) {
       var resourceFormTitleHint = $projektPhase.data("resourceFormTitleHint");
+      var defaultFormTitleHint = this.defaultFormTitleHint;
 
       if (resourceFormTitleHint && resourceFormTitleHint.length > 0) {
-        $(".user-resources-form--title-wrapper textarea:visible").attr("placeholder", resourceFormTitleHint);
+        document.querySelectorAll( '.ck-editor__editable' ).forEach( function(editor) { editor.ckeditorInstance.editing.view.document.getRoot( 'main' ).placeholder = resourceFormTitleHint;})
       } else {
-        $(".user-resources-form--title-wrapper textarea:visible").attr("placeholder", this.defaultFormTitleHint);
+        document.querySelectorAll( '.ck-editor__editable' ).forEach( function(editor) { editor.ckeditorInstance.editing.view.document.getRoot( 'main' ).placeholder = defaultFormTitleHint;})
       }
     },
 

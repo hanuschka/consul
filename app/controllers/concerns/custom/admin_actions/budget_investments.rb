@@ -92,7 +92,7 @@ module AdminActions::BudgetInvestments
 
   def people
     @investment = Budget::Investment.find(params[:id])
-    authorize! :people, @investment
+    authorize! :people, @investment if @namespace == :projekt_management
 
     load_staff
     load_valuator_groups
@@ -102,21 +102,21 @@ module AdminActions::BudgetInvestments
 
   def milestones
     @investment = Budget::Investment.find(params[:id])
-    authorize! :milestones, @investment
+    authorize! :milestones, @investment if @namespace == :projekt_management
 
     render "custom/admin/budget_investments/milestones"
   end
 
   def progress_bars
     @investment = Budget::Investment.find(params[:id])
-    authorize! :progress_bars, @investment
+    authorize! :progress_bars, @investment if @namespace == :projekt_management
 
     render "custom/admin/budget_investments/progress_bars"
   end
 
   def audits
     @investment = Budget::Investment.find(params[:id])
-    authorize! :audits, @investment
+    authorize! :audits, @investment if @namespace == :projekt_management
 
     render "custom/admin/budget_investments/audits"
   end

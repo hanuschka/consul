@@ -14,9 +14,20 @@ class Officing::OfflineBallotsController < Officing::BaseController
       render :verify_user
 
     else
-      @user = User.find_or_initialize_by(unique_stamp: unique_stamp)
+      @user = User.find_by(unique_stamp: unique_stamp)
+      @user ||= User.find_by(
+        first_name: user_params[:first_name],
+        last_name: user_params[:last_name],
+        plz: user_params[:plz],
+        date_of_birth: Date.new(
+          params[:"date_of_birth(1i)"].to_i,
+          params[:"date_of_birth(2i)"].to_i,
+          params[:"date_of_birth(3i)"].to_i
+        ).beginning_of_day
+      )
+      @user ||= User.new
 
-      unless @user.persisted?
+      if @user.new_record?
         @user.assign_attributes(user_params)
         @user.email = nil
         @user.verified_at = Time.current
@@ -30,6 +41,8 @@ class Officing::OfflineBallotsController < Officing::BaseController
         @user.geozone = Geozone.find_with_plz(params[:plz])
         @user.save!
       end
+
+      @user.verify! if @user.verified_at.nil?
 
       redirect_to officing_offline_ballots_investments_path(params[:budget_id], user_id: @user.id)
     end

@@ -243,7 +243,7 @@ class PagesController < ApplicationController
       @investments = @budget.investments
     else
       query = Budget::Ballot.where(user: current_user, budget: @budget)
-      @ballot = @budget.balloting? ? query.first_or_create! : query.first_or_initialize
+      @ballot = @budget.balloting? ? query.first_or_create!(conditional: ballot_conditional?) : query.first_or_initialize(conditional: ballot_conditional?)
 
       @investments = @budget.investments.send(@current_filter)
       @investment_ids = @budget.investments.ids
@@ -358,5 +358,13 @@ class PagesController < ApplicationController
 
   def resource_name
     "page"
+  end
+
+  def ballot_conditional?
+    return false unless current_user.present?
+
+    @projekt_phase.user_status == "verified" &&
+      current_user.verified_at.nil? &&
+      helpers.projekt_phase_feature?(@projekt_phase, "resource.conditional_balloting")
   end
 end

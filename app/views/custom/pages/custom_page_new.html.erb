@@ -36,9 +36,11 @@
         <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
           Info
         </div>
-        <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
-          Beteiligung
-        </div>
+        <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? %>
+          <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
+            Beteiligung
+          </div>
+        <% end %>
       </div>
     </div>
   <% end %>

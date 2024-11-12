@@ -127,7 +127,8 @@
         SpecialCharacters,
         SpecialCharactersEssentials,
         MediaEmbed,
-        SourceEditing
+        SourceEditing,
+        HtmlEmbed
       } = CKEDITOR;
 
       if ( $(element).hasClass("extended-u") ) {
@@ -154,7 +155,8 @@
           ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, ImageUpload, SimpleUploadAdapter,
           Link, Bold, Italic, Underline, Strikethrough, Subscript, Superscript, RemoveFormat,
           Table, HorizontalLine, SpecialCharacters, SpecialCharactersEssentials,
-          MediaEmbed, SourceEditing
+          MediaEmbed, SourceEditing,
+          HtmlEmbed
         ]
 
         toolbarControls = [
@@ -163,7 +165,8 @@
           "link", "|", "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "|", "removeFormat", "|",
           "fontColor", "fontBackgroundColor", "|",
           "insertTable", "horizontalLine", "specialCharacters", "|",
-          "mediaEmbed", "sourceEditing"
+          "mediaEmbed", "sourceEditing", "|",
+          "htmlEmbed"
         ]
 
       } else {

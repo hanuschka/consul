@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_10_30_133754) do
+ActiveRecord::Schema.define(version: 2024_11_12_162718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2391,6 +2391,7 @@ ActiveRecord::Schema.define(version: 2024_10_30_133754) do
     t.string "title"
     t.string "subtitle"
     t.text "content"
+    t.text "content_bu"
     t.index ["locale"], name: "index_site_customization_page_translations_on_locale"
     t.index ["site_customization_page_id"], name: "index_7fa0f9505738cb31a31f11fb2f4c4531fed7178b"
   end

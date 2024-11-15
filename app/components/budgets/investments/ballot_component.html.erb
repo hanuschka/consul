@@ -9,7 +9,7 @@
           <%= investment.formatted_price %>
         </p>
       <% end %>
-      <% if investment.should_show_ballots? %>
+      <% if investment.should_show_ballots?(controller_name: controller_name, current_user: current_user) %>
         <div class="margin-bottom-10">
           <strong>
             <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>
@@ -45,7 +45,7 @@
           <%= investment.formatted_price %>
         </p>
       <% end %>
-      <% if investment.should_show_ballots? %>
+      <% if investment.should_show_ballots?(controller_name: controller_name, current_user: current_user) %>
         <div class="margin-bottom-10">
           <strong>
             <%= t("custom.budgets.investments.investment.qualified_supports", count: investment.total_ballot_votes) %>
@@ -93,7 +93,9 @@
     </div>
   <% end %>
 
-  <% unless ballot.conditional? %>
-    <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
+  <% if controller_name != "offline_ballots" && (!current_user&.administrator? || !current_user&.poll_officer?) %>
+    <% unless ballot.conditional? %>
+      <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
+    <% end %>
   <% end %>
 </div>

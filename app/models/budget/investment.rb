@@ -328,8 +328,13 @@ class Budget
       budget.valuating?
     end
 
-    def should_show_ballots?
-      budget.balloting? && selected?
+    def should_show_ballots?(**args)
+      return false unless selected?
+      return true if budget.balloting?
+
+      budget.reviewing_ballots? &&
+        args[:controller_name].in?(["offline_ballots", "lines"]) &&
+        (args[:current_user]&.administrator? || args[:current_user]&.poll_officer?)
     end
 
     def should_show_price?

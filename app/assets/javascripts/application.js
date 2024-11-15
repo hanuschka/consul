@@ -54,8 +54,6 @@
 //= require foundation
 //= require turbolinks
 //= require turbolinks_anchors
-//= require ckeditor/loader
-//= require_directory ./ckeditor
 //= require social-share-button
 //= require initial
 //= require ahoy
@@ -132,6 +130,7 @@
 //= require leaflet-gesture-handling/dist/leaflet-gesture-handling.min
 //= require Leaflet.Deflate/dist/L.Deflate
 //= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
+//= require ckeditor5/ckeditor5.umd
 
 var initialize_modules = function() {
   "use strict";

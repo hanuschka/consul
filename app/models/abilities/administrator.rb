@@ -65,12 +65,13 @@ module Abilities
 
       can [:index, :read, :create, :update, :destroy], Budget
       can :publish, Budget, id: Budget.where(id: Budget.drafting.pluck(:id)).ids
-      can :calculate_winners, Budget, &:reviewing_ballots?
+      can :calculate_winners, Budget, &:balloting_or_later?
+      can :recalculate_winners, Budget, &:balloting_or_later?
+
       can :read_results, Budget do |budget|
         budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
-      can :recalculate_winners, Budget, &:balloting_or_later?
 
       can [:read, :create, :update, :destroy], Budget::Group
       can [:read, :create, :update, :destroy], Budget::Heading

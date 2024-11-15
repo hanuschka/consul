@@ -141,6 +141,22 @@
         </div>
       </div>
     <% end %>
+
+    <% if @projekt_phase.name == "comment_phase" %>
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.comment_form_title") %></strong>
+          <%= translations_form.text_field :comment_form_title, label: false %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.comment_form_button") %></strong>
+          <%= translations_form.text_field :comment_form_button, label: false %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
 
   <% if @projekt_phase.name.in?(["voting_phase"]) %>

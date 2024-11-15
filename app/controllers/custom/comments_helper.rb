@@ -25,7 +25,7 @@ module CommentsHelper
     elsif commentable.class == ProjektQuestion
       t("custom.projekts.projekt_questions.comments_button")
     else
-      parent_id.present? ? t("comments_helper.reply_button") : t("comments_helper.comment_button")
+      parent_id.present? ? t("comments_helper.reply_button") : (@projekt_phase&.comment_form_button.presence || t("comments_helper.comment_button"))
     end
   end
 

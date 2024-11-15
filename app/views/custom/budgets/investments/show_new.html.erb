@@ -54,7 +54,7 @@
 
             <% if @investment.should_show_price_explanation? %>
               <br>
-              <%= @investment.price_explanation %>
+              <%= @investment.valuator_explanation %>
             <% end %>
           </div>
         <% elsif @investment.should_show_feasibility_explanation? %>

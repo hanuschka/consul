@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_10_24_065406) do
+ActiveRecord::Schema.define(version: 2024_11_12_202809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -414,6 +414,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.integer "qualified_total_ballot_line_weight", default: 0
     t.string "video_url"
     t.bigint "sentiment_id"
+    t.text "valuator_explanation"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -1903,6 +1904,8 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.string "sentiments_name"
     t.string "resource_form_title_hint"
     t.text "description"
+    t.string "comment_form_title"
+    t.string "comment_form_button"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -2390,6 +2393,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.string "title"
     t.string "subtitle"
     t.text "content"
+    t.text "content_bu"
     t.index ["locale"], name: "index_site_customization_page_translations_on_locale"
     t.index ["site_customization_page_id"], name: "index_7fa0f9505738cb31a31f11fb2f4c4531fed7178b"
   end

@@ -88,12 +88,12 @@ de:
         one: 1 Sekunde
         other: "%{count} Sekunden"
     prompts:
-      day: Tag
+      day: Geburtstag
       hour: Stunde
       minute: Minute
-      month: Monat
+      month: Geburtsmonat
       second: Sekunden
-      year: Jahr
+      year: Geburtsjahr
   errors:
     format: "%{attribute} %{message}"
     messages:

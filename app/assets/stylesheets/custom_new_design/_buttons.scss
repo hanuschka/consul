@@ -1,5 +1,5 @@
-$orange-button-color: #FFA42D;
-$grey-button-color: #cfd9e2;
+$orange-button-color: #00389a;
+$grey-button-color: #00389a;
 $green-button-color: #00AA0B;
 
 button {
@@ -44,7 +44,7 @@ button {
 
     &.-grey {
       background: $grey-button-color;
-      color: black;
+      color: white;
 
       &:hover, &:focus {
         background-color: lighten($grey-button-color, 5%)
@@ -57,7 +57,7 @@ button {
 
     &.-orange {
       background: $orange-button-color;
-      color: black;
+      color: white;
 
       &:hover, &:focus {
         background-color: lighten($orange-button-color, 5%)
@@ -82,11 +82,11 @@ button {
     }
 
     &.-purple {
-      background: #EAE4FB;
-      color: black;
+      background: #00389a;
+      color: white;
 
       &:hover, &:focus {
-        background-color: #dad2f0;
+        background-color: #00389a;
       }
     }
 

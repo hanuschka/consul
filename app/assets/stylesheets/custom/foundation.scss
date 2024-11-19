@@ -5,3 +5,10 @@
   padding: 0.4em;
   padding-left: 1rem;
 }
+
+// fix for ckeditor
+.accordion-item {
+  p {
+    margin-bottom: 0;
+  }
+}

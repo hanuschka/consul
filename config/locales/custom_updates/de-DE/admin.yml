@@ -445,6 +445,8 @@ de:
               investments_limit: Anzahl an angezeigten Investitionsvorschläge
               deficiency_reports_limit: Anzahl an angezeigten Mangelmeldungen
       users:
+        reverify_button_text: Verifizierung aktuallisieren
+        reverify_success_notice: Reverifizierungsprozess läuft
         columns:
           id: ID
           erase_reason: Grund des Löschens

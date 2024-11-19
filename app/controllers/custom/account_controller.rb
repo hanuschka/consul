@@ -59,8 +59,10 @@ class AccountController < ApplicationController
 
     process_temp_attributes_for(@account)
 
+    @account.update(reverify: true)
+
     if @account.update(user_params)
-      @account.unverify!
+      @account.reverify!
       redirect_to account_path, notice: t("flash.actions.save_changes.notice")
     else
       render :edit_details

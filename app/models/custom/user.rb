@@ -26,6 +26,7 @@ class User < ApplicationRecord
   before_validation :strip_whitespace
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
+  after_create :attempt_verification
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
 
@@ -47,6 +48,8 @@ class User < ApplicationRecord
   has_many :projekt_phase_subscriptions
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :verified, -> { where.not(verified_at: nil) }
+  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
 
   validate :email_should_not_be_used_by_hidden_user
@@ -226,6 +229,20 @@ class User < ApplicationRecord
     "#{street_name} #{street_number}#{street_number_extension}"
   end
 
+  def reverify!
+    return if organization?
+
+    initially_verified = verified?
+    unverify!
+    verification_attempt_successful = attempt_verification
+
+    if initially_verified && !verification_attempt_successful
+      NotificationServices::UserReverificationFailedNotifier.call(id)
+    elsif !initially_verified && verification_attempt_successful
+      NotificationServices::UserReverificationSucceededNotifier.call(id)
+    end
+  end
+
   def roles
     roles = []
     roles << :admin if administrator?
@@ -301,6 +318,30 @@ class User < ApplicationRecord
       if User.only_hidden.where.not(id: id).find_by(email: email).present?
         errors.add(:email, "Diese E-Mail-Adresse wurde bereits verwendet. Ggf. wurde das Konto geblockt. Bitte kontaktieren Sie uns per E-Mail.")
       end
+    end
+
+    def attempt_verification
+      return false if organization?
+      return false unless residency_valid?
+
+      verify!
+    end
+
+    def census_data
+      RemoteCensusApi.new.call(first_name: first_name,
+                               last_name: last_name,
+                               street_name: registered_address&.registered_address_street&.name.presence || street_name,
+                               street_number: registered_address&.street_number.presence || street_number,
+                               plz: registered_address&.registered_address_street&.plz.presence || plz,
+                               city_name: registered_address&.registered_address_city&.name.presence || city_name,
+                               date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),
+                               gender: gender)
+    end
+
+    def residency_valid?
+      return true if organization?
+
+      census_data.valid?
     end
 
     def remove_audits

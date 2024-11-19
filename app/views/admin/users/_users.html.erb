@@ -4,7 +4,10 @@
   <h3><%= page_entries_info @users %></h3>
 
   <% if @current_filter != "erased" %>
-    <%= link_to t("custom.shared.download"), admin_users_path(format: :csv), class: "float-right small clear" %>
+    <div class="float-right small clear">
+      <%#= link_to t("custom.admin.users.reverify_button_text"), reverify_admin_users_path, style: "margin-right:2rem;", data: { confirm: "Sind Sie sicher?" } %>
+      <%= link_to t("custom.shared.download"), admin_users_path(format: :csv), class: "float-right small clear" %>
+    </div>
   <% end %>
 
   <table>
@@ -34,6 +37,7 @@
           <th scope="col"><%= link_to_users_sorted_by(:created_at) %></th>
           <th scope="col"><%= t("custom.admin.users.columns.last_sign_in_date") %></th>
           <th scope="col"><%= link_to_users_sorted_by(:verified_at) %></th>
+          <th scope="col"><%= t("custom.admin.users.columns.reverify") %></th>
           <th scope="col"><%= t("custom.admin.users.columns.actions") %></th>
         <% end %>
       </tr>

@@ -28,8 +28,7 @@ class Budget::Investment::Stats < Budget::Stats
     end
 
     def poll_ballot_voters
-      # @poll_ballot_voters ||= investment.budget.poll ? investment.budget.poll.voters.pluck(:user_id) : []
-      @poll_ballot_voters ||= investment.budget.poll ? investment.budget.poll.voters.joins(:user).where.not(users: { verified_at: nil, geozone_id: nil }).pluck(:user_id) : [] #CON-2085
+      @poll_ballot_voters ||= investment.budget.poll ? investment.budget.poll.voters.pluck(:user_id) : []
     end
 
     def vote_phase_enabled? # changed

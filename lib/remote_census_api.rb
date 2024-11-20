@@ -26,7 +26,6 @@ class RemoteCensusApi
         last_name_matched? &&
         house_number_matched? &&
         postleitzahl_matched? &&
-        street_matched? &&
         city_matched?
     end
 

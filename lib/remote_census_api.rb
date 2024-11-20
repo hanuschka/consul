@@ -76,11 +76,8 @@ class RemoteCensusApi
   private
 
     def get_response_body(first_name:, last_name:, street_name:, street_number:, plz:, city_name:, date_of_birth:, gender:)
-      ENV['http_proxy'] = ENV["phttp"]
-      ENV['https_proxy'] = ENV["phttps"]
-
       url = URI(Rails.application.secrets.soap_endpoint)
-      https = Net::HTTP.new(url.host, url.port)
+      https = Net::HTTP.new(url.host, url.port, ENV["proxyip"], ENV["proxyport"])
       https.use_ssl = true
 
       request = Net::HTTP::Post.new(url)

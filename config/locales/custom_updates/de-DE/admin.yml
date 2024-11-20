@@ -530,6 +530,8 @@ de:
         labels_name: Alternativtext zu Labels
         sentiments_name: Alternativtext zu Sentimente
         projekt_selector_hint: Hinweise zum Projekt
+        comment_form_title: Titel des Kommentarformulars
+        comment_form_button: Kommentarformular Button
         edit:
           title: Einstellung für Phase
         duration:

@@ -119,7 +119,7 @@
               </div>
             <% end %>
 
-            <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? && @proposal.community.topics.any? %>
+            <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? && can?(:show, @proposal.community) %>
               <div class="proposal-resources-section">
                 <%= render Shared::CollapseComponent.new(opened_by_default: true) do |c| %>
                   <% c.with_head do %>
@@ -222,7 +222,7 @@
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? %>
+        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? && can?(:show, @proposal.community) %>
           <%= render(Shared::SidebarCardComponent.new(
               title: t("custom.proposals.show.community_section.title"),
               icon_name: "users")

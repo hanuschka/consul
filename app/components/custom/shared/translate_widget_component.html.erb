@@ -1,8 +1,8 @@
-<div id='translate-widget'>
+<div class='translate-widget'>
   <% if google_translate_accepted? %>
-    <div id="google_translate_element"></div>
+    <div id="google_translate_element_<%= @placement %>" class='google_translate_element'></div>
   <% else %>
-    <%= link_to "#", id: "translate-widget-toggler", onClick: "klaro.show();return false;" do %>
+    <%= link_to "#", class: "translate-widget-toggler", onClick: "klaro.show();return false;" do %>
       <i class="fas fa-language"></i>
     <% end %>
   <% end %>

@@ -170,6 +170,12 @@ module Abilities
       end
 
       can [:create, :update], FormularAnswer
+
+      can :show, Community do |community|
+        return false unless community.communitable.present?
+
+        community.communitable.projekt_phase.permission_problem(user).blank?
+      end
     end
   end
 end

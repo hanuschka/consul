@@ -15,7 +15,7 @@
 
         // Get the current content of the CKEditor
         document.querySelectorAll( '.ck-editor__editable' ).forEach( function(editor) {
-          existingPlaceholderElement = editor.ckeditorInstance.editing.view.document.getRoot( 'main' );
+          var existingPlaceholderElement = editor.ckeditorInstance.editing.view.document.getRoot( 'main' );
 
           if (existingPlaceholderElement.placeholder) {
             existingPlaceholderElement.placeholder = "";

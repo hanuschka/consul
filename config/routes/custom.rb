@@ -1,4 +1,4 @@
-get "ckeditor/assets", to: "ckeditor/assets#index"
+post "ckeditor/assets", to: "ckeditor/assets#index"
 post "ckeditor/pictures", to: "ckeditor/pictures#create"
 
 resources :user_resources, only: [:index]

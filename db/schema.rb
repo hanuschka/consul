@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_11_21_213430) do
+ActiveRecord::Schema.define(version: 2024_12_02_145937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -557,6 +557,10 @@ ActiveRecord::Schema.define(version: 2024_11_21_213430) do
     t.integer "height"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "title", default: ""
+    t.string "description", default: ""
+    t.tsvector "tsv"
+    t.string "alt_text", default: ""
     t.index ["type"], name: "index_ckeditor_assets_on_type"
   end
 

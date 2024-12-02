@@ -194,6 +194,8 @@ module Abilities
 
       can :get_coordinates_map_location, MapLocation
       can :send_notification, Memo, user_id: user.id
+
+      can :index, Ckeditor::Asset
     end
   end
 end

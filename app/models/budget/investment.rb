@@ -56,7 +56,8 @@ class Budget
       class_name: "Comment"
 
     validates_translation :title, presence: true, length: { in: 4..Budget::Investment.title_max_length }
-    validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    # validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    validates_translation :description, presence: true
 
     validates :author, presence: true
     validates :heading_id, presence: true

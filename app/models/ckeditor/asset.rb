@@ -17,20 +17,6 @@ class Ckeditor::Asset < ApplicationRecord
     pg_search(terms)
   end
 
-  def url_content(editor_id: nil)
-    file_path = rails_representation_url(
-      storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true
-    )
-
-    absolute_path?(editor_id) ? Setting["url"] + file_path : file_path
-  end
-
-  def url_thumb
-    Setting["url"] + rails_representation_url(
-      storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
-    )
-  end
-
   def attach_uploaded_file(data)
     return unless data.is_a?(ActionDispatch::Http::UploadedFile)
 
@@ -39,7 +25,7 @@ class Ckeditor::Asset < ApplicationRecord
     self.data_file_name = data.original_filename
     self.data_content_type = data.content_type
     self.data_file_size = data.size
-    self.type = "Ckeditor::Picture"
+    self.type = type
   end
 
   def searchable_values

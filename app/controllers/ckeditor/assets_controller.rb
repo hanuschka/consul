@@ -48,8 +48,7 @@ class Ckeditor::AssetsController < ApplicationController
       {
         items: assets_json,
         total_pages: @assets.total_pages,
-        items_per_page: @assets.limit_value,
-        page: @assets.current_page
+        items_per_page: @assets.limit_value
       }
     end
 end

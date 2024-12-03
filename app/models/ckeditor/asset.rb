@@ -26,7 +26,7 @@ class Ckeditor::Asset < ApplicationRecord
   end
 
   def url_thumb
-    rails_representation_url(
+    Setting["url"] + rails_representation_url(
       storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
     )
   end

@@ -5,7 +5,7 @@ class Ckeditor::DocumentsController < ApplicationController
   skip_authorization_check
 
   def create
-    document = Ckeditor::Document.new(document_params)
+    document = Ckeditor::Document.new
     # authorize! :create, document
     document.attach_uploaded_file(params[:upload])
 

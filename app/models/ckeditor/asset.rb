@@ -26,6 +26,7 @@ class Ckeditor::Asset < ApplicationRecord
     self.data_content_type = data.content_type
     self.data_file_size = data.size
     self.type = type
+    self.title = data.original_filename
   end
 
   def searchable_values

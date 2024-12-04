@@ -5,7 +5,7 @@ class Ckeditor::PicturesController < ApplicationController
   skip_authorization_check
 
   def create
-    picture = Ckeditor::Picture.new(picture_params)
+    picture = Ckeditor::Picture.new
     # authorize! :create, picture
     picture.attach_uploaded_file(params[:upload])
 

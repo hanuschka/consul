@@ -295,6 +295,7 @@ namespace :admin do
   end
 
   resources :users, only: [:index, :show, :edit, :update] do
+    get :reverify, on: :collection #custom
     resources :audits, only: :show, controller: "user_audits"
   end
 

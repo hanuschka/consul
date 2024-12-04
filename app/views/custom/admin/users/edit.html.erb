@@ -40,7 +40,10 @@
 
   <div class="row">
     <div class="column">
-      <%= f.submit %>
+      <%= f.submit "Speichern", class: "button primary" %>
+      <% if Setting["feature.melderegister"].present? %>
+				<%= f.submit "Speichern & Einwohnermeldeamt-Abgleich durchführen", name: "reverify", class: "button alert", data: { confirm: "Sind Sie sicher?" } %>
+      <% end %>
     </div>
   </div>
 <% end %>

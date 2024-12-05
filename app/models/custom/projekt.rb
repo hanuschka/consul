@@ -758,9 +758,7 @@ class Projekt < ApplicationRecord
         map_location.projekt_id = id
         map_location.save!
 
-        map_layers = parent&.map_layers || MapLayer.general
-
-        map_layers.each do |map_layer|
+        (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
           map_layers << map_layer.dup
         end
       end

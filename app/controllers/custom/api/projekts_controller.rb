@@ -133,7 +133,7 @@ class Api::ProjektsController < Api::BaseController
   def import_projekt_params
     params.require(:projekt).permit(
       :title,
-      :brief_description,
+      :subtitle,
       :summary,
       :greeting,
       :additional_information,

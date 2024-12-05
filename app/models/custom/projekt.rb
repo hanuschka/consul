@@ -754,11 +754,13 @@ class Projekt < ApplicationRecord
           projekt_id: id
         )
       else
-        map_location = Projekt.overview_page.map_location.dup
+        map_location = (parent || Projekt.overview_page).map_location.dup
         map_location.projekt_id = id
         map_location.save!
 
-        Projekt.overview_page.map_layers.each do |map_layer|
+        map_layers = parent&.map_layers || MapLayer.general
+
+        map_layers.each do |map_layer|
           map_layers << map_layer.dup
         end
       end

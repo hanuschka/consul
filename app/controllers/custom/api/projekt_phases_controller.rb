@@ -3,7 +3,6 @@ class Api::ProjektPhasesController < Api::BaseController
   before_action :find_phase, only: [:update]
 
   skip_authorization_check
-  skip_forgery_protection
 
   # Do not comment
   # In use

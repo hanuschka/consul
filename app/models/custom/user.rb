@@ -30,7 +30,6 @@ class User < ApplicationRecord
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
 
-  # has_secure_token :temporary_auth_token
   has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -286,18 +285,6 @@ class User < ApplicationRecord
   def frame_sign_in_token_valid?
     frame_sign_in_token_valid_until > Time.current
   end
-
-  # def generate_temporary_auth_token!
-  #   regenerate_temporary_auth_token
-  #
-  #   update!(temporary_auth_token_valid_until: 1.hour.from_now)
-  # end
-  #
-  # def temporary_auth_token_valid?
-  #   return false if temporary_auth_token_valid_until.nil?
-  #
-  #   temporary_auth_token_valid_until > Time.current
-  # end
 
   private
 

@@ -195,7 +195,7 @@ body.frame-admin-layout {
 }
 
 .frame-select-new-phase-button {
-  font-size: 28px;
+  font-size: 23px !important;
   /* width: 45px; */
   /* height: 45px; */
 }
@@ -203,6 +203,12 @@ body.frame-admin-layout {
 .frame-explain-button {
   font-size: 18px;
   margin-left: 5px;
+
+  &:disabled {
+    /* opacity: 0.8; */
+    filter: grayscale(0.7);
+    cursor: initial;
+  }
 }
 
 .admin-top-navigation {

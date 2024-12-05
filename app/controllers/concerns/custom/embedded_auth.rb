@@ -26,7 +26,7 @@ module EmbeddedAuth
     def frame_access_code_valid?(projekt)
       return false if params[:frame_code].blank?
 
-      params[:frame_code] = projekt.frame_access_code
+      params[:frame_code] == projekt.frame_access_code
     end
 
     def embedded_and_frame_access_code_valid?(projekt)
@@ -158,12 +158,4 @@ module EmbeddedAuth
 
       current_frame_csrf_token && current_frame_csrf_token == params[:frame_csrf_token]
     end
-
-    # def frame_temp_token_valid?
-    #   return false if params[:temp_token].blank?
-    #
-    #   user = User.find_by(temporary_auth_token: params[:temp_token])
-    #
-    #   user.present? && user.temporary_auth_token_valid?
-    # end
 end

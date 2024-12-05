@@ -88,7 +88,7 @@ class UserResources::FormComponent < ApplicationComponent
   def base_class_name
     class_name = ""
 
-    if phase_feature_enabled?("form.allow_attached_image") || !feature?(:allow_images)
+    if !phase_feature_enabled?("form.allow_attached_image") || !feature?(:allow_images)
       class_name += " -no-image"
     end
 

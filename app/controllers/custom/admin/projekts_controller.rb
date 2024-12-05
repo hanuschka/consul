@@ -5,7 +5,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekts = Projekt.top_level.regular
 
     @new_projekt = Projekt.new
-    @projekt = Projekt.overview_page
+    @overview_page_projekt = Projekt.overview_page
 
     @projekts_settings = Setting.all.group_by(&:type)["projekts"]
 

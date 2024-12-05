@@ -30,6 +30,15 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   def show
     @deficiency_report = DeficiencyReport.find(params[:id])
     @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "Mangelmeldung - #{@deficiency_report.id}",
+               page_size: "A4",
+               show_as_html: Rails.env.test? || params.key?("debug")
+      end
+    end
   end
 
   def edit

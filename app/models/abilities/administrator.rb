@@ -65,12 +65,13 @@ module Abilities
 
       can [:index, :read, :create, :update, :destroy], Budget
       can :publish, Budget, id: Budget.where(id: Budget.drafting.pluck(:id)).ids
-      can :calculate_winners, Budget, &:reviewing_ballots?
+      can :calculate_winners, Budget, &:balloting_or_later?
+      can :recalculate_winners, Budget, &:balloting_or_later?
+
       can :read_results, Budget do |budget|
         budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
-      can :recalculate_winners, Budget, &:balloting_or_later?
 
       can [:read, :create, :update, :destroy], Budget::Group
       can [:read, :create, :update, :destroy], Budget::Heading
@@ -148,7 +149,7 @@ module Abilities
 
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type], Poll::Question
-      can [:update, :verify, :unverify], User
+      can [:update, :verify, :unverify, :reverify], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
         investment.budget.current_phase.kind == "selecting"

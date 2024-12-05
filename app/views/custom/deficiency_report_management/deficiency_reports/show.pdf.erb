@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <%= wicked_pdf_stylesheet_link_tag "pdf_fonts" -%>
+</head>
+<body class="">
+	<h1><%= @deficiency_report.title %></h1>
+
+  <div style="margin-bottom:20px;">
+    <div>
+      <strong><%= t("custom.admin.deficiency_reports.show.created_at") %>:</strong>
+      <%= l(@deficiency_report.created_at, format: "%d %b %Y") %>
+    </div>
+    <div>
+      <strong><%= t("custom.admin.deficiency_reports.show.updated_at") %>:</strong>
+      <%= l(@deficiency_report.updated_at, format: "%d %b %Y") %>
+    </div>
+
+    <% if @deficiency_report.approximated_address.present? %>
+      <div>
+        <strong><%= DeficiencyReport.human_attribute_name(:approximated_address) %>:</strong>
+        <%= @deficiency_report.approximated_address %>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <% if @deficiency_report.image.present? %>
+      <%= wicked_pdf_image_tag polymorphic_url(@deficiency_report.image.variant(:large)) %>
+    <% end %>
+  </div>
+
+  <div style="margin-top:20px;margin-bottom:20px;">
+    <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.description) %>
+  </div>
+
+  <div>
+    <strong><%= "#{DeficiencyReport.human_attribute_name(:author)}:" %></strong>
+    <br>
+    <%= @deficiency_report.author.username %>
+    <%= @deficiency_report.author.full_name %>
+    <br>
+    <% if @deficiency_report.on_behalf_of.present? %>
+      <%= "(#{t("custom.admin.deficiency_reports.show.on_behalf_of")} #{@deficiency_report.on_behalf_of})" %>
+      <br>
+    <% end %>
+    <%= "#{@deficiency_report.author.formatted_address}, " if @deficiency_report.author.formatted_address.present? %>
+    <%= [@deficiency_report.author.plz, @deficiency_report.author.city_name].join(", ") %><br>
+  </div>
+</body>
+</html>

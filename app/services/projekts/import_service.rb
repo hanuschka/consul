@@ -64,7 +64,7 @@ class Projekts::ImportService < ApplicationService
 
     projekt.page.update!(
       title: projekt_params[:title],
-      subtitle: projekt_params[:brief_description],
+      subtitle: projekt_params[:subtitle],
     )
   end
 

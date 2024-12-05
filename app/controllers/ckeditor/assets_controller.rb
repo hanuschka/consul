@@ -22,6 +22,10 @@ class Ckeditor::AssetsController < ApplicationController
     render json: json
   end
 
+  def preflight_check
+    head :ok
+  end
+
   private
 
     def filter_by_type

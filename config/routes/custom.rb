@@ -1,3 +1,4 @@
+match "ckeditor/assets", to: "ckeditor/assets#preflight_check", via: :options
 post "ckeditor/assets", to: "ckeditor/assets#index"
 
 namespace :ckeditor do

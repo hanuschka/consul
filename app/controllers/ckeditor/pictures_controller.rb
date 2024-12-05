@@ -31,6 +31,10 @@ class Ckeditor::PicturesController < ApplicationController
     render json: { status: :no_content }
   end
 
+  def preflight_check
+    head :ok
+  end
+
   private
 
     def picture_params

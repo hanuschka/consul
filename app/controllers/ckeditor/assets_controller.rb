@@ -4,6 +4,7 @@ class Ckeditor::AssetsController < ApplicationController
   include Search
   skip_forgery_protection
   skip_authorization_check
+  before_action :set_cors_headers
 
   def index
     # authorize! :index, Ckeditor::Asset
@@ -50,5 +51,11 @@ class Ckeditor::AssetsController < ApplicationController
         total_pages: @assets.total_pages,
         items_per_page: @assets.limit_value
       }
+    end
+
+    def set_cors_headers
+      headers["Access-Control-Allow-Origin"] = "*"
+      headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS" # Allow all HTTP methods
+      headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     end
 end

@@ -3,6 +3,7 @@
 class Ckeditor::DocumentsController < ApplicationController
   skip_forgery_protection
   skip_authorization_check
+  before_action :set_cors_headers
 
   def create
     document = Ckeditor::Document.new
@@ -34,5 +35,11 @@ class Ckeditor::DocumentsController < ApplicationController
 
     def document_params
       params.require(:document).permit(:title, :description)
+    end
+
+    def set_cors_headers
+      headers["Access-Control-Allow-Origin"] = "*"
+      headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS" # Allow all HTTP methods
+      headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     end
 end

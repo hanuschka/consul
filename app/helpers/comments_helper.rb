@@ -11,7 +11,8 @@ module CommentsHelper
     if commentable.class == Legislation::Question
       t("legislation.questions.comments.form.leave_comment")
     else
-      t("comments.form.leave_comment")
+      @projekt_phase&.comment_form_title.presence ||
+        t("comments.form.leave_comment")
     end
   end
 

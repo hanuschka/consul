@@ -2,7 +2,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   has_one :budget, foreign_key: :projekt_phase_id,
     dependent: :restrict_with_exception, inverse_of: :projekt_phase
 
-  after_create :create_map_location, :create_budget
+  after_create :copy_map_settings_from_projekt, :create_budget
 
   def phase_activated?
     # projekt.budget.present?

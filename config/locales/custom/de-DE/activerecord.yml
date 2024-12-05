@@ -188,6 +188,7 @@ de:
         valuation_finished: "Begutachtung abgeschlossen"
         valuator_ids: "Gruppen"
         valuation_tag_list: "Tags"
+        valuator_explanation: Erläuterung
       budget/investment/translation:
         title: "Titel"
         description: "Beschreibung"

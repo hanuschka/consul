@@ -278,7 +278,7 @@ de:
           incompatible: Inkompatibel
           price: Preis
           author: Autor
-        cannot_calculate_winners: Das Budget muss in Phase „%{phase}“ stehen, um Gewinnervorschläge berechnen zu können
+        cannot_calculate_winners: "In der 7. Phase (Abstimmung über Investitionsvorschläge) kann von den Admins eine Vorschau auf das Ergebnis kalkuliert werden. Um die finalen Gewinnervorschläge berechnen zu können, muss die 8. Phase \"Abstimmung überprüfen\" ausgewählt werden."
         see_results: "Ergebnisse anzeigen"
         milestone_tags_filter_all: "Status aller Investitionsvorschläge"
       show:

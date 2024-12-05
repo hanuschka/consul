@@ -78,6 +78,19 @@ de:
         hi: Hallo %{username},
         link: Livestream
         p1: es ist ein neue Livestream auf Consul eingegangen.
+      user_reverification_failed:
+        subject: Die Verifizierung Ihres Kontos wurde aufgehoben
+        hi: Sehr geehrte(r) Herr/Frau %{last_name},
+        p1_html: die Verifizierung Ihres Nutzerkontos auf der Mitmachen-Plattform wurde aufgehoben. Somit können Sie aktuell an keinen Beteiligungsprojekten teilnehmen, für die ein verifizierter Account erforderlich ist (beispielsweise Bürgerbudget)
+        p2_html: <strong>Sie sind innerhalb des Stadtgebietes wohnhaft?</strong><br>Unter Account können Sie Ihre persönlichen Daten überprüfen und sich erneut verifizieren. Achten Sie hierbei auf die exakt richtige Schreibweise Ihrer persönlichen Daten.
+        p3_html: <strong>Sie sind weggezogen?</strong><br>Auch als Auswärtiger können Sie weiterhin an vielen Beteiligungsprojekten auf der Mitmachen-Plattform teilnehmen. Ändern Sie bitte Ihren Wohnort unter Account.
+        p4_html: Für Rückfragen stehen wir Ihnen jederzeit gerne zur Verfügung.
+        signature_html: Vielen Dank für Ihre Teilhabe.
+      user_reverification_succeeded:
+        subject: Die Verifizierung Ihres Kontos wurde abgeschlossen
+        hi: Sehr geehrte(r) Herr/Frau %{last_name},
+        p1_html: die Verifizierung Ihres Nutzerkontos auf der Siegburger Mitmachen-Plattform wurde abgeschlossen. Somit können Sie an Beteiligungsprojekten teilnehmen, für die ein verifizierter Account erforderlich ist (beispielsweise Bürgerbudget).
+        signature_html: Vielen Dank für Ihre Teilhabe.
       new_topic:
         subject: Neues Thema auf Consul
         hi: Hallo %{username},

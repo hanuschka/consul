@@ -2,7 +2,7 @@ class CommunitiesController < ApplicationController
   has_orders %w[newest most_commented oldest]
   before_action :set_community, :load_topics, :load_participants
 
-  skip_authorization_check
+  # skip_authorization_check
 
   def show
     raise ActionController::RoutingError, "Not Found" unless communitable_exists?

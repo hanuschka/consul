@@ -36,6 +36,8 @@ class ProjektPhase < ApplicationRecord
   translates :sentiments_name, touch: true
   translates :resource_form_title_hint, touch: true
   translates :description, touch: true
+  translates :comment_form_title, touch: true
+  translates :comment_form_button, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -137,14 +139,9 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?
-    # For Poll/VotingPhase we dont check the date
-    if is_a?(ProjektPhase::VotingPhase)
-      phase_activated?
-    else
-      phase_activated? &&
-        ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
-        ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
-    end
+    phase_activated? &&
+      ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
+      ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
   end
 
   def not_current?
@@ -152,13 +149,15 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
+    return if user&.administrator? || user&.projekt_manager?
+
+    return :phase_not_active if not_active?
+    return :phase_expired if expired?
+    return :phase_not_current if not_current?
+
     return :guest_not_logged_in if user_status == "guest" && !user
     return if user_status == "guest"
     return :not_logged_in if !user || user&.guest?
-    return if user.has_pm_permission_to?("manage", projekt)
-    return :phase_not_active if not_active?
-    return :phase_expired if expired? && !is_a?(ProjektPhase::VotingPhase)
-    return :phase_not_current if not_current?
     return :not_verified if user_status == "verified" && !user.level_three_verified?
 
     if phase_specific_permission_problems(user, location).present?
@@ -245,17 +244,6 @@ class ProjektPhase < ApplicationRecord
     else
       nil
     end
-  end
-
-  def create_map_location
-    return if map_location.present?
-
-    MapLocation.create!(
-      latitude: Setting["map.latitude"],
-      longitude: Setting["map.longitude"],
-      zoom: Setting["map.zoom"],
-      projekt_phase_id: id
-    )
   end
 
   def settings_categories
@@ -374,6 +362,17 @@ class ProjektPhase < ApplicationRecord
 
       phase_settings.each do |key, value|
         settings.create!(key: key, value: value)
+      end
+    end
+
+    def copy_map_settings_from_projekt
+      return if map_location.present?
+
+      map_location = projekt.map_location&.dup
+      map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+
+      projekt.map_layers.each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 end

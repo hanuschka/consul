@@ -1,6 +1,4 @@
 class Api::SettingsController < Api::BaseController
-  skip_forgery_protection
-
   def enable
     Setting[params[:name]] = true
   end

@@ -38,7 +38,10 @@ class Admin::UsersController < Admin::BaseController
     process_temp_attributes_for(@user)
 
     if @user.update(user_params)
-      @user.unverify!
+      if params[:reverify].present?
+        @user.reverify!
+        @user.update!(reverify: true)
+      end
       redirect_to admin_users_path, notice: "Benutzer aktualisiert"
     else
       render :edit
@@ -48,6 +51,7 @@ class Admin::UsersController < Admin::BaseController
   def verify
     @user = User.find(params[:id])
     if @user.verify!
+      @user.update!(reverify: false)
       @verification_result_notice = "Benutzer verifiziert"
       Mailer.manual_verification_confirmation(@user).deliver_later
     else
@@ -58,6 +62,14 @@ class Admin::UsersController < Admin::BaseController
   def unverify
     @user = User.find(params[:id])
     @user.unverify!
+    @user.update!(reverify: false)
+  end
+
+  def reverify
+    return if Setting["feature.melderegister"].blank?
+
+    VerificationServices::UsersReverifier.call
+    redirect_to admin_users_path, notice: t("custom.admin.users.reverify_success_notice")
   end
 
   private

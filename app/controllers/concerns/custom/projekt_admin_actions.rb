@@ -36,7 +36,7 @@ module ProjektAdminActions
     @projekt_manager_assignments = @projekt.projekt_manager_assignments
 
     if @projekt.map_location.nil?
-      @projekt.send(:create_map_location)
+      @projekt.send(:copy_map_settings)
       @projekt.reload
     end
 

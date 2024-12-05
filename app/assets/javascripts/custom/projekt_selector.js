@@ -167,6 +167,7 @@
     toggleImageAttachment: function($projektPhase) {
       var $userResourcesForm = $(".js-user-resources-form");
 
+      console.log("allow allowAttachedImage", $projektPhase)
       if (!!$projektPhase.data("allowAttachedImage")) {
         $("#attach-image").show();
         $userResourcesForm.removeClass("-no-image");

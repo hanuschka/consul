@@ -35,7 +35,6 @@ namespace :api do
   patch "/api_clients_registration/mark_as_registered"
 
   post "/auth/generate_frame_sign_in_token", to: "auth#generate_frame_sign_in_token"
-  # post "/auth/generate_temporary_auth_token", to: "auth#generate_temporary_auth_token"
 
   resources :projekts, only: [:index, :create, :update] do
     collection do
@@ -43,6 +42,7 @@ namespace :api do
     end
     member do
       patch :update_page
+      patch :update_title_image
       patch :import
     end
     patch "projekt_settings", to: "projekt_settings#update"

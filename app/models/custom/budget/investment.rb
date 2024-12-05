@@ -20,6 +20,7 @@ class Budget
 
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
     validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
+    validate :description_sanitized #custom
 
     def self.sort_by_ballot_line_weight
       left_joins(budget_ballot_lines: :ballot)
@@ -76,5 +77,14 @@ class Budget
         selected? && budget.published_prices? &&
         price_explanation.present?
     end
+
+    private
+
+      def description_sanitized
+        sanitized_description = ActionController::Base.helpers.strip_tags(description).gsub("\n", '').gsub("\r", '').gsub(" ", '').gsub(/^$\n/, '').gsub(/[\u202F\u00A0\u2000\u2001\u2003]/, "")
+
+        errors.add(:description, :too_long, message: 'too long text') if
+          sanitized_description.length > Setting[ "extended_option.proposals.description_max_length"].to_i
+      end
   end
 end

@@ -225,7 +225,7 @@
           <% end %>
         <% end %>
 
-        <% if current_user && !current_user.guest? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_community_button_in_sidebar") %>
+        <% if current_user && !current_user.guest? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_community_button_in_sidebar") && can?(:show, @investment.community) %>
           <%= render(Shared::SidebarCardComponent.new(
               title: t("custom.proposals.show.community_section.title"),
               icon_name: "users")

@@ -72,6 +72,19 @@ en:
         hi: Hi %{username},
         link: Projekt livestream
         p1: New projekt livestream has just been added to Consul
+      user_reverification_failed:
+        subject: Your account has been de-verified
+        hi: Dear Mr/Mrs %{last_name},
+        p1_html: The verification of your user account on the Siegburger Participation platform has been canceled. This means that you cannot currently take part in any participation projects that require a verified account (e.g. citizen budget).
+        p2_html: <strong>Do you live in Siegburg?</strong><br>At <a href="https://mitmachen.siegburg.de/account">https://mitmachen.siegburg.de/account</a> you can check your personal information and verify yourself again. Please ensure that your personal data is spelled correctly.
+        p3_html: <strong>Have you moved away?</strong><br>Even as a “non-Siegburger” you can still take part in many participation projects on the participation platform. Please change your place of residence at <a href="https://mitmachen.siegburg.de/account">https://mitmachen.siegburg.de/account</a>.
+        p4_html: If you have any questions, please do not hesitate to contact us at <a href="mailto:mitmachen@siegburg.de">mitmachen@siegburg.de</a>.
+        signature_html: Thank you for your participation.
+      user_reverification_succeeded:
+        subject: Your account verification has been completed
+        hi: Dear Mr/Mrs %{last_name},
+        p1_html: The verification of your user account on the Siegburger Participation platform has been completed. This means you can take part in participation projects that require a verified account (e.g. citizen budget).
+        signature_html: Thank you for your participation.
       new_topic:
         subject: New Topic added to Consul
         hi: Hello %{username},

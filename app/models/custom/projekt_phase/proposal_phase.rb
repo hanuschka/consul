@@ -4,7 +4,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
 
   has_many :base_selection_proposals, -> { base_selection }, foreign_key: :projekt_phase_id, class_name: "Proposal"
 
-  after_create :create_map_location
+  after_create :copy_map_settings_from_projekt
 
   def phase_activated?
     active?

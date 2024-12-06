@@ -18,6 +18,9 @@
             <%= t("custom.#{i18n_scope}.form.image_upload.bottom_line",
                   default: t("custom.user_resources.image_upload.bottom_line_default")) %>
           </div>
+          <div class="user-resource-image-upload--hint">
+            <%= t("custom.user_resources.image_upload.max_image_size", size: Setting["uploads.images.max_size"]) %>
+          </div>
         </div>
       </div>
     </div>

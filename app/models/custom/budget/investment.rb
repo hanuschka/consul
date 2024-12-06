@@ -20,12 +20,12 @@ class Budget
 
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
     validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
+    validate :description_sanitized #custom
 
     def self.sort_by_ballot_line_weight
-      left_joins(:budget_ballot_lines)
+      left_joins(budget_ballot_lines: :ballot)
         .group("budget_investments.id")
-        .select("budget_investments.*, COALESCE(SUM(budget_ballot_lines.line_weight), 0) AS total_ballot_line_weight")
-        .order("total_ballot_line_weight DESC")
+        .order(Arel.sql("COALESCE(SUM(CASE WHEN budget_ballots.conditional = false THEN budget_ballot_lines.line_weight ELSE 0 END), 0) DESC"))
     end
 
     def register_selection(user, vote_weight = 1)
@@ -77,5 +77,14 @@ class Budget
         selected? && budget.published_prices? &&
         price_explanation.present?
     end
+
+    private
+
+      def description_sanitized
+        sanitized_description = ActionController::Base.helpers.strip_tags(description).gsub("\n", '').gsub("\r", '').gsub(" ", '').gsub(/^$\n/, '').gsub(/[\u202F\u00A0\u2000\u2001\u2003]/, "")
+
+        errors.add(:description, :too_long, message: 'too long text') if
+          sanitized_description.length > Setting[ "extended_option.proposals.description_max_length"].to_i
+      end
   end
 end

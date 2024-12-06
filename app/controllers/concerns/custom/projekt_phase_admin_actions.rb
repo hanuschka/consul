@@ -167,7 +167,7 @@ module ProjektPhaseAdminActions
   def map
     authorize!(:map, @projekt_phase)
 
-    @projekt_phase.create_map_location unless @projekt_phase.map_location.present?
+    @projekt_phase.copy_map_settings unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
 
     render "custom/admin/projekt_phases/map"
@@ -179,22 +179,6 @@ module ProjektPhaseAdminActions
     authorize!(:update_map, map_location)
 
     map_location.update!(map_location_params)
-
-    redirect_to namespace_projekt_phase_path(action: "map"),
-      notice: t("admin.settings.index.map.flash.update")
-  end
-
-  def copy_map_settings_from_projekt
-    authorize!(:copy_map_settings_from_projekt, @projekt_phase)
-
-    unless @projekt_phase.map_location.latitude == @projekt_phase.projekt.map_location.latitude &&
-           @projekt_phase.map_location.longitude == @projekt_phase.projekt.map_location.longitude
-      @projekt_phase.map_location = @projekt_phase.projekt.map_location.dup
-    end
-
-    @projekt_phase.projekt.map_layers.each do |map_layer|
-      @projekt_phase.map_layers << map_layer.dup unless @projekt_phase.map_layers.any? { |ml| ml.name == map_layer.name }
-    end
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")

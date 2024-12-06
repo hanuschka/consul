@@ -21,7 +21,7 @@ class Projekts::SerializeForOverview < ApplicationService
 
     base[:activated] = @projekt.activated?
     base[:page_published] = @projekt.page.status == "published"
-    # base[:show_in_overview_page] = @projekt.feature?("general.show_in_overview_page")
+    base[:show_in_overview_page] = @projekt.feature?("general.show_in_overview_page")
     base[:mark_as_underway] = @projekt.feature?("general.consider_underway")
     base[:has_hard_individual_groups] = @projekt.hard_individual_group_values.any?
     base[:in_individual_list] = @projekt.feature?("general.show_in_individual_list")

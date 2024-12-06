@@ -26,8 +26,12 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
     end
 
     def latest_proposals
-      Proposal.published.not_archived.with_current_projekt
-        .sort_by_created_at.limit(@proposals_limit)
+      Proposal.published
+              .not_archived
+              .not_retired
+              .with_current_projekt
+              .sort_by_created_at
+              .limit(@proposals_limit)
     end
 
     def latest_investment_proposals

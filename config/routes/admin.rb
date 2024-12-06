@@ -10,7 +10,6 @@ namespace :admin do
       get :settings
       get :map
       patch :update_map
-      put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -295,6 +294,7 @@ namespace :admin do
   end
 
   resources :users, only: [:index, :show, :edit, :update] do
+    get :reverify, on: :collection #custom
     resources :audits, only: :show, controller: "user_audits"
   end
 

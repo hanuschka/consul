@@ -119,7 +119,7 @@
               </div>
             <% end %>
 
-            <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? && can?(:show, @proposal.community) %>
+            <% if can?(:show, @proposal.community) %>
               <div class="proposal-resources-section">
                 <%= render Shared::CollapseComponent.new(opened_by_default: true) do |c| %>
                   <% c.with_head do %>
@@ -128,9 +128,11 @@
                     </h3>
                   <% end %>
                   <% c.with_body do %>
-                    <%= link_to t("community.show.sidebar.new_topic"),
-                                create_topic_link(@proposal.community),
-                                class: "button expanded" %>
+                    <% if can?(:create_topic, @proposal.community) %>
+                      <%= link_to t("community.show.sidebar.new_topic"),
+                                  create_topic_link(@proposal.community),
+                                  class: "button expanded" %>
+                    <% end %>
                     <%= render(
                       Shared::ResourcesListComponent.new(
                         resources: @proposal.community.topics,
@@ -222,7 +224,7 @@
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.show_community_button_in_proposal_sidebar") && !current_user&.guest? && can?(:show, @proposal.community) %>
+        <% if can?(:show, @proposal.community) %>
           <%= render(Shared::SidebarCardComponent.new(
               title: t("custom.proposals.show.community_section.title"),
               icon_name: "users")
@@ -244,12 +246,11 @@
                 <%= t("custom.proposals.show.community_section.comments_count") %>
               </div>
               <%= render(Sidebar::UsersListComponent.new(users: @proposal.community.participants)) %>
-              <% participate_button_text = t("custom.community.sidebar.particapate") %>
-            <% else %>
-                <%= t("custom.proposals.show.community_section.description_create_first") %>
-                <% participate_button_text = t("custom.community.sidebar.be_first") %>
+              <%= link_to t("custom.community.sidebar.particapate"), community_path(@proposal.community), class: "button" %>
+            <% elsif can?(:create_topic, @proposal.community) %>
+              <%= t("custom.proposals.show.community_section.description_create_first") %>
+              <%= link_to t("custom.community.sidebar.be_first"), community_path(@proposal.community), class: "button" %>
             <% end %>
-            <%= link_to participate_button_text, community_path(@proposal.community), class: "button" %>
           <% end %>
         <% end %>
 

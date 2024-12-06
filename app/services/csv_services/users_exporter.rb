@@ -26,7 +26,7 @@ module CsvServices
           "Stadt", "Adresse", "Postleitzahl", "Gebiet",
           "Dokument", "Dokument (4 letzten Ziffern)",
           "Nutzer angelegt am", "letzter Login am",
-          "Geschlecht", "Geburtsdatum", "Rollen", "Unique Stamp", "Verifiziert am"
+          "Geschlecht", "Geburtsdatum", "Rollen", "Unique Stamp", "Verifiziert am", "Reverifizieren"
         ]
       end
 
@@ -43,6 +43,7 @@ module CsvServices
         user_row.push(display_user_roles(user))
         user_row.push(user.unique_stamp.to_s)
         user_row.push(user.verified_at.present? ? I18n.l(user.verified_at, format: "%d.%m.%Y") : "")
+        user_row.push(I18n.t("shared.#{user.reverify ? 'yes' : 'no'}"))
 
         user_row
       end

@@ -79,6 +79,3 @@ namespace :api do
 end
 
 post "iframe_sessions", to: "iframe_sessions#create"
-
-# get "/admin/projekts/:projekt_id/frame_phases_restrictions", to: "admin/projekt_phases#frame_phases_restrictions", as: :admin_frame_phase_restrictons
-get "/admin/projekts/:projekt_id/frame_new_phase_selector", to: "admin/projekt_phases#frame_new_phase_selector", as: :admin_frame_new_phase_selector

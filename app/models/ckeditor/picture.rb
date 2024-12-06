@@ -5,7 +5,7 @@ class Ckeditor::Picture < ApplicationRecord
 
   EDITORS_WITH_FULL_URL = %w[newsletter_body].freeze
   ALLOWED_CONTENT_TYPES = %w[image/jpg image/jpeg image/png image/gif].freeze
-  MAX_FILE_SIZE = 2.megabytes
+  MAX_FILE_SIZE = Setting["uploads.images.max_size"].to_i.megabytes
 
   has_one_attached :storage_data
 

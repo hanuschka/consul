@@ -10,7 +10,6 @@ module ProjektPhaseAdminActions
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
       :create, :order_phases, :frame_phases_restrictions,
-      :frame_new_phase_selector
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -350,14 +349,6 @@ module ProjektPhaseAdminActions
     @process = @projekt_phase.legislation_process
 
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
-  end
-
-  def frame_new_phase_selector
-    @projekt = Projekt.find(params[:projekt_id])
-
-    authorize!(:edit, @projekt)
-
-    render
   end
 
   # def frame_phases_restrictions

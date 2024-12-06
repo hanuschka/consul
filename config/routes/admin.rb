@@ -77,6 +77,7 @@ namespace :admin do
       get :order_up
       get :order_down
       patch :update_standard_phase
+      get :frame_new_phase_selector
       patch :quick_update
       patch :update_map
     end

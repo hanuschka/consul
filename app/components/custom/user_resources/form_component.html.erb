@@ -1,9 +1,4 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %>">
-  <%# <% if Rails.env.development? %> %>
-  <%#   <% iframe_path = "#{Rails.application.secrets.dt[:url]}/proposal_assistant" %1> %>
-  <%#   <iframe src="<%= iframe_path %1>" frameborder="0" allow="microphone" class="proposal-assistant-iframe"></iframe> %>
-  <%# <% end %1> %>
-
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
     <%= back_link %>
 

@@ -2,7 +2,9 @@
 class Api::ImagesController < Api::BaseController
   def create
     pictures = params[:images].map do |image|
-      Ckeditor::Picture.new(data: image)
+      picture = Ckeditor::Picture.new
+      picture.attach_uploaded_file(image)
+      picture
     end
 
     pictures.each(&:save)

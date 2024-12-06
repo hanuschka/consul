@@ -114,6 +114,11 @@ class Projekts::ImportService < ApplicationService
                 i.variant(resize_to_fill: [1500, 750]),
                 only_path: true
               ),
+            medium_url:
+              url_helpers.rails_representation_url(
+                i.variant(resize_to_fill: [823, 412]),
+                only_path: true
+              ),
             thumb_url:
               url_helpers.rails_representation_url(
                 i.variant(resize_to_fill: [426, 212]),

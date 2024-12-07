@@ -2590,6 +2590,7 @@ ActiveRecord::Schema.define(version: 2024_11_21_213430) do
     t.datetime "temporary_auth_token_valid_until"
     t.string "frame_sign_in_token"
     t.datetime "frame_sign_in_token_valid_until"
+    t.boolean "on_dt", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

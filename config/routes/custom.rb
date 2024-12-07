@@ -50,6 +50,12 @@ namespace :api do
     resources :projekt_content_blocks, only: [:create]
   end
 
+  resources :users, only: [] do
+    member do
+      patch :mark_as_on_dt
+    end
+  end
+
   resources :projekt_content_blocks, only: [:destroy, :update] do
     member do
       patch :update_position

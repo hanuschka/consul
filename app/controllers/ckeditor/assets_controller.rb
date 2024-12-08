@@ -42,11 +42,11 @@ class Ckeditor::AssetsController < ApplicationController
       ]
 
       @assets.map do |asset|
-        asset.attributes.merge(
+        asset.attributes.symbolize_keys.slice(*allowed_attributes).merge(
           url: asset.url_content(editor_id: params[:editor_id]),
           thumb_url: asset.url_thumb
         )
-      end.to_json(only: allowed_attributes)
+      end
     end
 
     def json

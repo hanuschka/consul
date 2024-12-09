@@ -11,7 +11,7 @@ class Ckeditor::DocumentsController < ApplicationController
     document.attach_uploaded_file(params[:upload])
 
     if document.save
-      render json: { url: document.url_content(editor_id: params[:editor_id]) }
+      render json: document.to_json(only: allowed_attributes)
     else
       render json: { error: { message: document.errors.messages.values.flatten.join(", ") }}
     end
@@ -21,7 +21,7 @@ class Ckeditor::DocumentsController < ApplicationController
     document = Ckeditor::Document.find(params[:id])
     # authorize! :update, document
     document.update!(document_params)
-    render json: { url: document.url_content(editor_id: params[:editor_id]) }
+    render json: document.to_json(only: allowed_attributes)
   end
 
   def destroy
@@ -39,6 +39,10 @@ class Ckeditor::DocumentsController < ApplicationController
 
     def document_params
       params.require(:document).permit(:title, :description)
+    end
+
+    def allowed_attributes
+      %i[id data_file_name data_content_type data_file_size width height created_at title description alt_text url thumb_url]
     end
 
     def set_cors_headers

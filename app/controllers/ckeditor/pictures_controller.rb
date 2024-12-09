@@ -11,7 +11,10 @@ class Ckeditor::PicturesController < ApplicationController
     picture.attach_uploaded_file(params[:upload])
 
     if picture.save
-      render json: picture.to_json(only: allowed_attributes)
+      render json: picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
+        url: picture.url_content(editor_id: params[:editor_id]),
+        thumb_url: picture.url_thumb
+      )
     else
       render json: { error: { message: picture.errors.messages.values.flatten.join(", ") }}
     end
@@ -21,7 +24,10 @@ class Ckeditor::PicturesController < ApplicationController
     picture = Ckeditor::Picture.find(params[:id])
     # authorize! :update, picture
     picture.update!(picture_params)
-    render json: picture.to_json(only: allowed_attributes)
+    render json: picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
+      url: picture.url_content(editor_id: params[:editor_id]),
+      thumb_url: picture.url_thumb
+    )
   end
 
   def destroy

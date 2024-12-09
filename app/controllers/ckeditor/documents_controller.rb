@@ -11,7 +11,9 @@ class Ckeditor::DocumentsController < ApplicationController
     document.attach_uploaded_file(params[:upload])
 
     if document.save
-      render json: document.to_json(only: allowed_attributes)
+      render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
+        url: document.url_content(editor_id: params[:editor_id])
+      )
     else
       render json: { error: { message: document.errors.messages.values.flatten.join(", ") }}
     end
@@ -21,7 +23,9 @@ class Ckeditor::DocumentsController < ApplicationController
     document = Ckeditor::Document.find(params[:id])
     # authorize! :update, document
     document.update!(document_params)
-    render json: document.to_json(only: allowed_attributes)
+    render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
+      url: document.url_content(editor_id: params[:editor_id])
+    )
   end
 
   def destroy

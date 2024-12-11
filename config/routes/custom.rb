@@ -44,6 +44,7 @@ namespace :api do
       patch :update_page
       patch :update_title_image
       patch :import
+      patch :update_managers_list
     end
     patch "projekt_settings", to: "projekt_settings#update"
 

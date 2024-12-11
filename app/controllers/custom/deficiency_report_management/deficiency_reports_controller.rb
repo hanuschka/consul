@@ -34,9 +34,8 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     respond_to do |format|
       format.html
       format.pdf do
-        render pdf: "Mangelmeldung - #{@deficiency_report.id}",
-               page_size: "A4",
-               show_as_html: Rails.env.test? || params.key?("debug")
+        pdf_content = PdfServices::DeficiencyReportExporter.call(@deficiency_report)
+        send_data pdf_content.render, filename: "deficiency_report_#{params[:id]}.pdf", type: "application/pdf"
       end
     end
   end

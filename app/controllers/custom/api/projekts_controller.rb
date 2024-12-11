@@ -3,7 +3,8 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt, only: [
-    :update, :update_page, :import, :update_title_image
+    :update, :update_page, :import, :update_title_image,
+    :update_managers_list
   ]
   before_action :process_tags, only: [:update]
 
@@ -92,6 +93,44 @@ class Api::ProjektsController < Api::BaseController
     else
       render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
     end
+  end
+
+  def update_managers_list
+    if params[:allowed_projekt_managers_ids].present?
+      params[:allowed_projekt_managers_ids].each do |id|
+        projekt_manager = ProjektManager.find_by(user_id: id)
+
+        next unless projekt_manager.present?
+
+        assignment = projekt_manager.projekt_manager_assignments.find_or_create_by(
+          projekt_id: @projekt.id
+        )
+
+        if assignment.permissions.exclude?("manage")
+          assignment.permissions << "manage"
+          assignment.save!
+        end
+      end
+    end
+
+    if params[:not_allowed_projekt_managers_ids].present?
+      params[:not_allowed_projekt_managers_ids].each do |id|
+        projekt_manager = ProjektManager.find_by(user_id: id)
+
+        next unless projekt_manager.present?
+
+        assignment = projekt_manager.projekt_manager_assignments.find_or_create_by(
+          projekt_id: @projekt.id
+        )
+
+        if assignment.permissions.include?("manage")
+          assignment.permissions = assignment.permissions  - ["manage"]
+          assignment.save!
+        end
+      end
+    end
+
+    render json: { status: { message: "Users updated" }}
   end
 
   private

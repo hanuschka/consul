@@ -26,3 +26,4 @@ gem "sentry-rails"
 gem "acts_as_list"
 gem "jwt"
 gem 'rack-cors'
+gem 'prawn', '~> 2.1', require: false

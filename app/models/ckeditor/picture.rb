@@ -25,9 +25,13 @@ class Ckeditor::Picture < ApplicationRecord
   end
 
   def url_thumb
-    rails_representation_url(
-      storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
-    )
+    if data_content_type == "image/gif"
+      rails_blob_url(storage_data, only_path: true)
+    else
+      rails_representation_url(
+        storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
+      )
+    end
   end
 
   def attach_uploaded_file(data)

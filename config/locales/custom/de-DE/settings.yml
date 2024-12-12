@@ -142,6 +142,8 @@ de:
       matomo_description: Aktiviert Matomo
       melderegister: Melderegisterabgleich
       melderegister_description: Aktiviert den Melderegisterabgleich der Nutzer*innen
+      bund_id_verification: BundID Registrierung und Anmeldung
+      bund_id_verification_description: Aktivieren Sie diese Einstellung, um die BundID-Registrierung/Anmeldung freizuschalten
     remote_census:
       general:
         endpoint: "Endpunkt"

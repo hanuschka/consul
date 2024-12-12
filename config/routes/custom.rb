@@ -44,10 +44,17 @@ namespace :api do
       patch :update_page
       patch :update_title_image
       patch :import
+      patch :update_managers_list
     end
     patch "projekt_settings", to: "projekt_settings#update"
 
     resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :users, only: [] do
+    member do
+      patch :mark_as_on_dt
+    end
   end
 
   resources :projekt_content_blocks, only: [:destroy, :update] do
@@ -79,6 +86,3 @@ namespace :api do
 end
 
 post "iframe_sessions", to: "iframe_sessions#create"
-
-# get "/admin/projekts/:projekt_id/frame_phases_restrictions", to: "admin/projekt_phases#frame_phases_restrictions", as: :admin_frame_phase_restrictons
-get "/admin/projekts/:projekt_id/frame_new_phase_selector", to: "admin/projekt_phases#frame_new_phase_selector", as: :admin_frame_new_phase_selector

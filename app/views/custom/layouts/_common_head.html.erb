@@ -31,9 +31,10 @@
     <% if Rails.application.secrets.matomo_site_id.present? %>
       <%= render "layouts/matomo" %>
     <% end %>
-    <%= javascript_include_tag "klaro/config.js", defer: true %>
-    <%= javascript_include_tag "klaro/klaro.js", defer: true %>
   <% end %>
+
+  <%= javascript_include_tag "klaro/config.js", defer: true %>
+  <%= javascript_include_tag "klaro/klaro.js", defer: true %>
 <% end %>
 
 <% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
@@ -46,7 +47,11 @@
     }
 
     function googleTranslateElementInit() {
-      new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element');
+      if ( $(".hamburger-menu:visible").length ) {
+        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_mobile');
+      } else {
+        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_desktop');
+      }
     }
 
     $(document).on('turbolinks:load', function() {

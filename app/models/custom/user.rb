@@ -26,11 +26,10 @@ class User < ApplicationRecord
   before_validation :strip_whitespace
 
   before_create :set_default_privacy_settings_to_false, if: :gdpr_conformity?
-  after_create :attempt_verification
+  after_create :attempt_verification, if: -> { Setting["feature.melderegister"].present? }
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
 
-  # has_secure_token :temporary_auth_token
   has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -117,6 +116,7 @@ class User < ApplicationRecord
     take_votes_from_erased_user
     update!(
       verified_at: Time.current,
+      geozone_id: geozone_with_plz&.id,
       unique_stamp: prepare_unique_stamp
     )
 
@@ -127,6 +127,7 @@ class User < ApplicationRecord
   def unverify!
     update!(
       verified_at: nil,
+      geozone_id: nil,
       unique_stamp: nil
     )
   end
@@ -284,18 +285,6 @@ class User < ApplicationRecord
   def frame_sign_in_token_valid?
     frame_sign_in_token_valid_until > Time.current
   end
-
-  # def generate_temporary_auth_token!
-  #   regenerate_temporary_auth_token
-  #
-  #   update!(temporary_auth_token_valid_until: 1.hour.from_now)
-  # end
-  #
-  # def temporary_auth_token_valid?
-  #   return false if temporary_auth_token_valid_until.nil?
-  #
-  #   temporary_auth_token_valid_until > Time.current
-  # end
 
   private
 

@@ -66,6 +66,8 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def reverify
+    return if Setting["feature.melderegister"].blank?
+
     VerificationServices::UsersReverifier.call
     redirect_to admin_users_path, notice: t("custom.admin.users.reverify_success_notice")
   end

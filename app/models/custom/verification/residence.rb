@@ -58,8 +58,12 @@ class Verification::Residence
       registered_address_id:   registered_address_id
     )
 
-    user.save!
-    user.verify!
+    if Setting["feature.melderegister"].present?
+      user.save!
+      user.verify!
+    else
+      user.save!
+    end
   end
 
   def document_required?

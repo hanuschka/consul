@@ -10,7 +10,6 @@ namespace :admin do
       get :settings
       get :map
       patch :update_map
-      put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -78,6 +77,7 @@ namespace :admin do
       get :order_up
       get :order_down
       patch :update_standard_phase
+      get :frame_new_phase_selector
       patch :quick_update
       patch :update_map
     end

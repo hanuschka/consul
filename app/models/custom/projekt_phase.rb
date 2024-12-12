@@ -149,7 +149,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return if user&.has_pm_permission_to?("manage", projekt)
+    return if user&.administrator? || user&.projekt_manager?
 
     return :phase_not_active if not_active?
     return :phase_expired if expired?
@@ -244,17 +244,6 @@ class ProjektPhase < ApplicationRecord
     else
       nil
     end
-  end
-
-  def create_map_location
-    return if map_location.present?
-
-    MapLocation.create!(
-      latitude: Setting["map.latitude"],
-      longitude: Setting["map.longitude"],
-      zoom: Setting["map.zoom"],
-      projekt_phase_id: id
-    )
   end
 
   def settings_categories
@@ -373,6 +362,17 @@ class ProjektPhase < ApplicationRecord
 
       phase_settings.each do |key, value|
         settings.create!(key: key, value: value)
+      end
+    end
+
+    def copy_map_settings_from_projekt
+      return if map_location.present?
+
+      map_location = projekt.map_location&.dup
+      map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+
+      projekt.map_layers.each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 end

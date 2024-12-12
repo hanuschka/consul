@@ -60,6 +60,7 @@ class Setting < ApplicationRecord
         "feature.sdg": false,
         "feature.machine_learning": false,
         "feature.matomo": false,
+        "feature.melderegister": false,
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,

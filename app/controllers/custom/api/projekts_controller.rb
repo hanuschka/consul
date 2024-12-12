@@ -3,12 +3,12 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt, only: [
-    :update, :update_page, :import
+    :update, :update_page, :import, :update_title_image,
+    :update_managers_list
   ]
   before_action :process_tags, only: [:update]
 
   skip_authorization_check
-  skip_forgery_protection
 
   # def index
   #   projekts = Projekt.current_for_import.regular
@@ -75,11 +75,62 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def update_page
-    if @projekt.page.update!(projekt_page_params)
+    if @projekt.page.update(projekt_page_params)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
     else
       render json: { message: "Error updating projekt page" }
     end
+  end
+
+  def update_title_image
+    @projekt.page.image = Image.new(
+      attachment: params[:title_image],
+      user: User.administrators.first
+    )
+
+    if @projekt.page.save
+      render json: { status: { message: "Projekt page title image updated" }}
+    else
+      render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
+    end
+  end
+
+  def update_managers_list
+    if params[:allowed_projekt_managers_ids].present?
+      params[:allowed_projekt_managers_ids].each do |id|
+        projekt_manager = ProjektManager.find_by(user_id: id)
+
+        next unless projekt_manager.present?
+
+        assignment = projekt_manager.projekt_manager_assignments.find_or_create_by(
+          projekt_id: @projekt.id
+        )
+
+        if assignment.permissions.exclude?("manage")
+          assignment.permissions << "manage"
+          assignment.save!
+        end
+      end
+    end
+
+    if params[:not_allowed_projekt_managers_ids].present?
+      params[:not_allowed_projekt_managers_ids].each do |id|
+        projekt_manager = ProjektManager.find_by(user_id: id)
+
+        next unless projekt_manager.present?
+
+        assignment = projekt_manager.projekt_manager_assignments.find_or_create_by(
+          projekt_id: @projekt.id
+        )
+
+        if assignment.permissions.include?("manage")
+          assignment.permissions = assignment.permissions  - ["manage"]
+          assignment.save!
+        end
+      end
+    end
+
+    render json: { status: { message: "Users updated" }}
   end
 
   private
@@ -121,7 +172,7 @@ class Api::ProjektsController < Api::BaseController
   def import_projekt_params
     params.require(:projekt).permit(
       :title,
-      :brief_description,
+      :subtitle,
       :summary,
       :greeting,
       :additional_information,

@@ -30,6 +30,14 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   def show
     @deficiency_report = DeficiencyReport.find(params[:id])
     @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf_content = PdfServices::DeficiencyReportExporter.call(@deficiency_report)
+        send_data pdf_content.render, filename: "deficiency_report_#{params[:id]}.pdf", type: "application/pdf"
+      end
+    end
   end
 
   def edit

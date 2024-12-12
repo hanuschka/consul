@@ -6,7 +6,6 @@ class Api::ProjektContentBlocksController < Api::BaseController
 
   # Add authorization
   skip_authorization_check
-  skip_forgery_protection
 
   def create
     @content_block = @projekt.content_blocks.build(

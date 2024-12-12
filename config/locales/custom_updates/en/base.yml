@@ -186,6 +186,7 @@ en:
         report_text: Report this entry if it contains unacceptable content or infringes third party rights.
         report_title: Report
       download: Download
+      download_pdf: Download PDF
       sort_by: Sort by
       filter_by: Filter by
     tag_names:

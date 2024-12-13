@@ -5,10 +5,19 @@
 
   <%= f.select :deficiency_report_category_id, DeficiencyReport::Category.all.map { |df| [df.name, df.id] } %>
 
-  <%= f.select :deficiency_report_officer_id, DeficiencyReport::Officer.all.map { |df| [df.name, df.id] },
-    { prompt: t("custom.deficiency_reports.show.sidebar.select_officer") },
-    { onchange: "$('#deficiency_report_assigned_at').val(new Date().toISOString());" } %>
-  <%= f.hidden_field :assigned_at %>
+  <%= f.label :responsible %>
+  <div style="column-count:3;margin-top:5px;">
+    <%= f.collection_radio_buttons :officer_id, DeficiencyReport::Officer.all, :id, :name do |rb| %>
+      <div>
+        <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report[officer_group_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+      </div>
+    <% end %>
+    <%= f.collection_radio_buttons :officer_group_id, DeficiencyReport::OfficerGroup.all, :id, :name do |rb| %>
+      <div>
+        <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report[officer_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+      </div>
+    <% end %>
+  </div>
 
   <%= f.select :deficiency_report_status_id, DeficiencyReport::Status.all.map { |df| [df.title, df.id] } %>
 

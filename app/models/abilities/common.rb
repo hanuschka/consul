@@ -173,8 +173,22 @@ module Abilities
 
       can :show, Community do |community|
         return false unless community.communitable.present?
+        return false unless community.communitable.projekt_phase_id.present?
 
-        community.communitable.projekt_phase.permission_problem(user).blank?
+        projekt_phase = community.communitable.projekt_phase
+
+        projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
+          (community.communitable.projekt_phase.permission_problem(user).blank? || community.topics.any?)
+      end
+
+      can :create_topic, Community do |community|
+        return false unless community.communitable.present?
+        return false unless community.communitable.projekt_phase_id.present?
+
+        projekt_phase = community.communitable.projekt_phase
+
+        projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
+          community.communitable.projekt_phase.permission_problem(user).blank?
       end
     end
   end

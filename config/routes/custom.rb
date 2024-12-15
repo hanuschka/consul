@@ -2,8 +2,8 @@ match "ckeditor/assets", to: "ckeditor/assets#preflight_check", via: :options
 post "ckeditor/assets", to: "ckeditor/assets#index"
 
 
-match "ckeditor/pictures", to: "ckeditor/pictures#preflight_check", via: :options
-match "ckeditor/documents", to: "ckeditor/documents#preflight_check", via: :options
+match "ckeditor/pictures/:id", to: "ckeditor/pictures#preflight_check", via: :options
+match "ckeditor/documents/:id", to: "ckeditor/documents#preflight_check", via: :options
 
 namespace :ckeditor do
   resources :pictures, only: [:create, :update, :destroy]

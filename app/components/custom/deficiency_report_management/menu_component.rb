@@ -13,7 +13,8 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
       statuses_link,
       settings_link,
       official_answer_templates_link,
-      areas_link
+      areas_link,
+      officer_groups_link
     ].compact
   end
 
@@ -86,6 +87,16 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
         t("custom.admin.menu.deficiency_reports.areas"),
         deficiency_report_management_areas_path,
         controller_name == "areas"
+      ]
+    end
+
+    def officer_groups_link
+      return unless can?(:index, DeficiencyReport::OfficerGroup)
+
+      [
+        t("custom.admin.menu.deficiency_reports.officer_groups"),
+        deficiency_report_management_officer_groups_path,
+        controller_name == "officer_groups"
       ]
     end
 end

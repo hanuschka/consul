@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_06_155206) do
+ActiveRecord::Schema.define(version: 2024_12_13_122426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -716,8 +716,9 @@ ActiveRecord::Schema.define(version: 2024_12_06_155206) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "warning_text", default: ""
-    t.bigint "deficiency_report_officer_id"
-    t.index ["deficiency_report_officer_id"], name: "index_dr_categories_on_dr_officer_id"
+    t.string "default_responsible_type"
+    t.bigint "default_responsible_id"
+    t.index ["default_responsible_type", "default_responsible_id"], name: "index_deficiency_report_categories_on_default_responsible"
   end
 
   create_table "deficiency_report_category_translations", force: :cascade do |t|
@@ -735,6 +736,22 @@ ActiveRecord::Schema.define(version: 2024_12_06_155206) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_deficiency_report_managers_on_user_id"
+  end
+
+  create_table "deficiency_report_officer_group_assignments", force: :cascade do |t|
+    t.bigint "deficiency_report_officer_id", null: false
+    t.bigint "deficiency_report_officer_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_officer_group_id"], name: "index_dr_officer_group_assignments_on_dr_officer_group_id"
+    t.index ["deficiency_report_officer_id", "deficiency_report_officer_group_id"], name: "index_dr_officer_group_assignments_on_dro_id_and_drog_id", unique: true
+    t.index ["deficiency_report_officer_id"], name: "index_dr_officer_group_assignments_on_dr_officer_id"
+  end
+
+  create_table "deficiency_report_officer_groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_officers", force: :cascade do |t|
@@ -808,6 +825,8 @@ ActiveRecord::Schema.define(version: 2024_12_06_155206) do
     t.boolean "notify_officer_about_new_comments", default: false
     t.datetime "notified_officer_about_new_comments_datetime"
     t.boolean "admin_accepted", default: false
+    t.string "responsible_type"
+    t.bigint "responsible_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -819,6 +838,7 @@ ActiveRecord::Schema.define(version: 2024_12_06_155206) do
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
+    t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
     t.index ["tsv"], name: "index_deficiency_reports_on_tsv", using: :gin
   end
 
@@ -2767,8 +2787,9 @@ ActiveRecord::Schema.define(version: 2024_12_06_155206) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
-  add_foreign_key "deficiency_report_categories", "deficiency_report_officers"
   add_foreign_key "deficiency_report_managers", "users"
+  add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
+  add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_areas"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"

@@ -19,10 +19,19 @@
 
   <div class="clear">
     <div class="small-12 column">
-      <%= f.label :default_deficiency_report_officer, t("custom.admin.deficiency_reports.categories.category.default_deficiency_report_officer") %>
-      <%= f.collection_radio_buttons :deficiency_report_officer_id, @df_officers, :id, :name do |rb| %>
-        <%= rb.radio_button + rb.label(style: "margin-right:1rem;") { rb.text } %>
-      <% end %>
+      <%= label_tag t("custom.admin.deficiency_reports.categories.category.default_deficiency_report_officer") %>
+      <div style="column-count:3;margin-top:10px;">
+        <%= f.collection_radio_buttons :default_officer_id, DeficiencyReport::Officer.all, :id, :name do |rb| %>
+          <div>
+            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report_category[officer_group_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+          </div>
+        <% end %>
+        <%= f.collection_radio_buttons :default_officer_group_id, DeficiencyReport::OfficerGroup.all, :id, :name do |rb| %>
+          <div>
+            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report_category[officer_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 

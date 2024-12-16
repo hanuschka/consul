@@ -116,6 +116,19 @@ de:
             title: Vorlage bearbeiten
           form:
             submit_button: Speichern
+        officer_groups:
+          officer_group:
+            name: Name
+            officers: Sachbearbeiter*innen
+          destroy:
+            destroyed_successfully: Die Sachbearbeitergruppe wurde erfolgreich gelöscht.
+          edit:
+            editing: Sachbearbeitergruppe bearbeiten
+          index:
+            create: Sachbearbeitergruppe erstellen
+            title: Sachbearbeitergruppen
+          new:
+            creating: Neue Sachbearbeitergruppe erstellen
         deficiency_report:
           category: Kategorie
           officer: Sachbearbeiter*in
@@ -225,6 +238,7 @@ de:
           statuses: Status definieren
           official_answer_templates: Antwortvorlagen
           areas: Gebiete
+          officer_groups: Sachbearbeitergruppen
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen

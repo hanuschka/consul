@@ -23,12 +23,12 @@
       <div style="column-count:3;margin-top:10px;">
         <%= f.collection_radio_buttons :default_officer_id, DeficiencyReport::Officer.all, :id, :name do |rb| %>
           <div>
-            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report_category[officer_group_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report_category[default_officer_group_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
           </div>
         <% end %>
         <%= f.collection_radio_buttons :default_officer_group_id, DeficiencyReport::OfficerGroup.all, :id, :name do |rb| %>
           <div>
-            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report_category[officer_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report_category[default_officer_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
           </div>
         <% end %>
       </div>

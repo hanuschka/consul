@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_13_122426) do
+ActiveRecord::Schema.define(version: 2024_12_19_141401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2154,6 +2154,15 @@ ActiveRecord::Schema.define(version: 2024_12_13_122426) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "registered_address_districts", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "default_deficiency_report_responsible_type"
+    t.bigint "default_deficiency_report_responsible_id"
+    t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible", unique: true
+  end
+
   create_table "registered_address_groupings", force: :cascade do |t|
     t.string "key"
     t.string "name"
@@ -2186,7 +2195,9 @@ ActiveRecord::Schema.define(version: 2024_12_13_122426) do
     t.datetime "updated_at", null: false
     t.bigint "registered_address_street_id"
     t.integer "registered_address_city_id"
+    t.bigint "registered_address_district_id"
     t.index ["groupings"], name: "index_registered_addresses_on_groupings", using: :gin
+    t.index ["registered_address_district_id"], name: "index_registered_addresses_on_registered_address_district_id"
     t.index ["registered_address_street_id"], name: "index_registered_addresses_on_registered_address_street_id"
   end
 
@@ -2876,6 +2887,7 @@ ActiveRecord::Schema.define(version: 2024_12_13_122426) do
   add_foreign_key "proposals", "sentiments"
   add_foreign_key "registered_address_street_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_street_projekt_phases", "registered_address_streets"
+  add_foreign_key "registered_addresses", "registered_address_districts"
   add_foreign_key "registered_addresses", "registered_address_streets"
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"

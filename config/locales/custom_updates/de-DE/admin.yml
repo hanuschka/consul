@@ -194,6 +194,9 @@ de:
             creating: Neues Gebiet erstellen
           area:
             name: Name
+        districts:
+          index:
+            title: Gebiete
       geozones:
         geozone:
           postal_codes: Postleitzahlen
@@ -237,7 +240,8 @@ de:
           settings: Funktionen
           statuses: Status definieren
           official_answer_templates: Antwortvorlagen
-          areas: Gebiete
+          areas: Alte Gebiete
+          districts: Gebiete
           officer_groups: Sachbearbeitergruppen
         deficiency_reports_title: Mängelmelder
         projekts: Projekte

@@ -90,7 +90,7 @@ class DeficiencyReportsController < ApplicationController
     end
 
     @deficiency_report = DeficiencyReport.new(filtered_deficiency_report_params.merge(author: current_user, status: status))
-    @deficiency_report.responsible = @deficiency_report.category&.default_responsible
+    @deficiency_report.responsible = @deficiency_report.get_default_responsible
 
     if @deficiency_report.save
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call

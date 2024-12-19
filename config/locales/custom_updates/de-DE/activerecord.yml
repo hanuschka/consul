@@ -281,3 +281,5 @@ de:
       formular_answer_document:
         title: Titel
         attachment: Anhang
+      registered_address/district:
+        default_deficiency_report_responsible: Standardmäßig Sachbearbeiter*in

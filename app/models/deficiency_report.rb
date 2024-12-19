@@ -170,6 +170,11 @@ class DeficiencyReport < ApplicationRecord
     true
   end
 
+  def get_default_responsible
+    map_location&.get_district&.default_deficiency_report_responsible ||
+      category&.default_responsible
+  end
+
   private
 
     def validate_area_presence?

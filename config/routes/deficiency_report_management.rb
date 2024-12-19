@@ -39,6 +39,7 @@ namespace :deficiency_report_management do
   end
 
   resources :officer_groups, except: :show
+  resources :districts, only: [:index, :edit, :update]
 
   resources :memos, only: %i[create] do
     member do

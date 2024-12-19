@@ -22,6 +22,7 @@ class Projekts::ImportService < ApplicationService
     projekt.assign_attributes(
       total_duration_start: projekt_params[:start_date],
       total_duration_end: projekt_params[:end_date],
+      from_dt: true,
       new_content_block_mode: true
     )
 

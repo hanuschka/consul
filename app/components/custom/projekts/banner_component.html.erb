@@ -4,7 +4,7 @@
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
           <% if show_embedded_controlls? %>
-            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
+            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[title]', title: "Titel bearbeiten") do %>
               <h1 class="custom-page--banner-title">
                 <%= @custom_page.title %>
               </h1>
@@ -18,7 +18,7 @@
 
         <% if @custom_page.subtitle.present? || show_embedded_controlls? %>
           <% if show_embedded_controlls? %>
-            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
+            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]', title: "Untertitel bearbeiten") do %>
               <div class="custom-page--banner-description">
                 <% if show_embedded_controlls? %>
                   <%= @custom_page.subtitle.presence || " " %>
@@ -76,7 +76,11 @@
           <div class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="">
-            <label for="projektImageUploadInput" class="button -round-icon-button projekt-image-upload-button">
+            <label
+              for="projektImageUploadInput"
+              class="button -round-icon-button projekt-image-upload-button"
+              title="Bild hinzufügen / ändern"
+            >
               <i class="fas fa-pencil-alt"></i>
             </label>
             <input

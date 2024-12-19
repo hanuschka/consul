@@ -286,6 +286,10 @@ class User < ApplicationRecord
     frame_sign_in_token_valid_until > Time.current
   end
 
+  def sync_user_on_dt
+    Users::SyncUserUpdateJob.perform_later(self)
+  end
+
   private
 
     def geozone_with_plz

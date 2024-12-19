@@ -1,4 +1,4 @@
-class Projekts::OverviewProjektDestroyedJob < ApplicationJob
+class Projekts::SyncProjektDestroyedJob < ApplicationJob
   queue_as :default
 
   def perform(projekt_id)

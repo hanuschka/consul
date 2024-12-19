@@ -41,6 +41,15 @@ class DtApi
     )
   end
 
+  def update_user(user_id, user)
+    patch_with_auth(
+      "/users/#{user_id}",
+      body: {
+        user: user
+      }
+    )
+  end
+
   def post_with_auth(url, body:, multipart: false)
     self.class.post(
       url,

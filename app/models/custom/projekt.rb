@@ -103,14 +103,14 @@ class Projekt < ApplicationRecord
 
   before_save :assign_top_level_projekt_from_parent
 
-  after_update :note_updated_for_global_overview #, on: :update
-  after_touch :note_updated_for_global_overview
-  after_destroy :note_destroy_for_global_overview
+  after_update :note_updated_for_sync #, on: :update
+  after_touch :note_updated_for_sync
+  after_destroy :note_destroy_for_sync
 
   after_destroy :ensure_projekt_order_integrity
 
   def should_be_exported?
-    ApiClient.active_dt? && for_global_overview?
+    ApiClient.active_dt? && (for_global_overview? || from_dt?)
   end
 
   # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
@@ -780,21 +780,21 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def note_updated_for_global_overview
+    def note_updated_for_sync
       if should_be_exported?
         if hidden_at.present?
-          note_destroy_for_global_overview
+          note_destroy_for_sync
         else
-          Projekts::OverviewProjektUpdatedJob.perform_later(
+          Projekts::SyncProjektUpdatedJob.perform_later(
             self
           )
         end
       end
     end
 
-    def note_destroy_for_global_overview
+    def note_destroy_for_sync
       if should_be_exported?
-        Projekts::OverviewProjektDestroyedJob.perform_later(id)
+        Projekts::SyncProjektDestroyedJob.perform_later(id)
       end
     end
 end

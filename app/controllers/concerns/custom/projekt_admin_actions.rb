@@ -92,6 +92,20 @@ module ProjektAdminActions
     render "admin/projekt_phases/frame_new_phase_selector"
   end
 
+  def update_content_block
+    content_block = @projekt.content_blocks.find(params[:content_block_id])
+
+    if content_block.update(content_block_params)
+      flash[:notice] = "Inhaltsblock aktualisiert"
+
+      redirect_to action: :edit, anchor: params[:tab]
+    else
+      flash[:alert] = "Fehler beim Aktualisieren des Inhaltsblocks"
+
+      redirect_to action: :edit, anchor: params[:tab]
+    end
+  end
+
   private
 
     def projekt_params
@@ -107,6 +121,10 @@ module ProjektAdminActions
         projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
       ]
       params.require(:projekt).permit(attributes, translation_params(Projekt))
+    end
+
+    def content_block_params
+      params.require(:site_customization_content_block).permit(:body)
     end
 
     def process_tags

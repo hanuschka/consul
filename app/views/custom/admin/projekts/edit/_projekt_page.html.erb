@@ -37,7 +37,6 @@
     <hr>
 
     <%= render Images::NestedComponent.new(f, block_id: "projekt_page") %>
-
     <%= f.translatable_fields do |translations_form| %>
       <div>
         <%= translations_form.text_field :title %>
@@ -46,7 +45,9 @@
         <%= translations_form.text_field :subtitle %>
       </div>
       <div>
-        <%= translations_form.text_area :content, class: "html-area tall-editor #{ck_editor_class(current_user)}" %>
+        <% unless @projekt.new_content_block_mode? %>
+          <%= translations_form.text_area :content, class: "html-area tall-editor #{ck_editor_class(current_user)}" %>
+        <% end %>
       </div>
     <% end %>
 
@@ -56,5 +57,19 @@
     <div>
       <%= f.submit class: "button success" %>
     </div>
+
+  <% end %>
+
+  <div class="margin-bottom"></div>
+
+  <% if @projekt.new_content_block_mode? %>
+    <h4>Inhaltsblöcke:</h4>
+    <% @projekt.content_blocks.order(:position).each do |content_block| %>
+      <%= form_for(content_block, url: update_content_block_admin_projekt_path(id: @projekt.id, content_block_id: content_block.id, tab: "tab-projekt-page")) do |f| %>
+        <%= f.text_area :body, class: "html-area tall-editor #{ck_editor_class(current_user)}" %>
+        <%= f.submit class: "button success" %>
+      <% end %>
+    <% end %>
   <% end %>
 </div>
+

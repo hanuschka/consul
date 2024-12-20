@@ -38,7 +38,7 @@
         <% if resource.extended_registration? %>
           <%= f.select :gender, options_for_gender_select,
             { prompt: t("custom.helpers.select.gender_prompt") },
-            { class: "show-arrow", style: "background-color:#f8f8f8;" } %>
+            { class: "show-arrow" } %>
           <%= f.text_field :first_name, placeholder: t("custom.devise_views.users.registrations.new.first_name_label") %>
           <%= f.text_field :last_name, placeholder: t("custom.devise_views.users.registrations.new.last_name_label") %>
 

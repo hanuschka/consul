@@ -23,6 +23,7 @@
     <td><%= l(user.created_at, format: "%d %b %Y") %></td>
     <td><%= last_sign_in_date_formatted(user) %></td>
     <td><%= l(user.verified_at, format: "%d %b %Y") if user.verified_at %></td>
+    <td><%= t("shared.#{user.reverify ? 'yes' : 'no'}") %></td>
 
     <td>
       <div style="display:flex; gap:10px;">

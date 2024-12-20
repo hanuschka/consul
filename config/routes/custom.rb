@@ -1,3 +1,5 @@
+post "ckeditor/pictures", to: "ckeditor/pictures#create"
+
 resources :user_resources, only: [:index]
 get "/proposals/:proposal_id/dashboard/campaign", to: "dashboard#campaign", as: :proposal_dashbord_campaign
 
@@ -33,7 +35,6 @@ namespace :api do
   patch "/api_clients_registration/mark_as_registered"
 
   post "/auth/generate_frame_sign_in_token", to: "auth#generate_frame_sign_in_token"
-  # post "/auth/generate_temporary_auth_token", to: "auth#generate_temporary_auth_token"
 
   resources :projekts, only: [:index, :create, :update] do
     collection do
@@ -41,11 +42,19 @@ namespace :api do
     end
     member do
       patch :update_page
+      patch :update_title_image
       patch :import
+      patch :update_managers_list
     end
     patch "projekt_settings", to: "projekt_settings#update"
 
     resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :users, only: [] do
+    member do
+      patch :mark_as_on_dt
+    end
   end
 
   resources :projekt_content_blocks, only: [:destroy, :update] do
@@ -77,6 +86,3 @@ namespace :api do
 end
 
 post "iframe_sessions", to: "iframe_sessions#create"
-
-# get "/admin/projekts/:projekt_id/frame_phases_restrictions", to: "admin/projekt_phases#frame_phases_restrictions", as: :admin_frame_phase_restrictons
-get "/admin/projekts/:projekt_id/frame_new_phase_selector", to: "admin/projekt_phases#frame_new_phase_selector", as: :admin_frame_new_phase_selector

@@ -91,7 +91,7 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
   private
 
     def individual_group_value_params
-      params.require(:individual_group_value).permit(:individual_group_id, :name)
+      params.require(:individual_group_value).permit(:individual_group_id, :name, :email_pattern)
     end
 
     def save_file_in_tmp(uploaded_file)

@@ -13,9 +13,9 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
   end
 
   def can_answer?
-    # question.open_question_answer.present? && already_answered?(question.open_question_answer)
     can?(:answer, question) &&
-      question.open_question_answer.present?
+      question.open_question_answer.present? &&
+      (user_answers.include?(open_answer) || any_remaining_votes?)
   end
 
   def open_answer
@@ -30,4 +30,18 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
 
     classes.join(" ")
   end
+
+  private
+
+    def user_answers
+      @user_answers ||= question.answers.by_author(current_user)
+    end
+
+    def any_remaining_votes?
+      if question.votation_type&.multiple?
+        user_answers.count < question.max_votes
+      else
+        user_answers.empty?
+      end
+    end
 end

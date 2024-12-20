@@ -116,6 +116,19 @@ de:
             title: Vorlage bearbeiten
           form:
             submit_button: Speichern
+        officer_groups:
+          officer_group:
+            name: Name
+            officers: Sachbearbeiter*innen
+          destroy:
+            destroyed_successfully: Die Sachbearbeitergruppe wurde erfolgreich gelöscht.
+          edit:
+            editing: Sachbearbeitergruppe bearbeiten
+          index:
+            create: Sachbearbeitergruppe erstellen
+            title: Sachbearbeitergruppen
+          new:
+            creating: Neue Sachbearbeitergruppe erstellen
         deficiency_report:
           category: Kategorie
           officer: Sachbearbeiter*in
@@ -181,6 +194,9 @@ de:
             creating: Neues Gebiet erstellen
           area:
             name: Name
+        districts:
+          index:
+            title: Gebiete
       geozones:
         geozone:
           postal_codes: Postleitzahlen
@@ -224,7 +240,9 @@ de:
           settings: Funktionen
           statuses: Status definieren
           official_answer_templates: Antwortvorlagen
-          areas: Gebiete
+          areas: Alte Gebiete
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen
@@ -445,6 +463,8 @@ de:
               investments_limit: Anzahl an angezeigten Investitionsvorschläge
               deficiency_reports_limit: Anzahl an angezeigten Mangelmeldungen
       users:
+        reverify_button_text: Verifizierung aktuallisieren
+        reverify_success_notice: Reverifizierungsprozess läuft
         columns:
           id: ID
           erase_reason: Grund des Löschens
@@ -528,6 +548,8 @@ de:
         labels_name: Alternativtext zu Labels
         sentiments_name: Alternativtext zu Sentimente
         projekt_selector_hint: Hinweise zum Projekt
+        comment_form_title: Titel des Kommentarformulars
+        comment_form_button: Kommentarformular Button
         edit:
           title: Einstellung für Phase
         duration:

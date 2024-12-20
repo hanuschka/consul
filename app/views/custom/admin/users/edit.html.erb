@@ -33,14 +33,17 @@
       <div>
         <%= f.select :gender, options_for_gender_select,
           { prompt: t("custom.helpers.select.gender_prompt") },
-          { class: "show-arrow", style: "background-color:#f8f8f8;" } %>
+          { class: "show-arrow"} %>
       </div>
     </div>
   </div>
 
   <div class="row">
     <div class="column">
-      <%= f.submit %>
+      <%= f.submit "Speichern", class: "button primary" %>
+      <% if Setting["feature.melderegister"].present? %>
+				<%= f.submit "Speichern & Einwohnermeldeamt-Abgleich durchführen", name: "reverify", class: "button alert", data: { confirm: "Sind Sie sicher?" } %>
+      <% end %>
     </div>
   </div>
 <% end %>

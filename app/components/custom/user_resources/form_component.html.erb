@@ -1,5 +1,4 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %>">
-
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
     <%= back_link %>
 
@@ -162,7 +161,7 @@
               id="persisted-resource-data"
               data-resource-class="<%= resource.class.name.to_s %>"
               data-resource-id="<%= resource.id %>"
-              data-resource-map="<%= resource.is_a?(Proposal) && resource.map_location.present? %>">
+              data-resource-map="<%= resource.is_a?(Proposal) %>">
           </span>
         <% end %>
       </div>

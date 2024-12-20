@@ -6,15 +6,6 @@
 
 <div class="row">
   <div class="column">
-    <%= link_to t("custom.admin.projekt_phases.map.copy_from_projekt"),
-                polymorphic_path([@namespace, @projekt_phase], action: :copy_map_settings_from_projekt),
-                remote: true, method: :put, class: "float-right small clear",
-                data: { confirm: "Sind Sie sicher?" } %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="column">
     <h2>
       <%= t("custom.admin.projekt_phases.map.map_layers.title") %>
       <% if embedded? %>

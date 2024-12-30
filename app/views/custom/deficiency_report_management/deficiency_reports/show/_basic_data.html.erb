@@ -1,8 +1,9 @@
-<div class="float-right small clear">
-  <%= link_to t("custom.shared.download_pdf"), deficiency_report_management_deficiency_report_path(format: :pdf), class: "float-right small clear" %>
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <%= link_to t("custom.shared.download_pdf"), deficiency_report_management_deficiency_report_path(deficiency_report, format: :pdf), class: "float-right small clear" %>
+    <h2><%= deficiency_report.title %></h2>
+  </div>
 </div>
-
-<h2><%= deficiency_report.title %></h2>
 
 <div class="row expanded full-width">
   <div class="small-12 medium-8 columns margin-bottom">

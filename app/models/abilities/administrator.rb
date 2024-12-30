@@ -145,6 +145,7 @@ module Abilities
       can [:manage], ::DeficiencyReport::Status
       can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
       can [:manage], ::DeficiencyReport::Area
+      can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 
       can [:csv_answers_votes], Poll
@@ -194,6 +195,10 @@ module Abilities
 
       can :get_coordinates_map_location, MapLocation
       can :send_notification, Memo, user_id: user.id
+
+      can :index, Ckeditor::Asset
+      can [:create, :update, :destroy], Ckeditor::Picture
+      can [:create, :update, :destroy], Ckeditor::Document
     end
   end
 end

@@ -29,8 +29,8 @@ class User < ApplicationRecord
   after_create :attempt_verification, if: -> { Setting["feature.melderegister"].present? }
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
+  after_create :assign_individual_group_values_based_on_email_pattern
 
-  # has_secure_token :temporary_auth_token
   has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -287,18 +287,6 @@ class User < ApplicationRecord
     frame_sign_in_token_valid_until > Time.current
   end
 
-  # def generate_temporary_auth_token!
-  #   regenerate_temporary_auth_token
-  #
-  #   update!(temporary_auth_token_valid_until: 1.hour.from_now)
-  # end
-  #
-  # def temporary_auth_token_valid?
-  #   return false if temporary_auth_token_valid_until.nil?
-  #
-  #   temporary_auth_token_valid_until > Time.current
-  # end
-
   private
 
     def geozone_with_plz
@@ -361,6 +349,15 @@ class User < ApplicationRecord
         next if permission_problem_present
 
         ballot.update!(conditional: false)
+      end
+    end
+
+    def assign_individual_group_values_based_on_email_pattern
+      IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
+        next unless email.ends_with?(group_value.email_pattern)
+        next if group_value.users.include?(self)
+
+        group_value.users << self if email.ends_with?(group_value.email_pattern)
       end
     end
 end

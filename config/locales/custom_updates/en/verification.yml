@@ -3,6 +3,7 @@ en:
     verification:
       residence:
         new:
+          verification_with_bund_id_description: If you live in %{city_name}, please use the form below. If you are not from %{city_name}, please verify yourself using BundID.
           first_name: First name
           last_name: Last name
           city_street_id: Street

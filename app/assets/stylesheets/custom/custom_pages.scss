@@ -418,6 +418,12 @@ li.projekt-navigator[aria-expanded="false"] {
 .footer-phases-filter-subnav {
   display: flex;
 
+  @media(max-width: $small-tablet-viewport-start) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
   .page-subnav-tab {
     h4 {
       margin-right: 30px;
@@ -449,7 +455,7 @@ li.projekt-navigator[aria-expanded="false"] {
       }
 
       @media screen and (max-width: $small-tablet-viewport-start) {
-        top: 17px;
+        top: 12px;
         right: 45px;
 
         a {

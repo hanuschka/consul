@@ -44,10 +44,17 @@ namespace :api do
       patch :update_page
       patch :update_title_image
       patch :import
+      patch :update_managers_list
     end
     patch "projekt_settings", to: "projekt_settings#update"
 
     resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :users, only: [] do
+    member do
+      patch :mark_as_on_dt
+    end
   end
 
   resources :projekt_content_blocks, only: [:destroy, :update] do

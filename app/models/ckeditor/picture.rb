@@ -13,17 +13,25 @@ class Ckeditor::Picture < ApplicationRecord
                            file_size: { less_than: MAX_FILE_SIZE }
 
   def url_content(editor_id: nil)
-    file_path = rails_representation_url(
-      storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true
-    )
+    file_path = if data_content_type == "image/gif"
+                  rails_blob_url(storage_data, only_path: true)
+                else
+                  rails_representation_url(
+                    storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true
+                  )
+                end
 
     absolute_path?(editor_id) ? Setting["url"] + file_path : file_path
   end
 
   def url_thumb
-    rails_representation_url(
-      storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
-    )
+    if data_content_type == "image/gif"
+      rails_blob_url(storage_data, only_path: true)
+    else
+      rails_representation_url(
+        storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
+      )
+    end
   end
 
   def attach_uploaded_file(data)

@@ -61,6 +61,8 @@ class Setting < ApplicationRecord
         "feature.machine_learning": false,
         "feature.matomo": false,
         "feature.melderegister": false,
+        "feature.bund_id_verification": false,
+
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,

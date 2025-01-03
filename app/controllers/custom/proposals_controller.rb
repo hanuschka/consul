@@ -91,7 +91,7 @@ class ProposalsController
                             anchor: "filter-subnav")
     end
 
-    @resource = resource_model.new
+    @resource = resource_model.new(projekt_phase: @projekt_phase)
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]

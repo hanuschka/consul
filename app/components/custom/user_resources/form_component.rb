@@ -2,39 +2,22 @@ class UserResources::FormComponent < ApplicationComponent
   include TranslatableFormHelper
   include GlobalizeHelper
 
-  delegate :suggest_data, to: :helpers
-  delegate :current_user, to: :helpers
+  delegate :suggest_data, :current_user, :projekt_phase_feature?, to: :helpers
 
   attr_reader :resource
 
-  def initialize(resource, url:, title:, selected_projekt:, categories:)
+  def initialize(resource, url:, title:)
     @resource = resource
     @title = title
     @url = url
-    @selected_projekt = selected_projekt
-    @categories = categories
+  end
+
+  def render?
+    projekt_phase.present?
   end
 
   def projekt_phase
-    @projekt_phase ||=
-      if params[:projekt_phase_id] && @resource.new_record?
-        Projekt.find(params[:projekt_id]).projekt_phases.find(params[:projekt_phase_id])
-      elsif @resource.persisted?
-        @resource.projekt_phase
-      end
-  end
-
-  def selected_projekt_id
-    @selected_projekt_id ||=
-      if params[:projekt_id] && @resource.new_record?
-        params[:projekt_id]
-      elsif @resource.persisted?
-        @resource.projekt_phase&.projekt_id
-      end
-  end
-
-  def selected_projekt_phase_id
-    @selected_projekt_phase_id ||= projekt_phase&.id
+    resource.projekt_phase
   end
 
   def back_link
@@ -88,26 +71,46 @@ class UserResources::FormComponent < ApplicationComponent
   def base_class_name
     class_name = ""
 
-    if !phase_feature_enabled?("form.allow_attached_image") || !feature?(:allow_images)
+    if !helpers.projekt_phase_feature?(projekt_phase, "form.allow_attached_image")
       class_name += " -no-image"
     end
 
     class_name
   end
 
-  def phase_feature_enabled?(feature_name)
-    (projekt_phase.present? && helpers.projekt_phase_feature?(projekt_phase, feature_name))
+  def form_title
+    projekt_phase.resource_form_title.presence || @title
   end
 
-  def render_map?
-    resource.is_a?(Proposal)
+  def descriotion_placeholder
+    projekt_phase.resource_form_title_hint.presence || t("custom.#{i18n_scope}.form.description_placeholder_html")
   end
 
-  def projekt_selector_class
-    if (params[:origin] == "projekt" && params[:projekt_id].present?) || resource.persisted?
-      "hide"
-    else
-      ""
-    end
+  def show_labels_selector?
+    projekt_phase_feature?(projekt_phase, "form.labels")
+  end
+
+  def show_sentiments_selector?
+    projekt_phase_feature?(projekt_phase, "form.sentiments")
+  end
+
+  def show_documents_input?
+    projekt_phase_feature?(projekt_phase, "form.allow_attached_documents")
+  end
+
+  def show_external_video_input?
+    projekt_phase_feature?(projekt_phase, "form.enable_external_video")
+  end
+
+  def show_post_on_behalf_of_input?
+    helpers.allowed_to_post_on_behalf_of?(current_user, projekt_phase.projekt)
+  end
+
+  def show_image_input?
+    projekt_phase_feature?(projekt_phase, "form.allow_attached_image")
+  end
+
+  def show_map_input?
+    projekt_phase_feature?(projekt_phase, "form.show_map") || @resource.map_location.present?
   end
 end

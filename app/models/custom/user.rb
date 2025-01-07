@@ -29,6 +29,7 @@ class User < ApplicationRecord
   after_create :attempt_verification, if: -> { Setting["feature.melderegister"].present? }
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
+  after_create :assign_individual_group_values_based_on_email_pattern
 
   has_secure_token :frame_sign_in_token
 
@@ -348,6 +349,15 @@ class User < ApplicationRecord
         next if permission_problem_present
 
         ballot.update!(conditional: false)
+      end
+    end
+
+    def assign_individual_group_values_based_on_email_pattern
+      IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
+        next unless email.ends_with?(group_value.email_pattern)
+        next if group_value.users.include?(self)
+
+        group_value.users << self if email.ends_with?(group_value.email_pattern)
       end
     end
 end

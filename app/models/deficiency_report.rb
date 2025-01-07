@@ -26,12 +26,15 @@ class DeficiencyReport < ApplicationRecord
             only: DeficiencyReport.translated_attribute_names
   end
 
+  attr_accessor :officer_id, :officer_group_id
+
   belongs_to :category, class_name: "DeficiencyReport::Category", foreign_key: :deficiency_report_category_id
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
-  belongs_to :officer, class_name: "DeficiencyReport::Officer", foreign_key: :deficiency_report_officer_id
+  # belongs_to :officer, class_name: "DeficiencyReport::Officer", foreign_key: :deficiency_report_officer_id
   belongs_to :area, class_name: "DeficiencyReport::Area",
     foreign_key: :deficiency_report_area_id, inverse_of: :deficiency_reports
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
+  belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
   delegate :approximated_address, to: :map_location, allow_nil: true
@@ -165,6 +168,11 @@ class DeficiencyReport < ApplicationRecord
 
   def comments_allowed?(user)
     true
+  end
+
+  def get_default_responsible
+    map_location&.get_district&.default_deficiency_report_responsible ||
+      category&.default_responsible
   end
 
   private

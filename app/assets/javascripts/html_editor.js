@@ -223,7 +223,8 @@
           Link, Bold, Italic, Underline, Strikethrough, Subscript, Superscript, RemoveFormat,
           Table, HorizontalLine, SpecialCharacters, SpecialCharactersEssentials,
           MediaEmbed, SourceEditing,
-          HtmlEmbed, GeneralHtmlSupport
+          HtmlEmbed, GeneralHtmlSupport,
+          window.UploadFilesPlugin
         ]
 
         toolbarControls = [
@@ -233,7 +234,8 @@
           "fontColor", "fontBackgroundColor", "|",
           "insertTable", "horizontalLine", "specialCharacters", "|",
           "mediaEmbed", "sourceEditing", "|",
-          "htmlEmbed"
+          "htmlEmbed",
+          "uploadFiles"
         ]
 
       } else {

@@ -27,7 +27,7 @@
     enableCKeditorFor: function(textarea) {
       var { ClassicEditor } = CKEDITOR;
 
-      var editorPromise =ClassicEditor.create(textarea, {
+      var editorPromise = ClassicEditor.create(textarea, {
         plugins: this.toolbarFor(textarea).plugins,
         toolbar: {
           items: this.toolbarFor(textarea).toolbarControls,

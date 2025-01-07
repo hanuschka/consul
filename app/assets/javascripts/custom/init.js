@@ -21,6 +21,7 @@
       App.ImageGallery.initialize();
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
+      App.ProposalAssistant.initialize();
     }
   };
 }).call(this);

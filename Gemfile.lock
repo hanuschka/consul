@@ -467,7 +467,6 @@ GEM
     pronto-scss (0.11.0)
       pronto (~> 0.11.0)
       scss_lint (~> 0.43, >= 0.43.0)
-    prosopite (1.4.2)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -821,7 +820,6 @@ DEPENDENCIES
   pronto-eslint (~> 0.11.1)
   pronto-rubocop (~> 0.11.5)
   pronto-scss (~> 0.11.0)
-  prosopite
   pry (~> 0.13.0)
   pry-byebug (~> 3.9)
   pry-rails

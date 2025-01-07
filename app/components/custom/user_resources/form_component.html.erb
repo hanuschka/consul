@@ -136,7 +136,7 @@
           <%= @title %>
         </h1>
 
-        <div class="user-resources-form--description">
+        <div class="user-resources-form--description js-user-resource-form-description">
           <% if resource.is_a?(Proposal) %>
             <%= helpers.render_custom_block "proposals_creation_recommendations", default_content: t("custom.user_resources.form.page_description") %>
           <% elsif resource.is_a?(Debate) %>
@@ -188,7 +188,7 @@
                   maxlength: title_max_length,
                   data: suggest_data(resource),
                   label: false,
-                  class: "user-resources-form--banner-editor-title",
+                  class: "user-resources-form--banner-editor-title js-user-resource-form-title",
                   placeholder: t("custom.#{i18n_scope}.form.title_placeholder"),
                   autocomplete: "off" %>
               </div>

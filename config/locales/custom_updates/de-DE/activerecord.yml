@@ -92,6 +92,10 @@ de:
           attributes:
             color:
               invalid: Bitte den Farbwert als HEX-code eingeben
+        user:
+          attributes:
+            password:
+              low_complexity: "muss mindestens drei der nachfolgenden Kriterien erfüllen: Großbuchstaben, Kleinbuchstaben, Ziffern, Sonderzeichen."
         unregistered_newsletter_subscriber:
           attributes:
             email:
@@ -227,6 +231,7 @@ de:
           soft: schwache Gruppe
       individual_group_value:
         name: Name
+        email_pattern: E-Mail-Muster
       sentiment:
         color: Farbe des Sentiments
       sentiment/translation:
@@ -281,3 +286,5 @@ de:
       formular_answer_document:
         title: Titel
         attachment: Anhang
+      registered_address/district:
+        default_deficiency_report_responsible: Standardmäßig Sachbearbeiter*in

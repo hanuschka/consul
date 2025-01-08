@@ -1,4 +1,9 @@
-post "ckeditor/pictures", to: "ckeditor/pictures#create"
+post "ckeditor/assets", to: "ckeditor/assets#index"
+
+namespace :ckeditor do
+  resources :pictures, only: [:create, :update, :destroy]
+  resources :documents, only: [:create, :update, :destroy]
+end
 
 resources :user_resources, only: [:index]
 get "/proposals/:proposal_id/dashboard/campaign", to: "dashboard#campaign", as: :proposal_dashbord_campaign

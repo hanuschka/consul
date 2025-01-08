@@ -92,6 +92,10 @@ de:
           attributes:
             color:
               invalid: Bitte den Farbwert als HEX-code eingeben
+        user:
+          attributes:
+            password:
+              low_complexity: "muss mindestens drei der nachfolgenden Kriterien erfüllen: Großbuchstaben, Kleinbuchstaben, Ziffern, Sonderzeichen."
         unregistered_newsletter_subscriber:
           attributes:
             email:

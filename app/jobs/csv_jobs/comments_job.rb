@@ -3,7 +3,7 @@ class CsvJobs::CommentsJob < ApplicationJob
 
   def perform(exporting_user_id, comments_to_export_ids, commentable_name)
     @exporting_user = User.find(exporting_user_id)
-    comments_to_export = Comment.where(id: comments_to_export_ids)
+    comments_to_export = Comment.where(id: comments_to_export_ids).sort_by_newest
 
     file_name = "#{commentable_name}_comments_#{Time.zone.now.strftime("%Y-%m-%d-%H:%M")}.csv"
     file_path = "tmp/#{file_name}"

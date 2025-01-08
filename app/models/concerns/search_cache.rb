@@ -6,6 +6,8 @@ module SearchCache
   end
 
   def calculate_tsvector
+    return if searchable_values.blank?
+
     self.class.where(id: id).update_all("tsv = (#{searchable_values_sql})")
   end
 

@@ -17,6 +17,7 @@ de:
         identity_taken: "Wir konnten Ihr Konto nicht verifizieren. Bitte kontaktieren Sie uns per Mail."
         email_taken_html: "Die bei Ihrer BundID hinterlegte E-Mail-Adresse wird bereits auf Consul verwendet.<br>Bitte ändern Sie Ihre BundID-E-Mail-Adresse oder melden Sie sich in Ihrem bestehenden Consul-Konto an."
         email_updated: "Die bei Ihrem BundID hinterlegte E-Mail-Adresse unterscheidet sich von ihrer Consul-E-Mail-Adresse. Wir haben beide Konten zusammengeführt und Ihre Consul-E-Mail-Adresse geändert. Sie können sich künftig mit dieser E-Mail-Adresse auf Consul einloggen: %{email}"
+        verification_successfull: Sie wurden erfolgreich mit der BundID verifiziert.
     user_page:
       filters:
         proposals: Vorschläge

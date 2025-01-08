@@ -79,8 +79,8 @@ class MapLocation < ApplicationRecord
     geo_data = Geocoder.search([latitude, longitude]).first&.data
 
     matching_address = RegisteredAddress.joins(:registered_address_street, :registered_address_city).find_by(
-      street_number: geo_data["address"]["house_number"].match(/\A\d+/).to_s,
-      street_number_extension: geo_data["address"]["house_number"].match(/[a-zA-Z]+\z/).to_s.downcase.presence,
+      street_number: geo_data["address"]["house_number"]&.match(/\A\d+/).to_s,
+      street_number_extension: geo_data["address"]["house_number"]&.match(/[a-zA-Z]+\z/).to_s.downcase.presence,
       registered_address_street: {
         name: geo_data["address"]["road"],
         plz: geo_data["address"]["postcode"]

@@ -62,9 +62,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           @user.verify! if @user.errors.blank? && @user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
           sign_in_and_redirect @user, event: :authentication
           preexisting_flash = flash[:notice]
-          preexisting_flash = t("custom.users.omniauth.verification_successfull") if @user.level_three_verified?
           set_flash_message(:notice, :success, kind: provider_name(provider)) if is_navigational_format?
           flash[:notice] += " #{preexisting_flash}" if preexisting_flash
+          flash[:notice] = t("custom.users.omniauth.verification_successfull") if @user.level_three_verified?
         else
           session["devise.#{provider}_data"] = auth
           redirect_to new_user_registration_path

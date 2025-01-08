@@ -5,7 +5,6 @@
 
   <% if feature?("bund_id_verification") %>
     <p><%= t("custom.verification.residence.new.verification_with_bund_id_description_html", city_name: Setting["extended_option.general.city_name"]) %></p>
-    <br>
     <p><strong><%= t("custom.verification.residence.new.bund_id_block_title") %></strong></p>
     <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId", style: "width:150px;margin-left: 0 !important;margin-bottom:30px;" do %>
       <%= image_tag "bund_id_logo.svg", alt: "BundId Logo", style: "" %>

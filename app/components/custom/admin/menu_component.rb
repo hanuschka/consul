@@ -22,7 +22,7 @@ class Admin::MenuComponent < ApplicationComponent
     end
 
     def registered_addresses?
-      %w[registered_addresses registered_address_groupings registered_address_streets].include?(controller_name)
+      %w[registered_addresses registered_address_groupings registered_address_districts registered_address_streets].include?(controller_name)
     end
 
     def projekts_link
@@ -41,6 +41,7 @@ class Admin::MenuComponent < ApplicationComponent
           registered_addresses_list,
           registered_address_groupings_list,
           registered_address_streets_list,
+          registered_address_districts_list,
           id: "registered-addresses-link", class: ("is-active" if registered_addresses?)
         )
     end
@@ -66,6 +67,14 @@ class Admin::MenuComponent < ApplicationComponent
         t("custom.admin.menu.registered_address_streets.list"),
         admin_registered_address_streets_path,
         controller_name == "registered_address_streets"
+      ]
+    end
+
+    def registered_address_districts_list
+      [
+        t("custom.admin.menu.registered_address_districts.list"),
+        admin_registered_address_districts_path,
+        controller_name == "registered_address_districts"
       ]
     end
 

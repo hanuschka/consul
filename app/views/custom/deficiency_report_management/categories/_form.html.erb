@@ -49,6 +49,7 @@
   <div class="clear">
     <div class="small-12 medium-6 column">
       <%= f.text_area :warning_text, label: t("custom.admin.deficiency_reports.categories.category.warning_text"),
+        value: AdminWYSIWYGSanitizer.new.sanitize(category.warning_text),
         class: "html-area #{ck_editor_class(current_user)}" %>
     </div>
   </div>

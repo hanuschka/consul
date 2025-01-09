@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_19_141401) do
+ActiveRecord::Schema.define(version: 2025_01_09_202812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -702,13 +702,6 @@ ActiveRecord::Schema.define(version: 2024_12_19_141401) do
     t.index ["tsv"], name: "index_debates_on_tsv", using: :gin
   end
 
-  create_table "deficiency_report_areas", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "given_order"
-  end
-
   create_table "deficiency_report_categories", force: :cascade do |t|
     t.string "color"
     t.string "icon"
@@ -821,7 +814,6 @@ ActiveRecord::Schema.define(version: 2024_12_19_141401) do
     t.bigint "hot_score", default: 0
     t.string "on_behalf_of"
     t.datetime "assigned_at"
-    t.bigint "deficiency_report_area_id"
     t.boolean "notify_officer_about_new_comments", default: false
     t.datetime "notified_officer_about_new_comments_datetime"
     t.boolean "admin_accepted", default: false
@@ -832,7 +824,6 @@ ActiveRecord::Schema.define(version: 2024_12_19_141401) do
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
     t.index ["cached_votes_total"], name: "index_deficiency_reports_on_cached_votes_total"
     t.index ["cached_votes_up"], name: "index_deficiency_reports_on_cached_votes_up"
-    t.index ["deficiency_report_area_id"], name: "index_deficiency_reports_on_deficiency_report_area_id"
     t.index ["deficiency_report_category_id"], name: "index_deficiency_reports_on_deficiency_report_category_id"
     t.index ["deficiency_report_officer_id"], name: "index_deficiency_reports_on_deficiency_report_officer_id"
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
@@ -1081,6 +1072,7 @@ ActiveRecord::Schema.define(version: 2024_12_19_141401) do
     t.bigint "individual_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email_pattern", default: "", null: false
     t.index ["individual_group_id"], name: "index_individual_group_values_on_individual_group_id"
   end
 
@@ -1390,15 +1382,15 @@ ActiveRecord::Schema.define(version: 2024_12_19_141401) do
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
     t.bigint "projekt_phase_id"
-    t.bigint "deficiency_report_area_id"
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
-    t.index ["deficiency_report_area_id"], name: "index_map_locations_on_deficiency_report_area_id"
+    t.bigint "registered_address_district_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
     t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
+    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
     t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
   end
 
@@ -2802,7 +2794,6 @@ ActiveRecord::Schema.define(version: 2024_12_19_141401) do
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
-  add_foreign_key "deficiency_reports", "deficiency_report_areas"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
   add_foreign_key "deficiency_reports", "deficiency_report_statuses"
@@ -2832,10 +2823,10 @@ ActiveRecord::Schema.define(version: 2024_12_19_141401) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
-  add_foreign_key "map_locations", "deficiency_report_areas"
   add_foreign_key "map_locations", "deficiency_reports"
   add_foreign_key "map_locations", "projekt_phases"
   add_foreign_key "map_locations", "projekts"
+  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "notifications", "users"

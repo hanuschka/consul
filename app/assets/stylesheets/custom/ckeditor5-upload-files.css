@@ -21,7 +21,6 @@
 .upldFls__editForm {
     display: flex;
     flex-direction: column;
-    gap: 7px;
     padding: 20px 0;
     border-top: 1px solid #e7e7e7;
     margin: 10px 0;
@@ -40,6 +39,8 @@
 
 .upldFls__editForm .ck.ck-input {
     min-width: auto;
+    margin-bottom: 0.4rem;
+    height: 1.8rem;
 }
 
 .upldFls__search {
@@ -54,31 +55,55 @@
 
 .upldFls__search .ck.ck-input {
     min-width: auto;
+    margin-bottom: 0.1rem;
 }
 
 .ck.ck-button.upldFls__searchBtn {
     border: 1px solid black;
     text-align: center;
     justify-content: center;
+    background: var(--ck-color-button-action-background);
+    color: var(--ck-color-button-action-text);
 }
 
 .ck.ck-button.upldFls__searchBtn:hover {
     cursor: pointer;
+    background: var(--ck-color-button-action-background) !important;
+    color: var(--ck-color-button-action-text);
 }
 
 .ck.ck-button.upldFls__btnUpload {
     border: 1px solid black;
     text-align: center;
     justify-content: center;
+    background: var(--ck-color-button-action-background);
+    color: var(--ck-color-button-action-text);
 }
 
+.ck.ck-button.upldFls__btnUpload:hover {
+    cursor: pointer;
+    background: var(--ck-color-button-action-background) !important;
+    color: var(--ck-color-button-action-text);
+}
+
+
 .ck.ck-button.upldFls__btnEdit {
-    border: 1px solid green;
+    border: 1px solid black;
     text-align: center;
     justify-content: center;
+    background: var(--ck-color-button-action-background);
+    color: var(--ck-color-button-action-text);
+    margin-top: 0.8rem;
+}
+
+.ck.ck-button.upldFls__btnEdit:hover {
+    cursor: pointer;
+    background: var(--ck-color-button-action-background) !important;
+    color: var(--ck-color-button-action-text);
 }
 
 .ck.ck-button.upldFls__btnDelete {
+    cursor: pointer;
     border: 1px solid red;
     text-align: center;
     justify-content: center;
@@ -199,4 +224,8 @@
     gap: var(--ck-spacing-large);
     overflow-y: auto;
     max-height: 370px;
+}
+
+.upldFls__details {
+  font-size: 14px;
 }

@@ -47,6 +47,10 @@ en:
           attributes:
             color:
               invalid: Please provide color in HEX format
+        user:
+          attributes:
+            password:
+              low_complexity: "must include minimum three of the following four cretiria: uppercase letter lower, case letter, digit, special symbol (e.g. ! or @)"
         unregistered_newsletter_subscriber:
           attributes:
             email:

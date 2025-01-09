@@ -98,6 +98,7 @@
         <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.#{@projekt_phase.name}.description") %></strong>
           <%= translations_form.text_area :description,
+            value: AdminWYSIWYGSanitizer.new.sanitize(@projekt_phase.description),
             label: false,
             class: "html-area #{ck_editor_class(current_user)}" %>
         </div>
@@ -109,6 +110,7 @@
         <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.projekt_selector_hint") %></strong>
           <%= translations_form.text_area :projekt_selector_hint,
+            value: AdminWYSIWYGSanitizer.new.sanitize(@projekt_phase.projekt_selector_hint),
             label: false,
             class: "html-area #{ck_editor_class(current_user)}" %>
         </div>
@@ -139,6 +141,7 @@
           <%= f.fields_for :polls, @projekt_phase.poll do |polls_form| %>
             <%= polls_form.translatable_fields do |poll_translations_form| %>
               <%= poll_translations_form.text_area :closing_note,
+                value: AdminWYSIWYGSanitizer.new.sanitize(polls_form.object.closing_note),
                 class: "html-area #{ck_editor_class(current_user)}" %>
             <% end %>
 

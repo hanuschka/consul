@@ -173,7 +173,7 @@ module Abilities
 
       can :show, Community do |community|
         return false unless community.communitable.present?
-        return false unless community.communitable.projekt_phase_id.present?
+        return false unless community.communitable.projekt_phase.present?
 
         projekt_phase = community.communitable.projekt_phase
 

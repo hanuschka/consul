@@ -4,8 +4,8 @@ class MapLocation < ApplicationRecord
   belongs_to :projekt, touch: true
   belongs_to :deficiency_report, touch: true
   belongs_to :projekt_phase, touch: true
-  belongs_to :deficiency_report_area, class_name: "DeficiencyReport::Area",
-    foreign_key: :deficiency_report_area_id, touch: true, inverse_of: :map_location
+  belongs_to :registered_address_district, class_name: "RegisteredAddress::District",
+    foreign_key: :registered_address_district_id, touch: true, inverse_of: :map_location
 
   before_save :ensure_shape_is_json
   after_save :update_geocoder_data
@@ -78,7 +78,7 @@ class MapLocation < ApplicationRecord
 
     geo_data = Geocoder.search([latitude, longitude]).first&.data
 
-    matching_address = RegisteredAddress.joins(:registered_address_street, :registered_address_city).find_by(
+    matching_address_query = {
       street_number: geo_data["address"]["house_number"]&.match(/\A\d+/).to_s,
       street_number_extension: geo_data["address"]["house_number"]&.match(/[a-zA-Z]+\z/).to_s.downcase.presence,
       registered_address_street: {
@@ -88,9 +88,9 @@ class MapLocation < ApplicationRecord
       registered_address_city: {
         name: geo_data["address"]["city"]
       }
-    )
+    }.reject { |_k, v| v.in?(["", nil]) }
 
-    matching_address&.district
+    RegisteredAddress.joins(:registered_address_street, :registered_address_city).find_by(matching_address_query)&.district
   end
 
   private

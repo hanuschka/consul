@@ -14,13 +14,13 @@ class DeficiencyReports::NewComponent < ApplicationComponent
     t("custom.deficiency_reports.new.start_new")
   end
 
-  def areas
-    @areas ||= DeficiencyReport::Area.all.order(created_at: :asc)
+  def districts
+    @districts ||= RegisteredAddress::District.joins(:map_location).order(id: :asc)
   end
 
-  def map_coordinates_for_areas
-    areas.map do |area|
-      [area.id, [area.map_location.latitude, area.map_location.longitude]]
+  def map_coordinates_for_districts
+    districts.map do |district|
+      [district.id, [district.map_location.latitude, district.map_location.longitude]]
     end.to_h
   end
 end

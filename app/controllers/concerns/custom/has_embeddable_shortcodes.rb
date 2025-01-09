@@ -7,7 +7,7 @@ module HasEmbeddableShortcodes
     text = obj.send(attr)
 
     text&.scan(/{{(.*?)}}/) do |shortcode|
-      return unless SUPPORTED_SHORTCODES.include?(shortcode.first)
+      next unless SUPPORTED_SHORTCODES.include?(shortcode.first)
 
       text = send("replace_#{shortcode.first}", text, **vars)
     end

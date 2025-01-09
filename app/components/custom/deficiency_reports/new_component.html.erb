@@ -4,18 +4,18 @@
     <%= translatable_form_for(deficiency_report, html: { class: "deficiency-report-form" }) do |f| %>
       <%= back_link_to(deficiency_reports_path) %>
 
-      <% area_select_html = capture do %>
+      <% district_select_html = capture do %>
         <div class="margin-bottom">
           <%= render Shared::SidebarCardComponent.new(
-                        title: t("custom.deficiency_reports.form.area.title"),
-                        description: t("custom.deficiency_reports.form.area.description"),
+                        title: t("custom.deficiency_reports.form.district.title"),
+                        description: t("custom.deficiency_reports.form.district.description"),
                         icon_name: "map-pin"
                      ) do |c| %>
-            <%= f.select :deficiency_report_area_id, areas.all.map { |area| [area.name, area.id] },
-              { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false },
-              { class: "js-dr-form-update-map",
+            <%= select_tag :deficiency_report_district, options_for_select(districts.all.map { |district| [district.name, district.id] }),
+              { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false,
+                class: "js-dr-form-update-map",
                 data: {
-                  all_area_map_coordinates: map_coordinates_for_areas,
+                  all_district_map_coordinates: map_coordinates_for_districts,
                   default_map_coordinates: [Setting["map.latitude"], Setting["map.longitude"]]
                 }
               } %>
@@ -58,18 +58,18 @@
 
       <div class="flex-layout">
         <div class="main-column">
-          <% if areas.any? %>
-            <div class="show-on-small-tablet js-remove-on-desktop-section">
-              <%= area_select_html %>
-            </div>
-          <% end %>
           <div class="show-on-small-tablet js-remove-on-desktop-section">
             <%= category_select_html %>
           </div>
+          <% if districts.any? %>
+            <div class="show-on-small-tablet js-remove-on-desktop-section">
+              <%= district_select_html %>
+            </div>
+          <% end %>
           <%= f.translatable_fields do |translations_form| %>
             <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
-            <div class="user-resources-form--banner-editor js-user-resources-form--banner-editor -deficiency-report">
+            <div class="user-resources-form--banner-editor -deficiency-report">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
                   data: suggest_data(deficiency_report),
@@ -93,6 +93,7 @@
 
             <%= translations_form.text_area :description,
               label: false,
+              value: AdminWYSIWYGSanitizer.new.sanitize(deficiency_report.description),
               data: {placeholder: t("custom.deficiency_reports.form.description_placeholder_html")},
               class: "html-area #{ck_editor_class(current_user)}" %>
           <% end %>
@@ -110,15 +111,15 @@
 
         <aside class="sidebar">
 
-          <% if areas.any? %>
-            <div class="hide-on-mobile js-remove-on-mobile-section">
-              <%= area_select_html %>
-            </div>
-          <% end %>
-
           <div class="hide-on-mobile js-remove-on-mobile-section">
             <%= category_select_html %>
           </div>
+
+          <% if districts.any? %>
+            <div class="hide-on-mobile js-remove-on-mobile-section">
+              <%= district_select_html %>
+            </div>
+          <% end %>
 
           <% if Setting["deficiency_reports.document_upload"].present? %>
             <%= render Shared::SidebarCardComponent.new(

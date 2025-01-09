@@ -179,21 +179,6 @@ de:
             icon: Icon
             title: Name
             notice_text: E-Mail-Benachrichtigungstext
-        areas:
-          destroy:
-            cannot_be_destroyed: Sie können dieses Gebiet nicht löschen, da er mindestens einem Mangel zugewiesen ist.
-            destroyed_successfully: Der Gebiet wurde erfolgreich gelöscht.
-          edit:
-            editing: Gebiet bearbeiten
-          form:
-            submit_button: Speichern
-          index:
-            create: Gebiet erstellen
-            title: Gebiet
-          new:
-            creating: Neues Gebiet erstellen
-          area:
-            name: Name
         districts:
           index:
             title: Gebiete
@@ -212,6 +197,7 @@ de:
           street_name: Straße
           street_number: Hausnummer
           street_number_extension: Hausnummerergänzung
+          district: Gebiet
           groupings: Gruppierungen
       registered_address_groupings:
         index:
@@ -224,6 +210,14 @@ de:
           key: Spaltenname
           name: Name
           options: Optionen
+      registered_address_districts:
+        index:
+          title: Gebiete
+        update:
+          success: Gebiet erfolgreich aktualisiert
+        attributes:
+          name: Name
+          coordinates: Koordinaten
       registered_address_streets:
         index:
           title: Registrierte Adressen
@@ -255,6 +249,8 @@ de:
           list: Registrierte Adressen
         registered_address_groupings:
           list: Registrierte Adressgruppen
+        registered_address_districts:
+          list: Gebiete
         registered_address_streets:
           list: Registrierte Straßen
         individual_groups: Individuelle Gruppen

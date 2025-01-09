@@ -11,9 +11,9 @@ en:
           Please do not provide any personal information from third parties such as addresses."
         map:
           hint: Place a pin on the map to precisely locate the deficiency.
-        area:
-          title: Location
-          description: "Please assign your report to a location:"
+        district:
+          title: Quick map zoom
+          description: Quickly navigate to the desired map position
         category:
           title: Category
           description: Please assign a category to your report
@@ -71,9 +71,6 @@ en:
             all_reports: Alle Reports
             reports_to_approve: Released Reports
             title: Admin
-          areas:
-            title: Areas
-            all_areas: Alle Meldungen
           categories:
             filter_button: Filter categories
             title: Categories

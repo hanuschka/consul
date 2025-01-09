@@ -9,8 +9,8 @@ de:
         erase_account_link: Konto löschen
         settings: Kontoeinstellungen
         verification_title_html: Persönliche Daten |<br>Konto-Verifizierung
-        verification_description: Einige Beteiligungsprojekte setzen eine zusätzliche Datenabfrage oder eine Nutzerinnen-/Nutzer-Verifizierung voraus. Mit Klick auf den Button können Sie die benötigten Daten abgeben und/oder die Nutzerinnen-/Nutzer-Verifizierung starten.
         verification_with_bund_id_description: Einige Beteiligungsprojekte setzen eine Nutzerinnen-/Nutzer-Verifizierung voraus. Mit Klick auf den Button können Sie die Nutzerinnen-/Nutzer-Verifizierung starten. Sie müssen sich bei der BundID mit einem hohen Verifizierungsniveau wie z.B. mit Personalausweis oder Elster verifizieren. Andere Login-Methoden wie z.B. Nutzername und Passwort reicht nicht aus.
+        verification_description: Einige Beteiligungsprojekte setzen eine zusätzliche Datenabfrage oder eine Nutzerinnen-/Nutzer-Verifizierung voraus. Mit Klick auf den Button können Sie die benötigten Daten abgeben und/oder die Nutzerinnen-/Nutzer-Verifizierung starten.
         personal_settings: Persönliche Einstellungen
         notifications: Benachrichtigungen
         save_settings: Aktualisieren

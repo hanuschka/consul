@@ -54,7 +54,7 @@ class Api::ProjektsController < Api::BaseController
         message: "Projekt created"
       }
     else
-      render json: { message: "Error updating projekt" }
+      render json: { message: "Error creating projekt" }
     end
   end
 
@@ -62,7 +62,7 @@ class Api::ProjektsController < Api::BaseController
     if import_projekt(projekt: @projekt)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
     else
-      render json: { message: "Error updating projekt" }
+      render json: { message: "Error importing projekt" }
     end
   end
 
@@ -107,8 +107,11 @@ class Api::ProjektsController < Api::BaseController
         )
 
         if assignment.permissions.exclude?("manage")
-          assignment.permissions << "manage"
-          assignment.save!
+          permission_set = Set.new(assignment.permissions)
+          permission_set << "manage"
+
+          # Update column directly to not trigger callbacks
+          assignment.update_column(:permissions, permission_set.to_a)
         end
       end
     end
@@ -124,8 +127,8 @@ class Api::ProjektsController < Api::BaseController
         )
 
         if assignment.permissions.include?("manage")
-          assignment.permissions = assignment.permissions  - ["manage"]
-          assignment.save!
+          permission_set = assignment.permissions - ["manage"]
+          assignment.update_column(:permissions, permission_set)
         end
       end
     end
@@ -140,9 +143,15 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def import_projekt(projekt:)
-    Projekts::ImportService.call(
-      projekt: projekt, projekt_params: import_projekt_params
-    )
+    import_params = {
+      projekt: projekt, projekt_params: import_projekt_params,
+    }
+
+    if params[:author_user_id].present?
+      import_params[:author_user] = User.find_by(id: params[:author_user_id])
+    end
+
+    Projekts::ImportService.call(**import_params)
   end
 
   def projekt_params

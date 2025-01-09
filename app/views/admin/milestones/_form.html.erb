@@ -20,7 +20,7 @@
       <div class="column">
         <%= translations_form.hidden_field :title, value: l(Time.current, format: :datetime),
                                                    maxlength: Milestone.title_max_length %>
-        <%= translations_form.text_area :description, class: "html-area #{ck_editor_class(current_user)}" %>
+        <%= translations_form.text_area :description, value: AdminWYSIWYGSanitizer.new.sanitize(@milestone.description), class: "html-area #{ck_editor_class(current_user)}" %>
 
         <%= f.date_field :publication_date, value: @milestone.publication_date&.to_date || Time.zone.today %>
 

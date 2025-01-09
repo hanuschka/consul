@@ -1,0 +1,54 @@
+<%= back_link_to admin_registered_address_districts_path %>
+
+<div class="small-12 column">
+  <h2><%= @registered_address_district.name %></h2>
+</div>
+
+<%= form_for [:admin, @registered_address_district] do |f| %>
+
+  <%= render "shared/errors", resource: @registered_address_district %>
+
+  <div class="small-12 column">
+    <p><%= t("admin.settings.index.map.help") %></p>
+
+    <div id="admin-map" class="map"
+                        data-map
+                        data-map-center-latitude="<%= @registered_address_district.map_location.latitude %>"
+                        data-map-center-longitude="<%= @registered_address_district.map_location.longitude %>"
+                        data-map-zoom="<%= @registered_address_district.map_location.zoom %>"
+
+                        data-admin-editor="true"
+                        data-enable-geoman-controls="true"
+
+                        data-show-admin-shape="<%= @registered_address_district.map_location.show_admin_shape? %>"
+                        data-admin-shape="<%= @registered_address_district.map_location.shape.presence&.to_json || @registered_address_district.map_location.json_data.to_json %>"
+
+                        data-editable="true"
+                        data-latitude-input-selector="#registered_address_district_map_location_attributes_latitude"
+                        data-longitude-input-selector="#registered_address_district_map_location_attributes_longitude"
+                        data-zoom-input-selector="#registered_address_district_map_location_attributes_zoom"
+                        data-shape-input-selector="#registered_address_district_map_location_attributes_shape"
+                        data-show-admin-shape-input-selector="#registered_address_district_map_location_attributes_show_admin_shape"
+
+                        data-map-tiles-provider="<%= Rails.application.secrets.map_tiles_provider %>"
+                        data-map-tiles-provider-attribution="<%= Rails.application.secrets.map_tiles_provider_attribution %>"
+                        data-marker-latitude="<%= @registered_address_district.map_location.latitude %>"
+                        data-marker-longitude="<%= @registered_address_district.map_location.longitude %>"
+                        >
+    </div>
+
+    <%= f.fields_for :map_location do |mlf| %>
+      <%= mlf.hidden_field :latitude, value: @registered_address_district.map_location.latitude %>
+      <%= mlf.hidden_field :longitude, value: @registered_address_district.map_location.longitude %>
+      <%= mlf.hidden_field :zoom, value: @registered_address_district.map_location.zoom %>
+      <%= mlf.hidden_field :shape, value: JSON.generate(@registered_address_district.map_location.shape) %>
+      <%= mlf.hidden_field :show_admin_shape, value: @registered_address_district.map_location.show_admin_shape %>
+      <%= mlf.hidden_field :registered_address_district_id, value: @registered_address_district.id %>
+    <% end %>
+  </div>
+
+  <div class="small-12 column margin-top">
+    <%= f.submit(value: t("custom.admin.deficiency_reports.areas.form.submit_button"),
+                class: "button success") %>
+  </div>
+<% end %>

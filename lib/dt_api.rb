@@ -31,6 +31,16 @@ class DtApi
     )
   end
 
+  def update_projekt_manager_permission(projekt_id, user_id, allowed_to_manage)
+    patch_with_auth(
+      "/projekts/#{projekt_id}/update_projekt_manager_permission",
+      body: {
+        user_id: user_id,
+        allowed_to_manage: allowed_to_manage
+      }
+    )
+  end
+
   def post_with_auth(url, body:, multipart: false)
     self.class.post(
       url,

@@ -7,6 +7,9 @@ en:
       deficiency_report_manager:
         one: Deficiency reporting admin
         other: Deficiency reporting admins
+      deficiency_report/officer_group:
+        one: Deficiency report officer group
+        other: Deficiency report officer groups
       map_layer:
         one: Map Layer
         other: Map Layers
@@ -44,6 +47,10 @@ en:
           attributes:
             color:
               invalid: Please provide color in HEX format
+        user:
+          attributes:
+            password:
+              low_complexity: "must include minimum three of the following four cretiria: uppercase letter lower, case letter, digit, special symbol (e.g. ! or @)"
         unregistered_newsletter_subscriber:
           attributes:
             email:
@@ -70,6 +77,7 @@ en:
         on_behalf_of: Create report on behalf of someone
         category: Category
         status: Status
+        responsible: Responsible
       debate:
         on_behalf_of: Create debate on behalf of someone
       proposal:
@@ -137,6 +145,7 @@ en:
           soft: soft
       individual_group_value:
         name: Name
+        email_pattern: E-mail pattern
       projekt_label:
         icon: Icon
         color: Color

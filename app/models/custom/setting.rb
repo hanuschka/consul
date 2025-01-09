@@ -61,6 +61,8 @@ class Setting < ApplicationRecord
         "feature.machine_learning": false,
         "feature.matomo": false,
         "feature.melderegister": false,
+        "feature.bund_id_verification": false,
+
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
@@ -196,6 +198,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        "extended_option.general.city_name": "CONSUL",
         "extended_option.general.title": "Öffentlichkeitsbeteiligung",
         "extended_option.general.subtitle": "in der Stadt CONSUL",
         "extended_option.general.launch_date": "",

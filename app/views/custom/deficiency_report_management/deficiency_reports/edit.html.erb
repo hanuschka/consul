@@ -17,6 +17,7 @@
 
           <div>
             <%= translations_form.text_area :description,
+                  value: AdminWYSIWYGSanitizer.new.sanitize(@deficiency_report.description),
                   class: "html-area #{ck_editor_class(current_user)}",
                   label: t("custom.deficiency_reports.form.labels.description") %>
           </div>

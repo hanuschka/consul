@@ -437,6 +437,8 @@ en:
         labels_name: Labels
         sentiments_name: Sentiments
         projekt_selector_hint: Project tips
+        comment_form_title: Title of comment form
+        comment_form_button: Comment form button
         edit:
           title: Phase settings
         duration:

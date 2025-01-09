@@ -10,7 +10,6 @@ module ProjektPhaseAdminActions
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
       :create, :order_phases, :frame_phases_restrictions,
-      :frame_new_phase_selector
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -167,7 +166,7 @@ module ProjektPhaseAdminActions
   def map
     authorize!(:map, @projekt_phase)
 
-    @projekt_phase.create_map_location unless @projekt_phase.map_location.present?
+    @projekt_phase.copy_map_settings unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
 
     render "custom/admin/projekt_phases/map"
@@ -179,22 +178,6 @@ module ProjektPhaseAdminActions
     authorize!(:update_map, map_location)
 
     map_location.update!(map_location_params)
-
-    redirect_to namespace_projekt_phase_path(action: "map"),
-      notice: t("admin.settings.index.map.flash.update")
-  end
-
-  def copy_map_settings_from_projekt
-    authorize!(:copy_map_settings_from_projekt, @projekt_phase)
-
-    unless @projekt_phase.map_location.latitude == @projekt_phase.projekt.map_location.latitude &&
-           @projekt_phase.map_location.longitude == @projekt_phase.projekt.map_location.longitude
-      @projekt_phase.map_location = @projekt_phase.projekt.map_location.dup
-    end
-
-    @projekt_phase.projekt.map_layers.each do |map_layer|
-      @projekt_phase.map_layers << map_layer.dup unless @projekt_phase.map_layers.any? { |ml| ml.name == map_layer.name }
-    end
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -366,14 +349,6 @@ module ProjektPhaseAdminActions
     @process = @projekt_phase.legislation_process
 
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
-  end
-
-  def frame_new_phase_selector
-    @projekt = Projekt.find(params[:projekt_id])
-
-    authorize!(:edit, @projekt)
-
-    render
   end
 
   # def frame_phases_restrictions

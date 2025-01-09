@@ -2,7 +2,7 @@
   <% show_admin_controlls = current_user&.email.in?(@partner_emails) || current_user&.has_pm_permission_to?(:manage, @projekt) %>
   <% show_embeded_controls = embedded_and_frame_access_code_valid?(@projekt) %>
 
-  <% if show_admin_controlls %>
+  <% if show_admin_controlls && !show_embeded_controls %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
       <%= render partial: 'pages/sidebar/admin_controls' %>
     <% end %>

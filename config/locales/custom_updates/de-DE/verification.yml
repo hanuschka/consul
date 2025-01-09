@@ -3,6 +3,9 @@ de:
     verification:
       residence:
         new:
+          verification_with_bund_id_description_html: Sie wohnen nicht in %{city_name}? Nutzen Sie bitte den nachfolgenden BundID-Button, um sich zu verifizieren.<br>Sie wohnen in %{city_name}? Dann verifizieren Sie sich bitte mit Hilfe des nachfolgenden Formulars.
+          bund_id_block_title: Verifizierung mit der BundID
+          form_block_title: Verifizierung für Bürger:innen der Stadt %{city_name}
           first_name: Vorname
           last_name: Nachname
           street_name: Straße

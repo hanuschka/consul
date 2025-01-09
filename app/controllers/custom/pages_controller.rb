@@ -82,14 +82,17 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.js { render "pages/projekt_footer/footer_tab" }
       format.csv do
-        formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
+        unless current_user&.administrator?
+          redirect_path = page_path(@projekt.page.slug, projekt_phase_id: @projekt_phase.id, anchor: "projekt-footer")
+          redirect_to redirect_path and return
+        end
 
         if @projekt_phase.name == "debate_phase"
-          send_data Debates::CsvExporter.new(@debates.limit(nil)).to_csv,
-            filename: "debates1-#{formated_time}.csv"
+          send_data CsvServices::DebatesExporter.call(@resources.limit(nil)),
+            filename: "debates-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
         elsif @projekt_phase.name == "proposal_phase"
-          send_data Proposals::CsvExporter.new(@proposals.limit(nil)).to_csv,
-            filename: "proposals1-#{formated_time}.csv"
+          send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
+            filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
         end
       end
     end
@@ -216,8 +219,7 @@ class PagesController < ApplicationController
 
     @valid_filters = @budget.investments_filters
     params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting", "valuating"])
-    params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["balloting"])
-    params[:filter] ||= "all" if @budget.current_phase.kind.in?(["publishing_prices", "reviewing_ballots"])
+    params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["publishing_prices", "balloting", "reviewing_ballots"])
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
@@ -244,7 +246,7 @@ class PagesController < ApplicationController
       @investments = @budget.investments
     else
       query = Budget::Ballot.where(user: current_user, budget: @budget)
-      @ballot = @budget.balloting? ? query.first_or_create! : query.first_or_initialize
+      @ballot = @budget.balloting? ? query.first_or_create!(conditional: ballot_conditional?) : query.first_or_initialize(conditional: ballot_conditional?)
 
       @investments = @budget.investments.send(@current_filter)
       @investment_ids = @budget.investments.ids
@@ -359,5 +361,13 @@ class PagesController < ApplicationController
 
   def resource_name
     "page"
+  end
+
+  def ballot_conditional?
+    return false unless current_user.present?
+
+    @projekt_phase.user_status == "verified" &&
+      current_user.verified_at.nil? &&
+      helpers.projekt_phase_feature?(@projekt_phase, "resource.conditional_balloting")
   end
 end

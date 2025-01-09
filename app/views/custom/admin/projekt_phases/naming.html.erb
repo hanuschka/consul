@@ -10,34 +10,7 @@
       <%= t("custom.admin.projekt_phases.naming.page_title") %>
 
       <% if embedded? %>
-        <% fields_to_explain = %w( name phase_tab_name) %>
-
-        <% if @projekt_phase.name.in?(["voting_phase"]) %>
-          <% fields_to_explain << "phase description" %>
-        <% end %>
-
-        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase", "voting_phase", "question_phase", "formular_phase", "legislation_phase", "comment_phase", "livestream_phase"]) %>
-          <% fields_to_explain << "cta button name" %>
-        <% end %>
-
-        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
-          <% fields_to_explain += ["labels name", "sentiments name"] %>
-        <% end %>
-
-        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase"]) %>
-          <% fields_to_explain << "projekt selector hint" %>
-        <% end %>
-
-        <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
-          <% fields_to_explain += ["projekt selector hint", "resource form title", "resource form title hint"] %>
-        <% end %>
-        <% if @projekt_phase.name.in?(["voting_phase"]) %>
-          <% fields_to_explain << "description" %>
-        <% end %>
-
-        <%= render Shared::ExplainButtonComponent.new(
-          explain: "phase naming. Fields: #{fields_to_explain&.join(', ')}"
-        ) %>
+        <%= render Shared::ExplainButtonComponent.new(explain: "") %>
       <% end %>
     </h2>
   </div>
@@ -125,6 +98,7 @@
         <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.#{@projekt_phase.name}.description") %></strong>
           <%= translations_form.text_area :description,
+            value: AdminWYSIWYGSanitizer.new.sanitize(@projekt_phase.description),
             label: false,
             class: "html-area #{ck_editor_class(current_user)}" %>
         </div>
@@ -136,8 +110,25 @@
         <div class="column <%= naming_column_class %>">
           <strong><%= t("custom.admin.projekt_phases.projekt_selector_hint") %></strong>
           <%= translations_form.text_area :projekt_selector_hint,
+            value: AdminWYSIWYGSanitizer.new.sanitize(@projekt_phase.projekt_selector_hint),
             label: false,
             class: "html-area #{ck_editor_class(current_user)}" %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @projekt_phase.name == "comment_phase" %>
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.comment_form_title") %></strong>
+          <%= translations_form.text_field :comment_form_title, label: false %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.comment_form_button") %></strong>
+          <%= translations_form.text_field :comment_form_button, label: false %>
         </div>
       </div>
     <% end %>
@@ -150,6 +141,7 @@
           <%= f.fields_for :polls, @projekt_phase.poll do |polls_form| %>
             <%= polls_form.translatable_fields do |poll_translations_form| %>
               <%= poll_translations_form.text_area :closing_note,
+                value: AdminWYSIWYGSanitizer.new.sanitize(polls_form.object.closing_note),
                 class: "html-area #{ck_editor_class(current_user)}" %>
             <% end %>
 

@@ -112,7 +112,8 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
         :price, :price_first_year, :price_explanation,
         :feasibility, :unfeasibility_explanation,
         :duration, :valuation_finished,
-        :incompatible, :selected
+        :incompatible, :selected,
+        :valuator_explanation
       ]
     end
 

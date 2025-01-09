@@ -155,14 +155,14 @@ module Abilities
         user.projekt_manager.allowed_to?("manage", budget&.projekt)
       end
       can :publish, Budget, id: Budget.where(id: Budget.drafting.pluck(:id)).ids
-      can :calculate_winners, Budget, &:reviewing_ballots?
+      can :calculate_winners, Budget, &:balloting_or_later?
+      can :recalculate_winners, Budget, &:balloting_or_later?
+
       can :read_results, Budget do |budget|
         budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
       can :read_stats, Budget, id: Budget.where(id: Budget.valuating_or_later.pluck(:id)).ids
-
-      can :recalculate_winners, Budget, &:balloting_or_later?
 
       can [:admin_update, :toggle_selection, :add_memo, :people, :milestones, :progress_bars, :audits], Budget::Investment do |investment|
         can?(:create, investment.budget)

@@ -14,7 +14,7 @@
       </li>
     <% end %>
 
-    <% Budget.joins(projekt_phase: :projekt).where(phase: 'balloting').each do |budget| %>
+    <% (Budget.balloting + Budget.reviewing_ballots).each do |budget| %>
       <li>
         <%= link_to budget.name, officing_offline_ballots_verify_user_path(budget), class: "users-link" %>
       </li>

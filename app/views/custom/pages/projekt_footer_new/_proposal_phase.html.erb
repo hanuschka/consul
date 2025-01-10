@@ -9,9 +9,15 @@
           <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
         </div>
         <div class="new-resource-cta">
-          <% url = "/proposals/new?origin=projekt&projekt_id=#{@projekt_phase.projekt.id}&projekt_phase_id=#{@projekt_phase.id}?ai_assistant=true" %>
+          <% url = "/proposals/new?origin=projekt&projekt_id=#{@projekt_phase.projekt.id}&projekt_phase_id=#{@projekt_phase.id}&proposal_assistant=standard" %>
           <a class="button -orange new-resource-button js-preselect-projekt" href="<%= url %>">
             Create proposals with AI Assistant
+          </a>
+        </div>
+        <div class="new-resource-cta">
+          <% url = "/proposals/new?origin=projekt&projekt_id=#{@projekt_phase.projekt.id}&projekt_phase_id=#{@projekt_phase.id}&proposal_assistant=websocket" %>
+          <a class="button -orange new-resource-button js-preselect-projekt" href="<%= url %>">
+            Create proposals with AI Assistant(Websocket)
           </a>
         </div>
       </div>

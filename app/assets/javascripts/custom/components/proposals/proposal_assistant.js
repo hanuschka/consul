@@ -18,23 +18,31 @@
         const params = data.params
 
         switch(data.event_type) {
-          case "Consul.ProposalForm.updateProposalTitle":
-            this.updateProposalTitle(params);
-            break;
-          case "Consul.ProposalForm.updateProposalDescription":
-            this.updateProposalDescription(params);
+          case "Consul.ProposalForm.updateField":
+            this.updateProposalField(params);
             break;
         }
       }
     },
 
-    updateProposalTitle: function({ title }) {
+    updateProposalField: function(params) {
+      switch(params.field) {
+        case "title":
+          this.updateProposalTitle(params.value);
+          break;
+        case "title":
+          this.updateProposalDescription(params.value);
+          break;
+      }
+    },
+
+    updateProposalTitle: function(title) {
       document.querySelector(
         ".js-user-resource-form-title"
       ).value = title
     },
 
-    updateProposalDescription: function({ description }) {
+    updateProposalDescription: function(description) {
       window.CKeditorInstancesGlobal["proposal_translations_attributes_0_description"].setData(description)
     }
   };

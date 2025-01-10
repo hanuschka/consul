@@ -72,9 +72,10 @@ class ProposalsController
       end
 
       format.csv do
-        formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
-        send_data Proposals::CsvExporter.new(@proposals.limit(nil)).to_csv,
-          filename: "proposals-#{formated_time}.csv"
+        redirect_to proposals_path and return unless current_user&.administrator?
+
+        send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
+          filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
       end
     end
   end
@@ -90,7 +91,7 @@ class ProposalsController
                             anchor: "filter-subnav")
     end
 
-    @resource = resource_model.new
+    @resource = resource_model.new(projekt_phase: @projekt_phase)
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]

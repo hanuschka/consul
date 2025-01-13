@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Ckeditor::DocumentsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def create
     document = Ckeditor::Document.new
     authorize! :create, document

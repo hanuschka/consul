@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Ckeditor::PicturesController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def create
     picture = Ckeditor::Picture.new
     authorize! :create, picture

@@ -85,6 +85,10 @@ module Abilities
       can :read_stats, Budget::Investment do |investment|
         can? :read_stats, investment.budget
       end
+
+      can :index, Ckeditor::Asset
+      can [:create, :update, :destroy], Ckeditor::Picture
+      can [:create, :update, :destroy], Ckeditor::Document
     end
   end
 end

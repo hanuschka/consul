@@ -190,6 +190,10 @@ module Abilities
         projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
           community.communitable.projekt_phase.permission_problem(user).blank?
       end
+
+      can :index, Ckeditor::Asset
+      can [:create, :update, :destroy], Ckeditor::Picture
+      can [:create, :update, :destroy], Ckeditor::Document
     end
   end
 end

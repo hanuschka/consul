@@ -2,6 +2,7 @@
 
 class Ckeditor::AssetsController < ApplicationController
   include Search
+  skip_before_action :verify_authenticity_token
 
   def index
     authorize! :index, Ckeditor::Asset

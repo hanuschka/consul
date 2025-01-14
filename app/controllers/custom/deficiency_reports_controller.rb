@@ -20,11 +20,6 @@ class DeficiencyReportsController < ApplicationController
   def index
     @deficiency_report_count = @deficiency_reports.count
 
-    @areas = DeficiencyReport::Area.where(id: @deficiency_reports.pluck(:deficiency_report_area_id).uniq).order(created_at: :asc)
-    @selected_area = DeficiencyReport::Area.find_by(id: params[:dr_area]) if params[:dr_area].present?
-    @map_location = @selected_area&.map_location
-    @deficiency_reports = @deficiency_reports.where(deficiency_report_area_id: @selected_area&.id) if @selected_area.present?
-
     @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
     @categories = DeficiencyReport::Category.all.order(created_at: :asc)
@@ -90,11 +85,11 @@ class DeficiencyReportsController < ApplicationController
     end
 
     @deficiency_report = DeficiencyReport.new(filtered_deficiency_report_params.merge(author: current_user, status: status))
-    @deficiency_report.officer = @deficiency_report.category&.default_deficiency_report_officer
+    @deficiency_report.responsible = @deficiency_report.get_default_responsible
 
     if @deficiency_report.save
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
-      DeficiencyReportMailer.notify_officer(@deficiency_report).deliver_later
+      notify_responsible(@deficiency_report)
       redirect_to deficiency_report_path(@deficiency_report)
     else
       render :new
@@ -159,7 +154,6 @@ class DeficiencyReportsController < ApplicationController
     attributes = [:video_url, :on_behalf_of,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
-                  :deficiency_report_area_id,
                   :notify_officer_about_new_comments,
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
@@ -202,5 +196,17 @@ class DeficiencyReportsController < ApplicationController
 
   def resource_model
     DeficiencyReport
+  end
+
+  def notify_responsible(dr)
+    return if dr.responsible.blank?
+
+    if dr.responsible.is_a?(DeficiencyReport::Officer)
+      DeficiencyReportMailer.notify_officer(dr, dr.responsible).deliver_later
+    elsif dr.responsible.is_a?(DeficiencyReport::OfficerGroup)
+      dr.responsible.officers.each do |officer|
+        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+      end
+    end
   end
 end

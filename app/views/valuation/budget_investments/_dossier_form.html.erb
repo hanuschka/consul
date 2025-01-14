@@ -8,100 +8,77 @@
 
   <h3>Einschätzung der Verwaltung / der Gutachter</h3>
 
-  <div class="row">
-    <div class="small-12 column">
-      <fieldset class="fieldset">
-        <legend><%= t("valuation.budget_investments.edit.feasibility") %></legend>
-        <div class="small-4 column">
-            <span class="radio">
-              <%= f.radio_button :feasibility, "undecided" %>
-            </span>
-        </div>
+  <div class="row" style="margin-bottom:1rem;">
+    <div class="small-12 medium-6 column">
+      <h4><%= t("valuation.budget_investments.edit.feasibility") %></h4>
+      <p class="margin-bottom"><%= t("valuation.budget_investments.edit.feasibility_hint") %></p>
+      <div><%= f.radio_button :feasibility, "undecided", style: "margin-bottom:0.5rem" %></div>
+      <div><%= f.radio_button :feasibility, "feasible", style: "margin-bottom:0.5rem" %></div>
+      <div><%= f.radio_button :feasibility, "unfeasible", style: "margin-bottom:0.5rem" %></div>
+    </div>
 
-        <div class="small-4 column">
-            <span class="radio">
-              <%= f.radio_button :feasibility, "feasible" %>
-            </span>
-        </div>
+    <div class="small-12 medium-4 column">
+      <h4><%= t("valuation.budget_investments.edit.valuation_closing_title") %></h4>
 
-        <div class="small-4 column">
-            <span class="radio">
-              <%= f.radio_button :feasibility, "unfeasible" %>
-            </span>
-        </div>
-      </fieldset>
+      <%= f.check_box :valuation_finished,
+          id: "js-investment-report-alert",
+          "data-alert": t("valuation.budget_investments.edit.valuation_finished_alert"),
+          "data-not-feasible-alert": t("valuation.budget_investments.edit.not_feasible_alert") %>
+      <span><%= t("valuation.budget_investments.edit.valuation_closing_hint") %></span>
     </div>
   </div>
 
-  <div id="unfeasible_fields">
-
-    <div class="row">
-      <div class="small-12 column">
-        <%= f.text_area :unfeasibility_explanation, rows: 3 %>
+  <div class="margin-bottom">
+    <div class="row feasible_fields unfeasible_fields">
+      <div class="small-12 medium-8 column">
+        <div class="margin-bottom">
+          <%= f.text_area :valuator_explanation, rows: 3 %>
+        </div>
       </div>
     </div>
 
-  </div>
-
-  <div id="feasible_fields">
-
     <% if budget.show_money? %>
-      <div class="row">
-        <div class="small-12 medium-6 column">
+      <div class="row feasible_fields">
+        <div class="small-12 medium-4 column">
           <%= f.number_field :price,
             label: t("valuation.budget_investments.edit.price", currency: budget.currency_symbol),
             max: 1000000000000000 %>
         </div>
 
-        <div class="small-12 medium-6 column end">
+        <div class="small-12 medium-4 column end">
           <%= f.number_field :price_first_year,
             label: t("valuation.budget_investments.edit.price_first_year", currency: budget.currency_symbol),
             max: 1000000000000000 %>
         </div>
       </div>
 
-      <div class="row">
-        <div class="small-12 column">
-          <%= f.text_area :price_explanation, rows: 3 %>
-        </div>
-      </div>
     <% else %>
-      <div class="row">
-        <div class="small-12 column">
-          <%= f.text_area :price_explanation, rows: 3, label: t("custom.budgets.investments.show.feasibility_explanation") %>
-        </div>
-      </div>
       <%= f.hidden_field :price, value: 0 %>
+
     <% end %>
 
-    <div class="row">
-      <div class="small-12 medium-6 column">
+    <div class="row feasible_fields">
+      <div class="small-12 medium-4 column">
         <%= f.text_field :duration %>
       </div>
     </div>
-
   </div>
 
-  <div class="row">
+  <div class="row expanded margin-bottom">
     <div class="small-12 medium-8 column">
-      <%= f.check_box :valuation_finished,
-          id: "js-investment-report-alert",
-          "data-alert": t("valuation.budget_investments.edit.valuation_finished_alert"),
-          "data-not-feasible-alert": t("valuation.budget_investments.edit.not_feasible_alert") %>
-    </div>
-  </div>
+			<h4><%= t("valuation.budget_investments.edit.phase_6_title") %></h4>
+			<p><%= t("valuation.budget_investments.edit.phase_6_hint") %></p>
 
-  <h3>Entscheidungen der Verwaltung</h3>
-
-  <div class="row expanded">
-    <div class="small-12 medium-8 column">
-      <%= f.check_box :incompatible, title: t("admin.budget_investments.edit.compatibility") %>
-    </div>
-  </div>
-
-  <div class="row expanded">
-    <div class="small-12 medium-8 column">
       <%= f.check_box :selected, title: t("admin.budget_investments.edit.selection") %>
+    </div>
+  </div>
+
+  <div class="row expanded margin-bottom">
+    <div class="small-12 medium-8 column">
+      <h4><%= t("valuation.budget_investments.edit.phase_8_title") %></h4>
+      <p><%= t("valuation.budget_investments.edit.phase_8_hint") %></p>
+
+      <%= f.check_box :incompatible, title: t("admin.budget_investments.edit.compatibility") %>
     </div>
   </div>
 

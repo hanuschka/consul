@@ -10,7 +10,6 @@ de:
         settings: Kontoeinstellungen
         verification_title_html: Persönliche Daten |<br>Konto-Verifizierung
         verification_description: Einige Beteiligungsprojekte setzen eine zusätzliche Datenabfrage oder eine Nutzer*innen-Verifizierung voraus. Mit Klick auf den Button können Sie die benötigten Daten abgeben und/oder die Nutzer*innen-Verifizierung starten.
-        verification_with_bund_id_description: Einige Beteiligungsprojekte setzen eine Nutzer*innen-Verifizierung voraus. Mit Klick auf den Button können Sie die Nutzer*innen-Verifizierung starten. Sie müssen sich bei der BundID mit einem hohen Verifizierungsniveau wie z.B. mit Personalausweis oder Elster verifizieren. Andere Login-Methoden wie z.B. Nutzername und Passwort reicht nicht aus.
         personal_settings: Persönliche Einstellungen
         notifications: Benachrichtigungen
         save_settings: Aktualisieren

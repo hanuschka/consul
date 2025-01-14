@@ -56,11 +56,12 @@ class Budget
       class_name: "Comment"
 
     validates_translation :title, presence: true, length: { in: 4..Budget::Investment.title_max_length }
-    validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    # validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    validates_translation :description, presence: true
 
     validates :author, presence: true
     validates :heading_id, presence: true
-    validates :unfeasibility_explanation, presence: { if: :unfeasibility_explanation_required? }
+    validates :valuator_explanation, presence: { if: :valuator_explanation_required? }
     validates :price, presence: { if: :price_required? }
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
 
@@ -228,7 +229,7 @@ class Budget
       feasibility == "unfeasible"
     end
 
-    def unfeasibility_explanation_required?
+    def valuator_explanation_required?
       unfeasible? && valuation_finished?
     end
 
@@ -328,16 +329,21 @@ class Budget
       budget.valuating?
     end
 
-    def should_show_ballots?
-      budget.balloting? && selected?
+    def should_show_ballots?(**args)
+      return false unless selected?
+      return true if budget.balloting?
+
+      budget.reviewing_ballots? &&
+        args[:controller_name].in?(["offline_ballots", "lines"]) &&
+        (args[:current_user]&.administrator? || args[:current_user]&.poll_officer?)
     end
 
     def should_show_price?
-      selected? && price.present? && budget.publishing_prices_or_later? && budget.show_money?
+      selected? && price.present? && budget.show_money? && feasible?
     end
 
     def should_show_price_explanation?
-      should_show_price? && price_explanation.present?
+      should_show_price? && valuator_explanation.present?
     end
 
     def should_show_unfeasibility_explanation?

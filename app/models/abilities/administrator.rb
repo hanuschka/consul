@@ -65,12 +65,13 @@ module Abilities
 
       can [:index, :read, :create, :update, :destroy], Budget
       can :publish, Budget, id: Budget.where(id: Budget.drafting.pluck(:id)).ids
-      can :calculate_winners, Budget, &:reviewing_ballots?
+      can :calculate_winners, Budget, &:balloting_or_later?
+      can :recalculate_winners, Budget, &:balloting_or_later?
+
       can :read_results, Budget do |budget|
         budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
-      can :recalculate_winners, Budget, &:balloting_or_later?
 
       can [:read, :create, :update, :destroy], Budget::Group
       can [:read, :create, :update, :destroy], Budget::Heading
@@ -143,12 +144,12 @@ module Abilities
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
       can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
-      can [:manage], ::DeficiencyReport::Area
+      can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type], Poll::Question
-      can [:update, :verify, :unverify], User
+      can [:update, :verify, :unverify, :reverify], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
         investment.budget.current_phase.kind == "selecting"
@@ -157,6 +158,7 @@ module Abilities
       can :manage, ModalNotification
       can [:index, :import], RegisteredAddress
       can [:index, :update, :destroy], RegisteredAddress::Grouping
+      can [:index, :update], RegisteredAddress::District
       can [:index], RegisteredAddress::Street
 
       can [:results, :stats], Poll, projekt_phase: { settings: { key: "feature.resource.intermediate_poll_results_for_admins", value: "active" }}
@@ -193,6 +195,10 @@ module Abilities
 
       can :get_coordinates_map_location, MapLocation
       can :send_notification, Memo, user_id: user.id
+
+      can :index, Ckeditor::Asset
+      can [:create, :update, :destroy], Ckeditor::Picture
+      can [:create, :update, :destroy], Ckeditor::Document
     end
   end
 end

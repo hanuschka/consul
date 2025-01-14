@@ -1,5 +1,5 @@
 module CsvServices
-  class CommentsExporter < ApplicationService
+  class CommentsExporter < CsvServices::BaseService
     require "csv"
 
     def initialize(comments)
@@ -31,8 +31,8 @@ module CsvServices
 
       def row(comment)
         [
-          comment.id, comment.body, comment.cached_votes_total, comment.cached_votes_up, comment.cached_votes_down,
-          comment.author&.username, comment.user_id, comment.author&.email,
+          comment.id, sanitize_for_csv(comment.body), comment.cached_votes_total, comment.cached_votes_up, comment.cached_votes_down,
+          sanitize_for_csv(comment.author&.username), comment.user_id, sanitize_for_csv(comment.author&.email),
           comment.commentable_type, comment.commentable_id,
           comment.flags_count, comment.ignored_flag_at, comment.moderator_id,
           comment.hidden_at,

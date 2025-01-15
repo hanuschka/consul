@@ -54,7 +54,7 @@ class Users::LatestActivityComponent < ApplicationComponent
     end
 
     def proposals
-      @proposals ||= Proposal.where(author_id: current_user.id)
+      @proposals ||= Proposal.published.not_archived.not_retired.where(author_id: current_user.id)
     end
 
     def debates

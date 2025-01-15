@@ -7,6 +7,9 @@ de:
       deficiency_report_manager:
         one: Mängelmelder Admin
         other: Mängelmelder Admins
+      deficiency_report/officer_group:
+        one: Sachbearbeitergruppe
+        other: Sachbearbeitergruppen
       map_layer:
         one: Kartenebene
         other: Kartenebenen
@@ -89,6 +92,10 @@ de:
           attributes:
             color:
               invalid: Bitte den Farbwert als HEX-code eingeben
+        user:
+          attributes:
+            password:
+              low_complexity: "muss mindestens drei der nachfolgenden Kriterien erfüllen: Großbuchstaben, Kleinbuchstaben, Ziffern, Sonderzeichen."
         unregistered_newsletter_subscriber:
           attributes:
             email:
@@ -128,7 +135,6 @@ de:
         author: Autor
         deficiency_report_category_id: Kategorie
         deficiency_report_status_id: Status
-        deficiency_report_officer_id: Sachbearbeiter*in
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
         on_behalf_of: Meldung im Namen von jemanden erstellen
@@ -137,6 +143,7 @@ de:
         notify_officer_about_new_comments: Benachrichtigung für Sachbearbeiter*in
         official_answer_approved: Antwort freigeben
         approximated_address: Addresse
+        responsible: Sachbearbeiter*in
       deficiency_report/category:
         default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
       deficiency_report/official_answer_template:
@@ -224,6 +231,7 @@ de:
           soft: schwache Gruppe
       individual_group_value:
         name: Name
+        email_pattern: E-Mail-Muster
       sentiment:
         color: Farbe des Sentiments
       sentiment/translation:
@@ -278,3 +286,5 @@ de:
       formular_answer_document:
         title: Titel
         attachment: Anhang
+      registered_address/district:
+        default_deficiency_report_responsible: Standardmäßig Sachbearbeiter*in

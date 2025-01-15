@@ -46,9 +46,12 @@ class ApiClientsController < ApplicationController
     end
 
     redirect_url = dt_response["redirect_url"]
+    redirect_type = dt_response["redirect_type"]
 
     if redirect_url.present?
-      redirect_to redirect_url
+      redirect_to UrlUtils.add_params_to_url(
+        redirect_url, { type: redirect_type }
+      )
     else
       if dt_response.code == 404
         flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, error: #{dt_response['error']}"

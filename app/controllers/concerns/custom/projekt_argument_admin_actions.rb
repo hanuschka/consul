@@ -36,7 +36,7 @@ module ProjektArgumentAdminActions
 
     NotificationServices::ProjektArgumentsNotifier.call(@projekt_phase.id)
     redirect_to polymorphic_path([@namespace, @projekt_phase], action: "projekt_arguments"),
-      notice: t("custom.admin.projekts.edit.projekt_arguments_tab.notifications_sent_notice")
+      notice: t("custom.admin.projekt_phases.projekt_arguments.notifications_sent_notice")
   end
 
   private

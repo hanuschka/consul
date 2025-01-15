@@ -59,7 +59,7 @@ de:
         price: "Preis (€) - im Frontend sichtbar"
         price_first_year: "Kosten im ersten Jahr (intern)"
         feasibility: "Phase 2 & 3: Durchführbarkeit des Vorschlags"
-        feasibility_hint: Definieren SIe, ob dieser Vorschlag durchführbar ist. Durchführbare Vorschläge werden in der Unterstützungsphase (Phase 4) zur Auswahl gestellt. Die Erläuterung kann optional im Frontend oberhalb der Vorschlagsseite angezeigt werden.
+        feasibility_hint: Definieren SIe, ob dieser Vorschlag durchführbar ist. Durchführbare Vorschläge werden in der Unterstützungsphase (Phase 4) zur Auswahl gestellt.
         valuation_closing_title: Status des Vorschlags
         valuation_closing_hint: Vorschlag kann vom Autor nicht mehr geändert werden
         valuation_finished_alert: "Sind Sie sicher, dass Sie diesen Bericht als erledigt markieren möchten? Hiernach können Sie keine Änderungen mehr vornehmen."

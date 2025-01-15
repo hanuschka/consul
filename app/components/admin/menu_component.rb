@@ -89,7 +89,7 @@ class Admin::MenuComponent < ApplicationComponent
     end
 
     def messages_sections
-      %w[newsletters emails_download admin_notifications]
+      %w[newsletters emails_download admin_notifications recipient_groups]
     end
 
     def sdg_managers?
@@ -214,6 +214,7 @@ class Admin::MenuComponent < ApplicationComponent
           admin_notifications_link,
           # system_emails_link,
           emails_download_link,
+          recipient_groups_link,
           id: "messaging_users_menu", class: ("is-active" if messages_menu_active?)
         )
     end

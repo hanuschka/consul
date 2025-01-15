@@ -374,6 +374,8 @@ namespace :admin do
     end
   end
 
+  resources :recipient_groups
+
   resources :system_emails, only: [:index] do
     get :view
     get :preview_pending

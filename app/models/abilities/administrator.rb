@@ -199,6 +199,8 @@ module Abilities
       can :index, Ckeditor::Asset
       can [:create, :update, :destroy], Ckeditor::Picture
       can [:create, :update, :destroy], Ckeditor::Document
+
+      can :manage, RecipientGroup
     end
   end
 end

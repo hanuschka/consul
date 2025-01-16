@@ -337,7 +337,7 @@ de:
     retire_options:
       duplicated: Dupliziert
       started: In Ausführung
-      unfeasible: Undurchführbar
+      unfeasible: Entspricht nicht den Kriterien
       done: Fertig
       other: Andere
     form:
@@ -897,7 +897,7 @@ de:
       not_logged_in: Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können.
       not_verified: Nur verifizierte Benutzer können über ein Investitionsprojekt abstimmen; %{verify_account}.
       organization: Organisationen ist es nicht erlaubt abzustimmen
-      unfeasible: Undurchführbare Investitionsprojekte können nicht unterstützt werden
+      unfeasible: Vorschläge, die den Kriterien nicht ensprechen, können in Phase 4 nicht unterstützt werden.
       not_voting_allowed: Die Abstimmungsphase ist beendet
       different_heading_assigned:
         one: "Sie können nur Investitionsprojekte in %{count} Bereich unterstützen. Sie haben bereits Investitionen in %{supported_headings} unterstützt."

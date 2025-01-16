@@ -88,7 +88,7 @@
       <div class="row">
         <div class="column large-8">
           <strong><%= t("custom.admin.projekt_phases.resource_form_title_hint") %></strong>
-          <%= translations_form.text_field :resource_form_title_hint, label: false %>
+          <%= translations_form.text_area :resource_form_title_hint, label: false, rows: 4, style: "margin-bottom:1rem;" %>
         </div>
       </div>
     <% end %>

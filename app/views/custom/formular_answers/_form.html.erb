@@ -1,5 +1,10 @@
 <%= form_with model: formular_answer, local: false do |f| %>
   <%= f.hidden_field :formular_id, value: formular_answer.formular_id %>
+
+  <% if params[:token].present? %>
+    <%= hidden_field_tag :token, params[:token] %>
+  <% end %>
+
   <% formular_fields.each do |ff| %>
     <div class="formular-field-block">
       <% label_class = [] %>

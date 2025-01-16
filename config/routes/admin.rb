@@ -147,6 +147,7 @@ namespace :admin do
   end
   resources :registered_address_groupings, only: %i[index edit update destroy]
   resources :registered_address_streets, only: %i[index]
+  resources :registered_address_districts, only: %i[index edit update]
 
   resources :organizations, only: :index do
     get :search, on: :collection

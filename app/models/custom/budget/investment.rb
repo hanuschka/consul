@@ -71,11 +71,9 @@ class Budget
     end
 
     def should_show_feasibility_explanation?
-      return if should_show_price?
-
       feasible? &&
-        selected? && budget.published_prices? &&
-        price_explanation.present?
+        selected? &&
+        valuator_explanation.present?
     end
 
     private

@@ -175,7 +175,7 @@ de:
         image: "Beschreibendes Bild zum Ausgabenvorschlag"
         image_title: "Bildtitel"
         duration: "Zeitrahmen"
-        feasibility_feasible: "Durchführbar"
+        feasibility_feasible: Entspricht den Kriterien
         feasibility_undecided: "Undefiniert"
         feasibility_unfeasible: "Undurchführbar"
         incompatible: "Als inkompatibel markieren"
@@ -184,7 +184,7 @@ de:
         selected: "Als ausgewählt markieren"
         selected_true: "Ausgewählt"
         selected_false: "Nicht ausgewählt"
-        unfeasibility_explanation: "Erläuterung der Durchführbarkeit"
+        unfeasibility_explanation: "Erläuterung"
         valuation_finished: "Begutachtung abgeschlossen"
         valuator_ids: "Gruppen"
         valuation_tag_list: "Tags"

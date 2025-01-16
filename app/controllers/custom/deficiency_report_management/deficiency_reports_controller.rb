@@ -42,9 +42,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def edit
     @deficiency_report = DeficiencyReport.find(params[:id])
-    @areas = DeficiencyReport::Area.all.order(created_at: :asc)
-    @map_coordinates_for_areas = @areas.map do |area|
-      [area.id, [area.map_location.latitude, area.map_location.longitude]]
+    @districts = RegisteredAddress::District.joins(:map_location).order(created_at: :asc)
+    @map_coordinates_for_districts = @districts.map do |district|
+      [district.id, [district.map_location.latitude, district.map_location.longitude]]
     end.to_h
   end
 
@@ -92,7 +92,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     def deficiency_report_params
       attributes = [:video_url, :on_behalf_of,
                     :deficiency_report_category_id,
-                    :deficiency_report_area_id,
                     :deficiency_report_status_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,

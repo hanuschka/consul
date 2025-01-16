@@ -89,7 +89,7 @@ de:
         map_remove_marker: "Entfernen Sie die Kartenmarkierung"
       index:
         title: Budgets
-        unfeasible: Undurchführbare Investitionsvorschläge
+        unfeasible: Entspricht nicht den Kriterien
         unfeasible_text: "Der Investitionsvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, innerhalb des Limits des Budgetss) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Investitionsvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
         by_heading: "Investitionsvorschläge im Bereich: %{heading}"
         search_form:
@@ -119,7 +119,7 @@ de:
           create: "Investitionsvorschlag erstellen"
         filter: "Projekte filtern nach"
         filters:
-          not_unfeasible: "Durchführbar"
+          not_unfeasible: Entspricht den Kriterien
           selected: "Ausgewählt"
           unfeasible: "Nicht durchführbar"
           unselected: "Nicht für die Endabstimmung ausgewählt"

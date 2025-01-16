@@ -174,11 +174,11 @@ de:
         organization_name: "Investitionsvorschlag erstellen im Namen von..."
         image: "Beschreibendes Bild zum Investitionsvorschlag"
         image_title: "Bildtitel"
-        duration: "Zeitrahmen"
-        feasibility_feasible: "Durchführbar"
-        feasibility_undecided: "Undefiniert"
-        feasibility_unfeasible: "Undurchführbar"
-        incompatible: "Als inkompatibel markieren"
+        duration: Zeitrahmen (intern)
+        feasibility_feasible: Entspricht den Kriterien
+        feasibility_undecided: Noch nicht bewertet
+        feasibility_unfeasible: Entspricht nicht den Kriterien
+        incompatible: Diesen Vorschlag nicht zur Kalkulation der Gewinner berücksichtigen
         milestone_tag_list: "Status des Vorschlags"
         price_explanation: "Erläuterung der Kosten"
         selected: "Als ausgewählt markieren"

@@ -20,8 +20,8 @@ de:
       index:
         filters:
           all: Alle
-          feasible: Zugelassene
-          unfeasible: Nicht zugelassene
+          feasible: Entspricht den Kriterien
+          unfeasible: Entspricht nicht den Kriterien
           undecided: Noch nicht definiert
         orders:
           random: Zufällig

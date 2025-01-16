@@ -6,12 +6,12 @@ en:
         tags_custom: User tags
         required: Your input
         title_placeholder: "Give your contribution a catchy title, for example “The project duration is too long” or “Please expand the planned measures”."
-        description_placeholder_html: "
-          Describe your contribution here. The following procedure has proven successful:<br /><br />
-          Start with a general description of your idea and then show what would improve with the implementation of your suggestion.<br /><br />
-          When writing, keep sentences as short as possible.<br />
-          Also use paragraphs to make your text more readable. (Many users read your text on mobile devices.)<br /><br />
-          If possible, limit your content to a maximum of three paragraphs.<br /><br />
+        description_placeholder: "
+          Describe your contribution here. The following procedure has proven successful:\n\n
+          Start with a general description of your idea and then show what would improve with the implementation of your suggestion.\n\n
+          When writing, keep sentences as short as possible.\n
+          Also use paragraphs to make your text more readable. (Many users read your text on mobile devices.)\n\n
+          If possible, limit your content to a maximum of three paragraphs.\n\n
           If appropriate, use lists and bullet points for better clarity.
           "
       index:

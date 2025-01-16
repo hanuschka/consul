@@ -5,9 +5,9 @@ de:
         page_description: Vielen Dank, dass Sie einen Mangel melden! Sie helfen uns damit, diesen so schnell es geht abzustellen.
           Bitte beschreiben Sie möglichst genau, was Ihnen aufgefallen ist. Typische Mängel sind zum Beispiel Straßenschäden oder beschädigte Parkbänke.
         title_placeholder: Geben Sie dem Mangel, den Sie melden möchten, einen plakativen Titel wie zum Beispiel “Schlagloch in XY-Straße vor Hausnummer 123”.
-        description_placeholder_html: "Beschreiben Sie hier den Mangel, den Sie melden möchten.<br><br>
-          Details helfen der Stadtverwaltung, den Mangel aufzufinden und schnell zu beseitigen.<br></br>
-          Wenn Sie zum Beispiel die Hausnummer wissen, vor der sich ein Schlagloch befindet, dann geben Sie diese gerne an.<br></br>
+        description_placeholder: "Beschreiben Sie hier den Mangel, den Sie melden möchten.\n\n
+          Details helfen der Stadtverwaltung, den Mangel aufzufinden und schnell zu beseitigen.\n\n
+          Wenn Sie zum Beispiel die Hausnummer wissen, vor der sich ein Schlagloch befindet, dann geben Sie diese gerne an.\n\n
           Bitte nennen Sie keine persönlichen Daten von Dritten wie zum Beispiel Adressen."
         map:
           hint: Setzen Sie einen Pin auf der Karte, um den Mangel genau zu verorten.

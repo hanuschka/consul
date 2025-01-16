@@ -59,6 +59,7 @@ de:
           details_block_title: Weitere Infos
           author: Autor
           created_at: Erstellungsdatum
+          frontend: Frontend
           implementation_performer_label: Umsetzung
           implementation_performer:
             city: Autor unterstützt bei der Umsetzung nicht

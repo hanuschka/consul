@@ -131,7 +131,6 @@
 //= require Leaflet.Deflate/dist/L.Deflate
 //= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
 //= require ckeditor5/ckeditor5.umd
-//= require ckeditor5/file-upload-manager
 
 var initialize_modules = function() {
   "use strict";

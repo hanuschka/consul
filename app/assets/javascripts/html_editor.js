@@ -50,6 +50,17 @@
           }
         },
 
+        fontSize: {
+            options: [
+                9,
+                11,
+                'default',
+                17,
+                19,
+                21
+            ]
+        },
+
         heading: {
           options: [
             {
@@ -219,23 +230,22 @@
         plugins = [
           Essentials, Font, Paragraph, Heading,
           List, Indent, IndentBlock, BlockQuote, Alignment,
-          ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, ImageUpload, SimpleUploadAdapter,
+          ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, window.UploadFilesPlugin,
           Link, Bold, Italic, Underline, Strikethrough, Subscript, Superscript, RemoveFormat,
           Table, HorizontalLine, SpecialCharacters, SpecialCharactersEssentials,
           MediaEmbed, SourceEditing,
-          HtmlEmbed, GeneralHtmlSupport,
-          window.UploadFilesPlugin
+          HtmlEmbed, GeneralHtmlSupport
         ]
 
         toolbarControls = [
           "bulletedList", "numberedList", "|", "indent", "outdent", "|", "blockQuote", "|", "alignment:left", "alignment:center", "alignment:right", "alignment:justify", "|",
-          "insertImage", "|",
+          "uploadFiles", "|",
+          "fontSize", "|",
           "heading", "|", "link", "|", "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "|", "removeFormat", "|",
           "fontColor", "fontBackgroundColor", "|",
           "insertTable", "horizontalLine", "specialCharacters", "|",
           "mediaEmbed", "sourceEditing", "|",
-          "htmlEmbed",
-          "uploadFiles"
+          "htmlEmbed"
         ]
 
       } else {

@@ -91,6 +91,8 @@ de:
 
       extended_option:
         general:
+          city_name: Name der Applikation
+          city_name_description: Wird unter anderem bei der BundID-Verifizierung verwendet
           title: Titel der Applikation
           title_description: Fügt einen Titel zur Applikation hinzu.
           subtitle: Untertitel der Applikation

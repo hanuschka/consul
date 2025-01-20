@@ -7,8 +7,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   load_and_authorize_resource
 
-  after_action :unassign_deficiency_report_officer, only: :destroy
-
   def index
     filter_assigned_reports_only
     @deficiency_reports = apply_filters(@deficiency_reports)
@@ -30,18 +28,30 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   def show
     @deficiency_report = DeficiencyReport.find(params[:id])
     @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
+
+    set_current_responsible
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf_content = PdfServices::DeficiencyReportExporter.call(@deficiency_report)
+        send_data pdf_content.render, filename: "deficiency_report_#{params[:id]}.pdf", type: "application/pdf"
+      end
+    end
   end
 
   def edit
     @deficiency_report = DeficiencyReport.find(params[:id])
-    @areas = DeficiencyReport::Area.all.order(created_at: :asc)
-    @map_coordinates_for_areas = @areas.map do |area|
-      [area.id, [area.map_location.latitude, area.map_location.longitude]]
+    @districts = RegisteredAddress::District.joins(:map_location).order(created_at: :asc)
+    @map_coordinates_for_districts = @districts.map do |district|
+      [district.id, [district.map_location.latitude, district.map_location.longitude]]
     end.to_h
   end
 
   def update
     @deficiency_report = DeficiencyReport.find(params[:id])
+
+    update_responsible
 
     if @deficiency_report.update(deficiency_report_params)
       notify_new_officer(@deficiency_report)
@@ -82,8 +92,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     def deficiency_report_params
       attributes = [:video_url, :on_behalf_of,
                     :deficiency_report_category_id,
-                    :deficiency_report_area_id,
-                    :deficiency_report_officer_id, :assigned_at,
                     :deficiency_report_status_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
@@ -96,13 +104,24 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       return unless Setting["deficiency_reports.admins_must_assign_officer"].present?
       raise CanCan::AccessDenied unless current_user.deficiency_report_officer?
 
-      @deficiency_reports = @deficiency_reports.where(deficiency_report_officer_id: current_user.deficiency_report_officer.id)
+      deficiency_report_ids = @deficiency_reports.select do |dr|
+        dr.responsible.is_a?(DeficiencyReport::Officer) && dr.responsible == current_user.deficiency_report_officer ||
+          dr.responsible.is_a?(DeficiencyReport::OfficerGroup) && dr.responsible.officers.include?(current_user.deficiency_report_officer)
+      end
+
+      @deficiency_reports = @deficiency_reports.where(id: deficiency_report_ids)
     end
 
     def notify_new_officer(dr)
-      return if dr.deficiency_report_officer_id_before_last_save == dr.deficiency_report_officer_id
+      return if dr.responsible_id_before_last_save == dr.responsible_id && dr.responsible_type_before_last_save == dr.responsible_type
 
-      DeficiencyReportMailer.notify_officer(dr).deliver_later
+      if dr.responsible.is_a?(DeficiencyReport::Officer)
+        DeficiencyReportMailer.notify_officer(dr, dr.responsible).deliver_later
+      elsif dr.responsible.is_a?(DeficiencyReport::OfficerGroup)
+        dr.responsible.officers.each do |officer|
+          DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+        end
+      end
     end
 
     def notify_author_about_status_change(dr)
@@ -111,7 +130,24 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
     end
 
-    def unassign_deficiency_report_officer
-      @deficiency_report.update_column(:deficiency_report_officer_id, nil)
+    def set_current_responsible
+      if @deficiency_report.responsible.is_a?(DeficiencyReport::Officer)
+        @deficiency_report.officer_id = @deficiency_report.responsible.id
+      elsif @deficiency_report.responsible.is_a?(DeficiencyReport::OfficerGroup)
+        @deficiency_report.officer_group_id = @deficiency_report.responsible.id
+      end
+    end
+
+    def update_responsible
+      current_responsible = @deficiency_report.responsible
+
+      if params[:deficiency_report]["officer_id"].present?
+        @deficiency_report.responsible = DeficiencyReport::Officer.find(params[:deficiency_report]["officer_id"])
+      elsif params[:deficiency_report]["officer_group_id"].present?
+        @deficiency_report.responsible = DeficiencyReport::OfficerGroup.find(params[:deficiency_report]["officer_group_id"])
+      end
+
+      new_responsible = @deficiency_report.responsible
+      @deficiency_report.assigned_at = Time.zone.now unless current_responsible == new_responsible
     end
 end

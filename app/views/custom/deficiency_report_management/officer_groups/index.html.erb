@@ -1,0 +1,34 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("custom.admin.deficiency_reports.officer_groups.index.title") %>
+<% end %>
+
+<%= link_to t("custom.admin.deficiency_reports.officer_groups.index.create"),
+              new_deficiency_report_management_officer_group_path, class: "button float-right" %>
+
+<h2 class="inline-block"><%= t("custom.admin.deficiency_reports.officer_groups.index.title") %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("custom.admin.deficiency_reports.officer_groups.officer_group.name") %></th>
+      <th><%= t("custom.admin.deficiency_reports.officer_groups.officer_group.officers") %></th>
+      <th><%= t("admin.actions.actions") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @officer_groups.each do |officer_group| %>
+      <tr>
+        <td><%= officer_group.name %></td>
+        <td><%= officer_group.officers.map(&:name).join(", ") %></td>
+        <td>
+          <%= render Admin::TableActionsComponent.new(officer_group,
+                                                      actions: [:edit, :destroy],
+                                                      edit_path: edit_deficiency_report_management_officer_group_path(officer_group),
+                                                      destroy_path: deficiency_report_management_officer_group_path(officer_group)
+                                                     ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

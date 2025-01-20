@@ -70,6 +70,10 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
   end
 
   def cancel_url
-    admin_frame_new_phase_selector_path(projekt)
+    if current_user.administrator?
+      frame_new_phase_selector_admin_projekt_phase(projekt)
+    elsif current_user.projekt_manager?
+      frame_new_phase_selector_projekt_management_projekt_phase(projekt)
+    end
   end
 end

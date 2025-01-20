@@ -1,26 +1,23 @@
 class Ckeditor::Picture < Ckeditor::Asset
-  EDITORS_WITH_FULL_URL = %w[newsletter_body].freeze
-
-  attr_accessor :data
-  has_one_attached :storage_data
-
-  validates :storage_data, file_content_type: { allow: /^image\/.*/ }, file_size: { less_than: 2.megabytes }
+  ALLOWED_CONTENT_TYPES = %w[image/jpg image/jpeg image/png image/gif].freeze
 
   def url_content(editor_id: nil)
-    if absolute_path?(editor_id)
-      Setting["url"] + rails_representation_url(storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true)
-    else
-      rails_representation_url(storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true)
-    end
+    file_path = rails_representation_url(
+      storage_data.variant(coalesce: true, resize: "800>", loader: { page: nil }), only_path: true
+    )
+
+    absolute_path?(editor_id) ? Setting["url"] + file_path : file_path
   end
 
-  def url_thumb
-    rails_representation_url(storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true)
+  def url_thumb(editor_id: nil)
+    file_path = rails_representation_url(
+      storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
+    )
+
+    absolute_path?(editor_id) ? Setting["url"] + file_path : file_path
   end
 
-  private
-
-    def absolute_path?(editor_id)
-      editor_id.present? && EDITORS_WITH_FULL_URL.include?(editor_id)
-    end
+  def type
+    "Ckeditor::Picture"
+  end
 end

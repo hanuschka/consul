@@ -29,7 +29,7 @@
           <% if @investment.should_show_unfeasibility_explanation? %>
             <div class="resource-page--description new-card" style="background-color:#fcf8e3;border-color:#faebcc;">
               <h3><%= t("budgets.investments.show.unfeasibility_explanation") %></h3>
-              <p><%= auto_link_already_sanitized_html wysiwyg(@investment.unfeasibility_explanation) %></p>
+              <p><%= auto_link_already_sanitized_html wysiwyg(@investment.valuator_explanation) %></p>
             </div>
           <% end %>
 
@@ -54,13 +54,13 @@
 
             <% if @investment.should_show_price_explanation? %>
               <br>
-              <%= @investment.price_explanation %>
+              <%= @investment.valuator_explanation %>
             <% end %>
           </div>
         <% elsif @investment.should_show_feasibility_explanation? %>
             <div class="resource-page--description new-card" style="background-color:#fff;border-color:#d9d9d9;">
               <h3><%= t("custom.budgets.investments.show.feasibility_explanation") %></h3>
-              <p><%= auto_link_already_sanitized_html wysiwyg(@investment.price_explanation) %></p>
+              <p><%= auto_link_already_sanitized_html wysiwyg(@investment.valuator_explanation) %></p>
             </div>
         <% end %>
 
@@ -225,7 +225,7 @@
           <% end %>
         <% end %>
 
-        <% if current_user && !current_user.guest? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_community_button_in_sidebar") %>
+        <% if current_user && !current_user.guest? && projekt_phase_feature?(@investment.projekt_phase, "resource.show_community_button_in_sidebar") && can?(:show, @investment.community) %>
           <%= render(Shared::SidebarCardComponent.new(
               title: t("custom.proposals.show.community_section.title"),
               icon_name: "users")

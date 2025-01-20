@@ -41,7 +41,9 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
         redirect_to valuation_budget_budget_investment_path(@budget, @investment), notice: notice
       end
     else
-      render action: :edit
+      @show_state_form_by_default = true
+      @namespace = params[:namespace].to_sym if params[:namespace].present?
+      render "custom/admin/budget_investments/show"
     end
   end
 
@@ -112,7 +114,8 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
         :price, :price_first_year, :price_explanation,
         :feasibility, :unfeasibility_explanation,
         :duration, :valuation_finished,
-        :incompatible, :selected
+        :incompatible, :selected,
+        :valuator_explanation
       ]
     end
 

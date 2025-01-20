@@ -10,7 +10,6 @@ namespace :admin do
       get :settings
       get :map
       patch :update_map
-      put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -78,6 +77,7 @@ namespace :admin do
       get :order_up
       get :order_down
       patch :update_standard_phase
+      get :frame_new_phase_selector
       patch :quick_update
       patch :update_map
     end
@@ -147,6 +147,7 @@ namespace :admin do
   end
   resources :registered_address_groupings, only: %i[index edit update destroy]
   resources :registered_address_streets, only: %i[index]
+  resources :registered_address_districts, only: %i[index edit update]
 
   resources :organizations, only: :index do
     get :search, on: :collection
@@ -295,6 +296,7 @@ namespace :admin do
   end
 
   resources :users, only: [:index, :show, :edit, :update] do
+    get :reverify, on: :collection #custom
     resources :audits, only: :show, controller: "user_audits"
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_01_09_202812) do
+ActiveRecord::Schema.define(version: 2025_01_16_122613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2140,6 +2140,14 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
   end
 
+  create_table "recipient_groups", force: :cascade do |t|
+    t.string "name"
+    t.string "origin_class"
+    t.string "origin_method"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "registered_address_cities", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -2515,6 +2523,7 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["individual_group_value_id"], name: "index_user_individual_group_values_on_individual_group_value_id"
+    t.index ["user_id", "individual_group_value_id"], name: "index_user_ig_values_on_user_id_and_ig_value_id", unique: true
     t.index ["user_id"], name: "index_user_individual_group_values_on_user_id"
   end
 

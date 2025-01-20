@@ -28,7 +28,7 @@ de:
           other: "Sie haben für <span>%{count}</span> Investitionsvorschläge gestimmt."
         voted_info: "Ihre Stimme ist bestätigt!"
         voted_info_2: "Aber Sie können Ihre Stimme jederzeit ändern, bis diese Phase abgeschlossen ist."
-        zero: Sie haben noch über keinen Investitionsvorschlag abgestimmt.
+        zero: Sie haben noch über keinen Vorschlag abgestimmt.
       reasons_for_not_balloting:
         not_logged_in: Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können.
         not_verified: Nur verifizierte Benutzer*innen können über einen Investitionsvorschlag abstimmen, %{verify_account}.
@@ -115,13 +115,13 @@ de:
           different_heading_assigned: "Sie haben bereits in einer anderen Rubrik: %{heading_link} abgestimmt"
           change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme unter %{check_ballot} entfernen und von vorne beginnen."
           check_ballot_link: "Überprüfung meiner Abstimmung"
-          zero: Sie haben bislang noch für keinen Investitionsvorschlag abgestimmt.
+          zero: Sie haben bislang noch für keinen Vorschlag abgestimmt.
           create: "Investitionsvorschlag erstellen"
         filter: "Projekte filtern nach"
         filters:
           not_unfeasible: Entspricht den Kriterien
           selected: "Ausgewählt"
-          unfeasible: "Nicht durchführbar"
+          unfeasible: "Entspricht nicht den Kriterien"
           unselected: "Nicht für die Endabstimmung ausgewählt"
           winners: "Gewinner"
         orders:

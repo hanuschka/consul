@@ -369,10 +369,11 @@ class User < ApplicationRecord
 
     def assign_individual_group_values_based_on_email_pattern
       IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
-        next unless email.ends_with?(group_value.email_pattern)
         next if group_value.users.include?(self)
+        next unless group_value.email_pattern.start_with?("@")
+        next unless email.ends_with?(group_value.email_pattern)
 
-        group_value.users << self if email.ends_with?(group_value.email_pattern)
+        group_value.users << self
       end
     end
 end

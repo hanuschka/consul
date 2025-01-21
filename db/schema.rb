@@ -2064,6 +2064,7 @@ ActiveRecord::Schema.define(version: 2025_01_16_122613) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
+    t.boolean "from_dt", default: false
     t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin

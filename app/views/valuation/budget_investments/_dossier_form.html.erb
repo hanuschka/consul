@@ -1,90 +1,142 @@
 <% budget = investment.budget %>
-<%= form_for(investment, url: valuate_valuation_budget_budget_investment_path(budget, investment), html: { id: "valuation_budget_investment_edit_form" }) do |f| %>
 
-  <%= hidden_field_tag :origin, origin if local_assigns[:origin] %>
-  <%= hidden_field_tag :namespace, @namespace if @namespace %>
+<h3>Einschätzung der Verwaltung / der Gutachter</h3>
 
-  <%= render "shared/errors", resource: investment %>
+<div id="valuation_budget_investment_edit_forms">
 
-  <h3>Einschätzung der Verwaltung / der Gutachter</h3>
+  <%= form_for(investment, url: valuate_valuation_budget_budget_investment_path(budget, investment)) do |f| %>
+    <%= hidden_field_tag :origin, origin if local_assigns[:origin] %>
+    <%= hidden_field_tag :namespace, @namespace if @namespace %>
 
-  <div class="row" style="margin-bottom:1rem;">
-    <div class="small-12 medium-6 column">
-      <h4><%= t("valuation.budget_investments.edit.feasibility") %></h4>
-      <p class="margin-bottom"><%= t("valuation.budget_investments.edit.feasibility_hint") %></p>
-      <div><%= f.radio_button :feasibility, "undecided", style: "margin-bottom:0.5rem" %></div>
-      <div><%= f.radio_button :feasibility, "feasible", style: "margin-bottom:0.5rem" %></div>
-      <div><%= f.radio_button :feasibility, "unfeasible", style: "margin-bottom:0.5rem" %></div>
-    </div>
+    <%= render "shared/errors", resource: investment %>
 
-    <div class="small-12 medium-4 column">
-      <h4><%= t("valuation.budget_investments.edit.valuation_closing_title") %></h4>
-
-      <%= f.check_box :valuation_finished,
-          id: "js-investment-report-alert",
-          "data-alert": t("valuation.budget_investments.edit.valuation_finished_alert"),
-          "data-not-feasible-alert": t("valuation.budget_investments.edit.not_feasible_alert") %>
-      <span><%= t("valuation.budget_investments.edit.valuation_closing_hint") %></span>
-    </div>
-  </div>
-
-  <div class="margin-bottom">
-    <div class="row feasible_fields unfeasible_fields">
+    <div class="row" style="">
       <div class="small-12 medium-8 column">
-        <div class="margin-bottom">
-          <%= f.text_area :valuator_explanation, rows: 3 %>
-        </div>
-      </div>
-    </div>
-
-    <% if budget.show_money? %>
-      <div class="row feasible_fields">
-        <div class="small-12 medium-4 column">
-          <%= f.number_field :price,
-            label: t("valuation.budget_investments.edit.price", currency: budget.currency_symbol),
-            max: 1000000000000000 %>
+        <h4><%= t("valuation.budget_investments.edit.feasibility") %></h4>
+        <p class="margin-bottom"><%= t("valuation.budget_investments.edit.feasibility_hint") %></p>
+        <div><%= f.radio_button :feasibility, "undecided", style: "margin-bottom:0.5rem" %></div>
+        <div><%= f.radio_button :feasibility, "feasible", style: "margin-bottom:0.5rem" %></div>
+        <div><%= f.radio_button :feasibility, "unfeasible", style: "margin-bottom:0.5rem" %></div>
+        <div class="feasible_fields unfeasible_fields margin-top">
+          <%= f.text_area :valuator_explanation, rows: 4, class: "margin-bottom" %>
         </div>
 
-        <div class="small-12 medium-4 column end">
-          <%= f.number_field :price_first_year,
-            label: t("valuation.budget_investments.edit.price_first_year", currency: budget.currency_symbol),
-            max: 1000000000000000 %>
-        </div>
+        <%= f.check_box :valuation_finished,
+            id: "js-investment-report-alert",
+            "data-alert": t("valuation.budget_investments.edit.valuation_finished_alert"),
+            "data-not-feasible-alert": t("valuation.budget_investments.edit.not_feasible_alert") %>
       </div>
 
-    <% else %>
-      <%= f.hidden_field :price, value: 0 %>
-
-    <% end %>
-
-    <div class="row feasible_fields">
       <div class="small-12 medium-4 column">
-        <%= f.text_field :duration %>
+        <h4>Information</h4>
+        <p class="">
+          Das Budget befindet sich im Moment in folgender Phase:<br>
+          <%= "#{budget.current_phase_index}. #{budget.current_phase.name}" %>
+        </p>
       </div>
     </div>
-  </div>
 
-  <div class="row expanded margin-bottom">
-    <div class="small-12 medium-8 column">
-			<h4><%= t("valuation.budget_investments.edit.phase_6_title") %></h4>
-			<p><%= t("valuation.budget_investments.edit.phase_6_hint") %></p>
-
-      <%= f.check_box :selected, title: t("admin.budget_investments.edit.selection") %>
+    <div class="row">
+      <div class="actions small-12 medium-4 column">
+        <%= f.submit(class: "button expanded large", value: t("valuation.budget_investments.edit.save"), style: "margin-bottom:3rem;") %>
+      </div>
     </div>
+  <% end %>
+
+  <div class="feasible_fields">
+    <%= form_for(investment, url: valuate_valuation_budget_budget_investment_path(budget, investment)) do |f| %>
+      <%= hidden_field_tag :origin, origin if local_assigns[:origin] %>
+      <%= hidden_field_tag :namespace, @namespace if @namespace %>
+
+      <%= render "shared/errors", resource: investment %>
+
+      <div class="row expanded">
+        <div class="small-12 medium-8 column">
+          <h4><%= t("valuation.budget_investments.edit.phase_5_title") %></h4>
+          <p><%= t("valuation.budget_investments.edit.phase_5_hint") %></p>
+        </div>
+      </div>
+
+      <div class="row expanded">
+        <div class="small-12 medium-4 column">
+          <% if budget.show_money? %>
+            <div class="">
+              <%= f.number_field :price,
+                label: t("valuation.budget_investments.edit.price", currency: budget.currency_symbol),
+                max: 1000000000000000 %>
+            </div>
+
+            <div class="">
+              <%= f.number_field :price_first_year,
+                label: t("valuation.budget_investments.edit.price_first_year", currency: budget.currency_symbol),
+                max: 1000000000000000 %>
+            </div>
+
+          <% else %>
+            <%= f.hidden_field :price, value: 0 %>
+
+          <% end %>
+
+          <div class="">
+            <%= f.text_field :duration %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="actions small-12 medium-4 column">
+          <%= f.submit(class: "button expanded large", value: t("valuation.budget_investments.edit.save"), style: "margin-bottom:3rem;") %>
+        </div>
+      </div>
+    <% end %>
   </div>
 
-  <div class="row expanded margin-bottom">
-    <div class="small-12 medium-8 column">
-      <h4><%= t("valuation.budget_investments.edit.phase_8_title") %></h4>
-      <p><%= t("valuation.budget_investments.edit.phase_8_hint") %></p>
+  <%= form_for(investment, url: valuate_valuation_budget_budget_investment_path(budget, investment)) do |f| %>
+    <%= hidden_field_tag :origin, origin if local_assigns[:origin] %>
+    <%= hidden_field_tag :namespace, @namespace if @namespace %>
 
-      <%= f.check_box :incompatible, title: t("admin.budget_investments.edit.compatibility") %>
+    <%= render "shared/errors", resource: investment %>
+
+    <div class="row expanded">
+      <div class="small-12 medium-8 column">
+        <h4><%= t("valuation.budget_investments.edit.phase_6_title") %></h4>
+        <p><%= t("valuation.budget_investments.edit.phase_6_hint") %></p>
+
+        <div>
+          <%= f.radio_button :selected, true, label: t("valuation.budget_investments.edit.selected_true") %>
+        </div>
+        <div>
+          <%= f.radio_button :selected, false, label: t("valuation.budget_investments.edit.selected_false") %>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="actions small-12 medium-4 column">
-      <%= f.submit(class: "button expanded large", value: t("valuation.budget_investments.edit.save")) %>
+    <div class="row">
+      <div class="actions small-12 medium-4 column">
+        <%= f.submit(class: "button expanded large", value: t("valuation.budget_investments.edit.save"), style: "margin-bottom:3rem;") %>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+
+  <%= form_for(investment, url: valuate_valuation_budget_budget_investment_path(budget, investment)) do |f| %>
+    <%= hidden_field_tag :origin, origin if local_assigns[:origin] %>
+    <%= hidden_field_tag :namespace, @namespace if @namespace %>
+
+    <%= render "shared/errors", resource: investment %>
+
+    <div class="row expanded">
+      <div class="small-12 medium-8 column">
+        <h4><%= t("valuation.budget_investments.edit.phase_8_title") %></h4>
+        <p><%= t("valuation.budget_investments.edit.phase_8_hint") %></p>
+
+        <%= f.check_box :incompatible, title: t("admin.budget_investments.edit.compatibility") %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="actions small-12 medium-4 column">
+        <%= f.submit(class: "button expanded large", value: t("valuation.budget_investments.edit.save"), style: "margin-bottom:4rem;") %>
+      </div>
+    </div>
+  <% end %>
+</div>

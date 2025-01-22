@@ -12,9 +12,9 @@
 
 <% @audit.audited_changes.each do |field, (old_value, new_value)| %>
   <strong><%= t("admin.audits.field") %></strong>
-  <p><%= sanitize(@audit.auditable.class.human_attribute_name(field)) %></p>
+  <p><%= @audit.auditable.class.human_attribute_name(field) %></p>
   <strong><%= t("admin.audits.old_value") %></strong>
-  <p><%= wysiwyg(audit_value(@audit.auditable, field, old_value)) %></p>
+  <p><%= audit_value(@audit.auditable, field, old_value) %></p>
   <strong><%= t("admin.audits.new_value") %></strong>
-  <p><%= wysiwyg(audit_value(@audit.auditable, field, new_value)) %></p>
+  <p><%= audit_value(@audit.auditable, field, new_value) %></p>
 <% end %>

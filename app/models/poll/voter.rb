@@ -8,16 +8,17 @@ class Poll
     belongs_to :booth_assignment
     belongs_to :officer_assignment
     belongs_to :officer
+    belongs_to :poll_manager #custom
 
     validates :poll_id, presence: true
     validates :user_id, presence: true
-    validates :booth_assignment_id, presence: true, if: ->(voter) { voter.origin == "booth" }
-    validates :officer_assignment_id, presence: true, if: ->(voter) { voter.origin == "booth" }
+    # validates :booth_assignment_id, presence: true, if: ->(voter) { voter.origin == "booth" }
+    # validates :officer_assignment_id, presence: true, if: ->(voter) { voter.origin == "booth" }
 
     validates :user_id, uniqueness: { scope: [:poll_id], message: :has_voted }
     validates :origin, inclusion: { in: ->(*) { VALID_ORIGINS }}
 
-    before_validation :set_demographic_info, :set_document_info, :set_denormalized_booth_assignment_id
+    # before_validation :set_demographic_info, :set_document_info, :set_denormalized_booth_assignment_id
 
     scope :web,    -> { where(origin: "web") }
     scope :booth,  -> { where(origin: "booth") }

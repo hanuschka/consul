@@ -1,6 +1,6 @@
 section "Creating Users" do
   def create_user(email, username)
-    password = "12345678"
+    password = "Aa12345678"
     User.create!(
       username:               username,
       email:                  email,

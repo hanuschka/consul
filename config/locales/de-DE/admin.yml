@@ -207,10 +207,10 @@ de:
           without_valuator: Ohne zugewiesene*n Begutachter*in
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
-          feasible: Durchführbar
+          feasible: Entspricht den Kriterien
           selected: Ausgewählt
           undecided: Offen
-          unfeasible: Undurchführbar
+          unfeasible: Entspricht nicht den Kriterien
           min_total_supports: Minimum Unterstützer*innen
           max_total_supports: Maximum Unterstützer*innen
           winners: Bestbewertete Vorschläge

@@ -2,6 +2,4 @@
 
 <p><%= t("admin.dashboard.index.description", org: setting["org_name"]) %></p>
 
-<% if ApiClient.where(registration_status: :registered).none? %>
-  <%= render ApiClients::ConnectToClientComponent.new %>
-<% end %>
+<%= render ApiClients::ConnectToClientComponent.new %>

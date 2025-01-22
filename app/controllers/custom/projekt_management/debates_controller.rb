@@ -20,8 +20,8 @@ class ProjektManagement::DebatesController < ProjektManagement::BaseController
       end
 
       format.csv do
-        send_data Debates::CsvExporter.new(@resources.limit(nil)).to_csv,
-          filename: "debates.csv"
+        send_data CsvServices::DebatesExporter.call(@resources.limit(nil)),
+          filename: "debates-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
       end
     end
   end

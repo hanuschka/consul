@@ -22,7 +22,7 @@
   <td><%= deficiency_report.status&.title %></td>
   <td><%= deficiency_report.map_location&.approximated_address %></td>
   <td><%= deficiency_report.category&.name %></td>
-  <td><%= deficiency_report.officer&.name %></td>
+  <td><%= deficiency_report.responsible&.name %></td>
   <td><%= render Admin::TableActionsComponent.new(deficiency_report,
                                                   edit_path: edit_deficiency_report_management_deficiency_report_path(deficiency_report),
                                                   destroy_path: deficiency_report_management_deficiency_report_path(deficiency_report)

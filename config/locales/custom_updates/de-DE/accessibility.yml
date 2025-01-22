@@ -8,6 +8,7 @@ de:
         admin_icon: Adminmenü Link
         notification_icon: Benachrichtigungen
         all_projekts: Alle Projekte
+        draft_projekts: Entwürfe
         projekt_name_label: "Projekt Name: %{projekt_name} "
         archived_projekts_label: Archivierte Projekte
         deficiency_reports: Mängelmelder

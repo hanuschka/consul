@@ -12,17 +12,18 @@ class DeficiencyReportMailer < ApplicationMailer
     end
   end
 
-  def notify_officer(deficiency_report)
+  def notify_officer(deficiency_report, officer)
     @deficiency_report = deficiency_report
-    return unless @deficiency_report.officer.present?
+    @deficinecy_report_officer = officer
+    return if @deficiency_report.blank? || @deficiency_report_officer.blank?
 
 
     subject = t("custom.deficiency_reports.mailers.notify_officer.subject",
-                identifier: "#{deficiency_report.id}: #{deficiency_report.title.first(50)}")
-    @email_to = @deficiency_report.officer.email
+                identifier: "#{@deficiency_report.id}: #{@deficiency_report.title.first(50)}")
+    @email_to = @deficiency_report_officer.email
 
-    with_user(@deficiency_report.officer.user) do
-      mail(to: @email_to, subject: subject) if @deficiency_report.officer.present?
+    with_user(@deficiency_report_officer.user) do
+      mail(to: @email_to, subject: subject)
     end
   end
 

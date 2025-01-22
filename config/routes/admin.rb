@@ -77,6 +77,7 @@ namespace :admin do
       get :order_up
       get :order_down
       patch :update_standard_phase
+      get :frame_new_phase_selector
       patch :quick_update
       patch :update_map
     end
@@ -146,6 +147,7 @@ namespace :admin do
   end
   resources :registered_address_groupings, only: %i[index edit update destroy]
   resources :registered_address_streets, only: %i[index]
+  resources :registered_address_districts, only: %i[index edit update]
 
   resources :organizations, only: :index do
     get :search, on: :collection

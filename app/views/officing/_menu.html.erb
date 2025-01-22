@@ -19,5 +19,13 @@
         <%= link_to budget.name, officing_offline_ballots_verify_user_path(budget), class: "users-link" %>
       </li>
     <% end %>
+
+    <% if current_user.poll_manager.present? %>
+      <% current_user.poll_manager.polls.each do |poll| %>
+        <li>
+          <%= link_to poll.name, officing_offline_poll_voters_verify_user_path(poll), class: "users-link" %>
+        </li>
+      <% end %>
+    <% end %>
   </ul>
 </div>

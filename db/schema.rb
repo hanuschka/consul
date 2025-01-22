@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_01_16_122613) do
+ActiveRecord::Schema.define(version: 2025_01_21_145448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1548,6 +1548,23 @@ ActiveRecord::Schema.define(version: 2025_01_16_122613) do
     t.string "location"
   end
 
+  create_table "poll_manager_assignments", force: :cascade do |t|
+    t.bigint "poll_id"
+    t.bigint "poll_manager_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["poll_id", "poll_manager_id"], name: "index_poll_manager_assignments_on_poll_id_and_poll_manager_id", unique: true
+    t.index ["poll_id"], name: "index_poll_manager_assignments_on_poll_id"
+    t.index ["poll_manager_id"], name: "index_poll_manager_assignments_on_poll_manager_id"
+  end
+
+  create_table "poll_managers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_poll_managers_on_user_id"
+  end
+
   create_table "poll_officer_assignments", id: :serial, force: :cascade do |t|
     t.integer "booth_assignment_id"
     t.integer "officer_id"
@@ -1717,11 +1734,13 @@ ActiveRecord::Schema.define(version: 2025_01_16_122613) do
     t.string "origin"
     t.integer "officer_id"
     t.string "token"
+    t.bigint "poll_manager_id"
     t.index ["booth_assignment_id"], name: "index_poll_voters_on_booth_assignment_id"
     t.index ["document_number"], name: "index_poll_voters_on_document_number"
     t.index ["officer_assignment_id"], name: "index_poll_voters_on_officer_assignment_id"
     t.index ["poll_id", "document_number", "document_type"], name: "doc_by_poll"
     t.index ["poll_id"], name: "index_poll_voters_on_poll_id"
+    t.index ["poll_manager_id"], name: "index_poll_voters_on_poll_manager_id"
     t.index ["user_id"], name: "index_poll_voters_on_user_id"
   end
 
@@ -2064,6 +2083,7 @@ ActiveRecord::Schema.define(version: 2025_01_16_122613) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
+    t.boolean "from_dt", default: false
     t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2842,6 +2862,9 @@ ActiveRecord::Schema.define(version: 2025_01_16_122613) do
   add_foreign_key "organizations", "users"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"
+  add_foreign_key "poll_manager_assignments", "poll_managers"
+  add_foreign_key "poll_manager_assignments", "polls"
+  add_foreign_key "poll_managers", "users"
   add_foreign_key "poll_officer_assignments", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_partial_results", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_partial_results", "poll_officer_assignments", column: "officer_assignment_id"
@@ -2854,6 +2877,7 @@ ActiveRecord::Schema.define(version: 2025_01_16_122613) do
   add_foreign_key "poll_questions", "users", column: "author_id"
   add_foreign_key "poll_recounts", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_recounts", "poll_officer_assignments", column: "officer_assignment_id"
+  add_foreign_key "poll_voters", "poll_managers"
   add_foreign_key "poll_voters", "polls"
   add_foreign_key "polls", "budgets"
   add_foreign_key "polls", "projekt_phases"

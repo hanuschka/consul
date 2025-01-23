@@ -21,7 +21,7 @@
     <% end %>
 
     <% if current_user.poll_manager.present? %>
-      <% current_user.poll_manager.polls.each do |poll| %>
+      <% current_user.poll_manager.polls.where("lock_on >= ?", Time.zone.now.to_date).find_each do |poll| %>
         <li>
           <%= link_to poll.name, officing_offline_poll_voters_verify_user_path(poll), class: "users-link" %>
         </li>

@@ -63,7 +63,6 @@ class Officing::OfflinePollVotersController < Officing::BaseController
     @responding_user = User.find(params[:responding_user_id])
     @poll = Poll.find(params[:poll_id])
     @questions = @poll.questions.for_render.root_questions.sort_for_list
-
   end
 
   def record_answer
@@ -73,14 +72,29 @@ class Officing::OfflinePollVotersController < Officing::BaseController
 
     @answer = @question.find_or_initialize_user_answer(@responding_user, params[:answer])
     @answer.answer_weight = params[:answer_weight].presence || 1
+    @answer.poll_manager_id = current_user.poll_manager_id
 
     @answer.touch if @answer.persisted?
-    @answer.save!
-    @voter = Poll::Voter.find_by(user: @responding_user, poll: @poll)
-    @voter ||= Poll::Voter.create!(origin: "booth",
-                                   user: @responding_user,
-                                   poll: @poll,
-                                   poll_manager: current_user.poll_manager)
+    if @answer.save
+      @voter = Poll::Voter.find_by(user: @responding_user, poll: @poll)
+      @voter ||= Poll::Voter.create!(origin: "booth",
+                                     user: @responding_user,
+                                     poll: @poll,
+                                     poll_manager: current_user.poll_manager)
+      @answer_updated = "answered"
+    end
+  end
+
+  def update_open_answer
+    @responding_user = User.find(params["responding_user_id"])
+    @question = Poll::Question.find(params["poll_question_id"])
+    @answer = Poll::Answer.find(params["poll_answer_id"])
+
+    if @answer.update(open_answer_text: params["open_answer_text"])
+      @open_answer_updated = true
+    end
+
+    render "custom/officing/offline_poll_voters/record_answer"
   end
 
   def remove_answer

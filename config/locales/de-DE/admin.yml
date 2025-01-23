@@ -400,8 +400,9 @@ de:
     dashboard:
       index:
         back: Zurück zu %{org}
-        title: Verwaltung
+        title: Dashboard für Administratoren
         description: Willkommen auf dem Admin-Panel für %{org}.
+        additional_description: "Herzlich willkommen im Administrationsbereich von Consul! Hier finden Sie alle wichtigen Links und Ressourcen, die Sie für die Verwaltung und Optimierung Ihrer Bürgerbeteiligungsplattform benötigen."
       actions:
         index:
           description: "Wenn Benutzer Vorschläge erstellen, können sie auf ein Dashboard ihres Vorschlags zugreifen, in dem Sie Ressourcen und Empfehlungen vorschlagen können, um Unterstützung für ihre Idee zu erhalten."

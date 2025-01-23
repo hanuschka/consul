@@ -1,0 +1,39 @@
+<%= render "custom/admin/projekt_phases/heading" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
+
+<div class="row">
+  <div class="column">
+    <%= form_for @poll, url: update_poll_manager_assignments_admin_projekt_phase_path(@projekt_phase) do |f| %>
+
+      <div class="row margin-bottom">
+        <div class="column medium-3">
+          <%= f.date_field :lock_on %>
+        </div>
+      </div>
+
+      <div class="margin-bottom" style="column-count:3;">
+        <%= f.collection_check_boxes :poll_manager_ids, @poll_managers, :id, :name do |b| %>
+          <div>
+            <%= b.check_box %>
+            <%= b.label %>
+          </div>
+        <% end %>
+      </div>
+      <div>
+        <%= f.submit "Aktualisieren" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if embedded? %>
+  <% content_for :admin_frame_top_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase, show_title: true) %>
+  <% end %>
+  <%= content_for :admin_frame_bottom_navigation do %>
+    <%= render Admin::ProjektPhases::FrameNavigationComponent.new(projekt_phase: @projekt_phase) %>
+  <% end %>
+<% end %>

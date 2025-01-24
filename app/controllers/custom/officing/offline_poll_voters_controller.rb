@@ -72,7 +72,7 @@ class Officing::OfflinePollVotersController < Officing::BaseController
 
     @answer = @question.find_or_initialize_user_answer(@responding_user, params[:answer])
     @answer.answer_weight = params[:answer_weight].presence || 1
-    @answer.poll_manager_id = current_user.poll_manager_id
+    @answer.poll_manager_id = current_user.poll_manager.id
 
     @answer.touch if @answer.persisted?
     if @answer.save

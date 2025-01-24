@@ -159,3 +159,39 @@
     top: -5px;
   }
 }
+
+.admin-welcome-dt-links {
+  display: inline-grid;
+  justify-content: flex-start;
+  max-width: 1400px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+
+  @media(max-width: 1250px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media(max-width: $mobile-viewport-start) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.admin-welcome-dt-link-item {
+  display: block;
+  color: inherit;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  transition: 100ms background-color ease;
+  box-shadow: 2px 2px 7px 1px #00000026;
+
+  &:hover {
+    background-color: #e8eff3;
+    text-decoration: none;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: 400;
+    padding: 10px 15px;
+  }
+}

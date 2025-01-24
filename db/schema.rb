@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_01_21_145448) do
+ActiveRecord::Schema.define(version: 2025_01_23_164405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1511,7 +1511,9 @@ ActiveRecord::Schema.define(version: 2025_01_21_145448) do
     t.datetime "updated_at"
     t.string "open_answer_text"
     t.integer "answer_weight", default: 1
+    t.bigint "poll_manager_id"
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
+    t.index ["poll_manager_id"], name: "index_poll_answers_on_poll_manager_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
   end
@@ -1768,6 +1770,7 @@ ActiveRecord::Schema.define(version: 2025_01_21_145448) do
     t.boolean "show_individual_stats_per_answer", default: false
     t.bigint "projekt_phase_id"
     t.boolean "wizard_mode", default: false
+    t.date "lock_on"
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -2083,7 +2086,6 @@ ActiveRecord::Schema.define(version: 2025_01_21_145448) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
-    t.boolean "from_dt", default: false
     t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2860,6 +2862,7 @@ ActiveRecord::Schema.define(version: 2025_01_21_145448) do
   add_foreign_key "moderators", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "organizations", "users"
+  add_foreign_key "poll_answers", "poll_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"
   add_foreign_key "poll_manager_assignments", "poll_managers"

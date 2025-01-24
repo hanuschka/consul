@@ -1,5 +1,7 @@
 class Poll
   class Voter < ApplicationRecord
+    audited if: :audit_changes?
+
     VALID_ORIGINS = %w[web booth letter].freeze
 
     belongs_to :poll
@@ -43,6 +45,10 @@ class Poll
 
       def set_denormalized_booth_assignment_id
         self.booth_assignment_id ||= officer_assignment&.booth_assignment_id
+      end
+
+      def audit_changes?
+        origin == "booth" || poll_manager_id.present?
       end
   end
 end

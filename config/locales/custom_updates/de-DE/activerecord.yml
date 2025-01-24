@@ -59,6 +59,9 @@ de:
       projekt_phase/newsfeed_phase: News-Feed
       projekt_phase/formular_phase: Formular
       formular_field: Formularfeld
+      poll_manager:
+        one: Abstimmungshelfer*innen
+        other: Abstimmungshelfer*innen
     errors:
       messages:
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'

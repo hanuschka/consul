@@ -5,9 +5,10 @@ en:
         page_description: Thank you for reporting a deficiency! You will help us to stop this as quickly as possible. Please describe in as much detail as possible what you noticed.
           Typical deficiencies include road damage or damaged park benches.
         title_placeholder: Give your report a catchy title, for example “Zebra crossing in front of the XY primary school” or “More diversity at the weekly markets”.
-        description_placeholder_html: "Describe the deficiency you would like to report here.<br><br>
-          Details help the city administration to find the deficiency and eliminate it quickly.<br></br>
-          For example, if you know the number of the broken street lamp, then feel free to provide it.<br></br>
+        description_placeholder: "
+          Describe the deficiency you would like to report here.\n\n
+          Details help the city administration to find the deficiency and eliminate it quickly.\n\n
+          For example, if you know the number of the broken street lamp, then feel free to provide it.\n\n
           Please do not provide any personal information from third parties such as addresses."
         map:
           hint: Place a pin on the map to precisely locate the deficiency.

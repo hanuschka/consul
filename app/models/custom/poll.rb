@@ -7,9 +7,14 @@ class Poll < ApplicationRecord
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id" # TODO: remove column after data migration con1538
 
   delegate :projekt, to: :projekt_phase, allow_nil: true
-  belongs_to :projekt_phase
+
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
+
+  has_many :poll_manager_assignments, dependent: :destroy
+  has_many :poll_managers, through: :poll_manager_assignments
+
+  belongs_to :projekt_phase
   validates :projekt_phase, presence: true
 
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }

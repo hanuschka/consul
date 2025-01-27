@@ -45,7 +45,7 @@
 </table>
 
 <% if @newsletter.image&.attachment&.attached? %>
-  <% background_image_url = @newsletter.image.attachment %>
+  <% background_image_url = url_for(@newsletter.image.attachment) %>
   <% header_background_style = "background-image: url(#{background_image_url})" %>
 <% else %>
   <% header_background_style = "background: #{email_brand_color}" %>

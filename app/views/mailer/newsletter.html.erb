@@ -43,7 +43,14 @@
     </td>
   </tr>
 </table>
-<div style="height:420px;margin:auto;padding:0;background-image: url(<%= url_for(@newsletter.image.attachment) %>);background-size:100%;">
+
+<% if @newsletter.image&.attachment&.attached? %>
+  <% background_image_url = @newsletter.image.attachment %>
+  <% header_background_style = "background-image: url(#{background_image_url})" %>
+<% else %>
+  <% header_background_style = "background: #{email_brand_color}" %>
+<% end %>
+<div style="height:420px;margin:auto;padding:0;<%= header_background_style %> ;background-size:100%;">
   <div style="width: 100%;max-width:580px; margin: auto;padding-top: 50px;color:white;vertical-align:top; padding:120px 0 0 0">
     <h1 style="font-size: 32px;margin:0;color:white">
       <%= @newsletter.title %>

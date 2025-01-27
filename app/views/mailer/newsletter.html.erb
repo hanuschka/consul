@@ -1,6 +1,109 @@
-<td style="<%= css_for_mailer_content %>">
+<% email_brand_color = Setting["brand_color"] %>
+<style>
+  a, a:hover, a:focus {
+    color: inherit;
+  }
+  h1, h2, h3, h4, h5 {
+    color: black;
+  }
+  tr, td, tbody, table {
+    background-color: transparent;
+  }
 
-  <p style="<%= css_for_mailer_text %>">
-    <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
-  </p>
-</td>
+  tr:hover {
+    background-color: transparent !important;
+  }
+  table tr:nth-child(odd), table tr:nth-child(even) {
+    background-color: transparent;
+  }
+  p {
+    font-size: 15px;
+  }
+  table.header tr:hover {
+    background-color: initial;
+  }
+</style>
+<table class="header" cellpadding="0" cellspacing="0" border="0" style="background: <%= email_brand_color %>; margin: 0 auto; width:100%;">
+  <tr>
+    <td style="padding:0">
+      <table cellpadding="0" cellspacing="0" border="0" style="max-width: 580px;width: 100%;margin: auto;margin-bottom:0">
+        <tr>
+          <td style="padding: 20px 0;">
+            <a href="#" target="_blank">
+              <%= image_tag(
+                image_path_for("logo_email.png"),
+                height: 45,
+                style: "border: 0;display: block;height: 55px",
+                alt: setting["org_name"]
+              ) %>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<div style="height:420px;margin:auto;padding:0;background-image: url(<%= url_for(@newsletter.image.attachment) %>);background-size:100%;">
+  <div style="width: 100%;max-width:580px; margin: auto;padding-top: 50px;color:white;vertical-align:top; padding:120px 0 0 0">
+    <h1 style="font-size: 32px;margin:0;color:white">
+      <%= @newsletter.title %>
+    </h1>
+    <div style="display:block; max-width:204px; width: 100%; height:0; margin-top:4px; margin-bottom:18px; padding-top:0.5em; border-style:solid; border-width:6px 6px 6px 0; border-color:transparent transparent #0ab4ff transparent">
+    </div>
+    <div style="font-size:19px; margin-top:0; margin-bottom:8px; color:white">
+      <%= @newsletter.subtitle %>
+    </div>
+  </div>
+</div>
+<table class="newsletter-template-content" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif; font-size: 15px; margin: 0; background: #fff; margin: 0 auto; max-width: 580px; width: 100%; margin-top: -70px;background:#ffffff; ">
+  <tbody>
+    <tr>
+      <td style="padding:0 40px 0 40px">
+        <div style="<%= css_for_mailer_text %>;font-size: 15px;">
+          <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<table style="background-color:<%= email_brand_color %>; margin-top: 40px;" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td style="padding:36px 40px 18px 40px; background-color: transparent;" align="left">
+        <table align="center" width="580" border="0" cellpadding="0" cellspacing="0" style="max-width: 580px" class="x_wrapper">
+          <tbody>
+            <tr>
+              <td align="left">
+                <div style="font-size:13px; margin:0 0 18px 0; color:#ffffff">
+                  <% if defined?(render_custom_block) %>
+                    <%= render_custom_block 'newsletter_email_footer_block_1' %>
+                  <% else %>
+                    <%= render_custom_content_block_content 'newsletter_email_footer_block_1' %>
+                  <% end %>
+                </div>
+                <% if @subscriptions_token.present? %>
+                  <% unsubscribe_path = edit_subscriptions_url(token: @subscriptions_token) %>
+                <% elsif @unregistered_newletter_unsubscribe_token.present? %>
+                  <% unsubscribe_path = unregistered_newsletter_subscribers_unsubscribe_url(unsubscribe_token: @unregistered_newletter_unsubscribe_token) %>
+                <% elsif controller.class.name == "NotificationServiceMailer" %>
+                  <%= notification_service_mailer_unsubscribe_block(action_name, projekt_phase: @projekt_phase) %>
+                <% end %>
+                <% if unsubscribe_path.present? %>
+                  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif; margin: 0;padding: 0;line-height: 1.5em;color: #222; font-size: 10px; margin-top: 12px;">
+                  <%= link_to(t("mailers.config.unsubscribe_notifications_link_short"), unsubscribe_path, style: "text-decoration: undescore;color: white;") %>
+                  </p>
+                <% end %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+

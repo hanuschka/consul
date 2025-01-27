@@ -1163,14 +1163,21 @@ table {
 // -----------------
 
 .admin .newsletter-body-content {
-
   table,
   tbody,
   tr,
   th,
   td {
     border: 0;
+  }
+}
 
+.admin .newsletter-template-content {
+  table,
+  tbody,
+  tr,
+  th,
+  td {
     &:nth-child(even),
     &:nth-child(even) td:last-child,
     &:nth-child(odd) td:last-child,

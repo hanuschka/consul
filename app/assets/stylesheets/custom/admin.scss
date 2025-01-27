@@ -112,6 +112,10 @@
     input[type="submit"], .button {
       background-color: #14679e;
       color: white;
+
+      &:hover {
+        background-color: #2375ac;
+      }
     }
   }
 }
@@ -183,11 +187,6 @@
   background-color: white;
   transition: 100ms background-color ease;
   box-shadow: 2px 2px 7px 1px #00000026;
-
-  &:hover {
-    background-color: #e8eff3;
-    text-decoration: none;
-  }
 
   h4 {
     font-size: 18px;

@@ -1,0 +1,7 @@
+<div class='small-12 medium-12 margin-bottom'>
+  <%= @form.file_field "image_attributes[attachment]", {
+    frequired: @required, id: "#{@form.object.class.name.underscore}-#{@form.object.id}", label: @label
+  } %>
+  <%= @form.hidden_field "image_attributes[title]", value: "photo" %>
+  <%= @form.hidden_field "image_attributes[user_id]", value: helpers.current_user.id %>
+</div>

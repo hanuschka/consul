@@ -37,6 +37,9 @@ en:
       projekt_notification:
         one: Projektbenachrichtigung
         other: Projektbenachrichtigungen
+      poll_manager:
+        one: Poll manager
+        other: Poll managers
     errors:
       models:
         proposal:

@@ -3,11 +3,17 @@
 <p>
   <strong><%= "#{t("custom.admin.budget_investments.show.author")}: " %></strong>
   <%= t("valuation.budget_investments.show.#{investment.author.username}") %>
+  <%= "(#{investment.author.email})" %>
 </p>
 
 <p>
   <strong><%= "#{t("custom.admin.budget_investments.show.created_at")}: " %></strong>
   <%= l investment.created_at.to_date %>
+</p>
+
+<p>
+  <strong><%= "#{t("custom.admin.budget_investments.show.frontend")}: " %></strong>
+  <%= link_to(investment.title, budget_investment_path(investment.budget, investment), target: "_blank") %>
 </p>
 
 <% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>

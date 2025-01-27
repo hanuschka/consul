@@ -41,7 +41,9 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
         redirect_to valuation_budget_budget_investment_path(@budget, @investment), notice: notice
       end
     else
-      render action: :edit
+      @show_state_form_by_default = true
+      @namespace = params[:namespace].to_sym if params[:namespace].present?
+      render "custom/admin/budget_investments/show"
     end
   end
 

@@ -59,6 +59,7 @@ de:
           details_block_title: Weitere Infos
           author: Autor
           created_at: Erstellungsdatum
+          frontend: Frontend
           implementation_performer_label: Umsetzung
           implementation_performer:
             city: Autor unterstützt bei der Umsetzung nicht
@@ -179,21 +180,6 @@ de:
             icon: Icon
             title: Name
             notice_text: E-Mail-Benachrichtigungstext
-        areas:
-          destroy:
-            cannot_be_destroyed: Sie können dieses Gebiet nicht löschen, da er mindestens einem Mangel zugewiesen ist.
-            destroyed_successfully: Der Gebiet wurde erfolgreich gelöscht.
-          edit:
-            editing: Gebiet bearbeiten
-          form:
-            submit_button: Speichern
-          index:
-            create: Gebiet erstellen
-            title: Gebiet
-          new:
-            creating: Neues Gebiet erstellen
-          area:
-            name: Name
         districts:
           index:
             title: Gebiete
@@ -212,6 +198,7 @@ de:
           street_name: Straße
           street_number: Hausnummer
           street_number_extension: Hausnummerergänzung
+          district: Gebiet
           groupings: Gruppierungen
       registered_address_groupings:
         index:
@@ -224,6 +211,14 @@ de:
           key: Spaltenname
           name: Name
           options: Optionen
+      registered_address_districts:
+        index:
+          title: Gebiete
+        update:
+          success: Gebiet erfolgreich aktualisiert
+        attributes:
+          name: Name
+          coordinates: Koordinaten
       registered_address_streets:
         index:
           title: Registrierte Adressen
@@ -247,6 +242,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
+        poll_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
@@ -255,6 +251,8 @@ de:
           list: Registrierte Adressen
         registered_address_groupings:
           list: Registrierte Adressgruppen
+        registered_address_districts:
+          list: Gebiete
         registered_address_streets:
           list: Registrierte Straßen
         individual_groups: Individuelle Gruppen
@@ -426,6 +424,13 @@ de:
           no_deficiency_report_managers: Keine Mängelmelder Admins vorhanden.
         search:
           title: "Mangelmeldungmanager*innen: Benutzer*innensuche"
+      poll_managers:
+        index:
+          title: Abstimmungshelfer*innen
+          no_projekt_managers: Keine Abstimmungshelfer*innen vorhanden.
+        search:
+          title: "Abstimmungshelfer*innen: Benutzer*innensuche"
+      deficiency_report_managers:
       settings:
         index:
           extended_features:
@@ -529,6 +534,8 @@ de:
           poll_booth_assignments: Wahlkabinen
           poll_officer_assignments: Wahlhelfer
           poll_recounts: Auszählung
+          poll_managers: Abstimmungshelfer
+          poll_manager_audits: Abstimmungshelfer Logs
           poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge
@@ -671,7 +678,7 @@ de:
           name: Veranstaltungen
           page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
-          notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
+          notifications_sent_notice: Benachrichtigung wurde erfolgreich verschickt
         projekt_livestreams:
           new_block_title: Möchten Sie einen Livestream hinzufügen?
           new_button_title: Livestream hinzufügen

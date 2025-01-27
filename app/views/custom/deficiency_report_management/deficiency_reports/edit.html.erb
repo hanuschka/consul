@@ -48,11 +48,12 @@
         </div>
 
         <div>
-          <%= f.select :deficiency_report_area_id, @areas.map { |area| [area.name, area.id] },
-            { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: t("custom.deficiency_reports.form.area.title") },
-            { class: "js-dr-form-update-map",
+          <%= label_tag "Schnellauswahl Kartenausschnitt" %>
+          <%= select_tag :registered_address_district_id, options_for_select(@districts.map { |district| [district.name, district.id] }),
+            { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: t("custom.deficiency_reports.form.district.title"),
+              class: "js-dr-form-update-map",
               data: {
-                all_area_map_coordinates: @map_coordinates_for_areas,
+                all_district_map_coordinates: @map_coordinates_for_districts,
                 default_map_coordinates: [Setting["map.latitude"], Setting["map.longitude"]]
               }
             } %>

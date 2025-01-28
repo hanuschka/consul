@@ -11,7 +11,7 @@ class Ckeditor::Picture < Ckeditor::Asset
 
   def url_thumb(editor_id: nil)
     file_path = rails_representation_url(
-      storage_data.variant(coalesce: true, resize: "118x100", loader: { page: nil }), only_path: true
+      storage_data.variant(coalesce: true, resize: "190x190", loader: { page: nil }), only_path: true
     )
 
     absolute_path?(editor_id) ? Setting["url"] + file_path : file_path

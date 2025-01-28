@@ -269,6 +269,6 @@ class Proposal < ApplicationRecord
   private
 
     def up_and_down_voting_enabled?
-      projekt_phase.settings.find_by(key: "feature.resource.enable_up_and_down_voting").value.present?
+      projekt_phase.feature?("resource.enable_up_and_down_voting")
     end
 end

@@ -4,4 +4,9 @@
   } %>
   <%= @form.hidden_field "image_attributes[title]", value: "photo" %>
   <%= @form.hidden_field "image_attributes[user_id]", value: helpers.current_user.id %>
+  <% if @hint.present? %>
+    <i>
+      <%= @hint %>
+    </i>
+  <% end %>
 </div>

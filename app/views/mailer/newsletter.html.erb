@@ -54,7 +54,7 @@
   <% header_background_style = "background: #{email_brand_color}" %>
 <% end %>
 
-<div style="background-size: 100% auto; background-repeat: no-repeat;margin:auto;padding:0;<%= header_background_style %> ;">
+<div style="background-size: 100% auto; background-repeat: no-repeat;margin:auto;padding:0;<%= header_background_style %> ;padding-bottom:40px;">
   <div style="width: 100%;max-width:590px; margin: auto;padding-top: 50px;color:white;vertical-align:top; padding:120px 0 0 0">
     <h1 style="font-size: 32px;margin:0;color:white">
       <%= @newsletter.title %>
@@ -80,7 +80,7 @@
 </div>
 
 
-<table style="background-color:<%= email_brand_color %>; margin-top: 40px;" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
+<table style="background-color:<%= email_brand_color %>;" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
   <tbody>
     <tr>
       <td style="padding:36px 40px 18px 40px; background-color: transparent;" align="left">

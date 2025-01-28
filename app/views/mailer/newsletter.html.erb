@@ -66,17 +66,17 @@
     </div>
   </div>
 
-  <div style="margin: auto; max-width: 670px;background: rgb(255, 255, 255); padding: 34px 40px 0px;">
-    <h4 style="margin-bottom: 0;">
+  <div style="margin: auto; max-width: 670px;background: rgb(255, 255, 255); padding: 35px 40px 0px;">
+    <h3 style="font-size: 22px;font-weight: normal;margin-top: 0;margin-bottom: 0;">
       <%= @newsletter.greeting %>
-    </h4>
+    </h3>
   </div>
 </div>
 
 <table class="newsletter-template-content" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif; font-size: 15px; margin: 0; background: #fff; margin: 0 auto; max-width: 670px; width: 100%;margin-bottom: 40px;background:#ffffff; ">
   <tbody>
     <tr>
-      <td style="padding:20px 40px 0 40px">
+      <td style="padding:25px 40px 0 40px">
         <div style="<%= css_for_mailer_text %>;font-size: 15px;">
           <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
         </div>

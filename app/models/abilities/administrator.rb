@@ -55,6 +55,7 @@ module Abilities
       can [:search, :create, :index, :destroy, :update], ::Administrator
       can [:search, :create, :index, :destroy], ::ProjektManager # custom
       can [:search, :create, :index, :destroy], ::DeficiencyReportManager # custom
+      can [:search, :create, :index, :destroy], ::PollManager # custom
       can [:search, :create, :index, :destroy], ::Moderator
       can [:search, :show, :update, :create, :index, :destroy, :summary], ::Valuator
       can [:search, :create, :index, :destroy], ::Manager
@@ -144,7 +145,7 @@ module Abilities
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
       can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
-      can [:manage], ::DeficiencyReport::Area
+      can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 
       can [:csv_answers_votes], Poll
@@ -158,6 +159,7 @@ module Abilities
       can :manage, ModalNotification
       can [:index, :import], RegisteredAddress
       can [:index, :update, :destroy], RegisteredAddress::Grouping
+      can [:index, :update], RegisteredAddress::District
       can [:index], RegisteredAddress::Street
 
       can [:results, :stats], Poll, projekt_phase: { settings: { key: "feature.resource.intermediate_poll_results_for_admins", value: "active" }}
@@ -194,6 +196,10 @@ module Abilities
 
       can :get_coordinates_map_location, MapLocation
       can :send_notification, Memo, user_id: user.id
+
+      can :index, Ckeditor::Asset
+      can [:create, :update, :destroy], Ckeditor::Picture
+      can [:create, :update, :destroy], Ckeditor::Document
     end
   end
 end

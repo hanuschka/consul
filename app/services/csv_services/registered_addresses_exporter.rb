@@ -1,5 +1,5 @@
 module CsvServices
-  class RegisteredAddressesExporter < ApplicationService
+  class RegisteredAddressesExporter < CsvServices::BaseService
     require "csv"
 
     def initialize(registered_addresses)

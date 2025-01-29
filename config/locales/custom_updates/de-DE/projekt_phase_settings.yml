@@ -134,8 +134,7 @@ de:
       projekt_questions:
         feature:
           general:
-            show_questions_list: Aktivieren Sie eine bersicht aller Fragen
-            show_questions_list_desctiption: Aktivieren Sie eine bersicht aller Fragen
+            show_questions_list: Aktivieren Sie eine Übersicht aller Fragen
       milestones:
         feature:
           general:

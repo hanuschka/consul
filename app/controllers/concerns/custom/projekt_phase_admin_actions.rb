@@ -10,7 +10,6 @@ module ProjektPhaseAdminActions
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
       :create, :order_phases, :frame_phases_restrictions,
-      :frame_new_phase_selector
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -310,6 +309,31 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/poll_recounts"
   end
 
+  def poll_managers
+    authorize!(:poll_managers, @projekt_phase)
+    @poll = @projekt_phase.poll
+    @poll_managers = PollManager.all
+  end
+
+  def update_poll_manager_assignments
+    authorize!(:poll_managers, @projekt_phase)
+    @poll = @projekt_phase.poll
+    poll_params = params.require(:poll).permit(:lock_on, poll_manager_ids: [])
+
+    @poll.update!(poll_params)
+
+    redirect_to polymorphic_path([@namespace, @projekt_phase], action: :poll_managers)
+  end
+
+  def poll_manager_audits
+    poll = @projekt_phase.poll
+    poll_voters = Poll::Voter.where(poll_id: poll.id)
+                             .where.not(poll_manager_id: nil)
+
+    @audits = Audit.where(auditable: poll_voters)
+                   .page(params[:page]).per(50)
+  end
+
   def poll_results
     authorize!(:poll_results, @projekt_phase)
     @poll = @projekt_phase.poll
@@ -350,14 +374,6 @@ module ProjektPhaseAdminActions
     @process = @projekt_phase.legislation_process
 
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
-  end
-
-  def frame_new_phase_selector
-    @projekt = Projekt.find(params[:projekt_id])
-
-    authorize!(:edit, @projekt)
-
-    render
   end
 
   # def frame_phases_restrictions

@@ -64,6 +64,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           preexisting_flash = flash[:notice]
           set_flash_message(:notice, :success, kind: provider_name(provider)) if is_navigational_format?
           flash[:notice] += " #{preexisting_flash}" if preexisting_flash
+          flash[:notice] = t("custom.users.omniauth.verification_successfull") if @user.level_three_verified?
         else
           session["devise.#{provider}_data"] = auth
           redirect_to new_user_registration_path

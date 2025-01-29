@@ -234,7 +234,8 @@ class Budget
     end
 
     def price_required?
-      feasible? && valuation_finished? && budget.show_money?
+      false
+      # feasible? && valuation_finished? && budget.show_money?
     end
 
     def unfeasible_email_pending?
@@ -347,7 +348,7 @@ class Budget
     end
 
     def should_show_unfeasibility_explanation?
-      unfeasible? && valuation_finished? && unfeasibility_explanation.present?
+      unfeasible? && valuation_finished? && valuator_explanation.present?
     end
 
     def formatted_price

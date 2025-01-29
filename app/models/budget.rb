@@ -70,6 +70,10 @@ class Budget < ApplicationRecord
     phases.published.where("starts_at < ? AND ends_at > ?", Time.zone.today, Time.zone.today).last || phases.published.last || phases.first
   end
 
+  def current_phase_index
+    Budget::Phase::PHASE_KINDS.index(current_phase.kind) + 1
+  end
+
   def published_phases
     phases.published.order(:id)
   end

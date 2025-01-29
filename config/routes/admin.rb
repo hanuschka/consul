@@ -26,6 +26,9 @@ namespace :admin do
       get :poll_booth_assignments
       get :poll_officer_assignments
       get :poll_recounts
+      get :poll_managers
+      get :poll_manager_audits
+      patch :update_poll_manager_assignments
       get :poll_results
       get :budget_edit
       get :budget_investments
@@ -77,6 +80,7 @@ namespace :admin do
       get :order_up
       get :order_down
       patch :update_standard_phase
+      get :frame_new_phase_selector
       patch :quick_update
       patch :update_map
     end
@@ -137,6 +141,11 @@ namespace :admin do
     get :search, on: :collection
   end
 
+  # custom poll managers
+  resources :poll_managers, only: [:index, :create, :destroy] do
+    get :search, on: :collection
+  end
+
   # custom modal notifications routes
   resources :modal_notifications, except: :show
 
@@ -146,6 +155,7 @@ namespace :admin do
   end
   resources :registered_address_groupings, only: %i[index edit update destroy]
   resources :registered_address_streets, only: %i[index]
+  resources :registered_address_districts, only: %i[index edit update]
 
   resources :organizations, only: :index do
     get :search, on: :collection

@@ -72,9 +72,10 @@ class ProposalsController
       end
 
       format.csv do
-        formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
-        send_data Proposals::CsvExporter.new(@proposals.limit(nil)).to_csv,
-          filename: "proposals-#{formated_time}.csv"
+        redirect_to proposals_path and return unless current_user&.administrator?
+
+        send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
+          filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
       end
     end
   end
@@ -90,7 +91,7 @@ class ProposalsController
                             anchor: "filter-subnav")
     end
 
-    @resource = resource_model.new
+    @resource = resource_model.new(projekt_phase: @projekt_phase)
     set_geozone
     set_resource_instance
     @selected_projekt = Projekt.find(params[:projekt_id]) if params[:projekt_id]
@@ -104,13 +105,14 @@ class ProposalsController
   end
 
   def update
-    custom_proposal_params = proposal_params
+    # custom_proposal_params = proposal_params
 
-    if proposal_params["image_attributes"]["cached_attachment"].blank?
-      custom_proposal_params = proposal_params.except("image_attributes")
-    end
+    # if proposal_params["image_attributes"]["cached_attachment"].blank?
+    #   custom_proposal_params = proposal_params.except("image_attributes")
+    # end
 
-    if resource.update(custom_proposal_params)
+    # if resource.update(custom_proposal_params)
+    if resource.update(proposal_params)
       NotificationServices::NewProposalNotifier.new(resource.id).call if resource.published?
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
@@ -121,13 +123,14 @@ class ProposalsController
   end
 
   def create
-    custom_proposal_params = proposal_params
+    # custom_proposal_params = proposal_params
 
-    if proposal_params["image_attributes"]["cached_attachment"].blank?
-      custom_proposal_params = proposal_params.except("image_attributes")
-    end
+    # if proposal_params["image_attributes"]["cached_attachment"].blank?
+    #   custom_proposal_params = proposal_params.except("image_attributes")
+    # end
 
-    @proposal = Proposal.new(custom_proposal_params.merge(author: current_user))
+    # @proposal = Proposal.new(custom_proposal_params.merge(author: current_user))
+    @proposal = Proposal.new(proposal_params.merge(author: current_user))
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")

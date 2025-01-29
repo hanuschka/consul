@@ -4,6 +4,7 @@ namespace :projekt_management do
   resources :projekt_phases, only: [:update, :destroy] do
     member do
       get :duration
+      get :frame_new_phase_selector
       get :naming
       get :restrictions
       get :settings
@@ -26,6 +27,9 @@ namespace :projekt_management do
       get :poll_booth_assignments
       get :poll_officer_assignments
       get :poll_recounts
+      get :poll_managers
+      get :poll_manager_audits
+      patch :update_poll_manager_assignments
       get :poll_results
       get :budget_edit
       get :budget_investments
@@ -75,6 +79,7 @@ namespace :projekt_management do
   resources :projekts, only: %i[index edit update] do
     member do
       patch :update_standard_phase
+      get :frame_new_phase_selector
       patch :update_map
     end
 

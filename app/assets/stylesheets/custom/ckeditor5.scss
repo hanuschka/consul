@@ -181,3 +181,11 @@
 .ck-source-editing-area textarea {
   overflow: auto !important;
 }
+
+form.edit_page .ck-editor {
+  max-width: 823px;
+}
+
+.ck.ck-editor__editable > .ck-placeholder::before {
+  white-space: pre;
+}

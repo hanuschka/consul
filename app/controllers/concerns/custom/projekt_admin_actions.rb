@@ -36,7 +36,7 @@ module ProjektAdminActions
     @projekt_manager_assignments = @projekt.projekt_manager_assignments
 
     if @projekt.map_location.nil?
-      @projekt.send(:create_map_location)
+      @projekt.send(:copy_map_settings)
       @projekt.reload
     end
 
@@ -82,6 +82,14 @@ module ProjektAdminActions
     respond_to do |format|
       format.js
     end
+  end
+
+  def frame_new_phase_selector
+    @projekt = Projekt.find(params[:id])
+
+    authorize!(:edit, @projekt)
+
+    render "admin/projekt_phases/frame_new_phase_selector"
   end
 
   private

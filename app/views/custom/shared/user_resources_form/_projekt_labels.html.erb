@@ -1,0 +1,18 @@
+<div id="projekt_labels_selector" class="projekt-labels">
+  <p class="small" style="margin-bottom:0.25rem;"><%= t("custom.shared.form.projekt_labels_hint") %></p>
+  <div class="projekt-labels-selector--checkboxes">
+    <%= f.collection_check_boxes :projekt_label_ids, projekt_phase.projekt_labels, :id, :name do |cb| %>
+      <%= cb.check_box %>
+      <% iconn = content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") %>
+      <%= cb.label(id: dom_id(cb.object), class: "projekt-label", data: { "label-id" => cb.object.id }) { iconn + cb.text } %>
+    <% end %>
+  </div>
+</div>
+
+<% if model.errors.details[:projekt_labels].any? %>
+  <% model.errors.details[:projekt_labels].each do |error| %>
+    <small class='form-error is-visible'>
+      <%= t("activerecord.errors.models.#{model.model_name.param_key}.attributes.projekt_labels.#{error[:error]}") %>
+    </small>
+  <% end %>
+<% end %>

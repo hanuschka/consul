@@ -94,10 +94,10 @@ en:
           reports: Assign deficiencies
           settings: Features
           statuses: Set categories
-          areas: Areas
         deficiency_reports_title: Deficiency reports
         projekts: Projects
         projekt_managers: Project managers
+        officing_managers: Poll managers
         legislation: Text edit
         age_restrictions: Age restrictions
         modal_notification: Modal notifications
@@ -334,6 +334,12 @@ en:
           no_projekt_managers: No projekt managers
         search:
           title: "Projekt managers: User search"
+      officing_managers:
+        index:
+          title: Poll managers
+          no_projekt_managers: No poll managers
+        search:
+          title: "Poll managers: User search"
       settings:
         index:
           extended_features:
@@ -437,6 +443,8 @@ en:
         labels_name: Labels
         sentiments_name: Sentiments
         projekt_selector_hint: Project tips
+        comment_form_title: Title of comment form
+        comment_form_button: Comment form button
         edit:
           title: Phase settings
         duration:

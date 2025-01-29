@@ -6,6 +6,6 @@ class Shared::TranslateWidgetComponent < ApplicationComponent
   end
 
   def render?
-    extended_feature?("general.enable_google_translate") && @placement == "desktop"
+    extended_feature?("general.enable_google_translate")
   end
 end

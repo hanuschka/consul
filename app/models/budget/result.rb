@@ -40,7 +40,7 @@ class Budget
     end
 
     def reset_winners
-      investments.update_all(winner: false)
+      Budget::Investment.where(id: investments.pluck(:id)).update_all(winner: false)
     end
 
     def set_winner

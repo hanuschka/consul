@@ -56,7 +56,8 @@ class Budget
       class_name: "Comment"
 
     validates_translation :title, presence: true, length: { in: 4..Budget::Investment.title_max_length }
-    validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    # validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    validates_translation :description, presence: true
 
     validates :author, presence: true
     validates :heading_id, presence: true
@@ -233,7 +234,8 @@ class Budget
     end
 
     def price_required?
-      feasible? && valuation_finished? && budget.show_money?
+      false
+      # feasible? && valuation_finished? && budget.show_money?
     end
 
     def unfeasible_email_pending?
@@ -328,8 +330,13 @@ class Budget
       budget.valuating?
     end
 
-    def should_show_ballots?
-      budget.balloting? && selected?
+    def should_show_ballots?(**args)
+      return false unless selected?
+      return true if budget.balloting?
+
+      budget.reviewing_ballots? &&
+        args[:controller_name].in?(["offline_ballots", "lines"]) &&
+        (args[:current_user]&.administrator? || args[:current_user]&.poll_officer?)
     end
 
     def should_show_price?
@@ -341,7 +348,7 @@ class Budget
     end
 
     def should_show_unfeasibility_explanation?
-      unfeasible? && valuation_finished? && unfeasibility_explanation.present?
+      unfeasible? && valuation_finished? && valuator_explanation.present?
     end
 
     def formatted_price

@@ -137,7 +137,7 @@
       if (event.target.value == 0) {
         coordinates = JSON.parse(event.target.dataset.defaultMapCoordinates)
       } else {
-        coordinates = JSON.parse(event.target.dataset.allAreaMapCoordinates)[event.target.value];
+        coordinates = JSON.parse(event.target.dataset.allDistrictMapCoordinates)[event.target.value];
       }
 
       App.Map.maps.forEach(function(map) {

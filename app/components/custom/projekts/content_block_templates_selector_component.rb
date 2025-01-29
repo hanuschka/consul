@@ -32,14 +32,14 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
         title: example_title,
         template_mode: true,
         images: [
-          { url: "https://via.placeholder.com/426x212" },
-          { url: "https://via.placeholder.com/426x212" },
-          { url: "https://via.placeholder.com/426x212" },
-          { url: "https://via.placeholder.com/426x212" }
+          { url: "https://placehold.co/426x212" },
+          { url: "https://placehold.co/426x212" },
+          { url: "https://placehold.co/426x212" },
+          { url: "https://placehold.co/426x212" }
         ]
       ),
       Projekts::ContentBlockTemplates::SingleImageComponent.new(
-        image: { url: "https://via.placeholder.com/426x212" }
+        image: { url: "https://placehold.co/426x212" }
       ),
       Projekts::ContentBlockTemplates::ExternalVideoPlayerComponent.new(
         url: nil
@@ -52,7 +52,7 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     [
       # Projekts::ContentBlockTemplates::ResourceCard::Component.new
       Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new,
-      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://via.placeholder.com/200x200")
+      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://placehold.co/200x200")
     ]
   end
 

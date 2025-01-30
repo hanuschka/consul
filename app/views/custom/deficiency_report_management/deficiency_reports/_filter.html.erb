@@ -2,7 +2,7 @@
   <div class="row expanded full-width">
     <div class="small-12 medium-4 columns">
       <div>
-        <%= label_tag :search, t("custom.shared.search") %>
+        <%= label_tag :search, "Suche nach Titel oder ID" %>
         <%= text_field_tag :search, params[:search], autocomplete: "off" %>
       </div>
 
@@ -12,8 +12,8 @@
       </div>
 
       <div>
-        <%= label_tag :approved, t("custom.admin.deficiency_reports.index.admin_accepted") %>
-        <%= select_tag :approved,
+        <%= label_tag :admin_accepted, t("custom.admin.deficiency_reports.index.admin_accepted") %>
+        <%= select_tag :admin_accepted,
           options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
           prompt: t("custom.shared.select") %>
       </div>
@@ -39,10 +39,10 @@
       </div>
 
       <div>
-        <%= label_tag :officer, t("custom.admin.deficiency_reports.index.officer_name") %>
-        <%= select_tag :officer,
+        <%= label_tag :responsible, t("custom.admin.deficiency_reports.index.responsible_name") %>
+        <%= select_tag :responsible,
           options_for_select(
-            DeficiencyReport::Officer.all.map { |dro| [dro.name, dro.id] }, params[:officer]
+            (DeficiencyReport::Officer.all + DeficiencyReport::OfficerGroup.all).map { |r| [r.name, "#{r.class.name}_#{r.id}"] }, params[:responsible]
           ),
           prompt: t("custom.shared.select") %>
       </div>

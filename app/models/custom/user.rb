@@ -42,7 +42,7 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
-  has_one :poll_manager
+  has_one :officing_manager
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -196,6 +196,10 @@ class User < ApplicationRecord
     return false unless projekt_manager?
 
     projekt_manager.allowed_to?(permission, projekt)
+  end
+
+  def officing_manager?
+    officing_manager.present?
   end
 
   def extended_registration?

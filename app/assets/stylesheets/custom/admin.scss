@@ -112,6 +112,10 @@
     input[type="submit"], .button {
       background-color: #14679e;
       color: white;
+
+      &:hover {
+        background-color: #2375ac;
+      }
     }
   }
 }
@@ -163,7 +167,7 @@
 .admin-welcome-dt-links {
   display: inline-grid;
   justify-content: flex-start;
-  max-width: 1400px;
+  max-width: 1200px;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 
@@ -184,14 +188,24 @@
   transition: 100ms background-color ease;
   box-shadow: 2px 2px 7px 1px #00000026;
 
-  &:hover {
-    background-color: #e8eff3;
-    text-decoration: none;
-  }
-
   h4 {
     font-size: 18px;
     font-weight: 400;
     padding: 10px 15px;
+  }
+}
+
+.admin {
+  fieldset {
+    padding: 0;
+  }
+  input[type="file"] {
+    margin: 0;
+  }
+
+  .direct-upload {
+    .image-preview {
+      padding: 0;
+    }
   }
 }

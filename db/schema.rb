@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_01_28_132937) do
+ActiveRecord::Schema.define(version: 2025_01_30_125337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2089,6 +2089,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
+    t.boolean "from_dt", default: false
     t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2177,7 +2178,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "default_deficiency_report_responsible_type"
     t.bigint "default_deficiency_report_responsible_id"
-    t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible", unique: true
+    t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible"
   end
 
   create_table "registered_address_groupings", force: :cascade do |t|

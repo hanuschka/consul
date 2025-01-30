@@ -5,9 +5,10 @@ module CustomSearch
 
   def apply_filters(resources)
     @filtered_resources = resources
+    @filtered_params = params.reject { |_, v| v.blank? }
+
     apply_search
     apply_address_search
-    apply_location_filter
     apply_date_filters
     apply_regular_filters
 
@@ -15,27 +16,23 @@ module CustomSearch
   end
 
   def apply_search
-    @filtered_resources = @filtered_resources.search(params[:search]) if params[:search].present?
+    return unless @filtered_params[:search].present?
+
+    @filtered_resources = @filtered_resources.search(@filtered_params[:search])
   end
 
   def apply_address_search
-    @filtered_resources = @filtered_resources.address_search(params[:address_search]) if params[:address_search].present?
-  end
+    return unless @filtered_params[:address_search].present?
 
-  def apply_location_filter
-    return unless params[:coordinates].present?
-    return unless @filtered_resources.class_name.in? %w[DeficiencyReport]
-
-    coordinates = params[:coordinates].split(",").map(&:to_f)
-    @filtered_resources = @filtered_resources.joins(:map_location).where(map_locations: { id: MapLocation.near(coordinates, 1).to_a.pluck(:id) })
+    @filtered_resources = @filtered_resources.address_search(@filtered_params[:address_search])
   end
 
   def apply_date_filters
-    date_min = safe_parse_date(params[:date_min])
-    @filtered_resources = @filtered_resources.where("created_at >= ?", date_min) if date_min
+    date_min = safe_parse_date(@filtered_params[:date_min])
+    @filtered_resources = @filtered_resources.where("created_at >= ?", date_min.beginning_of_day) if date_min
 
-    date_max = safe_parse_date(params[:date_max])
-    @filtered_resources = @filtered_resources.where("created_at <= ?", date_max) if date_max
+    date_max = safe_parse_date(@filtered_params[:date_max])
+    @filtered_resources = @filtered_resources.where("created_at <= ?", date_max.end_of_day) if date_max
   end
 
   def safe_parse_date(date_string)
@@ -53,13 +50,19 @@ module CustomSearch
   end
 
   def apply_regular_filter(mapped_filter)
-    @filtered_resources = @filtered_resources.where(mapped_filter[0] => params[mapped_filter[1]]) if params[mapped_filter[1]].present?
+    return unless @filtered_params[mapped_filter[1]].present?
+
+    @filtered_resources = @filtered_resources.where(mapped_filter[0] => @filtered_params[mapped_filter[1]])
   end
 
   def mapped_regular_filters_for(resources_class_name)
     case resources_class_name
     when "DeficiencyReport"
-      [[:deficiency_report_status_id, :status], [:deficiency_report_category_id, :category], [:deficiency_report_officer_id, :officer], [:admin_accepted, :approved]]
+      [
+        [:deficiency_report_status_id, :status],
+        [:deficiency_report_category_id, :category],
+        [:admin_accepted, :admin_accepted]
+      ]
     end
   end
 end

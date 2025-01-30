@@ -6,7 +6,9 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
   def show
     @individual_group_value = IndividualGroupValue.find(params[:id])
     @individual_group = @individual_group_value.individual_group
-    @related_users = @individual_group_value.users.page(params[:page])
+    @related_users = @individual_group_value.users
+                                            .order("user_individual_group_values.id": :desc)
+                                            .page(params[:page])
   end
 
   def new

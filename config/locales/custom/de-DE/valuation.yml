@@ -44,10 +44,10 @@ de:
         price: Preis
         price_first_year: Kosten im ersten Jahr
         currency: "€"
-        feasibility: Durchführbarkeit
-        feasible: Durchführbar
-        unfeasible: Undurchführbar
-        undefined: Undefiniert
+        feasibility: Entspricht den Kriterien
+        feasible: Entspricht den Kriterien
+        unfeasible: Entspricht nicht den Kriterien
+        undefined: Noch nicht bewertet
         valuation_finished: Begutachtung abgeschlossen
         duration: Zeitrahmen
         responsibles: Verantwortliche
@@ -56,18 +56,22 @@ de:
         preview: Investitionsvorschau
       edit:
         dossier: Bericht
-        price: "Preis (€) - im Frontend sichtbar"
-        price_first_year: "Kosten im ersten Jahr (intern)"
-        feasibility: "Phase 2 & 3: Durchführbarkeit des Vorschlags"
-        feasibility_hint: Definieren SIe, ob dieser Vorschlag durchführbar ist. Durchführbare Vorschläge werden in der Unterstützungsphase (Phase 4) zur Auswahl gestellt. Die Erläuterung kann optional im Frontend oberhalb der Vorschlagsseite angezeigt werden.
+        price: "Preis in € (öffentlich)"
+        price_first_year: Fortlaufende Kosten pro Jahr (intern)
+        feasibility: "Phase 2 & 3: Prüfung auf Kriterienerfüllung"
+        feasibility_hint: Prüfen Sie, ob der Vorschlag den Kriterien entspricht. In Phase 4 (Unterstützungsphase) und Phase 7 (Abstimmungsphase) werden ausschließlich Vorschläge zur Wahl gestellt, die den Kriterien entsprechen und über ein abgeschlossenes Gutachten verfügen. Erst nach Abschluss des Gutachtens werden die Vorschläge zur Wahl freigegeben und die Erläuterung im Frontend veröffentlicht. Zudem kann ein Vorschlag nach Abschluss des Gutachtens vom Autor nicht mehr bearbeitet werden.
         valuation_closing_title: Status des Vorschlags
         valuation_closing_hint: Vorschlag kann vom Autor nicht mehr geändert werden
         valuation_finished_alert: "Sind Sie sicher, dass Sie diesen Bericht als erledigt markieren möchten? Hiernach können Sie keine Änderungen mehr vornehmen."
         not_feasible_alert: "Der Autor des Projekts erhält sofort eine E-Mail mit einem Bericht zur Undurchführbarkeit."
-        phase_6_title: "Phase 6: Auswahl des Vorschlags"
-        phase_6_hint: Definieren SIe, ob dieser Vorschlag für die Abstimmungsphase (Phase 7) ausgewählt werden soll.
+        phase_5_title: "Phase 5: Preisgestaltung"
+        phase_5_hint: Definieren Sie den Preis, der ab der Phase 6 öffentlich im Frontend angezeigt wird. Ergänzend dazu können die fortlaufenden Kosten und der Zeitrahmen festgelegt werden, welche ausschließlich für interne Informationen bestimmt sind.
+        phase_6_title: "Phase 6: Zulassung zur Abstimmung"
+        phase_6_hint: Legen Sie fest, ob dieser Vorschlag für die Phase 7 (Abstimmungsphase) berücksichtigt werden soll.
+        selected_true: Vorschlag soll für die Abstimmung berücksichtigt werden
+        selected_false: Vorschlag soll nicht für die Abstimmung berücksichtigt werden
         phase_8_title: "Phase 8: Gewinnerliste"
-        phase_8_hint: Definieren SIe, ob dieser Vorschlag bei der Kalkulation der Gewinnervorschläge außen vor bleiben soll. Dieser Vorschlag wird ggf. von der Gewinnerliste ausgeschlossen.
+        phase_8_hint: Definieren Sie, ob dieser Vorschlag bei der Berechnung der Gewinnervorschläge (Phase 9) unberücksichtigt bleiben soll. In diesem Fall wird der Vorschlag möglicherweise von der Gewinnerliste ausgeschlossen.
         save: Änderungen speichern
       notice:
         valuate: "Dossier aktualisiert"

@@ -309,6 +309,21 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/poll_recounts"
   end
 
+  def officing_managers
+    authorize!(:officing_managers, @projekt_phase)
+    @poll = @projekt_phase.poll
+    @officing_managers = OfficingManager.all
+  end
+
+  def officing_manager_audits
+    poll = @projekt_phase.poll
+    poll_voters = Poll::Voter.where(poll_id: poll.id)
+                             .where.not(officing_manager_id: nil)
+
+    @audits = Audit.where(auditable: poll_voters)
+                   .page(params[:page]).per(50)
+  end
+
   def poll_results
     authorize!(:poll_results, @projekt_phase)
     @poll = @projekt_phase.poll
@@ -378,6 +393,7 @@ module ProjektPhaseAdminActions
         :active, :start_date, :end_date,
         :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
+        :lock_on, officing_manager_ids: [],
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],

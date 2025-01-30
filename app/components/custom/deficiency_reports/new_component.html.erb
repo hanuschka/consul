@@ -94,7 +94,7 @@
             <%= translations_form.text_area :description,
               label: false,
               value: AdminWYSIWYGSanitizer.new.sanitize(deficiency_report.description),
-              data: {placeholder: t("custom.deficiency_reports.form.description_placeholder_html")},
+              placeholder: t("custom.deficiency_reports.form.description_placeholder"),
               class: "html-area #{ck_editor_class(current_user)}" %>
           <% end %>
 

@@ -112,7 +112,7 @@ class Mailer < ApplicationMailer
 
   def budget_investment_selected(investment)
     @investment = investment
-    @author = investment.author
+    @author = investment.autho
     @email_to = @author.email
 
     with_user(@author) do
@@ -140,7 +140,9 @@ class Mailer < ApplicationMailer
       manage_subscriptions_token(user)
     end
 
-    mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject)
+    mail(to: @email_to, from: @newsletter.from, subject: @newsletter.subject) do |f|
+      f.html { render(layout: "newsletter_mail")}
+    end
   end
 
   def evaluation_comment(comment, to)

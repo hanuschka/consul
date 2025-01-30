@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_01_09_202812) do
+ActiveRecord::Schema.define(version: 2025_01_28_132937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1482,6 +1482,9 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "hidden_at"
+    t.string "title"
+    t.text "subtitle"
+    t.string "greeting"
   end
 
   create_table "notifications", id: :serial, force: :cascade do |t|
@@ -1492,6 +1495,23 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.datetime "emailed_at"
     t.datetime "read_at"
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "officing_manager_assignments", force: :cascade do |t|
+    t.bigint "officing_manager_id", null: false
+    t.bigint "projekt_phase_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["officing_manager_id", "projekt_phase_id"], name: "index_om_assignments_on_om_id_and_projekt_phase_id", unique: true
+    t.index ["officing_manager_id"], name: "index_officing_manager_assignments_on_officing_manager_id"
+    t.index ["projekt_phase_id"], name: "index_officing_manager_assignments_on_projekt_phase_id"
+  end
+
+  create_table "officing_managers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_officing_managers_on_user_id"
   end
 
   create_table "organizations", id: :serial, force: :cascade do |t|
@@ -1511,7 +1531,9 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.datetime "updated_at"
     t.string "open_answer_text"
     t.integer "answer_weight", default: 1
+    t.bigint "officing_manager_id"
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
+    t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
   end
@@ -1717,9 +1739,11 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.string "origin"
     t.integer "officer_id"
     t.string "token"
+    t.bigint "officing_manager_id"
     t.index ["booth_assignment_id"], name: "index_poll_voters_on_booth_assignment_id"
     t.index ["document_number"], name: "index_poll_voters_on_document_number"
     t.index ["officer_assignment_id"], name: "index_poll_voters_on_officer_assignment_id"
+    t.index ["officing_manager_id"], name: "index_poll_voters_on_officing_manager_id"
     t.index ["poll_id", "document_number", "document_type"], name: "doc_by_poll"
     t.index ["poll_id"], name: "index_poll_voters_on_poll_id"
     t.index ["user_id"], name: "index_poll_voters_on_user_id"
@@ -1942,6 +1966,7 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
     t.integer "user_status", default: 1
+    t.date "lock_on"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2516,6 +2541,7 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["individual_group_value_id"], name: "index_user_individual_group_values_on_individual_group_value_id"
+    t.index ["user_id", "individual_group_value_id"], name: "index_user_ig_values_on_user_id_and_ig_value_id", unique: true
     t.index ["user_id"], name: "index_user_individual_group_values_on_user_id"
   end
 
@@ -2831,7 +2857,11 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "officing_manager_assignments", "officing_managers"
+  add_foreign_key "officing_manager_assignments", "projekt_phases"
+  add_foreign_key "officing_managers", "users"
   add_foreign_key "organizations", "users"
+  add_foreign_key "poll_answers", "officing_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"
   add_foreign_key "poll_officer_assignments", "poll_booth_assignments", column: "booth_assignment_id"
@@ -2846,6 +2876,7 @@ ActiveRecord::Schema.define(version: 2025_01_09_202812) do
   add_foreign_key "poll_questions", "users", column: "author_id"
   add_foreign_key "poll_recounts", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_recounts", "poll_officer_assignments", column: "officer_assignment_id"
+  add_foreign_key "poll_voters", "officing_managers"
   add_foreign_key "poll_voters", "polls"
   add_foreign_key "polls", "budgets"
   add_foreign_key "polls", "projekt_phases"

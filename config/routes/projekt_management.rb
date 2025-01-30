@@ -24,9 +24,9 @@ namespace :projekt_management do
       get :formular
       get :formular_answers
       get :poll_questions
-      get :poll_booth_assignments
-      get :poll_officer_assignments
-      get :poll_recounts
+      get :officing_managers
+      get :officing_manager_audits
+      patch :update_officing_manager_assignments
       get :poll_results
       get :budget_edit
       get :budget_investments

@@ -59,6 +59,7 @@ de:
           details_block_title: Weitere Infos
           author: Autor
           created_at: Erstellungsdatum
+          frontend: Frontend
           implementation_performer_label: Umsetzung
           implementation_performer:
             city: Autor unterstützt bei der Umsetzung nicht
@@ -241,6 +242,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
+        officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
@@ -422,6 +424,13 @@ de:
           no_deficiency_report_managers: Keine Mängelmelder Admins vorhanden.
         search:
           title: "Mangelmeldungmanager*innen: Benutzer*innensuche"
+      officing_managers:
+        index:
+          title: Abstimmungshelfer*innen
+          no_officing_managers: Keine Abstimmungshelfer*innen vorhanden.
+        search:
+          title: "Abstimmungshelfer*innen: Benutzer*innensuche"
+      deficiency_report_managers:
       settings:
         index:
           extended_features:
@@ -522,9 +531,8 @@ de:
           form_author: Formular Autor
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
-          poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer
-          poll_recounts: Auszählung
+          officing_managers: Abstimmungshelfer
+          officing_manager_audits: Logs
           poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge
@@ -667,7 +675,7 @@ de:
           name: Veranstaltungen
           page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
-          notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
+          notifications_sent_notice: Benachrichtigung wurde erfolgreich verschickt
         projekt_livestreams:
           new_block_title: Möchten Sie einen Livestream hinzufügen?
           new_button_title: Livestream hinzufügen

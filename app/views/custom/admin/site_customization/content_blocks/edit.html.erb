@@ -3,12 +3,13 @@
 <% end %>
 
 <% unless embedded? %>
-  <%= back_link_to admin_site_customization_content_blocks_path %>
+  <% back_url = params[:return_to] %>
+  <%= back_link_to (back_url.presence || admin_site_customization_content_blocks_path)  %>
 
-<%= link_to t("admin.site_customization.content_blocks.index.delete"),
-            (@is_heading_content_block ? admin_site_customization_delete_heading_content_block_path(@content_block.id) : admin_site_customization_content_block_path(@content_block, return_to: (params[:return_to]))),
-            method: :delete,
-            class: "delete float-right margin-bottom" %>
+  <%= link_to t("admin.site_customization.content_blocks.index.delete"),
+              (@is_heading_content_block ? admin_site_customization_delete_heading_content_block_path(@content_block.id) : admin_site_customization_content_block_path(@content_block, return_to: (params[:return_to]))),
+              method: :delete,
+              class: "delete float-right margin-bottom" %>
 <% end %>
 
 

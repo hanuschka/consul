@@ -42,6 +42,7 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
+  has_one :officing_manager
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -195,6 +196,10 @@ class User < ApplicationRecord
     return false unless projekt_manager?
 
     projekt_manager.allowed_to?(permission, projekt)
+  end
+
+  def officing_manager?
+    officing_manager.present?
   end
 
   def extended_registration?
@@ -372,11 +377,14 @@ class User < ApplicationRecord
     end
 
     def assign_individual_group_values_based_on_email_pattern
-      IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
-        next unless email.ends_with?(group_value.email_pattern)
-        next if group_value.users.include?(self)
+      return unless email.present?
 
-        group_value.users << self if email.ends_with?(group_value.email_pattern)
+      IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
+        next if group_value.users.include?(self)
+        next unless group_value.email_pattern.start_with?("@")
+        next unless email.ends_with?(group_value.email_pattern)
+
+        group_value.users << self
       end
     end
 end

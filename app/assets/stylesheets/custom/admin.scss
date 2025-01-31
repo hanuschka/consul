@@ -167,7 +167,7 @@
 .admin-welcome-dt-links {
   display: inline-grid;
   justify-content: flex-start;
-  max-width: 1400px;
+  max-width: 1200px;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 
@@ -192,5 +192,20 @@
     font-size: 18px;
     font-weight: 400;
     padding: 10px 15px;
+  }
+}
+
+.admin {
+  fieldset {
+    padding: 0;
+  }
+  input[type="file"] {
+    margin: 0;
+  }
+
+  .direct-upload {
+    .image-preview {
+      padding: 0;
+    }
   }
 }

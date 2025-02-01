@@ -25,6 +25,8 @@
   <td><%= deficiency_report.responsible&.name %></td>
   <td><%= render Admin::TableActionsComponent.new(deficiency_report,
                                                   edit_path: edit_deficiency_report_management_deficiency_report_path(deficiency_report),
-                                                  destroy_path: deficiency_report_management_deficiency_report_path(deficiency_report)
+                                                  edit_options: { target: "_blank" },
+                                                  destroy_path: deficiency_report_management_deficiency_report_path(deficiency_report),
+                                                  destroy_options: { remote: true }
                                                  ) %></td>
 </tr>

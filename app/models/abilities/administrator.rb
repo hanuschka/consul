@@ -55,6 +55,7 @@ module Abilities
       can [:search, :create, :index, :destroy, :update], ::Administrator
       can [:search, :create, :index, :destroy], ::ProjektManager # custom
       can [:search, :create, :index, :destroy], ::DeficiencyReportManager # custom
+      can [:search, :create, :index, :destroy], ::OfficingManager # custom
       can [:search, :create, :index, :destroy], ::Moderator
       can [:search, :show, :update, :create, :index, :destroy, :summary], ::Valuator
       can [:search, :create, :index, :destroy], ::Manager
@@ -144,7 +145,6 @@ module Abilities
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
       can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
-      can [:manage], ::DeficiencyReport::Area
       can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 
@@ -159,6 +159,7 @@ module Abilities
       can :manage, ModalNotification
       can [:index, :import], RegisteredAddress
       can [:index, :update, :destroy], RegisteredAddress::Grouping
+      can [:index, :update], RegisteredAddress::District
       can [:index], RegisteredAddress::Street
 
       can [:results, :stats], Poll, projekt_phase: { settings: { key: "feature.resource.intermediate_poll_results_for_admins", value: "active" }}

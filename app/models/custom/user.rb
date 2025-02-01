@@ -42,6 +42,7 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
+  has_one :officing_manager
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -53,6 +54,7 @@ class User < ApplicationRecord
   scope :not_guests, -> { where(guest: false) }
 
   validate :email_should_not_be_used_by_hidden_user
+  validate :password_complexity, if: :password_required?
 
   validates :first_name, presence: true, on: :create, if: :extended_registration?
   validates :last_name, presence: true, on: :create, if: :extended_registration?
@@ -196,6 +198,10 @@ class User < ApplicationRecord
     projekt_manager.allowed_to?(permission, projekt)
   end
 
+  def officing_manager?
+    officing_manager.present?
+  end
+
   def extended_registration?
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.extended"].present?
   end
@@ -310,6 +316,20 @@ class User < ApplicationRecord
       end
     end
 
+    def password_complexity
+      return unless password.present?
+
+      # at least three of the following four elements: a capital letter, a small letter, a digit, or a special symbol
+      special_symbols = "~!@#$%^&*()_-+={}[]|:;,<>.?/"
+      escaped_special_symbols = Regexp.escape(special_symbols)
+
+      regex_pattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?=.*[A-Z])(?=.*[a-z])(?=.*[#{escaped_special_symbols}])|(?=.*[A-Z])(?=.*\d)(?=.*[#{escaped_special_symbols}])|(?=.*[a-z])(?=.*\d)(?=.*[#{escaped_special_symbols}])/
+
+      unless password.match?(regex_pattern)
+        errors.add :password, :low_complexity
+      end
+    end
+
     def attempt_verification
       return false if organization?
       return false unless residency_valid?
@@ -353,11 +373,14 @@ class User < ApplicationRecord
     end
 
     def assign_individual_group_values_based_on_email_pattern
-      IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
-        next unless email.ends_with?(group_value.email_pattern)
-        next if group_value.users.include?(self)
+      return unless email.present?
 
-        group_value.users << self if email.ends_with?(group_value.email_pattern)
+      IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
+        next if group_value.users.include?(self)
+        next unless group_value.email_pattern.start_with?("@")
+        next unless email.ends_with?(group_value.email_pattern)
+
+        group_value.users << self
       end
     end
 end

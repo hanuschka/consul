@@ -8,12 +8,12 @@
 
 <div class="row margin-bottom">
   <div class="column">
-    <div id="investment-state" class="margin-bottom">
+    <div id="investment-state" class="margin-bottom" style="display: <%= @show_state_form_by_default ? "none" : "block" %>;">
       <%= render "custom/admin/budget_investments/investment_state", investment: @investment %>
       <%= link_to t("custom.admin.budget_investments.show.state_block_action_button_title"), "#", class: "button hollow", onclick: "$('#investment-state-form').toggle(); $('#investment-state').toggle();" %>
     </div>
 
-    <div id="investment-state-form" class="margin-bottom" style="display: none;">
+    <div id="investment-state-form" class="margin-bottom" style="display: <%= @show_state_form_by_default ? "block" : "none" %>;">
       <%= render "custom/admin/budget_investments/investment_state_form", investment: @investment %>
     </div>
 
@@ -28,8 +28,10 @@
   </div>
 </div>
 
-<div class="row margin-bottom">
-  <div class="column">
-    <%= render "admin/memos/memos", memoable: @investment %>
+<% unless namespace == "valuation" %>
+  <div class="row margin-bottom">
+    <div class="column">
+      <%= render "admin/memos/memos", memoable: @investment %>
+    </div>
   </div>
-</div>
+<% end %>

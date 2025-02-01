@@ -44,6 +44,7 @@
 
       <div>
         <%= translations_form.text_area :description,
+              value: AdminWYSIWYGSanitizer.new.sanitize(debate.description),
               maxlength: Debate.description_max_length,
               class: "html-area #{helpers.ck_editor_class(current_user)}" %>
       </div>

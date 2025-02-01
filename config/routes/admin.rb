@@ -23,9 +23,9 @@ namespace :admin do
       get :formular
       get :formular_answers
       get :poll_questions
-      get :poll_booth_assignments
-      get :poll_officer_assignments
-      get :poll_recounts
+      get :officing_managers
+      get :officing_manager_audits
+      patch :update_officing_manager_assignments
       get :poll_results
       get :budget_edit
       get :budget_investments
@@ -138,6 +138,11 @@ namespace :admin do
     get :search, on: :collection
   end
 
+  # custom poll managers
+  resources :officing_managers, only: [:index, :create, :destroy] do
+    get :search, on: :collection
+  end
+
   # custom modal notifications routes
   resources :modal_notifications, except: :show
 
@@ -147,6 +152,7 @@ namespace :admin do
   end
   resources :registered_address_groupings, only: %i[index edit update destroy]
   resources :registered_address_streets, only: %i[index]
+  resources :registered_address_districts, only: %i[index edit update]
 
   resources :organizations, only: :index do
     get :search, on: :collection

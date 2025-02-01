@@ -54,7 +54,7 @@
     </li>
   <% end %>
 
-  <% if current_user.poll_officer? %>
+  <% if current_user.poll_officer? || current_user.officing_manager? %>
     <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
         tabindex="0"
         aria-label='<%= t("layouts.header.officing") %>'

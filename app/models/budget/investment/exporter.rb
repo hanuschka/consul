@@ -23,7 +23,8 @@ class Budget::Investment::Exporter
       [
         I18n.t("admin.budget_investments.index.list.id"),
         I18n.t("admin.budget_investments.index.list.title"),
-        I18n.t("admin.budget_investments.index.list.supports"),
+        "Stimmen vierte Phase",
+        "Stimmen siebte Phase",
         'projekt',
         I18n.t("admin.budget_investments.index.list.admin"),
         I18n.t("admin.budget_investments.index.list.valuator"),
@@ -42,6 +43,7 @@ class Budget::Investment::Exporter
         investment.id.to_s,
         investment.title,
         investment.total_votes.to_s,
+        investment.total_ballot_votes.to_s,
         investment.budget&.projekt&.name,
         admin(investment),
         investment.assigned_valuators || "-",

@@ -77,7 +77,7 @@ de:
           status_title: Status
           approximater_location: Standort
           category_name: Kategorie
-          officer_name: Sachbearbeiter*in
+          responsible_name: Sachbearbeiter*in
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
@@ -242,7 +242,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
-        poll_managers: Abstimmungshelfer*innen
+        officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
@@ -424,10 +424,10 @@ de:
           no_deficiency_report_managers: Keine Mängelmelder Admins vorhanden.
         search:
           title: "Mangelmeldungmanager*innen: Benutzer*innensuche"
-      poll_managers:
+      officing_managers:
         index:
           title: Abstimmungshelfer*innen
-          no_projekt_managers: Keine Abstimmungshelfer*innen vorhanden.
+          no_officing_managers: Keine Abstimmungshelfer*innen vorhanden.
         search:
           title: "Abstimmungshelfer*innen: Benutzer*innensuche"
       deficiency_report_managers:
@@ -531,11 +531,8 @@ de:
           form_author: Formular Autor
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
-          poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer
-          poll_recounts: Auszählung
-          poll_managers: Abstimmungshelfer
-          poll_manager_audits: Abstimmungshelfer Logs
+          officing_managers: Abstimmungshelfer
+          officing_manager_audits: Logs
           poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge

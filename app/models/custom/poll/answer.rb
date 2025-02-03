@@ -19,6 +19,6 @@ class Poll::Answer < ApplicationRecord
     end
 
     def audit_changes?
-      poll_manager_id.present?
+      officing_manager_id.present?
     end
 end

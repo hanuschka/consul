@@ -48,7 +48,7 @@ $table-header:   #ecf1f6;
     }
 
     &.title {
-      text-transform: uppercase;
+      // text-transform: uppercase;
     }
   }
 
@@ -115,7 +115,7 @@ $table-header:   #ecf1f6;
 
       small {
         color: inherit;
-        text-transform: uppercase;
+        // text-transform: uppercase;
       }
 
       a {
@@ -512,7 +512,7 @@ code {
     color: $text-medium;
     font-size: rem-calc(13);
     padding: rem-calc(6);
-    text-transform: uppercase;
+    // text-transform: uppercase;
 
     &.featured {
       background: $info-bg;
@@ -1163,14 +1163,32 @@ table {
 // -----------------
 
 .admin .newsletter-body-content {
-
+  h1::after {
+    display: none !important;
+  }
   table,
   tbody,
   tr,
   th,
   td {
     border: 0;
+  }
+}
 
+.admin .newsletter-template-content {
+  table {
+    padding: 0;
+
+    td {
+      padding: 0;
+    }
+  }
+
+  table,
+  tbody,
+  tr,
+  th,
+  td {
     &:nth-child(even),
     &:nth-child(even) td:last-child,
     &:nth-child(odd) td:last-child,

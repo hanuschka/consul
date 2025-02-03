@@ -303,7 +303,7 @@ class UploadFilesPlugin extends Plugin {
                                 console.log('change', e)
                             }
                         },
-                        'Bild / Dokument soll in neuem Fenster geöffnet werden'
+                        'Dokument soll in neuem Fenster geöffnet werden'
                     ]
                 },
                 mainActionButton

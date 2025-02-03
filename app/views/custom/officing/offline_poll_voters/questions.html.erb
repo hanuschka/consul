@@ -32,7 +32,7 @@
     <div class="row">
       <div class="column medium-6">
         <div id="<%= dom_id(question) %>_answers" class="">
-          <%= render PollManagers::Questions::AnswersComponent.new(question, @responding_user) %>
+          <%= render OfficingManagers::Polls::Questions::AnswersComponent.new(question, @responding_user) %>
 
           <% question.nested_questions.each do |nested_question| %>
             <h3>
@@ -48,7 +48,7 @@
 
             <div class="padding">
               <div id="<%= dom_id(nested_question) %>_answers" class="">
-                <%= render PollManagers::Questions::AnswersComponent.new(nested_question, @responding_user) %>
+                <%= render OfficingManagers::Polls::Questions::AnswersComponent.new(nested_question, @responding_user) %>
               </div>
             </div>
           <% end %>

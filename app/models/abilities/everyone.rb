@@ -80,6 +80,10 @@ module Abilities
 
           investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?
         end
+
+        can [:create, :update], FormularAnswer do |formular_answer|
+          formular_answer.formular.projekt_phase.permission_problem(user).blank?
+        end
       end
 
       can :read_stats, Budget::Investment do |investment|

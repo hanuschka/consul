@@ -309,26 +309,16 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/poll_recounts"
   end
 
-  def poll_managers
-    authorize!(:poll_managers, @projekt_phase)
+  def officing_managers
+    authorize!(:officing_managers, @projekt_phase)
     @poll = @projekt_phase.poll
-    @poll_managers = PollManager.all
+    @officing_managers = OfficingManager.all
   end
 
-  def update_poll_manager_assignments
-    authorize!(:poll_managers, @projekt_phase)
-    @poll = @projekt_phase.poll
-    poll_params = params.require(:poll).permit(:lock_on, poll_manager_ids: [])
-
-    @poll.update!(poll_params)
-
-    redirect_to polymorphic_path([@namespace, @projekt_phase], action: :poll_managers)
-  end
-
-  def poll_manager_audits
+  def officing_manager_audits
     poll = @projekt_phase.poll
     poll_voters = Poll::Voter.where(poll_id: poll.id)
-                             .where.not(poll_manager_id: nil)
+                             .where.not(officing_manager_id: nil)
 
     @audits = Audit.where(auditable: poll_voters)
                    .page(params[:page]).per(50)
@@ -403,6 +393,7 @@ module ProjektPhaseAdminActions
         :active, :start_date, :end_date,
         :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
+        :lock_on, officing_manager_ids: [],
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],

@@ -20,8 +20,8 @@
       </li>
     <% end %>
 
-    <% if current_user.poll_manager.present? %>
-      <% current_user.poll_manager.polls.where("lock_on IS NULL OR lock_on >= ?", Time.zone.now.to_date).find_each do |poll| %>
+    <% if current_user.officing_manager? %>
+      <% current_user.officing_manager.officing_polls.each do |poll| %>
         <li>
           <%= link_to poll.name, officing_offline_poll_voters_verify_user_path(poll), class: "users-link" %>
         </li>

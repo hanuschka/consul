@@ -1,4 +1,4 @@
-class PollManagers::Questions::AnswersComponent < ApplicationComponent
+class OfficingManagers::Polls::Questions::AnswersComponent < ApplicationComponent
   attr_reader :question, :responding_user
   delegate :answer_with_description?, to: :helpers
 

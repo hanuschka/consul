@@ -6,7 +6,8 @@
 
 <div class="row">
   <div class="column">
-    <%= form_for @poll, url: update_poll_manager_assignments_admin_projekt_phase_path(@projekt_phase) do |f| %>
+    <%= form_for @projekt_phase, url: namespace_projekt_phase_path, as: :projekt_phase do |f| %>
+      <%= hidden_field_tag :action_name, action_name %>
 
       <div class="row margin-bottom">
         <div class="column medium-3">
@@ -15,7 +16,7 @@
       </div>
 
       <div class="margin-bottom" style="column-count:3;">
-        <%= f.collection_check_boxes :poll_manager_ids, @poll_managers, :id, :name do |b| %>
+        <%= f.collection_check_boxes :officing_manager_ids, @officing_managers, :id, :name do |b| %>
           <div>
             <%= b.check_box %>
             <%= b.label %>

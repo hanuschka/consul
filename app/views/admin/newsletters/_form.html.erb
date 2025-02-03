@@ -6,7 +6,7 @@
   <%= f.text_field :subject %>
   <%= f.text_field :title %>
   <%= f.text_field :subtitle %>
-  <%= render Custom::Admin::ImageFieldComponent.new(form: f, label: "Titelbild", hint: "Die Bildgröße sollte 1280 x 420 betragen") %>
+  <%= render Images::NestedComponent.new(f) %>
   <%= f.text_field :greeting, value: (f.object.greeting || "Sehr geehrte Damen und Herren, liebe Nutzer*innen ") %>
   <%= f.text_area :body, value: AdminWYSIWYGSanitizer.new.sanitize(@newsletter.body), class: "html-area  tall-editor #{ck_editor_class(current_user)}" %>
 

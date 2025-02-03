@@ -1,12 +1,12 @@
-<h2><%= t("custom.admin.poll_managers.search.title") %></h2>
+<h2><%= t("custom.admin.officing_managers.search.title") %></h2>
 
-<%= render "admin/shared/user_search", url: search_admin_poll_managers_path %>
+<%= render "admin/shared/user_search", url: search_admin_officing_managers_path %>
 
-<div id="poll_managers">
+<div id="officing_managers">
   <% if @users.any? %>
     <h3><%= page_entries_info @users %></h3>
 
-    <table id="poll_managers">
+    <table id="officing_managers">
       <thead>
         <th scope="col"><%= User.human_attribute_name(:name) %></th>
         <th scope="col" class="small-6"><%= User.human_attribute_name(:email) %></th>
@@ -18,7 +18,7 @@
           <td><%= user.name %></td>
           <td><%= user.email %></td>
           <td>
-            <%= render Admin::Roles::TableActionsComponent.new(user.poll_manager || user.build_poll_manager) %>
+            <%= render Admin::Roles::TableActionsComponent.new(user.officing_manager || user.build_officing_manager) %>
           </td>
         </tr>
       <% end %>

@@ -23,12 +23,9 @@ namespace :admin do
       get :formular
       get :formular_answers
       get :poll_questions
-      get :poll_booth_assignments
-      get :poll_officer_assignments
-      get :poll_recounts
-      get :poll_managers
-      get :poll_manager_audits
-      patch :update_poll_manager_assignments
+      get :officing_managers
+      get :officing_manager_audits
+      patch :update_officing_manager_assignments
       get :poll_results
       get :budget_edit
       get :budget_investments
@@ -142,7 +139,7 @@ namespace :admin do
   end
 
   # custom poll managers
-  resources :poll_managers, only: [:index, :create, :destroy] do
+  resources :officing_managers, only: [:index, :create, :destroy] do
     get :search, on: :collection
   end
 

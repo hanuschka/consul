@@ -39,6 +39,16 @@
   background: #f14b59 !important;
 }
 
+.upldFls__viewItems .upldFls__item {
+  height: max-content;
+  overflow: hidden;
+}
+
+.upldFls__viewItems .upldFls__item.active {
+  border-color: var(--ck-color-focus-border);
+  border-width: 3px;
+}
+
 /* Customization end */
 
 

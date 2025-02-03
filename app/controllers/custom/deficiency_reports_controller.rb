@@ -199,14 +199,10 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def notify_responsible(dr)
-    return if dr.responsible.blank?
-
-    if dr.responsible.is_a?(DeficiencyReport::Officer)
-      DeficiencyReportMailer.notify_officer(dr, dr.responsible).deliver_later
-    elsif dr.responsible.is_a?(DeficiencyReport::OfficerGroup)
-      dr.responsible.officers.each do |officer|
-        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
-      end
+    dr.responsible_officers.each do |officer|
+      DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+      Notification.add(officer.user, dr)
+      Activity.log(officer.user, "email", dr)
     end
   end
 end

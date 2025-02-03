@@ -59,7 +59,7 @@ de:
       projekt_phase/newsfeed_phase: News-Feed
       projekt_phase/formular_phase: Formular
       formular_field: Formularfeld
-      poll_manager:
+      officing_manager:
         one: Abstimmungshelfer*innen
         other: Abstimmungshelfer*innen
     errors:

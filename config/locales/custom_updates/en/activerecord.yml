@@ -37,7 +37,7 @@ en:
       projekt_notification:
         one: Projektbenachrichtigung
         other: Projektbenachrichtigungen
-      poll_manager:
+      officing_manager:
         one: Poll manager
         other: Poll managers
     errors:

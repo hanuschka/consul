@@ -300,7 +300,7 @@ var UploadFilesPlugin = /*#__PURE__*/function (_Plugin) {
             onExecute: function onExecute(e) {
               console.log('change', e);
             }
-          }, 'Bild / Dokument soll in neuem Fenster geöffnet werden']
+          }, 'Dokument soll in neuem Fenster geöffnet werden']
         }, mainActionButton]
       });
     }

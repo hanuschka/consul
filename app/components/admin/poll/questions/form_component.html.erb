@@ -35,6 +35,7 @@
     <div class="row">
       <div class="column">
         <%= translations_form.text_area :description,
+          value: AdminWYSIWYGSanitizer.new.sanitize(question.description),
           class: "html-area #{ck_editor_class(current_user)}" %>
       </div>
     </div>

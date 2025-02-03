@@ -43,5 +43,28 @@
           <% end %>
       </li>
     <% end %>
+
+    <% if local_assigns[:called_from] == "subnavigation_projekts_overview" && @draft_projekts_for_navigation.any? %>
+      <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'
+        <%= "tabindex=0" if placement == "desktop" %>
+        aria-label="<%= t("custom.links.menu.projekt_name_label", projekt_name: "Drafts") %>"
+        aria-haspopup=true>
+
+        <div class='projekt-name-group'>
+          <div class='flyout-item-name projekt-name'>
+            <%= t("custom.links.menu.draft_projekts") %>
+          </div>
+
+          <% if placement == 'mobile' %>
+            <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
+                 tabindex="0"
+                 aria-expanded=false>
+            </div>
+          <% end %>
+        </div>
+
+        <%= render partial: "shared/subnavigation_flyout_projekts", locals: { projekts: @draft_projekts_for_navigation, placement: placement }  %>
+      </li>
+    <% end %>
   </ul>
 <% end %>

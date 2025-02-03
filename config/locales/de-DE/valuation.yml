@@ -44,7 +44,7 @@ de:
         price: Preis
         price_first_year: Kosten im ersten Jahr
         currency: "€"
-        feasibility: Durchführbarkeit
+        feasibility: Kriterienerfüllung
         feasible: Durchführbar
         unfeasible: Undurchführbar
         undefined: Undefiniert
@@ -58,7 +58,7 @@ de:
         dossier: Bericht
         price: "Preis (%{currency})"
         price_first_year: "Kosten im ersten Jahr (%{currency}) <small>(optional, nicht öffentliche Daten)</small>"
-        feasibility: Durchführbarkeit
+        feasibility: Kriterienerfüllung
         valuation_finished_alert: "Sind Sie sicher, dass Sie diesen Bericht als erledigt markieren möchten? Hiernach können Sie keine Änderungen mehr vornehmen."
         not_feasible_alert: "Der Autor des Projekts erhält sofort eine E-Mail mit einem Bericht zur Undurchführbarkeit."
         save: Änderungen speichern

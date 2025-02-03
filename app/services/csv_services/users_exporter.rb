@@ -1,5 +1,5 @@
 module CsvServices
-  class UsersExporter < ApplicationService
+  class UsersExporter < CsvServices::BaseService
     require "csv"
     include AdminHelper
     include UsersHelper
@@ -26,14 +26,14 @@ module CsvServices
           "Stadt", "Adresse", "Postleitzahl", "Gebiet",
           "Dokument", "Dokument (4 letzten Ziffern)",
           "Nutzer angelegt am", "letzter Login am",
-          "Geschlecht", "Geburtsdatum", "Rollen", "Unique Stamp", "Verifiziert am"
+          "Geschlecht", "Geburtsdatum", "Rollen", "Unique Stamp", "Verifiziert am", "Reverifizieren"
         ]
       end
 
       def row(user)
         user_row = [
-          user.id, user.name, user.email, user.first_name, user.last_name,
-          user.city_name, user.formatted_address, user.plz, user.geozone&.name,
+          user.id, sanitize_for_csv(user.name), sanitize_for_csv(user.email), sanitize_for_csv(user.first_name), sanitize_for_csv(user.last_name),
+          sanitize_for_csv(user.city_name), sanitize_for_csv(user.formatted_address), user.plz, user.geozone&.name,
           user.document_type, user.document_last_digits,
           I18n.l(user.created_at, format: "%d.%m.%Y"), last_sign_in_date_formatted(user, "%d.%m.%Y")
         ]
@@ -43,6 +43,7 @@ module CsvServices
         user_row.push(display_user_roles(user))
         user_row.push(user.unique_stamp.to_s)
         user_row.push(user.verified_at.present? ? I18n.l(user.verified_at, format: "%d.%m.%Y") : "")
+        user_row.push(I18n.t("shared.#{user.reverify ? 'yes' : 'no'}"))
 
         user_row
       end

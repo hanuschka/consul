@@ -4,13 +4,13 @@ namespace :projekt_management do
   resources :projekt_phases, only: [:update, :destroy] do
     member do
       get :duration
+      get :frame_new_phase_selector
       get :naming
       get :restrictions
       get :settings
       get :age_ranges_for_stats
       get :map
       patch :update_map
-      put :copy_map_settings_from_projekt
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -24,9 +24,9 @@ namespace :projekt_management do
       get :formular
       get :formular_answers
       get :poll_questions
-      get :poll_booth_assignments
-      get :poll_officer_assignments
-      get :poll_recounts
+      get :officing_managers
+      get :officing_manager_audits
+      patch :update_officing_manager_assignments
       get :poll_results
       get :budget_edit
       get :budget_investments
@@ -76,6 +76,7 @@ namespace :projekt_management do
   resources :projekts, only: %i[index edit update] do
     member do
       patch :update_standard_phase
+      get :frame_new_phase_selector
       patch :update_map
     end
 

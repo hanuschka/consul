@@ -1,0 +1,35 @@
+<%= back_link_to deficiency_report_management_districts_path %>
+
+<div class="small-12 column">
+  <h2><%= @district.name %></h2>
+</div>
+
+<%= form_with method: :put, url: deficiency_report_management_district_path(@district) do |f| %>
+
+  <div class="clear">
+    <div class="small-12 column">
+      <%= label_tag RegisteredAddress::District.human_attribute_name(:default_deficiency_report_responsible) %>
+      <div style="column-count:3;margin-top:10px;">
+
+        <% checked_officer_id = @district.default_deficiency_report_responsible.id if @district.default_deficiency_report_responsible.is_a?(DeficiencyReport::Officer) %>
+        <%= f.collection_radio_buttons :default_deficiency_report_officer_id, DeficiencyReport::Officer.all, :id, :name, { checked: checked_officer_id } do |rb| %>
+          <div>
+            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"default_deficiency_report_officer_group_id\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+          </div>
+        <% end %>
+
+        <% checked_officer_group_id = @district.default_deficiency_report_responsible.id if @district.default_deficiency_report_responsible.is_a?(DeficiencyReport::OfficerGroup) %>
+        <%= f.collection_radio_buttons :default_deficiency_report_officer_group_id, DeficiencyReport::OfficerGroup.all, :id, :name, { checked: checked_officer_group_id } do |rb| %>
+          <div>
+            <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"default_deficiency_report_officer_id\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="small-12 column">
+    <%= f.submit class: "button success" %>
+  </div>
+<% end %>

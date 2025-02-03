@@ -1,5 +1,5 @@
 module CsvServices
-  class UnregisteredNewsletterSubscribersExporter < ApplicationService
+  class UnregisteredNewsletterSubscribersExporter < CsvServices::BaseService
     require "csv"
     include AdminHelper
 
@@ -30,7 +30,7 @@ module CsvServices
       def row(subscriber)
         [
           subscriber.id,
-          subscriber.email,
+          sanitize_for_csv(subscriber.email),
           subscriber.created_at
         ]
       end

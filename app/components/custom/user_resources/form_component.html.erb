@@ -1,47 +1,46 @@
-<main class="user-resources-form js-user-resources-form <%= base_class_name %>">
-
+<main class="user-resources-form <%= base_class_name %>">
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
     <%= back_link %>
 
-    <% projekt_selector_html = capture do %>
-      <%= render Shared::SidebarCardComponent.new(title: "Projektzuordnung", opened_on_mobile: true, description: "Ihr Vorschlag wird diesem Projekt zugeordnet", icon_name: "code-branch", class_name: "js-sidebar-projekt-section #{projekt_selector_class} projekt-selector-card") do |c| %>
-        <%= f.error_for(:projekt_phase) %>
-        <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: resource } %>
-      <% end %>
-    <% end %>
-
     <% labels_and_sentiments_html = capture do %>
-      <%= render Shared::SidebarCardComponent.new(title: "Labels", opened_on_mobile: true, icon_name: "tag", class_name: "js-sidebar-label-section hide js-projekt-labels-selector") do |c| %>
-        <%= render partial: "shared/projekt_selector/projekt_labels", locals: { f: f, model: resource } %>
+      <% if show_labels_selector? %>
+        <%= render Shared::SidebarCardComponent.new(
+          title: projekt_phase.labels_name.presence || t("custom.shared.form.projekt_labels_label"),
+          opened_on_mobile: true,
+          icon_name: "tag",
+        ) do |c| %>
+          <%= render partial: "shared/user_resources_form/projekt_labels", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
+        <% end %>
       <% end %>
 
-      <%= render Shared::SidebarCardComponent.new(title: "Sentiments", opened_on_mobile: true, icon_name: "heart", class_name: "js-sidebar-sentiment-section hide js-sentiments-selector") do |c| %>
-        <%= render partial: "shared/projekt_selector/sentiments", locals: { f: f, model: resource } %>
+      <% if show_sentiments_selector? %>
+        <%= render Shared::SidebarCardComponent.new(
+          title: projekt_phase.sentiments_name.presence || I18n.t("custom.shared.form.sentiment_label"),
+          opened_on_mobile: true,
+          icon_name: "heart",
+        ) do |c| %>
+          <%= render partial: "shared/user_resources_form/sentiments", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
+        <% end %>
       <% end %>
     <% end %>
 
     <% sidebar_html = capture do %>
       <aside class="sidebar">
-        <%# <%= helpers.render_custom_block 'proposals_creation_recommendations' %>
-
         <fieldset class="required-fields">
           <%= hidden_field_tag :order, params[:order] %>
-
-          <div class="hide-on-small-tablet js-remove-on-mobile-section">
-            <%= projekt_selector_html %>
-          </div>
 
           <div class="js-remove-on-mobile-section">
             <%= labels_and_sentiments_html %>
           </div>
 
-          <%= render(Shared::SidebarCardComponent.new(
-            title: "Dokumente hinzufügen",
-            class_name: "d-none js-sidebar-documment-attacher-section",
-            icon_name: "file")) do %>
-            <div class="documents d-none" id="attach-documents">
-              <%= render "documents/nested_documents", f: f %>
-            </div>
+          <% if show_documents_input? %>
+            <%= render(Shared::SidebarCardComponent.new(
+              title: "Dokumente hinzufügen",
+              icon_name: "file")) do %>
+              <div class="documents" id="attach-documents">
+                <%= render "documents/nested_documents", f: f %>
+              </div>
+            <% end %>
           <% end %>
 
           <% if translations_interface_enabled? %>
@@ -56,65 +55,24 @@
             <% end %>
           <% end %>
 
-          <%= render(Shared::SidebarCardComponent.new(
-            title: "Video hinzufügen",
-            class_name: "d-none js-sidebar-external-video-section",
+          <% if show_external_video_input? %>
+            <%= render(Shared::SidebarCardComponent.new(
+              title: "Video hinzufügen",
               opened_on_mobile: true,
-            icon_name: "video")) do %>
-            <p>
-            Gibt es Videos, die Ihre Argumentation und Sichtweise stützen?
-            Dann fügen Sie diese über einen Link hinzu.
-            </p>
-            <%= f.text_field :video_url, label: false, placeholder: "YouTube oder Vimeo-Link eingeben", class: "light-input" %>
+              icon_name: "video")) do %>
+              <p>
+              Gibt es Videos, die Ihre Argumentation und Sichtweise stützen?
+              Dann fügen Sie diese über einen Link hinzu.
+              </p>
+              <%= f.text_field :video_url, label: false, placeholder: "YouTube oder Vimeo-Link eingeben", class: "light-input" %>
+            <% end %>
           <% end %>
 
           <%= f.invisible_captcha :subtitle %>
 
-          <% if @categories&.any? %>
-            <%= render(Shared::SidebarCardComponent.new(
-              title: "Tags",
-              class_name: "js-sidebar-category-tags-selector-section",
-              opened_on_mobile: true,
-              icon_name: "tags")) do %>
-              <p>
-              Tags sind Markierungen, die uns dabei helfen, Diskussionen
-              bestimmten Themen zuzuordnen. So findet jeder schnell, was
-              ihn interessiert. Aktivieren Sie per Klick den oder die Tags,
-              die zu Ihrer Diskussion passen.
-              </p>
-              <div id="category_tags" class="tags">
-                <% @categories.each do |tag| %>
-                  <a class="js-add-tag-link" data-category-id="<%= tag.id %>"><%= tag.name %></a>
-                <% end %>
-              </div>
-              <br>
-
-              <%= f.hidden_field :tag_list_predefined, value: @resource.tags.reject{ |t| !['category'].include?(t.kind)}.map(&:name).join(","), class: "js-tag-list list-tags predefined" %>
-            <% end %>
-          <% end %>
-
-          <% if extended_feature?("modulewide.enable_categories") && @categories&.any? && SDG::ProcessEnabled.new(f.object).enabled? %>
-            <%= render(Shared::SidebarCardComponent.new(
-              title: "UN-Nachhaltigkeitsziele",
-              class_name: "js-sidebar-sdgs-selector-section",
-              opened_on_mobile: true,
-              icon_name: "tags")) do %>
-              <p>
-              Die Vereinten Nationen haben 17 Nachhaltigkeitsziele
-              formuliert. Lässt sich Ihre Diskussion einem dieser Ziele
-              zuordnen? Dann aktivieren Sie das entsprechende Feld per Klick.
-              </p>
-              <div id="sdgs-selector" class='row margin-top'>
-                <br>
-                <%= render SDG::RelatedListSelectorComponent.new(f) %>
-              </div>
-            <% end %>
-          <% end %>
-
-          <% if projekt_phase.present? && current_user.has_pm_permission_to?("manage", projekt_phase.projekt) %>
+          <% if show_post_on_behalf_of_input? %>
             <%= render(Shared::SidebarCardComponent.new(
               title: "Veröffentlichen für",
-              class_name: "js-sidebar-behalf-of",
               opened_on_mobile: true,
               icon_name: "user")) do %>
               <p>
@@ -129,41 +87,18 @@
     <div class="flex-layout">
       <div class="main-column">
         <h1 class="user-resources-form--title">
-          <%= @title %>
+          <%= form_title %>
         </h1>
 
         <div class="user-resources-form--description">
-          <% if resource.is_a?(Proposal) %>
-            <%= helpers.render_custom_block "proposals_creation_recommendations", default_content: t("custom.user_resources.form.page_description") %>
-          <% elsif resource.is_a?(Debate) %>
-            <%= helpers.render_custom_block "debates_creation_recommendations" %>
-          <% else %>
-            <%= helpers.render_custom_block "user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description") %>
-          <% end %>
+          <%= projekt_phase.projekt_selector_hint&.html_safe.presence ||
+            helpers.render_custom_block("user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description")) %>
         </div>
 
         <%= render "shared/errors", resource: resource %>
 
-        <% if selected_projekt_id.present? %>
-          <%= hidden_field_tag :projekt_id, selected_projekt_id %>
-        <% end %>
-
-        <% if selected_projekt_phase_id.present? %>
-          <%= hidden_field_tag :projekt_phase_id, selected_projekt_phase_id %>
-        <% end %>
-
         <% if params[:origin].present? %>
           <%= hidden_field_tag :origin, params[:origin] %>
-        <% end %>
-
-        <% if resource.persisted? %>
-          <span
-              class="hide"
-              id="persisted-resource-data"
-              data-resource-class="<%= resource.class.name.to_s %>"
-              data-resource-id="<%= resource.id %>"
-              data-resource-map="<%= resource.is_a?(Proposal) && resource.map_location.present? %>">
-          </span>
         <% end %>
       </div>
     </div>
@@ -171,14 +106,16 @@
     <div class="flex-layout">
       <div class="main-column">
         <div class="show-on-small-tablet js-remove-on-desktop-section">
-          <%= projekt_selector_html %>
           <%= labels_and_sentiments_html %>
         </div>
+
+        <%= f.hidden_field :projekt_phase_id, value: projekt_phase.id %>
+
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
-          <div class="user-resources-form--banner-editor js-user-resources-form--banner-editor <%= banner_class_name %>"
-              style="<%= helpers.sentiment_color_style(@resource.sentiment) %>">
+          <div class="user-resources-form--banner-editor <%= banner_class_name %>"
+              style="<%= helpers.sentiment_color_style(resource.sentiment) %>">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
                   maxlength: title_max_length,
@@ -189,11 +126,9 @@
                   autocomplete: "off" %>
               </div>
 
-              <% if feature?(:allow_images) %>
+              <% if show_image_input? %>
                 <div class="banner-editor-image-attachment js-banner-editor-image-attachment">
-                  <% if f.object.image.blank? %>
-                    <% f.object.build_image %>
-                  <% end %>
+                  <% f.object.build_image if f.object.image.nil? %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
                   <% end %>
@@ -201,29 +136,27 @@
               <% end %>
           </div>
           <%= translations_form.text_area :description,
+            value: AdminWYSIWYGSanitizer.new.sanitize(resource.description),
             maxlength: max_description_lenght,
             label: false,
-            data: { placeholder: t("custom.#{i18n_scope}.form.description_placeholder_html") },
+            placeholder: descriotion_placeholder,
             class: "html-area #{helpers.ck_editor_class(current_user)}" %>
         <% end %>
 
-        <% if @resource.errors[:description].any? %>
-          <p class="form-error is-visible"><%= @resource.errors[:description].join(", ") %></p>
+        <% if resource.errors[:description].any? %>
+          <p class="form-error is-visible"><%= resource.errors[:description].join(", ") %></p>
         <% end %>
 
-        <% if render_map? %>
+        <% if show_map_input? %>
           <div class="new-card" id='map-container'>
             <%= render "map_locations/form_fields",
-              form:     f,
-              map_location: resource.map_location || MapLocation.new,
-              label: t("#{i18n_scope}.form.map_location"),
-              help: t("custom.user_resources.form.map_location_instructions"),
-              remove_marker_label: t("proposals.form.map_remove_marker"),
-              mappable: resource,
-              projekt:  @selected_projekt,
-              projekt_phase:  @projekt_phase,
-              parent_class: "proposal",
-              i18n_namespace: "proposals" %>
+              form:          f,
+              map_location:  resource.map_location || resource.build_map_location,
+              label:         t("#{i18n_scope}.form.map_location"),
+              help:          t("custom.user_resources.form.map_location_instructions"),
+              mappable:      resource,
+              projekt_phase: projekt_phase,
+              parent_class:  "proposal" %>
           </div>
         <% end %>
 

@@ -8,6 +8,14 @@
 <% end %>
 
 <style>
+    .newsletter-template-content table {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      width: 100% !important;
+    }
+    figure.table {
+      width: 100%;
+    }
     table {
       margin-bottom: 0;
     }
@@ -88,7 +96,7 @@
                     <tr>
                       <td style="background:#ffffff; padding:34px 40px 0 40px" align="left">
                         <span style="font-size:22px; color:#000000; margin-top:0">
-                          <%= @newsletter.greeting %>
+                          <%= @newsletter.greeting %>,
                         </span>
                       </td>
                     </tr>

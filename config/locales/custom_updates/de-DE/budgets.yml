@@ -20,7 +20,7 @@ de:
       index:
         filters:
           all: Alle
-          feasible: Durchführbar
+          feasible: Entspricht den Kriterien
           undecided: Noch nicht definiert
         orders:
           random: Zufällig

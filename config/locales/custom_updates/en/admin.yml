@@ -97,6 +97,7 @@ en:
         deficiency_reports_title: Deficiency reports
         projekts: Projects
         projekt_managers: Project managers
+        officing_managers: Poll managers
         legislation: Text edit
         age_restrictions: Age restrictions
         modal_notification: Modal notifications
@@ -333,6 +334,12 @@ en:
           no_projekt_managers: No projekt managers
         search:
           title: "Projekt managers: User search"
+      officing_managers:
+        index:
+          title: Poll managers
+          no_projekt_managers: No poll managers
+        search:
+          title: "Poll managers: User search"
       settings:
         index:
           extended_features:

@@ -370,19 +370,6 @@ td.answers-column  {
   .poll-question-answers {
     margin: 0 !important;
   }
-  &.-rating-scale {
-    display: flex;
-    justify-content: flex-start;
-
-    @media(max-width: $small-tablet-viewport-start) {
-      flex-direction: column;
-    }
-
-    .poll-question--nested-question-title {
-      min-width: 150px;
-      max-width: 150px;
-    }
-  }
 }
 
 .poll-question--nested-question-title {

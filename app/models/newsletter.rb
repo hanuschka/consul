@@ -1,4 +1,6 @@
 class Newsletter < ApplicationRecord
+  include Imageable
+
   has_many :activities, as: :actionable, inverse_of: :actionable
 
   validates :subject, presence: true

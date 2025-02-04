@@ -238,10 +238,10 @@ de:
           without_valuator: Ohne zugewiesene*n Gutachter*in
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
-          feasible: Durchführbar
+          feasible: Entspricht den Kriterien
           selected: Ausgewählt
           undecided: Offen
-          unfeasible: Undurchführbar
+          unfeasible: Entspricht nicht den Kriterien
           min_total_supports: Minimum Unterstützer*innen
           max_total_supports: Maximum Unterstützer*innen
           winners: Bestbewertete Vorschläge
@@ -257,8 +257,8 @@ de:
         no_admin_assigned: Kein*e Administrator*in zugewiesen
         no_valuators_assigned: Kein*e Gutachter*in*in zugewiesen
         feasibility:
-          feasible: "Durchführbar"
-          unfeasible: "Undurchführbar"
+          feasible: Entspricht den Kriterien
+          unfeasible: Entspricht nicht den Kriterien
           undecided: "Offen"
         selected: "Ausgewählt"
         select: "Auswählen"
@@ -270,7 +270,7 @@ de:
           valuator: Gutachter*in
           valuation_group: Bewertungsgruppe
           geozone: Bezug der Vorschläge
-          feasibility: Durchführbarkeit
+          feasibility: Kriterienerfüllung
           valuation_finished: Bewertung fertig?
           selected: Status
           visible_to_valuators: Gutachter*innen zeigen
@@ -295,7 +295,7 @@ de:
         dossier: Bericht
         edit_dossier: Bericht bearbeiten
         tags: Tags
-        undefined: Undefiniert
+        undefined: Noch nicht bewertet
         compatibility:
           title: Kompatibilität
           "true": Inkompatibel
@@ -317,7 +317,7 @@ de:
         submit_button: Aktualisieren
         user_tags: Tags, die von Benutzer*innen zugewiesen wurden
         tags_placeholder: "Geben Sie die gewünschten Tags durch Kommas (,) getrennt ein"
-        undefined: Undefiniert
+        undefined: Noch nicht bewertet
       search_unfeasible: Suche undurchführbar
     budgets_wizard:
       creation_timeline:

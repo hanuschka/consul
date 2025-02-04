@@ -8,6 +8,10 @@ textarea{
   max-height: 50vh;
 }
 
+.ck-editor__main textarea {
+  max-height: unset;
+}
+
 body.home-page .homepage-image-header {
   @media(max-width: 850px) {
     background-image: url("mobile-header.jpeg");

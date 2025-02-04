@@ -4,9 +4,9 @@
     <%= "*" if question.answer_mandatory? %>
   </h3>
 
-  <p class="poll-question--description">
-  <%= auto_link_already_sanitized_html wysiwyg(question.description) %>
-  </p>
+  <div class="poll-question--description">
+    <%= auto_link_already_sanitized_html wysiwyg(question.description) %>
+  </div>
 
   <% if question.votation_type&.show_hint_callout? && !question.bundle_question? %>
     <div class="callout primary">
@@ -20,7 +20,7 @@
     </div>
 
     <% question.nested_questions.each do |nested_question| %>
-      <div class="poll-question--nested-question <%= nested_question.votation_type.rating_scale? ? "-rating-scale" : "" %>" data-answer-mandatory="<%= nested_question.answer_mandatory? ? 'true' : 'false' %>">
+      <div class="poll-question--nested-question padding <%= nested_question.votation_type.rating_scale? ? "-rating-scale" : "" %>" data-answer-mandatory="<%= nested_question.answer_mandatory? ? 'true' : 'false' %>">
         <div class="poll-question--nested-question-title">
           <%= nested_question.title %>
           <%= "*" if nested_question.answer_mandatory? %>

@@ -26,9 +26,9 @@
           <%= "*" if nested_question.answer_mandatory? %>
         </div>
 
-        <p class="poll-question--description">
+        <div class="poll-question--description">
           <%= auto_link_already_sanitized_html wysiwyg(nested_question.description) %>
-        </p>
+        </div>
 
         <div id="<%= dom_id(nested_question) %>_answers" class="">
           <%= render Polls::Questions::AnswersComponent.new(nested_question) %>

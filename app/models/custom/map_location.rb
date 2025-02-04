@@ -86,7 +86,7 @@ class MapLocation < ApplicationRecord
         plz: geo_data["address"]["postcode"]
       },
       registered_address_city: {
-        name: geo_data["address"]["city"]
+        name: geo_data["address"]["city"] || geo_data["address"]["town"]
       }
     }.reject { |_k, v| v.in?(["", nil]) }
 

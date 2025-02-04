@@ -17,7 +17,7 @@ module NotificationServices
     private
 
       def users_to_notify
-        [administrators, projekt_managers, deficiency_report_managers]
+        [administrators, projekt_managers, deficiency_report_managers, deficiency_report_officers]
           .flatten.uniq(&:id).reject { |user| user.id == @memo.user_id }
       end
 
@@ -36,6 +36,14 @@ module NotificationServices
         return Array.new unless @memo.root_memoable.is_a?(DeficiencyReport)
 
         User.joins(:deficiency_report_manager)
+      end
+
+      def deficiency_report_officers
+        return Array.new unless @memo.root_memoable.is_a?(DeficiencyReport)
+
+        User.joins(:deficiency_report_officer).where(
+          deficiency_report_officers: { id: @memo.root_memoable.responsible_officers.pluck(:id) }
+        )
       end
 
       def namespace(user, memo)

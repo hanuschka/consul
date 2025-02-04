@@ -775,6 +775,10 @@ de:
       send_success: Newsletter erfolgreich gesendet
       delete_success: Newsletter erfolreich gelöscht
       index:
+        tabs:
+          list: Newsletter
+          settings: Einstellungen
+
         title: Newsletter
         new_newsletter: Neuer Newsletter
         subject: Betreff
@@ -784,6 +788,7 @@ de:
         draft: Entwurf
         preview: Vorschau
         empty_newsletters: Keine Newsletter zum Anzeigen vorhanden
+
       new:
         title: Neuer Newsletter
         header_footer_help_text: "Die Kopf- und Fußzeile ist für alle E-Mails gleich, Sie können sie ändern unter <code>app/views/layouts/mailer_header</code> and <code>app/views/layouts/mailer_footer</code>.<br>\nSie können das Bilder der Kopfzeile ersetzen unter %{link}."

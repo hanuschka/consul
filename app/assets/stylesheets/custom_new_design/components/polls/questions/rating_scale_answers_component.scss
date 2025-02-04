@@ -1,19 +1,4 @@
 .custom-new-design  {
-  .poll-question--nested-question {
-    &.-rating-scale {
-      .poll-question--nested-question-title {
-        min-width: 250px;
-        max-width: 250px;
-        text-align: left;
-
-        @media(max-width: $small-tablet-viewport-start) {
-          min-width: 100%;
-          max-width: auto;
-        }
-      }
-    }
-  }
-
   .rating-scale-label {
     color: $white;
     font-size: 16px;

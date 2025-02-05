@@ -41,21 +41,6 @@ module PdfServices
         pdf.text html_to_paragraphs(@deficiency_report.description), size: 10, inline_format: true
 
         pdf.move_down 10
-
-        pdf.text "#{DeficiencyReport.human_attribute_name(:author)}:", size: 10, style: :bold
-        pdf.text @deficiency_report.author.username, size: 10
-        pdf.text @deficiency_report.author.full_name, size: 10
-
-        if @deficiency_report.on_behalf_of.present?
-          pdf.text "(#{I18n.t("custom.admin.deficiency_reports.show.on_behalf_of")} #{@deficiency_report.on_behalf_of})", size: 10
-        end
-
-        pdf.move_down 10
-
-        pdf.text "#{DeficiencyReport.human_attribute_name(:address)}:", size: 10, style: :bold
-        pdf.text @deficiency_report.author.formatted_address, size: 10
-        pdf.text @deficiency_report.author.plz.to_s, size: 10
-        pdf.text @deficiency_report.author.city_name, size: 10
       end
     end
   end

@@ -7,5 +7,4 @@ class IndividualGroup < ApplicationRecord
   scope :hard, -> { where(kind: "hard") }
   scope :soft, -> { where(kind: "soft") }
   scope :visible, -> { where(visible: true) }
-
 end

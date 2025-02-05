@@ -105,13 +105,14 @@ class ProposalsController
   end
 
   def update
-    custom_proposal_params = proposal_params
+    # custom_proposal_params = proposal_params
 
-    if proposal_params["image_attributes"]["cached_attachment"].blank?
-      custom_proposal_params = proposal_params.except("image_attributes")
-    end
+    # if proposal_params["image_attributes"]["cached_attachment"].blank?
+    #   custom_proposal_params = proposal_params.except("image_attributes")
+    # end
 
-    if resource.update(custom_proposal_params)
+    # if resource.update(custom_proposal_params)
+    if resource.update(proposal_params)
       NotificationServices::NewProposalNotifier.new(resource.id).call if resource.published?
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
@@ -122,13 +123,14 @@ class ProposalsController
   end
 
   def create
-    custom_proposal_params = proposal_params
+    # custom_proposal_params = proposal_params
 
-    if proposal_params["image_attributes"]["cached_attachment"].blank?
-      custom_proposal_params = proposal_params.except("image_attributes")
-    end
+    # if proposal_params["image_attributes"]["cached_attachment"].blank?
+    #   custom_proposal_params = proposal_params.except("image_attributes")
+    # end
 
-    @proposal = Proposal.new(custom_proposal_params.merge(author: current_user))
+    # @proposal = Proposal.new(custom_proposal_params.merge(author: current_user))
+    @proposal = Proposal.new(proposal_params.merge(author: current_user))
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")

@@ -55,6 +55,7 @@ module Abilities
       can [:search, :create, :index, :destroy, :update], ::Administrator
       can [:search, :create, :index, :destroy], ::ProjektManager # custom
       can [:search, :create, :index, :destroy], ::DeficiencyReportManager # custom
+      can [:search, :create, :index, :destroy], ::OfficingManager # custom
       can [:search, :create, :index, :destroy], ::Moderator
       can [:search, :show, :update, :create, :index, :destroy, :summary], ::Valuator
       can [:search, :create, :index, :destroy], ::Manager
@@ -144,7 +145,6 @@ module Abilities
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
       can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
-      can [:manage], ::DeficiencyReport::Area
       can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 

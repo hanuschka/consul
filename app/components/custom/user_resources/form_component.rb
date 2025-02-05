@@ -83,7 +83,7 @@ class UserResources::FormComponent < ApplicationComponent
   end
 
   def descriotion_placeholder
-    projekt_phase.resource_form_title_hint.presence || t("custom.#{i18n_scope}.form.description_placeholder_html")
+    projekt_phase.resource_form_title_hint.presence || t("custom.#{i18n_scope}.form.description_placeholder")
   end
 
   def show_labels_selector?
@@ -111,6 +111,6 @@ class UserResources::FormComponent < ApplicationComponent
   end
 
   def show_map_input?
-    projekt_phase_feature?(projekt_phase, "form.show_map") || @resource.map_location.present?
+    projekt_phase_feature?(projekt_phase, "form.show_map") || @resource.try(:map_location).present?
   end
 end

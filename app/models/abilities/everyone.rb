@@ -44,7 +44,7 @@ module Abilities
 
       can :show, Community do |community|
         return false unless community.communitable.present?
-        return false unless community.communitable.projekt_phase_id.present?
+        return false unless community.communitable.projekt_phase.present?
 
         projekt_phase = community.communitable.projekt_phase
 
@@ -79,6 +79,10 @@ module Abilities
           projekt_phase = investment.budget.projekt_phase
 
           investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?
+        end
+
+        can [:create, :update], FormularAnswer do |formular_answer|
+          formular_answer.formular.projekt_phase.permission_problem(user).blank?
         end
       end
 

@@ -19,18 +19,18 @@
 
         switch(data.event_type) {
           case "Consul.ProposalForm.updateField":
-            this.updateProposalField(params);
+            this.updateField(params);
             break;
         }
       }
     },
 
-    updateProposalField: function(params) {
+    updateField: function(params) {
       switch(params.field) {
         case "title":
           this.updateProposalTitle(params.value);
           break;
-        case "title":
+        case "description":
           this.updateProposalDescription(params.value);
           break;
       }

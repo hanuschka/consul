@@ -29,13 +29,19 @@
     },
 
     updateProposalTitle: function(title) {
-      document.querySelector(
+      const titleElement = document.querySelector(
         ".js-user-resource-form-title"
-      ).value = title
+      )
+
+      titleElement.value = title
+      titleElement.scrollIntoView({block: "center", inline: "nearest"})
     },
 
     updateProposalDescription: function(description) {
-      window.CKeditorInstancesGlobal["proposal_translations_attributes_0_description"].setData(description)
+      var editor = window.CKeditorInstancesGlobal["proposal_translations_attributes_0_description"]
+      editor.setData(description)
+      editor.sourceElement.scrollIntoView({block: "center", inline: "nearest"})
+      // console.log(editor)
     }
   };
 

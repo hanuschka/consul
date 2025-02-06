@@ -1,0 +1,88 @@
+<h2>
+  <%= t("custom.admin.newsletters.index.tabs.settings") %>
+</h2>
+
+<ul class="tabs" >
+  <li class="tabs-title is-active">
+    <%= link_to admin_newsletters_path do %>
+    <%= t("custom.admin.newsletters.index.tabs.list") %>
+  <% end %>
+  </li>
+
+  <li class="tabs-title" id="newsletter-settings-tab">
+    <%= link_to settings_admin_newsletters_path, "aria-selected" => "true" do %>
+      <%= t("custom.admin.newsletters.index.tabs.settings") %>
+    <% end %>
+  </li>
+</ul>
+
+<h3><%= t("custom.admin.newsletters.settings.email_logo") %></h2>
+<div class="compact-config-block">
+  <% image = @image || SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %>
+
+  <%= form_with(url: update_logo_admin_newsletters_path, method: :patch, html: { id: "edit_#{dom_id(image)}" }) do |f| %>
+    <% if image.image.attached? %>
+      <div class="margin-bottom">
+        <%= image_tag(
+          image_path_for("logo_newsletter_email.png"),
+          height: 45,
+          style: "border: 0;display: block;height: 55px",
+          alt: setting["org_name"]
+        ) %>
+      </div>
+    <% end %>
+
+    <p>
+      Die Bildgröße sollte 130 x 45 betragen
+    </p>
+
+    <div class="margin-bottom">
+      <%= f.file_field :image, label: false %>
+      <%= hidden_field_tag :image_id, value: image.id %>
+    </div>
+
+    <% if image.errors.any? %>
+      <div class="margin-bottom">
+        <% image.errors.full_messages.each do |error| %>
+          <p class="error"><%= error %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="">
+      <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
+    </div>
+  <% end %>
+</div>
+
+<h3><%= t("custom.admin.newsletters.settings.brand_color") %></h2>
+<div class="compact-config-block">
+  <%= form_with(url: update_color_admin_newsletters_path, method: :patch, html: { id: "edit_brand_color_newsletter" }) do |f| %>
+    <div style="width:150px;" class="margin-bottom">
+      <%= f.color_field :newsletter_brand_color, value: Setting['newsletter_brand_color'], label: false %>
+    </div>
+
+    <div class="">
+      <%= f.submit(t("custom.admin.projekt_phases.shared.update_button"), class: "button success") %>
+    </div>
+  <% end %>
+</div>
+
+<h3><%= t("custom.admin.newsletters.settings.footer") %></h2>
+<% content_block_key = 'newsletter_email_footer_block_1' %>
+<% block = SiteCustomization::ContentBlock.custom_block_for(content_block_key, current_user&.locale) %>
+<% return_path = settings_admin_newsletters_path %>
+
+<%= form_for [:admin, block], html: { class: "edit_page" } do |f| %>
+  <%= render "shared/errors", resource: block %>
+
+  <%= hidden_field_tag :return_to, settings_admin_newsletters_path  %>
+  <%= f.hidden_field :locale%>
+  <%= f.hidden_field :name%>
+
+  <%= f.text_area :body, rows: 10, value: AdminWYSIWYGSanitizer.new.sanitize(block.body), label: false, class: block.custom? ? "html-area #{ck_editor_class(current_user)}" : "" %>
+  <div class="small-12 medium-12 large-12">
+    <%= f.submit class: "button success" %>
+  </div>
+<% end %>
+

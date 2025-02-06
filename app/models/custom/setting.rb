@@ -129,7 +129,7 @@ class Setting < ApplicationRecord
         "url": "http://example.com", # Public-facing URL of the app.
         # CONSUL installation's organization name
         "org_name": "CONSUL",
-        "brand_color": "#004a83",
+        "newsletter_brand_color": "#004a83",
         "meta_title": nil,
         "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
         "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",

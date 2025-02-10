@@ -1,4 +1,4 @@
-<% email_brand_color = Setting["brand_color"] %>
+<% email_brand_color = Setting["newsletter_brand_color"] %>
 
 <% if @newsletter.image&.attachment&.attached? %>
   <% background_image_url = url_for(@newsletter.image.attachment) %>
@@ -18,6 +18,7 @@
     }
     table {
       margin-bottom: 0;
+      width: 100%;
     }
     a, a:hover, a:focus {
       color: inherit;
@@ -54,12 +55,19 @@
                   <tbody>
                     <tr>
                       <td align="left">
-                        <%= image_tag(
-                          image_path_for("logo_email.png"),
-                          height: 45,
-                          style: "border: 0;display: block;height: 55px",
-                          alt: setting["org_name"]
-                        ) %>
+                        <div class="small-12 medium-6 large-6 column">
+                          <% image = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %>
+                          <% if image.image.attached? %>
+                            <%= image_tag(
+                              image_path_for("logo_newsletter_email.png"),
+                              height: 45,
+                              style: "border: 0;display: block;height: 55px",
+                              alt: setting["org_name"]
+                            ) %>
+                          <% end %>
+                        </div>
+                      </td>
+                      <td>
                       </td>
                     </tr>
                   </tbody>
@@ -157,11 +165,14 @@
                                         <% end %>
                                       </td>
                                       <td style="vertical-align:top; padding-bottom:20px;width: 130px;" width="130">
-                                        <%= image_tag(
-                                          image_path_for("logo_email.png"),
-                                          style: "vertical-align:middle; width:130px; height:auto;border: 0;display: block;",
-                                          alt: setting["org_name"]
-                                        ) %>
+                                        <% image = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %>
+                                        <% if image.image.attached? %>
+                                          <%= image_tag(
+                                            image_path_for("logo_newsletter_email.png"),
+                                            style: "vertical-align:middle; width:130px; height:auto;border: 0;display: block;",
+                                            alt: setting["org_name"]
+                                          ) %>
+                                        <% end %>
                                       </td>
                                     </tr>
                                   </tbody>

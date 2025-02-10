@@ -370,6 +370,13 @@ namespace :admin do
     member do
       post :deliver
     end
+
+    collection do
+      get :settings
+      patch :update_logo
+      patch :update_color
+    end
+
     get :users, on: :collection
   end
 

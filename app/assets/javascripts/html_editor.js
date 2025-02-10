@@ -147,22 +147,22 @@
         ],
       })
 
-      // editorPromise.then((editor) => {
-      //   window.CKeditorInstancesGlobal[editor.sourceElement.id] = editor;
+      editorPromise.then((editor) => {
+        window.CKeditorInstancesGlobal[editor.sourceElement.id] = editor;
 
-      //   if (editor.sourceElement.form) {
-      //     editor.sourceElement.form.addEventListener("submit", function(e) {
-      //       e.preventDefault();
+        // if (editor.sourceElement.form) {
+        //   editor.sourceElement.form.addEventListener("submit", function(e) {
+        //     e.preventDefault();
 
-      //       var textarea = editor.sourceElement
-      //       var editorData = editor.getData();
-      //       var processedData = removeWrappingParagraphs(editorData);
+        //     var textarea = editor.sourceElement
+        //     var editorData = editor.getData();
+        //     var processedData = removeWrappingParagraphs(editorData);
 
-      //       textarea.value = processedData
-      //       textarea.form.submit();
-      //     })
-      //   }
-      // })
+        //     textarea.value = processedData
+        //     textarea.form.submit();
+        //   })
+        // }
+      })
     },
 
     toolbarFor: function(element) {

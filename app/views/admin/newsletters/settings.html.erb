@@ -21,7 +21,7 @@
   <% image = @image || SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %>
 
   <%= form_with(url: update_logo_admin_newsletters_path, method: :patch, html: { id: "edit_#{dom_id(image)}" }) do |f| %>
-    <% if image.image.attached? %>
+    <% if image.valid? && image.image.attached? %>
       <div class="margin-bottom">
         <%= image_tag(
           image_path_for("logo_newsletter_email.png"),

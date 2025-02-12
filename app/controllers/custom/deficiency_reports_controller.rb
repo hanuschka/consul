@@ -1,4 +1,5 @@
 class DeficiencyReportsController < ApplicationController
+  include FeatureFlags
   include Translatable
   include MapLocationAttributes
   include ImageAttributes
@@ -10,6 +11,9 @@ class DeficiencyReportsController < ApplicationController
   before_action :load_categories
   before_action :set_view, only: :index
   before_action :destroy_map_location_association, only: :update
+
+  feature_flag :deficiency_reports
+
   load_and_authorize_resource
 
   has_orders ->(c) { DeficiencyReport.deficiency_report_orders }, only: :index

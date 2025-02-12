@@ -45,6 +45,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
+      officing_managers officing_manager_audits
     ]
   end
 

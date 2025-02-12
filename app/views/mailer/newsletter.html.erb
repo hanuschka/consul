@@ -61,7 +61,7 @@
                             <%= image_tag(
                               image_path_for("logo_newsletter_email.png"),
                               height: 45,
-                              style: "border: 0;display: block;height: 55px",
+                              style: "border: 0;display: block;height: 45px",
                               alt: setting["org_name"]
                             ) %>
                           <% end %>
@@ -164,16 +164,16 @@
                                           </p>
                                         <% end %>
                                       </td>
-                                      <td style="vertical-align:top; padding-bottom:20px;width: 130px;" width="130">
-                                        <% image = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %>
-                                        <% if image.image.attached? %>
-                                          <%= image_tag(
-                                            image_path_for("logo_newsletter_email.png"),
-                                            style: "vertical-align:middle; width:130px; height:auto;border: 0;display: block;",
-                                            alt: setting["org_name"]
-                                          ) %>
-                                        <% end %>
-                                      </td>
+                                      <%# <td style="vertical-align:top; padding-bottom:20px;width: 130px;" width="130"> %>
+                                      <%#   <% image = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %1> %>
+                                      <%#   <% if image.image.attached? %1> %>
+                                      <%#     <%= image_tag( %>
+                                      <%#       image_path_for("logo_newsletter_email.png"), %>
+                                      <%#       style: "vertical-align:middle; width:130px; height:auto;border: 0;display: block;", %>
+                                      <%#       alt: setting["org_name"] %>
+                                      <%#     ) %1> %>
+                                      <%#   <% end %1> %>
+                                      <%# </td> %>
                                     </tr>
                                   </tbody>
                                 </table>

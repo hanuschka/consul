@@ -157,4 +157,12 @@ class Admin::MenuComponent < ApplicationComponent
         class: "matomo-link"
       ]
     end
+
+    def recipient_groups_link
+      [
+        t("custom.admin.menu.recipient_groups"),
+        admin_recipient_groups_path,
+        controller_name == "recipient_groups"
+      ]
+    end
 end

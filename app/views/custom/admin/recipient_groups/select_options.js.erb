@@ -1,0 +1,6 @@
+<% if @available_options_for_kind.present? %>
+  $(".recipient-group-constructor-options-blocks").append("<%= j render partial: "options_for_kind", locals: { options_for_kind: @available_options_for_kind, label_key: @label_key } %>");
+<% elsif @available_access_methods.present? %>
+  $("#access_methods").remove();
+  $(".recipient-group-constructor-options-blocks").after("<%= j render partial: "access_methods", locals: { options_for_access_methods: @available_access_methods, origin_class_name: @origin_class_name, origin_class_object_id: @origin_class_object_id, label_key: @label_key } %>");
+<% end %>

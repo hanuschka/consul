@@ -1,0 +1,4 @@
+<%= form_with model: @recipient_group, url: admin_recipient_group_path(@recipient_group) do |form| %>
+  <%= form.text_field :name %>
+  <%= form.submit %>
+<% end %>

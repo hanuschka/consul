@@ -1,3 +1,0 @@
-$("#<%= dom_id(@question) %>_answers").html(
-  "<%= j render OfficingManagers::Polls::Questions::AnswersComponent.new(@question, @responding_user, answer_updated: @answer_updated, open_answer_updated: @open_answer_updated) %>"
-);

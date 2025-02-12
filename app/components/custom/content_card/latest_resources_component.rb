@@ -21,13 +21,23 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
     end
 
     def latest_debates
+      scoped_projekt_ids = Debate.scoped_projekt_ids_for_index(current_user)
+
       Debate.with_current_projekt
+        .by_projekt_id(scoped_projekt_ids)
         .sort_by_created_at.limit(@debates_limit)
     end
 
     def latest_proposals
-      Proposal.published.not_archived.with_current_projekt
-        .sort_by_created_at.limit(@proposals_limit)
+      scoped_projekt_ids = Proposal.scoped_projekt_ids_for_index(current_user)
+
+      Proposal.published
+              .not_archived
+              .not_retired
+              .with_current_projekt
+              .by_projekt_id(scoped_projekt_ids)
+              .sort_by_created_at
+              .limit(@proposals_limit)
     end
 
     def latest_investment_proposals

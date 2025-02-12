@@ -19,25 +19,25 @@ class DeficiencyReport < ApplicationRecord
   include ActsAsParanoidAliases
 
   audited only: %i[video_url on_behalf_of cached_votes_up cached_votes_down
-                   deficiency_report_area_id deficiency_report_status_id deficiency_report_officer_id deficiency_report_category_id]
+                   deficiency_report_status_id deficiency_report_officer_id deficiency_report_category_id]
   has_associated_audits
   translation_class.class_eval do
     audited associated_with: :globalized_model,
             only: DeficiencyReport.translated_attribute_names
   end
 
+  attr_accessor :officer_id, :officer_group_id
+
   belongs_to :category, class_name: "DeficiencyReport::Category", foreign_key: :deficiency_report_category_id
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
-  belongs_to :officer, class_name: "DeficiencyReport::Officer", foreign_key: :deficiency_report_officer_id
-  belongs_to :area, class_name: "DeficiencyReport::Area",
-    foreign_key: :deficiency_report_area_id, inverse_of: :deficiency_reports
+  # belongs_to :officer, class_name: "DeficiencyReport::Officer", foreign_key: :deficiency_report_officer_id
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
+  belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
   delegate :approximated_address, to: :map_location, allow_nil: true
 
   validates :deficiency_report_category_id, :author, presence: true
-  validates :deficiency_report_area_id, presence: true, if: -> { validate_area_presence? }, on: :create
   validates :map_location, presence: true, on: :create
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
@@ -58,14 +58,14 @@ class DeficiencyReport < ApplicationRecord
   scope :admin_accepted, -> { Setting["deficiency_reports.admin_acceptance_required"].present? ? where(admin_accepted: true) : all }
 
   pg_search_scope :pg_search,
-    against: :on_behalf_of,
+    against: [:id, :on_behalf_of],
     associated_against: {
       translations: [:title, :description, :official_answer],
       author: :username
     },
     using: {
       trigram: {
-        threshold: 0.05
+        threshold: 0.03
       }
     },
     ignoring: :accents,
@@ -109,6 +109,7 @@ class DeficiencyReport < ApplicationRecord
 
   def searchable_values
     {
+      id.to_s               => "A",
       author.username       => "B",
       tag_list.join(" ")    => "B"
     }.merge!(searchable_globalized_values)
@@ -167,9 +168,19 @@ class DeficiencyReport < ApplicationRecord
     true
   end
 
-  private
+  def get_default_responsible
+    map_location&.get_district&.default_deficiency_report_responsible ||
+      category&.default_responsible
+  end
 
-    def validate_area_presence?
-      DeficiencyReport::Area.exists?
+  def responsible_officers
+    case responsible
+    when DeficiencyReport::Officer
+      [responsible]
+    when DeficiencyReport::OfficerGroup
+      responsible.officers
+    else
+      []
     end
+  end
 end

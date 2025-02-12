@@ -99,7 +99,7 @@ de:
       edit: Budgetinvestitionen bearbeiten
       filters:
         heading: Konzept
-        unfeasible: Undurchführbare Investition
+        unfeasible: Entspricht nicht den Kriterien
       print:
         print_button: Drucken
       search_results:

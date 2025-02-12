@@ -24,9 +24,10 @@ module AdminActions::Poll::Polls
 
     respond_to do |format|
       format.html { render "admin/poll/polls/index" }
+
       format.csv do
-        send_data Poll::CsvExporter.new(@polls.except(:limit, :offset)).to_csv,
-          filename: "polls.csv"
+        send_data CsvServices::PollsExporter.call(@polls.limit(nil)),
+          filename: "polls-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
       end
     end
   end

@@ -1,4 +1,16 @@
 module MailerHelper
+  def render_custom_content_block_content(key, default_content: '', custom_prefix: nil)
+    locale = I18n.default_locale
+    block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
+    block_body = block&.body.presence || default_content || ""
+
+    if custom_prefix
+      block_body = "#{custom_prefix} #{block_body}"
+    end
+
+    AdminWYSIWYGSanitizer.new.sanitize(block_body)
+  end
+
   def commentable_url(commentable)
     polymorphic_url(commentable)
   end

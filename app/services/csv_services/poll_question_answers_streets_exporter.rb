@@ -1,5 +1,5 @@
 module CsvServices
-  class PollQuestionAnswersStreetsExporter < ApplicationService
+  class PollQuestionAnswersStreetsExporter < CsvServices::BaseService
     require "csv"
 
     def initialize(question)

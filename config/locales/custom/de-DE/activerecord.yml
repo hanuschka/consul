@@ -174,20 +174,21 @@ de:
         organization_name: "Investitionsvorschlag erstellen im Namen von..."
         image: "Beschreibendes Bild zum Investitionsvorschlag"
         image_title: "Bildtitel"
-        duration: "Zeitrahmen"
-        feasibility_feasible: "Durchführbar"
-        feasibility_undecided: "Undefiniert"
-        feasibility_unfeasible: "Undurchführbar"
-        incompatible: "Als inkompatibel markieren"
+        duration: Zeitrahmen (intern)
+        feasibility_feasible: Entspricht den Kriterien
+        feasibility_undecided: Noch nicht bewertet
+        feasibility_unfeasible: Entspricht nicht den Kriterien
+        incompatible: Diesen Vorschlag nicht zur Kalkulation der Gewinner berücksichtigen
         milestone_tag_list: "Status des Vorschlags"
         price_explanation: "Erläuterung der Kosten"
         selected: "Als ausgewählt markieren"
         selected_true: "Ausgewählt"
         selected_false: "Nicht ausgewählt"
-        unfeasibility_explanation: "Erläuterung der Bewertung"
-        valuation_finished: "Begutachtung abgeschlossen"
+        unfeasibility_explanation: "Erläuterung"
+        valuation_finished: "Gutachten abgeschlossen"
         valuator_ids: "Gruppen"
         valuation_tag_list: "Tags"
+        valuator_explanation: Erläuterung
       budget/investment/translation:
         title: "Titel"
         description: "Beschreibung"
@@ -461,7 +462,8 @@ de:
       newsletter:
         segment_recipient: Empfänger*innen
         subject: Betreff
-        from: "Von"
+        from: "Absender-Email-Adresse (muss auf @domain.de enden)"
+        greeting: Ansprache
         body: Inhalt der E-Mail
       admin_notification:
         segment_recipient: Empfänger*innen

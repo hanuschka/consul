@@ -5,7 +5,7 @@ class Admin::MenuComponent < ApplicationComponent
   private
 
     def profiles?
-      %w[administrators projekt_managers deficiency_report_managers organizations officials moderators valuators managers
+      %w[administrators projekt_managers deficiency_report_managers officing_managers organizations officials moderators valuators managers
          users unregistered_newsletter_subscribers].include?(controller_name)
     end
 
@@ -22,7 +22,7 @@ class Admin::MenuComponent < ApplicationComponent
     end
 
     def registered_addresses?
-      %w[registered_addresses registered_address_groupings registered_address_streets].include?(controller_name)
+      %w[registered_addresses registered_address_groupings registered_address_districts registered_address_streets].include?(controller_name)
     end
 
     def projekts_link
@@ -41,6 +41,7 @@ class Admin::MenuComponent < ApplicationComponent
           registered_addresses_list,
           registered_address_groupings_list,
           registered_address_streets_list,
+          registered_address_districts_list,
           id: "registered-addresses-link", class: ("is-active" if registered_addresses?)
         )
     end
@@ -69,6 +70,14 @@ class Admin::MenuComponent < ApplicationComponent
       ]
     end
 
+    def registered_address_districts_list
+      [
+        t("custom.admin.menu.registered_address_districts.list"),
+        admin_registered_address_districts_path,
+        controller_name == "registered_address_districts"
+      ]
+    end
+
     def projekt_managers_link
       [
         t("custom.admin.menu.projekt_managers"),
@@ -82,6 +91,14 @@ class Admin::MenuComponent < ApplicationComponent
         t("custom.admin.menu.deficiency_report_managers"),
         admin_deficiency_report_managers_path,
         controller_name == "deficiency_report_managers"
+      ]
+    end
+
+    def officing_managers_link
+      [
+        t("custom.admin.menu.officing_managers"),
+        admin_officing_managers_path,
+        controller_name == "officing_managers"
       ]
     end
 

@@ -17,7 +17,7 @@
 <% if answer.description.present? %>
   <div class="margin-top">
     <div id="answer_description_<%= answer.id %>" class="answer-description short" data-toggler="short">
-      <%= wysiwyg(answer.description) %>
+      <%= AdminWYSIWYGSanitizer.new.sanitize(answer.description) %>
     </div>
     <div class="margin">
       <a id="read_more_<%= answer.id %>"

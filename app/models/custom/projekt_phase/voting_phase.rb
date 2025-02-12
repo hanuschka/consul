@@ -28,7 +28,9 @@ class ProjektPhase::VotingPhase < ProjektPhase
 
   def admin_nav_bar_items
     %w[duration naming restrictions settings
-       poll_questions poll_booth_assignments poll_officer_assignments poll_recounts poll_results
+       poll_questions
+       officing_managers officing_manager_audits
+       poll_results
        age_ranges_for_stats]
   end
 

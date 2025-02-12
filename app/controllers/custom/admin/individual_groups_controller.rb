@@ -1,6 +1,6 @@
 class Admin::IndividualGroupsController < Admin::BaseController
   def index
-    @individual_groups = IndividualGroup.all
+    @individual_groups = IndividualGroup.all.order(:id)
   end
 
   def show

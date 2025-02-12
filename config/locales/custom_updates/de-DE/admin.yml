@@ -59,6 +59,7 @@ de:
           details_block_title: Weitere Infos
           author: Autor
           created_at: Erstellungsdatum
+          frontend: Frontend
           implementation_performer_label: Umsetzung
           implementation_performer:
             city: Autor unterstützt bei der Umsetzung nicht
@@ -76,7 +77,7 @@ de:
           status_title: Status
           approximater_location: Standort
           category_name: Kategorie
-          officer_name: Sachbearbeiter*in
+          responsible_name: Sachbearbeiter*in
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
@@ -116,6 +117,19 @@ de:
             title: Vorlage bearbeiten
           form:
             submit_button: Speichern
+        officer_groups:
+          officer_group:
+            name: Name
+            officers: Sachbearbeiter*innen
+          destroy:
+            destroyed_successfully: Die Sachbearbeitergruppe wurde erfolgreich gelöscht.
+          edit:
+            editing: Sachbearbeitergruppe bearbeiten
+          index:
+            create: Sachbearbeitergruppe erstellen
+            title: Sachbearbeitergruppen
+          new:
+            creating: Neue Sachbearbeitergruppe erstellen
         deficiency_report:
           category: Kategorie
           officer: Sachbearbeiter*in
@@ -166,21 +180,9 @@ de:
             icon: Icon
             title: Name
             notice_text: E-Mail-Benachrichtigungstext
-        areas:
-          destroy:
-            cannot_be_destroyed: Sie können dieses Gebiet nicht löschen, da er mindestens einem Mangel zugewiesen ist.
-            destroyed_successfully: Der Gebiet wurde erfolgreich gelöscht.
-          edit:
-            editing: Gebiet bearbeiten
-          form:
-            submit_button: Speichern
+        districts:
           index:
-            create: Gebiet erstellen
-            title: Gebiet
-          new:
-            creating: Neues Gebiet erstellen
-          area:
-            name: Name
+            title: Gebiete
       geozones:
         geozone:
           postal_codes: Postleitzahlen
@@ -196,6 +198,7 @@ de:
           street_name: Straße
           street_number: Hausnummer
           street_number_extension: Hausnummerergänzung
+          district: Gebiet
           groupings: Gruppierungen
       registered_address_groupings:
         index:
@@ -208,6 +211,14 @@ de:
           key: Spaltenname
           name: Name
           options: Optionen
+      registered_address_districts:
+        index:
+          title: Gebiete
+        update:
+          success: Gebiet erfolgreich aktualisiert
+        attributes:
+          name: Name
+          coordinates: Koordinaten
       registered_address_streets:
         index:
           title: Registrierte Adressen
@@ -224,11 +235,14 @@ de:
           settings: Funktionen
           statuses: Status definieren
           official_answer_templates: Antwortvorlagen
-          areas: Gebiete
+          areas: Alte Gebiete
+          districts: Gebiete
+          officer_groups: Sachbearbeitergruppen
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
+        officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
@@ -237,6 +251,8 @@ de:
           list: Registrierte Adressen
         registered_address_groupings:
           list: Registrierte Adressgruppen
+        registered_address_districts:
+          list: Gebiete
         registered_address_streets:
           list: Registrierte Straßen
         individual_groups: Individuelle Gruppen
@@ -408,6 +424,13 @@ de:
           no_deficiency_report_managers: Keine Mängelmelder Admins vorhanden.
         search:
           title: "Mangelmeldungmanager*innen: Benutzer*innensuche"
+      officing_managers:
+        index:
+          title: Abstimmungshelfer*innen
+          no_officing_managers: Keine Abstimmungshelfer*innen vorhanden.
+        search:
+          title: "Abstimmungshelfer*innen: Benutzer*innensuche"
+      deficiency_report_managers:
       settings:
         index:
           extended_features:
@@ -445,6 +468,8 @@ de:
               investments_limit: Anzahl an angezeigten Investitionsvorschläge
               deficiency_reports_limit: Anzahl an angezeigten Mangelmeldungen
       users:
+        reverify_button_text: Verifizierung aktuallisieren
+        reverify_success_notice: Reverifizierungsprozess läuft
         columns:
           id: ID
           erase_reason: Grund des Löschens
@@ -506,9 +531,8 @@ de:
           form_author: Formular Autor
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
-          poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer
-          poll_recounts: Auszählung
+          officing_managers: Abstimmungshelfer
+          officing_manager_audits: Logs
           poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge
@@ -528,6 +552,8 @@ de:
         labels_name: Alternativtext zu Labels
         sentiments_name: Alternativtext zu Sentimente
         projekt_selector_hint: Hinweise zum Projekt
+        comment_form_title: Titel des Kommentarformulars
+        comment_form_button: Kommentarformular Button
         edit:
           title: Einstellung für Phase
         duration:
@@ -540,7 +566,7 @@ de:
           page_title: Möchten Sie die Beteiligung einschränken?
           intro:
             p1_html: Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.
-            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet. 
+            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
@@ -649,7 +675,7 @@ de:
           name: Veranstaltungen
           page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
-          notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
+          notifications_sent_notice: Benachrichtigung wurde erfolgreich verschickt
         projekt_livestreams:
           new_block_title: Möchten Sie einen Livestream hinzufügen?
           new_button_title: Livestream hinzufügen
@@ -758,3 +784,12 @@ de:
           title: Newsletter-Abonnenten
       common:
         download_current_selection: Aktuelle Auswahl herunterladen
+      newsletters:
+        settings:
+          email_logo: Logo im E-Mail Header
+          brand_color: Farbe des E-Mail Header & Footers
+          footer: Fußzeileninhalt
+        index:
+          tabs:
+            list: Newsletter
+            settings: Einstellungen

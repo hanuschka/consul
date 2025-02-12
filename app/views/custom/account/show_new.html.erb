@@ -61,14 +61,7 @@
         <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow delete alert" %>
       <% end %>
 
-      <% if !current_user.level_three_verified? && Setting["feature.bund_id_login"] %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_with_bund_id_description"), icon_name: "check") do |c| %>
-          <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId", style: "width: 150px" do %>
-            <%= image_tag "bund_id_logo.svg", alt: "BundId Logo", class: "bund-id-logo" %>
-          <% end %>
-        <% end %>
-
-      <% elsif !current_user.level_three_verified? %>
+      <% if !current_user.level_three_verified? %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description"),  icon_name: "check") do |c| %>
           <div class="verify-account">
             <% if current_user.level_two_verified? %>

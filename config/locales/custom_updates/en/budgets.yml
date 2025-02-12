@@ -54,11 +54,12 @@ en:
             The budget lives from your contributions! Tell us what you would like to have implemented - and then share your ideas with others. You can indicate whether you would like to support the implementation yourself or whether the city administration should take responsibility.<br></br>
             You can also make an initial price assessment for your contribution. The city administration will check your contribution for its feasibility and also provide a price estimate. Thank you for taking the time and getting involved!
           title_placeholder: Give your contribution a catchy title, for example “Renovate the train station square” or “Build a new children's playground”.
-          description_placeholder_html: "Describe your contribution here. The following procedure has proven successful:<br><br>
-             Start with a general description of your idea and then show what would improve with the implementation of your suggestion.<br><br>
-             When writing, keep sentences as short as possible.<br><br>
-             Also use paragraphs to make your text more readable. (Many users read your text on mobile devices.)<br><br>
-             If possible, limit your content to a maximum of three paragraphs.<br><br>
+          description_placeholder: "
+             Describe your contribution here. The following procedure has proven successful:\n\n
+             Start with a general description of your idea and then show what would improve with the implementation of your suggestion.\n\n
+             When writing, keep sentences as short as possible.\n\n
+             Also use paragraphs to make your text more readable. (Many users read your text on mobile devices.)\n\n
+             If possible, limit your content to a maximum of three paragraphs.\n\n
              If appropriate, use bullet points and bullet points for better clarity."
           map:
             hint: Where should your contribution be implemented? Place a “pin” to bring others into the picture.

@@ -93,6 +93,8 @@ de:
       google_login_description: "Anmeldung mit Google-Account erlauben"
       wordpress_login: "Wordpress Login"
       wordpress_login_description: "Anmeldung mit Wordpress-Account erlauben"
+      bund_id_login: BundID Registrierung und Anmeldung
+      bund_id_login_description: Aktivieren Sie diese Einstellung, um die BundID-Registrierung/Anmeldung freizuschalten
       featured_proposals: "Hervorgehobene Vorschläge"
       featured_proposals_description: "Zeigt hervorgehobene Vorschläge auf der Index Vorschlags-Seite an"
       signature_sheets: "Unterschriftenbögen"
@@ -136,6 +138,12 @@ de:
       remove_investments_supports_description: "Allow users to remove supports on participatory budgets investments during the selecting projects phase."
       sdg: SDG
       sdg_description: Aktivieren Sie die Abschnitte "Sustainable Development Goals" im Administrationsmenü und in den Globalen Einstellungen.
+      matomo: Matomo
+      matomo_description: Aktiviert Matomo
+      melderegister: Melderegisterabgleich
+      melderegister_description: Aktiviert den Melderegisterabgleich der Nutzer*innen
+      bund_id_verification: BundID Verifizierung
+      bund_id_verification_description: Aktiviert den Abgleich der Nutzer*innen über die BundID
     remote_census:
       general:
         endpoint: "Endpunkt"

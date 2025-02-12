@@ -1,0 +1,30 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("custom.admin.deficiency_reports.districts.index.title") %>
+<% end %>
+
+<h2 class="inline-block"><%= t("custom.admin.deficiency_reports.districts.index.title") %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("custom.admin.deficiency_reports.areas.area.name") %></th>
+      <th><%= RegisteredAddress::District.human_attribute_name(:default_deficiency_report_responsible) %></th>
+      <th><%= t("admin.actions.actions") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @districts.each do |district| %>
+      <tr>
+        <td><%= district.name %></td>
+        <td><%= district.default_deficiency_report_responsible&.name %></td>
+        <td>
+          <%= render Admin::TableActionsComponent.new(district,
+                                                      actions: [:edit],
+                                                      edit_path: edit_deficiency_report_management_district_path(district)
+                                                     ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

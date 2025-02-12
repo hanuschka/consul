@@ -1,4 +1,5 @@
 class DeficiencyReportsController < ApplicationController
+  include FeatureFlags
   include Translatable
   include MapLocationAttributes
   include ImageAttributes

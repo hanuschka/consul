@@ -311,7 +311,6 @@ module ProjektPhaseAdminActions
 
   def officing_managers
     authorize!(:officing_managers, @projekt_phase)
-    @poll = @projekt_phase.poll
     @officing_managers = OfficingManager.all
   end
 

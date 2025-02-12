@@ -18,15 +18,12 @@ class Admin::NewslettersController < Admin::BaseController
   end
 
   def update_logo
-    @image = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email")
-
-    redirect_path =
-      admin_newsletters_path(anchor: "tab-newsletter-settings")
+    @image = ::SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email")
 
     if @image.update(image: params[:image])
       notice = t("admin.site_customization.images.update.notice")
 
-      redirect_to redirect_path, notice: notice
+      redirect_to settings_admin_newsletters_path, notice: notice
     else
       flash.now[:error] = t("admin.site_customization.images.update.error")
       render action: :settings
@@ -36,13 +33,10 @@ class Admin::NewslettersController < Admin::BaseController
   def update_color
     @setting = Setting.find_by(key: 'newsletter_brand_color')
 
-    redirect_path =
-      admin_newsletters_path(anchor: "tab-newsletter-settings")
-
     if @setting.update(value: params[:newsletter_brand_color])
       notice = t("admin.site_customization.images.update.notice")
 
-      redirect_to redirect_path, notice: notice
+      redirect_to settings_admin_newsletters_path, notice: notice
     else
       flash.now[:error] = t("admin.site_customization.images.update.error")
       render action: :settings

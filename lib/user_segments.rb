@@ -17,7 +17,7 @@ class UserSegments
   end
 
   def self.all_users
-    User.active.where.not(confirmed_at: nil)
+    User.active.where.not(confirmed_at: nil).where(guest: false, erased_at: nil)
   end
 
   def self.administrators

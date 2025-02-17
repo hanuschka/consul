@@ -202,21 +202,21 @@ class ProposalsController
 
   def vote
     if params[:value] == "no"
-      @follow = Follow.find_by(user: current_user, followable: @proposal)
+      @follow = Follow.find_by(user: voting_user, followable: @proposal)
       @follow&.destroy!
-      @voted = !@proposal.register_vote(current_user, "no")
+      @voted = !@proposal.register_vote(voting_user, "no")
     else
-      @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
-      @voted = @proposal.register_vote(current_user, "yes")
+      @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
+      @voted = @proposal.register_vote(voting_user, "yes")
     end
   end
 
   def unvote
-    @follow = Follow.find_by(user: current_user, followable: @proposal)
+    @follow = Follow.find_by(user: voting_user, followable: @proposal)
 
     @follow.destroy! if @follow
 
-    @voted = !@proposal.unvote_by(current_user)
+    @voted = !@proposal.unvote_by(voting_user)
   end
 
   def created
@@ -252,5 +252,11 @@ class ProposalsController
                     map_location_attributes: map_location_attributes]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
+    end
+
+    def voting_user
+      return current_user unless params[:offline_user_id].present?
+
+      current_user.officing_manager? ? User.find(params[:offline_user_id]) : current_user
     end
 end

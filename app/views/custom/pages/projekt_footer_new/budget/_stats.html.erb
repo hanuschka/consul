@@ -1,4 +1,7 @@
 <div class='participation-stats'>
   <%= render "shared/stats/participation", stats: @stats %>
-  <%= render "budgets/stats/advanced_stats", stats: @stats if @stats.advanced? || current_user&.administrator? %>
+
+  <% if (@stats.advanced? || current_user&.administrator?) && !params["stats_section"].in?(["accepting", "selecting", "balloting"]) %>
+    <%= render "budgets/stats/advanced_stats", stats: @stats %>
+  <% end %>
 </div>

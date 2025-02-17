@@ -28,7 +28,12 @@ module ModerateActions
       # @resources.accessible_by(current_ability, :hide).each { |resource| hide_resource resource }
       ## resource_ids = @resources.select{ |r| can?(:hide, r) }.pluck(:id)
       ## @resources.where(id: resource_ids).each { |resource| hide_resource resource }
-      @resources.select { |r| can?(:hide, r) }.each { |resource| hide_resource resource }
+      @resources.select { |r| can?(:hide, r) }.each do |resource|
+        hide_resource resource
+        if resource.author.email.present? && resource.class.name.in?(["Proposal", "Budget::Investment"])
+          Mailer.resource_hidden(resource).deliver_later
+        end
+      end
     elsif params[:ignore_flags].present?
       # @resources.accessible_by(current_ability, :ignore_flag).each(&:ignore_flag)
       ## resource_ids = @resources.select{ |r| can?(:ignore_flag, r) }.pluck(:id)

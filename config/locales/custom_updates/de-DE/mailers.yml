@@ -1,10 +1,15 @@
 de:
   mailers:
     budget_investment_unfeasible:
-      subject: "Ihr Ausgabenvorschlag '%{title}' wurde als undurchführbar markiert"
-      hi: "Liebe*r Benutzer*in,"
-      rejected: "vielen Dank für die Einreichung Ihres Vorschlags \"%{title}\". Leider wurde Ihr Vorschlag mit folgender Begründung abgelehnt:"
-      thank_you: Vielen Dank für Ihre Beteiligung!
+      subject: "Ihr Vorschlag entspricht leider nicht den Kriterien."
+      title: "Ihr Vorschlag entspricht leider nicht den Kriterien."
+      hi: "Hallo %{username},"
+      text1: "wir haben Ihren %{proposal_link} geprüft: Leider entspricht dieser nicht den Kriterien."
+      text2: "Er wird somit nicht zur nächsten Phase des %{projekt_link} zugelassen."
+      reason: "Begründung:"
+      text3: "Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Vorschlag einzureichen."
+      proposal_link_text: Vorschlag
+      projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     manual_verification_confirmation:
       subject: Ihr Konto wurde soeben verifiziert.
@@ -16,10 +21,13 @@ de:
     formular_follow_up_letter:
       button_text: Zum Formular
     budget_investment_feasible:
-      subject: "Ihr Ausgabenvorschlag '%{title}' wurde als durchführbar markiert"
-      hi: "Liebe*r Benutzer*in,"
-      accepted: "vielen Dank für die Einreichung Ihres Vorschlags \"%{title}\". Ihr Vorschlag wurde als durchführbar klassifiziert."
-      thank_you: Vielen Dank für Ihre Beteiligung!
+      subject: "Herzlichen Glückwunsch, Ihr Vorschlag entspricht den Kriterien."
+      title: "Herzlichen Glückwunsch, Ihr Vorschlag entspricht den Kriterien."
+      hi: "Hallo %{username},"
+      proposal_link_text: Vorschlag
+      projekt_link_1_text: Kriterien
+      projekt_link_2_text: Projekts
+      text: "wir haben Ihren %{proposal_link} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
       sincerely: Mit freundlichen Grüßen
     newsletter_subscription_for_existing_user:
       subject: Anmeldung zum Newsletter
@@ -30,3 +38,36 @@ de:
     individual_group_value_users_added:
       subject: Upload der CSV-Daten erfolgreich abgeschlossen.
       p1_html: "Ihre Daten wurden erfolgreich hinzugefügt: <a href=\"%{url}\">%{url}</a>"
+    resource_hidden:
+      subject: Ihr Beitrag verstößt gegen die Netiquette.
+      title: Ihr Beitrag verstößt gegen die Netiquette.
+      hi: "Hallo %{username},"
+      text1: "wir haben Ihren Beitrag (Link zum Beitrag) geprüft: Leider verstößt er gegen die Netiquette dieser Plattform. Wir haben Ihren Beitrag daher entfernt."
+      text2: Sie können die Regeln der Netiquette %{netiquette_link} nachlesen.
+      netiquette_link_text: hier
+      text3: Sollten Sie dazu Fragen haben, kontaktieren Sie unstext gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
+      sincerely: Mit freundlichen Grüßen
+    comment:
+      subject: Jemand hat Ihren Beitrag kommentiert.
+      title: Neuer Kommentar
+      hi: Hallo
+      new_comment_by: Es gibt einen neuen Kommentar von <strong>%{commenter}</strong>
+      sincerely: Mit freundlichen Grüßen
+      budget/investment:
+        subject: Ihr Vorschlag wurde kommentiert.
+        title: Ihr Vorschlag wurde kommentiert.
+        hi: "Hallo %{username},"
+        text: Ihr Vorschlag wurde kommentiert. Schauen Sie sich den Kommentar %{comment_link} an. 
+        comment_link_text: hier
+    reply:
+      subject: Jemand hat auf Ihren Kommentar geantwortet
+      title: Neue Antwort auf Ihren Kommentar
+      hi: Hallo
+      new_reply_by: Es gibt eine neue Antwort von <strong>%{commenter}</strong> auf Ihren Kommentar
+      sincerely: Mit freundlichen Grüßen
+      budget/investment:
+        subject: Ihr Kommentar wurde beantwortet.
+        title: Ihr Kommentar wurde beantwortet.
+        hi: "Hallo %{username},"
+        text: Ihr Kommentar wurde beantwortet. Schauen Sie sich die Antwort %{comment_link} an.
+        comment_link_text: hier

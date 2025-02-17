@@ -386,6 +386,12 @@ namespace :admin do
     end
   end
 
+  resources :recipient_groups, except: :show do
+    collection do
+      post :select_options
+    end
+  end
+
   resources :system_emails, only: [:index] do
     get :view
     get :preview_pending

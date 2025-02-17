@@ -11,11 +11,11 @@
 
       <div>
         <% if already_answered?(question_answer) %>
-          <%= form_with url: officing_offline_poll_voters_remove_answer_path(question, user_answer(question_answer), question_answer_id: question_answer.id),
+          <%= form_with url: remove_answer_officing_poll_path(poll, question, user_answer(question_answer), question_answer_id: question_answer.id),
                         local: false,
                         method: :delete,
                         class: "button_to js-question-answered" do |f| %>
-            <%= f.hidden_field :responding_user_id, value: @responding_user.id %>
+            <%= f.hidden_field :offline_user_id, value: @offline_user.id %>
             <% if should_show_answer_weight? %>
               <span class="answer-weight-text answer-weight-text--voted"><%= question_answer.title %></span>
               <%= select_tag dom_id(user_answer(question_answer), :answer_weight),
@@ -35,10 +35,10 @@
           <% end %>
 
         <% else %>
-          <%= form_with url: officing_offline_poll_voters_record_answer_path(question, answer: question_answer.title, question_answer_id: question_answer.id),
+          <%= form_with url: record_answer_officing_poll_path(poll, question, answer: question_answer.title, question_answer_id: question_answer.id),
                         local: false,
                         class: "button_to" do |f| %>
-            <%= f.hidden_field :responding_user_id, value: @responding_user.id %>
+            <%= f.hidden_field :offline_user_id, value: @offline_user.id %>
             <% if should_show_answer_weight? && available_vote_weight(question_answer) > 0 %>
               <span class="answer-weight-text"><%= question_answer.title %></span>
               <%= f.select :answer_weight, (0..available_vote_weight(question_answer)).to_a, { selected: 0, label: false }, { onchange: "$(this).closest('form').submit()" } %>
@@ -64,9 +64,9 @@
 
     <% if question.open_question_answer.present? && already_answered?(question.open_question_answer) %>
       <% open_answer = user_answer(question.open_question_answer) %>
-      <%= form_with url: officing_offline_poll_voters_update_open_answer_path(question, open_answer), local: false, method: :patch do |f| %>
+      <%= form_with url: update_open_answer_officing_poll_path(poll, question, open_answer), local: false, method: :patch do |f| %>
         <%= f.text_area :open_answer_text, value: open_answer.open_answer_text, label: false %>
-        <%= f.hidden_field :responding_user_id, value: @responding_user.id %>
+        <%= f.hidden_field :offline_user_id, value: @offline_user.id %>
         <% if open_answer.open_answer_text.present? %>
           <%= f.submit t("custom.polls.questions.answers.update_open_answer"), class: "button open-answer margin-top" %>
           <% if @open_answer_updated %>

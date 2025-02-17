@@ -1,6 +1,6 @@
 <div class="in-favor-against">
   <div class="in-favor">
-    <%= button_to polymorphic_path(votable, action: :vote, value: "yes"),
+    <%= button_to polymorphic_path(votable, action: :vote, value: "yes", offline_user_id: params[:offline_user_id]),
         class: "like #{voted_classes[:in_favor]}",
         title: t("votes.agree"),
         "aria-label": agree_aria_label,
@@ -12,7 +12,7 @@
   </div>
 
   <div class="against">
-    <%= button_to polymorphic_path(votable, action: :vote, value: "no"),
+    <%= button_to polymorphic_path(votable, action: :vote, value: "no", offline_user_id: params[:offline_user_id]),
         class: "unlike #{voted_classes[:against]}",
         title: t("votes.disagree"),
         "aria-label": disagree_aria_label,

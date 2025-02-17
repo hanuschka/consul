@@ -1,0 +1,4 @@
+<%= form_with url: select_options_admin_recipient_groups_path, local: false do |form| %>
+  <%= label_tag :kind, t("custom.admin.recipient_groups.new.#{label_key}") %>
+  <%= select_tag :kind, options_for_select(options_for_kind), include_blank: true, onchange: "$(this.closest('.recipient-group-constructor-options-block')).nextAll('.recipient-group-constructor-options-block').remove();$(this.closest('form')).trigger('submit.rails');" %>
+<% end %>

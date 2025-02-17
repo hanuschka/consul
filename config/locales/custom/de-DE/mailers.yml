@@ -51,12 +51,14 @@ de:
       button: Registrierung abschließen
       subject: "Einladung an %{org_name}"
     budget_investment_created:
-      subject: "Danke, dass Sie einen Budgetvorschlag erstellt haben!"
-      title: "Danke, dass Sie einen Budgetvorschlag erstellt haben!"
+      subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
+      title: "Danke, dass Sie einen Vorschlag eingereicht haben!"
       intro: "Hallo <strong>%{author}</strong>,"
-      text: "vielen Dank, dass Sie einen Budgetvorschlag erstellt haben!"
-      follow: "Wir werden Sie über den Fortgang des Prozesses informieren.<br>Sie können sich auch über nachfolgenden Link informieren: %{link}"
-      share: "Teilen Sie Ihr Projekt"
+      text: "vielen Dank, dass Sie einen Vorschlag %{investment_link} für das Projekt eingereicht haben. Ihr Vorschlag ist ab sofort im Projektraum %{projekt_link} sichtbar."
+      follow: "Teilen Sie Ihren Vorschlag in den sozialen Netzwerken und laden Sie andere Personen ein, Ihren Vorschlag zu kommentieren."
+      share: "Jetzt Vorschlag teilen!"
+      notifications: "Möchten Sie Benachrichtigungen per E-Mail erhalten, wenn eine andere Person Ihren Vorschlag kommentiert? Dann prüfen Sie bitte die Einstellungen in %{account_link}."
+      profile_link_text: "Ihrem Profil"
       sincerely: "Mit freundlichen Grüßen"
     budget_investment_unfeasible:
       hi: "Liebe*r Benutzer*in,"
@@ -66,16 +68,21 @@ de:
       sorry: "Entschuldigung für die Unannehmlichkeiten und vielen Dank für Ihre wertvolle Beteiligung."
       subject: "Ihr Investitionsvorschlag '%{code}' wurde als undurchführbar markiert"
     budget_investment_selected:
-      subject: "Ihr Investitionsprojekt %{code} wurde ausgewählt"
-      hi: "Liebe*r Benutzer*in,"
-      share: "Fangen Sie an Stimmen zu bekommen, indem sie Ihr Investitionsprojekt auf sozialen Netzwerken teilen. Teilen ist wichtig, um Ihr Projekt zu verwirklichen."
-      share_button: "Teilen Sie Ihr Investitionsprojekt"
-      thanks: "Vielen Dank für Ihre Teilnahme."
+      subject: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
+      title: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
+      hi: "Hello %{username},"
+      text: "Bewerben Sie Ihren %{proposal_link} jetzt für die letzte Abstimmungsphase."
+      proposal_link_text: "Vorschlag"
+      share_button: "Jetzt Vorschlag teilen!"
+      thanks: "Viel Erfolg!"
       sincerely: "Mit freundlichen Grüßen"
     budget_investment_unselected:
-      subject: "Ihr Investitionsprojekt %{code} wurde nicht ausgewählt"
-      hi: "Liebe*r Benutzer*in,"
-      thanks: "Vielen Dank für Ihre Teilnahme."
+      subject: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
+      title: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
+      hi: "Hello %{username},"
+      text: "Ihr %{proposal_link} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
+      proposal_link_text: "Vorschlag"
+      projekt_link_text: "Projekts"
       sincerely: "Mit freundlichen Grüßen"
     evaluation_comment:
       subject: "Neuer Bewertungs-Kommentar"

@@ -311,7 +311,6 @@ module ProjektPhaseAdminActions
 
   def officing_managers
     authorize!(:officing_managers, @projekt_phase)
-    @poll = @projekt_phase.poll
     @officing_managers = OfficingManager.all
   end
 
@@ -349,7 +348,14 @@ module ProjektPhaseAdminActions
     @investments = Kaminari.paginate_array(@investments) if @investments.is_a?(Array)
     @investments = @investments.page(params[:page]) unless request.format.csv?
 
-    render "custom/admin/projekt_phases/budget_investments"
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/budget_investments" }
+      format.js { render "custom/admin/projekt_phases/budget_investments" }
+      format.csv do
+        send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+									filename: "budget-investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+      end
+    end
   end
 
   def budget_phases

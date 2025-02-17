@@ -48,6 +48,11 @@ en:
           sidebar:
             user_votes: "My votes: %{count}"
           empty_list_text: No results
+          stat_phases:
+            accepting: Accepting proposals
+            selecting: Selecting proposals
+            balloting: Voting
+            finished: Final
         form:
           start_new: Investitionsvorschlag erstellen
           page_description:

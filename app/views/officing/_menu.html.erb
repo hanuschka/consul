@@ -14,18 +14,35 @@
       </li>
     <% end %>
 
-    <% (Budget.balloting + Budget.reviewing_ballots).each do |budget| %>
-      <li>
-        <%= link_to budget.name, officing_offline_ballots_verify_user_path(budget), class: "users-link" %>
-      </li>
-    <% end %>
-
     <% if current_user.officing_manager? %>
       <% current_user.officing_manager.officing_polls.each do |poll| %>
         <li>
-          <%= link_to poll.name, officing_offline_poll_voters_verify_user_path(poll), class: "users-link" %>
+          <%= link_to poll.name, verify_user_officing_poll_path(poll), class: "users-link" %>
         </li>
       <% end %>
+
+      <% current_user.officing_manager.officing_proposal_phases.each do |proposal_phase| %>
+        <li>
+          <%= link_to (proposal_phase.phase_tab_name || proposal_phase.projekt.name), verify_user_officing_proposal_phase_path(proposal_phase), class: "users-link" %>
+        </li>
+
+        <li>
+          <%= link_to (proposal_phase.phase_tab_name || proposal_phase.projekt.name) + " Menge", bulk_votes_officing_proposal_phase_path(proposal_phase), class: "users-link" %>
+        </li>
+      <% end %>
+
+      <% current_user.officing_manager.selecting_budgets.each do |budget| %>
+        <li>
+          <%= link_to budget.projekt.name, verify_user_officing_budget_path(budget), class: "users-link" %>
+        </li>
+      <% end %>
+
+      <% current_user.officing_manager.balloting_budgets.each do |budget| %>
+        <li>
+          <%= link_to budget.projekt.name, verify_user_officing_budget_path(budget), class: "users-link" %>
+        </li>
+      <% end %>
+
     <% end %>
   </ul>
 </div>

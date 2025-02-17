@@ -1,5 +1,5 @@
 <%= link_to t("admin.budget_investments.index.download_current_selection"),
-            polymorphic_path([@namespace, @budget, :budget_investments], format: :csv),
+            polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_investments, format: :csv),
             class: "float-right small clear" %>
 
 <% if params[:advanced_filters].include?("winners") %>

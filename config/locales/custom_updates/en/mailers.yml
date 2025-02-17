@@ -1,10 +1,15 @@
 en:
   mailers:
     budget_investment_unfeasible:
-      subject: "Your investment proposal '%{title}' has been marked as unfeasible."
-      hi: "Dear User"
-      rejected: "Unfortunately, after examining your proposal \"%{title}\", we have to inform you that it is not valid and therefore cannot be put to the vote."
-      thank_you: "Thank you very much for submitting your proposal"
+      subject: "Unfortunately, your proposal does not meet the criteria."
+      title: "Unfortunately, your proposal does not meet the criteria."
+      hi: "Hello %{username},"
+      text1: "We have checked your %{proposal_link}: Unfortunately, it does not meet the criteria."
+      text2: "It will therefore not be admitted to the next phase of the %{project_link}."
+      reason: "Reason:"
+      text3: "If you have any questions, please contact us. You are welcome to submit a new proposal."
+      proposal_link_text: Proposal
+      project_link_text: Project
       sincerely: "Sincerely"
     manual_verification_confirmation:
       subject: Your account has just been verified.
@@ -14,10 +19,13 @@ en:
     formular_follow_up_letter:
       button_text: To the form
     budget_investment_feasible:
-      subject: "Your investment proposal '%{title}' has been marked as feasible"
-      hi: "Dear User,"
-      accepted: "Thank you for submitting your proposal \"%{title}\". It was classified as feasible."
-      thank_you: Thank you for participation!
+      subject: "Congratulations, your proposal meets the criteria."
+      title: "Congratulations, your proposal meets the criteria."
+      hi: "Hello %{username},"
+      proposal_link_text: proposal
+      project_link_1_text: criteria
+      project_link_2_text: project
+      text: "We have reviewed your %{proposal_link}: your proposal meets %{project_link_1}. This means it will be accepted for the next phase of %{project_link_2}."
       sincerely: Best regards
     newsletter_subscription_for_existing_user:
       subject: Subscribe to the newsletter
@@ -25,3 +33,15 @@ en:
     file_ready:
       subject: Data-Export
       p1_html: You have requested an export. The data has now been exported and is attached.
+    individual_group_value_users_added:
+      subject: Upload of CSV data completed successfully.
+      p1_html: "Your data was added successfully: <a href=\"%{url}\">%{url}</a>"
+    resource_hidden:
+      subject: Your post violates the netiquette.
+      title: Your post violates the netiquette.
+      hi: "Hello %{username},"
+      text1: "We have checked your post (link to the post): Unfortunately, it violates the netiquette of this platform. We have therefore removed your post."
+      text2: You can read the rules of netiquette %{netiquette_link}.
+      netiquette_link_text: here
+      text3: If you have any questions, please contact ustext. You are cordially invited to create a new post that complies with the netiquette.
+      sincerely: Kind regards

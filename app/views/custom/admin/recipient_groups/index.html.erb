@@ -1,0 +1,36 @@
+<h2 class="inline-block"><%= t("custom.admin.recipient_groups.index.title") %></h2>
+
+<div class="">
+
+  <%= link_to t("custom.admin.recipient_groups.index.new_recipient_group"),
+    new_admin_recipient_group_path,
+    class: "button float-right" %>
+
+  <% if @recipient_groups.any? %>
+    <table id="recipient_groups">
+      <thead>
+        <tr>
+          <th class="small-2" style="width:80%;"><%= t("custom.admin.recipient_groups.index.name") %></th>
+          <th><%= t("custom.admin.recipient_groups.index.actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recipient_groups.each do |recipient_group| %>
+          <tr id="<%= dom_id(recipient_group) %>" class="recipient_group">
+            <td>
+              <%= recipient_group.name %>
+            </td>
+            <td>
+              <%= render Admin::TableActionsComponent.new(recipient_group,
+                                                          actions: [:edit, :destroy]) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="callout primary margin-top clear">
+      <%= t("admin.recipient_groups.index.empty_recipient_groups") %>
+    </div>
+  <% end %>
+</div>

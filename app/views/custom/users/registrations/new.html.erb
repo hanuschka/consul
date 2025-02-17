@@ -104,6 +104,11 @@
           <%= f.text_field :redeemable_code, placeholder: t("devise_views.users.registrations.new.redeemable_code") %>
         <% end %>
 
+        <%= f.check_box :newsletter,
+          title: t("custom.terms.newsletter.title"),
+          label: t("custom.terms.newsletter.label"),
+          class: "checkbox-label--aligned" %>
+
         <%= f.check_box :terms_data_storage,
           title: t("custom.terms.data_storage.title"),
           label: t("custom.terms.data_storage.label"),
@@ -146,11 +151,6 @@
         <%= t("custom.devise_views.users.registrations.new.message") %>
       </p>
       <%= form_html %>
-    <% end %>
-    <% c.with_after_card_container do %>
-      <p>
-      <%= link_to(t("custom.devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path) %>
-      </p>
     <% end %>
   <% end %>
 <% else %>

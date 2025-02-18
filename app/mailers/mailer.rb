@@ -237,6 +237,7 @@ class Mailer < ApplicationMailer
 
   def resource_hidden(resource)
     @resource = resource
+    @resource_text = resource.is_a?(Comment) ? resource.body : resource.title
     @author = resource.author
     @email_to = @author.email
 

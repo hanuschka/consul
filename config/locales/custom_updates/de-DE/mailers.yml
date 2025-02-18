@@ -42,10 +42,11 @@ de:
       subject: Ihr Beitrag verstößt gegen die Netiquette.
       title: Ihr Beitrag verstößt gegen die Netiquette.
       hi: "Hallo %{username},"
-      text1: "wir haben Ihren Beitrag (Link zum Beitrag) geprüft: Leider verstößt er gegen die Netiquette dieser Plattform. Wir haben Ihren Beitrag daher entfernt."
-      text2: Sie können die Regeln der Netiquette %{netiquette_link} nachlesen.
+      text1: "wir haben Ihren Beitrag geprüft: %{text}"
+      text2: "Leider verstößt er gegen die Netiquette dieser Plattform. Wir haben Ihren Beitrag daher entfernt."
+      text3: Sie können die Regeln der Netiquette %{netiquette_link} nachlesen.
       netiquette_link_text: hier
-      text3: Sollten Sie dazu Fragen haben, kontaktieren Sie unstext gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
+      text4: Sollten Sie dazu Fragen haben, kontaktieren Sie unstext gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
       sincerely: Mit freundlichen Grüßen
     comment:
       subject: Jemand hat Ihren Beitrag kommentiert.

@@ -133,7 +133,7 @@ de:
       show:
         author_deleted: Benutzer gelöscht
         price_explanation: Preiserklärung
-        unfeasibility_explanation: Erläuterung der Undurchführbarkeit
+        unfeasibility_explanation: Erläuterung
         code: "Code des Investitionsvorschlags: <strong>%{code}</strong>"
         location: "Standort: <strong>%{location}</strong>"
         organization_name: "Vorgeschlagen von: <strong>%{name}</strong>"

@@ -30,7 +30,7 @@ module ModerateActions
       ## @resources.where(id: resource_ids).each { |resource| hide_resource resource }
       @resources.select { |r| can?(:hide, r) }.each do |resource|
         hide_resource resource
-        if resource.author.email.present? && resource.class.name.in?(["Proposal", "Budget::Investment"])
+        if resource.author.email.present? && resource.class.name.in?(["Comment", "Proposal", "Budget::Investment"])
           Mailer.resource_hidden(resource).deliver_later
         end
       end

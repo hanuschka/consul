@@ -134,7 +134,7 @@
               </div>
             <% end %>
 
-            <% if projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") %>
+            <% if user_can_comment_budget_investment?(@investment) %>
               <div class="proposal-resources-section">
                 <%= render Shared::NewCommentsComponent.new(@investment, @comment_tree) %>
               </div>

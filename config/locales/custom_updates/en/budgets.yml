@@ -25,6 +25,7 @@ en:
           random: Random
           ballot_line_weight: Most supported
           newest: Newest
+          comments_count: Most comments
         sidebar:
           voted_info:
             distributed: You can change your vote at any time until the end of this phase. There is no need to spend all available budget.

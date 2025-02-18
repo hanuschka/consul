@@ -17,7 +17,7 @@ class Budget::PhaseStats < Budget::Stats
     end
 
     def participant_ids_selecting_phase
-      (authors + voters).uniq
+      voters.uniq
     end
 
     def participant_ids_balloting_phase

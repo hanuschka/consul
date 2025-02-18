@@ -40,8 +40,33 @@ en:
       subject: Your post violates the netiquette.
       title: Your post violates the netiquette.
       hi: "Hello %{username},"
-      text1: "We have checked your post (link to the post): Unfortunately, it violates the netiquette of this platform. We have therefore removed your post."
-      text2: You can read the rules of netiquette %{netiquette_link}.
+      text1: "We have checked your post: %{text}"
+      text2: "Unfortunately, it violates the netiquette of this platform. We have therefore removed your post."
+      text3: You can read the rules of netiquette %{netiquette_link}.
       netiquette_link_text: here
-      text3: If you have any questions, please contact ustext. You are cordially invited to create a new post that complies with the netiquette.
+      text4: If you have any questions, please contact ustext. You are cordially invited to create a new post that complies with the netiquette.
       sincerely: Kind regards
+    comment:
+      subject: Someone has commented on your proposal
+      title: New comment
+      hi: Hello
+      new_comment_by: There is a new comment from <strong>%{commenter}</strong>
+      sincerely: Kind regards
+      budget/investment:
+        subject: Your proposal has been commented on.
+        title: Your proposal has been commented on.
+        hi: "Hi %{username},"
+        text: Your proposal has been commented on. Check out the comment %{comment_link}.
+        comment_link_text: here
+    reply:
+      subject: New reply to your comment
+      title: New reply to your comment
+      hi: Hello
+      new_reply_by: There is a new reply from <strong>%{commenter}</strong> to your comment
+      sincerely: Kind regards
+      budget/investment:
+        subject: Your comment has been answered.
+        title: Your comment has been answered.
+        hi: "Hello %{username},"
+        text: Your comment has been answered. Check out the answer %{comment_link}.
+        comment_link_text: here

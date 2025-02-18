@@ -41,6 +41,7 @@ de:
             random: Zufällig
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
+            comments_count: Meist kommentiert
           filters:
             budget:
               title: Budgets

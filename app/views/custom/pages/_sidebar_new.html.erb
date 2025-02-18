@@ -47,7 +47,7 @@
     <% end %>
   </div>
 
-  <% if projekt.sdg_goals.any? || show_embeded_controls %>
+  <% if feature?("sdg") && (projekt.sdg_goals.any? || show_embeded_controls) %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.sdgs.title"), icon_name: "tag") do |c| %>
       <% if show_embeded_controls %>
         <%= form_for(@projekt, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>
@@ -61,7 +61,7 @@
     <% end %>
   <% end %>
 
-  <% if projekt.tags.category.any? || show_embeded_controls %>
+  <% if Tag.any? && (projekt.tags.category.any? || show_embeded_controls) %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.tags.title"), icon_name: "tag") do |c| %>
       <% if show_embeded_controls %>
         <%= form_for(@projekt, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>

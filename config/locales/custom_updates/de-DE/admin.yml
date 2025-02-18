@@ -77,7 +77,7 @@ de:
           status_title: Status
           approximater_location: Standort
           category_name: Kategorie
-          officer_name: Sachbearbeiter*in
+          responsible_name: Sachbearbeiter*in
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
@@ -226,6 +226,34 @@ de:
           id: ID
           name: Name
           plz: PLZ
+      recipient_groups:
+        index:
+          title: Adressatengruppen
+          new_recipient_group: Neue Adressatengruppe
+          name: Name
+        new:
+          base_options_for_kind:
+            projekts: Projekte
+            user_roles: Nutzerrollen
+          label_for_general: Typ der Adressatengruppe
+          label_for_projekt: Projekt
+          label_for_projekt_phase: Projektphase
+          label_for_user_role: Nutzerrolle
+          name: Name
+          access_methods:
+            all_user_ids: Alle Nutzer*innen
+            administrators_ids: Administrator*innen
+            authors_of_feasible_ids: Autor*innen von machbaren Vorschlägen
+            authors_of_unfeasible_ids: Autor*innen von nicht machbaren Vorschlägen
+            authors_of_selected_ids: Autor*innen von ausgewählten Vorschlägen
+            authors_of_not_winners_ids: Autor*innen von nicht gewählten Vorschlägen
+            authors_of_winners_ids: Autor*innen von gewählten Vorschlägen
+        create:
+          notice: Adressatengruppe wurde erfolgreich erstellt
+        update:
+          notice: Adressatengruppe wurde erfolgreich aktualisiert
+        destroy:
+          notice: Adressatengruppe wurde erfolgreich gelöscht
       menu:
         deficiency_reports:
           categories: Kategorien festlegen
@@ -242,6 +270,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
+        officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
@@ -257,6 +286,7 @@ de:
         individual_groups: Individuelle Gruppen
         unregistered_newsletter_subscribers:
           list: Newsletter-Abonnenten
+        recipient_groups: Adressatengruppen
         matomo: Matomo
       polls:
         show:
@@ -423,6 +453,13 @@ de:
           no_deficiency_report_managers: Keine Mängelmelder Admins vorhanden.
         search:
           title: "Mangelmeldungmanager*innen: Benutzer*innensuche"
+      officing_managers:
+        index:
+          title: Abstimmungshelfer*innen
+          no_officing_managers: Keine Abstimmungshelfer*innen vorhanden.
+        search:
+          title: "Abstimmungshelfer*innen: Benutzer*innensuche"
+      deficiency_report_managers:
       settings:
         index:
           extended_features:
@@ -523,9 +560,8 @@ de:
           form_author: Formular Autor
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
-          poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer
-          poll_recounts: Auszählung
+          officing_managers: Abstimmungshelfer
+          officing_manager_audits: Logs
           poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge
@@ -559,7 +595,7 @@ de:
           page_title: Möchten Sie die Beteiligung einschränken?
           intro:
             p1_html: Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.
-            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet. 
+            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
@@ -777,3 +813,12 @@ de:
           title: Newsletter-Abonnenten
       common:
         download_current_selection: Aktuelle Auswahl herunterladen
+      newsletters:
+        settings:
+          email_logo: Logo im E-Mail Header
+          brand_color: Farbe des E-Mail Header & Footers
+          footer: Fußzeileninhalt
+        index:
+          tabs:
+            list: Newsletter
+            settings: Einstellungen

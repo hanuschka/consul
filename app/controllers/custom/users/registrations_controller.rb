@@ -163,7 +163,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     def create_user_params
       params[:user].delete(:redeemable_code) if params[:user].present? && params[:user][:redeemable_code].blank?
-      params.require(:user).permit(:redeemable_code, :locale, :email, :password, :password_confirmation, :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general)
+      params.require(:user).permit(:redeemable_code, :locale, :email, :password, :password_confirmation, :newsletter, :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general)
     end
 
     def update_user_details_params

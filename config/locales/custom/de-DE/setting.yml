@@ -269,9 +269,9 @@ de:
           show_related_content: Verwandte Inhalte
           show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
           show_implementation_option_fields: Umsetzung
-          show_implementation_option_fields_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Umsetzung” hinzu
+          show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
           show_user_cost_estimate: Preisliche Einschätzung
-          show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+          show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
           allow_attached_documents: Zusätzliche Dokumente

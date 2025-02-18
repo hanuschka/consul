@@ -1,4 +1,5 @@
 class DeficiencyReportsController < ApplicationController
+  include FeatureFlags
   include Translatable
   include MapLocationAttributes
   include ImageAttributes
@@ -10,6 +11,9 @@ class DeficiencyReportsController < ApplicationController
   before_action :load_categories
   before_action :set_view, only: :index
   before_action :destroy_map_location_association, only: :update
+
+  feature_flag :deficiency_reports
+
   load_and_authorize_resource
 
   has_orders ->(c) { DeficiencyReport.deficiency_report_orders }, only: :index
@@ -199,14 +203,10 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def notify_responsible(dr)
-    return if dr.responsible.blank?
-
-    if dr.responsible.is_a?(DeficiencyReport::Officer)
-      DeficiencyReportMailer.notify_officer(dr, dr.responsible).deliver_later
-    elsif dr.responsible.is_a?(DeficiencyReport::OfficerGroup)
-      dr.responsible.officers.each do |officer|
-        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
-      end
+    dr.responsible_officers.each do |officer|
+      DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+      Notification.add(officer.user, dr)
+      Activity.log(officer.user, "email", dr)
     end
   end
 end

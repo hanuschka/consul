@@ -10,6 +10,12 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   def index
     filter_assigned_reports_only
     @deficiency_reports = apply_filters(@deficiency_reports)
+
+    if params[:responsible].present?
+      klass, id = params[:responsible].split("_")
+      @deficiency_reports = @deficiency_reports.where(responsible_type: klass, responsible_id: id)
+    end
+
     @deficiency_reports = @deficiency_reports.order(id: :desc)
 
     unless params[:format] == "csv"
@@ -66,8 +72,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   def destroy
     @deficiency_report = DeficiencyReport.find(params[:id])
     @deficiency_report.destroy!
-
-    redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.destroy.success_notice")
   end
 
   def audits

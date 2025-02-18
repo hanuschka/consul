@@ -24,7 +24,7 @@ module ProjektPhaseAdminActions
     @projekt_phase.save!
 
     if embedded? && frame_session_from_authorized_source?
-      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :duration)
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: (@projekt_phase.admin_nav_bar_items.first.presence || :naming))
     else
       redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
         notice: t("custom.admin.projekt_phases.notice.created")
@@ -309,6 +309,20 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/poll_recounts"
   end
 
+  def officing_managers
+    authorize!(:officing_managers, @projekt_phase)
+    @officing_managers = OfficingManager.all
+  end
+
+  def officing_manager_audits
+    poll = @projekt_phase.poll
+    poll_voters = Poll::Voter.where(poll_id: poll.id)
+                             .where.not(officing_manager_id: nil)
+
+    @audits = Audit.where(auditable: poll_voters)
+                   .page(params[:page]).per(50)
+  end
+
   def poll_results
     authorize!(:poll_results, @projekt_phase)
     @poll = @projekt_phase.poll
@@ -334,7 +348,14 @@ module ProjektPhaseAdminActions
     @investments = Kaminari.paginate_array(@investments) if @investments.is_a?(Array)
     @investments = @investments.page(params[:page]) unless request.format.csv?
 
-    render "custom/admin/projekt_phases/budget_investments"
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/budget_investments" }
+      format.js { render "custom/admin/projekt_phases/budget_investments" }
+      format.csv do
+        send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+									filename: "budget-investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+      end
+    end
   end
 
   def budget_phases
@@ -378,6 +399,7 @@ module ProjektPhaseAdminActions
         :active, :start_date, :end_date,
         :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
+        :lock_on, officing_manager_ids: [],
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],

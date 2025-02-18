@@ -45,11 +45,36 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
+      officing_managers officing_manager_audits
     ]
+  end
+
+  def embedded_admin_nav_bar_items
+    admin_nav_bar_items.excluding(%w[ officing_managers officing_manager_audits])
   end
 
   def safe_to_destroy?
     budget.nil?
+  end
+
+  def authors_of_feasible_ids
+    budget.investments.feasible.pluck(:author_id).uniq
+  end
+
+  def authors_of_unfeasible_ids
+    budget.investments.unfeasible.pluck(:author_id).uniq
+  end
+
+  def authors_of_selected_ids
+    budget.investments.selected.pluck(:author_id).uniq
+  end
+
+  def authors_of_not_winners_ids
+    budget.investments.selected.compatible.where(winner: true).pluck(:author_id).uniq
+  end
+
+  def authors_of_winners_ids
+    budget.investments.winners.pluck(:author_id).uniq
   end
 
   private

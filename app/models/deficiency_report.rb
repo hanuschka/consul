@@ -58,14 +58,14 @@ class DeficiencyReport < ApplicationRecord
   scope :admin_accepted, -> { Setting["deficiency_reports.admin_acceptance_required"].present? ? where(admin_accepted: true) : all }
 
   pg_search_scope :pg_search,
-    against: :on_behalf_of,
+    against: [:id, :on_behalf_of],
     associated_against: {
       translations: [:title, :description, :official_answer],
       author: :username
     },
     using: {
       trigram: {
-        threshold: 0.05
+        threshold: 0.03
       }
     },
     ignoring: :accents,
@@ -109,6 +109,7 @@ class DeficiencyReport < ApplicationRecord
 
   def searchable_values
     {
+      id.to_s               => "A",
       author.username       => "B",
       tag_list.join(" ")    => "B"
     }.merge!(searchable_globalized_values)
@@ -170,5 +171,16 @@ class DeficiencyReport < ApplicationRecord
   def get_default_responsible
     map_location&.get_district&.default_deficiency_report_responsible ||
       category&.default_responsible
+  end
+
+  def responsible_officers
+    case responsible
+    when DeficiencyReport::Officer
+      [responsible]
+    when DeficiencyReport::OfficerGroup
+      responsible.officers
+    else
+      []
+    end
   end
 end

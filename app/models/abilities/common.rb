@@ -169,7 +169,9 @@ module Abilities
         related_content.author_id == user.id
       end
 
-      can [:create, :update], FormularAnswer
+      can [:create, :update], FormularAnswer do |formular_answer|
+        formular_answer.formular.projekt_phase.permission_problem(user).blank?
+      end
 
       can :show, Community do |community|
         return false unless community.communitable.present?

@@ -59,6 +59,8 @@ class Budget
     end
 
     def comments_allowed?(user)
+      return false if unfeasible? && valuation_finished?
+
       permission_problem(user).nil?
     end
 

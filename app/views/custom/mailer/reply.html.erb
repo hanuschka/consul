@@ -1,0 +1,45 @@
+<td style="<%= css_for_mailer_content %>">
+  <% if @reply.commentable.class.name.in?(["Budget::Investment"]) %>
+    <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
+      <%= t("mailers.comment.#{@reply.commentable.model_name.i18n_key}.title") %>
+    </h1>
+
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.comment.#{@reply.commentable.model_name.i18n_key}.hi", username: @reply.parent.author.username) %>
+    </p>
+
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= sanitize(
+        t("mailers.comment.#{@reply.commentable.model_name.i18n_key}.text",
+          comment_link: link_to(t("mailers.comment.#{@reply.commentable.model_name.i18n_key}.comment_link_text"),
+                                comment_url(@reply))
+         ),
+         attributes: %w[href]
+      ) %>
+    </p>
+
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.comment.sincerely") %>
+    </p>
+
+
+
+  <% else %>
+    <h1 style="<%= css_for_mailer_heading %>">
+      <%= t("mailers.reply.title") %>
+    </h1>
+
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.reply.hi") %> <strong><%= @email.recipient.name %></strong>,
+    </p>
+
+    <p style="<%= css_for_mailer_text %>">
+      <%= sanitize(t("mailers.reply.new_reply_by", commenter: @email.reply.author.name)) %>
+      <%= link_to @email.commentable.title, comment_url(@email.reply.id), style: css_for_mailer_link %>
+    </p>
+
+    <div style="<%= css_for_mailer_text + css_for_mailer_quote %>">
+      <%= mailer_simple_format(@email.reply.body) %>
+    </div>
+  <% end %>
+</td>

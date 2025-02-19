@@ -7,7 +7,7 @@
   </thead>
   <tbody>
     <% settings.each do |setting| %>
-      <tr>
+      <tr data-setting-key="<%= setting.key %>">
         <td class="small-6">
           <strong><%= t("settings.#{setting.key}") %></strong>
           <br>

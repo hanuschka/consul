@@ -123,6 +123,11 @@
                                        title: t("shared.target_blank"), target: "_blank")),
           class: "checkbox-label--aligned" %>
 
+        <%= f.check_box :newsletter,
+          title: t("custom.terms.newsletter.title"),
+          label: t("custom.terms.newsletter.label"),
+          class: "checkbox-label--aligned" %>
+
         <% if Setting.old_design_enabled? %>
           <p><%= t("custom.terms.revoke_consent.text") %></p>
         <% end %>
@@ -146,11 +151,6 @@
         <%= t("custom.devise_views.users.registrations.new.message") %>
       </p>
       <%= form_html %>
-    <% end %>
-    <% c.with_after_card_container do %>
-      <p>
-      <%= link_to(t("custom.devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path) %>
-      </p>
     <% end %>
   <% end %>
 <% else %>

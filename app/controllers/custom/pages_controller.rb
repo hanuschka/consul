@@ -223,7 +223,7 @@ class PagesController < ApplicationController
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
-    @valid_orders = %w[random supports ballots ballot_line_weight newest]
+    @valid_orders = %w[random supports ballots ballot_line_weight newest comments_count]
     @valid_orders.delete("supports")
     @valid_orders.delete("ballots")
     @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
@@ -237,19 +237,26 @@ class PagesController < ApplicationController
     end
     # con-1036
 
-    @investments = @budget.investments
-
     if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.heading).investments
     elsif params[:section] == "stats" && can?(:read_stats, @budget)
-      @stats = Budget::Stats.new(@budget)
+      if params["stats_section"].in? ["accepting", "selecting", "balloting"]
+        @stats = Budget::PhaseStats.new(@budget, params["stats_section"])
+      else
+        @stats = Budget::Stats.new(@budget)
+      end
       @investments = @budget.investments
     else
       query = Budget::Ballot.where(user: current_user, budget: @budget)
       @ballot = @budget.balloting? ? query.first_or_create!(conditional: ballot_conditional?) : query.first_or_initialize(conditional: ballot_conditional?)
 
-      @investments = @budget.investments.send(@current_filter)
-      @investment_ids = @budget.investments.ids
+      @resources = @budget.investments
+      take_by_projekt_labels
+      take_by_sentiment
+      @investments = @resources
+
+      @investments = @investments.send(@current_filter)
+      @investment_ids = @investments.ids
     end
 
     if @budget.current_phase.kind == "finished"

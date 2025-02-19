@@ -257,6 +257,10 @@ class ProjektPhase < ApplicationRecord
     []
   end
 
+  def embedded_admin_nav_bar_items
+    admin_nav_bar_items
+  end
+
   def settings_in_tabs
     {}
   end

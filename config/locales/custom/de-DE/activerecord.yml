@@ -17,8 +17,8 @@ de:
         one: "Budget"
         other: "Budgets"
       budget/investment:
-        one: "Investitionsvorschlag"
-        other: "Investitionsvorschläge"
+        one: "Vorschlag"
+        other: "Vorschläge"
       milestone:
         one: "Meilenstein"
         other: "Meilensteine"
@@ -171,8 +171,8 @@ de:
         external_url: "Link zur weiteren Dokumentation"
         administrator_id: "Administrator*in"
         location: "Standort (optional)"
-        organization_name: "Investitionsvorschlag erstellen im Namen von..."
-        image: "Beschreibendes Bild zum Investitionsvorschlag"
+        organization_name: "Vorschlag erstellen im Namen von..."
+        image: "Beschreibendes Bild zum Vorschlag"
         image_title: "Bildtitel"
         duration: Zeitrahmen (intern)
         feasibility_feasible: Entspricht den Kriterien
@@ -333,7 +333,7 @@ de:
       signature_sheet:
         title: "Titel"
         signable_type: "Unterschriftentyp"
-        signable_id: "ID des Vorschlags/Investitionsvorschlags"
+        signable_id: "ID des Vorschlags"
         document_numbers: "Dokumentennummern"
       sdg/goal:
         code: "Code"

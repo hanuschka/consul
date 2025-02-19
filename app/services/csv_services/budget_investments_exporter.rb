@@ -45,7 +45,7 @@ module CsvServices
           investment.comments_count,
           investment.total_votes.to_s,
           investment.total_ballot_votes.to_s,
-          link_to_investment(investment)
+          Rails.application.routes.url_helpers.budget_investment_url(investment.budget, investment, host: @host)
         ]
       end
 
@@ -64,11 +64,6 @@ module CsvServices
         else
           I18n.t(price_string)
         end
-      end
-
-      def link_to_investment(investment)
-        link = Rails.application.routes.url_helpers.budget_investment_url(investment.budget, investment, host: @host)
-        "=HYPERLINK(\"#{link}\", \"#{link}\")"
       end
   end
 end

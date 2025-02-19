@@ -63,10 +63,10 @@ de:
     budget_investment_unfeasible:
       hi: "Liebe*r Benutzer*in,"
       new: "Hierfür laden wir Sie ein, eine <strong>neue Investition</strong> auszuarbeiten, die an die Konditionen dieses Prozesses angepasst sind. Sie können dies über folgenden Link tun: %{url}."
-      new_href: "neuer Investitionsvorschlag"
+      new_href: "neuer Vorschlag"
       sincerely: "Mit freundlichen Grüßen"
       sorry: "Entschuldigung für die Unannehmlichkeiten und vielen Dank für Ihre wertvolle Beteiligung."
-      subject: "Ihr Investitionsvorschlag '%{code}' wurde als undurchführbar markiert"
+      subject: "Ihr Vorschlag '%{code}' wurde als undurchführbar markiert"
     budget_investment_selected:
       subject: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       title: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!

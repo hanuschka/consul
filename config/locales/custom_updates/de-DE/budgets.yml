@@ -56,7 +56,7 @@ de:
             balloting: Abstimmungsphase
             finished: Statistik über alle Phasen
         form:
-          start_new: Investitionsvorschlag erstellen
+          start_new: Vorschlag erstellen
           page_description: Das Budget lebt von Ihren Beiträgen! Teilen Sie uns mit, was Sie gerne umgesetzt hätten - und tauschen Sie sich im Anschluss mit anderen zu Ihren Ideen aus. Sie können angeben, ob Sie bei der Umsetzung selbst unterstützen möchten oder ob die Stadtverwaltung die Verantwortung übernehmen soll.<br><br>
             Außerdem können Sie eine erste preisliche Einschätzung zu Ihrem Beitrag vornehmen. Die Stadtverwaltung wird Ihren Beitrag auf seine Durchführbarkeit prüfen und ebenfalls eine preisliche Einschätzung abgeben. Danke, dass Sie sich die Zeit nehmen und sich beteiligen!
           title_placeholder: Geben Sie Ihrem Beitrag einen plakativen Titel, zum Beispiel „Bahnhofsplatz sanieren“ oder „Neuen Kinderspielplatz bauen“.
@@ -71,10 +71,10 @@ de:
             hint: Wo soll Ihr Beitrag umgesetzt werden? Platzieren Sie einen „Pin“, um andere ins Bild zu setzen.
           implementation:
             title: Umsetzung
-            description: Geben Sie hier an von wem der Investitionsvorschlag umgesetzt werden soll
+            description: Geben Sie hier an von wem der Vorschlag umgesetzt werden soll
           user_cost_estimate:
             title: Preisliche Einschätzung
-            description: Bitte geben Sie hier eine preisliche Einschätzung ihres Investitionsvorschlags an.
+            description: Bitte geben Sie hier eine preisliche Einschätzung ihres Vorschlags an.
             placeholder: Preis in Euro angeben
           documents:
             title: Dokumente hinzufügen
@@ -101,11 +101,11 @@ de:
         show:
           callouts:
             publishing_prices:
-              undecided: Der Investitionsvorschlag wird nicht zur Wahl gestellt.
-              unfeasible: Dieser Investitionsvorschlag wurde als nicht durchführbar markiert
+              undecided: Der Vorschlag wird nicht zur Wahl gestellt.
+              unfeasible: Dieser Vorschlag wurde als nicht durchführbar markiert
             selecting:
-              undecided: Dieser Investitionsvorschlag befindet sich gerade noch in der Bewertung.
-              unfeasible: Dieser Investitionsvorschlag wurde als nicht durchführbar klassifiziert.
+              undecided: Dieser Vorschlag befindet sich gerade noch in der Bewertung.
+              unfeasible: Dieser Vorschlag wurde als nicht durchführbar klassifiziert.
           implementation: Umsetzung
           implementation_city_text_html: Soll von Stadtverwaltung umgesetzt werden
           implementation_user_text_html: "%{author} unterstützt bei der Durchführung<br><br>%{implementation_contribution}"
@@ -118,7 +118,7 @@ de:
         statuses:
           phases:
             accepting: Der Vorschlag wurde erfolgreich eingereicht.
-            reviewing: Der Investitionsvorschlag wird zur Zeit intern auf seine Durchführbarkeit überprüft.
+            reviewing: Der Vorschlag wird zur Zeit intern auf seine Durchführbarkeit überprüft.
             reviewing_ballots: Das Ergebniss der Abstimmung wird kalkuliert.
             valuating: Der Vorschlag wird fachlich geprüft.
       results:

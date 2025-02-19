@@ -132,6 +132,7 @@
 //= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
 //= require ckeditor5/ckeditor5.umd
 //= require ckeditor5/file-upload-manager
+//= require html2canvas/dist/html2canvas.min
 
 var initialize_modules = function() {
   "use strict";
@@ -189,7 +190,6 @@ var initialize_modules = function() {
   App.SDGManagementRelationSearch.initialize();
   App.Geozones.initialize();
   App.ExpandOverviewMap.initialize();
-  App.MapRefresh.initialize();
   App.PollsCustom.initialize();
   App.RadioButtonFilter.initialize();
   App.DeficiencyReports.initialize();
@@ -214,6 +214,7 @@ var initialize_modules = function() {
   App.ClickOutWarning.initialize();
   App.Projekts.initialize();
   App.ResponsiveMenu.initialize();
+  App.MapScreenshot.initialize();
 
   if ($("#projekt-selector-fields").length) {
     App.ProjektSelector.initialize();

@@ -55,7 +55,7 @@ en:
             balloting: Voting
             finished: Final
         form:
-          start_new: Investitionsvorschlag erstellen
+          start_new: Create new proposal
           page_description:
             The budget lives from your contributions! Tell us what you would like to have implemented - and then share your ideas with others. You can indicate whether you would like to support the implementation yourself or whether the city administration should take responsibility.<br></br>
             You can also make an initial price assessment for your contribution. The city administration will check your contribution for its feasibility and also provide a price estimate. Thank you for taking the time and getting involved!

@@ -31,7 +31,7 @@ de:
         zero: Sie haben noch über keinen Vorschlag abgestimmt.
       reasons_for_not_balloting:
         not_logged_in: Sie müssen sich %{signin} oder %{signup}, um fortfahren zu können.
-        not_verified: Nur verifizierte Benutzer*innen können über einen Investitionsvorschlag abstimmen, %{verify_account}.
+        not_verified: Nur verifizierte Benutzer*innen können über einen Vorschlag abstimmen, %{verify_account}.
         organization: Organisationen ist es nicht erlaubt abzustimmen
         not_selected: Für nicht durchführbare Ausgabevorschläge kann nicht abgestimmt werden
         not_enough_money: "Sie haben bereits das gesamte verfügbare Budget zugewiesen.<br><small>Bitte denken Sie daran, dass Sie dies %{change_ballot} jederzeit</small>ändern können"
@@ -90,7 +90,7 @@ de:
       index:
         title: Budgets
         unfeasible: Entspricht nicht den Kriterien
-        unfeasible_text: "Der Investitionsvorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, innerhalb des Limits des Budgetss) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Investitionsvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
+        unfeasible_text: "Der Vorschlag muss eine gewisse Anzahl von Anforderungen erfüllen, (Legalität, Durchführbarkeit, innerhalb des Limits des Budgetss) um für durchführbar erklärt werden zu können und das Stadium der finalen Abstimmung zu erreichen. Alle Investitionsvorschläge, die diese Kriterien nicht erfüllen, sind als nicht durchführbar markiert und stehen in der folgenden Liste, zusammen mit einem Bericht zur Undurchführbarkeit."
         by_heading: "Investitionsvorschläge im Bereich: %{heading}"
         search_form:
           button: Suche
@@ -116,7 +116,7 @@ de:
           change_ballot: "Wenn Sie Ihre Meinung ändern, können Sie Ihre Stimme unter %{check_ballot} entfernen und von vorne beginnen."
           check_ballot_link: "Überprüfung meiner Abstimmung"
           zero: Sie haben bislang noch für keinen Vorschlag abgestimmt.
-          create: "Investitionsvorschlag erstellen"
+          create: "Vorschlag erstellen"
         filter: "Projekte filtern nach"
         filters:
           not_unfeasible: Entspricht den Kriterien
@@ -129,12 +129,12 @@ de:
           confidence_score: Am besten bewertet
           price: Nach Preis
       share:
-        message: "Ich habe einen Investitionsvorschlag %{title} in %{handle} erstellt. Erstellen Sie auch einen Investitionsvorschlag!"
+        message: "Ich habe einen Vorschlag %{title} in %{handle} erstellt. Erstellen Sie auch einen Investitionsvorschlag!"
       show:
         author_deleted: Benutzer gelöscht
         price_explanation: Preiserklärung
         unfeasibility_explanation: Erläuterung
-        code: "Code des Investitionsvorschlags: <strong>%{code}</strong>"
+        code: "Code des Vorschlags: <strong>%{code}</strong>"
         location: "Standort: <strong>%{location}</strong>"
         organization_name: "Vorgeschlagen von: <strong>%{name}</strong>"
         share: Teilen
@@ -145,15 +145,15 @@ de:
         comments_tab: Kommentare
         milestones_tab: Meilensteine
         author: Autor
-        project_unfeasible: "Dieser Investitionsvorschlag <strong>wurde als nicht durchführbar markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
-        project_selected: "Dieser Investitionsvorschlag wurde für die Abstimmungsphase <strong>ausgewählt</strong>."
-        project_winner: "Best bewerteter Investitionsvorschlag"
-        project_not_selected: "Dieser Investitionsvorschlag wurde <strong>nicht</strong> für die Abstimmungsphase ausgewählt."
+        project_unfeasible: "Dieser Vorschlag <strong>wurde als nicht durchführbar markiert</strong> und wird nicht in die Abstimmungsphase übergehen."
+        project_selected: "Dieser Vorschlag wurde für die Abstimmungsphase <strong>ausgewählt</strong>."
+        project_winner: "Best bewerteter Vorschlag"
+        project_not_selected: "Dieser Vorschlag wurde <strong>nicht</strong> für die Abstimmungsphase ausgewählt."
         see_price_explanation: Erläuterung der Kosten anzeigen
       wrong_price_format: Nur ganze Zahlen
       investment:
         add: Stimme
-        already_added: Sie haben diesen Investitionsvorschlag bereits hinzugefügt
+        already_added: Sie haben diesen Vorschlag bereits hinzugefügt
         support_title: Unterstützen Sie dieses Projekt
         supports:
           zero: Keine Unterstützung
@@ -204,8 +204,8 @@ de:
       show_all_link: Alle anzeigen
       price: Preis
       amount_available: VerfügbareBudgetmittel
-      accepted: "Genehmigter Investitionsvorschlag: "
-      discarded: "Verworfener Investitionsvorschlag: "
+      accepted: "Genehmigter Vorschlag: "
+      discarded: "Verworfener Vorschlag: "
       incompatibles: Unvereinbar
       investment_title: Vorschlag Titel
       investment_proyects: Liste aller Investitionsvorschläge, die gewonnen haben

@@ -27,10 +27,17 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
 
   def valuate
     if valid_price_params? && @investment.update(valuation_params)
-      if @investment.unfeasible_email_pending?
-        @investment.send_unfeasible_email
-      elsif @investment.feasible? && @investment.valuation_finished?
-        Mailer.budget_investment_feasible(@investment).deliver_later
+
+      if valuation_params[:feasibility].present? && @investment.valuation_finished?
+        if @investment.unfeasible_email_pending?
+          @investment.send_unfeasible_email
+        elsif @investment.feasible?
+          Mailer.budget_investment_feasible(@investment).deliver_later
+        end
+      elsif valuation_params[:selected] == "true" && @investment.selected?
+        Mailer.budget_investment_selected(@investment).deliver_later
+      elsif valuation_params[:selected] == "false" && !@investment.selected?
+        Mailer.budget_investment_unselected(@investment).deliver_later
       end
 
       Activity.log(current_user, :valuate, @investment)

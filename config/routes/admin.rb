@@ -370,12 +370,25 @@ namespace :admin do
     member do
       post :deliver
     end
+
+    collection do
+      get :settings
+      patch :update_logo
+      patch :update_color
+    end
+
     get :users, on: :collection
   end
 
   resources :admin_notifications do
     member do
       post :deliver
+    end
+  end
+
+  resources :recipient_groups, except: :show do
+    collection do
+      post :select_options
     end
   end
 

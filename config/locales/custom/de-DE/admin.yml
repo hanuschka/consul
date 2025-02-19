@@ -197,8 +197,8 @@ de:
       form:
         max_ballot_lines_info: 'Maximum number of projects a user can vote on this heading during the "Voting projects" phase. Only for budgets using approval voting.'
         population_info: "Dieses Feld wird nur für statistische Zwecke verwendet, mit dem Ziel, den Prozentsatz der Stimmen in jeder Rubrik anzuzeigen. Dieses Feld ist optional; Sie können es daher leer lassen, wenn es nicht zutrifft."
-        coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Investitionsvorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
-        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, können Sie benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Investitionsvorschlagsseite für diese Rubrik angezeigt."
+        coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Vorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
+        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, können Sie benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Vorschlagsseite für diese Rubrik angezeigt."
         create: "Neue Rubrik erstellen"
         edit: "Rubrik bearbeiten"
         submit: "Rubrik speichern"
@@ -285,7 +285,7 @@ de:
         assigned_admin: Zugewiesene*r Administrator*in
         assigned_valuators: Zugewiesene Gutachter*innen
         classification: Klassifizierung
-        info: "%{budget_name} - Gruppe: %{group_name} - Investitionsvorschlag %{id}"
+        info: "%{budget_name} - Gruppe: %{group_name} - Vorschlag %{id}"
         edit: Bearbeiten
         edit_classification: Klassifizierung bearbeiten
         by: Von
@@ -387,15 +387,15 @@ de:
         table_description: Beschreibung
         table_actions: Aktionen
       edit:
-        title: Status des Investitionsvorschlag bearbeiten
+        title: Status des Vorschlags bearbeiten
       update:
-        notice: Status des Investitionsvorschlag erfolgreich aktualisiert
+        notice: Status des Vorschlags erfolgreich aktualisiert
       new:
-        title: Status des Investitionsvorschlag erstellen
+        title: Status des Vorschlags erstellen
       create:
-        notice: Status des Investitionsvorschlag erfolgreich erstellt
+        notice: Status des Vorschlags erfolgreich erstellt
       delete:
-        notice: Status des Investitionsvorschlag erfolgreich gelöscht
+        notice: Status des Vorschlags erfolgreich gelöscht
     progress_bars:
       manage: "Fortschrittsbalken verwalten"
       index:

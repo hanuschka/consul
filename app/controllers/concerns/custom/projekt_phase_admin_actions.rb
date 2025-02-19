@@ -24,7 +24,7 @@ module ProjektPhaseAdminActions
     @projekt_phase.save!
 
     if embedded? && frame_session_from_authorized_source?
-      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :duration)
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: (@projekt_phase.admin_nav_bar_items.first.presence || :naming))
     else
       redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
         notice: t("custom.admin.projekt_phases.notice.created")
@@ -311,7 +311,6 @@ module ProjektPhaseAdminActions
 
   def officing_managers
     authorize!(:officing_managers, @projekt_phase)
-    @poll = @projekt_phase.poll
     @officing_managers = OfficingManager.all
   end
 
@@ -349,7 +348,14 @@ module ProjektPhaseAdminActions
     @investments = Kaminari.paginate_array(@investments) if @investments.is_a?(Array)
     @investments = @investments.page(params[:page]) unless request.format.csv?
 
-    render "custom/admin/projekt_phases/budget_investments"
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/budget_investments" }
+      format.js { render "custom/admin/projekt_phases/budget_investments" }
+      format.csv do
+        send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+									filename: "budget-investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+      end
+    end
   end
 
   def budget_phases

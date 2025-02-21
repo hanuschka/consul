@@ -226,6 +226,34 @@ de:
           id: ID
           name: Name
           plz: PLZ
+      recipient_groups:
+        index:
+          title: Adressatengruppen
+          new_recipient_group: Neue Adressatengruppe
+          name: Name
+        new:
+          base_options_for_kind:
+            projekts: Projekte
+            user_roles: Nutzerrollen
+          label_for_general: Typ der Adressatengruppe
+          label_for_projekt: Projekt
+          label_for_projekt_phase: Projektphase
+          label_for_user_role: Nutzerrolle
+          name: Name
+          access_methods:
+            all_user_ids: Alle Nutzer*innen
+            administrators_ids: Administrator*innen
+            authors_of_feasible_ids: Autor*innen von machbaren Vorschlägen
+            authors_of_unfeasible_ids: Autor*innen von nicht machbaren Vorschlägen
+            authors_of_selected_ids: Autor*innen von ausgewählten Vorschlägen
+            authors_of_not_winners_ids: Autor*innen von nicht gewählten Vorschlägen
+            authors_of_winners_ids: Autor*innen von gewählten Vorschlägen
+        create:
+          notice: Adressatengruppe wurde erfolgreich erstellt
+        update:
+          notice: Adressatengruppe wurde erfolgreich aktualisiert
+        destroy:
+          notice: Adressatengruppe wurde erfolgreich gelöscht
       menu:
         deficiency_reports:
           categories: Kategorien festlegen
@@ -258,6 +286,7 @@ de:
         individual_groups: Individuelle Gruppen
         unregistered_newsletter_subscribers:
           list: Newsletter-Abonnenten
+        recipient_groups: Adressatengruppen
         matomo: Matomo
       polls:
         show:

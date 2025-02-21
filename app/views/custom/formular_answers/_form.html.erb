@@ -17,7 +17,7 @@
         <%= content_tag(:small, t("custom.shared.required")) %>
         <br>
       <% end %>
-      <span class="help-text"><%= ff.description %></span>
+      <span class="help-text"><%= ff.description.html_safe %></span>
 
       <% if ff.kind.in? ["string", "email"] %>
         <%= text_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off", class: ("is-invalid-input" if invalid_field_class) %>

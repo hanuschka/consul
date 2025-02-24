@@ -66,6 +66,11 @@
 
     <div class="sidebar" id="sidebar">
       <%= render "budgets/investments/sidebar_new" %>
+      <% if params[:section] == "stats" && can?(:read_stats, @budget) %>
+        <%= render Shared::SidebarCardComponent.new(title: "Filter", icon_name: "filter") do |c| %>
+					<%= render Budgets::PhaseStats::FiltersComponent.new %>
+        <% end %>
+      <% end %>
     </div>
   </div>
 <% end %>

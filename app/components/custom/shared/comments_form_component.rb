@@ -20,7 +20,13 @@ class Shared::CommentsFormComponent < ApplicationComponent
     def permission_problem_key
       return nil if projekt_phase.blank?
 
-      @permission_problem_key ||= projekt_phase.permission_problem(current_user)
+      @permission_problem_key ||= projekt_phase.permission_problem(current_user) || record_permission_problem_key
+    end
+
+    def record_permission_problem_key
+      return if current_user&.administrator? || current_user&.projekt_manager?
+
+      :investment_unfeasible if record.is_a?(Budget::Investment) && record.unfeasible? && record.valuation_finished?
     end
 
     def cannot_vote_text

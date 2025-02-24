@@ -55,9 +55,9 @@ de:
         link: Pro und Contra Stimmen
         p1: es sind neue Pro und Contra Stimmen auf Consul eingegangen.
       new_budget_investment:
-        subject: Neuer Investitionsvorschlag auf Consul
+        subject: Neuer Vorschlag auf Consul
         hi: Hallo %{username},
-        p1: es ist ein neuer Investitionsvorschlag auf Consul eingegangen.
+        p1: es ist ein neuer Vorschlag auf Consul eingegangen.
       new_projekt_notification:
         subject: Neue Projektbenachrichtigung auf Consul
         hi: Hallo %{username},

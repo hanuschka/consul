@@ -5,11 +5,17 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.budget_investment_selected.hi") %>
+    <%= t("mailers.budget_investment_selected.hi", username: @author.username) %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.budget_investment_selected.share") %>
+    <%= sanitize(
+      t("mailers.budget_investment_selected.text",
+        proposal_link: link_to(t("mailers.budget_investment_selected.proposal_link_text"),
+                               budget_investment_url(@investment.budget, @investment))
+       ),
+       attributes: %w[href]
+    ) %>
   </p>
 
   <table style="width: 100%;">

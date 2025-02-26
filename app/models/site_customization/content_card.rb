@@ -1,6 +1,7 @@
 class SiteCustomization::ContentCard < ApplicationRecord
   KINDS = %w[
     active_projekts
+    current_projekts
     latest_user_activity
     current_polls
     latest_resources
@@ -34,6 +35,7 @@ class SiteCustomization::ContentCard < ApplicationRecord
   def self.default_titles
     {
       "active_projekts" => "Projektübersicht",
+      "current_projekts" => "Aktive Beteiligung",
       "latest_user_activity" => "Meine Aktivitäten",
       "current_polls" => "Laufende Abstimmungen",
       "latest_resources" => "Neueste Beiträge",
@@ -45,6 +47,9 @@ class SiteCustomization::ContentCard < ApplicationRecord
   def self.default_settings
     {
       "active_projekts" => {
+        "limit" => 3
+      },
+      "current_projekts" => {
         "limit" => 3
       },
       "latest_user_activity" => {},

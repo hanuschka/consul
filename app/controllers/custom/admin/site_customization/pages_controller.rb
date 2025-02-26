@@ -17,7 +17,12 @@ class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::Base
     if @page.safe_to_destroy?
       @page.destroy!
       notice = t("admin.site_customization.pages.destroy.notice")
-      redirect_to admin_site_customization_pages_path, notice: notice
+
+      if @page.landing?
+        redirect_to admin_site_customization_landing_pages_path, notice: notice
+      else
+        redirect_to admin_site_customization_pages_path, notice: notice
+      end
     else
       notice = t("custom.admin.site_customization.pages.destroy.cannot_notice")
       redirect_to admin_site_customization_pages_path, alert: notice

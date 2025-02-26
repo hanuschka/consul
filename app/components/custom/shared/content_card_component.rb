@@ -12,7 +12,13 @@ class Shared::ContentCardComponent < ApplicationComponent
     def render_content_card_component
       case @content_card.kind
       when "active_projekts"
+<<<<<<< Updated upstream
         render ContentCard::ActiveProjektsComponent.new(@content_card)
+=======
+        render ContentCard::ActiveProjektsComponent.new(@content_card, custom_page: @custom_page)
+      when "current_projekts"
+        render ContentCard::CurrentProjektsComponent.new(@content_card, custom_page: @custom_page)
+>>>>>>> Stashed changes
       when "latest_user_activity"
         render ContentCard::LatestUserActivityComponent.new(@content_card)
       when "current_polls"

@@ -27,8 +27,11 @@ class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::Base
   end
 
   def destroy
-    @page.destroy!
     notice = t("admin.site_customization.pages.destroy.notice")
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     redirect_to admin_site_customization_pages_path, notice: notice
   end
 

@@ -166,7 +166,7 @@ de:
         check_ballot_link: "Meine Abstimmungen überprüfen"
         price: "Dieser Bereich verfügt über ein Budget von"
       votes:
-        already_supported: "Sie haben dieses Investitionsprojekt bereits unterstützt. Teilen Sie es!"
+        already_supported: "Sie haben diesen Vorschlag bereits unterstützt."
         confirm_group:
           one: "Sie können nur Investitionen im Bezirk %{count} unterstützen. Wenn Sie fortfahren, können Sie die Wahl Ihres Bezirks nicht ändern. Sind Sie sicher?"
           other: "Sie können nur Investitionen in %{count}-Bezirken unterstützen. Wenn Sie fortfahren, können Sie die Wahl Ihres Bezirks nicht ändern. Sind Sie sicher?"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_02_17_122908) do
+ActiveRecord::Schema.define(version: 2025_02_27_132942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -415,6 +415,9 @@ ActiveRecord::Schema.define(version: 2025_02_17_122908) do
     t.string "video_url"
     t.bigint "sentiment_id"
     t.text "valuator_explanation"
+    t.time "email_on_feasibility_sent_at"
+    t.time "email_on_selected_sent_at"
+    t.boolean "preselected", default: false
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -520,6 +523,7 @@ ActiveRecord::Schema.define(version: 2025_02_17_122908) do
     t.bigint "projekt_phase_id"
     t.boolean "show_percentage_values_only", default: false
     t.boolean "show_results_after_first_vote", default: false
+    t.integer "max_preselected", default: 0
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_budgets_on_projekt_phase_id"
   end
@@ -2657,6 +2661,7 @@ ActiveRecord::Schema.define(version: 2025_02_17_122908) do
     t.string "frame_sign_in_token"
     t.datetime "frame_sign_in_token_valid_until"
     t.boolean "on_dt", default: false
+    t.boolean "adm_email_on_new_budget_investment", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

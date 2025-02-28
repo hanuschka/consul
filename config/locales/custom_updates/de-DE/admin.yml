@@ -27,9 +27,6 @@ de:
           info:
             projekt_association: Projektzuordnung
       budget_investments:
-        index:
-          list:
-            created_at: Erstellungsdatum
         show:
           not_defined: undefiniert
           state_block_title: Status des Vorschlags
@@ -750,7 +747,7 @@ de:
         budget_edit:
           page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
         budget_investments:
-          page_title: Investitionsvorschläge
+          page_title: Vorschläge
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen

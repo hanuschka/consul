@@ -46,7 +46,7 @@ de:
       text2: "Leider verstößt er gegen die Netiquette dieser Plattform. Wir haben Ihren Beitrag daher entfernt."
       text3: Sie können die Regeln der Netiquette %{netiquette_link} nachlesen.
       netiquette_link_text: hier
-      text4: Sollten Sie dazu Fragen haben, kontaktieren Sie unstext gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
+      text4: Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
       sincerely: Mit freundlichen Grüßen
     comment:
       subject: Jemand hat Ihren Beitrag kommentiert.

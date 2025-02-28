@@ -44,10 +44,7 @@
 .user-resource-image-upload--text {
   line-height: 1.25;
   text-align: center;
-
-  @media(max-width: $mobile-viewport-start) {
-    font-size: 14px;
-  }
+  font-size: 14px;
 }
 
 .user-resource-image-upload--plus {
@@ -70,8 +67,9 @@
 }
 
 .user-resource-image-upload--label-title {
-  font-size: 33px;
+  font-size: 28px;
   margin-top: -15px;
+  margin-bottom: 4px;
 
   @media(max-width: $big-tablet-viewport-start) {
     font-size: 30px;

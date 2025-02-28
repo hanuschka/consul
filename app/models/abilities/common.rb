@@ -101,8 +101,8 @@ module Abilities
       end
 
       # can :create, Budget::Investment,               budget: { phase: "accepting" }
-      can :edit, Budget::Investment,                 budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id
-      can :update, Budget::Investment,               budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id
+      can :edit, Budget::Investment,                 budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
+      can :update, Budget::Investment,               budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
       can :suggest, Budget::Investment,              budget: { id: Budget.accepting.pluck(:id) }
       can :destroy, Budget::Investment,              budget: { id: (Budget.accepting.pluck(:id) + Budget.reviewing.pluck(:id)) }, author_id: user.id
       can [:create, :destroy], ActsAsVotable::Vote,

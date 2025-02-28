@@ -9,7 +9,7 @@ de:
       index:
         title: Budgets
         filters:
-          current: Offen
+          current: Nicht bewertet
           finished: Abgeschlossen
         table_name: Name
         table_phase: Phase
@@ -21,7 +21,7 @@ de:
       index:
         headings_filter_all: Alle Rubriken
         filters:
-          valuation_open: Offen
+          valuation_open: Nitcht bewertet
           valuating: Unter Bewertung
           valuation_finished: Begutachtung abgeschlossen
         assigned_to: "%{valuator} zugewiesen"

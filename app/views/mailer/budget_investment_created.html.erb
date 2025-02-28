@@ -13,31 +13,33 @@
   <p style="<%= css_for_mailer_text %>">
     <%= sanitize(
       t("mailers.budget_investment_created.text",
-        investment_link: link_to(@investment.title, budget_investment_url(@investment.budget, @investment)))
+        investment_link: link_to(@investment.title, budget_investment_url(@investment.budget, @investment)),
+        projekt_link: link_to(@projekt.page.title, page_url(@projekt.page.slug)))
     ) %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= sanitize(
-      t("mailers.budget_investment_created.follow",
-        link: link_to(@projekt.page.title, page_url(@projekt.page.slug),
-        style: css_for_mailer_link)
-      ),
-      attributes: %w[href style]
-    ) %>
+    <%= t("mailers.budget_investment_created.follow") %>
   </p>
 
   <table style="width: 100%;">
     <tbody>
       <tr>
-        <td style="padding-bottom: 12px; text-align: center;">
-          <%= link_to budget_investment_url(@investment.budget, @investment, anchor: "social-share"), style: css_for_mailer_button do %>
+        <td style="padding-bottom: 12px; text-align: left;">
+          <%= link_to budget_investment_url(@investment.budget, @investment), style: css_for_mailer_button do %>
             <%= t("mailers.budget_investment_created.share") %>
           <% end %>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize(
+      t("mailers.budget_investment_created.notifications",
+        account_link: link_to(t("mailers.budget_investment_created.profile_link_text"), account_url))
+    ) %>
+  </p>
 
   <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.budget_investment_created.sincerely") %>

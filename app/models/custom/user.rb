@@ -75,21 +75,31 @@ class User < ApplicationRecord
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
-  def self.order_filter(params)
-    sorting_key = params[:sort_by]&.downcase&.to_sym
-    allowed_sort_option = SORTING_OPTIONS[sorting_key]
-    direction = params[:direction] == "desc" ? "desc" : "asc"
+  class << self
+    def order_filter(params)
+      sorting_key = params[:sort_by]&.downcase&.to_sym
+      allowed_sort_option = SORTING_OPTIONS[sorting_key]
+      direction = params[:direction] == "desc" ? "desc" : "asc"
 
-    if allowed_sort_option.present?
-      order("#{allowed_sort_option} #{direction}")
-    elsif sorting_key == :roles
-      if direction == "asc"
-        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+      if allowed_sort_option.present?
+        order("#{allowed_sort_option} #{direction}")
+      elsif sorting_key == :roles
+        if direction == "asc"
+          all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+        else
+          all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+        end
       else
-        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+        order(id: :desc)
       end
-    else
-      order(id: :desc)
+    end
+
+    def all_user_ids
+      active.where.not(confirmed_at: nil).where(guest: false, erased_at: nil)
+    end
+
+    def administrators_ids
+      joins(:administrator).ids
     end
   end
 

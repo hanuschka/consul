@@ -66,8 +66,26 @@ class Budget < ApplicationRecord
     published.order(:created_at).last
   end
 
+  def self.process_preselected_investments
+    where(phase: "selecting").find_each do |budget|
+      return unless budget.current_phase.kind == "valuating"
+      return unless budget.phase == "selecting"
+
+      budget.update_column(:phase, "valuating")
+      budget.update_preselected_investments
+    end
+  end
+
+  def self.update_cached_current_phase
+    where.not(phase: "finished").find_each(&:update_cached_current_phase)
+  end
+
   def current_phase
-    phases.published.where("starts_at < ? AND ends_at > ?", Time.zone.today, Time.zone.today).last || phases.published.last || phases.first
+    @current_phase ||= begin
+      phases.published.where("starts_at < ? AND ends_at > ?", Time.zone.today, Time.zone.today).last ||
+        phases.published.last ||
+        phases.first
+    end
   end
 
   def current_phase_index
@@ -240,6 +258,23 @@ class Budget < ApplicationRecord
 
   def show_money?
     !hide_money?
+  end
+
+  def update_preselected_investments
+    investments.update_all(preselected: false)
+
+    preselected_investments = investments.sort_by_total_votes.limit(max_preselected)
+    preselected_investments.update_all(preselected: true)
+    preselected_investments.each do |investment|
+      Mailer.budget_investment_preselected(investment).deliver_later
+    end
+  end
+
+  def update_cached_current_phase
+    current_phase_kind = current_phase.kind
+    return if current_phase_kind == phase
+
+    budget.update_column(:phase, current_phase_kind)
   end
 
   private

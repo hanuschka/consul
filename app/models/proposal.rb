@@ -160,9 +160,9 @@ class Proposal < ApplicationRecord
 
   def total_votes
     if up_and_down_voting_enabled?
-      cached_votes_up + cached_votes_down
+      cached_votes_up + cached_votes_down + officing_bulk_votes
     else
-      cached_votes_up
+      cached_votes_up + officing_bulk_votes
     end
   end
 

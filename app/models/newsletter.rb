@@ -1,16 +1,22 @@
 class Newsletter < ApplicationRecord
+  include Imageable
+
   has_many :activities, as: :actionable, inverse_of: :actionable
+  belongs_to :recipient_group
 
   validates :subject, presence: true
-  validates :segment_recipient, presence: true
+  # validates :segment_recipient, presence: true
   validates :from, presence: true, format: { with: /\A.+@.+\Z/ }
   validates :body, presence: true
-  validate :validate_segment_recipient
+  # validate :validate_segment_recipient
+  validates :recipient_group, presence: true
 
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
 
   def list_of_recipient_emails
+    return recipient_group.user_emails if recipient_group
+
     UserSegments.user_segment_emails(segment_recipient) if valid_segment_recipient?
   end
 
@@ -53,9 +59,9 @@ class Newsletter < ApplicationRecord
 
   private
 
-    def validate_segment_recipient
-      errors.add(:segment_recipient, :invalid) unless valid_segment_recipient?
-    end
+    # def validate_segment_recipient
+    #   errors.add(:segment_recipient, :invalid) unless valid_segment_recipient?
+    # end
 
     def valid_email?(email)
       email.match(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i)

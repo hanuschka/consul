@@ -11,9 +11,6 @@ class Poll < ApplicationRecord
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
 
-  has_many :poll_manager_assignments, dependent: :destroy
-  has_many :poll_managers, through: :poll_manager_assignments
-
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
 

@@ -51,17 +51,25 @@ every :reboot do
   # command "cd #{@path} && RAILS_ENV=#{@environment} bin/delayed_job -n 2 restart"
 end
 
+every 1.day, at: "1:00 am", roles: [:cron] do
+  rake "budgets:process_preselected_investments"
+end
+
+every 1.day, at: "2:00 am", roles: [:cron] do
+  rake "budgets:update_cached_current_phase"
+end
+
 every 1.day, at: "2:30 am", roles: [:cron] do
   rake "projekt_phases:check_currentness_change"
+end
+
+every 1.day, at: "3:00 am", roles: [:cron] do
+  rake "maintenance:reverify_users"
 end
 
 every 1.day, at: "6:00 am", roles: [:cron] do
   rake "reminders:overdue_deficiency_reports"
   rake "reminders:not_assigned_deficiency_reports"
-end
-
-every 1.day, at: "3:00 am", roles: [:cron] do
-  rake "maintenance:reverify_users"
 end
 
 every 1.day, at: "2:00 pm", roles: [:cron] do

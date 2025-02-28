@@ -1,10 +1,13 @@
 <%= form_for [:admin, @newsletter] do |f| %>
   <%= render "shared/errors", resource: @newsletter %>
 
-  <%= f.select :segment_recipient, options_for_select(user_segments_options,
-                                                      @newsletter[:segment_recipient]) %>
+  <%= f.select :recipient_group_id, options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }), prompt: t("custom.shared.select") %>
+  <%= f.text_field :from, value: (f.object.from || Setting['mailer_from_address'] ) %>
   <%= f.text_field :subject %>
-  <%= f.text_field :from %>
+  <%= f.text_field :title %>
+  <%= f.text_field :subtitle %>
+  <%= render Images::NestedComponent.new(f) %>
+  <%= f.text_field :greeting, value: (f.object.greeting || "Sehr geehrte Damen und Herren, liebe Nutzer*innen ") %>
   <%= f.text_area :body, value: AdminWYSIWYGSanitizer.new.sanitize(@newsletter.body), class: "html-area  tall-editor #{ck_editor_class(current_user)}" %>
 
   <div class="margin-top">

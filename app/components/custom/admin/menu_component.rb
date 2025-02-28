@@ -5,7 +5,7 @@ class Admin::MenuComponent < ApplicationComponent
   private
 
     def profiles?
-      %w[administrators projekt_managers deficiency_report_managers poll_managers organizations officials moderators valuators managers
+      %w[administrators projekt_managers deficiency_report_managers officing_managers organizations officials moderators valuators managers
          users unregistered_newsletter_subscribers].include?(controller_name)
     end
 
@@ -94,11 +94,11 @@ class Admin::MenuComponent < ApplicationComponent
       ]
     end
 
-    def poll_managers_link
+    def officing_managers_link
       [
-        t("custom.admin.menu.poll_managers"),
-        admin_poll_managers_path,
-        controller_name == "poll_managers"
+        t("custom.admin.menu.officing_managers"),
+        admin_officing_managers_path,
+        controller_name == "officing_managers"
       ]
     end
 
@@ -155,6 +155,14 @@ class Admin::MenuComponent < ApplicationComponent
         admin_matomo_path,
         controller_name == "matomo",
         class: "matomo-link"
+      ]
+    end
+
+    def recipient_groups_link
+      [
+        t("custom.admin.menu.recipient_groups"),
+        admin_recipient_groups_path,
+        controller_name == "recipient_groups"
       ]
     end
 end

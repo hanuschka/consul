@@ -373,6 +373,11 @@ de:
           projekt_managers_tab:
             name: Projektmanager*innen
             main_block_title: Projektmanager*innen
+            permissions:
+              manage: administrieren
+              moderate: moderieren
+              create_on_behalf_of: erstellen im Namen von jemanden
+              get_notifications: benachrichtigt werden
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:

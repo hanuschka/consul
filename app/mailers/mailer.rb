@@ -246,6 +246,28 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def budget_investment_preselected(investment)
+    @investment = investment
+    @author = investment.author
+    @projekt = investment.projekt
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail(to: @email_to, subject: t("mailers.budget_investment_preselected.subject"))
+    end
+  end
+
+  def budget_investment_not_preselected(investment)
+    @investment = investment
+    @projekt = investment.projekt
+    @author = investment.author
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail(to: @email_to, subject: t("mailers.budget_investment_not_preselected.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)

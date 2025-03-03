@@ -28,8 +28,9 @@ module NotificationServices
       def projekt_managers
         return Array.new unless @memo.root_memoable.respond_to?(:projekt_phase)
 
-        User.joins(projekt_manager: :projekts)
-          .where(projekt_managers: { projekts: { id: @memo.root_memoable.projekt_phase.projekt.id }}).to_a
+        User.joins(projekt_manager: :projekt_manager_assignments)
+          .where(projekt_manager_assignments: { projekt_id: @memo.root_memoable.projekt_phase.projekt.id })
+          .where("projekt_manager_assignments.permissions @> ARRAY[?]::text[]", ["get_notifications"]).to_a
       end
 
       def deficiency_report_officers

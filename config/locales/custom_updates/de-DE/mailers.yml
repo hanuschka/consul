@@ -1,14 +1,18 @@
 de:
   mailers:
+    sincerely: Kind regards
+    signature: Your Consul Team
+    shared:
+      sincerely: Mit freundlichen Grüßen
+      signature: Ihr Beteiligungs-Team
     budget_investment_unfeasible:
       subject: "Ihr Vorschlag entspricht leider nicht den Kriterien."
       title: "Ihr Vorschlag entspricht leider nicht den Kriterien."
       hi: "Hallo %{username},"
-      text1: "wir haben Ihren %{proposal_link} geprüft: Leider entspricht dieser nicht den Kriterien."
+      text1: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Leider entspricht dieser nicht den Kriterien."
       text2: "Er wird somit nicht zur nächsten Phase des %{projekt_link} zugelassen."
       reason: "Begründung:"
       text3: "Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Vorschlag einzureichen."
-      proposal_link_text: Vorschlag
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     manual_verification_confirmation:
@@ -24,10 +28,9 @@ de:
       subject: "Herzlichen Glückwunsch, Ihr Vorschlag entspricht den Kriterien."
       title: "Herzlichen Glückwunsch, Ihr Vorschlag entspricht den Kriterien."
       hi: "Hallo %{username},"
-      proposal_link_text: Vorschlag
       projekt_link_1_text: Kriterien
       projekt_link_2_text: Projekts
-      text: "wir haben Ihren %{proposal_link} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
+      text: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
       sincerely: Mit freundlichen Grüßen
     newsletter_subscription_for_existing_user:
       subject: Anmeldung zum Newsletter
@@ -49,26 +52,32 @@ de:
       text4: Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Beitrag zu erstellen, der die Netiquette einhält.
       sincerely: Mit freundlichen Grüßen
     comment:
-      subject: Jemand hat Ihren Beitrag kommentiert.
-      title: Neuer Kommentar
-      hi: Hallo
-      new_comment_by: Es gibt einen neuen Kommentar von <strong>%{commenter}</strong>
+      subject: Ihr Vorschlag wurde kommentiert.
+      title: Ihr Vorschlag wurde kommentiert.
+      hi: "Hallo %{username},"
+      text: Ihr Vorschlag wurde kommentiert. Schauen Sie sich den Kommentar %{comment_link} an. 
+      comment_link_text: hier
       sincerely: Mit freundlichen Grüßen
-      budget/investment:
-        subject: Ihr Vorschlag wurde kommentiert.
-        title: Ihr Vorschlag wurde kommentiert.
-        hi: "Hallo %{username},"
-        text: Ihr Vorschlag wurde kommentiert. Schauen Sie sich den Kommentar %{comment_link} an. 
-        comment_link_text: hier
     reply:
-      subject: Jemand hat auf Ihren Kommentar geantwortet
-      title: Neue Antwort auf Ihren Kommentar
-      hi: Hallo
-      new_reply_by: Es gibt eine neue Antwort von <strong>%{commenter}</strong> auf Ihren Kommentar
+      subject: Es wurde auf Ihren Kommentar geantwortet.
+      title: Es wurde auf Ihren Kommentar geantwortet.
+      hi: Hallo %{username},
+      text: "Ein anderer Nutzer hat auf Ihren Kommentar geantwortet. Sehen Sie sich die Antwort hier an: %{comment_link}"
+      comment_link_text: hier
       sincerely: Mit freundlichen Grüßen
-      budget/investment:
-        subject: Ihr Kommentar wurde beantwortet.
-        title: Ihr Kommentar wurde beantwortet.
-        hi: "Hallo %{username},"
-        text: Ihr Kommentar wurde beantwortet. Schauen Sie sich die Antwort %{comment_link} an.
-        comment_link_text: hier
+    budget_investment_preselected:
+      subject: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
+      title: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
+      hi: "Hallo %{username},"
+      text1: Ihr Vorshlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
+      text2: Das Ergebnis der Prüfung wird zu Beginn der nächsten Phase des %{projekt_link} veröffentlicht.
+      projekt_link_text: Projekts
+      sincerely: Mit freundlichen Grüßen
+    budget_investment_not_preselected:
+      subject: Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft.
+      title: Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft.
+      hi: "Hallo %{username},"
+      text1: Ihr Vorschlag %{proposal_link} hat leider nicht genügend Stimmen erhalten.
+      text2: Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen.
+      projekt_link_text: Projekts
+      sincerely: Mit freundlichen Grüßen

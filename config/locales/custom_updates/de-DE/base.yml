@@ -28,7 +28,7 @@ de:
         adm_email_on_new_topic: Neue Themen
       show:
         user_permission_votes: An Abstimmungen teilnehmen
-        admin_notifications: Admin Benachrichtigungen
+        admin_notifications: Admin- & Projektmanager Benachrichtigungen
         user_groups_title: Individuelle Gruppen
         hard_user_groups_title: Starke Gruppen
         soft_user_groups_title: Schwache Gruppen

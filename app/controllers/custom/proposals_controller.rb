@@ -107,7 +107,7 @@ class ProposalsController
   def update
     custom_proposal_params = proposal_params
 
-    if proposal_params["image_attributes"]["cached_attachment"].blank? && resource.image.nil?
+    if proposal_params["image_attributes"].present? && proposal_params["image_attributes"]["cached_attachment"].blank? && resource.image.nil?
       custom_proposal_params = proposal_params.except("image_attributes")
     end
 
@@ -124,7 +124,7 @@ class ProposalsController
   def create
     @proposal = Proposal.new(proposal_params.merge(author: current_user))
 
-    if proposal_params["image_attributes"]["cached_attachment"].blank?
+    if proposal_params["image_attributes"].present? && proposal_params["image_attributes"]["cached_attachment"].blank?
       @proposal.image = nil
     end
 

@@ -1,48 +1,25 @@
 <td style="padding-bottom: 20px; padding-left: 10px;">
+  <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
+    <%= t("mailers.comment.title") %>
+  </h1>
 
-  <% if @commentable.class.name.in?(["Budget::Investment"]) %>
-    <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
-      <%= t("mailers.comment.#{@commentable.model_name.i18n_key}.title") %>
-    </h1>
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("mailers.comment.hi", username: @commentable.author.username) %>
+  </p>
 
-    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-      <%= t("mailers.comment.#{@commentable.model_name.i18n_key}.hi", username: @commentable.author.username) %>
-    </p>
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= sanitize(
+      t("mailers.comment.text",
+        comment_link: link_to(t("mailers.comment.comment_link_text"),
+                              comment_url(@comment))
+       ),
+       attributes: %w[href]
+    ) %>
+  </p>
 
-    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-      <%= sanitize(
-        t("mailers.comment.#{@commentable.model_name.i18n_key}.text",
-          comment_link: link_to(t("mailers.comment.#{@commentable.model_name.i18n_key}.comment_link_text"),
-                                comment_url(@comment))
-         ),
-         attributes: %w[href]
-      ) %>
-    </p>
-
-    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-      <%= t("mailers.comment.sincerely") %>
-    </p>
-
-  <% else %>
-    <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
-      <%= t("mailers.comment.title") %>
-    </h1>
-
-    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-      <%= t("mailers.comment.hi") %> <strong><%= @commentable.author.name %></strong>,
-    </p>
-
-    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-      <%= sanitize(t("mailers.comment.new_comment_by", commenter: @comment.author.name)) %>
-      <%= link_to @commentable.title, commentable_url(@comment), style: "color: #2895F1; text-decoration:none;" %>
-    </p>
-
-    <p style="border-left: 2px solid #DEE0E3;font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-style: italic;font-weight: normal;line-height: 24px;margin-left: 20px;padding: 10px;">
-      <%= sanitize_and_auto_link @comment.body %>
-    </p>
-
-    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 12px;font-weight: normal;line-height: 20px;">
-      <%= t("mailers.config.manage_email_subscriptions") %> <%= link_to t("account.show.title"), account_url, style: "color: #2895F1; text-decoration:none;" %>
-    </p>
-  <% end %>
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("mailers.comment.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
+  </p>
 </td>

@@ -15,7 +15,7 @@ module Budgets
     end
 
     def create
-      if investment_params["image_attributes"]["cached_attachment"].blank?
+      if investment_params["image_attributes"].present? && investment_params["image_attributes"]["cached_attachment"].blank?
         @investment.image = nil
       end
 

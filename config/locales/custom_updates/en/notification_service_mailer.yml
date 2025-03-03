@@ -28,6 +28,7 @@ en:
         p1: New Debate has just been added to Consul.
       new_comment:
         subject: New Comment added to Consul
+        title: New Comment added to Consul
         hi: Hi %{username},
         p1: New comment has just been added to Consul.
       new_deficiency_report:
@@ -49,9 +50,12 @@ en:
         link: Projekt arguments
         p1: Projekt arguments were just added to Consul
       new_budget_investment:
-        subject: New Investment proposal added to Consul
-        hi: Hi %{username},
-        p1: New Investment proposal has just been added to Consul.
+        subject: A new proposal has been submitted!
+        title: A new proposal has been submitted!
+        hi: Hello %{username},
+        p1: "a new proposal has been submitted in %{projekt_link}. Check it out here: %{proposal_link}"
+        projekt_link_text: Project
+        sincerely: Kind regards,
       new_projekt_notification:
         subject: New projekt notification added to Consul
         hi: Hi %{username},

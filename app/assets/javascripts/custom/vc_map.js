@@ -11,7 +11,7 @@
       // init App and load a config file
       var vcsApp = new window.vcs.VcsApp();
       vcsApp.maps.setTarget(element);
-      App.VCMap.loadModule(vcsApp, 'https://new.virtualcitymap.de/map.config.json');
+      App.VCMap.loadModule(vcsApp, 'https://siegburg.virtualcitymap.de/app.config.json');
 
       // custom map options
       vcsApp.customMapOptions = {}

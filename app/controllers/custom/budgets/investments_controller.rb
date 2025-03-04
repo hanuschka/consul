@@ -15,10 +15,6 @@ module Budgets
     end
 
     def create
-      if investment_params["image_attributes"].present? && investment_params["image_attributes"]["cached_attachment"].blank?
-        @investment.image = nil
-      end
-
       @investment.author = current_user
       @investment.heading = @budget.heading
 
@@ -33,13 +29,7 @@ module Budgets
     end
 
     def update
-      custom_investment_params = investment_params
-
-      if investment_params["image_attributes"]["cached_attachment"].blank? && @investment.image.nil?
-        custom_investment_params = investment_params.except("image_attributes")
-      end
-
-      if @investment.update(custom_investment_params)
+      if @investment.update(investment_params)
         redirect_to budget_investment_path(@budget, @investment),
                     notice: t("flash.actions.update.budget_investment")
       else

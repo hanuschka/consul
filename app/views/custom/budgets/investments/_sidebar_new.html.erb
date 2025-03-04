@@ -28,8 +28,10 @@
   <% end %>
 
   <% if params[:section] == "stats" && can?(:read_stats, @budget) %>
-    <%= render Shared::SidebarCardComponent.new(title: "Filter", icon_name: "filter") do |c| %>
-      <%= render Budgets::PhaseStats::FiltersComponent.new %>
+    <% if @budget.selecting_or_later? %>
+      <%= render Shared::SidebarCardComponent.new(title: "Filter", icon_name: "filter") do |c| %>
+        <%= render Budgets::PhaseStats::FiltersComponent.new(@budget) %>
+      <% end %>
     <% end %>
 
     <%= render Sidebar::ExportListComponent.new(

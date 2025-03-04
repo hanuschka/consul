@@ -28,9 +28,10 @@ de:
         hi: Hallo %{username},
         p1: es ist ein neuer Diskussionsbeitrag auf Consul erstellt worden.
       new_comment:
-        subject: Neuer Kommentar auf Consul
+        subject: Neuer Kommentar auf der Beteiligungsplattform.
+        title: Neuer Kommentar auf der Beteiligungsplattform.
         hi: Hallo %{username},
-        p1: es ist ein neuer Kommentar auf Consul veröffentlicht worden.
+        p1: es ist ein neuer Kommentar auf der Beteiligungsplattform veröffentlicht worden.
       new_deficiency_report:
         subject: Neue Mangelmeldung %{identifier}
         hi: Hallo %{username},
@@ -55,9 +56,12 @@ de:
         link: Pro und Contra Stimmen
         p1: es sind neue Pro und Contra Stimmen auf Consul eingegangen.
       new_budget_investment:
-        subject: Neuer Vorschlag auf Consul
+        subject: Ein neuer Vorschlag wurde eingereicht!
+        title: Ein neuer Vorschlag wurde eingereicht!
         hi: Hallo %{username},
-        p1: es ist ein neuer Vorschlag auf Consul eingegangen.
+        p1: "es wurde ein neuer Vorschlag im %{projekt_link} eingereicht. Sehen Sie sich ihn hier an: %{proposal_link}"
+        projekt_link_text: Projekt
+        sincerely: Mit freundlichen Grüßen
       new_projekt_notification:
         subject: Neue Projektbenachrichtigung auf Consul
         hi: Hallo %{username},

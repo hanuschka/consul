@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_02_27_132942) do
+ActiveRecord::Schema.define(version: 2025_03_05_090222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -783,6 +783,7 @@ ActiveRecord::Schema.define(version: 2025_02_27_132942) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "notice_text", default: ""
+    t.boolean "archive_reports", default: false
   end
 
   create_table "deficiency_report_translations", force: :cascade do |t|
@@ -823,6 +824,8 @@ ActiveRecord::Schema.define(version: 2025_02_27_132942) do
     t.boolean "admin_accepted", default: false
     t.string "responsible_type"
     t.bigint "responsible_id"
+    t.datetime "status_changed_at"
+    t.datetime "archived_at"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"

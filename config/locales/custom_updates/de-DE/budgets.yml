@@ -40,6 +40,7 @@ de:
           orders:
             random: Zufällig
             ballot_line_weight: Aktuelle Stimmenverteilung
+            total_votes: Aktuelles Ranking
             newest: Neueste zuerst
             comments_count: Meist kommentiert
           filters:
@@ -121,7 +122,7 @@ de:
         statuses:
           phases:
             accepting: Der Vorschlag wurde erfolgreich eingereicht.
-            reviewing: Der Vorschlag wird zur Zeit intern auf seine Durchführbarkeit überprüft.
+            reviewing: Der Vorschlag wird geprüft.
             reviewing_ballots: Das Ergebniss der Abstimmung wird kalkuliert.
             valuating: Der Vorschlag wird fachlich geprüft.
       results:

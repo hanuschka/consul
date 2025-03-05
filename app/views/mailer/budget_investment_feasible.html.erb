@@ -10,7 +10,7 @@
   <p style="<%= css_for_mailer_text %>">
     <%= sanitize(
       t("mailers.budget_investment_feasible.text",
-        proposal_link: link_to(t("mailers.budget_investment_feasible.proposal_link_text"),
+        proposal_link: link_to(@investment.title,
                                budget_investment_url(@investment.budget, @investment)),
         projekt_link_1: link_to(t("mailers.budget_investment_feasible.projekt_link_1_text"),
                                 page_url(@projekt.page.slug)),
@@ -23,5 +23,7 @@
 
   <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.budget_investment_feasible.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
   </p>
 </td>

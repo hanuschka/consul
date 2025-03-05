@@ -67,6 +67,10 @@ every 1.day, at: "3:00 am", roles: [:cron] do
   rake "maintenance:reverify_users"
 end
 
+every 1.day, at: "3:30 am", roles: [:cron] do
+  rake "rake deficiency_reports:archive_closed"
+end
+
 every 1.day, at: "6:00 am", roles: [:cron] do
   rake "reminders:overdue_deficiency_reports"
   rake "reminders:not_assigned_deficiency_reports"

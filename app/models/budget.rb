@@ -53,6 +53,7 @@ class Budget < ApplicationRecord
   scope :reviewing, -> { select(&:reviewing?) }
   scope :selecting, -> { select(&:selecting?) }
   scope :valuating, -> { select(&:valuating?) }
+  scope :accepting_or_later, -> { select(&:accepting_or_later?) }
   scope :valuating_or_later, -> { select(&:valuating_or_later?) }
   scope :publishing_prices, -> { select(&:publishing_prices?) }
   scope :balloting, -> { select(&:balloting?) }
@@ -168,6 +169,14 @@ class Budget < ApplicationRecord
     Budget::Phase::PUBLISHED_PRICES_PHASES.include?(phase)
   end
 
+  def accepting_or_later?
+    current_phase&.accepting_or_later?
+  end
+
+  def selecting_or_later?
+    current_phase&.selecting_or_later?
+  end
+
   def valuating_or_later?
     current_phase&.valuating_or_later?
   end
@@ -263,10 +272,17 @@ class Budget < ApplicationRecord
   def update_preselected_investments
     investments.update_all(preselected: false)
 
-    preselected_investments = investments.sort_by_total_votes.limit(max_preselected)
+    preselected_investments_ids = investments.sort_by_total_votes.limit(max_preselected).ids
+    preselected_investments = investments.where(id: preselected_investments_ids)
+
     preselected_investments.update_all(preselected: true)
-    preselected_investments.each do |investment|
-      Mailer.budget_investment_preselected(investment).deliver_later
+
+    investments.each do |investment|
+      if investment.preselected?
+        Mailer.budget_investment_preselected(investment).deliver_later
+      else
+        Mailer.budget_investment_not_preselected(investment).deliver_later
+      end
     end
   end
 

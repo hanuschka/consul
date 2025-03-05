@@ -366,6 +366,12 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
   end
 
+  def ai_settings
+    # authorize!(:ai_settings, @projekt_phase)
+
+    render "custom/admin/projekt_phases/ai_settings"
+  end
+
   # def frame_phases_restrictions
   #   @projekt = Projekt.find(params[:projekt_id])
   #   authorize!(:edit, @projekt)

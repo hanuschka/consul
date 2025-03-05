@@ -43,7 +43,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    setting_pages + %w[projekt_labels sentiments map]
+    setting_pages + %w[projekt_labels sentiments map ai_settings]
   end
 
   def safe_to_destroy?

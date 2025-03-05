@@ -31,6 +31,7 @@ namespace :admin do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      get :ai_settings
     end
 
     resources :formular, only: [] do

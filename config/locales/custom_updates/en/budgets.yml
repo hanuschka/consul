@@ -40,6 +40,7 @@ en:
           orders:
             random: Random
             ballot_line_weight: Votes
+            total_votes: Current ranking
             newest: Newest
           filters:
             budget:

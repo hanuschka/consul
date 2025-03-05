@@ -160,6 +160,7 @@ de:
         voting_style: "Abstimmungsstil"
         voting_style_knapsack: "Knapsack (Mehrere Stimmen bis Budget aufgebraucht ist)"
         voting_style_approval: "Zustimmung (Eine Stimme)"
+        max_preselected: Bestenliste (optional)
       budget/translation:
         main_link_text: "Linktext"
         main_link_url: "Der Link führt Sie zu (Link hinzufügen)"

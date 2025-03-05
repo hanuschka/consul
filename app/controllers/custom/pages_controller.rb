@@ -227,8 +227,8 @@ class PagesController < ApplicationController
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
-    @valid_orders = %w[random supports ballots ballot_line_weight newest comments_count]
-    @valid_orders.delete("supports")
+    @valid_orders = %w[random total_votes ballots ballot_line_weight newest comments_count]
+    @valid_orders.delete("total_votes") unless @budget.current_phase.kind == "selecting"
     @valid_orders.delete("ballots")
     @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
@@ -244,7 +244,11 @@ class PagesController < ApplicationController
     if params[:section] == "results" && can?(:read_results, @budget)
       @investments = Budget::Result.new(@budget, @budget.heading).investments
     elsif params[:section] == "stats" && can?(:read_stats, @budget)
-      if params["stats_section"].in? ["accepting", "selecting", "balloting"]
+      params["stats_section"] ||= "accepting" if @budget.current_phase.kind.in? %w[accepting reviewing]
+      params["stats_section"] ||= "selecting" if @budget.current_phase.kind.in? %w[selecting valuating publishing_prices]
+      params["stats_section"] ||= "balloting" if @budget.current_phase.kind.in? %w[balloting]
+
+      if params["stats_section"].in? %w[accepting reviewing selecting valuating publishing_prices balloting]
         @stats = Budget::PhaseStats.new(@budget, params["stats_section"])
       else
         @stats = Budget::Stats.new(@budget)

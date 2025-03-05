@@ -84,6 +84,7 @@ module AdminActions::Budgets
                           :show_results_after_first_vote,
                           :show_percentage_values_only,
                           :hide_money,
+                          :max_preselected,
                           :max_number_of_winners,
                           heading_attributes: [:id, :price, :population, :max_ballot_lines],
                           administrator_ids: [],
@@ -96,7 +97,4 @@ module AdminActions::Budgets
     def load_budget
       @budget = Budget.find_by_slug_or_id! params[:id]
     end
-
-
-
 end

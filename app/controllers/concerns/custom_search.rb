@@ -7,12 +7,19 @@ module CustomSearch
     @filtered_resources = resources
     @filtered_params = params.reject { |_, v| v.blank? }
 
+    apply_id_search
     apply_search
     apply_address_search
     apply_date_filters
     apply_regular_filters
 
     @filtered_resources
+  end
+
+  def apply_id_search
+    return unless @filtered_params[:id_search].present?
+
+    @filtered_resources = @filtered_resources.where(id: @filtered_params[:id_search])
   end
 
   def apply_search

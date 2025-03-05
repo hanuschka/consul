@@ -57,7 +57,7 @@ module ApplicationHelper
           collection.offset_value + page_size
         end
 
-      t('helpers.page_entries_info.more_pages.display_entries', entry_name: entry_name, first: from, last: to, total: collection.total_count)
+      t('helpers.page_entries_info.more_pages.display_entries', entry_name: entry_name, total: collection.total_count)
     end.html_safe
   end
 end

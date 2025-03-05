@@ -4,11 +4,10 @@ en:
       subject: "Unfortunately, your proposal does not meet the criteria."
       title: "Unfortunately, your proposal does not meet the criteria."
       hi: "Hello %{username},"
-      text1: "We have checked your %{proposal_link}: Unfortunately, it does not meet the criteria."
+      text1: "We have checked your proposal %{proposal_link}: Unfortunately, it does not meet the criteria."
       text2: "It will therefore not be admitted to the next phase of the %{project_link}."
       reason: "Reason:"
       text3: "If you have any questions, please contact us. You are welcome to submit a new proposal."
-      proposal_link_text: Proposal
       project_link_text: Project
       sincerely: "Sincerely"
     manual_verification_confirmation:
@@ -22,10 +21,9 @@ en:
       subject: "Congratulations, your proposal meets the criteria."
       title: "Congratulations, your proposal meets the criteria."
       hi: "Hello %{username},"
-      proposal_link_text: proposal
       project_link_1_text: criteria
       project_link_2_text: project
-      text: "We have reviewed your %{proposal_link}: your proposal meets %{project_link_1}. This means it will be accepted for the next phase of %{project_link_2}."
+      text: "We have reviewed your proposal %{proposal_link}: your proposal meets %{project_link_1}. This means it will be accepted for the next phase of %{project_link_2}."
       sincerely: Best regards
     newsletter_subscription_for_existing_user:
       subject: Subscribe to the newsletter
@@ -47,26 +45,32 @@ en:
       text4: If you have any questions, please contact ustext. You are cordially invited to create a new post that complies with the netiquette.
       sincerely: Kind regards
     comment:
-      subject: Someone has commented on your proposal
-      title: New comment
-      hi: Hello
-      new_comment_by: There is a new comment from <strong>%{commenter}</strong>
+      subject: Your	proposal  has been  commented on.
+      title: Your proposal has been commented on.
+      hi: "Hello %{username},"
+      text: Your proposal has been commented on. Check out the comment %{comment_link}.
+      comment_link_text: here
       sincerely: Kind regards
-      budget/investment:
-        subject: Your proposal has been commented on.
-        title: Your proposal has been commented on.
-        hi: "Hi %{username},"
-        text: Your proposal has been commented on. Check out the comment %{comment_link}.
-        comment_link_text: here
     reply:
-      subject: New reply to your comment
-      title: New reply to your comment
-      hi: Hello
-      new_reply_by: There is a new reply from <strong>%{commenter}</strong> to your comment
+      subject: A reply has been made to your comment.
+      title: A reply has been made to your comment.
+      hi: Hello %{username},
+      text: "Another user has replied to your comment. Check out the reply here: %{comment_link}"
+      comment_link_text: here
       sincerely: Kind regards
-      budget/investment:
-        subject: Your comment has been answered.
-        title: Your comment has been answered.
-        hi: "Hello %{username},"
-        text: Your comment has been answered. Check out the answer %{comment_link}.
-        comment_link_text: here
+    budget_investment_preselected:
+      subject: Congratulations, your proposal is going to the next round!
+      title: Congratulations, your proposal is going to the next round!
+      hi: "Hello %{username},"
+      text1: Your proposal %{proposal_link} has received enough votes and will now be reviewed.
+      text2: The result of the review will be published at the beginning of the next phase of the %{project_link}.
+      projekt_link_text: Project
+      sincerely: Kind regards
+    budget_investment_not_preselected:
+      subject: Unfortunately, your proposal did not make it to the next round.
+      title: Unfortunately, your proposal did not make it to the next round.
+      hi: "Hello %{username},"
+      text1: Your proposal %{proposal_link} has unfortunately not received enough votes.
+      text2: It will therefore not be admitted to the next phase of the %{project_link}.
+      projekt_link_text: Project
+      sincerely: Kind regards

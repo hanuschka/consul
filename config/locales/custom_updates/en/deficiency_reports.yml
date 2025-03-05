@@ -82,6 +82,10 @@ en:
           statuses:
             all_statuses: All Reports
             title: Status
+          archived_status:
+            title: Archive
+            not_archived: Not archived
+            only_archived: Archived
           my_posts:
             title: My contributions
         start_deficiency_report: Report a deficiency

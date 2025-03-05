@@ -37,7 +37,7 @@ module MailerHelper
   end
 
   def css_for_mailer_heading
-    mailer_font_family + "font-size: 48px;"
+    mailer_font_family
   end
 
   def css_for_mailer_subheading

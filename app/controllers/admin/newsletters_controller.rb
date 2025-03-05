@@ -7,6 +7,7 @@ class Admin::NewslettersController < Admin::BaseController
 
   def show
     @newsletter = Newsletter.find(params[:id])
+    @recipients_count = @newsletter.list_of_recipient_emails&.count || 0
   end
 
   def new
@@ -66,6 +67,6 @@ class Admin::NewslettersController < Admin::BaseController
     end
 
     def allowed_params
-      [:subject, :segment_recipient, :from, :body, :title, :subtitle, :greeting]
+      [:subject, :recipient_group_id, :from, :body, :title, :subtitle, :greeting]
     end
 end

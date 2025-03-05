@@ -17,7 +17,7 @@ module NotificationServices
     private
 
       def users_to_notify
-        [administrators, projekt_managers, deficiency_report_managers, deficiency_report_officers]
+        [administrators, projekt_managers, deficiency_report_officers]
           .flatten.uniq(&:id).reject { |user| user.id == @memo.user_id }
       end
 
@@ -28,14 +28,9 @@ module NotificationServices
       def projekt_managers
         return Array.new unless @memo.root_memoable.respond_to?(:projekt_phase)
 
-        User.joins(projekt_manager: :projekts)
-          .where(projekt_managers: { projekts: { id: @memo.root_memoable.projekt_phase.projekt.id }}).to_a
-      end
-
-      def deficiency_report_managers
-        return Array.new unless @memo.root_memoable.is_a?(DeficiencyReport)
-
-        User.joins(:deficiency_report_manager)
+        User.joins(projekt_manager: :projekt_manager_assignments)
+          .where(projekt_manager_assignments: { projekt_id: @memo.root_memoable.projekt_phase.projekt.id })
+          .where("projekt_manager_assignments.permissions @> ARRAY[?]::text[]", ["get_notifications"]).to_a
       end
 
       def deficiency_report_officers

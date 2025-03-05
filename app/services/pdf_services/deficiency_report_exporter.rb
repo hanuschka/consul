@@ -31,6 +31,13 @@ module PdfServices
 
         pdf.move_down 10
 
+        if @deficiency_report&.map_location&.screenshot.present?
+          image_data = StringIO.open(@deficiency_report.map_location.screenshot.download)
+          pdf.image(image_data, width: 500)
+        end
+
+        pdf.move_down 10
+
         if @deficiency_report.image.present?
           image_data = StringIO.open(@deficiency_report.image.attachment.download)
           pdf.image(image_data, width: 500)

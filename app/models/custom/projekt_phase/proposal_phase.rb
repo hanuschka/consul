@@ -43,7 +43,18 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
+<<<<<<< HEAD
     setting_pages + %w[projekt_labels sentiments map ai_settings]
+=======
+    setting_pages + %w[
+      projekt_labels sentiments map
+      officing_managers
+    ]
+  end
+
+  def embedded_admin_nav_bar_items
+    admin_nav_bar_items.excluding(%w[ officing_managers])
+>>>>>>> new-connection
   end
 
   def safe_to_destroy?

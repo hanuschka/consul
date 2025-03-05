@@ -1,4 +1,5 @@
 class DeficiencyReportsController < ApplicationController
+  include FeatureFlags
   include Translatable
   include MapLocationAttributes
   include ImageAttributes
@@ -10,6 +11,9 @@ class DeficiencyReportsController < ApplicationController
   before_action :load_categories
   before_action :set_view, only: :index
   before_action :destroy_map_location_association, only: :update
+
+  feature_flag :deficiency_reports
+
   load_and_authorize_resource
 
   has_orders ->(c) { DeficiencyReport.deficiency_report_orders }, only: :index
@@ -35,6 +39,7 @@ class DeficiencyReportsController < ApplicationController
     filter_by_categories if @selected_categories_ids.present?
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
+    filter_by_archived_status
     filter_by_my_posts
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
@@ -175,6 +180,10 @@ class DeficiencyReportsController < ApplicationController
 
   def filter_by_selected_status
     @deficiency_reports = @deficiency_reports.where(status: @selected_status_id)
+  end
+
+  def filter_by_archived_status
+    @deficiency_reports = params[:dr_archived_status].present? ? @deficiency_reports.archived : @deficiency_reports.not_archived
   end
 
   def filter_by_selected_officer

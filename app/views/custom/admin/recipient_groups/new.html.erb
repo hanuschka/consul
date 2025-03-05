@@ -1,0 +1,3 @@
+<div class="recipient-group-constructor-options-blocks">
+  <%= render "options_for_kind", options_for_kind: RecipientGroup.base_options_for_kind.map { |k| [t("custom.admin.recipient_groups.new.base_options_for_kind.#{k}"), k] }, label_key: "label_for_general" %>
+</div>

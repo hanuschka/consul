@@ -1,10 +1,11 @@
 class OfficingManagers::Polls::Questions::AnswersComponent < ApplicationComponent
-  attr_reader :question, :responding_user
+  attr_reader :poll, :question, :offline_user
   delegate :answer_with_description?, to: :helpers
 
   def initialize(question, user, answer_updated: nil, open_answer_updated: nil)
     @question = question
-    @responding_user = user
+    @poll = question.poll
+    @offline_user = user
     @answer_updated = answer_updated
     @open_answer_updated = open_answer_updated
   end
@@ -27,20 +28,20 @@ class OfficingManagers::Polls::Questions::AnswersComponent < ApplicationComponen
   end
 
   def available_vote_weight(question_answer)
-    return 0 unless responding_user.present?
+    return 0 unless offline_user.present?
 
     if user_answer(question_answer).present?
       question.max_votes -
-        question.answers.where(author_id: responding_user.id).sum(:answer_weight) +
+        question.answers.where(author_id: offline_user.id).sum(:answer_weight) +
         user_answer(question_answer).answer_weight
     else
       question.max_votes -
-        question.answers.where(author_id: responding_user.id).sum(:answer_weight)
+        question.answers.where(author_id: offline_user.id).sum(:answer_weight)
     end
   end
 
   def disable_answer?(question_answer)
-    return false unless responding_user.present?
+    return false unless offline_user.present?
 
     (question.votation_type&.multiple? && user_answers.count == question.max_votes) ||
       (question.votation_type&.multiple_with_weight? && available_vote_weight(question_answer) == 0)
@@ -49,6 +50,6 @@ class OfficingManagers::Polls::Questions::AnswersComponent < ApplicationComponen
   private
 
     def user_answers
-      @user_answers ||= question.answers.by_author(responding_user)
+      @user_answers ||= question.answers.by_author(offline_user)
     end
 end

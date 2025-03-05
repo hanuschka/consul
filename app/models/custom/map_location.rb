@@ -7,6 +7,8 @@ class MapLocation < ApplicationRecord
   belongs_to :registered_address_district, class_name: "RegisteredAddress::District",
     foreign_key: :registered_address_district_id, touch: true, inverse_of: :map_location
 
+  has_one_attached :screenshot
+
   before_save :ensure_shape_is_json
   after_save :update_geocoder_data
   # before_save :set_pin_styles

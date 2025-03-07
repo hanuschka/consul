@@ -2,20 +2,18 @@
   <div class="row expanded full-width">
     <div class="small-12 medium-4 columns">
       <div>
-        <%= label_tag :search, "Suche nach Titel oder ID" %>
+        <%= label_tag :id_search, "Suche nach ID" %>
+        <%= text_field_tag :id_search, params[:id_search], autocomplete: "off" %>
+      </div>
+
+      <div>
+        <%= label_tag :search, "Suche nach Titel" %>
         <%= text_field_tag :search, params[:search], autocomplete: "off" %>
       </div>
 
       <div>
         <%= label_tag :address_search, t("custom.shared.address_search") %>
         <%= text_field_tag :address_search, params[:address_search], autocomplete: "off" %>
-      </div>
-
-      <div>
-        <%= label_tag :admin_accepted, t("custom.admin.deficiency_reports.index.admin_accepted") %>
-        <%= select_tag :admin_accepted,
-          options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
-          prompt: t("custom.shared.select") %>
       </div>
     </div>
 
@@ -54,6 +52,13 @@
         <%= date_field_tag :date_min, params[:date_min], class: "datepicker", autocomplete: "off" %>
         <%= label_tag :date_max, t("shared.advanced_search.to") %>
         <%= date_field_tag :date_max, params[:date_max], class: "datepicker", autocomplete: "off" %>
+      </div>
+
+      <div>
+        <%= label_tag :admin_accepted, t("custom.admin.deficiency_reports.index.admin_accepted") %>
+        <%= select_tag :admin_accepted,
+          options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
+          prompt: t("custom.shared.select") %>
       </div>
     </div>
   </div>

@@ -60,7 +60,7 @@ module ProjektAdminActions
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params)
+    map_location.update!(map_location_params.except(:id))
 
     redirect_to namespace_projekt_path(action: "edit", anchor: "tab-projekt-map"),
       notice: t("admin.settings.index.map.flash.update")

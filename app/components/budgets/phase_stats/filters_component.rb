@@ -1,14 +1,20 @@
 class Budgets::PhaseStats::FiltersComponent < ApplicationComponent
-  delegate :valid_filters, :current_filter, :link_list, :current_path_with_query_params, to: :helpers
+  delegate :link_list, to: :helpers
 
-  def render?
-    valid_filters&.any?
+  def initialize(budget)
+    @budget = budget
   end
 
   private
 
     def stat_phases
-      %w[accepting selecting balloting finished]
+      stat_filters = []
+      stat_filters << "accepting" if @budget.selecting_or_later?
+      stat_filters << "selecting" if @budget.selecting_or_later?
+      stat_filters << "balloting" if @budget.balloting_or_later?
+      stat_filters << "finished" if @budget.balloting_finished?
+
+      stat_filters
     end
 
     def filters
@@ -16,7 +22,7 @@ class Budgets::PhaseStats::FiltersComponent < ApplicationComponent
         [
           t("custom.budgets.investments.index.stat_phases.#{phase}"),
           url_to_footer_tab(section: "stats", remote: true, extras: { stats_section: phase }),
-          params[:stats_section] == phase,
+          params[:stats_section] == phase || params[:stats_section].nil? && phase == "finished",
           remote: true
         ]
       end

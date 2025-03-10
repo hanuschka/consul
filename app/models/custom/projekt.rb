@@ -754,7 +754,12 @@ class Projekt < ApplicationRecord
           projekt_id: id
         )
       else
-        map_location = (parent || Projekt.overview_page).map_location.dup
+        map_location = parent&.map_location&.dup || MapLocation.create!(
+          latitude: Setting["map.latitude"],
+          longitude: Setting["map.longitude"],
+          zoom: Setting["map.zoom"]
+        )
+
         map_location.projekt_id = id
         map_location.save!
 

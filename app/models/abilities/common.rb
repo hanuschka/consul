@@ -117,9 +117,11 @@ module Abilities
         can :vote, Legislation::Proposal
         can :create, Legislation::Answer
 
-        can :create, DirectMessage
-        can :show, DirectMessage, sender_id: user.id
+        # can :create, DirectMessage
+        # can :show, DirectMessage, sender_id: user.id
       end
+      can :create, DirectMessage
+      can :show, DirectMessage, sender_id: user.id
 
       can [:create, :show, :edit, :update, :destroy], ProposalNotification, proposal: { author_id: user.id }
 

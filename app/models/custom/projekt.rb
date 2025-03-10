@@ -664,6 +664,12 @@ class Projekt < ApplicationRecord
     #   .regular
   end
 
+  def any_phase_subscribers_ids
+    User.joins(:projekt_phase_subscriptions)
+      .where(projekt_phase_subscriptions: { projekt_phase_id: projekt_phases.ids })
+      .ids.uniq
+  end
+
   private
 
     def create_corresponding_page

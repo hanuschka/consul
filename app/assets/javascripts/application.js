@@ -216,6 +216,7 @@ var initialize_modules = function() {
   App.Projekts.initialize();
   App.ResponsiveMenu.initialize();
   App.MapScreenshot.initialize();
+  App.RecipientGroups.initialize();
 
   if ($("#projekt-selector-fields").length) {
     App.ProjektSelector.initialize();

@@ -237,11 +237,11 @@ de:
             user_roles: Nutzerrollen
           label_for_general: Typ der Adressatengruppe
           label_for_projekt: Projekt
-          label_for_projekt_phase: Projektphase
+          label_for_projekt_phase: Projektphase(n)
           label_for_user_role: Nutzerrolle
           name: Name
           select_options:
-            projekt_related: Projektbezogen
+            projekt_related: Alle Projektphasen
           access_methods:
             all_user_ids: Alle Nutzer*innen
             administrators_ids: Administrator*innen

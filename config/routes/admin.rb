@@ -434,6 +434,14 @@ namespace :admin do
   resources :geozones, only: [:index, :new, :create, :edit, :update, :destroy]
 
   namespace :site_customization do
+    resources :landing_pages, except: [:show] do
+      member do
+        get :edit_content_cards
+      end
+      collection do
+        post :update_order
+      end
+    end
     resources :pages, except: [:show] do
       resources :cards, except: [:show], as: :widget_cards
     end

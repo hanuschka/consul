@@ -369,7 +369,7 @@ de:
         locale: Sprache
       site_customization/page/translation:
         title: Titel
-        subtitle: Untertitel und Projektbeschreibung
+        subtitle: Untertitel
         content: Inhalt
       site_customization/image:
         name: Name
@@ -378,6 +378,11 @@ de:
         name: Name
         locale: Sprache
         body: Inhalt
+      site_customization/page:
+        landing_show_in_top_nav: "Themen/Gebietsseite in der Hauptnavigation anzeigen"
+        landing_hide_all_top_nav_links: "Sämtliche Links in der Top Navigation auf dieser Themen/Gebietsseite ausblenden"
+        landing_hide_title_and_subtitle: "Informationsbox mit Titel und Untertitel ausblenden"
+        landing_mobile_header_image: "Mobile Header Bild"
       tag:
         name: "Geben Sie den Namen des Tags ein"
       topic:

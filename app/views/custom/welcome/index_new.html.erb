@@ -11,7 +11,11 @@
               social_url: root_url %>
 <% end %>
 
-<%= render "header", header: @header %>
+<%= render "header",
+  header_image_attachment: @header&.image&.attachment,
+  mobile_header_image_attachment: @mobile_header&.image&.attachment
+%>
+
 <main class="welcome-page">
   <div class="d-flex flex-layout">
     <div class="main-column">

@@ -1101,6 +1101,15 @@ ActiveRecord::Schema.define(version: 2025_03_05_090222) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "landing_pages_projekts", force: :cascade do |t|
+    t.bigint "site_customization_page_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "site_customization_page_id"], name: "index_projekts_scp"
+    t.index ["projekt_id"], name: "index_landing_pages_projekts_on_projekt_id"
+    t.index ["site_customization_page_id", "projekt_id"], name: "index_scp_projekts", unique: true
+    t.index ["site_customization_page_id"], name: "index_landing_pages_projekts_on_site_customization_page_id"
+  end
+
   create_table "legislation_annotations", id: :serial, force: :cascade do |t|
     t.string "quote"
     t.text "ranges"
@@ -2444,6 +2453,8 @@ ActiveRecord::Schema.define(version: 2025_03_05_090222) do
     t.string "kind"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "landing_page_id"
+    t.index ["landing_page_id"], name: "index_site_customization_content_cards_on_landing_page_id"
   end
 
   create_table "site_customization_images", id: :serial, force: :cascade do |t|
@@ -2479,6 +2490,12 @@ ActiveRecord::Schema.define(version: 2025_03_05_090222) do
     t.datetime "updated_at", null: false
     t.string "locale"
     t.bigint "projekt_id"
+    t.boolean "landing_show_in_top_nav", default: false
+    t.boolean "landing_hide_all_top_nav_links", default: false
+    t.boolean "landing_hide_title_and_subtitle", default: false
+    t.boolean "landing", default: false
+    t.integer "landing_nav_position"
+    t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
 

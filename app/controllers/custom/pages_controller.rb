@@ -17,6 +17,14 @@ class PagesController < ApplicationController
   def show
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
+    if @custom_page.landing?
+      @content_cards =
+        SiteCustomization::ContentCard
+          .for_landing_page(@custom_page.id)
+          .active
+          .to_a
+    end
+
     set_resource_instance
     custom_page_name = Setting.new_design_enabled? ? :custom_page_new : :custom_page
 

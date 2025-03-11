@@ -1,4 +1,4 @@
-class ContentCard::ExpiredProjektsComponent < ApplicationComponent
+class ContentCard::CurrentProjektsComponent < ApplicationComponent
   delegate :current_user, to: :helpers
 
   def initialize(content_card, custom_page: nil)
@@ -13,16 +13,16 @@ class ContentCard::ExpiredProjektsComponent < ApplicationComponent
   end
 
   def render?
-    expired_projekts.any?
+    current_projekts.any?
   end
 
   private
 
-    def expired_projekts
-      @expired_projekts =
+    def current_projekts
+      @current_projekts =
         @projekts
           .sort_by_order_number
-          .index_order_expired
+          .index_order_underway
           .select { |p| p.visible_for?(current_user) }
           .first(@limit)
     end

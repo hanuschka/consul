@@ -258,6 +258,8 @@ de:
         destroy:
           notice: Adressatengruppe wurde erfolgreich gelöscht
       menu:
+        site_customization:
+          landing_pages: Zielseiten
         deficiency_reports:
           categories: Kategorien festlegen
           list: Liste der Mängelmeldungen
@@ -351,6 +353,7 @@ de:
             duration_block_title: Laufzeit
             geo_affiliation_block_title: Gebietszuordnung
             individual_groups_block_title: Sichtbarkeitsbeschränkung auf starke Gruppen
+            landing_page_assignments: Zuordnung zu Themen/Gebietsseiten
           projekt_page_tab:
             name: Projektseite
             main_block_title: Projektseite
@@ -488,6 +491,17 @@ de:
               disabled: Projekt deaktiviert
               enabled: Projekt aktiviert
       site_customization:
+        landing_pages:
+          new:
+            title: "Themen/Gebietsseite"
+          index:
+            create: "Neue Themen/Gebietsseite erstellen"
+            title: "Themen/Gebietsseiten"
+          edit:
+            header_image_title: Header image
+          edit_content_cards:
+            title: Inhaltskarten für %{page_title}
+            link: Inhaltskarten
         pages:
           destroy:
             cannot_notice: Diese Seite kann nicht gelöscht werden. Bitte löschen Sie das zugehörige Projekt zuvor.

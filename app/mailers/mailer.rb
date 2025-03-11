@@ -268,6 +268,18 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def custom_mail(recipient, title, body)
+    @recipient = recipient
+    @subject = title
+    @title = title
+    @body = body
+    @email_to = recipient.email
+
+    with_user(recipient) do
+      mail(to: @email_to, subject: @subject)
+    end
+  end
+
   private
 
     def with_user(user, &block)

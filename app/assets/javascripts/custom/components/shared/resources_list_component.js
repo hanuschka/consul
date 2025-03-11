@@ -22,9 +22,7 @@
 
     switchResourcesViewMode: function(e) {
       var switchButton = e.currentTarget;
-
       var resourcesList = switchButton.closest(".js-resources-list");
-
       var currentViewModeWide = this.isResourcesListInWideMode(resourcesList);
 
       if (currentViewModeWide) {
@@ -50,12 +48,16 @@
 
     switchResourceListViewMode: function(resourcesList) {
       resourcesList.classList.toggle(this.WIDE_MODE_CLASS);
+
       var switchButton = resourcesList.querySelector(".js-resource-list-switch-view-button");
 
-      var switchButtonIcon = switchButton.querySelector("i");
+      if (switchButton) {
+        var switchButtonIcon = switchButton.querySelector("i");
+        console.log("switchButtonIcon", switchButtonIcon)
 
-      switchButtonIcon.classList.toggle("fa-grip-vertical");
-      switchButtonIcon.classList.toggle("fa-bars");
+        switchButtonIcon.classList.toggle("fa-grip-vertical");
+        switchButtonIcon.classList.toggle("fa-bars");
+      }
     }
   };
 }).call(this);

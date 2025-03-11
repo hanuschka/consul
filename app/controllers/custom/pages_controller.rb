@@ -17,7 +17,7 @@ class PagesController < ApplicationController
   def show
     @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
 
-    if @custom_page.landing?
+    if @custom_page&.landing?
       @content_cards =
         SiteCustomization::ContentCard
           .for_landing_page(@custom_page.id)

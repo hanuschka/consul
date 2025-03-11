@@ -20,7 +20,11 @@ class Budget
     end
 
     def investments
-      heading.investments.selected.sort_by_ballots
+      if @budget.show_money?
+        heading.investments.selected.where.not(price: nil).sort_by_ballots
+      else
+        heading.investments.selected.sort_by_ballots
+      end
     end
 
     def inside_budget?

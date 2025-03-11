@@ -16,11 +16,6 @@ class Admin::MenuComponent < ApplicationComponent
         controller.class.module_parent != Admin::Poll::Questions::Answers
     end
 
-    def customization?
-      ["pages", "banners", "modal_notifications", "information_texts", "documents"].include?(controller_name) ||
-        homepage? || pages?
-    end
-
     def registered_addresses?
       %w[registered_addresses registered_address_groupings registered_address_districts registered_address_streets].include?(controller_name)
     end

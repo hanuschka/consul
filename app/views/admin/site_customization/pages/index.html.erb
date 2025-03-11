@@ -1,9 +1,25 @@
 <% provide :title do %>
-  <%= t("admin.header.title") %> - <%= t("admin.menu.site_customization.pages") %>
+  <% if controller_name == "landing_pages" %>
+    <% title = t("custom.admin.menu.site_customization.landing_pages") %>
+  <% else %>
+    <% title = t("admin.menu.site_customization.pages") %>
+  <% end %>
+
+  <%= t("admin.header.title") %> - <%= title %>
 <% end %>
 
-<%= link_to t("admin.site_customization.pages.index.create"), new_admin_site_customization_page_path, class: "button float-right" %>
-<h2 class="inline-block"><%= t("admin.site_customization.pages.index.title") %></h2>
+<% if controller_name == "landing_pages" %>
+  <%= link_to t("custom.admin.site_customization.landing_pages.index.create"), new_admin_site_customization_landing_page_path, class: "button float-right" %>
+<% else %>
+  <%= link_to t("admin.site_customization.pages.index.create"), new_admin_site_customization_page_path, class: "button float-right" %>
+<% end %>
+
+<% if controller_name == "landing_pages" %>
+  <% header = t("custom.admin.site_customization.landing_pages.index.title") %>
+<% else %>
+  <% header = t("admin.site_customization.pages.index.title") %>
+<% end %>
+<h2 class="inline-block"><%= header %></h2>
 
 <% if @pages.any? %>
   <h3><%= page_entries_info @pages %></h3>
@@ -11,6 +27,9 @@
   <table class="cms-page-list">
     <thead>
       <tr>
+        <% if controller_name == "landing_pages" %>
+          <th></th>
+        <% end %>
         <th><%= t("admin.site_customization.pages.page.title") %></th>
         <th><%= t("admin.site_customization.pages.page.slug") %></th>
         <th><%= t("admin.site_customization.pages.page.created_at") %></th>
@@ -19,19 +38,47 @@
         <th><%= t("admin.actions.actions") %></th>
       </tr>
     </thead>
-    <tbody>
+    <% if controller_name == "landing_pages" %>
+      <tbody
+        class="js-new-sortable"
+        data-handle=".js-landing-pages-sort-handle"
+        data-sort-url="<%= update_order_admin_site_customization_landing_pages_path %>"
+       >
+    <% else %>
+      <tbody>
+    <% end %>
     <% @pages.each do |page| %>
-      <tr id="<%= dom_id(page) %>">
+      <tr id="<%= dom_id(page) %>" data-record-id="<%= page.id %>">
+        <% if controller_name == "landing_pages" %>
+          <td style="text-align:center;padding-left:10px">
+            <div type="button" class="sort-item-button js-landing-pages-sort-handle" >
+              <i class="fa fa-solid fa-up-down-left-right"></i>
+            </div>
+          </td>
+        <% end %>
         <td><%= page.title %></td>
         <td><%= page.slug %></td>
         <td><%= I18n.l page.created_at, format: :short %></td>
         <td><%= I18n.l page.created_at, format: :short %></td>
         <td><%= t("admin.site_customization.pages.page.status_#{page.status}") %></td>
         <td>
-          <%= render Admin::TableActionsComponent.new(page) do |actions| %>
-            <%= actions.action(:cards,
-                               text: t("admin.site_customization.pages.page.see_cards"),
-                               path: admin_site_customization_page_widget_cards_path(page)) %>
+
+          <% actions = page.landing? ? [:destroy] : [:edit, :destroy] %>
+          <%= render Admin::TableActionsComponent.new(page, actions: actions) do |actions| %>
+            <% if page.landing? %>
+              <%= actions.action(:edit,
+                                 text: t('admin.actions.edit'),
+                                 path: edit_admin_site_customization_landing_page_path(page)) %>
+              <%= actions.action(:cards,
+                                 text: t('custom.admin.site_customization.landing_pages.edit_content_cards.link'),
+                                 path: edit_content_cards_admin_site_customization_landing_page_path(page)) %>
+            <% end %>
+
+            <% unless page.landing? %>
+              <%= actions.action(:cards,
+                                 text: t("admin.site_customization.pages.page.see_cards.title"),
+                                 path: admin_site_customization_page_widget_cards_path(page)) %>
+            <% end %>
 
             <% if page.status == "published" %>
               <%= actions.action(:show,

@@ -57,8 +57,9 @@ class Admin::RecipientGroupsController < Admin::BaseController
         elsif params[:kind].start_with?("Projekt_")
           @label_key = "label_for_projekt_phase"
           p_id = params[:kind].split("_").last
-          ProjektPhase.where(projekt_id: p_id).map { |pp| [pp.name, "#{pp.type}_#{pp.id}"] }
-
+          ProjektPhase.where(projekt_id: p_id, type: "ProjektPhase::BudgetPhase")
+            .map { |pp| [pp.title, "#{pp.type}_#{pp.id}"] }
+            .unshift([t("custom.admin.recipient_groups.new.select_options.projekt_related"), "projekt_related_#{p_id}"])
         end
     end
 
@@ -71,6 +72,10 @@ class Admin::RecipientGroupsController < Admin::BaseController
       elsif params[:kind] == "user_roles"
         @available_access_methods = [["all_user_ids"], ["administrators_ids"]]
         @origin_class_name = "User"
+      elsif params[:kind].start_with?("projekt_related")
+        @available_access_methods = [["any_phase_subscribers_ids"]]
+        @origin_class_name = "Projekt"
+        @origin_class_object_id = params[:kind].split("_").last
       end
     end
 

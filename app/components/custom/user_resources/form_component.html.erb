@@ -151,7 +151,7 @@
           <div class="new-card" id='map-container'>
             <%= render "map_locations/form_fields",
               form:          f,
-              map_location:  resource.map_location || resource.build_map_location,
+              map_location:  resource.map_location || resource.projekt_phase.map_location || resource.build_map_location,
               label:         t("#{i18n_scope}.form.map_location"),
               help:          t("custom.user_resources.form.map_location_instructions"),
               mappable:      resource,

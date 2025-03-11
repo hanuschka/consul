@@ -57,6 +57,11 @@ class DeficiencyReport < ApplicationRecord
   }
   scope :admin_accepted, -> { Setting["deficiency_reports.admin_acceptance_required"].present? ? where(admin_accepted: true) : all }
 
+  scope :closed, -> { joins(:status).where(deficiency_report_statuses: { archive_reports: true }) }
+  scope :archived, -> { where.not(archived_at: nil) }
+  scope :not_archived, -> { where(archived_at: nil) }
+  scope :closed_to_archive, -> { closed.not_archived.where("status_changed_at < ?", 7.days.ago) }
+
   pg_search_scope :pg_search,
     against: [:id, :on_behalf_of],
     associated_against: {
@@ -105,6 +110,10 @@ class DeficiencyReport < ApplicationRecord
 
   def self.search(terms)
     pg_search(terms)
+  end
+
+  def self.archive_closed
+    closed_to_archive.update_all(archived_at: Time.zone.now)
   end
 
   def searchable_values

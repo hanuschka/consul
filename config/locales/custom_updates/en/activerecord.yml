@@ -40,6 +40,9 @@ en:
       officing_manager:
         one: Poll manager
         other: Poll managers
+      recipient_group:
+        one: Recipient group
+        other: Recipient groups
     errors:
       models:
         proposal:

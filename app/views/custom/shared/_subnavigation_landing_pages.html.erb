@@ -1,0 +1,7 @@
+<% SiteCustomization::Page.landing.order(:landing_nav_position).landing_show_in_top_nav.each do |page| %>
+  <li class="nav-element top-level-item" >
+      <div class="flyout-item-name">
+        <%= link_to page.title, page.url, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), aria: { hidden: true }, data: { turbolinks: !extended_feature?("general.enable_google_translate") } %>
+      </div>
+  </li>
+<% end %>

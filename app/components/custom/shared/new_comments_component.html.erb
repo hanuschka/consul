@@ -28,7 +28,7 @@
         ) %>
       </div>
     <% end %>
-    <%= render "comments/comment_list", comments: comment_tree.root_comments %>
+    <%= render "comments/comment_list", comments: comment_tree.root_comments.where(hidden_at: nil) %>
     <%= pagination_links %>
   </div>
 </div>

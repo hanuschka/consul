@@ -10,7 +10,7 @@ class Poll
     belongs_to :booth_assignment
     belongs_to :officer_assignment
     belongs_to :officer
-    belongs_to :poll_manager #custom
+    belongs_to :officing_manager #custom
 
     validates :poll_id, presence: true
     validates :user_id, presence: true
@@ -48,7 +48,7 @@ class Poll
       end
 
       def audit_changes?
-        origin == "booth" || poll_manager_id.present?
+        origin == "booth" || officing_manager_id.present?
       end
   end
 end

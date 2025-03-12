@@ -5,7 +5,8 @@
   height: 100%;
   margin: auto;
   user-select: none;
-  background: #e2e2e2;
+  color: #666;
+  background: #feebd3;
   transition: background 0.2s ease-in-out;
   border-radius: 10px;
   padding-top: 40px;
@@ -41,23 +42,16 @@
 }
 
 .user-resource-image-upload--text {
-  color: $dark;
-  opacity: 0.5;
   line-height: 1.25;
   text-align: center;
-
-  @media(max-width: $mobile-viewport-start) {
-    font-size: 14px;
-  }
+  font-size: 14px;
 }
 
 .user-resource-image-upload--plus {
   margin: auto;
-  color: $dark;
   font-size: 130px;
   line-height: 1;
   text-align: center;
-  opacity: 0.5;
 
   @media(max-width: $mobile-viewport-start) {
     font-size: 100px;
@@ -73,10 +67,9 @@
 }
 
 .user-resource-image-upload--label-title {
-  font-size: 33px;
-  color: $dark;
-  opacity: 0.7;
+  font-size: 28px;
   margin-top: -15px;
+  margin-bottom: 4px;
 
   @media(max-width: $big-tablet-viewport-start) {
     font-size: 30px;
@@ -89,8 +82,6 @@
 }
 
 .user-resource-image-upload--hint {
-  color: $dark;
-  opacity: 0.5;
   font-size: 14px;
 
   @media(max-width: $small-tablet-viewport-start) {

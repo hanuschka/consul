@@ -9,7 +9,7 @@
     <div class="resource-page-banner--details">
       <div class="resource-page-banner--detail">
         <i class="fa fa-calendar"></i>
-        <%= l(resource.created_at, format: :new_date_with_year) %>
+        <%= date_string %>
       </div>
       <% if !resource.respond_to?(:projekt_phase) || projekt_phase_feature?(resource&.projekt_phase, "resource.show_comments") %>
         <div class="resource-page-banner--detail">
@@ -19,7 +19,7 @@
           <% end %>
         </div>
       <% end %>
-      <% if @resource.respond_to?(:projekt) %>
+      <% if show_projekt_link? %>
         <div class="resource-page-banner--detail">
           <%= link_to(projekt_path(resource.projekt)) do %>
             <i class="fa fa-code-branch"></i>

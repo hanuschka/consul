@@ -55,7 +55,7 @@ module Abilities
       can [:search, :create, :index, :destroy, :update], ::Administrator
       can [:search, :create, :index, :destroy], ::ProjektManager # custom
       can [:search, :create, :index, :destroy], ::DeficiencyReportManager # custom
-      can [:search, :create, :index, :destroy], ::PollManager # custom
+      can [:search, :create, :index, :destroy], ::OfficingManager # custom
       can [:search, :create, :index, :destroy], ::Moderator
       can [:search, :show, :update, :create, :index, :destroy, :summary], ::Valuator
       can [:search, :create, :index, :destroy], ::Manager
@@ -182,7 +182,7 @@ module Abilities
       can :manage, FormularFollowUpLetter
       can :manage, ProjektArgument
 
-      can :read_stats, Budget, id: Budget.where(id: Budget.valuating_or_later.pluck(:id)).ids
+      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).ids
 
       can :destroy, RelatedContent
 
@@ -200,6 +200,8 @@ module Abilities
       can :index, Ckeditor::Asset
       can [:create, :update, :destroy], Ckeditor::Picture
       can [:create, :update, :destroy], Ckeditor::Document
+
+      can :manage, RecipientGroup
     end
   end
 end

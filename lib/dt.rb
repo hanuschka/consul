@@ -28,6 +28,6 @@ module Dt
   end
 
   def self.website_url
-    "https://demo.demokratie.today/bibliothek"
+    "https://demokratie.today"
   end
 end

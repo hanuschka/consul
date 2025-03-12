@@ -1,6 +1,210 @@
-<td style="<%= css_for_mailer_content %>">
+<% email_brand_color = Setting["newsletter_brand_color"] %>
 
-  <p style="<%= css_for_mailer_text %>">
-    <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
-  </p>
-</td>
+<% if @newsletter.image&.attachment&.attached? %>
+  <% background_image_url = url_for(@newsletter.image.attachment) %>
+  <% header_background_style = "background-image: url(#{background_image_url})" %>
+<% else %>
+  <% header_background_style = "background: #{email_brand_color}" %>
+<% end %>
+
+<style>
+    .newsletter-template-content table {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      width: 100% !important;
+    }
+    .newsletter-template-content img {
+      width: 100% !important;
+      height: auto !important;
+    }
+    .newsletter-template-content p {
+      padding:34px 40px 26px 40px !i;
+    }
+    figure.table {
+      width: 100%;
+    }
+    table {
+      margin-bottom: 0;
+      width: 100%;
+    }
+    a, a:hover, a:focus {
+      color: inherit;
+    }
+    h1, h2, h3, h4, h5 {
+      color: black;
+    }
+    tr, td, tbody, table {
+      background-color: transparent;
+    }
+
+    tr:hover {
+      background-color: transparent !important;
+    }
+    table tr:nth-child(odd), table tr:nth-child(even) {
+      background-color: transparent;
+    }
+    p {
+      font-size: 15px;
+    }
+    table.header tr:hover {
+      background-color: initial;
+    }
+</style>
+<table style="max-width:1280px" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td style="font-family:Arial,sans-serif; font-size:16px; line-height:1.4" align="left">
+        <table style="background-color:<%= email_brand_color %>" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tbody>
+            <tr>
+              <td style="padding:20px 40px 20px 40px" align="left">
+                <table align="center" style="width: 580px" width="580" border="0" cellpadding="0" cellspacing="0" class="x_wrapper">
+                  <tbody>
+                    <tr>
+                      <td align="left">
+                        <div class="small-12 medium-6 large-6 column">
+                          <% image = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %>
+                          <% if image.image.attached? %>
+                            <%= image_tag(
+                              image_path_for("logo_newsletter_email.png"),
+                              height: 45,
+                              style: "border: 0;display: block;height: 45px",
+                              alt: setting["org_name"]
+                            ) %>
+                          <% end %>
+                        </div>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table style="<%= header_background_style %>; background-position:top center; background-repeat:no-repeat; background-size:cover" align="center" height="420" width="100%" border="0" cellpadding="0" cellspacing="0" background="https://files.crsend.com/306000/306558/images/Vorlage/kopfbild-international.jpg" data-imagetype="External">
+          <tbody>
+            <tr>
+              <td style="vertical-align:top; padding:120px 40px 0 40px" valign="top" align="left">
+                <table align="center" width="580" style="width: 580px" border="0" cellpadding="0" class="x_wrapper">
+                  <tbody>
+                    <tr>
+                      <td align="left">
+                        <h1 style="font-size:32px; color:#ffffff; margin:0 0 0 0; line-height:1.2">
+                          <div><%= @newsletter.title %></div>
+                        </h1>
+                        <div style="display:block; width:204px; height:0; margin-top:4px; margin-bottom:18px; padding-top:0.5em; border-style:solid; border-width:6px 6px 6px 0; border-color:transparent transparent <%= email_brand_color %> transparent"></div>
+                        <div style="font-size:19px; color:#ffffff; margin-top:0; margin-bottom:8px">
+                            <%= @newsletter.subtitle %>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align:bottom;padding-bottom:0" valign="bottom" align="left">
+                <table align="center" width="670" style="width: 670px" border="0" cellpadding="0" cellspacing="0" class="x_wrapper">
+                  <tbody>
+                    <tr>
+                      <td style="background:#ffffff; padding:25px 40px 0 40px" align="left">
+                        <span style="font-size:22px; color:#000000; margin-top:0">
+                          <%= @newsletter.greeting %>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <%# Content %>
+
+        <table
+            class="newsletter-template-content"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="font-family:Arial,sans-serif; font-size: 15px; margin: 0; background: #fff; margin: 0 auto; max-width: 670px; width: 670px;background:#ffffff; "
+            width="670"
+            >
+            <tbody>
+              <tr>
+                <td width="670" style="padding-top: 0;width:670px;padding-left:0;padding-right:0;">
+                  <div style="<%= css_for_mailer_text %>;font-size: 15px;">
+                      <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+
+        <%# Footer %>
+        <table style="" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tbody>
+            <tr>
+              <td style="padding:40px 0 0 0" align="left" class="x_footer">
+                <table style="background-color:<%= email_brand_color %>" align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="padding:36px 40px 18px 40px" align="left">
+                        <table align="center" width="580" style="width: 580px" border="0" cellpadding="0" cellspacing="0" class="x_wrapper">
+                          <tbody>
+                            <tr>
+                              <td align="left">
+                                <table class="x_image-right" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                  <tbody>
+                                    <tr>
+                                      <td style="vertical-align:top; padding:0 22px 0 0;color:white;">
+                                        <% if defined?(render_custom_block) %>
+                                          <%= render_custom_block 'newsletter_email_footer_block_1' %>
+                                        <% else %>
+                                          <%= render_custom_content_block_content 'newsletter_email_footer_block_1' %>
+                                        <% end %>
+
+                                        <% if @subscriptions_token.present? %>
+                                          <% unsubscribe_path = edit_subscriptions_url(token: @subscriptions_token) %>
+                                        <% elsif @unregistered_newletter_unsubscribe_token.present? %>
+                                          <% unsubscribe_path = unregistered_newsletter_subscribers_unsubscribe_url(unsubscribe_token: @unregistered_newletter_unsubscribe_token) %>
+                                        <% elsif controller.class.name == "NotificationServiceMailer" %>
+                                          <%= notification_service_mailer_unsubscribe_block(action_name, projekt_phase: @projekt_phase) %>
+                                        <% end %>
+                                        <% if unsubscribe_path.present? %>
+                                          <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif; margin: 0;padding: 0;line-height: 1.5em;color: #222; font-size: 10px; margin-top: 12px;">
+                                          <%= link_to(t("mailers.config.unsubscribe_notifications_link_short"), unsubscribe_path, style: "text-decoration: undescore;color: white;") %>
+                                          </p>
+                                        <% end %>
+                                      </td>
+                                      <%# <td style="vertical-align:top; padding-bottom:20px;width: 130px;" width="130"> %>
+                                      <%#   <% image = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %1> %>
+                                      <%#   <% if image.image.attached? %1> %>
+                                      <%#     <%= image_tag( %>
+                                      <%#       image_path_for("logo_newsletter_email.png"), %>
+                                      <%#       style: "vertical-align:middle; width:130px; height:auto;border: 0;display: block;", %>
+                                      <%#       alt: setting["org_name"] %>
+                                      <%#     ) %1> %>
+                                      <%#   <% end %1> %>
+                                      <%# </td> %>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

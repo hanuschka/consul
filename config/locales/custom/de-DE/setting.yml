@@ -138,12 +138,14 @@ de:
       extra_fields:
         registration:
           extended: Erweiterte Registrierung
-          extended_description: Bei der Registrierung werden zusätzlich "Vorname", "Nachname", "Straße", "Hausnummer", "PLZ", "Stadt" und "Geburtsdatum" abgefragt
+          extended_description: Bei der Registrierung werden zusätzlich "Vorname", "Nachname", "Geschlecht", "Straße", "Hausnummer", "PLZ", "Stadt" und "Geburtsdatum" abgefragt
           check_documents: Dokumentenabfrage
           check_documents_description: Aktiviert die zusätzliche Dokumentenabfrage "Personalausweis" oder "Reisepass" während der Registrierung
         verification:
           check_documents: Dokumentenprüfung
           check_documents_description: Aktiviert die zusätzliche Dokumentenprüfung "Personalausweis" oder "Reisepass"
+          show_verification_status: Zeige Verifizierungsstatus im Konto an
+          show_verification_status_description: Zeigt den Verifizierungsstatus unterhalb des Nutzerbildes an
 
       projekt_feature:
         main:
@@ -269,9 +271,9 @@ de:
           show_related_content: Verwandte Inhalte
           show_related_content_description: Aktivieren Sie die Funktion “Verwandte Inhalte” für Investitionen
           show_implementation_option_fields: Umsetzung
-          show_implementation_option_fields_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Umsetzung” hinzu
+          show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
           show_user_cost_estimate: Preisliche Einschätzung
-          show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+          show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           show_comments: Kommentare
           show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
           allow_attached_documents: Zusätzliche Dokumente
@@ -301,6 +303,8 @@ de:
         show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
         admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
         admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
+        officers_can_administer_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen administrieren
+        officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
         officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
         officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
         allow_voting: Nutzer*innen Bewertung pro Mangel

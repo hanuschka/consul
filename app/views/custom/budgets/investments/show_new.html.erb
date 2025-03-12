@@ -25,6 +25,10 @@
           <div class="callout <%= "#{ @investment.feasible? ? 'success' : 'alert'}" %>" style="color:initial;">
             <h3><%= t("custom.budgets.investments.investment.#{@investment.feasibility}_html") %></h3>
 
+            <% if @investment.should_show_price? %>
+              <p><%= "#{t("custom.budgets.investments.show.price")}: #{@investment.formatted_price}" %></p>
+            <% end %>
+
             <% if @investment.valuator_explanation.present? %>
               <p><%= auto_link_already_sanitized_html wysiwyg(@investment.valuator_explanation) %></p>
             <% end %>
@@ -44,22 +48,6 @@
           </div>
         <% end %>
 
-        <% if @investment.should_show_price? %>
-          <div class="resource-page--description new-card" style="background-color:#E3FCE7">
-            <h3><%= t("custom.budgets.investments.show.price") %></h2>
-            <b><%= @investment.formatted_price %></b>
-
-            <% if @investment.should_show_price_explanation? %>
-              <br>
-              <%= @investment.valuator_explanation %>
-            <% end %>
-          </div>
-        <% elsif @investment.should_show_feasibility_explanation? %>
-            <div class="resource-page--description new-card" style="background-color:#fff;border-color:#d9d9d9;">
-              <h3><%= t("custom.budgets.investments.show.feasibility_explanation") %></h3>
-              <p><%= auto_link_already_sanitized_html wysiwyg(@investment.valuator_explanation) %></p>
-            </div>
-        <% end %>
 
         <% if projekt_phase_feature?(@investment.projekt_phase, "form.show_user_cost_estimate") && @investment.user_cost_estimate.present? %>
           <div class="resource-page--description new-card" style="background-color:#fff;">

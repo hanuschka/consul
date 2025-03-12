@@ -52,6 +52,7 @@ class User < ApplicationRecord
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
+  scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
   validate :email_should_not_be_used_by_hidden_user
   validate :password_complexity, if: :password_required?
@@ -94,9 +95,11 @@ class User < ApplicationRecord
       end
     end
 
-    def all_user_ids
-      active.where.not(confirmed_at: nil).where(guest: false, erased_at: nil)
+    def newsletter_subscriber_ids
+      User.actual.where(newsletter: true).ids
     end
+
+    alias all_newsletter_subscriber_ids newsletter_subscriber_ids
 
     def administrators_ids
       joins(:administrator).ids

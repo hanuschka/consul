@@ -4,7 +4,7 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= @body %>
+    <%= sanitize(@body, tags: %w[a], attributes: %w[href]) %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">

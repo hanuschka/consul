@@ -70,7 +70,7 @@ class Admin::RecipientGroupsController < Admin::BaseController
         @origin_class_name = params[:kind].split("_").first
         @origin_class_object_id = params[:kind].split("_").last
       elsif params[:kind] == "user_roles"
-        @available_access_methods = [["all_user_ids"], ["administrators_ids"]]
+        @available_access_methods = [["newsletter_subscriber_ids"], ["all_newsletter_subscriber_ids"], ["administrators_ids"]]
         @origin_class_name = "User"
       elsif params[:kind].start_with?("projekt_related")
         @available_access_methods = [["any_phase_subscribers_ids"]]

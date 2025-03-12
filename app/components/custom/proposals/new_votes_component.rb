@@ -13,7 +13,7 @@ class Proposals::NewVotesComponent < ApplicationComponent
   end
 
   def vote_url
-    @vote_url || vote_proposal_path(proposal, value: "yes")
+    @vote_url || vote_proposal_path(proposal, value: "yes", offline_user_id: params[:offline_user_id])
   end
 
   private

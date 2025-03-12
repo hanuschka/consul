@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_10_24_065406) do
+ActiveRecord::Schema.define(version: 2025_03_05_090222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -414,6 +414,10 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.integer "qualified_total_ballot_line_weight", default: 0
     t.string "video_url"
     t.bigint "sentiment_id"
+    t.text "valuator_explanation"
+    t.time "email_on_feasibility_sent_at"
+    t.time "email_on_selected_sent_at"
+    t.boolean "preselected", default: false
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -519,6 +523,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.bigint "projekt_phase_id"
     t.boolean "show_percentage_values_only", default: false
     t.boolean "show_results_after_first_vote", default: false
+    t.integer "max_preselected", default: 0
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_budgets_on_projekt_phase_id"
   end
@@ -556,6 +561,10 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.integer "height"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "title", default: ""
+    t.string "description", default: ""
+    t.tsvector "tsv"
+    t.string "alt_text", default: ""
     t.index ["type"], name: "index_ckeditor_assets_on_type"
   end
 
@@ -697,13 +706,6 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.index ["tsv"], name: "index_debates_on_tsv", using: :gin
   end
 
-  create_table "deficiency_report_areas", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "given_order"
-  end
-
   create_table "deficiency_report_categories", force: :cascade do |t|
     t.string "color"
     t.string "icon"
@@ -711,8 +713,9 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "warning_text", default: ""
-    t.bigint "deficiency_report_officer_id"
-    t.index ["deficiency_report_officer_id"], name: "index_dr_categories_on_dr_officer_id"
+    t.string "default_responsible_type"
+    t.bigint "default_responsible_id"
+    t.index ["default_responsible_type", "default_responsible_id"], name: "index_deficiency_report_categories_on_default_responsible"
   end
 
   create_table "deficiency_report_category_translations", force: :cascade do |t|
@@ -730,6 +733,22 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_deficiency_report_managers_on_user_id"
+  end
+
+  create_table "deficiency_report_officer_group_assignments", force: :cascade do |t|
+    t.bigint "deficiency_report_officer_id", null: false
+    t.bigint "deficiency_report_officer_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_officer_group_id"], name: "index_dr_officer_group_assignments_on_dr_officer_group_id"
+    t.index ["deficiency_report_officer_id", "deficiency_report_officer_group_id"], name: "index_dr_officer_group_assignments_on_dro_id_and_drog_id", unique: true
+    t.index ["deficiency_report_officer_id"], name: "index_dr_officer_group_assignments_on_dr_officer_id"
+  end
+
+  create_table "deficiency_report_officer_groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_officers", force: :cascade do |t|
@@ -764,6 +783,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "notice_text", default: ""
+    t.boolean "archive_reports", default: false
   end
 
   create_table "deficiency_report_translations", force: :cascade do |t|
@@ -799,21 +819,24 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.bigint "hot_score", default: 0
     t.string "on_behalf_of"
     t.datetime "assigned_at"
-    t.bigint "deficiency_report_area_id"
     t.boolean "notify_officer_about_new_comments", default: false
     t.datetime "notified_officer_about_new_comments_datetime"
     t.boolean "admin_accepted", default: false
+    t.string "responsible_type"
+    t.bigint "responsible_id"
+    t.datetime "status_changed_at"
+    t.datetime "archived_at"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
     t.index ["cached_votes_total"], name: "index_deficiency_reports_on_cached_votes_total"
     t.index ["cached_votes_up"], name: "index_deficiency_reports_on_cached_votes_up"
-    t.index ["deficiency_report_area_id"], name: "index_deficiency_reports_on_deficiency_report_area_id"
     t.index ["deficiency_report_category_id"], name: "index_deficiency_reports_on_deficiency_report_category_id"
     t.index ["deficiency_report_officer_id"], name: "index_deficiency_reports_on_deficiency_report_officer_id"
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
+    t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
     t.index ["tsv"], name: "index_deficiency_reports_on_tsv", using: :gin
   end
 
@@ -1056,6 +1079,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.bigint "individual_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email_pattern", default: "", null: false
     t.index ["individual_group_id"], name: "index_individual_group_values_on_individual_group_id"
   end
 
@@ -1075,6 +1099,15 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.boolean "visible", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "landing_pages_projekts", force: :cascade do |t|
+    t.bigint "site_customization_page_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "site_customization_page_id"], name: "index_projekts_scp"
+    t.index ["projekt_id"], name: "index_landing_pages_projekts_on_projekt_id"
+    t.index ["site_customization_page_id", "projekt_id"], name: "index_scp_projekts", unique: true
+    t.index ["site_customization_page_id"], name: "index_landing_pages_projekts_on_site_customization_page_id"
   end
 
   create_table "legislation_annotations", id: :serial, force: :cascade do |t|
@@ -1365,15 +1398,15 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
     t.bigint "projekt_phase_id"
-    t.bigint "deficiency_report_area_id"
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
-    t.index ["deficiency_report_area_id"], name: "index_map_locations_on_deficiency_report_area_id"
+    t.bigint "registered_address_district_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
     t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
+    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
     t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
   end
 
@@ -1458,13 +1491,18 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
 
   create_table "newsletters", id: :serial, force: :cascade do |t|
     t.string "subject"
-    t.string "segment_recipient", null: false
+    t.string "segment_recipient"
     t.string "from"
     t.text "body"
     t.date "sent_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "hidden_at"
+    t.string "title"
+    t.text "subtitle"
+    t.string "greeting"
+    t.bigint "recipient_group_id"
+    t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 
   create_table "notifications", id: :serial, force: :cascade do |t|
@@ -1475,6 +1513,23 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "emailed_at"
     t.datetime "read_at"
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "officing_manager_assignments", force: :cascade do |t|
+    t.bigint "officing_manager_id", null: false
+    t.bigint "projekt_phase_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["officing_manager_id", "projekt_phase_id"], name: "index_om_assignments_on_om_id_and_projekt_phase_id", unique: true
+    t.index ["officing_manager_id"], name: "index_officing_manager_assignments_on_officing_manager_id"
+    t.index ["projekt_phase_id"], name: "index_officing_manager_assignments_on_projekt_phase_id"
+  end
+
+  create_table "officing_managers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_officing_managers_on_user_id"
   end
 
   create_table "organizations", id: :serial, force: :cascade do |t|
@@ -1494,7 +1549,9 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "updated_at"
     t.string "open_answer_text"
     t.integer "answer_weight", default: 1
+    t.bigint "officing_manager_id"
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
+    t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
   end
@@ -1700,9 +1757,11 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.string "origin"
     t.integer "officer_id"
     t.string "token"
+    t.bigint "officing_manager_id"
     t.index ["booth_assignment_id"], name: "index_poll_voters_on_booth_assignment_id"
     t.index ["document_number"], name: "index_poll_voters_on_document_number"
     t.index ["officer_assignment_id"], name: "index_poll_voters_on_officer_assignment_id"
+    t.index ["officing_manager_id"], name: "index_poll_voters_on_officing_manager_id"
     t.index ["poll_id", "document_number", "document_type"], name: "doc_by_poll"
     t.index ["poll_id"], name: "index_poll_voters_on_poll_id"
     t.index ["user_id"], name: "index_poll_voters_on_user_id"
@@ -1903,6 +1962,8 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.string "sentiments_name"
     t.string "resource_form_title_hint"
     t.text "description"
+    t.string "comment_form_title"
+    t.string "comment_form_button"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -1923,6 +1984,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.integer "comments_count", default: 0
     t.datetime "hidden_at"
     t.integer "user_status", default: 1
+    t.date "lock_on"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2045,6 +2107,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
+    t.boolean "from_dt", default: false
     t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2105,6 +2168,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.bigint "sentiment_id"
     t.text "official_answer", default: ""
     t.integer "cached_votes_down", default: 0
+    t.integer "officing_bulk_votes", default: 0
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -2121,10 +2185,28 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
   end
 
+  create_table "recipient_groups", force: :cascade do |t|
+    t.string "name"
+    t.string "origin_class_name"
+    t.string "origin_class_object_id"
+    t.string "access_method"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "registered_address_cities", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "registered_address_districts", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "default_deficiency_report_responsible_type"
+    t.bigint "default_deficiency_report_responsible_id"
+    t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible"
   end
 
   create_table "registered_address_groupings", force: :cascade do |t|
@@ -2159,7 +2241,9 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "updated_at", null: false
     t.bigint "registered_address_street_id"
     t.integer "registered_address_city_id"
+    t.bigint "registered_address_district_id"
     t.index ["groupings"], name: "index_registered_addresses_on_groupings", using: :gin
+    t.index ["registered_address_district_id"], name: "index_registered_addresses_on_registered_address_district_id"
     t.index ["registered_address_street_id"], name: "index_registered_addresses_on_registered_address_street_id"
   end
 
@@ -2369,6 +2453,8 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.string "kind"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "landing_page_id"
+    t.index ["landing_page_id"], name: "index_site_customization_content_cards_on_landing_page_id"
   end
 
   create_table "site_customization_images", id: :serial, force: :cascade do |t|
@@ -2390,6 +2476,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.string "title"
     t.string "subtitle"
     t.text "content"
+    t.text "content_bu"
     t.index ["locale"], name: "index_site_customization_page_translations_on_locale"
     t.index ["site_customization_page_id"], name: "index_7fa0f9505738cb31a31f11fb2f4c4531fed7178b"
   end
@@ -2403,6 +2490,12 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "updated_at", null: false
     t.string "locale"
     t.bigint "projekt_id"
+    t.boolean "landing_show_in_top_nav", default: false
+    t.boolean "landing_hide_all_top_nav_links", default: false
+    t.boolean "landing_hide_title_and_subtitle", default: false
+    t.boolean "landing", default: false
+    t.integer "landing_nav_position"
+    t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
 
@@ -2484,6 +2577,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["individual_group_value_id"], name: "index_user_individual_group_values_on_individual_group_value_id"
+    t.index ["user_id", "individual_group_value_id"], name: "index_user_ig_values_on_user_id_and_ig_value_id", unique: true
     t.index ["user_id"], name: "index_user_individual_group_values_on_user_id"
   end
 
@@ -2527,7 +2621,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.string "erase_reason"
     t.datetime "erased_at"
     t.boolean "public_activity", default: true
-    t.boolean "newsletter", default: true
+    t.boolean "newsletter", default: false
     t.integer "notifications_count", default: 0
     t.boolean "registering_with_oauth", default: false
     t.string "locale"
@@ -2586,6 +2680,8 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
     t.datetime "temporary_auth_token_valid_until"
     t.string "frame_sign_in_token"
     t.datetime "frame_sign_in_token_valid_until"
+    t.boolean "on_dt", default: false
+    t.boolean "adm_email_on_new_budget_investment", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -2758,10 +2854,10 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
-  add_foreign_key "deficiency_report_categories", "deficiency_report_officers"
   add_foreign_key "deficiency_report_managers", "users"
+  add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
+  add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
-  add_foreign_key "deficiency_reports", "deficiency_report_areas"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
   add_foreign_key "deficiency_reports", "deficiency_report_statuses"
@@ -2791,14 +2887,19 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
-  add_foreign_key "map_locations", "deficiency_report_areas"
   add_foreign_key "map_locations", "deficiency_reports"
   add_foreign_key "map_locations", "projekt_phases"
   add_foreign_key "map_locations", "projekts"
+  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
+  add_foreign_key "officing_manager_assignments", "officing_managers"
+  add_foreign_key "officing_manager_assignments", "projekt_phases"
+  add_foreign_key "officing_managers", "users"
   add_foreign_key "organizations", "users"
+  add_foreign_key "poll_answers", "officing_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"
   add_foreign_key "poll_officer_assignments", "poll_booth_assignments", column: "booth_assignment_id"
@@ -2813,6 +2914,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
   add_foreign_key "poll_questions", "users", column: "author_id"
   add_foreign_key "poll_recounts", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_recounts", "poll_officer_assignments", column: "officer_assignment_id"
+  add_foreign_key "poll_voters", "officing_managers"
   add_foreign_key "poll_voters", "polls"
   add_foreign_key "polls", "budgets"
   add_foreign_key "polls", "projekt_phases"
@@ -2846,6 +2948,7 @@ ActiveRecord::Schema.define(version: 2024_10_24_065406) do
   add_foreign_key "proposals", "sentiments"
   add_foreign_key "registered_address_street_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_street_projekt_phases", "registered_address_streets"
+  add_foreign_key "registered_addresses", "registered_address_districts"
   add_foreign_key "registered_addresses", "registered_address_streets"
   add_foreign_key "related_content_scores", "related_contents"
   add_foreign_key "related_content_scores", "users"

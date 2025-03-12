@@ -31,17 +31,6 @@ class Shared::NewCommentsComponent < ApplicationComponent
       commentable_cache_key(record),
       comment_tree.comments,
       comment_tree.comment_authors,
-      record.comments_count
-    ]
-  end
-
-  def cache_key
-    [
-      locale_and_user_status,
-      current_order,
-      commentable_cache_key(record),
-      comment_tree.comments,
-      comment_tree.comment_authors,
       record.comments_count,
       record_specific_keys,
       Comment.body_max_length
@@ -79,9 +68,9 @@ class Shared::NewCommentsComponent < ApplicationComponent
 
   def pagination_links
     if params[:projekt_phase_id].present?
-      paginate comment_tree.root_comments, params: { action: "projekt_phase_footer_tab" }, remote: true
+      paginate comment_tree.root_comments.where(hidden_at: nil), params: { action: "projekt_phase_footer_tab" }, remote: true
     else
-      paginate comment_tree.root_comments, params: { anchor: "comments" }
+      paginate comment_tree.root_comments.where(hidden_at: nil), params: { anchor: "comments" }
     end
   end
 end

@@ -1,0 +1,64 @@
+<% provide :title do %>
+  <%= t("admin.header.title") %> - <%= t("customadmin.menu.site_customization.pages") %> - <%= @page.title %>
+<% end %>
+
+<%= back_link_to admin_site_customization_landing_pages_path %>
+
+<div class="row">
+  <div class="small-12 column">
+    <h2 class="inline-block"><%= t("custom.admin.site_customization.landing_pages.edit_content_cards.title", page_title: @page.title) %></h2>
+  </div>
+</div>
+
+<% if @page.landing? && @page.persisted? %>
+  <hr/>
+
+  <div class="row">
+    <div class="column">
+      <div id="content-cards">
+
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th><%= t("custom.admin.deficiency_reports.statuses.status.id") %></th>
+              <th><%= t("custom.admin.deficiency_reports.statuses.status.title") %></th>
+              <th><%= t("admin.actions.actions") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="js-new-sortable" data-handle=".js-content-cards-sort-handle" data-sort-url="<%= order_content_cards_admin_site_customization_content_cards_path %>">
+            <% @content_cards.each do |card| %>
+              <tr id="<%= dom_id(card) %>" data-record-id="<%= card.id %>">
+                <td style="text-align:center;padding-left:20px;">
+                  <div type="button" class="sort-item-button js-content-cards-sort-handle" >
+                    <i class="fa fa-solid fa-up-down-left-right"></i>
+                  </div>
+                </td>
+                <td><%= card.id %></td>
+                <td><%= card.title %></td>
+                <td>
+                  <%= render Admin::LivesubmitCheckbox::Component.new(
+                    url: toggle_active_admin_site_customization_content_cards_path(card),
+                    resource_name: "site_customization_content_card",
+                    attribute_name: "active",
+                    record_id: card.id,
+                    current_value: card.active
+                  ) %>
+                </td>
+
+                <td>
+                  <%= render Admin::TableActionsComponent.new(card,
+                                                              actions: [:edit]
+                                                             ) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <hr>
+    </div>
+  </div>
+<% end %>
+

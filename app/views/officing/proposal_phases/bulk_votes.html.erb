@@ -1,0 +1,22 @@
+<%= form_with url: update_bulk_votes_officing_proposal_phase_path(@projekt_phase) do |f| %>
+  <table>
+    <thead>
+      <tr>
+        <td>ID</td>
+        <td>Titel</td>
+        <td style="width:200px;">Stimmen Menge</td>
+      </tr>
+    </thead>
+    <tbody>
+      <% @proposals.each do |proposal| %>
+        <tr>
+          <td><%= proposal.id %></td>
+          <td><%= link_to proposal.title, proposal_path(proposal), target: "_blank" %></td>
+          <td><%= f.number_field "proposals[#{proposal.id}][officing_bulk_votes]", value: proposal.officing_bulk_votes, label: false %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= f.submit "Aktualisieren" %>
+<% end %>

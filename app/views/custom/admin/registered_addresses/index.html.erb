@@ -1,8 +1,3 @@
-<%#= form_tag import_admin_registered_addresses_path, multipart: true do %>
-  <%#= file_field_tag :file, style: "width:auto;" %>
-  <%#= submit_tag t("custom.admin.registered_addresses.index.import_button") %>
-<%# end %>
-
 <h2 class="inline-block"><%= t("custom.admin.registered_addresses.index.title") %></h2>
 
 <%= link_to t("custom.shared.download"), admin_registered_addresses_path(format: :csv), class: "float-right small clear" %>
@@ -16,6 +11,7 @@
       <th><%= t("custom.admin.registered_addresses.attributes.street_name") %></th>
       <th><%= t("custom.admin.registered_addresses.attributes.street_number") %></th>
       <th><%= t("custom.admin.registered_addresses.attributes.street_number_extension") %></th>
+      <th><%= t("custom.admin.registered_addresses.attributes.district") %></th>
       <th><%= t("custom.admin.registered_addresses.attributes.groupings") %></th>
     </tr>
   </thead>
@@ -29,6 +25,7 @@
         <td><%= address.registered_address_street.name %></td>
         <td><%= address.street_number %></td>
         <td><%= address.street_number_extension %></td>
+        <td><%= address.district&.name %></td>
         <td><%= JSON.pretty_generate(address.groupings) %></td>
       </tr>
     <% end %>

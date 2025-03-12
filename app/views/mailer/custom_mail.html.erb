@@ -1,0 +1,15 @@
+<td style="<%= css_for_mailer_content %>">
+  <h1 style="<%= css_for_mailer_heading %>">
+    <%= @title %>
+  </h1>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= @body %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.budget_investment_created.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
+  </p>
+</td>

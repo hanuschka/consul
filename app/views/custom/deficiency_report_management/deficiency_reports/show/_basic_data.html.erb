@@ -1,4 +1,16 @@
-<h2><%= deficiency_report.title %></h2>
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <%= link_to t("custom.shared.download_pdf"), deficiency_report_management_deficiency_report_path(deficiency_report, format: :pdf),
+      class: "float-right small clear #{'js-update-screenshot' if deficiency_report.map_location.present?}",
+      data: { "map-container-id": deficiency_report.map_location.present? ? "#{dom_id(deficiency_report.map_location)}_deficiency_report" : "" } %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <h2><%= deficiency_report.title %></h2>
+  </div>
+</div>
 
 <div class="row expanded full-width">
   <div class="small-12 medium-8 columns margin-bottom">
@@ -23,23 +35,32 @@
         <strong><%= DeficiencyReport.human_attribute_name(:approximated_address) %>:</strong>
         <%= deficiency_report.approximated_address %>
       </div>
+
+      <% if deficiency_report.map_location.present? %>
+        <%= render Shared::MapComponent.new(
+          mappable: deficiency_report,
+          map_location: deficiency_report.map_location,
+          parent_class: "deficiency_report"
+        ) %>
+      <% end %>
     <% end %>
   </div>
 </div>
 
 <div class="row expanded full-width">
   <div class="small-12 medium-8 columns">
-    <div class='margin-bottom'>
-      <div class="small-12 margin-bottom">
-        <strong><%= "#{DeficiencyReport.human_attribute_name(:author)}:" %></strong>
-        <%= deficiency_report.author.username %>
-        <%= deficiency_report.author.full_name %><br>
-        <% if deficiency_report.on_behalf_of.present? %>
-          <%= "(#{t("custom.admin.deficiency_reports.show.on_behalf_of")} #{deficiency_report.on_behalf_of})" %>
-        <% end %>
-        <%= "#{deficiency_report.author.formatted_address}, " if deficiency_report.author.formatted_address.present? %>
-        <%= [deficiency_report.author.plz, deficiency_report.author.city_name].join(", ") %><br>
-        <%= deficiency_report.author.email %>
+    <div class="margin-top margin-bottom">
+      <strong><%= "#{DeficiencyReport.human_attribute_name(:author)}:" %></strong>
+      <%= deficiency_report.author.name %>
+      <% if deficiency_report.on_behalf_of.present? %>
+        <%= "(#{t("custom.admin.deficiency_reports.show.on_behalf_of")} #{deficiency_report.on_behalf_of})" %>
+      <% end %>
+
+      <div>
+        <%= link_to t("users.show.send_private_message"),
+          new_user_direct_message_path(@deficiency_report.author),
+          target: "_blank",
+          class: "button" %>
       </div>
     </div>
   </div>

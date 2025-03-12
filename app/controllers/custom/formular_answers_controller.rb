@@ -1,8 +1,14 @@
 class FormularAnswersController < ApplicationController
   include ImageAttributes
   include DocumentAttributes
+  include GuestUsers
 
   respond_to :js
+
+  skip_authorization_check only: :update, if: -> {
+    skip_authorization_check_for_guesst_user_with_token?
+  }
+
 
   invisible_captcha only: [:create], honeypot: :subtitle
 
@@ -29,7 +35,9 @@ class FormularAnswersController < ApplicationController
     @formular_answer = FormularAnswer.find(params[:id])
     @formular_answer.answer_errors = {}
 
-    authorize! :update, @formular_answer
+    if @formular_follow_up_letter_recipient.blank?
+      authorize! :update, @formular_answer
+    end
 
     @formular_answer.answers = @formular_answer.answers.merge(formular_answer_params["answers"].to_h)
 
@@ -105,5 +113,15 @@ class FormularAnswersController < ApplicationController
         error_message = t("custom.formular_answer.errors.format")
         formular_answer.answer_errors[formular_field.key] = error_message
       end
+    end
+
+    def skip_authorization_check_for_guesst_user_with_token?
+      if params[:token].present?
+        @formular_follow_up_letter_recipient = FormularFollowUpLetterRecipient.find_by(
+          subscription_token: params[:token]
+        )
+      end
+
+      @formular_follow_up_letter_recipient.present?
     end
 end

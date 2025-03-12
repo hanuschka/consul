@@ -23,15 +23,12 @@
 
         <% if (@investment.feasible? || @investment.unfeasible?) && @investment.valuation_finished? %>
           <div class="callout <%= "#{ @investment.feasible? ? 'success' : 'alert'}" %>" style="color:initial;">
-            <%= t("custom.budgets.investments.investment.#{@investment.feasibility}_html") %>
-          </div>
+            <h3><%= t("custom.budgets.investments.investment.#{@investment.feasibility}_html") %></h3>
 
-          <% if @investment.valuator_explanation.present? %>
-            <div class="callout <%= "#{ @investment.feasible? ? 'success' : 'alert'}" %>" style="color:initial;">
-              <h3><%= t("budgets.investments.show.unfeasibility_explanation") %></h3>
+            <% if @investment.valuator_explanation.present? %>
               <p><%= auto_link_already_sanitized_html wysiwyg(@investment.valuator_explanation) %></p>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
 
         <% elsif @investment.winner? && @budget.finished? %>
           <div class="callout success">

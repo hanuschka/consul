@@ -24,8 +24,6 @@ end
 
 resources :projekt_phases, only: [] do
   member do
-    get :selector_hint_html
-    get :form_heading_text
     get :map_html
     post :toggle_subscription
   end

@@ -28,6 +28,7 @@ en:
         p1: New Debate has just been added to Consul.
       new_comment:
         subject: New Comment added to Consul
+        title: New Comment added to Consul
         hi: Hi %{username},
         p1: New comment has just been added to Consul.
       new_deficiency_report:
@@ -49,9 +50,12 @@ en:
         link: Projekt arguments
         p1: Projekt arguments were just added to Consul
       new_budget_investment:
-        subject: New Investment proposal added to Consul
-        hi: Hi %{username},
-        p1: New Investment proposal has just been added to Consul.
+        subject: A new proposal has been submitted!
+        title: A new proposal has been submitted!
+        hi: Hello %{username},
+        p1: "a new proposal has been submitted in %{projekt_link}. Check it out here: %{proposal_link}"
+        projekt_link_text: Project
+        sincerely: Kind regards,
       new_projekt_notification:
         subject: New projekt notification added to Consul
         hi: Hi %{username},
@@ -72,6 +76,19 @@ en:
         hi: Hi %{username},
         link: Projekt livestream
         p1: New projekt livestream has just been added to Consul
+      user_reverification_failed:
+        subject: Your account has been de-verified
+        hi: Dear Mr/Mrs %{last_name},
+        p1_html: The verification of your user account on the Participation platform has been canceled. This means that you cannot currently take part in any participation projects that require a verified account (e.g. citizen budget).
+        p2_html: <strong>Do you live within the city?</strong><br>At <a href="%{base_url}/account">%{base_url}/account</a> you can check your personal information and verify yourself again. Please ensure that your personal data is spelled correctly.
+        p3_html: <strong>Have you moved away?</strong><br>Even as an \"outsider\" you can still take part in many participation projects on the participation platform. Please change your place of residence at <a href="%{base_url}/account">%{base_url}/account</a>.
+        p4_html: If you have any questions, please do not hesitate to contact us.
+        signature_html: Thank you for your participation.
+      user_reverification_succeeded:
+        subject: Your account verification has been completed
+        hi: Dear Mr/Mrs %{last_name},
+        p1_html: The verification of your user account on the Participation platform has been completed. This means you can take part in participation projects that require a verified account.
+        signature_html: Thank you for your participation.
       new_topic:
         subject: New Topic added to Consul
         hi: Hello %{username},

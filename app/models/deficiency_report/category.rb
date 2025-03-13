@@ -4,9 +4,10 @@ class DeficiencyReport::Category < ApplicationRecord
   translates :name, touch: true
   include Globalizable
 
+  attr_accessor :default_officer_id, :default_officer_group_id
+
   has_many :deficiency_reports, foreign_key: :deficiency_report_category_id
-  belongs_to :default_deficiency_report_officer, class_name: "DeficiencyReport::Officer",
-    foreign_key: :deficiency_report_officer_id
+  belongs_to :default_responsible, polymorphic: true
 
   default_scope { order(given_order: :asc) }
 

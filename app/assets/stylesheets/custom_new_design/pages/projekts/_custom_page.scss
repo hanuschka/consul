@@ -128,6 +128,8 @@
 
   .custom-page--banner-description {
     font-size: 22px;
+    min-height: 1em;
+    min-width: 1em;
   }
 
   .custom-page--banner-text-section-wrapper {
@@ -166,6 +168,8 @@
     bottom: -50px;
     height: 390px !important;
     cursor: zoom-in;
+    overflow: hidden;
+    border-radius: 10px;
 
     .image-maximize-button {
       visibility: hidden;
@@ -180,8 +184,8 @@
       }
     }
 
-    & > .resource-image {
-      border-radius: 10px;
+    .resource-image {
+      // border-radius: 10px;
     }
 
     @media(max-width: 1150px) {
@@ -284,6 +288,20 @@
   .projekt-footer {
     .key-dates {
       margin: 0;
+      width: 100%;
+
+      @media(max-width: $small-tablet-viewport-start) {
+        max-width: 500px;
+
+        li::after {
+          content: '';
+        }
+      }
+      @media(min-width: $small-tablet-viewport-start) {
+        li::after {
+          content: '';
+        }
+      }
     }
 
     .row {
@@ -333,6 +351,14 @@
 
     img {
       border-radius: 5px;
+    }
+  }
+
+  .content-blocks-container {
+    .projekt-content-block:first-child  {
+      h1:first-child, h2:first-child, h3:first-child {
+        margin-top: 0;
+      }
     }
   }
 }

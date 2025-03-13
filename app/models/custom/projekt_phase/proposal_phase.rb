@@ -4,7 +4,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
 
   has_many :base_selection_proposals, -> { base_selection }, foreign_key: :projekt_phase_id, class_name: "Proposal"
 
-  after_create :create_map_location
+  after_create :copy_map_settings_from_projekt
 
   def phase_activated?
     active?
@@ -43,7 +43,14 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    setting_pages + %w[projekt_labels sentiments map]
+    setting_pages + %w[
+      projekt_labels sentiments map
+      officing_managers
+    ]
+  end
+
+  def embedded_admin_nav_bar_items
+    admin_nav_bar_items.excluding(%w[ officing_managers])
   end
 
   def safe_to_destroy?

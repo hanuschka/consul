@@ -24,7 +24,10 @@ class Budget::Investment::Stats < Budget::Stats
     end
 
     def balloters # changed
-      @balloters ||= investment.budget_ballot_lines.where(conditional: false).joins(:ballot).pluck("budget_ballots.user_id").compact
+      @balloters ||= investment.budget_ballot_lines
+                               .joins(:ballot).where(budget_ballots: { conditional: false })
+                               .pluck("budget_ballots.user_id")
+                               .compact.uniq
     end
 
     def poll_ballot_voters

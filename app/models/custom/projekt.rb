@@ -89,11 +89,17 @@ class Projekt < ApplicationRecord
   has_one_attached :greeting_image
   has_many_attached :images
 
+  has_and_belongs_to_many :landing_pages,
+    class_name: 'SiteCustomization::Page',
+    join_table: 'landing_pages_projekts',
+    foreign_key: 'projekt_id',
+    association_foreign_key: 'site_customization_page_id'
+
   delegate :image, to: :page, allow_nil: true
 
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
-    :create_map_location, :ensure_other_projekts_order_integrity
+    :copy_map_settings, :ensure_other_projekts_order_integrity
   around_update :update_page
   after_save do
     if parent_id_previously_changed?
@@ -664,6 +670,12 @@ class Projekt < ApplicationRecord
     #   .regular
   end
 
+  def any_phase_subscribers_ids
+    User.joins(:projekt_phase_subscriptions)
+      .where(projekt_phase_subscriptions: { projekt_phase_id: projekt_phases.ids })
+      .ids.uniq
+  end
+
   private
 
     def create_corresponding_page
@@ -743,14 +755,29 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def create_map_location
-      unless map_location.present?
+    def copy_map_settings
+      return if map_location.present?
+
+      if overview_page?
         MapLocation.create!(
           latitude: Setting["map.latitude"],
           longitude: Setting["map.longitude"],
           zoom: Setting["map.zoom"],
           projekt_id: id
         )
+      else
+        map_location = parent&.map_location&.dup || MapLocation.create!(
+          latitude: Setting["map.latitude"],
+          longitude: Setting["map.longitude"],
+          zoom: Setting["map.zoom"]
+        )
+
+        map_location.projekt_id = id
+        map_location.save!
+
+        (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+          map_layers << map_layer.dup
+        end
       end
     end
 

@@ -1,0 +1,61 @@
+<% @questions.each do |question| %>
+  <div class="margin-bottom" style="padding:15px;background-color:white;border:1px solid;border-radius:5px;">
+    <div class="row">
+      <div class="column">
+        <h3>
+          <%= question.title %>
+          <%= "*" if question.answer_mandatory? %>
+        </h3>
+      </div>
+    </div>
+
+    <% if question.description.present? %>
+      <div class="row">
+        <div class="column">
+          <div class='margin-bottom'>
+            <%= auto_link_already_sanitized_html wysiwyg(question.description) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if question.votation_type&.show_hint_callout? && !question.bundle_question? %>
+      <div class="row">
+        <div class="column">
+          <div class="callout primary">
+            <%= t("poll_questions.description.#{question.vote_type}", maximum: question.max_votes, cap: (question.votation_type.max_votes_per_answer || question.max_votes)) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <div class="column medium-6">
+        <div id="<%= dom_id(question) %>_answers" class="">
+          <%= render OfficingManagers::Polls::Questions::AnswersComponent.new(question, @offline_user) %>
+
+          <% question.nested_questions.each do |nested_question| %>
+            <h3>
+              <%= nested_question.title %>
+              <%= "*" if nested_question.answer_mandatory? %>
+            </h3>
+
+            <% if nested_question.description.present? %>
+              <div class=''>
+                <%= auto_link_already_sanitized_html wysiwyg(nested_question.description) %>
+              </div>
+            <% end %>
+
+            <div class="padding">
+              <div id="<%= dom_id(nested_question) %>_answers" class="">
+                <%= render OfficingManagers::Polls::Questions::AnswersComponent.new(nested_question, @offline_user) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= link_to "Nächster Stimmzettel", verify_user_officing_poll_path(@poll), class: "button hollow" %>

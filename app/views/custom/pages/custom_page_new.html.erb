@@ -1,163 +1,100 @@
-<%= content_for :body_class, "custom-page" %>
+<% if @custom_page.landing? %>
+  <% provide(:hide_navigation_menu, @custom_page.landing_hide_all_top_nav_links) %>
+  <%= render "pages/landing_page_content" %>
+<% else %>
+  <%= content_for :body_class, "custom-page" %>
   <% provide :title do %><%= @custom_page.title %><% end %>
 
-<% provide :social_media_meta_tags do %>
-  <%= render "shared/social_media_meta_tags",
-    social_title: @custom_page.title,
-    social_description: strip_tags(@custom_page.content).to_s[0..200],
-    og_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image.attachment) : nil),
-    social_url: page_url(@custom_page.slug),
-    twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
-<% end %>
-
-<% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
-  <% provide :vc_maps do %>
-    <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+  <% provide :social_media_meta_tags do %>
+    <%= render "shared/social_media_meta_tags",
+      social_title: @custom_page.title,
+      social_description: strip_tags(@custom_page.content).to_s[0..200],
+      og_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image.attachment) : nil),
+      social_url: page_url(@custom_page.slug),
+      twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
   <% end %>
-<% end %>
 
-<style>
-  <% if @custom_page.image&.attached? %>
-    .custom-page-banner {
-      background-image: url("<%= url_for(@custom_page.image.attachment) %>");
-      background-size: cover;
-      background-position: center center;
-    }
+  <% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
+    <% provide :vc_maps do %>
+      <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+    <% end %>
   <% end %>
-</style>
 
-<main class="projekt-page js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
-  <% if @custom_page.projekt.present? %>
-    <div class="custom-fixed-tabs margin-bottom">
-      <div class="custom-fixed-tabs--content">
-        <div class="js-scroll-link custom-tab" data-anchor-id="projekt-body">
-          Inhalt
-        </div>
-        <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
-          Info
-        </div>
-        <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
-          Beteiligung
+  <style>
+    <% if @custom_page.image&.attached? %>
+      .custom-page-banner {
+        background-image: url("<%= url_for(@custom_page.image.attachment) %>");
+        background-size: cover;
+        background-position: center center;
+      }
+    <% end %>
+  </style>
+
+  <main class="projekt-page js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
+    <% if @custom_page.projekt.present? %>
+      <div class="custom-fixed-tabs margin-bottom">
+        <div class="custom-fixed-tabs--content">
+          <div class="js-scroll-link custom-tab" data-anchor-id="projekt-body">
+            Inhalt
+          </div>
+          <div class="js-scroll-link custom-tab" data-anchor-id="projekt-info">
+            Info
+          </div>
+          <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? %>
+            <div class="js-scroll-link custom-tab" data-anchor-id="projekt-particapation">
+              Beteiligung
+            </div>
+          <% end %>
         </div>
       </div>
-    </div>
-  <% end %>
-  <% if @custom_page.subtitle.blank? && @custom_page.image.blank? %>
-    <h1 class="page-main-title margin-bottom">
-      <%= @custom_page.title %>
-    </h1>
-  <% else %>
-    <div class="custom-page--banner-wrapper">
-      <div class="custom-page--banner">
-        <div class="custom-page--banner-text-section-wrapper">
-          <div class="custom-page--banner-text-section">
-            <div class="custom-page--banner-title-wrapper">
-              <% if embedded_and_frame_access_code_valid?(@projekt) %>
-                <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
-                  <h1 class="custom-page--banner-title">
-                    <%= @custom_page.title %>
-                  </h1>
-                <% end %>
-              <% else %>
-                <h1 class="custom-page--banner-title">
-                  <%= @custom_page.title %>
-                </h1>
-              <% end %>
-            </div>
+    <% end %>
 
-            <% if @custom_page.subtitle.present? %>
-              <% if embedded_and_frame_access_code_valid?(@projekt) %>
-                <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
-                  <div class="custom-page--banner-description">
-                    <%= @custom_page.subtitle %>
-                  </div>
+    <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
+
+    <% if @custom_page.projekt.present? %>
+      <div class="flex-layout">
+        <div class="main-column">
+          <div class="js-anchor-navigation-content" id="projekt-body">
+            <% if @custom_page.content.present? || @custom_page&.projekt.new_content_block_mode? %>
+              <div class="main-content-card">
+                <% if @custom_page.content&.include?('template_projekt_library') %>
+                  <%= render "projekt_library", projekt: @custom_page.projekt %>
+                <% else %>
+                  <%= render "custom_page_content" %>
                 <% end %>
-              <% else %>
-                <div class="custom-page--banner-description">
-                  <%= @custom_page.subtitle %>
-                </div>
-              <% end %>
+              </div>
             <% end %>
           </div>
-
-          <% if @custom_page.projekt.present? %>
-            <div class="custom-page--banner-breadcrumbs">
-              <%= breadcrumbs_links(@custom_page.projekt) %>
-            </div>
-          <% end %>
         </div>
-
-        <% if @custom_page.image.present? %>
-          <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
-          <% big_projekt_image_url =
-            polymorphic_path(@custom_page.image.attachment.variant(
-              resize_to_limit: [1750, 900],
-              saver: { quality: 80 },
-              strip: true,
-              format: "jpeg"
-            ))
-          %>
-
-          <%= link_to big_projekt_image_url, target: "_blank", class: "glightbox custom-page--banner-image" do %>
-            <span class="image-maximize-button">
-              <i class="fas fa-magnifying-glass-plus"></i>
-            </span>
-            <%= render(
-              Shared::ResourceImageComponent.new(
-                image_url: @custom_page.image&.attachment.variant(coalesce: true, gravity: "center", resize_to_fill: [620, 390] ),
-                image_placeholder_icon_class: "fa-comments",
-                resource: @custom_page
-              )
-            ) %>
-          <% end %>
-        <% end %>
+        <div id="projekt-info">
+          <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "desktop" } %>
+        </div>
       </div>
-    </div>
-  <% end %>
 
-  <% if @custom_page.projekt.present? %>
-    <div class="flex-layout">
+    <% else %>
       <div class="main-column">
-        <div class="js-anchor-navigation-content" id="projekt-body">
-          <% if @custom_page.content.present? || @custom_page&.projekt.new_content_block_mode? %>
-            <div class="main-content-card">
-              <% if @custom_page.content&.include?('template_projekt_library') %>
-                <%= render "projekt_library", projekt: @custom_page.projekt %>
-              <% else %>
-                <%= render "custom_page_content" %>
-              <% end %>
-            </div>
-          <% end %>
+        <%= render 'custom_page_content' %>
+      </div>
+    <% end %>
+
+    <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || embedded? %>
+      <div class="js-anchor-navigation-content" id="projekt-particapation">
+        <div class="projekt-footer-anchor" id="projekt-footer"> </div>
+        <div class="projekt-footer flex-layout">
+          <div class="full-width-column">
+            <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase) %>
+            <% if @default_projekt_phase.present? %>
+              <div id="footer-content" class="js-projekt-footer-content">
+                <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
-      <div id="projekt-info">
-        <%= render partial: 'pages/sidebar_new', locals: { projekt: @custom_page.projekt, id_prefix: "desktop" } %>
-      </div>
-    </div>
+    <% end %>
+  </main>
 
-  <% else %>
-    <div class="main-column">
-      <%= render 'custom_page_content' %>
-    </div>
-  <% end %>
-
-  <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || embedded? %>
-    <div class="js-anchor-navigation-content" id="projekt-particapation">
-      <div class="projekt-footer-anchor" id="projekt-footer"> </div>
-      <div class="projekt-footer flex-layout">
-        <div class="full-width-column">
-          <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase) %>
-          <% if @default_projekt_phase.present? %>
-            <div id="footer-content" class="js-projekt-footer-content">
-              <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-</main>
-
-<script>
-  App.Projekts.toggleDefaultProjekts();
-</script>
+  <script>
+    App.Projekts.toggleDefaultProjekts();
+  </script>
+<% end %>

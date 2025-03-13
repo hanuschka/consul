@@ -1,6 +1,7 @@
 class FormularAnswersController < ApplicationController
   include ImageAttributes
   include DocumentAttributes
+  include GuestUsers
 
   respond_to :js
 

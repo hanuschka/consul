@@ -17,8 +17,8 @@ de:
         one: "Budget"
         other: "Budgets"
       budget/investment:
-        one: "Investitionsvorschlag"
-        other: "Investitionsvorschläge"
+        one: "Vorschlag"
+        other: "Vorschläge"
       milestone:
         one: "Meilenstein"
         other: "Meilensteine"
@@ -160,6 +160,7 @@ de:
         voting_style: "Abstimmungsstil"
         voting_style_knapsack: "Knapsack (Mehrere Stimmen bis Budget aufgebraucht ist)"
         voting_style_approval: "Zustimmung (Eine Stimme)"
+        max_preselected: Bestenliste (optional)
       budget/translation:
         main_link_text: "Linktext"
         main_link_url: "Der Link führt Sie zu (Link hinzufügen)"
@@ -171,8 +172,8 @@ de:
         external_url: "Link zur weiteren Dokumentation"
         administrator_id: "Administrator*in"
         location: "Standort (optional)"
-        organization_name: "Investitionsvorschlag erstellen im Namen von..."
-        image: "Beschreibendes Bild zum Investitionsvorschlag"
+        organization_name: "Vorschlag erstellen im Namen von..."
+        image: "Beschreibendes Bild zum Vorschlag"
         image_title: "Bildtitel"
         duration: Zeitrahmen (intern)
         feasibility_feasible: Entspricht den Kriterien
@@ -333,7 +334,7 @@ de:
       signature_sheet:
         title: "Titel"
         signable_type: "Unterschriftentyp"
-        signable_id: "ID des Vorschlags/Investitionsvorschlags"
+        signable_id: "ID des Vorschlags"
         document_numbers: "Dokumentennummern"
       sdg/goal:
         code: "Code"
@@ -368,7 +369,7 @@ de:
         locale: Sprache
       site_customization/page/translation:
         title: Titel
-        subtitle: Untertitel und Projektbeschreibung
+        subtitle: Untertitel
         content: Inhalt
       site_customization/image:
         name: Name
@@ -377,6 +378,11 @@ de:
         name: Name
         locale: Sprache
         body: Inhalt
+      site_customization/page:
+        landing_show_in_top_nav: "Themen/Gebietsseite in der Hauptnavigation anzeigen"
+        landing_hide_all_top_nav_links: "Sämtliche Links in der Top Navigation auf dieser Themen/Gebietsseite ausblenden"
+        landing_hide_title_and_subtitle: "Informationsbox mit Titel und Untertitel ausblenden"
+        landing_mobile_header_image: "Mobile Header Bild"
       tag:
         name: "Geben Sie den Namen des Tags ein"
       topic:
@@ -460,9 +466,11 @@ de:
         title: Externes Video Titel
         url: Externes Video URL
       newsletter:
+        recipient_group_id: Adressatengruppe
         segment_recipient: Empfänger*innen
         subject: Betreff
-        from: "Von"
+        from: "Absender-Email-Adresse (muss auf @domain.de enden)"
+        greeting: Ansprache
         body: Inhalt der E-Mail
       admin_notification:
         segment_recipient: Empfänger*innen

@@ -20,7 +20,8 @@ class Budget::Stats
   end
 
   def phases
-    %w[support vote].select { |phase| send("#{phase}_phase_finished?") }
+    # %w[support vote].select { |phase| send("#{phase}_phase_finished?") }
+    %w[support vote]
   end
 
   def all_phases
@@ -29,14 +30,14 @@ class Budget::Stats
     [*phases, "every"]
   end
 
-  def support_phase_finished?
-    budget.valuating_or_later?
-  end
+  # def support_phase_finished?
+  #   budget.valuating_or_later?
+  # end
 
-  def vote_phase_finished?
-    budget.reviewing_ballots? || #custom line
-      budget.finished?
-  end
+  # def vote_phase_finished?
+  #   budget.reviewing_ballots? || #custom line
+  #     budget.finished?
+  # end
 
   def total_participants
     participants.distinct.count

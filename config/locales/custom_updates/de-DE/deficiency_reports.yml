@@ -83,6 +83,10 @@ de:
           statuses:
             all_statuses: Alle Meldungen
             title: Status
+          archived_status:
+            title: Archiv
+            not_archived: Nicht archiviert
+            only_archived: Archiviert
           my_posts:
             title: Meine Beiträge
         start_deficiency_report: Mangel melden

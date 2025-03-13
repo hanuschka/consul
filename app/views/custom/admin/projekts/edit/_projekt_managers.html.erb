@@ -12,7 +12,7 @@
         <%= af.collection_check_boxes :permissions, ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS, :to_s, :to_s do |cb| %>
           <%= cb.label(class: "projekt-manager-permission-checkbox") do %>
             <%= cb.check_box(class: "projekt-manager-permission-checkbox") %>
-            <%= cb.text %>
+            <%= t("custom.admin.projekts.edit.projekt_managers_tab.permissions.#{cb.text}") %>
           <% end %>
         <% end %>
       </div>

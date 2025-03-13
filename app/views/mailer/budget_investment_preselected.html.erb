@@ -1,0 +1,35 @@
+<td style="<%= css_for_mailer_content %>">
+  <h1 style="<%= css_for_mailer_heading %>">
+    <%= t("mailers.budget_investment_preselected.title") %>
+  </h1>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.budget_investment_preselected.hi", username: @author.username) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize(
+      t("mailers.budget_investment_preselected.text1",
+        proposal_link: link_to(@investment.title,
+                               budget_investment_url(@investment.budget, @investment))
+      ),
+      attributes: %w[href style]
+    ) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize(
+      t("mailers.budget_investment_preselected.text2",
+        projekt_link: link_to(t("mailers.budget_investment_preselected.projekt_link_text"),
+                              page_url(@projekt.page.slug))
+      ),
+      attributes: %w[href style]
+    ) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.budget_investment_preselected.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
+  </p>
+</td>

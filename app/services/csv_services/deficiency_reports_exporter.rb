@@ -1,7 +1,6 @@
 module CsvServices
-  class DeficiencyReportsExporter < ApplicationService
+  class DeficiencyReportsExporter < CsvServices::BaseService
     require "csv"
-    include JsonExporter
 
     def initialize(deficiency_reports)
       @deficiency_reports = deficiency_reports
@@ -34,12 +33,12 @@ module CsvServices
 
       def row(dr)
         [
-          dr.id, dr.admin_accepted, dr.author.username,
-          dr.title, strip_tags(dr.description),
+          dr.id, dr.admin_accepted, sanitize_for_csv(dr.author.username),
+          sanitize_for_csv(dr.title), sanitize_for_csv(strip_tags(dr.description)),
           dr.status&.title, dr.map_location&.approximated_address, dr.area&.name,
           dr.category&.name,
-          dr.officer&.user&.username, dr.assigned_at,
-          dr.video_url, dr.on_behalf_of,
+          sanitize_for_csv(dr.responsible&.name), dr.assigned_at,
+          sanitize_for_csv(dr.video_url), sanitize_for_csv(dr.on_behalf_of),
           dr.created_at,
           strip_tags(dr.official_answer)
         ]

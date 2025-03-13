@@ -22,9 +22,13 @@ class Verification::ResidenceController < ApplicationController
     process_temp_attributes_for(@residence)
 
     if @residence.save
-      NotificationServices::NewManualVerificationRequestNotifier.call(current_user.id) # remove unless manual
+      NotificationServices::NewManualVerificationRequestNotifier.call(current_user.id) if Setting["feature.melderegister"].blank?
       redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
     else
+      if @residence.user.verified? && Setting["feature.melderegister"].present?
+        NotificationServices::UserReverificationFailedNotifier.call(@residence.user.id)
+        @residence.user.unverify!
+      end
       render :new #, alert: t("custom.verification.residence.create.flash.error")
     end
   end
@@ -39,5 +43,9 @@ class Verification::ResidenceController < ApplicationController
         :terms_data_storage, :terms_data_protection, :terms_general,
         :registered_address_id, :terms_of_service
       ]
+    end
+
+    def verify_verified!
+      # allows reverification
     end
 end

@@ -6,7 +6,9 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
   def show
     @individual_group_value = IndividualGroupValue.find(params[:id])
     @individual_group = @individual_group_value.individual_group
-    @related_users = @individual_group_value.users.page(params[:page])
+    @related_users = @individual_group_value.users
+                                            .order("user_individual_group_values.id": :desc)
+                                            .page(params[:page])
   end
 
   def new
@@ -91,7 +93,7 @@ class Admin::IndividualGroupValuesController < Admin::BaseController
   private
 
     def individual_group_value_params
-      params.require(:individual_group_value).permit(:individual_group_id, :name)
+      params.require(:individual_group_value).permit(:individual_group_id, :name, :email_pattern)
     end
 
     def save_file_in_tmp(uploaded_file)

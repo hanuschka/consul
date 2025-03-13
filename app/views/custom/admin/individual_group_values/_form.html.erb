@@ -8,8 +8,14 @@
   <%= f.hidden_field :individual_group_id, value: params[:individual_group_id] %>
 
   <div class="row">
-    <div class="column">
+    <div class="column medium-4">
       <%= f.text_field :name, autocomplete: "off" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column medium-4">
+      <%= f.text_field :email_pattern, autocomplete: "off" %>
     </div>
   </div>
 

@@ -70,15 +70,18 @@
       <% end %>
     </div>
 
-    <div class="users-profile-banner--info-line">
-      <% if @user.level_three_verified? %>
-        <span class="icon-check"></span>
-        <%= t("account.show.verified_account") %>
-      <% else %>
-        <span class="icon-x"></span>
-        <%= t("custom.account.show.not_verified_account") %>
-      <% end %>
-    </div>
+    <% if Setting["extra_fields.verification.show_verification_status"].present? %>
+      <div class="users-profile-banner--info-line">
+        <% if @user.level_three_verified? %>
+          <span class="icon-check"></span>
+          <%= t("account.show.verified_account") %>
+        <% else %>
+          <span class="icon-x"></span>
+          <%= t("custom.account.show.not_verified_account") %>
+        <% end %>
+      </div>
+    <% end %>
+
     <%= render Shared::OfficialPositionBadgeComponent.new(user: @user) %>
   </div>
 </div>

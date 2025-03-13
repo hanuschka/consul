@@ -6,6 +6,7 @@ class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::Base
   def update
     if @page.update(page_params)
       notice = t("admin.site_customization.pages.update.notice")
+
       redirect_to redirect_path, notice: notice
     else
       flash.now[:error] = t("admin.site_customization.pages.update.error")
@@ -17,7 +18,12 @@ class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::Base
     if @page.safe_to_destroy?
       @page.destroy!
       notice = t("admin.site_customization.pages.destroy.notice")
-      redirect_to admin_site_customization_pages_path, notice: notice
+
+      if @page.landing?
+        redirect_to admin_site_customization_landing_pages_path, notice: notice
+      else
+        redirect_to admin_site_customization_pages_path, notice: notice
+      end
     else
       notice = t("custom.admin.site_customization.pages.destroy.cannot_notice")
       redirect_to admin_site_customization_pages_path, alert: notice
@@ -27,8 +33,11 @@ class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::Base
   private
 
     def page_params
-      attributes = [:slug, :more_info_flag, :print_content_flag, :status,
-                    image_attributes: image_attributes]
+      attributes = [
+        :slug, :more_info_flag,
+        :print_content_flag, :status,
+        image_attributes: image_attributes
+      ]
 
       params.require(:site_customization_page).permit(*attributes,
         translation_params(SiteCustomization::Page)
@@ -36,7 +45,7 @@ class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::Base
     end
 
     def resource
-      SiteCustomization::Page.find(params[:id])
+      SiteCustomization::Page.regular.find(params[:id])
     end
 
     def redirect_path

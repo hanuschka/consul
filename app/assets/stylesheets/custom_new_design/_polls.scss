@@ -58,15 +58,6 @@
       }
     }
   }
-
-  .poll-question--nested-question {
-    &.-rating-scale {
-      .poll-question--nested-question-title {
-        min-width: 250px;
-        max-width: 250px;
-      }
-    }
-  }
 }
 
 .menu.poll-results-menu {

@@ -1,6 +1,9 @@
 de:
   custom:
     terms:
+      newsletter:
+        title: Newsletter
+        label: Ich möchte den Newsletter erhalten.
       data_storage:
         title: Datenverarbeitung
         label: Mit der Registrierung akzeptieren Sie, dass wir die hier erhobenen Daten zur Verarbeitung speichern.

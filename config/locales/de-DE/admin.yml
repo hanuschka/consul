@@ -207,10 +207,10 @@ de:
           without_valuator: Ohne zugewiesene*n Begutachter*in
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
-          feasible: Durchführbar
+          feasible: Entspricht den Kriterien
           selected: Ausgewählt
           undecided: Offen
-          unfeasible: Undurchführbar
+          unfeasible: Entspricht nicht den Kriterien
           min_total_supports: Minimum Unterstützer*innen
           max_total_supports: Maximum Unterstützer*innen
           winners: Bestbewertete Vorschläge
@@ -400,8 +400,9 @@ de:
     dashboard:
       index:
         back: Zurück zu %{org}
-        title: Verwaltung
+        title: Dashboard für Administratoren
         description: Willkommen auf dem Admin-Panel für %{org}.
+        additional_description: "Herzlich willkommen im Administrationsbereich von Consul! Hier finden Sie alle wichtigen Links und Ressourcen, die Sie für die Verwaltung und Optimierung Ihrer Bürgerbeteiligungsplattform benötigen."
       actions:
         index:
           description: "Wenn Benutzer Vorschläge erstellen, können sie auf ein Dashboard ihres Vorschlags zugreifen, in dem Sie Ressourcen und Empfehlungen vorschlagen können, um Unterstützung für ihre Idee zu erhalten."
@@ -774,6 +775,10 @@ de:
       send_success: Newsletter erfolgreich gesendet
       delete_success: Newsletter erfolreich gelöscht
       index:
+        tabs:
+          list: Newsletter
+          settings: Einstellungen
+
         title: Newsletter
         new_newsletter: Neuer Newsletter
         subject: Betreff
@@ -783,6 +788,7 @@ de:
         draft: Entwurf
         preview: Vorschau
         empty_newsletters: Keine Newsletter zum Anzeigen vorhanden
+
       new:
         title: Neuer Newsletter
         header_footer_help_text: "Die Kopf- und Fußzeile ist für alle E-Mails gleich, Sie können sie ändern unter <code>app/views/layouts/mailer_header</code> and <code>app/views/layouts/mailer_footer</code>.<br>\nSie können das Bilder der Kopfzeile ersetzen unter %{link}."

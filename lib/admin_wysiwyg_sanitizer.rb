@@ -39,6 +39,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       data-path
       data-show-more-text data-show-less-text
       data-pswp-width data-pswp-height
+      data-turbolinks
     ]
   end
 end

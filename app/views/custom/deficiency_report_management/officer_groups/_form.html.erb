@@ -1,0 +1,26 @@
+<%= form_for officer_group, url: form_path do |f| %>
+  <%= render "shared/errors", resource: officer_group %>
+
+  <div class="row expanded">
+    <div class="small-12 medium-6 large-4 column">
+      <%= f.text_field :name %>
+    </div>
+  </div>
+
+  <div class="row expanded">
+    <div class="small-12 medium-6 large-4 column">
+      <div style="column-count:3;margin-bottom:50px;">
+        <%= f.collection_check_boxes :officer_ids, DeficiencyReport::Officer.all, :id, :name do |b| %>
+          <div style="margin-right:20px;">
+            <%= b.check_box %>
+            <%= b.label %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="small-12 column">
+    <%= f.submit class: "button success" %>
+  </div>
+<% end %>

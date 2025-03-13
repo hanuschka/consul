@@ -61,6 +61,7 @@ en:
         password_confirmation_label: Confirm new password
         password_label: New Password
         title: Change my password
+        password_hint: "Your password must meet three of the following four criteria: uppercase letter, lowercase letter, number, special character."
       new:
         email_label: Email
         send_submit: Submit
@@ -121,6 +122,7 @@ en:
           username_is_not_available: Username already taken
           username_label: Username (publicly visible)
           username_note: Name that will be displayed publicly next to your posts
+          password_hint: "Your password must meet three of the following four criteria: uppercase letter, lowercase letter, number, special character."
         success:
           back_to_index: Back to home page
           instructions_1: Please <b>check your email</b> - we have sent you a <b>link to confirm your account</b>.

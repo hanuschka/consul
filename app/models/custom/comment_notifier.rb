@@ -5,6 +5,8 @@ class CommentNotifier
   private
 
     def email_on_comment?
+      return false unless @comment.root?
+
       commentable_author = @comment.commentable.author
 
       return false unless commentable_author.present?

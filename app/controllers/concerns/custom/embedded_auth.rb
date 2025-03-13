@@ -6,9 +6,9 @@ module EmbeddedAuth
     helper_method :embedded? #, :frame_temp_token_valid?
     helper_method :frame_access_code_valid? #, :frame_temp_token_valid?
     helper_method :embedded_and_frame_access_code_valid?
-    helper_method :frame_session_authentificated?, :frame_session_from_authorized_source?, :frame_session
+    helper_method :skip_forgery_protection_for_frame_session?, :frame_session_from_authorized_source?, :frame_session
 
-    skip_forgery_protection if: :frame_session_authentificated?
+    skip_forgery_protection if: :skip_forgery_protection_for_frame_session?
   end
 
   private
@@ -26,25 +26,31 @@ module EmbeddedAuth
     def frame_access_code_valid?(projekt)
       return false if params[:frame_code].blank?
 
-      params[:frame_code] = projekt.frame_access_code
+      params[:frame_code] == projekt.frame_access_code
     end
 
     def embedded_and_frame_access_code_valid?(projekt)
       embedded? && frame_access_code_valid?(projekt)
     end
 
-    def frame_session_authentificated?
+    def skip_forgery_protection_for_frame_session?
       @_frame_session_authentificated ||=
         frame_session_from_authorized_source? &&
           Current.frame_current_user.present?
     end
 
+    # def frame_session_from_authorized_source?
+    #   @_frame_session_from_authorized_source ||=
+    #     frame_session.present? &&
+    #       origin_allowed? &&
+    #       frame_csrf_token_valid?(frame_session[:frame_csrf_token])
+    # end
+
     def frame_session_from_authorized_source?
       @_frame_session_from_authorized_source ||=
-        frame_session.present? &&
-          origin_allowed? &&
-          frame_csrf_token_valid?(frame_session[:frame_csrf_token])
+        frame_session.present? && origin_allowed?
     end
+
 
     def frame_session
       return @_frame_session if @_frame_session.present?
@@ -61,10 +67,6 @@ module EmbeddedAuth
     def authentificate_frame_session_user!
       return unless embedded?
 
-      # if !frame_session_from_authorized_source? && !request.get?
-      #   raise "Frame csrf token invalid/expired"
-      # end
-
       if frame_session_from_authorized_source?
         user = User.find(frame_session["user_id"])
 
@@ -76,19 +78,8 @@ module EmbeddedAuth
       end
     end
 
-    def update_frame_session_data(user, gen_new_frame_csrf_token: false)
-      active_frame_csrf_token =
-        if gen_new_frame_csrf_token
-          SecureRandom.base64(32)
-        elsif frame_session[:frame_csrf_token].present?
-          frame_session[:frame_csrf_token]
-        end
-
+    def update_frame_session_data(user)
       new_frame_session = { user_id: user.id }
-
-      if active_frame_csrf_token.present?
-        new_frame_session[:frame_csrf_token] = active_frame_csrf_token
-      end
 
       cookies.encrypted[:frame_session] = {
         value: new_frame_session.to_json,
@@ -98,7 +89,6 @@ module EmbeddedAuth
         expires: 5.hours
       }
 
-      Current.active_frame_csrf_token = active_frame_csrf_token
       Current.frame_current_user = user
       request.env["warden"].set_user(user)
     end
@@ -110,26 +100,11 @@ module EmbeddedAuth
     def gen_default_url_options(options)
       options = options.presence || {}
 
-      # options =
-      #   if params[:temp_token].present?
-      #     options.merge({ temp_token: params[:temp_token] })
-      #   else
-      #     {}
-      #   end
-
       options =
         if params[:embedded].present?
           options.merge({ embedded: params[:embedded] })
         else
           {}
-        end
-
-      options =
-        # TODO move this to JS
-        if Current.active_frame_csrf_token.present? && frame_session_from_authorized_source?
-          options.merge({ frame_csrf_token: Current.active_frame_csrf_token })
-        else
-          options
         end
 
       options
@@ -151,19 +126,11 @@ module EmbeddedAuth
     #   return false
     end
 
-    def frame_csrf_token_valid?(current_frame_csrf_token)
-      # if Rails.env.development? && ENV["TURN_ON_DEV_FRAME_CSRF_PROTECTION"] != "true"
-      #   return true
-      # end
+    # def frame_csrf_token_valid?(current_frame_csrf_token)
+    #   # if Rails.env.development? && ENV["TURN_ON_DEV_FRAME_CSRF_PROTECTION"] != "true"
+    #   #   return true
+    #   # end
 
-      current_frame_csrf_token && current_frame_csrf_token == params[:frame_csrf_token]
-    end
-
-    # def frame_temp_token_valid?
-    #   return false if params[:temp_token].blank?
-    #
-    #   user = User.find_by(temporary_auth_token: params[:temp_token])
-    #
-    #   user.present? && user.temporary_auth_token_valid?
+    #   current_frame_csrf_token && current_frame_csrf_token == params[:frame_csrf_token]
     # end
 end

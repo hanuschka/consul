@@ -15,7 +15,7 @@ class Verification::Residence
   # validate :document_number_uniqueness
 
   # validate :local_postal_code
-  # validate :local_residence
+  validate :local_residence, if: -> { Setting["feature.melderegister"].present? }
 
   def initialize(attrs = {})
     self.date_of_birth = parse_date("date_of_birth", attrs)

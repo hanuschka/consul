@@ -3,6 +3,7 @@
   "dependencies": {
     "@geoman-io/leaflet-geoman-free": "^2.15.0",
     "glightbox": "^3.3.0",
+    "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.13.2",
     "jquery-ujs": "^1.2.3",

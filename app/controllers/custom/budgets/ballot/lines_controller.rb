@@ -34,7 +34,7 @@ module Budgets
       private
 
         def load_ballot
-          user = User.find_by(id: params[:user_id]) || current_user
+          user = User.find_by(id: params[:offline_user_id]) || current_user
           @ballot = Budget::Ballot.where(user: user, budget: @budget).first_or_create!
         end
 

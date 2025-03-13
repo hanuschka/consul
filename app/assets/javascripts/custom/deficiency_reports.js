@@ -99,6 +99,22 @@
       window.location.href = url;
     },
 
+    updateSelectedDeficiencyArchivedStatusParam: function($label) {
+      var url = new URL(window.location.href);
+      var selection = $('input[name="archived_status"]:checked').val();
+
+      if ( selection == 0 ) {
+        url.searchParams.delete('dr_archived_status')
+      } else {
+        url.searchParams.set('dr_archived_status', selection)
+      }
+
+      url.searchParams.delete('search')
+      url.searchParams.delete('page')
+      window.history.pushState('', '', url)
+      window.location.href = url;
+    },
+
     updateSelectedDeficiencyAreaParam: function($label) {
       var url = new URL(window.location.href);
       var selection = $('input[name="area"]:checked').val();
@@ -161,6 +177,12 @@
         var $label = $(this).closest('label');
         App.DeficiencyReports.updateLabelStyle($label.closest('li'));
         App.DeficiencyReports.updateSelectedDeficiencyStatusParam($label);
+      });
+
+      $("body").on("click", ".js-filter-by-deficiency-report-archived-status", function() {
+        var $label = $(this).closest('label');
+        App.DeficiencyReports.updateLabelStyle($label.closest('li'));
+        App.DeficiencyReports.updateSelectedDeficiencyArchivedStatusParam($label);
       });
 
       $("body").on("click", ".js-filter-by-deficiency-report-area", function() {

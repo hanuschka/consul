@@ -25,6 +25,7 @@
             <div class="user-resources-form--banner-editor -budget-investment">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
+                  data: suggest_data(investment),
                   label: false,
                   class: "user-resources-form--banner-editor-title",
                   placeholder: investment.projekt_phase&.resource_form_title_hint.presence || t("custom.budgets.investments.form.title_placeholder"),
@@ -221,7 +222,7 @@
         </div>
       <% end %>
 
-        <%= f.submit(class: "button", value: t("custom.user_resources.form.submit_button")) %>
+        <%= f.submit t("custom.user_resources.form.submit_button"), class: "button" %>
       </div>
     <% end %>
   </main>

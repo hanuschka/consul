@@ -162,7 +162,7 @@ module Abilities
         budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
-      can :read_stats, Budget, id: Budget.where(id: Budget.valuating_or_later.pluck(:id)).ids
+      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).ids
 
       can [:admin_update, :toggle_selection, :add_memo, :people, :milestones, :progress_bars, :audits], Budget::Investment do |investment|
         can?(:create, investment.budget)

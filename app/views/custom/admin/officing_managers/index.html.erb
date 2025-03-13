@@ -1,0 +1,38 @@
+<h2 class="inline-block"><%= t("custom.admin.officing_managers.index.title") %></h2>
+
+<%= render "admin/shared/user_search", url: search_admin_officing_managers_path %>
+
+<div id="officing_managers">
+  <% if @officing_managers.any? %>
+    <h3><%= page_entries_info @officing_managers %></h3>
+
+    <table>
+      <thead>
+        <th scope="col"><%= Moderator.human_attribute_name(:name) %></th>
+        <th scope="col" class="small-6"><%= Moderator.human_attribute_name(:email) %></th>
+        <th scope="col" class="small-3"><%= t("admin.shared.actions") %></th>
+      </thead>
+      <tbody>
+        <% @officing_managers.each do |officing_manager| %>
+          <tr>
+            <td>
+              <%= officing_manager.name %>
+            </td>
+            <td>
+              <%= officing_manager.email %>
+            </td>
+            <td>
+              <%= render Admin::Roles::TableActionsComponent.new(officing_manager) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate @officing_managers %>
+  <% else %>
+    <div class="callout primary">
+      <%= t("custom.admin.officing_managers.index.no_officing_managers") %>
+    </div>
+  <% end %>
+</div>

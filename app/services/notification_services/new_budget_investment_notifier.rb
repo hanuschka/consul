@@ -15,8 +15,23 @@ module NotificationServices
     private
 
       def users_to_notify
-        [projekt_phase_subscribers]
+        [administrators, moderators, projekt_managers, projekt_phase_subscribers]
           .flatten.uniq(&:id).reject { |user| user.id == @investment.author.id }
+      end
+
+      def administrators
+        User.joins(:administrator).where(adm_email_on_new_budget_investment: true).to_a
+      end
+
+      def moderators
+        User.joins(:moderator).where(adm_email_on_new_budget_investment: true).to_a
+      end
+
+      def projekt_managers
+        User.joins(projekt_manager: :projekt_manager_assignments)
+          .where(adm_email_on_new_budget_investment: true)
+          .where(projekt_manager_assignments: { projekt_id: @investment.projekt_phase.projekt.id })
+          .where("projekt_manager_assignments.permissions @> ARRAY[?]::text[]", ["get_notifications"]).to_a
       end
 
       def projekt_phase_subscribers

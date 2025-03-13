@@ -6,7 +6,7 @@
 
     <div class="image-gallery-with-ligthbox" style="display:grid;grid-template-columns: repeat(2, 1fr);gap:5px">
       <% @images.each do |image| %>
-        <%= link_to(image[:url], class: "glightbox", target: "_blank") do %>
+        <%= link_to(image[:url], class: "glightbox template-thumb-image", target: "_blank") do %>
           <%= image_tag(image[:thumb_url] || image[:url], referrerpolicy: "no-referer", style: "aspect-ratio: 1 / 0.5") %>
         <% end %>
       <% end %>

@@ -14,14 +14,13 @@
         event.preventDefault();
 
         // Get the current content of the CKEditor
-        for (var key in CKEDITOR.instances) {
-          var editor = CKEDITOR.instances[key];
-          var existingPlaceholderElement = editor.document.$.querySelector("p[data-cke-placeholdertext]");
+        document.querySelectorAll( '.ck-editor__editable' ).forEach( function(editor) {
+          var existingPlaceholderElement = editor.ckeditorInstance.editing.view.document.getRoot( 'main' );
 
-          if (existingPlaceholderElement) {
-            editor.setData("");
+          if (existingPlaceholderElement.placeholder) {
+            existingPlaceholderElement.placeholder = "";
           }
-        }
+        })
 
         form.submit();
       });

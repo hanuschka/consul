@@ -1,0 +1,25 @@
+<td style="<%= css_for_mailer_content %>">
+  <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
+    <%= t("mailers.reply.title") %>
+  </h1>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("mailers.reply.hi", username: @reply.parent.author.username) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= sanitize(
+      t("mailers.reply.text",
+        comment_link: link_to(t("mailers.reply.comment_link_text"),
+                              comment_url(@reply))
+       ),
+       attributes: %w[href]
+    ) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("mailers.reply.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
+  </p>
+</td>

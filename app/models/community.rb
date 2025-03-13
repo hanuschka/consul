@@ -42,6 +42,10 @@ class Community < ApplicationRecord
     participants.count
   end
 
+  def communitable
+    proposal || investment
+  end
+
   private
 
     def users_who_commented

@@ -40,7 +40,7 @@ module ProjektEventAdminActions
     authorize!(:send_notifications, @projekt_event)
     NotificationServices::NewProjektEventNotifier.call(@projekt_event.id)
     redirect_to polymorphic_path([@namespace, @projekt_phase], action: :projekt_events),
-      notice: t("custom.admin.projekts.edit.projekt_events_tab.notifications_sent_notice")
+      notice: t("custom.admin.projekts.edit.projekt_events.notifications_sent_notice")
   end
 
   private

@@ -1,0 +1,7 @@
+<%= back_link_to deficiency_report_management_officer_groups_path %>
+
+<div class="small-12 column">
+  <h2><%= t("custom.admin.deficiency_reports.officer_groups.new.creating") %></h2>
+</div>
+
+<%= render "form", officer_group: @officer_group, form_path: deficiency_report_management_officer_groups_path(@officer_group) %>

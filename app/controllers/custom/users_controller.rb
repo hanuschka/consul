@@ -8,13 +8,13 @@ class UsersController < ApplicationController
       redirect_to root_path, alert: "Diese Funktion ist deaktiviert"
     end
 
-    @users = User.active.where(show_in_users_overview: true).order(created_at: :desc).page(params[:page])
+    @users = User.active.where(show_in_users_overview: true, guest: false).order(created_at: :desc).page(params[:page])
   end
 
   def show
     raise CanCan::AccessDenied if params[:filter] == "follows" && !valid_interests_access?(@user)
 
-    if @user.erased?
+    if @user.erased? || @user.guest?
       head :not_found
     elsif @user == current_user
       redirect_to account_path

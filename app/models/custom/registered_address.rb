@@ -3,6 +3,8 @@ class RegisteredAddress < ApplicationRecord
 
   belongs_to :registered_address_city, class_name: "RegisteredAddress::City"
   belongs_to :registered_address_street, class_name: "RegisteredAddress::Street"
+  belongs_to :district, class_name: "RegisteredAddress::District",
+    foreign_key: :registered_address_district_id, optional: true, inverse_of: :registered_addresses
   has_many :users, dependent: :nullify
 
   def self.import(file_path)
@@ -17,6 +19,9 @@ class RegisteredAddress < ApplicationRecord
 
     CSV.foreach(file_path, headers: true) do |row|
       fixed_attributes_hash = row.to_hash.slice(*fixed_attribute_keys)
+      if fixed_attributes_hash["street_number_extension"].present?
+        fixed_attributes_hash["street_number_extension"] = fixed_attributes_hash["street_number_extension"].downcase
+      end
 
       street_id = find_or_create_registered_address_street(row["street_name"], row["plz"]).id
       fixed_attributes_hash[:registered_address_street_id] = street_id
@@ -26,7 +31,9 @@ class RegisteredAddress < ApplicationRecord
 
       grouping_attributes_hash = row.to_hash.slice(*grouping_keys)
 
-      RegisteredAddress.find_or_create_by!(fixed_attributes_hash).update!(groupings: grouping_attributes_hash)
+      district = RegisteredAddress::District.find_or_create_by!(name: row["district"])
+
+      RegisteredAddress.find_or_create_by!(fixed_attributes_hash).update!(groupings: grouping_attributes_hash, registered_address_district_id: district.id)
     rescue ActiveRecord::RecordInvalid
       next
     end

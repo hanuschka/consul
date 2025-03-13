@@ -25,11 +25,13 @@
 
       <div class="small-12 column">
         <%= translations_form.text_area :summary,
+            value: AdminWYSIWYGSanitizer.new.sanitize(@poll.summary),
             class: "html-area #{ck_editor_class(current_user)}" %>
       </div>
 
       <div class="small-12 column">
         <%= translations_form.text_area :closing_note,
+            value: AdminWYSIWYGSanitizer.new.sanitize(@poll.closing_note),
             class: "html-area #{ck_editor_class(current_user)}" %>
       </div>
     <% end %>
@@ -50,12 +52,6 @@
           <% end %>
         </div>
       <% end %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-12 column margin-top margin-bottom">
-      <%= render partial: "shared/projekt_selector/projekt_selector", locals: { f: f, model: @poll }  %>
     </div>
   </div>
 

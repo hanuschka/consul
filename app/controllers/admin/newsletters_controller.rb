@@ -1,10 +1,13 @@
 class Admin::NewslettersController < Admin::BaseController
+  include ImageAttributes
+
   def index
     @newsletters = Newsletter.all
   end
 
   def show
     @newsletter = Newsletter.find(params[:id])
+    @recipients_count = @newsletter.list_of_recipient_emails&.count || 0
   end
 
   def new
@@ -60,10 +63,10 @@ class Admin::NewslettersController < Admin::BaseController
   private
 
     def newsletter_params
-      params.require(:newsletter).permit(allowed_params)
+      params.require(:newsletter).permit(allowed_params, image_attributes: image_attributes)
     end
 
     def allowed_params
-      [:subject, :segment_recipient, :from, :body]
+      [:subject, :recipient_group_id, :from, :body, :title, :subtitle, :greeting]
     end
 end

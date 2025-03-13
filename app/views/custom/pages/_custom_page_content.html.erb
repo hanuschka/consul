@@ -1,6 +1,7 @@
 <div class="custom-page-content" id='page-content'>
   <% if @custom_page&.projekt&.new_content_block_mode? %>
-    <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+    <div class="js-content-block-templates-load-container">
+    </div>
 
     <div class="custom-page-content-inner">
       <div class="content-blocks-container">

@@ -1,54 +1,74 @@
-<% if Setting.old_design_enabled? %>
-  <% if header.present? %>
-    <%header_large = Widget::Card.header.find_by title: "header_large" %>
-    <style>
-<%if header_large%>
-  .home-page .jumbo{
-    background-image: url("<%= polymorphic_path(header_large.image.attachment) %>");
-    background-size: cover;
-    background-position: center 25%;
-  }
-<%end%>
-    </style>
+<% header_image_attachment = local_assigns[:header_image_attachment] %>
+<% mobile_header_image_attachment = local_assigns[:mobile_header_image_attachment] %>
 
-    <div class="jumbo not-print">
-      <div class='jumbo-message'>
-      </div>
-    </div>
+<% if header_image_attachment.attached? %>
+  <style>
+      <% image_variant = header_image_attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 85 }, strip: true, format: 'jpeg') %>
 
-    <div class="background-header"></div>
-  <% end %>
-<% else %>
-  <% if header.present? %>
-    <% header_large = Widget::Card.header.find_by(title: "header_large") %>
-    <style>
-<%if header_large %>
-  .home-page .homepage-image-header{
-    background-image: url("<%= polymorphic_path(header_large.image.attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 85 }, strip: true, format: 'jpeg')) %>");
-    background-size: cover;
-    background-position: top;
-  }
+      .home-page .homepage-image-header {
+        background-image: url("<%= polymorphic_path(image_variant) %>");
+        background-size: cover;
+        background-position: top;
+      }
 
-  .top-bar-background-wrapper {
-    background: transparent;
-  }
-<%end%>
-    </style>
-
-    <div class="homepage-image-header not-print">
-      <div class="homepage-image-header--title-wrapper">
-        <% if Setting["extended_option.general.title"].present? %>
-          <div class="homepage-image-header--title">
-            <div>
-              <%= Setting["extended_option.general.title"] %>
-            </div>
-            <div>
-              <b><%= Setting["extended_option.general.subtitle"] %></b>
-            </div>
-          </div>
-        <% end %>
-        <%= header_button_html %>
-      </div>
-    </div>
-  <% end %>
+      .top-bar-background-wrapper {
+        background: transparent;
+      }
+  </style>
 <% end %>
+
+
+<%
+  mobile_header_attachment_to_use =
+    if mobile_header_image_attachment&.attached?
+      mobile_header_image_attachment
+    elsif header_image_attachment&.attached?
+      header_image_attachment
+    end
+%>
+
+<% if mobile_header_attachment_to_use.attached? %>
+  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [750, nil], saver: { quality: 80 }, strip: true, format: 'jpeg') %>
+
+  <style>
+    @media(max-width: 750px) {
+      .home-page .homepage-image-header{
+        background-image: url("<%= polymorphic_path(mobile_image_variant) %>");
+        background-size: cover;
+        background-position: top;
+      }
+    }
+  </style>
+<% end %>
+
+<div class="homepage-image-header not-print">
+  <div class="homepage-image-header--title-wrapper">
+    <% show_title_and_subtitle =
+      if @custom_page&.landing?
+        !@custom_page.landing_hide_title_and_subtitle
+      else
+        Setting["extended_option.general.title"].present?
+      end
+    %>
+
+    <% if show_title_and_subtitle %>
+      <div class="homepage-image-header--title">
+        <div>
+          <% if @custom_page&.landing? %>
+           <%= @custom_page.title %>
+          <% else %>
+            <%= Setting["extended_option.general.title"] %>
+          <% end %>
+        </div>
+        <div>
+          <% if @custom_page&.landing? %>
+           <%= @custom_page.subtitle %>
+          <% else %>
+            <b><%= Setting["extended_option.general.subtitle"] %></b>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <%= header_button_html %>
+  </div>
+</div>

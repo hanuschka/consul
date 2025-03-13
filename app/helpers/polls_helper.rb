@@ -14,11 +14,11 @@ module PollsHelper
 
   def link_to_poll(text, poll)
     if can?(:results, poll)
-      link_to text, results_poll_path(id: poll.slug || poll.id)
+      link_to text, results_poll_path(id: poll.id)
     elsif can?(:stats, poll)
-      link_to text, stats_poll_path(id: poll.slug || poll.id)
+      link_to text, stats_poll_path(id: poll.id)
     else
-      link_to text, poll_path(id: poll.slug || poll.id)
+      link_to text, poll_path(id: poll.id)
     end
   end
 

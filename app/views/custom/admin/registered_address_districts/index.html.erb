@@ -1,0 +1,26 @@
+<h2 class="inline-block"><%= t("custom.admin.registered_address_districts.index.title") %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("custom.admin.registered_address_districts.attributes.name") %></th>
+      <th><%= t("custom.admin.registered_address_districts.attributes.coordinates") %></th>
+      <th><%= t("admin.actions.actions") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @registered_address_districts.each do |district| %>
+      <tr id="<%= dom_id(district) %>">
+        <td><%= district.name %></td>
+        <td><%= "#{district.map_location&.longitude}, #{district.map_location&.latitude}" if district.map_location %></td>
+        <td>
+          <%= render Admin::TableActionsComponent.new(district,
+                                                      actions: [:edit],
+                                                      edit_path: edit_admin_registered_address_district_path(district)
+                                                     ) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

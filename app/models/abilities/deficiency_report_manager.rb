@@ -9,7 +9,7 @@ module Abilities
       can [:manage], ::DeficiencyReport::Category
       can [:manage], ::DeficiencyReport::Status
       can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
-      can [:manage], ::DeficiencyReport::Area
+      can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 
       can :get_coordinates_map_location, MapLocation

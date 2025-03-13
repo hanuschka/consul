@@ -178,6 +178,7 @@ class Setting < ApplicationRecord
 
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
+        "deficiency_reports.officers_can_administer_assigned_reports": true,
         "deficiency_reports.officers_can_edit_assigned_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
@@ -258,7 +259,9 @@ class Setting < ApplicationRecord
 
         "extra_fields.registration.extended": false,
         "extra_fields.registration.check_documents": false,
-        "extra_fields.verification.check_documents": false
+
+        "extra_fields.verification.check_documents": false,
+        "extra_fields.verification.show_verification_status": true
       }
     end
 

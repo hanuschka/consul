@@ -25,6 +25,9 @@ module CsvServices
           I18n.t("admin.budget_investments.index.list.title"),
           "Beschreibungstext",
           I18n.t("admin.budget_investments.index.list.feasibility"),
+          I18n.t("admin.budget_investments.index.list.price"),
+          "Folgekosten",
+          "Zeitrahmen",
           "Beanstandungskriterium",
           I18n.t("admin.budget_investments.index.list.author_username"),
           "Anzahl Kommentare",
@@ -39,7 +42,10 @@ module CsvServices
           investment.id,
           sanitize_for_csv(investment.title),
           sanitize_for_csv(strip_tags(investment.description)),
-          price(investment),
+          I18n.t("admin.budget_investments.index.feasibility.#{investment.feasibility}"),
+          investment.formatted_price,
+          investment.price_first_year,
+          investment.duration,
           investment.valuator_explanation,
           investment.author.username,
           investment.comments_count,
@@ -54,15 +60,6 @@ module CsvServices
           investment.administrator.name
         else
           I18n.t("admin.budget_investments.index.no_admin_assigned")
-        end
-      end
-
-      def price(investment)
-        price_string = "admin.budget_investments.index.feasibility.#{investment.feasibility}"
-        if investment.feasible?
-          "#{I18n.t(price_string)} (#{investment.formatted_price})"
-        else
-          I18n.t(price_string)
         end
       end
   end

@@ -62,6 +62,9 @@ de:
       officing_manager:
         one: Abstimmungshelfer*innen
         other: Abstimmungshelfer*innen
+      recipient_group:
+        one: Adressatengruppe
+        other: Adressatengruppen
     errors:
       messages:
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'

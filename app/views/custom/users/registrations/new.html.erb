@@ -94,6 +94,7 @@
         <% end %>
 
         <%= f.password_field :password, autocomplete: "off",
+                             hint: t("devise_views.users.registrations.new.password_hint"),
                              placeholder: t("devise_views.users.registrations.new.password_label") %>
 
         <%= f.password_field :password_confirmation, autocomplete: "off",

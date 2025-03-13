@@ -1,10 +1,27 @@
 <div id="participation_statistics">
 
-  <h3 class="section-title"><%= t("stats.title") %></h3>
+  <small><%= t("stats.hint") %></small>
+
+  <% if stats.is_a?(Budget::Stats) %>
+    <div id="total_investments" class="stats-group">
+      <h4><%= t("stats.budgets.total_investments") %></h4>
+
+      <%= number_with_info_tags(
+        stats.total_budget_investments,
+        t("stats.budgets.total_investments"),
+        html_class: "total-investments"
+      ) %>
+
+      <% unless params[:stats_section] == "accepting" %>
+        <%= number_with_info_tags(stats.total_unfeasible_investments,
+                                  t("stats.budgets.total_unfeasible_investments")) %>
+        <%= number_with_info_tags(stats.total_selected_investments,
+                                  t("stats.budgets.total_selected_investments")) %>
+      <% end %>
+    </div>
+  <% end %>
 
   <% unless stats.show_percentage_values_only? %>
-    <small><%= t("stats.hint") %></small>
-
     <div id="total_participants" class="stats-group">
       <h4><%= t("stats.total_participants") %></h4>
 

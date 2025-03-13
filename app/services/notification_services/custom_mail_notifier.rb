@@ -20,8 +20,7 @@ module NotificationServices
 
       def users_to_notify
         if @user_ids.is_a?(Array) && @user_ids.all? { |id| id.is_a?(Integer) }
-          User.where(erased_at: nil, guest: false, hidden_at: nil, id: @user_ids)
-              .where.not(email: nil)
+          User.actual.where(id: @user_ids)
         else
           puts "Bitte geben Sie als erstes Argument ein Array von Benutzer-IDs an"
           []

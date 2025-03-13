@@ -243,7 +243,8 @@ de:
           select_options:
             projekt_related: Alle Projektphasen
           access_methods:
-            all_user_ids: Alle Nutzer*innen
+            newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung
+            all_newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
             administrators_ids: Administrator*innen
             authors_of_feasible_ids: Autor*innen, deren Vorschläge den Kriterien entsprechen
             authors_of_unfeasible_ids: Autor*innen, deren Vorschläge den Kriterien nicht entsprechen

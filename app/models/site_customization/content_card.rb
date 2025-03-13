@@ -55,8 +55,8 @@ class SiteCustomization::ContentCard < ApplicationRecord
 
   def self.default_titles
     {
-      "active_projekts" => "Projektübersicht",
-      "current_projekts" => "Aktive Beteiligung",
+      "active_projekts" => "Laufende Projekte",
+      "current_projekts" => "Laufende Projekte mit aktiver Beteiligung",
       "latest_user_activity" => "Meine Aktivitäten",
       "current_polls" => "Laufende Abstimmungen",
       "latest_resources" => "Neueste Beiträge",

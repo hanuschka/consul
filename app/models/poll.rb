@@ -68,7 +68,7 @@ class Poll < ApplicationRecord
     name
   end
 
-  def current?(timestamp = Date.current.beginning_of_day)
+  def current?(timestamp = Time.zone.today)
     start_ok = projekt_phase.start_date.nil? || projekt_phase.start_date <= timestamp
     end_ok = projekt_phase.end_date.nil? || timestamp <= projekt_phase.end_date
 

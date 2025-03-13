@@ -10,7 +10,7 @@ module FeatureFlags
   end
 
   def check_feature_flag(name)
-    raise FeatureDisabled, name unless Setting["feature.#{name}"] || Setting["process.#{name}"]
+    raise FeatureDisabled, name unless Setting["feature.#{name}"].present? || Setting["process.#{name}"].present?
   end
 
   class FeatureDisabled < Exception

@@ -3,10 +3,6 @@ require_dependency Rails.root.join("app", "models", "budget", "stats").to_s
 class Budget::Stats
   delegate :show_percentage_values_only?, to: :budget
 
-  def phases
-    %w[support vote].select { |phase| send("#{phase}_phase_enabled?") }
-  end
-
   def total_votes
     Budget::Ballot::Line.joins(:ballot)
                         .where(budget_ballots: { budget_id: budget.id, conditional: false })

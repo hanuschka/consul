@@ -1,5 +1,8 @@
 en:
   mailers:
+    shared:
+      sincerely: Kind	regards
+      signature: Your Consul Team
     budget_investment_unfeasible:
       subject: "Unfortunately, your proposal does not meet the criteria."
       title: "Unfortunately, your proposal does not meet the criteria."
@@ -74,3 +77,6 @@ en:
       text2: It will therefore not be admitted to the next phase of the %{project_link}.
       projekt_link_text: Project
       sincerely: Kind regards
+    proposal_created:
+      hi: "Hello %{username},"
+      text1: "Your proposal has been successfully submitted: %{proposal_link}"

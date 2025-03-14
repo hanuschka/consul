@@ -290,7 +290,7 @@ class Budget < ApplicationRecord
     current_phase_kind = current_phase.kind
     return if current_phase_kind == phase
 
-    budget.update_column(:phase, current_phase_kind)
+    update_column(:phase, current_phase_kind)
   end
 
   private

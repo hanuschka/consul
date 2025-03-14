@@ -37,7 +37,7 @@
               <%= newsletter.subject %>
             </td>
             <td>
-              <%= segment_name(newsletter.segment_recipient) %>
+              <%= newsletter.recipient_group.present? ? newsletter.recipient_group.name : segment_name(newsletter.segment_recipient) %>
             </td>
             <td>
               <% if newsletter.draft? %>

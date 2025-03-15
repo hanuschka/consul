@@ -122,6 +122,8 @@ class ProposalsController
     elsif @proposal.save
       @proposal.publish
 
+      Mailer.proposal_created(@proposal).deliver_now
+
       if @proposal.projekt_phase.active?
         redirect_to page_path(
           @proposal.projekt_phase.projekt.page.slug,

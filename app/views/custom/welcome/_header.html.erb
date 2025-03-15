@@ -1,7 +1,7 @@
 <% header_image_attachment = local_assigns[:header_image_attachment] %>
 <% mobile_header_image_attachment = local_assigns[:mobile_header_image_attachment] %>
 
-<% if header_image_attachment.attached? %>
+<% if header_image_attachment&.attached? %>
   <style>
       <% image_variant = header_image_attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 85 }, strip: true, format: 'jpeg') %>
 
@@ -27,7 +27,7 @@
     end
 %>
 
-<% if mobile_header_attachment_to_use.attached? %>
+<% if mobile_header_attachment_to_use&.attached? %>
   <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [750, nil], saver: { quality: 80 }, strip: true, format: 'jpeg') %>
 
   <style>

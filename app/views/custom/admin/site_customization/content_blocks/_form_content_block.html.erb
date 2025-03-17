@@ -23,7 +23,7 @@
   <%end%>
 
   <div class="small-12 column">
-    <%= f.text_area :body, rows: 10, label: false, class: @content_block.custom? ? "html-area #{ck_editor_class(current_user)}" : "" %>
+    <%= f.text_area :body, rows: 10, value: AdminWYSIWYGSanitizer.new.sanitize(@content_block.body), label: false, class: @content_block.custom? ? "html-area #{ck_editor_class(current_user)}" : "" %>
     <div class="small-12 medium-12 large-12">
       <%= f.submit class: "button success" %>
     </div>

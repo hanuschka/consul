@@ -1,5 +1,5 @@
 module CsvServices
-  class CommentsExporter < ApplicationService
+  class CommentsExporter < CsvServices::BaseService
     require "csv"
 
     def initialize(comments)
@@ -22,7 +22,7 @@ module CsvServices
         [
           "ID", "body", "cached_votes_total", "cached_votes_up", "cached_votes_down",
           "author_username", "author_user_id", "author_email",
-          "commentable_type", "commentable_id",
+          "commentable_type", "commentable_id", "related_projekt",
           "flags_count", "ignored_flag_at", "moderator_id",
           "hidden_at",
           "created_at"
@@ -31,13 +31,21 @@ module CsvServices
 
       def row(comment)
         [
-          comment.id, comment.body, comment.cached_votes_total, comment.cached_votes_up, comment.cached_votes_down,
-          comment.author&.username, comment.user_id, comment.author&.email,
-          comment.commentable_type, comment.commentable_id,
+          comment.id, sanitize_for_csv(comment.body), comment.cached_votes_total, comment.cached_votes_up, comment.cached_votes_down,
+          sanitize_for_csv(comment.author&.username), comment.user_id, sanitize_for_csv(comment.author&.email),
+          comment.commentable_type, comment.commentable_id, related_projekt_name(comment),
           comment.flags_count, comment.ignored_flag_at, comment.moderator_id,
           comment.hidden_at,
           I18n.l(comment.created_at, format: "%d.%m.%Y")
         ]
+      end
+
+      def related_projekt_name(comment)
+        if comment.commentable_type == "Projekt"
+          sanitize_for_csv(comment.commentable&.name)
+        elsif comment.commentable.respond_to?(:projekt)
+          sanitize_for_csv(comment.commentable.projekt&.name)
+        end
       end
   end
 end

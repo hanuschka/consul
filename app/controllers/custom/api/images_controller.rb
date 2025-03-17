@@ -1,10 +1,10 @@
 
 class Api::ImagesController < Api::BaseController
-  skip_forgery_protection
-
   def create
     pictures = params[:images].map do |image|
-      Ckeditor::Picture.new(data: image)
+      picture = Ckeditor::Picture.new
+      picture.attach_uploaded_file(image)
+      picture
     end
 
     pictures.each(&:save)
@@ -23,7 +23,7 @@ class Api::ImagesController < Api::BaseController
       name: picture.data_file_name,
       valid: picture.persisted?,
       url: url_for(picture.storage_data),
-      thumb_url: url_for(picture.storage_data.variant(resize_to_limit: [280, 140]).processed),
+      thumb_url: picture.persisted? && url_for(picture.storage_data.variant(resize_to_fill: [504, 252]).processed),
       errors: picture.errors.messages.values.flatten
     }
   end

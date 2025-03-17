@@ -1,5 +1,5 @@
 <%= render Shared::ResourcesListComponent.new(
-  resources: @active_projekts,
+  resources: active_projekts,
   resource_type: Projekt,
   title: @content_card.title || t("custom.content_cards.active_projekts.title")) do |c| %>
   <% c.with_bottom_content do %>

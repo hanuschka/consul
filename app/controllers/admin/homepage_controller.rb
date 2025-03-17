@@ -9,7 +9,9 @@ class Admin::HomepageController < Admin::BaseController
   private
 
     def load_header
-      @header = ::Widget::Card.header
+      @header = [::Widget::Card.find_or_create_by(
+        title: "header_large", header: true)
+      ]
     end
 
     def load_recommendations

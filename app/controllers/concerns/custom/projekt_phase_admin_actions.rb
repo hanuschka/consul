@@ -10,7 +10,6 @@ module ProjektPhaseAdminActions
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
       :create, :order_phases, :frame_phases_restrictions,
-      :frame_new_phase_selector
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -25,7 +24,7 @@ module ProjektPhaseAdminActions
     @projekt_phase.save!
 
     if embedded? && frame_session_from_authorized_source?
-      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :duration)
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: (@projekt_phase.admin_nav_bar_items.first.presence || :naming))
     else
       redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
         notice: t("custom.admin.projekt_phases.notice.created")
@@ -167,7 +166,7 @@ module ProjektPhaseAdminActions
   def map
     authorize!(:map, @projekt_phase)
 
-    @projekt_phase.create_map_location unless @projekt_phase.map_location.present?
+    @projekt_phase.copy_map_settings unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
 
     render "custom/admin/projekt_phases/map"
@@ -178,23 +177,7 @@ module ProjektPhaseAdminActions
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params)
-
-    redirect_to namespace_projekt_phase_path(action: "map"),
-      notice: t("admin.settings.index.map.flash.update")
-  end
-
-  def copy_map_settings_from_projekt
-    authorize!(:copy_map_settings_from_projekt, @projekt_phase)
-
-    unless @projekt_phase.map_location.latitude == @projekt_phase.projekt.map_location.latitude &&
-           @projekt_phase.map_location.longitude == @projekt_phase.projekt.map_location.longitude
-      @projekt_phase.map_location = @projekt_phase.projekt.map_location.dup
-    end
-
-    @projekt_phase.projekt.map_layers.each do |map_layer|
-      @projekt_phase.map_layers << map_layer.dup unless @projekt_phase.map_layers.any? { |ml| ml.name == map_layer.name }
-    end
+    map_location.update!(map_location_params.except(:id))
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -326,6 +309,20 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/poll_recounts"
   end
 
+  def officing_managers
+    authorize!(:officing_managers, @projekt_phase)
+    @officing_managers = OfficingManager.all
+  end
+
+  def officing_manager_audits
+    poll = @projekt_phase.poll
+    poll_voters = Poll::Voter.where(poll_id: poll.id)
+                             .where.not(officing_manager_id: nil)
+
+    @audits = Audit.where(auditable: poll_voters)
+                   .page(params[:page]).per(50)
+  end
+
   def poll_results
     authorize!(:poll_results, @projekt_phase)
     @poll = @projekt_phase.poll
@@ -345,13 +342,30 @@ module ProjektPhaseAdminActions
     authorize!(:budget_investments, @projekt_phase)
     @budget = @projekt_phase.budget
 
+    if params[:valuator_or_group_id]
+      model, id = params[:valuator_or_group_id].split("_")
+
+      if model == "group"
+        params[:valuator_group_id] = id
+      else
+        params[:valuator_id] = id
+      end
+    end
+
     @investments = @budget.investments
                           .scoped_filter(params.merge(budget_id: @budget.id), "all")
                           .order_filter(params.merge(budget_id: @budget.id))
     @investments = Kaminari.paginate_array(@investments) if @investments.is_a?(Array)
     @investments = @investments.page(params[:page]) unless request.format.csv?
 
-    render "custom/admin/projekt_phases/budget_investments"
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/budget_investments" }
+      format.js { render "custom/admin/projekt_phases/budget_investments" }
+      format.csv do
+        send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+									filename: "budget-investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+      end
+    end
   end
 
   def budget_phases
@@ -366,14 +380,6 @@ module ProjektPhaseAdminActions
     @process = @projekt_phase.legislation_process
 
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
-  end
-
-  def frame_new_phase_selector
-    @projekt = Projekt.find(params[:projekt_id])
-
-    authorize!(:edit, @projekt)
-
-    render
   end
 
   # def frame_phases_restrictions
@@ -403,6 +409,7 @@ module ProjektPhaseAdminActions
         :active, :start_date, :end_date,
         :user_status, :age_range_id,
         :geozone_restricted, :registered_address_grouping_restriction,
+        :lock_on, officing_manager_ids: [],
         geozone_restriction_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [],
         age_ranges_for_stat_ids: [],

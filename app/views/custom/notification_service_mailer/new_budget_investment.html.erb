@@ -1,14 +1,25 @@
 <td style="padding-bottom: 20px; padding-left: 10px;">
+  <h1 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;">
+    <%= t("custom.notification_service_mailers.new_budget_investment.title") %>
+  </h1>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= t("custom.notification_service_mailers.new_budget_investment.hi", username: @user.username) %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("custom.notification_service_mailers.new_budget_investment.p1") %>
+    <%= sanitize(
+      t("custom.notification_service_mailers.new_budget_investment.p1",
+        projekt_link: link_to(t("custom.notification_service_mailers.new_budget_investment.projekt_link_text"), page_url(@projekt.page.slug)),
+        proposal_link: link_to(@investment.title, budget_investment_url(@investment.budget, @investment))
+      ),
+      attributes: %w[href style]
+    ) %>
   </p>
 
-  <p>
-    <%= link_to @investment.title, budget_investment_url(@investment.budget, @investment) %>
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("mailers.shared.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
   </p>
 </td>

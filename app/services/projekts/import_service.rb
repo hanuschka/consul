@@ -4,10 +4,11 @@ class Projekts::ImportService < ApplicationService
 
   attr_reader :projekt, :projekt_params
 
-  def initialize(projekt:, projekt_params:)
+  def initialize(projekt:, projekt_params:, author_user: nil)
     @projekt = projekt
     @projekt_params = projekt_params
     @documents = []
+    @author_user = author_user
   end
 
   def call
@@ -62,10 +63,14 @@ class Projekts::ImportService < ApplicationService
     update_projekt_setting("projekt_feature.sidebar.show_navigator_in_projekts_page_sidebar", projekt_params[:show_navigator_in_projekts_page_sidebar])
     update_projekt_setting("projekt_feature.sidebar.projekt_page_sharing", projekt_params[:projekt_page_sharing])
 
+    assign_projekt_manager
+
     projekt.page.update!(
       title: projekt_params[:title],
-      subtitle: projekt_params[:brief_description],
+      subtitle: projekt_params[:subtitle],
     )
+
+    true
   end
 
   def create_content_blocks!
@@ -112,6 +117,11 @@ class Projekts::ImportService < ApplicationService
             url:
               url_helpers.rails_representation_url(
                 i.variant(resize_to_fill: [1500, 750]),
+                only_path: true
+              ),
+            medium_url:
+              url_helpers.rails_representation_url(
+                i.variant(resize_to_fill: [823, 412]),
                 only_path: true
               ),
             thumb_url:
@@ -187,6 +197,18 @@ class Projekts::ImportService < ApplicationService
       document.user = User.administrators.first
       document.save!
       document
+    end
+  end
+
+  def assign_projekt_manager
+    return if @author_user.nil?
+
+    if @author_user.projekt_manager?
+      assignment = @author_user.projekt_manager.projekt_manager_assignments.find_or_create_by(
+        projekt_id: @projekt.id
+      )
+
+      assignment.update_column(:permissions, ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS)
     end
   end
 

@@ -1,6 +1,6 @@
 class Budget
   class Investment < ApplicationRecord
-    SORTING_OPTIONS = { id: "id", supports: "cached_votes_up" }.freeze
+    SORTING_OPTIONS = { id: "id", supports: "cached_votes_up", balloters: "ballot_lines_count" }.freeze
 
     include Measurable
     include Sanitizable
@@ -56,7 +56,8 @@ class Budget
       class_name: "Comment"
 
     validates_translation :title, presence: true, length: { in: 4..Budget::Investment.title_max_length }
-    validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    # validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
+    validates_translation :description, presence: true
 
     validates :author, presence: true
     validates :heading_id, presence: true
@@ -70,6 +71,7 @@ class Budget
 
     scope :sort_by_id, -> { order("id DESC") }
     scope :sort_by_supports, -> { order("cached_votes_up DESC") }
+    scope :sort_by_comments_count, -> { order("comments_count DESC") }
 
     scope :valuation_open,              -> { where(valuation_finished: false) }
     scope :without_admin,               -> { where(administrator_id: nil) }
@@ -177,6 +179,10 @@ class Budget
         order("#{allowed_sort_option} #{direction}")
       elsif sorting_key == :title
         direction == "asc" ? sort_by_title : sort_by_title.reverse
+      elsif sorting_key == :total_votes
+        direction == "desc" ? sort_by_total_votes : sort_by_total_votes.reverse
+      elsif sorting_key == :total_ballot_votes
+        direction == "desc" ? sort_by_ballot_line_weight : sort_by_ballot_line_weight.reverse
       else
         order(cached_votes_up: :desc).order(id: :desc)
       end
@@ -233,11 +239,20 @@ class Budget
     end
 
     def price_required?
-      feasible? && valuation_finished? && budget.show_money?
+      false
+      # feasible? && valuation_finished? && budget.show_money?
     end
 
     def unfeasible_email_pending?
       unfeasible_email_sent_at.blank? && unfeasible? && valuation_finished?
+    end
+
+    def email_on_feasibility_pending?
+      email_on_feasibility_sent_at.blank?
+    end
+
+    def email_on_selected_pending?
+      email_on_selected_sent_at.blank?
     end
 
     def total_votes
@@ -328,20 +343,25 @@ class Budget
       budget.valuating?
     end
 
-    def should_show_ballots?
-      budget.balloting? && selected?
+    def should_show_ballots?(**args)
+      return false unless selected?
+      return true if budget.balloting?
+
+      budget.reviewing_ballots? &&
+        args[:controller_name].in?(["offline_ballots", "lines"]) &&
+        (args[:current_user]&.administrator? || args[:current_user]&.poll_officer?)
     end
 
     def should_show_price?
-      selected? && price.present? && budget.show_money? && feasible?
+      selected? && price.present? && budget.show_money? && feasible? && budget.publishing_prices_or_later?
     end
 
     def should_show_price_explanation?
-      should_show_price? && valuator_explanation.present?
+      should_show_price? && valuator_explanation.present? && budget.publishing_prices_or_later?
     end
 
     def should_show_unfeasibility_explanation?
-      unfeasible? && valuation_finished? && unfeasibility_explanation.present?
+      unfeasible? && valuation_finished? && valuator_explanation.present?
     end
 
     def formatted_price

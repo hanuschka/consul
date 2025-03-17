@@ -8,6 +8,7 @@ class Budget
     include Memoable
 
     delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
+    delegate :approximated_address, to: :map_location, allow_nil: true
 
     has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
 
@@ -20,6 +21,13 @@ class Budget
 
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
     validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
+    validate :description_sanitized #custom
+
+    def self.sort_by_total_votes
+      left_joins(:votes_for)
+        .group("budget_investments.id")
+        .order(Arel.sql("COALESCE(SUM(votes.vote_weight), 0) + budget_investments.physical_votes DESC"))
+    end
 
     def self.sort_by_ballot_line_weight
       left_joins(budget_ballot_lines: :ballot)
@@ -36,11 +44,7 @@ class Budget
     end
 
     def total_votes
-      if budget.distributed_voting?
-        votes_for.sum(:vote_weight) + physical_votes
-      else
-        cached_votes_up + physical_votes
-      end
+      votes_for.sum(:vote_weight) + physical_votes
     end
 
     def total_ballot_votes
@@ -58,6 +62,8 @@ class Budget
     end
 
     def comments_allowed?(user)
+      return false if unfeasible? && valuation_finished?
+
       permission_problem(user).nil?
     end
 
@@ -70,11 +76,18 @@ class Budget
     end
 
     def should_show_feasibility_explanation?
-      return if should_show_price?
-
       feasible? &&
-        selected? && budget.published_prices? &&
-        price_explanation.present?
+        selected? &&
+        valuator_explanation.present?
     end
+
+    private
+
+      def description_sanitized
+        sanitized_description = ActionController::Base.helpers.strip_tags(description).gsub("\n", '').gsub("\r", '').gsub(" ", '').gsub(/^$\n/, '').gsub(/[\u202F\u00A0\u2000\u2001\u2003]/, "")
+
+        errors.add(:description, :too_long, message: 'too long text') if
+          sanitized_description.length > Setting[ "extended_option.proposals.description_max_length"].to_i
+      end
   end
 end

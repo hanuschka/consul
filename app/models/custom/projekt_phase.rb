@@ -36,6 +36,8 @@ class ProjektPhase < ApplicationRecord
   translates :sentiments_name, touch: true
   translates :resource_form_title_hint, touch: true
   translates :description, touch: true
+  translates :comment_form_title, touch: true
+  translates :comment_form_button, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -67,6 +69,9 @@ class ProjektPhase < ApplicationRecord
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+
+  has_many :officing_manager_assignments, dependent: :destroy
+  has_many :officing_managers, through: :officing_manager_assignments
 
   accepts_nested_attributes_for :settings
 
@@ -147,13 +152,15 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return :guest_not_logged_in if user_status == "guest" && !user
-    return if user_status == "guest"
-    return :not_logged_in if !user || user&.guest?
-    return if user.has_pm_permission_to?("manage", projekt)
+    return if user&.administrator? || user&.projekt_manager?
+
     return :phase_not_active if not_active?
     return :phase_expired if expired?
     return :phase_not_current if not_current?
+
+    return :guest_not_logged_in if user_status == "guest" && !user
+    return if user_status == "guest"
+    return :not_logged_in if !user || user&.guest?
     return :not_verified if user_status == "verified" && !user.level_three_verified?
 
     if phase_specific_permission_problems(user, location).present?
@@ -242,23 +249,16 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
-  def create_map_location
-    return if map_location.present?
-
-    MapLocation.create!(
-      latitude: Setting["map.latitude"],
-      longitude: Setting["map.longitude"],
-      zoom: Setting["map.zoom"],
-      projekt_phase_id: id
-    )
-  end
-
   def settings_categories
     []
   end
 
   def admin_nav_bar_items
     []
+  end
+
+  def embedded_admin_nav_bar_items
+    admin_nav_bar_items
   end
 
   def settings_in_tabs
@@ -369,6 +369,17 @@ class ProjektPhase < ApplicationRecord
 
       phase_settings.each do |key, value|
         settings.create!(key: key, value: value)
+      end
+    end
+
+    def copy_map_settings_from_projekt
+      return if map_location.present?
+
+      map_location = projekt.map_location&.dup
+      map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+
+      projekt.map_layers.each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 end

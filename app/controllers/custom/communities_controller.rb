@@ -6,6 +6,8 @@ class CommunitiesController < ApplicationController
 
     redirect_to root_path if Setting["feature.community"].blank?
 
+    authorize! :show, @community
+
     @resource =
       if @community.proposal.present?
         @community.proposal

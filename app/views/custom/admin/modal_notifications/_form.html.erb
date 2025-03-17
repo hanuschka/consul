@@ -23,8 +23,9 @@
       <div class="small-12 column">
         <%= translations_form.label t("activerecord.attributes.modal_notification.html_content") %>
         <%= translations_form.text_area :html_content,
+          value: AdminWYSIWYGSanitizer.new.sanitize(@modal_notification.html_content),
           class: "html-area #{ck_editor_class(current_user)}",
-          label: false  %>
+          label: false %>
       </div>
     <% end %>
   </div>

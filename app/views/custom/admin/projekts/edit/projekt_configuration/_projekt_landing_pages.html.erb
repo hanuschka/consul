@@ -1,0 +1,18 @@
+<div class="compact-config-block">
+  <div class="margin-bottom">
+    <%= form_for [@namespace, projekt] do |f| %>
+      <div class="admin-checkboxes-list">
+        <%= f.collection_check_boxes(:landing_page_ids, SiteCustomization::Page.landing, :id, :title) do |b| %>
+          <div class="margin-bottom-half d-flex d-flex-align-center">
+            <%= b.check_box %>
+            <%= b.label do %>
+              <%= b.text %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+  </div>
+
+    <%= f.submit %>
+  <% end %>
+</div>

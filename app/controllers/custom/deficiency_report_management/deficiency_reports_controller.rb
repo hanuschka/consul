@@ -10,6 +10,12 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   def index
     filter_assigned_reports_only
     @deficiency_reports = apply_filters(@deficiency_reports)
+
+    if params[:responsible].present?
+      klass, id = params[:responsible].split("_")
+      @deficiency_reports = @deficiency_reports.where(responsible_type: klass, responsible_id: id)
+    end
+
     @deficiency_reports = @deficiency_reports.order(id: :desc)
 
     unless params[:format] == "csv"
@@ -42,9 +48,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def edit
     @deficiency_report = DeficiencyReport.find(params[:id])
-    @areas = DeficiencyReport::Area.all.order(created_at: :asc)
-    @map_coordinates_for_areas = @areas.map do |area|
-      [area.id, [area.map_location.latitude, area.map_location.longitude]]
+    @districts = RegisteredAddress::District.joins(:map_location).order(created_at: :asc)
+    @map_coordinates_for_districts = @districts.map do |district|
+      [district.id, [district.map_location.latitude, district.map_location.longitude]]
     end.to_h
   end
 
@@ -56,6 +62,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     if @deficiency_report.update(deficiency_report_params)
       notify_new_officer(@deficiency_report)
       notify_author_about_status_change(@deficiency_report)
+      update_status_change_date(@deficiency_report)
 
       redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.update.success_notice")
     else
@@ -66,8 +73,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   def destroy
     @deficiency_report = DeficiencyReport.find(params[:id])
     @deficiency_report.destroy!
-
-    redirect_to deficiency_report_management_deficiency_reports_path, notice: t("custom.admin.deficiency_reports.destroy.success_notice")
   end
 
   def audits
@@ -92,7 +97,6 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     def deficiency_report_params
       attributes = [:video_url, :on_behalf_of,
                     :deficiency_report_category_id,
-                    :deficiency_report_area_id,
                     :deficiency_report_status_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
@@ -129,6 +133,12 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
 
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
+    end
+
+    def update_status_change_date(dr)
+      return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
+
+      dr.update_column(:status_changed_at, Time.zone.now)
     end
 
     def set_current_responsible

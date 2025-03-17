@@ -4,10 +4,10 @@ class MapLocation < ApplicationRecord
   belongs_to :projekt, touch: true
   belongs_to :deficiency_report, touch: true
   belongs_to :projekt_phase, touch: true
-  belongs_to :deficiency_report_area, class_name: "DeficiencyReport::Area",
-    foreign_key: :deficiency_report_area_id, touch: true, inverse_of: :map_location
   belongs_to :registered_address_district, class_name: "RegisteredAddress::District",
     foreign_key: :registered_address_district_id, touch: true, inverse_of: :map_location
+
+  has_one_attached :screenshot
 
   before_save :ensure_shape_is_json
   after_save :update_geocoder_data
@@ -88,7 +88,7 @@ class MapLocation < ApplicationRecord
         plz: geo_data["address"]["postcode"]
       },
       registered_address_city: {
-        name: geo_data["address"]["city"]
+        name: geo_data["address"]["city"] || geo_data["address"]["town"]
       }
     }.reject { |_k, v| v.in?(["", nil]) }
 

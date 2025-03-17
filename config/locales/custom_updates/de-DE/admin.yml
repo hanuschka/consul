@@ -27,9 +27,6 @@ de:
           info:
             projekt_association: Projektzuordnung
       budget_investments:
-        index:
-          list:
-            created_at: Erstellungsdatum
         show:
           not_defined: undefiniert
           state_block_title: Status des Vorschlags
@@ -59,6 +56,7 @@ de:
           details_block_title: Weitere Infos
           author: Autor
           created_at: Erstellungsdatum
+          frontend: Frontend
           implementation_performer_label: Umsetzung
           implementation_performer:
             city: Autor unterstützt bei der Umsetzung nicht
@@ -76,7 +74,7 @@ de:
           status_title: Status
           approximater_location: Standort
           category_name: Kategorie
-          officer_name: Sachbearbeiter*in
+          responsible_name: Sachbearbeiter*in
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
@@ -178,22 +176,8 @@ de:
             color: Farbe
             icon: Icon
             title: Name
+            archive_reports: Archivieren
             notice_text: E-Mail-Benachrichtigungstext
-        areas:
-          destroy:
-            cannot_be_destroyed: Sie können dieses Gebiet nicht löschen, da er mindestens einem Mangel zugewiesen ist.
-            destroyed_successfully: Der Gebiet wurde erfolgreich gelöscht.
-          edit:
-            editing: Gebiet bearbeiten
-          form:
-            submit_button: Speichern
-          index:
-            create: Gebiet erstellen
-            title: Gebiet
-          new:
-            creating: Neues Gebiet erstellen
-          area:
-            name: Name
         districts:
           index:
             title: Gebiete
@@ -240,7 +224,43 @@ de:
           id: ID
           name: Name
           plz: PLZ
+      recipient_groups:
+        index:
+          new_recipient_group: Adressatengruppe erstellen
+          title: Adressatengruppen
+          new_recipient_group: Neue Adressatengruppe
+          name: Name
+          empty_recipient_groups: Keine Adressatengruppe vorhanden
+        new:
+          base_options_for_kind:
+            projekts: Projekte
+            user_roles: Nutzerrollen
+          label_for_general: Typ der Adressatengruppe
+          label_for_projekt: Projekt
+          label_for_projekt_phase: Projektphase(n)
+          label_for_user_role: Nutzerrolle
+          name: Name
+          select_options:
+            projekt_related: Alle Projektphasen
+          access_methods:
+            newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung
+            all_newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
+            administrators_ids: Administrator*innen
+            authors_of_feasible_ids: Autor*innen, deren Vorschläge den Kriterien entsprechen
+            authors_of_unfeasible_ids: Autor*innen, deren Vorschläge den Kriterien nicht entsprechen
+            authors_of_selected_ids: Autor*innen, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
+            authors_of_not_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
+            authors_of_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung gewonnen haben
+            any_phase_subscribers_ids: Abonnent*innen aller Phasen
+        create:
+          notice: Adressatengruppe wurde erfolgreich erstellt
+        update:
+          notice: Adressatengruppe wurde erfolgreich aktualisiert
+        destroy:
+          notice: Adressatengruppe wurde erfolgreich gelöscht
       menu:
+        site_customization:
+          landing_pages: Zielseiten
         deficiency_reports:
           categories: Kategorien festlegen
           list: Liste der Mängelmeldungen
@@ -256,6 +276,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
+        officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen
         modal_notification: Popup Benachrichtigung
@@ -271,6 +292,7 @@ de:
         individual_groups: Individuelle Gruppen
         unregistered_newsletter_subscribers:
           list: Newsletter-Abonnenten
+        recipient_groups: Adressatengruppen
         matomo: Matomo
       polls:
         show:
@@ -332,6 +354,7 @@ de:
             duration_block_title: Laufzeit
             geo_affiliation_block_title: Gebietszuordnung
             individual_groups_block_title: Sichtbarkeitsbeschränkung auf starke Gruppen
+            landing_page_assignments: Zuordnung zu Themen/Gebietsseiten
           projekt_page_tab:
             name: Projektseite
             main_block_title: Projektseite
@@ -360,6 +383,11 @@ de:
           projekt_managers_tab:
             name: Projektmanager*innen
             main_block_title: Projektmanager*innen
+            permissions:
+              manage: administrieren
+              moderate: moderieren
+              create_on_behalf_of: erstellen im Namen von jemanden
+              get_notifications: benachrichtigt werden
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:
@@ -437,6 +465,13 @@ de:
           no_deficiency_report_managers: Keine Mängelmelder Admins vorhanden.
         search:
           title: "Mangelmeldungmanager*innen: Benutzer*innensuche"
+      officing_managers:
+        index:
+          title: Abstimmungshelfer*innen
+          no_officing_managers: Keine Abstimmungshelfer*innen vorhanden.
+        search:
+          title: "Abstimmungshelfer*innen: Benutzer*innensuche"
+      deficiency_report_managers:
       settings:
         index:
           extended_features:
@@ -457,6 +492,17 @@ de:
               disabled: Projekt deaktiviert
               enabled: Projekt aktiviert
       site_customization:
+        landing_pages:
+          new:
+            title: "Themen/Gebietsseite"
+          index:
+            create: "Neue Themen/Gebietsseite erstellen"
+            title: "Themen/Gebietsseiten"
+          edit:
+            header_image_title: Header image
+          edit_content_cards:
+            title: Inhaltskarten für %{page_title}
+            link: Inhaltskarten
         pages:
           destroy:
             cannot_notice: Diese Seite kann nicht gelöscht werden. Bitte löschen Sie das zugehörige Projekt zuvor.
@@ -537,9 +583,8 @@ de:
           form_author: Formular Autor
           user_functions: Funktionen Nutzer
           poll_questions: Fragen
-          poll_booth_assignments: Wahlkabinen
-          poll_officer_assignments: Wahlhelfer
-          poll_recounts: Auszählung
+          officing_managers: Abstimmungshelfer
+          officing_manager_audits: Logs
           poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge
@@ -573,7 +618,7 @@ de:
           page_title: Möchten Sie die Beteiligung einschränken?
           intro:
             p1_html: Die erweiterten Beteiligungsbeschränkungen, wie die Einschränkung nach geografischen Gebieten oder Altersgruppen, sind ausschließlich für registrierte und verifizierte Nutzer verfügbar. Der Gastnutzerstatus ermöglicht keine derartigen Einschränkungen.
-            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet. 
+            p2_html: Um diese erweiterten Beschränkungen anzuwenden, müssen die entsprechenden Daten, wie beispielsweise Wohnort oder Geburtsdatum, vorliegen. Diese Daten können entweder bereits im Rahmen der Registrierung erhoben oder erst im Zuge der Beteiligung in der jeweiligen Phase abgefragt werden. Nutzer, die die notwendigen Daten noch nicht hinterlegt haben, werden aufgefordert, diese vor der Teilnahme anzugeben. Nur wenn die hinterlegten Informationen den Einschränkungskriterien entsprechen, wird die Beteiligung freigeschaltet.
           age:
             title: Alter
             hint: Um die Partizipation einschränken zu können, müssen Nutzer*innen verifiziert werden.
@@ -682,7 +727,7 @@ de:
           name: Veranstaltungen
           page_title: Möchten Sie eine Veranstaltung hinzufügen?
           send_notifications_button: Benachrichtigungen senden
-          notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
+          notifications_sent_notice: Benachrichtigung wurde erfolgreich verschickt
         projekt_livestreams:
           new_block_title: Möchten Sie einen Livestream hinzufügen?
           new_button_title: Livestream hinzufügen
@@ -728,7 +773,7 @@ de:
         budget_edit:
           page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
         budget_investments:
-          page_title: Investitionsvorschläge
+          page_title: Vorschläge
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen
@@ -791,3 +836,12 @@ de:
           title: Newsletter-Abonnenten
       common:
         download_current_selection: Aktuelle Auswahl herunterladen
+      newsletters:
+        settings:
+          email_logo: Logo im E-Mail Header
+          brand_color: Farbe des E-Mail Header & Footers
+          footer: Fußzeileninhalt
+        index:
+          tabs:
+            list: Newsletter
+            settings: Einstellungen

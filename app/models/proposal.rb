@@ -61,7 +61,7 @@ class Proposal < ApplicationRecord
 
   before_save :calculate_hot_score, :calculate_confidence_score
 
-  after_create :send_new_actions_notification_on_create
+  # after_create :send_new_actions_notification_on_create
 
   scope :for_render,               -> { includes(:tags) }
   scope :sort_by_hot_score,        -> { reorder(hot_score: :desc) }
@@ -160,9 +160,9 @@ class Proposal < ApplicationRecord
 
   def total_votes
     if up_and_down_voting_enabled?
-      cached_votes_up + cached_votes_down
+      cached_votes_up + cached_votes_down + officing_bulk_votes
     else
-      cached_votes_up
+      cached_votes_up + officing_bulk_votes
     end
   end
 
@@ -269,6 +269,6 @@ class Proposal < ApplicationRecord
   private
 
     def up_and_down_voting_enabled?
-      projekt_phase.settings.find_by(key: "feature.resource.enable_up_and_down_voting").value.present?
+      projekt_phase.feature?("resource.enable_up_and_down_voting")
     end
 end

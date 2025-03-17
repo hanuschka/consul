@@ -54,14 +54,14 @@
 
 <% if investment.should_show_unfeasibility_explanation? %>
   <h2><%= t("budgets.investments.show.unfeasibility_explanation") %></h2>
-  <p><%= auto_link_already_sanitized_html wysiwyg(investment.unfeasibility_explanation) %></p>
+  <p><%= auto_link_already_sanitized_html wysiwyg(investment.valuator_explanation) %></p>
 <% end %>
 
 <% if investment.should_show_price_explanation? %>
   <h2 id="price_explanation" data-magellan-target="price_explanation">
     <%= t("budgets.investments.show.price_explanation") %>
   </h2>
-  <p><%= investment.price_explanation %></p>
+  <p><%= investment.valuator_explanation %></p>
 <% end %>
 
 <% if local_assigns[:preview].nil? %>

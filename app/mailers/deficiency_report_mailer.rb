@@ -14,7 +14,7 @@ class DeficiencyReportMailer < ApplicationMailer
 
   def notify_officer(deficiency_report, officer)
     @deficiency_report = deficiency_report
-    @deficinecy_report_officer = officer
+    @deficiency_report_officer = officer
     return if @deficiency_report.blank? || @deficiency_report_officer.blank?
 
 

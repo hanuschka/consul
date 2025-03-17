@@ -19,6 +19,12 @@
 
   <div class="clear">
     <div class="small-12 medium-6 column">
+      <%= f.check_box :archive_reports, label: t("custom.admin.deficiency_reports.statuses.status.archive_reports") %>
+    </div>
+  </div>
+
+  <div class="clear">
+    <div class="small-12 medium-6 column">
       <%= f.text_area :notice_text, label: t("custom.admin.deficiency_reports.statuses.status.notice_text"),
         value: AdminWYSIWYGSanitizer.new.sanitize(status.notice_text),
         class: "html-area #{ck_editor_class(current_user)}" %>

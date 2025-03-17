@@ -1,6 +1,6 @@
 .ck-editor__editable_inline,
 .ck-source-editing-area {
-  min-height: 300px;	
+  min-height: 340px;
   margin-bottom: 1em;
 }
 
@@ -184,4 +184,8 @@
 
 form.edit_page .ck-editor {
   max-width: 823px;
+}
+
+.ck.ck-editor__editable > .ck-placeholder::before {
+  white-space: pre;
 }

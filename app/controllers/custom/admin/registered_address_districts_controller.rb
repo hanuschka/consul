@@ -28,7 +28,7 @@ class Admin::RegisteredAddressDistrictsController < Admin::BaseController
 
     def district_params
       params.require(:registered_address_district).permit(
-        map_location_attributes: nested_map_location_attributes
+        map_location_attributes: map_location_attributes
       )
     end
 end

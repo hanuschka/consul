@@ -195,10 +195,11 @@ de:
         success_notice: "Rubrik erfolgreich gelöscht"
         unable_notice: "Eine Rubrik mit zugehörigen Investitionsvorschlägen kann nicht gelöscht werden"
       form:
+        max_preselected_info: Wie viele Vorschläge sollen in die Prüfungsphase gehen
         max_ballot_lines_info: 'Maximum number of projects a user can vote on this heading during the "Voting projects" phase. Only for budgets using approval voting.'
         population_info: "Dieses Feld wird nur für statistische Zwecke verwendet, mit dem Ziel, den Prozentsatz der Stimmen in jeder Rubrik anzuzeigen. Dieses Feld ist optional; Sie können es daher leer lassen, wenn es nicht zutrifft."
-        coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Investitionsvorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
-        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, können Sie benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Investitionsvorschlagsseite für diese Rubrik angezeigt."
+        coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Vorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
+        content_blocks_info: "Wenn Inhaltsblock zulassen aktiviert ist, können Sie benutzerdefinierte Inhalte, die sich auf diese Rubrik beziehen, im Abschnitt Einstellungen> Benutzerdefinierte Inhaltsblöcke erstellen. Dieser Inhalt wird auf der Vorschlagsseite für diese Rubrik angezeigt."
         create: "Neue Rubrik erstellen"
         edit: "Rubrik bearbeiten"
         submit: "Rubrik speichern"
@@ -239,12 +240,12 @@ de:
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
           feasible: Entspricht den Kriterien
-          selected: Ausgewählt
-          undecided: Offen
+          selected: Zulassung zur Abstimmung
+          undecided: Nicht bewertet
           unfeasible: Entspricht nicht den Kriterien
           min_total_supports: Minimum Unterstützer*innen
           max_total_supports: Maximum Unterstützer*innen
-          winners: Bestbewertete Vorschläge
+          winners: Gewinner
           one_filter: "Verwendete Filter: <b><em>%{filter}</em></b>"
           two_filters: "Verwendete Filter: <b><em>%{filter},%{advanced_filters}</em></b>"
         buttons:
@@ -259,25 +260,31 @@ de:
         feasibility:
           feasible: Entspricht den Kriterien
           unfeasible: Entspricht nicht den Kriterien
-          undecided: "Offen"
+          undecided: Nicht bewertet
         selected: "Ausgewählt"
         select: "Auswählen"
         list:
           id: ID
           title: Titel
+          created_at: Eingereicht
           supports: Unterstützung
+          total_votes: Unterstützung
           admin: Administrator
           valuator: Gutachter*in
           valuation_group: Bewertungsgruppe
           geozone: Bezug der Vorschläge
-          feasibility: Kriterienerfüllung
-          valuation_finished: Bewertung fertig?
-          selected: Status
+          feasibility: Kriterien
+          valuation_finished: Bewertung beendet
+          selected: Zulassung zur Abstimmung
           visible_to_valuators: Gutachter*innen zeigen
           author_username: Benutzer*innenname des/der Verfasser*in
           incompatible: Inkompatibel
           price: Preis
           author: Autor
+          balloters: Anzahl Wähler
+          total_ballot_votes: Anzahl Stimmen
+          winner: Gewinner
+          pdf_link: PDF
         cannot_calculate_winners: "In der 7. Phase (Abstimmung über Investitionsvorschläge) kann von den Admins eine Vorschau auf das Ergebnis kalkuliert werden. Um die finalen Gewinnervorschläge berechnen zu können, muss die 8. Phase \"Abstimmung überprüfen\" ausgewählt werden."
         see_results: "Ergebnisse anzeigen"
         milestone_tags_filter_all: "Status aller Investitionsvorschläge"
@@ -285,7 +292,7 @@ de:
         assigned_admin: Zugewiesene*r Administrator*in
         assigned_valuators: Zugewiesene Gutachter*innen
         classification: Klassifizierung
-        info: "%{budget_name} - Gruppe: %{group_name} - Investitionsvorschlag %{id}"
+        info: "%{budget_name} - Gruppe: %{group_name} - Vorschlag %{id}"
         edit: Bearbeiten
         edit_classification: Klassifizierung bearbeiten
         by: Von
@@ -387,15 +394,15 @@ de:
         table_description: Beschreibung
         table_actions: Aktionen
       edit:
-        title: Status des Investitionsvorschlag bearbeiten
+        title: Status des Vorschlags bearbeiten
       update:
-        notice: Status des Investitionsvorschlag erfolgreich aktualisiert
+        notice: Status des Vorschlags erfolgreich aktualisiert
       new:
-        title: Status des Investitionsvorschlag erstellen
+        title: Status des Vorschlags erstellen
       create:
-        notice: Status des Investitionsvorschlag erfolgreich erstellt
+        notice: Status des Vorschlags erfolgreich erstellt
       delete:
-        notice: Status des Investitionsvorschlag erfolgreich gelöscht
+        notice: Status des Vorschlags erfolgreich gelöscht
     progress_bars:
       manage: "Fortschrittsbalken verwalten"
       index:
@@ -749,6 +756,7 @@ de:
       site_customization:
         documents: Benutzerdefinierte Dokumente
         homepage: Homepage
+        landing_pages: Zielseiten
         pages: Meine Seiten
         images: Bilder
         content_blocks: Benutzerspezifische Inhaltsdatenblöcke
@@ -903,8 +911,8 @@ de:
         title: "Budget ausgewählt"
         description: "Wird an den Autor gesendet, wenn sein Vorschlag zum Budget ausgewählt wurde."
       budget_investment_unfeasible:
-        title: "Vorschlag Budget nicht zugelassen"
-        description: "Wird dem Autor gesendet, wenn sein Vorschlag zum Budget nicht zugelassen ist."
+        title: "Vorschlag Budget nicht durchführbar"
+        description: "Wird dem Autor gesendet, wenn sein Vorschlag zum Budget nicht durchführbar ist."
       budget_investment_unselected:
         title: "Budget nicht ausgewählt"
         description: "Wird an den Autor gesendet, wenn sein Vorschlag zum Budget nicht ausgewählt wurde."

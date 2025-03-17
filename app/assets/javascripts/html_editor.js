@@ -50,6 +50,17 @@
           }
         },
 
+        fontSize: {
+            options: [
+                9,
+                11,
+                'default',
+                17,
+                19,
+                21
+            ]
+        },
+
         heading: {
           options: [
             {
@@ -139,18 +150,18 @@
       editorPromise.then((editor) => {
         window.CKeditorInstancesGlobal[editor.sourceElement.id] = editor;
 
-        if (editor.sourceElement.form) {
-          editor.sourceElement.form.addEventListener("submit", function(e) {
-            e.preventDefault();
+        // if (editor.sourceElement.form) {
+        //   editor.sourceElement.form.addEventListener("submit", function(e) {
+        //     e.preventDefault();
 
-            var textarea = editor.sourceElement
-            var editorData = editor.getData();
-            var processedData = removeWrappingParagraphs(editorData);
+        //     var textarea = editor.sourceElement
+        //     var editorData = editor.getData();
+        //     var processedData = removeWrappingParagraphs(editorData);
 
-            textarea.value = processedData
-            textarea.form.submit();
-          })
-        }
+        //     textarea.value = processedData
+        //     textarea.form.submit();
+        //   })
+        // }
       })
     },
 
@@ -167,8 +178,6 @@
         ImageStyle,
         ImageTextAlternative,
         ImageToolbar,
-        ImageUpload,
-        SimpleUploadAdapter,
         ClassicEditor,
         Essentials,
         Font,
@@ -219,23 +228,22 @@
         plugins = [
           Essentials, Font, Paragraph, Heading,
           List, Indent, IndentBlock, BlockQuote, Alignment,
-          ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, ImageUpload, SimpleUploadAdapter,
+          ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, window.UploadFilesPlugin,
           Link, Bold, Italic, Underline, Strikethrough, Subscript, Superscript, RemoveFormat,
           Table, HorizontalLine, SpecialCharacters, SpecialCharactersEssentials,
           MediaEmbed, SourceEditing,
-          HtmlEmbed, GeneralHtmlSupport,
-          window.UploadFilesPlugin
+          HtmlEmbed, GeneralHtmlSupport
         ]
 
         toolbarControls = [
           "bulletedList", "numberedList", "|", "indent", "outdent", "|", "blockQuote", "|", "alignment:left", "alignment:center", "alignment:right", "alignment:justify", "|",
-          "insertImage", "|",
+          "uploadFiles", "|",
+          "fontSize", "|",
           "heading", "|", "link", "|", "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "|", "removeFormat", "|",
           "fontColor", "fontBackgroundColor", "|",
           "insertTable", "horizontalLine", "specialCharacters", "|",
           "mediaEmbed", "sourceEditing", "|",
-          "htmlEmbed",
-          "uploadFiles"
+          "htmlEmbed"
         ]
 
       } else {

@@ -129,7 +129,7 @@ de:
       remote_census: "Konfigurieren Sie die Verbindung zu einem Melderegister per API (SOAP)"
       remote_census_description: "Ermöglicht den Nutzer-Abgleich per API"
       valuation_comment_notification: "Benachrichtigung bei Gutachterbewertungen"
-      valuation_comment_notification_description: "E-Mailversand bei Gutachterbewertungen von Investitionsvorschlägen an alle Nutzer:innen, die in Zusammenhang mit dem Investitionsvorschlag stehen"
+      valuation_comment_notification_description: "E-Mailversand bei Gutachterbewertungen von Investitionsvorschlägen an alle Nutzer:innen, die in Zusammenhang mit dem Vorschlag stehen"
       graphql_api: "GraphQL API"
       dashboard:
         notification_emails: "Dashboard Email-Benachrichtigungen"

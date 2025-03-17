@@ -105,36 +105,24 @@ class ProposalsController
   end
 
   def update
-    custom_proposal_params = proposal_params
-
-    if proposal_params["image_attributes"]["cached_attachment"].blank?
-      custom_proposal_params = proposal_params.except("image_attributes")
-    end
-
-    if resource.update(custom_proposal_params)
+    if resource.update(proposal_params)
       NotificationServices::NewProposalNotifier.new(resource.id).call if resource.published?
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
-      load_geozones
-      set_resource_instance
       render :edit
     end
   end
 
   def create
-    custom_proposal_params = proposal_params
-
-    if proposal_params["image_attributes"]["cached_attachment"].blank?
-      custom_proposal_params = proposal_params.except("image_attributes")
-    end
-
-    @proposal = Proposal.new(custom_proposal_params.merge(author: current_user))
+    @proposal = Proposal.new(proposal_params.merge(author: current_user))
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")
 
     elsif @proposal.save
       @proposal.publish
+
+      Mailer.proposal_created(@proposal).deliver_now
 
       if @proposal.projekt_phase.active?
         redirect_to page_path(
@@ -149,9 +137,8 @@ class ProposalsController
         ), notice: t("proposals.notice.published")
       end
     else
-      @selected_projekt = @proposal&.projekt_phase&.projekt
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
-      params[:projekt_id] = @selected_projekt&.id
+      params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
       render :new
     end
   end
@@ -200,21 +187,21 @@ class ProposalsController
 
   def vote
     if params[:value] == "no"
-      @follow = Follow.find_by(user: current_user, followable: @proposal)
+      @follow = Follow.find_by(user: voting_user, followable: @proposal)
       @follow&.destroy!
-      @voted = !@proposal.register_vote(current_user, "no")
+      @voted = !@proposal.register_vote(voting_user, "no")
     else
-      @follow = Follow.find_or_create_by!(user: current_user, followable: @proposal)
-      @voted = @proposal.register_vote(current_user, "yes")
+      @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
+      @voted = @proposal.register_vote(voting_user, "yes")
     end
   end
 
   def unvote
-    @follow = Follow.find_by(user: current_user, followable: @proposal)
+    @follow = Follow.find_by(user: voting_user, followable: @proposal)
 
     @follow.destroy! if @follow
 
-    @voted = !@proposal.unvote_by(current_user)
+    @voted = !@proposal.unvote_by(voting_user)
   end
 
   def created
@@ -250,5 +237,11 @@ class ProposalsController
                     map_location_attributes: map_location_attributes]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
+    end
+
+    def voting_user
+      return current_user unless params[:offline_user_id].present?
+
+      current_user.officing_manager? ? User.find(params[:offline_user_id]) : current_user
     end
 end

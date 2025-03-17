@@ -460,6 +460,9 @@ de:
         subject: Betreff
         from: "Von"
         body: Inhalt der E-Mail
+        title: Überschrift / Titel
+        subtitle: Untertitel
+        cover_image: Titelbild
       admin_notification:
         segment_recipient: Empfänger*innen
         title: Titel

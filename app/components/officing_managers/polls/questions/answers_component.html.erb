@@ -1,0 +1,90 @@
+<div>
+    <% if question.vote_type == "rating_scale" && question.votation_type.min_rating_scale_label.present? %>
+      <div class="rating-scale-label rating-scale-label--left">
+        <div class="label secondary">
+          <%= question.votation_type.min_rating_scale_label %>
+        </div>
+      </div>
+    <% end %>
+
+    <% question_answers.each do |question_answer| %>
+
+      <div>
+        <% if already_answered?(question_answer) %>
+          <%= form_with url: remove_answer_officing_poll_path(poll, question, user_answer(question_answer), question_answer_id: question_answer.id),
+                        local: false,
+                        method: :delete,
+                        class: "button_to js-question-answered" do |f| %>
+            <%= f.hidden_field :offline_user_id, value: @offline_user.id %>
+            <% if should_show_answer_weight? %>
+              <span class="answer-weight-text answer-weight-text--voted"><%= question_answer.title %></span>
+              <%= select_tag dom_id(user_answer(question_answer), :answer_weight),
+                             options_for_select((0..available_vote_weight(question_answer)).to_a,
+                                                selected: user_answer(question_answer).answer_weight),
+                             { label: false,
+                               onchange: "$(this).closest('form').submit()",
+                               class: "answer-weight-result"
+                             } %>
+            <% else %>
+              <%= f.button question_answer.title,
+                           title: t("poll_questions.show.voted", answer: question_answer.title),
+                           value: "remove_answer",
+                           class: "button expanded success",
+                           "aria-pressed": true %>
+            <% end %>
+          <% end %>
+
+        <% else %>
+          <%= form_with url: record_answer_officing_poll_path(poll, question, answer: question_answer.title, question_answer_id: question_answer.id),
+                        local: false,
+                        class: "button_to" do |f| %>
+            <%= f.hidden_field :offline_user_id, value: @offline_user.id %>
+            <% if should_show_answer_weight? && available_vote_weight(question_answer) > 0 %>
+              <span class="answer-weight-text"><%= question_answer.title %></span>
+              <%= f.select :answer_weight, (0..available_vote_weight(question_answer)).to_a, { selected: 0, label: false }, { onchange: "$(this).closest('form').submit()" } %>
+            <% else %>
+              <%= f.button question_answer.title,
+                           title: t("poll_questions.show.vote_answer", answer: question_answer.title),
+                           class: "button primary hollow expanded",
+                           disabled: disable_answer?(question_answer),
+                           "aria-pressed": false %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if question.vote_type == "rating_scale" && question.votation_type.max_rating_scale_label.present? %>
+      <div class="rating-scale-label rating-scale-label--right">
+        <div class="label secondary">
+          <%= question.votation_type.max_rating_scale_label %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if question.open_question_answer.present? && already_answered?(question.open_question_answer) %>
+      <% open_answer = user_answer(question.open_question_answer) %>
+      <%= form_with url: update_open_answer_officing_poll_path(poll, question, open_answer), local: false, method: :patch do |f| %>
+        <%= f.text_area :open_answer_text, value: open_answer.open_answer_text, label: false %>
+        <%= f.hidden_field :offline_user_id, value: @offline_user.id %>
+        <% if open_answer.open_answer_text.present? %>
+          <%= f.submit t("custom.polls.questions.answers.update_open_answer"), class: "button open-answer margin-top" %>
+          <% if @open_answer_updated %>
+            <div class='open-answer-saved-notice'>
+              <%= t("custom.admin.polls.questions.answers.notice.open_answer_saved") %>
+            </div>
+          <% end %>
+        <% else %>
+          <%= f.submit t("custom.polls.questions.answers.save_open_answer"), class: "button open-answer margin-top" %>
+        <% end %>
+      <% end %>
+    <% end %>
+</div>
+
+<div class="answer-counted" <%= "style=color:#a94442" if @answer_updated == "unanswered" %>>
+  <% if @answer_updated == "answered" %>
+    <%= t("custom.polls.show.vote_counted") %>
+  <% elsif @answer_updated == 'unanswered' %>
+    <%= t("custom.polls.show.vote_uncounted") %>
+  <% end %>
+</div>

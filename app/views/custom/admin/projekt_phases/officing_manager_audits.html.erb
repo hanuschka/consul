@@ -6,7 +6,28 @@
 
 <div class="row">
   <div class="column">
-    <%= render "admin/poll/officer_assignments/list" %>
+    <table>
+      <thead>
+        <th scope="col">ID</th>
+        <th scope="col">Änderungen</th>
+        <th scope="col">Aufgenommen am</th>
+      </thead>
+      <% @audits.each do |audit| %>
+        <tr>
+          <td>
+            <%= audit.id %>
+          </td>
+          <td>
+            <%= audit.audited_changes.compact %>
+          </td>
+          <td>
+            <%= l audit.created_at, format: :short %>
+          </td>
+        <tr>
+      <% end %>
+    </table>
+
+    <%= paginate @audits %>
   </div>
 </div>
 

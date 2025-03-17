@@ -94,7 +94,7 @@ de:
             no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
           budget_phase:
-            phase_expired: Diese Projektphase ist abgelaufen
+            investment_unfeasible: Für nicht durchführbare Investitionsvorschläge kann nicht kommentiert werden
         poll_votes:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."

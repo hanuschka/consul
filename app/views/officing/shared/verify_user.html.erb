@@ -1,35 +1,41 @@
-<h2>Offline Stimme hinzufügen</h2>
+<h2><%= t("custom.officing.shared.verify_users.title") %></h2>
 
-<div class="row verification account">
-  <div class="small-12 medium-8 column">
-    <%= form_with url: officing_offline_ballots_find_or_create_user_path do |f| %>
-      <%= f.hidden_field :budget_id, value: params[:budget_id]  %>
+<div class="verification account">
+  <div class="small-12 medium-8">
+    <%= form_with url: url_for(action: "find_or_create_user") do |f| %>
+      <div class="small-12 medium-6">
+        <div class="margin-bottom">
+          <%= f.submit t("custom.officing.shared.verify_users.skip_verification"), name: "skip_verification", class: "button expanded" %>
+        </div>
+      </div>
+
+      <hr>
 
       <div class="small-12 medium-6">
         <%= f.text_field :first_name,
                          value: params[:first_name],
-                         label: t("custom.officing.budgets.verify_users.first_name"),
+                         label: t("custom.officing.shared.verify_users.first_name"),
                          autocomplete: "off" %>
       </div>
 
       <div class="small-12 medium-6">
         <%= f.text_field :last_name,
                          value: params[:last_name],
-                         label: t("custom.officing.budgets.verify_users.last_name"),
+                         label: t("custom.officing.shared.verify_users.last_name"),
                          autocomplete: "off" %>
       </div>
 
       <div class="small-12 medium-6">
         <%= f.text_field :plz,
                          value: params[:plz],
-                         label: t("custom.officing.budgets.verify_users.plz"),
+                         label: t("custom.officing.shared.verify_users.plz"),
                          autocomplete: "off" %>
       </div>
 
       <div class="date-of-birth small-12 medium-6 clear">
       <%= f.date_select :date_of_birth,
                         prompt: true,
-                        label: t("custom.officing.budgets.verify_users.date_of_birth"),
+                        label: t("custom.officing.shared.verify_users.date_of_birth"),
                         start_year: 1900, end_year: minimum_required_age.years.ago.year %>
       </div>
 

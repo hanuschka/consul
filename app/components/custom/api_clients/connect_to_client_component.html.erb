@@ -1,3 +1,7 @@
 <div class="api-clients-connect-to-client">
-  <%= button_to("Connect to DemokratieToday AI", connect_api_clients_path, class: 'button') %>
+  <% if current_user.on_dt? %>
+    <%= link_to("Zum Consul Projekt Studio wechseln", Rails.application.secrets.dt[:url] + "/navigate/from_consul", class: 'button -blue') %>
+  <% else %>
+    <%= button_to("Connect to DemokratieToday AI", connect_api_clients_path, class: 'button') %>
+  <% end %>
 </div>

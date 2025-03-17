@@ -68,6 +68,10 @@
         <%= render "deficiency_reports/sidebar/statuses" %>
       <% end %>
 
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.deficiency_reports.index.sidebar.archived_status.title"), icon_name: "check-circle") do |c| %>
+        <%= render "deficiency_reports/sidebar/archived_status" %>
+      <% end %>
+
       <% if current_user &&
           ( current_user.deficiency_report_officer? ||
           current_user.administrator? ) %>

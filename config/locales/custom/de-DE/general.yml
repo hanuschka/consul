@@ -173,12 +173,12 @@ de:
     direct_message: Private Nachricht
     error: Fehler
     errors: Fehler
-    not_saved: "Fehler verhindern das Speichern. <br>Bitte überprüfen Sie die gekennzeichneten Felder."
+    not_saved: "verhindern das Speichern. <br>Bitte überprüfen Sie die gekennzeichneten Felder."
     policy: Datenschutzbestimmungen
     banner: Banner
     proposal: Vorschlag
     proposal_notification: "Benachrichtigung"
-    budget/investment: Investitionsvorschlag
+    budget/investment: Vorschlag
     budget/group: Budget Gruppe
     budget/heading: Budget Untergruppe
     geozone: Bereiche
@@ -868,8 +868,8 @@ de:
           one: 1 Vorschlag
           other: "%{count} Vorschläge"
         budget_investments:
-          one: 1 Investitionsvorschlag
-          other: "%{count} Investitionsvorschläge"
+          one: 1 Vorschlag
+          other: "%{count} Vorschläge"
         follows:
           one: 1 folge ich
           other: "%{count} folge ich"

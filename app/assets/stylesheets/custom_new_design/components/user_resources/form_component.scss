@@ -32,7 +32,7 @@ $banner-mobile-layout-change-widthpoint: 720px;
 
 .user-resources-form--banner-editor {
   width: 100%;
-  background-color: $brand-lighter;
+  background-color: #ddeeff;
   padding-top: 30px;
   padding-bottom: 30px;
   padding-left: 30px;
@@ -135,8 +135,7 @@ textarea.user-resources-form--banner-editor-title {
   }
 
   &::placeholder  {
-    color: $dark;
-    opacity: 0.3;
+    color: #666;
   }
 
   &:focus {

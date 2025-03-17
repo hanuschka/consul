@@ -4,6 +4,6 @@
     <%= f.hidden_field :memoable_type, value: memoable.class.name %>
     <%= f.hidden_field :parent_id, value: memoable.is_a?(Memo) ? memoable.id : nil %>
     <%= f.text_area :text, label: false %>
-    <%= f.submit "Speichern", class: "button" %>
+    <%= f.submit "Memonachricht erstellen", class: "button" %>
   <% end %>
 </div>

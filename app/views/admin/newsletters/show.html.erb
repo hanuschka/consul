@@ -2,8 +2,6 @@
 
 <h2><%= t("admin.newsletters.show.title") %></h2>
 
-<% recipients_count = @newsletter.valid_segment_recipient? ? @newsletter.list_of_recipient_emails.count : 0 %>
-
 <div class="small-12 column callout highlight">
   <div class="small-12 medium-2 column">
     <strong><%= t("admin.newsletters.show.sent_at") %></strong><br>
@@ -24,7 +22,7 @@
   <div class="small-12 column">
     <strong><%= t("admin.newsletters.show.segment_recipient") %></strong><br>
     <%= segment_name(@newsletter.segment_recipient) %>
-    <%= t("admin.newsletters.show.affected_users", n: recipients_count) %>
+    <%= t("admin.newsletters.show.affected_users", n: @recipients_count) %>
   </div>
 
   <div class="small-12 column">
@@ -45,10 +43,10 @@
   <%= render template: "mailer/newsletter" %>
 </div>
 
-<% if @newsletter.valid_segment_recipient? %>
+<% if @newsletter.valid_segment_recipient? || @newsletter.recipient_group.present? %>
   <%= link_to t("admin.newsletters.show.send"),
               deliver_admin_newsletter_path(@newsletter),
-              "data-alert": t("admin.newsletters.show.send_alert", n: recipients_count),
+              "data-alert": t("admin.newsletters.show.send_alert", n: @recipients_count),
               method: :post,
               id: "js-send-newsletter-alert",
               class: "button success" %>

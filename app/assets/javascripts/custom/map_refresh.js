@@ -3,9 +3,7 @@
   App.MapRefresh = {
     initialize: function() {
       $("#projekts-tabs, #edit-projekt-tabs").on("change.zf.tabs", function() {
-        if ($("#tab-projekt-map:visible").length) {
-          $('#admin-map').foundation();
-          App.Map.destroy();
+        if ($("#tab-projekt-map:visible").length > 0 && App.Map.maps.length == 0) {
           App.Map.initialize();
         }
       });

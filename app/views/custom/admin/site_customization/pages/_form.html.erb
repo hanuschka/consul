@@ -1,28 +1,68 @@
 <%= render "shared/globalize_locales", resource: @page %>
 
-<%= translatable_form_for [:admin, @page], html: { class: "edit_page" } do |f| %>
+<% form_url =
+  if @page.landing?
+    if @page.persisted?
+      admin_site_customization_landing_page_path(@page)
+    else
+      admin_site_customization_landing_pages_path
+    end
+  else
+    nil
+  end
+%>
+
+<%= translatable_form_for [:admin, @page], url: form_url, html: { class: "edit_page" } do |f| %>
   <%= render "shared/errors", resource: @page %>
+
+  <% if @page.landing? %>
+    <%= f.hidden_field :landing, value: true %>
+  <% end %>
 
   <div class="row">
     <div class="small-12 column">
       <hr>
     </div>
 
-    <div class="small-12 medium-4 column">
-      <h3><%= t("admin.site_customization.pages.form.options") %></h3>
-      <%= f.label :status %>
-      <% ::SiteCustomization::Page::VALID_STATUSES.each do |status| %>
-        <%= f.radio_button :status, status %>
-        <br>
+    <div class="small-12 medium-8 column">
+
+      <div class="row">
+        <div class="small-12 medium-8 column">
+          <% if @page.landing? %>
+            <%= f.translatable_fields do |translations_form| %>
+              <%= translations_form.text_field :title %>
+              <%= translations_form.text_field :subtitle %>
+            <% end %>
+          <% end %>
+
+          <div class="margin-bottom">
+            <%= f.text_field :slug, size: 80, maxlength: 80,
+              hint: sanitize(t("admin.site_customization.pages.new.slug_help")) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="margin-bottom">
+        <%= f.label :status %>
+        <% ::SiteCustomization::Page::VALID_STATUSES.each do |status| %>
+          <%= f.radio_button :status, status %>
+          <br>
+        <% end %>
+      </div>
+
+      <% if @page.landing? %>
+        <%= f.check_box :landing_show_in_top_nav %>
+        <%= f.check_box :landing_hide_all_top_nav_links %>
+        <%= f.check_box :landing_hide_title_and_subtitle %>
       <% end %>
 
-      <%= f.check_box :more_info_flag, class: "small" %>
-      <%= f.check_box :print_content_flag %>
+      <% unless @page.landing? %>
+        <%= f.check_box :more_info_flag, class: "small" %>
+        <%= f.check_box :print_content_flag %>
+      <% end %>
     </div>
 
     <div class="small-12 medium-6 column">
-      <%= f.text_field :slug, size: 80, maxlength: 80,
-        hint: sanitize(t("admin.site_customization.pages.new.slug_help")) %>
     </div>
   </div>
 
@@ -30,21 +70,36 @@
     <div class="small-12 column">
       <hr>
 
-      <div class="images small-12 column">
+      <div class="images small-12 column margin-bottom">
+        <%= hidden_field_tag "site_customization_page[image_attributes][cached_attachment]" %>
         <%= render "images/nested_image", f: f %>
       </div>
 
-      <%= f.translatable_fields do |translations_form| %>
+      <% if @page.landing? %>
+        <div class="margin-bottom  small-12 column ">
+          <div class="margin-bottom">
+            <%= f.file_field :landing_mobile_header_image %>
+          </div>
 
-        <div class="small-12 column end">
+          <% if @page.landing_mobile_header_image.attached? %>
+            <div style="justify-content: center" class="d-flex">
+              <%= image_tag @page.landing_mobile_header_image, width: 640 %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% unless @page.landing? %>
+        <%= f.translatable_fields do |translations_form| %>
           <%= translations_form.text_field :title %>
-        </div>
-        <div class="small-12 column">
           <%= translations_form.text_field :subtitle %>
-        </div>
-        <div class="column">
-          <%= translations_form.text_area :content, value: AdminWYSIWYGSanitizer.new.sanitize(@page.content), class: "html-area #{ck_editor_class(current_user)}" %>
-        </div>
+
+          <% unless @page.landing? %>
+            <div class="column">
+              <%= translations_form.text_area :content, value: AdminWYSIWYGSanitizer.new.sanitize(@page.content), class: "html-area #{ck_editor_class(current_user)}" %>
+            </div>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -57,3 +112,4 @@
     </div>
   </div>
 <% end %>
+

@@ -24,7 +24,7 @@ module ProjektPhaseAdminActions
     @projekt_phase.save!
 
     if embedded? && frame_session_from_authorized_source?
-      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :duration)
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: (@projekt_phase.admin_nav_bar_items.first.presence || :naming))
     else
       redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
         notice: t("custom.admin.projekt_phases.notice.created")
@@ -177,7 +177,7 @@ module ProjektPhaseAdminActions
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params)
+    map_location.update!(map_location_params.except(:id))
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -342,13 +342,30 @@ module ProjektPhaseAdminActions
     authorize!(:budget_investments, @projekt_phase)
     @budget = @projekt_phase.budget
 
+    if params[:valuator_or_group_id]
+      model, id = params[:valuator_or_group_id].split("_")
+
+      if model == "group"
+        params[:valuator_group_id] = id
+      else
+        params[:valuator_id] = id
+      end
+    end
+
     @investments = @budget.investments
                           .scoped_filter(params.merge(budget_id: @budget.id), "all")
                           .order_filter(params.merge(budget_id: @budget.id))
     @investments = Kaminari.paginate_array(@investments) if @investments.is_a?(Array)
     @investments = @investments.page(params[:page]) unless request.format.csv?
 
-    render "custom/admin/projekt_phases/budget_investments"
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/budget_investments" }
+      format.js { render "custom/admin/projekt_phases/budget_investments" }
+      format.csv do
+        send_data CsvServices::BudgetInvestmentsExporter.call(@investments.limit(nil), request.base_url),
+									filename: "budget-investments-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
+      end
+    end
   end
 
   def budget_phases

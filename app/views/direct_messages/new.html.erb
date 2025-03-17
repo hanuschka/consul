@@ -1,3 +1,17 @@
+<% form_html = capture do %>
+  <%= form_for [@receiver, @direct_message] do |f| %>
+    <%= render "shared/errors", resource: @direct_message %>
+
+    <%= f.text_field :title %>
+    <%= f.text_area :body, rows: "3" %>
+
+    <div class="small-12 medium-4">
+      <%= f.submit t("users.direct_messages.new.submit_button"), class: "button expanded" %>
+    </div>
+  <% end %>
+<% end %>
+
+
 <div class="row">
   <div class="small-12 medium-9 column">
     <%= back_link_to %>
@@ -13,6 +27,8 @@
             signin: link_to_signin, signup: link_to_signup)) %>
         </p>
       </div>
+    <% elsif current_user.administrator? || current_user.deficiency_report_manager? || current_user.deficiency_report_officer? %>
+      <%= form_html %>
     <% elsif not @receiver.email_on_direct_message? %>
       <div class="callout primary">
         <p>
@@ -20,16 +36,7 @@
         </p>
       </div>
     <% elsif can? :create, @direct_message %>
-      <%= form_for [@receiver, @direct_message] do |f| %>
-        <%= render "shared/errors", resource: @direct_message %>
-
-        <%= f.text_field :title %>
-        <%= f.text_area :body, rows: "3" %>
-
-        <div class="small-12 medium-4">
-          <%= f.submit t("users.direct_messages.new.submit_button"), class: "button expanded" %>
-        </div>
-      <% end %>
+      <%= form_html %>
     <% else %>
       <div class="callout warning">
         <p>

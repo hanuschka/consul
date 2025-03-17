@@ -1,0 +1,19 @@
+<div class="sidebar-divider"></div>
+
+<ul class='deficiency-reports-sidebar-filter '>
+  <li <%= "class=label-selected" if params["dr_archived_status"].nil? %>>
+    <%= label_tag "archived_status_0", class: "" do %>
+      <%= radio_button_tag(:archived_status, 0, params["dr_archived_status"].nil?, { class: "js-filter-by-deficiency-report-archived-status" }) %>
+      <%= t("custom.deficiency_reports.index.sidebar.archived_status.not_archived") %>
+      <span class="checkmark"></span>
+    <% end %>
+  </li>
+
+  <li <%= "class=label-selected" if params["dr_archived_status"].present? %>>
+    <%= label_tag "archived_status_1", class: "" do %>
+      <%= radio_button_tag(:archived_status, 1, params["dr_archived_status"].present?, { class: "js-filter-by-deficiency-report-archived-status" }) %>
+      <%= t("custom.deficiency_reports.index.sidebar.archived_status.only_archived") %>
+      <span class="checkmark"></span>
+    <% end %>
+  </li>
+</ul>

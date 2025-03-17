@@ -17,8 +17,8 @@ class ProjektManagement::CommentsController < ProjektManagement::BaseController
       end
 
       format.csv do
-        send_data Comments::CsvExporter.new(@resources.limit(20_000)).to_csv,
-          filename: "comments.csv"
+        CsvJobs::CommentsJob.perform_later(current_user.id, @resources.limit(20_000).ids, "projekt_management")
+        redirect_to projekt_management_comments_path, notice: "Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist."
       end
     end
   end

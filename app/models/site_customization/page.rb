@@ -4,6 +4,7 @@ class SiteCustomization::Page < ApplicationRecord
   translates :title,       touch: true
   translates :subtitle,    touch: true
   translates :content,     touch: true
+  translates :content_bu
   include Globalizable
 
   validates_translation :title, presence: true

@@ -9,6 +9,9 @@
 <h2><%= t("custom.admin.projekts.edit.projekt_configuration_tab.duration_block_title") %></h2>
 <%= render partial: "admin/projekts/edit/projekt_configuration/projekt_duration" %>
 
+<h2><%= t("custom.admin.projekts.edit.projekt_configuration_tab.landing_page_assignments") %></h2>
+<%= render partial: "admin/projekts/edit/projekt_configuration/projekt_landing_pages", locals: { projekt: @projekt } %>
+
 <h2><%= t("custom.admin.projekts.edit.projekt_configuration_tab.geo_affiliation_block_title") %></h2>
 <%= render partial: "admin/projekts/edit/projekt_configuration/geo_affiliation" %>
 

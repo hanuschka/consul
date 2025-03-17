@@ -16,6 +16,12 @@
 
   <div class="row expanded">
     <div class="small-12 medium-6 column end">
+      <%= f.text_field :max_preselected, hint: t("admin.budget_headings.form.max_preselected_info") %>
+    </div>
+  </div>
+
+  <div class="row expanded">
+    <div class="small-12 medium-6 column end">
       <%= f.fields_for :heading do |heading_form| %>
         <%= heading_form.text_field :price %>
         <%= heading_form.text_field :population %>

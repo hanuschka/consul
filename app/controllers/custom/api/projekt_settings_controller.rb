@@ -3,7 +3,6 @@ class Api::ProjektSettingsController < Api::BaseController
   before_action :find_projekt_setting
 
   skip_authorization_check
-  skip_forgery_protection
 
   def update
     if @projekt_setting.update_column(:value, projekt_setting_params[:value])

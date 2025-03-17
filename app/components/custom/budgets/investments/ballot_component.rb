@@ -62,12 +62,4 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
     def path_to_key
       "custom.projekt_phases.permission_problem.ballot_component.budget_phase.#{reason}"
     end
-
-    def conditional_ballot?
-      return false unless current_user.present?
-
-      @projekt_phase.user_status == "verified" &&
-        current_user.verified_at.nil? &&
-        projekt_phase_feature?(@projekt_phase, "resource.conditional_balloting")
-    end
 end

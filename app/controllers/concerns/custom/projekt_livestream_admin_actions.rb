@@ -50,7 +50,7 @@ module ProjektLivestreamAdminActions
 
     NotificationServices::NewProjektLivestreamNotifier.call(@projekt_livestream.id)
     redirect_to polymorphic_path([@namespace, @projekt_phase, ProjektLivestream]),
-      notice: t("custom.admin.projekts.edit.projekt_livestreams_tab.notifications_sent_notice")
+      notice: t("custom.admin.projekt_phases.projekt_livestreams.notifications_sent_notice")
   end
 
   private

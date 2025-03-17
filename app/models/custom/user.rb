@@ -29,6 +29,7 @@ class User < ApplicationRecord
   after_create :attempt_verification, if: -> { Setting["feature.melderegister"].present? }
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
+  after_create :assign_individual_group_values_based_on_email_pattern
 
   has_secure_token :frame_sign_in_token
 
@@ -41,6 +42,7 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
+  has_one :officing_manager
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -50,8 +52,10 @@ class User < ApplicationRecord
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
+  scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
   validate :email_should_not_be_used_by_hidden_user
+  validate :password_complexity, if: :password_required?
 
   validates :first_name, presence: true, on: :create, if: :extended_registration?
   validates :last_name, presence: true, on: :create, if: :extended_registration?
@@ -72,21 +76,33 @@ class User < ApplicationRecord
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
-  def self.order_filter(params)
-    sorting_key = params[:sort_by]&.downcase&.to_sym
-    allowed_sort_option = SORTING_OPTIONS[sorting_key]
-    direction = params[:direction] == "desc" ? "desc" : "asc"
+  class << self
+    def order_filter(params)
+      sorting_key = params[:sort_by]&.downcase&.to_sym
+      allowed_sort_option = SORTING_OPTIONS[sorting_key]
+      direction = params[:direction] == "desc" ? "desc" : "asc"
 
-    if allowed_sort_option.present?
-      order("#{allowed_sort_option} #{direction}")
-    elsif sorting_key == :roles
-      if direction == "asc"
-        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+      if allowed_sort_option.present?
+        order("#{allowed_sort_option} #{direction}")
+      elsif sorting_key == :roles
+        if direction == "asc"
+          all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+        else
+          all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+        end
       else
-        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+        order(id: :desc)
       end
-    else
-      order(id: :desc)
+    end
+
+    def newsletter_subscriber_ids
+      User.actual.where(newsletter: true).ids
+    end
+
+    alias all_newsletter_subscriber_ids newsletter_subscriber_ids
+
+    def administrators_ids
+      joins(:administrator).ids
     end
   end
 
@@ -193,6 +209,10 @@ class User < ApplicationRecord
     return false unless projekt_manager?
 
     projekt_manager.allowed_to?(permission, projekt)
+  end
+
+  def officing_manager?
+    officing_manager.present?
   end
 
   def extended_registration?
@@ -309,6 +329,20 @@ class User < ApplicationRecord
       end
     end
 
+    def password_complexity
+      return unless password.present?
+
+      # at least three of the following four elements: a capital letter, a small letter, a digit, or a special symbol
+      special_symbols = "~!@#$%^&*()_-+={}[]|:;,<>.?/"
+      escaped_special_symbols = Regexp.escape(special_symbols)
+
+      regex_pattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?=.*[A-Z])(?=.*[a-z])(?=.*[#{escaped_special_symbols}])|(?=.*[A-Z])(?=.*\d)(?=.*[#{escaped_special_symbols}])|(?=.*[a-z])(?=.*\d)(?=.*[#{escaped_special_symbols}])/
+
+      unless password.match?(regex_pattern)
+        errors.add :password, :low_complexity
+      end
+    end
+
     def attempt_verification
       return false if organization?
       return false unless residency_valid?
@@ -348,6 +382,18 @@ class User < ApplicationRecord
         next if permission_problem_present
 
         ballot.update!(conditional: false)
+      end
+    end
+
+    def assign_individual_group_values_based_on_email_pattern
+      return unless email.present?
+
+      IndividualGroupValue.where.not(email_pattern: "").find_each do |group_value|
+        next if group_value.users.include?(self)
+        next unless group_value.email_pattern.start_with?("@")
+        next unless email.ends_with?(group_value.email_pattern)
+
+        group_value.users << self
       end
     end
 end

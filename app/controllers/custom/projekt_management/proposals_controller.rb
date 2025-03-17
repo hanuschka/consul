@@ -20,8 +20,8 @@ class ProjektManagement::ProposalsController < ProjektManagement::BaseController
       end
 
       format.csv do
-        send_data Proposals::CsvExporter.new(@resources.limit(nil)).to_csv,
-          filename: "proposals.csv"
+        send_data CsvServices::ProposalsExporter.call(@resources.limit(nil)),
+          filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
       end
     end
   end

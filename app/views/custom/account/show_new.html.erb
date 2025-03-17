@@ -21,31 +21,28 @@
     <div class="main-column">
       <%= render "shared/loader_spinner" %>
       <%= render(Users::ProfileBannerComponent.new(user: current_user, edit_mode: true)) %>
-      <div class="row margin-bottom">
-        <div class="small-12 column">
+      <div class="margin-bottom">
+        <h1 class="inline-block margin-bottom accout-page-notifications-title">
+          <%= t("notifications.index.title") %>
+        </h1>
 
-          <h1 class="inline-block margin-bottom accout-page-notifications-title">
-            <%= t("notifications.index.title") %>
-          </h1>
+        <%= link_to t("notifications.index.mark_all_as_read"),
+          mark_all_as_read_notifications_path, method: :put,
+          class: "button hollow float-right-medium" %>
 
-          <%= link_to t("notifications.index.mark_all_as_read"),
-            mark_all_as_read_notifications_path, method: :put,
-            class: "button hollow float-right-medium" %>
+        <ul class="menu simple clear">
+          <li class="<%= params[:notifications] == "read" ? "" : "is-active" %>">
+            <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
+          </li>
+          <li class="<%= params[:notifications] == "read" ? "is-active" : "" %>">
+            <h2>
+              <%= link_to t("notifications.index.read"), account_path(notifications: "read") %>
+            </h2>
+          </li>
+        </ul>
 
-          <ul class="menu simple clear">
-            <li class="<%= params[:notifications] == "read" ? "" : "is-active" %>">
-              <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
-            </li>
-            <li class="<%= params[:notifications] == "read" ? "is-active" : "" %>">
-              <h2>
-                <%= link_to t("notifications.index.read"), account_path(notifications: "read") %>
-              </h2>
-            </li>
-          </ul>
-
-          <div class="hide-on-small-tablet">
-            <%= notifications_content %>
-          </div>
+        <div class="hide-on-small-tablet">
+          <%= notifications_content %>
         </div>
       </div>
       <div class="hide-on-small-tablet">
@@ -61,14 +58,7 @@
         <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow delete alert" %>
       <% end %>
 
-      <% if !current_user.level_three_verified? && feature?("bund_id_login") %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_with_bund_id_description"), icon_name: "check") do |c| %>
-          <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId", style: "width: 150px" do %>
-            <%= image_tag "bund_id_logo.svg", alt: "BundId Logo", class: "bund-id-logo" %>
-          <% end %>
-        <% end %>
-
-      <% elsif !current_user.level_three_verified? %>
+      <% if !current_user.level_three_verified? %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description"),  icon_name: "check") do |c| %>
           <div class="verify-account">
             <% if current_user.level_two_verified? %>
@@ -132,6 +122,11 @@
             <div>
               <%= f.check_box :adm_email_on_new_proposal,
                 {label: t('custom.account.settings.adm_email_on_new_proposal'), class: "checkbox-label--aligned"} %>
+            </div>
+
+            <div>
+              <%= f.check_box :adm_email_on_new_budget_investment,
+                {label: t('custom.account.settings.adm_email_on_new_budget_investment'), class: "checkbox-label--aligned"} %>
             </div>
 
             <div>

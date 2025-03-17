@@ -70,6 +70,9 @@ class ProjektPhase < ApplicationRecord
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
+  has_many :officing_manager_assignments, dependent: :destroy
+  has_many :officing_managers, through: :officing_manager_assignments
+
   accepts_nested_attributes_for :settings
 
   enum user_status: {
@@ -252,6 +255,10 @@ class ProjektPhase < ApplicationRecord
 
   def admin_nav_bar_items
     []
+  end
+
+  def embedded_admin_nav_bar_items
+    admin_nav_bar_items
   end
 
   def settings_in_tabs

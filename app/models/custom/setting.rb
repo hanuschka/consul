@@ -61,6 +61,8 @@ class Setting < ApplicationRecord
         "feature.machine_learning": false,
         "feature.matomo": false,
         "feature.melderegister": false,
+        "feature.bund_id_verification": false,
+
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
         "homepage.widgets.feeds.polls": true,
@@ -127,6 +129,7 @@ class Setting < ApplicationRecord
         "url": "http://example.com", # Public-facing URL of the app.
         # CONSUL installation's organization name
         "org_name": "CONSUL",
+        "newsletter_brand_color": "#004a83",
         "meta_title": nil,
         "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
         "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
@@ -175,6 +178,7 @@ class Setting < ApplicationRecord
 
         "deficiency_reports.show_in_main_menu": false,
         "deficiency_reports.admins_must_assign_officer": false,
+        "deficiency_reports.officers_can_administer_assigned_reports": true,
         "deficiency_reports.officers_can_edit_assigned_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
@@ -196,6 +200,7 @@ class Setting < ApplicationRecord
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        "extended_option.general.city_name": "CONSUL",
         "extended_option.general.title": "Öffentlichkeitsbeteiligung",
         "extended_option.general.subtitle": "in der Stadt CONSUL",
         "extended_option.general.launch_date": "",
@@ -254,7 +259,9 @@ class Setting < ApplicationRecord
 
         "extra_fields.registration.extended": false,
         "extra_fields.registration.check_documents": false,
-        "extra_fields.verification.check_documents": false
+
+        "extra_fields.verification.check_documents": false,
+        "extra_fields.verification.show_verification_status": true
       }
     end
 

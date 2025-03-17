@@ -63,6 +63,7 @@ class ApplicationController < ActionController::Base
 
       @projekts_for_overview_page_navigation =
         Projekt
+          .activated
           .sort_by_order_number
           .includes({page: [:translations]}, :projekt_settings, { children_projekts_show_in_navigation: :projekt_settings })
           .joins(:projekt_settings)
@@ -74,6 +75,7 @@ class ApplicationController < ActionController::Base
       @projekts_for_navigation =
         Projekt
           .top_level
+          .activated
           .includes(
             :projekt_settings, :hard_individual_group_values,
             page: [:translations]
@@ -81,6 +83,16 @@ class ApplicationController < ActionController::Base
           .order(created_at: :asc)
           .show_in_navigation
           .sort_by_order_number
+          .select { |p| p.visible_for?(current_user) }
+
+      @draft_projekts_for_navigation =
+        Projekt
+          .regular
+          .not_activated
+          .includes(
+            page: [:translations]
+          )
+          .order(created_at: :asc)
           .select { |p| p.visible_for?(current_user) }
     end
 

@@ -47,7 +47,7 @@ de:
             sentiments:
               title: Sentiment
           budget:
-            investments_subtab: Investitionen
+            investments_subtab: Vorschläge
         projekt_events_tab:
           event_date: Datum
           event_location: Veranstaltungsort

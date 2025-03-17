@@ -48,7 +48,7 @@ class DeficiencyReportManagement::StatusesController < DeficiencyReportManagemen
 
   def status_params
     params.require(:deficiency_report_status).permit(
-      :color, :icon, :notice_text,
+      :color, :archive_reports, :icon, :notice_text,
       translation_params(DeficiencyReport::Status)
     )
   end

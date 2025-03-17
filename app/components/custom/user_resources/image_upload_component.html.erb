@@ -2,6 +2,10 @@
   <% c.with_placeholder do %>
     <div class="user-resource-image-upload--placeholder">
       <div class="user-resource-image-upload--placeholder-inner">
+        <div class="user-resource-image-upload--label-title">
+          <%= t("custom.#{i18n_scope}.form.image_upload.title",
+                default: t("custom.user_resources.image_upload.title_default")) %>
+        </div>
         <div class="user-resource-image-upload--text">
           <%= t("custom.#{i18n_scope}.form.image_upload.top_line",
                 default: t("custom.user_resources.image_upload.top_line_default")) %>
@@ -9,10 +13,6 @@
         <div class="user-resource-image-upload--label">
           <div class="user-resource-image-upload--plus">
             +
-          </div>
-          <div class="user-resource-image-upload--label-title">
-            <%= t("custom.#{i18n_scope}.form.image_upload.title",
-                  default: t("custom.user_resources.image_upload.title_default")) %>
           </div>
           <div class="user-resource-image-upload--hint">
             <%= t("custom.#{i18n_scope}.form.image_upload.bottom_line",

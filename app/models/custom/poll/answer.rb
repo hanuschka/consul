@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "models", "poll", "answer").to_s
 
 class Poll::Answer < ApplicationRecord
+  audited if: :audit_changes?
+
   private
 
     def max_votes
@@ -14,5 +16,9 @@ class Poll::Answer < ApplicationRecord
       if answer_weight > available_weight
         raise "Maximum number of votes per user exceeded"
       end
+    end
+
+    def audit_changes?
+      officing_manager_id.present?
     end
 end

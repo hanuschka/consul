@@ -1,4 +1,8 @@
 resources :budgets, only: [:show, :index] do
+  member do
+    get :read_stats
+  end
+
   resources :groups, controller: "budgets/groups", only: [:show, :index]
   resources :investments, controller: "budgets/investments" do
     member do

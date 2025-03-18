@@ -59,8 +59,11 @@ class AccountController < ApplicationController
 
     process_temp_attributes_for(@account)
 
+
+    @account.update(reverify: true)
+
     if @account.update(user_params)
-      @account.unverify!
+      Setting["feature.melderegister"].present? ? @account.reverify! : @account.unverify!
       redirect_to account_path, notice: t("flash.actions.save_changes.notice")
     else
       render :edit_details
@@ -92,7 +95,7 @@ class AccountController < ApplicationController
          :email_on_comment_reply, :email_on_direct_message, :email_digest, :newsletter,
          :official_position_badge, :recommended_debates, :recommended_proposals,
          :show_in_users_overview,
-         :adm_email_on_new_comment, :adm_email_on_new_proposal,
+         :adm_email_on_new_comment, :adm_email_on_new_proposal, :adm_email_on_new_budget_investment,
          :adm_email_on_new_debate, :adm_email_on_new_deficiency_report,
          :adm_email_on_new_manual_verification, :adm_email_on_new_topic,
          :background_image,

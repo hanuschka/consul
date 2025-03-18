@@ -1,31 +1,31 @@
-<%= link_to valuation_budget_budget_investment_path(@budget, @investment), class: "back" do %>
-  <span class="icon-angle-left"></span>
-  <%= "#{t("valuation.budget_investments.show.title")} #{@investment.id}" %>
-<% end %>
-
-<h2><%= t("valuation.budget_investments.edit.dossier") %></h2>
 <% if can?(:valuate, @investment) %>
-  <%= render "/valuation/budget_investments/dossier_form", investment: @investment %>
+  <%= render "valuation/budget_investments/dossier_form/phase_2_3", budget: @investment.budget, investment: @investment %>
 <% else %>
   <%= render "/valuation/budget_investments/dossier_detail", investment: @investment %>
 <% end %>
 
-<%= render "valuation/budget_investments/valuation_comments" %>
+<%= render "custom/admin/budget_investments/investment_details", investment: @investment %>
 
-<h2><%= t("valuation.budget_investments.show.preview") %></h2>
+<!--
+<%#= render "valuation/budget_investments/valuation_comments" %>
+
+<h2><%#= t("valuation.budget_investments.show.preview") %></h2>
 <hr>
-<%= render "/budgets/investments/investment_detail", investment: @investment, preview: true %>
+<%#= render "/budgets/investments/investment_detail", investment: @investment, preview: true %>
 <hr>
+-->
 
 <h2><%= t("valuation.budget_investments.show.responsibles") %></h2>
 
-<p><strong><%= t("valuation.budget_investments.show.assigned_admin") %>:</strong>
-  <% if @investment.administrator.present? %>
-    <%= @investment.administrator.name %> (<%= @investment.administrator.email %>)
-  <% else %>
-    <%= t("valuation.budget_investments.show.undefined") %>
-  <% end %>
+<!--
+<p><strong><%#= t("valuation.budget_investments.show.assigned_admin") %>:</strong>
+  <%# if @investment.administrator.present? %>
+    <%#= @investment.administrator.name %> (<%#= @investment.administrator.email %>)
+  <%# else %>
+    <%#= t("valuation.budget_investments.show.undefined") %>
+  <%# end %>
 </p>
+-->
 
 <p><strong><%= t("valuation.budget_investments.show.assigned_valuators") %>:</strong></p>
 <div id="assigned_valuators">

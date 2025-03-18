@@ -1,5 +1,5 @@
 module CsvServices
-  class PollAnswersVotesExporter < ApplicationService
+  class PollAnswersVotesExporter < CsvServices::BaseService
     require "csv"
 
     def initialize(poll)
@@ -61,7 +61,7 @@ module CsvServices
         return if open_answer.blank? || open_answer.all_open_answers.blank?
 
         open_answer.all_open_answers.each do |user_open_answer|
-          csv << [user_open_answer.open_answer_text, "offene Antwort"]
+          csv << [sanitize_for_csv(user_open_answer.open_answer_text), "offene Antwort"]
         end
       end
   end

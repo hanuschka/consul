@@ -101,8 +101,8 @@ module Abilities
       end
 
       # can :create, Budget::Investment,               budget: { phase: "accepting" }
-      can :edit, Budget::Investment,                 budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id
-      can :update, Budget::Investment,               budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id
+      can :edit, Budget::Investment,                 budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
+      can :update, Budget::Investment,               budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
       can :suggest, Budget::Investment,              budget: { id: Budget.accepting.pluck(:id) }
       can :destroy, Budget::Investment,              budget: { id: (Budget.accepting.pluck(:id) + Budget.reviewing.pluck(:id)) }, author_id: user.id
       can [:create, :destroy], ActsAsVotable::Vote,
@@ -110,16 +110,18 @@ module Abilities
         votable_type: "Budget::Investment",
         votable: { budget: { id: Budget.selecting.pluck(:id) }}
 
-      can [:show, :create], Budget::Ballot,          budget: { id: Budget.balloting.pluck(:id) }
-      can [:create, :destroy], Budget::Ballot::Line, budget: { id: Budget.balloting.pluck(:id) }
+      can [:show, :create], Budget::Ballot,          budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.poll_officer?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
+      can [:create, :destroy], Budget::Ballot::Line, budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.poll_officer?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
 
       if user.level_two_or_three_verified?
         can :vote, Legislation::Proposal
         can :create, Legislation::Answer
 
-        can :create, DirectMessage
-        can :show, DirectMessage, sender_id: user.id
+        # can :create, DirectMessage
+        # can :show, DirectMessage, sender_id: user.id
       end
+      can :create, DirectMessage
+      can :show, DirectMessage, sender_id: user.id
 
       can [:create, :show, :edit, :update, :destroy], ProposalNotification, proposal: { author_id: user.id }
 
@@ -169,7 +171,29 @@ module Abilities
         related_content.author_id == user.id
       end
 
-      can [:create, :update], FormularAnswer
+      can [:create, :update], FormularAnswer do |formular_answer|
+        formular_answer.formular.projekt_phase.permission_problem(user).blank?
+      end
+
+      can :show, Community do |community|
+        return false unless community.communitable.present?
+        return false unless community.communitable.projekt_phase.present?
+
+        projekt_phase = community.communitable.projekt_phase
+
+        projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
+          (community.communitable.projekt_phase.permission_problem(user).blank? || community.topics.any?)
+      end
+
+      can :create_topic, Community do |community|
+        return false unless community.communitable.present?
+        return false unless community.communitable.projekt_phase.present?
+
+        projekt_phase = community.communitable.projekt_phase
+
+        projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
+          community.communitable.projekt_phase.permission_problem(user).blank?
+      end
     end
   end
 end

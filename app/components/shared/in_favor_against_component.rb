@@ -13,7 +13,7 @@ class Shared::InFavorAgainstComponent < ApplicationComponent
     end
 
     def css_classes_for_vote
-      case current_user&.voted_as_when_voted_for(votable)
+      case voting_user&.voted_as_when_voted_for(votable)
       when true
         { in_favor: "voted", against: "no-voted" }
       when false
@@ -29,5 +29,11 @@ class Shared::InFavorAgainstComponent < ApplicationComponent
 
     def disagree_aria_label
       t("votes.disagree_label", title: votable.title)
+    end
+
+    def voting_user
+      return current_user unless params[:offline_user_id].present?
+
+      current_user.officing_manager? ? User.find(params[:offline_user_id]) : current_user
     end
 end

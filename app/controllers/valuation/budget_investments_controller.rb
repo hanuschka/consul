@@ -17,7 +17,7 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
   def index
     @heading_filters = heading_filters
     @investments = if current_user.valuator? && @budget.present?
-                     @budget.investments.visible_to_valuators.scoped_filter(params_for_current_valuator, @current_filter)
+                     @budget.investments.scoped_filter(params_for_current_valuator, @current_filter)
                             .order(cached_votes_up: :desc)
                             .page(params[:page])
                    else
@@ -27,10 +27,22 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
 
   def valuate
     if valid_price_params? && @investment.update(valuation_params)
-      if @investment.unfeasible_email_pending?
-        @investment.send_unfeasible_email
-      elsif @investment.feasible? && @investment.valuation_finished?
-        Mailer.budget_investment_feasible(@investment).deliver_later
+
+      if valuation_params[:feasibility].present? && @investment.valuation_finished? && @investment.email_on_feasibility_pending?
+        if @investment.unfeasible?
+          Mailer.budget_investment_unfeasible(@investment).deliver_later
+        elsif @investment.feasible?
+          Mailer.budget_investment_feasible(@investment).deliver_later
+        end
+        @investment.update_column(:email_on_feasibility_sent_at, Time.zone.now)
+
+      elsif valuation_params[:selected].present? && @investment.email_on_selected_pending?
+        if @investment.selected?
+          Mailer.budget_investment_selected(@investment).deliver_later
+        else
+          Mailer.budget_investment_unselected(@investment).deliver_later
+        end
+        @investment.update_column(:email_on_selected_sent_at, Time.zone.now)
       end
 
       Activity.log(current_user, :valuate, @investment)
@@ -38,10 +50,12 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
       if params[:namespace].present?
         redirect_to polymorphic_path([params[:namespace].to_sym, @budget, @investment]), notice: notice
       else
-        redirect_to valuation_budget_budget_investment_path(@budget, @investment), notice: notice
+        redirect_to edit_valuation_budget_budget_investment_path(@budget, @investment), notice: notice
       end
     else
-      render action: :edit
+      @show_state_form_by_default = true
+      @namespace = params[:namespace].to_sym if params[:namespace].present?
+      render "custom/admin/budget_investments/show"
     end
   end
 
@@ -112,7 +126,8 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
         :price, :price_first_year, :price_explanation,
         :feasibility, :unfeasibility_explanation,
         :duration, :valuation_finished,
-        :incompatible, :selected
+        :incompatible, :selected,
+        :valuator_explanation
       ]
     end
 

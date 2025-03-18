@@ -1,43 +1,23 @@
-class DtApi
+class DtApi::Client
   include HTTParty
 
   base_uri "#{Rails.application.secrets.dt[:url]}/api"
 
   def initialize(api_token = nil)
-    @api_token = api_token || ApiClient.dt.service_api_token
+    @api_token = api_token || ApiClient&.dt&.service_api_token
   end
 
-  def connect(**params)
-    post_with_auth(
-      "/clients/connect",
-      multipart: true,
-      body: {
-        **params,
-        logo: File.open(Rails.root.join("app", "assets", "images", "logo_header.png").to_s)
-      }
+  def ai_assistant_configs
+    @projekts ||= DtApi::Resources::ClientAiAssistantConfigs.new(
+      self
     )
   end
 
-  def projekt_updated(projekt_id, serialized_projekt)
-    patch_with_auth(
-      "/projekts/#{projekt_id}/projekt_updated",
-      body: { projekt: serialized_projekt }
-    )
-  end
-
-  def projekt_destroyed(projekt_id)
-    delete_with_auth(
-      "/projekts/#{projekt_id}/projekt_destroyed"
-    )
-  end
-
-  def update_projekt_manager_permission(projekt_id, user_id, allowed_to_manage)
-    patch_with_auth(
-      "/projekts/#{projekt_id}/update_projekt_manager_permission",
-      body: {
-        user_id: user_id,
-        allowed_to_manage: allowed_to_manage
-      }
+  def get_with_auth(url)
+    self.class.get(
+      url,
+      **base_headers,
+      **auth_settings,
     )
   end
 

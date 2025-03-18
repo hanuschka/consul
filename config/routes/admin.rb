@@ -32,6 +32,7 @@ namespace :admin do
       get :budget_phases
       get :legislation_process_draft_versions
       get :ai_settings
+      patch :update_ai_settings
     end
 
     resources :formular, only: [] do

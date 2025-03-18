@@ -383,9 +383,33 @@ module ProjektPhaseAdminActions
   end
 
   def ai_settings
-    # authorize!(:ai_settings, @projekt_phase)
+    authorize!(:ai_settings, @projekt_phase)
+
+    dt_api = DtApi::Client.new
+
+    @ai_assistant_config =
+      dt_api
+        .ai_assistant_configs
+        .get(codename: "proposal_voice_assistant")
+        .fetch("client_ai_assistant_config")
 
     render "custom/admin/projekt_phases/ai_settings"
+  end
+
+  def update_ai_settings
+    authorize!(:ai_settings, @projekt_phase)
+
+    dt_api = DtApi::Client.new
+
+    @ai_assistant_config =
+      dt_api
+        .ai_assistant_configs
+        .update(
+          codename: "proposal_voice_assistant",
+          params: params[:projekt_phase].as_json
+        )
+
+    redirect_to action: "ai_settings"
   end
 
   # def frame_phases_restrictions

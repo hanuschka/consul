@@ -683,6 +683,9 @@ de:
             title: Kartenebenen
         ai_settings:
           page_title: KI Prompt
+          questions: Welche Fragen sollen den Bürgern gestellt werden?
+          restrictions: Welche Kriterien müssen die Vorschläge erfüllen?
+          parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
         projekt_notifications:
           page_title: Möchten Sie eine Benachrichtigung senden?
           button: Nachricht senden

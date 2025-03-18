@@ -15,12 +15,44 @@
   </div>
 </div>
 
-<%= form_with model: @projekt_phase, url: namespace_projekt_phase_path, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
+<%= form_with url: namespace_projekt_phase_path(action: "update_ai_settings"), method: :patch, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
 
   <div class="row margin-bottom">
     <div class="column large-8 small-12">
-      <%= text_area_tag :ai_assistant_instructions, "", label: t("custom.admin.projekt_phases.duration.start_date"), style: "" %>
+      <%= f.text_area(
+        :questions,
+        label: t("custom.admin.projekt_phases.ai_settings.questions"),
+        value: @ai_assistant_config["questions"],
+        rows: 5,
+        style: "field-sizing: content"
+      ) %>
+    </div>
+  </div>
+
+  <div class="row margin-bottom">
+    <div class="column large-8 small-12">
+      <%= f.text_area(
+        :restrictions,
+        label: t("custom.admin.projekt_phases.ai_settings.restrictions"),
+        value: @ai_assistant_config["restrictions"],
+        style: "",
+        rows: 5,
+        style: "field-sizing: content"
+      ) %>
+    </div>
+  </div>
+
+  <div class="row margin-bottom">
+    <div class="column large-8 small-12">
+      <%= f.text_area(
+        :parting_words,
+        label: t("custom.admin.projekt_phases.ai_settings.parting_words"),
+        value: @ai_assistant_config["parting_words"],
+        style: "",
+        rows: 5,
+        style: "field-sizing: content"
+      ) %>
     </div>
   </div>
 

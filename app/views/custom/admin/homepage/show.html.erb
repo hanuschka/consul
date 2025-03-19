@@ -9,10 +9,12 @@
     <%= link_to t("admin.homepage.create_header"), new_admin_widget_card_path(header_card: true), class: "button" %>
   </div>
 
-  <%= render Admin::Widget::Cards::TableComponent.new(
-    @header,
-    no_cards_message: t("admin.homepage.no_header")
-  ) %>
+  <% @headers.each do |header| %>
+    <%= render Admin::Widget::Cards::TableComponent.new(
+      header,
+      no_cards_message: t("admin.homepage.no_header")
+    ) %>
+  <% end %>
 </div>
 
 <hr>

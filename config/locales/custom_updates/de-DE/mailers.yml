@@ -1,7 +1,5 @@
 de:
   mailers:
-    sincerely: Kind regards
-    signature: Your Consul Team
     shared:
       sincerely: Mit freundlichen Grüßen
       signature: Ihr Beteiligungs-Team
@@ -69,7 +67,7 @@ de:
       subject: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       title: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       hi: "Hallo %{username},"
-      text1: Ihr Vorshlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
+      text1: Ihr Vorschlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
       text2: Das Ergebnis der Prüfung wird zu Beginn der nächsten Phase des %{projekt_link} veröffentlicht.
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
@@ -81,3 +79,6 @@ de:
       text2: Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen.
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
+    proposal_created:
+      hi: "Hallo %{username},"
+      text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"

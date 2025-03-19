@@ -9,7 +9,7 @@ class Newsletter < ApplicationRecord
   validates :from, presence: true, format: { with: /\A.+@.+\Z/ }
   validates :body, presence: true
   # validate :validate_segment_recipient
-  validates :recipient_group, presence: true
+  validates :recipient_group_id, presence: true
 
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases

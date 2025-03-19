@@ -10,7 +10,8 @@ class Budget
     def calculate_winners
       reset_winners
       if @budget.hide_money?
-        investments.compatible.limit(@budget.max_number_of_winners).update_all(winner: true)
+        winner_ids = investments.compatible.limit(@budget.max_number_of_winners).pluck(:id)
+        Budget::Investment.where(id: winner_ids).update_all(winner: true)
       else
         investments.compatible.each do |investment|
           @current_investment = investment
@@ -20,7 +21,11 @@ class Budget
     end
 
     def investments
-      heading.investments.selected.sort_by_ballots
+      if @budget.show_money?
+        heading.investments.selected.where.not(price: nil).sort_by_ballots
+      else
+        heading.investments.selected.sort_by_ballots
+      end
     end
 
     def inside_budget?

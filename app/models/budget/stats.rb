@@ -8,7 +8,7 @@ class Budget::Stats
 
   def self.support_phase_methods
     %i[total_participants_support_phase total_budget_investments
-       total_selected_investments total_unfeasible_investments headings]
+       total_selected_investments total_feasible_investments total_unfeasible_investments headings]
   end
 
   def self.vote_phase_methods
@@ -65,6 +65,10 @@ class Budget::Stats
 
   def total_selected_investments
     budget.investments.selected.count
+  end
+
+  def total_feasible_investments
+    budget.investments.feasible.count
   end
 
   def total_unfeasible_investments

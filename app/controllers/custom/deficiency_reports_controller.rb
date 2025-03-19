@@ -39,6 +39,7 @@ class DeficiencyReportsController < ApplicationController
     filter_by_categories if @selected_categories_ids.present?
     filter_by_selected_status if @selected_status_id.present?
     filter_by_selected_officer if @selected_officer.present?
+    filter_by_archived_status
     filter_by_my_posts
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
@@ -179,6 +180,10 @@ class DeficiencyReportsController < ApplicationController
 
   def filter_by_selected_status
     @deficiency_reports = @deficiency_reports.where(status: @selected_status_id)
+  end
+
+  def filter_by_archived_status
+    @deficiency_reports = params[:dr_archived_status].present? ? @deficiency_reports.archived : @deficiency_reports.not_archived
   end
 
   def filter_by_selected_officer

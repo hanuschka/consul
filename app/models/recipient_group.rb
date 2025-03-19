@@ -15,6 +15,11 @@ class RecipientGroup < ApplicationRecord
                                   .send(access_method.to_sym)
     end
 
-    User.where(id: user_ids).pluck(:email).compact.uniq
+    if access_method == "all_newsletter_subscriber_ids"
+      [User.where(id: user_ids).pluck(:email) + UnregisteredNewsletterSubscriber.all.pluck(:email)]
+        .flatten.compact.uniq
+    else
+      User.where(id: user_ids).pluck(:email).compact.uniq
+    end
   end
 end

@@ -25,13 +25,14 @@ de:
         public_interests: Gefolgte Beiträge veröffentlichen
         adm_email_on_new_comment: Neue Kommentare
         adm_email_on_new_proposal: Neue Vorschläge
+        adm_email_on_new_budget_investment: Neue Vorschläge (Budget)
         adm_email_on_new_debate: Neue Diskussionsbeiträge
         adm_email_on_new_deficiency_report: Neue Mangelmeldungen
         adm_email_on_new_manual_verification: Neue Nutzerverifizierungen
         adm_email_on_new_topic: Neue Themen
       show:
         user_permission_votes: An Abstimmungen teilnehmen
-        admin_notifications: Admin Benachrichtigungen
+        admin_notifications: Admin- & Projektmanager Benachrichtigungen
         user_groups_title: Individuelle Gruppen
         hard_user_groups_title: Starke Gruppen
         soft_user_groups_title: Schwache Gruppen
@@ -198,6 +199,7 @@ de:
         report_text: Melden Sie uns diesen Beitrag bei unangebrachten Inhalt oder bei Urheberrechtsverletzungen.
         report_title: Melden
       download: Herunterladen
+      download_pdf: PDF herunterladen
       sort_by: Sortieren nach
       filter_by: Filtern nach
     tag_names:

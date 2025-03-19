@@ -31,7 +31,7 @@ module ProjektsHelper
 
   def prepare_projekt_name(projekt, placement = nil)
     classes = []
-    classes.push("draft-projekt") unless projekt.activated?
+    # classes.push("draft-projekt") unless projekt.activated?
 
     if projekt.page.published? && placement == "desktop"
       link_to projekt.page.title, projekt.page.url, tabindex: "-1", aria: { hidden: true }, class: classes.join(" "), data: { turbolinks: !extended_feature?("general.enable_google_translate") }

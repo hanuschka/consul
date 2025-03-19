@@ -24,6 +24,7 @@
     <td><%= last_sign_in_date_formatted(user) %></td>
     <td><%= l(user.verified_at, format: "%d %b %Y") if user.verified_at %></td>
     <td><%= user.custom_newsletter if user.custom_newsletter %></td>
+    <td><%= t("shared.#{user.reverify ? 'yes' : 'no'}") %></td>
 
     <td>
       <div style="display:flex; gap:10px;">

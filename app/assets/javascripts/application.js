@@ -54,8 +54,6 @@
 //= require foundation
 //= require turbolinks
 //= require turbolinks_anchors
-//= require ckeditor/loader
-//= require_directory ./ckeditor
 //= require social-share-button
 //= require initial
 //= require ahoy
@@ -132,6 +130,9 @@
 //= require leaflet-gesture-handling/dist/leaflet-gesture-handling.min
 //= require Leaflet.Deflate/dist/L.Deflate
 //= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
+//= require ckeditor5/ckeditor5.umd
+//= require ckeditor5/file-upload-manager
+//= require html2canvas/dist/html2canvas.min
 
 var initialize_modules = function() {
   "use strict";
@@ -215,6 +216,8 @@ var initialize_modules = function() {
   App.ClickOutWarning.initialize();
   App.Projekts.initialize();
   App.ResponsiveMenu.initialize();
+  App.MapScreenshot.initialize();
+  App.RecipientGroups.initialize();
 
   if ($("#projekt-selector-fields").length) {
     App.ProjektSelector.initialize();

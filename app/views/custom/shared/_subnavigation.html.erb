@@ -18,10 +18,6 @@
     <% end %>
   </div>
 
-  <% if extended_feature?("general.enable_google_translate") && placement == 'desktop' %>
-    <div id="google_translate_element"></div>
-  <% end %>
-
   <% unless launch_page %>
     <div class="account-admin-items">
       <%= render partial: 'shared/subnavigation_custom_newsletter', locals: { placement: placement } %>

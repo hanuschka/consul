@@ -7,18 +7,6 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!, only: [:hide]
   before_action :verify_user_can_comment, only: [:create, :vote]
 
-  def index
-    super
-
-    respond_to do |format|
-      format.html
-      format.csv do
-        send_data Comments::CsvExporter.new(@resources).to_csv,
-          filename: "comments.csv"
-      end
-    end
-  end
-
   def create
     if @comment.save
       CommentNotifier.new(comment: @comment).process

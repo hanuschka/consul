@@ -161,6 +161,7 @@ en:
         voting_style_knapsack: "Knapsack"
         voting_style_approval: "Approval"
         hide_money: "Hide money amount for this budget"
+        max_preselected: Preselected (optional)
       budget/translation:
         main_link_text: "Text on the link"
         main_link_url: "The link takes you to (add a link)"
@@ -189,6 +190,7 @@ en:
         valuation_finished: "Valuation finished"
         valuator_ids: "Groups"
         valuation_tag_list: "Tags"
+        valuator_explanation: Valuator Explanation
       budget/investment/translation:
         title: "Title"
         description: "Description"

@@ -1,5 +1,5 @@
 module CsvServices
-  class FormularAnswersExporter < ApplicationService
+  class FormularAnswersExporter < CsvServices::BaseService
     require "csv"
 
     def initialize(formular)
@@ -25,8 +25,8 @@ module CsvServices
 
       def row(formular_answer)
         @formular.formular_fields.map do |formular_field|
-          formular_answer.answers[formular_field.key]
-        end + [formular_answer.submitter_id, formular_answer.original_submitter_email, formular_answer.created_at]
+          sanitize_for_csv(formular_answer.answers[formular_field.key])
+        end + [formular_answer.submitter_id, sanitize_for_csv(formular_answer.original_submitter_email), formular_answer.created_at]
       end
   end
 end

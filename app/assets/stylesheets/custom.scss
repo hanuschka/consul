@@ -8,6 +8,10 @@ textarea{
   max-height: 50vh;
 }
 
+.ck-editor__main textarea {
+  max-height: unset;
+}
+
 .label-with-hint {
   display: flex;
   align-items: baseline;

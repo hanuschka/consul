@@ -137,7 +137,7 @@ class NotificationServiceMailer < ApplicationMailer
   def new_budget_investment(user_id, investment_id)
     @user = User.find(user_id)
     @investment = Budget::Investment.find(investment_id)
-    @projekt_phase = @investment&.projekt_phase
+    @projekt = @investment&.projekt
 
     subject = t("custom.notification_service_mailers.new_budget_investment.subject")
 

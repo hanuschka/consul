@@ -370,12 +370,25 @@ namespace :admin do
     member do
       post :deliver
     end
+
+    collection do
+      get :settings
+      patch :update_logo
+      patch :update_color
+    end
+
     get :users, on: :collection
   end
 
   resources :admin_notifications do
     member do
       post :deliver
+    end
+  end
+
+  resources :recipient_groups, except: :show do
+    collection do
+      post :select_options
     end
   end
 
@@ -421,6 +434,14 @@ namespace :admin do
   resources :geozones, only: [:index, :new, :create, :edit, :update, :destroy]
 
   namespace :site_customization do
+    resources :landing_pages, except: [:show] do
+      member do
+        get :edit_content_cards
+      end
+      collection do
+        post :update_order
+      end
+    end
     resources :pages, except: [:show] do
       resources :cards, except: [:show], as: :widget_cards
     end

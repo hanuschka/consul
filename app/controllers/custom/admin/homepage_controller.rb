@@ -13,7 +13,7 @@ class Admin::HomepageController < Admin::BaseController
   private
 
     def load_content_cards
-      @content_cards = SiteCustomization::ContentCard.for_homepage
+      @content_cards = ::SiteCustomization::ContentCard.get_or_create_for_homepage
     end
 
     def load_cards
@@ -22,5 +22,11 @@ class Admin::HomepageController < Admin::BaseController
 
     def load_settings
       @settings = Setting.all.group_by(&:type)["welcomepage"]
+    end
+
+    def load_header
+      @headers = [::Widget::Card.where(
+        title: ["header_large", "header_mobile"], header: true)
+      ]
     end
 end

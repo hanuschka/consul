@@ -89,6 +89,12 @@ class Projekt < ApplicationRecord
   has_one_attached :greeting_image
   has_many_attached :images
 
+  has_and_belongs_to_many :landing_pages,
+    class_name: 'SiteCustomization::Page',
+    join_table: 'landing_pages_projekts',
+    foreign_key: 'projekt_id',
+    association_foreign_key: 'site_customization_page_id'
+
   delegate :image, to: :page, allow_nil: true
 
   # before_validation :set_default_color - should projekt still have a color?
@@ -668,6 +674,12 @@ class Projekt < ApplicationRecord
     #   .regular
   end
 
+  def any_phase_subscribers_ids
+    User.joins(:projekt_phase_subscriptions)
+      .where(projekt_phase_subscriptions: { projekt_phase_id: projekt_phases.ids })
+      .ids.uniq
+  end
+
   private
 
     def create_corresponding_page
@@ -758,7 +770,12 @@ class Projekt < ApplicationRecord
           projekt_id: id
         )
       else
-        map_location = (parent || Projekt.overview_page).map_location.dup
+        map_location = parent&.map_location&.dup || MapLocation.create!(
+          latitude: Setting["map.latitude"],
+          longitude: Setting["map.longitude"],
+          zoom: Setting["map.zoom"]
+        )
+
         map_location.projekt_id = id
         map_location.save!
 

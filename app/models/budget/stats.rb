@@ -8,7 +8,7 @@ class Budget::Stats
 
   def self.support_phase_methods
     %i[total_participants_support_phase total_budget_investments
-       total_selected_investments total_unfeasible_investments headings]
+       total_selected_investments total_feasible_investments total_unfeasible_investments headings]
   end
 
   def self.vote_phase_methods
@@ -20,7 +20,8 @@ class Budget::Stats
   end
 
   def phases
-    %w[support vote].select { |phase| send("#{phase}_phase_finished?") }
+    # %w[support vote].select { |phase| send("#{phase}_phase_finished?") }
+    %w[support vote]
   end
 
   def all_phases
@@ -29,14 +30,14 @@ class Budget::Stats
     [*phases, "every"]
   end
 
-  def support_phase_finished?
-    budget.valuating_or_later?
-  end
+  # def support_phase_finished?
+  #   budget.valuating_or_later?
+  # end
 
-  def vote_phase_finished?
-    budget.reviewing_ballots? || #custom line
-      budget.finished?
-  end
+  # def vote_phase_finished?
+  #   budget.reviewing_ballots? || #custom line
+  #     budget.finished?
+  # end
 
   def total_participants
     participants.distinct.count
@@ -64,6 +65,10 @@ class Budget::Stats
 
   def total_selected_investments
     budget.investments.selected.count
+  end
+
+  def total_feasible_investments
+    budget.investments.feasible.count
   end
 
   def total_unfeasible_investments

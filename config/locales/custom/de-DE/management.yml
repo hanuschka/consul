@@ -95,8 +95,8 @@ de:
     budget_investments:
       alert:
         unverified_user: Benutzer ist nicht bestätigt
-      create: Investitionsvorschlag erstellen
-      edit: Budgetinvestitionen bearbeiten
+      create: Vorschlag erstellen
+      edit: Vorschlag bearbeiten
       filters:
         heading: Konzept
         unfeasible: Entspricht nicht den Kriterien

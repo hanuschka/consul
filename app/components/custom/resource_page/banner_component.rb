@@ -2,7 +2,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   renders_one :links_section
   attr_reader :resource
 
-  delegate :current_user, :projekt_phase_feature?, to: :helpers
+  delegate :current_user, :projekt_feature?, :projekt_phase_feature?, :format_date_range, to: :helpers
 
   def initialize(resource:, compact: false)
     @resource = resource
@@ -41,5 +41,20 @@ class ResourcePage::BannerComponent < ApplicationComponent
     end
 
     base_class
+  end
+
+  def date_string
+    if resource.is_a?(Poll)
+      format_date_range(resource.projekt_phase.start_date, resource.projekt_phase.end_date, separator: t("custom.polls.poll.date.to"))
+    else
+      l(resource.created_at, format: :new_date_with_year)
+    end
+  end
+
+  def show_projekt_link?
+    return false unless resource.respond_to?(:projekt)
+
+    projekt_feature?(resource.projekt, "general.show_in_navigation") ||
+      projekt_feature?(resource.projekt, "general.show_in_homepage")
   end
 end

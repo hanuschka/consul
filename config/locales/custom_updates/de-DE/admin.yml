@@ -27,9 +27,6 @@ de:
           info:
             projekt_association: Projektzuordnung
       budget_investments:
-        index:
-          list:
-            created_at: Erstellungsdatum
         show:
           not_defined: undefiniert
           state_block_title: Status des Vorschlags
@@ -179,6 +176,7 @@ de:
             color: Farbe
             icon: Icon
             title: Name
+            archive_reports: Archivieren
             notice_text: E-Mail-Benachrichtigungstext
         districts:
           index:
@@ -228,26 +226,32 @@ de:
           plz: PLZ
       recipient_groups:
         index:
+          new_recipient_group: Adressatengruppe erstellen
           title: Adressatengruppen
           new_recipient_group: Neue Adressatengruppe
           name: Name
+          empty_recipient_groups: Keine Adressatengruppe vorhanden
         new:
           base_options_for_kind:
             projekts: Projekte
             user_roles: Nutzerrollen
           label_for_general: Typ der Adressatengruppe
           label_for_projekt: Projekt
-          label_for_projekt_phase: Projektphase
+          label_for_projekt_phase: Projektphase(n)
           label_for_user_role: Nutzerrolle
           name: Name
+          select_options:
+            projekt_related: Alle Projektphasen
           access_methods:
-            all_user_ids: Alle Nutzer*innen
+            newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung
+            all_newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
             administrators_ids: Administrator*innen
-            authors_of_feasible_ids: Autor*innen von machbaren Vorschlägen
-            authors_of_unfeasible_ids: Autor*innen von nicht machbaren Vorschlägen
-            authors_of_selected_ids: Autor*innen von ausgewählten Vorschlägen
-            authors_of_not_winners_ids: Autor*innen von nicht gewählten Vorschlägen
-            authors_of_winners_ids: Autor*innen von gewählten Vorschlägen
+            authors_of_feasible_ids: Autor*innen, deren Vorschläge den Kriterien entsprechen
+            authors_of_unfeasible_ids: Autor*innen, deren Vorschläge den Kriterien nicht entsprechen
+            authors_of_selected_ids: Autor*innen, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
+            authors_of_not_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
+            authors_of_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung gewonnen haben
+            any_phase_subscribers_ids: Abonnent*innen aller Phasen
         create:
           notice: Adressatengruppe wurde erfolgreich erstellt
         update:
@@ -255,6 +259,8 @@ de:
         destroy:
           notice: Adressatengruppe wurde erfolgreich gelöscht
       menu:
+        site_customization:
+          landing_pages: Zielseiten
         deficiency_reports:
           categories: Kategorien festlegen
           list: Liste der Mängelmeldungen
@@ -348,6 +354,7 @@ de:
             duration_block_title: Laufzeit
             geo_affiliation_block_title: Gebietszuordnung
             individual_groups_block_title: Sichtbarkeitsbeschränkung auf starke Gruppen
+            landing_page_assignments: Zuordnung zu Themen/Gebietsseiten
           projekt_page_tab:
             name: Projektseite
             main_block_title: Projektseite
@@ -376,6 +383,11 @@ de:
           projekt_managers_tab:
             name: Projektmanager*innen
             main_block_title: Projektmanager*innen
+            permissions:
+              manage: administrieren
+              moderate: moderieren
+              create_on_behalf_of: erstellen im Namen von jemanden
+              get_notifications: benachrichtigt werden
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:
@@ -480,6 +492,17 @@ de:
               disabled: Projekt deaktiviert
               enabled: Projekt aktiviert
       site_customization:
+        landing_pages:
+          new:
+            title: "Themen/Gebietsseite"
+          index:
+            create: "Neue Themen/Gebietsseite erstellen"
+            title: "Themen/Gebietsseiten"
+          edit:
+            header_image_title: Header image
+          edit_content_cards:
+            title: Inhaltskarten für %{page_title}
+            link: Inhaltskarten
         pages:
           destroy:
             cannot_notice: Diese Seite kann nicht gelöscht werden. Bitte löschen Sie das zugehörige Projekt zuvor.
@@ -750,7 +773,7 @@ de:
         budget_edit:
           page_title: Welche Grundeinstellungen für Ihr Budget möchten Sie treffen?
         budget_investments:
-          page_title: Investitionsvorschläge
+          page_title: Vorschläge
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen

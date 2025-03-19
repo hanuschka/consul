@@ -62,6 +62,9 @@ de:
       officing_manager:
         one: Abstimmungshelfer*innen
         other: Abstimmungshelfer*innen
+      recipient_group:
+        one: Adressatengruppe
+        other: Adressatengruppen
     errors:
       messages:
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
@@ -166,13 +169,13 @@ de:
       budget/heading:
         price: Gesamtbudget
       budget/investment:
-        implementation_performer: Umsetzung des Investitionsvorschlages
+        implementation_performer: Umsetzung des Vorschlages
         implementation_performers:
           city: Umsetzung durch die Stadtverwaltung
           user: Ich kann bei der Umsetzung unterstützen
         implementation_contribution: Was tragen Sie zur Umsetzung bei?
         user_cost_estimate: Preisliche Einschätzung
-        on_behalf_of: Investitionsvorschlag im Namen von jemanden erstellen
+        on_behalf_of: Vorschlag im Namen von jemanden erstellen
       geozone:
         postal_codes: Postleitzahlen
       milestone:

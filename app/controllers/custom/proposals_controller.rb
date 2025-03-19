@@ -105,31 +105,15 @@ class ProposalsController
   end
 
   def update
-    # custom_proposal_params = proposal_params
-
-    # if proposal_params["image_attributes"]["cached_attachment"].blank?
-    #   custom_proposal_params = proposal_params.except("image_attributes")
-    # end
-
-    # if resource.update(custom_proposal_params)
     if resource.update(proposal_params)
       NotificationServices::NewProposalNotifier.new(resource.id).call if resource.published?
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
-      load_geozones
-      set_resource_instance
       render :edit
     end
   end
 
   def create
-    # custom_proposal_params = proposal_params
-
-    # if proposal_params["image_attributes"]["cached_attachment"].blank?
-    #   custom_proposal_params = proposal_params.except("image_attributes")
-    # end
-
-    # @proposal = Proposal.new(custom_proposal_params.merge(author: current_user))
     @proposal = Proposal.new(proposal_params.merge(author: current_user))
 
     if params[:save_draft].present? && @proposal.save
@@ -137,6 +121,8 @@ class ProposalsController
 
     elsif @proposal.save
       @proposal.publish
+
+      Mailer.proposal_created(@proposal).deliver_later
 
       if @proposal.projekt_phase.active?
         redirect_to page_path(
@@ -151,9 +137,8 @@ class ProposalsController
         ), notice: t("proposals.notice.published")
       end
     else
-      @selected_projekt = @proposal&.projekt_phase&.projekt
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
-      params[:projekt_id] = @selected_projekt&.id
+      params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
       render :new
     end
   end

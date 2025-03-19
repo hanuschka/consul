@@ -182,7 +182,7 @@ module Abilities
       can :manage, FormularFollowUpLetter
       can :manage, ProjektArgument
 
-      can :read_stats, Budget, id: Budget.where(id: Budget.valuating_or_later.pluck(:id)).ids
+      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).ids
 
       can :destroy, RelatedContent
 

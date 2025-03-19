@@ -1,8 +1,3 @@
-<%= link_to t("budgets.results.show_all_link"), "#",
-            class: "js-toggle-link button hollow margin-bottom float-right-medium",
-            data: { "toggle-selector" => ".js-discarded",
-                    "toggle-text" => t("budgets.results.hide_discarded_link") } %>
-
 <%= render "budgets/results/results_table", results_type: :compatible,
                             title: @heading.name,
                             heading_price: @heading.price,
@@ -14,6 +9,11 @@
                               heading_price: @heading.price,
                               investments: @investments.incompatible %>
 <% end %>
+
+<%= link_to t("budgets.results.show_all_link"), "#",
+            class: "js-toggle-link button hollow margin-bottom float-right-medium",
+            data: { "toggle-selector" => ".js-discarded",
+                    "toggle-text" => t("budgets.results.hide_discarded_link") } %>
 
 <p>
   <%= link_to url_to_footer_tab(section: 'overview', remote: true), remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")' do %>

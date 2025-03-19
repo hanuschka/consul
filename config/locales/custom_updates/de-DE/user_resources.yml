@@ -10,3 +10,4 @@ de:
         top_line_default: Beiträge mit aussagekräftigem Bild erhalten mehr Unterstützung
         title_default: Bild hinzufügen
         bottom_line_default: "Am besten eignet sich ein Bild im Format 490 x 290 Pixel  (Dateiformat: jpg, png. Größe: bis 5 MB)."
+        max_image_size: Die maximale Bildgröße beträgt %{size} MB.

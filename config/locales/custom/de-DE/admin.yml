@@ -195,6 +195,7 @@ de:
         success_notice: "Rubrik erfolgreich gelöscht"
         unable_notice: "Eine Rubrik mit zugehörigen Investitionsvorschlägen kann nicht gelöscht werden"
       form:
+        max_preselected_info: Wie viele Vorschläge sollen in die Prüfungsphase gehen
         max_ballot_lines_info: 'Maximum number of projects a user can vote on this heading during the "Voting projects" phase. Only for budgets using approval voting.'
         population_info: "Dieses Feld wird nur für statistische Zwecke verwendet, mit dem Ziel, den Prozentsatz der Stimmen in jeder Rubrik anzuzeigen. Dieses Feld ist optional; Sie können es daher leer lassen, wenn es nicht zutrifft."
         coordinates_info: "Wenn Längen- und Breitengrad angegeben sind, enthält die Seite des Investitionsvorschlags für diese Rubrik eine Karte. Diese Karte wird mit diesen Koordinaten berechnet."
@@ -238,10 +239,10 @@ de:
           without_valuator: Ohne zugewiesene Gutachterin oder Gutachter
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
-          feasible: Durchführbar
-          selected: Ausgewählt
-          undecided: Offen
-          unfeasible: Undurchführbar
+          feasible: Entspricht den Kriterien
+          selected: Zulassung zur Abstimmung
+          undecided: Nicht bewertet
+          unfeasible: Entspricht nicht den Kriterien
           min_total_supports: Minimum Unterstützungen
           max_total_supports: Maximum Unterstützerungen
           winners: Bestbewertete Vorschläge
@@ -257,35 +258,41 @@ de:
         no_admin_assigned: Keine Administration zugewiesen
         no_valuators_assigned: Keine Gutachterin oder Gutachter zugewiesen
         feasibility:
-          feasible: "Durchführbar"
-          unfeasible: "Undurchführbar"
-          undecided: "Offen"
+          feasible: Entspricht den Kriterien
+          unfeasible: Entspricht nicht den Kriterien
+          undecided: Nicht bewertet
         selected: "Ausgewählt"
         select: "Auswählen"
         list:
           id: ID
           title: Titel
+          created_at: Eingereicht
           supports: Unterstützung
+          total_votes: Unterstützung
           admin: Administration
           valuator: Gutachterin oder Gutachter
           valuation_group: Bewertungsgruppe
           geozone: Bezug der Vorschläge
-          feasibility: Durchführbarkeit
-          valuation_finished: Bewertung fertig?
-          selected: Status
+          feasibility: Kriterien
+          valuation_finished: Bewertung beendet
+          selected: Zulassung zur Abstimmung
           visible_to_valuators: Gutachterinnen oder Gutachter zeigen
           author_username: Nutzername der Verfasserin oder des Verfassers
           incompatible: Inkompatibel
           price: Preis
           author: Autor
-        cannot_calculate_winners: Das Budget muss in Phase „%{phase}“ stehen, um Gewinnervorschläge berechnen zu können
+          balloters: Anzahl Wähler
+          total_ballot_votes: Anzahl Stimmen
+          winner: Gewinner
+          pdf_link: PDF
+        cannot_calculate_winners: "In der 7. Phase (Abstimmung über Investitionsvorschläge) kann von den Admins eine Vorschau auf das Ergebnis kalkuliert werden. Um die finalen Gewinnervorschläge berechnen zu können, muss die 8. Phase \"Abstimmung überprüfen\" ausgewählt werden."
         see_results: "Ergebnisse anzeigen"
         milestone_tags_filter_all: "Status aller Investitionsvorschläge"
       show:
         assigned_admin: Zugewiesene Administration
         assigned_valuators: Zugewiesene Gutachterinnen und Gutachter
         classification: Klassifizierung
-        info: "%{budget_name} - Gruppe: %{group_name} - Investitionsvorschlag %{id}"
+        info: "%{budget_name} - Gruppe: %{group_name} - Vorschlag %{id}"
         edit: Bearbeiten
         edit_classification: Klassifizierung bearbeiten
         by: Von
@@ -295,7 +302,7 @@ de:
         dossier: Bericht
         edit_dossier: Bericht bearbeiten
         tags: Tags
-        undefined: Undefiniert
+        undefined: Noch nicht bewertet
         compatibility:
           title: Kompatibilität
           "true": Inkompatibel
@@ -317,7 +324,7 @@ de:
         submit_button: Aktualisieren
         user_tags: Tags, die von Benutzerinnen und Benutzer zugewiesen wurden
         tags_placeholder: "Geben Sie die gewünschten Tags durch Kommas (,) getrennt ein"
-        undefined: Undefiniert
+        undefined: Noch nicht bewertet
       search_unfeasible: Suche undurchführbar
     budgets_wizard:
       creation_timeline:
@@ -387,15 +394,15 @@ de:
         table_description: Beschreibung
         table_actions: Aktionen
       edit:
-        title: Status des Investitionsvorschlag bearbeiten
+        title: Status des Vorschlags bearbeiten
       update:
-        notice: Status des Investitionsvorschlag erfolgreich aktualisiert
+        notice: Status des Vorschlags erfolgreich aktualisiert
       new:
-        title: Status des Investitionsvorschlag erstellen
+        title: Status des Vorschlags erstellen
       create:
-        notice: Status des Investitionsvorschlag erfolgreich erstellt
+        notice: Status des Vorschlags erfolgreich erstellt
       delete:
-        notice: Status des Investitionsvorschlag erfolgreich gelöscht
+        notice: Status des Vorschlags erfolgreich gelöscht
     progress_bars:
       manage: "Fortschrittsbalken verwalten"
       index:
@@ -749,6 +756,7 @@ de:
       site_customization:
         documents: Benutzerdefinierte Dokumente
         homepage: Homepage
+        landing_pages: Zielseiten
         pages: Meine Seiten
         images: Bilder
         content_blocks: Benutzerspezifische Inhaltsdatenblöcke
@@ -924,7 +932,7 @@ de:
         title: "E-Mail Überprüfung"
         description: "Wird an einen neuen Benutzer gesendet zur Verifizierung seines Accounts."
       user_invite:
-        title: "Benutzer Einladung"
+        title: "Benutzter Einladung"
         description: "Wird an die eingeladene Person gesendet."
       evaluation_comment:
         title: "Neuer Bewertungs-Kommentar"
@@ -1724,7 +1732,7 @@ de:
         description_4b: "Die neuen Skripte sollten sich in dem Ordner <code>public/machine_learning/scripts</code> befinden."
         description_4c: "Die Eingabedaten, die das Skript verwenden soll, werden als JSON-Dateien im Ordner <code>../data</code> erstellt."
         description_4d: "Jede erzeugte Ausgabe sollte in den Ordner <code>../data</code> abgelegt werden."
-        description_4e: "Es wird empfohlen, eine unabhängige <code>.ini</code> Textdatei mit den Einstellungen des Skripts zu erstellen, die den gleichen Namen wie das Skript trägt und von configparser gelesen werden kann. Diese Datei erleichtert die Änderung der Einstellungen durch die Administration."
+        description_4e: "Es wird empfohlen, eine unabhängige <code>.ini</code> Textdatei mit den Einstellungen des Skripts zu erstellen, die den gleichen Namen wie das Skript trägt und von configparser gelesen werden kann. Diese Datei erleichtert die Änderung der Einstellungen durch die Administratoren."
         description_4f: "Es wird empfohlen, in die erste Zeile des Skripts eine Zeichenfolge in dreifachen Anführungszeichen aufzunehmen, die einige kurze Informationen über das Skript und Links zu allen relevanten Informationen enthält. Diese Zeichenfolge wird automatisch in der Verwaltungsschnittstelle angezeigt."
         description_4g: "Es wird empfohlen, die relevanten Informationen des Skripts in einer <code>.log</code> Textdatei mit demselben Namen wie das Skript zu protokollieren."
         title_5: "Um AI / Machine Learning Skripte zu verwenden, müssen Sie Python auf Ihrem Server installiert haben"
@@ -1735,7 +1743,7 @@ de:
       notice:
         success: "Das letzte Skript wurde erfolgreich ausgeführt."
         error: "Es ist ein Fehler aufgetreten. Sie können die Details unten sehen."
-        working: "Das Skript wird ausgeführt. Der Admin, der es ausgeführt hat, erhält eine E-Mail, wenn es beendet ist."
+        working: "Das Skript wird ausgeführt. Der Administrator, der es ausgeführt hat, erhält eine E-Mail, wenn es beendet ist."
         delete_generated_content: "Der generierte Inhalt wurde erfolgreich gelöscht."
       output_files: "Output-Dateien:"
       related_content: "Verwandte Inhalte"

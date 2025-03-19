@@ -397,7 +397,7 @@ de:
         guide: "Nun können Sie ihren Vorschlag teilen, damit andere ihn unterstützen."
         edit: "Bevor Sie ihren Text teilen, können Sie ihn beliebig bearbeiten. "
         view_proposal: Nicht jetzt. Gehe zu meinem Vorschlag
-      already_supported: Sie haben diesen Vorschlag bereits unterstützt. Teilen Sie ihn!
+      already_supported: Sie haben diesen Vorschlag bereits unterstützt.
       comments:
         zero: Keine Kommentare
         one: 1 Kommentar

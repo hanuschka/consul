@@ -17,6 +17,7 @@ en:
         identity_taken: "We could not verify your account. Please contact us by email."
         email_taken_html: "The email address stored with your BundID is already in use on Consul.<br>Please change your BundID email address or log in to your existing Consul account."
         email_updated: "The email address stored with your BundID is different from your Consul email address. We have merged both accounts and changed your Consul email address. You can log in to Consul with this email address in the future: %{email}"
+        verification_successfull: You were successfully verified with BundID.
     user_page:
       filters:
         proposals: Proposals

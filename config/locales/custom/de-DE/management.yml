@@ -95,11 +95,11 @@ de:
     budget_investments:
       alert:
         unverified_user: Konto ist nicht bestätigt
-      create: Investitionsvorschlag erstellen
-      edit: Budgetinvestitionen bearbeiten
+      create: Vorschlag erstellen
+      edit: Vorschlag bearbeiten
       filters:
         heading: Konzept
-        unfeasible: Undurchführbare Investition
+        unfeasible: Entspricht nicht den Kriterien
       print:
         print_button: Drucken
       search_results:

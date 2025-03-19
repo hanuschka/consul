@@ -18,6 +18,19 @@ class MapLocationsController < ApplicationController
     end
   end
 
+  def update_screenshot
+    authorize! :update_screenshot, MapLocation
+
+    @map_location = MapLocation.find(params[:id])
+    @map_location.screenshot.purge if @map_location.screenshot.attached?
+
+    if @map_location.screenshot.attach(params[:screenshot])
+      render json: { success: true }
+    else
+      render json: { success: false, errors: @map_location.errors.full_messages }
+    end
+  end
+
   private
 
     def geocoder_extra_query_params

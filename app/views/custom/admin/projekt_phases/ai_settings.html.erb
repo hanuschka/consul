@@ -34,10 +34,10 @@
   <div class="row margin-bottom">
     <div class="column large-8 small-12">
       <%= f.text_area(
-        :restrictions,
-        label: t("custom.admin.projekt_phases.ai_settings.restrictions"),
-        placeholder: @ai_assistant_config["default_restrictions"],
-        value: @ai_assistant_config["restrictions"],
+        :criteria,
+        label: t("custom.admin.projekt_phases.ai_settings.criteria"),
+        placeholder: @ai_assistant_config["default_criteria"],
+        value: @ai_assistant_config["criteria"],
         style: "",
         rows: 5,
         style: "field-sizing: content"

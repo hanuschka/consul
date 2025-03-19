@@ -54,6 +54,14 @@ class Budget
       end
     end
 
+    def accepting_or_later?
+      in_phase_or_later?("accepting")
+    end
+
+    def selecting_or_later?
+      in_phase_or_later?("selecting")
+    end
+
     def valuating_or_later?
       in_phase_or_later?("valuating")
     end

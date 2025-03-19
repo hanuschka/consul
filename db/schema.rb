@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_01_28_132937) do
+ActiveRecord::Schema.define(version: 2025_03_12_141756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -415,6 +415,9 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.string "video_url"
     t.bigint "sentiment_id"
     t.text "valuator_explanation"
+    t.time "email_on_feasibility_sent_at"
+    t.time "email_on_selected_sent_at"
+    t.boolean "preselected", default: false
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -520,6 +523,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.bigint "projekt_phase_id"
     t.boolean "show_percentage_values_only", default: false
     t.boolean "show_results_after_first_vote", default: false
+    t.integer "max_preselected", default: 0
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_budgets_on_projekt_phase_id"
   end
@@ -779,6 +783,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.datetime "updated_at", null: false
     t.integer "given_order"
     t.text "notice_text", default: ""
+    t.boolean "archive_reports", default: false
   end
 
   create_table "deficiency_report_translations", force: :cascade do |t|
@@ -819,6 +824,8 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.boolean "admin_accepted", default: false
     t.string "responsible_type"
     t.bigint "responsible_id"
+    t.datetime "status_changed_at"
+    t.datetime "archived_at"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1092,6 +1099,15 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.boolean "visible", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "landing_pages_projekts", force: :cascade do |t|
+    t.bigint "site_customization_page_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "site_customization_page_id"], name: "index_projekts_scp"
+    t.index ["projekt_id"], name: "index_landing_pages_projekts_on_projekt_id"
+    t.index ["site_customization_page_id", "projekt_id"], name: "index_scp_projekts", unique: true
+    t.index ["site_customization_page_id"], name: "index_landing_pages_projekts_on_site_customization_page_id"
   end
 
   create_table "legislation_annotations", id: :serial, force: :cascade do |t|
@@ -1475,7 +1491,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
 
   create_table "newsletters", id: :serial, force: :cascade do |t|
     t.string "subject"
-    t.string "segment_recipient", null: false
+    t.string "segment_recipient"
     t.string "from"
     t.text "body"
     t.date "sent_at"
@@ -1485,6 +1501,8 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.string "title"
     t.text "subtitle"
     t.string "greeting"
+    t.bigint "recipient_group_id"
+    t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 
   create_table "notifications", id: :serial, force: :cascade do |t|
@@ -2089,6 +2107,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false
+    t.boolean "from_dt", default: false
     t.index ["for_global_overview"], name: "index_projekts_on_for_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
@@ -2149,6 +2168,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.bigint "sentiment_id"
     t.text "official_answer", default: ""
     t.integer "cached_votes_down", default: 0
+    t.integer "officing_bulk_votes", default: 0
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -2165,6 +2185,15 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
   end
 
+  create_table "recipient_groups", force: :cascade do |t|
+    t.string "name"
+    t.string "origin_class_name"
+    t.string "origin_class_object_id"
+    t.string "access_method"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "registered_address_cities", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -2177,7 +2206,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "default_deficiency_report_responsible_type"
     t.bigint "default_deficiency_report_responsible_id"
-    t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible", unique: true
+    t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible"
   end
 
   create_table "registered_address_groupings", force: :cascade do |t|
@@ -2424,6 +2453,8 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.string "kind"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "landing_page_id"
+    t.index ["landing_page_id"], name: "index_site_customization_content_cards_on_landing_page_id"
   end
 
   create_table "site_customization_images", id: :serial, force: :cascade do |t|
@@ -2459,6 +2490,12 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.datetime "updated_at", null: false
     t.string "locale"
     t.bigint "projekt_id"
+    t.boolean "landing_show_in_top_nav", default: false
+    t.boolean "landing_hide_all_top_nav_links", default: false
+    t.boolean "landing_hide_title_and_subtitle", default: false
+    t.boolean "landing", default: false
+    t.integer "landing_nav_position"
+    t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
 
@@ -2584,7 +2621,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.string "erase_reason"
     t.datetime "erased_at"
     t.boolean "public_activity", default: true
-    t.boolean "newsletter", default: true
+    t.boolean "newsletter", default: false
     t.integer "notifications_count", default: 0
     t.boolean "registering_with_oauth", default: false
     t.string "locale"
@@ -2644,6 +2681,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
     t.string "frame_sign_in_token"
     t.datetime "frame_sign_in_token_valid_until"
     t.boolean "on_dt", default: false
+    t.boolean "adm_email_on_new_budget_investment", default: false
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -2855,6 +2893,7 @@ ActiveRecord::Schema.define(version: 2025_01_28_132937) do
   add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
   add_foreign_key "officing_manager_assignments", "officing_managers"
   add_foreign_key "officing_manager_assignments", "projekt_phases"

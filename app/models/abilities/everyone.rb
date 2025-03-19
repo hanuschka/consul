@@ -16,10 +16,7 @@ module Abilities
       can [:read], Budget::Group
       can [:read, :print, :json_data], Budget::Investment
       can :read_results, Budget, id: Budget.where(id: Budget.finished.pluck(:id)).results_enabled.ids
-      can :read_stats, Budget, id: (
-        Budget.where(id: Budget.finished.pluck(:id)).stats_enabled.ids +
-        Budget.where(id: Budget.valuating_or_later.pluck(:id), show_results_after_first_vote: true).ids
-      ).uniq
+      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).stats_enabled.ids
       can :read_executions, Budget, id: Budget.finished.pluck(:id)
       can :new, DirectMessage
       can [:read, :debate, :draft_publication, :allegations, :result_publication,
@@ -79,6 +76,10 @@ module Abilities
           projekt_phase = investment.budget.projekt_phase
 
           investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?
+        end
+
+        can [:create, :update], FormularAnswer do |formular_answer|
+          formular_answer.formular.projekt_phase.permission_problem(user).blank?
         end
       end
 

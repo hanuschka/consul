@@ -1,0 +1,16 @@
+<div id="access_methods">
+  <%= form_with model: RecipientGroup.new, url: admin_recipient_groups_path do |form| %>
+    <%= form.text_field :name %>
+    <%= form.hidden_field :origin_class_name, value: origin_class_name %>
+    <%= form.hidden_field :origin_class_object_id, value: origin_class_object_id %>
+    <%= form.collection_radio_buttons :access_method, options_for_access_methods, :first, :first do |rb| %>
+      <div>
+        <%= rb.label(style: "font-weight:400;") do %>
+          <%= rb.radio_button(style: "margin-top:0;") %>
+          <%= t("custom.admin.recipient_groups.new.access_methods.#{rb.text}") %>
+        <% end %>
+      </div>
+    <% end %>
+    <%= form.submit %>
+  <% end %>
+</div>

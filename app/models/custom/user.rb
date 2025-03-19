@@ -52,6 +52,7 @@ class User < ApplicationRecord
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
+  scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
   validate :email_should_not_be_used_by_hidden_user
   validate :password_complexity, if: :password_required?
@@ -75,21 +76,33 @@ class User < ApplicationRecord
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
-  def self.order_filter(params)
-    sorting_key = params[:sort_by]&.downcase&.to_sym
-    allowed_sort_option = SORTING_OPTIONS[sorting_key]
-    direction = params[:direction] == "desc" ? "desc" : "asc"
+  class << self
+    def order_filter(params)
+      sorting_key = params[:sort_by]&.downcase&.to_sym
+      allowed_sort_option = SORTING_OPTIONS[sorting_key]
+      direction = params[:direction] == "desc" ? "desc" : "asc"
 
-    if allowed_sort_option.present?
-      order("#{allowed_sort_option} #{direction}")
-    elsif sorting_key == :roles
-      if direction == "asc"
-        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+      if allowed_sort_option.present?
+        order("#{allowed_sort_option} #{direction}")
+      elsif sorting_key == :roles
+        if direction == "asc"
+          all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 1 : 0, role] }
+        else
+          all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+        end
       else
-        all.sort_by { |user| role = user.roles.first.to_s; [role.empty? ? 0 : 1, role] }.reverse
+        order(id: :desc)
       end
-    else
-      order(id: :desc)
+    end
+
+    def newsletter_subscriber_ids
+      User.actual.where(newsletter: true).ids
+    end
+
+    alias all_newsletter_subscriber_ids newsletter_subscriber_ids
+
+    def administrators_ids
+      joins(:administrator).ids
     end
   end
 

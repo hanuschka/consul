@@ -20,6 +20,7 @@ class Mailer < ApplicationMailer
   end
 
   def reply(reply)
+    @reply = reply
     @email = ReplyEmail.new(reply)
     @email_to = @email.to
     manage_subscriptions_token(@email.recipient)
@@ -80,6 +81,16 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def proposal_created(proposal)
+    @proposal = proposal
+    @author = @proposal.author
+    @email_to = @proposal.author.email
+
+    with_user(@proposal.author) do
+      mail(to: @email_to, subject: t("mailers.budget_investment_created.subject"))
+    end
+  end
+
   def budget_investment_created(investment)
     @investment = investment
     @projekt = investment.projekt
@@ -92,31 +103,33 @@ class Mailer < ApplicationMailer
 
   def budget_investment_unfeasible(investment)
     @investment = investment
+    @projekt = investment.projekt
     @author = investment.author
     @email_to = @author.email
 
     with_user(@author) do
-      mail(to: @email_to, subject: t("mailers.budget_investment_unfeasible.subject", title: @investment.title))
+      mail(to: @email_to, subject: t("mailers.budget_investment_unfeasible.subject"))
     end
   end
 
   def budget_investment_feasible(investment)
     @investment = investment
+    @projekt = investment.projekt
     @author = investment.author
     @email_to = @author.email
 
     with_user(@author) do
-      mail(to: @email_to, subject: t("mailers.budget_investment_feasible.subject", title: @investment.title))
+      mail(to: @email_to, subject: t("mailers.budget_investment_feasible.subject"))
     end
   end
 
   def budget_investment_selected(investment)
     @investment = investment
-    @author = investment.autho
+    @author = investment.author
     @email_to = @author.email
 
     with_user(@author) do
-      mail(to: @email_to, subject: t("mailers.budget_investment_selected.subject", code: @investment.code))
+      mail(to: @email_to, subject: t("mailers.budget_investment_selected.subject"))
     end
   end
 
@@ -126,7 +139,7 @@ class Mailer < ApplicationMailer
     @email_to = @author.email
 
     with_user(@author) do
-      mail(to: @email_to, subject: t("mailers.budget_investment_unselected.subject", code: @investment.code))
+      mail(to: @email_to, subject: t("mailers.budget_investment_unselected.subject"))
     end
   end
 
@@ -229,6 +242,51 @@ class Mailer < ApplicationMailer
 
     with_user(@user) do
       mail(to: @email_to, subject: t("mailers.individual_group_value_users_added.subject"))
+    end
+  end
+
+  def resource_hidden(resource)
+    @resource = resource
+    @resource_text = resource.is_a?(Comment) ? resource.body : resource.title
+    @author = resource.author
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail(to: @email_to, subject: t("mailers.resource_hidden.subject"))
+    end
+  end
+
+  def budget_investment_preselected(investment)
+    @investment = investment
+    @author = investment.author
+    @projekt = investment.projekt
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail(to: @email_to, subject: t("mailers.budget_investment_preselected.subject"))
+    end
+  end
+
+  def budget_investment_not_preselected(investment)
+    @investment = investment
+    @projekt = investment.projekt
+    @author = investment.author
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail(to: @email_to, subject: t("mailers.budget_investment_not_preselected.subject"))
+    end
+  end
+
+  def custom_mail(recipient, title, body)
+    @recipient = recipient
+    @subject = title
+    @title = title
+    @body = body
+    @email_to = recipient.email
+
+    with_user(recipient) do
+      mail(to: @email_to, subject: @subject)
     end
   end
 

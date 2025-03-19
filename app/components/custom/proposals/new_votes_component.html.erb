@@ -26,7 +26,7 @@
     <% else %>
       <div class="in-favor">
         <% if voted? %>
-          <%= button_to unvote_proposal_url(proposal),
+          <%= button_to unvote_proposal_url(proposal, offline_user_id: params[:offline_user_id]),
               class: "button button-support small expanded unvote",
               title: t("proposals.proposal.support_title"), method: "post", remote: true do %>
             <%= t("custom.proposals.proposal.unsupport") %>

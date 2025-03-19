@@ -1,0 +1,45 @@
+<% content_for :body_class, "home-page" %>
+
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: root_url %>
+<% end %>
+
+<%= render Shared::BannerComponent.new("homepage") %>
+
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: root_url %>
+<% end %>
+
+<%= render "welcome/header",
+    header_image_attachment: @custom_page&.image&.attachment,
+    mobile_header_image_attachment: @custom_page&.landing_mobile_header_image
+%>
+
+<main class="welcome-page">
+  <div class="d-flex flex-layout">
+    <div class="main-column">
+
+      <% if render_custom_content_block?("landing_page_#{@custom_page.id}_sidebar") %>
+        <div class="show-on-small-tablet standalone-sidebar-section margin-bottom">
+          <%= render Shared::SidebarCardComponent.new(title: 'Information', icon_name: "info-circle") do |c| %>
+            <%= render_custom_block "landing_page_#{@custom_page.id}_sidebar" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% 0.upto(6) do |index| %>
+        <% content_card = @content_cards[index] %>
+        <%= render_custom_block "landing_page_#{@custom_page.id}_#{index}" %>
+        <%= render Shared::ContentCardComponent.new(content_card, custom_page: @custom_page) %>
+      <% end %>
+    </div>
+
+    <aside class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle") do |c| %>
+        <%= render_custom_block "landing_page_sidebar_#{@custom_page.id}" %>
+      <% end %>
+    </aside>
+  </div>
+</main>
+

@@ -36,7 +36,13 @@ module AdminActions::BudgetInvestments
     authorize!(:create, @budget) if @namespace == :projekt_management
     load_comments
 
-    render "admin/budget_investments/show"
+    respond_to do |format|
+      format.html { render "admin/budget_investments/show" }
+      format.pdf do
+        pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment)
+        send_data pdf_content.render, filename: "budget_proposal_#{@investment.id}.pdf", type: "application/pdf"
+      end
+    end
   end
 
   def edit

@@ -28,8 +28,10 @@ module NotificationServices
       end
 
       def projekt_managers
-        User.joins(projekt_manager: :projekts).where(adm_email_on_new_comment: true)
-          .where(projekt_managers: { projekts: { id: @comment&.projekt&.id }}).to_a
+        User.joins(projekt_manager: :projekt_manager_assignments)
+          .where(adm_email_on_new_comment: true)
+          .where(projekt_manager_assignments: { projekt_id: @comment&.projekt&.id })
+          .where("projekt_manager_assignments.permissions @> ARRAY[?]::text[]", ["get_notifications"]).to_a
       end
 
       def projekt_phase_subscribers

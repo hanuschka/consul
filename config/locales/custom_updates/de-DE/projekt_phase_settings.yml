@@ -111,9 +111,9 @@ de:
             enable_external_video: Video
             enable_external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
             show_implementation_option_fields: Umsetzung
-            show_implementation_option_fields_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Umsetzung” hinzu
+            show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
             show_user_cost_estimate: Preisschätzung
-            show_user_cost_estimate_description: Fügt beim Erstellen eines Investitionsvorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+            show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
           resource:
             users_can_create_investment_proposals: Vorschläge einreichen
             users_can_create_investment_proposals_description: Nutzer können Vorschläge erstellen

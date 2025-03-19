@@ -15,7 +15,7 @@
     <%= cannot_vote_text %>
   </div>
 
-<% else can? :create, Comment.new(commentable: record) %>
+<% elsif can?(:create, Comment.new(commentable: record)) %>
   <%= render "comments/form", { commentable: record, parent_id: nil } %>
 
 <% end %>

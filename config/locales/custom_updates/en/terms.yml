@@ -1,6 +1,9 @@
 en:
   custom:
     terms:
+      newsletter:
+        title: Newsletter
+        label: By registering, you agree to receive our newsletter.
       data_storage:
         title: Data processing
         label: By registering, you accept that we store the data collected here for processing.

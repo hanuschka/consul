@@ -145,6 +145,7 @@ class UserResources::FormComponent < ApplicationComponent
         projekt_phase
           .sentiments
           .as_json(only: [:id, :color], methods: [:name])
+          # .as_json(only: [:id], methods: [:name])
     end
 
     data.to_json

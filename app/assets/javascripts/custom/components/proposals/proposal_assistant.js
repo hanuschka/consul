@@ -125,9 +125,8 @@
     },
 
     selectSentiment: function(sentimentId) {
-      var sentimentElement = document.querySelector(
-        ".js-projekt-phase-sentiment[data-sentiment-id='"
-      );
+      var selector = ".js-projekt-phase-sentiment[data-sentiment-id='" + sentimentId + "']";
+      var sentimentElement = document.querySelector(selector);
 
       // sentimentElement.control.checked = true;
       sentimentElement.click()

@@ -18,8 +18,10 @@ module UsersHelper
   end
 
   def user_document_types
-    [[t("custom.sign_up.user_details.card_name"), "card"],
-     [t("custom.sign_up.user_details.pass_name"), "pass"]]
+    [
+      [t("custom.devise_views.users.document_type.card"), "card"],
+      [t("custom.devise_views.users.document_type.pass"), "pass"]
+    ]
   end
 
   def show_admin_menu?(user = nil)

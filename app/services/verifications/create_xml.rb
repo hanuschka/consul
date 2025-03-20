@@ -23,7 +23,7 @@ module Verifications
       filename = file_path + current_time + '_' + user_id.to_s + '_'
 
       File.open("#{filename}RQ.xml",'w') {|f| f.write builder.to_xml}
-      CheckUserVerificationRequestJob.perform_later(filename)
+      CheckUserVerificationRequestJob.set(wait: 15.seconds).perform_later(filename)
     end
 
     def self.create_verification_request_in_booth(residence, document_number)

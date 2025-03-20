@@ -10,6 +10,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if resource.valid?
       super
+      if @user.citizen?
+        Verifications::CreateXML.create_verification_request(@user.id, params[:user][:document_last_digits])
+      else
+        @user.update_column(:bam_letter_verification_code, rand(11111111..99999999)) unless @user.bam_letter_verification_code.present?
+        Verifications::CreateXML.create_verification_letter(@user)
+      end
     else
       render :new
     end

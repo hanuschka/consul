@@ -66,20 +66,20 @@ class User < ApplicationRecord
   validate :email_should_not_be_used_by_hidden_user
   validate :password_complexity, if: :password_required?
 
-  # validates :first_name, presence: true, on: :create, if: :extended_registration?
-  # validates :last_name, presence: true, on: :create, if: :extended_registration?
-  # validates :gender, presence: true, on: :create, if: :extended_registration?
-  # validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
+  validates :first_name, presence: true, on: :create, if: :extended_registration?
+  validates :last_name, presence: true, on: :create, if: :extended_registration?
+  validates :gender, presence: true, on: :create, if: :extended_registration?
+  validates :date_of_birth, presence: true, on: :create, if: :extended_registration?
 
-  # validates :registered_address_id, presence: true, on: :create, if: :validate_registered_address?
+  validates :registered_address_id, presence: true, on: :create, if: :validate_registered_address?
 
   validates :city_name, presence: true, on: :create, if: :validate_regular_address_fields?
   validates :plz, presence: true, on: :create, if: :validate_regular_address_fields?
   validates :street_name, presence: true, on: :create, if: :validate_regular_address_fields?
   validates :street_number, presence: true, on: :create, if: :validate_regular_address_fields?
 
-  # validates :document_type, presence: true, on: :create, if: :document_required?
-  # validates :document_last_digits, presence: true, on: :create, if: :document_required?
+  validates :document_type, presence: true, on: :create, if: :document_required?
+  validates :document_last_digits, presence: true, on: :create, if: :document_required?
 
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
@@ -229,7 +229,6 @@ class User < ApplicationRecord
   end
 
   def document_required?
-    return false #cli line
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 
@@ -313,7 +312,7 @@ class User < ApplicationRecord
   end
 
   def citizen?
-    location == "citizen"
+    location == "citizen" || registered_address_city&.name == "Bamberg"
   end
 
   def username

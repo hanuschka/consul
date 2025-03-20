@@ -113,4 +113,55 @@ class UserResources::FormComponent < ApplicationComponent
   def show_map_input?
     projekt_phase_feature?(projekt_phase, "form.show_map") || @resource.try(:map_location).present?
   end
+
+  def assistant_iframe_path
+    "#{Rails.application.secrets.dt[:url]}/proposal_assistant?type=#{params[:proposal_assistant]}&projekt_name=#{projekt_phase.projekt.title}&locale=#{I18n.locale}"
+  end
+
+  def assistant_initial_data
+    data = {
+      resource_type: resource.class.name.downcase,
+      projekt: {
+        title: resource.projekt.page.title,
+        page_content: page_content,
+        start_date: resource.projekt.total_duration_start,
+        end_date: resource.projekt.total_duration_end
+      },
+      projekt_phase: {
+        start_date: projekt_phase.start_date,
+        end_date: projekt_phase.end_date
+      }
+    }
+
+    if show_labels_selector? && projekt_phase.projekt_labels.present?
+      data[:projekt_phase][:labels] =
+        projekt_phase
+          .projekt_labels
+          .as_json(only: [:id], methods: [:name])
+    end
+
+    if show_sentiments_selector? && projekt_phase.sentiments.present?
+      data[:projekt_phase][:sentiments] =
+        projekt_phase
+          .sentiments
+          .as_json(only: [:id, :color], methods: [:name])
+    end
+
+    data.to_json
+  end
+
+  def page_content
+    if resource.projekt.new_content_block_mode?
+      content_blocks_content =
+        resource
+          .projekt
+          .content_blocks
+          .map(&:body)
+          .reduce(&:concat)
+
+      helpers.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
+    else
+      resource.projekt.page.content
+    end
+  end
 end

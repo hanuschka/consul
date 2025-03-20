@@ -1,7 +1,13 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %>">
   <% if params[:proposal_assistant].present? %>
-    <% iframe_path = "#{Rails.application.secrets.dt[:url]}/proposal_assistant?type=#{params[:proposal_assistant]}&projekt_name=#{projekt_phase.projekt.title}&locale=#{I18n.locale}" %>
-    <iframe src="<%= iframe_path %>" frameborder="0" allow="microphone" class="proposal-assistant-iframe"></iframe>
+    <iframe
+      src="<%= assistant_iframe_path %>"
+      frameborder="0"
+      allow="microphone"
+      class="voice-assistant-iframe js-voice-assistant-iframe"
+      data-initial-data="<%= assistant_initial_data %>"
+    >
+    </iframe>
   <% end %>
 
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>

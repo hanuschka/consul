@@ -4,28 +4,54 @@
   App.ProposalAssistant = {
     initialized: false,
     initialize: function() {
+      this.voiceAssistantIframe = document.querySelector(".js-voice-assistant-iframe")
 
+      if (this.voiceAssistantIframe) {
+        window.addEventListener('message', this.handleGlobalMessage.bind(this));
+        this.initialData = JSON.parse(this.voiceAssistantIframe.dataset.initialData);
 
-      window.addEventListener('message', this.handleGlobalMessage.bind(this));
-      this.initialized = true
+        this.initialized = true
+      }
     },
 
     handleGlobalMessage: function(event) {
-      console.log("handleGlobalMessage")
-      console.log(event)
       if (event.data) {
         const data = parseIframeEventData(event.data);
         const params = data.params
 
+        // console.log("CONSUL handleGlobalMessage", data.event_type, data.params)
+
         switch(data.event_type) {
+          case "Consul.callbacks.VoiceAssistant.loaded":
+            this.loadInitialDataForAssistant();
+            break;
           case "Consul.ProposalForm.updateTitle":
             this.updateProposalTitle(params.value);
             break;
           case "Consul.ProposalForm.updateDescription":
             this.updateProposalDescription(params.value);
             break;
+          case "Consul.ProposalForm.updateDescription":
+            this.updateProposalDescription(params.value);
+            break;
+          case "Consul.ProposalForm.selectLabels":
+            this.toggleLabels(params.label_ids, true)
+            break;
+          case "Consul.ProposalForm.deselectLabels":
+            this.toggleLabels(params.label_ids, false)
+            break;
+          case "Consul.ProposalForm.selectSentiment":
+            this.selectSentiment(params.sentiment_id)
+            break;
+
         }
       }
+    },
+
+    loadInitialDataForAssistant: function() {
+      this.postMessageToDtIframe(
+        "Dt.VoiceAssistant.loadInitialData", this.initialData
+      )
     },
 
     highlightBanner: function() {
@@ -39,7 +65,7 @@
       }, 3000)
       setTimeout(function() {
         bannerElement.classList.remove("assistant-changed-field-highlight-transition")
-      }, 3500)
+      }, 5500)
     },
 
     updateProposal: function(params) {
@@ -84,6 +110,37 @@
       setTimeout(function() {
         editorContent.classList.remove("assistant-changed-field-highlight-transition")
       }, 3500)
+    },
+
+
+    toggleLabels: function(labelIds, checked) {
+      labelIds.forEach(function(labelId) {
+        var labelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
+
+        labelElements.forEach(function(labelElement) {
+          // labelElement.control.checked = checked;
+          labelElement.click()
+        })
+      })
+    },
+
+    selectSentiment: function(sentimentId) {
+      var sentimentElement = document.querySelector(
+        ".js-projekt-phase-sentiment[data-sentiment-id='"
+      );
+
+      // sentimentElement.control.checked = true;
+      sentimentElement.click()
+    },
+
+    postMessageToDtIframe(eventType, params) {
+      this.voiceAssistantIframe.contentWindow.postMessage(
+        JSON.stringify({
+          event_type: eventType,
+          params
+        }),
+        '*'
+      );
     }
   };
 

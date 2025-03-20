@@ -63,6 +63,13 @@ class Verification::Residence
       user.verify!
     else
       user.save!
+
+      if user.citizen? # cli_bam
+        Verifications::CreateXML.create_verification_request(user.id, document_last_digits)
+      else
+        user.update_column(:bam_letter_verification_code, rand(11111111..99999999)) unless user.bam_letter_verification_code.present?
+        Verifications::CreateXML.create_verification_letter(user)
+      end
     end
   end
 

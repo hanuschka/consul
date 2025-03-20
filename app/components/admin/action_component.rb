@@ -34,6 +34,7 @@ class Admin::ActionComponent < ApplicationComponent
         id: (dom_id(record, action) if record.respond_to?(:to_key)),
         "aria-describedby": describedby,
         "aria-label": label,
+        target: html_target,
         data: {
           confirm: confirmation_text,
           disable_with: (text if button?)
@@ -43,6 +44,12 @@ class Admin::ActionComponent < ApplicationComponent
 
     def html_class
       "admin-action #{options[:class] || "#{action.to_s.gsub("_", "-")}-link"}".strip
+    end
+
+    def html_target
+      if options.dig(:options, :target).present?
+        options.dig(:options, :target)
+      end
     end
 
     def describedby

@@ -61,6 +61,7 @@ de:
         password_confirmation_label: Neues Passwort bestätigen
         password_label: Neues Passwort
         title: Mein Passwort ändern
+        password_hint: "Ihr Passwort muss drei dieser vier Kriterien erfüllen: Großbuchstabe, Kleinbuchstabe, Zahl, Sonderzeichen."
       new:
         email_label: E-Mail
         send_submit: Anweisung zusenden lassen
@@ -121,6 +122,7 @@ de:
           username_is_not_available: Benutzer*innenname bereits vergeben
           username_label: Benutzer*innenname (öffentlich sichtbar)
           username_note: Name, der öffentlich neben ihren Beiträgen angezeigt wird
+          password_hint: "Ihr Passwort muss drei dieser vier Kriterien erfüllen: Großbuchstabe, Kleinbuchstabe, Zahl, Sonderzeichen."
         success:
           back_to_index: Zurück zur Startseite
           instructions_1: Bitte <b>überprüfen Sie Ihren E-Mail-Eingang</b> - wir haben Ihnen einen <b>Link zur Bestätigung Ihres Kontos</b> geschickt.

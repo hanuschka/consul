@@ -138,12 +138,14 @@ de:
       extra_fields:
         registration:
           extended: Erweiterte Registrierung
-          extended_description: Bei der Registrierung werden zusätzlich "Vorname", "Nachname", "Straße", "Hausnummer", "PLZ", "Stadt" und "Geburtsdatum" abgefragt
+          extended_description: Bei der Registrierung werden zusätzlich "Vorname", "Nachname", "Geschlecht", "Straße", "Hausnummer", "PLZ", "Stadt" und "Geburtsdatum" abgefragt
           check_documents: Dokumentenabfrage
           check_documents_description: Aktiviert die zusätzliche Dokumentenabfrage "Personalausweis" oder "Reisepass" während der Registrierung
         verification:
           check_documents: Dokumentenprüfung
           check_documents_description: Aktiviert die zusätzliche Dokumentenprüfung "Personalausweis" oder "Reisepass"
+          show_verification_status: Zeige Verifizierungsstatus im Konto an
+          show_verification_status_description: Zeigt den Verifizierungsstatus unterhalb des Nutzerbildes an
 
       projekt_feature:
         main:
@@ -301,10 +303,8 @@ de:
         show_in_main_menu_description: Zeigt Anliegen in der Hauptnavigation an
         admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
         admins_must_assign_officer_description: Administratoren weisen Anliegen an Sachbearbeiter*in zu
-        admins_must_approve_officer_answer: Admins müssen Antwort der Sachbearbeiter*innen freigeben
-        admins_must_approve_officer_answer_description: Administratoren geben die Antwort der Sachbearbeiter*in vor Veröffentlichung frei
-        allow_voting: Nutzer*innen Bewertung pro Anliegen
-        allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für das Anliegen
+        officers_can_administer_assigned_reports: Sachbearbeiter*innen können Anliegen administrieren
+        officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Anliegen
         officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
         officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
         enable_comments: Kommentarfunktion

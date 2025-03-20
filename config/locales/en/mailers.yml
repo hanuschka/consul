@@ -71,8 +71,7 @@ en:
       subject: Promote your proposal for the final vote!
       title: Promote your proposal for the final vote!
       hi: "Hello %{username},"
-      text: "Promote your %{proposal_link} for the final voting phase now."
-      proposal_link_text: "Proposal"
+      text: "Promote your proposal %{proposal_link} for the final voting phase now."
       share_button: "Share your proposal now!"
       thanks: "Good luck!"
       sincerely: "Sincerely"
@@ -80,8 +79,7 @@ en:
       subject: "Unfortunately, your proposal didn't make it to the next round."
       title: "Unfortunately, your proposal didn't make it to the next round."
       hi: "Hello %{username},"
-      text: "Unfortunately, your %{proposal_link} didn't receive enough votes. It will therefore not be admitted to the next phase of the %{project_link}."
-      proposal_link_text: "Proposal"
+      text: "Unfortunately, your proposal %{proposal_link} didn't receive enough votes. It will therefore not be admitted to the next phase of the %{project_link}."
       project_link_text: "Project"
       sincerely: "Sincerely"
     evaluation_comment:

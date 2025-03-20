@@ -80,7 +80,10 @@ de:
             only_current_user: Mir zugewiesene Anliegen
           statuses:
             title: Status
-            all_statuses: Alle Anliegen
+          archived_status:
+            title: Archiv
+            not_archived: Nicht archiviert
+            only_archived: Archiviert
           my_posts:
             title: Meine Beiträge
         start_deficiency_report: Ihr Anliegen melden

@@ -71,8 +71,7 @@ de:
       subject: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       title: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       hi: "Hello %{username},"
-      text: "Bewerben Sie Ihren %{proposal_link} jetzt für die letzte Abstimmungsphase."
-      proposal_link_text: "Vorschlag"
+      text: "Bewerben Sie Ihren Vorschlag %{proposal_link} jetzt für die letzte Abstimmungsphase."
       share_button: "Jetzt Vorschlag teilen!"
       thanks: "Viel Erfolg!"
       sincerely: "Mit freundlichen Grüßen"
@@ -80,8 +79,7 @@ de:
       subject: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
       title: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
       hi: "Hello %{username},"
-      text: "Ihr %{proposal_link} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
-      proposal_link_text: "Vorschlag"
+      text: "Ihr Vorschlag %{proposal_link} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
       projekt_link_text: "Projekts"
       sincerely: "Mit freundlichen Grüßen"
     evaluation_comment:

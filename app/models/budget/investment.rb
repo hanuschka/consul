@@ -1,6 +1,6 @@
 class Budget
   class Investment < ApplicationRecord
-    SORTING_OPTIONS = { id: "id", supports: "cached_votes_up" }.freeze
+    SORTING_OPTIONS = { id: "id", supports: "cached_votes_up", balloters: "ballot_lines_count" }.freeze
 
     include Measurable
     include Sanitizable
@@ -179,6 +179,10 @@ class Budget
         order("#{allowed_sort_option} #{direction}")
       elsif sorting_key == :title
         direction == "asc" ? sort_by_title : sort_by_title.reverse
+      elsif sorting_key == :total_votes
+        direction == "desc" ? sort_by_total_votes : sort_by_total_votes.reverse
+      elsif sorting_key == :total_ballot_votes
+        direction == "desc" ? sort_by_ballot_line_weight : sort_by_ballot_line_weight.reverse
       else
         order(cached_votes_up: :desc).order(id: :desc)
       end
@@ -241,6 +245,14 @@ class Budget
 
     def unfeasible_email_pending?
       unfeasible_email_sent_at.blank? && unfeasible? && valuation_finished?
+    end
+
+    def email_on_feasibility_pending?
+      email_on_feasibility_sent_at.blank?
+    end
+
+    def email_on_selected_pending?
+      email_on_selected_sent_at.blank?
     end
 
     def total_votes
@@ -341,11 +353,11 @@ class Budget
     end
 
     def should_show_price?
-      selected? && price.present? && budget.show_money? && feasible?
+      selected? && price.present? && budget.show_money? && feasible? && budget.publishing_prices_or_later?
     end
 
     def should_show_price_explanation?
-      should_show_price? && valuator_explanation.present?
+      should_show_price? && valuator_explanation.present? && budget.publishing_prices_or_later?
     end
 
     def should_show_unfeasibility_explanation?

@@ -195,6 +195,10 @@
   transition: 100ms background-color ease;
   box-shadow: 2px 2px 7px 1px #00000026;
 
+  img {
+    min-height: 179px;
+  }
+
   h4 {
     font-size: 18px;
     font-weight: 400;
@@ -214,5 +218,28 @@
     .image-preview {
       padding: 0;
     }
+  }
+}
+
+.sort-item-button {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  color: $standard-accent-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e3e3e3;
+  }
+}
+
+.admin-checkboxes-list {
+  input[type="checkbox"] {
+    display: block;
+    margin-bottom: 0;
   }
 }

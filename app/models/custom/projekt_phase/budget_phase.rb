@@ -45,12 +45,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
-      officing_managers officing_manager_audits
+      officing_managers
     ]
   end
 
   def embedded_admin_nav_bar_items
-    admin_nav_bar_items.excluding(%w[ officing_managers officing_manager_audits])
+    admin_nav_bar_items.excluding(%w[ officing_managers])
   end
 
   def safe_to_destroy?

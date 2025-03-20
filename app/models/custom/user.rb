@@ -46,7 +46,13 @@ class User < ApplicationRecord
   has_one :officing_manager
   belongs_to :registered_address, optional: true
 
-  scope :outside_bam, -> { where(location: 'not_citizen').where.not(bam_letter_verification_code: nil).order(id: :desc) } #cli
+  scope :outside_bam, -> {
+    joins("LEFT JOIN registered_addresses ON users.registered_address_id = registered_addresses.id
+           LEFT JOIN registered_address_cities ON registered_addresses.registered_address_city_id = registered_address_cities.id")
+      .where("(registered_address_cities.name IS NULL OR registered_address_cities.name != 'Bamberg' OR users.location = 'not_citizen')")
+      .where.not(bam_letter_verification_code: nil)
+      .order(id: :desc)
+  }
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions

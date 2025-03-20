@@ -1,56 +1,6 @@
 de:
   custom:
     sign_up:
-      common:
-        register: Registrieren
-        information: Information
-      progress_bar:
-        user_info: Email
-        user_location: Wohnort
-        user_details: Datenabgleich
-        complete: Abschluss
-      new:
-        information_details: Bitte melden Sie sich mit Ihrem richtigen Vornamen und Nachnamen (Klarnamen) an. Nur mit einer vollständigen Verifizierung können Sie aktiv mitdiskutieren, Ihre Vorschläge einbringen oder bei Abstimmungen mitmachen. Wenn Sie dies nicht möchten, können Sie sich aber weiterhin wie gewohnt auf der Webseite bewegen und informieren.
-        bullet_1: Email-Verifikation
-        bullet_1_text: Im ersten Schritt müssen Sie ein Konto anlegen, indem Sie ihre E-Mail-Adresse sowie ein Passwort angeben. Die angegebene E-Mail-Adresse muss im Anschluss, mit Klick auf den zugeschickten Link für die Verifizierung, bestätigt werden.
-        bullet_2: Wohnort
-        bullet_2_text: Mit Klick auf den Link werden Sie zur zweiten Verifizierungsstufe weitergeleitet. Bitte geben Sie in diesem Schritt an, ob Sie Bürger:in der Stadt Bamberg sind oder aus einem anderen Gebiet Deutschlands kommen.
-        bullet_2_extra_html: "<ul><li>Bamberger:innen werden im nächsten Schritt automatisch per Einwohnermelde-Abgleich verifiziert und können direkt aktiv teilnehmen</li><li>Bürger:innen aus anderen Gebieten Deutschlands bekommen einen Code per Post und können nach Abschluss der Anmeldung teilnehmen</li></ul>"
-        bullet_3: Einwohnermelde-Abgleich
-        bullet_3_text: Im dritten Schritt müssen Sie Ihren Vor- und Nachnamen und weitere Informationen bereitstellen, die mit dem Einwohnermeldeamt abgeglichen werden. Allen Bürger:innen, die aus anderen Gebieten Deutschlands kommen, wird ein Verifzierungscode per Post zugeschickt.
-        bullet_4: Abschluss der Verifizierung
-        submit: Registrierung starten
-      user_info:
-        information_details: Bitte geben Sie Ihre E-Mail-Adresse sowie ein sicheres Passwort an. Wir senden Ihnen eine Bestätigungsmail mit dem Verifizierungslink, der Ihr Konto bestätigt und zur nächsten Stufe weiterleitet.
-        submit: Per E-Mail registrieren
-      user_location:
-        information_details: Bitte geben Sie an, ob Sie Bürger:in der Stadt Bamberg sind oder aus einem anderen Gebiet Deutschlands kommen.
-        option:
-          citizen: Ich bin Bürger:in der Stadt Bamberg
-          not_citizen: Ich komme aus einem anderen Gebiet Deutschlands
-        submit: Wohnort bestätigen
-      user_details:
-        information_details:
-          citizen: Bitte geben Sie Ihren Vor- und Nachnamen und weitere persönliche Daten an. So wird sichergestellt, dass bei einzelnen Themen und Abstimmungen keine unbefugten Personen teilnehmen können. Die Verifizierung kann bis zu fünf Minuten dauern. Nach Abschluss der Verifizierung erhalten Sie von uns eine Email mit der Bestätigung Ihrer Anmeldung oder dem Hinweis auf etwaige Fehler.
-          not_citizen: Bitte geben Sie Ihren Vor- und Nachnamen und weitere persönliche Daten an. So wird sichergestellt, dass bei einzelnen Themen und Abstimmungen keine unbefugten Personen teilnehmen können. Sie erhalten nach Abschluss der Verifizierung einen Code, den wir Ihnen per Post zusenden. Im Anschluss müssen Sie den Code einmalig bei der ersten Anmeldung eingeben.
-        first_name_placeholder: Vorname
-        last_name_placeholder: Nachname
-        plz_placeholder: Postleitzahl
-        street_name_placeholder: Straße
-        street_number_placeholder: Hausnummer
-        city_name_placeholder: Stadt
-        document_number_placeholder: Letzten vier Zeichen auf Dokument
-        card_name: '1) Personalausweis'
-        pass_name: '2) Reisepass'
-        tips: 'Hinweis:'
-        card_label: '1) Personalausweis Rückseite'
-        card_help: 'Letzte vier Ziffern auf Personalausweis Rückseite:'
-        pass_label: '2) Reisepass Vorderseite'
-        pass_help: 'Letzte vier Ziffern auf Reisepass Vorderseite:'
-        submit: Einwohnermelde-Abgleich starten
-      complete_code:
-        welcome: Herzlichen Glückwunsch!
-        welcome_text_html: Sie haben beide Verifizierungsschritte durchlaufen. Wir werden Ihre Daten jetzt prüfen und Ihnen einen Verifizierungscode postalisch zuschicken. Sobald Sie den Code erhalten haben, bitte unter <a href="https://www.bamberg-gestalten.de/code">www.bamberg-gestalten.de/code</a> eingeben.
       user_verification_code:
         title: Verifizierungscode eingeben
         description: Bitte geben Sie in das nachfolgende Feld Ihren Verifizierungscode ein.
@@ -58,10 +8,6 @@ de:
         submit: Code verifizieren
       check_user_verification_code:
         user_verified: Ihr Konto wurde erfolgreich verifziert!
-      complete:
-        welcome: Herzlichen Glückwunsch!
-        welcome_text: Sie haben beide Verifizierungsschritte durchlaufen. Wir werden Ihre Daten jetzt prüfen und Sie per E-Mail benachrichtigen, sobald Ihr Konto mit dem Einwohnermelderegister abgeglichen wurde. Dies kann einige Minuten dauern.
-        button: Zu bamberg-gestalten.de wechseln
       mailer:
         residence_confirmed:
           subject: Erfolgreich verifiziert auf bamberg-gestalten.de

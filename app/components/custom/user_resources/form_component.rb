@@ -115,7 +115,23 @@ class UserResources::FormComponent < ApplicationComponent
   end
 
   def assistant_iframe_path
-    "#{Rails.application.secrets.dt[:url]}/proposal_assistant?type=#{params[:proposal_assistant]}&projekt_name=#{projekt_phase.projekt.title}&locale=#{I18n.locale}"
+    base_url = "#{Rails.application.secrets.dt[:url]}/proposal_assistant"
+
+    uri = URI(base_url)
+    params_hash = {
+      type: params[:proposal_assistant],
+      projekt_name: projekt_phase.projekt.title,
+      locale: I18n.locale,
+      start_with_greeting: params[:start_with_greeting],
+      greeting_delay: params[:greeting_delay]
+    }.compact
+
+    if Rails.env.development? && params[:dont_start_voice_session] == "true"
+      params_hash[:dont_start_voice_session] = "true"
+    end
+
+    uri.query = URI.encode_www_form(params_hash)
+    uri.to_s
   end
 
   def assistant_initial_data

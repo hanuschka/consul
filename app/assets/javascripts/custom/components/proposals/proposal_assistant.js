@@ -11,6 +11,17 @@
         this.initialData = JSON.parse(this.voiceAssistantIframe.dataset.initialData);
 
         this.initialized = true
+
+        // console.log("iframe.contentDocument.readyState", this.voiceAssistantIframe.contentDocument.readyState)
+        if (this.voiceAssistantIframe.contentDocument && this.voiceAssistantIframe.contentDocument.readyState === "complete") {
+          this.tryToPushInitialDataToDtAssistant();
+        }
+        else {
+          this.voiceAssistantIframe.addEventListener("load", function() {
+            this.tryToPushInitialDataToDtAssistant();
+          })
+        }
+        this.tryToPushInitialDataToDtAssistant();
       }
     },
 
@@ -23,7 +34,10 @@
 
         switch(data.event_type) {
           case "Consul.callbacks.VoiceAssistant.loaded":
-            this.loadInitialDataForAssistant();
+            this.tryToPushInitialDataToDtAssistant();
+            break;
+          case "Consul.VoiceAssistant.turnedOn":
+            this.expandAssistantIframe();
             break;
           case "Consul.ProposalForm.updateTitle":
             this.updateProposalTitle(params.value);
@@ -48,10 +62,16 @@
       }
     },
 
-    loadInitialDataForAssistant: function() {
+    tryToPushInitialDataToDtAssistant: function() {
+      console.log("Consul: push initialData for DT", this.initialData)
+
       this.postMessageToDtIframe(
         "Dt.VoiceAssistant.loadInitialData", this.initialData
       )
+    },
+
+    expandAssistantIframe: function() {
+      this.voiceAssistantIframe.classList.add("-running")
     },
 
     highlightBanner: function() {

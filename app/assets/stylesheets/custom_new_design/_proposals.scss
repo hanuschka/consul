@@ -16,15 +16,15 @@
 }
 
 .voice-assistant-iframe {
-  height: 120px;
+  height: 118px;
   width: 350px;
   position: fixed;
   bottom: 20px;
   left: 0;
   right: 0;
-  background-color: #383838;
   border-radius: 20px;
   border: 1px solid #959595;
+  background-color: #383838;
   margin: auto;
   z-index: 10;
   box-shadow: 2px 3px 5px 4px rgba(0, 0, 0, 0.12);
@@ -35,3 +35,6 @@
   }
 }
 
+// .voice-assistant-iframe {
+//   // backdrop-filter: blur(8px);
+// }

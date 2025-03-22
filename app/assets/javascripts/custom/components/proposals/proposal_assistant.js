@@ -33,7 +33,7 @@
         // console.log("CONSUL handleGlobalMessage", data.event_type, data.params)
 
         switch(data.event_type) {
-          case "Consul.callbacks.VoiceAssistant.loaded":
+          case "Consul.callbacks.VoiceAssistant.connected":
             this.tryToPushInitialDataToDtAssistant();
             break;
           case "Consul.VoiceAssistant.turnedOn":

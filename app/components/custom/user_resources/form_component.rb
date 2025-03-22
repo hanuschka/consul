@@ -115,11 +115,11 @@ class UserResources::FormComponent < ApplicationComponent
   end
 
   def assistant_iframe_path
-    base_url = "#{Rails.application.secrets.dt[:url]}/proposal_assistant"
+    base_url = "#{Rails.application.secrets.dt[:url]}/voice_assistant"
 
     uri = URI(base_url)
     params_hash = {
-      type: params[:proposal_assistant],
+      type: params[:voice_assistant],
       projekt_name: projekt_phase.projekt.title,
       locale: I18n.locale,
       start_with_greeting: params[:start_with_greeting],

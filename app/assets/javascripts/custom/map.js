@@ -179,6 +179,22 @@
         updateFormfieldsWithMarker();
       };
 
+      // Do not delete. This is interface function used to update
+      // map in other js componentns and in AI assistants
+      this.lastMapSetMarkerTo = function lastMapSetMarkerTo(lat, lng) {
+        if (App.Map.maps.length > 1) {
+          // Due to limitation of implementation of this functions
+          // it dosent work when there multiple instances of map
+          return
+        }
+        if (marker) {
+          marker.setLatLng([lat, lng]);
+        } else {
+          marker = createMarker(lat, lng);
+        }
+        updateFormfieldsWithMarker();
+      }
+
       // function to update form fields when marker is updated
       var updateFormfieldsWithMarker = function() {
         $(latitudeInputSelector).val(marker.getLatLng().lat);

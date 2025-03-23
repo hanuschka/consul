@@ -39,25 +39,27 @@
           case "Consul.VoiceAssistant.turnedOn":
             this.expandAssistantIframe();
             break;
-          case "Consul.ProposalForm.updateTitle":
+          case "Consul.resourceForm.updateTitle":
             this.updateProposalTitle(params.value);
             break;
-          case "Consul.ProposalForm.updateDescription":
+          case "Consul.resourceForm.updateDescription":
             this.updateProposalDescription(params.value);
             break;
-          case "Consul.ProposalForm.updateDescription":
+          case "Consul.resourceForm.updateDescription":
             this.updateProposalDescription(params.value);
             break;
-          case "Consul.ProposalForm.selectLabels":
+          case "Consul.resourceForm.selectLabels":
             this.toggleLabels(params.label_ids, true)
             break;
-          case "Consul.ProposalForm.deselectLabels":
+          case "Consul.resourceForm.deselectLabels":
             this.toggleLabels(params.label_ids, false)
             break;
-          case "Consul.ProposalForm.selectSentiment":
+          case "Consul.resourceForm.selectSentiment":
             this.selectSentiment(params.sentiment_id)
             break;
-
+          case "Consul.ResourceForm.updateMapLocation":
+            this.updateMapLocation(params.coordinates)
+            break;
         }
       }
     },
@@ -150,6 +152,15 @@
 
       // sentimentElement.control.checked = true;
       sentimentElement.click()
+    },
+
+    updateMapLocation: function(coordinates) {
+      var currentMap = App.Map.maps[0]
+
+      if (currentMap && App.Map.maps.length <= 1) {
+        currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
+        App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
+      }
     },
 
     postMessageToDtIframe(eventType, params) {

@@ -30,7 +30,7 @@
         const data = parseIframeEventData(event.data);
         const params = data.params
 
-        // console.log("CONSUL handleGlobalMessage", data.event_type, data.params)
+        console.log("CONSUL handleGlobalMessage", data.event_type, data.params)
 
         switch(data.event_type) {
           case "Consul.callbacks.VoiceAssistant.connected":
@@ -39,25 +39,25 @@
           case "Consul.VoiceAssistant.turnedOn":
             this.expandAssistantIframe();
             break;
-          case "Consul.resourceForm.updateTitle":
+          case "Consul.ResourceForm.updateTitle":
             this.updateProposalTitle(params.value);
             break;
-          case "Consul.resourceForm.updateDescription":
+          case "Consul.ResourceForm.updateDescription":
             this.updateProposalDescription(params.value);
             break;
-          case "Consul.resourceForm.updateDescription":
+          case "Consul.ResourceForm.updateDescription":
             this.updateProposalDescription(params.value);
             break;
-          case "Consul.resourceForm.selectLabels":
-            this.toggleLabels(params.label_ids, true)
+          case "Consul.ResourceForm.selectLabels":
+            this.toggleLabels(params.label_ids, true, params.shouldScroll)
             break;
-          case "Consul.resourceForm.deselectLabels":
-            this.toggleLabels(params.label_ids, false)
+          case "Consul.ResourceForm.deselectLabels":
+            this.toggleLabels(params.label_ids, false, params.shouldScroll)
             break;
-          case "Consul.resourceForm.selectSentiment":
-            this.selectSentiment(params.sentiment_id)
+          case "Consul.ResourceForm.selectSentiment":
+            this.selectSentiment(params.sentiment_id, params.shouldScroll)
             break;
-          case "Consul.ResourceForm.updateMapLocation":
+          case "Consul.ResourceForm.updateLocation":
             this.updateMapLocation(
               params.coordinates, params.shouldScroll
             )
@@ -119,7 +119,7 @@
       this.addChangedFieldsHighlightTo(editorContent)
     },
 
-    toggleLabels: function(labelIds, checked) {
+    toggleLabels: function(labelIds, checked, shouldScroll) {
       if (labelIds && labelIds.length > 0) {
         labelIds.forEach(function(labelId) {
           var labelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
@@ -134,11 +134,17 @@
 
         if (labelsSection) {
           this.addChangedFieldsHighlightTo(labelsSection)
+
+          if (shouldScroll) {
+            labelsSection.scrollIntoView({
+              block: "center", inline: "nearest"
+            })
+          }
         }
       }
     },
 
-    selectSentiment: function(sentimentId) {
+    selectSentiment: function(sentimentId, shouldScroll) {
       if (sentimentId) {
         var selector = ".js-projekt-phase-sentiment[data-sentiment-id='" + sentimentId + "']";
         var sentimentElement = document.querySelector(selector);
@@ -149,6 +155,11 @@
 
         if (sentimentsSection) {
           this.addChangedFieldsHighlightTo(sentimentsSection)
+          if (shouldScroll) {
+            sentimentsSection.scrollIntoView({
+              block: "center", inline: "nearest"
+            })
+          }
         }
       }
     },

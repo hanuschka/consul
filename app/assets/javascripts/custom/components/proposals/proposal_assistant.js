@@ -58,7 +58,12 @@
             this.selectSentiment(params.sentiment_id)
             break;
           case "Consul.ResourceForm.updateMapLocation":
-            this.updateMapLocation(params.coordinates)
+            this.updateMapLocation(
+              params.coordinates, params.shouldScroll
+            )
+            break;
+          case "Consul.ResourceForm.updateImage":
+            this.updateImage(params.image)
             break;
         }
       }
@@ -74,20 +79,6 @@
 
     expandAssistantIframe: function() {
       this.voiceAssistantIframe.classList.add("-running")
-    },
-
-    highlightBanner: function() {
-     var bannerElement = document.querySelector(".user-resources-form--banner-editor")
-
-      bannerElement.classList.add("assistant-changed-field-highlight-transition")
-      bannerElement.classList.add("assistant-changed-field-highlight")
-
-      setTimeout(function() {
-        bannerElement.classList.remove("assistant-changed-field-highlight")
-      }, 3000)
-      setTimeout(function() {
-        bannerElement.classList.remove("assistant-changed-field-highlight-transition")
-      }, 5500)
     },
 
     updateProposal: function(params) {
@@ -108,7 +99,9 @@
         titleElement.scrollIntoView({block: "center", inline: "nearest"})
       }
 
-      this.highlightBanner()
+      var bannerElement = document.querySelector(".user-resources-form--banner-editor")
+
+      this.addChangedFieldsHighlightTo(bannerElement)
     },
 
     updateProposalDescription: function(description, scroll) {
@@ -123,44 +116,72 @@
 
       var editorContent = document.querySelector(".ck-content.ck-editor__editable")
 
-      editorContent.classList.add("assistant-changed-field-highlight-transition")
-      editorContent.classList.add("assistant-changed-field-highlight")
-
-      setTimeout(function() {
-        editorContent.classList.remove("assistant-changed-field-highlight")
-      }, 3000)
-      setTimeout(function() {
-        editorContent.classList.remove("assistant-changed-field-highlight-transition")
-      }, 3500)
+      this.addChangedFieldsHighlightTo(editorContent)
     },
 
-
     toggleLabels: function(labelIds, checked) {
-      labelIds.forEach(function(labelId) {
-        var labelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
+      if (labelIds && labelIds.length > 0) {
+        labelIds.forEach(function(labelId) {
+          var labelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
 
-        labelElements.forEach(function(labelElement) {
-          // labelElement.control.checked = checked;
-          labelElement.click()
+          labelElements.forEach(function(labelElement) {
+            // labelElement.control.checked = checked;
+            labelElement.click()
+          })
         })
-      })
+
+        var labelsSection = document.querySelector(".js-sidebar-labels-section")
+
+        if (labelsSection) {
+          this.addChangedFieldsHighlightTo(labelsSection)
+        }
+      }
     },
 
     selectSentiment: function(sentimentId) {
-      var selector = ".js-projekt-phase-sentiment[data-sentiment-id='" + sentimentId + "']";
-      var sentimentElement = document.querySelector(selector);
+      if (sentimentId) {
+        var selector = ".js-projekt-phase-sentiment[data-sentiment-id='" + sentimentId + "']";
+        var sentimentElement = document.querySelector(selector);
 
-      // sentimentElement.control.checked = true;
-      sentimentElement.click()
+        sentimentElement.click()
+
+        var sentimentsSection = document.querySelector(".js-sidebar-sentiments-section")
+
+        if (sentimentsSection) {
+          this.addChangedFieldsHighlightTo(sentimentsSection)
+        }
+      }
     },
 
-    updateMapLocation: function(coordinates) {
+    updateMapLocation: function(coordinates, shouldScroll) {
       var currentMap = App.Map.maps[0]
 
       if (currentMap && App.Map.maps.length <= 1) {
         currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
         App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
+
+        if (shouldScroll) {
+          currentMap.getContainer().scrollIntoView({
+            block: "center", inline: "nearest"
+          })
+        }
       }
+    },
+
+    updateImage: function(image) {
+      var imageFileInput = document.querySelector(".js-direct-image-upload--input")
+      var imagePreview = document.querySelector(".js-direct-image-upload--preview-area img")
+
+      imagePreview.src = `data:image/jpeg;base64,${image}`;
+      setBase64ToFileInput(imageFileInput, image)
+    },
+
+    addChangedFieldsHighlightTo: function(element) {
+      element.classList.add("assistant-changed-field-highlight")
+
+      setTimeout(function() {
+        element.classList.remove("assistant-changed-field-highlight")
+      }, 2500)
     },
 
     postMessageToDtIframe(eventType, params) {
@@ -174,6 +195,24 @@
     }
   };
 
+ function setBase64ToFileInput(base64String, fileInputId) {
+    // Convert base64 to Blob
+    const byteCharacters = atob(base64String);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/jpeg" });
+
+    // Create a File object (optional: change filename)
+    const file = new File([blob], "generated_image.jpg", { type: "image/jpeg" });
+
+    // Set the file into the file input
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    fileInput.files = dataTransfer.files;
+  }
 
   function parseIframeEventData(eventData) {
     if (typeof eventData === "string") {

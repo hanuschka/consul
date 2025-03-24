@@ -21,6 +21,7 @@
           title: projekt_phase.labels_name.presence || t("custom.shared.form.projekt_labels_label"),
           opened_on_mobile: true,
           icon_name: "tag",
+          class_name: "js-sidebar-labels-section"
         ) do |c| %>
           <%= render partial: "shared/user_resources_form/projekt_labels", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
         <% end %>

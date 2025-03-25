@@ -180,11 +180,15 @@
     },
 
     updateImage: function(image) {
+      console.log("calling updateImage with", image)
       var imageFileInput = document.querySelector(".js-direct-image-upload--input")
-      var imagePreview = document.querySelector(".js-direct-image-upload--preview-area img")
+      // var imagePreview = document.querySelector(".js-direct-image-upload--preview-area img")
 
-      imagePreview.src = `data:image/jpeg;base64,${image}`;
-      setBase64ToFileInput(imageFileInput, image)
+      // imagePreview.src = `data:image/jpeg;base64,${image}`;
+      var imagePreviewUrl = `data:image/jpeg;base64,${image}`;
+      // setBase64ToFileInput(imageFileInput, image)
+
+      App.DirectUploadComponent.updateImagePreview(imagePreviewUrl);
     },
 
     addChangedFieldsHighlightTo: function(element) {
@@ -206,7 +210,7 @@
     }
   };
 
- function setBase64ToFileInput(base64String, fileInputId) {
+ function setBase64ToFileInput(fileInput, base64String) {
     // Convert base64 to Blob
     const byteCharacters = atob(base64String);
     const byteNumbers = new Array(byteCharacters.length);

@@ -205,7 +205,6 @@
   };
 
  function setBase64ToFileInput(fileInput, base64String) {
-    // Convert base64 to Blob
     const byteCharacters = atob(base64String);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -214,10 +213,8 @@
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: "image/jpeg" });
 
-    // Create a File object (optional: change filename)
     const file = new File([blob], "generated_image.jpg", { type: "image/jpeg" });
 
-    // Set the file into the file input
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
     fileInput.files = dataTransfer.files;

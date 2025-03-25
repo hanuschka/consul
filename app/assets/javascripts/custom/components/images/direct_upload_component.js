@@ -35,7 +35,6 @@
         paramName: "attachment",
         formData: null,
         add: function(e, data) {
-          console.log("handle direct upload image attachment", e, data)
           var upload_data = App.DirectUploadComponent.buildData(data, e.target);
 
           App.DirectUploadComponent.clearProgressBar(upload_data);
@@ -45,7 +44,6 @@
         },
 
         change: function(e, data) {
-          console.log("handle direct upload image change", e, data)
           data.files.forEach(function(file) {
             App.DirectUploadComponent.setFilename(inputData, file.name);
           });

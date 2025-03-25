@@ -122,7 +122,7 @@ class ProposalsController
     elsif @proposal.save
       @proposal.publish
 
-      Mailer.proposal_created(@proposal).deliver_now
+      Mailer.proposal_created(@proposal).deliver_later
 
       if @proposal.projekt_phase.active?
         redirect_to page_path(

@@ -4,7 +4,7 @@
 
   <% if stats.is_a?(Budget::Stats) %>
     <div id="total_investments" class="stats-group">
-      <h4><%= t("stats.budgets.total_investments") %></h4>
+      <h4><%= t("stats.budgets.total_investments_title") %></h4>
 
       <%= number_with_info_tags(
         stats.total_budget_investments,
@@ -15,6 +15,12 @@
       <% unless params[:stats_section] == "accepting" %>
         <%= number_with_info_tags(stats.total_unfeasible_investments,
                                   t("stats.budgets.total_unfeasible_investments")) %>
+
+        <%= number_with_info_tags(stats.total_feasible_investments,
+                                  t("stats.budgets.total_feasible_investments")) %>
+      <% end %>
+
+      <% if @budget.valuating_or_later? %>
         <%= number_with_info_tags(stats.total_selected_investments,
                                   t("stats.budgets.total_selected_investments")) %>
       <% end %>

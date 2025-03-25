@@ -173,23 +173,6 @@
       $dataWrapper.find(".js-direct-image-upload--preview-area").addClass("-preview-set");
     },
 
-    updateImagePreview: function(imageUrl, customPreview) {
-      var image_preview;
-      image_preview = "<div class='image-preview'><figure><img src='" + imageUrl + "' class='cached-image'></figure></div>";
-      var $dataWrapper = $(".js-direct-image-upload");
-
-      if ($(customPreview).length > 0) {
-        $(customPreview).replaceWith(image_preview);
-      } else {
-        var $actionsArea = $dataWrapper.find(".js-direct-image-upload--attachment-actions");
-
-        $(image_preview).insertBefore($actionsArea);
-        // data.preview = $dataWrapper.find(".image-preview");
-      }
-
-      $dataWrapper.find(".js-direct-image-upload--preview-area").addClass("-preview-set");
-    },
-
     initializeRemoveCachedImageLinks: function() {
       $(".js-direct-image-upload").on("click", ".remove-cached-attachment", function(event) {
         event.preventDefault();

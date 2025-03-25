@@ -180,15 +180,9 @@
     },
 
     updateImage: function(image) {
-      console.log("calling updateImage with", image)
       var imageFileInput = document.querySelector(".js-direct-image-upload--input")
-      // var imagePreview = document.querySelector(".js-direct-image-upload--preview-area img")
 
-      // imagePreview.src = `data:image/jpeg;base64,${image}`;
-      var imagePreviewUrl = `data:image/jpeg;base64,${image}`;
-      // setBase64ToFileInput(imageFileInput, image)
-
-      App.DirectUploadComponent.updateImagePreview(imagePreviewUrl);
+      setBase64ToFileInput(imageFileInput, image)
     },
 
     addChangedFieldsHighlightTo: function(element) {
@@ -227,6 +221,7 @@
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
     fileInput.files = dataTransfer.files;
+    fileInput.dispatchEvent(new Event('change'));
   }
 
   function parseIframeEventData(eventData) {

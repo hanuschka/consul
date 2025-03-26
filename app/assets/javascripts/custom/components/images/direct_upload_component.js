@@ -172,8 +172,8 @@
     },
 
     toggleGeneratingPlaceholderAnimation: function(visible) {
-      $(".js-direct-image-upload .js-direct-image-upload-generating-animation")
-        .toggleClass("-visible", visible)
+      $(".js-direct-image-upload")
+        .toggleClass("-generating-image", visible)
     },
 
     initializeRemoveCachedImageLinks: function() {

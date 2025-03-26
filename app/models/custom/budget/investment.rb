@@ -14,6 +14,8 @@ class Budget
 
     scope :seen, -> { where.not(ignored_flag_at: nil) }
     scope :unseen, -> { where(ignored_flag_at: nil) }
+    scope :preselected, -> { where(preselected: true) }
+    scope :not_preselected, -> { where(preselected: false) }
 
     enum implementation_performer: { city: 0, user: 1 }
 

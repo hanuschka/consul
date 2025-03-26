@@ -286,7 +286,7 @@ de:
       questions:
         answers:
           more_info: Mehr Infos
-          save_open_answer: Antwort speichern
+          save_open_answer: Texteingabe speichern
           update_open_answer: Antwort editieren
       results:
         open_answers: Offene Antworten

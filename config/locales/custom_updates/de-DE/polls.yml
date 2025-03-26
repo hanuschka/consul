@@ -32,7 +32,7 @@ de:
         answers:
           more_info: Mehr Infos
           save_open_answer: Texteingabe speichern
-          update_open_answer: Antwort editieren
+          update_open_answer: Texteingabe editieren
       results:
         open_answers: Offene Antworten
         scoped_popup_callout: Die nachfolgende Auswertung zeigt, wie die Nutzer*innen, die für diese Antwortoption gestimmt haben, in den nachfolgenden Fragen geantwortet haben.

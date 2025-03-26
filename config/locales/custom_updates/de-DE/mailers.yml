@@ -67,7 +67,7 @@ de:
       subject: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       title: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       hi: "Hallo %{username},"
-      text1: Ihr Vorshlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
+      text1: Ihr Vorschlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
       text2: Das Ergebnis der Prüfung wird zu Beginn der nächsten Phase des %{projekt_link} veröffentlicht.
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen

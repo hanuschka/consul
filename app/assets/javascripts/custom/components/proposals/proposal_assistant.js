@@ -62,6 +62,9 @@
               params.coordinates, params.shouldScroll
             )
             break;
+          case "Consul.ResourceForm.showImageGeneratingAnimation":
+            this.showImageGeneratingAnimation()
+            break;
           case "Consul.ResourceForm.updateImage":
             this.updateImage(params.image)
             break;
@@ -179,10 +182,15 @@
       }
     },
 
+    showImageGeneratingAnimation: function() {
+      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(true)
+    },
+
     updateImage: function(image) {
       var imageFileInput = document.querySelector(".js-direct-image-upload--input")
 
       setBase64ToFileInput(imageFileInput, image)
+      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false)
     },
 
     addChangedFieldsHighlightTo: function(element) {

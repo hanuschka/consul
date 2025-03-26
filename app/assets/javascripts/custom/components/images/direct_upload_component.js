@@ -171,6 +171,11 @@
       $dataWrapper.find(".js-direct-image-upload--preview-area").addClass("-preview-set");
     },
 
+    toggleGeneratingPlaceholderAnimation: function(visible) {
+      $(".js-direct-image-upload .js-direct-image-upload-generating-animation")
+        .toggleClass("-visible", visible)
+    },
+
     initializeRemoveCachedImageLinks: function() {
       $(".js-direct-image-upload").on("click", ".remove-cached-attachment", function(event) {
         event.preventDefault();

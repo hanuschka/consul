@@ -40,6 +40,11 @@
   }
 }
 
+.direct-image-upload--inner {
+  overflow: hidden;
+  position: relative;
+}
+
 .direct-image-upload--progress-bar-wrapper {
   position: absolute;
   width: 100%;
@@ -167,5 +172,29 @@
   &:focus {
     border: none !important;
     box-shadow: none;
+  }
+}
+
+.direct-image-upload--generating-animation {
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+
+  &.-visible {
+    display: flex;
+  }
+
+  svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  rect {
+    fill: #505050;
   }
 }

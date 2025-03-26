@@ -119,11 +119,14 @@ de:
           create: "Vorschlag erstellen"
         filter: "Projekte filtern nach"
         filters:
-          not_unfeasible: Entspricht den Kriterien
-          selected: "Ausgewählt"
-          unfeasible: "Entspricht nicht den Kriterien"
-          unselected: "Nicht für die Endabstimmung ausgewählt"
-          winners: "Gewinner"
+          undecided: noch nicht definiert
+          feasible: entspricht den Kriterien
+          unfeasible: entspricht nicht den Kriterien
+          preselected: zur Prüfung zugelassen
+          not_preselected: zur Prüfung nicht zugelassen
+          selected: ausgewählt
+          unselected: nicht für die Endabstimmung ausgewählt
+          winners: Gewinner
         orders:
           random: Zufällig
           confidence_score: Am besten bewertet
@@ -200,8 +203,8 @@ de:
       heading: "Ergebnisse des Budgets"
       heading_selection_title: "Nach Gebiet"
       ballot_lines_count: Stimmen
-      hide_discarded_link: Verworfene ausblenden
-      show_all_link: Alle anzeigen
+      hide_discarded_link: Vorschläge, die nicht gewonnen haben ausblenden
+      show_all_link: Vorschläge, die nicht gewonnen haben einblenden
       price: Preis
       amount_available: VerfügbareBudgetmittel
       accepted: "Genehmigter Vorschlag: "

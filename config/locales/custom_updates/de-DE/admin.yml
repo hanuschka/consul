@@ -272,6 +272,7 @@ de:
           areas: Alte Gebiete
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen
@@ -753,6 +754,7 @@ de:
             dropdown: Dropdown
             image: Bild
             document: Dokument
+            description: Beschreibung
           update_field_button: Formularfeld aktualisieren
           add_field_button: Neues Formularfeld hinzufügen
         formular_answers:

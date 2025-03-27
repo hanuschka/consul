@@ -190,7 +190,6 @@
       var imageFileInput = document.querySelector(".js-direct-image-upload--input")
 
       setBase64ToFileInput(imageFileInput, image)
-      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false)
     },
 
     addChangedFieldsHighlightTo: function(element) {

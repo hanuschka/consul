@@ -17,6 +17,10 @@
         fileAttachArea.addEventListener("click", App.DirectUploadComponent.fileAttachAreaClick);
       });
 
+      $(".js-direct-image-upload-image-preview").each(function(_index, imagePreview) {
+        imagePreview.addEventListener("load", App.DirectUploadComponent.handleImagePreviewLoded)
+      })
+
       App.DirectUploadComponent.initializeRemoveCachedImageLinks();
     },
 
@@ -115,6 +119,10 @@
       return data;
     },
 
+    handleImagePreviewLoded: function(e) {
+      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false)
+    },
+
     clearFilename: function(data) {
       $(data.fileNameContainer).text("");
       $(data.fileNameContainer).attr("title", "");
@@ -149,26 +157,19 @@
     },
 
     setInputErrors: function(data) {
-      var errors;
-      errors = "<small class='error'>" + data.jqXHR.responseJSON.errors + "</small>";
+      var errors = "<small class='error'>" + data.jqXHR.responseJSON.errors + "</small>";
       $(data.errorContainer).append(errors);
     },
 
     setPreview: function(data) {
-      var image_preview;
-      image_preview = "<div class='image-preview'><figure><img src='" + data.result.attachment_url + '?' + Date.now() + "' class='cached-image'></figure></div>";
-      var $dataWrapper = $(data.wrapper);
+      var $imagePreview = data.wrapper.find(".js-direct-image-upload-image-preview")
 
-      if ($(data.preview).length > 0) {
-        $(data.preview).replaceWith(image_preview);
-      } else {
-        var $actionsArea = $dataWrapper.find(".js-direct-image-upload--attachment-actions");
+      $imagePreview.attr("src", data.result.attachment_url)
 
-        $(image_preview).insertBefore($actionsArea);
-        data.preview = $dataWrapper.find(".image-preview");
-      }
-
-      $dataWrapper.find(".js-direct-image-upload--preview-area").addClass("-preview-set");
+      data
+        .wrapper
+        .find(".js-direct-image-upload--preview-area")
+        .addClass("-preview-set")
     },
 
     toggleGeneratingPlaceholderAnimation: function(visible) {

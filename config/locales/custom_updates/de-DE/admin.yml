@@ -272,6 +272,7 @@ de:
           areas: Alte Gebiete
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
+          stats: Statistiken
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen
@@ -388,6 +389,7 @@ de:
               moderate: moderieren
               create_on_behalf_of: erstellen im Namen von jemanden
               get_notifications: benachrichtigt werden
+              access_graphql: GraphQL-Zugriff
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:
@@ -753,6 +755,7 @@ de:
             dropdown: Dropdown
             image: Bild
             document: Dokument
+            description: Beschreibung
           update_field_button: Formularfeld aktualisieren
           add_field_button: Neues Formularfeld hinzufügen
         formular_answers:

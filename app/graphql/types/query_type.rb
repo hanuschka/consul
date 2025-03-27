@@ -1,107 +1,108 @@
 module Types
   class QueryType < Types::BaseObject
-    field :comments, Types::CommentType.connection_type, "Returns all comments", null: false
-    field :comment, Types::CommentType, "Returns comment for ID", null: false do
-      argument :id, ID, required: true, default_value: false
+    def self.collection_and_object_by_id_fields(name, type)
+      collection_field name.to_s.pluralize.to_sym, type, "Returns all #{name.to_s.pluralize}", null: false
+      object_by_id_field name, type, "Returns #{name} for ID", null: false
     end
 
-    field :debates, Types::DebateType.connection_type, "Returns all debates", null: false
-    field :debate, Types::DebateType, "Returns debate for ID", null: false do
-      argument :id, ID, required: true, default_value: false
-    end
+    # collection_and_object_by_id_fields :budget, Types::BudgetType
+    # collection_and_object_by_id_fields :comment, Types::CommentType
+    # collection_and_object_by_id_fields :debate, Types::DebateType
+    # collection_and_object_by_id_fields :geozone, Types::GeozoneType
+    # collection_and_object_by_id_fields :milestone, Types::MilestoneType
+    collection_and_object_by_id_fields :proposal, Types::ProposalType
+    # collection_and_object_by_id_fields :proposal_notification, Types::ProposalNotificationType
+    # collection_and_object_by_id_fields :tag, Types::TagType
+    # collection_and_object_by_id_fields :user, Types::UserType
+    # collection_and_object_by_id_fields :vote, Types::VoteType
 
-    field :geozones, Types::GeozoneType.connection_type, "Returns all geozones", null: false
-    field :geozone, Types::GeozoneType, "Returns geozone for ID", null: false do
-      argument :id, ID, required: true, default_value: false
-    end
+    # def budgets
+    #   Budget.public_for_api
+    # end
 
-    field :proposals, Types::ProposalType.connection_type, "Returns all proposals", null: false
-    field :proposal, Types::ProposalType, "Returns proposal for ID", null: false do
-      argument :id, ID, required: true, default_value: false
-    end
+    # def budget(id:)
+    #   budgets.find(id)
+    # end
 
-    field :proposal_notifications, Types::ProposalNotificationType.connection_type, "Returns all proposal notifications", null: false
-    field :proposal_notification, Types::ProposalNotificationType, "Returns proposal notification for ID", null: false do
-      argument :id, ID, required: true, default_value: false
-    end
+    # def comments
+    #   Comment.public_for_api
+    # end
 
-    field :tags, Types::TagType.connection_type, "Returns all tags", null: false
-    field :tag, Types::TagType, "Returns tag for ID", null: false do
-      argument :id, ID, required: true, default_value: false
-    end
+    # def comment(id:)
+    #   comments.find(id)
+    # end
 
-    field :users, Types::UserType.connection_type, "Returns all users", null: false
-    field :user, Types::UserType, "Returns user for ID", null: false do
-      argument :id, ID, required: true, default_value: false
-    end
+    # def debates
+    #   Debate.public_for_api
+    # end
 
-    field :votes, Types::VoteType.connection_type, "Returns all votes", null: false
-    field :vote, Types::VoteType, "Returns vote for ID", null: false do
-      argument :id, ID, required: true, default_value: false
-    end
+    # def debate(id:)
+    #   debates.find(id)
+    # end
 
-    def comments
-      Comment.public_for_api
-    end
+    # def geozones
+    #   Geozone.public_for_api
+    # end
 
-    def comment(id:)
-      Comment.find(id)
-    end
+    # def geozone(id:)
+    #   geozones.find(id)
+    # end
 
-    def debates
-      Debate.public_for_api
-    end
+    # def milestones
+    #   Milestone.public_for_api
+    # end
 
-    def debate(id:)
-      Debate.find(id)
-    end
-
-    def geozones
-      Geozone.public_for_api
-    end
-
-    def geozone(id:)
-      Geozone.find(id)
-    end
+    # def milestone(id:)
+    #   milestones.find(id)
+    # end
 
     def proposals
-      Proposal.public_for_api
+      user = context[:user]
+
+      return Proposal.none if user.blank?
+      return Proposal.all.order(:id) if user.administrator?
+
+      scoped_projekts = Projekt.with_pm_permission_to("access_graphql", user.projekt_manager)
+
+      Proposal.joins(projekt_phase: :projekt).where(
+        projekt_phases: { projekt_id: scoped_projekts.pluck(:id) }
+      )
     end
 
     def proposal(id:)
-      Proposal.find(id)
+      proposals.find(id)
     end
 
-    def proposal_notifications
-      ProposalNotification.public_for_api
-    end
+    # def proposal_notifications
+    #   ProposalNotification.public_for_api
+    # end
 
-    def proposal_notification(id:)
-      ProposalNotification.find(id)
-    end
+    # def proposal_notification(id:)
+    #   proposal_notifications.find(id)
+    # end
 
-    def tags
-      Tag.public_for_api
-    end
+    # def tags
+    #   Tag.public_for_api
+    # end
 
-    def tag(id:)
-      Tag.find(id)
-    end
+    # def tag(id:)
+    #   tags.find(id)
+    # end
 
-    def users
-      User.public_for_api
-    end
+    # def users
+    #   User.public_for_api
+    # end
 
-    def user(id:)
-      User.find(id)
-    end
+    # def user(id:)
+    #   users.find(id)
+    # end
 
-    def votes
-      Vote.public_for_api
-    end
+    # def votes
+    #   Vote.public_for_api
+    # end
 
-    def vote(id:)
-      Vote.find(id)
-    end
+    # def vote(id:)
+    #   votes.find(id)
+    # end
   end
 end

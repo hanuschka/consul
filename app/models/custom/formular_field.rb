@@ -1,5 +1,5 @@
 class FormularField < ApplicationRecord
-  KINDS = %w[string textarea email date dropdown image document].freeze
+  KINDS = %w[string textarea email date dropdown image document description].freeze
 
   CUSTOM_ATTRIBUTES = %i[
     email_for_confirmation

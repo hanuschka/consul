@@ -62,7 +62,8 @@ class GraphqlController < ApplicationController
     end
 
     def user
-      token = request.headers["Authorization"]
-      token.present? ? GraphqlUser.find_by(auth_token: token).user : nil
+      return unless (token = request.headers["Authorization"]).present?
+
+      GraphqlUser.find_by(auth_token: token)&.user
     end
 end

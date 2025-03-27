@@ -1,7 +1,7 @@
 <%= form_for [:admin, @newsletter] do |f| %>
   <%= render "shared/errors", resource: @newsletter %>
 
-  <%= f.select :recipient_group_id, options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }), prompt: t("custom.shared.select") %>
+  <%= f.select :recipient_group_id, options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }, f.object.recipient_group_id), prompt: t("custom.shared.select") %>
   <%= f.text_field :from, value: (f.object.from || Setting['mailer_from_address'] ) %>
   <%= f.text_field :subject %>
   <%= f.text_field :title %>

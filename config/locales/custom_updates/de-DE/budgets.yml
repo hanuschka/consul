@@ -18,10 +18,6 @@ de:
             other: "Sie können bis zu <span>%{count}</span> Stimmen abgeben"
     investments:
       index:
-        filters:
-          all: Alle
-          feasible: Entspricht den Kriterien
-          undecided: Noch nicht definiert
         orders:
           random: Zufällig
           ballot_line_weight: Aktuelle Stimmenverteilung
@@ -100,8 +96,8 @@ de:
           line_weight_label: "Deine Stimmenanzahl"
           unverified_note: "Ihre Daten werden manuell überprüft. Dies kann 1-2 Werktage in Anspruch nehmen. Danach werden Ihre Stimmen freigegeben."
           unverified_note_no_data_html: "Bitte %{verify_account}."
-          unfeasible_html: "Dieser Vorschlag entspricht <strong>nicht</strong> den Kriterien."
-          feasible_html: "Dieser Vorschlag entspricht den Kriterien."
+          unfeasible_html: "Dieser Vorschlag entspricht <strong>nicht</strong> den Kriterien"
+          feasible_html: "Dieser Vorschlag entspricht den Kriterien"
         show:
           callouts:
             publishing_prices:

@@ -177,7 +177,7 @@ module ProjektPhaseAdminActions
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params)
+    map_location.update!(map_location_params.except(:id))
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")

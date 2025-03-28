@@ -27,7 +27,7 @@ class ApiClientsController < ApplicationController
       DtApi.new.connect(
         name: Setting["org_name"],
         platform_url: Setting["url"],
-        auth_token: api_client.auth_token,
+        consul_auth_token: api_client.consul_auth_token,
         latitude: Setting["map.latitude"],
         longitude: Setting["map.longitude"],
         zoom: Setting["map.zoom"],

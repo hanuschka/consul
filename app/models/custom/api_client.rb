@@ -1,6 +1,6 @@
 class ApiClient < ApplicationRecord
   enum registration_status: [:registration_in_progress, :registered]
-  has_secure_token :auth_token
+  has_secure_token :consul_auth_token
 
   before_create do
     self.registration_status = :registration_in_progress
@@ -13,13 +13,13 @@ class ApiClient < ApplicationRecord
   def self.active_dt?
     client = dt
 
-    client.present? && client.service_api_token.present?
+    client.present? && client.service_auth_token.present?
   end
 
-  def mark_as_registered!(service_api_token)
+  def mark_as_registered!(service_auth_token)
     update!(
       registration_status: :registered,
-      service_api_token: service_api_token
+      service_auth_token: service_auth_token
     )
   end
 end

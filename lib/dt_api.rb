@@ -45,7 +45,7 @@ class DtApi
     self.class.post(
       url,
       multipart: multipart,
-      **base_headers,
+      headers: base_headers,
       **auth_settings,
       body: body
     )
@@ -55,7 +55,7 @@ class DtApi
     self.class.patch(
       url,
       multipart: multipart,
-      **base_headers,
+      headers: base_headers,
       **auth_settings,
       body: body
     )
@@ -64,22 +64,21 @@ class DtApi
   def delete_with_auth(url)
     self.class.delete(
       url,
-      **base_headers,
+      headers: base_headers,
       **auth_settings
     )
   end
 
   def base_headers
+    headers = {
+      Authorization: "Bearer #{@api_token}"
+    }
+
     if Rails.env.development?
-      {
-        headers: {
-          "X-Consul-Development-Domain" => Rails.application.secrets.server_name,
-          Authorization: "Bearer #{@api_token}"
-        }
-      }
-    else
-      {}
+      headers["X-Consul-Development-Domain"] = Rails.application.secrets.server_name
     end
+
+    headers
   end
 
   def auth_settings

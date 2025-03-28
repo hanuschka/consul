@@ -19,7 +19,7 @@ class Api::BaseController < ActionController::API
   end
 
   def find_api_client
-    @api_client = ApiClient.find_by!(auth_token: bearer_token)
+    @api_client = ApiClient.find_by!(consul_auth_token: bearer_token)
 
     if @api_client.nil?
       raise UnauthentificatedError

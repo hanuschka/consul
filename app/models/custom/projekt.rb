@@ -676,6 +676,19 @@ class Projekt < ApplicationRecord
       .ids.uniq
   end
 
+  def page_content
+    if new_content_block_mode?
+      content_blocks_content =
+        content_blocks
+          .map(&:body)
+          .reduce(&:concat)
+
+      ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
+    else
+      page.content
+    end
+  end
+
   private
 
     def create_corresponding_page

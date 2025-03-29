@@ -1,6 +1,13 @@
 <% if Setting.new_design_enabled? %>
 
   <main class="user-resources-form <%= " -no-image" unless projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>">
+    <% if true %>
+      <%= render Dt::VoiceAssistantComponent.new(
+        assistant_codename: "budget_proposal_voice_assistant",
+        projekt_phase: investment.projekt_phase
+      ) %>
+    <% end %>
+
     <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form" }) do |f| %>
       <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 

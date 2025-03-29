@@ -1,15 +1,9 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %>">
-  <% if params[:voice_assistant].present? %>
-    <div class="voice-assistant-iframe-wrapper">
-      <iframe
-        src="<%= assistant_iframe_path %>"
-        frameborder="0"
-        allow="microphone"
-        class="voice-assistant-iframe js-voice-assistant-iframe"
-        data-initial-data="<%= assistant_initial_data %>"
-        >
-      </iframe>
-    </div>
+  <% if true %>
+    <%= render Dt::VoiceAssistantComponent.new(
+      assistant_codename: "proposal_voice_assistant",
+      projekt_phase: projekt_phase
+    ) %>
   <% end %>
 
   <%= translatable_form_for(resource, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>

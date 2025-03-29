@@ -42,7 +42,7 @@
     <div id="responsive-menu" class='header--responsive-menu not-print'>
       <div class="subnavigation">
 
-        <% if current_user.present? %>
+        <% if current_user.present? && !current_user.guest? %>
           <div class="header--responsive-menu--user">
             <div class="header--responsive-menu--user-avatar">
               <% if current_user&.image&.attached? %>
@@ -55,7 +55,7 @@
               <%= current_user.name %>
             </div>
             <%= link_to("Profil anzeigen", user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
-            <%= link_to t("layouts.header.administration"), admin_root_path %>
+            <%= link_to t("layouts.header.administration"), admin_root_path if current_user.administrator? %>
           </div>
         <% end %>
 

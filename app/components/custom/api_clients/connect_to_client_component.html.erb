@@ -1,5 +1,5 @@
 <div class="api-clients-connect-to-client">
-  <% if current_user.on_dt? %>
+  <% if show_navigate_to_dt_link? %>
     <%= link_to("Zum Consul Projekt Studio wechseln", Dt.url + "/navigate/from_consul", class: 'button -blue') %>
   <% else %>
     <%= button_to("Connect to DemokratieToday AI", connect_api_clients_path, class: 'button') %>

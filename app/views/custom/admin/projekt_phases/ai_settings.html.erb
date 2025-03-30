@@ -17,6 +17,7 @@
 
 <%= form_with url: namespace_projekt_phase_path(action: "update_ai_settings"), method: :patch, scope: :projekt_phase, id: "phase-edit-form" do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
+  <%= hidden_field_tag :assistant_codename, @assistant_codename %>
 
   <div class="row margin-bottom">
     <div class="column large-8 small-12">

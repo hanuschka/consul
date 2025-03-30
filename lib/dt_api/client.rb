@@ -13,9 +13,10 @@ class DtApi::Client
     )
   end
 
-  def get_with_auth(url)
+  def get_with_auth(url, query: nil)
     self.class.get(
       url,
+      query: query,
       **base_headers,
       **auth_settings,
     )

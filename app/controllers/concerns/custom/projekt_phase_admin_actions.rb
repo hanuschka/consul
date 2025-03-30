@@ -385,12 +385,20 @@ module ProjektPhaseAdminActions
   def ai_settings
     authorize!(:ai_settings, @projekt_phase)
 
+    @assistant_codename = "proposal_voice_assistant"
+
     dt_api = DtApi::Client.new
 
-    @ai_assistant_config =
+    ai_assistant_config_response =
       dt_api
         .ai_assistant_configs
-        .get(codename: "proposal_voice_assistant")
+        .get(
+          codename: @assistant_codename,
+          consul_projekt_phase_id: @projekt_phase.id
+        )
+
+    @ai_assistant_config =
+      ai_assistant_config_response
         .fetch("client_ai_assistant_config")
 
     render "custom/admin/projekt_phases/ai_settings"
@@ -405,8 +413,13 @@ module ProjektPhaseAdminActions
       dt_api
         .ai_assistant_configs
         .update(
-          codename: "proposal_voice_assistant",
-          params: params[:projekt_phase].as_json
+          codename: params[:assistant_codename],
+          consul_projekt_phase_id: @projekt_phase.id,
+          params: {
+            questions: params[:projekt_phase][:questions],
+            criteria: params[:projekt_phase][:criteria],
+            parting_words: params[:projekt_phase][:parting_words]
+          }
         )
 
     redirect_to action: "ai_settings"

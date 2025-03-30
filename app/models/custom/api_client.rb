@@ -7,7 +7,7 @@ class ApiClient < ApplicationRecord
   end
 
   def self.dt
-    registered.find_by(name: "DT")
+    find_by(name: "DT")
   end
 
   def self.active_dt?

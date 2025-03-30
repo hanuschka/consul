@@ -4,7 +4,7 @@ class DtApi
   base_uri "#{Dt.url}/api"
 
   def initialize(api_token = nil)
-    @api_token = api_token
+    @api_token = api_token || ApiClient&.dt&.service_auth_token
   end
 
   def connect(**params)

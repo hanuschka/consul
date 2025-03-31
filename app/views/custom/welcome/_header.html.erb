@@ -3,7 +3,7 @@
 
 <% if header_image_attachment&.attached? %>
   <style>
-      <% image_variant = header_image_attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 85 }, strip: true, format: 'jpeg') %>
+      <% image_variant = header_image_attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
 
       .home-page .homepage-image-header {
         background-image: url("<%= polymorphic_path(image_variant) %>");
@@ -28,7 +28,7 @@
 %>
 
 <% if mobile_header_attachment_to_use&.attached? %>
-  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [750, nil], saver: { quality: 80 }, strip: true, format: 'jpeg') %>
+  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [nil, 550], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
 
   <style>
     @media(max-width: 750px) {

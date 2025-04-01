@@ -91,4 +91,7 @@ Rails.application.configure do
   ENV["RAILS_DEV_HOSTS"]&.split(",")&.each do |host|
     config.hosts << host
   end
+
+  require_relative "../../lib/middleware/vc_maps_middleware.rb"
+  config.middleware.insert_before 0, VcMapsMiddleware
 end

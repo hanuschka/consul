@@ -6,9 +6,10 @@ class VcMapsMiddleware
   def call(env)
     req = Rack::Request.new(env)
 
-    if req.path.start_with?("/datasource-data")
-      Rails.logger.info "Proxying to https://siegburg.virtualcitymap.de#{req.path}"
-      return [302, { "Location" => "https://siegburg.virtualcitymap.de#{req.path}" }, []]
+    if req.path.match?(%r{/datasource-data/})
+      new_path = req.path.sub(%r{.*?/datasource-data/}, "/datasource-data/")
+      Rails.logger.info "Redirecting to https://siegburg.virtualcitymap.de#{new_path}"
+      return [302, { "Location" => "https://siegburg.virtualcitymap.de#{new_path}" }, []]
     end
 
     @app.call(env)

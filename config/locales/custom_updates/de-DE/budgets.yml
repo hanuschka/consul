@@ -18,10 +18,6 @@ de:
             other: "Sie können bis zu <span>%{count}</span> Stimmen abgeben"
     investments:
       index:
-        filters:
-          all: Alle
-          feasible: Entspricht den Kriterien
-          undecided: Noch nicht definiert
         orders:
           random: Zufällig
           ballot_line_weight: Aktuelle Stimmenverteilung

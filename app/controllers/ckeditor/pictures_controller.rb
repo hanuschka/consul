@@ -13,7 +13,7 @@ class Ckeditor::PicturesController < ApplicationController
         created_at: picture.created_at.strftime("%d.%m.%Y")
       )
     else
-      render json: { error: { message: picture.errors.messages.values.flatten.join(", ") }}
+      render json: { error: { message: picture.errors.messages.values.flatten.join(", ") }}, status: :unprocessable_entity
     end
   end
 

@@ -1,5 +1,4 @@
 <% if @custom_page.landing? %>
-  <% provide(:hide_navigation_menu, @custom_page.landing_hide_all_top_nav_links) %>
   <%= render "pages/landing_page_content" %>
 <% else %>
   <%= content_for :body_class, "custom-page" %>

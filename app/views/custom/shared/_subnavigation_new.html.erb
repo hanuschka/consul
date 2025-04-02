@@ -1,7 +1,14 @@
 <ul class="main-menu">
   <div class="content-items">
-    <% unless content_for(:hide_navigation_menu) %>
-      <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement } if Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page %>
+
+    <% if @ui_hide_topbar_links && @ui_show_projekts_overview %>
+      <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement } %>
+    <% end %>
+
+    <% unless @ui_hide_topbar_links %>
+      <% if (Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page) || @custom_page&.landing_show_projekts_overview? %>
+        <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement }  %>
+      <% end %>
       <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
       <%= raw content_block("subnavigation_left_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
       <%= render partial: 'shared/subnavigation_landing_pages', locals: { placement: placement } unless launch_page %>

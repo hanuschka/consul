@@ -3,15 +3,10 @@ class Ckeditor::Asset < ApplicationRecord
   include Rails.application.routes.url_helpers
 
   EDITORS_WITH_FULL_URL = %w[newsletter_body].freeze
-  ALLOWED_CONTENT_TYPES = %w[].freeze
-  MAX_FILE_SIZE = 2.megabytes
 
   self.table_name = "ckeditor_assets"
 
   has_one_attached :storage_data
-
-  validates :storage_data, file_content_type: { allow: ALLOWED_CONTENT_TYPES },
-                           file_size: { less_than: MAX_FILE_SIZE }
 
   def self.search(terms)
     pg_search(terms)

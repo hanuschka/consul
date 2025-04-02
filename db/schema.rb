@@ -2503,6 +2503,8 @@ ActiveRecord::Schema.define(version: 2025_03_27_103950) do
     t.boolean "landing_hide_title_and_subtitle", default: false
     t.boolean "landing", default: false
     t.integer "landing_nav_position"
+    t.boolean "landing_show_projekts_overview", default: true
+    t.boolean "landing_site_logo_not_clickable", default: false
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end

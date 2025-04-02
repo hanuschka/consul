@@ -15,13 +15,16 @@
         </span>
 
         <div class="top-bar--title">
-          <%= link_to root_path do %>
-            <% if action_name == "machmit_jugend" %>
-              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
-              <%= image_tag(image_path_for("logo_header_weiss.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
-            <% else %>
-              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
-              <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
+          <% site_logo_images = capture do %>
+            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
+            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
+          <% end %>
+
+          <% if @ui_site_logo_not_clickable %>
+            <%= site_logo_images %>
+          <% else %>
+            <%= link_to root_path do %>
+              <%= site_logo_images %>
             <% end %>
           <% end %>
         </div>

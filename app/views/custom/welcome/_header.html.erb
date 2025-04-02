@@ -28,7 +28,7 @@
 %>
 
 <% if mobile_header_attachment_to_use&.attached? %>
-  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [750, nil], saver: { quality: 80 }, strip: true, format: 'jpeg') %>
+  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [nil, 550], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
 
   <style>
     @media(max-width: 750px) {

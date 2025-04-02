@@ -308,7 +308,12 @@ class PagesController < ApplicationController
   def set_event_phase_footer_tab_variables
     @valid_filters = %w[all incoming past]
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
-    @projekt_events = @projekt_phase.projekt_events.page(params[:page]).send("sort_by_#{@current_filter}")
+    order = @projekt_phase.feature?("general.reverse_order_for_incoming_events") ? :desc : :asc
+
+    @projekt_events = @projekt_phase.projekt_events
+                                    .send("sort_by_#{@current_filter}")
+                                    .reorder(datetime: order)
+                                    .page(params[:page])
   end
 
   def set_question_phase_footer_tab_variables

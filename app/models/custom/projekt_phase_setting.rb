@@ -149,6 +149,12 @@ class ProjektPhaseSetting < ApplicationRecord
           }
         },
 
+        "ProjektPhase::EventPhase" => {
+          base: {
+            "feature.general.reverse_order_for_incoming_events": ""
+          }
+        },
+
         "ProjektPhase::NewsfeedPhase" => {
           base: {
             "option.general.newsfeed_id": "",

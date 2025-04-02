@@ -3,7 +3,7 @@
 
 <% if header_image_attachment&.attached? %>
   <style>
-      <% image_variant = header_image_attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
+      <% image_variant = header_image_attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 85 }, strip: true, format: 'jpeg') %>
 
       .home-page .homepage-image-header {
         background-image: url("<%= polymorphic_path(image_variant) %>");

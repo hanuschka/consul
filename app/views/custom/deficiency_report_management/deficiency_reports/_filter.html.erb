@@ -40,7 +40,7 @@
         <%= label_tag :responsible, t("custom.admin.deficiency_reports.index.responsible_name") %>
         <%= select_tag :responsible,
           options_for_select(
-            (DeficiencyReport::Officer.all + DeficiencyReport::OfficerGroup.all).map { |r| [r.name, "#{r.class.name}_#{r.id}"] }, params[:responsible]
+            deficiency_report_all_responsible_sorted.map { |r| [r.name, "#{r.class.name}_#{r.id}"] }, params[:responsible]
           ),
           prompt: t("custom.shared.select") %>
       </div>

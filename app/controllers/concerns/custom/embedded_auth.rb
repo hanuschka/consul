@@ -15,7 +15,7 @@ module EmbeddedAuth
 
     def set_iframe_content_security_policy
       response.headers["Content-Security-Policy"] =
-        "frame-ancestors #{Rails.application.secrets.dt[:url]}"
+        "frame-ancestors #{Dt.url}"
     end
 
     def embedded?

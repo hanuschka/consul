@@ -152,7 +152,6 @@ button {
 
       &:hover  {
         background: rgba($brand, 0.1);
-        color: $brand;
       }
       &:focus, &:active {
         background: rgba($brand, 0.3);
@@ -194,8 +193,21 @@ button {
     background-color: antiquewhite;
   }
 
-  .open-answer {
-    background-color: #207868;
+  .poll-open-answer-form {
+    .open-answer {
+      border: 1px solid #003A71;
+      color: #003A71;
+    }
+
+    .open-answer.answered {
+      border-color: #207868;
+      background: #207868;
+      color: #fff;
+    }
+
+    .open-answer {
+      min-width: auto;
+    }
   }
 
   @media(min-width: 40em) {

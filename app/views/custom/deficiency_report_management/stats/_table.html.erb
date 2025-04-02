@@ -1,0 +1,28 @@
+<table>
+  <thead>
+    <tr>
+      <th style="width:20%"><%= title %></th>
+      <th>Gesamt</th>
+      <th>Dieses Jahr</th>
+      <th>Letztes Jahr</th>
+      <th>Diesen Monat</th>
+      <th>Letzten Monat</th>
+      <th>Diese Woche</th>
+      <th>Diese Woche</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- groups.each do |group| %>
+      <tr>
+        <td><%= group[0]&.name || "Ohne Status" %></td>
+        <td><%= group[1].count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.prev_year.beginning_of_year..Time.zone.now.prev_year.end_of_year).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.prev_month.beginning_of_month..Time.zone.now.prev_month.end_of_month).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).count %></td>
+        <td><%= group[1].where(created_at: Time.zone.now.prev_week.beginning_of_week..Time.zone.now.prev_week.end_of_week).count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

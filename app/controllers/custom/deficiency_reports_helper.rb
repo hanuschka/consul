@@ -46,4 +46,9 @@ module DeficiencyReportsHelper
   def deficiency_reports_secondary_view
     deficiency_reports_current_view == "default" ? "minimal" : "default"
   end
+
+  def deficiency_report_all_responsible_sorted
+    DeficiencyReport::OfficerGroup.all.order(:name) +
+      DeficiencyReport::Officer.joins(:user).order("users.username ASC")
+  end
 end

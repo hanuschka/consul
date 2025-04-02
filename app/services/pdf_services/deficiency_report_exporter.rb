@@ -11,6 +11,11 @@ module PdfServices
         pdf.move_down 10
 
         pdf.formatted_text [
+          { text: "ID: ", size: 10, styles: [:bold] },
+          { text: @deficiency_report.id.to_s, size: 10 }
+        ]
+
+        pdf.formatted_text [
           { text: "#{I18n.t("custom.admin.deficiency_reports.show.created_at")}: ", size: 10, styles: [:bold] },
           { text: @deficiency_report.created_at.strftime("%d %b %Y"), size: 10 }
         ]

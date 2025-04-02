@@ -22,17 +22,4 @@ class WelcomeController < ApplicationController
   end
 
   def latest_activity; end
-
-  def machmit_jugend
-    @active_projekts = Projekt.show_in_homepage
-      .joins(:tags).where(tags: { name: "Jugendbeteiligung" })
-      .index_order_underway
-      .select { |p| p.visible_for?(current_user) }
-      .sort_by(&:created_at).reverse
-    @expired_projekts = Projekt.show_in_homepage
-      .joins(:tags).where(tags: { name: "Jugendbeteiligung" })
-      .index_order_expired
-      .select { |p| p.visible_for?(current_user) }
-      .sort_by(&:created_at).reverse
-  end
 end

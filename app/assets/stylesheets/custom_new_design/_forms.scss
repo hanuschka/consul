@@ -125,6 +125,15 @@
       }
     }
   }
+
+  form select {
+    color: #0f0f0f;
+    padding-left: 15px;
+
+    &:focus {
+      border: 1px solid #cccccc;
+    }
+  }
 }
 
 form .checkbox-label {

@@ -40,13 +40,10 @@
             this.expandAssistantIframe();
             break;
           case "Consul.ResourceForm.updateTitle":
-            this.updateProposalTitle(params.value);
+            this.updateTitle(params.value);
             break;
           case "Consul.ResourceForm.updateDescription":
-            this.updateProposalDescription(params.value);
-            break;
-          case "Consul.ResourceForm.updateDescription":
-            this.updateProposalDescription(params.value);
+            this.updateDescription(params.value);
             break;
           case "Consul.ResourceForm.selectLabels":
             this.toggleLabels(params.label_ids, true, params.shouldScroll)
@@ -57,6 +54,12 @@
           case "Consul.ResourceForm.selectSentiment":
             this.selectSentiment(params.sentiment_id, params.shouldScroll)
             break;
+          case "Consul.ResourceForm.updateImage":
+            this.updateImage(params.image)
+            break;
+          case "Consul.ResourceForm.selectCategory":
+            this.selectCategory(params.categoryId)
+            break;
           case "Consul.ResourceForm.updateLocation":
             this.updateMapLocation(
               params.coordinates, params.shouldScroll
@@ -64,9 +67,6 @@
             break;
           case "Consul.ResourceForm.showImageGeneratingAnimation":
             this.showImageGeneratingAnimation()
-            break;
-          case "Consul.ResourceForm.updateImage":
-            this.updateImage(params.image)
             break;
         }
       }
@@ -85,11 +85,11 @@
     },
 
     updateProposal: function(params) {
-      this.updateProposalTitle(params.title, false)
-      this.updateProposalDescription(params.description, false)
+      this.updateTitle(params.title, false)
+      this.updateDescription(params.description, false)
     },
 
-    updateProposalTitle: function(title, scroll) {
+    updateTitle: function(title, scroll) {
       var scroll = scroll || true;
 
       var titleElement = document.querySelector(
@@ -107,10 +107,10 @@
       this.addChangedFieldsHighlightTo(bannerElement)
     },
 
-    updateProposalDescription: function(description, scroll) {
+    updateDescription: function(description, scroll) {
       var scroll = scroll || true;
 
-      var editor = window.CKeditorInstancesGlobal["proposal_translations_attributes_0_description"]
+      var editor = window.CKeditorInstancesGlobal["userResourceFromEditor"]
       editor.setData(description)
 
       if (scroll) {
@@ -122,28 +122,28 @@
       this.addChangedFieldsHighlightTo(editorContent)
     },
 
+    selectCategory(categoryId, shouldScroll) {
+      var categorySelectElement = document.querySelector(".js-user-resource-select-category")
+
+      categorySelectElement.value = categoryId
+
+      this.highlightAndScrollToContentCard(categorySelectElement, shouldScroll)
+    },
+
     toggleLabels: function(labelIds, checked, shouldScroll) {
       if (labelIds && labelIds.length > 0) {
-        labelIds.forEach(function(labelId) {
-          var labelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
+        var recentLabelElements;
 
-          labelElements.forEach(function(labelElement) {
+        labelIds.forEach(function(labelId) {
+          recentLabelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
+
+          recentLabelElements.forEach(function(labelElement) {
             // labelElement.control.checked = checked;
             labelElement.click()
           })
         })
 
-        var labelsSection = document.querySelector(".js-sidebar-labels-section")
-
-        if (labelsSection) {
-          this.addChangedFieldsHighlightTo(labelsSection)
-
-          if (shouldScroll) {
-            labelsSection.scrollIntoView({
-              block: "center", inline: "nearest"
-            })
-          }
-        }
+        this.highlightAndScrollToContentCard(Array.from(recentLabelElements)[0], shouldScroll)
       }
     },
 
@@ -154,16 +154,7 @@
 
         sentimentElement.click()
 
-        var sentimentsSection = document.querySelector(".js-sidebar-sentiments-section")
-
-        if (sentimentsSection) {
-          this.addChangedFieldsHighlightTo(sentimentsSection)
-          if (shouldScroll) {
-            sentimentsSection.scrollIntoView({
-              block: "center", inline: "nearest"
-            })
-          }
-        }
+        this.highlightAndScrollToContentCard(sentimentElement, shouldScroll)
       }
     },
 
@@ -182,14 +173,27 @@
       }
     },
 
-    showImageGeneratingAnimation: function() {
-      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(true)
-    },
-
     updateImage: function(image) {
       var imageFileInput = document.querySelector(".js-direct-image-upload--input")
 
       setBase64ToFileInput(imageFileInput, image)
+    },
+
+    showImageGeneratingAnimation: function() {
+      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(true)
+    },
+
+    highlightAndScrollToContentCard: function(element, shouldScroll) {
+      var section = element.closest(".js-sidebar-card")
+
+      if (section) {
+        this.addChangedFieldsHighlightTo(section)
+        if (shouldScroll) {
+          section.scrollIntoView({
+            block: "center", inline: "nearest"
+          })
+        }
+      }
     },
 
     addChangedFieldsHighlightTo: function(element) {

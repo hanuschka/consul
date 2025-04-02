@@ -3,9 +3,10 @@ class Dt::VoiceAssistantComponent < ApplicationComponent
 
   attr_reader :assistant_codename, :projekt_phase
 
-  def initialize(assistant_codename:, projekt_phase:)
+  def initialize(assistant_codename:, projekt_phase: nil, custom_data: {})
     @assistant_codename = assistant_codename
     @projekt_phase = projekt_phase
+    @custom_data = custom_data
   end
 
   def assistant_iframe_path
@@ -13,6 +14,8 @@ class Dt::VoiceAssistantComponent < ApplicationComponent
 
     uri = URI(base_url)
     params_hash = {
+      domain: Rails.application.secrets.server_name,
+      consul_projekt_phase_id: @projekt_phase&.id,
       type: params[:voice_assistant],
       locale: I18n.locale,
       start_with_greeting: params[:start_with_greeting],
@@ -28,32 +31,40 @@ class Dt::VoiceAssistantComponent < ApplicationComponent
   end
 
   def assistant_initial_data
-    data = {
-      projekt: {
-        title: projekt_phase.projekt.page.title,
-        page_content: projekt_phase.projekt.page_content,
-        start_date: projekt_phase.projekt.total_duration_start,
-        end_date: projekt_phase.projekt.total_duration_end
-      },
-      projekt_phase: {
-        start_date: projekt_phase.start_date,
-        end_date: projekt_phase.end_date
-      }
-    }
+    data = {}
 
-    if show_labels_selector? && projekt_phase.projekt_labels.present?
-      data[:projekt_phase][:labels] =
-        projekt_phase
+    if projekt_phase.present?
+      data.merge!({
+        projekt: {
+          title: projekt_phase.projekt.page.title,
+          page_content: projekt_phase.projekt.page_content,
+          start_date: projekt_phase.projekt.total_duration_start,
+          end_date: projekt_phase.projekt.total_duration_end
+        },
+        projekt_phase: {
+          start_date: projekt_phase.start_date,
+          end_date: projekt_phase.end_date
+        }
+      })
+
+      if show_labels_selector? && projekt_phase.projekt_labels.present?
+        data[:projekt_phase][:labels] =
+          projekt_phase
           .projekt_labels
           .as_json(only: [:id], methods: [:name])
-    end
+      end
 
-    if show_sentiments_selector? && projekt_phase.sentiments.present?
-      data[:projekt_phase][:sentiments] =
-        projekt_phase
+      if show_sentiments_selector? && projekt_phase.sentiments.present?
+        data[:projekt_phase][:sentiments] =
+          projekt_phase
           .sentiments
           .as_json(only: [:id, :color], methods: [:name])
-          # .as_json(only: [:id], methods: [:name])
+        # .as_json(only: [:id], methods: [:name])
+      end
+    end
+
+    if @custom_data.present?
+      data.merge!(@custom_data)
     end
 
     data.to_json

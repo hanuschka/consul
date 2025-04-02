@@ -5,14 +5,16 @@ class DtApi::Resources::ClientAiAssistantConfigs
     @client = client
   end
 
-  def update(codename:, consul_projekt_phase_id:, params:)
+  def update(codename:, consul_projekt_phase_id: nil, params:)
     @client.patch_with_auth(
       BASE_PATH + "/#{codename}",
       body: { consul_projekt_phase_id:, client_ai_assistant_config: params }
     )
   end
 
-  def get(codename:, consul_projekt_phase_id:)
-    @client.get_with_auth(BASE_PATH + "/#{codename}", query: { consul_projekt_phase_id: })
+  def get(codename:, consul_projekt_phase_id: nil)
+    @client.get_with_auth(BASE_PATH + "/#{codename}",
+      query: { consul_projekt_phase_id: }
+    )
   end
 end

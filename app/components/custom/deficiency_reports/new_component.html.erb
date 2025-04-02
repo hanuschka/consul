@@ -1,6 +1,15 @@
 <% if Setting.new_design_enabled? %>
 
   <main class="user-resources-form <%= " -no-image" unless feature?(:allow_images) %>">
+    <% if true %>
+      <%= render Dt::VoiceAssistantComponent.new(
+        assistant_codename: "deficiency_report_voice_assistant",
+        custom_data: {
+          categories: categories_serialized
+        }
+      ) %>
+    <% end %>
+
     <%= translatable_form_for(deficiency_report, html: { class: "deficiency-report-form" }) do |f| %>
       <%= back_link_to(deficiency_reports_path) %>
 
@@ -34,7 +43,7 @@
           <%= f.select :deficiency_report_category_id,
             DeficiencyReport::Category.all.map { |category| [category.name, category.id, category.warning_text.present? ? { "data-warning-popup" => dom_id(category, :warning_popup) } : {}] },
             { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false },
-            { onChange: "var warningPopupId = this.options[this.selectedIndex].getAttribute('data-warning-popup'); if (warningPopupId) { $('#' + warningPopupId).foundation('open'); }" } %>
+            { class: "js-user-resource-select-category", onChange: "var warningPopupId = this.options[this.selectedIndex].getAttribute('data-warning-popup'); if (warningPopupId) { $('#' + warningPopupId).foundation('open'); }" } %>
 
         <% end %>
         </div>
@@ -74,7 +83,7 @@
                 <%= translations_form.text_area :title,
                   data: suggest_data(deficiency_report),
                   label: false,
-                  class: "user-resources-form--banner-editor-title",
+                  class: "user-resources-form--banner-editor-title js-user-resource-form-title",
                   placeholder: t("custom.deficiency_reports.form.title_placeholder"),
                   autocomplete: "off" %>
               </div>
@@ -95,7 +104,7 @@
               label: false,
               value: AdminWYSIWYGSanitizer.new.sanitize(deficiency_report.description),
               placeholder: t("custom.deficiency_reports.form.description_placeholder"),
-              class: "html-area #{ck_editor_class(current_user)}" %>
+              class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description" %>
           <% end %>
 
           <div class="new-card" id='map-container'>

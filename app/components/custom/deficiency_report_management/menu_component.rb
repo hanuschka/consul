@@ -15,7 +15,8 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
       official_answer_templates_link,
       districts_link,
       officer_groups_link,
-      stats_link
+      stats_link,
+      ai_settings_link
     ].compact
   end
 
@@ -104,6 +105,14 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
         t("custom.admin.menu.deficiency_reports.stats"),
         deficiency_report_management_stats_path,
         controller_name == "stats"
+      ]
+    end
+
+    def ai_settings_link
+      [
+        t("custom.admin.menu.deficiency_reports.ai_settings"),
+        deficiency_report_management_ai_settings_path,
+        controller_name == "ai_settings"
       ]
     end
 end

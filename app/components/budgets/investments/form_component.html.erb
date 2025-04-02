@@ -34,7 +34,7 @@
                 <%= translations_form.text_area :title,
                   data: suggest_data(investment),
                   label: false,
-                  class: "user-resources-form--banner-editor-title",
+                  class: "user-resources-form--banner-editor-title js-user-resource-form-title",
                   placeholder: investment.projekt_phase&.resource_form_title_hint.presence || t("custom.budgets.investments.form.title_placeholder"),
                   autocomplete: "off" %>
               </div>
@@ -55,7 +55,7 @@
               value: AdminWYSIWYGSanitizer.new.sanitize(investment.description),
               label: false,
               placeholder: t("custom.budgets.investments.form.description_placeholder"),
-              class: "html-area #{ck_editor_class(current_user)}" %>
+              class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description" %>
           <% end %>
 
           <% if projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
@@ -118,7 +118,7 @@
                   <%= f.collection_check_boxes :projekt_label_ids, investment.projekt_phase.projekt_labels, :id, :name do |cb| %>
                     <%= cb.check_box %>
                     <% iconn = content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") %>
-                    <%= cb.label(id: dom_id(cb.object), class: "projekt-label") { iconn + cb.text } %>
+                    <%= cb.label(id: dom_id(cb.object), class: "projekt-label js-projekt-label", data: { "label-id" => cb.object.id }) { iconn + cb.text } %>
                   <% end %>
                 </div>
               </div>
@@ -143,7 +143,7 @@
                   <%= f.collection_radio_buttons :sentiment_id, investment.projekt_phase.sentiments, :id, :name, { include_hidden: false } do |rb| %>
                     <%= rb.radio_button %>
                     <% button_styles = "border-color:#{rb.object.color};background-color:#{rb.object.color};color:#{pick_text_color(rb.object.color)}" %>
-                    <%= rb.label(id: dom_id(rb.object), class: "sentiment", data: { "sentiment-color" =>  rb.object.color }, style: button_styles) { rb.text } %>
+                    <%= rb.label(id: dom_id(rb.object), class: "sentiment js-projekt-phase-sentiment", data: { "sentiment-id" => rb.object.id, "sentiment-color" =>  rb.object.color }, style: button_styles) { rb.text } %>
                   <% end %>
                 </div>
               </div>

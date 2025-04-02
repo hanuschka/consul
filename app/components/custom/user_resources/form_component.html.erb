@@ -148,7 +148,7 @@
             maxlength: max_description_lenght,
             label: false,
             placeholder: descriotion_placeholder,
-            class: "html-area #{helpers.ck_editor_class(current_user)}" %>
+            class: "html-area #{helpers.ck_editor_class(current_user)} js-user-resource-form-description" %>
         <% end %>
 
         <% if resource.errors[:description].any? %>

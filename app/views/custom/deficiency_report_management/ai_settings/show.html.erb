@@ -1,0 +1,62 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("custom.admin.deficiency_reports.settings.index.title") %>
+<% end %>
+
+<div class="row">
+  <div class="column">
+    <h2>
+      <%= t("custom.admin.deficiency_reports.ai_settings.page_title") %>
+    </h2>
+  </div>
+</div>
+
+<%= form_with url: deficiency_report_management_ai_settings_path, method: :patch  do |f| %>
+  <%= hidden_field_tag :assistant_codename, @assistant_codename %>
+
+  <div class="row margin-bottom">
+    <div class="column large-8 small-12">
+      <%= f.text_area(
+        :questions,
+        label: t("custom.admin.deficiency_reports.ai_settings.questions"),
+        placeholder: @ai_assistant_config["default_questions"],
+        value: @ai_assistant_config["questions"],
+        rows: 5,
+        style: "field-sizing: content"
+      ) %>
+    </div>
+  </div>
+
+  <div class="row margin-bottom">
+    <div class="column large-8 small-12">
+      <%= f.text_area(
+        :criteria,
+        label: t("custom.admin.deficiency_reports.ai_settings.criteria"),
+        placeholder: @ai_assistant_config["default_criteria"],
+        value: @ai_assistant_config["criteria"],
+        style: "",
+        rows: 5,
+        style: "field-sizing: content"
+      ) %>
+    </div>
+  </div>
+
+  <div class="row margin-bottom">
+    <div class="column large-8 small-12">
+      <%= f.text_area(
+        :parting_words,
+        label: t("custom.admin.deficiency_reports.ai_settings.parting_words"),
+        placeholder: @ai_assistant_config["default_parting_words"],
+        value: @ai_assistant_config["parting_words"],
+        style: "",
+        rows: 5,
+        style: "field-sizing: content"
+      ) %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <%= f.submit(t("custom.admin.deficiency_reports.ai_settings.update_button"), class: "button success") %>
+    </div>
+  </div>
+<% end %>

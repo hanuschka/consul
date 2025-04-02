@@ -79,6 +79,12 @@ de:
           official_answer: Offizielle Antwort
           officer_email: Email
           submit: Filter/Suche
+        ai_settings:
+          page_title: KI prompt
+          questions: Welche Fragen sollen den Bürgern gestellt werden?
+          criteria: Welche Kriterien müssen die Vorschläge erfüllen?
+          parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
+          update_button: Aktualisieren KI Prompt
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -273,6 +279,7 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
+          ai_settings: KI prompt
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen

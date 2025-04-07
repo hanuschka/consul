@@ -14,13 +14,19 @@ class Poll::Question::Answer < ApplicationRecord
   end
 
   def all_open_answers
-    return nil unless self.open_answer
-    Poll::Answer.where(question_id: question, answer: title).where.not(open_answer_text: nil)
+    return [] unless open_answer?
+
+    Poll::Answer.where(question_id: question, answer: title).where.not(open_answer_text: [nil, ""])
   end
 
   def total_votes
-    Poll::Answer.where(question_id: question, answer: title).sum(:answer_weight) +
-      ::Poll::PartialResult.where(question: question).where(answer: title).sum(:amount)
+    if open_answer?
+      all_open_answers.count +
+        ::Poll::PartialResult.where(question: question).where(answer: title).count
+    else
+      Poll::Answer.where(question_id: question, answer: title).sum(:answer_weight) +
+        ::Poll::PartialResult.where(question: question).where(answer: title).sum(:amount)
+    end
   end
 
   def total_votes_percentage

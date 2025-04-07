@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_12_141756) do
+ActiveRecord::Schema.define(version: 2025_04_04_100716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1033,6 +1033,14 @@ ActiveRecord::Schema.define(version: 2025_03_12_141756) do
     t.index ["projekt_id", "geozone_id"], name: "index_geozones_projekts_on_projekt_id_and_geozone_id", unique: true
   end
 
+  create_table "graphql_users", force: :cascade do |t|
+    t.string "auth_token"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_graphql_users_on_user_id"
+  end
+
   create_table "i18n_content_translations", id: :serial, force: :cascade do |t|
     t.integer "i18n_content_id", null: false
     t.string "locale", null: false
@@ -1959,10 +1967,11 @@ ActiveRecord::Schema.define(version: 2025_03_12_141756) do
     t.text "projekt_selector_hint"
     t.string "labels_name"
     t.string "sentiments_name"
-    t.string "resource_form_title_hint"
+    t.string "resource_form_title_placeholder"
     t.text "description"
     t.string "comment_form_title"
     t.string "comment_form_button"
+    t.text "resource_form_description_placeholder"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -2494,6 +2503,8 @@ ActiveRecord::Schema.define(version: 2025_03_12_141756) do
     t.boolean "landing_hide_title_and_subtitle", default: false
     t.boolean "landing", default: false
     t.integer "landing_nav_position"
+    t.boolean "landing_show_projekts_overview", default: true
+    t.boolean "landing_site_logo_not_clickable", default: false
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
@@ -2875,6 +2886,7 @@ ActiveRecord::Schema.define(version: 2025_03_12_141756) do
   add_foreign_key "formulars", "projekt_phases"
   add_foreign_key "geozones_polls", "geozones"
   add_foreign_key "geozones_polls", "polls"
+  add_foreign_key "graphql_users", "users"
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"
   add_foreign_key "individual_group_values", "individual_groups"

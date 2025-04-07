@@ -439,12 +439,13 @@ en:
         phase_tab_name: Name in Tab
         cta_button_name: Text in Button
         resource_form_title: Resource form title
-        resource_form_title_hint: Resource form title placeholder
         labels_name: Labels
         sentiments_name: Sentiments
         projekt_selector_hint: Project tips
         comment_form_title: Title of comment form
         comment_form_button: Comment form button
+        resource_form_title_placeholder: Text of the title placeholder
+        resource_form_description_placeholder: Text of the description placeholder
         edit:
           title: Phase settings
         duration:

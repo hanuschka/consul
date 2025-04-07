@@ -18,6 +18,9 @@ class SiteCustomization::Page < ApplicationRecord
 
   has_one_attached :landing_mobile_header_image
 
+  has_one_attached :landing_site_logo_for_transparent_background
+  has_one_attached :landing_site_logo_for_white_background
+
   scope :regular, -> {
     where(landing: false)
   }

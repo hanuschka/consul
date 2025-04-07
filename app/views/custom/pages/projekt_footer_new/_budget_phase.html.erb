@@ -36,7 +36,7 @@
           <% else %>
 
             <% if @budget.current_phase.kind == "accepting" %>
-              <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>" style="width:100%;margin:2rem 0;">
+              <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>">
                 <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
               </div>
             <% end %>

@@ -54,8 +54,8 @@
             <%= translations_form.text_area :description,
               value: AdminWYSIWYGSanitizer.new.sanitize(investment.description),
               label: false,
-              class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description",
-              placeholder: description_placeholder %>
+              placeholder: description_placeholder,
+              class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description" %>
           <% end %>
 
           <% if projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
@@ -351,5 +351,4 @@
       <%= f.submit %>
     </div>
   <% end %>
-
 <% end %>

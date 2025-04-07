@@ -82,13 +82,18 @@
           <%= translations_form.text_field :resource_form_title, label: false %>
         </div>
       </div>
-    <% end %>
 
-    <% if @projekt_phase.name.in?(["debate_phase", "proposal_phase", "budget_phase"]) %>
       <div class="row">
         <div class="column large-8">
-          <strong><%= t("custom.admin.projekt_phases.resource_form_title_hint") %></strong>
-          <%= translations_form.text_area :resource_form_title_hint, label: false, rows: 4, style: "margin-bottom:1rem;" %>
+          <strong><%= t("custom.admin.projekt_phases.resource_form_title_placeholder") %></strong>
+          <%= translations_form.text_area :resource_form_title_placeholder, label: false, rows: 4, style: "margin-bottom:1rem;" %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.resource_form_description_placeholder") %></strong>
+          <%= translations_form.text_area :resource_form_description_placeholder, label: false, rows: 4, style: "margin-bottom:1rem;" %>
         </div>
       </div>
     <% end %>

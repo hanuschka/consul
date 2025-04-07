@@ -119,6 +119,7 @@ de:
           create: "Vorschlag erstellen"
         filter: "Projekte filtern nach"
         filters:
+          all: alle Vorschläge
           undecided: noch nicht definiert
           feasible: entspricht den Kriterien
           unfeasible: entspricht nicht den Kriterien

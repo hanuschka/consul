@@ -2,4 +2,5 @@
   location.reload();
 <% else %>
   $("#<%= dom_id(@formular_field) %>").replaceWith("<%= j render("custom/admin/formular_fields/formular_field", formular_field: @formular_field) %>");
+  App.HTMLEditor.initialize();
 <% end %>

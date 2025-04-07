@@ -15,6 +15,11 @@
     <%= cannot_vote_text %>
   </div>
 
+<% elsif exception_for_investment? %>
+  <div class='callout secondary'>
+    <%= t("custom.projekt_phases.permission_problem.commenting.budget_phase.too_late") %>
+  </div>
+
 <% elsif can?(:create, Comment.new(commentable: record)) %>
   <%= render "comments/form", { commentable: record, parent_id: nil } %>
 

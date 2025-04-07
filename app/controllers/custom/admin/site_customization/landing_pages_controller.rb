@@ -92,6 +92,8 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
         :landing_show_in_top_nav,
         :landing_hide_all_top_nav_links,
         :landing_hide_title_and_subtitle,
+        :landing_show_projekts_overview,
+        :landing_site_logo_not_clickable,
         :landing_mobile_header_image,
         image_attributes: image_attributes
       ]

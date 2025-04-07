@@ -30,14 +30,15 @@ class ProjektPhase < ApplicationRecord
 
   translates :phase_tab_name, touch: true
   translates :cta_button_name, touch: true
-  translates :resource_form_title, touch: true
   translates :projekt_selector_hint, touch: true
   translates :labels_name, touch: true
   translates :sentiments_name, touch: true
-  translates :resource_form_title_hint, touch: true
   translates :description, touch: true
   translates :comment_form_title, touch: true
   translates :comment_form_button, touch: true
+  translates :resource_form_title, touch: true
+  translates :resource_form_title_placeholder, touch: true
+  translates :resource_form_description_placeholder, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true

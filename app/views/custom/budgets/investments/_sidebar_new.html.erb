@@ -1,5 +1,11 @@
 <aside class='margin-bottom' id='sidebar'>
-  <%= render_custom_block "budget_#{@budget.id}_phase_#{@budget.current_phase.id}_info" %>
+
+  <% content_block_sidebar_name = "budget_#{@budget.id}_phase_#{@budget.current_phase.id}_info" %>
+  <% if render_custom_projekt_content_block?(content_block_sidebar_name, @projekt_phase.projekt) %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.proposals.index.participation_information"), icon_name: "info-circle") do |c| %>
+      <%= render_custom_block content_block_sidebar_name %>
+    <% end %>
+  <% end %>
 
   <%= render "pages/projekt_footer_new/budget/my_ballot" %>
 

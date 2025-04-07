@@ -74,6 +74,9 @@ de:
         prompt_address: Hausnummer (bitte wählen)
         document_prompt: Offizielles Dokument (bitte wählen)
         not_in_list: Nicht in der Liste enthalten
+        birth_year: Geburtsjahr
+        birth_month: Geburtsmonat
+        birth_day: Geburtsdatum
     gdpr_notice:
       accept: Akzeptieren
       link_text: Mehr Infos

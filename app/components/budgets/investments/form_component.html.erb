@@ -28,7 +28,7 @@
                   data: suggest_data(investment),
                   label: false,
                   class: "user-resources-form--banner-editor-title",
-                  placeholder: investment.projekt_phase&.resource_form_title_hint.presence || t("custom.budgets.investments.form.title_placeholder"),
+                  placeholder: title_placeholder,
                   autocomplete: "off" %>
               </div>
 
@@ -47,7 +47,7 @@
             <%= translations_form.text_area :description,
               value: AdminWYSIWYGSanitizer.new.sanitize(investment.description),
               label: false,
-              placeholder: t("custom.budgets.investments.form.description_placeholder"),
+              placeholder: description_placeholder,
               class: "html-area #{ck_editor_class(current_user)}" %>
           <% end %>
 

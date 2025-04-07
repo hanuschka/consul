@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_27_103950) do
+ActiveRecord::Schema.define(version: 2025_04_04_100716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1968,10 +1968,11 @@ ActiveRecord::Schema.define(version: 2025_03_27_103950) do
     t.text "projekt_selector_hint"
     t.string "labels_name"
     t.string "sentiments_name"
-    t.string "resource_form_title_hint"
+    t.string "resource_form_title_placeholder"
     t.text "description"
     t.string "comment_form_title"
     t.string "comment_form_button"
+    t.text "resource_form_description_placeholder"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -2503,6 +2504,8 @@ ActiveRecord::Schema.define(version: 2025_03_27_103950) do
     t.boolean "landing_hide_title_and_subtitle", default: false
     t.boolean "landing", default: false
     t.integer "landing_nav_position"
+    t.boolean "landing_show_projekts_overview", default: true
+    t.boolean "landing_site_logo_not_clickable", default: false
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end

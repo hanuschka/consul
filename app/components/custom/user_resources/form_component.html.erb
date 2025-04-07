@@ -122,7 +122,7 @@
                   data: suggest_data(resource),
                   label: false,
                   class: "user-resources-form--banner-editor-title",
-                  placeholder: t("custom.#{i18n_scope}.form.title_placeholder"),
+                  placeholder: title_placeholder,
                   autocomplete: "off" %>
               </div>
 
@@ -139,7 +139,7 @@
             value: AdminWYSIWYGSanitizer.new.sanitize(resource.description),
             maxlength: max_description_lenght,
             label: false,
-            placeholder: descriotion_placeholder,
+            placeholder: description_placeholder,
             class: "html-area #{helpers.ck_editor_class(current_user)}" %>
         <% end %>
 

@@ -19,7 +19,7 @@ class ProjektPhase::EventPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[naming].push(resources_name)
+    %w[naming settings].push(resources_name)
   end
 
   def safe_to_destroy?

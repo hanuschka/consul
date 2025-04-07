@@ -140,6 +140,11 @@ de:
           general:
             newest_first: Neueste Meilensteine zuerst anzeigen
             newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
+      projekt_events:
+        feature:
+          general:
+            reverse_order_for_incoming_events: Zurückgekehrte Reihenfolge für eingehende Ereignisse
+            reverse_order_for_incoming_events_description: Sortiert die Ereignisse absteigend mit dem spätesten Datum zuerst
       newsfeed:
         option:
           general:

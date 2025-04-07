@@ -602,12 +602,13 @@ de:
         phase_tab_name: Name in Tab auf der Projektseite
         cta_button_name: Buttontext auf der Projektseite
         resource_form_title: Überschrift des Erstellungsformulars
-        resource_form_title_hint: Text des Platzhalters im Erstellungsformular
         labels_name: Alternativtext zu Labels
         sentiments_name: Alternativtext zu Sentimente
         projekt_selector_hint: Hinweise zum Projekt
         comment_form_title: Titel des Kommentarformulars
         comment_form_button: Kommentarformular Button
+        resource_form_title_placeholder: Text des Platzhalters für den Titel im Erstellungsformular
+        resource_form_description_placeholder: Text des Platzhalters für die Beschreibung im Erstellungsformular
         edit:
           title: Einstellung für Phase
         duration:

@@ -18,4 +18,14 @@ class Budgets::Investments::FormComponent < ApplicationComponent
     def categories
       Tag.category.order(:name)
     end
+
+    def title_placeholder
+      investment.projekt_phase&.resource_form_title_placeholder.presence ||
+        t("custom.budgets.investments.form.title_placeholder")
+    end
+
+    def description_placeholder
+      investment.projekt_phase&.resource_form_description_placeholder.presence ||
+        t("custom.budgets.investments.form.description_placeholder")
+    end
 end

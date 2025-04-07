@@ -4,6 +4,7 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
   def initialize(content_card, custom_page: nil)
     @content_card = content_card
     @limit = @content_card.settings["limit"].to_i
+    @custom_page = custom_page
     @projekts =
       if custom_page.present?
         custom_page.landing_projekts
@@ -17,6 +18,14 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
   end
 
   private
+
+    def projekts_path(...)
+      if @custom_page.present? && @custom_page.landing?
+        landing_page_projekts_path(@custom_page.slug, ...)
+      else
+        helpers.projekts_path(...)
+      end
+    end
 
     def active_projekts
       @active_projekts =

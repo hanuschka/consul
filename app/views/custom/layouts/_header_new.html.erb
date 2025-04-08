@@ -15,13 +15,36 @@
         </span>
 
         <div class="top-bar--title">
-          <%= link_to root_path do %>
-            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
-            <%= image_tag(image_path_for("logo_header_inverted.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
+          <% site_logo_images = capture do %>
+            <% transparent_background_logo =
+              if content_for?(:site_logo_for_transparent_background)
+                content_for(:site_logo_for_transparent_background)
+              else
+                image_path_for("logo_header_inverted.png")
+              end
+            %>
+            <%= image_tag(transparent_background_logo, alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
+
+            <% white_background_logo =
+              if content_for?(:site_logo_for_white_background)
+                content_for(:site_logo_for_white_background)
+              else
+                image_path_for("logo_header.png")
+              end
+            %>
+            <%= image_tag(white_background_logo, alt: Setting["org_name"], class: "top-logo--regular") %>
+          <% end %>
+
+          <% if @ui_site_logo_not_clickable %>
+            <%= site_logo_images %>
+          <% else %>
+            <%= link_to root_path do %>
+              <%= site_logo_images %>
+            <% end %>
           <% end %>
         </div>
 
-        <div class="header--navigation expanded not-print">
+        <div class="header--navigation expanded not-print hide-for-small-only">
           <div class="hader--subnavigation-wrapper hide-for-small-only">
             <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
           </div>
@@ -42,7 +65,7 @@
     <div id="responsive-menu" class='header--responsive-menu not-print'>
       <div class="subnavigation">
 
-        <% if current_user.present? %>
+        <% if current_user.present? && !current_user.guest? %>
           <div class="header--responsive-menu--user">
             <div class="header--responsive-menu--user-avatar">
               <% if current_user&.image&.attached? %>
@@ -55,7 +78,7 @@
               <%= current_user.name %>
             </div>
             <%= link_to("Profil anzeigen", user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
-            <%= link_to t("layouts.header.administration"), admin_root_path %>
+            <%= link_to t("layouts.header.administration"), admin_root_path if current_user.administrator? %>
           </div>
         <% end %>
 

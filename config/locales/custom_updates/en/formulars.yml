@@ -2,6 +2,7 @@ en:
   custom:
     formular_answer:
       form:
+        select_prompt: click to select
         submit: Submit answer
       notifications:
         success: Thank you! Your answer was successfully submitted.

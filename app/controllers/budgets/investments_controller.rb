@@ -72,6 +72,18 @@ module Budgets
       @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
                                   .page(params[:page]).per(5)
 
+      if params[:page_ref].present?
+        @landing_page =
+          @investment
+          .projekt
+          .landing_pages
+          .find_by(slug: params[:page_ref])
+
+        @ui_show_projekts_overview = @landing_page.landing_show_projekts_overview
+        @ui_hide_topbar_links = @landing_page.landing_hide_all_top_nav_links
+        @ui_site_logo_not_clickable = @landing_page.landing_site_logo_not_clickable
+      end
+
       if !@investment.projekt.visible_for?(current_user)
         @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)
         render "custom/pages/forbidden", layout: false

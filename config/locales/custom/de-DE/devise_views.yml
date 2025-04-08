@@ -99,7 +99,7 @@ de:
           current_password_label: Aktuelles Passwort
           edit: Bearbeiten
           email_label: E-Mail
-          leave_blank: Lassen Sie das Feld leer, wenn Sie keine Änderungen vornehmen möchten
+          leave_blank: Lassen Sie das Feld leer, wenn Sie lediglich die Email Adresse ändern möchten.
           need_current: Wir benötigen Ihr aktuelles Passwort, um die Änderungen zu bestätigen
           password_confirmation_label: Neues Passwort bestätigen
           password_label: Neues Passwort

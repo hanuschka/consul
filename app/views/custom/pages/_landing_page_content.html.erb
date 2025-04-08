@@ -1,5 +1,14 @@
 <% content_for :body_class, "home-page" %>
 
+<% content_for :styles do %>
+  <style>
+    .custom-new-design .header--navigation ul.main-menu .projekt-name,
+    .custom-new-design .header--navigation ul.main-menu li.nav-element a {
+      color: <%= @custom_page.landing_navigation_link_color.presence %> !important;
+    }
+  </style>
+<% end %>
+
 <% if @custom_page.landing_site_logo_for_transparent_background.attached? %>
   <% provide(:site_logo_for_transparent_background, url_for(@custom_page.landing_site_logo_for_transparent_background)) %>
 <% end %>

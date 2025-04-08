@@ -1,5 +1,13 @@
 <% content_for :body_class, "home-page" %>
 
+<% if @custom_page.landing_site_logo_for_transparent_background.attached? %>
+  <% provide(:site_logo_for_transparent_background, url_for(@custom_page.landing_site_logo_for_transparent_background)) %>
+<% end %>
+
+<% if @custom_page.landing_site_logo_for_white_background.attached? %>
+  <% provide(:site_logo_for_white_background, url_for(@custom_page.landing_site_logo_for_white_background)) %>
+<% end %>
+
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: root_url %>
 <% end %>

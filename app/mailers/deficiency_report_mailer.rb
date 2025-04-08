@@ -1,6 +1,8 @@
 class DeficiencyReportMailer < ApplicationMailer
   helper TextWithLinksHelper
 
+  default from: proc { "#{Setting["mailer_from_name"]} <#{Setting["mailer_from_deficiency_report_address"]}>" }
+
   def notify_author_about_status_change(deficiency_report)
     @deficiency_report = deficiency_report
     subject = t("custom.deficiency_reports.mailers.notify_author_about_status_change.subject")

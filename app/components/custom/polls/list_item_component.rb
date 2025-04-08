@@ -4,9 +4,10 @@ class Polls::ListItemComponent < ApplicationComponent
   delegate :link_to_poll, to: :helpers
   attr_reader :poll, :projekt_phase
 
-  def initialize(poll:)
+  def initialize(poll:, additional_url_params: nil)
     @poll = poll
     @projekt_phase = poll.projekt_phase
+    @additional_url_params = additional_url_params
   end
 
   def component_attributes
@@ -15,13 +16,23 @@ class Polls::ListItemComponent < ApplicationComponent
       projekt: poll.projekt,
       title: poll.title,
       description: projekt_phase.description,
-      url: helpers.poll_path(poll.id),
+      url: poll_path,
       image_url: poll.image&.variant(:card_thumb),
       image_placeholder_icon_class: "fa-vote-yea"
     }
   end
 
   private
+
+    def poll_path
+      base_url = helpers.poll_path(poll.id)
+
+      if @additional_url_params.present?
+        base_url = UrlUtils.add_params_to_url(base_url, @additional_url_params)
+      end
+
+      base_url
+    end
 
     def button_text
       if poll&.projekt_phase&.current?

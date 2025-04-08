@@ -2,6 +2,7 @@ de:
   custom:
     formular_answer:
       form:
+        select_prompt: für eine Auswahl hier klicken
         submit: Abschicken
       notifications:
         success: Vielen Dank! Ihr Formular wurde erfolgreich eingereicht.

@@ -89,17 +89,6 @@ en:
           my_posts:
             title: My contributions
         start_deficiency_report: Report a deficiency
-      mailers:
-        notify_author_about_status_change:
-          hi: Hi
-          p1: Status of your a deficiency report you submitted earlier, was changed.
-          signature_html: Best regards,</br>Consul
-          subject: Status change of your deficiency report
-        notify_officer:
-          hi: Dear Officer,
-          p1: Admin has assigned you one of the new deficiency reports.
-          signature_html: Best regards,</br>Consul
-          subject: New deficiency report %{identifier}
       new:
         more_info: More info
         recommendation_one: Verwenden Sie bitte nicht ausschließelich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien und niemand möchte angeschrien werden.

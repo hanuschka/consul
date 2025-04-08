@@ -15,13 +15,21 @@
         </span>
 
         <div class="top-bar--title">
-          <%= link_to root_path do %>
+          <% site_logo_images = capture do %>
             <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
             <%= image_tag(image_path_for("logo_header_for_transparent.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
           <% end %>
+
+          <% if @ui_site_logo_not_clickable %>
+            <%= site_logo_images %>
+          <% else %>
+            <%= link_to root_path do %>
+              <%= site_logo_images %>
+            <% end %>
+          <% end %>
         </div>
 
-        <div class="header--navigation expanded not-print">
+        <div class="header--navigation expanded not-print hide-for-small-only">
           <div class="hader--subnavigation-wrapper hide-for-small-only">
             <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
           </div>

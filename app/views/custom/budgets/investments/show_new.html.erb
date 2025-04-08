@@ -9,9 +9,8 @@
       <div class="main-column">
         <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
-        <h1 class="resource-page--title"><%= "Beitrag von #{@investment.author_name}" %></h1>
         <div class="common-page-description">
-          <%= render_custom_block("budget_investment_show_welcome_text", default_content: t("custom.budgets.investments.show.welcome_default_text_html", author_name: @investment.author_name)) %>
+          <%= render_custom_block("budget_investment_show_welcome_text") %>
         </div>
 
       </div>
@@ -22,7 +21,7 @@
       <div class="main-column">
 
         <% if (@investment.feasible? || @investment.unfeasible?) && @investment.valuation_finished? %>
-          <div class="callout <%= "#{ @investment.feasible? ? 'success' : 'alert'}" %>" style="color:initial;">
+          <div class="callout <%= "#{ @investment.feasible? ? 'success' : 'alert'}" %>" style="color:initial;padding:30px 30px;">
             <h3><%= t("custom.budgets.investments.investment.#{@investment.feasibility}_html") %></h3>
 
             <% if @investment.should_show_price? %>
@@ -48,30 +47,28 @@
           </div>
         <% end %>
 
+        <%= render ResourcePage::BannerComponent.new(resource: @investment) do |c| %>
 
-        <% if projekt_phase_feature?(@investment.projekt_phase, "form.show_user_cost_estimate") && @investment.user_cost_estimate.present? %>
-          <div class="resource-page--description new-card" style="background-color:#fff;">
-            <h3><%= t("custom.budgets.investments.show.user_cost_estimate") %></h3>
-            <%= ActionController::Base.helpers.number_to_currency(@investment.user_cost_estimate,
-                                                                  precision: 0,
-                                                                  locale: I18n.locale,
-                                                                  unit: "Euro",
-                                                                  delimiter: ".",
-                                                                  format: "%n %u"
-                                                                  ) %>
-          </div>
+          <% if projekt_phase_feature?(@investment.projekt_phase, "form.show_user_cost_estimate") && @investment.user_cost_estimate.present? %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail" style="align-items:baseline;">
+                <i class="fas fa-euro-sign"></i>
+                <%= t("custom.budgets.investments.show.user_cost_estimate_text", user_cost_estimate: ActionController::Base.helpers.number_to_currency(@investment.user_cost_estimate, precision: 0, locale: I18n.locale, unit: "Euro", delimiter: ".", format: "%n %u")) %>
+              </div>
+            <% end %>
+          <% end %>
+
+					<% if projekt_phase_feature?(@investment&.projekt_phase, "form.show_implementation_option_fields") %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail" style="align-items:baseline;">
+                <i class="fas fa-tools"></i>
+                <%= t("custom.budgets.investments.show.implementation_#{@investment.implementation_performer}_text", author: @investment.author.name)	%><br>
+                <%= @investment.implementation_contribution %>
+
+              </div>
+            <% end %>
+          <% end %>
         <% end %>
-
-        <% if projekt_phase_feature?(@investment&.projekt_phase, "form.show_implementation_option_fields") %>
-          <div class="resource-page--description new-card" style="background-color:#fff;">
-            <h3><%= t("custom.budgets.investments.show.implementation") %></h3>
-            <%= t("custom.budgets.investments.show.implementation_#{@investment.implementation_performer}_text_html",
-                   author: @investment.author.name,
-                   implementation_contribution: @investment.implementation_contribution) %>
-          </div>
-        <% end %>
-
-        <%= render ResourcePage::BannerComponent.new(resource: @investment) %>
 
         <div class="resource-page--description new-card">
           <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>

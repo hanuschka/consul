@@ -16,7 +16,7 @@ module FormularFieldsAdminActions
   end
 
   def create
-    @formular_field = FormularField.new(formular_field_params)
+    @formular_field = FormularField.new(formular_field_params.merge(given_order: @formular.formular_fields.count + 1))
     @formular_field.formular = @formular
     authorize!(:create, @formular_field)
 

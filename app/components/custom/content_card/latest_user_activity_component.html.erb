@@ -1,3 +1,4 @@
 <%= render Users::LatestActivityComponent.new(
-  title: @content_card.title || t("custom.content_cards.expired_projekts.title")
+  title: @content_card.title || t("custom.content_cards.expired_projekts.title"),
+  custom_page: @custom_page
 ) %>

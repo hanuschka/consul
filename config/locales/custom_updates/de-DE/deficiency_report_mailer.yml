@@ -1,0 +1,15 @@
+de:
+  custom:
+    deficiency_reports:
+      mailers:
+        closing: Freundliche Grüße
+        signature: Euer Anliegenmanagement
+        contact_info: Bei inhaltlichen Fragen wendet euch bitte an <a href="anliegen@siegburg.de">anliegen@siegburg.de</a>
+        notify_author_about_status_change:
+          subject: Statusänderung Ihres Mangels
+          hi: Hallo
+          p1: der Status des von Ihnen eingereichten Mangels wurde geändert.
+        notify_officer:
+          subject: Neue Mangelmeldung %{identifier}
+          hi: Liebe/r Sachbearbeiter*in,
+          p1: Ihnen wurde ein Mangel vom Admin zugewiesen.

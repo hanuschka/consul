@@ -89,6 +89,28 @@
             </div>
           <% end %>
         </div>
+        <div class="margin-bottom  small-12 column ">
+          <div class="margin-bottom">
+            <%= f.file_field :landing_site_logo_for_transparent_background %>
+          </div>
+
+          <% if @page.landing_site_logo_for_transparent_background.attached? %>
+            <div style="justify-content: center" class="d-flex">
+              <%= image_tag @page.landing_site_logo_for_transparent_background, width: 640 %>
+            </div>
+          <% end %>
+        </div>
+        <div class="margin-bottom  small-12 column ">
+          <div class="margin-bottom">
+            <%= f.file_field :landing_site_logo_for_white_background %>
+          </div>
+
+          <% if @page.landing_site_logo_for_white_background.attached? %>
+            <div style="justify-content: center" class="d-flex">
+              <%= image_tag @page.landing_site_logo_image_for_white_background, width: 640 %>
+            </div>
+          <% end %>
+        </div>
       <% end %>
 
       <% unless @page.landing? %>

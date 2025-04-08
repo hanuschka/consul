@@ -5,14 +5,13 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
 <% unless embedded? %>
+  <% if can?(:read_results, @budget) || can?(:read_stats, @budget) %>
+    <%= render Pages::Projekts::BudgetsSubnavComponent.new(@budget, @projekt_phase) %>
+  <% end %>
+
   <div class="flex-layout">
     <div class="main-column">
       <% if @budget.present? %>
-
-        <% if can?(:read_results, @budget) || can?(:read_stats, @budget) %>
-          <%= render Pages::Projekts::BudgetsSubnavComponent.new(@budget, @projekt_phase) %>
-        <% end %>
-
         <% if params[:section] == "results" && can?(:read_results, @budget) %>
           <%= render "pages/projekt_footer_new/budget/results" %>
         <% elsif params[:section] == "stats" && can?(:read_stats, @budget) %>

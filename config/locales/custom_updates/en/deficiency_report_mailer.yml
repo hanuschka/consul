@@ -1,0 +1,15 @@
+en:
+  custom:
+    deficiency_reports:
+      mailers:
+        closing: Best regards
+        signature: Your team
+        contact_info: With any qustions please contact us at <a href="anliegen@siegburg.de">anliegen@siegburg.de</a>
+        notify_author_about_status_change:
+          subject: Status change of your deficiency report
+          hi: Hi
+          p1: Status of your a deficiency report you submitted earlier, was changed.
+        notify_officer:
+          subject: New deficiency report %{identifier}
+          hi: Dear Officer,
+          p1: Admin has assigned you one of the new deficiency reports.

@@ -81,7 +81,7 @@ class ProposalsController
   end
 
   def new
-    @projekt_phase = ProjektPhase::ProposalPhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
+    @projekt_phase = ProjektPhase::ProposalPhase.find_by(id: params[:projekt_phase_id])
 
     if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
       redirect_to proposals_path
@@ -115,6 +115,7 @@ class ProposalsController
 
   def create
     @proposal = Proposal.new(proposal_params.merge(author: current_user))
+    @projekt_phase = @proposal.projekt_phase
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")

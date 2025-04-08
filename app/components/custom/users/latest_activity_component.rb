@@ -1,8 +1,9 @@
 class Users::LatestActivityComponent < ApplicationComponent
   delegate :current_user, to: :helpers
 
-  def initialize(title:)
+  def initialize(title:, custom_page: nil)
     @title = title
+    @custom_page = custom_page
   end
 
   def render?

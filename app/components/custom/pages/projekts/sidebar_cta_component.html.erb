@@ -1,5 +1,8 @@
 <%= render Shared::SidebarCardComponent.new(title: I18n.t("custom.projekt_phases.cta.title"), icon_name: "pen-fancy", opened_on_mobile: true) do |c| %>
-  <% if @projekt_phase.type.in?(phase_types_with_new_button) %>
+  <% if @projekt_phase.is_a?(ProjektPhase::VotingPhase) %>
+    <%= link_to button_text, poll_path(@projekt_phase.poll), class: "button -orange" %>
+
+  <% elsif @projekt_phase.type.in?(phase_types_with_new_button) %>
     <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
 
   <% elsif @projekt_phase.type.in?(phase_types_with_link) %>

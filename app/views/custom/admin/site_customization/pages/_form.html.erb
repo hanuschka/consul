@@ -91,7 +91,8 @@
         </div>
         <div class="margin-bottom  small-12 column ">
           <div class="margin-bottom">
-            <%= f.file_field :landing_site_logo_for_transparent_background %>
+            <%= f.label :landing_site_logo_for_transparent_background, t("custom.admin.site_customization.landing_pages.form.landing_site_logo_for_transparent_background") %>
+            <%= f.file_field :landing_site_logo_for_transparent_background, label: false %>
           </div>
 
           <% if @page.landing_site_logo_for_transparent_background.attached? %>
@@ -102,7 +103,8 @@
         </div>
         <div class="margin-bottom  small-12 column ">
           <div class="margin-bottom">
-            <%= f.file_field :landing_site_logo_for_white_background %>
+            <%= f.label :landing_site_logo_for_white_background, t("custom.admin.site_customization.landing_pages.form.landing_site_logo_for_white_background") %>
+            <%= f.file_field :landing_site_logo_for_white_background, label: false %>
           </div>
 
           <% if @page.landing_site_logo_for_white_background.attached? %>

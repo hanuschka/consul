@@ -16,8 +16,23 @@
 
         <div class="top-bar--title">
           <% site_logo_images = capture do %>
-            <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "top-logo--regular") %>
-            <%= image_tag(image_path_for("logo_header_for_transparent.png"), alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
+            <% transparent_background_logo =
+              if content_for?(:site_logo_for_transparent_background)
+                content_for(:site_logo_for_transparent_background)
+              else
+                image_path_for("logo_header_for_transparent.png")
+              end
+            %>
+            <%= image_tag(transparent_background_logo, alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
+
+            <% white_background_logo =
+              if content_for?(:site_logo_for_white_background)
+                content_for(:site_logo_for_white_background)
+              else
+                image_path_for("logo_header.png")
+              end
+            %>
+            <%= image_tag(white_background_logo, alt: Setting["org_name"], class: "top-logo--regular") %>
           <% end %>
 
           <% if @ui_site_logo_not_clickable %>

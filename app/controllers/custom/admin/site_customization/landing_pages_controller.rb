@@ -94,7 +94,10 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
         :landing_hide_title_and_subtitle,
         :landing_show_projekts_overview,
         :landing_site_logo_not_clickable,
+        :landing_navigation_link_color,
         :landing_mobile_header_image,
+        :landing_site_logo_for_transparent_background,
+        :landing_site_logo_for_white_background,
         image_attributes: image_attributes
       ]
 

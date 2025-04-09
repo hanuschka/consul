@@ -27,7 +27,8 @@
           current_filter: @current_projekts_filter,
           map_coordinates: @map_coordinates,
           text_search_enabled: true,
-          filters: @active_projekts_filters
+          filters: @active_projekts_filters,
+          resource_link_additional_url_params: (@landing_site_customization_page.present? ? { page_ref: @landing_site_customization_page&.slug } : nil),
         ) do |c| %>
           <% c.with_items_remark do %>
             <%= render_custom_block("projekts_index_filter_#{@current_projekts_filter}") %>

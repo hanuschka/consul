@@ -13,6 +13,7 @@
     <%= raw setting["html.per_page_code_head"] %>
   </head>
   <body class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>">
+    <%= yield :styles %>
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>
       <!--[if lt IE 9]>

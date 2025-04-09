@@ -15,32 +15,17 @@
         </span>
 
         <div class="top-bar--title">
-          <% site_logo_images = capture do %>
+
+          <%= link_to (@ui_site_logo_homepage_path.presence || root_path) do %>
             <% transparent_background_logo =
-              if content_for?(:site_logo_for_transparent_background)
-                content_for(:site_logo_for_transparent_background)
-              else
-                image_path_for("logo_header_for_transparent.png")
-              end
+                @ui_site_logo_transparent_background.presence || image_path_for("logo_header_for_transparent.png")
             %>
             <%= image_tag(transparent_background_logo, alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
 
             <% white_background_logo =
-              if content_for?(:site_logo_for_white_background)
-                content_for(:site_logo_for_white_background)
-              else
-                image_path_for("logo_header.png")
-              end
+                @ui_site_logo_white_background.presence || image_path_for("logo_header.png")
             %>
             <%= image_tag(white_background_logo, alt: Setting["org_name"], class: "top-logo--regular") %>
-          <% end %>
-
-          <% if @ui_site_logo_not_clickable %>
-            <%= site_logo_images %>
-          <% else %>
-            <%= link_to root_path do %>
-              <%= site_logo_images %>
-            <% end %>
           <% end %>
         </div>
 

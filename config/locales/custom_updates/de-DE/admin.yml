@@ -148,6 +148,7 @@ de:
           on_behalf_of: im Namen von
           created_at: Erstellt am
           updated_at: Aktualisiert am
+          link: Link
           # category: Kategorie
           # description: Bezeichnung
           # entry_name: Mangel

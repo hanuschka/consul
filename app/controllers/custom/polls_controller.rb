@@ -96,9 +96,9 @@ class PollsController < ApplicationController
           .landing_pages
           .find_by(slug: params[:page_ref])
 
-      @ui_show_projekts_overview = @landing_page.landing_show_projekts_overview
-      @ui_hide_topbar_links = @landing_page.landing_hide_all_top_nav_links
-      @ui_site_logo_not_clickable = @landing_page.landing_site_logo_not_clickable
+      if @landing_page.present?
+        set_landing_page_topbar_ui_variables(@landing_page)
+      end
     end
 
     if !@poll.projekt.visible_for?(current_user)

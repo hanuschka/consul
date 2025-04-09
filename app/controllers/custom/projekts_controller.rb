@@ -10,26 +10,25 @@ class ProjektsController < ApplicationController
 
   def index
     if params[:landing_page_slug].present?
-      @landing_site_customization_page =
+      @landing_page =
         SiteCustomization::Page
           .published
           .landing
           .where(landing_show_projekts_overview: true)
           .find_by(slug: params[:landing_page_slug])
 
-      if @landing_site_customization_page.nil?
+      if @landing_page.nil?
         raise ActionController::RoutingError.new('Not Found')
       end
 
-      if @landing_site_customization_page.present?
-        @ui_show_projekts_overview = @landing_site_customization_page.landing_show_projekts_overview
-        @ui_hide_topbar_links = @landing_site_customization_page.landing_hide_all_top_nav_links
+      if @landing_page.present?
+        set_landing_page_topbar_ui_variables(@landing_page)
       end
     end
 
     base_projekts =
-      if @landing_site_customization_page.present?
-        @landing_site_customization_page.landing_projekts
+      if @landing_page.present?
+        @landing_page.landing_projekts
       else
         Projekt
       end
@@ -66,7 +65,7 @@ class ProjektsController < ApplicationController
 
     @show_comments = Setting["extended_feature.projekts_overview_page_footer.show_in_#{@current_projekts_filter}"].present?
 
-    if @show_comments && @landing_site_customization_page.present?
+    if @show_comments && @landing_page.present?
       @show_comments = false
     end
 

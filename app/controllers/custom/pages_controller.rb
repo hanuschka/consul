@@ -34,9 +34,7 @@ class PagesController < ApplicationController
       @custom_page&.projekt&.visible_for?(current_user)
 
     if @custom_page&.landing?
-      @ui_show_projekts_overview = @custom_page.landing_show_projekts_overview
-      @ui_hide_topbar_links = @custom_page.landing_hide_all_top_nav_links
-      @ui_site_logo_not_clickable = @custom_page.landing_site_logo_not_clickable
+      set_landing_page_topbar_ui_variables(@custom_page)
     end
 
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
@@ -48,9 +46,7 @@ class PagesController < ApplicationController
             .landing_pages
             .find_by(slug: params[:page_ref])
 
-        @ui_show_projekts_overview = @landing_page.landing_show_projekts_overview
-        @ui_hide_topbar_links = @landing_page.landing_hide_all_top_nav_links
-        @ui_site_logo_not_clickable = @landing_page.landing_site_logo_not_clickable
+        set_landing_page_topbar_ui_variables(@landing_page)
       end
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")

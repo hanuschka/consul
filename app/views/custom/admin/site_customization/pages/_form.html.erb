@@ -55,9 +55,8 @@
         <%= f.check_box :landing_hide_all_top_nav_links %>
         <%= f.check_box :landing_hide_title_and_subtitle %>
         <%= f.check_box :landing_show_projekts_overview %>
-        <%= f.check_box :landing_site_logo_not_clickable %>
-
         <%= f.text_field :landing_navigation_link_color %>
+        <%= f.check_box :landing_site_logo_follow_to_landing_page %>
       <% end %>
 
       <% unless @page.landing? %>
@@ -111,7 +110,7 @@
 
           <% if @page.landing_site_logo_for_white_background.attached? %>
             <div style="justify-content: center" class="d-flex">
-              <%= image_tag @page.landing_site_logo_image_for_white_background, width: 640 %>
+              <%= image_tag @page.landing_site_logo_for_white_background, width: 640 %>
             </div>
           <% end %>
         </div>

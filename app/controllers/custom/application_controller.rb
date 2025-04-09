@@ -181,11 +181,11 @@ class ApplicationController < ActionController::Base
       end
 
       if landing_page.landing_site_logo_for_white_background.attached?
-        @ui_site_logo_white_background = url_for(landing_page.landing_site_logo_for_transparent_background)
+        @ui_site_logo_white_background = url_for(landing_page.landing_site_logo_for_white_background)
       end
 
       if landing_page.landing_site_logo_follow_to_landing_page
-        @ui_site_logo_path = landing_page.url
+        @ui_site_homepage_path = landing_page.url
       end
     end
 end

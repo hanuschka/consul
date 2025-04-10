@@ -21,4 +21,9 @@
                               "data-twitter-title": local_assigns[:mobile],
                               "data-telegram-title": local_assigns[:mobile]) %>
 
+  <div class='social-share-button'>
+    <%= link_to "#", class: 'ssb-icon ssb-copy-link js-copy-data-url', data: { url: local_assigns[:url], site: "kopieren"}, title: t('social_share_button.copy_link_title')  do %>
+      <span class="show-for-sr">kopieren</span>
+    <% end %>
+  </div>
 </div>

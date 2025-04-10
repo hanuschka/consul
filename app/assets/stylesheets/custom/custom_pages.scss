@@ -433,6 +433,12 @@ li.projekt-navigator[aria-expanded="false"] {
       }
     }
 
+    .tab-info-summary {
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        display: none;
+      }
+    }
+
     .phase-subscription {
       position: absolute;
       top: 15px;

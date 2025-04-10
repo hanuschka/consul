@@ -1,74 +1,109 @@
-.ssb-whatsapp,
-.ssb-facebook,
-.ssb-twitter,
-.ssb-telegram,
-.ssb-linkedin,
-.ssb-email {
-  margin-bottom: 0.25rem;
-  vertical-align: middle;
+.social-share-button {
+  .ssb-icon {
+    margin-bottom: 0.25rem;
+    vertical-align: middle;
+    transition: background-color 100ms ease;
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+  .ssb-whatsapp {
+    background: #43d854;
+
+    &::before {
+      content: "P";
+      font-family: "icons";
+    }
+
+    &:hover,
+    &:focus {
+      background: #58dc67;
+    }
+  }
+
+  .ssb-facebook {
+    background: #3b5998;
+
+    &:hover,
+    &:focus {
+      background: #4568b2;
+    }
+  }
+
+  .ssb-twitter {
+    background: #000;
+
+    &:hover,
+    &:focus {
+      background: #2e2e2e;
+    }
+  }
+
+  .ssb-telegram {
+    background: #2e87ca;
+
+    &:hover,
+    &:focus {
+      background: #08c;
+    }
+  }
+
+  .ssb-email {
+    background: #f00;
+
+    &::before {
+      content: "L";
+      font-family: "icons";
+    }
+
+    &:hover,
+    &:focus {
+      background: #f33;
+    }
+  }
+
+  .ssb-linkedin {
+    background: #0e76a8;
+
+    &::before {
+      content: "#";
+      font-family: "icons";
+    }
+
+    &:hover,
+    &:focus {
+      background: #1083bb;
+    }
+  }
+
+  .ssb-copy-link {
+    background: #000;
+    color: #fff;
+
+    &::before {
+      content: "\f0c1";
+      font-family: "Font Awesome 5 Free";
+      font-weight: bold;
+    }
+
+    &:hover,
+    &:focus {
+      background: #2e2e2e;
+    }
+  }
 }
 
 
 
-.ssb-whatsapp,
-.ssb-linkedin,
-.ssb-email {
-  background-image: none !important;
-  color: #fff;
-  position: relative;
-  height: $line-height * 2 !important;
-  width: $line-height * 2 !important;
-  vertical-align: middle;
-
-  &::before {
-    font-family: "icons" !important;
-  }
-
-  &:hover,
-  &:focus {
-    background: #fff;
-    text-decoration: none;
-  }
-}
 
 
-.ssb-whatsapp {
-  background: #25D366;
 
-  &::before {
-    content: "P";
-  }
 
-  &:hover,
-  &:focus {
-    color: #075E54;
-  }
-}
-
-.ssb-email {
-  background: red;
-
-  &::before {
-    content: "L";
-  }
-
-  &:hover,
-  &:focus {
-    color: red;
-  }
-}
-
-.ssb-linkedin {
-  background: #0e76a8;
-
-  &::before {
-    content: '#';
-  }
-  &:hover,
-  &:focus {
-    color: #0e76a8;
-  }
-}
+///////
 
 .share-supported {
   text-align: left;

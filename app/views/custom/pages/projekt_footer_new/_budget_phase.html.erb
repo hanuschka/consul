@@ -9,6 +9,12 @@
     <%= render Pages::Projekts::BudgetsSubnavComponent.new(@budget, @projekt_phase) %>
   <% end %>
 
+  <% if @budget.current_phase.kind == "accepting" && params[:section] != "results" && params[:section] != "stats" %>
+    <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>">
+      <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+    </div>
+  <% end %>
+
   <div class="flex-layout">
     <div class="main-column">
       <% if @budget.present? %>
@@ -33,12 +39,6 @@
               <% end %>
             </div>
           <% else %>
-
-            <% if @budget.current_phase.kind == "accepting" %>
-              <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>">
-                <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
-              </div>
-            <% end %>
 
             <% budget_investments_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
             <%= render(

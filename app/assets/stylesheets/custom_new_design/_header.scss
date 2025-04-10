@@ -302,10 +302,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   .top-bar--title {
     flex-grow: initial;
     user-select: none;
-    width: 180px;
 
-    img {
+    a img {
       max-height: 52px;
+      // max-width: 52px;
     }
   }
 
@@ -550,13 +550,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .header--responsive-menu-title {
-    color: $brand;
+    color: $responsive-menu-text-color;
   }
 
-  .header--responsive-menu-sign-in-button {
+  .header--responsive-menu-sign-auth-button {
     width: auto;
-    background: $brand !important;
-    color: white !important;
+    background: $responsive-menu-contrast-color !important;
+    color: $responsive-menu-background-color !important;
     border-radius: 5px !important;
     padding: 10px 20px;
     line-height: inherit !important;
@@ -634,6 +634,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     .header--responsive-menu-sign-in-section {
+      gap: 10px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       margin-top: 20px;
       margin-bottom: 10px;
     }

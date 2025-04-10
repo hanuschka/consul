@@ -43,7 +43,7 @@ de:
         participation_information: Beteiligungsinformation
         search_form:
           button: Suche
-          placeholder: Vorschläge durchsuchen...
+          placeholder: Beiträge durchsuchen...
           title: Suche
         orders:
           confidence_score: Am besten bewertet

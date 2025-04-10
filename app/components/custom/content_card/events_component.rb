@@ -3,7 +3,7 @@ class ContentCard::EventsComponent < ApplicationComponent
 
   def initialize(content_card, custom_page: nil)
     @content_card = content_card
-    @limit = @content_card.settings['limit'].to_i
+    @limit = @content_card.settings["limit"].to_i
 
     @original_events =
       if custom_page.present?
@@ -15,7 +15,7 @@ class ContentCard::EventsComponent < ApplicationComponent
             projekt_id: custom_page.landing_projekts.activated.ids
           })
       else
-        ProjektEvent.with_active_projekt
+        ProjektEvent.with_active_projekt.merge(Projekt.show_in_homepage)
       end
   end
 

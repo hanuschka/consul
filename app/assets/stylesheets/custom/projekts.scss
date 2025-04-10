@@ -1738,7 +1738,10 @@ span.projekt-backlink:before {
   position: absolute;
   right: 0;
   top: 0;
-  border-bottom: 1px solid #dee0e3;
+
+  @media screen and (min-width: $small-tablet-viewport-start) {
+    border-bottom: 1px solid #dee0e3;
+  }
 
   @media screen and (min-width: 75em) {
     left: calc(37.5rem - 50vw);

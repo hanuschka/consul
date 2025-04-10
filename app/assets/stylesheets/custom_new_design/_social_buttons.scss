@@ -1,60 +1,33 @@
+.button.button-bund-id,
 .button.button-twitter,
 .button.button-facebook,
 .button.button-google,
 .button.button-wordpress {
   color: $text;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  &::before {
-    font-size: rem-calc(24);
-    margin-right: $font-icon-margin;
+.button.button-bund-id {
+  background: #ebeef4;
+
+  &:hover {
+    background: #d1d8e7;
   }
 }
 
 .button.button-twitter {
-  //background: #ecf7fc;
-  background-color: black !important;
-  color: white;
+  background-color: #222 !important;
+  color: #fff;
 
   &:hover {
-    color: white !important;
+    color: #fff !important;
     background-color: #000 !important;
   }
 
   &::before {
-    color: white;
-  }
-}
-
-.social-share-button {
-  .button.button-twitter {
-    //background: #ecf7fc;
-    background-color: black;
-    color: white;
-
-    &::before {
-      mask-image: image-url("x_icon.svg");
-      color: white;
-    }
-  }
-}
-
-.social-share-button .ssb-icon {
-  background-image: none;
-  color: #fff;
-  height: $icon-width;
-  line-height: $icon-width;
-  text-align: center;
-  width: $icon-width;
-
-  &::before {
-    font-size: $icon-width / 2;
-    margin-right: 0;
-  }
-
-  &:hover,
-  &:focus {
-    /* background: #fff; */
+    color: #fff;
   }
 }
 
@@ -66,6 +39,7 @@
     color: #3b5998;
   }
 }
+
 .button.button-google {
   background: #fcedea;
   border-left: 3px solid #de4c34;
@@ -81,61 +55,5 @@
 
   &::before {
     color: #2f2f33;
-  }
-}
-
-.social-share-button {
-  .ssb-icon {
-    transition: background-color 100ms ease;
-  }
-
-  .ssb-twitter {
-    background: #000;
-
-    &:hover,
-    &:focus {
-      background:  lighten(#000, 18);
-    }
-  }
-
-  .ssb-facebook {
-    background: #3b5998;
-
-    &:hover,
-    &:focus {
-      background: lighten(#3b5998, 7);
-    }
-  }
-
-  .ssb-telegram {
-    background: #08c;
-
-    &:hover,
-    &:focus {
-      background: lighten(#08c, 2);
-    }
-  }
-
-  .ssb-whatsapp {
-    background: #43d854;
-
-    &:hover,
-    &:focus {
-      background: lighten(#43d854, 5);
-    }
-  }
-
-  .ssb-email {
-    &:hover,
-    &:focus {
-      background: lighten(red, 10);
-    }
-  }
-
-  .ssb-linkedin {
-    &:hover,
-    &:focus {
-      background: lighten(#0e76a8, 4);
-    }
   }
 }

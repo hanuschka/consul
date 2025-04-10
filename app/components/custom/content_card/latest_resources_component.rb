@@ -34,6 +34,7 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
       end
 
       Debate.with_current_projekt
+        .merge(Projekt.show_in_homepage)
         .by_projekt_id(scoped_projekt_ids)
         .sort_by_created_at.limit(@debates_limit)
     end
@@ -50,6 +51,7 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
         .not_archived
         .not_retired
         .with_current_projekt
+        .merge(Projekt.show_in_homepage)
         .by_projekt_id(scoped_projekt_ids)
         .sort_by_created_at
         .limit(@proposals_limit)
@@ -58,7 +60,8 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
     def latest_investment_proposals
       investment_proposals =
         Budget::Investment
-        .joins(:budget)
+        .joins(budget: { projekt_phase: :projekt })
+        .merge(Projekt.show_in_homepage)
         .where.not(budgets: { projekt_phase_id: nil })
 
       if @custom_page&.landing?

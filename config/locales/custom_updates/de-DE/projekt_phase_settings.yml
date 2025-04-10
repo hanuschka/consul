@@ -145,6 +145,8 @@ de:
           general:
             reverse_order_for_incoming_events: Zurückgekehrte Reihenfolge für eingehende Ereignisse
             reverse_order_for_incoming_events_description: Sortiert die Ereignisse absteigend mit dem spätesten Datum zuerst
+            show_on_home_page: Veranstaltung auf Homepage anzeigen
+            show_on_home_page_description: Zeigt die Veranstaltung auf der Homepage an
       newsfeed:
         option:
           general:

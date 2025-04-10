@@ -151,7 +151,8 @@ class ProjektPhaseSetting < ApplicationRecord
 
         "ProjektPhase::EventPhase" => {
           base: {
-            "feature.general.reverse_order_for_incoming_events": ""
+            "feature.general.reverse_order_for_incoming_events": "",
+            "feature.general.show_on_home_page": "active"
           }
         },
 

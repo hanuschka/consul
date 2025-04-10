@@ -15,7 +15,8 @@ class ContentCard::EventsComponent < ApplicationComponent
             projekt_id: custom_page.landing_projekts.activated.ids
           })
       else
-        ProjektEvent.with_active_projekt.merge(Projekt.show_in_homepage)
+        ProjektEvent.with_active_projekt
+                    .with_phase_feature("general.show_on_home_page")
       end
   end
 

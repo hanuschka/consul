@@ -41,6 +41,29 @@
   #budgets ul.tabs {
     background: initial;
   }
+
+  .expanded.jumbo-budget.budget-heading.padding {
+    @media screen and (max-width: $small-tablet-viewport-start) {
+      padding: 0 20px;
+      position: sticky;
+      top: 109px;
+      z-index: 1000;
+      margin-top: 10px;
+      border: 1px solid #CFCECE;
+      border-left: none;
+      border-right: none;
+      margin-left: -20px;
+      margin-right: -20px;
+
+      &:after {
+        border-bottom: none;
+      }
+    }
+
+    @media screen and (min-width: $small-tablet-viewport-start) and (max-width: $big-tablet-viewport-start) {
+      padding-left: 25px;
+    }
+  }
 }
 
 .expanded.jumbo-budget.budget-heading {

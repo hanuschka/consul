@@ -18,13 +18,7 @@ button {
     color: white;
     margin-top: 10px;
     margin-bottom: 10px;
-    // padding: 0 20px 0;
     padding: 10px 20px !important;
-    // max-width: 300px;
-    // display: flex !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 15px;
     border-radius: 7px;
     transition: background-color 0.1s ease;
@@ -126,6 +120,7 @@ button {
     &.-green {
       background: $green-button-color;
       color: white;
+      line-height: inherit;
 
       &:hover, &:focus {
         background-color: lighten($green-button-color, 5%)
@@ -163,6 +158,30 @@ button {
           color: #cc4b37;
         }
       }
+    }
+
+    &.full-width {
+      text-align: center;
+      display: block;
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    &.left-aligned {
+      text-align: start;
+      padding-left: 0.5em;
+
+      i {
+        width: 25px;
+        text-align: center;
+      }
+    }
+
+    &.pillow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 

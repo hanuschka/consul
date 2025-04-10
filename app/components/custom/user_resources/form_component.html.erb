@@ -143,10 +143,6 @@
             class: "html-area #{helpers.ck_editor_class(current_user)}" %>
         <% end %>
 
-        <% if resource.errors[:description].any? %>
-          <p class="form-error is-visible"><%= resource.errors[:description].join(", ") %></p>
-        <% end %>
-
         <% if show_map_input? %>
           <div class="new-card" id='map-container'>
             <%= render "map_locations/form_fields",

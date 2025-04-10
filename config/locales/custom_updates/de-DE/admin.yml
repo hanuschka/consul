@@ -148,6 +148,7 @@ de:
           on_behalf_of: im Namen von
           created_at: Erstellt am
           updated_at: Aktualisiert am
+          link: Link
           # category: Kategorie
           # description: Bezeichnung
           # entry_name: Mangel
@@ -505,6 +506,9 @@ de:
           edit_content_cards:
             title: Inhaltskarten für %{page_title}
             link: Inhaltskarten
+          form:
+            landing_site_logo_for_transparent_background: Individuelles Logo für diese Landingpage auf transparentem Hintergrund
+            landing_site_logo_for_white_background: Individuelles Logo für diese Landingpage auf weißem Hintergrund
         pages:
           destroy:
             cannot_notice: Diese Seite kann nicht gelöscht werden. Bitte löschen Sie das zugehörige Projekt zuvor.

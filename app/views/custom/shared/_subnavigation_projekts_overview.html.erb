@@ -12,7 +12,7 @@
             projekts_path
           end
     %>
-    <%= link_to t('custom.links.menu.projekts_overview'), projekt_link_path, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), aria: { hidden: true }, data: { turbolinks: !extended_feature?("general.enable_google_translate") } %>
+    <%= link_to t('custom.links.menu.projekts_overview'), projekt_link_path, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), aria: { hidden: true }, data: { turbolinks: false } %>
   </div>
 
   <% unless use_landing_projekts_for_overview_link %>

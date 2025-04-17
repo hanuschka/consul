@@ -528,6 +528,7 @@ de:
       users:
         reverify_button_text: Verifizierung aktuallisieren
         reverify_success_notice: Reverifizierungsprozess läuft
+        erase_success_notice: Nutzer erfolgreich gelöscht
         columns:
           id: ID
           erase_reason: Grund des Löschens

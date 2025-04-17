@@ -303,7 +303,7 @@ namespace :admin do
     get :search, on: :collection
   end
 
-  resources :users, only: [:index, :show, :edit, :update] do
+  resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :reverify, on: :collection #custom
     resources :audits, only: :show, controller: "user_audits"
   end

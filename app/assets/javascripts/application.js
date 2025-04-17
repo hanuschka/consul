@@ -200,6 +200,7 @@ var initialize_modules = function() {
   App.CustomAdmin.initialize();
   App.ModerationCustom.initialize();
   App.CopyContent.initialize();
+  App.CopyDataUrl.initialize();
   App.FooterPhasesComponentCustom.initialize();
   App.RemoteLinksPushState.initialize();
   App.ProjektQuestionCustom.initialize();

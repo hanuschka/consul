@@ -11,8 +11,8 @@
       <% end %>
       <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
       <%= raw content_block("subnavigation_left_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
-      <%= render partial: 'shared/subnavigation_landing_pages', locals: { placement: placement } unless launch_page %>
       <%= render partial: 'shared/subnavigation_projekts', locals: { placement: placement } unless launch_page %>
+      <%= render partial: 'shared/subnavigation_landing_pages', locals: { placement: placement } unless launch_page %>
       <%= render partial: 'shared/subnavigation_deficiency_reports', locals: { placement: placement } if deficiency_reports_feature?('show_in_main_menu') && !launch_page %>
       <%= render partial: 'shared/subnavigation_investments_overview', locals: { placement: placement } %>
       <%= raw content_block("subnavigation_right_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>

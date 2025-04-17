@@ -43,7 +43,7 @@ de:
         participation_information: Beteiligungsinformation
         search_form:
           button: Suche
-          placeholder: Vorschläge durchsuchen...
+          placeholder: Beiträge durchsuchen...
           title: Suche
         orders:
           confidence_score: Am besten bewertet
@@ -66,7 +66,6 @@ de:
           random_title: Zufällig
           votes_up: Am meisten gewählt
           votes_up_title: Am meisten gewählt
-
       show:
         community_section:
           title: Beteiligen Sie sich

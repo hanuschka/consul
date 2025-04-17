@@ -99,7 +99,7 @@
         </h1>
 
         <div class="user-resources-form--description js-user-resource-form-description">
-          <%= projekt_phase.projekt_selector_hint&.html_safe.presence ||
+          <%= projekt_phase.resource_form_intro&.html_safe.presence ||
             helpers.render_custom_block("user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description")) %>
         </div>
 
@@ -149,10 +149,6 @@
             label: false,
             placeholder: description_placeholder,
             class: "html-area #{helpers.ck_editor_class(current_user)} js-user-resource-form-description" %>
-        <% end %>
-
-        <% if resource.errors[:description].any? %>
-          <p class="form-error is-visible"><%= resource.errors[:description].join(", ") %></p>
         <% end %>
 
         <% if show_map_input? %>

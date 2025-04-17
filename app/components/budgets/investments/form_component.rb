@@ -52,6 +52,16 @@ class Budgets::Investments::FormComponent < ApplicationComponent
       data.to_json
     end
 
+    def form_title
+      investment.projekt_phase.resource_form_title.presence || t("custom.budgets.investments.form.start_new")
+    end
+
+    def form_description
+      investment.projekt_phase.resource_form_intro.presence ||
+        render_custom_block("user_resource_form_budget_investment",
+                            default_content: t("custom.budgets.investments.form.page_description"))
+    end
+
     def title_placeholder
       investment.projekt_phase&.resource_form_title_placeholder.presence ||
         t("custom.budgets.investments.form.title_placeholder")
@@ -60,6 +70,5 @@ class Budgets::Investments::FormComponent < ApplicationComponent
     def description_placeholder
       investment.projekt_phase&.resource_form_description_placeholder.presence ||
         t("custom.budgets.investments.form.description_placeholder")
->>>>>>> con-2470
     end
 end

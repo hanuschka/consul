@@ -7,6 +7,10 @@ class Budget
     include Sentimentable
     include Memoable
 
+    DEFAULT_ORDERS = %w(
+      random total_votes ballot_line_weight newest comments_count
+    ).freeze
+
     delegate :projekt, :projekt_phase, :find_or_create_stats_version, :show_percentage_values_only?, to: :budget
     delegate :approximated_address, to: :map_location, allow_nil: true
 

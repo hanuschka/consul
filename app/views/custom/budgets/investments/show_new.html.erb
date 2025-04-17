@@ -10,9 +10,12 @@
         <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
         <div class="common-page-description">
-          <%= render_custom_block("budget_investment_show_welcome_text") %>
+          <% if @investment.projekt_phase&.welcome_text_in_show.present? %>
+            <%= AdminWYSIWYGSanitizer.new.sanitize(@investment.projekt_phase&.welcome_text_in_show) %>
+          <% else %>
+            <%= render_custom_block("budget_investment_show_welcome_text") %>
+          <% end %>
         </div>
-
       </div>
       <div class="sidebar-placeholder"></div>
     </div>
@@ -152,15 +155,30 @@
             <% end %>
 
           <% elsif @investment.should_show_ballots? %>
-            <%= render(Shared::SidebarCardComponent.new(title: t("budgets.investments.show.votes"), icon_name: "vote-yea")) do |c| %>
-              <div class="text-center">
-                <div id="<%= dom_id(@investment) %>_ballot">
-                  <%= render "ballot",
-                    investment: @investment,
-                    investment_ids: @investment_ids,
-                    ballot: @ballot %>
+            <%= render(Mobile::FixedBottomActionComponent.new) do %>
+              <%= render(Shared::SidebarCardComponent.new(title: t("budgets.investments.show.votes"), icon_name: "vote-yea")) do |c| %>
+                <div class="sidebar-divider"></div>
+                <div id="budget_investment_sticky" >
+                  <div class=""
+                       data-stick-to="bottom"
+                       data-sticky-on="small"
+                       data-top-anchor="0"
+                       data-btm-anchor="sticky_stop"
+                       data-check-every="0">
+                    <div class="fix-on-mobile">
+                      <div class="text-center">
+                        <div id="<%= dom_id(@investment) %>_ballot">
+                          <%= render "ballot",
+                            investment: @investment,
+                            investment_ids: @investment_ids,
+                            ballot: @ballot %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+                <div id="sticky_stop"></div>
+              <% end %>
             <% end %>
 
           <% end %>

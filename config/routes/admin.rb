@@ -8,6 +8,9 @@ namespace :admin do
       get :naming
       get :restrictions
       get :settings
+      get :general_settings
+      get :user_functions
+      get :form_author
       get :map
       patch :update_map
       get :projekt_labels

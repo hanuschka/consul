@@ -41,6 +41,55 @@
   #budgets ul.tabs {
     background: initial;
   }
+
+  .sticky-ballot-progress-bar {
+    position: sticky;
+    top: 90px;
+    z-index: 1000;
+
+    @media screen and (max-width: $small-tablet-viewport-start) {
+      top: 109px;
+      padding: 20px !important;
+      border-top: 0 !important;
+
+      #progress_bar #total_amount {
+        display: none;
+      }
+    }
+  }
+
+  .expanded.jumbo-budget.budget-heading {
+    @media screen and (max-width: $small-tablet-viewport-start) {
+      margin-left: -20px;
+      margin-right: -20px;
+      border: 1px solid #cfcece;
+      border-left: 0;
+      border-right: 0;
+      padding: 0 20px;
+
+      &:after {
+        border-bottom: 0;
+      }
+    }
+
+    @media screen and (min-width: $small-tablet-viewport-start) and (max-width: $big-tablet-viewport-start) {
+      padding-left: 25px;
+    }
+
+    &.balloting {
+      margin-bottom: 0;
+      padding-bottom: 0;
+
+      &:after {
+        border-bottom: 0;
+      }
+
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        margin-bottom: 1.5rem;
+        border-bottom: 0 !important;
+      }
+    }
+  }
 }
 
 .expanded.jumbo-budget.budget-heading {

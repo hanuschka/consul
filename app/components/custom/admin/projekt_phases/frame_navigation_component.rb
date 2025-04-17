@@ -13,11 +13,6 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
     current_action = params[:category].presence || params[:action]
     next_action = helpers.next_action_for_phase(@projekt_phase, current_action)
 
-    if @projekt_phase.settings_categories.include?(next_action)
-      original_action = next_action
-      next_action = "settings"
-    end
-
     if next_action.present?
       url_for(
         action: next_action, action_name: next_action,
@@ -38,11 +33,6 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
 
     if @projekt_phase.present?
       previous_action = helpers.previous_action_for_phase(@projekt_phase, current_action)
-    end
-
-    if @projekt_phase.settings_categories.include?(previous_action)
-      original_action = previous_action
-      previous_action = "settings"
     end
 
     if previous_action.present?

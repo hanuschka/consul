@@ -6,13 +6,8 @@
 
       <div class="flex-layout">
         <div class="main-column">
-          <h1 class="user-resources-form--title">
-            <%= investment.projekt_phase.resource_form_title.presence || t("custom.budgets.investments.form.start_new") %>
-          </h1>
-
-          <div class="user-resources-form--description">
-            <%= render_custom_block "user_resource_form_budget_investment", default_content: t("custom.budgets.investments.form.page_description") %>
-          </div>
+          <h1 class="user-resources-form--title"><%= form_title %></h1>
+          <div class="user-resources-form--description"><%= AdminWYSIWYGSanitizer.new.sanitize(form_description) %></div>
 
           <%= render "shared/errors", resource: investment %>
         </div>

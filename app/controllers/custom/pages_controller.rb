@@ -34,13 +34,20 @@ class PagesController < ApplicationController
       @custom_page&.projekt&.visible_for?(current_user)
 
     if @custom_page&.landing?
-      @ui_show_projekts_overview = @custom_page.landing_show_projekts_overview
-      @ui_hide_topbar_links = @custom_page.landing_hide_all_top_nav_links
-      @ui_site_logo_not_clickable = @custom_page.landing_site_logo_not_clickable
+      set_landing_page_topbar_ui_variables(@custom_page)
     end
 
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
+
+      if params[:page_ref].present?
+        @landing_page =
+          @projekt
+            .landing_pages
+            .find_by(slug: params[:page_ref])
+
+        set_landing_page_topbar_ui_variables(@landing_page)
+      end
 
       if @projekt.feature?("sidebar.show_notification_subscription_toggler")
         @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
@@ -158,10 +165,12 @@ class PagesController < ApplicationController
     @valid_orders = Proposal.proposals_orders(current_user)
     @valid_orders.delete("archival_date")
     @valid_orders.delete("relevance")
+    sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
+
     @current_order = if @valid_orders.include?(params[:order])
                        params[:order]
-                     elsif helpers.projekt_feature?(@projekt, "general.set_default_sorting_to_newest") && @valid_orders.include?("created_at")
-                       @current_order = "created_at"
+                     elsif sort_option.present?
+                       @current_order = sort_option.value
                      else
                        Setting["selectable_setting.proposals.default_order"]
                      end
@@ -237,11 +246,28 @@ class PagesController < ApplicationController
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
-    @valid_orders = %w[random total_votes ballots ballot_line_weight newest comments_count]
+    @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
     @valid_orders.delete("total_votes") unless @budget.current_phase.kind == "selecting"
-    @valid_orders.delete("ballots")
     @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
-    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+
+    sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
+
+    @current_order =
+      if @valid_orders.include?(params[:order])
+        params[:order]
+      elsif sort_option.present? || @valid_orders.include?(sort_option.value)
+        @current_order = sort_option.value
+      else
+        @valid_orders.first
+      end
+
+    if @budget.current_phase.kind == "finished"
+      if @budget.voting_style == "distributed"
+        @current_order = "ballot_line_weight"
+      elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"
+        @current_order = "ballots"
+      end
+    end
 
     params[:section] ||= "results" if @budget.current_phase.kind == "finished"
 
@@ -269,23 +295,19 @@ class PagesController < ApplicationController
       @ballot = @budget.balloting? ? query.first_or_create!(conditional: ballot_conditional?) : query.first_or_initialize(conditional: ballot_conditional?)
 
       @resources = @budget.investments
-      take_by_projekt_labels
-      take_by_sentiment
-      @investments = @resources
 
-      @investments = @investments.send(@current_filter)
-      @investment_ids = @investments.ids
-    end
-
-    if @budget.current_phase.kind == "finished"
-      if @budget.voting_style == "distributed"
-        @current_order = "ballot_line_weight"
-      elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"
-        @current_order = "ballots"
+      if params[:search].present?
+        @resources = @resources.search(params[:search])
+      else
+        take_by_projekt_labels
+        take_by_sentiment
       end
-    end
 
-    @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+      @investments = @resources.send(@current_filter)
+      @investment_ids = @investments.ids
+      @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+      @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
+    end
 
     unless params[:section] == "results" && can?(:read_results, @budget)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)

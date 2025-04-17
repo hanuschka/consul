@@ -55,8 +55,11 @@ class Verification::Residence
       street_number_extension: street_number_extension,
       document_type:           document_type,
       document_last_digits:    document_last_digits,
-      registered_address_id:   registered_address_id
+      registered_address_id:   registered_address_id,
+      geozone_id:              Geozone.find_with_plz(plz)&.id
     )
+
+
 
     if Setting["feature.melderegister"].present?
       user.save!

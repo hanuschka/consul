@@ -188,9 +188,9 @@
       });
     },
 
-    setActiveMap: function(maps, mapName) {
-      maps.setActiveMap(mapName);
-    },
+    // setActiveMap: function(maps, mapName) {
+    //   maps.setActiveMap(mapName);
+    // },
 
     setDefaultView: function(app, map) {
       var mapCenterLat = app.customMapOptions.mapCenterLatitude;

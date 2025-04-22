@@ -18,9 +18,15 @@ en:
     investments:
       index:
         filters:
-          all: All
-          feasible: Feasible
-          undecided: Undecided
+          all: all Proposals
+          undecided: undecided
+          feasible: feasible
+          unfeasible: unfeasible
+          preselected: preselected
+          not_preselected: not preselected
+          selected: selected
+          unselected: unselected
+          winners: winners
         orders:
           random: Random
           ballot_line_weight: Most supported
@@ -107,12 +113,11 @@ en:
             selecting:
               undecided: This investment proposal was not eveluated yet.
               unfeasible: This investment proposal was marked as unfeasible.
-          implementation: Implementation
-          implementation_city_text_html: Needs to be implemented by the city
-          implementation_text_html: "%{author} supports with implementation<br><br>%{implementation_contribution}"
           price: Cost estimation by the administration
-          user_cost_estimate: Cost estimation by the user
           feasibility_explanation: Assessment of the administration
+          implementation_city_text: "Implementation: Should be implemented by the city administration"
+          implementation_user_text: "Implementation: %{author} will assist with the implementation"
+          user_cost_estimate_text: "User cost estimate: %{user_cost_estimate}"
         statuses:
           phases:
             accepting: The investment proposal was successfully submitted.

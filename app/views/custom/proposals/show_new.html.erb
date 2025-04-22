@@ -16,6 +16,12 @@
   <%= render "shared/canonical", href: proposal_url(@proposal) %>
 <% end %>
 
+<% if projekt_feature?(@proposal.projekt_phase.projekt, "general.vc_map_enabled") %>
+  <% provide :vc_maps do %>
+    <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+  <% end %>
+<% end %>
+
 <main class="resource-page">
   <div class="custom-fixed-tabs margin-bottom">
     <div class="custom-fixed-tabs--content">
@@ -37,8 +43,6 @@
       <div class="main-column" id="proposal-content">
         <%= resources_back_link(fallback_path: proposals_path) %>
 
-        <h1 class="resource-page--title"><%= "Beitrag von #{@proposal.author_name}" %></h1>
-
         <% if @proposal.retired? %>
           <div class="callout alert margin-top proposal-retired">
             <strong>
@@ -49,7 +53,11 @@
         <% end %>
 
         <div class="common-page-description">
-          <%= render_custom_block('debate_show_welcome_text', default_content: t("custom.proposals.show.welcome_default_text", author: @proposal.author_name)) %>
+          <% if @proposal.projekt_phase&.welcome_text_in_show.present? %>
+            <%= AdminWYSIWYGSanitizer.new.sanitize(@proposal.projekt_phase&.welcome_text_in_show) %>
+          <% else %>
+            <% render_custom_block("proposals_show_welcome_text") %>
+          <% end %>
         </div>
 
       </div>
@@ -131,7 +139,7 @@
                     <% if can?(:create_topic, @proposal.community) %>
                       <%= link_to t("community.show.sidebar.new_topic"),
                                   create_topic_link(@proposal.community),
-                                  class: "button expanded" %>
+                                  class: "button" %>
                     <% end %>
                     <%= render(
                       Shared::ResourcesListComponent.new(
@@ -159,7 +167,7 @@
           <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.author"), icon_name: "user-edit")) do |c| %>
             <% if can?(:dashboard, @proposal) %>
               <%= link_to proposal_dashboard_path(@proposal),
-                class: "button hollow expanded",
+                class: "button hollow full-width",
                 id: "proposal-dashboard-#{@proposal.id}" do %>
                 <span class="icon icon-edit"></span>
                 <%= t("proposals.show.dashboard_proposal_link") %>
@@ -169,7 +177,7 @@
             <% if current_editable?(@proposal) %>
               <%= link_to edit_proposal_path(@proposal),
                 target: "_blank",
-                class: "button hollow expanded left-aligned" do %>
+                class: "button hollow full-width" do %>
                 <i class="fas fa-edit"></i>
                 <%= t("dashboard.index.edit_proposal_link") %>
               <% end %>
@@ -178,14 +186,14 @@
             <% if !@proposal.retired? && can?(:retire, @proposal) %>
               <%= link_to t("dashboard.index.retire"),
                 retire_form_proposal_path(@proposal),
-                class: "button hollow alert",
+                class: "button hollow full-width alert",
                 target: "_blank" %>
             <% end %>
 
             <% if can?(:publish, @proposal) %>
               <%= link_to t("dashboard.index.publish"),
                 publish_proposal_path(@proposal),
-                class: "button hollow expanded",
+                class: "button hollow full-width",
                 method: :patch %>
             <% end %>
           <% end %>
@@ -246,10 +254,10 @@
                 <%= t("custom.proposals.show.community_section.comments_count") %>
               </div>
               <%= render(Sidebar::UsersListComponent.new(users: @proposal.community.participants)) %>
-              <%= link_to t("custom.community.sidebar.particapate"), community_path(@proposal.community), class: "button" %>
+              <%= link_to t("custom.community.sidebar.particapate"), community_path(@proposal.community), class: "button full-width" %>
             <% elsif can?(:create_topic, @proposal.community) %>
               <%= t("custom.proposals.show.community_section.description_create_first") %>
-              <%= link_to t("custom.community.sidebar.be_first"), community_path(@proposal.community), class: "button" %>
+              <%= link_to t("custom.community.sidebar.be_first"), community_path(@proposal.community), class: "button full-width" %>
             <% end %>
           <% end %>
         <% end %>

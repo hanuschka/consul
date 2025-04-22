@@ -33,7 +33,9 @@
         <%= render "devise/shared/links" %>
       </div>
 
-      <%= link_to(t("devise_views.shared.links.signup_link"), new_user_registration_path, class: 'button n -green') %>
+      <div class="small-12 medium-6 small-centered margin-top">
+        <%= link_to(t("devise_views.shared.links.signup_link"), new_user_registration_path, class: 'button expanded -green') %>
+      </div>
     <% end %>
   <% end %>
 <% else %>

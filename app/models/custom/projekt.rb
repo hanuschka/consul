@@ -109,9 +109,9 @@ class Projekt < ApplicationRecord
 
   before_save :assign_top_level_projekt_from_parent
 
-  after_update :note_updated_for_global_overview #, on: :update
-  after_touch :note_updated_for_global_overview
-  after_destroy :note_destroy_for_global_overview
+  after_update :sync_update_for_global_overview #, on: :update
+  after_touch :sync_update_for_global_overview
+  after_destroy :sync_destroy_for_global_overview
 
   after_destroy :ensure_projekt_order_integrity
 
@@ -797,10 +797,10 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def note_updated_for_global_overview
+    def sync_update_for_global_overview
       if should_be_exported?
         if hidden_at.present?
-          note_destroy_for_global_overview
+          sync_destroy_for_global_overview
         else
           Projekts::OverviewProjektUpdatedJob.perform_later(
             self
@@ -809,7 +809,7 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def note_destroy_for_global_overview
+    def sync_destroy_for_global_overview
       if should_be_exported?
         Projekts::OverviewProjektDestroyedJob.perform_later(id)
       end

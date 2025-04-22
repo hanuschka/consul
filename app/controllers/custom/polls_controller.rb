@@ -89,6 +89,18 @@ class PollsController < ApplicationController
     @commentable = @poll
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
 
+    if params[:page_ref].present?
+      @landing_page =
+        @projekt_phase
+          .projekt
+          .landing_pages
+          .find_by(slug: params[:page_ref])
+
+      if @landing_page.present?
+        set_landing_page_topbar_ui_variables(@landing_page)
+      end
+    end
+
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "custom/pages/forbidden", layout: false

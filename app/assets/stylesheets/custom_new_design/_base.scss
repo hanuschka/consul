@@ -44,6 +44,12 @@ body.custom-new-design {
     z-index: 100;
     top: 110px;
     right: 20px;
+    position: absolute;
+
+    @media(max-width: $mobile-viewport-start) {
+      right: 10px;
+      left: 10px;
+    }
   }
 
   .account-admin-items li#notifications a.notifications {

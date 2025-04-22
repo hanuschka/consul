@@ -53,4 +53,8 @@ class Shared::CommentsFormComponent < ApplicationComponent
         "custom.projekt_phases.permission_problem.commenting.shared.#{permission_problem_key}"
       end
     end
+
+    def exception_for_investment?
+      record.is_a?(Budget::Investment) && record.unfeasible? && record.valuation_finished?
+    end
 end

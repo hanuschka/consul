@@ -89,6 +89,7 @@ en:
             only_specific_registered_address_groupings: Participation is limited to another area.
           budget_phase:
             investment_unfeasible: Für nicht durchführbare Investitionsvorschläge kann nicht kommentiert werden
+            too_late: No further comments are possible at this time.
         poll_votes:
           guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."

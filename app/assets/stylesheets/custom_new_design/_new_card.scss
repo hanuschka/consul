@@ -5,7 +5,7 @@
     border: 1px solid $border-color;
     margin-bottom: 15px;
     color: $main-text-color;
-    padding: 20px 25px;
+    padding: 30px 30px;
     overflow: hidden;
 
     &.-no-padding {
@@ -31,26 +31,13 @@
   }
 
   .main-content-card {
-    padding: 30px 50px;
-    padding-top: 35px;
+    padding: 30px 30px;
     // TODO change if needed
     overflow: visible;
     min-height: 114px;
 
     h1 {
       margin-top: 0;
-    }
-
-    @media (max-width: 1365px) {
-      padding: 25px 35px;
-    }
-
-    @media(max-width: $big-tablet-viewport-start) {
-      padding: 20px 22px;
-    }
-
-    @media (max-width: $mobile-viewport-start) {
-      padding: 18px 22px;
     }
   }
 

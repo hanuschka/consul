@@ -3,7 +3,7 @@ class ContentCard::EventsComponent < ApplicationComponent
 
   def initialize(content_card, custom_page: nil)
     @content_card = content_card
-    @limit = @content_card.settings['limit'].to_i
+    @limit = @content_card.settings["limit"].to_i
 
     @original_events =
       if custom_page.present?
@@ -16,6 +16,7 @@ class ContentCard::EventsComponent < ApplicationComponent
           })
       else
         ProjektEvent.with_active_projekt
+                    .with_phase_feature("general.show_on_home_page")
       end
   end
 

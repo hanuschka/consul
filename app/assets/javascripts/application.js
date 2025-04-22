@@ -133,6 +133,7 @@
 //= require ckeditor5/ckeditor5.umd
 //= require ckeditor5/file-upload-manager
 //= require html2canvas/dist/html2canvas.min
+//= require select2/dist/js/select2.full
 
 var initialize_modules = function() {
   "use strict";
@@ -199,6 +200,7 @@ var initialize_modules = function() {
   App.CustomAdmin.initialize();
   App.ModerationCustom.initialize();
   App.CopyContent.initialize();
+  App.CopyDataUrl.initialize();
   App.FooterPhasesComponentCustom.initialize();
   App.RemoteLinksPushState.initialize();
   App.ProjektQuestionCustom.initialize();

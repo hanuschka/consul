@@ -36,7 +36,7 @@ $header-mobile-height: 60px;
   }
 
   .top-bar-background-wrapper {
-    height: 90px;
+    height: $topbar-height;
     // max-width: 1920px;
     margin: auto;
     background-color: white;

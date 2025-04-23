@@ -186,7 +186,23 @@ class PagesController < ApplicationController
     end
 
     @proposals_coordinates = all_proposal_map_locations(@resources)
-    @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
+
+    @proposals =
+      @resources
+        .perform_sort_by(@current_order, session[:random_seed])
+        .page(params[:page])
+
+    if helpers.proposal_browse_mode_in_footer_tab?(@projekt_phase)
+      @proposals = @proposals.per(1)
+      @proposal = @proposals.first
+
+      if @proposal.present?
+        @comment_tree = CommentTree.new(@proposal, params[:page], "newest")
+        set_comment_flags(@comment_tree.comments)
+      end
+    else
+      @proposals = @proposals.per(24)
+    end
   end
 
   def set_voting_phase_footer_tab_variables
@@ -311,6 +327,16 @@ class PagesController < ApplicationController
 
     unless params[:section] == "results" && can?(:read_results, @budget)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
+    end
+
+    if helpers.proposal_browse_mode_in_footer_tab?(@projekt_phase)
+      @investments = @investments.per(1)
+      @investment = @investments.first
+
+      if @investment.present?
+        @comment_tree = CommentTree.new(@investment, params[:page], "newest")
+        set_comment_flags(@comment_tree.comments)
+      end
     end
   end
 

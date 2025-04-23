@@ -11,5 +11,7 @@ class DeficiencyReportManagement::StatsController < DeficiencyReportManagement::
     @by_responsible = deficiency_report_all_responsible_sorted.map do |responsible|
       [responsible, DeficiencyReport.where(responsible: responsible)]
     end
+
+    @all_deficiency_reports = DeficiencyReport.all
   end
 end

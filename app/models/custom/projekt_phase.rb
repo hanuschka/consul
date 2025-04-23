@@ -97,11 +97,7 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
-  scope :sorted, -> do
-    regular_phases.sort_by(&:default_order).each do |x|
-      x.start_date = Time.zone.today if x.start_date.nil?
-    end.sort_by(&:start_date)
-  end
+  scope :sorted, ->  {order(:given_order) }
 
   def self.order_phases(ordered_array)
     ordered_array.each_with_index do |phase_id, order|

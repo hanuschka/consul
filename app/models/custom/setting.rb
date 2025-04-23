@@ -137,6 +137,7 @@ class Setting < ApplicationRecord
         "direct_message_max_per_day": 3,
         "mailer_from_name": "CONSUL",
         "mailer_from_address": "noreply@consul.dev",
+        "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
         "related_content_score_threshold": -0.3,

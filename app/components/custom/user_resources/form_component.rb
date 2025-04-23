@@ -82,8 +82,12 @@ class UserResources::FormComponent < ApplicationComponent
     projekt_phase.resource_form_title.presence || @title
   end
 
-  def descriotion_placeholder
-    projekt_phase.resource_form_title_hint.presence || t("custom.#{i18n_scope}.form.description_placeholder")
+  def title_placeholder
+    projekt_phase.resource_form_title_placeholder.presence || t("custom.#{i18n_scope}.form.title_placeholder")
+  end
+
+  def description_placeholder
+    projekt_phase.resource_form_description_placeholder.presence || t("custom.#{i18n_scope}.form.description_placeholder")
   end
 
   def show_labels_selector?

@@ -52,10 +52,4 @@
   </span>
 
   <%= render Shared::ParticipationNotAllowedComponent.new(proposal, cannot_vote_text: cannot_vote_text) %>
-
-  <% if voted? && setting["twitter_handle"] %>
-    <div class="share-supported">
-      <%= render "proposals/social_share", proposal: proposal, share_title: false %>
-    </div>
-  <% end %>
 </div>

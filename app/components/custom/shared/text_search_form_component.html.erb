@@ -1,30 +1,27 @@
-<div id="search_form" class="text-search-form search-form-header">
-  <%= form_tag form_url, method: :get, remote: remote_attribute, enforce_utf8: false, class: "js-text-search-form" do %>
-    <% other_query_params_from_current_path.each do |param_name, param_value| %>
-      <%= hidden_field_tag param_name, param_value %>
-    <% end %>
+<%= form_tag form_url, method: :get, remote: remote_attribute, enforce_utf8: false, class: "text-search-form js-text-search-form", data: { disable_reset_button_submit: @disable_reset_button_submit} do %>
+  <% other_query_params_from_current_path.each do |param_name, param_value| %>
+    <%= hidden_field_tag param_name, param_value %>
+  <% end %>
 
-    <label for="search_text">
-      <input
-           type="text"
+  <label for="search_text">
+    <input
+        type="text"
         name="search"
         autocomplete="off"
         placeholder="<%= t("placeholder", scope: i18n_namespace) %>"
-        class="input-group-field"
+        class="input-group-field js-search-input"
         value="<%= params[:search] %>" id="search_text"
-      >
-
-    </label>
-    <%# <div class="input-group-button"> %>
+                                       >
+  </label>
+  <%# <div class="input-group-button"> %>
     <%#   <button type="submit" class="button" title="<%= t("#{i18n_namespace}.button_title", default: "Search") %1>"> %>
-    <%#     <span class="icon-search"></span> %>
-    <%#   </button> %>
+      <%#     <span class="icon-search"></span> %>
+      <%#   </button> %>
     <%# </div> %>
-    <button type="submit" class="button text-search-form--search-button" title="<%= t("#{i18n_namespace}.button_title", default: "Search") %>">
-      <span class="icon-search"></span>
-    </button>
-    <div class="text-search-form--reset-button js-text-search-form-reset-button">
-      <i class="icon-cross"></i>
-    </div>
-  <% end %>
-</div>
+  <div class="text-search-form--search-button js-search-button" title="<%= t("#{i18n_namespace}.button_title", default: "Search") %>">
+    <span class="icon-search"></span>
+  </div>
+  <div class="text-search-form--reset-button js-text-search-form-reset-button" disabled>
+    <i class="icon-cross"></i>
+  </div>
+<% end %>

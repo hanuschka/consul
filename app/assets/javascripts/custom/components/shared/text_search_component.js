@@ -1,24 +1,66 @@
 (function() {
   "use strict";
+
   App.TextSearchFormComponent = {
     initialize: function() {
-      $(document).on("click", ".js-text-search-form-reset-button", this.resetForm.bind(this));
-      // $(".js-text-search-form").on("submit", this.enableTurbolinksSubmit.bind(this));
+      var elements = document.querySelectorAll('.js-text-search-form');
+
+      elements.forEach(element => {
+        this.initializeFor(element)
+      })
     },
 
-    // enableTurbolinksSubmit: function(e) {
-    //   e.preventDefault();
-    //   var form = e.currentTarget;
-    //
-    //   Turbolinks.visit(form.action + "?" + new URLSearchParams(new FormData(form)));
-    // },
+    initializeFor: function(element) {
+      var searchInput = this.searchInput(element);
 
-    resetForm: function(e) {
-      var $parentForm = $(e.currentTarget).closest("form");
-      var $searchText = $parentForm.find("#search_text");
+      if (searchInput) {
+        this.setupEventListeners(element);
+        this.updateButtonVisibility(element);
+      }
+    },
 
-      $searchText.val("").prop("disabled", true);
-      $parentForm.submit();
+    searchInput: function() {
+      return document.querySelector('.js-search-input');
+    },
+
+    searchButton: function() {
+      return document.querySelector('.js-search-button');
+    },
+
+    resetButton: function() {
+      return document.querySelector('.js-text-search-form-reset-button');
+    },
+
+    setupEventListeners: function(rootElement) {
+      var searchInput = this.searchInput(rootElement)
+
+      searchInput.addEventListener('input', function() {
+        this.updateButtonVisibility(rootElement);
+      }.bind(this));
+
+      this.resetButton(rootElement).addEventListener('click', function () {
+        console.log("resetButton click")
+        this.handleReset(rootElement);
+      }.bind(this));
+    },
+
+    updateButtonVisibility: function(rootElement) {
+      var hasValue = this.searchInput(rootElement).value.trim().length > 0;
+
+      rootElement.classList.toggle("-active", hasValue)
+    },
+
+    handleReset: function(rootElement) {
+      var searchInput = this.searchInput(rootElement);
+
+      searchInput.value = '';
+      this.updateButtonVisibility(rootElement);
+      searchInput.focus();
+
+      if (rootElement.dataset.disableResetButtonSubmit !== "true") {
+        rootElement.requestSubmit()
+      }
     }
   };
 }).call(this);
+

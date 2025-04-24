@@ -76,6 +76,7 @@
         <%= render(
           Shared::TextSearchFormComponent.new(
             url: projekts_path,
+            disable_reset_button_submit: true,
             i18n_namespace: "custom.projekts.homepage_search_form",
           )
         ) %>

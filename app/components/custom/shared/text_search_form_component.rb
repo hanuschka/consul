@@ -1,10 +1,11 @@
 class Shared::TextSearchFormComponent < ApplicationComponent
   attr_reader :i18n_namespace
 
-  def initialize(i18n_namespace:, url: nil, remote: false)
+  def initialize(i18n_namespace:, url: nil, remote: false, disable_reset_button_submit: false)
     @i18n_namespace = i18n_namespace
     @url = url
     @remote = remote
+    @disable_reset_button_submit = disable_reset_button_submit
   end
 
   def remote_attribute

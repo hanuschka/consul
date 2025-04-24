@@ -9,7 +9,7 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    right: 38px;
+    right: 5px;
     border-radius: 50%;
     width: 2.0em;
     height: 2.0em;
@@ -43,10 +43,10 @@
     height: 2.0em;
     padding: 5px;
     border-radius: 50%;
-    display: flex;
     justify-content: center;
     align-items: center;
     transition: 100ms background-color ease;
+    display: none;
 
     i {
       display: block;
@@ -54,6 +54,18 @@
 
     &:hover {
       background-color: #e6e6e6;
+    }
+  }
+
+  .text-search-form {
+    &.-active {
+      .text-search-form--reset-button {
+        display: flex;
+      }
+
+      .text-search-form--search-button {
+        display: none;
+      }
     }
   }
 }

@@ -5,13 +5,13 @@
 
   <label for="search_text">
     <input
-        type="text"
-        name="search"
-        autocomplete="off"
-        placeholder="<%= t("placeholder", scope: i18n_namespace) %>"
-        class="input-group-field js-search-input"
-        value="<%= params[:search] %>" id="search_text"
-                                       >
+      type="text"
+      name="search"
+      autocomplete="off"
+      placeholder="<%= t("placeholder", scope: i18n_namespace) %>"
+      class="input-group-field js-text-search-form-search-input"
+      value="<%= params[:search] %>"
+    >
   </label>
   <%# <div class="input-group-button"> %>
     <%#   <button type="submit" class="button" title="<%= t("#{i18n_namespace}.button_title", default: "Search") %1>"> %>

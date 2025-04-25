@@ -8,3 +8,9 @@
     </div>
   <% end %>
 </div>
+
+<% if @resource.image&.credits&.present? %>
+  <div class="resource-image--credits">
+    <%= @resource.image.credits %>
+  </div>
+<% end %>

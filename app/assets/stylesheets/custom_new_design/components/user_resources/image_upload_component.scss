@@ -8,7 +8,7 @@
   color: #666;
   background: #feebd3;
   transition: background 0.2s ease-in-out;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   padding-top: 40px;
   padding-left: 35px;
   padding-right: 35px;
@@ -87,4 +87,10 @@
 
   @media(max-width: $small-tablet-viewport-start) {
   }
+}
+
+form input.light-input.image-upload-credits-input {
+  padding: 0;
+  padding-left: 10px !important;
+  border-radius: 0 0 10px 10px !important;
 }

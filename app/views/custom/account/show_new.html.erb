@@ -58,7 +58,7 @@
         <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow expanded delete alert" %>
       <% end %>
 
-      <% if !current_user.level_three_verified? %>
+      <% if !current_user.level_three_verified? && false # cli %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description"),  icon_name: "check") do |c| %>
           <div class="verify-account">
             <% if current_user.level_two_verified? %>

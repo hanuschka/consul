@@ -51,11 +51,11 @@
     </div>
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.users.settings"), icon_name: "cog") do |c| %>
-        <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow" %>
+        <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
         <% if @account.extended_registration? %>
-          <%= link_to t("custom.account.show.edit_details_link"), edit_details_account_path, class: "button hollow" %>
+          <%= link_to t("custom.account.show.edit_details_link"), edit_details_account_path, class: "button hollow expanded" %>
         <% end %>
-        <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow delete alert" %>
+        <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow expanded delete alert" %>
       <% end %>
 
       <% if !current_user.level_three_verified? %>

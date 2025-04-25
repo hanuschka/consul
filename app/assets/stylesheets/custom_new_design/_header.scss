@@ -36,7 +36,7 @@ $header-mobile-height: 60px;
   }
 
   .top-bar-background-wrapper {
-    height: 90px;
+    height: $topbar-height;
     // max-width: 1920px;
     margin: auto;
     background-color: white;
@@ -110,6 +110,26 @@ $header-mobile-height: 60px;
 
     .button {
       font-size: 20px;
+    }
+  }
+
+  .homepage-search-form {
+    max-width: 350px;
+    margin-top: 25px;
+    flex-grow: 1;
+    width: 100%;
+
+    .input-group-button {
+      display: none;
+    }
+
+    .search-form-header {
+      input[type="text"] {
+        width: 100%;
+        height: 42px;
+        font-size: 18px;
+        border-radius: 4px;
+      }
     }
   }
 }
@@ -303,8 +323,9 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     flex-grow: initial;
     user-select: none;
 
-    img {
+    a img {
       max-height: 52px;
+      // max-width: 52px;
     }
   }
 
@@ -495,9 +516,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     border-radius: 10px;
 
     .nav-element {
-      padding: 1em;
       width: 300px;
-      min-height: 45px;
       margin-right: 0 !important;
 
       &:hover {
@@ -526,6 +545,11 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
       }
+
+      @media screen and (min-width: $small-tablet-viewport-start) {
+        padding: 1em;
+        min-height: 45px;
+      }
     }
   }
 
@@ -549,13 +573,13 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .header--responsive-menu-title {
-    color: $brand;
+    color: $responsive-menu-text-color;
   }
 
-  .header--responsive-menu-sign-in-button {
+  .header--responsive-menu-sign-auth-button {
     width: auto;
-    background: $brand !important;
-    color: white !important;
+    background: $responsive-menu-contrast-color !important;
+    color: $responsive-menu-background-color !important;
     border-radius: 5px !important;
     padding: 10px 20px;
     line-height: inherit !important;
@@ -633,6 +657,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     .header--responsive-menu-sign-in-section {
+      gap: 10px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       margin-top: 20px;
       margin-bottom: 10px;
     }

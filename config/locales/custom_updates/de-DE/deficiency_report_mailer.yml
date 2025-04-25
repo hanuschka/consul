@@ -4,7 +4,7 @@ de:
       mailers:
         closing: Freundliche Grüße
         signature: Euer Anliegenmanagement
-        contact_info: Bei inhaltlichen Fragen wendet euch bitte an <a href="anliegen@siegburg.de">anliegen@siegburg.de</a>
+        contact_info: Bei inhaltlichen Fragen wendet euch bitte an <a href="mailto:%{email}">%{email}</a>
         notify_author_about_status_change:
           subject: Statusänderung Ihres Mangels
           hi: Hallo

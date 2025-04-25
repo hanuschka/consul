@@ -1,6 +1,12 @@
 de:
   custom:
     projekt_phases:
+      proposal_navigation:
+        back_to_detail_view: Zur Einzelansicht
+        back_to_overview: Zur Übersichtsseite
+        next: "Weiter"
+        back: "Zurück"
+        first: "Erster Vorschlag"
       cta:
         title: Beteiligung
         voting_phase: An Abstimmung teilnehmen

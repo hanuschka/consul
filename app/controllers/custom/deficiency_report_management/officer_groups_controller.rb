@@ -37,6 +37,7 @@ class DeficiencyReportManagement::OfficerGroupsController < DeficiencyReportMana
     def officer_group_params
       params.require(:deficiency_report_officer_group).permit(
         :name,
+        :default_email,
         officer_ids: []
       )
     end

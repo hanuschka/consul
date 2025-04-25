@@ -16,6 +16,11 @@ class Proposals::NewVotesComponent < ApplicationComponent
     @vote_url || vote_proposal_path(proposal, value: "yes", offline_user_id: params[:offline_user_id])
   end
 
+  def support_button_text
+    @proposal_phase.support_button_text.presence ||
+      t("proposals.proposal.support")
+  end
+
   private
 
     def voted?

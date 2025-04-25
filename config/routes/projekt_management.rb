@@ -8,6 +8,9 @@ namespace :projekt_management do
       get :naming
       get :restrictions
       get :settings
+      get :general_settings
+      get :user_functions
+      get :form_author
       get :age_ranges_for_stats
       get :map
       patch :update_map

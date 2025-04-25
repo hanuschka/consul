@@ -1,5 +1,7 @@
 class ProjektPhaseSetting < ApplicationRecord
-  SETTING_KINDS = %w[feature option].freeze
+  SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
+
+  SETTING_KINDS = %w[feature option selectable_setting].freeze
   SETTING_BANDS = %w[general form resource].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
@@ -43,137 +45,114 @@ class ProjektPhaseSetting < ApplicationRecord
     def defaults
       {
         "ProjektPhase::DebatePhase" => {
-          base: {
-            "feature.general.only_admins_create_debates": "",
+          "feature.general.only_admins_create_debates": "",
 
-            "feature.form.allow_attached_image": "active",
-            "feature.form.allow_attached_documents": "",
+          "feature.form.allow_attached_image": "active",
+          "feature.form.allow_attached_documents": "",
 
-            "feature.resource.allow_voting": "active",
-            "feature.resource.show_report_button_in_sidebar": "active",
-            "feature.resource.show_related_content": "active",
-            "feature.resource.show_comments": "active"
-          }
+          "feature.resource.allow_voting": "active",
+          "feature.resource.show_report_button_in_sidebar": "active",
+          "feature.resource.show_related_content": "active",
+          "feature.resource.show_comments": "active"
         },
 
         "ProjektPhase::ProposalPhase" => {
-          form_author: {
-            "feature.form.allow_attached_image": "active",
-            "feature.form.labels": "",
-            "feature.form.sentiments": "",
-            "feature.form.show_map": "active",
-            "feature.form.enable_geoman_controls_in_maps": "active",
-            "feature.form.allow_attached_documents": "",
-            "feature.form.enable_external_video": "",
-            "feature.resource.show_video_as_link": "",
-            "feature.resource.enable_proposal_notifications_tab": "",
-            "feature.resource.enable_proposal_milestones_tab": ""
-          },
+          "feature.form.allow_attached_image": "active",
+          "feature.form.labels": "",
+          "feature.form.sentiments": "",
+          "feature.form.show_map": "active",
+          "feature.form.enable_geoman_controls_in_maps": "active",
+          "feature.form.allow_attached_documents": "",
+          "feature.form.enable_external_video": "",
+          "feature.resource.show_video_as_link": "",
+          "feature.resource.enable_proposal_notifications_tab": "",
+          "feature.resource.enable_proposal_milestones_tab": "",
 
-          user_functions: {
-            "feature.resource.users_can_create_proposals": "active",
-            "feature.resource.allow_voting": "active",
-            "feature.resource.quorum_for_proposals": "",
-            "feature.resource.enable_up_and_down_voting": "",
-            "feature.resource.show_report_button_in_sidebar": "active",
-            "feature.resource.show_follow_button_in_proposal_sidebar": "",
-            "feature.resource.show_community_button_in_proposal_sidebar": "",
-            "feature.resource.show_related_content": "",
-            "feature.resource.show_comments": "active",
-            "option.resource.votes_for_proposal_success": 100
-          },
+          "feature.general.browse_mode_in_phase_footer": "",
 
-          old: {
-            "feature.general.only_admins_create_proposals": ""
-          }
+          "feature.resource.users_can_create_proposals": "active",
+          "feature.resource.allow_voting": "active",
+          "feature.resource.quorum_for_proposals": "",
+          "feature.resource.enable_up_and_down_voting": "",
+          "feature.resource.show_report_button_in_sidebar": "active",
+          "feature.resource.show_follow_button_in_proposal_sidebar": "",
+          "feature.resource.show_community_button_in_proposal_sidebar": "",
+          "feature.resource.show_related_content": "",
+          "feature.resource.show_comments": "active",
+          "option.resource.votes_for_proposal_success": 100,
+
+          "selectable_setting.general.default_order": "created_at",
         },
 
         "ProjektPhase::VotingPhase" => {
-          base: {
-            "feature.resource.wizard_mode": "active",
-            "feature.resource.show_on_home_page": "active",
-            "feature.resource.show_on_index_page": "active",
-            "feature.resource.results_enabled": "",
-            "feature.resource.intermediate_poll_results_for_admins": "active",
-            "feature.resource.stats_enabled": "",
-            "feature.resource.advanced_stats_enabled": "",
-            "feature.resource.show_comments": "active",
-            "feature.resource.show_open_answer_author_name": ""
-          }
+          "feature.resource.wizard_mode": "active",
+          "feature.resource.show_on_home_page": "active",
+          "feature.resource.show_on_index_page": "active",
+          "feature.resource.results_enabled": "",
+          "feature.resource.intermediate_poll_results_for_admins": "active",
+          "feature.resource.stats_enabled": "",
+          "feature.resource.advanced_stats_enabled": "",
+          "feature.resource.show_comments": "active",
+          "feature.resource.show_open_answer_author_name": ""
         },
 
         "ProjektPhase::BudgetPhase" => {
-          form_author: {
-            "feature.form.allow_attached_image": "active",
-            "feature.form.labels": "",
-            "feature.form.sentiments": "",
-            "feature.form.show_map": "active",
-            "feature.form.enable_geoman_controls_in_maps": "active",
-            "feature.form.allow_attached_documents": "",
-            "feature.form.enable_external_video": "",
-            "feature.resource.show_video_as_link": "",
-            "feature.form.show_implementation_option_fields": "",
-            "feature.form.show_user_cost_estimate": ""
-          },
+          "feature.form.allow_attached_image": "active",
+          "feature.form.labels": "",
+          "feature.form.sentiments": "",
+          "feature.form.show_map": "active",
+          "feature.form.enable_geoman_controls_in_maps": "active",
+          "feature.form.allow_attached_documents": "",
+          "feature.form.enable_external_video": "",
+          "feature.form.show_implementation_option_fields": "",
+          "feature.form.show_user_cost_estimate": "",
 
-          user_functions: {
-            "feature.resource.users_can_create_investment_proposals": "active",
-            "feature.resource.show_report_button_in_sidebar": "active",
-            "feature.resource.show_follow_button_in_sidebar": "",
-            "feature.resource.show_community_button_in_sidebar": "",
-            "feature.resource.show_related_content": "",
-            "feature.resource.show_comments": "active",
-            "feature.resource.conditional_balloting": ""
-          },
+          "feature.general.browse_mode_in_phase_footer": "",
 
-          old: {
-            "feature.general.only_admins_create_investment_proposals": ""
-          }
+          "feature.resource.users_can_create_investment_proposals": "active",
+          "feature.resource.show_report_button_in_sidebar": "active",
+          "feature.resource.show_follow_button_in_sidebar": "",
+          "feature.resource.show_community_button_in_sidebar": "",
+          "feature.resource.show_related_content": "",
+          "feature.resource.show_comments": "active",
+          "feature.resource.conditional_balloting": "",
+          "feature.resource.show_video_as_link": "",
+
+          "selectable_setting.general.default_order": "created_at",
         },
 
         "ProjektPhase::QuestionPhase" => {
-          base: {
-            "feature.general.show_questions_list": ""
-          }
+          "feature.general.show_questions_list": ""
         },
 
         "ProjektPhase::LivestreamPhase" => {
-          base: {
-            "feature.general.show_questions_list": ""
-          }
+          "feature.general.show_questions_list": ""
         },
 
         "ProjektPhase::MilestonePhase" => {
-          base: {
-            "feature.general.newest_first": ""
-          }
+          "feature.general.newest_first": ""
         },
 
         "ProjektPhase::EventPhase" => {
-          base: {
-            "feature.general.reverse_order_for_incoming_events": ""
-          }
+          "feature.general.reverse_order_for_incoming_events": "",
+          "feature.general.show_on_home_page": "active"
         },
 
         "ProjektPhase::NewsfeedPhase" => {
-          base: {
-            "option.general.newsfeed_id": "",
-            "option.general.newsfeed_type": ""
-          }
+          "option.general.newsfeed_id": "",
+          "option.general.newsfeed_type": ""
         },
 
         "ProjektPhase::FormularPhase" => {
-          base: {
-            "option.general.primary_formular_cutoff_date": "",
-            "option.general.submissions_limit": "1"
-          }
+          "option.general.primary_formular_cutoff_date": "",
+          "option.general.submissions_limit": "1"
         }
       }
     end
 
     def add_new_settings
       defaults.each do |phase_class, phase_settings|
-        phase_default_settings = phase_settings.values.reduce(:merge)
+        phase_default_settings = phase_settings
 
         phase_class.to_s.constantize.all.find_each do |phase|
           phase_default_settings.each do |key, value|
@@ -185,7 +164,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
     def destroy_obsolete
       defaults.each do |phase_class, phase_settings|
-        phase_default_settings_keys = phase_settings.values.reduce(:merge).keys
+        phase_default_settings_keys = phase_settings.keys
 
         phase_class.to_s.constantize.all.find_each do |phase|
           phase.settings.each do |setting|
@@ -198,5 +177,9 @@ class ProjektPhaseSetting < ApplicationRecord
 
   def enabled?
     value.present?
+  end
+
+  def i18n_key
+    "custom.projekt_phase_settings.#{projekt_phase.resources_name}.#{key}"
   end
 end

@@ -7,9 +7,9 @@ class Budget::VotingStyles::Distributed < Budget::VotingStyles::Base
     :not_enough_available_votes unless enough_resources?(investment)
   end
 
-  # def not_enough_resources_error
-  #   "insufficient votes"
-  # end
+  def not_enough_resources_error
+    "insufficient votes"
+  end
 
   def amount_spent(heading)
     ballot.lines.sum(:line_weight)

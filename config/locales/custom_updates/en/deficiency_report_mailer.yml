@@ -4,7 +4,7 @@ en:
       mailers:
         closing: Best regards
         signature: Your team
-        contact_info: With any qustions please contact us at <a href="anliegen@siegburg.de">anliegen@siegburg.de</a>
+        contact_info: With any qustions please contact us at <a href="mailto:%{email}">%{email}</a>
         notify_author_about_status_change:
           subject: Status change of your deficiency report
           hi: Hi

@@ -1,26 +1,23 @@
 module ProjektPhasesHelper
-  def projekt_phase_navbar_link(action, projekt_phase)
-    class_names = ["static-subnav-link", static_subnav_link_current?(action)].reject(&:blank?)
-    category = action
-    url_params = {}
+  def projekt_phase_navbar_link(action)
+    class_name = ["static-subnav-link", static_subnav_link_current?(action)].reject(&:blank?).join(" ")
 
-    if projekt_phase.settings_categories.include?(action)
-      url_params[:category] = action
-      action = "settings"
-
-      if params[:category] == url_params[:category]
-        class_names << "current"
-      end
-    end
-
-    class_name = class_names.join(" ")
-
-    link_to namespace_projekt_phase_path(action: action, url_params: url_params), class: class_name do
-      t("custom.admin.projekt_phases.nav_bar.#{category}")
+    link_to namespace_projekt_phase_path(action: action), class: class_name do
+      t("custom.admin.projekt_phases.nav_bar.#{action}")
     end
   end
 
   def link_to_footer_tab(projekt_phase)
+  end
+
+  def proposal_browse_mode_in_footer_tab?(projekt_phase)
+    (
+      (
+       projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer") &&
+        params[:proposal_view_mode] != "overview"
+      ) ||
+      params[:proposal_view_mode] == "browse"
+    )
   end
 
   def admin_projekt_phase_resources_link(projekt_phase)

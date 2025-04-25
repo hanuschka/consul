@@ -62,6 +62,7 @@
         <%= render(
           Shared::TextSearchFormComponent.new(
             url: @remote_url,
+            remote: @remote_url.present?,
             i18n_namespace: "#{i18n_namespace}.search_form",
           )
         ) %>

@@ -2,7 +2,7 @@ class Proposals::NewVotesComponent < ApplicationComponent
   delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_guest_signin, :link_to_enter_missing_user_data,
            :link_to_verify_account, :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
-  attr_reader :proposal, :vote_url
+  attr_reader :proposal
   delegate :current_user, :link_to_verify_account, to: :helpers
 
   def initialize(proposal, voted: nil, vote_url: nil)
@@ -14,6 +14,11 @@ class Proposals::NewVotesComponent < ApplicationComponent
 
   def vote_url
     @vote_url || vote_proposal_path(proposal, value: "yes", offline_user_id: params[:offline_user_id])
+  end
+
+  def support_button_text
+    @proposal_phase.support_button_text.presence ||
+      t("proposals.proposal.support")
   end
 
   def supports_count

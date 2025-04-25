@@ -52,6 +52,8 @@ de:
     mailer_from_name_description: "Dieser Name wird in E-Mails angezeigt, die von dieser Anwendung versendet werden"
     mailer_from_address: "Absender E-Mail-Adresse"
     mailer_from_address_description: "Diese E-Mail-Adresse wird in E-Mails angezeigt, die von dieser Anwendung versendet werden"
+    mailer_from_deficiency_report_address: Absender E-Mail-Adresse des Mängelmelders
+    mailer_from_deficiency_report_address_description: Diese E-Mail-Adresse wird in E-Mails angezeigt, die über den Mängelmelder versendet werden
     meta_title: "Seiten-Titel (SEO)"
     meta_title_description: "Titel für die Seite <title>, zur Verbesserung der Auffindbarkeit in Suchmaschinen"
     meta_description: "Seiten-Beschreibung (SEO)"

@@ -137,6 +137,7 @@ class Setting < ApplicationRecord
         "direct_message_max_per_day": 3,
         "mailer_from_name": "CONSUL",
         "mailer_from_address": "noreply@consul.dev",
+        "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
         "related_content_score_threshold": -0.3,
@@ -170,6 +171,7 @@ class Setting < ApplicationRecord
         "welcomepage.usage_stats": true,
         "welcomepage.platform_activity": true,
         "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
 
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
@@ -200,6 +202,8 @@ class Setting < ApplicationRecord
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        # "extended_feature.general.homepage_projekt_search": false,
+
         "extended_option.general.city_name": "CONSUL",
         "extended_option.general.title": "Öffentlichkeitsbeteiligung",
         "extended_option.general.subtitle": "in der Stadt CONSUL",

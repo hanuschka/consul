@@ -1,6 +1,12 @@
 de:
   custom:
     projekt_phases:
+      proposal_navigation:
+        back_to_detail_view: Zur Einzelansicht
+        back_to_overview: Zur Übersichtsseite
+        next: "Weiter"
+        back: "Zurück"
+        first: "Erster Vorschlag"
       cta:
         title: Beteiligung
         voting_phase: An Abstimmung teilnehmen
@@ -95,6 +101,7 @@ de:
             only_specific_registered_address_groupings: Die Beteiligung ist auf ein anderes Gebiet beschränkt.
           budget_phase:
             investment_unfeasible: Für nicht durchführbare Investitionsvorschläge kann nicht kommentiert werden
+            too_late: Zu diesem Zeitpunkt sind keine weiteren Kommentare mehr möglich.
         poll_votes:
           guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
           not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."

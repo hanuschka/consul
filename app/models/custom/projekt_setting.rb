@@ -44,7 +44,6 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.show_in_homepage": "active",
         "projekt_feature.general.show_in_individual_list": "",
         "projekt_feature.general.allow_downvoting_comments": "active",
-        "projekt_feature.general.set_default_sorting_to_newest": "",
         "projekt_feature.general.show_in_sidebar_filter": 'active',
         "projekt_feature.general.vc_map_enabled": '',
         "projekt_feature.general.consider_underway": "",

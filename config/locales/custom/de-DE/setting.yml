@@ -16,6 +16,8 @@ de:
         newsletter_subscription_description: Fügt eine Box hinzu, die zur Newsletter-Anmeldung auffordert.
         platform_activity: Plattform-Aktivität
         platform_activity_description: Zeigt die Plattform-Aktivtät in einer Box an
+        projekt_search: Projektsuche auf Startseite aktivieren
+        projekt_search_description: Aktiviert eine Suchleiste auf der Startseite, um nach Projekten suchen zu können.
       feature:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
@@ -106,6 +108,7 @@ de:
           homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen sein soll
           homepage_button_link: Homepage-Button-Link
           homepage_button_link_description: Link, der über den Button angesteuert werden soll
+
         gdpr:
           devise_timeout_min: Dauer von Nutzer-Sitzungen
           devise_timeout_min_description: Legen Sie fest, wie lange ein Nutzer pro Sitzung eingeloggt bleiben soll in Minuten
@@ -117,13 +120,6 @@ de:
           description_max_length: Maximale Zeichenanzahl für die Vorschlagsbeschreibung
           description_max_length_description: Legen Sie fest, wie viele Zeichen für Vorschläge maximal verwendet werden dürfen
 
-      selectable_setting:
-        debates:
-          default_order: Standardsortierung
-          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
-        proposals:
-          default_order: Standardsortierung
-          default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
 
       projekts:
         overview_page: Projektübersichtsseite in Navigation anzeigen

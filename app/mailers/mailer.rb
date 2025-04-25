@@ -290,6 +290,16 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def new_valuator_assignment(valuator_assignment)
+    @investment = valuator_assignment.investment
+    @recipient = valuator_assignment.valuator.user
+    @email_to = @recipient.email
+
+    with_user(@recipient) do
+      mail(to: @email_to, subject: t("mailers.new_valuator_assignment.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)

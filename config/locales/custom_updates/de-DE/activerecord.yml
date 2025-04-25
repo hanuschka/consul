@@ -152,6 +152,8 @@ de:
         responsible: Sachbearbeiter*in
       deficiency_report/category:
         default_deficiency_report_officer: Standardmäßig Sachbearbeiter*in
+      deficiency_report/officer_group:
+        default_email: Standard-E-Mail
       deficiency_report/official_answer_template:
         title: Titel
         text: Text

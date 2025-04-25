@@ -52,8 +52,8 @@
 
           <div class="user-date-of-birth sign-up">
             <%= f.date_select :date_of_birth,
-                              prompt: true,
-                              start_year: 1900, end_year: minimum_required_age.years.ago.year %>
+              prompt: { year: t("custom.helpers.select.birth_year"), month: t("custom.helpers.select.birth_month"), day: t("custom.helpers.select.birth_day") },
+              start_year: 1900, end_year: minimum_required_age.years.ago.year %>
           </div>
         <% end %>
 

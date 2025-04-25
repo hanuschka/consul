@@ -68,7 +68,7 @@ every 1.day, at: "3:00 am", roles: [:cron] do
 end
 
 every 1.day, at: "3:30 am", roles: [:cron] do
-  rake "rake deficiency_reports:archive_closed"
+  rake "deficiency_reports:archive_closed"
 end
 
 every 1.day, at: "6:00 am", roles: [:cron] do

@@ -77,9 +77,14 @@ de:
       proposal:
         support: Unterstützen
         unsupport: Zurückziehen
-        supports:
-          one: "%{count} Unterstützung"
-          other: "%{count} Unterstützungen"
+        default:
+          supports:
+            one: "%{count} Unterstützung"
+            other: "%{count} Unterstützungen"
+        themenwahl-2025:
+          supports:
+            one: "%{count} Einwand"
+            other: "%{count} Einwände"
       dashboard:
         default_welcome_text_html: Wollen Sie als Autor oder Autorin eines Vorschlages ein konkretes Meinungsbild zu einer Sachfrage einholen? Dann nutzen Sie hierfür die Abstimmungsfunktion. Sie können eine oder mehrere Abstimmungen initiieren.
         polls:

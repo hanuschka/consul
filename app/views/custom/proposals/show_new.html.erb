@@ -216,7 +216,11 @@
 
         <% if projekt_phase_feature?(@proposal.projekt_phase, "resource.allow_voting") %>
           <%= render(Mobile::FixedBottomActionComponent.new) do %>
-            <%= render(Shared::SidebarCardComponent.new(title: "Unterstützung", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
+            <%= render(Shared::SidebarCardComponent.new(
+                        title: @proposal.projekt_phase.projekt.page.slug == "themenwahl-2025" ? "Einspruch" : "Unterstützung",
+                        icon_name: "vote-yea",
+                        opened_on_mobile: true)
+                      ) do |c| %>
               <div class="proposal-page--votes">
                 <%= render "proposals/support_status", proposal: @proposal %>
               </div>

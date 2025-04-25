@@ -16,6 +16,13 @@ class Proposals::NewVotesComponent < ApplicationComponent
     @vote_url || vote_proposal_path(proposal, value: "yes", offline_user_id: params[:offline_user_id])
   end
 
+  def supports_count
+    I18n.t("custom.proposals.proposal.#{@proposal.projekt_phase.projekt.page.slug}.supports",
+           count: proposal.total_votes,
+           default: t("custom.proposals.proposal.default.supports", count: proposal.total_votes)
+          )
+  end
+
   private
 
     def voted?

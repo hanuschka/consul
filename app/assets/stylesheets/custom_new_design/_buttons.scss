@@ -178,6 +178,13 @@ button {
       }
     }
 
+    &.with-icon {
+      i {
+        width: 25px;
+        text-align: center;
+      }
+    }
+
     &.pillow {
       display: flex;
       justify-content: center;

@@ -69,6 +69,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.enable_proposal_milestones_tab": "",
 
           "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
 
           "feature.resource.users_can_create_proposals": "active",
           "feature.resource.allow_voting": "active",
@@ -108,6 +109,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.show_user_cost_estimate": "",
 
           "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
 
           "feature.resource.users_can_create_investment_proposals": "active",
           "feature.resource.show_report_button_in_sidebar": "active",

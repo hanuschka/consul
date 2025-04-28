@@ -192,7 +192,7 @@ class PagesController < ApplicationController
         .perform_sort_by(@current_order, session[:random_seed])
         .page(params[:page])
 
-    if helpers.proposal_browse_mode_in_footer_tab?(@projekt_phase)
+    if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
       @proposals = @proposals.per(1)
       @proposal = @proposals.first
 
@@ -329,7 +329,7 @@ class PagesController < ApplicationController
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
     end
 
-    if helpers.proposal_browse_mode_in_footer_tab?(@projekt_phase)
+    if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
       @investments = @investments.per(1)
       @investment = @investments.first
 

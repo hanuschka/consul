@@ -1,36 +1,60 @@
 <div class="proposal-navigation">
-  <% if @resources.total_count > 1 %>
-    <%= link_to t("custom.projekt_phases.proposal_navigation.back_to_overview"),
-      projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "overview"),
+  <% if @resources.total_count > 0 %>
+    <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "overview"),
       remote: true,
-      class: "button"
-    %>
-
-  <div class="proposal-navigation--current-page">
-    <%= @resources.current_page %> / <%= @resources.total_count %>
-  </div>
-  <div class="proposal-navigation--buttons">
-    <% if @resources.prev_page.present? %>
-      <%= link_to t("custom.projekt_phases.proposal_navigation.back"),
-        projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: @resources.prev_page, proposal_view_mode: "browse"),
-        remote: true,
-        class: "button expanded"
-      %>
-  <% end %>
-  <% if @resources.current_page != 1 && @resources.current_page == @resources.total_pages %>
-    <%= link_to t("custom.projekt_phases.proposal_navigation.first"),
-      projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: 1, proposal_view_mode: "browse"),
-      remote: true,
-      class: "button expanded"
-    %>
-<% elsif @resources.next_page.present? %>
-  <%= link_to t("custom.projekt_phases.proposal_navigation.next"),
-    projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: @resources.next_page, proposal_view_mode: "browse"),
-    remote: true,
-    class: "button expanded"
-  %>
+      class: "button" do %>
+      <div class="hide-on-small-tablet">
+        <%= t("custom.projekt_phases.proposal_navigation.back_to_overview") %>
+      </div>
+      <div class="show-on-small-tablet">
+        <i class="fas fa-fast-backward">
+        </i>
+      </div>
+    <% end %>
+    <div class="proposal-navigation--current-page">
+      <%= @resources.current_page %> / <%= @resources.total_count %>
+    </div>
+    <div class="proposal-navigation--buttons">
+      <% if @resources.prev_page.present? %>
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: @resources.prev_page, proposal_view_mode: "browse"),
+          remote: true,
+          class: "button expanded" do %>
+          <div class="hide-on-small-tablet">
+            <%= t("custom.projekt_phases.proposal_navigation.back") %>
+          </div>
+          <div class="show-on-small-tablet">
+            <i class="fas fa-arrow-circle-left">
+            </i>
+          </div>
         <% end %>
-  </div>
-<% end %>
+      <% end %>
+      <% if @resources.current_page != 1 && @resources.current_page == @resources.total_pages %>
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: 1, proposal_view_mode: "browse"),
+          remote: true,
+          class: "button expanded" do %>
+
+          <div class="hide-on-small-tablet">
+            <%= t("custom.projekt_phases.proposal_navigation.first") %>
+          </div>
+          <div class="show-on-small-tablet">
+            <i class="fas fa-arrow-circle-right">
+            </i>
+          </div>
+        <% end %>
+      <% elsif @resources.next_page.present? %>
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: @resources.next_page, proposal_view_mode: "browse"),
+          remote: true,
+          class: "button expanded" do %>
+          <div class="hide-on-small-tablet">
+            <%= t("custom.projekt_phases.proposal_navigation.next") %>
+          </div>
+          <div class="show-on-small-tablet">
+            <i class="fas fa-arrow-circle-right">
+            </i>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 </div>
 

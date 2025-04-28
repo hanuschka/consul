@@ -2,8 +2,8 @@ de:
   custom:
     projekt_phases:
       proposal_navigation:
-        back_to_detail_view: Zur Einzelansicht
-        back_to_overview: Zur Übersichtsseite
+        back_to_detail_view: Blättern-Modus aktivieren
+        back_to_overview: Zur Übersicht
         next: "Weiter"
         back: "Zurück"
         first: "Erster Vorschlag"

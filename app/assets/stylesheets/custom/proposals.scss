@@ -34,4 +34,82 @@
   }
 }
 
+.navigable-proposal-list {
+  width: 100%;
+
+  .current-proposal {
+    margin-bottom: 2rem;
+
+    .proposal-show {
+      margin: 0;
+    }
+  }
+
+  .proposal-navigation--buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+
+    a {
+      min-width: 152px;
+    }
+  }
+
+  .proposal-navigation {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 1rem 30px;
+    width: 100%;
+    margin: auto;
+    background: white;
+    position: sticky;
+    top: $topbar-height;
+    z-index: 1000;
+    border-bottom: 1px solid $border;
+
+    a {
+      display: inline-block;
+    }
+
+    .button {
+      margin: 0;
+    }
+  }
+
+  .proposal-navigation--button-wrapper {
+    width: 100%;
+  }
+
+  .proposal-navigation--title {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 30px;
+    margin: auto;
+    padding-left: 30px;
+    font-size: 18px;
+  }
+
+  .proposal-navigation--current-page {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 120px;
+    color: #4f4f4f;
+    font-size: 20px;
+    padding: 0 20px;
+  }
+}
+
 

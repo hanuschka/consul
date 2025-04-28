@@ -75,7 +75,7 @@
 
   <% if projekt_feature?(projekt, 'sidebar.show_map') || show_embeded_controls %>
     <%= render Projekts::WrapSectionWithSettingDataComponent.new(enable: show_embeded_controls, setting_key: "projekt_feature.sidebar.show_map", setting_active: projekt_feature?(projekt, 'sidebar.show_map')) do %>
-      <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.map.title"), icon_name: "map", opened_on_mobile: true) do |c| %>
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.map.title"), icon_name: "map") do |c| %>
         <%= render Pages::Projekts::SidebarMapComponent.new(projekt, @default_phase_name) %>
 
         <% if show_embeded_controls %>

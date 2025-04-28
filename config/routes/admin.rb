@@ -8,6 +8,9 @@ namespace :admin do
       get :naming
       get :restrictions
       get :settings
+      get :general_settings
+      get :user_functions
+      get :form_author
       get :map
       patch :update_map
       get :projekt_labels
@@ -300,7 +303,7 @@ namespace :admin do
     get :search, on: :collection
   end
 
-  resources :users, only: [:index, :show, :edit, :update] do
+  resources :users, only: [:index, :show, :edit, :update, :destroy] do
     get :reverify, on: :collection #custom
     resources :audits, only: :show, controller: "user_audits"
   end

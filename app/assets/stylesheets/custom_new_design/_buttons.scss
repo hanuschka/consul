@@ -120,7 +120,7 @@ button {
     &.-green {
       background: $green-button-color;
       color: white;
-      line-height: inherit;
+      line-height: normal;
 
       &:hover, &:focus {
         background-color: lighten($green-button-color, 5%)

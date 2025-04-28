@@ -317,8 +317,6 @@
   }
 
   .projekt-page {
-    padding-top: 50px;
-
     .main-column {
       display: flex;
       flex-direction: column;
@@ -330,6 +328,10 @@
       position: relative;
       top: -270px;
       visibility: hidden;
+    }
+
+    @media screen and (min-width: $small-tablet-viewport-start) {
+      padding-top: 50px;
     }
   }
 

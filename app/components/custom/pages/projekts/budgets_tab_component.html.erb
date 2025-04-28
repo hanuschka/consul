@@ -17,7 +17,7 @@
   </div>
 <% end %>
 
-<div class="no-margin-top margin-bottom expanded jumbo-budget budget-heading padding">
+<div class="no-margin-top margin-bottom expanded jumbo-budget budget-heading padding <%= budget.current_phase.kind %>">
   <div class="row progress-votes">
     <div class="small-12 column">
       <h2 class="margin-top">
@@ -29,16 +29,21 @@
           <%= budget.formatted_heading_price(heading) %>
         </h3>
       <% end %>
-
-      <% if can? :show, ballot %>
-        <% if ballot.valid_heading?(heading) %>
-          <div class="progress-bar-nav">
-            <div id="progress_bar">
-              <%= render "budgets/ballot/progress_bar", ballot: ballot, heading: heading %>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
     </div>
   </div>
 </div>
+
+
+<% if can?(:show, ballot) && ballot.valid_heading?(heading) %>
+  <div class="no-margin-top margin-bottom sticky-ballot-progress-bar expanded jumbo-budget budget-heading padding">
+    <div class="row progress-votes">
+      <div class="small-12 column">
+        <div class="progress-bar-nav">
+          <div id="progress_bar">
+            <%= render "budgets/ballot/progress_bar", ballot: ballot, heading: heading %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -351,7 +351,6 @@ span.icon-account {
       display: block !important;
     }
 
-
     li.nav-element:focus {
       outline: $outline-focus;
       z-index: 1000;
@@ -368,6 +367,11 @@ span.icon-account {
     li.nav-element.top-level-item > ul.nav-flyout-block {
       left: 0;
       top: 100%;
+    }
+
+    li.nav-element.top-level-item ul.nav-flyout-block .nav-flyout-block  {
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
     }
 
     .account-admin-items li.nav-element.top-level-item > ul.nav-flyout-block {

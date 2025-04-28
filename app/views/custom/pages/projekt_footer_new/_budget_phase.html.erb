@@ -17,14 +17,6 @@
         </div>
       <% end %>
     </div>
-
-    <% unless proposal_browse_mode_in_footer_tab?(@projekt_phase) %>
-      <%= link_to t("custom.projekt_phases.proposal_navigation.back_to_detail_view"),
-        projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse"),
-        remote: true,
-        class: "button"
-      %>
-    <% end %>
   </div>
 
   <div class="flex-layout">
@@ -48,7 +40,7 @@
             <% end %>
           </div>
         <% else %>
-          <% if proposal_browse_mode_in_footer_tab?(@projekt_phase) %>
+          <% if browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
             <div class="navigable-proposal-list">
               <% if @investments.any? %>
                 <div class="margin-bottom">

@@ -237,18 +237,41 @@ class Projekt < ApplicationRecord
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
   }
 
-  scope :visible_in_menu, ->(user) {
-    select { |p| p.visible_for?(user) }
+  ##################
+
+  scope :visible_for, ->(user) {
+    if user.present? && user.administrator?
+      activated
+    elsif user.present?
+      where.not(
+        id: Projekt.joins(:individual_group_values).where.not(
+              individual_group_values: {
+                id: user.individual_group_values
+                        .joins(:individual_group)
+                        .where(individual_groups: { kind: "hard" })
+                        .ids
+              }
+            ).select(:id)
+      ).or(
+            where(id: Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id))
+      ).activated
+    elsif user.nil?
+      where.not(
+        id: Projekt.joins(:individual_group_values).select(:id)
+      ).activated
+    end
   }
 
-  scope :show_in_sidebar_filter, ->(user = nil) {
+  # scope :with_active_feature, ->(projekt_feature_key) {
+  #   joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
+  #     .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active")
+  # }
+
+  ##################
+
+  scope :show_in_sidebar_filter, -> {
     joins("INNER JOIN projekt_settings show_in_sidebar_filter_settings ON projekts.id = show_in_sidebar_filter_settings.projekt_id")
       .where("show_in_sidebar_filter_settings.key": "projekt_feature.general.show_in_sidebar_filter", "show_in_sidebar_filter_settings.value": "active")
-  }
-
-  scope :with_active_feature, ->(projekt_feature_key) {
-    joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
-      .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active")
   }
 
   scope :by_my_posts, ->(my_posts_switch, current_user_id) {
@@ -527,15 +550,7 @@ class Projekt < ApplicationRecord
   end
 
   def visible_for?(user = nil)
-    return true if user.present? && user.administrator?
-    return true if user.present? && user.projekt_manager&.allowed_to?("manage", self)
-    return false unless activated?
-
-    if hard_individual_group_values.empty?
-      true
-    else
-      user.present? && (hard_individual_group_values.ids & user.individual_group_values.ids).any?
-    end
+    Projekt.visible_for(user).where(id: id).exists?
   end
 
   def hidden_for?(user = nil)

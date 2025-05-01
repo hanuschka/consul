@@ -28,6 +28,7 @@
 
   <% if setting["welcomepage.platform_activity"].present? %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.activity.title"), icon_name: "tachometer-alt") do |c| %>
+
       <% projekts_count = Projekt.regular.index_order_all.count %>
       <% if projekts_count > 0 %>
         <%= link_to projekts_path, class: "resources--info-count -no-default-style" do %>
@@ -64,7 +65,7 @@
         <% end %>
       <% end %>
 
-      <% scoped_projekt_ids = Poll.scoped_projekt_ids_for_index(current_user) %>
+      <% scoped_projekt_ids = Projekt.visible_for(current_user).show_in_sidebar_filter.select(:id) %>
       <% polls_count = Poll.for_public_render.by_projekt_id(scoped_projekt_ids).count %>
       <% if polls_count > 0 %>
         <%= link_to polls_path, class: "resources--info-count -no-default-style" do %>

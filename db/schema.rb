@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_24_151929) do
+ActiveRecord::Schema.define(version: 2025_05_01_104613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2072,6 +2072,7 @@ ActiveRecord::Schema.define(version: 2025_04_24_151929) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["projekt_id", "key", "value"], name: "index_projekt_settings_on_projekt_id_key_value"
     t.index ["projekt_id"], name: "index_projekt_settings_on_projekt_id"
   end
 

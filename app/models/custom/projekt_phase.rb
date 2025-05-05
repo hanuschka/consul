@@ -13,7 +13,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::IframePhase"
   ].freeze
 
   PROJEKT_PHASES_TYPES = [

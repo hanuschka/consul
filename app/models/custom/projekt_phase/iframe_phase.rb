@@ -8,7 +8,7 @@ class ProjektPhase::IframePhase < ProjektPhase
   end
 
   def resources_name
-    ""
+    "iframe"
   end
 
   def resource_count

@@ -16,7 +16,7 @@ class ProjektPhase::IframePhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[naming settings]
+    %w[duration naming restrictions settings]
   end
 
   def safe_to_destroy?

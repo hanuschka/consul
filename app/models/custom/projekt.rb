@@ -24,8 +24,6 @@ class Projekt < ApplicationRecord
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
 
-  has_many :children_projekts_show_in_navigation, -> { show_in_navigation }, class_name: "Projekt", foreign_key: "parent_id"
-
   has_many :third_level_children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "top_level_projekt_id",
     inverse_of: :top_level_projekt, dependent: :nullify
   belongs_to :parent, class_name: "Projekt", optional: true
@@ -232,40 +230,53 @@ class Projekt < ApplicationRecord
       .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
   }
 
-  scope :show_in_navigation, -> {
-    joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
-      .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
-  }
-
   ##################
 
   scope :visible_for, ->(user) {
-    if user.present? && user.administrator?
-      activated
-    elsif user.present?
-      where.not(
-        id: Projekt.joins(:individual_group_values).where.not(
-              individual_group_values: {
-                id: user.individual_group_values
-                        .joins(:individual_group)
-                        .where(individual_groups: { kind: "hard" })
-                        .ids
-              }
-            ).select(:id)
-      ).or(
-            where(id: Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id))
-      ).activated
-    elsif user.nil?
-      where.not(
-        id: Projekt.joins(:individual_group_values).select(:id)
-      ).activated
+    return regular if user&.administrator?
+
+    if user.present?
+      user_hard_group_value_ids = user.individual_group_values
+        .joins(:individual_group)
+        .where(individual_groups: { kind: "hard" })
+        .select(:id)
+
+      excluded_projekt_ids = Projekt.joins(:individual_group_values)
+        .where.not(individual_group_values: { id: user_hard_group_value_ids })
+        .select(:id)
+
+      permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
+
+      arel = Projekt.arel_table
+
+      regular.where(
+        arel[:id].in(
+          Projekt.activated.where.not(id: excluded_projekt_ids).select(:id).arel
+        ).or(
+          arel[:id].in(permitted_projekt_ids.arel)
+        )
+      )
+    else
+      regular.activated
+        .where.not(id: Projekt.joins(:individual_group_values).select(:id))
     end
   }
 
-  # scope :with_active_feature, ->(projekt_feature_key) {
-  #   joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
-  #     .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active")
-  # }
+  scope :for_overview_page_navigation, ->(user) {
+    activated
+      .visible_for(user)
+      .joins(:projekt_settings)
+      .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+      .sort_by_order_number
+  }
+
+  scope :for_navigation, ->(user) {
+    activated
+      .visible_for(user)
+      .joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
+      .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
+      .sort_by_order_number
+  }
 
   ##################
 

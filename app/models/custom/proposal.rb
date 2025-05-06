@@ -95,7 +95,7 @@ class Proposal < ApplicationRecord
 	end
 
   def self.unsuccessful
-    ids = Proposal.select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
+    ids = Proposal.includes([:projekt_phase]).select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
     Proposal.where(id: ids)
 	end
 

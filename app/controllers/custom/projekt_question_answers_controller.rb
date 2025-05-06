@@ -16,7 +16,7 @@ class ProjektQuestionAnswersController < ApplicationController
     @question = question_option.question
     question_phase = @question.projekt_phase
 
-    if !question_phase.phase_activated? && @question.root_question?
+    if !question_phase.active? && @question.root_question?
       render text: "Question phase not active", status: :unprocessable_entity
     else
       @answer = ProjektQuestionAnswer.find_or_initialize_by(

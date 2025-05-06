@@ -58,7 +58,6 @@ class Projekt < ApplicationRecord
 
   has_many :debates, through: :debate_phases
   has_many :proposals, through: :proposal_phases
-  has_many :base_selection_proposals, through: :proposal_phases
   has_many :budgets, through: :budget_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
@@ -344,14 +343,6 @@ class Projekt < ApplicationRecord
     { page.title          => "A",
       title               => "A",
       page.content        => "C" }
-  end
-
-  def can_filter_proposals?
-    proposal_phases.any?(&:current?) || base_selection_proposals.any?
-  end
-
-  def can_filter_debates?
-    debate_phases.any?(&:current?) || debates.any?
   end
 
   def projekt_phases_for(resource)

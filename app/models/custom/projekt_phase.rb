@@ -40,6 +40,7 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_title, touch: true
   translates :resource_form_title_placeholder, touch: true
   translates :resource_form_description_placeholder, touch: true
+  translates :support_button_text, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true

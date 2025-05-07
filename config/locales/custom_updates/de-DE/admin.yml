@@ -616,6 +616,7 @@ de:
         comment_form_button: Kommentarformular Button
         resource_form_title_placeholder: Text des Platzhalters für den Titel im Erstellungsformular
         resource_form_description_placeholder: Text des Platzhalters für die Beschreibung im Erstellungsformular
+        support_button_text: Text des Unterstützungsbuttons
         edit:
           title: Einstellung für Phase
         duration:

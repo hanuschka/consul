@@ -52,6 +52,12 @@ body.custom-new-design {
     }
   }
 
+  .wrapper.has-custom-fixed-tabs .notice-container {
+    @media screen and (max-width: $small-tablet-viewport-start) {
+      top: 170px;
+    }
+  }
+
   .account-admin-items li#notifications a.notifications {
     position: relative;
     height: auto;

@@ -28,12 +28,13 @@
               </div>
 
               <% if projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>
-                <div class="banner-editor-image-attachment js-banner-editor-image-attachment">
+                <div class="banner-editor-image-attachment">
                   <% if f.object.image.blank? %>
                     <% f.object.build_image %>
                   <% end %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                    <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
                   <% end %>
                 </div>
               <% end %>

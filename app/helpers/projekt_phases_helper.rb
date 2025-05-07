@@ -10,14 +10,14 @@ module ProjektPhasesHelper
   def link_to_footer_tab(projekt_phase)
   end
 
-  def proposal_browse_mode_in_footer_tab?(projekt_phase)
-    (
-      (
-       projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer") &&
-        params[:proposal_view_mode] != "overview"
-      ) ||
+  def browse_mode_in_projekt_footer_tab?(projekt_phase)
+    return false unless projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer")
+
+    if params[:proposal_view_mode].blank?
+      projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer_by_default")
+    else
       params[:proposal_view_mode] == "browse"
-    )
+    end
   end
 
   def admin_projekt_phase_resources_link(projekt_phase)

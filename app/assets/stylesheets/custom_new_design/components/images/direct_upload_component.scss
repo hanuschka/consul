@@ -1,10 +1,10 @@
 .direct-image-upload {
-  height: 100%;
+  height: 91%;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0;
 
   .image-preview, figure, img {
     width: 100%;

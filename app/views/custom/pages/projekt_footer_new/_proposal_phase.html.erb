@@ -7,18 +7,10 @@
         <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
       </div>
     </div>
-
-    <% unless proposal_browse_mode_in_footer_tab?(@projekt_phase) %>
-      <%= link_to t("custom.projekt_phases.proposal_navigation.back_to_detail_view"),
-        projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse"),
-        remote: true,
-        class: "button"
-      %>
-    <% end %>
   </div>
 
   <% proposal_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
-  <% if proposal_browse_mode_in_footer_tab?(@projekt_phase) %>
+  <% if browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
     <div class="navigable-proposal-list">
       <% if @proposals.any? %>
         <div class="margin-bottom">
@@ -53,11 +45,23 @@
           )) %>
         <%= paginate @proposals, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
       </div>
+
       <aside id="proposals-sidebar" class="sidebar">
         <% content_block_sidebar_name = "projekt_phase_footer_sidebar_#{@projekt_phase.id}" %>
-        <% if render_custom_projekt_content_block?(content_block_sidebar_name, @projekt_phase.projekt) %>
-          <%= render Shared::SidebarCardComponent.new(title: t("custom.proposals.index.participation_information"), icon_name: "info-circle") do |c| %>
+        <% if render_custom_projekt_content_block?(content_block_sidebar_name, @projekt_phase.projekt) ||
+            projekt_phase_feature?(@projekt_phase, "general.browse_mode_in_phase_footer")
+        %>
+          <%= render Shared::SidebarCardComponent.new(title: t("custom.proposals.index.participation_information"), icon_name: "info-circle", opened_on_mobile: true) do |c| %>
             <%= render_custom_block content_block_sidebar_name %>
+
+            <% if projekt_phase_feature?(@projekt_phase, "general.browse_mode_in_phase_footer") && !browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
+              <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse"),
+                remote: true,
+                class: "button with-icon" do %>
+                <i class="fa-window-maximize fas"></i>
+                <%= t("custom.projekt_phases.proposal_navigation.back_to_detail_view") %>
+              <% end %>
+            <% end %>
           <% end %>
         <% end %>
 

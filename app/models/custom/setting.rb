@@ -171,6 +171,7 @@ class Setting < ApplicationRecord
         "welcomepage.usage_stats": true,
         "welcomepage.platform_activity": true,
         "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
 
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
@@ -201,6 +202,8 @@ class Setting < ApplicationRecord
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        # "extended_feature.general.homepage_projekt_search": false,
+
         "extended_option.general.city_name": "CONSUL",
         "extended_option.general.title": "Öffentlichkeitsbeteiligung",
         "extended_option.general.subtitle": "in der Stadt CONSUL",

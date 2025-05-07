@@ -116,6 +116,10 @@ class Projekt < ApplicationRecord
   after_destroy :ensure_projekt_order_integrity
 
   def should_be_exported?
+    if  Rails.env.development? && Rails.application.secrets.dt[:disable_sync]
+      return false
+    end
+
     ApiClient.active_dt? && for_global_overview?
   end
 

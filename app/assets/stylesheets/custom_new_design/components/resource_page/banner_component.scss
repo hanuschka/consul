@@ -59,7 +59,6 @@
     min-height: 260px;
     max-height: 260px;
     border-radius: 8px;
-    overflow: hidden;
     cursor: zoom-in;
     position: relative;
 
@@ -77,6 +76,12 @@
 
     .resource-image {
       max-height: 260px;
+    }
+
+    .resource-image--credits {
+      text-align: center;
+      font-style: italic;
+      color: gray;
     }
   }
 

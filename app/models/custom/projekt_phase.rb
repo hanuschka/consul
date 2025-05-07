@@ -40,6 +40,7 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_title, touch: true
   translates :resource_form_title_placeholder, touch: true
   translates :resource_form_description_placeholder, touch: true
+  translates :support_button_text, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -97,11 +98,7 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
-  scope :sorted, -> do
-    regular_phases.sort_by(&:default_order).each do |x|
-      x.start_date = Time.zone.today if x.start_date.nil?
-    end.sort_by(&:start_date)
-  end
+  scope :sorted, ->  {order(:given_order) }
 
   def self.order_phases(ordered_array)
     ordered_array.each_with_index do |phase_id, order|

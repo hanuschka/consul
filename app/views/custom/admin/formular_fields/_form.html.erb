@@ -15,7 +15,8 @@
           <%= f.check_box :email_for_confirmation, onChange: "if (this.checked) { $('#confirmation-email').show(); } else { $('#confirmation-email').hide(); }" %>
           <div id="confirmation-email" class="margin-bottom" style="display: <%= formular_field.email_for_confirmation ? "block" : "none" %>;">
             <%= f.text_field :email_for_confirmation_subject %>
-            <%= f.text_area :email_for_confirmation_text, rows: 4 %>
+            <%= f.text_area :email_for_confirmation_text,
+              class: "html-area extended-u" %>
           </div>
         </div>
 

@@ -16,6 +16,8 @@ de:
         newsletter_subscription_description: Fügt eine Box hinzu, die zur Newsletter-Anmeldung auffordert.
         platform_activity: Plattform-Aktivität
         platform_activity_description: Zeigt die Plattform-Aktivtät in einer Box an
+        projekt_search: Projektsuche auf Startseite aktivieren
+        projekt_search_description: Aktiviert eine Suchleiste auf der Startseite, um nach Projekten suchen zu können.
       feature:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
@@ -103,6 +105,7 @@ de:
           homepage_button_text_description: Text, der auf dem Homepage-Button zu sehen
           homepage_button_link: Homepage-Button-Link
           homepage_button_link_description: Link, der über den Button angesteuert werden soll
+
         gdpr:
           devise_timeout_min: Dauer von Nutzer-Sitzungen
           devise_timeout_min_description: Legen Sie fest, wie lange ein Nutzer pro Sitzung eingeloggt bleiben soll in Minuten
@@ -165,6 +168,8 @@ de:
           vc_map_enabled_description: Aktiviert die 3D Karten von [Virtual City Systems]
           consider_underway: Projekt als aktive Beteiligung betrachten
           consider_underway_description: Sortiert dieses Projekt in der Projektübersicht immer unter “Aktive Beteiligung”.
+          allow_indexing: Projektseite soll von Suchmaschinen indexiert werden
+          allow_indexing_description: Die Projektseite wird von Google und anderen Suchmaschinen indexiert
         sidebar:
           show_notification_subscription_toggler: Benachrichtigungen
           show_notification_subscription_toggler_description: Aktivieren Sie die Projektbenachrichtigungen in der rechten Seitenleiste

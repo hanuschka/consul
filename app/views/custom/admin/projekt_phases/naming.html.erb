@@ -143,6 +143,15 @@
         </div>
       </div>
     <% end %>
+
+    <% if @projekt_phase.name == "proposal_phase" %>
+      <div class="row">
+        <div class="column large-8">
+          <strong><%= t("custom.admin.projekt_phases.support_button_text") %></strong>
+          <%= translations_form.text_field :support_button_text, label: false %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
 
   <% if @projekt_phase.name.in?(["voting_phase"]) %>

@@ -23,7 +23,6 @@ env "MAILTO", ""
 # Learn more: http://github.com/javan/whenever
 
 every 1.minute do
-  command "date > ~/ctest.txt"
   command "date > ~/cron-test.txt"
 end
 
@@ -70,10 +69,6 @@ every 1.day, at: "3:00 am", roles: [:cron] do
 end
 
 every 1.day, at: "3:30 am", roles: [:cron] do
-  rake "deficiency_reports:archive_closed"
-end
-
-every 5.minutes do
   rake "deficiency_reports:archive_closed"
 end
 

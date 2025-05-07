@@ -72,6 +72,10 @@ every 1.day, at: "3:30 am", roles: [:cron] do
   rake "deficiency_reports:archive_closed"
 end
 
+every 5.minutes do
+  rake "deficiency_reports:archive_closed", output: { error: "log/cron_error.log", standard: "log/cron.log" }
+end
+
 every 1.day, at: "6:00 am", roles: [:cron] do
   rake "reminders:overdue_deficiency_reports"
   rake "reminders:not_assigned_deficiency_reports"

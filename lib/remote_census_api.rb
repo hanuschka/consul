@@ -31,46 +31,46 @@ class RemoteCensusApi
     end
 
     def response_code_matched?
-      @body.xpath("//ns2:ergebnisstatus/code", "ns2" => "http://www.osci.de/xmeld30").text == "01"
+      @body.xpath("//ns2:ergebnisstatus/code", "ns2" => "http://www.osci.de/xmeld2411").text == "01"
     end
 
     def first_name_matched?
-      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld30").text ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld30").text
+      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld2411").text ==
+        @body.xpath("//ns2:datenZurAnfrage //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld2411").text
     end
 
     def last_name_matched?
-      last_name_particle = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:namensbestandteil", "ns2" => "http://www.osci.de/xmeld30").text
-      last_name = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:nachname", "ns2" => "http://www.osci.de/xmeld30").text
+      last_name_particle = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:namensbestandteil", "ns2" => "http://www.osci.de/xmeld2411").text
+      last_name = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:nachname", "ns2" => "http://www.osci.de/xmeld2411").text
 
       [last_name_particle, last_name].join(" ").strip.downcase ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:nachname/name", "ns2" => "http://www.osci.de/xmeld30").text.downcase
+        @body.xpath("//ns2:datenZurAnfrage //ns2:nachname/name", "ns2" => "http://www.osci.de/xmeld2411").text.downcase
     end
 
     def house_number_matched?
-      request_house_number = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummer", "ns2" => "http://www.osci.de/xmeld30").text
-      registered_house_numbers = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummer", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+      request_house_number = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummer", "ns2" => "http://www.osci.de/xmeld2411").text
+      registered_house_numbers = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummer", "ns2" => "http://www.osci.de/xmeld2411").map(&:text)
 
       request_house_number.in?(registered_house_numbers)
     end
 
     def postleitzahl_matched?
-      request_plz = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl", "ns2" => "http://www.osci.de/xmeld30").text
-      registered_plzs = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+      request_plz = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl", "ns2" => "http://www.osci.de/xmeld2411").text
+      registered_plzs = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl", "ns2" => "http://www.osci.de/xmeld2411").map(&:text)
 
       request_plz.in?(registered_plzs)
     end
 
     def street_matched?
-      request_street = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/strasse", "ns2" => "http://www.osci.de/xmeld30").text
-      registered_streets = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //strasse", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+      request_street = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/strasse", "ns2" => "http://www.osci.de/xmeld2411").text
+      registered_streets = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //strasse", "ns2" => "http://www.osci.de/xmeld2411").map(&:text)
 
       request_street.in?(registered_streets)
     end
 
     def city_matched?
-      request_city = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/wohnort", "ns2" => "http://www.osci.de/xmeld30").text
-      registered_cities = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //wohnort", "ns2" => "http://www.osci.de/xmeld30").map(&:text)
+      request_city = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/wohnort", "ns2" => "http://www.osci.de/xmeld2411").text
+      registered_cities = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //wohnort", "ns2" => "http://www.osci.de/xmeld2411").map(&:text)
 
       request_city.in?(registered_cities)
     end
@@ -104,7 +104,7 @@ class RemoteCensusApi
     def form_request_xml(first_name:, last_name:, street_name:, street_number:, plz:, city_name:, date_of_birth:, gender:)
       b = Nokogiri::XML::Builder.new(encoding: "UTF-8")
 
-      b.Envelope("xmlns:xmel": "XMeld30Auskunft", "xmlns:xmel1": "http://www.osci.de/xmeld30") {
+      b.Envelope("xmlns:xmel": "XMeld2411Auskunft", "xmlns:xmel1": "http://www.osci.de/xmeld2411") {
         b.parent.namespace = b.parent.add_namespace_definition("soapenv", "http://schemas.xmlsoap.org/soap/envelope/")
         b["soapenv"].Header
         b["soapenv"].Body {

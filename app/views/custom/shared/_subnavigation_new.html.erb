@@ -6,7 +6,8 @@
     <% end %>
 
     <% unless @ui_hide_topbar_links %>
-      <% if (Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page) || @custom_page&.landing_show_projekts_overview? %>
+      <% if (Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page) ||
+            (@custom_page&.landing? && @custom_page&.landing_show_projekts_overview?) %>
         <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement }  %>
       <% end %>
       <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>

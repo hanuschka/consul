@@ -360,6 +360,10 @@ class ProjektPhase < ApplicationRecord
     end
 
     def add_default_settings
+      projekt_phase_settings = ProjektPhaseSetting.defaults[self.class.name]
+
+      return if projekt_phase_settings.nil?
+
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
         settings.create!(key: key, value: value)
       end

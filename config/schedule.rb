@@ -5,7 +5,8 @@
 
 # Example:
 #
-# set :output, "/path/to/my/cron_log.log"
+set :output, { error: "log/cron_errors.log", standard: "log/cron.log" }
+set :job_template, "/bin/bash -lc 'export EXECJS_RUNTIME=Disabled && :job'"
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"

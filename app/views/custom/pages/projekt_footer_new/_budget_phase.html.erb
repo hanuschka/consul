@@ -17,23 +17,15 @@
         </div>
       <% end %>
     </div>
-
-    <% unless proposal_browse_mode_in_footer_tab?(@projekt_phase) %>
-      <%= link_to t("custom.projekt_phases.proposal_navigation.back_to_detail_view"),
-        projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, proposal_view_mode: "browse"),
-        remote: true,
-        class: "button"
-      %>
-    <% end %>
   </div>
 
-  <div class="flex-layout">
-    <% if @budget.present? %>
-      <% if params[:section] == "results" && can?(:read_results, @budget) %>
-        <%= render "pages/projekt_footer_new/budget/results" %>
-      <% elsif params[:section] == "stats" && can?(:read_stats, @budget) %>
-        <%= render "pages/projekt_footer_new/budget/stats" %>
-      <% else %>
+  <% if @budget.present? %>
+    <% if params[:section] == "results" && can?(:read_results, @budget) %>
+      <%= render "pages/projekt_footer_new/budget/results" %>
+    <% elsif params[:section] == "stats" && can?(:read_stats, @budget) %>
+      <%= render "pages/projekt_footer_new/budget/stats" %>
+    <% else %>
+      <div class="flex-layout">
         <% if @budget.current_phase.kind == 'informing' %>
           <div class="new-card">
             <h4>
@@ -48,7 +40,7 @@
             <% end %>
           </div>
         <% else %>
-          <% if proposal_browse_mode_in_footer_tab?(@projekt_phase) %>
+          <% if browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
             <div class="navigable-proposal-list">
               <% if @investments.any? %>
                 <div class="margin-bottom">
@@ -88,9 +80,9 @@
             </div>
           <% end %>
         <% end %>
-      <% end %>
-    <% else %>
-      <h3>Dieses Projekt Phase hat kein zugehöriges Budget</h3>
+      </div>
     <% end %>
-  </div>
+  <% else %>
+    <h3>Dieses Projekt Phase hat kein zugehöriges Budget</h3>
+  <% end %>
 <% end %>

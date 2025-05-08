@@ -1,10 +1,27 @@
+<% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 <% preview = false unless local_assigns.has_key? :preview %>
 <% in_projekt_footer = local_assigns[:in_projekt_footer] %>
 
 <main class="resource-page">
+  <div class="custom-fixed-tabs margin-bottom">
+    <div class="custom-fixed-tabs--content">
+      <div class="js-scroll-link custom-tab" data-anchor-id="investment-content">
+        <%= t("custom.common.fixed_tabs.content") %>
+      </div>
+      <% if projekt_phase_feature?(@investment.projekt_phase, "resource.show_comments") %>
+        <div class="js-scroll-link custom-tab" data-anchor-id="investment-comments">
+          <%= t("custom.common.fixed_tabs.comments") %>
+        </div>
+      <% end %>
+      <div class="js-scroll-link custom-tab" data-anchor-id="investment-author">
+        <%= t("custom.common.fixed_tabs.author") %>
+      </div>
+    </div>
+  </div>
+
   <div id="<%= dom_id(@investment) %>">
     <div class="flex-layout">
-      <div class="main-column">
+      <div class="main-column" id="investment-content">
         <% unless in_projekt_footer %>
           <%= resources_back_link(fallback_path: url_to_footer_tab) %>
         <% end %>
@@ -120,7 +137,7 @@
             <% end %>
 
             <% if projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") %>
-              <div class="proposal-resources-section">
+              <div id="investment-comments" class="proposal-resources-section">
                 <%= render Shared::NewCommentsComponent.new(@investment, @comment_tree) %>
               </div>
             <% end %>
@@ -129,7 +146,7 @@
         </div>
       </div>
 
-      <aside class="sidebar">
+      <aside class="sidebar" id="investment-author">
         <%= render Sidebar::ResourceAuthorComponent.new(resource: @investment) %>
 
         <% if @investment.should_show_aside? %>

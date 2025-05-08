@@ -69,6 +69,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.enable_proposal_milestones_tab": "",
 
           "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
 
           "feature.resource.users_can_create_proposals": "active",
           "feature.resource.allow_voting": "active",
@@ -81,7 +82,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
 
-          "selectable_setting.general.default_order": "created_at",
+          "selectable_setting.general.default_order": "random",
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -108,6 +109,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.show_user_cost_estimate": "",
 
           "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
 
           "feature.resource.users_can_create_investment_proposals": "active",
           "feature.resource.show_report_button_in_sidebar": "active",
@@ -118,7 +120,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_balloting": "",
           "feature.resource.show_video_as_link": "",
 
-          "selectable_setting.general.default_order": "created_at",
+          "selectable_setting.general.default_order": "random",
         },
 
         "ProjektPhase::QuestionPhase" => {

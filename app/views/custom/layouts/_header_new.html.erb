@@ -62,7 +62,7 @@
             <div class="header--responsive-menu--user-name">
               <%= current_user.name %>
             </div>
-            <%= link_to("Profil anzeigen", user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
+            <%= link_to(t("layouts.header.my_account_link"), user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
             <%= link_to t("layouts.header.administration"), admin_root_path if current_user.administrator? %>
           </div>
         <% end %>

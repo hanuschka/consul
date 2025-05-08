@@ -8,8 +8,8 @@
   <div class="main-column projekts-overview-page--heading">
     <div class="padding-on-mobile">
       <h1>
-        <% if @landing_site_customization_page.present? %>
-          <%= t("custom.projekts.index.title") %> <%= @landing_site_customization_page.title %>
+        <% if @landing_page.present? %>
+          <%= t("custom.projekts.index.title") %> <%= @landing_page.title %>
         <% else %>
           <%= t("custom.projekts.index.title") %>
         <% end %>
@@ -27,7 +27,8 @@
           current_filter: @current_projekts_filter,
           map_coordinates: @map_coordinates,
           text_search_enabled: true,
-          filters: @active_projekts_filters
+          filters: @active_projekts_filters,
+          resource_link_additional_url_params: (@landing_page.present? ? { page_ref: @landing_page&.slug } : nil),
         ) do |c| %>
           <% c.with_items_remark do %>
             <%= render_custom_block("projekts_index_filter_#{@current_projekts_filter}") %>

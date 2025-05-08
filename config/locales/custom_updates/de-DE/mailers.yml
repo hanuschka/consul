@@ -82,3 +82,7 @@ de:
     proposal_created:
       hi: "Hallo %{username},"
       text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
+    new_valuator_assignment:
+      subject: Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen
+      hi: "Hallo %{username},"
+      text1: "Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen: %{valuation_link}"

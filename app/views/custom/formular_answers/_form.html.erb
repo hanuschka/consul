@@ -32,7 +32,7 @@
         <%= date_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off", class: ("is-invalid-input" if invalid_field_class) %>
       <% elsif ff.kind == "dropdown" %>
         <%= select_tag "formular_answer[answers][#{ff.key}]", options_for_select((ff.drop_down_options&.split(",") || []).map(&:strip), formular_answer.answers[ff.key]),
-          include_blank: true, class: "show-arrow #{"is-invalid-input" if invalid_field_class}" %>
+          prompt: t("custom.formular_answer.form.select_prompt"), class: "show-arrow #{"is-invalid-input" if invalid_field_class}" %>
       <% elsif ff.kind == "image" %>
         <%= render FormularAnswers::NestedImageComponent.new(f: f, formular_field: ff, block_id: "nested-image-#{ff.id}") %>
       <% elsif ff.kind == "document" %>

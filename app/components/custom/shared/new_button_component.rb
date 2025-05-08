@@ -42,7 +42,7 @@ class Shared::NewButtonComponent < ApplicationComponent
       sanitize(
         t(path_to_key(permission_problem_key),
               sign_in: link_to_signin(intended_path: CGI::escape(link_path)),
-              sign_up: link_to_signup,
+              sign_up: link_to_signup(intended_path: CGI::escape(link_path)),
               guest_sign_in: link_to_guest_signin(intended_path: CGI::escape(link_path)),
               enter_missing_user_data: link_to_enter_missing_user_data,
               verify: link_to_verify_account,
@@ -82,7 +82,7 @@ class Shared::NewButtonComponent < ApplicationComponent
     end
 
     def new_button_classes
-      classes = %w[button -orange new-resource-button]
+      classes = %w[button -orange expanded new-resource-button]
 
       if @projekt_phase.class.name.in?(["ProjektPhase::ProposalPhase", "ProjektPhase::DebatePhase"]) ||
           @resources_name.in?(["proposals", "debates"])

@@ -1,7 +1,7 @@
 <% projekt_nesting_level ||= 1 %>
 
 <% if projekt_nesting_level <= 3 %>
-  <ul class="nav-flyout-block">
+  <ul class="nav-flyout-block <%= 'nested-dropdown' if projekt_nesting_level > 1 %>">
 
     <% if local_assigns[:called_from] == "subnavigation_projekts_overview" && projekts.any? %>
       <li class='nav-element flyout-item flyout-item-projekt js-access-flyout-menu-item focusable'

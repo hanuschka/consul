@@ -68,6 +68,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_geoman_controls_in_maps": "active",
           "feature.form.allow_attached_documents": "",
           "feature.form.enable_external_video": "",
+          "feature.form.voice_assistant": "",
+
           "feature.resource.show_video_as_link": "",
           "feature.resource.enable_proposal_notifications_tab": "",
           "feature.resource.enable_proposal_milestones_tab": "",
@@ -84,7 +86,6 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_community_button_in_proposal_sidebar": "",
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
-          VOICE_ASSISTANT_SETTING => "",
 
           "option.resource.votes_for_proposal_success": 100,
 

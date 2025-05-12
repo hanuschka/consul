@@ -809,7 +809,6 @@ class Projekt < ApplicationRecord
         return
       end
 
-      binding.pry
       if should_be_exported?
         if hidden_at.present?
           sync_destroy_for_global_overview

@@ -82,7 +82,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
 
-          "selectable_setting.general.default_order": "created_at",
+          "selectable_setting.general.default_order": "random",
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -120,7 +120,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_balloting": "",
           "feature.resource.show_video_as_link": "",
 
-          "selectable_setting.general.default_order": "created_at",
+          "selectable_setting.general.default_order": "random",
         },
 
         "ProjektPhase::QuestionPhase" => {

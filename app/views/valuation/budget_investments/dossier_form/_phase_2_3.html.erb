@@ -12,7 +12,7 @@
       <div><%= f.radio_button :feasibility, "feasible", style: "margin-bottom:0.5rem" %></div>
       <div><%= f.radio_button :feasibility, "unfeasible", style: "margin-bottom:0.5rem" %></div>
       <div class="feasible_fields unfeasible_fields margin-top">
-        <%= f.text_area :valuator_explanation, rows: 4, class: "margin-bottom" %>
+        <%= f.text_area :valuator_explanation, class: "margin-bottom html-area #{ck_editor_class(current_user)}" %>
       </div>
 
       <%= f.check_box :valuation_finished,

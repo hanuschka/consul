@@ -13,6 +13,12 @@ class DtApi::Client
     )
   end
 
+  def voice_assistant
+    @voice_assistant ||= DtApi::Resources::VoiceAssistant.new(
+      self
+    )
+  end
+
   def get_with_auth(url, query: nil)
     self.class.get(
       url,

@@ -39,6 +39,9 @@
           case "Consul.VoiceAssistant.turnedOn":
             this.expandAssistantIframe();
             break;
+          case "Consul.VoiceAssistant.requestVoiceSession":
+            this.requestVoiceSession(params);
+            break;
           case "Consul.ResourceForm.updateTitle":
             this.updateTitle(params.value);
             break;
@@ -76,8 +79,16 @@
       console.log("Consul: push initialData for DT", this.initialData)
 
       this.postMessageToDtIframe(
-        "Dt.VoiceAssistant.loadInitialData", this.initialData
+        "Dt.VoiceAssistant.setInitialData", this.initialData
       )
+    },
+
+    requestVoiceSession: function(params) {
+      window.App.Ajax.post("/voice_assistant/create_session", {
+        session_uuid: params.session_uuid,
+        codename: params.codename,
+        consul_projekt_phase_id: params.consul_projekt_phase_id
+      })
     },
 
     expandAssistantIframe: function() {

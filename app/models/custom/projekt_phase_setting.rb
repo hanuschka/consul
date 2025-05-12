@@ -1,6 +1,10 @@
 class ProjektPhaseSetting < ApplicationRecord
   SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
 
+  PRO_SETTINGS = [
+    VOICE_ASSISTANT_SETTING = "feature.resource.voice_assistant"
+  ]
+
   SETTING_KINDS = %w[feature option selectable_setting].freeze
   SETTING_BANDS = %w[general form resource].freeze
 
@@ -68,6 +72,9 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.enable_proposal_notifications_tab": "",
           "feature.resource.enable_proposal_milestones_tab": "",
 
+          "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
+
           "feature.resource.users_can_create_proposals": "active",
           "feature.resource.allow_voting": "active",
           "feature.resource.quorum_for_proposals": "",
@@ -77,9 +84,12 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_community_button_in_proposal_sidebar": "",
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
+          VOICE_ASSISTANT_SETTING => "",
+
           "option.resource.votes_for_proposal_success": 100,
 
-          "selectable_setting.general.default_order": "created_at",
+          "selectable_setting.general.default_order": "random",
+
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -105,6 +115,9 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.show_implementation_option_fields": "",
           "feature.form.show_user_cost_estimate": "",
 
+          "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
+
           "feature.resource.users_can_create_investment_proposals": "active",
           "feature.resource.show_report_button_in_sidebar": "active",
           "feature.resource.show_follow_button_in_sidebar": "",
@@ -114,7 +127,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_balloting": "",
           "feature.resource.show_video_as_link": "",
 
-          "selectable_setting.general.default_order": "created_at",
+          "selectable_setting.general.default_order": "random",
         },
 
         "ProjektPhase::QuestionPhase" => {

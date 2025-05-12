@@ -97,3 +97,5 @@ end
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
 
 post "iframe_sessions", to: "iframe_sessions#create"
+
+post "/voice_assistant/create_session", to: "voice_assistant#create_session"

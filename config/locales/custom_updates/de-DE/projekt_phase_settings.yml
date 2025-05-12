@@ -73,6 +73,11 @@ de:
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
             show_video_as_link: Videos als Link
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+          general:
+            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
         option:
           resource:
             votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
@@ -150,6 +155,11 @@ de:
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
             conditional_balloting: Vereinfachte Stimmabgabe
             conditional_balloting_description: Stimmen werden vor der Verifizierung aufgenommen, aber erst nach der Verifizierung gezählt
+          general:
+            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
         selectable_setting:
           general:
             default_order: Standardsortierung

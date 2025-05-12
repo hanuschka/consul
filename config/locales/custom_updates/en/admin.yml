@@ -446,6 +446,7 @@ en:
         comment_form_button: Comment form button
         resource_form_title_placeholder: Text of the title placeholder
         resource_form_description_placeholder: Text of the description placeholder
+        support_button_text: Support button text
         edit:
           title: Phase settings
         duration:

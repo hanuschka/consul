@@ -77,11 +77,15 @@
     }
 
     &.balloting {
+      margin-bottom: 0;
+      padding-bottom: 5px;
+
       &:after {
         border-bottom: 0;
       }
 
       @media screen and (max-width: $small-tablet-viewport-start) {
+        margin-bottom: 1.5rem;
         border-bottom: 0 !important;
       }
     }

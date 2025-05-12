@@ -132,7 +132,7 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
     end
 
     def restrict_access
-      unless current_user.administrator? || current_budget.valuating?
+      unless current_user.administrator? || Budget.find(params[:budget_id]).current_phase.kind.in?(%w[accepting reviewing selecting valuating])
         raise CanCan::AccessDenied, I18n.t("valuation.budget_investments.not_in_valuating_phase")
       end
     end

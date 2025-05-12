@@ -89,7 +89,6 @@ class ProjektPhaseSetting < ApplicationRecord
           "option.resource.votes_for_proposal_success": 100,
 
           "selectable_setting.general.default_order": "random",
-
         },
 
         "ProjektPhase::VotingPhase" => {

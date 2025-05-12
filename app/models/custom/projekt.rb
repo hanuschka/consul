@@ -110,7 +110,7 @@ class Projekt < ApplicationRecord
   before_save :assign_top_level_projekt_from_parent
 
   after_update :sync_update_for_global_overview #, on: :update
-  after_touch :sync_update_for_global_overview
+  # after_touch :sync_update_for_global_overview
   after_destroy :sync_destroy_for_global_overview
 
   after_destroy :ensure_projekt_order_integrity
@@ -802,6 +802,13 @@ class Projekt < ApplicationRecord
     end
 
     def sync_update_for_global_overview
+      # Ignore position update change
+      if previous_changes["updated_at"].present? &&
+          previous_changes["order_number"].present? &&
+          previous_changes.to_a.size == 2
+        return
+      end
+
       if should_be_exported?
         if hidden_at.present?
           sync_destroy_for_global_overview

@@ -11,8 +11,8 @@ class App < ApplicationRecord
 
   validates :codename, presence: true, inclusion: { in: CODENAMES }
 
-  def self.app_for_proposal_phase_setting(setting)
-    codename = APP_CODENAME_FOR_PROPOSAL_SETTINGS[setting]
+  def self.app_for_proposal_phase_setting(setting_key)
+    codename = APP_CODENAME_FOR_PROPOSAL_SETTINGS[setting_key]
 
     return if codename.blank?
 

@@ -29,7 +29,7 @@
 
                 <% if app.present? %>
                   <div>
-                    <%= link_to "See app in app store", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
+                    <%= link_to "App in Store anzeigen", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
                   </div>
                 <% end %>
               </div>
@@ -42,10 +42,13 @@
                 <% end %>
                 <% if app.present? && app.inactive? %>
                   <div class="admin-setting-app-activate-link">
-                    <%= link_to "Activate", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
+                    <%= link_to "Aktivieren", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
                   </div>
                 <% elsif app.present? && app.waiting_for_activation? %>
-                  Activatation in progress
+                  <div class="admin-setting-app-waiting-for-activation">
+                    Aktivierung in Arbeit
+                    <i class="fas fa-hourglass-half"></i>
+                  </div>
                 <% else %>
                   <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature) %>
                 <% end %>

@@ -1,5 +1,5 @@
 <main class="user-resources-form js-user-resources-form <%= base_class_name %>">
-  <% if projekt_phase_feature?(projekt_phase, "form.voice_assistant") %>
+  <% if helpers.projekt_phase_pro_feature?(projekt_phase, "form.voice_assistant") %>
     <%= render Dt::VoiceAssistantComponent.new(
       assistant_codename: "proposal_voice_assistant",
       projekt_phase: projekt_phase

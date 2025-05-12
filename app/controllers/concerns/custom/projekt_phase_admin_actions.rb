@@ -104,7 +104,6 @@ module ProjektPhaseAdminActions
   def settings
     authorize!(:settings, @projekt_phase)
 
-
     set_setting_page_variables(@projekt_phase)
 
     render "custom/admin/projekt_phases/settings"
@@ -178,6 +177,8 @@ module ProjektPhaseAdminActions
 
     @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
     @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
+
+    @apps = App.all
   end
 
   def projekt_labels

@@ -188,7 +188,7 @@ ActiveRecord::Schema.define(version: 2025_05_09_124050) do
   end
 
   create_table "apps", force: :cascade do |t|
-    t.boolean "enabled", default: false
+    t.integer "status"
     t.string "codename"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -2,7 +2,7 @@ class ProjektPhaseSetting < ApplicationRecord
   SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
 
   PRO_SETTINGS = [
-    VOICE_ASSISTANT_SETTING = "feature.resource.voice_assistant"
+    VOICE_ASSISTANT_SETTING = "feature.form.voice_assistant"
   ]
 
   SETTING_KINDS = %w[feature option selectable_setting].freeze

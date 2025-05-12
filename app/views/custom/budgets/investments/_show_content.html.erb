@@ -8,7 +8,7 @@
       <div class="js-scroll-link custom-tab" data-anchor-id="investment-content">
         <%= t("custom.common.fixed_tabs.content") %>
       </div>
-      <% if projekt_phase_feature?(@investment.projekt_phase, "resource.show_comments") %>
+      <% if projekt_phase_feature?(@investment.projekt_phase, "resource.show_comments") || @investment.comments.exists? %>
         <div class="js-scroll-link custom-tab" data-anchor-id="investment-comments">
           <%= t("custom.common.fixed_tabs.comments") %>
         </div>
@@ -128,7 +128,7 @@
         </div>
 
         <div class="proposal-resources-sections">
-          <% if @milestones.present? || projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") %>
+          <% if @milestones.present? || projekt_phase_feature?(@investment&.projekt_phase, "resource.show_comments") || @investment.comments.exists? %>
 
             <% if @milestones.present? %>
               <div class="proposal-resources-section">

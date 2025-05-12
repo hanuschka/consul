@@ -42,6 +42,7 @@ module ProposalsHelper
     data = {
       proposal_id: proposal.id,
       proposal_title: proposal.title,
+      projekt_phase_id: proposal.projekt_phase_id,
       # description: ActionController::Base.helpers.truncate(ActionController::Base.helpers.strip_tags(proposal.description), length: 100),
       image_url: image_url,
       labels: labels,

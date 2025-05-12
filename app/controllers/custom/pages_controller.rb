@@ -193,7 +193,7 @@ class PagesController < ApplicationController
         .page(params[:page])
 
     if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
-      @proposals = @proposals.per(1)
+      @proposals = @proposals.page(params[:resource_browse_mode_page]).per(1)
       @proposal = @proposals.first
 
       if @proposal.present?
@@ -326,7 +326,7 @@ class PagesController < ApplicationController
     end
 
     if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
-      @investments = @investments.per(1)
+      @investments = @investments.page(params[:resource_browse_mode_page]).per(1)
       @investment = @investments.first
 
       if @investment.present?

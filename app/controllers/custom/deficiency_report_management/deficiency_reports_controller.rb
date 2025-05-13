@@ -123,6 +123,10 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       if dr.responsible.is_a?(DeficiencyReport::Officer)
         DeficiencyReportMailer.notify_officer(dr, dr.responsible).deliver_later
       elsif dr.responsible.is_a?(DeficiencyReport::OfficerGroup)
+        if dr.responsible.default_email.present?
+          DeficiencyReportMailer.notify_default_officer_group_email(dr).deliver_later
+        end
+
         dr.responsible.officers.each do |officer|
           DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
         end

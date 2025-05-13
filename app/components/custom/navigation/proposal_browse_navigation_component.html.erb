@@ -16,7 +16,7 @@
     </div>
     <div class="proposal-navigation--buttons">
       <% if @resources.prev_page.present? %>
-        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: @resources.prev_page, proposal_view_mode: "browse"),
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, resource_browse_mode_page: @resources.prev_page, proposal_view_mode: "browse", page: 1),
           remote: true,
           class: "button expanded" do %>
           <div class="hide-on-small-tablet">
@@ -29,7 +29,7 @@
         <% end %>
       <% end %>
       <% if @resources.current_page != 1 && @resources.current_page == @resources.total_pages %>
-        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: 1, proposal_view_mode: "browse"),
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, resource_browse_mode_page: 1, proposal_view_mode: "browse"),
           remote: true,
           class: "button expanded" do %>
 
@@ -42,7 +42,7 @@
           </div>
         <% end %>
       <% elsif @resources.next_page.present? %>
-        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, page: @resources.next_page, proposal_view_mode: "browse"),
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id, resource_browse_mode_page: @resources.next_page, proposal_view_mode: "browse", page: 1),
           remote: true,
           class: "button expanded" do %>
           <div class="hide-on-small-tablet">

@@ -8,7 +8,7 @@
       <div class="js-scroll-link custom-tab" data-anchor-id="proposal-content">
         <%= t("custom.common.fixed_tabs.content") %>
       </div>
-      <% if projekt_phase_feature?(proposal.projekt_phase, "resource.show_comments") %>
+      <% if projekt_phase_feature?(proposal.projekt_phase, "resource.show_comments") || proposal.comments.exists? %>
         <div class="js-scroll-link custom-tab" data-anchor-id="proposal-comments">
           <%= t("custom.common.fixed_tabs.comments") %>
         </div>
@@ -94,7 +94,7 @@
         </div>
 
         <div class="proposal-resources-sections">
-          <% if ((projekt_phase_feature?(proposal.projekt_phase, "resource.show_comments") ||
+          <% if ((projekt_phase_feature?(proposal.projekt_phase, "resource.show_comments") || proposal.comments.exists? ||
               projekt_phase_feature?(proposal.projekt_phase, "resource.enable_proposal_notifications_tab") ||
               projekt_phase_feature?(proposal.projekt_phase, "resource.enable_proposal_milestones_tab")) && !preview) %>
 
@@ -135,7 +135,7 @@
               </div>
             <% end %>
 
-            <% if projekt_phase_feature?(proposal.projekt_phase, "resource.show_comments") %>
+            <% if projekt_phase_feature?(proposal.projekt_phase, "resource.show_comments") || proposal.comments.exists? %>
               <div id="proposal-comments" class="proposal-resources-section">
                 <%= render Shared::NewCommentsComponent.new(proposal, comment_tree) %>
               </div>

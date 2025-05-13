@@ -1,6 +1,14 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<% unless embedded? %>
-  <iframe src="<%= @iframe_url %>" class="projekt-phase-iframe" width="<%= @iframe_width %>" height="<%= @iframe_height %>" frameborder="0">
-  </iframe>
+<% permission_problem = @projekt_phase.permission_problem(current_user, location: "new_button_component") %>
+
+<% if permission_problem.present? %>
+  <div class="projekt-phase-permission-problem-message">
+    <%= projekt_phase_view_permission_problem_message(permission_problem, @projekt_phase) %>
+  </div>
+<% else %>
+  <%# <% unless embedded? %1> %>
+    <iframe src="<%= @iframe_url %>" class="projekt-phase-iframe" width="<%= @iframe_width %>" height="<%= @iframe_height %>" frameborder="0">
+    </iframe>
+  <%# <% end %1> %>
 <% end %>

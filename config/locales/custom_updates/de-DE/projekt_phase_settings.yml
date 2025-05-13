@@ -138,6 +138,8 @@ de:
             show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
             show_user_cost_estimate: Preisschätzung
             show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+            voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
+            voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
           resource:
             users_can_create_investment_proposals: Vorschläge einreichen
             users_can_create_investment_proposals_description: Nutzer können Vorschläge erstellen

@@ -2,7 +2,7 @@ class ProjektPhaseSetting < ApplicationRecord
   SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
 
   PRO_SETTINGS = [
-    VOICE_ASSISTANT_SETTING = "feature.form.voice_assistant"
+    "feature.form.voice_assistant"
   ]
 
   SETTING_KINDS = %w[feature option selectable_setting].freeze
@@ -114,6 +114,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_external_video": "",
           "feature.form.show_implementation_option_fields": "",
           "feature.form.show_user_cost_estimate": "",
+          "feature.form.voice_assistant": "",
 
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",

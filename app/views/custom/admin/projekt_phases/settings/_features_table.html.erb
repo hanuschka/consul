@@ -12,7 +12,7 @@
           <% pro_setting = ProjektPhaseSetting::PRO_SETTINGS.find { |s| s == feature.key } %>
 
           <% if pro_setting.present? %>
-            <% app = App.app_for_proposal_phase_setting(feature.key) %>
+            <% app = App.app_for_projekt_phase_setting(@projekt_phase, feature.key) %>
           <% end %>
 
           <tr>

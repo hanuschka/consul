@@ -9,7 +9,7 @@
   <% end %>
 </div>
 
-<% if @resource.image&.credits&.present? %>
+<% if @resource.respond_to?(:image) && @resource.image&.credits&.present? %>
   <div class="resource-image--credits">
     <%= @resource.image.credits %>
   </div>

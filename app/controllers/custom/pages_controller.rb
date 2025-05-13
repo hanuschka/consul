@@ -197,7 +197,7 @@ class PagesController < ApplicationController
         .page(params[:page])
 
     if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
-      @proposals = @proposals.per(1)
+      @proposals = @proposals.page(params[:resource_browse_mode_page]).per(1)
       @proposal = @proposals.first
 
       if @proposal.present?
@@ -329,12 +329,8 @@ class PagesController < ApplicationController
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 
-    unless params[:section] == "results" && can?(:read_results, @budget)
-      @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
-    end
-
     if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
-      @investments = @investments.per(1)
+      @investments = @investments.page(params[:resource_browse_mode_page]).per(1)
       @investment = @investments.first
 
       if @investment.present?
@@ -399,6 +395,12 @@ class PagesController < ApplicationController
   def set_argument_phase_footer_tab_variables
     @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro.order(created_at: :desc)
     @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons.order(created_at: :desc)
+  end
+
+  def set_iframe_phase_footer_tab_variables
+    @iframe_url = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_url" }.value
+    @iframe_width = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_width" }.value
+    @iframe_height = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_height" }.value
   end
 
   def set_livestream_phase_footer_tab_variables

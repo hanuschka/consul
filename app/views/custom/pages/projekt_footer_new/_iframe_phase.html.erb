@@ -1,0 +1,6 @@
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
+
+<% unless embedded? %>
+  <iframe src="<%= @iframe_url %>" class="projekt-phase-iframe" width="<%= @iframe_width %>" height="<%= @iframe_height %>" frameborder="0">
+  </iframe>
+<% end %>

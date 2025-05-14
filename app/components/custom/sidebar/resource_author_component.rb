@@ -9,7 +9,7 @@ class Sidebar::ResourceAuthorComponent < ApplicationComponent
   private
 
     def on_behalf_of?
-      resource.on_behalf_of.present?
+      resource.on_behalf_of?
     end
 
     def show_background_image?

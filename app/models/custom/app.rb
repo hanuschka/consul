@@ -10,6 +10,10 @@ class App < ApplicationRecord
     "deficiency_reports.voice_assistant" => App::VOICE_ASSISTANT_CODENAME
   }
 
+  APP_CODENAME_FOR_SETTINGS = {
+    Setting::DEFICIENCY_REPORT_VOICE_ASSISTANT => App::VOICE_ASSISTANT_CODENAME
+  }
+
   enum status: [:inactive, :waiting_for_activation, :active], _default: :inactive
 
   validates :codename, presence: true, inclusion: { in: CODENAMES }
@@ -28,6 +32,14 @@ class App < ApplicationRecord
 
   def self.app_for_general_setting(setting_key)
     codename = APP_CODENAME_FOR_GENERAL_SETTINGS[setting_key]
+
+    return if codename.blank?
+
+    App.find_or_create_by(codename: codename)
+  end
+
+  def self.app_for_setting(setting_key)
+    codename = APP_CODENAME_FOR_SETTINGS[setting_key]
 
     return if codename.blank?
 

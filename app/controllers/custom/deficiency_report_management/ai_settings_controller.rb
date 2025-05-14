@@ -1,6 +1,7 @@
 class DeficiencyReportManagement::AiSettingsController < DeficiencyReportManagement::BaseController
   def show
     @assistant_codename = "deficiency_report_voice_assistant"
+    @ai_settings = Setting.where(key: "deficiency_reports.voice_assistant")
 
     dt_api = DtApi::Client.new
 

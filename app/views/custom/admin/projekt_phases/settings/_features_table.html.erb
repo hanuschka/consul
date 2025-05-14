@@ -15,7 +15,7 @@
             <% app = App.app_for_projekt_phase_setting(@projekt_phase, feature.key) %>
           <% end %>
 
-          <tr>
+          <tr data-setting-key="<%= feature.key %>">
             <td class='small-9'>
               <strong id="<%= dom_id(feature, :title) %>"><%= t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}") %></strong>
               <% if embedded? %>

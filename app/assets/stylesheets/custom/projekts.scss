@@ -1790,3 +1790,11 @@ span.projekt-backlink:before {
     height: 100%;
   }
 }
+
+.projekt-phase-iframe {
+  max-width: 100%;
+
+  @media(max-width: $mobile-viewport-start) {
+    width: 100% !important;
+  }
+}

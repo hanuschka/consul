@@ -91,7 +91,7 @@
         </h1>
 
         <div class="user-resources-form--description">
-          <%= projekt_phase.resource_form_intro&.html_safe.presence ||
+          <%= projekt_phase&.resource_form_intro&.html_safe.presence ||
             helpers.render_custom_block("user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description")) %>
         </div>
 
@@ -109,13 +109,15 @@
           <%= labels_and_sentiments_html %>
         </div>
 
-        <%= f.hidden_field :projekt_phase_id, value: projekt_phase.id %>
+        <% if projekt_phase.present? %>
+          <%= f.hidden_field :projekt_phase_id, value: projekt_phase.id %>
+        <% end %>
 
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
           <div class="user-resources-form--banner-editor <%= banner_class_name %>"
-              style="<%= helpers.sentiment_color_style(resource.sentiment) %>">
+              style="<%= helpers.sentiment_color_style(resource.try(:sentiment)) %>">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
                   maxlength: title_max_length,
@@ -148,7 +150,7 @@
           <div class="new-card" id='map-container'>
             <%= render "map_locations/form_fields",
               form:          f,
-              map_location:  resource.map_location || resource.build_map_location(latitude: resource.projekt_phase&.map_location&.latitude, longitude: resource.projekt_phase&.map_location&.longitude, zoom: resource.projekt_phase&.map_location&.zoom),
+              map_location:  map_location,
               label:         t("#{i18n_scope}.form.map_location"),
               help:          t("custom.user_resources.form.map_location_instructions"),
               mappable:      resource,

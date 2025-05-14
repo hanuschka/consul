@@ -202,3 +202,13 @@ de:
             primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"
             submissions_limit: Beschränkung der erlaubten Einreichungen pro Nutzer
             submissions_limit_description: Limitieren Sie die Anzahl der erlaubten Formulareinreichungen pro Nutzer
+            submissions_limit_description: Limitieren Sie die Anzahl der erlaubten Formulareinreichungen pro Nutzer
+      iframe:
+        option:
+          general:
+            iframe_url: Iframe URL
+            iframe_url_description: Bitte geben Sie hier die URL ein
+            iframe_width: Breite des Iframes
+            iframe_width_description: "Bitte definieren Sie hier die Breite des Iframes. Empfohlener Wert: 1260"
+            iframe_height: Höhe des Iframes
+            iframe_height_description: "Bitte definieren Sie hier die Höhe des Iframes. Empfohlener Wert: 1000"

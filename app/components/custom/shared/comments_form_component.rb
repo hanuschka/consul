@@ -9,6 +9,13 @@ class Shared::CommentsFormComponent < ApplicationComponent
 
   private
 
+    def render?
+      return true if user_signed_in? && (current_user.administrator? || current_user.has_pm_permission_to?(:manage, @projekt))
+      return true unless record.class.name.in? %w[Proposal Budget::Investment Poll]
+
+      helpers.projekt_phase_feature?(record.projekt_phase, "resource.show_comments")
+    end
+
     def projekt_phase
       return nil if record.is_a?(Projekt)
       return record if record.is_a?(ProjektPhase)

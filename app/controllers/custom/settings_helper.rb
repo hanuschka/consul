@@ -9,6 +9,10 @@ module SettingsHelper
     setting["deficiency_reports.#{name}"].presence
   end
 
+  def ideas_feature?(name)
+    setting["ideas.#{name}"].presence
+  end
+
   # form permissions
   def allowed_to_post_on_behalf_of?(current_user, projekt)
     return true if current_user.administrator? || current_user.moderator?

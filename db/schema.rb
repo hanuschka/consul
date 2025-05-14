@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_24_151929) do
+ActiveRecord::Schema.define(version: 2025_05_13_143008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1057,6 +1057,32 @@ ActiveRecord::Schema.define(version: 2025_04_24_151929) do
     t.string "key"
   end
 
+  create_table "idea_translations", force: :cascade do |t|
+    t.bigint "idea_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "title"
+    t.text "description"
+    t.index ["idea_id"], name: "index_idea_translations_on_idea_id"
+    t.index ["locale"], name: "index_idea_translations_on_locale"
+  end
+
+  create_table "ideas", force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.string "video_url"
+    t.datetime "hidden_at"
+    t.boolean "admin_accepted"
+    t.datetime "archived_at"
+    t.tsvector "tsv"
+    t.string "on_behalf_of"
+    t.integer "comments_count", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_ideas_on_author_id"
+    t.index ["tsv"], name: "index_ideas_on_tsv", using: :gin
+  end
+
   create_table "identities", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "provider"
@@ -1411,7 +1437,9 @@ ActiveRecord::Schema.define(version: 2025_04_24_151929) do
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
     t.bigint "registered_address_district_id"
+    t.bigint "idea_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
+    t.index ["idea_id"], name: "index_map_locations_on_idea_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
@@ -2072,6 +2100,7 @@ ActiveRecord::Schema.define(version: 2025_04_24_151929) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["projekt_id", "key", "value"], name: "index_projekt_settings_on_projekt_id_key_value"
     t.index ["projekt_id"], name: "index_projekt_settings_on_projekt_id"
   end
 
@@ -2893,6 +2922,7 @@ ActiveRecord::Schema.define(version: 2025_04_24_151929) do
   add_foreign_key "geozones_polls", "geozones"
   add_foreign_key "geozones_polls", "polls"
   add_foreign_key "graphql_users", "users"
+  add_foreign_key "ideas", "users", column: "author_id"
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"
   add_foreign_key "individual_group_values", "individual_groups"
@@ -2905,6 +2935,7 @@ ActiveRecord::Schema.define(version: 2025_04_24_151929) do
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
   add_foreign_key "map_locations", "deficiency_reports"
+  add_foreign_key "map_locations", "ideas"
   add_foreign_key "map_locations", "projekt_phases"
   add_foreign_key "map_locations", "projekts"
   add_foreign_key "map_locations", "registered_address_districts"

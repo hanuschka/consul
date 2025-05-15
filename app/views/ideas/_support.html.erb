@@ -2,21 +2,21 @@
   <% if current_user&.voted_up_for?(idea) %>
     <%= button_to unvote_idea_path(idea),
         class: "button button-support small expanded unvote",
-        title: t("custom.ideas.unsupport"), method: "post", remote: true do %>
-      <%= t("custom.ideas.unsupport") %>
+        title: t("ideas.unsupport"), method: "post", remote: true do %>
+      <%= t("ideas.unsupport") %>
     <% end %>
 
   <% else %>
     <%= button_to vote_idea_path(idea, value: "yes"),
         class: "button button-support small expanded",
-        title: t("custom.ideas.support"),
+        title: t("ideas.support"),
         method: "post",
         remote: true do %>
-      <%= t("custom.ideas.support") %>
+      <%= t("ideas.support") %>
     <% end %>
   <% end %>
 
   <span class="total-supports">
-    <%= t("custom.ideas.supports_count", count: idea.cached_votes_up) %>
+    <%= t("ideas.supports_count", count: idea.cached_votes_up) %>
   </span>
 </div>

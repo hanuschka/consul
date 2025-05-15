@@ -10,12 +10,13 @@ class IdeasController < ApplicationController
 
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_idea, only: [:show, :vote, :unvote]
-  skip_authorization_check only: [:index, :show]
 
   has_orders ->(c) { Idea.idea_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
 
   def index
+    authorize! :index, Idea
+
     @ideas = Idea.all
     @ideas_coordinates = all_idea_map_locations(@ideas)
 
@@ -25,6 +26,8 @@ class IdeasController < ApplicationController
 
   def show
     @idea = Idea.find(params[:id])
+    authorize! :show, @idea
+
     @comment_tree = CommentTree.new(@idea, params[:page], @current_order)
   end
 

@@ -68,7 +68,11 @@ module CustomSearch
       [
         [:deficiency_report_status_id, :status],
         [:deficiency_report_category_id, :category],
-        [:admin_accepted, :admin_accepted]
+        [:admin_accepted]
+      ]
+    when "Idea"
+      [
+        [:admin_accepted]
       ]
     end
   end

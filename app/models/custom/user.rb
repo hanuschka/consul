@@ -299,6 +299,10 @@ class User < ApplicationRecord
     deficiency_report_manager.present?
   end
 
+  def idea_manager?
+    idea_manager.present?
+  end
+
   def generate_frame_sign_in_token!
     regenerate_frame_sign_in_token
 

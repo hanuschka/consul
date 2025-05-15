@@ -149,6 +149,8 @@ module Abilities
       can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 
+      can [:manage], Idea
+
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type], Poll::Question
       can [:update, :verify, :unverify, :reverify, :destroy], User

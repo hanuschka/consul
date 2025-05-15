@@ -274,6 +274,9 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
+        ideas:
+          list: Ideen
+          settings: Funktionen
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen

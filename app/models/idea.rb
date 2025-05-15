@@ -13,6 +13,8 @@ class Idea < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
 
+  acts_as_votable
+
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create

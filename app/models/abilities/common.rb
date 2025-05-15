@@ -195,7 +195,7 @@ module Abilities
           community.communitable.projekt_phase.permission_problem(user).blank?
       end
 
-      can :create, Idea
+      can [:create, :vote, :unvote], Idea
     end
   end
 end

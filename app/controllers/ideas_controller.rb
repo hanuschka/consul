@@ -9,12 +9,14 @@ class IdeasController < ApplicationController
   feature_flag :ideas
 
   before_action :authenticate_user!, except: [:index, :show]
-  skip_authorization_check only: [:index, :show]
+  before_action :set_idea, only: [:show, :vote, :unvote]
 
   has_orders ->(c) { Idea.idea_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
 
   def index
+    authorize! :index, Idea
+
     @ideas = Idea.all
     @ideas_coordinates = all_idea_map_locations(@ideas)
 
@@ -24,6 +26,8 @@ class IdeasController < ApplicationController
 
   def show
     @idea = Idea.find(params[:id])
+    authorize! :show, @idea
+
     @comment_tree = CommentTree.new(@idea, params[:page], @current_order)
   end
 
@@ -46,6 +50,21 @@ class IdeasController < ApplicationController
   def suggest
     @limit = 5
     @resources = @search_terms.present? ? Idea.admin_accepted.search(@search_terms) : nil
+  end
+
+  def vote
+    authorize! :vote, @idea
+
+    @follow = Follow.find_or_create_by!(user: current_user, followable: @idea)
+    @voted = @idea.vote_by(voter: current_user, vote: "yes")
+  end
+
+  def unvote
+    authorize! :unvote, @idea
+
+    @follow = Follow.find_by(user: current_user, followable: @idea)
+    @follow&.destroy!
+    @voted = !@idea.unvote_by(current_user)
   end
 
   def json_data
@@ -81,5 +100,9 @@ class IdeasController < ApplicationController
       MapLocation.where(idea_id: ids).map do |map_location|
         map_location.shape_json_data.presence || map_location.json_data
       end
+    end
+
+    def set_idea
+      @idea = Idea.find(params[:id])
     end
 end

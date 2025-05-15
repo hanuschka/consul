@@ -1,0 +1,31 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("custom.admin.deficiency_reports.settings.index.title") %>
+<% end %>
+
+<h2><%= t("custom.admin.deficiency_reports.settings.index.title") %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("admin.settings.setting") %></th>
+      <th><%= t("admin.settings.index.features.enabled") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @settings.each do |feature| %>
+      <tr>
+        <td>
+          <strong id="<%= dom_id(feature, :title) %>"><%= t("custom.settings.#{feature.key}") %></strong>
+          <br>
+          <span class="small">
+            <%= t("custom.settings.#{feature.key}_description", default: t("admin.settings.no_description")) %>
+          </span>
+        </td>
+
+        <td>
+          <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature, tab: '#tab-projekts-settings') %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

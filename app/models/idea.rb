@@ -13,15 +13,18 @@ class Idea < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
 
+  acts_as_votable
+
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
 
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create
 
+  scope :sort_by_most_supported, -> { reorder(cached_votes_up: :desc) }
   scope :sort_by_most_commented, -> { reorder(comments_count: :desc) }
   scope :sort_by_newest,         -> { reorder(created_at: :desc) }
 
   def self.idea_orders
-    %w[most_commented newest]
+    %w[most_supported most_commented newest]
   end
 
   def self.search(terms)

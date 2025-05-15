@@ -274,10 +274,14 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
+        ideas:
+          list: Ideen
+          settings: Funktionen
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
+        idea_managers: Admin Ideen
         officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen

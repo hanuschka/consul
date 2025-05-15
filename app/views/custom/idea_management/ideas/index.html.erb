@@ -1,0 +1,44 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("admin.ideas.index.title") %>
+<% end %>
+
+<h2><%= t("admin.ideas.index.title") %></h2>
+
+<%= render "custom/idea_management/ideas/filter" %>
+
+<% if @ideas.any? %>
+  <h3><%= page_entries_info @ideas %></h3>
+
+  <%= link_to t("custom.shared.download"), idea_management_ideas_path(csv_params), class: "float-right small clear" %>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="text-center"><%= t("custom.admin.ideas.index.id") %></th>
+        <% if Setting["ideas.admin_acceptance_required"].present? %>
+          <th><%= t("custom.admin.ideas.index.admin_accepted") %></th>
+        <% end %>
+        <th><%= t("custom.admin.ideas.index.created_at") %></th>
+        <th><%= t("custom.admin.ideas.index.title") %></th>
+        <th><%= t("custom.admin.ideas.index.author") %></th>
+        <th><%= t("custom.admin.ideas.index.status_title") %></th>
+        <th><%= t("custom.admin.ideas.index.approximater_location") %></th>
+        <th><%= t("custom.admin.ideas.index.category_name") %></th>
+        <th><%= t("custom.admin.ideas.index.officer_name") %></th>
+        <th><%= t("custom.admin.ideas.index.actions") %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @ideas.each do |idea| %>
+        <%= render "idea_row", idea: idea %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @ideas %>
+<% else %>
+  <div class="callout primary">
+    <%= t("admin.ideas.no_ideas") %>
+  </div>
+<% end %>

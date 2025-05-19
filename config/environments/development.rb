@@ -92,6 +92,6 @@ Rails.application.configure do
     config.hosts << host
   end
 
-  require_relative "../../lib/middleware/vc_maps_middleware.rb"
+  require_relative "../../lib/middleware/vc_maps_middleware"
   config.middleware.insert_before 0, VcMapsMiddleware
 end

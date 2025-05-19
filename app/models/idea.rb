@@ -16,6 +16,7 @@ class Idea < ApplicationRecord
   acts_as_votable
 
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  belongs_to :category, optional: true, inverse_of: :ideas, foreign_key: :idea_category_id
 
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create
 

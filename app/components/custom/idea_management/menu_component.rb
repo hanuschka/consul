@@ -8,6 +8,7 @@ class IdeaManagement::MenuComponent < ApplicationComponent
   def links
     [
       ideas_link,
+      categories_link,
       settings_link,
     ].compact
   end
@@ -21,6 +22,16 @@ class IdeaManagement::MenuComponent < ApplicationComponent
         t("custom.admin.menu.ideas.list"),
         idea_management_ideas_path,
         controller_name == "ideas"
+      ]
+    end
+
+    def categories_link
+      return unless can?(:index, Idea::Category)
+
+      [
+        t("custom.admin.menu.ideas.categories"),
+        idea_management_categories_path,
+        controller_name == "categories"
       ]
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_15_120346) do
+ActiveRecord::Schema.define(version: 2025_05_19_080218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1057,6 +1057,24 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
     t.string "key"
   end
 
+  create_table "idea_categories", force: :cascade do |t|
+    t.string "color"
+    t.string "icon"
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "idea_category_translations", force: :cascade do |t|
+    t.bigint "idea_category_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["idea_category_id"], name: "index_idea_category_translations_on_idea_category_id"
+    t.index ["locale"], name: "index_idea_category_translations_on_locale"
+  end
+
   create_table "idea_managers", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
@@ -1087,7 +1105,9 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "cached_votes_up", default: 0
+    t.bigint "idea_category_id"
     t.index ["author_id"], name: "index_ideas_on_author_id"
+    t.index ["idea_category_id"], name: "index_ideas_on_idea_category_id"
     t.index ["tsv"], name: "index_ideas_on_tsv", using: :gin
   end
 
@@ -2931,6 +2951,7 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
   add_foreign_key "geozones_polls", "polls"
   add_foreign_key "graphql_users", "users"
   add_foreign_key "idea_managers", "users"
+  add_foreign_key "ideas", "idea_categories"
   add_foreign_key "ideas", "users", column: "author_id"
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"

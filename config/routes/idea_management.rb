@@ -12,5 +12,11 @@ namespace :idea_management do
     end
   end
 
+  resources :categories, only: %i[index new create edit update destroy] do
+    collection do
+      post "order_categories"
+    end
+  end
+
   resources :settings, only: :index
 end

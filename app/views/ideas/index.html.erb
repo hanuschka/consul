@@ -1,0 +1,62 @@
+<main>
+  <h1>
+    <%= t("ideas.index.title") %>
+  </h1>
+
+  <% if ideas_feature?("intro_text") %>
+    <div class="flex-layout">
+      <div class="main-column">
+        <div class="resource-page--intro-text hide-on-mobile">
+          <%= render_custom_block("ideas_index_welcome", default_content: t("ideas.index.welcome_default_text_html")) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="flex-layout">
+    <div class="main-column">
+      <%= render(
+        Shared::ResourcesListComponent.new(
+          resources: @ideas,
+          resource_type: Idea,
+          map_coordinates: @ideas_coordinates,
+          current_filter: @current_order,
+          filter_param: "order",
+          text_search_enabled: true,
+          filters: @valid_orders
+        )
+      ) %>
+
+      <%= paginate @ideas %>
+    </div>
+
+    <div id="ideas-sidebar" class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
+        <div class="margin-bottom-half">
+          <%= render_custom_block "ideas_index_sidebar", default_content: t("ideas.index.sidebar.information_default_text") %>
+        </div>
+
+        <div class="resources--info-count margin-bottom-half">
+          <span>
+            <%= t("ideas.index.sidebar.count") %>
+          </span>
+          <span>
+            <%= Idea.all.count %>
+          </span>
+        </div>
+
+        <div class="hide-on-mobile">
+          <%= link_to t("ideas.index.sidebar.button_new"), new_idea_path,
+            class: "button -orange", style: "display:inline-flex;" %>
+        </div>
+      <% end %>
+
+      <div class="show-on-mobile">
+        <%= render(Mobile::FixedBottomActionComponent.new) do %>
+          <%= link_to t("ideas.index.sidebar.button_new"), new_idea_path,
+            class: "button -orange", style: "display:inline-flex;" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</main>

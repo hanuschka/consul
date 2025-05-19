@@ -130,6 +130,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
       Projekts::ProjektEvents::ListItemComponent.new(projekt_event: resource)
     when Topic
       Topics::ListItemComponent.new(topic: resource)
+    when Idea
+      Ideas::ListItemComponent.new(idea: resource)
     end
   end
 

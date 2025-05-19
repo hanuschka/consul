@@ -1,0 +1,13 @@
+<%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_header do %>
+    <div>
+      <%= l(idea.created_at, format: :new_date_with_year) %>
+    </div>
+  <% end %>
+
+  <% if ideas_feature?("allow_voting") %>
+    <% c.with_footer_section do %>
+      <%= render "ideas/support", idea: idea %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -93,13 +93,19 @@
 
           <% if @url.present? %>
             <%= link_to(truncate(@title, length: 72), @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false }) %>
+
+            <div class="resource-item--description">
+              <%= link_to(@url, target: @url_target, data: { turbolinks: false }) do %>
+                <%= truncate(strip_tags(@description), length: 160) %>
+              <% end %>
+            </div>
           <% else %>
             <div class="no-link resource-item--title"><%= truncate(@title, length: 72) %></div>
-          <% end %>
 
-          <div class="resource-item--description">
-            <%= truncate(strip_tags(@description), length: 160) %>
-          </div>
+            <div class="resource-item--description">
+              <%= truncate(strip_tags(@description), length: 160) %>
+            </div>
+          <% end %>
         </div>
 
         <% if additional_body_sections.any? %>

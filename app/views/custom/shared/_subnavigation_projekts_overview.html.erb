@@ -16,7 +16,7 @@
   </div>
 
   <% unless use_landing_projekts_for_overview_link %>
-    <% if placement == 'mobile' && @projekts_for_overview_page_navigation.present? %>
+    <% if placement == 'mobile' && @projekts_for_overview_page_navigation.any? %>
       <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
         tabindex="0"
         aria-label='<%= t('custom.links.menu.mobile.arrow_projekts') %>'
@@ -25,7 +25,7 @@
         >
       </div>
     <% end %>
-    <% if @projekts_for_overview_page_navigation.present? %>
+    <% if @projekts_for_overview_page_navigation.any? %>
       <%= render partial: 'shared/subnavigation_flyout_projekts',
         locals: { projekts: @projekts_for_overview_page_navigation, placement: placement, skip_subprojekts: true, called_from: "subnavigation_projekts_overview" } %>
     <% end %>

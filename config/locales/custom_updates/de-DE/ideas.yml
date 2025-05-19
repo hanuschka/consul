@@ -1,0 +1,23 @@
+de:
+  ideas:
+    support: Unterstützen
+    unsupport: Unterstützung zurückziehen
+    supports_count:
+      one: "%{count} Unterstützung"
+      other: "%{count} Unterstützungen"
+    index:
+      title: Ideen
+      welcome_default_text_html: "welcome_default_text_html"
+      orders:
+        most_supported: "Meist unterstützt"
+        most_commented: "Meist kommentiert"
+        newest: "Neueste"
+      sidebar:
+        information_default_text: "information_default_text"
+        count: "Anzahl"
+        button_new: "Neue Idee"
+    show:
+      video_url_title: "Video URL"
+      author_actions:
+        title: "Aktionen"
+        delete_button: "Idee löschen"

@@ -42,11 +42,14 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
+  has_one :idea_manager
   has_one :officing_manager
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
+
+  has_many :ideas, inverse_of: :author
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
@@ -294,6 +297,10 @@ class User < ApplicationRecord
 
   def deficiency_report_manager?
     deficiency_report_manager.present?
+  end
+
+  def idea_manager?
+    idea_manager.present?
   end
 
   def generate_frame_sign_in_token!

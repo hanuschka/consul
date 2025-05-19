@@ -4,7 +4,7 @@ class Setting < ApplicationRecord
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type
-    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage].include? prefix
+    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
       prefix
     elsif %w[remote_census].include? prefix
       key.rpartition(".").first
@@ -85,6 +85,7 @@ class Setting < ApplicationRecord
         "process.legislation": true,
         "process.projekts": true,
         "process.deficiency_reports": false,
+        "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,
         "proposals.poll_description": nil,
@@ -171,6 +172,7 @@ class Setting < ApplicationRecord
         "welcomepage.usage_stats": true,
         "welcomepage.platform_activity": true,
         "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
 
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
@@ -189,6 +191,18 @@ class Setting < ApplicationRecord
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
 
+        "ideas.show_in_main_menu": false,
+        # "ideas.admins_must_assign_officer": false,
+        # "ideas.officers_can_administer_assigned_reports": true,
+        # "ideas.officers_can_edit_assigned_reports": false,
+        "ideas.allow_voting": false,
+        "ideas.enable_comments": true,
+        "ideas.intro_text": false,
+        # "ideas.enable_geoman_controls_in_maps": true,
+        # "ideas.admin_acceptance_required": false,
+        "ideas.document_upload": true,
+        "ideas.external_video": true,
+
         # "extended_feature.general.elasticsearch": false,
 
         "extended_feature.general.extended_editor_for_admins": true,
@@ -201,6 +215,8 @@ class Setting < ApplicationRecord
         "extended_feature.general.use_white_top_navigation_text": false,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        # "extended_feature.general.homepage_projekt_search": false,
+
         "extended_option.general.city_name": "CONSUL",
         "extended_option.general.title": "Öffentlichkeitsbeteiligung",
         "extended_option.general.subtitle": "in der Stadt CONSUL",

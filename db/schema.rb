@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_08_130242) do
+ActiveRecord::Schema.define(version: 2025_05_15_120346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -749,6 +749,7 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "default_email"
   end
 
   create_table "deficiency_report_officers", force: :cascade do |t|
@@ -1056,6 +1057,40 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.string "key"
   end
 
+  create_table "idea_managers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_idea_managers_on_user_id"
+  end
+
+  create_table "idea_translations", force: :cascade do |t|
+    t.bigint "idea_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "title"
+    t.text "description"
+    t.index ["idea_id"], name: "index_idea_translations_on_idea_id"
+    t.index ["locale"], name: "index_idea_translations_on_locale"
+  end
+
+  create_table "ideas", force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.string "video_url"
+    t.datetime "hidden_at"
+    t.boolean "admin_accepted"
+    t.datetime "archived_at"
+    t.tsvector "tsv"
+    t.string "on_behalf_of"
+    t.integer "comments_count", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "cached_votes_up", default: 0
+    t.index ["author_id"], name: "index_ideas_on_author_id"
+    t.index ["tsv"], name: "index_ideas_on_tsv", using: :gin
+  end
+
   create_table "identities", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "provider"
@@ -1078,6 +1113,7 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.datetime "attachment_updated_at"
     t.integer "user_id"
     t.boolean "concealed", default: false
+    t.string "credits"
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end
@@ -1409,7 +1445,9 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
     t.bigint "registered_address_district_id"
+    t.bigint "idea_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
+    t.index ["idea_id"], name: "index_map_locations_on_idea_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
@@ -1965,7 +2003,7 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.string "phase_tab_name"
     t.text "cta_button_name"
     t.text "resource_form_title"
-    t.text "projekt_selector_hint"
+    t.text "resource_form_intro"
     t.string "labels_name"
     t.string "sentiments_name"
     t.string "resource_form_title_placeholder"
@@ -1973,6 +2011,8 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.string "comment_form_title"
     t.string "comment_form_button"
     t.text "resource_form_description_placeholder"
+    t.text "welcome_text_in_show"
+    t.string "support_button_text"
     t.index ["locale"], name: "index_projekt_phase_translations_on_locale"
     t.index ["projekt_phase_id"], name: "index_projekt_phase_translations_on_projekt_phase_id"
   end
@@ -2068,6 +2108,7 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["projekt_id", "key", "value"], name: "index_projekt_settings_on_projekt_id_key_value"
     t.index ["projekt_id"], name: "index_projekt_settings_on_projekt_id"
   end
 
@@ -2505,7 +2546,7 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
     t.boolean "landing", default: false
     t.integer "landing_nav_position"
     t.boolean "landing_show_projekts_overview", default: true
-    t.boolean "landing_site_logo_not_clickable", default: false
+    t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
@@ -2889,6 +2930,8 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
   add_foreign_key "geozones_polls", "geozones"
   add_foreign_key "geozones_polls", "polls"
   add_foreign_key "graphql_users", "users"
+  add_foreign_key "idea_managers", "users"
+  add_foreign_key "ideas", "users", column: "author_id"
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"
   add_foreign_key "individual_group_values", "individual_groups"
@@ -2901,6 +2944,7 @@ ActiveRecord::Schema.define(version: 2025_04_08_130242) do
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
   add_foreign_key "map_locations", "deficiency_reports"
+  add_foreign_key "map_locations", "ideas"
   add_foreign_key "map_locations", "projekt_phases"
   add_foreign_key "map_locations", "projekts"
   add_foreign_key "map_locations", "registered_address_districts"

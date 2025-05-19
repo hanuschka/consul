@@ -82,6 +82,7 @@ de:
         signin_with_provider: Anmelden mit %{provider}
         signup: Sie haben noch kein Konto? %{signup_link}
         signup_link: Neues Konto erstellen
+        signup_link_hint: Noch kein Konto?
     unlocks:
       new:
         email_label: E-Mail

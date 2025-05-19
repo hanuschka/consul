@@ -59,6 +59,10 @@ module CustomHelper
   def toggle_element_in_array(array, element)
     array ||= []
 
+    if array.present? && !array.is_a?(Array)
+      array = [array]
+    end
+
     if array.include?(element)
       array.delete(element)
     else

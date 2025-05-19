@@ -1,0 +1,22 @@
+<div id="<%= dom_id(idea, :support) %>" class="supports text-center">
+  <% if current_user&.voted_up_for?(idea) %>
+    <%= button_to unvote_idea_path(idea),
+        class: "button button-support small expanded unvote",
+        title: t("ideas.unsupport"), method: "post", remote: true do %>
+      <%= t("ideas.unsupport") %>
+    <% end %>
+
+  <% else %>
+    <%= button_to vote_idea_path(idea, value: "yes"),
+        class: "button button-support small expanded",
+        title: t("ideas.support"),
+        method: "post",
+        remote: true do %>
+      <%= t("ideas.support") %>
+    <% end %>
+  <% end %>
+
+  <span class="total-supports">
+    <%= t("ideas.supports_count", count: idea.cached_votes_up) %>
+  </span>
+</div>

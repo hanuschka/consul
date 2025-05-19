@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_19_080218) do
+ActiveRecord::Schema.define(version: 2025_05_19_142400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1080,6 +1080,13 @@ ActiveRecord::Schema.define(version: 2025_05_19_080218) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_idea_managers_on_user_id"
+  end
+
+  create_table "idea_officers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_idea_officers_on_user_id"
   end
 
   create_table "idea_translations", force: :cascade do |t|
@@ -2951,6 +2958,7 @@ ActiveRecord::Schema.define(version: 2025_05_19_080218) do
   add_foreign_key "geozones_polls", "polls"
   add_foreign_key "graphql_users", "users"
   add_foreign_key "idea_managers", "users"
+  add_foreign_key "idea_officers", "users"
   add_foreign_key "ideas", "idea_categories"
   add_foreign_key "ideas", "users", column: "author_id"
   add_foreign_key "identities", "users"

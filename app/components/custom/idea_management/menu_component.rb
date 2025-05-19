@@ -11,6 +11,7 @@ class IdeaManagement::MenuComponent < ApplicationComponent
       officers_link,
       categories_link,
       settings_link,
+      districts_link
     ].compact
   end
 
@@ -53,6 +54,14 @@ class IdeaManagement::MenuComponent < ApplicationComponent
         t("custom.admin.menu.ideas.settings"),
         idea_management_settings_path,
         controller_name == "settings"
+      ]
+    end
+
+    def districts_link
+      [
+        t("custom.admin.menu.ideas.districts"),
+        idea_management_districts_path,
+        controller_name == "districts"
       ]
     end
 end

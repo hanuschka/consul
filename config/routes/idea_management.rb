@@ -23,4 +23,5 @@ namespace :idea_management do
   end
 
   resources :settings, only: :index
+  resources :districts, only: [:index, :edit, :update]
 end

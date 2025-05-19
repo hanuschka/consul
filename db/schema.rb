@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_19_142400) do
+ActiveRecord::Schema.define(version: 2025_05_19_155905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2283,7 +2283,9 @@ ActiveRecord::Schema.define(version: 2025_05_19_142400) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "default_deficiency_report_responsible_type"
     t.bigint "default_deficiency_report_responsible_id"
+    t.bigint "idea_officer_id"
     t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible"
+    t.index ["idea_officer_id"], name: "index_registered_address_districts_on_idea_officer_id"
   end
 
   create_table "registered_address_groupings", force: :cascade do |t|
@@ -3032,6 +3034,7 @@ ActiveRecord::Schema.define(version: 2025_05_19_142400) do
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
+  add_foreign_key "registered_address_districts", "idea_officers"
   add_foreign_key "registered_address_street_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_street_projekt_phases", "registered_address_streets"
   add_foreign_key "registered_addresses", "registered_address_districts"

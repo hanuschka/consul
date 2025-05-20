@@ -149,6 +149,8 @@ module Abilities
       can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
 
+      can [:manage], ::Idea::Officer
+      can [:manage], ::Idea::Category
       can [:manage], Idea
 
       can [:csv_answers_votes], Poll

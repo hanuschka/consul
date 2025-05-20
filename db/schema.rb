@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_15_120346) do
+ActiveRecord::Schema.define(version: 2025_05_19_155905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1057,11 +1057,36 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
     t.string "key"
   end
 
+  create_table "idea_categories", force: :cascade do |t|
+    t.string "color"
+    t.string "icon"
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "idea_category_translations", force: :cascade do |t|
+    t.bigint "idea_category_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["idea_category_id"], name: "index_idea_category_translations_on_idea_category_id"
+    t.index ["locale"], name: "index_idea_category_translations_on_locale"
+  end
+
   create_table "idea_managers", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_idea_managers_on_user_id"
+  end
+
+  create_table "idea_officers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_idea_officers_on_user_id"
   end
 
   create_table "idea_translations", force: :cascade do |t|
@@ -1087,7 +1112,9 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "cached_votes_up", default: 0
+    t.bigint "idea_category_id"
     t.index ["author_id"], name: "index_ideas_on_author_id"
+    t.index ["idea_category_id"], name: "index_ideas_on_idea_category_id"
     t.index ["tsv"], name: "index_ideas_on_tsv", using: :gin
   end
 
@@ -2256,7 +2283,9 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "default_deficiency_report_responsible_type"
     t.bigint "default_deficiency_report_responsible_id"
+    t.bigint "idea_officer_id"
     t.index ["default_deficiency_report_responsible_type", "default_deficiency_report_responsible_id"], name: "index_registered_address_districts_on_default_dr_responsible"
+    t.index ["idea_officer_id"], name: "index_registered_address_districts_on_idea_officer_id"
   end
 
   create_table "registered_address_groupings", force: :cascade do |t|
@@ -2931,6 +2960,8 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
   add_foreign_key "geozones_polls", "polls"
   add_foreign_key "graphql_users", "users"
   add_foreign_key "idea_managers", "users"
+  add_foreign_key "idea_officers", "users"
+  add_foreign_key "ideas", "idea_categories"
   add_foreign_key "ideas", "users", column: "author_id"
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"
@@ -3003,6 +3034,7 @@ ActiveRecord::Schema.define(version: 2025_05_15_120346) do
   add_foreign_key "proposals", "projekt_phases"
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
+  add_foreign_key "registered_address_districts", "idea_officers"
   add_foreign_key "registered_address_street_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_street_projekt_phases", "registered_address_streets"
   add_foreign_key "registered_addresses", "registered_address_districts"

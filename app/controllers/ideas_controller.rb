@@ -87,6 +87,7 @@ class IdeasController < ApplicationController
 
     def idea_params
       attributes = [:resource_terms,
+                    :idea_category_id,
                     :video_url, :on_behalf_of,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,

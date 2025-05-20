@@ -65,6 +65,7 @@
                      map_location: @idea.map_location || MapLocation.new,
                      label:    t("proposals.form.map_location"),
                      help:     t("proposals.form.map_location_instructions"),
+                     mappable: @idea,
                      remove_marker_label: t("proposals.form.map_remove_marker"),
                      parent_class: "proposal",
                      i18n_namespace: "proposals" %>
@@ -82,6 +83,3 @@
     <% end %>
   </div>
 </div>
-
-<hr>
-<%= render "admin/milestones/milestones", milestoneable: @idea %>

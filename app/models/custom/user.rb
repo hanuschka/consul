@@ -42,14 +42,14 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
+  has_many :ideas, inverse_of: :author, foreign_key: :author_id
+  has_one :idea_officer, class_name: "Idea::Officer"
   has_one :idea_manager
   has_one :officing_manager
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
-
-  has_many :ideas, inverse_of: :author
 
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
@@ -197,6 +197,10 @@ class User < ApplicationRecord
 
   def deficiency_report_officer?
     deficiency_report_officer.present?
+  end
+
+  def idea_officer?
+    idea_officer.present?
   end
 
   def projekt_manager?(projekt = nil)

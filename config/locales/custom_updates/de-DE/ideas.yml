@@ -29,6 +29,13 @@ de:
       author_actions:
         title: "Aktionen"
         delete_button: "Idee löschen"
+    new:
+      start_new: "Neue Idee starten"
     form:
       category_label: Kategorie
       category_hint: Bitte wählen Sie eine Option aus
+  custom:
+    ideas:
+      form:
+        title_placeholder: "Titel der Idee"
+        description_placeholder: "Beschreibung der Idee"

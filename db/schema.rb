@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_20_124956) do
+ActiveRecord::Schema.define(version: 2025_05_20_142301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1096,6 +1096,7 @@ ActiveRecord::Schema.define(version: 2025_05_20_124956) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "title"
     t.text "description"
+    t.text "official_answer"
     t.index ["idea_id"], name: "index_idea_translations_on_idea_id"
     t.index ["locale"], name: "index_idea_translations_on_locale"
   end
@@ -1115,8 +1116,10 @@ ActiveRecord::Schema.define(version: 2025_05_20_124956) do
     t.bigint "idea_category_id"
     t.integer "votes_needed_for_success", default: 100, null: false
     t.integer "timeframe", default: 50, null: false
+    t.bigint "idea_officer_id"
     t.index ["author_id"], name: "index_ideas_on_author_id"
     t.index ["idea_category_id"], name: "index_ideas_on_idea_category_id"
+    t.index ["idea_officer_id"], name: "index_ideas_on_idea_officer_id"
     t.index ["tsv"], name: "index_ideas_on_tsv", using: :gin
   end
 
@@ -2964,6 +2967,7 @@ ActiveRecord::Schema.define(version: 2025_05_20_124956) do
   add_foreign_key "idea_managers", "users"
   add_foreign_key "idea_officers", "users"
   add_foreign_key "ideas", "idea_categories"
+  add_foreign_key "ideas", "idea_officers"
   add_foreign_key "ideas", "users", column: "author_id"
   add_foreign_key "identities", "users"
   add_foreign_key "images", "users"

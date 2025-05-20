@@ -18,6 +18,10 @@ class IdeasController < ApplicationController
     authorize! :index, Idea
 
     @ideas = Idea.all
+
+    filter_by_status
+    filter_by_quorum
+
     @ideas_coordinates = all_idea_map_locations(@ideas)
 
     @ideas = @ideas.send("sort_by_#{@current_order}")
@@ -105,5 +109,17 @@ class IdeasController < ApplicationController
 
     def set_idea
       @idea = Idea.find(params[:id])
+    end
+
+    def filter_by_status
+      return unless params[:status].in? %w[active archived]
+
+      @ideas = @ideas.send("filter_by_status_#{params[:status]}")
+    end
+
+    def filter_by_quorum
+      return unless params[:quorum].in? %w[reached not_reached]
+
+      @ideas = @ideas.send("filter_by_quorum_#{params[:quorum]}")
     end
 end

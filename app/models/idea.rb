@@ -24,6 +24,12 @@ class Idea < ApplicationRecord
   scope :sort_by_most_commented, -> { reorder(comments_count: :desc) }
   scope :sort_by_newest,         -> { reorder(created_at: :desc) }
 
+  scope :filter_by_status_active,   -> { where(archived_at: nil) }
+  scope :filter_by_status_archived, -> { where.not(archived_at: nil) }
+
+  scope :filter_by_quorum_reached,     -> { where("cached_votes_up >= votes_needed_for_success") }
+  scope :filter_by_quorum_not_reached, -> { where("cached_votes_up < votes_needed_for_success") }
+
   def self.idea_orders
     %w[most_supported most_commented newest]
   end

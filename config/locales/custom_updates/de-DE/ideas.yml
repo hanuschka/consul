@@ -16,6 +16,14 @@ de:
         information_default_text: "information_default_text"
         count: "Anzahl"
         button_new: "Neue Idee"
+        status_filter:
+          title: Status
+          active: Aktiv
+          archived: Archiviert
+        quorum_filter:
+          title: Quorum
+          reached: Erreicht
+          not_reached: Nicht erreicht
     show:
       video_url_title: "Video URL"
       author_actions:

@@ -7,7 +7,7 @@
 
   <% if ideas_feature?("allow_voting") %>
     <% c.with_footer_section do %>
-      <%= render "ideas/support", idea: idea %>
+      <%= render Ideas::VotesComponent.new(idea) %>
     <% end %>
   <% end %>
 <% end %>

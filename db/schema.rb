@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_19_155905) do
+ActiveRecord::Schema.define(version: 2025_05_20_073752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1113,6 +1113,7 @@ ActiveRecord::Schema.define(version: 2025_05_19_155905) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "cached_votes_up", default: 0
     t.bigint "idea_category_id"
+    t.integer "votes_needed_for_success", default: 0, null: false
     t.index ["author_id"], name: "index_ideas_on_author_id"
     t.index ["idea_category_id"], name: "index_ideas_on_idea_category_id"
     t.index ["tsv"], name: "index_ideas_on_tsv", using: :gin

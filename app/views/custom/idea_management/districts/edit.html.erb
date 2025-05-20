@@ -1,0 +1,20 @@
+<%= back_link_to idea_management_districts_path %>
+
+<div class="small-12 column">
+  <h2><%= @district.name %></h2>
+</div>
+
+<%= form_with model: @district, method: :put, url: idea_management_district_path(@district) do |f| %>
+
+  <div class="clear">
+    <div class="small-12 column">
+      <div style="column-count:3;margin-top:10px;">
+        <%= f.collection_radio_buttons :idea_officer_id, Idea::Officer.all, :id, :name %>
+      </div>
+    </div>
+  </div>
+
+  <div class="small-12 column">
+    <%= f.submit class: "button success" %>
+  </div>
+<% end %>

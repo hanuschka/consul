@@ -12,5 +12,16 @@ namespace :idea_management do
     end
   end
 
+  resources :officers, only: [:index, :create, :destroy] do
+    get :search, on: :collection
+  end
+
+  resources :categories, only: %i[index new create edit update destroy] do
+    collection do
+      post "order_categories"
+    end
+  end
+
   resources :settings, only: :index
+  resources :districts, only: [:index, :edit, :update]
 end

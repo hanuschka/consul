@@ -21,3 +21,6 @@ de:
       author_actions:
         title: "Aktionen"
         delete_button: "Idee löschen"
+    form:
+      category_label: Kategorie
+      category_hint: Bitte wählen Sie eine Option aus

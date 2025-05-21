@@ -175,6 +175,21 @@ class ProjektPhase < ApplicationRecord
     nil
   end
 
+  def view_phase_permission_problem(user, location: nil)
+    return :phase_not_active if not_active?
+    return :phase_expired if expired?
+    return :phase_not_current if not_current?
+
+    if phase_specific_permission_problems(user, location).present?
+      return phase_specific_permission_problems(user, location)
+    end
+
+    return age_permission_problem(user) if age_permission_problem(user).present?
+    return geozone_permission_problem(user) if geozone_permission_problem(user)
+    return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
+    return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
+  end
+
   def geozone_allowed?(user)
     geozone_permission_problem(user).present?
   end

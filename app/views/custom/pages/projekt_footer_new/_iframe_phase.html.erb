@@ -1,6 +1,6 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<% permission_problem = @projekt_phase.permission_problem(current_user, location: "new_button_component") %>
+<% permission_problem = @projekt_phase.view_phase_permission_problem(current_user, location: "new_button_component") %>
 
 <% if permission_problem.present? %>
   <div class="projekt-phase-permission-problem-message">

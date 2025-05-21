@@ -15,10 +15,19 @@
 <div class="row expanded full-width">
   <div class="small-12 medium-8 columns margin-bottom">
     <strong><%= t("custom.admin.ideas.show.created_at") %>:</strong>
-    <%= l(idea.created_at, format: "%d %b %Y") %>,
+    <%= l(idea.created_at, format: "%d %b %Y") %>
+    <br>
 
     <strong><%= t("custom.admin.ideas.show.updated_at") %>:</strong>
     <%= l(idea.updated_at, format: "%d %b %Y") %>
+    <br>
+
+    <strong><%= t("custom.admin.ideas.show.admin_accepted_at") %>:</strong>
+    <% if idea.admin_accepted_at.present? %>
+      <%= l(idea.admin_accepted_at, format: "%d %b %Y") %>
+    <% else %>
+      Nicht veröffentlicht
+    <% end %>
   </div>
 </div>
 

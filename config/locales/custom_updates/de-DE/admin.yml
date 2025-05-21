@@ -204,6 +204,9 @@ de:
           on_behalf_of: im Namen von
           created_at: Erstellt am
           updated_at: Aktualisiert am
+          admin_accepted_at: Veröffentlichung
+          status: Status
+          category: Kategorie
           link: Link
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert

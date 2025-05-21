@@ -31,6 +31,7 @@ de:
           reached: Erreicht
           not_reached: Nicht erreicht
     show:
+      official_answer_title: "Offizielle Antwort"
       video_url_title: "Video URL"
       author_actions:
         title: Autor

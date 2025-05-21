@@ -5,12 +5,18 @@
 
   <%= f.select :idea_category_id, Idea::Category.all.map { |df| [df.name, df.id] } %>
 
-  <div style="column-count:3;margin-top:5px;">
-    <%= f.collection_radio_buttons :idea_officer_id, Idea::Officer.all, :id, :name %>
+  <%= f.label :idea_officer_id, t("custom.admin.ideas.categories.category.idea_officer") %>
+  <div style="column-count:3;margin-top:10px;">
+    <%= f.collection_radio_buttons :idea_officer_id, Idea::Officer.all, :id, :name do |b| %>
+      <div class="radio">
+        <%= b.radio_button %>
+        <%= b.label %>
+      </div>
+    <% end %>
   </div>
 
   <%= f.translatable_fields do |translations_form| %>
-    <%= translations_form.label :official_answer, t("custom.ideas.show.official_answer.title") %>
+    <%= translations_form.label :official_answer, t("ideas.show.official_answer_title") %>
     <%= translations_form.text_area :official_answer,
       value: AdminWYSIWYGSanitizer.new.sanitize(@idea.official_answer),
       label: false,

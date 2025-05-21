@@ -47,7 +47,7 @@ class IdeaManagement::IdeasController < IdeaManagement::BaseController
     @idea = Idea.find(params[:id])
 
     if @idea.update(idea_params)
-      # notify_new_officer(@idea)
+      notify_new_officer(@idea)
 
       redirect_to idea_management_ideas_path, notice: t("custom.admin.ideas.update.success_notice")
     else
@@ -96,19 +96,9 @@ class IdeaManagement::IdeasController < IdeaManagement::BaseController
       @ideas = @ideas.where(officer: current_user.idea_officer)
     end
 
-    # def notify_new_officer(dr)
-    #   return if dr.responsible_id_before_last_save == dr.responsible_id && dr.responsible_type_before_last_save == dr.responsible_type
+    def notify_new_officer(idea)
+      return if idea.idea_officer_id_before_last_save == idea.idea_officer_id
 
-    #   if dr.responsible.is_a?(Idea::Officer)
-    #     IdeaMailer.notify_officer(dr, dr.responsible).deliver_later
-    #   elsif dr.responsible.is_a?(Idea::OfficerGroup)
-    #     if dr.responsible.default_email.present?
-    #       IdeaMailer.notify_default_officer_group_email(dr).deliver_later
-    #     end
-
-    #     dr.responsible.officers.each do |officer|
-    #       IdeaMailer.notify_officer(dr, officer).deliver_later
-    #     end
-    #   end
-    # end
+      IdeaMailer.notify_officer(idea, idea.officer).deliver_later
+    end
 end

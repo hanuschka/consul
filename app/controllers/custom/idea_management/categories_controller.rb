@@ -46,8 +46,7 @@ class IdeaManagement::CategoriesController < IdeaManagement::BaseController
 
     def category_params
       params.require(:idea_category).permit(
-        :color, :icon,
-        :warning_text,
+        :color, :icon, :idea_officer_id,
         translation_params(Idea::Category)
       )
     end

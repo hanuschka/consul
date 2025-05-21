@@ -17,7 +17,7 @@ class IdeasController < ApplicationController
   def index
     authorize! :index, Idea
 
-    @ideas = Idea.all
+    @ideas = Idea.accepted
 
     filter_by_status
     filter_by_quorum
@@ -29,7 +29,7 @@ class IdeasController < ApplicationController
   end
 
   def show
-    @idea = Idea.find(params[:id])
+    @idea = Idea.accepted.find(params[:id])
     authorize! :show, @idea
 
     @comment_tree = CommentTree.new(@idea, params[:page], @current_order)
@@ -44,7 +44,15 @@ class IdeasController < ApplicationController
     @idea = Idea.new(idea_params.merge(author: current_user))
     authorize! :create, @idea
 
+    @idea.officer = @idea.get_default_officer
+
     if @idea.save
+      if @idea.officer.present?
+        IdeaMailer.notify_officer(@idea, Idea::Officer.last).deliver_later
+        Notification.add(@idea.officer.user, @idea)
+        Activity.log(@idea.officer.user, "email", @idea)
+      end
+
       redirect_to idea_path(@idea)
     else
       render :new
@@ -53,7 +61,7 @@ class IdeasController < ApplicationController
 
   def suggest
     @limit = 5
-    @resources = @search_terms.present? ? Idea.admin_accepted.search(@search_terms) : nil
+    @resources = @search_terms.present? ? Idea.accepted.search(@search_terms) : nil
   end
 
   def vote

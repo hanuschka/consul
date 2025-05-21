@@ -15,9 +15,8 @@
     <thead>
       <tr>
         <th class="text-center"><%= t("custom.admin.ideas.index.id") %></th>
-        <% if Setting["ideas.admin_acceptance_required"].present? %>
-          <th><%= t("custom.admin.ideas.index.admin_accepted") %></th>
-        <% end %>
+        <th><%= t("custom.admin.ideas.index.admin_accepted") %></th>
+        <th><%= t("custom.admin.ideas.index.admin_accepted_at") %></th>
         <th><%= t("custom.admin.ideas.index.created_at") %></th>
         <th><%= t("custom.admin.ideas.index.title") %></th>
         <th><%= t("custom.admin.ideas.index.author") %></th>

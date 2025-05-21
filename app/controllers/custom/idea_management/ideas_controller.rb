@@ -48,7 +48,6 @@ class IdeaManagement::IdeasController < IdeaManagement::BaseController
 
     if @idea.update(idea_params)
       # notify_new_officer(@idea)
-      # notify_author_about_status_change(@idea)
 
       redirect_to idea_management_ideas_path, notice: t("custom.admin.ideas.update.success_notice")
     else
@@ -65,10 +64,10 @@ class IdeaManagement::IdeasController < IdeaManagement::BaseController
   end
 
   def accept
-    enabled = ["1", "true"].include?(params[:idea][:admin_accepted])
+    enabled = ["1", "true"].include?(params[:idea][:admin_accepted_at])
     idea = Idea.find(params[:idea][:id])
 
-    idea.update!(admin_accepted: enabled)
+    idea.update!(admin_accepted_at: enabled ? Time.zone.now : nil)
 
     head :ok
   end
@@ -111,11 +110,5 @@ class IdeaManagement::IdeasController < IdeaManagement::BaseController
     #       IdeaMailer.notify_officer(dr, officer).deliver_later
     #     end
     #   end
-    # end
-
-    # def notify_author_about_status_change(dr)
-    #   return if dr.idea_status_id_before_last_save == dr.idea_status_id
-
-    #   IdeaMailer.notify_author_about_status_change(dr).deliver_later
     # end
 end

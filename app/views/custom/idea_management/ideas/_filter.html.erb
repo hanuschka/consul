@@ -19,13 +19,6 @@
         <%= label_tag :date_max, t("shared.advanced_search.to") %>
         <%= date_field_tag :date_max, params[:date_max], class: "datepicker", autocomplete: "off" %>
       </div>
-
-      <div>
-        <%= label_tag :admin_accepted, t("custom.admin.ideas.index.admin_accepted") %>
-        <%= select_tag :admin_accepted,
-          options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
-          prompt: t("custom.shared.select") %>
-      </div>
     </div>
   </div>
 

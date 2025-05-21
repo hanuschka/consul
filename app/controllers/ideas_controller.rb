@@ -17,7 +17,11 @@ class IdeasController < ApplicationController
   def index
     authorize! :index, Idea
 
-    @ideas = Idea.all
+    @ideas = Idea.accepted
+
+    filter_by_status
+    filter_by_quorum
+
     @ideas_coordinates = all_idea_map_locations(@ideas)
 
     @ideas = @ideas.send("sort_by_#{@current_order}")
@@ -25,7 +29,7 @@ class IdeasController < ApplicationController
   end
 
   def show
-    @idea = Idea.find(params[:id])
+    @idea = Idea.accepted.find(params[:id])
     authorize! :show, @idea
 
     @comment_tree = CommentTree.new(@idea, params[:page], @current_order)
@@ -40,7 +44,15 @@ class IdeasController < ApplicationController
     @idea = Idea.new(idea_params.merge(author: current_user))
     authorize! :create, @idea
 
+    @idea.officer = @idea.get_default_officer
+
     if @idea.save
+      if @idea.officer.present?
+        IdeaMailer.notify_officer(@idea, Idea::Officer.last).deliver_later
+        Notification.add(@idea.officer.user, @idea)
+        Activity.log(@idea.officer.user, "email", @idea)
+      end
+
       redirect_to idea_path(@idea)
     else
       render :new
@@ -49,7 +61,7 @@ class IdeasController < ApplicationController
 
   def suggest
     @limit = 5
-    @resources = @search_terms.present? ? Idea.admin_accepted.search(@search_terms) : nil
+    @resources = @search_terms.present? ? Idea.accepted.search(@search_terms) : nil
   end
 
   def vote
@@ -87,6 +99,7 @@ class IdeasController < ApplicationController
 
     def idea_params
       attributes = [:resource_terms,
+                    :idea_category_id,
                     :video_url, :on_behalf_of,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
@@ -104,5 +117,17 @@ class IdeasController < ApplicationController
 
     def set_idea
       @idea = Idea.find(params[:id])
+    end
+
+    def filter_by_status
+      return unless params[:status].in? %w[active archived]
+
+      @ideas = @ideas.send("filter_by_status_#{params[:status]}")
+    end
+
+    def filter_by_quorum
+      return unless params[:quorum].in? %w[reached not_reached]
+
+      @ideas = @ideas.send("filter_by_quorum_#{params[:quorum]}")
     end
 end

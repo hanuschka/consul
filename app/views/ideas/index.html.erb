@@ -51,6 +51,24 @@
         </div>
       <% end %>
 
+      <%= render Sidebar::RadioFilterComponent.new(
+        identifier: :status,
+        options: [
+          [t("ideas.index.sidebar.status_filter.active"), :active],
+          [t("ideas.index.sidebar.status_filter.archived"), :archived]
+        ],
+        title: t("ideas.index.sidebar.status_filter.title")
+      ) %>
+
+      <%= render Sidebar::RadioFilterComponent.new(
+        identifier: :quorum,
+        options: [
+          [t("ideas.index.sidebar.quorum_filter.reached"), :reached],
+          [t("ideas.index.sidebar.quorum_filter.not_reached"), :not_reached]
+        ],
+        title: t("ideas.index.sidebar.quorum_filter.title")
+      ) %>
+
       <div class="show-on-mobile">
         <%= render(Mobile::FixedBottomActionComponent.new) do %>
           <%= link_to t("ideas.index.sidebar.button_new"), new_idea_path,

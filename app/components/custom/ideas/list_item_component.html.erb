@@ -1,13 +1,17 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
   <% c.with_header do %>
     <div>
-      <%= l(idea.created_at, format: :new_date_with_year) %>
+      <%= t("ideas.status.#{idea.status}") %>
     </div>
   <% end %>
 
-  <% if ideas_feature?("allow_voting") %>
-    <% c.with_footer_section do %>
-      <%= render "ideas/support", idea: idea %>
-    <% end %>
+  <% c.with_footer_section do %>
+    <div>
+      <%= t("ideas.remaining_days", count: idea.remaining_days) %>
+    </div>
+  <% end %>
+
+  <% c.with_footer_section do %>
+    <%= render Ideas::VotesComponent.new(idea) %>
   <% end %>
 <% end %>

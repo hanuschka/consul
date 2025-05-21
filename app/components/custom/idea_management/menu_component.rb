@@ -8,7 +8,10 @@ class IdeaManagement::MenuComponent < ApplicationComponent
   def links
     [
       ideas_link,
+      officers_link,
+      categories_link,
       settings_link,
+      districts_link
     ].compact
   end
 
@@ -24,6 +27,26 @@ class IdeaManagement::MenuComponent < ApplicationComponent
       ]
     end
 
+    def officers_link
+      return unless can?(:index, Idea::Officer)
+
+      [
+        t("custom.admin.menu.ideas.officers"),
+        idea_management_officers_path,
+        controller_name == "officers"
+      ]
+    end
+
+    def categories_link
+      return unless can?(:index, Idea::Category)
+
+      [
+        t("custom.admin.menu.ideas.categories"),
+        idea_management_categories_path,
+        controller_name == "categories"
+      ]
+    end
+
     def settings_link
       return unless can?(:manage, Idea)
 
@@ -31,6 +54,14 @@ class IdeaManagement::MenuComponent < ApplicationComponent
         t("custom.admin.menu.ideas.settings"),
         idea_management_settings_path,
         controller_name == "settings"
+      ]
+    end
+
+    def districts_link
+      [
+        t("custom.admin.menu.ideas.districts"),
+        idea_management_districts_path,
+        controller_name == "districts"
       ]
     end
 end

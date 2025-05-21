@@ -367,7 +367,6 @@ class PagesController < ApplicationController
     @projekt_events = @projekt_phase.projekt_events
                                     .send("sort_by_#{@current_filter}")
                                     .reorder(datetime: order)
-                                    .page(params[:page])
   end
 
   def set_question_phase_footer_tab_variables

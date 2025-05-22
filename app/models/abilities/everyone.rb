@@ -86,6 +86,7 @@ module Abilities
       can :read_stats, Budget::Investment do |investment|
         can? :read_stats, investment.budget
       end
+      can [:read, :create], ProjektPointOfInterestPin
     end
   end
 end

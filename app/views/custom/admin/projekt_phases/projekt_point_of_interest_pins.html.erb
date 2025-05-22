@@ -1,0 +1,62 @@
+<%= render "custom/admin/projekt_phases/heading" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
+
+<div class="row">
+  <div class="column">
+    <h2>
+      <%= t("custom.admin.projekt_phases.projekt_point_of_interest_pins.page_title") %>
+
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(explain: "") %>
+      <% end %>
+    </h2>
+  </div>
+</div>
+
+<div class="small-12 column">
+  <div class="margin-bottom">
+    <%= link_to t("custom.admin.projekt_phases.point_of_interest_phases.pins.export_csv"),
+      admin_projekt_phase_projekt_point_of_interest_pins_path(@projekt_phase, format: :csv),
+      class: "button hollow" %>
+  </div>
+
+  <table class="table-for-mobile">
+    <thead>
+      <tr>
+        <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.title") %></th>
+        <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.category") %></th>
+        <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.user") %></th>
+        <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.created_at") %></th>
+        <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @projekt_phase.projekt_point_of_interest_pins.ordered.each do |pin| %>
+        <tr id="<%= dom_id(pin) %>">
+          <td><%= pin.title %></td>
+          <td>
+            <span class="color-preview" style="background-color: <%= pin.projekt_point_of_interest_category.color %>"></span>
+            <%= pin.projekt_point_of_interest_category.name %>
+          </td>
+          <td><%= pin.user.name %></td>
+          <td><%= l pin.created_at, format: :short %></td>
+          <td>
+            <%= link_to t("custom.admin.projekt_phases.point_of_interest_phases.pins.view"),
+              admin_projekt_phase_projekt_point_of_interest_pin_path(@projekt_phase, pin),
+              class: "button hollow" %>
+            <%= link_to t("custom.admin.projekt_phases.point_of_interest_phases.pins.delete"),
+              admin_projekt_phase_projekt_point_of_interest_pin_path(@projekt_phase, pin),
+              method: :delete,
+              class: "button hollow alert",
+              data: { confirm: t("custom.admin.projekt_phases.point_of_interest_phases.pins.delete_confirm") } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+
+</div>

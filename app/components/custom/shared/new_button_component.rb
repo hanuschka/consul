@@ -99,6 +99,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         @projekt_phase&.cta_button_name.presence || t("proposals.index.start_proposal")
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
         @projekt_phase&.cta_button_name.presence || t("debates.index.start_debate")
+      elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
+        t("custom.point_of_interest.index.add_pin")
       end
     end
 
@@ -109,6 +111,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         new_proposal_path(link_params_hash)
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
         new_debate_path(link_params_hash)
+      elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
+        new_projekt_point_of_interest_pin_path(link_params_hash)
       end
     end
 

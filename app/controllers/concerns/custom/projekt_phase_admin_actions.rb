@@ -159,25 +159,29 @@ module ProjektPhaseAdminActions
   end
 
   def set_setting_page_variables(projekt_phase)
-    proposal_setting_key_ordered = ProjektPhaseSetting.defaults[projekt_phase.class.name].keys
+    phase_settings = ProjektPhaseSetting.defaults[projekt_phase.class.name]
 
-    projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
-      result[item.key] = item
+    if phase_settings.present?
+      proposal_setting_key_ordered = phase_settings.keys
+
+      projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
+        result[item.key] = item
+      end
+
+      setting_ordered = []
+      proposal_setting_key_ordered.each do |setting_key|
+        setting = projekt_phase_settings_by_key[setting_key.to_s]
+        setting_ordered.push(setting)
+      end
+
+      all_settings = setting_ordered.compact.group_by(&:kind)
+
+      @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
+      @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
+
+      @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
+      @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
     end
-
-    setting_ordered = []
-    proposal_setting_key_ordered.each do |setting_key|
-      setting = projekt_phase_settings_by_key[setting_key.to_s]
-      setting_ordered.push(setting)
-    end
-
-    all_settings = setting_ordered.compact.group_by(&:kind)
-
-    @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
-    @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
-
-    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
-    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
   end
 
   def projekt_labels
@@ -198,7 +202,7 @@ module ProjektPhaseAdminActions
   def map
     authorize!(:map, @projekt_phase)
 
-    @projekt_phase.copy_map_settings unless @projekt_phase.map_location.present?
+    @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
 
     render "custom/admin/projekt_phases/map"

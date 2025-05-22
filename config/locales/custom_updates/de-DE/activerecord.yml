@@ -54,11 +54,12 @@ de:
       projekt_phase/milestone_phase: Meilensteine
       projekt_phase/question_phase: Kurzumfrage
       projekt_phase/livestream_phase: Livestreams
-      projekt_phase/iframe_phase: Iframe
       projekt_phase/projekt_notification_phase: Benachrichtigungen
       projekt_phase/legislation_phase: Textbearbeitung
       projekt_phase/newsfeed_phase: News-Feed
       projekt_phase/formular_phase: Formular
+      projekt_phase/iframe_phase: Iframe
+      projekt_phase/point_of_interest_phase: Point of interest
       formular_field: Formularfeld
       officing_manager:
         one: Abstimmungshelfer*innen

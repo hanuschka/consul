@@ -13,7 +13,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     user_id, purpose, request_time = Rails.application.message_verifier(:bund_id).verify(params["RelayState"]) if params["RelayState"]
 
     if user_id.present? && purpose == "verification"
-      if Time.zone.at(request_time) < 10.seconds.ago
+      if Time.zone.at(request_time) < 15.minutes.ago
         flash[:error] = t("custom.users.omniauth.bund_id.verification_request_expired")
         redirect_to root_path
       else
@@ -22,7 +22,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         user.update(user_attributes_from(auth_data))
         user.update(address_attributes_from(auth_data))
 
-        user.verify! if user.last_stork_level.in?(["STORK-QAA-Level-1", "STORK-QAA-Level-4"])
+        user.verify! if user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
 
         sign_in user
         redirect_to account_path

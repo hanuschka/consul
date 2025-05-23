@@ -321,6 +321,31 @@ de:
         document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
         external_video: Externes Video einbinden
         external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+      ideas:
+        show_in_main_menu: Ideen in Navigation anzeigen
+        show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an
+        admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
+        admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
+        officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
+        officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Idee
+        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
+        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Idee
+        allow_voting: Nutzer*innen Bewertung pro Idee
+        allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Ideen
+        enable_comments: Kommentarfunktion
+        enable_comments_description: Nutzer*innen können unterhalb einer Idee kommentieren
+        intro_text: Einleitungstext für die Idee
+        intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Ideenübersichtsseite
+        enable_my_posts_filter: Meine Beiträge
+        enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
+        enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
+        enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+        admin_acceptance_required: Bestätigung durch Administratoren
+        admin_acceptance_required_description: Administratoren müssen neue Idee vor der Veröffentlichung zunächst bestätigen.
+        document_upload: Zusätzliche Dokumente
+        document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Ideen anzuhängen
+        external_video: Externes Video einbinden
+        external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
 
       projekt_newsfeed:
         id: Newsfeed ID

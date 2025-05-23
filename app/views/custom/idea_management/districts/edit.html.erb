@@ -8,6 +8,7 @@
 
   <div class="clear">
     <div class="small-12 column">
+      <%= f.label :default_idea_officer %>
       <div style="column-count:3;margin-top:10px;">
         <%= f.collection_radio_buttons :idea_officer_id, Idea::Officer.all, :id, :name %>
       </div>

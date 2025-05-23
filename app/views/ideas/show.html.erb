@@ -124,11 +124,9 @@
           <%# end %>
         <%# end %>
 
-        <% if ideas_feature?("allow_voting") %>
-          <%= render(Mobile::FixedBottomActionComponent.new) do %>
-            <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
-              <%= render "ideas/support", idea: @idea %>
-            <% end %>
+        <%= render(Mobile::FixedBottomActionComponent.new) do %>
+          <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
+            <%= render Ideas::VotesComponent.new(@idea) %>
           <% end %>
         <% end %>
 

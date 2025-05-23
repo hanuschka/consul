@@ -71,9 +71,7 @@ module CustomSearch
         [:admin_accepted]
       ]
     when "Idea"
-      [
-        [:admin_accepted]
-      ]
+      []
     end
   end
 end

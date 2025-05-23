@@ -5,6 +5,7 @@ class Idea::Category < ApplicationRecord
   include Globalizable
 
   has_many :ideas, foreign_key: :idea_category_id, inverse_of: :category
+  belongs_to :default_idea_officer, class_name: "Idea::Officer", foreign_key: :idea_officer_id, optional: true
 
   default_scope { order(given_order: :asc) }
 

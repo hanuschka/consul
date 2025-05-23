@@ -39,6 +39,8 @@ class UserResources::FormComponent < ApplicationComponent
       "debates"
     when Proposal
       "proposals"
+    when Idea
+      "ideas"
     end
   end
 

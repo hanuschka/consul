@@ -7,7 +7,7 @@
 <table>
   <thead>
     <tr>
-      <th><%= t("custom.admin.ideas.areas.area.name") %></th>
+      <th><%= RegisteredAddress::District.human_attribute_name(:name) %></th>
       <th><%= RegisteredAddress::District.human_attribute_name(:default_idea_officer) %></th>
       <th><%= t("admin.actions.actions") %></th>
     </tr>

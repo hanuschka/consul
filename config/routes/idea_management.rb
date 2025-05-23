@@ -22,6 +22,12 @@ namespace :idea_management do
     end
   end
 
+  resources :memos, only: %i[create] do
+    member do
+      post :send_notification
+    end
+  end
+
   resources :settings, only: :index
   resources :districts, only: [:index, :edit, :update]
 end

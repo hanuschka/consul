@@ -888,6 +888,11 @@ de:
           list_title: Dies ist die Lister aller Textversionen
         projekt_events:
           page_title: Veranstaltungen
+        projekt_point_of_interest_pins:
+          page_title: Want to add Point of interest pins
+        projekt_point_of_interest_categories:
+          page_title: Point of interest categories
+          new: New category
       modal_notifications:
         index:
           create: Erstellen

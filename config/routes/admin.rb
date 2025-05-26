@@ -36,6 +36,8 @@ namespace :admin do
       get :legislation_process_draft_versions
       get :ai_settings
       patch :update_ai_settings
+      get :projekt_point_of_interest_pins
+      get :projekt_point_of_interest_categories
     end
 
     resources :formular, only: [] do
@@ -473,6 +475,9 @@ namespace :admin do
   end
 
   resource :homepage, controller: :homepage, only: [:show]
+  resources :projekt_phases, only: [] do
+    resources :projekt_point_of_interest_categories
+  end
 
   namespace :widget do
     resources :cards

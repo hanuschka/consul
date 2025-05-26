@@ -1,0 +1,19 @@
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
+
+<%# <% unless embedded? %1> %>
+<div class="flex-layout">
+  <div class="main-column">
+    <%= render Shared::MapComponent.new(
+      map_location: @projekt_phase.map_location,
+      parent_class: "point-of-interest-map",
+      process_coordinates: @map_coordinates,
+      projekt_phase: @projekt_phase
+    ) %>
+  </div>
+  <div class="sidebar">
+    <div class="new-resource-cta" style="width:100%">
+      <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+    </div>
+  </div>
+</div>
+<%# <% end %1> %>

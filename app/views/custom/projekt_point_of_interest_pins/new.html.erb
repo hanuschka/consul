@@ -1,0 +1,68 @@
+<main class="user-resources-form point-of-interest-map <%= " -no-image" unless feature?(:allow_images) %>">
+  <%= translatable_form_for(@pin, html: { class: "js-rich-text-form user-resource-form" }) do |f| %>
+  <%= hidden_field_tag :projekt_phase_id, @projekt_phase.id %>
+    <%= back_link_to %>
+
+    <% category_select_html = capture do %>
+      <div class="margin-bottom">
+        <%= render Shared::SidebarCardComponent.new(
+          title: t("custom.deficiency_reports.form.category.title"),
+          icon_name: "th-large"
+        ) do |c| %>
+        <%= f.select :projekt_point_of_interest_category_id, options_for_select(
+            @categories.map { |category|
+              [
+                "#{category.name}".html_safe,
+                category.id,
+                { class: "", data: { color: category.color, icon: category.icon } }
+              ]
+            }
+        ), {label: false},  {class: "js-map-update-pin-style"} %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <h1 class="user-resources-form--title">
+          <%# <%= t("custom.projekt_point_of_interest_pins.new.title") %1> %>
+          Create new pin
+        </h1>
+
+        <div class="hide-on-mobile">
+          <div class="user-resources-form--description">
+            <%# <%= render_custom_block "user_resource_form_deficiency_report", default_content: t("custom.deficiency_reports.form.page_description") %1> %>
+          </div>
+        </div>
+
+        <%= render "shared/errors", resource: @pin  %>
+      </div>
+    </div>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <div class="new-card" id='map-container'>
+          <% i18n_scope = "test" %>
+          <%= render("map_locations/form_fields",
+            form:          f,
+            map_location:  @pin.map_location_with_default,
+            label:         t("#{i18n_scope}.form.map_location"),
+            help:          t("custom.user_resources.form.map_location_instructions"),
+            mappable:      @pin,
+            projekt_phase: @projekt_phase,
+            parent_class:  "point-of-interest-map") %>
+        </div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="hide-on-mobile js-remove-on-mobile-section">
+          <%= category_select_html %>
+        </div>
+      </aside>
+    </div>
+
+    <div class="user-resources-form--submit-section">
+      <%= f.submit(class: "button", value: t("custom.user_resources.form.submit_button")) %>
+    </div>
+  <% end %>
+</main>

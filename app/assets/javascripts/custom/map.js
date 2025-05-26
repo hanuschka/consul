@@ -15,6 +15,16 @@
       App.Map.maps = [];
     },
     initializeMap: function(element) {
+      var $categorySelect = $(".js-map-update-pin-style");
+
+      $categorySelect.on(
+        "change",
+        function(e) { updateMarkerStyleFromCategorySelect(e.target) }
+      )
+
+      if ($categorySelect.length) {
+        updateMarkerStyleFromCategorySelect($categorySelect.get(0))
+      }
 
       // variables to set map view
       var mapCenterLatitude = $(element).data("map-center-latitude");
@@ -52,6 +62,8 @@
       // biolerplate for marker
       var marker = null;
       var markersGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
+      var markerCategoryStyle = null;
+      var markerCategoryColor = null;
 
 
       /* Create leaflet map start */
@@ -99,6 +111,21 @@
       })
       deflateFeatures.addTo(map);
 
+      function updateMarkerWithCategoryStyle() {
+        if (marker && markerCategoryStyle && markerCategoryColor) {
+          marker.setIcon(getMarkerIcon(null, null))
+        }
+      }
+
+      function updateMarkerStyleFromCategorySelect(element) {
+        var selectedOption = element.options[element.selectedIndex]
+
+        markerCategoryStyle = selectedOption.dataset.icon;
+        markerCategoryColor = selectedOption.dataset.color;
+
+        updateMarkerWithCategoryStyle()
+      }
+
       function getProcessId(shape) {
         var id;
 
@@ -132,15 +159,22 @@
       function getMarkerIconHTML(color, iconClass) {
         var markerIconHTML;
 
-        if ( !iconClass ) {
+        if (markerCategoryStyle) {
+          iconClass = markerCategoryStyle;
+        } else if (!iconClass ) {
           iconClass = 'circle';
         } else {
           iconClass = iconClass
         };
 
+        if (markerCategoryColor) {
+          color = markerCategoryColor;
+        }
+
         if ( adminEditor ) {
           color = adminShapesColor;
         }
+        console.log("getMarkerIconHTML", color, iconClass)
 
         if ( color ) {
           markerIconHTML = '<div class="map-icon icon-' + iconClass + '" style="background-color: ' + color + '"></div>'
@@ -173,6 +207,8 @@
       var moveOrPlaceMarker = function(e) {
         if (marker) {
           marker.setLatLng(e.latlng);
+
+          updateMarkerWithCategoryStyle()
         } else {
           marker = createMarker(e.latlng.lat, e.latlng.lng);
         }

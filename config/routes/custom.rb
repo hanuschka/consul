@@ -38,6 +38,9 @@ end
 get "admin/matomo", to: "admin/matomo#index"
 
 get "users", to: "users#index"
+
+resources :projekt_point_of_interest_pins, only: [:new, :create]
+
 post "/connect_dt_service", to: "api_clients#connect", as: :connect_api_clients
 
 namespace :api do

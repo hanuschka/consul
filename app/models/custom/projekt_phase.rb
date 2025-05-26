@@ -14,7 +14,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
     "ProjektPhase::NewsfeedPhase",
-    "ProjektPhase::IframePhase"
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::PointOfInterestPhase"
   ].freeze
 
   PROJEKT_PHASES_TYPES = [
@@ -24,7 +25,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::VotingPhase",
     "ProjektPhase::BudgetPhase",
     "ProjektPhase::LegislationPhase",
-    "ProjektPhase::FormularPhase"
+    "ProjektPhase::FormularPhase",
   ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
@@ -298,6 +299,21 @@ class ProjektPhase < ApplicationRecord
     nil
   end
 
+  def copy_map_settings_from_projekt
+    return if map_location.present?
+
+    map_location = projekt.map_location&.dup
+    map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+
+    projekt.map_layers.each do |map_layer|
+      map_layers << map_layer.dup
+    end
+  end
+
+  def url
+    projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)
@@ -367,17 +383,6 @@ class ProjektPhase < ApplicationRecord
 
       ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
         settings.create!(key: key, value: value)
-      end
-    end
-
-    def copy_map_settings_from_projekt
-      return if map_location.present?
-
-      map_location = projekt.map_location&.dup
-      map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
-
-      projekt.map_layers.each do |map_layer|
-        map_layers << map_layer.dup
       end
     end
 end

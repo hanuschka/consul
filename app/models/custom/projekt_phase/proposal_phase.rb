@@ -34,16 +34,9 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     !selectable_by_users?
   end
 
-  def settings_categories
-    %w[form_author user_functions]
-  end
-
-  def setting_pages
-    %w[duration naming restrictions form_author user_functions]
-  end
-
   def admin_nav_bar_items
-    setting_pages + %w[
+    %w[
+      duration naming restrictions general_settings form_author user_functions
       projekt_labels sentiments map
       officing_managers
     ]

@@ -37,4 +37,6 @@ class DeficiencyReport::Status < ApplicationRecord
       find(status_id).update_column(:given_order, (order + 1))
     end
   end
+
+  alias_attribute :name, :title
 end

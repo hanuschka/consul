@@ -39,6 +39,8 @@ de:
         index_order_drafts_title: "Entwürfe"
       search_form:
         placeholder: Suchen...
+      homepage_search_form:
+        placeholder: Projekte durchsuchen...
       page:
         footer:
           sidebar:
@@ -123,6 +125,7 @@ de:
         voting_phase: Abstimmungen
         argument_phase: Stimmen
         livestream_phase: Livestream
+        livestream_phase: Iframe
       projekt_events:
         index:
           title: Veranstaltungskalender

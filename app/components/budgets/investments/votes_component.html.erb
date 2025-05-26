@@ -17,9 +17,6 @@
     <% if investment.should_show_votes? %>
       <% if user_voted_for? %>
         <div class="supported">
-          <div class="callout success" style="margin-bottom:15px;width:230px;">
-            <%= t("budgets.investments.votes.already_supported") %>
-          </div>
           <%= button_to remove_support_path,
               class: "button button-remove-support expanded",
               style: "margin-top:15px;",
@@ -54,15 +51,4 @@
   </div>
 
   <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
-
-  <% if user_voted_for? && setting["twitter_handle"] %>
-    <div class="share-supported">
-      <%= render "shared/social_share",
-        title: investment.title,
-        image_url: image_absolute_url(investment.image, :thumb),
-        url: budget_investment_url(investment.budget, investment),
-        description: investment.title,
-        mobile: investment.title %>
-    </div>
-  <% end %>
 </div>

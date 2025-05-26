@@ -34,7 +34,7 @@ module ProjektsHelper
     # classes.push("draft-projekt") unless projekt.activated?
 
     if projekt.page.published? && placement == "desktop"
-      link_to projekt.page.title, projekt.page.url, tabindex: "-1", aria: { hidden: true }, class: classes.join(" "), data: { turbolinks: !extended_feature?("general.enable_google_translate") }
+      link_to projekt.page.title, projekt.page.url, tabindex: "-1", aria: { hidden: true }, class: classes.join(" "), data: { turbolinks: false }
     elsif projekt.page.published? && placement == "mobile"
       link_to projekt.page.title, projekt.page.url, class: classes.join(" ")
     else

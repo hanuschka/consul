@@ -1,5 +1,5 @@
 var {
-    // ClassicEditor,
+    ClassicEditor,
     Plugin,
     ButtonView,
     icons,
@@ -904,7 +904,11 @@ class UploadFilesPlugin extends Plugin {
         })
             .then((response) => response.json())
             .then((resp) => {
-                this.state.items = [resp, ...this.state.items];
+                if (resp.error) {
+                  alert(resp.error.message);
+                } else {
+                  this.state.items = [resp, ...this.state.items];
+                }
             })
             .catch((error) => {
                 alert(error.message);

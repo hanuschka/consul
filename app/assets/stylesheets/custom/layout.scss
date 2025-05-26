@@ -227,3 +227,9 @@ ul.tabs li.tabs-title {
   }
 }
 
+
+@media screen and (max-width: $small-tablet-viewport-start) {
+  .wrapper.has-custom-fixed-tabs {
+    margin-top: 64px;
+  }
+}

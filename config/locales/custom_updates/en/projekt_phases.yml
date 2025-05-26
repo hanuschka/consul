@@ -89,6 +89,7 @@ en:
             only_specific_registered_address_groupings: Participation is limited to another area.
           budget_phase:
             investment_unfeasible: Für nicht durchführbare Investitionsvorschläge kann nicht kommentiert werden
+            too_late: No further comments are possible at this time.
         poll_votes:
           guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
@@ -123,6 +124,22 @@ en:
           no_registered_address: A registered address could not be assigned to your account. Please update your account.
           only_specific_registered_address_groupings: Participation is limited to another area.
         projekt_questions:
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+          not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+          not_verified: "To continue, please %{verify}."
+          organization: Organizations are not allowed to create content.
+          only_citizens: Participation is limited to citizens of the city.
+          only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+          only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+          only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+          only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+          phase_not_active: This project phase is not active
+          phase_expired: This project phase has already expired
+          phase_not_current: This project phase has not yet started
+          only_admins: Participation is limited to admin users.
+          no_registered_address: A registered address could not be assigned to your account. Please update your account.
+          only_specific_registered_address_groupings: Participation is limited to another area.
+        iframe:
           guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."

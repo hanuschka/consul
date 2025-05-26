@@ -39,7 +39,7 @@ module BundIdServices
         extensons = root.add_element "saml2p:Extensions"
         akdb_authentication_request = extensons.add_element "akdb:AuthenticationRequest", {
           "xmlns:akdb" => "https://www.akdb.de/request/2018/09",
-          "Version" => "1"
+          "Version" => "2"
         }
 
         akdb_allowed_methods = akdb_authentication_request.add_element "akdb:AllowedMethods"
@@ -55,6 +55,18 @@ module BundIdServices
         akdb_requested_attributes = akdb_authentication_request.add_element "akdb:RequestedAttributes"
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.18" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.4.1.25484.494450.3" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.4.1.25484.494450.2" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:0.9.2342.19200300.100.1.3" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.42" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.4" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.2.40.0.10.2.1.1.55" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.4.1.33592.1.3.5" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.16" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.7" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.2.40.0.10.2.1.1.225599" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.17" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.5.5.7.9.2" }
+        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.2.40.0.10.2.1.1.261.94" }
 
         akdb_authentication_request.add_element "akdb:Berechtigungszertifikat", { "Bundesland" => settings[:bundesland_code] }
 

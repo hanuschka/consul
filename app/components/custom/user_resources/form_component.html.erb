@@ -22,6 +22,20 @@
           <%= render partial: "shared/user_resources_form/sentiments", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
         <% end %>
       <% end %>
+
+      <% if resource.is_a?(Idea) && Idea::Category.exists? %>
+        <%= render Shared::SidebarCardComponent.new(
+          title: t("ideas.form.category_label"),
+          opened_on_mobile: true,
+          icon_name: "tag"
+        ) do |c| %>
+          <div id="idea_category_selector" class="">
+            <p class="small" style="margin-bottom:0.25rem;"><%= t("ideas.form.category_hint") %></p>
+
+            <%= f.select :idea_category_id, Idea::Category.all.map { |category| [category.name, category.id] }, { include_blank: true, label: false }, class: "select" %>
+          </div>
+        <% end %>
+      <% end %>
     <% end %>
 
     <% sidebar_html = capture do %>
@@ -91,7 +105,7 @@
         </h1>
 
         <div class="user-resources-form--description">
-          <%= projekt_phase.projekt_selector_hint&.html_safe.presence ||
+          <%= projekt_phase&.resource_form_intro&.html_safe.presence ||
             helpers.render_custom_block("user_resource_form_#{resource.class.name.downcase}", default_content: t("custom.user_resources.form.page_description")) %>
         </div>
 
@@ -109,28 +123,31 @@
           <%= labels_and_sentiments_html %>
         </div>
 
-        <%= f.hidden_field :projekt_phase_id, value: projekt_phase.id %>
+        <% if projekt_phase.present? %>
+          <%= f.hidden_field :projekt_phase_id, value: projekt_phase.id %>
+        <% end %>
 
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
           <div class="user-resources-form--banner-editor <%= banner_class_name %>"
-              style="<%= helpers.sentiment_color_style(resource.sentiment) %>">
+              style="<%= helpers.sentiment_color_style(resource.try(:sentiment)) %>">
               <div class="user-resources-form--title-wrapper">
                 <%= translations_form.text_area :title,
                   maxlength: title_max_length,
                   data: suggest_data(resource),
                   label: false,
                   class: "user-resources-form--banner-editor-title",
-                  placeholder: t("custom.#{i18n_scope}.form.title_placeholder"),
+                  placeholder: title_placeholder,
                   autocomplete: "off" %>
               </div>
 
               <% if show_image_input? %>
-                <div class="banner-editor-image-attachment js-banner-editor-image-attachment">
+                <div class="banner-editor-image-attachment">
                   <% f.object.build_image if f.object.image.nil? %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                    <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
                   <% end %>
                 </div>
               <% end %>
@@ -139,19 +156,15 @@
             value: AdminWYSIWYGSanitizer.new.sanitize(resource.description),
             maxlength: max_description_lenght,
             label: false,
-            placeholder: descriotion_placeholder,
+            placeholder: description_placeholder,
             class: "html-area #{helpers.ck_editor_class(current_user)}" %>
-        <% end %>
-
-        <% if resource.errors[:description].any? %>
-          <p class="form-error is-visible"><%= resource.errors[:description].join(", ") %></p>
         <% end %>
 
         <% if show_map_input? %>
           <div class="new-card" id='map-container'>
             <%= render "map_locations/form_fields",
               form:          f,
-              map_location:  resource.map_location || resource.build_map_location(latitude: resource.projekt_phase&.map_location&.latitude, longitude: resource.projekt_phase&.map_location&.longitude, zoom: resource.projekt_phase&.map_location&.zoom),
+              map_location:  map_location,
               label:         t("#{i18n_scope}.form.map_location"),
               help:          t("custom.user_resources.form.map_location_instructions"),
               mappable:      resource,

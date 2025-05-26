@@ -69,6 +69,9 @@ en:
         prompt_address: Address (bitte wählen)
         document_prompt: Document type (please select)
         not_in_list: Not in the list
+        birth_year: Birth year
+        birth_month: Birth month
+        birth_day: Birth day
     gdpr_notice:
       accept: Accept
       link_text: More info
@@ -111,6 +114,7 @@ en:
         demokratie_url: https://demokratie.today/
         description: The platform is based on %{consul}, a %{open_source} and is modified by %{demokratie}.
         impressum: Imprint
+        netiquette: Netiquette
         statistic_cookies_settings: Cookie Settings
         contact_us: Contact us
         sign_in_as_guest: Sign in as a guest

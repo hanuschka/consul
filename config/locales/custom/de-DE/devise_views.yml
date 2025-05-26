@@ -89,6 +89,7 @@ de:
         signin_with_provider: Anmelden mit %{provider}
         signup: Sie haben noch kein Konto? %{signup_link}
         signup_link: Neues Konto erstellen
+        signup_link_hint: Noch kein Konto?
     unlocks:
       new:
         email_label: E-Mail
@@ -106,7 +107,7 @@ de:
           current_password_label: Aktuelles Passwort
           edit: Bearbeiten
           email_label: E-Mail
-          leave_blank: Lassen Sie das Feld leer, wenn Sie keine Änderungen vornehmen möchten
+          leave_blank: Lassen Sie das Feld leer, wenn Sie lediglich die Email Adresse ändern möchten.
           need_current: Wir benötigen Ihr aktuelles Passwort, um die Änderungen zu bestätigen
           password_confirmation_label: Neues Passwort bestätigen
           password_label: Neues Passwort

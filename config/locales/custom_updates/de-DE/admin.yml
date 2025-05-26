@@ -184,7 +184,7 @@ de:
             title: Gebiete
       ideas:
         index:
-          title: Ideen
+          title: Ideenplattform
           entry_name: Idee
           no_deficiency_reports: Keine Ideen
           id: ID
@@ -235,6 +235,9 @@ de:
             icon: Icon
             name: Name
             idea_officer: Standardmäßig Sachbearbeiter*in
+            votes_needed_for_success: Quorum
+            timeframe: Zeitrahmen (Tage)
+            idea_category: Kategorie
           destroy:
             cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einer Idee zugewiesen ist.
             destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.
@@ -353,7 +356,7 @@ de:
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
-        idea_managers: Admin Ideen
+        idea_managers: Admin Ideenplattform
         officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen

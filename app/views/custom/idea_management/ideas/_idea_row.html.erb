@@ -16,7 +16,7 @@
     <small><%= link_to "Front-end", idea_path(idea), target: "_blank" %></small>
   </td>
   <td><%= link_to idea.author.username, user_path(idea.author), target: "_blank" %></td>
-  <td><%= idea.status %></td>
+  <td><%= t("ideas.status.#{idea.status}") %></td>
   <td><%= idea.map_location&.approximated_address %></td>
   <td><%= idea.category&.name %></td>
   <td><%= idea.officer&.name %></td>

@@ -3,7 +3,14 @@
   <%= render "shared/globalize_locales", resource: idea %>
   <%= render "shared/errors", resource: idea %>
 
-  <%= f.select :idea_category_id, Idea::Category.all.map { |df| [df.name, df.id] } %>
+  <%= f.label :votes_needed_for_success, t("custom.admin.ideas.categories.category.votes_needed_for_success") %>
+  <%= f.number_field :votes_needed_for_success, label: false, step: 1, min: 1 %>
+
+  <%= f.label :timeframe, t("custom.admin.ideas.categories.category.timeframe") %>
+  <%= f.number_field :timeframe, label: false, step: 1, min: 1 %>
+
+  <%= f.label :idea_category_id, t("custom.admin.ideas.categories.category.idea_category") %>
+  <%= f.select :idea_category_id, Idea::Category.all.map { |df| [df.name, df.id] }, label: false %>
 
   <%= f.label :idea_officer_id, t("custom.admin.ideas.categories.category.idea_officer") %>
   <div style="column-count:3;margin-top:10px;">

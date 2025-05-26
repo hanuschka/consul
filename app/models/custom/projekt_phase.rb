@@ -153,7 +153,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return if user&.administrator? || user&.projekt_manager?
+    return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
 
     return :phase_not_active if not_active?
     return :phase_expired if expired?

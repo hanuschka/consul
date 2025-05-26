@@ -10,6 +10,9 @@ de:
       deficiency_report/officer_group:
         one: Sachbearbeitergruppe
         other: Sachbearbeitergruppen
+      idea:
+        one: Idee
+        other: Ideen
       map_layer:
         one: Kartenebene
         other: Kartenebenen

@@ -52,6 +52,12 @@
       <% end %>
 
       <%= render Sidebar::RadioFilterComponent.new(
+        identifier: :idea_category,
+        options: Idea::Category.all.map { |c| [c.name, c.id] },
+        title: t("ideas.index.sidebar.category_filter.title")
+      ) %>
+
+      <%= render Sidebar::RadioFilterComponent.new(
         identifier: :status,
         options: [
           [t("ideas.index.sidebar.status_filter.active"), :active],

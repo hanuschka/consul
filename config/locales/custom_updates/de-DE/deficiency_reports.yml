@@ -1,4 +1,7 @@
 de:
+  deficiency_report_management:
+    header:
+      title: Mängelmelder
   custom:
     deficiency_reports:
       form:

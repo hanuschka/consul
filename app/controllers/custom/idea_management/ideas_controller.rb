@@ -81,6 +81,7 @@ class IdeaManagement::IdeasController < IdeaManagement::BaseController
 
     def idea_params
       attributes = [:video_url, :on_behalf_of,
+                    :votes_needed_for_success, :timeframe,
                     :idea_category_id, :idea_officer_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,

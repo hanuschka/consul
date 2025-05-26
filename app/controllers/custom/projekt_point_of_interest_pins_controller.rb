@@ -53,8 +53,6 @@ class ProjektPointOfInterestPinsController < ApplicationController
 
     def pin_params
       params.require(:projekt_point_of_interest_pin).permit(
-        :latitude,
-        :longitude,
         :projekt_point_of_interest_category_id,
         map_location_attributes: map_location_attributes
       )

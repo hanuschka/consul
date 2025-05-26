@@ -1,26 +1,11 @@
 class ProjektPointOfInterestPin < ApplicationRecord
+  include NewMappable
+
   belongs_to :projekt_phase
   belongs_to :author, class_name: "User"
   belongs_to :projekt_point_of_interest_category
-  has_one :map_location, as: :mappable, dependent: :destroy
-
-  validates_associated :map_location
 
   scope :ordered, -> { order(created_at: :desc) }
-
-  accepts_nested_attributes_for :map_location
-
-  def latitude
-    map_location&.latitude
-  end
-
-  def longitude
-    map_location&.longitude
-  end
-
-  def zoom
-    map_location&.zoom
-  end
 
   def to_csv
     [
@@ -34,6 +19,16 @@ class ProjektPointOfInterestPin < ApplicationRecord
       created_at,
       updated_at
     ]
+  end
+
+  def pin_json_data
+    {
+      lat: map_location.latitude,
+      long: map_location.longitude,
+      zoom: map_location.zoom,
+      color: projekt_point_of_interest_category.color,
+      fa_icon_class: projekt_point_of_interest_category.icon
+    }
   end
 
   def self.to_csv

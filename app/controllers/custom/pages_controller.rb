@@ -355,9 +355,7 @@ class PagesController < ApplicationController
       @projekt_phase
         .projekt_point_of_interest_pins
         .includes(:map_location)
-        .map(&:map_location)
-        .compact
-        .map(&:json_data)
+        .map(&:pin_json_data)
   end
 
   def set_newsfeed_phase_footer_tab_variables

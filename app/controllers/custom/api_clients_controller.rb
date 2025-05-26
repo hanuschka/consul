@@ -53,7 +53,7 @@ class ApiClientsController < ApplicationController
         redirect_url, { type: redirect_type }
       )
     else
-      if dt_response.code == 404
+      if dt_response.code != 200
         flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, error: #{dt_response['error']}"
       else
         flash[:error] = "Error connecting to DT. HTTP code: #{dt_response.code}, http message: #{dt_response.message}"

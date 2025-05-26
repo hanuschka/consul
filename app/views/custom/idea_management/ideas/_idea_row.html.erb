@@ -1,0 +1,29 @@
+<tr id="<%= dom_id(idea) %>" class="idea">
+  <td class="text-center"><%= idea.id %></td>
+  <td>
+    <%= render Admin::LivesubmitCheckbox::Component.new(
+      url: accept_idea_management_idea_path(idea),
+      resource_name: "idea",
+      attribute_name: "admin_accepted_at",
+      record_id: idea.id,
+      current_value: idea.admin_accepted_at.present?
+    ) %>
+  </td>
+  <td><%= l(idea.admin_accepted_at, format: "%d.%m.%Y") if idea.admin_accepted_at.present? %></td>
+  <td><%= l(idea.created_at, format: "%d.%m.%Y") %></td>
+  <td>
+    <%= link_to idea.title, idea_management_idea_path(idea), target: "_blank" %>
+    <small><%= link_to "Front-end", idea_path(idea), target: "_blank" %></small>
+  </td>
+  <td><%= link_to idea.author.username, user_path(idea.author), target: "_blank" %></td>
+  <td><%= idea.status %></td>
+  <td><%= idea.map_location&.approximated_address %></td>
+  <td><%= idea.category&.name %></td>
+  <td><%= idea.officer&.name %></td>
+  <td><%= render Admin::TableActionsComponent.new(idea,
+                                                  edit_path: edit_idea_management_idea_path(idea),
+                                                  edit_options: { target: "_blank" },
+                                                  destroy_path: idea_management_idea_path(idea),
+                                                  destroy_options: { remote: true }
+                                                 ) %></td>
+</tr>

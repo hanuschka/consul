@@ -55,7 +55,8 @@
         <%= f.check_box :landing_hide_all_top_nav_links %>
         <%= f.check_box :landing_hide_title_and_subtitle %>
         <%= f.check_box :landing_show_projekts_overview %>
-        <%= f.check_box :landing_site_logo_not_clickable %>
+        <%= f.text_field :landing_navigation_link_color %>
+        <%= f.check_box :landing_site_logo_follow_to_landing_page %>
       <% end %>
 
       <% unless @page.landing? %>
@@ -86,6 +87,30 @@
           <% if @page.landing_mobile_header_image.attached? %>
             <div style="justify-content: center" class="d-flex">
               <%= image_tag @page.landing_mobile_header_image, width: 640 %>
+            </div>
+          <% end %>
+        </div>
+        <div class="margin-bottom  small-12 column ">
+          <div class="margin-bottom">
+            <%= f.label :landing_site_logo_for_transparent_background, t("custom.admin.site_customization.landing_pages.form.landing_site_logo_for_transparent_background") %>
+            <%= f.file_field :landing_site_logo_for_transparent_background, label: false %>
+          </div>
+
+          <% if @page.landing_site_logo_for_transparent_background.attached? %>
+            <div style="justify-content: center" class="d-flex">
+              <%= image_tag @page.landing_site_logo_for_transparent_background, width: 640 %>
+            </div>
+          <% end %>
+        </div>
+        <div class="margin-bottom  small-12 column ">
+          <div class="margin-bottom">
+            <%= f.label :landing_site_logo_for_white_background, t("custom.admin.site_customization.landing_pages.form.landing_site_logo_for_white_background") %>
+            <%= f.file_field :landing_site_logo_for_white_background, label: false %>
+          </div>
+
+          <% if @page.landing_site_logo_for_white_background.attached? %>
+            <div style="justify-content: center" class="d-flex">
+              <%= image_tag @page.landing_site_logo_for_white_background, width: 640 %>
             </div>
           <% end %>
         </div>

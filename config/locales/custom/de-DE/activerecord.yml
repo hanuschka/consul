@@ -6,8 +6,10 @@ de:
     advanced_stats_enabled: "Erweiterte Statistiken"
     name: Name
     email: Email
+    title: Titel
     description: Beschreibung
     related_sdg_list: Ziele und Unterziele
+    resource_terms: Die AGBs und die Datenschutzbestimmung
   activerecord:
     models:
       activity:
@@ -383,8 +385,11 @@ de:
         landing_hide_all_top_nav_links: "Sämtliche Links in der Top Navigation auf dieser Themen/Gebietsseite ausblenden"
         landing_hide_title_and_subtitle: "Informationsbox mit Titel und Untertitel ausblenden"
         landing_mobile_header_image: "Mobile Header Bild"
+        landing_site_logo: "Site logo"
+        landing_site_logo_for_white_background: "Site logo for white background"
         landing_show_projekts_overview: "Projektübersicht für diese Zielseite in Hauptnavigation anzeigen"
-        landing_site_logo_not_clickable: "Logo soll nicht anklickbar sein"
+        landing_navigation_link_color: "Farbe der Links in der Top-Navigation"
+        landing_site_logo_follow_to_landing_page: "Klick auf Logo führt auf die Zielseite, statt auf die Homepage"
       tag:
         name: "Geben Sie den Namen des Tags ein"
       topic:

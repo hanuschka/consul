@@ -6,8 +6,6 @@
       <button onclick="event.preventDefault();App.VCMap.zoom(window.vcsApp.maps.activeMap, true)">-</button>
     </div>
     <div id="controls" class="controls">
-      <button onclick="event.preventDefault();App.VCMap.setActiveMap(window.vcsApp.maps, 'ol3')">2D</button>
-      <button onclick="event.preventDefault();App.VCMap.setActiveMap(window.vcsApp.maps, 'cesium')">3D</button>
       <% if editable %>
         <button onclick="event.preventDefault();App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Point)">Punkt einzeichnen</button>
         <button onclick="event.preventDefault();App.VCMap.drawFeature(window.vcsApp, vcs.GeometryType.Polygon)">Fläche einzeichnen</button>

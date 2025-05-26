@@ -7,7 +7,8 @@ class Comment < ApplicationRecord
   COMMENTABLE_TYPES = %w[Debate Proposal Budget::Investment Poll Topic
                         Legislation::Question Legislation::Annotation
                         Legislation::Proposal
-                        Projekt ProjektPhase ProjektQuestion DeficiencyReport].freeze
+                        Projekt ProjektPhase ProjektQuestion
+                        DeficiencyReport Idea].freeze
 
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases

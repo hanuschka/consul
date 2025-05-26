@@ -1,0 +1,19 @@
+<% provide(:title) do %>
+  <%= t("admin.header.title") %> - <%= t("custom.admin.ideas.officers.index.title") %>
+<% end %>
+
+<h2><%= t("custom.admin.ideas.officers.index.title") %></h2>
+
+<%= render "search" %>
+
+<div id="search-result"></div>
+
+<h3>
+  <%= page_entries_info @officers, entry_name: t("custom.admin.ideas.officers.officer.entry_name") %>
+</h3>
+
+<% if @officers.any? %>
+  <%= render Admin::Ideas::Officers::OfficersComponent.new(@officers, id: "officers") %>
+
+  <%= paginate @officers %>
+<% end %>

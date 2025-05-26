@@ -233,8 +233,13 @@
         }
 
         function proposalPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h6><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
+          var proposalUrl = "/proposals/" + data.proposal_id;
+          if (data.projekt_phase_id) {
+            proposalUrl += "?projekt_phase_id=" + data.projekt_phase_id;
+          }
+
+          var popupHtml;
+          popupHtml = "<h6><a href='" + proposalUrl + "'>" + data.proposal_title + "</a></h6>"; //title
 
           if (data.image_url) {
             popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image

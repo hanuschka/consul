@@ -297,4 +297,6 @@ de:
         title: Titel
         attachment: Anhang
       registered_address/district:
+        name: Gebiet
+        default_idea_officer: Standardmäßig Sachbearbeiter*in
         default_deficiency_report_responsible: Standardmäßig Sachbearbeiter*in

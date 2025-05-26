@@ -802,10 +802,10 @@ class Projekt < ApplicationRecord
     end
 
     def sync_update_for_global_overview
-      # Ignore position update change
-      if previous_changes["updated_at"].present? &&
-          previous_changes["order_number"].present? &&
-          previous_changes.to_a.size == 2
+      # Ignore order number update change
+      changed_set = previous_changes.except("created_at", "updated_at")
+
+      if changed_set["order_number"].present? && changed_set.size == 1
         return
       end
 

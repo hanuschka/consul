@@ -15,11 +15,7 @@ class Ideas::ListItemComponent < ApplicationComponent
       url: helpers.idea_path(idea),
       image_url: idea.image&.variant(:card_thumb),
       image_placeholder_icon_class: "fa-lightbulb",
-      subline: subline
+      subline: idea.category&.name
     }
-  end
-
-  def subline
-    "subline"
   end
 end

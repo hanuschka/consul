@@ -1,0 +1,10 @@
+de:
+  custom:
+    ideas:
+      mailers:
+        closing: Freundliche Grüße
+        signature: Ideenplattform
+        notify_officer:
+          subject: Neue Idee %{identifier}
+          hi: Liebe/r Sachbearbeiter*in,
+          p1: Ihnen wurde eine Idee vom Admin zugewiesen.

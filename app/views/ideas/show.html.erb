@@ -80,7 +80,7 @@
         <% end %>
 
         <% if ideas_feature?("external_video") && @idea.video_url.present? %>
-          <%= render(Shared::SidebarCardComponent.new(title: t("custom.ideas.show.video.title"), icon_name: "video")) do %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("ideas.show.video_url_title"), icon_name: "video")) do %>
             <div class="video-link">
               <%= sanitize_and_auto_link @idea.video_url %>
             </div>
@@ -103,14 +103,14 @@
 
         <% if current_user == @idea.author %>
           <%= render(Shared::SidebarCardComponent.new(
-            title: t("custom.ideas.show.author_actions.title"),
+            title: t("ideas.show.author_actions.title"),
             icon_name: "user-edit")) do |c| %>
             <div class="show-actions-menu">
               <%= link_to idea_path(@idea),
                           class: "button hollow alert",
                           style: "display: inline-flex;",
                           method: :delete do %>
-                <%= t("custom.ideas.show.author_actions.delete_button") %>
+                <%= t("ideas.show.author_actions.delete_button") %>
               <% end %>
             </div>
           <% end %>
@@ -123,6 +123,12 @@
               <%#= link_to "Administrieren", idea_management_idea_path(@idea), class: "button hollow alert" %>
           <%# end %>
         <%# end %>
+
+        <%= render(Mobile::FixedBottomActionComponent.new) do %>
+          <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
+            <%= render Ideas::VotesComponent.new(@idea) %>
+          <% end %>
+        <% end %>
 
         <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
           <%= render "shared/social_share",

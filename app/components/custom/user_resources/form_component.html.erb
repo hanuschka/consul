@@ -22,6 +22,20 @@
           <%= render partial: "shared/user_resources_form/sentiments", locals: { f: f, projekt_phase: projekt_phase, model: resource } %>
         <% end %>
       <% end %>
+
+      <% if resource.is_a?(Idea) && Idea::Category.exists? %>
+        <%= render Shared::SidebarCardComponent.new(
+          title: t("ideas.form.category_label"),
+          opened_on_mobile: true,
+          icon_name: "tag"
+        ) do |c| %>
+          <div id="idea_category_selector" class="">
+            <p class="small" style="margin-bottom:0.25rem;"><%= t("ideas.form.category_hint") %></p>
+
+            <%= f.select :idea_category_id, Idea::Category.all.map { |category| [category.name, category.id] }, { include_blank: true, label: false }, class: "select" %>
+          </div>
+        <% end %>
+      <% end %>
     <% end %>
 
     <% sidebar_html = capture do %>

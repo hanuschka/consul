@@ -15,7 +15,7 @@ module VideoUtils
     external_id =
       case platform
       when YOUTUBE_PLATFORM
-        url.match(/(?:v=|embed\/)(?<youtube_id>[\w-]+)/)[:youtube_id]
+        url.match(/(?:v=|embed|live\/)(?<youtube_id>[\w-]+)/)[:youtube_id]
       when VIMEO_PLATFORM
         url.match(/vimeo\.com\/(?<vimeo_id>\w+)/)[:vimeo_id]
       end

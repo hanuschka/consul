@@ -160,8 +160,8 @@ class ProjektPhaseSetting < ApplicationRecord
 
         "ProjektPhase::IframePhase" => {
           "option.general.iframe_url": "",
-          "option.general.iframe_width": "",
-          "option.general.iframe_height": ""
+          "option.general.iframe_width": "1240",
+          "option.general.iframe_height": "800"
         },
       }
     end

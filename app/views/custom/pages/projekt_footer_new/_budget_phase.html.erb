@@ -29,11 +29,11 @@
         <% if @budget.current_phase.kind == 'informing' %>
           <div class="new-card">
             <h4>
-              Noch keine Investitionsvorschläge vorhanden
+              Noch keine Vorschläge vorhanden
             </h3>
             <% if @budget.phases.accepting.starts_at.present? %>
               <div>
-                Investitionsvorschläge können erst in der nächsten Phase
+                Vorschläge können erst in der nächsten Phase
                 eingereicht werden. Diese beginnt am
                 <%= I18n.l(@budget.phases.accepting.starts_at, format: :new_date_with_year) %>.
               </div>

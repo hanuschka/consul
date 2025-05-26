@@ -88,6 +88,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
       "custom.polls.index"
     elsif resource_type == DeficiencyReport
       "custom.deficiency_reports.index"
+    elsif resource_type == Idea
+      "custom.ideas.index"
     elsif resource_type == Topic
       "custom.topics.list"
     end

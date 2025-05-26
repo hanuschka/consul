@@ -31,7 +31,7 @@ de:
         table_title: Titel
         table_heading_name: Name der Rubrik
         table_actions: Aktionen
-        no_investments: "Keine Investitionsvorschläge vorhanden."
+        no_investments: "Noch keine Vorschläge vorhanden."
       show:
         back: Zurück
         title: Investitionsprojekt

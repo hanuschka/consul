@@ -43,7 +43,7 @@ $banner-mobile-layout-change-widthpoint: 720px;
   justify-content: space-between;
   border-radius: 10px;
 
-  @media(max-width: $banner-mobile-layout-change-widthpoint) {
+  @media(max-width: 1279px) {
     flex-direction: column;
     padding-top: 20px;
     height: auto;
@@ -112,7 +112,7 @@ $banner-mobile-layout-change-widthpoint: 720px;
   width: 50%;
   margin-top: 20px;
 
-  @media(max-width: $banner-mobile-layout-change-widthpoint) {
+  @media(max-width: 1279px) {
     width: 100%;
     margin-top: 0;
   }
@@ -124,18 +124,13 @@ $banner-mobile-layout-change-widthpoint: 720px;
 
 textarea.user-resources-form--banner-editor-title {
   background: transparent !important;
-  height: 3rem;
   border: none;
   outline: none;
   box-shadow: none;
   font-size: 27px;
   overflow: hidden;
-  height: 200px;
+  height: 180px;
   padding: 0;
-
-  @media(max-width: $small-tablet-viewport-start) {
-    height: 100px;
-  }
 
   &::placeholder  {
     color: #666;
@@ -146,13 +141,17 @@ textarea.user-resources-form--banner-editor-title {
     border: none;
     box-shadow: none;
   }
+
+  @media (max-width: 480px) {
+    height: 260px;
+  }
 }
 
 
 .banner-editor-image-attachment {
   width: 48%;
 
-  @media(max-width: $banner-mobile-layout-change-widthpoint) {
+  @media(max-width: 1279px) {
     width: 100%;
   }
 }

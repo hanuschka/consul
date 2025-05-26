@@ -115,9 +115,12 @@ en:
         filter: "Filtering projects by"
         filters:
           not_unfeasible: "Active"
-          selected: "Active"
-          unfeasible: "Unfeasible"
-          unselected: "Not selected for the final voting"
+          feasible: meets the criteria
+          unfeasible: does not meet the criteria
+          preselected: allowed for review
+          not_preselected: not allowed for review
+          selected: selected for the final vote
+          unselected: not selected for the final vote
           winners: "Winners"
         orders:
           random: random

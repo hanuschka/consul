@@ -23,9 +23,11 @@ en:
     budgets:
       link: "Stats"
       page_title: "%{budget} - Participation stats"
-      total_investments: "Total investment projects"
+      total_investments_title: "Investments"
+      total_investments: "Total investments"
       total_selected_investments: "Projects in final voting phase"
-      total_unfeasible_investments: "Unfeasible projects"
+      total_feasible_investments: "Feasible investments"
+      total_unfeasible_investments: "Unfeasible investments"
       by_phase: "Participants by phase"
       by_heading: "Participants by phase and heading"
       total: "Total"

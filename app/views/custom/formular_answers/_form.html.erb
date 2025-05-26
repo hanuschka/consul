@@ -7,17 +7,22 @@
 
   <% formular_fields.each do |ff| %>
     <div class="formular-field-block">
-      <% label_class = [] %>
-      <% invalid_field_class = formular_answer.answer_errors.include?(ff.key) %>
-      <% label_class.push("is-invalid-label") if invalid_field_class %>
+      <% if ff.kind == "description" %>
+        <h3 style="margin-top:2rem;margin-bottom:0;"><%= ff.name %></h3>
+        <%= AdminWYSIWYGSanitizer.new.sanitize(ff.description) %>
+      <% else %>
+        <% label_class = [] %>
+        <% invalid_field_class = formular_answer.answer_errors.include?(ff.key) %>
+        <% label_class.push("is-invalid-label") if invalid_field_class %>
 
-      <%= label_tag "formular_answer[answers][#{ff.key}]", ff.name, class: label_class.join(" ") %>
+        <%= label_tag "formular_answer[answers][#{ff.key}]", ff.name, class: label_class.join(" ") %>
 
-      <% if ff.required? %>
-        <%= content_tag(:small, t("custom.shared.required")) %>
-        <br>
+        <% if ff.required? %>
+          <%= content_tag(:small, t("custom.shared.required")) %>
+          <br>
+        <% end %>
+        <span class="help-text"><%= AdminWYSIWYGSanitizer.new.sanitize(ff.description) %></span>
       <% end %>
-      <span class="help-text"><%= ff.description.html_safe %></span>
 
       <% if ff.kind.in? ["string", "email"] %>
         <%= text_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off", class: ("is-invalid-input" if invalid_field_class) %>
@@ -27,7 +32,7 @@
         <%= date_field_tag "formular_answer[answers][#{ff.key}]", formular_answer.answers[ff.key], autocomplete: "off", class: ("is-invalid-input" if invalid_field_class) %>
       <% elsif ff.kind == "dropdown" %>
         <%= select_tag "formular_answer[answers][#{ff.key}]", options_for_select((ff.drop_down_options&.split(",") || []).map(&:strip), formular_answer.answers[ff.key]),
-          include_blank: true, class: "show-arrow #{"is-invalid-input" if invalid_field_class}" %>
+          prompt: t("custom.formular_answer.form.select_prompt"), class: "show-arrow #{"is-invalid-input" if invalid_field_class}" %>
       <% elsif ff.kind == "image" %>
         <%= render FormularAnswers::NestedImageComponent.new(f: f, formular_field: ff, block_id: "nested-image-#{ff.id}") %>
       <% elsif ff.kind == "document" %>

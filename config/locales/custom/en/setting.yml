@@ -1,5 +1,7 @@
 en:
   settings:
+    mailer_from_deficiency_report_address: Sender email address for deficiency reports
+    mailer_from_deficiency_report_address_description: This email address will appear in emails related to deficiency reports
     features:
       elasticsearch: "Elasticsearch"
       elasticsearch_description: "Elasticsearch is the leading distributed, RESTful, open source search and analytics engine designed for speed, horizontal scalability, reliability, and easy management."

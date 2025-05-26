@@ -1,5 +1,7 @@
-<% provide :vc_maps do %>
-  <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+<% if projekt_feature?(@projekt_phase.projekt, "general.vc_map_enabled") %>
+  <% provide :vc_maps do %>
+    <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
+  <% end %>
 <% end %>
 
 <%= render UserResources::FormComponent.new(

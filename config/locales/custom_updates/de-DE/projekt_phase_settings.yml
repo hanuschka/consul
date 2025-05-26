@@ -24,6 +24,9 @@ de:
             show_comments_description: Aktivieren Sie "Kommentare" für das Diskussionsmodul
       proposals:
         feature:
+          general:
+            set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
+            set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -68,10 +71,26 @@ de:
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
             show_video_as_link: Videos als Link
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
+          general:
+            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
         option:
           resource:
             votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
             votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
+
+        selectable_setting:
+          general:
+            default_order: Standardsortierung
+            default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
+            default_order_options:
+              hot_score: Aktivste
+              created_at: Neueste zuerst
+              alphabet: Alphabetisch
+              votes_up: Am meisten gewählt
+              random: Zufällig
       polls:
         feature:
           resource:
@@ -95,6 +114,9 @@ de:
             show_open_answer_author_name_description: Zeigt den Benutzername der offenen Antworten an
       budget:
         feature:
+          general:
+            set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
+            set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -131,6 +153,21 @@ de:
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
             conditional_balloting: Vereinfachte Stimmabgabe
             conditional_balloting_description: Stimmen werden vor der Verifizierung aufgenommen, aber erst nach der Verifizierung gezählt
+          general:
+            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+        selectable_setting:
+          general:
+            default_order: Standardsortierung
+            default_order_description: Definieren Sie wie die Inhalte standardmäßig sortiert werden sollen
+            default_order_options:
+              random: Zufällig
+              ballot_line_weight: Aktuelle Stimmenverteilung
+              total_votes: Aktuelles Ranking
+              newest: Neueste zuerst
+              comments_count: Meist kommentiert
       projekt_questions:
         feature:
           general:
@@ -140,6 +177,13 @@ de:
           general:
             newest_first: Neueste Meilensteine zuerst anzeigen
             newest_first_description: Sortiert die Meilensteine absteigend mit dem neuesten Datum zuerst
+      projekt_events:
+        feature:
+          general:
+            reverse_order_for_incoming_events: Zurückgekehrte Reihenfolge für eingehende Ereignisse
+            reverse_order_for_incoming_events_description: Sortiert die Ereignisse absteigend mit dem spätesten Datum zuerst
+            show_on_home_page: Veranstaltung auf Homepage anzeigen
+            show_on_home_page_description: Zeigt die Veranstaltung auf der Homepage an
       newsfeed:
         option:
           general:
@@ -154,3 +198,12 @@ de:
             primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"
             submissions_limit: Beschränkung der erlaubten Einreichungen pro Nutzer
             submissions_limit_description: Limitieren Sie die Anzahl der erlaubten Formulareinreichungen pro Nutzer
+      iframe:
+        option:
+          general:
+            iframe_url: Iframe URL
+            iframe_url_description: Bitte geben Sie hier die URL ein
+            iframe_width: Breite des Iframes
+            iframe_width_description: "Bitte definieren Sie hier die Breite des Iframes. Empfohlener Wert: 1260"
+            iframe_height: Höhe des Iframes
+            iframe_height_description: "Bitte definieren Sie hier die Höhe des Iframes. Empfohlener Wert: 1000"

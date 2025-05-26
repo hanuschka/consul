@@ -11,9 +11,6 @@ class Poll < ApplicationRecord
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt
 
-  has_many :landing_page_resources, as: :resource, class_name: "LandingPageResource", dependent: :destroy
-  has_many :landing_pages, through: :landing_page_resources, source: :landing_page
-
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
 

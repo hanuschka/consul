@@ -13,7 +13,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::IframePhase"
   ].freeze
 
   PROJEKT_PHASES_TYPES = [
@@ -30,14 +31,17 @@ class ProjektPhase < ApplicationRecord
 
   translates :phase_tab_name, touch: true
   translates :cta_button_name, touch: true
-  translates :resource_form_title, touch: true
-  translates :projekt_selector_hint, touch: true
+  translates :welcome_text_in_show, touch: true
+  translates :resource_form_intro, touch: true
   translates :labels_name, touch: true
   translates :sentiments_name, touch: true
-  translates :resource_form_title_hint, touch: true
   translates :description, touch: true
   translates :comment_form_title, touch: true
   translates :comment_form_button, touch: true
+  translates :resource_form_title, touch: true
+  translates :resource_form_title_placeholder, touch: true
+  translates :resource_form_description_placeholder, touch: true
+  translates :support_button_text, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -95,11 +99,7 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
-  scope :sorted, -> do
-    regular_phases.sort_by(&:default_order).each do |x|
-      x.start_date = Time.zone.today if x.start_date.nil?
-    end.sort_by(&:start_date)
-  end
+  scope :sorted, ->  {order(:given_order) }
 
   def self.order_phases(ordered_array)
     ordered_array.each_with_index do |phase_id, order|
@@ -152,7 +152,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return if user&.administrator? || user&.projekt_manager?
+    return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
 
     return :phase_not_active if not_active?
     return :phase_expired if expired?
@@ -249,8 +249,8 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
-  def settings_categories
-    []
+  def setting(key)
+    setting = settings.find { |s| s.key == key }
   end
 
   def admin_nav_bar_items
@@ -361,13 +361,11 @@ class ProjektPhase < ApplicationRecord
     end
 
     def add_default_settings
-      phase_setting_categories = ProjektPhaseSetting.defaults[self.class.name]
+      projekt_phase_settings = ProjektPhaseSetting.defaults[self.class.name]
 
-      return if phase_setting_categories.nil?
+      return if projekt_phase_settings.nil?
 
-      phase_settings = phase_setting_categories.values.reduce(:merge) || {}
-
-      phase_settings.each do |key, value|
+      ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
         settings.create!(key: key, value: value)
       end
     end

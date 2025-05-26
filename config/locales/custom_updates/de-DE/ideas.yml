@@ -6,6 +6,7 @@ de:
     status:
       active: Aktiv
       archived: Archiviert
+      pending: Schwebend
     remaining_days:
       one: "Verbleibende Zeit: %{count} Tag"
       other: "Verbleibende Zeit: %{count} Tage"

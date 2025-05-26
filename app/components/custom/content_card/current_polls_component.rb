@@ -4,6 +4,7 @@ class ContentCard::CurrentPollsComponent < ApplicationComponent
   def initialize(content_card, custom_page: nil)
     @content_card = content_card
     @limit = content_card.settings['limit'].to_i
+    @custom_page = custom_page
 
     @original_polls =
       if @custom_page.present?

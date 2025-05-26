@@ -277,12 +277,6 @@
       margin-bottom: 15px;
       margin-top: 0px;
     }
-
-    .page-subnav-tab {
-      .tab-info-summary {
-        display: none;
-      }
-    }
   }
 
   .projekt-footer {
@@ -323,8 +317,6 @@
   }
 
   .projekt-page {
-    padding-top: 50px;
-
     .main-column {
       display: flex;
       flex-direction: column;
@@ -336,6 +328,10 @@
       position: relative;
       top: -270px;
       visibility: hidden;
+    }
+
+    @media screen and (min-width: $small-tablet-viewport-start) {
+      padding-top: 50px;
     }
   }
 

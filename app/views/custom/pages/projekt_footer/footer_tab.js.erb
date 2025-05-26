@@ -31,4 +31,4 @@ $('#footer-content').foundation();
   App.Map.initialize();
 <% end %>
 
-$("html, body").animate({ scrollTop: $("#footer-content").offset().top - 100 }, 500);
+$("html, body").animate({ scrollTop: $("#<%= params["scroll_to"] || "footer-content" %>").offset().top - 100 }, 500);

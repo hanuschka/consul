@@ -181,7 +181,6 @@ module ProjektPhaseAdminActions
       @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
       @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
     end
-<<<<<<< HEAD
 
     setting_ordered = []
     proposal_setting_key_ordered.each do |setting_key|
@@ -198,8 +197,6 @@ module ProjektPhaseAdminActions
     @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
 
     @apps = App.all
-=======
->>>>>>> con-2499
   end
 
   def projekt_labels

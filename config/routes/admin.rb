@@ -143,6 +143,11 @@ namespace :admin do
     get :search, on: :collection
   end
 
+  # custom idea managers
+  resources :idea_managers, only: [:index, :create, :destroy] do
+    get :search, on: :collection
+  end
+
   # custom poll managers
   resources :officing_managers, only: [:index, :create, :destroy] do
     get :search, on: :collection

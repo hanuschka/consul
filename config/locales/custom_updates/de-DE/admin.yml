@@ -188,6 +188,75 @@ de:
         districts:
           index:
             title: Gebiete
+      ideas:
+        index:
+          title: Ideen
+          entry_name: Idee
+          no_deficiency_reports: Keine Ideen
+          id: ID
+          admin_accepted: Sichtbarkeit
+          admin_accepted_at: Veröffentlichung
+          created_at: Erstellungsdatum
+          author: Autor
+          status_title: Status
+          approximater_location: Standort
+          category_name: Kategorie
+          officer_name: Sachbearbeiter*in
+          actions: Aktionen
+          official_answer: Offizielle Antwort
+          officer_email: Email
+          submit: Filter/Suche
+        show:
+          on_behalf_of: im Namen von
+          created_at: Erstellt am
+          updated_at: Aktualisiert am
+          admin_accepted_at: Veröffentlichung
+          status: Status
+          category: Kategorie
+          link: Link
+        update:
+          success_notice: Die Mängelmeldung wurde aktualisiert
+        destroy:
+          success_notice: Die Mängelmeldung wurde gelöscht
+        deficiency_report:
+          category: Kategorie
+          officer: Sachbearbeiter*in
+          status: Status
+          title: Gemeldeter Mangel
+        officers:
+          index:
+            search:
+              email_placeholder: Benutzer*in via E-Mail suchen
+            title: Sachbearbeiter*innen
+          officer:
+            email: E-Mail
+            entry_name: Sachbearbeiter*in
+            name: Name
+        categories:
+          index:
+            create: Kategorie erstellen
+            title: Kategorien
+          category:
+            color: Farbe
+            icon: Icon
+            name: Name
+            idea_officer: Standardmäßig Sachbearbeiter*in
+          destroy:
+            cannot_be_destroyed: Sie können diese Kategorie nicht löschen, da sie mindestens einer Idee zugewiesen ist.
+            destroyed_successfully: Die Kategorie wurde erfolgreich gelöscht.
+          edit:
+            editing: Kategorie bearbeiten
+          form:
+            color_placeholder: "HEX Code mit #"
+            submit_button: Speichern
+          new:
+            creating: Neue Mangelkategorie erstellen
+        settings:
+          index:
+            title: Funktionen
+        districts:
+          index:
+            title: Gebiete
       geozones:
         geozone:
           postal_codes: Postleitzahlen
@@ -281,10 +350,17 @@ de:
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
           ai_settings: KI prompt
+        ideas:
+          officers: Sachbearbeiter*innen
+          list: Ideen
+          categories: Kategorien
+          settings: Funktionen
+          districts: Gebiete
         deficiency_reports_title: Mängelmelder
         projekts: Projekte
         projekt_managers: Projektmanager*innen
         deficiency_report_managers: Admin Mängelmelder
+        idea_managers: Admin Ideen
         officing_managers: Abstimmungshelfer*innen
         legislation: Textbearbeitung
         age_ranges: Altersgruppen

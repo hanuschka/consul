@@ -129,18 +129,13 @@ class User < ApplicationRecord
   # Get the existing user by email if the provider gives us a verified email.
   def self.first_or_initialize_for_oauth(auth)
     oauth_email           = auth.info.email
-    oauth_email_confirmed = oauth_email.present?# && (auth.info.verified || auth.info.verified_email)
+    oauth_email_confirmed = oauth_email.present? && (auth.info.verified || auth.info.verified_email)
     oauth_user            = User.find_by(email: oauth_email) if oauth_email_confirmed
 
     user = oauth_user || User.new(
-      first_name: auth.info&.first_name&.capitalize,
-      last_name: auth.info&.last_name&.capitalize,
-      date_of_birth:  (Date.parse(auth.extra.raw_info&.date_of_birth) rescue nil),
-      plz: auth.extra.raw_info&.postal_code,
       email: oauth_email,
       oauth_email: oauth_email,
       password: Devise.friendly_token[0, 20],
-      # terms_of_service: "1", #custom
       terms_data_storage: "1", #custom
       terms_data_protection: "1", #custom
       terms_general: "1", #custom

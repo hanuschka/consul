@@ -1,13 +1,33 @@
 module BundIdServices
   class RedirectRequestMaker < ApplicationService
-    def call
-      base_url = Rails.application.secrets.bund_id[:idp_destination]
-      saml_request = CGI.escape(encode(deflate(signed_xml_document.to_s)))
+    def initialize(user_id: nil, purpose: nil)
+      @user_id = user_id
+      @purpose = purpose
+    end
 
-      "#{base_url}?SAMLRequest=#{saml_request}"
+    def call
+      "#{Rails.application.secrets.bund_id[:idp_destination]}?#{request_params}"
     end
 
     private
+
+      def request_params
+        saml_request = CGI.escape(encode(deflate(signed_xml_document.to_s)))
+
+        user_token = if @purpose.present?
+                       Rails.application.message_verifier(:bund_id).generate([
+                         @user_id,
+                         @purpose,
+                         Time.zone.now
+                       ])
+                     end
+
+        if user_token
+          "SAMLRequest=#{saml_request}&RelayState=#{user_token}"
+        else
+          "SAMLRequest=#{saml_request}"
+        end
+      end
 
       def signed_xml_document
         create_xml_document.sign_document(

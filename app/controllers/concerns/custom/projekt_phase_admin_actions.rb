@@ -147,6 +147,14 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/user_functions"
   end
 
+  def map_resources_overview
+    @map_coordinates =
+      @projekt_phase
+        .projekt_point_of_interest_pins
+        .includes(:map_location)
+        .map(&:pin_json_data)
+  end
+
   def user_functions
     authorize!(:settings, @projekt_phase)
 

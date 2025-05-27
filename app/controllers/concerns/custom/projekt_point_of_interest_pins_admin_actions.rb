@@ -10,22 +10,16 @@ module ProjektPointOfInterestPinsAdminActions
   def show
   end
 
-  # def edit
-  # end
-
-  # def update
-  #   if @pin.update(pin_params)
-  #     redirect_to admin_projekt_phase_projekt_point_of_interest_pins_path(@projekt_phase),
-  #                 notice: t("custom.admin.projekt_phases.point_of_interest_phases.pins.update.notice")
-  #   else
-  #     render :edit
-  #   end
-  # end
-
   def destroy
-    @pin.destroy
-    redirect_to admin_projekt_phase_projekt_point_of_interest_pins_path(@projekt_phase),
-                notice: t("custom.admin.projekt_phases.point_of_interest_phases.pins.destroy.notice")
+    authorize! :destroy, @pin
+
+    if @pin.destroy!
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :projekt_point_of_interest_pins),
+                  notice: t("custom.admin.projekt_phases.point_of_interest_phases.pins.destroy.notice")
+    else
+      redirect_to polymorphic_path([@namespace, @projekt_phase], action: :projekt_point_of_interest_pins),
+                  alert: t("custom.admin.projekt_phases.point_of_interest_phases.pins.destroy.error")
+    end
   end
 
   private

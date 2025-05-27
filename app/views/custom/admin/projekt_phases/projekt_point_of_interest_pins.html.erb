@@ -49,7 +49,7 @@
           <td><%= l pin.created_at, format: :short %></td>
           <td>
             <%= link_to t("custom.admin.projekt_phases.point_of_interest_phases.pins.delete"),
-              admin_projekt_point_of_interest_pin_path(@projekt_phase, pin),
+              admin_projekt_point_of_interest_pin_path(pin, projekt_phase_id: @projekt_phase.id),
               method: :delete,
               class: "button hollow alert",
               data: { confirm: t("custom.admin.projekt_phases.point_of_interest_phases.pins.delete_confirm") } %>

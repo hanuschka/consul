@@ -34,6 +34,7 @@ namespace :admin do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      get :map_resources_overview
       get :projekt_point_of_interest_pins
       get :projekt_point_of_interest_categories
     end

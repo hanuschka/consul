@@ -194,6 +194,9 @@ module Abilities
         projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
           community.communitable.projekt_phase.permission_problem(user).blank?
       end
+
+      can [:index, :show, :vote, :unvote, :json_data, :suggest], Idea, id: Idea.accepted.or(Idea.by_author(user)).ids
+      can [:create], Idea
     end
   end
 end

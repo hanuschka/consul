@@ -120,6 +120,7 @@ de:
         demokratie_url: https://demokratie.today/
         description: Die Plattform basiert auf %{consul}, einer %{open_source} und wurde von %{demokratie} modifiziert.
         impressum: Impressum
+        netiquette: Netiquette
         statistic_cookies_settings: Cookie Einstellungen
         contact_us: Kontaktieren Sie uns
         sign_in_as_guest: Melden Sie sich als Gast an
@@ -131,6 +132,7 @@ de:
         projekt_events_link: Veranstaltungen
         projekt_management: Projektmanager
         deficiency_report_management: Mängelmelder
+        idea_management: Ideenplattform
         notification_item:
           no_notifications: Keine Benachrichtigungen
         title_html: Öffentlichkeitsbeteiligung

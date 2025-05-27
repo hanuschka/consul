@@ -55,6 +55,7 @@ module Abilities
       can [:search, :create, :index, :destroy, :update], ::Administrator
       can [:search, :create, :index, :destroy], ::ProjektManager # custom
       can [:search, :create, :index, :destroy], ::DeficiencyReportManager # custom
+      can [:search, :create, :index, :destroy], ::IdeaManager # custom
       can [:search, :create, :index, :destroy], ::OfficingManager # custom
       can [:search, :create, :index, :destroy], ::Moderator
       can [:search, :show, :update, :create, :index, :destroy, :summary], ::Valuator
@@ -147,6 +148,10 @@ module Abilities
       can [:manage], ::DeficiencyReport::OfficialAnswerTemplate
       can [:manage], ::DeficiencyReport::OfficerGroup
       can [:manage], DeficiencyReport
+
+      can [:manage], ::Idea::Officer
+      can [:manage], ::Idea::Category
+      can [:manage], Idea
 
       can [:csv_answers_votes], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type], Poll::Question

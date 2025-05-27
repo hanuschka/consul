@@ -179,7 +179,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? || current_user.moderator? %>
+          <% if helpers.allowed_to_post_on_behalf_of?(current_user, investment.projekt_phase.projekt) %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.budgets.investments.form.on_behalf_of.title"),
                           description: t("custom.budgets.investments.form.on_behalf_of.description"),

@@ -88,6 +88,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
       "custom.polls.index"
     elsif resource_type == DeficiencyReport
       "custom.deficiency_reports.index"
+    elsif resource_type == Idea
+      "custom.ideas.index"
     elsif resource_type == Topic
       "custom.topics.list"
     end
@@ -130,6 +132,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
       Projekts::ProjektEvents::ListItemComponent.new(projekt_event: resource)
     when Topic
       Topics::ListItemComponent.new(topic: resource)
+    when Idea
+      Ideas::ListItemComponent.new(idea: resource)
     end
   end
 

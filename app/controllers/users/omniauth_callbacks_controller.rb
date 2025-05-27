@@ -18,13 +18,17 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_path
       else
         user = User.find(user_id)
-
-        user.update(user_attributes_from(auth_data))
-        user.update(address_attributes_from(auth_data))
-
+        user.update_columns(user_attributes_from(auth_data))
+        user.reload
         user.verify! if user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
-
         sign_in user
+
+        if user.verified?
+          flash[:notice] = t("custom.users.omniauth.bund_id.verification_successfull")
+        else
+          flash[:alert] = t("custom.users.omniauth.bund_id.verification_failed")
+        end
+
         redirect_to account_path
       end
     else
@@ -69,11 +73,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user = identity.user || User.first_or_initialize_for_oauth(auth)
 
       @user.assign_attributes(user_attributes_from(auth))
-      @user.assign_attributes(address_attributes_from(auth))
 
       if save_user
         identity.update!(user: @user)
-        @user.verify! if @user.errors.blank? && @user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
         preexisting_flash = flash[:notice]
         set_flash_message(:notice, :success, kind: (provider == :bund_id ? "BundID" : provider.to_s.capitalize)) if is_navigational_format?
         flash[:notice] += " #{preexisting_flash}" if preexisting_flash
@@ -90,24 +92,20 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
 
     def user_attributes_from(auth_data)
-      {
+      user_attributes = {
         first_name:              auth_data.info&.first_name&.capitalize,
         last_name:               auth_data.info&.last_name&.capitalize,
         gender:                  auth_data.extra&.raw_info&.gender,
         date_of_birth:           (Date.parse(auth_data.extra.raw_info&.date_of_birth) rescue nil),
-        last_stork_level:        auth_data.extra&.raw_info&.verification_level
-      }.reject { |_, v| v.blank? }
-    end
-
-    def address_attributes_from(auth_data)
-      full_street_address = auth_data.extra.raw_info.street_address
-      regex = /(?<street_name>[\p{L}\d\s,.-]+?)\s*(?<street_number>\d+)\s*(?<street_number_extension>[a-zA-Z\s]*)/
-      match = full_street_address.match(regex)
-
-      address_attributes = {
+        last_stork_level:        auth_data.extra&.raw_info&.verification_level,
         city_name: auth_data.extra.raw_info.locality_name&.capitalize,
         plz: auth_data.extra.raw_info.postal_code
       }
+
+      full_street_address = auth_data.extra.raw_info.street_address
+      regex = /(?<street_name>[\p{L}\d\s,.-]+?)\s*(?<street_number>\d+)\s*(?<street_number_extension>[a-zA-Z\s]*)/
+      match = full_street_address.match(regex)
+      registered_address = nil
 
       if match
         registered_address_city = RegisteredAddress::City.where(
@@ -129,9 +127,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           )
         end
 
-        address_attributes.merge!(
+        user_attributes.merge!(
           {
-            registered_address: registered_address,
+            registered_address_id: registered_address&.id,
             street_name: match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
             street_number: match[:street_number].strip,
             street_number_extension: match[:street_number_extension].strip.presence,
@@ -139,6 +137,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         )
       end
 
-      address_attributes.reject { |_, v| v.blank? }
+      user_attributes.reject { |_, v| v.blank? }
     end
 end

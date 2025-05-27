@@ -20,6 +20,8 @@ de:
         verification_successfull: Sie wurden erfolgreich mit der BundID verifiziert.
         bund_id:
           verification_request_expired: Die Verifizierung mit der BundID ist abgelaufen. Bitte versuchen Sie es erneut.
+          verification_successfull: Sie wurden erfolgreich mit der BundID verifiziert.
+          verification_failed: Die Verifizierung mit der BundID ist fehlgeschlagen.
     user_page:
       filters:
         proposals: Vorschläge

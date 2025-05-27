@@ -21,10 +21,10 @@ module CsvServices
       def headers
         [
           "id",
+          "category_name",
           "address",
           "latitude",
           "longitude",
-          "category_name",
           "created_at"
         ]
       end
@@ -32,10 +32,10 @@ module CsvServices
       def row(pin)
         [
           pin.id,
+          pin.projekt_point_of_interest_category.name,
           pin.map_location.get_approximated_address,
           geo_field(pin.map_location.latitude),
           geo_field(pin.map_location.longitude),
-          pin.projekt_point_of_interest_category.name,
           pin.created_at
         ]
       end

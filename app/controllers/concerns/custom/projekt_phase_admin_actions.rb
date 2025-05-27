@@ -101,6 +101,17 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/restrictions"
   end
 
+  def projekt_point_of_interest_pins
+    @pins = @projekt_phase.projekt_point_of_interest_pins.ordered
+
+    respond_to do |format|
+      format.html
+      format.csv {
+        send_data CsvServices::PointOfInterestPinsExporter.call(@pins), filename: "point_of_interest_pins-#{Date.today}.csv"
+      }
+    end
+  end
+
   def settings
     authorize!(:settings, @projekt_phase)
 

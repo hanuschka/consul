@@ -67,4 +67,4 @@ class Admin::ProjektPointOfInterestPinsController < Admin::BaseController
         :projekt_point_of_interest_category_id
       )
     end
-end 
+end

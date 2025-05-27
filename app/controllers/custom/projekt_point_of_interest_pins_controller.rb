@@ -12,7 +12,6 @@ class ProjektPointOfInterestPinsController < ApplicationController
   end
 
   def create
-    # binding.pry
     @pin = @projekt_phase.projekt_point_of_interest_pins.new(pin_params)
     @pin.author = current_user
 

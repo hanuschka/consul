@@ -8,7 +8,6 @@ class ProjektPointOfInterestPinsController < ApplicationController
 
   def new
     @pin = @projekt_phase.projekt_point_of_interest_pins.build
-    @categories = @projekt_phase.projekt_point_of_interest_categories
   end
 
   def create
@@ -20,24 +19,6 @@ class ProjektPointOfInterestPinsController < ApplicationController
     else
       render :new
     end
-  end
-
-  def edit
-  end
-
-  def update
-    if @pin.update(pin_params)
-      redirect_to projekt_phase_path(@projekt_phase),
-                  notice: t("custom.projekt_phases.point_of_interest_phases.pins.update.notice")
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    @pin.destroy
-    redirect_to projekt_phase_path(@projekt_phase),
-                notice: t("custom.projekt_phases.point_of_interest_phases.pins.destroy.notice")
   end
 
   private

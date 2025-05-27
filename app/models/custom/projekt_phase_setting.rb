@@ -155,6 +155,9 @@ class ProjektPhaseSetting < ApplicationRecord
           "option.general.iframe_width": "1240",
           "option.general.iframe_height": "800"
         },
+        "ProjektPhase::PointOfInterestPhase" => {
+          "option.general.max_number_of_pins_per_user": "",
+        },
       }
     end
 

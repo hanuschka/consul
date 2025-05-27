@@ -136,13 +136,17 @@ module ProjektPhaseAdminActions
         Budget::Investment::DEFAULT_ORDERS
       end
 
-    @projekt_phase_selectable_settings =
-      [
-        ProjektPhaseSetting::SelectableSettingSet.new(
-          setting: @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order"),
-          options: options
-        )
-      ]
+    selectable_setting = @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order")
+
+    if selectable_setting.present?
+      @projekt_phase_selectable_settings =
+        [
+          ProjektPhaseSetting::SelectableSettingSet.new(
+            setting: selectable_setting,
+            options: options
+          )
+        ]
+    end
 
     render "custom/admin/projekt_phases/user_functions"
   end

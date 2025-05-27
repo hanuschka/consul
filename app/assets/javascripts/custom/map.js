@@ -15,17 +15,6 @@
       App.Map.maps = [];
     },
     initializeMap: function(element) {
-      var $categorySelect = $(".js-map-update-pin-style");
-
-      $categorySelect.on(
-        "change",
-        function(e) { updateMarkerStyleFromCategorySelect(e.target) }
-      )
-
-      if ($categorySelect.length) {
-        updateMarkerStyleFromCategorySelect($categorySelect.get(0))
-      }
-
       // variables to set map view
       var mapCenterLatitude = $(element).data("map-center-latitude");
       var mapCenterLongitude = $(element).data("map-center-longitude");
@@ -62,9 +51,19 @@
       // biolerplate for marker
       var marker = null;
       var markersGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
-      var markerCategoryStyle = null;
-      var markerCategoryColor = null;
 
+      var markerCategoryIcon = null;
+      var markerCategoryColor = null;
+      var $categorySelect = $(".js-map-update-pin-style");
+
+      $categorySelect.on(
+        "change",
+        function(e) { updateMarkerStyleFromCategorySelect(e.target) }
+      )
+
+      if ($categorySelect.length) {
+        updateMarkerStyleFromCategorySelect($categorySelect.get(0))
+      }
 
       /* Create leaflet map start */
       var map = L.map(element.id, {
@@ -112,7 +111,7 @@
       deflateFeatures.addTo(map);
 
       function updateMarkerWithCategoryStyle() {
-        if (marker && markerCategoryStyle && markerCategoryColor) {
+        if (marker && markerCategoryIcon && markerCategoryColor) {
           marker.setIcon(getMarkerIcon(null, null))
         }
       }
@@ -120,7 +119,7 @@
       function updateMarkerStyleFromCategorySelect(element) {
         var selectedOption = element.options[element.selectedIndex]
 
-        markerCategoryStyle = selectedOption.dataset.icon;
+        markerCategoryIcon = selectedOption.dataset.icon;
         markerCategoryColor = selectedOption.dataset.color;
 
         updateMarkerWithCategoryStyle()
@@ -159,8 +158,8 @@
       function getMarkerIconHTML(color, iconClass) {
         var markerIconHTML;
 
-        if (markerCategoryStyle) {
-          iconClass = markerCategoryStyle;
+        if (markerCategoryIcon) {
+          iconClass = markerCategoryIcon;
         } else if (!iconClass ) {
           iconClass = 'circle';
         } else {
@@ -174,7 +173,6 @@
         if ( adminEditor ) {
           color = adminShapesColor;
         }
-        console.log("getMarkerIconHTML", color, iconClass)
 
         if ( color ) {
           markerIconHTML = '<div class="map-icon icon-' + iconClass + '" style="background-color: ' + color + '"></div>'

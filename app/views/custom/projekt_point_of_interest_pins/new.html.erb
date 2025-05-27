@@ -10,7 +10,7 @@
           icon_name: "th-large"
         ) do |c| %>
         <%= f.select :projekt_point_of_interest_category_id, options_for_select(
-            @categories.map { |category|
+            @projekt_phase.projekt_point_of_interest_categories.map { |category|
               [
                 "#{category.name}".html_safe,
                 category.id,

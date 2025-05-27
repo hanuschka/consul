@@ -45,7 +45,11 @@
             <%= pin.projekt_point_of_interest_category.name %>
           </td>
           <td><%= pin.map_location.get_approximated_address %></td>
-          <td><%= pin.author.name %></td>
+          <td><%= pin.author.name %> <br>
+            <span style="color:gray">
+              <%=  pin.author.email %>
+            </span>
+          </td>
           <td><%= l pin.created_at, format: :short %></td>
           <td>
             <%= link_to t("custom.admin.projekt_phases.point_of_interest_phases.pins.delete"),

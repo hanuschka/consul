@@ -1,8 +1,21 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<%# <% unless embedded? %1> %>
 <div class="flex-layout">
   <div class="main-column">
+    <% show_new_button =
+      if @projekt_phase.settings.find_by(key: "feature.general.only_admins_and_managers_can_create_pins").present?
+        current_user&.administrator? || current_user&.projekt_manager?(@projekt_phase.projekt)
+      else
+        true
+      end
+    %>
+
+    <% if show_new_button %>
+      <div class="new-resource-cta">
+        <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+      </div>
+    <% end %>
+
     <%= render Shared::MapComponent.new(
       map_location: @projekt_phase.map_location,
       parent_class: "point-of-interest-map",
@@ -11,9 +24,11 @@
     ) %>
   </div>
   <div class="sidebar">
-    <div class="new-resource-cta" style="width:100%">
-      <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
-    </div>
+    <%= render Shared::SidebarCardComponent.new(
+      title: t("custom.deficiency_reports.form.category.title"),
+      icon_name: "th-large"
+    ) do |c| %>
+      <%= render Shared::ProjektPointOfInterestCategoriesComponent.new(projekt_phase_id: @projekt_phase.id) %>
+    <% end %>
   </div>
 </div>
-<%# <% end %1> %>

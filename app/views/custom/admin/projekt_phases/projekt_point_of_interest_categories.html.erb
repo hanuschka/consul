@@ -16,49 +16,51 @@
   </div>
 </div>
 
-<div class="column">
-  <div class="small-9">
-    <div class="margin-top">
-      <div id="new-projekt-point-of-interest-category">
-        <%= link_to t("custom.admin.projekt_phases.projekt_point_of_interest_categories.new"),
-          new_admin_projekt_phase_projekt_point_of_interest_category_path(@projekt_phase),
-          remote: true,
-          class: "button" %>
+<div class="row">
+  <div class="column">
+    <div class="small-9">
+      <div class="margin-top">
+        <div id="new-projekt-point-of-interest-category">
+          <%= link_to t("custom.admin.projekt_phases.projekt_point_of_interest_categories.new"),
+            new_admin_projekt_phase_projekt_point_of_interest_category_path(@projekt_phase),
+            remote: true,
+            class: "button" %>
+        </div>
       </div>
-    </div>
 
-    <table class="table-for-mobile">
-      <thead>
-        <tr>
-          <th style="min-width: 120px"><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.name") %></th>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.icon") %></th>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.color") %></th>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.actions") %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @projekt_phase.projekt_point_of_interest_categories.ordered.each do |category| %>
-          <tr id="<%= dom_id(category) %>">
-            <td><%= category.name %></td>
-            <td>
-              <div style="padding-left: 20px;font-size: 28px;color: <%= category.color %>">
-                <i class="fa icon-<%= category.icon %>"></i>
-              </div>
-            </td>
-            <td>
-              <span class="admin-color-preview-badge" style="background-color: <%= category.color %>">
-                <%= category.color %>
-              </span>
-            </td>
-            <td>
-              <%= render Admin::TableActionsComponent.new(
-                category,
-                edit_path: polymorphic_path([@namespace, @projekt_phase, category], action: :edit),
-                destroy_path: polymorphic_path([@namespace, @projekt_phase, category])
-              ) %>
+      <table class="table-for-mobile">
+        <thead>
+          <tr>
+            <th style="min-width: 120px"><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.name") %></th>
+            <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.icon") %></th>
+            <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.color") %></th>
+            <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.categories.actions") %></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @projekt_phase.projekt_point_of_interest_categories.ordered.each do |category| %>
+            <tr id="<%= dom_id(category) %>">
+              <td><%= category.name %></td>
+              <td>
+                <div style="padding-left: 20px;font-size: 28px;color: <%= category.color %>">
+                  <i class="fa icon-<%= category.icon %>"></i>
+                </div>
+              </td>
+              <td>
+                <span class="admin-color-preview-badge" style="background-color: <%= category.color %>">
+                  <%= category.color %>
+                </span>
+              </td>
+              <td>
+                <%= render Admin::TableActionsComponent.new(
+                  category,
+                  edit_path: polymorphic_path([@namespace, @projekt_phase, category], action: :edit),
+                  destroy_path: polymorphic_path([@namespace, @projekt_phase, category])
+                ) %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

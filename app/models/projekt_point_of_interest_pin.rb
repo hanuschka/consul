@@ -6,6 +6,11 @@ class ProjektPointOfInterestPin < ApplicationRecord
   belongs_to :projekt_point_of_interest_category, optional: false
 
   scope :ordered, -> { order(created_at: :desc) }
+  scope :by_categories, -> (category_ids) {
+    return if category_ids.blank?
+
+    where(projekt_point_of_interest_category_id: category_ids)
+  }
 
   validate :validate_max_point_of_interest_pins_per_user
 

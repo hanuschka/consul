@@ -4,6 +4,8 @@ class ProjektPointOfInterestPinsController < ApplicationController
   before_action :set_projekt_phase
   before_action :set_pin, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_action :check_create_pin_acess, only: [:create, :new]
+
   skip_authorization_check
 
   def new
@@ -36,6 +38,19 @@ class ProjektPointOfInterestPinsController < ApplicationController
         :projekt_point_of_interest_category_id,
         map_location_attributes: map_location_attributes
       )
+    end
+
+    def check_create_pin_acess
+      can_add_pin =
+        if @projekt_phase.settings.find_by(key: "feature.general.only_admins_and_managers_can_create_pins").present?
+          current_user&.administrator? || current_user&.projekt_manager?(@projekt_phase.projekt)
+        else
+          true
+        end
+
+      unless can_add_pin
+        raise CanCan::AccessDenied.new
+      end
     end
 
     # def authorize_pin_creation

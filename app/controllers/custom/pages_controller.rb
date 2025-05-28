@@ -354,6 +354,7 @@ class PagesController < ApplicationController
     @map_coordinates =
       @projekt_phase
         .projekt_point_of_interest_pins
+        .by_categories(params[:category_ids])
         .includes(:map_location)
         .map(&:pin_json_data)
   end

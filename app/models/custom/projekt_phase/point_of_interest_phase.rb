@@ -23,7 +23,7 @@ class ProjektPhase::PointOfInterestPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[naming map projekt_point_of_interest_categories projekt_point_of_interest_pins settings map_resources_overview]
+    %w[duration naming restrictions map projekt_point_of_interest_categories projekt_point_of_interest_pins settings map_resources_overview]
   end
 
   def settings_in_tabs

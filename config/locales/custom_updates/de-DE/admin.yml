@@ -831,8 +831,8 @@ de:
           all_livestreams: Dies ist die Liste aller Livestreams
           add_question: Frage hinzufügen
           questions: Kurzumfragen
-          edit_livestream: Kurzumfrage editieren
-          delete_livestream: Kurzumfrage löschen
+          edit_livestream: Livestream editieren
+          delete_livestream: Livestream löschen
           send_notifications_button: Benachrichtigungen senden
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           new:

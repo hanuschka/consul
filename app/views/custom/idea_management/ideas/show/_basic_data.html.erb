@@ -1,0 +1,76 @@
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <%= link_to t("custom.shared.download_pdf"), idea_management_idea_path(idea, format: :pdf),
+      class: "float-right small clear #{'js-update-screenshot' if idea.map_location.present?}",
+      data: { "map-container-id": idea.map_location.present? ? "#{dom_id(idea.map_location)}_idea" : "" } %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <h2><%= idea.title %></h2>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <strong><%= t("custom.admin.ideas.show.created_at") %>:</strong>
+    <%= l(idea.created_at, format: "%d %b %Y") %>
+    <br>
+
+    <strong><%= t("custom.admin.ideas.show.updated_at") %>:</strong>
+    <%= l(idea.updated_at, format: "%d %b %Y") %>
+    <br>
+
+    <strong><%= t("custom.admin.ideas.show.admin_accepted_at") %>:</strong>
+    <% if idea.admin_accepted_at.present? %>
+      <%= l(idea.admin_accepted_at, format: "%d %b %Y") %>
+    <% else %>
+      Nicht veröffentlicht
+    <% end %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns margin-bottom">
+    <%= auto_link_already_sanitized_html wysiwyg(idea.description) %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns">
+    <% if idea.approximated_address.present? %>
+      <div class='margin-bottom'>
+        <strong>Adresse:</strong>
+        <%= idea.approximated_address %>
+      </div>
+
+      <% if idea.map_location.present? %>
+        <%= render Shared::MapComponent.new(
+          mappable: idea,
+          map_location: idea.map_location,
+          parent_class: "idea"
+        ) %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row expanded full-width">
+  <div class="small-12 medium-8 columns">
+    <div class="margin-top margin-bottom">
+      <strong>Autor:</strong>
+      <%= idea.author.name %>
+      <% if idea.on_behalf_of.present? %>
+        <%= "(#{t("custom.admin.ideas.show.on_behalf_of")} #{idea.on_behalf_of})" %>
+      <% end %>
+
+      <div>
+        <%= link_to t("users.show.send_private_message"),
+          new_user_direct_message_path(@idea.author),
+          target: "_blank",
+          class: "button" %>
+      </div>
+    </div>
+  </div>
+</div>

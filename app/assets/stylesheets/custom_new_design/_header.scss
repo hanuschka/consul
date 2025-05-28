@@ -220,7 +220,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .top-bar[data-white-text="true"], .sticky-header .top-bar  {
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {
-        color: white;
+        color: black !important;
       }
 
       .locale .locale-form select {

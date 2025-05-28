@@ -108,11 +108,11 @@
           <% end %>
         <% end %>
 
-        <% if !valuation || can?(:comment_valuation, comment.commentable) %>
-          <% #Renders reply_form instead of form %>
+        <% if can?(:create, comment) %>
           <%= render "comments/reply_form", { commentable: comment.commentable,
                                        parent_id: comment.id,
                                        valuation: valuation } %>
+
         <% end %>
 
       </div>

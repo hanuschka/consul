@@ -130,7 +130,8 @@ class ProjektPhase < ApplicationRecord
   end
 
   def comments_allowed?(user, resource = nil)
-    permission_problem(user).blank?
+    feature?("resource.show_comments") &&
+      permission_problem(user).blank?
   end
 
   def not_active?

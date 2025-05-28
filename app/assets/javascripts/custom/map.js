@@ -336,8 +336,9 @@
         }
 
         function pointOfInterestPopupContent(data) {
-          var popupHtml = "<h5 style='color:" + data.category.color + "'>" + data.category.name
-          popupHtml += "<i class='icon->" + data.category.icon + "'/>"
+          var popupHtml = "<h5 style='color:" + data.category.color + "'>";
+          popupHtml += "<i style='margin-right: 7px' class='icon-" + data.category.icon + "'></i>"
+          popupHtml += data.category.name;
           popupHtml += "</h5>";
 
           return popupHtml;

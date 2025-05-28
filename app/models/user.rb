@@ -418,7 +418,7 @@ class User < ApplicationRecord
   end
 
   def interests
-    followables = follows.map(&:followable)
+    followables = follows.includes([followable: :tags]).map(&:followable)
     followables.compact.map { |followable| followable.tags.map(&:name) }.flatten.compact.uniq
   end
 

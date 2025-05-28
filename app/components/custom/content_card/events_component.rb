@@ -29,6 +29,7 @@ class ContentCard::EventsComponent < ApplicationComponent
     def events
       @events ||=
         @original_events
+          .includes(:projekt_phase, :image)
           .sort_by_incoming
           .first(@limit)
     end

@@ -2,7 +2,7 @@ class ProjektPointOfInterestPinsController < ApplicationController
   include MapLocationAttributes
 
   before_action :set_projekt_phase
-  before_action :set_pin, only: [:show, :edit, :update, :destroy]
+  before_action :set_pin, only: [:show, :edit, :update, :destroy, :json_data]
   before_action :authenticate_user!
   before_action :check_create_pin_acess, only: [:create, :new]
 
@@ -23,10 +23,16 @@ class ProjektPointOfInterestPinsController < ApplicationController
     end
   end
 
+  def json_data
+    render json: {
+      category: @pin.projekt_point_of_interest_category.as_json(only: [:name, :color, :icon])
+    }
+  end
+
   private
 
     def set_projekt_phase
-      @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
+      @projekt_phase = ProjektPhase.active.find(params[:projekt_phase_id])
     end
 
     def set_pin

@@ -237,6 +237,8 @@
           route = "/projekts/" + e.target.options.id + "/json_data"
         } else if ( process == "budgets") {
           route = "/investments/" + e.target.options.id + "/json_data"
+        } else if (process == "point-of-interest-pin") {
+          route = "/projekt_point_of_interest_pins/" + e.target.options.id + "/json_data?projekt_phase_id=" + e.target.options.projekt_phase_id;
         }
 
         if (!route) { return };
@@ -262,6 +264,9 @@
         } else if ( process == "projekts" ) {
           return projektPopupContent(data);
 
+        } else if ( process == "point-of-interest-pin" ) {
+
+          return pointOfInterestPopupContent(data);
         } else {
           return budgetsPopupContent(data);
         }
@@ -326,6 +331,14 @@
           if (data.image_url) {
             popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
           }
+
+          return popupHtml;
+        }
+
+        function pointOfInterestPopupContent(data) {
+          var popupHtml = "<h5 style='color:" + data.category.color + "'>" + data.category.name
+          popupHtml += "<i class='icon->" + data.category.icon + "'/>"
+          popupHtml += "</h5>";
 
           return popupHtml;
         }
@@ -534,6 +547,9 @@
               marker.options.id = coordinates.deficiency_report_id
             } else if (process == "projekts") {
               marker.options.id = coordinates.projekt_id
+            } else if (process == "point-of-interest-pin") {
+              marker.options.id = coordinates.point_of_interest_pin_id
+              marker.options.projekt_phase_id = coordinates.projekt_phase_id
             } else {
               marker.options.id = coordinates.investment_id
             }

@@ -16,6 +16,8 @@ class ProjektPointOfInterestPin < ApplicationRecord
 
   def pin_json_data
     {
+      point_of_interest_pin_id: id,
+      projekt_phase_id: projekt_phase.id,
       lat: map_location.latitude,
       long: map_location.longitude,
       zoom: map_location.zoom,

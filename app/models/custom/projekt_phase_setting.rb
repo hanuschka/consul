@@ -156,7 +156,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "option.general.iframe_height": "800"
         },
         "ProjektPhase::PointOfInterestPhase" => {
-          "feature.general.only_admins_and_managers_can_create_pins": "",
+          "feature.general.users_can_create_pins": "active",
           "option.general.max_number_of_pins_per_user": "",
         },
       }

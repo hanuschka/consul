@@ -20,7 +20,7 @@
 
   <div class="small-12 column">
     <div class="margin-bottom">
-      <%= link_to t("custom.admin.projekt_phases.point_of_interest_phases.pins.export_csv"),
+      <%= link_to t("custom.common.export_csv"),
         projekt_point_of_interest_pins_admin_projekt_phase_path(@projekt_phase, format: :csv),
         class: "button hollow" %>
     </div>
@@ -28,12 +28,11 @@
     <table class="table-for-mobile">
       <thead>
         <tr>
-          <%# <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.title") %1></th> %>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.category") %></th>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.address") %></th>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.user") %></th>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.created_at") %></th>
-          <th><%= t("custom.admin.projekt_phases.point_of_interest_phases.pins.actions") %></th>
+          <th><%= t("custom.common.category") %></th>
+          <th><%= t("custom.common.address") %></th>
+          <th><%= t("custom.common.user") %></th>
+          <th><%= t("custom.common.created_at") %></th>
+          <th><%= t("custom.common.actions") %></th>
         </tr>
       </thead>
       <tbody>
@@ -54,11 +53,11 @@
             </td>
             <td><%= l pin.created_at, format: :short %></td>
             <td>
-              <%= link_to t("custom.admin.projekt_phases.point_of_interest_phases.pins.delete"),
+              <%= link_to t("custom.common.delete"),
                 admin_projekt_point_of_interest_pin_path(pin, projekt_phase_id: @projekt_phase.id),
                 method: :delete,
                 class: "button hollow alert",
-                data: { confirm: t("custom.admin.projekt_phases.point_of_interest_phases.pins.delete_confirm") } %>
+                data: { confirm: t("custom.admin.projekt_phases.point_of_interest.pins.destroy.confirm") } %>
             </td>
           </tr>
         <% end %>

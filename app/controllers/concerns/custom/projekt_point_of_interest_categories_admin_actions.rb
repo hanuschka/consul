@@ -48,11 +48,11 @@ module ProjektPointOfInterestCategoriesAdminActions
   def destroy
     if @category.projekt_point_of_interest_pins.any?
       redirect_to admin_projekt_phase_projekt_point_of_interest_categories_path(@projekt_phase),
-        alert: t("custom.admin.projekt_phases.point_of_interest_phases.categories.destroy.error")
+        alert: t("custom.admin.point_of_interest.categories.destroy.notice")
     else
       @category.destroy
       redirect_to admin_projekt_phase_projekt_point_of_interest_categories_path(@projekt_phase),
-        notice: t("custom.admin.projekt_phases.point_of_interest_phases.categories.destroy.notice")
+        notice: t("custom.admin.point_of_interest.categories.destroy.error")
     end
   end
 

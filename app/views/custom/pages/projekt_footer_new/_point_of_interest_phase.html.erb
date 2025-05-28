@@ -2,12 +2,15 @@
 
 <div class="flex-layout">
   <div class="main-column">
-    <% show_new_button =
-      if @projekt_phase.settings.find_by(key: "feature.general.only_admins_and_managers_can_create_pins").present?
-        current_user&.administrator? || current_user&.projekt_manager?(@projekt_phase.projekt)
-      else
-        true
-      end
+    <%
+      users_can_create_pins_setting = @projekt_phase.settings.find_by(key: "feature.general.users_can_create_pins")
+
+      show_new_button =
+        if users_can_create_pins_setting.present?
+          users_can_create_pins_setting.enabled?
+        else
+          true
+        end
     %>
 
     <% if show_new_button %>

@@ -41,9 +41,11 @@ class ProjektPointOfInterestPinsController < ApplicationController
     end
 
     def check_create_pin_acess
+      users_can_create_pins_setting = @projekt_phase.settings.find_by(key: "feature.general.users_can_create_pins")
+
       can_add_pin =
-        if @projekt_phase.settings.find_by(key: "feature.general.only_admins_and_managers_can_create_pins").present?
-          current_user&.administrator? || current_user&.projekt_manager?(@projekt_phase.projekt)
+        if users_can_create_pins_setting.present?
+          users_can_create_pins_setting.enabled?
         else
           true
         end

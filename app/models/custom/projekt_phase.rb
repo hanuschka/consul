@@ -4,6 +4,7 @@ class ProjektPhase < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
   include Notifiable
+  include StatsVersionable
 
   after_create :add_default_settings
 
@@ -99,6 +100,11 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
+  scope :has_resources, -> {
+    ids_with_resources = joins(:resources).select(:id)
+    where(id: ids_with_resources)
+  }
+
   scope :sorted, ->  {order(:given_order) }
 
   def self.order_phases(ordered_array)
@@ -142,10 +148,8 @@ class ProjektPhase < ApplicationRecord
     end_date.present? && end_date < Time.zone.today
   end
 
-  def current?
-    phase_activated? &&
-      ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
-      ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
+  def current?(timestamp = Time.zone.today)
+    self.class.current(timestamp).where(id: id).exists?
   end
 
   def not_current?

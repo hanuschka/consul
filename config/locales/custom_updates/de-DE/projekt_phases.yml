@@ -1,6 +1,20 @@
 de:
   custom:
     projekt_phases:
+      subnav:
+        stats: Statistiken
+        overview:
+          proposal_phase: Vorschläge
+      stats:
+        proposal_phase:
+          total_proposals_title: "Vorschläge"
+          total_proposals: "Gesamtzahl der Vorschläge"
+          total_authors_title: "Autoren"
+          total_authors: "Autoren"
+          total_supports_title: "Unterstützungen"
+          total_supports: "Gesamtzahl der Unterstützungen"
+          total_supports_weight_title: "Unterstützungsgewicht"
+          total_supports_weight: "Gesamtunterstützungsgewicht"
       proposal_navigation:
         back_to_detail_view: Blättern-Modus aktivieren
         back_to_overview: Zur Übersicht

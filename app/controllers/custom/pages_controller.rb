@@ -178,7 +178,9 @@ class PagesController < ApplicationController
     @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
 
 
-    if params[:section] == "stats"# && can?(:read_stats, @projekt_phase)
+    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
+      @projekt_phase.stats_version.destroy if @projekt_phase.stats_version.present? && @projekt_phase.current?
+
       @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
     else
       if params[:search].present?

@@ -100,7 +100,7 @@ class Shared::NewButtonComponent < ApplicationComponent
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
         @projekt_phase&.cta_button_name.presence || t("debates.index.start_debate")
       elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
-        @projekt_phase&.cta_button_name.presence || t("custom.point_of_interest.index.add_pin")
+        @projekt_phase&.cta_button_name.presence || t("custom.projekt_point_of_interest_pins.index.add_pin")
       end
     end
 

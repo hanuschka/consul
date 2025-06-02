@@ -43,8 +43,10 @@ class ProjektPhase::PointOfInterestPhase < ProjektPhase
   private
 
     def phase_specific_permission_problems(user, location)
+      return :not_enabled unless feature?("general.users_can_create_pins")
       return :organization if user.organization?
-      return :max_pins_reached if max_pins_reached?(user)
+
+      :max_pins_reached if max_pins_reached?(user)
     end
 
     def max_pins_reached?(user)

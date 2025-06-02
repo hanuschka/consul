@@ -256,7 +256,7 @@ class ProjektPhase < ApplicationRecord
     option = settings.find { |s| s.key == "option.#{key}" }
 
     if option.present?
-      option.value.present?
+      option.value
     else
       nil
     end

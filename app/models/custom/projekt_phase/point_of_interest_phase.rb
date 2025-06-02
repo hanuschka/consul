@@ -37,7 +37,7 @@ class ProjektPhase::PointOfInterestPhase < ProjektPhase
   end
 
   def max_pins_per_user
-    option("general.max_pins_per_user").to_i
+    option("general.max_number_of_pins_per_user").to_i
   end
 
   private
@@ -51,6 +51,7 @@ class ProjektPhase::PointOfInterestPhase < ProjektPhase
 
     def max_pins_reached?(user)
       return false if max_pins_per_user.zero?
-      projekt_point_of_interest_pins.where(user: user).count >= max_pins_per_user
+
+      projekt_point_of_interest_pins.where(author: user).count >= max_pins_per_user
     end
 end

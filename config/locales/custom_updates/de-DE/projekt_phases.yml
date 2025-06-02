@@ -54,6 +54,9 @@ de:
             submissions_limit_reached: Sie haben die maximale Zahl der erlaubten Einreichungen pro Nutzer erreicht.
           proposal_phase:
             proposals_limit_exceeded: Sie haben die maximale Anzahl an erlaubten Vorschlägen pro Tag %{proposals_limit} erreicht
+          point_of_interest_phase:
+            not_enabled: Hinzufügen von Punkten von Interesse ist nicht aktiviert
+            max_pins_reached: Sie haben die maximale Anzahl an erlaubten Punkten von Interesse erreicht
         votes_component:
           shared:
             guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."

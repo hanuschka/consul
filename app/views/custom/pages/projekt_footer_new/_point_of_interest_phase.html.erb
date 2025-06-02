@@ -2,22 +2,9 @@
 
 <div class="flex-layout">
   <div class="main-column">
-    <%
-      users_can_create_pins_setting = @projekt_phase.settings.find_by(key: "feature.general.users_can_create_pins")
-
-      show_new_button =
-        if users_can_create_pins_setting.present?
-          users_can_create_pins_setting.enabled?
-        else
-          true
-        end
-    %>
-
-    <% if show_new_button %>
-      <div class="new-resource-cta">
-        <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
-      </div>
-    <% end %>
+    <div class="new-resource-cta">
+      <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+    </div>
 
     <%= render Shared::MapComponent.new(
       map_location: @projekt_phase.map_location,

@@ -1,0 +1,37 @@
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
+
+<div class="flex-layout">
+  <div class="main-column">
+    <%
+      users_can_create_pins_setting = @projekt_phase.settings.find_by(key: "feature.general.users_can_create_pins")
+
+      show_new_button =
+        if users_can_create_pins_setting.present?
+          users_can_create_pins_setting.enabled?
+        else
+          true
+        end
+    %>
+
+    <% if show_new_button %>
+      <div class="new-resource-cta">
+        <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+      </div>
+    <% end %>
+
+    <%= render Shared::MapComponent.new(
+      map_location: @projekt_phase.map_location,
+      parent_class: "point-of-interest-pin",
+      process_coordinates: @map_coordinates,
+      projekt_phase: @projekt_phase
+    ) %>
+  </div>
+  <div class="sidebar">
+    <%= render Shared::SidebarCardComponent.new(
+      title: t("custom.deficiency_reports.form.category.title"),
+      icon_name: "th-large"
+    ) do |c| %>
+      <%= render Shared::ProjektPointOfInterestCategoriesComponent.new(projekt_phase_id: @projekt_phase.id) %>
+    <% end %>
+  </div>
+</div>

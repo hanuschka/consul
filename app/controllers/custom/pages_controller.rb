@@ -357,6 +357,15 @@ class PagesController < ApplicationController
     @projekt_notifications = @projekt_phase.projekt_notifications
   end
 
+  def set_point_of_interest_phase_footer_tab_variables
+    @map_coordinates =
+      @projekt_phase
+        .projekt_point_of_interest_pins
+        .by_categories(params[:category_ids])
+        .includes(:map_location)
+        .map(&:pin_json_data)
+  end
+
   def set_newsfeed_phase_footer_tab_variables
     @rss_id = @projekt_phase.settings.find_by(key: "option.general.newsfeed_id").value
     @rss_type = @projekt_phase.settings.find_by(key: "option.general.newsfeed_type").value

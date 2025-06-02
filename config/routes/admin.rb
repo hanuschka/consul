@@ -34,6 +34,9 @@ namespace :admin do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      get :map_resources_overview
+      get :projekt_point_of_interest_pins
+      get :projekt_point_of_interest_categories
     end
 
     resources :formular, only: [] do
@@ -471,6 +474,9 @@ namespace :admin do
   end
 
   resource :homepage, controller: :homepage, only: [:show]
+  resources :projekt_phases, only: [] do
+    resources :projekt_point_of_interest_categories
+  end
 
   namespace :widget do
     resources :cards
@@ -491,6 +497,8 @@ namespace :admin do
     post :execute, on: :collection
     delete :cancel, on: :collection
   end
+
+  resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
 end
 
 resolve "Milestone" do |milestone|

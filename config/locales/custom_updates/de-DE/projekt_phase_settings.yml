@@ -207,3 +207,11 @@ de:
             iframe_width_description: "Bitte definieren Sie hier die Breite des Iframes. Empfohlener Wert: 1260"
             iframe_height: Höhe des Iframes
             iframe_height_description: "Bitte definieren Sie hier die Höhe des Iframes. Empfohlener Wert: 1000"
+      projekt_point_of_interest_pins:
+        feature:
+          general:
+            users_can_create_pins: Pins setzen
+            users_can_create_pins_description: Nutzer können Pins erstellen 
+        option:
+          general:
+            max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer

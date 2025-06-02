@@ -5,5 +5,3 @@ de:
         add_pin: "Pin hinzufügen"
       new:
         title: "Neuen Pin erstellen"
-      form:
-        intro: "Hier kannst du einen neuen Pin erstellen."

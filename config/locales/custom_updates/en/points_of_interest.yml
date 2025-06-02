@@ -5,5 +5,3 @@ en:
         add_pin: "Add Pin"
       new:
         title: "New Pin"
-      form:
-        intro: "Add a new pin to the map."

@@ -51,7 +51,8 @@ class Shared::NewButtonComponent < ApplicationComponent
               age_restriction: @projekt_phase&.age_restriction_formatted,
               restricted_streets: @projekt_phase&.street_restrictions_formatted,
               individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted,
-              proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"]
+              proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"],
+              max_pin_number: @projekt_phase&.max_pins_per_user
         )
       )
     end

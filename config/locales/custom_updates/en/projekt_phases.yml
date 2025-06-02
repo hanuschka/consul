@@ -55,7 +55,7 @@ en:
             proposals_limit_exceeded: You have reached the maximum number of allowed proposals per day %{proposals_limit}
           point_of_interest_phase:
             not_enabled: Adding points of interest is not enabled
-            max_pins_reached: You have reached the maximum number of allowed points of interest
+            max_pins_reached: Maximum number of pins per user is limited to %{max_pin_number}. You have already reached this number.
         votes_component:
           shared:
             guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."

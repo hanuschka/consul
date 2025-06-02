@@ -12,6 +12,7 @@ module CustomSearch
     apply_address_search
     apply_date_filters
     apply_regular_filters
+    apply_archived_filter
 
     @filtered_resources
   end
@@ -50,6 +51,12 @@ module CustomSearch
     nil
   end
 
+  def apply_archived_filter
+    return unless @filtered_resources.klass == DeficiencyReport
+
+    @filtered_resources = @filtered_params[:archived] == "true" ? @filtered_resources.archived : @filtered_resources.not_archived
+  end
+
   def apply_regular_filters
     mapped_regular_filters_for(@filtered_resources.class_name).each do |mapped_filter|
       apply_regular_filter(mapped_filter)
@@ -68,7 +75,7 @@ module CustomSearch
       [
         [:deficiency_report_status_id, :status],
         [:deficiency_report_category_id, :category],
-        [:admin_accepted]
+        [:admin_accepted, :admin_accepted]
       ]
     when "Idea"
       []

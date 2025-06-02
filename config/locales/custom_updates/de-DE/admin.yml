@@ -68,6 +68,7 @@ de:
           no_deficiency_reports: Keine Mängelmeldungen
           id: ID
           admin_accepted: Sichtbarkeit
+          archived: Archiviert
           created_at: Veröffentlichung
           title: Titel
           author: Autor

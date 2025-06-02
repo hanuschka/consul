@@ -1,6 +1,6 @@
 <%= form.label :map_location, label %>
 
-<% mappable = @proposal || @deficiency_report || @investment || nil %>
+<% mappable = @proposal || @deficiency_report || @investment || local_assigns[:mappable] || nil %>
 <% projekt_phase ||= nil %>
 
 <% help_text_class = mappable.errors[:map_location].present? ? "form-error is-visible" : "help-text" %>

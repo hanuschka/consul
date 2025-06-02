@@ -148,7 +148,13 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::FormularPhase" => {
           "option.general.primary_formular_cutoff_date": "",
           "option.general.submissions_limit": "1"
-        }
+        },
+
+        "ProjektPhase::IframePhase" => {
+          "option.general.iframe_url": "",
+          "option.general.iframe_width": "1240",
+          "option.general.iframe_height": "800"
+        },
       }
     end
 

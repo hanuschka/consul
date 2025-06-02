@@ -34,7 +34,7 @@ class PollsController < ApplicationController
     related_projekt_ids = @resources.joins(projekt_phase: :projekt).pluck("projekts.id").uniq
     related_projekts = Projekt.where(id: related_projekt_ids)
 
-    @scoped_projekt_ids = Poll.scoped_projekt_ids_for_index(current_user)
+    @scoped_projekt_ids = Projekt.visible_for(current_user).joins(voting_phases: :polls).select(:id)
 
     @top_level_active_projekts = Projekt.top_level.current.where(id: @scoped_projekt_ids)
     @top_level_archived_projekts = Projekt.top_level.expired.where(id: @scoped_projekt_ids)

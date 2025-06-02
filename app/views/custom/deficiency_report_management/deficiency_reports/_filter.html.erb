@@ -60,6 +60,13 @@
           options_for_select([["Ja", true], ["Nein", false]], params[:admin_accepted]),
           prompt: t("custom.shared.select") %>
       </div>
+
+      <div>
+        <%= label_tag :archived, t("custom.admin.deficiency_reports.index.archived") %>
+        <%= select_tag :archived,
+          options_for_select([["Ja", true], ["Nein", false]], params[:archived].presence || false),
+          prompt: t("custom.shared.select") %>
+      </div>
     </div>
   </div>
 

@@ -59,22 +59,14 @@ class Proposal < ApplicationRecord
     orders
   end
 
-  # TODO: REFACTOR FOR NEW DESIGN
   def self.scoped_projekt_ids_for_index(current_user)
     Projekt
-      .activated
+      .visible_for(current_user)
       .show_in_sidebar_filter
-      .includes(top_level_projekt: [:projekt_settings, :hard_individual_group_values])
-      .includes(parent: [:projekt_settings, :hard_individual_group_values])
-      .includes(:hard_individual_group_values, :base_selection_proposals, :proposal_phases, :projekt_settings)
-      .includes_children_projekts_with(:proposal_phases)
-      .select do |projekt|
-        (
-          ([projekt] + projekt.all_parent_projekts).none? { |p| p.hidden_for?(current_user) } &&
-          ([projekt] + projekt.all_children_projekts).any?(&:can_filter_proposals?)
-        )
-      end
-      .pluck(:id)
+      .joins(:proposal_phases)
+      .merge(
+        ProjektPhase::ProposalPhase.current.or(ProjektPhase::ProposalPhase.has_resources)
+      ).select(:id)
   end
 
   # TODO: REFACTOR FOR NEW DESIGN
@@ -95,7 +87,7 @@ class Proposal < ApplicationRecord
 	end
 
   def self.unsuccessful
-    ids = Proposal.select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
+    ids = Proposal.includes([:projekt_phase]).select { |p| p.cached_votes_up < p.custom_votes_needed_for_success }.pluck(:id)
     Proposal.where(id: ids)
 	end
 

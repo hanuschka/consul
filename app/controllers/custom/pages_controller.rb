@@ -177,31 +177,38 @@ class PagesController < ApplicationController
 
     @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
 
-    if params[:search].present?
-      @resources = @resources.search(params[:search])
+
+    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
+      @projekt_phase.stats_version.destroy if @projekt_phase.stats_version.present? && @projekt_phase.current?
+
+      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
     else
-      take_by_projekt_labels
-      take_by_sentiment
-      take_by_my_posts
-    end
-
-    @proposals_coordinates = all_proposal_map_locations(@resources)
-
-    @proposals =
-      @resources
-        .perform_sort_by(@current_order, session[:random_seed])
-        .page(params[:page])
-
-    if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
-      @proposals = @proposals.per(1)
-      @proposal = @proposals.first
-
-      if @proposal.present?
-        @comment_tree = CommentTree.new(@proposal, params[:page], "newest")
-        set_comment_flags(@comment_tree.comments)
+      if params[:search].present?
+        @resources = @resources.search(params[:search])
+      else
+        take_by_projekt_labels
+        take_by_sentiment
+        take_by_my_posts
       end
-    else
-      @proposals = @proposals.per(24)
+
+      @proposals_coordinates = all_proposal_map_locations(@resources)
+
+      @proposals =
+        @resources
+          .perform_sort_by(@current_order, session[:random_seed])
+          .page(params[:page])
+
+      if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
+        @proposals = @proposals.page(params[:resource_browse_mode_page]).per(1)
+        @proposal = @proposals.first
+
+        if @proposal.present?
+          @comment_tree = CommentTree.new(@proposal, params[:page], "newest")
+          set_comment_flags(@comment_tree.comments)
+        end
+      else
+        @proposals = @proposals.per(24)
+      end
     end
   end
 
@@ -326,7 +333,7 @@ class PagesController < ApplicationController
     end
 
     if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
-      @investments = @investments.per(1)
+      @investments = @investments.page(params[:resource_browse_mode_page]).per(1)
       @investment = @investments.first
 
       if @investment.present?
@@ -363,7 +370,6 @@ class PagesController < ApplicationController
     @projekt_events = @projekt_phase.projekt_events
                                     .send("sort_by_#{@current_filter}")
                                     .reorder(datetime: order)
-                                    .page(params[:page])
   end
 
   def set_question_phase_footer_tab_variables
@@ -391,6 +397,12 @@ class PagesController < ApplicationController
   def set_argument_phase_footer_tab_variables
     @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro.order(created_at: :desc)
     @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons.order(created_at: :desc)
+  end
+
+  def set_iframe_phase_footer_tab_variables
+    @iframe_url = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_url" }.value
+    @iframe_width = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_width" }.value
+    @iframe_height = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_height" }.value
   end
 
   def set_livestream_phase_footer_tab_variables

@@ -1,6 +1,26 @@
 en:
   custom:
     projekt_phases:
+      subnav:
+        stats: Statistics
+        overview:
+          proposal_phase: Proposals
+      stats:
+        proposal_phase:
+          total_proposals_title: Proposals
+          total_proposals: "Total proposals"
+          total_authors_title: "Authors"
+          total_authors: "Autoren"
+          total_supports_title: "Unterstützungen"
+          total_supports: "Gesamtzahl der Unterstützungen"
+          total_supports_weight_title: "Unterstützungsgewicht"
+          total_supports_weight: "Gesamtunterstützungsgewicht"
+      proposal_navigation:
+        back_to_detail_view: Blättern-Modus aktivieren
+        back_to_overview: Zur Übersicht
+        next: "Weiter"
+        back: "Zurück"
+        first: "Erster Vorschlag"
       cta:
         title: Participation
         voting_phase: Take part in the poll
@@ -124,6 +144,22 @@ en:
           no_registered_address: A registered address could not be assigned to your account. Please update your account.
           only_specific_registered_address_groupings: Participation is limited to another area.
         projekt_questions:
+          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
+          not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
+          not_verified: "To continue, please %{verify}."
+          organization: Organizations are not allowed to create content.
+          only_citizens: Participation is limited to citizens of the city.
+          only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
+          only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
+          only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
+          only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
+          phase_not_active: This project phase is not active
+          phase_expired: This project phase has already expired
+          phase_not_current: This project phase has not yet started
+          only_admins: Participation is limited to admin users.
+          no_registered_address: A registered address could not be assigned to your account. Please update your account.
+          only_specific_registered_address_groupings: Participation is limited to another area.
+        iframe:
           guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."

@@ -1377,7 +1377,7 @@ span.projekt-backlink:before {
   padding: 10px 20px;
   background: white;
   margin-top: 15px;
-  width: 800px;
+  max-width: 800px;
   padding-bottom: 22px;
 }
 
@@ -1788,5 +1788,13 @@ span.projekt-backlink:before {
 
   &.-image-set {
     height: 100%;
+  }
+}
+
+.projekt-phase-iframe {
+  max-width: 100%;
+
+  @media(max-width: $mobile-viewport-start) {
+    width: 100% !important;
   }
 }

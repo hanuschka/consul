@@ -207,9 +207,15 @@ module ProjektPhaseAdminActions
     end
   end
 
+  def proposals
+    authorize!(:proposals, @projekt_phase)
+    @proposals = @projekt_phase.proposals.order(id: :desc).page(params[:page])
+
+    render "custom/admin/projekt_phases/proposals"
+  end
+
   def projekt_labels
     authorize!(:projekt_labels, @projekt_phase)
-
     @projekt_labels = @projekt_phase.projekt_labels
 
     render "custom/admin/projekt_phases/projekt_labels"

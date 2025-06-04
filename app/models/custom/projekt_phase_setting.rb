@@ -70,6 +70,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "feature.general.require_admin_acceptance": "",
 
           "feature.resource.users_can_create_proposals": "active",
           "feature.resource.allow_voting": "active",

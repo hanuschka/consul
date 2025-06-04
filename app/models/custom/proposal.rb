@@ -23,10 +23,12 @@ class Proposal < ApplicationRecord
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
+  scope :admin_accepted, -> { where(admin_accepted: true) }
   scope :base_selection, -> {
     published
       .not_archived
       .not_retired
+      .admin_accepted
   }
 
   scope :with_current_projekt, -> { joins(projekt_phase: :projekt).merge(Projekt.current) }

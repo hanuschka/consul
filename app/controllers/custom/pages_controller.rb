@@ -175,8 +175,9 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
-
+    @resources = @projekt_phase.proposals
+                               .base_selection
+                               .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
     if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
       @projekt_phase.stats_version.destroy if @projekt_phase.stats_version.present? && @projekt_phase.current?

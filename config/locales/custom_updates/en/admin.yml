@@ -418,6 +418,7 @@ en:
           restrictions: Restrictions
           settings: Settings
           map: Map
+          proposals: Proposals
           projekt_labels: Labels
           sentiments: Sentiments
           age_ranges_for_stats: Age ranges for stats

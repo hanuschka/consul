@@ -1,0 +1,62 @@
+<%= form_for([:admin, @projekt_phase, @category], remote: true) do |f| %>
+  <% if @category.errors.any? %>
+    <div class="error-messages">
+      <h2><%= pluralize(@category.errors.count, "error") %> prohibited this category from being saved:</h2>
+      <ul>
+        <% @category.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="small-12 medium-6">
+    <div class="form-group">
+      <%= f.label :name %>
+      <%= f.text_field :name, label: false %>
+    </div>
+  </div>
+
+  <div class="small-12 medium-6">
+    <div class="form-group">
+      <%= f.label :color %>
+      <%= f.color_field :color, label: false %>
+    </div>
+  </div>
+
+  <div class="small-12">
+    <%= f.label :icon, t("custom.admin.deficiency_reports.categories.category.icon")  %>
+    <div class='admin-deficiency-report-category-icons-selector'>
+      <%= f.collection_radio_buttons :icon, Iconable::AVAILABLE_ICONS, :first, :first do |rb| %>
+        <%= rb.label { rb.radio_button + "<i class=\"fas fa-#{rb.object.first}\"></i>".html_safe } %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# <div class="small-12 medium-6"> %>
+  <%#   <div class="form-group"> %>
+  <%#     <%= f.select( %>
+  <%#       :icon, %>
+  <%#       options_for_select([ %>
+  <%#         ["Map Marker", "map-marker"], %>
+  <%#         ["Info Circle", "info-circle"], %>
+  <%#         ["Exclamation Circle", "exclamation-circle"], %>
+  <%#         ["Question Circle", "question-circle"], %>
+  <%#         ["Star", "star"], %>
+  <%#         ["Heart", "heart"], %>
+  <%#         ["Flag", "flag"], %>
+  <%#         ["Building", "building"], %>
+  <%#         ["Tree", "tree"], %>
+  <%#         ["Car", "car"] %>
+  <%#       ], @category.icon), %>
+  <%#       { include_blank: true }, %>
+  <%#       { label: false } %>
+  <%#     ) %1> %>
+  <%#   </div> %>
+  <%# </div> %>
+
+  <div class="small-12">
+    <%= f.submit class: "button" %>
+  </div>
+<% end %>

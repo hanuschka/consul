@@ -51,7 +51,8 @@ class Shared::NewButtonComponent < ApplicationComponent
               age_restriction: @projekt_phase&.age_restriction_formatted,
               restricted_streets: @projekt_phase&.street_restrictions_formatted,
               individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted,
-              proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"]
+              proposals_limit: Setting["extended_option.proposals.max_active_proposals_per_user"],
+              max_pin_number: @projekt_phase&.max_pins_per_user
         )
       )
     end
@@ -99,6 +100,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         @projekt_phase&.cta_button_name.presence || t("proposals.index.start_proposal")
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
         @projekt_phase&.cta_button_name.presence || t("debates.index.start_debate")
+      elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
+        @projekt_phase&.cta_button_name.presence || t("custom.projekt_point_of_interest_pins.index.add_pin")
       end
     end
 
@@ -109,6 +112,8 @@ class Shared::NewButtonComponent < ApplicationComponent
         new_proposal_path(link_params_hash)
       elsif @projekt_phase.is_a?(ProjektPhase::DebatePhase) || @resources_name == "debates"
         new_debate_path(link_params_hash)
+      elsif @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase)
+        new_projekt_point_of_interest_pin_path(link_params_hash)
       end
     end
 

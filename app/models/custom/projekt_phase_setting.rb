@@ -70,6 +70,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "feature.general.require_admin_acceptance": "",
 
           "feature.resource.users_can_create_proposals": "active",
           "feature.resource.allow_voting": "active",
@@ -154,6 +155,10 @@ class ProjektPhaseSetting < ApplicationRecord
           "option.general.iframe_url": "",
           "option.general.iframe_width": "1240",
           "option.general.iframe_height": "800"
+        },
+        "ProjektPhase::PointOfInterestPhase" => {
+          "feature.general.users_can_create_pins": "active",
+          "option.general.max_number_of_pins_per_user": "",
         },
       }
     end

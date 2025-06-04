@@ -116,6 +116,7 @@ class ProposalsController
   def create
     @proposal = Proposal.new(proposal_params.merge(author: current_user))
     @projekt_phase = @proposal.projekt_phase
+    @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")

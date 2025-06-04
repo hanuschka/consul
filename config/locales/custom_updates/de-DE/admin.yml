@@ -747,10 +747,8 @@ de:
             resource: Individueller Beitrag
             form_author: Formular Autor
             user_functions: Funktionen Nutzer
-
         form_author:
           page_title: Welche Funktionen wollen Sie den Nutzern zur Verfügung stellen?
-
         user_functions:
           page_title: Welche Funktionen wollen Sie den Nutzern zur Verfügung stellen?
         proposals:
@@ -891,6 +889,12 @@ de:
           new: Neue Kategorie
         map_resources_overview:
           title: Kartenübersicht
+        point_of_interest_phases:
+          categories:
+            name: Name
+            icon: Icon
+            color: Farbe
+            actions: Aktionen
       modal_notifications:
         index:
           create: Erstellen

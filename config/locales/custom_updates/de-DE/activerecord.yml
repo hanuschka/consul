@@ -70,6 +70,9 @@ de:
       recipient_group:
         one: Adressatengruppe
         other: Adressatengruppen
+      projekt_point_of_interest_category:
+        one: Kategorie
+        other: Kategorien
     errors:
       messages:
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
@@ -303,3 +306,7 @@ de:
         name: Gebiet
         default_idea_officer: Standardmäßig Sachbearbeiter*in
         default_deficiency_report_responsible: Standardmäßig Sachbearbeiter*in
+      projekt_point_of_interest_category:
+        name: Name
+        icon: Icon
+        color: Farbe

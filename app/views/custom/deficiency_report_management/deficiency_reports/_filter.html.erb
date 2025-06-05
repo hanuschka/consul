@@ -67,6 +67,11 @@
           options_for_select([["Ja", true], ["Nein", false]], params[:archived].presence || false),
           prompt: t("custom.shared.select") %>
       </div>
+
+      <div>
+        <%= check_box_tag :only_hidden, "1", params[:only_hidden] == "1" %>
+        <%= label_tag :only_hidden, t("custom.admin.deficiency_reports.index.only_hidden") %>
+      </div>
     </div>
   </div>
 

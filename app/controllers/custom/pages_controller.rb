@@ -175,8 +175,9 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
-
+    @resources = @projekt_phase.proposals
+                               .base_selection
+                               .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
     if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
       @projekt_phase.stats_version.destroy if @projekt_phase.stats_version.present? && @projekt_phase.current?
@@ -355,6 +356,15 @@ class PagesController < ApplicationController
 
   def set_projekt_notification_phase_footer_tab_variables
     @projekt_notifications = @projekt_phase.projekt_notifications
+  end
+
+  def set_point_of_interest_phase_footer_tab_variables
+    @map_coordinates =
+      @projekt_phase
+        .projekt_point_of_interest_pins
+        .by_categories(params[:category_ids])
+        .includes(:map_location)
+        .map(&:pin_json_data)
   end
 
   def set_newsfeed_phase_footer_tab_variables

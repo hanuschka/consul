@@ -15,7 +15,6 @@
       App.Map.maps = [];
     },
     initializeMap: function(element) {
-
       // variables to set map view
       var mapCenterLatitude = $(element).data("map-center-latitude");
       var mapCenterLongitude = $(element).data("map-center-longitude");
@@ -53,6 +52,18 @@
       var marker = null;
       var markersGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
+      var markerCategoryIcon = null;
+      var markerCategoryColor = null;
+      var $categorySelect = $(".js-map-update-pin-style");
+
+      $categorySelect.on(
+        "change",
+        function(e) { updateMarkerStyleFromCategorySelect(e.target) }
+      )
+
+      if ($categorySelect.length) {
+        updateMarkerStyleFromCategorySelect($categorySelect.get(0))
+      }
 
       /* Create leaflet map start */
       var map = L.map(element.id, {
@@ -99,6 +110,21 @@
       })
       deflateFeatures.addTo(map);
 
+      function updateMarkerWithCategoryStyle() {
+        if (marker && markerCategoryIcon && markerCategoryColor) {
+          marker.setIcon(getMarkerIcon(null, null))
+        }
+      }
+
+      function updateMarkerStyleFromCategorySelect(element) {
+        var selectedOption = element.options[element.selectedIndex]
+
+        markerCategoryIcon = selectedOption.dataset.icon;
+        markerCategoryColor = selectedOption.dataset.color;
+
+        updateMarkerWithCategoryStyle()
+      }
+
       function getProcessId(shape) {
         var id;
 
@@ -132,11 +158,17 @@
       function getMarkerIconHTML(color, iconClass) {
         var markerIconHTML;
 
-        if ( !iconClass ) {
+        if (markerCategoryIcon) {
+          iconClass = markerCategoryIcon;
+        } else if (!iconClass ) {
           iconClass = 'circle';
         } else {
           iconClass = iconClass
         };
+
+        if (markerCategoryColor) {
+          color = markerCategoryColor;
+        }
 
         if ( adminEditor ) {
           color = adminShapesColor;
@@ -173,6 +205,8 @@
       var moveOrPlaceMarker = function(e) {
         if (marker) {
           marker.setLatLng(e.latlng);
+
+          updateMarkerWithCategoryStyle()
         } else {
           marker = createMarker(e.latlng.lat, e.latlng.lng);
         }
@@ -203,6 +237,8 @@
           route = "/projekts/" + e.target.options.id + "/json_data"
         } else if ( process == "budgets") {
           route = "/investments/" + e.target.options.id + "/json_data"
+        } else if (process == "point-of-interest-pin") {
+          route = "/projekt_point_of_interest_pins/" + e.target.options.id + "/json_data?projekt_phase_id=" + e.target.options.projekt_phase_id;
         }
 
         if (!route) { return };
@@ -228,6 +264,9 @@
         } else if ( process == "projekts" ) {
           return projektPopupContent(data);
 
+        } else if ( process == "point-of-interest-pin" ) {
+
+          return pointOfInterestPopupContent(data);
         } else {
           return budgetsPopupContent(data);
         }
@@ -292,6 +331,15 @@
           if (data.image_url) {
             popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
           }
+
+          return popupHtml;
+        }
+
+        function pointOfInterestPopupContent(data) {
+          var popupHtml = "<h5 style='color:" + data.category.color + "'>";
+          popupHtml += "<i style='margin-right: 7px' class='icon-" + data.category.icon + "'></i>"
+          popupHtml += data.category.name;
+          popupHtml += "</h5>";
 
           return popupHtml;
         }
@@ -500,6 +548,9 @@
               marker.options.id = coordinates.deficiency_report_id
             } else if (process == "projekts") {
               marker.options.id = coordinates.projekt_id
+            } else if (process == "point-of-interest-pin") {
+              marker.options.id = coordinates.point_of_interest_pin_id
+              marker.options.projekt_phase_id = coordinates.projekt_phase_id
             } else {
               marker.options.id = coordinates.investment_id
             }

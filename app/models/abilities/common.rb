@@ -197,6 +197,9 @@ module Abilities
 
       can [:index, :show, :vote, :unvote, :json_data, :suggest], Idea, id: Idea.accepted.or(Idea.by_author(user)).ids
       can [:create], Idea
+      can [:create], ProjektPointOfInterestPin do |pin|
+        pin.projekt_phase.permission_problem(user).blank?
+      end
     end
   end
 end

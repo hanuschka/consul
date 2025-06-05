@@ -9,6 +9,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def index
     filter_assigned_reports_only
+    @deficiency_reports = @deficiency_reports.only_hidden if params[:only_hidden] == "1"
     @deficiency_reports = apply_filters(@deficiency_reports)
 
     if params[:responsible].present?

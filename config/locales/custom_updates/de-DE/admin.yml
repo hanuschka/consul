@@ -76,6 +76,7 @@ de:
           approximater_location: Standort
           category_name: Kategorie
           responsible_name: Sachbearbeiter*in
+          only_hidden: Nur gelöschte Meldungen anzeigen
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email

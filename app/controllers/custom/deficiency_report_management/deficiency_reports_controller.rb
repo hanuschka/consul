@@ -5,10 +5,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   include DocumentAttributes
   include CustomSearch
 
-  load_and_authorize_resource
+  load_and_authorize_resource except: %i[show]
 
   def index
     filter_assigned_reports_only
+    @deficiency_reports = @deficiency_reports.only_hidden if params[:only_hidden] == "1"
     @deficiency_reports = apply_filters(@deficiency_reports)
 
     if params[:responsible].present?
@@ -32,7 +33,9 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
   end
 
   def show
-    @deficiency_report = DeficiencyReport.find(params[:id])
+    @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
+    authorize! :read, @deficiency_report
+
     @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
 
     set_current_responsible

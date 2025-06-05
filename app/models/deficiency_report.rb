@@ -24,6 +24,11 @@ class DeficiencyReport < ApplicationRecord
   translation_class.class_eval do
     audited associated_with: :globalized_model,
             only: DeficiencyReport.translated_attribute_names
+
+    def destroy
+      run_callbacks :destroy
+      true
+    end
   end
 
   attr_accessor :officer_id, :officer_group_id

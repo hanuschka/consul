@@ -4,7 +4,7 @@ class Setting < ApplicationRecord
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type
-    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage].include? prefix
+    if %w[feature process proposals map html homepage uploads projekts sdg welcomepage ideas].include? prefix
       prefix
     elsif %w[remote_census].include? prefix
       key.rpartition(".").first
@@ -85,6 +85,7 @@ class Setting < ApplicationRecord
         "process.legislation": true,
         "process.projekts": true,
         "process.deficiency_reports": false,
+        "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,
         "proposals.poll_description": nil,
@@ -190,6 +191,17 @@ class Setting < ApplicationRecord
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
 
+        "ideas.show_in_main_menu": false,
+        "ideas.admins_must_assign_officer": false,
+        "ideas.officers_can_administer_assigned_reports": true,
+        "ideas.officers_can_edit_assigned_reports": false,
+        "ideas.enable_comments": true,
+        "ideas.intro_text": false,
+        "ideas.enable_geoman_controls_in_maps": true,
+        "ideas.admin_acceptance_required": false,
+        "ideas.document_upload": true,
+        "ideas.external_video": true,
+
         # "extended_feature.general.elasticsearch": false,
 
         "extended_feature.general.extended_editor_for_admins": true,
@@ -237,7 +249,6 @@ class Setting < ApplicationRecord
         "extended_feature.proposals.enable_projekt_filter": true,
         "extended_feature.proposals.enable_my_posts_filter": true,
         "extended_option.proposals.max_active_proposals_per_user": 100,
-        "extended_option.proposals.description_max_length": 6000,
         "selectable_setting.proposals.default_order": "created_at",
 
         "extended_feature.polls.intro_text_for_polls": true,

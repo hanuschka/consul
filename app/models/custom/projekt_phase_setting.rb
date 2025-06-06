@@ -57,6 +57,11 @@ class ProjektPhaseSetting < ApplicationRecord
         },
 
         "ProjektPhase::ProposalPhase" => {
+          "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "feature.general.require_admin_acceptance": "",
+          "selectable_setting.general.default_order": "random",
+
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
           "feature.form.sentiments": "",
@@ -64,13 +69,11 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_geoman_controls_in_maps": "active",
           "feature.form.allow_attached_documents": "",
           "feature.form.enable_external_video": "",
+          "option.form.description_max_length": "6000",
+
           "feature.resource.show_video_as_link": "",
           "feature.resource.enable_proposal_notifications_tab": "",
           "feature.resource.enable_proposal_milestones_tab": "",
-
-          "feature.general.browse_mode_in_phase_footer": "",
-          "feature.general.browse_mode_in_phase_footer_by_default": "",
-
           "feature.resource.users_can_create_proposals": "active",
           "feature.resource.allow_voting": "active",
           "feature.resource.quorum_for_proposals": "",
@@ -80,9 +83,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_community_button_in_proposal_sidebar": "",
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
-          "option.resource.votes_for_proposal_success": 100,
-
-          "selectable_setting.general.default_order": "random",
+          "option.resource.votes_for_proposal_success": 100
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -98,6 +99,10 @@ class ProjektPhaseSetting < ApplicationRecord
         },
 
         "ProjektPhase::BudgetPhase" => {
+          "feature.general.browse_mode_in_phase_footer": "",
+          "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "selectable_setting.general.default_order": "random",
+
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
           "feature.form.sentiments": "",
@@ -107,9 +112,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_external_video": "",
           "feature.form.show_implementation_option_fields": "",
           "feature.form.show_user_cost_estimate": "",
-
-          "feature.general.browse_mode_in_phase_footer": "",
-          "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "option.form.description_max_length": "6000",
 
           "feature.resource.users_can_create_investment_proposals": "active",
           "feature.resource.show_report_button_in_sidebar": "active",
@@ -118,9 +121,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",
-          "feature.resource.show_video_as_link": "",
-
-          "selectable_setting.general.default_order": "random",
+          "feature.resource.show_video_as_link": ""
         },
 
         "ProjektPhase::QuestionPhase" => {
@@ -152,8 +153,12 @@ class ProjektPhaseSetting < ApplicationRecord
 
         "ProjektPhase::IframePhase" => {
           "option.general.iframe_url": "",
-          "option.general.iframe_width": "",
-          "option.general.iframe_height": ""
+          "option.general.iframe_width": "1240",
+          "option.general.iframe_height": "800"
+        },
+        "ProjektPhase::PointOfInterestPhase" => {
+          "feature.general.users_can_create_pins": "active",
+          "option.general.max_number_of_pins_per_user": "",
         },
       }
     end

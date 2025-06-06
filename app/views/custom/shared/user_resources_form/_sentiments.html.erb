@@ -10,10 +10,8 @@
   </div>
 </div>
 
-<% if model.errors.details[:sentiment_id].any? %>
-  <% model.errors.details[:sentiment_id].each do |error| %>
-    <small class="form-error is-visible">
-      <%= t("activerecord.errors.models.#{model.model_name.param_key}.attributes.sentiment.#{error[:error]}") %>
-    </small>
-  <% end %>
+<% model.errors.where(:sentiment_id).each do |error| %>
+  <small class='form-error is-visible'>
+    <%= error.message %>
+  </small>
 <% end %>

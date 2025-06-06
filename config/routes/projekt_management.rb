@@ -14,6 +14,7 @@ namespace :projekt_management do
       get :age_ranges_for_stats
       get :map
       patch :update_map
+      get :proposals
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -52,6 +53,10 @@ namespace :projekt_management do
       end
     end
 
+    resources :proposals, only: %i[edit update] do
+      patch :toggle_admin_accepted, on: :member
+      patch :toggle_image_concealed, on: :member
+    end
     resources :projekt_labels, except: %i[index show]
     resources :sentiments, except: %i[index show]
     resources :projekt_questions, except: %i[index show] do

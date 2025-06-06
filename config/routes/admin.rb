@@ -13,6 +13,7 @@ namespace :admin do
       get :form_author
       get :map
       patch :update_map
+      get :proposals
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -34,6 +35,9 @@ namespace :admin do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      get :map_resources_overview
+      get :projekt_point_of_interest_pins
+      get :projekt_point_of_interest_categories
     end
 
     resources :formular, only: [] do
@@ -51,6 +55,10 @@ namespace :admin do
       end
     end
 
+    resources :proposals, only: %i[edit update] do
+      patch :toggle_admin_accepted, on: :member
+      patch :toggle_image_concealed, on: :member
+    end
     resources :projekt_labels, except: %i[index show]
     resources :sentiments, except: %i[index show]
     resources :projekt_questions, except: %i[index show] do
@@ -139,6 +147,11 @@ namespace :admin do
 
   # custom deficiency report managers
   resources :deficiency_report_managers, only: [:index, :create, :destroy] do
+    get :search, on: :collection
+  end
+
+  # custom idea managers
+  resources :idea_managers, only: [:index, :create, :destroy] do
     get :search, on: :collection
   end
 
@@ -467,6 +480,9 @@ namespace :admin do
   end
 
   resource :homepage, controller: :homepage, only: [:show]
+  resources :projekt_phases, only: [] do
+    resources :projekt_point_of_interest_categories
+  end
 
   namespace :widget do
     resources :cards
@@ -487,6 +503,8 @@ namespace :admin do
     post :execute, on: :collection
     delete :cancel, on: :collection
   end
+
+  resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
 end
 
 resolve "Milestone" do |milestone|

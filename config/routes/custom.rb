@@ -37,6 +37,14 @@ end
 
 get "admin/matomo", to: "admin/matomo#index"
 
+get "users", to: "users#index"
+
+resources :projekt_point_of_interest_pins, only: [:new, :create] do
+  member do
+    get :json_data
+  end
+end
+
 post "/connect_dt_service", to: "api_clients#connect", as: :connect_api_clients
 
 namespace :api do
@@ -60,10 +68,6 @@ namespace :api do
   end
 
   resources :users, only: [] do
-    collection do
-      get :id_by_email
-    end
-
     member do
       patch :mark_as_on_dt
     end

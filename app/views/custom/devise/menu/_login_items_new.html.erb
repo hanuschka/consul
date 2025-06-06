@@ -34,6 +34,12 @@
     </li>
   <% end %>
 
+  <% if current_user.administrator? || current_user.idea_manager? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to t("custom.layouts.header.idea_management"), idea_management_root_path %>
+    </li>
+  <% end %>
+
   <% if feature?(:budgets) &&
       (current_user.administrator? || current_user.valuator?) %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">

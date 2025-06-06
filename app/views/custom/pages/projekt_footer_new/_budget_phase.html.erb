@@ -25,36 +25,41 @@
     <% elsif params[:section] == "stats" && can?(:read_stats, @budget) %>
       <%= render "pages/projekt_footer_new/budget/stats" %>
     <% else %>
+    <% if @budget.current_phase.kind == 'informing' %>
       <div class="flex-layout">
-        <% if @budget.current_phase.kind == 'informing' %>
-          <div class="new-card">
-            <h4>
-              Noch keine Investitionsvorschläge vorhanden
+        <div class="new-card">
+          <h4>
+            Noch keine Vorschläge vorhanden
             </h3>
             <% if @budget.phases.accepting.starts_at.present? %>
               <div>
-                Investitionsvorschläge können erst in der nächsten Phase
+                Vorschläge können erst in der nächsten Phase
                 eingereicht werden. Diese beginnt am
                 <%= I18n.l(@budget.phases.accepting.starts_at, format: :new_date_with_year) %>.
               </div>
             <% end %>
-          </div>
-        <% else %>
-          <% if browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
-            <div class="navigable-proposal-list">
-              <% if @investments.any? %>
-                <div class="margin-bottom">
-                </div>
-                <%= render Navigation::ProposalBrowseNavigationComponent.new(
-                  resources: @investments,
-                  projekt_phase: @projekt_phase
-                ) %>
-                <div class="current-proposal">
-                  <%= render "budgets/investments/show_content", investment: @investment, in_projekt_footer: true, comment_tree: @comment_tree %>
-                </div>
-              <% end %>
+        </div>
+      </div>
+    <% else %>
+        <% if browse_mode_in_projekt_footer_tab?(@projekt_phase) %>
+          <div class="navigable-proposal-list">
+            <% if @investments.any? %>
+              <div class="margin-bottom">
+              </div>
+              <%= render Navigation::ProposalBrowseNavigationComponent.new(
+                resources: @investments,
+                projekt_phase: @projekt_phase
+              ) %>
+            <div class="current-proposal">
+              <%= render "budgets/investments/show_content", investment: @investment, in_projekt_footer: true, comment_tree: @comment_tree %>
             </div>
-          <% else %>
+          <% end %>
+        <% else %>
+          <%= render Shared::ResourceMapComponent.new(
+            marker_coordinates: @investment_coordinates,
+            resource_type: Budget::Investment
+          ) %>
+          <div class="flex-layout">
             <% budget_investments_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
             <div class="main-column">
               <%= render(
@@ -62,7 +67,6 @@
                   resources: @investments,
                   resource_type: Budget::Investment,
                   remote_url: budget_investments_footer_url,
-                  map_coordinates: @investment_coordinates,
                   current_filter: @current_order,
                   filter_param: "order",
                   filters: @valid_orders,
@@ -78,9 +82,11 @@
             <div class="sidebar" id="sidebar">
               <%= render "budgets/investments/sidebar_new" %>
             </div>
-          <% end %>
+          </div>
         <% end %>
       </div>
+    <% end %>
+
     <% end %>
   <% else %>
     <h3>Dieses Projekt Phase hat kein zugehöriges Budget</h3>

@@ -112,13 +112,12 @@
                 </div>
               </div>
 
-              <% if investment.errors.details[:projekt_labels].any? %>
-                <% investment.errors.details[:projekt_labels].each do |error| %>
-                  <small class='form-error is-visible'>
-                    <%= t("activerecord.errors.models.budget_investment.attributes.projekt_labels.#{error[:error]}") %>
-                  </small>
-                <% end %>
+              <% investment.errors.where(:projekt_labels).each do |error| %>
+                <small class='form-error is-visible'>
+                  <%= error.message %>
+                </small>
               <% end %>
+
             <% end %>
           <% end %>
 
@@ -137,13 +136,12 @@
                 </div>
               </div>
 
-              <% if investment.errors.details[:sentiment_id].any? %>
-                <% investment.errors.details[:sentiment_id].each do |error| %>
-                  <small class="form-error is-visible">
-                    <%= t("activerecord.errors.models.budget_investment.attributes.sentiment.#{error[:error]}") %>
-                  </small>
-                <% end %>
+              <% investment.errors.where(:sentiment_id).each do |error| %>
+                <small class='form-error is-visible'>
+                  <%= error.message %>
+                </small>
               <% end %>
+
             <% end %>
           <% end %>
 
@@ -179,7 +177,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? || current_user.moderator? %>
+          <% if helpers.allowed_to_post_on_behalf_of?(current_user, investment.projekt_phase.projekt) %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.budgets.investments.form.on_behalf_of.title"),
                           description: t("custom.budgets.investments.form.on_behalf_of.description"),

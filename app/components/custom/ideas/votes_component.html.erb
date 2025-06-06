@@ -1,0 +1,34 @@
+<div id="<%= dom_id(@idea, :support) %>" class="supports idea text-center">
+  <div class="progress small-12 round" style="margin-bottom:0;">
+    <span class="meter" style="width: <%= progress_bar_percentage(@idea) %>%;"></span>
+    <span class="percentage">
+      <%= supports_percentage(@idea) %>&nbsp;/&nbsp;<%= t("proposals.proposal.total_percent") %>
+    </span>
+  </div>
+
+  <span class="total-supports" style="display:block;margin-top:10px;margin-bottom:0;">
+    <%= t("proposals.proposal.supports_necessary",
+        number: number_with_delimiter(@idea.votes_needed_for_success)) %>
+  </span>
+
+  <span class="total-supports" style='display:block;margin-top:0;'>
+    <%= t("ideas.supports_count", count: @idea.cached_votes_up) %>
+  </span>
+
+  <% if current_user&.voted_up_for?(@idea) %>
+    <%= button_to unvote_idea_path(@idea),
+        class: "button button-support small expanded unvote",
+        title: t("ideas.unsupport"), method: "post", remote: true do %>
+      <%= t("ideas.unsupport") %>
+    <% end %>
+
+  <% else %>
+    <%= button_to vote_idea_path(@idea, value: "yes"),
+        class: "button button-support small expanded",
+        title: t("ideas.support"),
+        method: "post",
+        remote: true do %>
+      <%= t("ideas.support") %>
+    <% end %>
+  <% end %>
+</div>

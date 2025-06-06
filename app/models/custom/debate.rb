@@ -48,19 +48,14 @@ class Debate
     orders
   end
 
-  # TODO: REFACTOR FOR NEW DESIGN
   def self.scoped_projekt_ids_for_index(current_user)
     Projekt
-      .activated
+      .visible_for(current_user)
       .show_in_sidebar_filter
-      .includes_children_projekts_with(:debate_phases, :debates, :projekt_settings)
-      .select do |projekt|
-        (
-          ([projekt] + projekt.all_parent_projekts).none? { |p| p.hidden_for?(current_user) } &&
-          ([projekt] + projekt.all_children_projekts).any?(&:can_filter_debates?)
-        )
-      end
-      .pluck(:id)
+      .joins(:debate_phases)
+      .merge(
+        ProjektPhase::DebatePhase.current.or(ProjektPhase::DebatePhase.has_resources)
+      ).select(:id)
   end
 
   def self.scoped_projekt_phase_ids_for_footer(projekt_phase)

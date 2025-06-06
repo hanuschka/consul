@@ -57,8 +57,8 @@
       content: image-url("stats_other_gen.png");
     }
 
-    &.total-investments::before {
-      content: image-url("stats_investments.png");
+    &.total-resources::before {
+      content: image_url("stats_resources.png");
     }
 
     &.web::before {

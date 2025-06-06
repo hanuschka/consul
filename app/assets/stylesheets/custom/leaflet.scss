@@ -108,6 +108,14 @@
   border-radius: 50%;
   line-height: 1;
   transition: background-color 50ms ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    position: relative;
+    top: -2px;
+  }
 
   &:hover {
     background: #e5e5e5;

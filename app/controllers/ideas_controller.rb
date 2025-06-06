@@ -19,6 +19,7 @@ class IdeasController < ApplicationController
 
     @ideas = Idea.accepted
 
+    filter_by_category
     filter_by_status
     filter_by_quorum
 
@@ -29,7 +30,7 @@ class IdeasController < ApplicationController
   end
 
   def show
-    @idea = Idea.accepted.find(params[:id])
+    @idea = Idea.find(params[:id])
     authorize! :show, @idea
 
     @comment_tree = CommentTree.new(@idea, params[:page], @current_order)
@@ -117,6 +118,12 @@ class IdeasController < ApplicationController
 
     def set_idea
       @idea = Idea.find(params[:id])
+    end
+
+    def filter_by_category
+      return unless params[:idea_category].present?
+
+      @ideas = @ideas.where(idea_category_id: params[:idea_category])
     end
 
     def filter_by_status

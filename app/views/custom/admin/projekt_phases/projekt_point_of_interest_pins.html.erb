@@ -1,0 +1,67 @@
+<%= render "custom/admin/projekt_phases/heading" %>
+
+<% unless embedded? %>
+  <%= render "custom/admin/projekt_phases/nav_bar" %>
+<% end %>
+
+<div class="row">
+  <div class="column">
+    <h2>
+      <%= t("custom.admin.projekt_phases.projekt_point_of_interest_pins.page_title") %>
+
+      <% if embedded? %>
+        <%= render Shared::ExplainButtonComponent.new(explain: "") %>
+      <% end %>
+    </h2>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="small-12 column">
+    <div class="margin-bottom">
+      <%= link_to t("custom.common.export_csv"),
+        projekt_point_of_interest_pins_admin_projekt_phase_path(@projekt_phase, format: :csv),
+        class: "button hollow" %>
+    </div>
+
+    <table class="table-for-mobile">
+      <thead>
+        <tr>
+          <th><%= t("custom.common.category") %></th>
+          <th><%= t("custom.common.address") %></th>
+          <th><%= t("custom.common.user") %></th>
+          <th><%= t("custom.common.created_at") %></th>
+          <th><%= t("custom.common.actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pins.each do |pin| %>
+          <tr id="<%= dom_id(pin) %>">
+            <td>
+              <span style="font-size: 20px;margin-right: 10px;margin-left: 10px;color: <%= pin.projekt_point_of_interest_category.color %>">
+                <i class="icon-<%= pin.projekt_point_of_interest_category.icon %>">
+                </i>
+              </span>
+              <%= pin.projekt_point_of_interest_category.name %>
+            </td>
+            <td><%= pin.map_location.get_approximated_address %></td>
+            <td><%= pin.author.name %> <br>
+              <span style="color:gray">
+                <%=  pin.author.email %>
+              </span>
+            </td>
+            <td><%= l pin.created_at, format: :short %></td>
+            <td>
+              <%= link_to t("custom.common.delete"),
+                admin_projekt_point_of_interest_pin_path(pin, projekt_phase_id: @projekt_phase.id),
+                method: :delete,
+                class: "button hollow alert",
+                data: { confirm: t("custom.admin.projekt_phases.point_of_interest.pins.destroy.confirm") } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -101,6 +101,17 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/restrictions"
   end
 
+  def projekt_point_of_interest_pins
+    @pins = @projekt_phase.projekt_point_of_interest_pins.ordered
+
+    respond_to do |format|
+      format.html
+      format.csv {
+        send_data CsvServices::PointOfInterestPinsExporter.call(@pins), filename: "point_of_interest_pins-#{Date.today}.csv"
+      }
+    end
+  end
+
   def settings
     authorize!(:settings, @projekt_phase)
 
@@ -125,15 +136,27 @@ module ProjektPhaseAdminActions
         Budget::Investment::DEFAULT_ORDERS
       end
 
-    @projekt_phase_selectable_settings =
-      [
-        ProjektPhaseSetting::SelectableSettingSet.new(
-          setting: @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order"),
-          options: options
-        )
-      ]
+    selectable_setting = @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order")
+
+    if selectable_setting.present?
+      @projekt_phase_selectable_settings =
+        [
+          ProjektPhaseSetting::SelectableSettingSet.new(
+            setting: selectable_setting,
+            options: options
+          )
+        ]
+    end
 
     render "custom/admin/projekt_phases/user_functions"
+  end
+
+  def map_resources_overview
+    @map_coordinates =
+      @projekt_phase
+        .projekt_point_of_interest_pins
+        .includes(:map_location)
+        .map(&:pin_json_data)
   end
 
   def user_functions
@@ -159,30 +182,40 @@ module ProjektPhaseAdminActions
   end
 
   def set_setting_page_variables(projekt_phase)
-    proposal_setting_key_ordered = ProjektPhaseSetting.defaults[projekt_phase.class.name].keys
+    phase_settings = ProjektPhaseSetting.defaults[projekt_phase.class.name]
 
-    projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
-      result[item.key] = item
+    if phase_settings.present?
+      proposal_setting_key_ordered = phase_settings.keys
+
+      projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
+        result[item.key] = item
+      end
+
+      setting_ordered = []
+      proposal_setting_key_ordered.each do |setting_key|
+        setting = projekt_phase_settings_by_key[setting_key.to_s]
+        setting_ordered.push(setting)
+      end
+
+      all_settings = setting_ordered.compact.group_by(&:kind)
+
+      @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
+      @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
+
+      @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
+      @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
     end
+  end
 
-    setting_ordered = []
-    proposal_setting_key_ordered.each do |setting_key|
-      setting = projekt_phase_settings_by_key[setting_key.to_s]
-      setting_ordered.push(setting)
-    end
+  def proposals
+    authorize!(:proposals, @projekt_phase)
+    @proposals = @projekt_phase.proposals.order(id: :desc).page(params[:page])
 
-    all_settings = setting_ordered.compact.group_by(&:kind)
-
-    @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
-    @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
-
-    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
-    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
+    render "custom/admin/projekt_phases/proposals"
   end
 
   def projekt_labels
     authorize!(:projekt_labels, @projekt_phase)
-
     @projekt_labels = @projekt_phase.projekt_labels
 
     render "custom/admin/projekt_phases/projekt_labels"
@@ -198,7 +231,7 @@ module ProjektPhaseAdminActions
   def map
     authorize!(:map, @projekt_phase)
 
-    @projekt_phase.copy_map_settings unless @projekt_phase.map_location.present?
+    @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
 
     render "custom/admin/projekt_phases/map"

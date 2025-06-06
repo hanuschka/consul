@@ -41,7 +41,7 @@
   <div class="small-12 medium-8 columns">
     <% if idea.approximated_address.present? %>
       <div class='margin-bottom'>
-        <strong><%= Idea.human_attribute_name(:approximated_address) %>:</strong>
+        <strong>Adresse:</strong>
         <%= idea.approximated_address %>
       </div>
 
@@ -59,7 +59,7 @@
 <div class="row expanded full-width">
   <div class="small-12 medium-8 columns">
     <div class="margin-top margin-bottom">
-      <strong><%= "#{Idea.human_attribute_name(:author)}:" %></strong>
+      <strong>Autor:</strong>
       <%= idea.author.name %>
       <% if idea.on_behalf_of.present? %>
         <%= "(#{t("custom.admin.ideas.show.on_behalf_of")} #{idea.on_behalf_of})" %>

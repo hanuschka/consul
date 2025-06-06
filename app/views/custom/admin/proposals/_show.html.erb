@@ -1,0 +1,26 @@
+<% provide :title do %>
+  <%= t("admin.header.title") %> - <%= t("admin.menu.proposals") %> - <%= @proposal.title %>
+<% end %>
+
+<div class="proposal-show">
+  <h2 class="inline-block"><%= @proposal.title %></h2>
+
+  <%= render "proposals/info", proposal: @proposal %>
+</div>
+
+<hr>
+
+<%= render "admin/memos/memos", memoable: @proposal %>
+
+<hr>
+
+<%= render "admin/milestones/milestones", milestoneable: @proposal %>
+
+<hr>
+
+<%= form_with(model: [@namespace, @projekt_phase, @proposal]) do |f| %>
+  <%= f.text_area :official_answer,
+                  value: AdminWYSIWYGSanitizer.new.sanitize(@proposal.official_answer),
+                  class: "html-area #{ck_editor_class(current_user)}" %>
+  <%= f.submit "Offizielle Antwort aktualisieren" %>
+<% end %>

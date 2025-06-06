@@ -9,7 +9,7 @@
       <%= number_with_info_tags(
         stats.total_budget_investments,
         t("stats.budgets.total_investments"),
-        html_class: "total-investments"
+        html_class: "total-resources"
       ) %>
 
       <% unless params[:stats_section] == "accepting" %>
@@ -24,6 +24,36 @@
         <%= number_with_info_tags(stats.total_selected_investments,
                                   t("stats.budgets.total_selected_investments")) %>
       <% end %>
+    </div>
+  <% elsif stats.is_a?(ProjektPhase::ProposalPhase::Stats) %>
+    <div id="" class="stats-group">
+      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_proposals_title") %></h4>
+      <%= number_with_info_tags(
+        stats.total_proposals,
+        t("custom.projekt_phases.stats.proposal_phase.total_proposals"),
+        html_class: "total-resources"
+      ) %>
+
+      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_supports_title") %></h4>
+      <%= number_with_info_tags(
+        stats.total_supports,
+        t("custom.projekt_phases.stats.proposal_phase.total_supports"),
+        html_class: "total-resources"
+      ) %>
+
+      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_supports_weight_title") %></h4>
+      <%= number_with_info_tags(
+        stats.total_supports_weight,
+        t("custom.projekt_phases.stats.proposal_phase.total_supports_weight"),
+        html_class: "total-resources"
+      ) %>
+
+      <h4><%= t("custom.projekt_phases.stats.proposal_phase.total_authors_title") %></h4>
+      <%= number_with_info_tags(
+        stats.total_authors,
+        "",
+        html_class: "total-participants"
+      ) %>
     </div>
   <% end %>
 

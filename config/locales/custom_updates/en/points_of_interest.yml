@@ -1,0 +1,7 @@
+en:
+  custom:
+    projekt_point_of_interest_pins:
+      index:
+        add_pin: "Add Pin"
+      new:
+        title: "New Pin"

@@ -74,6 +74,8 @@ class PagesController < ApplicationController
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
 
+      @custom_page.content = process_oembeds(@custom_page.content)
+
       render action: custom_page_name
 
     elsif @custom_page.present? && @custom_page.projekt.present?

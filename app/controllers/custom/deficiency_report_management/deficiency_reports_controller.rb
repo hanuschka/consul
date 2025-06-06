@@ -34,7 +34,7 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
 
   def show
     @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
-    authorize! :read, @deficiency_report
+    authorize! :show, @deficiency_report
 
     @official_answer_templates = DeficiencyReport::OfficialAnswerTemplate.all
 

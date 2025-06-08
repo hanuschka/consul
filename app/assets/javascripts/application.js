@@ -103,6 +103,7 @@
 //= require tag_autocomplete
 //= require polls_admin
 //= require leaflet/dist/leaflet
+//= require mapbox-gl/dist/mapbox-gl.js
 //= require leaflet.markercluster/dist/leaflet.markercluster
 //= require map
 //= require polls
@@ -123,17 +124,17 @@
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management
-//= require custom
-//= require_tree ./custom
 //= require leaflet.locatecontrol
 //= require leaflet-geosearch/dist/geosearch.umd
-//= require leaflet-gesture-handling/dist/leaflet-gesture-handling.min
+//= require leaflet-gesture-handling/dist/leaflet-gesture-handling
 //= require Leaflet.Deflate/dist/L.Deflate
 //= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
 //= require ckeditor5/ckeditor5.umd
 //= require ckeditor5/file-upload-manager
 //= require html2canvas/dist/html2canvas.min
 //= require select2/dist/js/select2.full
+//= require custom
+//= require_tree ./custom
 
 var initialize_modules = function() {
   "use strict";

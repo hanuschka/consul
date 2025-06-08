@@ -29,7 +29,7 @@ class Shared::MapComponent < ApplicationComponent
   def map_div
     content_tag :div, "",
                 id: "#{dom_id(map_location)}_#{parent_class}",
-                class: "map_location map",
+                class: "map_location map js-mapbox-map",
                 data: prepare_map_settings
   end
 
@@ -37,7 +37,6 @@ class Shared::MapComponent < ApplicationComponent
 
     def prepare_map_settings
       options = {
-        map: "",
 
         map_center_latitude: map_location_latitude(map_location),
         map_center_longitude: map_location_longitude(map_location),
@@ -62,10 +61,14 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:map_layers] = map_layers if map_layers.present?
 
-      if map_style == "regular"
-        options[:map] = ""
-      elsif map_style == "vcmap"
+      if map_style == "vcmap"
         options[:vcmap] = ""
+      end
+
+      if true
+        options.delete(:map)
+        options[:mapbox] = true
+        options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]
       end
 
       options

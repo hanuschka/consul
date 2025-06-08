@@ -4,7 +4,7 @@
     maps: [],
     initialize: function() {
       $("*[data-map]:visible").each(function() {
-        App.Map.initializeMap(this);
+        // App.Map.initializeMap(this);
       });
     },
     destroy: function() {

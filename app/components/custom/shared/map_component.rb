@@ -37,7 +37,6 @@ class Shared::MapComponent < ApplicationComponent
 
     def prepare_map_settings
       options = {
-
         map_center_latitude: map_location_latitude(map_location),
         map_center_longitude: map_location_longitude(map_location),
         map_zoom: map_location_zoom(map_location),
@@ -56,7 +55,10 @@ class Shared::MapComponent < ApplicationComponent
         shape_input_selector: "##{map_location_input_id(parent_class, "shape")}",
 
         editable: editable,
-        enable_geoman_controls: enable_geoman_controls?
+        enable_geoman_controls: enable_geoman_controls?,
+
+        # marker_icon_path: ActionController::Base.helpers.asset_path('custom/map-pin-icon.svg')
+        marker_icon_path: ActionController::Base.helpers.asset_path('fontawesome_png/solid/converted_pngs/euro-sign.png')
       }
 
       options[:map_layers] = map_layers if map_layers.present?

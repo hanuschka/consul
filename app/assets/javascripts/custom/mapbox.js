@@ -17,6 +17,7 @@
     this.adminShape = options.adminShape;
     this.showAdminShape = options.showAdminShape;
     this.adminShapesColor = 'red';
+    this.defaultMarkerBackgroundCircleRadius = 10;
 
     this.initialize();
   }
@@ -221,7 +222,7 @@
 
     if (this.processCoordinates) {
       console.log("processCoordinates", this.processCoordinates);
-      
+
       // Create a GeoJSON source for all markers
       var markers = {
         type: 'FeatureCollection',
@@ -260,10 +261,21 @@
         })
       };
 
-      console.log("markers", markers);
+
+//       this.element.dataset.markerIconPaths.forEach(function() {
+//         // Load the custom marker image first
+//         this.map.loadImage(this.element.dataset.markerIconPath, function(error, image) {
+//           if (error) throw error;
+
+//           self.map.addImage('custom-marker', image);
+//         });
+//       })
+
+
+      // Add the image to the map
 
       // Add the source to the map
-      this.map.addSource('markers', {
+      self.map.addSource('markers', {
         type: 'geojson',
         data: markers,
         cluster: true,
@@ -272,7 +284,7 @@
       });
 
       // Add cluster layer
-      this.map.addLayer({
+      self.map.addLayer({
         id: 'clusters',
         type: 'circle',
         source: 'markers',
@@ -296,7 +308,7 @@
       });
 
       // Add cluster count layer
-      this.map.addLayer({
+      self.map.addLayer({
         id: 'cluster-count',
         type: 'symbol',
         source: 'markers',
@@ -308,22 +320,50 @@
         }
       });
 
-      // Add unclustered point layer
-      this.map.addLayer({
-        id: 'unclustered-point',
+      // Add background circle layer
+      self.map.addLayer({
+        id: 'unclustered-point-background',
         type: 'circle',
         source: 'markers',
         filter: ['!', ['has', 'point_count']],
         paint: {
-          'circle-color': ['get', 'color'],
-          'circle-radius': 8,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff'
+          'circle-color': ['coalesce', ['get', 'color'], '#ff0000'],
+          'circle-radius': self.defaultMarkerBackgroundCircleRadius,
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#ffffff'
         }
       });
 
+      // Add unclustered point layer with custom marker
+      // self.map.addLayer({
+      //   id: 'unclustered-point',
+      //   type: 'symbol',
+      //   source: 'markers',
+      //   filter: ['!', ['has', 'point_count']],
+      //   layout: {
+      //     'icon-image': 'custom-marker',
+      //     'icon-size': 0.04,
+      //     'icon-allow-overlap': true,
+      //     'icon-ignore-placement': true,
+      //     'icon-anchor': 'center',
+      //     'icon-pitch-alignment': 'map',
+      //     'icon-rotation-alignment': 'map'
+      //   }
+      // });
+
+      // Add hover effect
+      self.map.on('mouseenter', 'unclustered-point', function() {
+        self.map.getCanvas().style.cursor = 'pointer';
+        self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius + 1);
+      });
+
+      self.map.on('mouseleave', 'unclustered-point', function() {
+        self.map.getCanvas().style.cursor = '';
+        self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius);
+      });
+
       // Add click handler for clusters
-      this.map.on('click', 'clusters', function(e) {
+      self.map.on('click', 'clusters', function(e) {
         var features = self.map.queryRenderedFeatures(e.point, {
           layers: ['clusters']
         });
@@ -342,10 +382,10 @@
       });
 
       // Add click handler for individual markers
-      this.map.on('click', 'unclustered-point', function(e) {
+      self.map.on('click', 'unclustered-point', function(e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var properties = e.features[0].properties;
-        
+
         var route;
         if (self.process == "proposals") {
           route = "/proposals/" + properties.id + "/json_data";
@@ -378,16 +418,10 @@
       });
 
       // Change cursor on hover
-      this.map.on('mouseenter', 'clusters', function() {
+      self.map.on('mouseenter', 'clusters', function() {
         self.map.getCanvas().style.cursor = 'pointer';
       });
-      this.map.on('mouseleave', 'clusters', function() {
-        self.map.getCanvas().style.cursor = '';
-      });
-      this.map.on('mouseenter', 'unclustered-point', function() {
-        self.map.getCanvas().style.cursor = 'pointer';
-      });
-      this.map.on('mouseleave', 'unclustered-point', function() {
+      self.map.on('mouseleave', 'clusters', function() {
         self.map.getCanvas().style.cursor = '';
       });
 

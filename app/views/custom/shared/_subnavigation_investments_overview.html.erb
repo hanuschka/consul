@@ -4,7 +4,7 @@
       <%= "tabindex=0" if placement == 'desktop' %>
   >
     <div class="flyout-item-name projekt-name">
-      <%= link_to t('custom.links.menu.investments_overview'), investments_path, class: '', tabindex: '-1', aria: { hidden: true }, data: { turbolinks: !extended_feature?("general.enable_google_translate") } %>
+      <%= link_to t('custom.links.menu.investments_overview'), investments_path, class: '', tabindex: '-1', aria: { hidden: true }, data: { turbolinks: false } %>
     </div>
   </li>
 <% end %>

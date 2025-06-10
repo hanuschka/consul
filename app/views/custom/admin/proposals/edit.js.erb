@@ -1,0 +1,13 @@
+$("#proposals-tab-content").html("<%= j render("custom/admin/proposals/show", projekt_phase: @projekt_phase, proposal: @proposal) %>")
+
+<% if @projekt_phase.projekt.vc_map_enabled? %>
+  var map = document.querySelector("#footer-content *[data-vcmap]")
+  App.VCMap.initializeMap(map);
+<% else %>
+  App.Map.destroy();
+  App.Map.initialize();
+<% end %>
+
+$('html, body').animate({
+  scrollTop: $("#proposals-tab-content").offset().top
+}, 500);

@@ -79,4 +79,18 @@ module ApplicationHelper
   def management_controller?
     controller.class.to_s.include?("Management")
   end
+
+  def count_db_queries
+    count = 0
+  
+    callback = ->(_name, _started, _finished, _unique_id, payload) do
+      count += 1 unless payload[:name] == "SCHEMA" # skip schema queries
+    end
+  
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      yield
+    end
+  
+    count
+  end
 end

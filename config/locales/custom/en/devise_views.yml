@@ -82,6 +82,7 @@ en:
         signin_with_provider: Login with %{provider}
         signup: Don't have an account yet? %{signup_link}
         signup_link: Create new account
+        signup_link_hint: Don't have an account yet?
     unlocks:
       new:
         email_label: Email

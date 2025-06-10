@@ -24,8 +24,6 @@ class Projekt < ApplicationRecord
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
 
-  has_many :children_projekts_show_in_navigation, -> { show_in_navigation }, class_name: "Projekt", foreign_key: "parent_id"
-
   has_many :third_level_children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "top_level_projekt_id",
     inverse_of: :top_level_projekt, dependent: :nullify
   belongs_to :parent, class_name: "Projekt", optional: true
@@ -60,7 +58,6 @@ class Projekt < ApplicationRecord
 
   has_many :debates, through: :debate_phases
   has_many :proposals, through: :proposal_phases
-  has_many :base_selection_proposals, through: :proposal_phases
   has_many :budgets, through: :budget_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
@@ -109,13 +106,17 @@ class Projekt < ApplicationRecord
 
   before_save :assign_top_level_projekt_from_parent
 
-  after_update :note_updated_for_global_overview #, on: :update
-  after_touch :note_updated_for_global_overview
-  after_destroy :note_destroy_for_global_overview
+  after_update :sync_update_for_global_overview #, on: :update
+  # after_touch :sync_update_for_global_overview
+  after_destroy :sync_destroy_for_global_overview
 
   after_destroy :ensure_projekt_order_integrity
 
   def should_be_exported?
+    if  Rails.env.development? && Rails.application.secrets.dt[:disable_sync]
+      return false
+    end
+
     ApiClient.active_dt? && for_global_overview?
   end
 
@@ -228,23 +229,59 @@ class Projekt < ApplicationRecord
       .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
   }
 
-  scope :show_in_navigation, -> {
-    joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
+  ##################
+
+  scope :visible_for, ->(user) {
+    return regular if user&.administrator?
+
+    if user.present?
+      user_hard_group_value_ids = user.individual_group_values
+        .joins(:individual_group)
+        .where(individual_groups: { kind: "hard" })
+        .select(:id)
+
+      excluded_projekt_ids = Projekt.joins(:individual_group_values)
+        .where.not(individual_group_values: { id: user_hard_group_value_ids })
+        .select(:id)
+
+      permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
+
+      arel = Projekt.arel_table
+
+      regular.where(
+        arel[:id].in(
+          Projekt.activated.where.not(id: excluded_projekt_ids).select(:id).arel
+        ).or(
+          arel[:id].in(permitted_projekt_ids.arel)
+        )
+      )
+    else
+      regular.activated
+        .where.not(id: Projekt.joins(:individual_group_values).select(:id))
+    end
+  }
+
+  scope :for_overview_page_navigation, ->(user) {
+    activated
+      .visible_for(user)
+      .joins(:projekt_settings)
+      .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+      .sort_by_order_number
+  }
+
+  scope :for_navigation, ->(user) {
+    activated
+      .visible_for(user)
+      .joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
       .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
+      .sort_by_order_number
   }
 
-  scope :visible_in_menu, ->(user) {
-    select { |p| p.visible_for?(user) }
-  }
+  ##################
 
-  scope :show_in_sidebar_filter, ->(user = nil) {
+  scope :show_in_sidebar_filter, -> {
     joins("INNER JOIN projekt_settings show_in_sidebar_filter_settings ON projekts.id = show_in_sidebar_filter_settings.projekt_id")
       .where("show_in_sidebar_filter_settings.key": "projekt_feature.general.show_in_sidebar_filter", "show_in_sidebar_filter_settings.value": "active")
-  }
-
-  scope :with_active_feature, ->(projekt_feature_key) {
-    joins("INNER JOIN projekt_settings waf ON projekts.id = waf.projekt_id")
-      .where("waf.key": "projekt_feature.#{projekt_feature_key}", "waf.value": "active")
   }
 
   scope :by_my_posts, ->(my_posts_switch, current_user_id) {
@@ -306,14 +343,6 @@ class Projekt < ApplicationRecord
     { page.title          => "A",
       title               => "A",
       page.content        => "C" }
-  end
-
-  def can_filter_proposals?
-    proposal_phases.any?(&:current?) || base_selection_proposals.any?
-  end
-
-  def can_filter_debates?
-    debate_phases.any?(&:current?) || debates.any?
   end
 
   def projekt_phases_for(resource)
@@ -523,15 +552,7 @@ class Projekt < ApplicationRecord
   end
 
   def visible_for?(user = nil)
-    return true if user.present? && user.administrator?
-    return true if user.present? && user.projekt_manager&.allowed_to?("manage", self)
-    return false unless activated?
-
-    if hard_individual_group_values.empty?
-      true
-    else
-      user.present? && (hard_individual_group_values.ids & user.individual_group_values.ids).any?
-    end
+    Projekt.visible_for(user).where(id: id).exists?
   end
 
   def hidden_for?(user = nil)
@@ -801,10 +822,17 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def note_updated_for_global_overview
+    def sync_update_for_global_overview
+      # Ignore order number update change
+      changed_set = previous_changes.except("created_at", "updated_at")
+
+      if changed_set["order_number"].present? && changed_set.size == 1
+        return
+      end
+
       if should_be_exported?
         if hidden_at.present?
-          note_destroy_for_global_overview
+          sync_destroy_for_global_overview
         else
           Projekts::OverviewProjektUpdatedJob.perform_later(
             self
@@ -813,7 +841,7 @@ class Projekt < ApplicationRecord
       end
     end
 
-    def note_destroy_for_global_overview
+    def sync_destroy_for_global_overview
       if should_be_exported?
         Projekts::OverviewProjektDestroyedJob.perform_later(id)
       end

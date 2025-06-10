@@ -1,4 +1,5 @@
 <%= render Shared::ResourcesListComponent.new(
   resources: latest_resources,
-  title: @content_card.title || t("custom.content_cards.latest_resources.title")
+  title: @content_card.title || t("custom.content_cards.latest_resources.title"),
+  resource_link_additional_url_params: (@custom_page.present? ? { page_ref: @custom_page&.slug } : nil),
 ) %>

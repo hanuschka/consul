@@ -9,10 +9,8 @@
   </div>
 </div>
 
-<% if model.errors.details[:projekt_labels].any? %>
-  <% model.errors.details[:projekt_labels].each do |error| %>
-    <small class='form-error is-visible'>
-      <%= t("activerecord.errors.models.#{model.model_name.param_key}.attributes.projekt_labels.#{error[:error]}") %>
-    </small>
-  <% end %>
+<% model.errors.where(:projekt_labels).each do |error| %>
+  <small class='form-error is-visible'>
+    <%= error.message %>
+  </small>
 <% end %>

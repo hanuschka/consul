@@ -3,7 +3,9 @@
     <div class="column small-11">
       <%= form_with model: formular_field, url: polymorphic_path([@namespace, @projekt_phase, @formular, formular_field]), local: false do |f| %>
         <%= f.text_field :name %>
-        <%= f.text_field :description %>
+        <%= f.text_area :description,
+          class: "html-area #{ck_editor_class(current_user)}" %>
+
         <%= f.select :kind, FormularField::KINDS.map { |kind| [t("custom.admin.projekt_phases.formular.kinds.#{kind}"), kind] }, {}, { class: "js-toggle-custom-formular-fields", disabled: formular_field.persisted? } %>
         <div class="drop-down-options <%= "hide" if formular_field.kind != "dropdown" %>">
           <%= f.text_field :drop_down_options, hint: t("custom.admin.projekt_phases.formular.dropdown_hint") %>
@@ -13,7 +15,8 @@
           <%= f.check_box :email_for_confirmation, onChange: "if (this.checked) { $('#confirmation-email').show(); } else { $('#confirmation-email').hide(); }" %>
           <div id="confirmation-email" class="margin-bottom" style="display: <%= formular_field.email_for_confirmation ? "block" : "none" %>;">
             <%= f.text_field :email_for_confirmation_subject %>
-            <%= f.text_area :email_for_confirmation_text, rows: 4 %>
+            <%= f.text_area :email_for_confirmation_text,
+              class: "html-area extended-u" %>
           </div>
         </div>
 

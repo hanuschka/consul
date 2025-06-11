@@ -18,7 +18,7 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
     end
 
     def projekt_phases
-      phases = projekt.projekt_phases.includes(:translations, :age_restriction)
+      phases = projekt.projekt_phases.frontend_visible.includes(:translations, :age_restriction)
 
       if embedded_and_frame_access_code_valid?(projekt)
         phases

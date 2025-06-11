@@ -455,6 +455,7 @@ de:
               limitations: Beschränkung
               default_tab: Standard
               activated: Aktiviert
+              frontend_visibility: Sichtbarkeit im Projekt
               edit_link: Bearbeiten
             restriction_names:
               age: Alter

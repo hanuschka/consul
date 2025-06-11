@@ -91,6 +91,7 @@ namespace :projekt_management do
     resources :projekt_phases, only: [:create] do
       member do
         patch :toggle_active_status
+        patch :toggle_frontend_visibility
       end
       collection do
         post :order_phases

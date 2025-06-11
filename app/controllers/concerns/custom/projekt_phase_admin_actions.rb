@@ -80,6 +80,14 @@ module ProjektPhaseAdminActions
     @projekt_phase.update!(active: status_value)
   end
 
+  def toggle_frontend_visibility
+    authorize!(:toggle_frontend_visibility, @projekt_phase)
+
+    visibility_value = params[:projekt][:phase_attributes][:frontend_visibility]
+    @projekt_phase.update!(frontend_visibility: visibility_value)
+
+  end
+
   def duration
     authorize!(:duration, @projekt_phase)
 

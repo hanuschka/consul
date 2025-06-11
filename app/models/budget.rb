@@ -69,8 +69,8 @@ class Budget < ApplicationRecord
 
   def self.process_preselected_investments
     where(phase: "selecting").find_each do |budget|
-      return unless budget.current_phase.kind == "valuating"
-      return unless budget.phase == "selecting"
+      next unless budget.current_phase.kind == "valuating"
+      next unless budget.phase == "selecting"
 
       budget.update_column(:phase, "valuating")
       budget.update_preselected_investments

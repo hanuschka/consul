@@ -3,6 +3,6 @@
     <%= "tabindex=0" if placement == 'desktop' %>
 >
   <div class="flyout-item-name projekt-name">
-    <%= link_to t('custom.layouts.header.projekt_events_link'), projekt_events_path, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), aria: { hidden: true }, data: { turbolinks: !extended_feature?("general.enable_google_translate") } %>
+    <%= link_to t('custom.layouts.header.projekt_events_link'), projekt_events_path, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), aria: { hidden: true }, data: { turbolinks: false } %>
   </div>
 </li>

@@ -1,6 +1,13 @@
 module Dt
   def self.url
-    Rails.application.secrets.dt[:url]
+    protocol =
+      if Rails.env.development? && Rails.application.secrets[:dont_use_https_on_dev]
+        "http"
+      else
+        "https"
+      end
+
+    "#{protocol}://#{Rails.application.secrets.dt[:domain]}"
   end
 
   def self.platforms_overview_url

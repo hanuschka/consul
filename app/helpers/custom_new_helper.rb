@@ -29,6 +29,8 @@ module CustomNewHelper
   def sentiment_color_style(sentiment)
     if sentiment.present?
       "background-color:#{sentiment.color};color: #{pick_text_color(sentiment.color)}"
+    else
+      "background-color:#ddeeff;color:#666; "
     end
   end
 
@@ -37,8 +39,14 @@ module CustomNewHelper
   end
 
   def google_translate_accepted?
-    return false if cookies[:klaro].blank?
+    return false if cookies[:klaro].blank? || !cookies[:klaro].is_a?(String)
 
-    JSON.parse(cookies[:klaro])["google_translate_accepted"]
+    begin
+      parsed_data = JSON.parse(cookies[:klaro])
+      parsed_data.is_a?(Hash) && parsed_data["google_translate_accepted"] == true
+    rescue JSON::ParserError, ArgumentError => e
+      Sentry.capture_exception(e)
+      false
+    end
   end
 end

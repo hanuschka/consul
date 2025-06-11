@@ -38,6 +38,13 @@ end
 get "admin/matomo", to: "admin/matomo#index"
 
 get "users", to: "users#index"
+
+resources :projekt_point_of_interest_pins, only: [:new, :create] do
+  member do
+    get :json_data
+  end
+end
+
 post "/connect_dt_service", to: "api_clients#connect", as: :connect_api_clients
 
 namespace :api do
@@ -93,5 +100,7 @@ namespace :api do
     patch "disable", to: "settings#disable"
   end
 end
+
+get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
 
 post "iframe_sessions", to: "iframe_sessions#create"

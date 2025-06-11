@@ -4,6 +4,7 @@ class ProjektPhase < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
   include Notifiable
+  include StatsVersionable
 
   after_create :add_default_settings
 
@@ -13,7 +14,9 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::IframePhase",
+    "ProjektPhase::PointOfInterestPhase"
   ].freeze
 
   PROJEKT_PHASES_TYPES = [
@@ -23,21 +26,24 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::VotingPhase",
     "ProjektPhase::BudgetPhase",
     "ProjektPhase::LegislationPhase",
-    "ProjektPhase::FormularPhase"
+    "ProjektPhase::FormularPhase",
   ] + SPECIAL_PROJEKT_PHASES
 
   delegate :icon, :author, :author_id, to: :projekt
 
   translates :phase_tab_name, touch: true
   translates :cta_button_name, touch: true
-  translates :resource_form_title, touch: true
-  translates :projekt_selector_hint, touch: true
+  translates :welcome_text_in_show, touch: true
+  translates :resource_form_intro, touch: true
   translates :labels_name, touch: true
   translates :sentiments_name, touch: true
-  translates :resource_form_title_hint, touch: true
   translates :description, touch: true
   translates :comment_form_title, touch: true
   translates :comment_form_button, touch: true
+  translates :resource_form_title, touch: true
+  translates :resource_form_title_placeholder, touch: true
+  translates :resource_form_description_placeholder, touch: true
+  translates :support_button_text, touch: true
   include Globalizable
 
   belongs_to :projekt, touch: true
@@ -88,6 +94,8 @@ class ProjektPhase < ApplicationRecord
   scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
   scope :special_phases, -> { where(type: SPECIAL_PROJEKT_PHASES) }
 
+  scope :frontend_visible, -> { where(frontend_visibility: true) }
+
   scope :active, -> { where(active: true) }
   scope :current, ->(timestamp = Time.zone.today) {
     active
@@ -95,11 +103,12 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
-  scope :sorted, -> do
-    regular_phases.sort_by(&:default_order).each do |x|
-      x.start_date = Time.zone.today if x.start_date.nil?
-    end.sort_by(&:start_date)
-  end
+  scope :has_resources, -> {
+    ids_with_resources = joins(:resources).select(:id)
+    where(id: ids_with_resources)
+  }
+
+  scope :sorted, ->  {order(:given_order) }
 
   def self.order_phases(ordered_array)
     ordered_array.each_with_index do |phase_id, order|
@@ -130,7 +139,8 @@ class ProjektPhase < ApplicationRecord
   end
 
   def comments_allowed?(user, resource = nil)
-    permission_problem(user).blank?
+    feature?("resource.show_comments") &&
+      permission_problem(user).blank?
   end
 
   def not_active?
@@ -141,10 +151,8 @@ class ProjektPhase < ApplicationRecord
     end_date.present? && end_date < Time.zone.today
   end
 
-  def current?
-    phase_activated? &&
-      ((start_date <= Time.zone.today if start_date.present?) || start_date.blank?) &&
-      ((end_date >= Time.zone.today if end_date.present?) || end_date.blank?)
+  def current?(timestamp = Time.zone.today)
+    self.class.current(timestamp).where(id: id).exists?
   end
 
   def not_current?
@@ -152,27 +160,34 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
-    return if user&.administrator? || user&.projekt_manager?
+    @permission_problem_cache ||= {}
+    cache_key = "#{user&.id}_#{location}"
 
-    return :phase_not_active if not_active?
-    return :phase_expired if expired?
-    return :phase_not_current if not_current?
+    return @permission_problem_cache[cache_key] if @permission_problem_cache.key?(cache_key)
 
-    return :guest_not_logged_in if user_status == "guest" && !user
-    return if user_status == "guest"
-    return :not_logged_in if !user || user&.guest?
-    return :not_verified if user_status == "verified" && !user.level_three_verified?
+    @permission_problem_cache[cache_key] = begin
+      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
 
-    if phase_specific_permission_problems(user, location).present?
-      return phase_specific_permission_problems(user, location)
+      return :phase_not_active if not_active?
+      return :phase_expired if expired?
+      return :phase_not_current if not_current?
+
+      return :guest_not_logged_in if user_status == "guest" && !user
+      return if user_status == "guest"
+      return :not_logged_in if !user || user&.guest?
+      return :not_verified if user_status == "verified" && !user.level_three_verified?
+
+      if phase_specific_permission_problems(user, location).present?
+        return phase_specific_permission_problems(user, location)
+      end
+
+      return age_permission_problem(user) if age_permission_problem(user).present?
+      return geozone_permission_problem(user) if geozone_permission_problem(user)
+      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
+      return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
+
+      nil
     end
-
-    return age_permission_problem(user) if age_permission_problem(user).present?
-    return geozone_permission_problem(user) if geozone_permission_problem(user)
-    return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
-    return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
-
-    nil
   end
 
   def geozone_allowed?(user)
@@ -243,14 +258,14 @@ class ProjektPhase < ApplicationRecord
     option = settings.find { |s| s.key == "option.#{key}" }
 
     if option.present?
-      option.value.present?
+      option.value
     else
       nil
     end
   end
 
-  def settings_categories
-    []
+  def setting(key)
+    setting = settings.find { |s| s.key == key }
   end
 
   def admin_nav_bar_items
@@ -296,6 +311,21 @@ class ProjektPhase < ApplicationRecord
     setting&.value&.to_date
   rescue
     nil
+  end
+
+  def copy_map_settings_from_projekt
+    return if map_location.present?
+
+    map_location = projekt.map_location&.dup
+    map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+
+    projekt.map_layers.each do |map_layer|
+      map_layers << map_layer.dup
+    end
+  end
+
+  def url
+    projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
   end
 
   private
@@ -361,25 +391,12 @@ class ProjektPhase < ApplicationRecord
     end
 
     def add_default_settings
-      phase_setting_categories = ProjektPhaseSetting.defaults[self.class.name]
+      projekt_phase_settings = ProjektPhaseSetting.defaults[self.class.name]
 
-      return if phase_setting_categories.nil?
+      return if projekt_phase_settings.nil?
 
-      phase_settings = phase_setting_categories.values.reduce(:merge) || {}
-
-      phase_settings.each do |key, value|
+      ProjektPhaseSetting.defaults[self.class.name].each do |key, value|
         settings.create!(key: key, value: value)
-      end
-    end
-
-    def copy_map_settings_from_projekt
-      return if map_location.present?
-
-      map_location = projekt.map_location&.dup
-      map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
-
-      projekt.map_layers.each do |map_layer|
-        map_layers << map_layer.dup
       end
     end
 end

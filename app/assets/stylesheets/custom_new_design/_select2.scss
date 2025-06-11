@@ -1,0 +1,20 @@
+.select2-container {
+  margin-bottom: 1rem;
+
+  .select2-selection--single {
+    height: 45px !important;
+    border-radius: 7px !important;
+    border-color: #cacaca !important;
+
+    .select2-selection__rendered {
+      color: #67788A !important;
+      line-height: 45px !important;
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+    }
+  }
+
+  .select2-selection__arrow {
+    display: none;
+  }
+}

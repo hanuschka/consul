@@ -9,7 +9,31 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    @projekts = Projekt.regular
+    if params[:landing_page_slug].present?
+      @landing_page =
+        SiteCustomization::Page
+          .published
+          .landing
+          .where(landing_show_projekts_overview: true)
+          .find_by(slug: params[:landing_page_slug])
+
+      if @landing_page.nil?
+        raise ActionController::RoutingError.new('Not Found')
+      end
+
+      if @landing_page.present?
+        set_landing_page_topbar_ui_variables(@landing_page)
+      end
+    end
+
+    base_projekts =
+      if @landing_page.present?
+        @landing_page.landing_projekts
+      else
+        Projekt
+      end
+
+    @projekts = base_projekts.regular
     @projekts = @projekts.search(@search_terms) if @search_terms.present?
 
     @all_projekts = @projekts.index_order_all
@@ -41,11 +65,15 @@ class ProjektsController < ApplicationController
 
     @show_comments = Setting["extended_feature.projekts_overview_page_footer.show_in_#{@current_projekts_filter}"].present?
 
+    if @show_comments && @landing_page.present?
+      @show_comments = false
+    end
+
     if @show_comments
       set_variables_for_footer_comments
     end
 
-    @projekts = @projekts.sort_by_order_number.select { |p| p.visible_for?(current_user) }
+    @projekts = @projekts.visible_for(current_user).sort_by_order_number
     @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id))
     @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(24)
 

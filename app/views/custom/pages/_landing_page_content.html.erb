@@ -1,5 +1,24 @@
 <% content_for :body_class, "home-page" %>
 
+<% content_for :styles do %>
+  <style>
+    .custom-new-design .header--navigation ul.main-menu .content-items .projekt-name,
+    .custom-new-design .header--navigation ul.main-menu .content-items li.nav-element a {
+      color: <%= @custom_page.landing_navigation_link_color.presence %> !important;
+    }
+
+    .custom-new-design .translate-widget .translate-widget-toggler,
+    .custom-new-design .top-bar[data-white-text="true"] .translate-widget .translate-widget-toggler {
+      color: <%= @custom_page.landing_navigation_link_color.presence %> !important;
+    }
+
+    .custom-new-design .sticky-header .top-bar .translate-widget .translate-widget-toggler,
+    .custom-new-design .sticky-header .top-bar[data-white-text="true"] .translate-widget .translate-widget-toggler {
+      color: unset !important;
+    }
+  </style>
+<% end %>
+
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: root_url %>
 <% end %>

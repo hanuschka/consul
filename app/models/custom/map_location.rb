@@ -6,6 +6,7 @@ class MapLocation < ApplicationRecord
   belongs_to :projekt_phase, touch: true
   belongs_to :registered_address_district, class_name: "RegisteredAddress::District",
     foreign_key: :registered_address_district_id, touch: true, inverse_of: :map_location
+  belongs_to :mappable, polymorphic: true, touch: true
 
   has_one_attached :screenshot
 

@@ -16,13 +16,16 @@
     </div>
   </div>
 
+  <%= render Shared::ResourceMapComponent.new(
+    marker_coordinates: @proposals_coordinates,
+    resource_type: Proposal
+  ) %>
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
       <%= render(
         Shared::ResourcesListComponent.new(
           resources: @proposals,
           resource_type: Proposal,
-          map_coordinates: @proposals_coordinates,
           current_filter: @current_order,
           filter_param: "order",
           text_search_enabled: true,

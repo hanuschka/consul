@@ -11,6 +11,13 @@
     <%= content_for :social_media_meta_tags %>
 
     <%= raw setting["html.per_page_code_head"] %>
+
+    <script>
+      window.CONSUL_SETTINGS = {
+        feature_mapbox: <%= Setting["feature.mapbox"].present? %>,
+        feature_map: <%= Setting["feature.map"].present? %>
+      };
+    </script>
   </head>
   <body class="<%= yield(:body_class) %> public">
     <%= raw setting["html.per_page_code_body"] %>

@@ -67,13 +67,21 @@ class Shared::MapComponent < ApplicationComponent
         options[:vcmap] = ""
       end
 
-      if true
+      if use_mapbox?
         options.delete(:map)
         options[:mapbox] = true
         options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]
       end
 
       options
+    end
+
+    def use_mapbox?
+      if projekt_phase.present?
+        projekt_phase_feature?(projekt_phase, "general.mapbox")
+      else
+        Setting["feature.mapbox"].present?
+      end
     end
 
     def get_process_coordinates

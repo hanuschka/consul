@@ -60,6 +60,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
           "feature.general.require_admin_acceptance": "",
+          "feature.general.mapbox": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -102,6 +103,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
           "selectable_setting.general.default_order": "random",
+          "feature.general.mapbox": "",
 
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
@@ -158,6 +160,7 @@ class ProjektPhaseSetting < ApplicationRecord
         },
         "ProjektPhase::PointOfInterestPhase" => {
           "feature.general.users_can_create_pins": "active",
+          "feature.general.mapbox": "",
           "option.general.max_number_of_pins_per_user": "",
         },
       }

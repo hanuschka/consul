@@ -74,6 +74,8 @@ class PagesController < ApplicationController
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
 
+      @custom_page.content = process_oembeds(@custom_page.content)
+
       render action: custom_page_name
 
     elsif @custom_page.present? && @custom_page.projekt.present?
@@ -165,26 +167,52 @@ class PagesController < ApplicationController
     @valid_orders = Proposal.proposals_orders(current_user)
     @valid_orders.delete("archival_date")
     @valid_orders.delete("relevance")
+    sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
+
     @current_order = if @valid_orders.include?(params[:order])
                        params[:order]
-                     elsif helpers.projekt_feature?(@projekt, "general.set_default_sorting_to_newest") && @valid_orders.include?("created_at")
-                       @current_order = "created_at"
+                     elsif sort_option.present?
+                       @current_order = sort_option.value
                      else
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
+    @resources = @projekt_phase.proposals
+                               .base_selection
+                               .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-    if params[:search].present?
-      @resources = @resources.search(params[:search])
+    if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
+      @projekt_phase.stats_version.destroy if @projekt_phase.stats_version.present? && @projekt_phase.current?
+
+      @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
     else
-      take_by_projekt_labels
-      take_by_sentiment
-      take_by_my_posts
-    end
+      if params[:search].present?
+        @resources = @resources.search(params[:search])
+      else
+        take_by_projekt_labels
+        take_by_sentiment
+        take_by_my_posts
+      end
 
-    @proposals_coordinates = all_proposal_map_locations(@resources)
-    @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
+      @proposals_coordinates = all_proposal_map_locations(@resources)
+
+      @proposals =
+        @resources
+          .perform_sort_by(@current_order, session[:random_seed])
+          .page(params[:page])
+
+      if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
+        @proposals = @proposals.page(params[:resource_browse_mode_page]).per(1)
+        @proposal = @proposals.first
+
+        if @proposal.present?
+          @comment_tree = CommentTree.new(@proposal, params[:page], "newest")
+          set_comment_flags(@comment_tree.comments)
+        end
+      else
+        @proposals = @proposals.per(24)
+      end
+    end
   end
 
   def set_voting_phase_footer_tab_variables
@@ -244,11 +272,28 @@ class PagesController < ApplicationController
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
-    @valid_orders = %w[random total_votes ballots ballot_line_weight newest comments_count]
+    @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
     @valid_orders.delete("total_votes") unless @budget.current_phase.kind == "selecting"
-    @valid_orders.delete("ballots")
     @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
-    @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
+
+    sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
+
+    @current_order =
+      if @valid_orders.include?(params[:order])
+        params[:order]
+      elsif sort_option.present? || @valid_orders.include?(sort_option.value)
+        @current_order = sort_option.value
+      else
+        @valid_orders.first
+      end
+
+    if @budget.current_phase.kind == "finished"
+      if @budget.voting_style == "distributed"
+        @current_order = "ballot_line_weight"
+      elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"
+        @current_order = "ballots"
+      end
+    end
 
     params[:section] ||= "results" if @budget.current_phase.kind == "finished"
 
@@ -276,26 +321,28 @@ class PagesController < ApplicationController
       @ballot = @budget.balloting? ? query.first_or_create!(conditional: ballot_conditional?) : query.first_or_initialize(conditional: ballot_conditional?)
 
       @resources = @budget.investments
-      take_by_projekt_labels
-      take_by_sentiment
-      @investments = @resources
 
-      @investments = @investments.send(@current_filter)
-      @investment_ids = @investments.ids
-    end
-
-    if @budget.current_phase.kind == "finished"
-      if @budget.voting_style == "distributed"
-        @current_order = "ballot_line_weight"
-      elsif @budget.voting_style == "approval" || @budget.voting_style == "knapsack"
-        @current_order = "ballots"
+      if params[:search].present?
+        @resources = @resources.search(params[:search])
+      else
+        take_by_projekt_labels
+        take_by_sentiment
       end
+
+      @investments = @resources.send(@current_filter)
+      @investment_ids = @investments.ids
+      @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+      @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 
-    @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+    if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
+      @investments = @investments.page(params[:resource_browse_mode_page]).per(1)
+      @investment = @investments.first
 
-    unless params[:section] == "results" && can?(:read_results, @budget)
-      @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(18)
+      if @investment.present?
+        @comment_tree = CommentTree.new(@investment, params[:page], "newest")
+        set_comment_flags(@comment_tree.comments)
+      end
     end
   end
 
@@ -313,6 +360,15 @@ class PagesController < ApplicationController
     @projekt_notifications = @projekt_phase.projekt_notifications
   end
 
+  def set_point_of_interest_phase_footer_tab_variables
+    @map_coordinates =
+      @projekt_phase
+        .projekt_point_of_interest_pins
+        .by_categories(params[:category_ids])
+        .includes(:map_location)
+        .map(&:pin_json_data)
+  end
+
   def set_newsfeed_phase_footer_tab_variables
     @rss_id = @projekt_phase.settings.find_by(key: "option.general.newsfeed_id").value
     @rss_type = @projekt_phase.settings.find_by(key: "option.general.newsfeed_type").value
@@ -326,7 +382,6 @@ class PagesController < ApplicationController
     @projekt_events = @projekt_phase.projekt_events
                                     .send("sort_by_#{@current_filter}")
                                     .reorder(datetime: order)
-                                    .page(params[:page])
   end
 
   def set_question_phase_footer_tab_variables
@@ -354,6 +409,12 @@ class PagesController < ApplicationController
   def set_argument_phase_footer_tab_variables
     @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro.order(created_at: :desc)
     @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons.order(created_at: :desc)
+  end
+
+  def set_iframe_phase_footer_tab_variables
+    @iframe_url = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_url" }.value
+    @iframe_width = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_width" }.value
+    @iframe_height = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_height" }.value
   end
 
   def set_livestream_phase_footer_tab_variables

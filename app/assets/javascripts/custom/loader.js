@@ -9,6 +9,7 @@
 
       if (window.parent) {
         window.addEventListener('message', this.handleIframeGlobalEvents.bind(this));
+        $(document).on("turbolinks:load", this.pageLoaded.bind(this));
 
         window.parent.postMessage(
           JSON.stringify({

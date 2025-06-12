@@ -11,3 +11,4 @@ de:
         title_default: Bild hinzufügen (optional)
         bottom_line_default: "Am besten eignet sich ein Bild im Format 490 x 290 Pixel."
         max_image_size: Die maximale Bildgröße beträgt %{size} MB.
+        credits_field_placeholder: Hier klicken, um Copyright des Bildes hinzuzufügen

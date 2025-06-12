@@ -6,13 +6,8 @@
 
       <div class="flex-layout">
         <div class="main-column">
-          <h1 class="user-resources-form--title">
-            <%= investment.projekt_phase.resource_form_title.presence || t("custom.budgets.investments.form.start_new") %>
-          </h1>
-
-          <div class="user-resources-form--description">
-            <%= render_custom_block "user_resource_form_budget_investment", default_content: t("custom.budgets.investments.form.page_description") %>
-          </div>
+          <h1 class="user-resources-form--title"><%= form_title %></h1>
+          <div class="user-resources-form--description"><%= AdminWYSIWYGSanitizer.new.sanitize(form_description) %></div>
 
           <%= render "shared/errors", resource: investment %>
         </div>
@@ -33,12 +28,13 @@
               </div>
 
               <% if projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>
-                <div class="banner-editor-image-attachment js-banner-editor-image-attachment">
+                <div class="banner-editor-image-attachment">
                   <% if f.object.image.blank? %>
                     <% f.object.build_image %>
                   <% end %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                    <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
                   <% end %>
                 </div>
               <% end %>
@@ -116,13 +112,12 @@
                 </div>
               </div>
 
-              <% if investment.errors.details[:projekt_labels].any? %>
-                <% investment.errors.details[:projekt_labels].each do |error| %>
-                  <small class='form-error is-visible'>
-                    <%= t("activerecord.errors.models.budget_investment.attributes.projekt_labels.#{error[:error]}") %>
-                  </small>
-                <% end %>
+              <% investment.errors.where(:projekt_labels).each do |error| %>
+                <small class='form-error is-visible'>
+                  <%= error.message %>
+                </small>
               <% end %>
+
             <% end %>
           <% end %>
 
@@ -141,13 +136,12 @@
                 </div>
               </div>
 
-              <% if investment.errors.details[:sentiment_id].any? %>
-                <% investment.errors.details[:sentiment_id].each do |error| %>
-                  <small class="form-error is-visible">
-                    <%= t("activerecord.errors.models.budget_investment.attributes.sentiment.#{error[:error]}") %>
-                  </small>
-                <% end %>
+              <% investment.errors.where(:sentiment_id).each do |error| %>
+                <small class='form-error is-visible'>
+                  <%= error.message %>
+                </small>
               <% end %>
+
             <% end %>
           <% end %>
 
@@ -183,7 +177,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? || current_user.moderator? %>
+          <% if helpers.allowed_to_post_on_behalf_of?(current_user, investment.projekt_phase.projekt) %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.budgets.investments.form.on_behalf_of.title"),
                           description: t("custom.budgets.investments.form.on_behalf_of.description"),

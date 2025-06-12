@@ -1,0 +1,8 @@
+proposals:
+  navigation:
+    back: "zurück"
+    next: "nächster Beitrag"
+  show:
+    previous: "Vorheriger Beitrag"
+    next: "Nächster Beitrag"
+    exit_quiz_mode: "Zurück zur Vorschlagsliste" 

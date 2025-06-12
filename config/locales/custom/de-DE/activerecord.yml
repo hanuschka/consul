@@ -6,8 +6,10 @@ de:
     advanced_stats_enabled: "Erweiterte Statistiken"
     name: Name
     email: Email
+    title: Titel
     description: Beschreibung
     related_sdg_list: Ziele und Unterziele
+    resource_terms: Die AGBs und die Datenschutzbestimmung
   activerecord:
     models:
       activity:

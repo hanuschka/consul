@@ -35,6 +35,15 @@
     </li>
   <% end %>
 
+  <% if current_user.administrator? || current_user.idea_manager? || current_user.idea_officer? %>
+    <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
+        tabindex="0"
+        aria-label='<%= t("custom.layouts.header.idea_management") %>'
+        >
+      <%= link_to t("custom.layouts.header.idea_management"), idea_management_root_path, tabindex: "-1", aria: { hidden: true } %>
+    </li>
+  <% end %>
+
   <% if feature?(:budgets) &&
         (current_user.administrator? || current_user.valuator?) %>
     <li class='nav-element flyout-item js-access-flyout-menu-item focusable'

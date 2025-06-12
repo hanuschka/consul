@@ -70,5 +70,17 @@
       </div>
     <% end %>
     <%= header_button_html %>
+
+    <% if Setting["welcomepage.projekt_search"] %>
+      <div class="homepage-search-form">
+        <%= render(
+          Shared::TextSearchFormComponent.new(
+            url: projekts_path,
+            disable_reset_button_submit: true,
+            i18n_namespace: "custom.projekts.homepage_search_form",
+          )
+        ) %>
+      </div>
+    <% end %>
   </div>
 </div>

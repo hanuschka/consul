@@ -4,13 +4,11 @@ class Widget::Feed < ApplicationRecord
   KINDS = %w[active_projekts polls proposals debates expired_projekts investment_proposals].freeze
 
   def active_projekts(current_user)
-    Projekt.show_in_homepage.index_order_underway
-      .select { |p| p.visible_for?(current_user) }.first(limit)
+    Projekt.visible_for(current_user).show_in_homepage.index_order_underway.first(limit)
   end
 
   def expired_projekts(current_user)
-    Projekt.show_in_homepage.index_order_expired
-      .select { |p| p.visible_for?(current_user) }.first(limit)
+    Projekt.visible_for(current_user).show_in_homepage.index_order_expired.first(limit)
   end
 
   def polls

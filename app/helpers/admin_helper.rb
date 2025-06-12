@@ -44,4 +44,8 @@ module AdminHelper
   def namespace
     controller.class.name.split("::").first.underscore
   end
+
+  def namespace_projekt_phase_path(action: "update", url_params: {})
+    url_for(controller: params[:controller], action: action, params: url_params, only_path: true)
+  end
 end

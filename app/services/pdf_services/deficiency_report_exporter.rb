@@ -75,7 +75,7 @@ module PdfServices
       end
 
       def svg
-        qrcode = RQRCode::QRCode.new(@host)
+        qrcode = RQRCode::QRCode.new(deficiency_report_url)
 
         qrcode.as_svg(
           module_size: 80,

@@ -38,7 +38,6 @@ class Shared::MapComponent < ApplicationComponent
     def prepare_map_settings
       options = {
         map: "",
-
         map_center_latitude: map_location_latitude(map_location),
         map_center_longitude: map_location_longitude(map_location),
         map_zoom: map_location_zoom(map_location),

@@ -72,10 +72,16 @@ class Shared::MapComponent < ApplicationComponent
           @process_coordinates.map { |coordinate|
             icon = coordinate[:fa_icon_class]
 
-            {
-              name: icon,
-              path: asset_path("fontawesome_png/solid/converted_pngs/#{icon}_50px.png")
-            }
+            if icon.present?
+              {
+                name: icon,
+                path: asset_path("fontawesome_png/solid/converted_pngs/#{icon}_50px.png")
+              }
+            else
+              {
+                name: icon
+              }
+            end
           }
       elsif map_style == "regular"
         options[:map] = ""

@@ -4,7 +4,7 @@
     maps: [],
     initialize: function() {
       $("*[data-map]:visible").each(function() {
-        // App.Map.initializeMap(this);
+        App.Map.initializeMap(this);
       });
     },
     destroy: function() {
@@ -248,142 +248,12 @@
           type: "GET",
           dataType: "json",
           success: function(data) {
-            e.target.bindPopup(getPopupContent(data), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
+            e.target.bindPopup(App.MapPopup.getPopupContent(data, process), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
           }
         });
       };
 
       // functions to generate markup for popup content
-      var getPopupContent = function(data) {
-        if (process == "proposals" || data.proposal_id) {
-          return proposalPopupContent(data);
-
-        } else if ( process == "deficiency-reports" ) {
-          return deficiencyReportPopupContent(data);
-
-        } else if ( process == "projekts" ) {
-          return projektPopupContent(data);
-
-        } else if ( process == "point-of-interest-pin" ) {
-
-          return pointOfInterestPopupContent(data);
-        } else {
-          return budgetsPopupContent(data);
-        }
-
-        function proposalPopupContent(data) {
-          var proposalUrl = "/proposals/" + data.proposal_id;
-          if (data.projekt_phase_id) {
-            proposalUrl += "?projekt_phase_id=" + data.projekt_phase_id;
-          }
-
-          var popupHtml;
-          popupHtml = "<h6><a href='" + proposalUrl + "'>" + data.proposal_title + "</a></h6>"; //title
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-          }
-
-          if (data.labels.length || Object.keys(data.sentiment).length) {
-            popupHtml += "<div class='resource-map-popup-details resource-taggings'>";
-
-            if (data.labels.length) {
-              var labels = "<div class='projekt-labels'>";
-              data.labels.forEach(function(label) {
-                labels += "<span class='projekt-label selected'>"
-                labels += "<i class='fas fa-" + label.icon + "' style='margin-right:4px;'></i>"
-                labels += label.name
-                labels += "</span>";
-              });
-              labels += "</div>";
-              popupHtml += labels;
-            }
-
-            if (Object.keys(data.sentiment).length) {
-              var sentiments = "<div class='sentiments'>";
-              sentiments += "<span class='sentiment' style='background-color:" + data.sentiment.backgroundColor + ";color:" + data.sentiment.color + "'>" + data.sentiment.name + "</span>";
-              sentiments += "</div>";
-              popupHtml += sentiments;
-            }
-
-            popupHtml += "</div>";
-          }
-          popupHtml = "<div class='proposal-map-popup-content'>" + popupHtml + "</div>"
-
-          return popupHtml;
-        }
-
-        function deficiencyReportPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-          }
-
-          return popupHtml;
-        }
-
-        function budgetsPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-          }
-
-          return popupHtml;
-        }
-
-        function pointOfInterestPopupContent(data) {
-          var popupHtml = "<h5 style='color:" + data.category.color + "'>";
-          popupHtml += "<i style='margin-right: 7px' class='icon-" + data.category.icon + "'></i>"
-          popupHtml += data.category.name;
-          popupHtml += "</h5>";
-
-          return popupHtml;
-        }
-
-        function projektPopupContent(data) {
-          // return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
-          var popupHtml = "";
-          popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a></h5>"; //title
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' >"; //image
-          }
-
-          if (data.sdg_goals.length || data.tags.length ) {
-             popupHtml += "<div class='resource-map-popup-details'>";
-
-             if (data.sdg_goals && data.sdg_goals.length) {
-               var sdg_goals = "<div class='projekt-sdg-goals'>";
-               data.sdg_goals.forEach(function(sdg_goal) {
-                 sdg_goals += "<span class='projekt-sdg-goal'>"
-                 sdg_goals += "<img title='" + sdg_goal.title + "' src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
-                 sdg_goals += "</span>";
-               });
-               sdg_goals += "</div>";
-               popupHtml += sdg_goals;
-             }
-
-             if (data.tags && data.tags.length) {
-               var tags = "<div class='tags'>";
-               data.tags.forEach(function(tag) {
-                 tags += "<span class='tag' style='font-size:0.75rem;padding:0.33333rem 0.5rem;margin-bottom:4px;'>" + tag + "</span>";
-               });
-               tags += "</div>";
-
-               popupHtml += tags;
-             }
-
-             popupHtml += "</div>";
-          }
-
-          return popupHtml;
-        }
-      };
-
       // function to add event listeners to the shape layer, used when shape layer is editable
       function addEventListenersToShapeLayer(layer) {
         layer.on('pm:edit', function(e) {

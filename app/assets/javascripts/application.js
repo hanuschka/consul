@@ -103,7 +103,6 @@
 //= require tag_autocomplete
 //= require polls_admin
 //= require leaflet/dist/leaflet
-//= require mapbox-gl/dist/mapbox-gl.js
 //= require leaflet.markercluster/dist/leaflet.markercluster
 //= require map
 //= require polls

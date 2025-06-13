@@ -63,14 +63,24 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:map_layers] = map_layers if map_layers.present?
 
-      if map_style == "vcmap"
-        options[:vcmap] = ""
-      end
-
       if use_mapbox?
         options.delete(:map)
         options[:mapbox] = true
         options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]
+
+        options[:mapbox_marker_images] =
+          @process_coordinates.map { |coordinate|
+            icon = coordinate[:fa_icon_class]
+
+            {
+              name: icon,
+              path: asset_path("fontawesome_png/solid/converted_pngs/#{icon}_50px.png")
+            }
+          }
+      elsif map_style == "regular"
+        options[:map] = ""
+      elsif map_style == "vcmap"
+        options[:vcmap] = ""
       end
 
       options
@@ -78,7 +88,7 @@ class Shared::MapComponent < ApplicationComponent
 
     def use_mapbox?
       if projekt_phase.present?
-        projekt_phase_feature?(projekt_phase, "general.mapbox")
+        Setting["feature.mapbox"].present? || projekt_phase_feature?(projekt_phase, "general.mapbox")
       else
         Setting["feature.mapbox"].present?
       end

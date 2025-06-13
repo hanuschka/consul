@@ -2,22 +2,34 @@
   "use strict";
 
   // MapboxMap class definition
-  function MapboxMap(element, options) {
+  function MapboxMap(element) {
     this.element = element;
-    this.options = options;
+    var $element = $(element);
+
+    this.mapCenterLatitude = $element.data("map-center-latitude");
+    this.mapCenterLongitude = $element.data("map-center-longitude");
+    this.zoom = $element.data("map-zoom");
+    this.process = $element.data("parent-class");
+    this.processCoordinates = $element.data("process-coordinates");
+    this.editable = $element.data("editable");
+    this.adminEditor = $element.data("admin-editor");
+    this.adminShape = $element.data("admin-shape");
+    this.showAdminShape = $element.data("show-admin-shape");
+    this.latitudeInputSelector = $element.data("latitude-input-selector");
+    this.longitudeInputSelector = $element.data("longitude-input-selector");
+    this.zoomInputSelector = $element.data("zoom-input-selector");
+    this.shapeInputSelector = $element.data("shape-input-selector");
+    this.showAdminShapeInputSelector = $element.data("show-admin-shape-input-selector");
+    this.$categorySelect = $(".js-map-update-pin-style");
+    this.markerImages = $element.data("mapbox-marker-images")
+
     this.map = null;
     this.markers = []; // Array to store all markers
     this.adminMarker = null;
     this.markerCategoryIcon = null;
     this.markerCategoryColor = null;
-    this.process = options.process;
-    this.processCoordinates = options.processCoordinates;
-    this.editable = options.editable;
-    this.adminEditor = options.adminEditor;
-    this.adminShape = options.adminShape;
-    this.showAdminShape = options.showAdminShape;
     this.adminShapesColor = 'red';
-    this.defaultMarkerBackgroundCircleRadius = 10;
+    this.defaultMarkerBackgroundCircleRadius = 14;
 
     this.initialize();
   }
@@ -35,8 +47,8 @@
     this.map = new mapboxgl.Map({
       container: this.element,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [this.options.mapCenterLongitude, this.options.mapCenterLatitude],
-      zoom: this.options.zoom
+      center: [this.mapCenterLongitude, this.mapCenterLatitude],
+      zoom: this.zoom
     });
 
     // Wait for the map to load before adding markers
@@ -50,22 +62,22 @@
   MapboxMap.prototype.setupEventListeners = function() {
     var self = this;
 
-    if (this.options.$categorySelect) {
-      this.options.$categorySelect.on("change", function(e) {
+    if (this.$categorySelect) {
+      this.$categorySelect.on("change", function(e) {
         self.updateMarkerStyleFromCategorySelect(e.target);
       });
 
-      if (this.options.$categorySelect.length) {
-        this.updateMarkerStyleFromCategorySelect(this.options.$categorySelect.get(0));
+      if (this.$categorySelect.length) {
+        this.updateMarkerStyleFromCategorySelect(this.$categorySelect.get(0));
       }
     }
 
     if (this.adminEditor && !this.markers.length) {
       this.map.on("moveend", function() {
         var center = self.map.getCenter();
-        $(self.options.latitudeInputSelector).val(center.lat);
-        $(self.options.longitudeInputSelector).val(center.lng);
-        $(self.options.zoomInputSelector).val(self.map.getZoom());
+        $(self.latitudeInputSelector).val(center.lat);
+        $(self.longitudeInputSelector).val(center.lng);
+        $(self.zoomInputSelector).val(self.map.getZoom());
       });
     }
   };
@@ -137,13 +149,13 @@
   MapboxMap.prototype.updateFormfieldsWithMarker = function(e) {
     var marker = e.target;
     var lngLat = marker.getLngLat();
-    $(this.options.latitudeInputSelector).val(lngLat.lat);
-    $(this.options.longitudeInputSelector).val(lngLat.lng);
-    $(this.options.zoomInputSelector).val(this.map.getZoom());
-    $(this.options.shapeInputSelector).val(JSON.stringify({}));
+    $(this.latitudeInputSelector).val(lngLat.lat);
+    $(this.longitudeInputSelector).val(lngLat.lng);
+    $(this.zoomInputSelector).val(this.map.getZoom());
+    $(this.shapeInputSelector).val(JSON.stringify({}));
 
     if (this.adminEditor) {
-      $(this.options.showAdminShapeInputSelector).val(true);
+      $(this.showAdminShapeInputSelector).val(true);
     }
   };
 
@@ -188,29 +200,15 @@
       dataType: "json",
       success: function(data) {
         var popup = new mapboxgl.Popup({
-          offset: [0, -30],
+          offset: [0, -20],
           closeButton: false,
           maxWidth: '200px'
         })
           .setLngLat(markerElement.getLngLat())
-          .setHTML(self.getPopupContent(data))
+          .setHTML(App.MapPopup.getPopupContent(data))
           .addTo(self.map);
       }
     });
-  };
-
-  MapboxMap.prototype.getPopupContent = function(data) {
-    if (this.process == "proposals" || data.proposal_id) {
-      return this.proposalPopupContent(data);
-    } else if (this.process == "deficiency-reports") {
-      return this.deficiencyReportPopupContent(data);
-    } else if (this.process == "projekts") {
-      return this.projektPopupContent(data);
-    } else if (this.process == "point-of-interest-pin") {
-      return this.pointOfInterestPopupContent(data);
-    } else {
-      return this.budgetsPopupContent(data);
-    }
   };
 
   MapboxMap.prototype.addMarkers = function() {
@@ -239,7 +237,8 @@
             },
             properties: {
               color: coords.color,
-              iconClass: coords.fa_icon_class
+              iconClass: coords.fa_icon_class,
+              fa_icon_class: coords.fa_icon_class // Ensure this matches the marker image name
             }
           };
 
@@ -257,22 +256,12 @@
             feature.properties.id = coords.investment_id;
           }
 
+          console.log('Created feature:', feature);
           return feature;
         })
       };
 
-
-//       this.element.dataset.markerIconPaths.forEach(function() {
-//         // Load the custom marker image first
-//         this.map.loadImage(this.element.dataset.markerIconPath, function(error, image) {
-//           if (error) throw error;
-
-//           self.map.addImage('custom-marker', image);
-//         });
-//       })
-
-
-      // Add the image to the map
+      console.log('Created markers GeoJSON:', markers);
 
       // Add the source to the map
       self.map.addSource('markers', {
@@ -334,33 +323,104 @@
         }
       });
 
-      // Add unclustered point layer with custom marker
-      // self.map.addLayer({
-      //   id: 'unclustered-point',
-      //   type: 'symbol',
-      //   source: 'markers',
-      //   filter: ['!', ['has', 'point_count']],
-      //   layout: {
-      //     'icon-image': 'custom-marker',
-      //     'icon-size': 0.04,
-      //     'icon-allow-overlap': true,
-      //     'icon-ignore-placement': true,
-      //     'icon-anchor': 'center',
-      //     'icon-pitch-alignment': 'map',
-      //     'icon-rotation-alignment': 'map'
-      //   }
-      // });
+      // Load all marker images
+      if (this.markerImages && this.markerImages.length) {
+        var loadedImages = 0;
+        var totalImages = this.markerImages.length;
+        console.log('Starting to load marker images:', this.markerImages);
 
-      // Add hover effect
-      self.map.on('mouseenter', 'unclustered-point', function() {
-        self.map.getCanvas().style.cursor = 'pointer';
-        self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius + 1);
-      });
+        this.markerImages.forEach(function(markerImage) {
+          self.map.loadImage(markerImage.path, function(error, image) {
+            if (error) {
+              console.error('Error loading marker image:', error, markerImage);
+              loadedImages++;
+            } else {
+              self.map.addImage(markerImage.name, image);
+              loadedImages++;
+            }
 
-      self.map.on('mouseleave', 'unclustered-point', function() {
-        self.map.getCanvas().style.cursor = '';
-        self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius);
-      });
+            // When all images are loaded, add the unclustered point layer
+            if (loadedImages === totalImages) {
+              console.log('All images loaded, adding icon layer');
+              // Remove existing layer if it exists
+              if (self.map.getLayer('unclustered-point')) {
+                self.map.removeLayer('unclustered-point');
+              }
+
+              // Add the unclustered point layer
+              self.map.addLayer({
+                id: 'unclustered-point',
+                type: 'symbol',
+                source: 'markers',
+                filter: ['!', ['has', 'point_count']],
+                layout: {
+                  'icon-image': ['get', 'fa_icon_class'],
+                  'icon-size': 0.35,
+                  'icon-allow-overlap': true,
+                  'icon-ignore-placement': true,
+                  // 'icon-anchor': 'center',
+                }
+              }, null);
+
+              // Add hover effect
+              self.map.on('mouseenter', 'unclustered-point', function() {
+                self.map.getCanvas().style.cursor = 'pointer';
+                self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius + 1);
+              });
+
+              self.map.on('mouseleave', 'unclustered-point', function() {
+                self.map.getCanvas().style.cursor = '';
+                self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius);
+              });
+
+              // Add click handler for individual markers
+              self.map.on('click', 'unclustered-point', function(e) {
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var properties = e.features[0].properties;
+
+                // Show empty popup immediately
+                var popup = new mapboxgl.Popup({
+                  offset: [0, -20],
+                  closeButton: true,
+                  maxWidth: '200px'
+                })
+                  .setLngLat(coordinates)
+                  .setHTML('<div class="map-popup-loading">Loading...</div>')
+                  .addTo(self.map);
+
+                var route;
+                if (self.process == "proposals") {
+                  route = "/proposals/" + properties.id + "/json_data";
+                } else if (self.process == "deficiency-reports") {
+                  route = "/deficiency_reports/" + properties.id + "/json_data";
+                } else if (self.process == "projekts") {
+                  route = "/projekts/" + properties.id + "/json_data";
+                } else if (self.process == "budgets") {
+                  route = "/investments/" + properties.id + "/json_data";
+                } else if (self.process == "point-of-interest-pin") {
+                  route = "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
+                }
+
+                if (!route) { return; }
+
+                $.ajax(route, {
+                  type: "GET",
+                  dataType: "json",
+                  success: function(data) {
+                    popup.setHTML(App.MapPopup.getPopupContent(data), self.process);
+                  },
+                  error: function() {
+                    popup.setHTML('<div class="error">Failed to load data</div>');
+                  }
+                });
+              });
+
+              // Verify layer was added
+              console.log('Layer added:', self.map.getLayer('unclustered-point'));
+            }
+          });
+        });
+      }
 
       // Add click handler for clusters
       self.map.on('click', 'clusters', function(e) {
@@ -379,42 +439,6 @@
             });
           }
         );
-      });
-
-      // Add click handler for individual markers
-      self.map.on('click', 'unclustered-point', function(e) {
-        var coordinates = e.features[0].geometry.coordinates.slice();
-        var properties = e.features[0].properties;
-
-        var route;
-        if (self.process == "proposals") {
-          route = "/proposals/" + properties.id + "/json_data";
-        } else if (self.process == "deficiency-reports") {
-          route = "/deficiency_reports/" + properties.id + "/json_data";
-        } else if (self.process == "projekts") {
-          route = "/projekts/" + properties.id + "/json_data";
-        } else if (self.process == "budgets") {
-          route = "/investments/" + properties.id + "/json_data";
-        } else if (self.process == "point-of-interest-pin") {
-          route = "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
-        }
-
-        if (!route) { return; }
-
-        $.ajax(route, {
-          type: "GET",
-          dataType: "json",
-          success: function(data) {
-            var popup = new mapboxgl.Popup({
-              offset: [0, -30],
-              closeButton: false,
-              maxWidth: '200px'
-            })
-              .setLngLat(coordinates)
-              .setHTML(self.getPopupContent(data))
-              .addTo(self.map);
-          }
-        });
       });
 
       // Change cursor on hover
@@ -527,25 +551,7 @@
     initialize: function() {
       $("[data-mapbox]").each(function() {
         var element = this;
-        var options = {
-          mapCenterLatitude: $(element).data("map-center-latitude"),
-          mapCenterLongitude: $(element).data("map-center-longitude"),
-          zoom: $(element).data("map-zoom"),
-          process: $(element).data("parent-class"),
-          processCoordinates: $(element).data("process-coordinates"),
-          editable: $(element).data("editable"),
-          adminEditor: $(element).data("admin-editor"),
-          adminShape: $(element).data("admin-shape"),
-          showAdminShape: $(element).data("show-admin-shape"),
-          latitudeInputSelector: $(element).data("latitude-input-selector"),
-          longitudeInputSelector: $(element).data("longitude-input-selector"),
-          zoomInputSelector: $(element).data("zoom-input-selector"),
-          shapeInputSelector: $(element).data("shape-input-selector"),
-          showAdminShapeInputSelector: $(element).data("show-admin-shape-input-selector"),
-          $categorySelect: $(".js-map-update-pin-style")
-        };
-
-        new MapboxMap(element, options);
+        new MapboxMap(element);
       });
     },
     destroy: function() {

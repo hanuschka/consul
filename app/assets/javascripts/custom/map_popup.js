@@ -1,19 +1,19 @@
 App.MapPopup = {
-  getPopupContent: function(data) {
-    if (process == "proposals" || data.proposal_id) {
-      return proposalPopupContent(data);
+  getPopupContent: function(data, resourceName) {
+    if (resourceName == "proposals" || data.proposal_id) {
+      return this.proposalPopupContent(data);
 
-    } else if ( process == "deficiency-reports" ) {
-      return deficiencyReportPopupContent(data);
+    } else if ( resourceName == "deficiency-reports" ) {
+      return this.deficiencyReportPopupContent(data);
 
-    } else if ( process == "projekts" ) {
-      return projektPopupContent(data);
+    } else if ( resourceName == "projekts" ) {
+      return this.projektPopupContent(data);
 
-    } else if ( process == "point-of-interest-pin" ) {
+    } else if ( resourceName == "point-of-interest-pin" ) {
 
-      return pointOfInterestPopupContent(data);
+      return this.pointOfInterestPopupContent(data);
     } else {
-      return budgetsPopupContent(data);
+      return this.budgetsPopupContent(data);
     }
 
   },
@@ -25,7 +25,7 @@ App.MapPopup = {
     }
 
     var popupHtml;
-    popupHtml = "<h6><a href='" + proposalUrl + "'>" + data.proposal_title + "</a></h6>"; //title
+    popupHtml = "<h5><a href='" + proposalUrl + "'>" + data.proposal_title + "</a></h5>"; //title
 
     if (data.image_url) {
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image

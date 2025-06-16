@@ -3,25 +3,20 @@ App.MapPopup = {
     console.log("getPopupContent", data, resourceName)
 
     if (resourceName == "proposals" || data.proposal_id) {
-      return this.proposalPopupContent(data);
-
-    } else if ( resourceName == "deficiency-reports" ) {
+      return this.standardResourcePopupContent(data);
+    } else if (resourceName == "deficiency-reports") {
       return this.deficiencyReportPopupContent(data);
-
-    } else if ( resourceName == "projekts" ) {
+    } else if (resourceName == "projekts") {
       return this.projektPopupContent(data);
-
-    } else if ( resourceName == "point-of-interest-pin" ) {
-
+    } else if (resourceName == "point-of-interest-pin") {
       return this.pointOfInterestPopupContent(data);
     } else {
       return this.budgetsPopupContent(data);
     }
-
   },
 
-  proposalPopupContent: function(data) {
-    console.log("proposalPopupContent", data)
+  standardResourcePopupContent: function(data) {
+    console.log("standardResourcePopupContent", data)
 
     var proposalUrl = "/proposals/" + data.proposal_id;
     if (data.projekt_phase_id) {
@@ -35,7 +30,7 @@ App.MapPopup = {
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
     }
 
-    if (data.labels.length || Object.keys(data.sentiment).length) {
+    if ((data.labels || data.sentiments) && (data.labels.length || Object.keys(data.sentiment).length)) {
       popupHtml += "<div class='resource-map-popup-details resource-taggings'>";
 
       if (data.labels.length) {
@@ -77,7 +72,7 @@ App.MapPopup = {
 
   budgetsPopupContent: function(data) {
     var popupHtml = "";
-    popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
+    popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.title + "</a></h5>";
 
     if (data.image_url) {
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image

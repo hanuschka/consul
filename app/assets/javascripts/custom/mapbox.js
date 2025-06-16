@@ -9,7 +9,7 @@
     this.mapCenterLatitude = $element.data("map-center-latitude");
     this.mapCenterLongitude = $element.data("map-center-longitude");
     this.zoom = $element.data("map-zoom");
-    this.process = $element.data("parent-class");
+    this.resourcesName = $element.data("parent-class");
     this.processCoordinates = $element.data("process-coordinates");
     this.editable = $element.data("editable");
     this.adminEditor = $element.data("admin-editor");
@@ -176,21 +176,32 @@
 
   MapboxMap.prototype.openMarkerPopup = function(e) {
     var self = this;
-    var route;
-    var markerElement = e.target || e.currentTarget;
-    var id = markerElement.dataset.id;
-    var projektPhaseId = markerElement.dataset.projektPhaseId;
 
-    if (this.process == "proposals") {
-      route = "/proposals/" + id + "/json_data";
-    } else if (this.process == "deficiency-reports") {
-      route = "/deficiency_reports/" + id + "/json_data";
-    } else if (this.process == "projekts") {
-      route = "/projekts/" + id + "/json_data";
-    } else if (this.process == "budgets") {
-      route = "/investments/" + id + "/json_data";
-    } else if (this.process == "point-of-interest-pin") {
-      route = "/projekt_point_of_interest_pins/" + id + "/json_data?projekt_phase_id=" + projektPhaseId;
+    console.log("handle click on marker")
+    var coordinates = e.features[0].geometry.coordinates.slice();
+    var properties = e.features[0].properties;
+
+    // Show empty popup immediately
+    var popup = new mapboxgl.Popup({
+      offset: [0, -20],
+      closeButton: true,
+      maxWidth: '200px'
+    })
+      .setLngLat(coordinates)
+      .setHTML('<div class="map-popup-loading">Loading...</div>')
+      .addTo(self.map);
+
+    var route;
+    if (self.resourcesName == "proposals") {
+      route = "/proposals/" + properties.id + "/json_data";
+    } else if (self.resourcesName == "deficiency-reports") {
+      route = "/deficiency_reports/" + properties.id + "/json_data";
+    } else if (self.resourcesName == "projekts") {
+      route = "/projekts/" + properties.id + "/json_data";
+    } else if (self.resourcesName == "budgets") {
+      route = "/investments/" + properties.id + "/json_data";
+    } else if (self.resourcesName == "point-of-interest-pin") {
+      route = "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
     }
 
     if (!route) { return; }
@@ -199,14 +210,10 @@
       type: "GET",
       dataType: "json",
       success: function(data) {
-        var popup = new mapboxgl.Popup({
-          offset: [0, -20],
-          closeButton: false,
-          maxWidth: '200px'
-        })
-          .setLngLat(markerElement.getLngLat())
-          .setHTML(App.MapPopup.getPopupContent(data))
-          .addTo(self.map);
+        popup.setHTML(App.MapPopup.getPopupContent(data), self.resourcesName);
+      },
+      error: function() {
+        popup.setHTML('<div class="error">Failed to load data</div>');
       }
     });
   };
@@ -242,14 +249,14 @@
             }
           };
 
-          // Add the appropriate ID based on process type
-          if (self.process == "proposals") {
+          // Add the appropriate ID based on resourcesName type
+          if (self.resourcesName == "proposals") {
             feature.properties.id = coords.proposal_id;
-          } else if (self.process == "deficiency-reports") {
+          } else if (self.resourcesName == "deficiency-reports") {
             feature.properties.id = coords.deficiency_report_id;
-          } else if (self.process == "projekts") {
+          } else if (self.resourcesName == "projekts") {
             feature.properties.id = coords.projekt_id;
-          } else if (self.process == "point-of-interest-pin") {
+          } else if (self.resourcesName == "point-of-interest-pin") {
             feature.properties.id = coords.point_of_interest_pin_id;
             feature.properties.projektPhaseId = coords.projekt_phase_id;
           } else {
@@ -422,46 +429,10 @@
     });
 
     // Add click handler for individual markers
-    console.log("add a click on marker")
+
     self.map.on('click', 'unclustered-point', function(e) {
-      var coordinates = e.features[0].geometry.coordinates.slice();
-      var properties = e.features[0].properties;
-
-      // Show empty popup immediately
-      var popup = new mapboxgl.Popup({
-        offset: [0, -20],
-        closeButton: true,
-        maxWidth: '200px'
-      })
-        .setLngLat(coordinates)
-        .setHTML('<div class="map-popup-loading">Loading...</div>')
-        .addTo(self.map);
-
-      var route;
-      if (self.process == "proposals") {
-        route = "/proposals/" + properties.id + "/json_data";
-      } else if (self.process == "deficiency-reports") {
-        route = "/deficiency_reports/" + properties.id + "/json_data";
-      } else if (self.process == "projekts") {
-        route = "/projekts/" + properties.id + "/json_data";
-      } else if (self.process == "budgets") {
-        route = "/investments/" + properties.id + "/json_data";
-      } else if (self.process == "point-of-interest-pin") {
-        route = "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
-      }
-
-      if (!route) { return; }
-
-      $.ajax(route, {
-        type: "GET",
-        dataType: "json",
-        success: function(data) {
-          popup.setHTML(App.MapPopup.getPopupContent(data), self.process);
-        },
-        error: function() {
-          popup.setHTML('<div class="error">Failed to load data</div>');
-        }
-      });
+      console.log("click on unclustered-point")
+      self.openMarkerPopup(e)
     });
 
     // Verify layer was added
@@ -511,6 +482,7 @@
     });
 
     this.map.on('click', layerId, function() {
+      console.log("map on click")
       self.openMarkerPopup({ target: { options: { id: coordinates.id } } });
     });
   };

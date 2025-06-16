@@ -139,7 +139,7 @@ module Budgets
 
       data = {
         investment_id: investment.id,
-        investment_title: investment.title,
+        title: investment.title,
         budget_id: investment.budget.id,
         image_url: image_url
       }.to_json

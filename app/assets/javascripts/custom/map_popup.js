@@ -1,5 +1,7 @@
 App.MapPopup = {
   getPopupContent: function(data, resourceName) {
+    console.log("getPopupContent", data, resourceName)
+
     if (resourceName == "proposals" || data.proposal_id) {
       return this.proposalPopupContent(data);
 
@@ -19,6 +21,8 @@ App.MapPopup = {
   },
 
   proposalPopupContent: function(data) {
+    console.log("proposalPopupContent", data)
+
     var proposalUrl = "/proposals/" + data.proposal_id;
     if (data.projekt_phase_id) {
       proposalUrl += "?projekt_phase_id=" + data.projekt_phase_id;

@@ -228,19 +228,21 @@
       // function to open marker popup
       var openMarkerPopup = function(e) {
         var route;
+        var resourceType = e.target.options.resource_type;
 
-        if ( process == "proposals" ) {
+        if ( resourceType == "proposal" ) {
           route = "/proposals/" + e.target.options.id + "/json_data"
-        } else if ( process == "deficiency-reports") {
+        } else if ( resourceType == "deficiency_report") {
           route = "/deficiency_reports/" + e.target.options.id + "/json_data"
-        } else if ( process == "projekts") {
+        } else if ( resourceType == "projekt") {
           route = "/projekts/" + e.target.options.id + "/json_data"
-        } else if ( process == "budgets") {
+        } else if ( resourceType == "investment") {
           route = "/investments/" + e.target.options.id + "/json_data"
-        } else if (process == "point-of-interest-pin") {
+        } else if (resourceType == "point_of_interest_pin") {
           route = "/projekt_point_of_interest_pins/" + e.target.options.id + "/json_data?projekt_phase_id=" + e.target.options.projekt_phase_id;
         }
 
+        console.log("openMarkerPopup", resourceType)
         if (!route) { return };
 
         marker = e.target;
@@ -248,7 +250,7 @@
           type: "GET",
           dataType: "json",
           success: function(data) {
-            e.target.bindPopup(App.MapPopup.getPopupContent(data, process), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
+            e.target.bindPopup(App.MapPopup.getPopupContent(data, resourceType), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
           }
         });
       };
@@ -408,40 +410,30 @@
 
       // ads pins and shapes created by user
       if (processCoordinates) {
-        processCoordinates.forEach(function(coordinates) {
-          if (App.Map.validCoordinates(coordinates)) {
-            marker = createMarker(coordinates.lat, coordinates.long, coordinates.color, coordinates.fa_icon_class);
+        processCoordinates.forEach(function(markerCoordinate) {
+          if (App.Map.validCoordinates(markerCoordinate)) {
+            marker = createMarker(markerCoordinate.lat, markerCoordinate.long, markerCoordinate.color, markerCoordinate.fa_icon_class);
 
-            if (process == "proposals") {
-              marker.options.id = coordinates.proposal_id
-            } else if (process == "deficiency-reports") {
-              marker.options.id = coordinates.deficiency_report_id
-            } else if (process == "projekts") {
-              marker.options.id = coordinates.projekt_id
-            } else if (process == "point-of-interest-pin") {
-              marker.options.id = coordinates.point_of_interest_pin_id
-              marker.options.projekt_phase_id = coordinates.projekt_phase_id
-            } else {
-              marker.options.id = coordinates.investment_id
-            }
+            marker.options.id = markerCoordinate.id
+            marker.options.resource_type = markerCoordinate.resource_type
+            marker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
             marker.on("click", openMarkerPopup);
-
           } else {
-            var userShape = L.geoJSON(coordinates, {
+            var userShape = L.geoJSON(markerCoordinate, {
               style: function(feature) {
-                return { color: coordinates.color };
+                return { color: markerCoordinate.color };
               }
             });
 
             if (process == "proposals") {
-              userShape.options.id = coordinates.proposal_id
+              userShape.options.id = markerCoordinate.proposal_id
             } else if (process == "deficiency-reports") {
-              userShape.options.id = coordinates.deficiency_report_id
+              userShape.options.id = markerCoordinate.deficiency_report_id
             } else if (process == "projekts") {
-              userShape.options.id = coordinates.projekt_id
+              userShape.options.id = markerCoordinate.projekt_id
             } else {
-              userShape.options.id = coordinates.investment_id
+              userShape.options.id = markerCoordinate.investment_id
             }
 
             userShape.on("click", openMarkerPopup);

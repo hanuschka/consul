@@ -56,9 +56,6 @@ class Shared::MapComponent < ApplicationComponent
 
         editable: editable,
         enable_geoman_controls: enable_geoman_controls?,
-
-        # marker_icon_path: ActionController::Base.helpers.asset_path('custom/map-pin-icon.svg')
-        marker_icon_path: ActionController::Base.helpers.asset_path('fontawesome_png/solid/converted_pngs/euro-sign.png')
       }
 
       options[:map_layers] = map_layers if map_layers.present?
@@ -67,18 +64,8 @@ class Shared::MapComponent < ApplicationComponent
         options.delete(:map)
         options[:mapbox] = true
         options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]
+        options[:mapbox_marker_images] = mapbox_marker_images
 
-        options[:mapbox_marker_images] =
-          @process_coordinates.map { |coordinate|
-            icon = coordinate[:fa_icon_class]
-
-            if icon.present?
-              {
-                name: icon,
-                path: asset_path("fontawesome_png/solid/converted_pngs/#{icon}_50px.png")
-              }
-            end
-          }.compact
       elsif map_style == "regular"
         options[:map] = ""
       elsif map_style == "vcmap"
@@ -86,6 +73,21 @@ class Shared::MapComponent < ApplicationComponent
       end
 
       options
+    end
+
+    def mapbox_marker_images
+      @process_coordinates.map { |coordinate|
+        icon = coordinate[:fa_icon_class]
+
+        if icon.present?
+          {
+            name: icon,
+            path: asset_path("fontawesome_png/solid/converted_pngs/#{icon}_50px.png")
+          }
+        end
+      }
+        .compact
+        .uniq { |icon| icon[:name] }
     end
 
     def use_mapbox?

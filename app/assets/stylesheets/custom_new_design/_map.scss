@@ -18,18 +18,18 @@
 }
 
 .mapboxgl-popup-content {
-  width: 221px;
+  width: 250px;
   padding: 0 !important;
 
-  h5 {
+  h5, h6 {
     padding: 8px 10px;
-    padding-right: 20px;
+    padding-right: 30px;
     margin-bottom: 0;
     margin-top: 0;
   }
 }
 
-.map-popup-loading {
+.map-popup-status-message {
   padding: 10px 10px 15px;
   font-size: 18px;
 }

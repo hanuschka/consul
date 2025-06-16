@@ -37,10 +37,11 @@ module ProposalsHelper
       sentiment["color"] = helpers.pick_text_color(proposal.sentiment.color)
     end
 
-    image_url = proposal.image.present? ? url_for(proposal.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+    image_url = proposal.image.present? ? url_for(proposal.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
 
     data = {
-      proposal_id: proposal.id,
+      resource_type: "proposal",
+      id: proposal.id,
       title: proposal.title,
       projekt_phase_id: proposal.projekt_phase_id,
       # description: ActionController::Base.helpers.truncate(ActionController::Base.helpers.strip_tags(proposal.description), length: 100),

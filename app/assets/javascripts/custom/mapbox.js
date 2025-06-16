@@ -30,6 +30,7 @@
     this.markerCategoryColor = null;
     this.adminShapesColor = 'red';
     this.defaultMarkerBackgroundCircleRadius = 14;
+    this.hoveredFeature = null;
 
     this.initialize();
   }
@@ -180,43 +181,47 @@
     console.log("handle click on marker")
     var coordinates = e.features[0].geometry.coordinates.slice();
     var properties = e.features[0].properties;
+    var resourceType = properties["resource_type"]
 
     // Show empty popup immediately
     var popup = new mapboxgl.Popup({
-      offset: [0, -20],
+      offset: 20,
       closeButton: true,
-      maxWidth: '200px'
+      maxWidth: '250px'
     })
       .setLngLat(coordinates)
-      .setHTML('<div class="map-popup-loading">Loading...</div>')
+      .setHTML('<div class="map-popup-status-message">Loading...</div>')
       .addTo(self.map);
 
-    var route;
-    if (self.resourcesName == "proposals") {
-      route = "/proposals/" + properties.id + "/json_data";
-    } else if (self.resourcesName == "deficiency-reports") {
-      route = "/deficiency_reports/" + properties.id + "/json_data";
-    } else if (self.resourcesName == "projekts") {
-      route = "/projekts/" + properties.id + "/json_data";
-    } else if (self.resourcesName == "budgets") {
-      route = "/investments/" + properties.id + "/json_data";
-    } else if (self.resourcesName == "point-of-interest-pin") {
-      route = "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
-    }
+    var popupDataUrl = self.getPopupDataUrl(resourceType, properties)
 
-    if (!route) { return; }
+    if (!popupDataUrl) return;
 
-    $.ajax(route, {
+    $.ajax(popupDataUrl, {
       type: "GET",
-      dataType: "json",
-      success: function(data) {
-        popup.setHTML(App.MapPopup.getPopupContent(data), self.resourcesName);
-      },
-      error: function() {
-        popup.setHTML('<div class="error">Failed to load data</div>');
-      }
-    });
+      dataType: "json"
+    })
+      .then(function(data) {
+        popup.setHTML(App.MapPopup.getPopupContent(data), resourceType);
+      })
+      .fail(function() {
+        popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
+      })
   };
+
+  MapboxMap.prototype.getPopupDataUrl = function(resourceType, properties) {
+    if (resourceType == "proposal") {
+      return "/proposals/" + properties.id + "/json_data";
+    } else if (resourceType == "deficiency_report") {
+      return "/deficiency_reports/" + properties.id + "/json_data";
+    } else if (resourceType == "projekt") {
+      return "/projekts/" + properties.id + "/json_data";
+    } else if (resourceType == "investment") {
+      return "/investments/" + properties.id + "/json_data";
+    } else if (resourceType == "point_of_interest_pin") {
+      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
+    }
+  }
 
   MapboxMap.prototype.addMarkers = function() {
     var self = this;
@@ -231,39 +236,26 @@
       // Create a GeoJSON source for all markers
       var markers = {
         type: 'FeatureCollection',
-        features: this.processCoordinates.filter(function(coords) {
-          var isValid = App.Mapbox.validCoordinates(coords);
-          console.log("coordinates validation:", coords, isValid);
+        features: this.processCoordinates.filter(function(markerCoordinate) {
+          var isValid = App.Mapbox.validCoordinates(markerCoordinate);
           return isValid;
-        }).map(function(coords) {
+        }).map(function(markerCoordinate) {
           var feature = {
             type: 'Feature',
+            id: markerCoordinate.id, // Add feature ID for feature-state
             geometry: {
               type: 'Point',
-              coordinates: [parseFloat(coords.long), parseFloat(coords.lat)]
+              coordinates: [parseFloat(markerCoordinate.long), parseFloat(markerCoordinate.lat)]
             },
             properties: {
-              color: coords.color,
-              iconClass: coords.fa_icon_class,
-              fa_icon_class: coords.fa_icon_class // Ensure this matches the marker image name
+              id: markerCoordinate.id,
+              resource_type: markerCoordinate.resource_type,
+              color: markerCoordinate.color,
+              iconClass: markerCoordinate.fa_icon_class,
+              fa_icon_class: markerCoordinate.fa_icon_class // Ensure this matches the marker image name
             }
           };
 
-          // Add the appropriate ID based on resourcesName type
-          if (self.resourcesName == "proposals") {
-            feature.properties.id = coords.proposal_id;
-          } else if (self.resourcesName == "deficiency-reports") {
-            feature.properties.id = coords.deficiency_report_id;
-          } else if (self.resourcesName == "projekts") {
-            feature.properties.id = coords.projekt_id;
-          } else if (self.resourcesName == "point-of-interest-pin") {
-            feature.properties.id = coords.point_of_interest_pin_id;
-            feature.properties.projektPhaseId = coords.projekt_phase_id;
-          } else {
-            feature.properties.id = coords.investment_id;
-          }
-
-          console.log('Created feature:', feature);
           return feature;
         })
       };
@@ -289,16 +281,18 @@
           'circle-color': [
             'step',
             ['get', 'point_count'],
-            '#51bbd6',
-            100, '#f1f075',
-            750, '#f28cb1'
+            'rgba(25.5, 77.7, 127.2, 0.5)',   // small clusters (e.g. < 10)
+            10, 'rgba(25.5, 77.7, 127.2, 0.5)', // medium clusters (e.g. < 30)
+            30, 'rgba(25.5, 77.7, 127.2, 0.5)'  // large clusters (30+)
           ],
           'circle-radius': [
             'step',
             ['get', 'point_count'],
+            15,
+            10,
             20,
-            100, 30,
-            750, 40
+            30,
+            25
           ]
         }
       });
@@ -318,13 +312,18 @@
 
       // Add background circle layer
       self.map.addLayer({
-        id: 'unclustered-point-background',
+        id: 'custom-marker',
         type: 'circle',
         source: 'markers',
         filter: ['!', ['has', 'point_count']],
         paint: {
           'circle-color': ['coalesce', ['get', 'color'], '#ff0000'],
-          'circle-radius': self.defaultMarkerBackgroundCircleRadius,
+          'circle-radius': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            self.defaultMarkerBackgroundCircleRadius + 1,
+            self.defaultMarkerBackgroundCircleRadius
+          ],
           'circle-stroke-width': 3,
           'circle-stroke-color': '#ffffff'
         }
@@ -349,12 +348,12 @@
 
             // When all images are loaded, add the unclustered point layer
             if (loadedImages === totalImages) {
-              self.setupMarkerEventListeners()
+              self.setupIconLayer()
             }
           });
         });
       } else {
-        self.setupMarkerEventListeners()
+        self.setupIconLayer()
       }
 
       // Add click handler for clusters
@@ -393,18 +392,17 @@
     }
   };
 
-  MapboxMap.prototype.setupMarkerEventListeners = function() {
-    console.log('All images loaded, adding icon layer');
+  MapboxMap.prototype.setupIconLayer = function(e) {
     var self = this;
 
     // Remove existing layer if it exists
-    if (self.map.getLayer('unclustered-point')) {
-      self.map.removeLayer('unclustered-point');
+    if (self.map.getLayer('custom-marker-icon')) {
+      self.map.removeLayer('custom-marker-icon');
     }
 
     // Add the unclustered point layer
     self.map.addLayer({
-      id: 'unclustered-point',
+      id: 'custom-marker-icon',
       type: 'symbol',
       source: 'markers',
       filter: ['!', ['has', 'point_count']],
@@ -413,30 +411,56 @@
         'icon-size': 0.35,
         'icon-allow-overlap': true,
         'icon-ignore-placement': true,
-        // 'icon-anchor': 'center',
+        'icon-anchor': 'center',
       }
     }, null);
 
-    // Add hover effect
-    self.map.on('mouseenter', 'unclustered-point', function() {
-      self.map.getCanvas().style.cursor = 'pointer';
-      self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius + 1);
-    });
+    self.setupMarkerEventListeners(e);
+  }
 
-    self.map.on('mouseleave', 'unclustered-point', function() {
-      self.map.getCanvas().style.cursor = '';
-      self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius);
-    });
+  MapboxMap.prototype.setupMarkerEventListeners = function() {
+    var self = this;
 
-    // Add click handler for individual markers
+    self.map.on('mouseenter', 'custom-marker',
+      self.handleMarkerMouseEnter.bind(self)
+    );
+    self.map.on('mouseleave', 'custom-marker',
+      self.handleMarkerMouseLeave.bind(self)
+    );
 
-    self.map.on('click', 'unclustered-point', function(e) {
-      console.log("click on unclustered-point")
-      self.openMarkerPopup(e)
-    });
+    self.map.on('click', 'custom-marker',
+      self.openMarkerPopup.bind(self)
+    );
+  };
 
-    // Verify layer was added
-    console.log('Layer added:', self.map.getLayer('unclustered-point'));
+  MapboxMap.prototype.handleMarkerMouseEnter = function(e) {
+    this.map.getCanvas().style.cursor = 'pointer';
+
+    if (e.features.length > 0) {
+      if (this.hoveredFeature !== null) {
+        this.map.setFeatureState(
+          { source: 'markers', id: this.hoveredFeature },
+          { hover: false }
+        );
+      }
+      this.hoveredFeature = e.features[0].id;
+      this.map.setFeatureState(
+        { source: 'markers', id: this.hoveredFeature },
+        { hover: true }
+      );
+    }
+  };
+
+  MapboxMap.prototype.handleMarkerMouseLeave = function() {
+    this.map.getCanvas().style.cursor = '';
+
+    if (this.hoveredFeature !== null) {
+      this.map.setFeatureState(
+        { source: 'markers', id: this.hoveredFeature },
+        { hover: false }
+      );
+    }
+    this.hoveredFeature = null;
   };
 
   MapboxMap.prototype.addAdminShape = function() {

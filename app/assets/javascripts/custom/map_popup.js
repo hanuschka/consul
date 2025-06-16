@@ -1,30 +1,43 @@
 App.MapPopup = {
-  getPopupContent: function(data, resourceName) {
-    console.log("getPopupContent", data, resourceName)
+  getPopupContent: function(data, resourcesName) {
+    console.log("getPopupContent", data, resourcesName)
 
-    if (resourceName == "proposals" || data.proposal_id) {
-      return this.standardResourcePopupContent(data);
-    } else if (resourceName == "deficiency-reports") {
-      return this.deficiencyReportPopupContent(data);
-    } else if (resourceName == "projekts") {
-      return this.projektPopupContent(data);
-    } else if (resourceName == "point-of-interest-pin") {
+    if (resourcesName == "proposal") {
+      return this.standardResourcePopupContent(data, resourcesName);
+    } else if (resourcesName == "deficiency_report") {
+      return this.standardResourcePopupContent(data, resourcesName);
+    } else if (resourcesName == "projekt") {
+      // return this.projektPopupContent(data);
+      return this.standardResourcePopupContent(data, resourcesName);
+    } else if (resourcesName == "point_of_interest_pin") {
       return this.pointOfInterestPopupContent(data);
     } else {
-      return this.budgetsPopupContent(data);
+      return this.standardResourcePopupContent(data, resourcesName);
     }
   },
 
-  standardResourcePopupContent: function(data) {
+  getResourceUrl: function(data, resourcesName) {
+    switch(resourcesName)  {
+      case  "proposals":
+        return "/proposals/" + data.proposal_id
+      case  "deficiency-reports":
+        return "/deficiency_reports/" + data.deficiency_report_id;
+      case "projekts":
+        return "/projekts/" + data.projekt_id;
+    }
+  },
+
+  standardResourcePopupContent: function(data, resourcesName) {
     console.log("standardResourcePopupContent", data)
 
-    var proposalUrl = "/proposals/" + data.proposal_id;
+    var url = this.getResourceUrl(data, resourcesName)
+
     if (data.projekt_phase_id) {
-      proposalUrl += "?projekt_phase_id=" + data.projekt_phase_id;
+      url += "?projekt_phase_id=" + data.projekt_phase_id;
     }
 
     var popupHtml;
-    popupHtml = "<h5><a href='" + proposalUrl + "'>" + data.title + "</a></h5>"; //title
+    popupHtml = "<h5><a href='" + url + "'>" + data.title + "</a></h5>"; //title
 
     if (data.image_url) {
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image

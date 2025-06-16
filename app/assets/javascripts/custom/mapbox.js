@@ -329,6 +329,7 @@
         var totalImages = this.markerImages.length;
         console.log('Starting to load marker images:', this.markerImages);
 
+        console.log("markerImages", this.markerImages)
         this.markerImages.forEach(function(markerImage) {
           self.map.loadImage(markerImage.path, function(error, image) {
             if (error) {
@@ -341,85 +342,12 @@
 
             // When all images are loaded, add the unclustered point layer
             if (loadedImages === totalImages) {
-              console.log('All images loaded, adding icon layer');
-              // Remove existing layer if it exists
-              if (self.map.getLayer('unclustered-point')) {
-                self.map.removeLayer('unclustered-point');
-              }
-
-              // Add the unclustered point layer
-              self.map.addLayer({
-                id: 'unclustered-point',
-                type: 'symbol',
-                source: 'markers',
-                filter: ['!', ['has', 'point_count']],
-                layout: {
-                  'icon-image': ['get', 'fa_icon_class'],
-                  'icon-size': 0.35,
-                  'icon-allow-overlap': true,
-                  'icon-ignore-placement': true,
-                  // 'icon-anchor': 'center',
-                }
-              }, null);
-
-              // Add hover effect
-              self.map.on('mouseenter', 'unclustered-point', function() {
-                self.map.getCanvas().style.cursor = 'pointer';
-                self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius + 1);
-              });
-
-              self.map.on('mouseleave', 'unclustered-point', function() {
-                self.map.getCanvas().style.cursor = '';
-                self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius);
-              });
-
-              // Add click handler for individual markers
-              self.map.on('click', 'unclustered-point', function(e) {
-                var coordinates = e.features[0].geometry.coordinates.slice();
-                var properties = e.features[0].properties;
-
-                // Show empty popup immediately
-                var popup = new mapboxgl.Popup({
-                  offset: [0, -20],
-                  closeButton: true,
-                  maxWidth: '200px'
-                })
-                  .setLngLat(coordinates)
-                  .setHTML('<div class="map-popup-loading">Loading...</div>')
-                  .addTo(self.map);
-
-                var route;
-                if (self.process == "proposals") {
-                  route = "/proposals/" + properties.id + "/json_data";
-                } else if (self.process == "deficiency-reports") {
-                  route = "/deficiency_reports/" + properties.id + "/json_data";
-                } else if (self.process == "projekts") {
-                  route = "/projekts/" + properties.id + "/json_data";
-                } else if (self.process == "budgets") {
-                  route = "/investments/" + properties.id + "/json_data";
-                } else if (self.process == "point-of-interest-pin") {
-                  route = "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
-                }
-
-                if (!route) { return; }
-
-                $.ajax(route, {
-                  type: "GET",
-                  dataType: "json",
-                  success: function(data) {
-                    popup.setHTML(App.MapPopup.getPopupContent(data), self.process);
-                  },
-                  error: function() {
-                    popup.setHTML('<div class="error">Failed to load data</div>');
-                  }
-                });
-              });
-
-              // Verify layer was added
-              console.log('Layer added:', self.map.getLayer('unclustered-point'));
+              self.setupMarkerEventListeners()
             }
           });
         });
+      } else {
+        self.setupMarkerEventListeners()
       }
 
       // Add click handler for clusters
@@ -456,6 +384,88 @@
         }
       });
     }
+  };
+
+  MapboxMap.prototype.setupMarkerEventListeners = function() {
+    console.log('All images loaded, adding icon layer');
+    var self = this;
+
+    // Remove existing layer if it exists
+    if (self.map.getLayer('unclustered-point')) {
+      self.map.removeLayer('unclustered-point');
+    }
+
+    // Add the unclustered point layer
+    self.map.addLayer({
+      id: 'unclustered-point',
+      type: 'symbol',
+      source: 'markers',
+      filter: ['!', ['has', 'point_count']],
+      layout: {
+        'icon-image': ['get', 'fa_icon_class'],
+        'icon-size': 0.35,
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true,
+        // 'icon-anchor': 'center',
+      }
+    }, null);
+
+    // Add hover effect
+    self.map.on('mouseenter', 'unclustered-point', function() {
+      self.map.getCanvas().style.cursor = 'pointer';
+      self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius + 1);
+    });
+
+    self.map.on('mouseleave', 'unclustered-point', function() {
+      self.map.getCanvas().style.cursor = '';
+      self.map.setPaintProperty('unclustered-point-background', 'circle-radius', self.defaultMarkerBackgroundCircleRadius);
+    });
+
+    // Add click handler for individual markers
+    console.log("add a click on marker")
+    self.map.on('click', 'unclustered-point', function(e) {
+      var coordinates = e.features[0].geometry.coordinates.slice();
+      var properties = e.features[0].properties;
+
+      // Show empty popup immediately
+      var popup = new mapboxgl.Popup({
+        offset: [0, -20],
+        closeButton: true,
+        maxWidth: '200px'
+      })
+        .setLngLat(coordinates)
+        .setHTML('<div class="map-popup-loading">Loading...</div>')
+        .addTo(self.map);
+
+      var route;
+      if (self.process == "proposals") {
+        route = "/proposals/" + properties.id + "/json_data";
+      } else if (self.process == "deficiency-reports") {
+        route = "/deficiency_reports/" + properties.id + "/json_data";
+      } else if (self.process == "projekts") {
+        route = "/projekts/" + properties.id + "/json_data";
+      } else if (self.process == "budgets") {
+        route = "/investments/" + properties.id + "/json_data";
+      } else if (self.process == "point-of-interest-pin") {
+        route = "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
+      }
+
+      if (!route) { return; }
+
+      $.ajax(route, {
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          popup.setHTML(App.MapPopup.getPopupContent(data), self.process);
+        },
+        error: function() {
+          popup.setHTML('<div class="error">Failed to load data</div>');
+        }
+      });
+    });
+
+    // Verify layer was added
+    console.log('Layer added:', self.map.getLayer('unclustered-point'));
   };
 
   MapboxMap.prototype.addAdminShape = function() {

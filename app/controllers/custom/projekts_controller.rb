@@ -117,7 +117,7 @@ class ProjektsController < ApplicationController
 
     data = {
       projekt_id: projekt.id,
-      projekt_title: projekt.title,
+      title: projekt.title,
       image_url: image_url,
       tags: tags,
       sdg_goals: sdg_goals

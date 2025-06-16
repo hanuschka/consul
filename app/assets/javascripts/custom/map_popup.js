@@ -29,7 +29,7 @@ App.MapPopup = {
     }
 
     var popupHtml;
-    popupHtml = "<h5><a href='" + proposalUrl + "'>" + data.proposal_title + "</a></h5>"; //title
+    popupHtml = "<h5><a href='" + proposalUrl + "'>" + data.title + "</a></h5>"; //title
 
     if (data.image_url) {
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
@@ -98,7 +98,7 @@ App.MapPopup = {
   projektPopupContent: function(data) {
     // return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
     var popupHtml = "";
-    popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a></h5>"; //title
+    popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.title + "</a></h5>"; //title
 
     if (data.image_url) {
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' >"; //image

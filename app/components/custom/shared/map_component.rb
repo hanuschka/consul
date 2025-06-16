@@ -77,12 +77,8 @@ class Shared::MapComponent < ApplicationComponent
                 name: icon,
                 path: asset_path("fontawesome_png/solid/converted_pngs/#{icon}_50px.png")
               }
-            else
-              {
-                name: icon
-              }
             end
-          }
+          }.compact
       elsif map_style == "regular"
         options[:map] = ""
       elsif map_style == "vcmap"
@@ -141,5 +137,9 @@ class Shared::MapComponent < ApplicationComponent
       else
         false
       end
+    end
+
+    def mapbox_style_id
+      Rails.application.secrets.dig(:mapbox, :style_id)
     end
 end

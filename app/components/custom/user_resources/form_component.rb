@@ -61,15 +61,6 @@ class UserResources::FormComponent < ApplicationComponent
     end
   end
 
-  def max_description_lenght
-    case resource
-    when Debate
-      Debate.description_max_length
-    else
-      2000
-    end
-  end
-
   def banner_class_name
     "-#{resource.class.name.downcase}"
   end

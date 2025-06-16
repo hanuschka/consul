@@ -1,6 +1,6 @@
 module Statisticable
   extend ActiveSupport::Concern
-  # PARTICIPATIONS = %w[gender age geozone].freeze
+  PARTICIPATIONS = %w[gender age geozone individual_group].freeze
 
   included do
     attr_reader :resource
@@ -20,7 +20,14 @@ module Statisticable
     end
 
     def gender_methods
-      %i[total_male_participants total_female_participants male_percentage female_percentage]
+      %i[
+        total_male_participants
+        total_female_participants
+        total_other_gen_participants
+        male_percentage
+        female_percentage
+        other_gen_percentage
+      ]
     end
 
     def age_methods
@@ -59,7 +66,7 @@ module Statisticable
   end
 
   def gender?
-    participants.male.any? || participants.female.any?
+    participants.male.any? || participants.female.any? || participants.other_gen.any?
   end
 
   def age?
@@ -82,6 +89,10 @@ module Statisticable
     participants.female.count
   end
 
+  def total_other_gen_participants
+    participants.other_gen.count
+  end
+
   def total_no_demographic_data
     participants.where("gender IS NULL OR date_of_birth IS NULL OR geozone_id IS NULL").count
   end
@@ -92,6 +103,10 @@ module Statisticable
 
   def female_percentage
     calculate_percentage(total_female_participants, total_participants_with_gender)
+  end
+
+  def other_gen_percentage
+    calculate_percentage(total_other_gen_participants, total_participants_with_gender)
   end
 
   def participants_by_age
@@ -133,14 +148,53 @@ module Statisticable
     resource.advanced_stats_enabled?
   end
 
+  def show_percentage_values_only?
+    false
+  end
+
+  def individual_group?
+    soft_individual_groups.any?
+  end
+
+  def soft_individual_groups
+    @soft_individual_groups ||= begin
+      IndividualGroup
+        .joins(individual_group_values: :users)
+        .where(kind: "soft", users: { id: participants.select(:id) })
+        .distinct
+    end
+  end
+
+  def total_individual_group_value_participants(individual_group_value)
+    participants.joins(:individual_group_values)
+      .where(individual_group_values: { id: individual_group_value.id }).distinct.count
+  end
+
+  def total_individual_group_participants(individual_group)
+    participants.joins(:individual_group_values)
+      .where(individual_group_values: { individual_group_id: individual_group.id }).distinct.count
+  end
+
+  def percentage_individual_group_value_participants(individual_group_value)
+    total = total_individual_group_participants(individual_group_value.individual_group)
+    return 0 if total.zero?
+
+    (total_individual_group_value_participants(individual_group_value).to_f / total) * 100
+  end
+
   private
 
     def base_stats_methods
       self.class.base_stats_methods
     end
 
+    def not_cached_participations
+      %w[individual_group]
+    end
+
     def participation_methods
-      participations.map { |participation| self.class.send("#{participation}_methods") }.flatten
+      cached_participations = participations - not_cached_participations
+      cached_participations.map { |participation| self.class.send("#{participation}_methods") }.flatten
     end
 
     def total_participants_with_gender

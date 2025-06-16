@@ -15,14 +15,17 @@
     </div>
   <% end %>
 
+  <%= render Shared::ResourceMapComponent.new(
+    map_location: @map_location,
+    marker_coordinates: @deficiency_reports_coordinates,
+    resource_type: DeficiencyReport
+  ) %>
   <div class="flex-layout">
     <div class="main-column">
       <%= render(
         Shared::ResourcesListComponent.new(
           resources: @deficiency_reports,
           resource_type: DeficiencyReport,
-          map_location: @map_location,
-          map_coordinates: @deficiency_reports_coordinates,
           current_filter: @current_order,
           filter_param: "order",
           text_search_enabled: true,

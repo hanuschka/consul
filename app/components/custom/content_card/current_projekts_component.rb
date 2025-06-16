@@ -30,9 +30,13 @@ class ContentCard::CurrentProjektsComponent < ApplicationComponent
     def current_projekts
       @current_projekts =
         @projekts
+          .visible_for(current_user)
+          .includes(
+            :projekt_phases, :projekt_settings, :sdg_relations, :tags,
+            page: [:image, :translations], projekt_phases: [:translations]
+          )
           .sort_by_order_number
           .index_order_underway
-          .select { |p| p.visible_for?(current_user) }
           .first(@limit)
     end
 end

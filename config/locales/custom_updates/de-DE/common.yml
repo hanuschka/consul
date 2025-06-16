@@ -1,0 +1,10 @@
+de:
+  custom:
+    common:
+      delete: Löschen
+      category: Kategorie
+      address: Adresse
+      user: Benutzer
+      created_at: Erstellt am
+      actions: Aktionen
+      export_csv: CSV exportieren

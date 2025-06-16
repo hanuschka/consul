@@ -13,13 +13,16 @@
     </div>
   <% end %>
 
+  <%= render Shared::ResourceMapComponent.new(
+    marker_coordinates: @ideas_coordinates,
+    resource_type: Idea
+  ) %>
   <div class="flex-layout">
     <div class="main-column">
       <%= render(
         Shared::ResourcesListComponent.new(
           resources: @ideas,
           resource_type: Idea,
-          map_coordinates: @ideas_coordinates,
           current_filter: @current_order,
           filter_param: "order",
           text_search_enabled: true,

@@ -249,7 +249,6 @@ class Setting < ApplicationRecord
         "extended_feature.proposals.enable_projekt_filter": true,
         "extended_feature.proposals.enable_my_posts_filter": true,
         "extended_option.proposals.max_active_proposals_per_user": 100,
-        "extended_option.proposals.description_max_length": 6000,
         "selectable_setting.proposals.default_order": "created_at",
 
         "extended_feature.polls.intro_text_for_polls": true,

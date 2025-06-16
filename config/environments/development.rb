@@ -4,8 +4,8 @@ Rails.application.configure do
     Bullet.alert         = false
     Bullet.bullet_logger = true
     Bullet.console       = true
-    Bullet.rails_logger  = true
-    Bullet.add_footer    = true
+    Bullet.rails_logger  = false
+    Bullet.add_footer    = false
   end
 
   # Settings specified here will take precedence over those in config/application.rb.
@@ -39,7 +39,7 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { host: "consul.local"}
+  config.action_mailer.default_url_options = { host: "consul.localhost"}
   config.action_mailer.asset_host = ENV.fetch("RAILS_LOCAL_DEV_URL", "http://localhost:3000")
 
   # Deliver emails to a development mailbox at /letter_opener

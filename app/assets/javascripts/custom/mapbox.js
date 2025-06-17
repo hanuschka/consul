@@ -1,6 +1,19 @@
 (function() {
   "use strict";
 
+  // Convert hex color to RGBA with 50% opacity
+  function hexToRgba(hex, alpha) {
+    // Remove # if present
+    hex = hex.replace('#', '');
+
+    // Parse RGB values
+    var r = parseInt(hex.substring(0, 2), 16);
+    var g = parseInt(hex.substring(2, 4), 16);
+    var b = parseInt(hex.substring(4, 6), 16);
+
+    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+  }
+
   // MapboxMap class definition
   function MapboxMap(element) {
     this.element = element;
@@ -358,6 +371,14 @@
         clusterRadius: 50
       });
 
+      // Get brand color from CSS variable with fallback
+      var brandColor = getComputedStyle(document.documentElement).getPropertyValue('--brand-color').trim() || '#004a83';
+
+      var clusterColor = hexToRgba(brandColor, 0.5);
+
+      console.log("brandColor", brandColor)
+      console.log("clusterColor", clusterColor)
+
       // Add cluster layer
       self.map.addLayer({
         id: 'clusters',
@@ -368,9 +389,9 @@
           'circle-color': [
             'step',
             ['get', 'point_count'],
-            'rgba(25.5, 77.7, 127.2, 0.5)',   // small clusters (e.g. < 10)
-            10, 'rgba(25.5, 77.7, 127.2, 0.5)', // medium clusters (e.g. < 30)
-            30, 'rgba(25.5, 77.7, 127.2, 0.5)'  // large clusters (30+)
+            clusterColor,   // small clusters (e.g. < 10)
+            10, clusterColor, // medium clusters (e.g. < 30)
+            30, clusterColor  // large clusters (30+)
           ],
           'circle-radius': [
             'step',

@@ -73,6 +73,7 @@ class Shared::MapComponent < ApplicationComponent
         options[:mapbox] = true
         options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]
         options[:mapbox_marker_images] = mapbox_marker_images
+        options[:mapbox_style_id] = mapbox_style_id
 
       elsif map_style == "regular"
         options[:map] = ""

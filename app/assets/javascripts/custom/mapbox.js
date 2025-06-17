@@ -22,6 +22,7 @@
     this.showAdminShapeInputSelector = $element.data("show-admin-shape-input-selector");
     this.$categorySelect = $(".js-map-update-pin-style");
     this.markerImages = $element.data("mapbox-marker-images")
+    this.styleId = $element.data("mapbox-style-id")
 
     this.map = null;
     this.markers = []; // Array to store all markers
@@ -47,6 +48,7 @@
     mapboxgl.accessToken = this.element.dataset.mapboxPublicToken;
 
     this.map = new mapboxgl.Map({
+      style: this.styleId,
       container: this.element,
       center: [this.mapCenterLongitude, this.mapCenterLatitude],
       zoom: this.zoom

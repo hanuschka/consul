@@ -1058,33 +1058,6 @@ table {
   }
 }
 
-// 09. Map
-// --------------
-
-.custom-leaflet-map-styles {
-  width: 100%;
-
-  .map-marker {
-    left: 50%;
-    top: 50%;
-    margin-top: -5px;
-  }
-
-  .map-attributtion {
-    visibility: visible;
-    height: auto;
-  }
-}
-
-.map-marker {
-  visibility: hidden;
-}
-
-.map-attributtion {
-  visibility: hidden;
-  height: 0;
-}
-
 // 10. Budgets
 // -----------------
 

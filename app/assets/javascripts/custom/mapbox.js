@@ -47,7 +47,6 @@
 
     this.map = new mapboxgl.Map({
       container: this.element,
-      style: 'mapbox://styles/mapbox/streets-v11',
       center: [this.mapCenterLongitude, this.mapCenterLatitude],
       zoom: this.zoom
     });

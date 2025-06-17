@@ -246,11 +246,12 @@ module ProjektPhaseAdminActions
   end
 
   def update_map
-    map_location = MapLocation.find_by(projekt_phase_id: params[:id])
+    @projekt_phase = ProjektPhase.find(params[:id])
+    map_location = @projekt_phase.map_location || MapLocation.new(projekt_phase: @projekt_phase)
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params.except(:id))
+    map_location.update!(map_location_params)
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -492,11 +493,12 @@ module ProjektPhaseAdminActions
     end
 
     def map_location_params
-      if params[:map_location]
-        params.require(:map_location).permit(map_location_attributes)
-      else
-        params.permit(map_location_attributes)
-      end
+      phase_key = params.keys.find { |k| k.start_with?('projekt_phase_') }
+      return {} unless phase_key
+
+      params.require(phase_key)
+            .require(:map_location_attributes)
+            .permit(map_location_attributes)
     end
 
     def set_projekt_phase

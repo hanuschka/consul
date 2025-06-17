@@ -1,12 +1,16 @@
-<%= form.label :map_location, label %>
+<% if local_assigns[:label] %>
+  <%= form.label :map_location, label %>
+<% end %>
 
 <% mappable = @proposal || @deficiency_report || @investment || local_assigns[:mappable] || nil %>
 <% projekt_phase ||= nil %>
 
-<% help_text_class = mappable.errors[:map_location].present? ? "form-error is-visible" : "help-text" %>
-<p class="<%= help_text_class %>" id="tag-list-help-text"><%= help %></p>
+<% if local_assigns[:help] %>
+  <% help_text_class = mappable.errors[:map_location].present? ? "form-error is-visible" : "help-text" %>
+  <p class="<%= help_text_class %>" id="tag-list-help-text"><%= help %></p>
+<% end %>
 
-<% if mappable.respond_to?(:projekt) && mappable.projekt&.vc_map_enabled? %>
+<% if mappable.try(:vc_map_enabled?) || mappable.try(:projekt).try(:vc_map_enabled?) %>
   <%= render Shared::VCMapComponent.new(
     mappable: mappable,
     map_location: map_location,

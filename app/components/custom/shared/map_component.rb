@@ -29,11 +29,19 @@ class Shared::MapComponent < ApplicationComponent
   def map_div
     content_tag :div, "",
                 id: "#{dom_id(map_location)}_#{parent_class}",
-                class: "map_location map js-mapbox-map",
+                class: "map_location map #{map_lib_class}",
                 data: prepare_map_settings
   end
 
   private
+
+    def map_lib_class
+      if use_mapbox?
+        "custom-mapbox-map-styles"
+      else
+        "custom-leaflet-map-styles"
+      end
+    end
 
     def prepare_map_settings
       options = {

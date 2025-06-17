@@ -26,6 +26,7 @@
     this.map = null;
     this.markers = []; // Array to store all markers
     this.adminMarker = null;
+    this.editableMarker = null; // Single editable marker for user interaction
     this.markerCategoryIcon = null;
     this.markerCategoryColor = null;
     this.adminShapesColor = 'red';
@@ -78,6 +79,20 @@
         $(self.latitudeInputSelector).val(center.lat);
         $(self.longitudeInputSelector).val(center.lng);
         $(self.zoomInputSelector).val(self.map.getZoom());
+      });
+    }
+
+    // Add click listener for moveOrPlaceMarker functionality
+    if (this.editable) {
+      this.map.on('click', function(e) {
+        // Only handle clicks that aren't on existing markers/features
+        var features = self.map.queryRenderedFeatures(e.point, {
+          layers: ['custom-marker', 'custom-marker-icon', 'clusters']
+        });
+        
+        if (features.length === 0) {
+          self.moveOrPlaceMarker(e);
+        }
       });
     }
   };
@@ -159,6 +174,66 @@
     }
   };
 
+  // function to create or move existing marker (similar to Leaflet version)
+  MapboxMap.prototype.moveOrPlaceMarker = function(e) {
+    var self = this;
+    var lngLat = e.lngLat;
+    
+    console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
+
+    if (this.editableMarker) {
+      // Move existing marker
+      this.editableMarker.setLngLat([lngLat.lng, lngLat.lat]);
+      this.updateMarkerWithCategoryStyle();
+    } else {
+      // Create new marker - note: createEditableMarker expects (lat, lng)
+      this.editableMarker = this.createEditableMarker(lngLat.lat, lngLat.lng);
+    }
+    this.updateFormfieldsFromEditableMarker();
+  };
+
+  // function to update form fields when editable marker is updated
+  MapboxMap.prototype.updateFormfieldsFromEditableMarker = function() {
+    if (!this.editableMarker) return;
+    
+    var lngLat = this.editableMarker.getLngLat();
+    console.log("Updating form fields with coordinates:", lngLat.lat, lngLat.lng);
+    
+    $(this.latitudeInputSelector).val(lngLat.lat);
+    $(this.longitudeInputSelector).val(lngLat.lng);
+    $(this.zoomInputSelector).val(this.map.getZoom());
+    $(this.shapeInputSelector).val(JSON.stringify({}));
+
+    if (this.adminEditor) {
+      $(this.showAdminShapeInputSelector).val(true);
+    }
+  };
+
+  // function to create an editable marker
+  MapboxMap.prototype.createEditableMarker = function(latitude, longitude) {
+    var self = this;
+    
+    console.log("Creating editable marker at:", latitude, longitude);
+    
+    var markerOptions = {
+      element: this.getMarkerIcon(null, null).element,
+      draggable: true
+    };
+
+    var marker = new mapboxgl.Marker(markerOptions)
+      .setLngLat([longitude, latitude]);
+
+    marker.on("dragend", function() {
+      self.updateFormfieldsFromEditableMarker();
+    });
+    
+    marker.addTo(this.map);
+    
+    console.log("Marker created at:", marker.getLngLat());
+    
+    return marker;
+  };
+
   MapboxMap.prototype.updateMarkerStyleFromCategorySelect = function(element) {
     var selectedOption = element.options[element.selectedIndex];
     this.markerCategoryIcon = selectedOption.dataset.icon;
@@ -171,6 +246,13 @@
       this.markers.forEach(function(marker) {
         marker.setIcon(this.getMarkerIcon(null, null));
       }.bind(this));
+    }
+    
+    // Also update editable marker if it exists
+    if (this.editableMarker) {
+      var newIcon = this.getMarkerIcon(null, null);
+      this.editableMarker.getElement().innerHTML = '';
+      this.editableMarker.getElement().appendChild(newIcon.element);
     }
   };
 
@@ -258,8 +340,6 @@
           return feature;
         })
       };
-
-      console.log('Created markers GeoJSON:', markers);
 
       // Add the source to the map
       self.map.addSource('markers', {
@@ -547,6 +627,10 @@
     if (this.adminMarker) {
       this.adminMarker.remove();
       this.adminMarker = null;
+    }
+    if (this.editableMarker) {
+      this.editableMarker.remove();
+      this.editableMarker = null;
     }
   };
 

@@ -89,7 +89,7 @@
         var features = self.map.queryRenderedFeatures(e.point, {
           layers: ['custom-marker', 'custom-marker-icon', 'clusters']
         });
-        
+
         if (features.length === 0) {
           self.moveOrPlaceMarker(e);
         }
@@ -108,7 +108,7 @@
     }));
   };
 
-  MapboxMap.prototype.getMarkerIcon = function(color, iconClass) {
+  MapboxMap.prototype.getStyledMarker = function(color, iconClass) {
     if (this.markerCategoryIcon) {
       iconClass = this.markerCategoryIcon;
     } else if (!iconClass) {
@@ -125,7 +125,7 @@
 
     return {
       element: this.createMarkerElement(color, iconClass),
-      anchor: [15, 40]
+      anchor: [0, 0]
     };
   };
 
@@ -142,8 +142,11 @@
   };
 
   MapboxMap.prototype.createMarker = function(latitude, longitude, color, iconClass) {
+    var styledMarker = this.getStyledMarker(color, iconClass);
     var markerOptions = {
-      element: this.getMarkerIcon(color, iconClass).element,
+      element: styledMarker.element,
+      anchor: 'bottom',
+      offset: [0, -10],
       draggable: this.editable
     };
 
@@ -178,15 +181,14 @@
   MapboxMap.prototype.moveOrPlaceMarker = function(e) {
     var self = this;
     var lngLat = e.lngLat;
-    
+
     console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
 
-    if (this.editableMarker) {
       // Move existing marker
+    if (this.editableMarker) {
       this.editableMarker.setLngLat([lngLat.lng, lngLat.lat]);
       this.updateMarkerWithCategoryStyle();
     } else {
-      // Create new marker - note: createEditableMarker expects (lat, lng)
       this.editableMarker = this.createEditableMarker(lngLat.lat, lngLat.lng);
     }
     this.updateFormfieldsFromEditableMarker();
@@ -195,10 +197,10 @@
   // function to update form fields when editable marker is updated
   MapboxMap.prototype.updateFormfieldsFromEditableMarker = function() {
     if (!this.editableMarker) return;
-    
+
     var lngLat = this.editableMarker.getLngLat();
     console.log("Updating form fields with coordinates:", lngLat.lat, lngLat.lng);
-    
+
     $(this.latitudeInputSelector).val(lngLat.lat);
     $(this.longitudeInputSelector).val(lngLat.lng);
     $(this.zoomInputSelector).val(this.map.getZoom());
@@ -212,25 +214,29 @@
   // function to create an editable marker
   MapboxMap.prototype.createEditableMarker = function(latitude, longitude) {
     var self = this;
-    
+
     console.log("Creating editable marker at:", latitude, longitude);
-    
+
+    var styledMarker = this.getStyledMarker(null, null);
     var markerOptions = {
-      element: this.getMarkerIcon(null, null).element,
+      element: styledMarker.element,
+      anchor: 'bottom',
+      offset: [0, 0],
       draggable: true
     };
 
-    var marker = new mapboxgl.Marker(markerOptions)
+    var marker =
+      (new mapboxgl.Marker(markerOptions))
       .setLngLat([longitude, latitude]);
 
     marker.on("dragend", function() {
       self.updateFormfieldsFromEditableMarker();
     });
-    
+
     marker.addTo(this.map);
-    
+
     console.log("Marker created at:", marker.getLngLat());
-    
+
     return marker;
   };
 
@@ -244,13 +250,13 @@
   MapboxMap.prototype.updateMarkerWithCategoryStyle = function() {
     if (this.markers.length) {
       this.markers.forEach(function(marker) {
-        marker.setIcon(this.getMarkerIcon(null, null));
+        marker.setIcon(this.getStyledMarker(null, null));
       }.bind(this));
     }
-    
+
     // Also update editable marker if it exists
     if (this.editableMarker) {
-      var newIcon = this.getMarkerIcon(null, null);
+      var newIcon = this.getStyledMarker(null, null);
       this.editableMarker.getElement().innerHTML = '';
       this.editableMarker.getElement().appendChild(newIcon.element);
     }
@@ -552,8 +558,11 @@
           this.adminShape.fa_icon_class
         );
       } else {
+        var styledMarker = this.getStyledMarker(this.adminShapesColor, this.adminShape.fa_icon_class);
         this.adminMarker = new mapboxgl.Marker({
-          element: this.getMarkerIcon(this.adminShapesColor, this.adminShape.fa_icon_class).element
+          element: styledMarker.element,
+          anchor: 'bottom',
+          offset: [0, -10]
         })
           .setLngLat([this.adminShape.long, this.adminShape.lat])
           .setPopup(new mapboxgl.Popup().setHTML('Alle markierten Flächen und Pins in rot sind vom System vorgegeben'))

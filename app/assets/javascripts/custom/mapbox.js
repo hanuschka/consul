@@ -149,6 +149,7 @@
     // Add polygon drawing controls if editable
     console.log("this.editable", this.editable)
     console.log("MapboxDraw", MapboxDraw)
+
     if (this.editable && typeof MapboxDraw !== 'undefined') {
       this.initializePolygonEditor();
     }
@@ -644,12 +645,16 @@
         self.map.getCanvas().style.cursor = '';
       });
 
-      // Add shapes for non-marker coordinates
-      this.processCoordinates.forEach(function(coordinates) {
-        if (!App.Mapbox.validCoordinates(coordinates)) {
-          self.addProcessShape(coordinates);
-        }
-      });
+      if (!this.editable) {
+        console.log("try to addProcessShape", this.processCoordinates)
+        // Add shapes for non-marker coordinates
+        this.processCoordinates.forEach(function(coordinates) {
+          if (!App.Mapbox.validCoordinates(coordinates)) {
+            console.log("addProcessShape", coordinates)
+            self.addProcessShape(coordinates);
+          }
+        });
+      }
     }
   };
 

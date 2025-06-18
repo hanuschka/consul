@@ -56,11 +56,11 @@ module ProjektAdminActions
   end
 
   def update_map
-    map_location = MapLocation.find_by(projekt_id: @projekt.id)
+    map_location = @projekt.map_location || @projekt.build_map_location
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params.except(:id))
+    map_location.update!(map_location_params)
 
     redirect_to namespace_projekt_path(action: "edit", anchor: "tab-projekt-map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -117,11 +117,9 @@ module ProjektAdminActions
     end
 
     def map_location_params
-      if params[:map_location]
-        params.require(:map_location).permit(map_location_attributes)
-      else
-        params.permit(map_location_attributes)
-      end
+      params.require(:projekt)
+            .require(:map_location_attributes)
+            .permit(map_location_attributes)
     end
 
     def find_projekt

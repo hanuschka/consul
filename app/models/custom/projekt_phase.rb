@@ -94,6 +94,8 @@ class ProjektPhase < ApplicationRecord
   scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
   scope :special_phases, -> { where(type: SPECIAL_PROJEKT_PHASES) }
 
+  scope :frontend_visible, -> { where(frontend_visibility: true) }
+
   scope :active, -> { where(active: true) }
   scope :current, ->(timestamp = Time.zone.today) {
     active

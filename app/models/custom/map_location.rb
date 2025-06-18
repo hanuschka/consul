@@ -1,6 +1,8 @@
 require_dependency Rails.root.join("app", "models", "map_location").to_s
 
 class MapLocation < ApplicationRecord
+  MAP_POPUP_STANDARD_IMAGE_SIZE = [250, 170]
+
   belongs_to :projekt, touch: true
   belongs_to :deficiency_report, touch: true
   belongs_to :projekt_phase, touch: true
@@ -26,11 +28,27 @@ class MapLocation < ApplicationRecord
     if: :audit_changes?
 
   def json_data
+    resource_id = [
+      investment_id,
+      proposal_id,
+      projekt_id,
+      deficiency_report_id
+    ].compact.first
+
+    resource_type =
+      if investment_id.present?
+        "investment"
+      elsif proposal_id.present?
+        "proposal"
+      elsif projekt_id.present?
+        "projekt"
+      elsif deficiency_report_id.present?
+        "deficiency_report"
+      end
+
     {
-      investment_id: investment_id,
-      proposal_id: proposal_id,
-      projekt_id: projekt_id,
-      deficiency_report_id: deficiency_report_id,
+      resource_type: resource_type,
+      id: resource_id,
       lat: latitude,
       long: longitude,
       alt: altitude,
@@ -101,19 +119,14 @@ class MapLocation < ApplicationRecord
   def get_pin_color
     if proposal.present? && proposal.projekt_phase.projekt.overview_page?
       "#009900"
-
     elsif proposal.present? && proposal.sentiment.present?
       proposal.sentiment.color
-
     elsif investment.present?
       investment.projekt&.color || "#004a83"
-
     elsif deficiency_report.present?
       deficiency_report.category.color
-
-    elsif projekt.present?
-      "red"
-
+    elsif projekt.present? || projekt_phase.present?
+      "#ff0000"
     else
       "#004a83"
     end

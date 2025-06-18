@@ -119,19 +119,14 @@ class MapLocation < ApplicationRecord
   def get_pin_color
     if proposal.present? && proposal.projekt_phase.projekt.overview_page?
       "#009900"
-
     elsif proposal.present? && proposal.sentiment.present?
       proposal.sentiment.color
-
     elsif investment.present?
       investment.projekt&.color || "#004a83"
-
     elsif deficiency_report.present?
       deficiency_report.category.color
-
-    elsif projekt.present?
-      "red"
-
+    elsif projekt.present? || projekt_phase.present?
+      "#ff0000"
     else
       "#004a83"
     end

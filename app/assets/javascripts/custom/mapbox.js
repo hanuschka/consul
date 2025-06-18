@@ -30,6 +30,7 @@
     this.showAdminShape = $element.data("show-admin-shape");
     this.latitudeInputSelector = $element.data("latitude-input-selector");
     this.longitudeInputSelector = $element.data("longitude-input-selector");
+    this.altitudeInputSelector = $element.data("altitude-input-selector");
     this.zoomInputSelector = $element.data("zoom-input-selector");
     this.shapeInputSelector = $element.data("shape-input-selector");
     this.showAdminShapeInputSelector = $element.data("show-admin-shape-input-selector");
@@ -46,6 +47,7 @@
     this.adminShapesColor = 'red';
     this.defaultMarkerBackgroundCircleRadius = 14;
     this.hoveredFeature = null;
+    this.draw = null; // Mapbox Draw instance for polygon editing
 
     this.initialize();
   }
@@ -93,6 +95,7 @@
         var center = self.map.getCenter();
         $(self.latitudeInputSelector).val(center.lat);
         $(self.longitudeInputSelector).val(center.lng);
+        $(self.altitudeInputSelector).val(0); // Set altitude to 0 for map center updates
         $(self.zoomInputSelector).val(self.map.getZoom());
       });
     }
@@ -100,12 +103,33 @@
     // Add click listener for moveOrPlaceMarker functionality
     if (this.editable) {
       this.map.on('click', function(e) {
-        // Only handle clicks that aren't on existing markers/features
+        // Check if click is on a draw control button
+        var target = e.originalEvent.target;
+        var isDrawControl = target && (
+          target.classList.contains('mapbox-gl-draw_ctrl-draw-btn') ||
+          target.closest('.mapbox-gl-draw_ctrl')
+        );
+
+        // Only handle clicks that aren't on existing markers/features or draw controls
         var features = self.map.queryRenderedFeatures(e.point, {
           layers: ['custom-marker', 'custom-marker-icon', 'clusters']
         });
 
-        if (features.length === 0) {
+        // Don't place markers if we're in drawing mode or clicked on draw controls
+        var isDrawingMode = false;
+        if (self.draw) {
+          var currentMode = self.draw.getMode();
+          isDrawingMode = currentMode.startsWith('draw_') || currentMode === 'direct_select';
+        }
+
+        // Only place markers if:
+        // - No features clicked
+        // - Not in drawing mode
+        // - Not clicked on draw controls
+        // - Draw has no existing features (to avoid conflicts)
+        var hasExistingShapes = self.draw && self.draw.getAll().features.length > 0;
+
+        if (features.length === 0 && !isDrawingMode && !isDrawControl && !hasExistingShapes) {
           self.moveOrPlaceMarker(e);
         }
       });
@@ -121,6 +145,106 @@
       },
       trackUserLocation: true
     }));
+
+    // Add polygon drawing controls if editable
+    console.log("this.editable", this.editable)
+    console.log("MapboxDraw", MapboxDraw)
+    if (this.editable && typeof MapboxDraw !== 'undefined') {
+      this.initializePolygonEditor();
+    }
+  };
+
+  MapboxMap.prototype.initializePolygonEditor = function() {
+    var self = this;
+    console.log("initializePolygonEditor")
+
+    // Initialize Mapbox Draw
+    this.draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        point: true,
+        line_string: true,
+        trash: true
+      },
+      defaultMode: 'simple_select' // Start in selection mode, not drawing mode
+    });
+
+    // Add the draw control to the map
+    this.map.addControl(this.draw);
+
+    // Load existing shape data if available
+    this.loadExistingShape();
+
+    // Set up event listeners for draw events
+    this.setupDrawEventListeners();
+  };
+
+  MapboxMap.prototype.loadExistingShape = function() {
+    // Try to load existing shape data from the shape input field
+    if (this.shapeInputSelector) {
+      var shapeData = $(this.shapeInputSelector).val();
+      if (shapeData && shapeData.trim() !== '' && shapeData !== '{}') {
+        try {
+          var existingShape = JSON.parse(shapeData);
+          if (existingShape && existingShape.type) {
+            // Add the existing shape to the draw instance
+            this.draw.add(existingShape);
+          }
+        } catch (e) {
+          console.warn('Could not parse existing shape data:', e);
+        }
+      }
+    }
+  };
+
+  MapboxMap.prototype.setupDrawEventListeners = function() {
+    var self = this;
+
+    // Update form fields when shapes are created, updated, or deleted
+    this.map.on('draw.create', function(e) {
+      self.updateShapeFormFields();
+      // Remove any existing markers when a shape is created
+      self.removeEditableMarker();
+    });
+
+    this.map.on('draw.update', function(e) {
+      self.updateShapeFormFields();
+    });
+
+    this.map.on('draw.delete', function(e) {
+      self.updateShapeFormFields();
+    });
+
+    // Listen for mode changes to help with conflict resolution
+    this.map.on('draw.modechange', function(e) {
+      console.log('Draw mode changed to:', e.mode);
+      // If entering a drawing mode, clear any existing markers
+      if (e.mode.startsWith('draw_')) {
+        self.removeEditableMarker();
+      }
+    });
+  };
+
+  MapboxMap.prototype.updateShapeFormFields = function() {
+    if (!this.draw || !this.shapeInputSelector) return;
+
+    var allFeatures = this.draw.getAll();
+
+    // Update the shape input field with the current polygon data
+    $(this.shapeInputSelector).val(JSON.stringify(allFeatures));
+
+    // Clear coordinates if we have a polygon
+    if (allFeatures.features.length > 0) {
+      $(this.altitudeInputSelector).val(''); // Clear altitude when shape is present
+    }
+
+    // Update zoom
+    $(this.zoomInputSelector).val(this.map.getZoom());
+
+    if (this.adminEditor && this.showAdminShapeInputSelector) {
+      $(this.showAdminShapeInputSelector).val(true);
+    }
   };
 
   MapboxMap.prototype.getStyledMarker = function(color, iconClass) {
@@ -184,11 +308,20 @@
     var lngLat = marker.getLngLat();
     $(this.latitudeInputSelector).val(lngLat.lat);
     $(this.longitudeInputSelector).val(lngLat.lng);
+    $(this.altitudeInputSelector).val(0); // Set altitude to 0 for marker placement
     $(this.zoomInputSelector).val(this.map.getZoom());
     $(this.shapeInputSelector).val(JSON.stringify({}));
 
     if (this.adminEditor) {
       $(this.showAdminShapeInputSelector).val(true);
+    }
+  };
+
+  // Helper method to remove editable marker
+  MapboxMap.prototype.removeEditableMarker = function() {
+    if (this.editableMarker) {
+      this.editableMarker.remove();
+      this.editableMarker = null;
     }
   };
 
@@ -199,7 +332,14 @@
 
     // console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
 
-      // Move existing marker
+    // Clear any existing polygons when placing a marker
+    if (this.draw) {
+      this.draw.deleteAll();
+      // Switch draw mode to simple_select to avoid conflicts
+      this.draw.changeMode('simple_select');
+    }
+
+    // Move existing marker
     if (this.editableMarker) {
       this.editableMarker.setLngLat([lngLat.lng, lngLat.lat]);
       this.updateMarkerWithCategoryStyle();
@@ -218,8 +358,14 @@
 
     $(this.latitudeInputSelector).val(lngLat.lat);
     $(this.longitudeInputSelector).val(lngLat.lng);
+    $(this.altitudeInputSelector).val(0); // Set altitude to 0 for editable marker
     $(this.zoomInputSelector).val(this.map.getZoom());
     $(this.shapeInputSelector).val(JSON.stringify({}));
+
+    // Clear any existing polygons when updating marker coordinates
+    if (this.draw) {
+      this.draw.deleteAll();
+    }
 
     if (this.adminEditor) {
       $(this.showAdminShapeInputSelector).val(true);
@@ -281,6 +427,13 @@
     var self = this;
 
     // console.log("handle click on marker")
+
+    // Check if we have features and at least one feature
+    if (!e.features || !e.features.length || !e.features[0]) {
+      console.warn("No features found in popup event:", e);
+      return;
+    }
+
     var coordinates = e.features[0].geometry.coordinates.slice();
     var properties = e.features[0].properties;
     var resourceType = properties["resource_type"]
@@ -617,9 +770,21 @@
       }
     });
 
-    this.map.on('click', layerId, function() {
+    this.map.on('click', layerId, function(e) {
       // console.log("map on click")
-      self.openMarkerPopup({ target: { options: { id: coordinates.id } } });
+      // Create a proper event structure for the popup
+      var popupEvent = {
+        features: [{
+          geometry: {
+            coordinates: e.lngLat ? [e.lngLat.lng, e.lngLat.lat] : [0, 0]
+          },
+          properties: {
+            id: coordinates.id,
+            resource_type: coordinates.resource_type || 'shape'
+          }
+        }]
+      };
+      self.openMarkerPopup(popupEvent);
     });
   };
 
@@ -653,6 +818,12 @@
 
     // Add a method to clean up markers
   MapboxMap.prototype.destroy = function() {
+    // Clean up draw instance
+    if (this.draw) {
+      this.map.removeControl(this.draw);
+      this.draw = null;
+    }
+
     this.markers.forEach(function(marker) {
       marker.remove();
     });

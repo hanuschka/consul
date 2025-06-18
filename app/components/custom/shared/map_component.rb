@@ -42,7 +42,7 @@ class Shared::MapComponent < Shared::MapBaseComponent
         if icon.present?
           {
             name: icon,
-            path: asset_path("fontawesome_png/solid/converted_pngs/#{icon}_50px.png")
+            path: asset_path("fontawesome_png/solid/#{icon}_50px.png")
           }
         end
       }

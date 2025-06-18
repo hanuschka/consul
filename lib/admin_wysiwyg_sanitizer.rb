@@ -10,7 +10,8 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
 
   def allowed_attributes
     super + %w[
-      min-height longdesc scrolling title allow value
+      gap
+      min-width min-height longdesc scrolling title allow value
       dir action
       role tabindex type for name title
       data-toggle aria-label aria-hidden allowfullscreen

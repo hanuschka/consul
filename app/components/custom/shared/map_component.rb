@@ -28,7 +28,7 @@ class Shared::MapComponent < Shared::MapBaseComponent
         options[:mapbox_marker_images] = mapbox_marker_images
         options[:mapbox_style_id] = mapbox_style_id
 
-      elsif map_style == "regular"
+      else
         options[:map] = ""
       end
 

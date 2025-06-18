@@ -46,8 +46,6 @@
     this.adminShapesColor = 'red';
     this.defaultMarkerBackgroundCircleRadius = 14;
     this.hoveredFeature = null;
-    this.currentPopup = null;
-    this.popupTimeout = null;
 
     this.initialize();
   }
@@ -279,41 +277,23 @@
     }
   };
 
-  MapboxMap.prototype.showHoverPopup = function(e) {
+  MapboxMap.prototype.openMarkerPopup = function(e) {
     var self = this;
 
-    // Cancel any pending popup close
-    this.cancelPopupClose();
-
-    // Don't create a new popup if one already exists for this feature
-    if (this.currentPopup && e.features[0].properties.id === this.currentPopupFeatureId) {
-      return;
-    }
-
-    // Close existing popup
-    this.closeCurrentPopup();
-
-    console.log("handle hover on marker")
+    console.log("handle click on marker")
     var coordinates = e.features[0].geometry.coordinates.slice();
     var properties = e.features[0].properties;
-    var resourceType = properties["resource_type"];
-    this.currentPopupFeatureId = properties.id;
+    var resourceType = properties["resource_type"]
 
     // Show empty popup immediately
     var popup = new mapboxgl.Popup({
       offset: 20,
-      closeButton: false, // No close button for hover popups
-      maxWidth: '250px',
-      className: 'hover-popup'
+      closeButton: true,
+      maxWidth: '250px'
     })
       .setLngLat(coordinates)
       .setHTML('<div class="map-popup-status-message">Loading...</div>')
       .addTo(self.map);
-
-    this.currentPopup = popup;
-
-    // Add hover event listeners to popup element
-    this.setupPopupHoverListeners();
 
     var popupDataUrl = self.getPopupDataUrl(resourceType, properties)
 
@@ -324,79 +304,14 @@
       dataType: "json"
     })
       .then(function(data) {
-        if (self.currentPopup === popup) { // Make sure popup wasn't closed while loading
-          popup.setHTML(App.MapPopup.getPopupContent(data), resourceType);
-          // Re-setup hover listeners after content change
-          self.setupPopupHoverListeners();
-        }
+        popup.setHTML(App.MapPopup.getPopupContent(data), resourceType);
       })
       .fail(function() {
-        if (self.currentPopup === popup) {
-          popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
-        }
+        popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
       })
   };
 
-  MapboxMap.prototype.openMarkerPopup = function(e) {
-    // Keep this method for backward compatibility or other uses
-    this.showHoverPopup(e);
-  };
-
-  MapboxMap.prototype.setupPopupHoverListeners = function() {
-    var self = this;
-
-    if (!this.currentPopup) return;
-
-    // Get the popup element
-    var popupElement = this.currentPopup.getElement();
-
-    if (popupElement) {
-      // Remove existing listeners to prevent duplicates
-      popupElement.removeEventListener('mouseenter', this._popupMouseEnter);
-      popupElement.removeEventListener('mouseleave', this._popupMouseLeave);
-
-      // Store bound functions for removal
-      this._popupMouseEnter = function() {
-        self.cancelPopupClose();
-      };
-
-      this._popupMouseLeave = function() {
-        self.schedulePopupClose();
-      };
-
-      // Add new listeners
-      popupElement.addEventListener('mouseenter', this._popupMouseEnter);
-      popupElement.addEventListener('mouseleave', this._popupMouseLeave);
-    }
-  };
-
-  MapboxMap.prototype.schedulePopupClose = function() {
-    var self = this;
-
-    // Cancel any existing timeout
-    this.cancelPopupClose();
-
-    // Set a timeout to close the popup
-    this.popupTimeout = setTimeout(function() {
-      self.closeCurrentPopup();
-    }, 300); // 300ms delay to allow moving to popup
-  };
-
-  MapboxMap.prototype.cancelPopupClose = function() {
-    if (this.popupTimeout) {
-      clearTimeout(this.popupTimeout);
-      this.popupTimeout = null;
-    }
-  };
-
-  MapboxMap.prototype.closeCurrentPopup = function() {
-    if (this.currentPopup) {
-      this.currentPopup.remove();
-      this.currentPopup = null;
-      this.currentPopupFeatureId = null;
-    }
-    this.cancelPopupClose();
-  };
+  
 
   MapboxMap.prototype.getPopupDataUrl = function(resourceType, properties) {
     if (resourceType == "proposal") {
@@ -623,9 +538,9 @@
       self.handleMarkerMouseLeave.bind(self)
     );
 
-    // Show popup on hover instead of click
-    self.map.on('mouseenter', 'custom-marker',
-      self.showHoverPopup.bind(self)
+    // Show popup on click
+    self.map.on('click', 'custom-marker',
+      self.openMarkerPopup.bind(self)
     );
   };
 
@@ -657,9 +572,6 @@
       );
     }
     this.hoveredFeature = null;
-
-    // Start timeout to close popup unless mouse enters popup
-    this.schedulePopupClose();
   };
 
   MapboxMap.prototype.addAdminShape = function() {
@@ -741,11 +653,8 @@
     }
   };
 
-  // Add a method to clean up markers
+    // Add a method to clean up markers
   MapboxMap.prototype.destroy = function() {
-    // Clean up popup
-    this.closeCurrentPopup();
-
     this.markers.forEach(function(marker) {
       marker.remove();
     });

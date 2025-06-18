@@ -155,11 +155,59 @@
     }
   };
 
+  MapboxMap.prototype.getDrawStyles = function() {
+    var color = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
+
+    return [
+      // Bigger points
+      {
+        'id': 'gl-draw-point-point-stroke-inactive',
+        'type': 'circle',
+        'filter': ['all', ['==', '$type', 'Point'], ['==', 'meta', 'feature'], ['!=', 'mode', 'static']],
+        'paint': {
+          'circle-radius': 10,
+          'circle-color': color,
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#ffffff'
+        }
+      },
+      // Basic polygon styles (needed for polygon tool to work)
+      {
+        'id': 'gl-draw-polygon-fill-inactive',
+        'type': 'fill',
+        'filter': ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+        'paint': {
+          'fill-color': '#3bb2d0',
+          'fill-opacity': 0.1
+        }
+      },
+      {
+        'id': 'gl-draw-polygon-stroke-inactive',
+        'type': 'line',
+        'filter': ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+        'paint': {
+          'line-color': '#3bb2d0',
+          'line-width': 2
+        }
+      },
+      // Vertex points for editing
+      {
+        'id': 'gl-draw-polygon-and-line-vertex-inactive',
+        'type': 'circle',
+        'filter': ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point']],
+        'paint': {
+          'circle-radius': 3,
+          'circle-color': '#fbb03b'
+        }
+      }
+    ];
+  };
+
   MapboxMap.prototype.initializePolygonEditor = function() {
     var self = this;
     console.log("initializePolygonEditor")
 
-    // Initialize Mapbox Draw
+    // Initialize Mapbox Draw with bigger point styles
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
@@ -168,7 +216,8 @@
         line_string: true,
         trash: true
       },
-      defaultMode: 'simple_select' // Start in selection mode, not drawing mode
+      defaultMode: 'simple_select', // Start in selection mode, not drawing mode
+      styles: this.getDrawStyles()
     });
 
     // Add the draw control to the map
@@ -213,22 +262,22 @@
           var newFeatureIds = e.features.map(function(feature) {
             return feature.id;
           });
-          
+
           // Delete all features except the newly created ones
           var featuresToDelete = allFeatures.features.filter(function(feature) {
             return newFeatureIds.indexOf(feature.id) === -1;
           });
-          
+
           var idsToDelete = featuresToDelete.map(function(feature) {
             return feature.id;
           });
-          
+
           if (idsToDelete.length > 0) {
             self.draw.delete(idsToDelete);
           }
         }
       }
-      
+
       self.updateShapeFormFields();
       // Remove any existing markers when a shape is created
       self.removeEditableMarker();

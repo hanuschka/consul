@@ -7,7 +7,8 @@ $('#extended-sidebar-map').foundation();
   var map = document.querySelector("#extended-sidebar-map *[data-vcmap]")
   App.VCMap.initializeMap(map);
 <% elsif use_mapbox?(@current_projekt) %>
-  App.Mapbox.initialize();
+  var map = document.querySelector("#extended-sidebar-map *[data-mapbox]")
+  App.Mapbox.initializeFor(map);
 <% else %>
   var map = document.querySelector("#extended-sidebar-map *[data-map]")
   App.Map.initializeMap(map);

@@ -6,6 +6,8 @@
       $("*[data-map]:visible").each(function() {
         App.Map.initializeMap(this);
       });
+
+      App.Mapbox.initialize();
     },
     destroy: function() {
       App.Map.maps.forEach(function(map) {
@@ -13,6 +15,8 @@
         map.remove();
       });
       App.Map.maps = [];
+
+      App.Mapbox.destroy();
     },
     initializeMap: function(element) {
       // variables to set map view

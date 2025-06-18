@@ -204,6 +204,31 @@
 
     // Update form fields when shapes are created, updated, or deleted
     this.map.on('draw.create', function(e) {
+      // If not admin editor, ensure only one polygon exists
+      if (!self.adminEditor) {
+        var allFeatures = self.draw.getAll();
+        // If we have more than one feature, remove all but the newest one
+        if (allFeatures.features.length > 1) {
+          // Get the newly created feature(s) from the event
+          var newFeatureIds = e.features.map(function(feature) {
+            return feature.id;
+          });
+          
+          // Delete all features except the newly created ones
+          var featuresToDelete = allFeatures.features.filter(function(feature) {
+            return newFeatureIds.indexOf(feature.id) === -1;
+          });
+          
+          var idsToDelete = featuresToDelete.map(function(feature) {
+            return feature.id;
+          });
+          
+          if (idsToDelete.length > 0) {
+            self.draw.delete(idsToDelete);
+          }
+        }
+      }
+      
       self.updateShapeFormFields();
       // Remove any existing markers when a shape is created
       self.removeEditableMarker();
@@ -646,12 +671,12 @@
       });
 
       if (!this.editable) {
-        console.log("try to addProcessShape", this.processCoordinates)
+        console.log("try to drawCoordinateCustomShape", this.processCoordinates)
         // Add shapes for non-marker coordinates
         this.processCoordinates.forEach(function(coordinates) {
           if (!App.Mapbox.validCoordinates(coordinates)) {
-            console.log("addProcessShape", coordinates)
-            self.addProcessShape(coordinates);
+            console.log("drawCoordinateCustomShape", coordinates)
+            self.drawCoordinateCustomShape(coordinates);
           }
         });
       }
@@ -755,10 +780,18 @@
     }
   };
 
-  MapboxMap.prototype.addProcessShape = function(coordinates) {
+  MapboxMap.prototype.drawCoordinateCustomShape = function(coordinates) {
     var self = this;
-    var sourceId = 'user-shape-' + coordinates.id;
-    var layerId = 'user-shape-layer-' + coordinates.id;
+    // Generate a unique ID if coordinates.id is undefined
+    var shapeId = coordinates.id || 'shape-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    var sourceId = 'user-shape-' + shapeId;
+    var layerId = 'user-shape-layer-' + shapeId;
+
+    // Check if source already exists to prevent duplicate source error
+    if (this.map.getSource(sourceId)) {
+      console.warn('Source with ID', sourceId, 'already exists. Skipping...');
+      return;
+    }
 
     this.map.addSource(sourceId, {
       type: 'geojson',
@@ -771,7 +804,7 @@
       source: sourceId,
       paint: {
         'fill-color': coordinates.color,
-        'fill-opacity': 0.4
+        'fill-opacity': 0.55
       }
     });
 
@@ -784,7 +817,7 @@
             coordinates: e.lngLat ? [e.lngLat.lng, e.lngLat.lat] : [0, 0]
           },
           properties: {
-            id: coordinates.id,
+            id: coordinates.id || shapeId,
             resource_type: coordinates.resource_type || 'shape'
           }
         }]

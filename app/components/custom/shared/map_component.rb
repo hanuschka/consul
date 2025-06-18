@@ -18,7 +18,6 @@ class Shared::MapComponent < Shared::MapBaseComponent
 
     def prepare_map_settings
       options = common_map_settings
-      options[:map] = ""
       options[:enable_geoman_controls] = enable_geoman_controls?
       options[:map_layers] = map_layers if map_layers.present?
 
@@ -31,8 +30,6 @@ class Shared::MapComponent < Shared::MapBaseComponent
 
       elsif map_style == "regular"
         options[:map] = ""
-      elsif map_style == "vcmap"
-        options[:vcmap] = ""
       end
 
       options
@@ -54,43 +51,11 @@ class Shared::MapComponent < Shared::MapBaseComponent
     end
 
     def use_mapbox?
-      if projekt_phase.present?
-        Setting["feature.mapbox"].present? || projekt_phase_feature?(projekt_phase, "general.mapbox")
+      if @projekt_phase.present?
+        Setting["feature.mapbox"].present? || projekt_phase_feature?(@projekt_phase, "general.mapbox")
       else
         Setting["feature.mapbox"].present?
       end
-    end
-
-    def get_process_coordinates
-      if mappable.present? && mappable.persisted? && mappable.map_location.present?
-        [
-          mappable.map_location.shape_json_data.presence ||
-            mappable.map_location.json_data
-        ]
-      else
-        []
-      end
-    end
-
-    def map_layers
-      if projekt_phase.present?
-        projekt_phase.map_layers_for_render.to_json
-      elsif projekt.present?
-        projekt.map_layers_for_render.to_json
-      else
-        MapLayer.general.to_json
-      end
-    end
-
-    def admin_shape
-      if projekt_phase.present?
-        projekt_phase.map_location&.shape_json_data.presence || projekt_phase.map_location&.json_data&.to_json
-      elsif projekt.present?
-        projekt.map_location.shape_json_data.presence || projekt.map_location.json_data.to_json
-      end
-    end
-
-=======
     end
 
     def enable_geoman_controls?

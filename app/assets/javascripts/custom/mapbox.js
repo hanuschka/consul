@@ -197,7 +197,7 @@
     var self = this;
     var lngLat = e.lngLat;
 
-    console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
+    // console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
 
       // Move existing marker
     if (this.editableMarker) {
@@ -214,7 +214,7 @@
     if (!this.editableMarker) return;
 
     var lngLat = this.editableMarker.getLngLat();
-    console.log("Updating form fields with coordinates:", lngLat.lat, lngLat.lng);
+    // console.log("Updating form fields with coordinates:", lngLat.lat, lngLat.lng);
 
     $(this.latitudeInputSelector).val(lngLat.lat);
     $(this.longitudeInputSelector).val(lngLat.lng);
@@ -230,7 +230,7 @@
   MapboxMap.prototype.createEditableMarker = function(latitude, longitude) {
     var self = this;
 
-    console.log("Creating editable marker at:", latitude, longitude);
+    // console.log("Creating editable marker at:", latitude, longitude);
 
     var styledMarker = this.getStyledMarker(null, null);
     var markerOptions = {
@@ -250,7 +250,7 @@
 
     marker.addTo(this.map);
 
-    console.log("Marker created at:", marker.getLngLat());
+    // console.log("Marker created at:", marker.getLngLat());
 
     return marker;
   };
@@ -280,7 +280,7 @@
   MapboxMap.prototype.openMarkerPopup = function(e) {
     var self = this;
 
-    console.log("handle click on marker")
+    // console.log("handle click on marker")
     var coordinates = e.features[0].geometry.coordinates.slice();
     var properties = e.features[0].properties;
     var resourceType = properties["resource_type"]
@@ -311,7 +311,7 @@
       })
   };
 
-  
+
 
   MapboxMap.prototype.getPopupDataUrl = function(resourceType, properties) {
     if (resourceType == "proposal") {
@@ -335,7 +335,7 @@
     }
 
     if (this.processCoordinates) {
-      console.log("processCoordinates", this.processCoordinates);
+      // console.log("processCoordinates", this.processCoordinates);
 
       // Create a GeoJSON source for all markers
       var markers = {
@@ -378,8 +378,8 @@
 
       var clusterColor = hexToRgba(brandColor, 0.5);
 
-      console.log("brandColor", brandColor)
-      console.log("clusterColor", clusterColor)
+      // console.log("brandColor", brandColor)
+      // console.log("clusterColor", clusterColor)
 
       // Add cluster layer
       self.map.addLayer({
@@ -443,9 +443,7 @@
       if (this.markerImages && this.markerImages.length) {
         var loadedImages = 0;
         var totalImages = this.markerImages.length;
-        console.log('Starting to load marker images:', this.markerImages);
 
-        console.log("markerImages", this.markerImages)
         this.markerImages.forEach(function(markerImage) {
           self.map.loadImage(markerImage.path, function(error, image) {
             if (error) {
@@ -620,7 +618,7 @@
     });
 
     this.map.on('click', layerId, function() {
-      console.log("map on click")
+      // console.log("map on click")
       self.openMarkerPopup({ target: { options: { id: coordinates.id } } });
     });
   };

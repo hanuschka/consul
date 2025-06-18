@@ -1,13 +1,12 @@
 App.MapPopup = {
   getPopupContent: function(data, resourcesName) {
-    console.log("getPopupContent", data, resourcesName)
+    // console.log("getPopupContent", data, resourcesName)
 
     if (resourcesName == "proposal") {
       return this.standardResourcePopupContent(data, resourcesName);
     } else if (resourcesName == "deficiency_report") {
       return this.standardResourcePopupContent(data, resourcesName);
     } else if (resourcesName == "projekt") {
-      // return this.projektPopupContent(data);
       return this.standardResourcePopupContent(data, resourcesName);
     } else if (resourcesName == "point_of_interest_pin") {
       return this.pointOfInterestPopupContent(data);
@@ -28,8 +27,6 @@ App.MapPopup = {
   },
 
   standardResourcePopupContent: function(data, resourcesName) {
-    console.log("standardResourcePopupContent", data)
-
     var url = this.getResourceUrl(data, resourcesName)
 
     if (data.projekt_phase_id) {
@@ -72,28 +69,6 @@ App.MapPopup = {
     return popupHtml;
   },
 
-  deficiencyReportPopupContent: function(data) {
-    var popupHtml = "";
-    popupHtml += "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
-
-    if (data.image_url) {
-      popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-    }
-
-    return popupHtml;
-  },
-
-  budgetsPopupContent: function(data) {
-    var popupHtml = "";
-    popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.title + "</a></h5>";
-
-    if (data.image_url) {
-      popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-    }
-
-    return popupHtml;
-  },
-
   pointOfInterestPopupContent: function(data) {
     var popupHtml = "<h5 style='color:" + data.category.color + "'>";
     popupHtml += "<i style='margin-right: 7px' class='icon-" + data.category.icon + "'></i>"
@@ -103,42 +78,64 @@ App.MapPopup = {
     return popupHtml;
   },
 
-  projektPopupContent: function(data) {
-    // return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
-    var popupHtml = "";
-    popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.title + "</a></h5>"; //title
+  // deficiencyReportPopupContent: function(data) {
+  //   var popupHtml = "";
+  //   popupHtml += "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
 
-    if (data.image_url) {
-      popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' >"; //image
-    }
+  //   if (data.image_url) {
+  //     popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+  //   }
 
-    if (data.sdg_goals.length || data.tags.length ) {
-      popupHtml += "<div class='resource-map-popup-details'>";
+  //   return popupHtml;
+  // },
 
-      if (data.sdg_goals && data.sdg_goals.length) {
-        var sdg_goals = "<div class='projekt-sdg-goals'>";
-        data.sdg_goals.forEach(function(sdg_goal) {
-          sdg_goals += "<span class='projekt-sdg-goal'>"
-          sdg_goals += "<img title='" + sdg_goal.title + "' src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
-          sdg_goals += "</span>";
-        });
-        sdg_goals += "</div>";
-        popupHtml += sdg_goals;
-      }
+  // budgetsPopupContent: function(data) {
+  //   var popupHtml = "";
+  //   popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.title + "</a></h5>";
 
-      if (data.tags && data.tags.length) {
-        var tags = "<div class='tags'>";
-        data.tags.forEach(function(tag) {
-          tags += "<span class='tag' style='font-size:0.75rem;padding:0.33333rem 0.5rem;margin-bottom:4px;'>" + tag + "</span>";
-        });
-        tags += "</div>";
+  //   if (data.image_url) {
+  //     popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+  //   }
 
-        popupHtml += tags;
-      }
+  //   return popupHtml;
+  // },
 
-      popupHtml += "</div>";
-    }
+  // projektPopupContent: function(data) {
+  //   // return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
+  //   var popupHtml = "";
+  //   popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.title + "</a></h5>"; //title
 
-    return popupHtml;
-  }
+  //   if (data.image_url) {
+  //     popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' >"; //image
+  //   }
+
+  //   if (data.sdg_goals.length || data.tags.length ) {
+  //     popupHtml += "<div class='resource-map-popup-details'>";
+
+  //     if (data.sdg_goals && data.sdg_goals.length) {
+  //       var sdg_goals = "<div class='projekt-sdg-goals'>";
+  //       data.sdg_goals.forEach(function(sdg_goal) {
+  //         sdg_goals += "<span class='projekt-sdg-goal'>"
+  //         sdg_goals += "<img title='" + sdg_goal.title + "' src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
+  //         sdg_goals += "</span>";
+  //       });
+  //       sdg_goals += "</div>";
+  //       popupHtml += sdg_goals;
+  //     }
+
+  //     if (data.tags && data.tags.length) {
+  //       var tags = "<div class='tags'>";
+  //       data.tags.forEach(function(tag) {
+  //         tags += "<span class='tag' style='font-size:0.75rem;padding:0.33333rem 0.5rem;margin-bottom:4px;'>" + tag + "</span>";
+  //       });
+  //       tags += "</div>";
+
+  //       popupHtml += tags;
+  //     }
+
+  //     popupHtml += "</div>";
+  //   }
+
+  //   return popupHtml;
+  // }
 }

@@ -3,10 +3,19 @@ $header-font-family: 'quicksand', sans-serif !important;
 
 // $new-body-font-family: "Asap", "sourcesanspro-regular-webfont", "sourcesanspro-bold-webfont", "PT_Serif_Web-Regular", sans-serif !important;
 // $new-header-font-family: "Asap", "sourcesanspro-regular-webfont", "sourcesanspro-bold-webfont", "PT_Serif_Web-Regular", sans-serif !important;
-$new-body-font-family: 'quicksand', sans-serif !important;
-$new-header-font-family: 'quicksand', sans-serif !important;
+$new-body-font-family: 'manrope', sans-serif !important;
+$new-header-font-family: 'manrope', sans-serif !important;
 
 $base-font-size:      18px;
+
+
+@font-face {
+  font-family: "manrope";
+  src: font-url("manrope/Manrope-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
   font-family: "quicksand";

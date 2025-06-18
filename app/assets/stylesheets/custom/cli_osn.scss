@@ -27,18 +27,18 @@ h5 {
   .auth-page-template--body {
     a:not(.button) {
       font-weight: bold;
-      color: #37847f;
+      color: #006363;
       text-decoration: underline;
     }
 	}
 
   a.button.-grey,
   a.button.-purple {
-    background-color: #37847f;
+    background-color: #006363;
     color: #fff;
 
     &:hover {
-      background-color: #37847f;
+      background-color: #006363;
       color: #fff;
     }
   }
@@ -54,7 +54,7 @@ h5 {
   }
 
   .resource-item--header {
-    background-color: #37847f !important;
+    background-color: #006363 !important;
     color: #fff !important;
   }
 
@@ -70,7 +70,7 @@ h5 {
 
   .auth-page-template--body {
     form .button {
-      background-color: #37847f;
+      background-color: #006363;
     }
 
     .button.-green {
@@ -88,7 +88,7 @@ h5 {
     }
 
     .milestone-item--status {
-      background-color: #37847f;
+      background-color: #006363;
     }
   }
 }
@@ -115,7 +115,7 @@ h5 {
 
   &__badge {
     width: 48%;
-    background-color: #37847f;
+    background-color: #006363;
     padding: 15px;
     border-radius: 5px;
     position: relative;

@@ -103,6 +103,8 @@
     // Add click listener for moveOrPlaceMarker functionality
     if (this.editable) {
       this.map.on('click', function(e) {
+        console.log("click controll")
+
         // Check if click is on a draw control button
         var target = e.originalEvent.target;
         var isDrawControl = target && (
@@ -115,21 +117,30 @@
           layers: ['custom-marker', 'custom-marker-icon', 'clusters']
         });
 
-        // Don't place markers if we're in drawing mode or clicked on draw controls
-        var isDrawingMode = false;
+        // Check current draw mode
+        var currentMode = 'simple_select';
         if (self.draw) {
-          var currentMode = self.draw.getMode();
-          isDrawingMode = currentMode.startsWith('draw_') || currentMode === 'direct_select';
+          currentMode = self.draw.getMode();
         }
 
-        // Only place markers if:
-        // - No features clicked
-        // - Not in drawing mode
-        // - Not clicked on draw controls
-        // - Draw has no existing features (to avoid conflicts)
-        var hasExistingShapes = self.draw && self.draw.getAll().features.length > 0;
+        var drawFetures = self.draw.getAll().features;
 
-        if (features.length === 0 && !isDrawingMode && !isDrawControl && !hasExistingShapes) {
+        // Check if there are existing draw features
+        var hasExistingDrawFeatures = self.draw && drawFetures.length > 0;
+        var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
+
+        // Place editable marker if:
+        // - No features clicked
+        // - Not clicked on draw controls
+        // - No existing draw features (to avoid conflicts)
+        // Allow placing markers even in drawing modes for better UX
+        // console.log("self.draw.getAll().features", self.draw.getAll().features)
+        // console.log("features.length", features.length)
+        // console.log("isDrawControl", isDrawControl)
+        // console.log("hasExistingDrawFeatures", hasExistingDrawFeatures)
+
+        if (hasOnlyPointDrawFeatures || (features.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
+          // console.log("moveOrPlaceMarker")
           self.moveOrPlaceMarker(e);
         }
       });
@@ -147,8 +158,8 @@
     }));
 
     // Add polygon drawing controls if editable
-    console.log("this.editable", this.editable)
-    console.log("MapboxDraw", MapboxDraw)
+    // console.log("this.editable", this.editable)
+    // console.log("MapboxDraw", MapboxDraw)
 
     if (this.editable && typeof MapboxDraw !== 'undefined') {
       this.initializePolygonEditor();
@@ -157,55 +168,164 @@
 
   MapboxMap.prototype.getDrawStyles = function() {
     var color = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
+    const blue = '#3bb2d0';
+    const orange = '#fbb03b';
+    const white = '#fff';
 
     return [
-      // Bigger points
+      // // Bigger points
+      // {
+      //   'id': 'gl-draw-point-point-stroke-inactive',
+      //   'type': 'circle',
+      //   'filter': ['all', ['==', '$type', 'Point'], ['==', 'meta', 'feature'], ['!=', 'mode', 'static']],
+      //   'paint': {
+      //     'circle-radius': 10,
+      //     'circle-color': color,
+      //     'circle-stroke-width': 3,
+      //     'circle-stroke-color': '#ffffff'
+      //   }
+      // },
+
+      // Polygons
+      //   Solid fill
+      //   Active state defines color
       {
-        'id': 'gl-draw-point-point-stroke-inactive',
-        'type': 'circle',
-        'filter': ['all', ['==', '$type', 'Point'], ['==', 'meta', 'feature'], ['!=', 'mode', 'static']],
-        'paint': {
-          'circle-radius': 10,
-          'circle-color': color,
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#ffffff'
-        }
-      },
-      // Basic polygon styles (needed for polygon tool to work)
-      {
-        'id': 'gl-draw-polygon-fill-inactive',
+        'id': 'gl-draw-polygon-fill',
         'type': 'fill',
-        'filter': ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+        'filter': [
+          'all',
+          ['==', '$type', 'Polygon'],
+        ],
         'paint': {
-          'fill-color': '#3bb2d0',
-          'fill-opacity': 0.1
-        }
+          'fill-color': [
+            'case',
+            ['==', ['get', 'active'], 'true'], orange,
+            blue,
+          ],
+          'fill-opacity': 0.3,
+        },
       },
+
+      // Lines
+      // Polygon
+      //   Matches Lines AND Polygons
+      //   Active state defines color
       {
-        'id': 'gl-draw-polygon-stroke-inactive',
+        'id': 'gl-draw-lines',
         'type': 'line',
-        'filter': ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+        'filter': [
+          'any',
+          ['==', '$type', 'LineString'],
+          ['==', '$type', 'Polygon'],
+        ],
+        'layout': {
+          'line-cap': 'round',
+          'line-join': 'round',
+        },
         'paint': {
-          'line-color': '#3bb2d0',
-          'line-width': 2
-        }
+          'line-color': [
+            'case',
+            ['==', ['get', 'active'], 'true'], orange,
+            blue,
+          ],
+          'line-dasharray': [
+            'case',
+            ['==', ['get', 'active'], 'true'], [0.2, 2],
+            [2, 0],
+          ],
+          'line-width': 3,
+        },
       },
-      // Vertex points for editing
+
+      // Points
+      //   Circle with an outline
+      //   Active state defines size and color
       {
-        'id': 'gl-draw-polygon-and-line-vertex-inactive',
+        'id': 'gl-draw-point-outer',
         'type': 'circle',
-        'filter': ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point']],
+        'filter': [
+          'all',
+          ['==', '$type', 'Point'],
+          ['==', 'meta', 'feature'],
+        ],
         'paint': {
-          'circle-radius': 3,
-          'circle-color': '#fbb03b'
-        }
-      }
+          'circle-radius': [
+            'case',
+            ['==', ['get', 'active'], 'true'], 7,
+            5,
+          ],
+          'circle-color': white,
+        },
+      },
+      {
+        'id': 'gl-draw-point-inner',
+        'type': 'circle',
+        'filter': [
+          'all',
+          ['==', '$type', 'Point'],
+          ['==', 'meta', 'feature'],
+        ],
+        'paint': {
+          'circle-radius': [
+            'case',
+            ['==', ['get', 'active'], 'true'], 5,
+            3,
+          ],
+          'circle-color': [
+            'case',
+            ['==', ['get', 'active'], 'true'], orange,
+            blue,
+          ],
+        },
+      },
+
+
+      // Vertex
+      //   Visible when editing polygons and lines
+      //   Similar behaviour to Points
+      //   Active state defines size
+      {
+        'id': 'gl-draw-vertex-outer',
+        'type': 'circle',
+        'filter': [
+          'all',
+          ['==', '$type', 'Point'],
+          ['==', 'meta', 'vertex'],
+          ['!=', 'mode', 'simple_select'],
+        ],
+        'paint': {
+          'circle-radius': [
+            'case',
+            ['==', ['get', 'active'], 'true'], 8,
+            9,
+          ],
+          'circle-color': white
+        },
+      },
+      {
+        'id': 'gl-draw-vertex-inner',
+        'type': 'circle',
+        'filter': [
+          'all',
+          ['==', '$type', 'Point'],
+          ['==', 'meta', 'vertex'],
+          ['!=', 'mode', 'simple_select'],
+        ],
+        'paint': {
+          'circle-radius': [
+            'case',
+            ['==', ['get', 'active'], 'true'], 5,
+            7,
+          ],
+          'circle-color': orange
+        },
+      },
     ];
   };
 
   MapboxMap.prototype.initializePolygonEditor = function() {
     var self = this;
-    console.log("initializePolygonEditor")
+    // console.log("initializePolygonEditor")
 
     // Initialize Mapbox Draw with bigger point styles
     this.draw = new MapboxDraw({
@@ -407,14 +527,17 @@
 
     // console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
 
-    // Clear any existing polygons when placing a marker
+    // Clear any existing draw features when placing an editable marker
     if (this.draw) {
-      this.draw.deleteAll();
+      var allFeatures = this.draw.getAll();
+      if (allFeatures.features.length > 0) {
+        this.draw.deleteAll();
+      }
       // Switch draw mode to simple_select to avoid conflicts
       this.draw.changeMode('simple_select');
     }
 
-    // Move existing marker
+    // Move existing marker or create new one
     if (this.editableMarker) {
       this.editableMarker.setLngLat([lngLat.lng, lngLat.lat]);
       this.updateMarkerWithCategoryStyle();
@@ -858,7 +981,7 @@
     });
 
     this.map.on('click', layerId, function(e) {
-      // console.log("map on click")
+      console.log("map on click")
       // Create a proper event structure for the popup
       var popupEvent = {
         features: [{

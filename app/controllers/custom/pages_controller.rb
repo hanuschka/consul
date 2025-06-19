@@ -179,8 +179,6 @@ class PagesController < ApplicationController
 
 
     if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
-      @projekt_phase.stats_version.destroy if @projekt_phase.stats_version.present? && @projekt_phase.current?
-
       @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
     else
       if params[:search].present?

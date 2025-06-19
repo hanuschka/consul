@@ -4,6 +4,10 @@
   <%= render ProjektPhaseSubnavComponent.new(@projekt_phase) %>
 
   <% if params[:section] == "stats" && can?(:read_stats, @projekt_phase) %>
+    <% if can?(:refresh_stats, @projekt_phase) %>
+      <%= button_to("Statistiken aktualisieren", refresh_stats_projekt_phase_path(@projekt_phase), class: "button") %>
+    <% end %>
+
     <div class='participation-stats'>
       <%= render "shared/stats/participation", stats: @stats %>
     </div>

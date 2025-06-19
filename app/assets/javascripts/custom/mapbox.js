@@ -100,6 +100,7 @@
       self.renderAdminShape();
       self.renderMarkerCoordinates();
       self.renderResourceShapes();
+      self.addMapInstructionOverlay();
     });
 
     App.Mapbox.maps.push(this.map);
@@ -212,6 +213,67 @@
     if (this.editable && typeof MapboxDraw !== 'undefined') {
       this.initializePolygonEditor();
     }
+  };
+
+  MapboxMap.prototype.addMapInstructionOverlay = function() {
+    var self = this;
+    
+    // Create overlay container
+    var overlay = document.createElement('div');
+    overlay.className = 'mapbox-instruction-overlay';
+    overlay.innerHTML = '<span class="mapbox-instruction-text">Right-click and drag to change map view angle</span>';
+    
+    // Add CSS styles to match Mapbox attribution style
+    overlay.style.cssText = `
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.5);
+      color: rgba(0, 0, 0, 0.75);
+      padding: 2px 6px;
+      border-radius: 0;
+      font-size: 13px;
+      font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      z-index: 1000;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      opacity: 0.8;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    `;
+    
+    // Add overlay to map container
+    this.element.style.position = 'relative';
+    this.element.appendChild(overlay);
+    
+    // Store reference for cleanup
+    this.instructionOverlay = overlay;
+    
+    // Auto-hide after 5 seconds
+    setTimeout(function() {
+      if (self.instructionOverlay) {
+        self.instructionOverlay.style.opacity = '0.5';
+      }
+    }, 5000);
+    
+    // Show on map interaction, then fade
+    var showOverlayTemporarily = function() {
+      if (self.instructionOverlay) {
+        self.instructionOverlay.style.opacity = '0.8';
+        clearTimeout(self.overlayTimeout);
+        self.overlayTimeout = setTimeout(function() {
+          if (self.instructionOverlay) {
+            self.instructionOverlay.style.opacity = '0.5';
+          }
+        }, 3000);
+      }
+    };
+    
+    // Show overlay on various map interactions
+    this.map.on('mousedown', showOverlayTemporarily);
+    this.map.on('touchstart', showOverlayTemporarily);
   };
 
   MapboxMap.prototype.getDrawStyles = function() {
@@ -1172,6 +1234,24 @@
     try {
       // Remove all event listeners first
       this.map.off();
+
+      // Clean up instruction overlay
+      if (this.instructionOverlay) {
+        try {
+          if (this.instructionOverlay.parentNode) {
+            this.instructionOverlay.parentNode.removeChild(this.instructionOverlay);
+          }
+        } catch (e) {
+          console.warn('Error removing instruction overlay:', e);
+        }
+        this.instructionOverlay = null;
+      }
+
+      // Clear overlay timeout
+      if (this.overlayTimeout) {
+        clearTimeout(this.overlayTimeout);
+        this.overlayTimeout = null;
+      }
 
       // Clean up draw instance
       if (this.draw) {

@@ -31,14 +31,11 @@ class ProjektPhase::ProposalPhase::Stats < ProjektPhase::Stats
     end
 
     def supports
-      eligible_user_ids = User.select(:id)
-
       @supports ||= ActsAsVotable::Vote
                       .where(
                         votable_type: "Proposal",
                         votable_id: proposals.select(:id),
-                        voter_type: "User",
-                        voter_id: eligible_user_ids
+                        voter_type: "User"
                       )
     end
 

@@ -56,9 +56,11 @@
     var self = this;
 
     this.map = this.initializeMap();
+    this.mapLoaded = false; // Track map loading state
 
     // Wait for the map to load before adding markers
     this.map.on('load', function() {
+      self.mapLoaded = true;
       self.renderMarkers();
     });
 
@@ -72,12 +74,19 @@
     var self = this;
     mapboxgl.accessToken = this.element.dataset.mapboxPublicToken;
 
-    return new mapboxgl.Map({
-      style: this.styleId,
+    var mapSettings = {
       container: this.element,
       center: [this.mapCenterLongitude, this.mapCenterLatitude],
       zoom: this.zoom
-    });
+    }
+
+    if (this.styleId) {
+      mapSettings.style = this.styleId;
+    }
+
+    // console.log("Using style", this.styleId)
+
+    return new mapboxgl.Map(mapSettings);
   };
 
   MapboxMap.prototype.setupEventListeners = function() {
@@ -106,8 +115,6 @@
     // Add click listener for moveOrPlaceMarker functionality
     if (this.editable) {
       this.map.on('click', function(e) {
-        console.log("click controll")
-
         // Check if click is on a draw control button
         var target = e.originalEvent.target;
         var isDrawControl = target && (
@@ -416,7 +423,7 @@
 
     // Listen for mode changes to help with conflict resolution
     this.map.on('draw.modechange', function(e) {
-      console.log('Draw mode changed to:', e.mode);
+      // console.log('Draw mode changed to:', e.mode);
       // If entering a drawing mode, clear any existing markers
       if (e.mode.startsWith('draw_')) {
         self.removeEditableMarker();
@@ -627,7 +634,7 @@
   MapboxMap.prototype.openMarkerPopup = function(e) {
     var self = this;
 
-    // console.log("handle click on marker")
+    console.log("handle click on marker")
 
     // Check if we have features and at least one feature
     if (!e.features || !e.features.length || !e.features[0]) {
@@ -649,7 +656,7 @@
       .setHTML('<div class="map-popup-status-message">Loading...</div>')
       .addTo(self.map);
 
-    var popupDataUrl = self.getPopupDataUrl(resourceType, properties)
+    var popupDataUrl = App.MapPopup.getPopupDataUrl(resourceType, properties)
 
     if (!popupDataUrl) return;
 
@@ -658,28 +665,12 @@
       dataType: "json"
     })
       .then(function(data) {
-        popup.setHTML(App.MapPopup.getPopupContent(data), resourceType);
+        popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType));
       })
       .fail(function() {
         popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
       })
   };
-
-
-
-  MapboxMap.prototype.getPopupDataUrl = function(resourceType, properties) {
-    if (resourceType == "proposal") {
-      return "/proposals/" + properties.id + "/json_data";
-    } else if (resourceType == "deficiency_report") {
-      return "/deficiency_reports/" + properties.id + "/json_data";
-    } else if (resourceType == "projekt") {
-      return "/projekts/" + properties.id + "/json_data";
-    } else if (resourceType == "investment") {
-      return "/investments/" + properties.id + "/json_data";
-    } else if (resourceType == "point_of_interest_pin") {
-      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projektPhaseId;
-    }
-  }
 
   MapboxMap.prototype.renderMarkers = function() {
     this.renderAdminShape();
@@ -722,8 +713,8 @@
             properties: {
               id: markerCoordinate.id,
               resource_type: markerCoordinate.resource_type,
+              projekt_phase_id: markerCoordinate.projekt_phase_id,
               color: markerCoordinate.color,
-              iconClass: markerCoordinate.fa_icon_class,
               fa_icon_class: markerCoordinate.fa_icon_class
             }
           };
@@ -761,10 +752,10 @@
         'circle-radius': [
           'step',
           ['get', 'point_count'],
-          15,
+          18,
           10,
-          20,
-          30,
+          22,
+          28,
           25
         ]
       }
@@ -779,7 +770,10 @@
       layout: {
         'text-field': '{point_count_abbreviated}',
         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-        'text-size': 12
+        'text-size': 17
+      },
+      paint: {
+        'text-color': 'white'
       }
     });
   };
@@ -836,7 +830,7 @@
         } else {
           self.map.addImage(markerImage.name, image);
         }
-        
+
         loadedImages++;
         if (loadedImages === totalImages) {
           callback();
@@ -994,7 +988,7 @@
 
     // Check if source already exists to prevent duplicate source error
     if (this.map.getSource(sourceId)) {
-      console.warn('Source with ID', sourceId, 'already exists. Skipping...');
+      // console.warn('Source with ID', sourceId, 'already exists. Skipping...');
       return;
     }
 
@@ -1022,7 +1016,7 @@
     });
 
     this.map.on('click', layerId, function(e) {
-      console.log("map on click")
+      // console.log("map on click")
       // Create a proper event structure for the popup
       var popupEvent = {
         features: [{
@@ -1077,46 +1071,170 @@
 
     // Add a method to clean up markers
   MapboxMap.prototype.destroy = function() {
-    // Clean up draw instance
-    if (this.draw) {
-      this.map.removeControl(this.draw);
-      this.draw = null;
-    }
+    if (!this.map) return; // Early return if map is already destroyed
 
-    this.markers.forEach(function(marker) {
-      marker.remove();
-    });
+    var self = this;
+
+    try {
+      // If map is still loading, wait for it to finish before destroying
+      if (!this.mapLoaded && this.map.isStyleLoaded && !this.map.isStyleLoaded()) {
+        this.map.once('idle', function() {
+          self.performDestroy();
+        });
+        return;
+      }
+
+      this.performDestroy();
+
+    } catch (e) {
+      console.error('Error during map destruction:', e);
+      this.forceCleanup();
+    }
+  };
+
+  // Separated destroy logic for better control
+  MapboxMap.prototype.performDestroy = function() {
+    var self = this;
+
+    try {
+      // Remove all event listeners first
+      this.map.off();
+
+      // Clean up draw instance
+      if (this.draw) {
+        try {
+          this.map.removeControl(this.draw);
+        } catch (e) {
+          console.warn('Error removing draw control:', e);
+        }
+        this.draw = null;
+      }
+
+      // Clean up all markers
+      this.markers.forEach(function(marker) {
+        try {
+          marker.remove();
+        } catch (e) {
+          console.warn('Error removing marker:', e);
+        }
+      });
+      this.markers = [];
+
+      if (this.adminMarker) {
+        try {
+          this.adminMarker.remove();
+        } catch (e) {
+          console.warn('Error removing admin marker:', e);
+        }
+        this.adminMarker = null;
+      }
+
+      if (this.editableMarker) {
+        try {
+          this.editableMarker.remove();
+        } catch (e) {
+          console.warn('Error removing editable marker:', e);
+        }
+        this.editableMarker = null;
+      }
+
+      // Clean up any popups
+      var popups = document.querySelectorAll('.mapboxgl-popup');
+      popups.forEach(function(popup) {
+        if (popup.parentNode) {
+          popup.parentNode.removeChild(popup);
+        }
+      });
+
+      // Remove sources and layers if they exist
+      this.cleanupMapSources();
+
+      // Wait a bit before removing the map to allow cleanup
+      setTimeout(function() {
+        if (self.map) {
+          try {
+            self.map.remove();
+          } catch (e) {
+            console.warn('Error removing map:', e);
+          }
+          self.map = null;
+          self.mapLoaded = false;
+        }
+      }, 100);
+
+    } catch (e) {
+      console.error('Error during map destruction:', e);
+      this.forceCleanup();
+    }
+  };
+
+  // Clean up map sources and layers
+  MapboxMap.prototype.cleanupMapSources = function() {
+    if (!this.map || !this.mapLoaded) return;
+
+    try {
+      // Remove known sources
+      var sources = ['markers', 'admin-shape'];
+      sources.forEach(function(sourceId) {
+        if (this.map.getSource(sourceId)) {
+          this.map.removeSource(sourceId);
+        }
+      }.bind(this));
+    } catch (e) {
+      console.warn('Error cleaning up map sources:', e);
+    }
+  };
+
+  // Force cleanup when errors occur
+  MapboxMap.prototype.forceCleanup = function() {
+    this.map = null;
+    this.draw = null;
     this.markers = [];
-    if (this.adminMarker) {
-      this.adminMarker.remove();
-      this.adminMarker = null;
-    }
-    if (this.editableMarker) {
-      this.editableMarker.remove();
-      this.editableMarker = null;
-    }
+    this.adminMarker = null;
+    this.editableMarker = null;
+    this.mapLoaded = false;
   };
 
   // Keep the existing App.Mapbox object
   App.Mapbox = {
     maps: [],
+    mapInstances: [], // Store MapboxMap instances for proper cleanup
     initialize: function() {
       var self = this;
       $("[data-mapbox]").each(function() {
         var element = this;
         var mapInstance = self.initializeFor(element)
 
-        self.maps.push(mapInstance.map)
+        self.maps.push(mapInstance.map);
+        self.mapInstances.push(mapInstance);
       });
     },
     initializeFor: function(element) {
       return new MapboxMap(element);
     },
     destroy: function() {
-      this.maps.forEach(function(map) {
-        map.remove();
+      // Use the proper destroy method for MapboxMap instances
+      this.mapInstances.forEach(function(mapInstance) {
+        try {
+          mapInstance.destroy();
+        } catch (e) {
+          console.warn('Error destroying map instance:', e);
+        }
       });
+
+      // Fallback: remove any remaining maps directly
+      this.maps.forEach(function(map) {
+        try {
+          if (map && typeof map.remove === 'function') {
+            map.remove();
+          }
+        } catch (e) {
+          console.warn('Error removing map:', e);
+        }
+      });
+
       this.maps = [];
+      this.mapInstances = [];
     },
     validCoordinates: function(coordinates) {
       return !isNaN(parseFloat(coordinates.lat)) && !isNaN(parseFloat(coordinates.long));

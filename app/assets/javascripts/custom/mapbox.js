@@ -14,6 +14,41 @@
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
+  // Calculate centroid of a polygon
+  function calculatePolygonCentroid(geometry) {
+    // Handle different coordinate structures
+    var coords;
+
+    if (geometry.type === 'Polygon') {
+      coords = geometry.coordinates[0]; // Get outer ring
+    } else if (geometry.type === 'MultiPolygon') {
+      coords = geometry.coordinates[0][0]; // Get first polygon's outer ring
+    } else if (Array.isArray(geometry) && Array.isArray(geometry[0])) {
+      coords = geometry;
+    }
+
+    if (!coords || coords.length === 0) {
+      return null;
+    }
+
+    var x = 0, y = 0;
+    var validCoords = coords.filter(function(coord) {
+      return Array.isArray(coord) && coord.length >= 2 &&
+             !isNaN(coord[0]) && !isNaN(coord[1]);
+    });
+
+    if (validCoords.length === 0) {
+      return null;
+    }
+
+    validCoords.forEach(function(coord) {
+      x += parseFloat(coord[0]);
+      y += parseFloat(coord[1]);
+    });
+
+    return [x / validCoords.length, y / validCoords.length];
+  }
+
   // MapboxMap class definition
   function MapboxMap(element) {
     this.element = element;
@@ -23,7 +58,7 @@
     this.mapCenterLongitude = $element.data("map-center-longitude");
     this.zoom = $element.data("map-zoom");
     this.resourcesName = $element.data("parent-class");
-    this.processCoordinates = $element.data("process-coordinates");
+    this.markerCoordinates = $element.data("process-coordinates");
     this.editable = $element.data("editable");
     this.adminEditor = $element.data("admin-editor");
     this.adminShape = $element.data("admin-shape");
@@ -39,7 +74,7 @@
     this.styleId = $element.data("mapbox-style-id")
 
     this.map = null;
-    this.markers = []; // Array to store all markers
+    this.pinMarkers = []; // Array to store all marker-coordinates
     this.adminMarker = null;
     this.editableMarker = null; // Single editable marker for user interaction
     this.markerCategoryIcon = null;
@@ -58,10 +93,13 @@
     this.map = this.initializeMap();
     this.mapLoaded = false; // Track map loading state
 
-    // Wait for the map to load before adding markers
+    // Wait for the map to load before adding marker-coordinates
     this.map.on('load', function() {
       self.mapLoaded = true;
-      self.renderMarkers();
+
+      self.renderAdminShape();
+      self.renderMarkerCoordinates();
+      self.renderResourceShapes();
     });
 
     App.Mapbox.maps.push(this.map);
@@ -102,7 +140,7 @@
       }
     }
 
-    if (this.adminEditor && !this.markers.length) {
+    if (this.adminEditor && !this.pinMarkers.length) {
       this.map.on("moveend", function() {
         var center = self.map.getCenter();
         $(self.latitudeInputSelector).val(center.lat);
@@ -122,7 +160,7 @@
           target.closest('.mapbox-gl-draw_ctrl')
         );
 
-        // Only handle clicks that aren't on existing markers/features or draw controls
+        // Only handle clicks that aren't on existing marker-coordinates/features or draw controls
         var features = self.map.queryRenderedFeatures(e.point, {
           layers: ['custom-marker', 'custom-marker-icon', 'clusters']
         });
@@ -143,7 +181,7 @@
         // - No features clicked
         // - Not clicked on draw controls
         // - No existing draw features (to avoid conflicts)
-        // Allow placing markers even in drawing modes for better UX
+        // Allow placing marker-coordinates even in drawing modes for better UX
         // console.log("self.draw.getAll().features", self.draw.getAll().features)
         // console.log("features.length", features.length)
         // console.log("isDrawControl", isDrawControl)
@@ -409,7 +447,7 @@
       }
 
       self.updateShapeFormFields();
-      // Remove any existing markers when a shape is created
+      // Remove any existing marker-coordinates when a shape is created
       self.removeEditableMarker();
     });
 
@@ -424,7 +462,7 @@
     // Listen for mode changes to help with conflict resolution
     this.map.on('draw.modechange', function(e) {
       // console.log('Draw mode changed to:', e.mode);
-      // If entering a drawing mode, clear any existing markers
+      // If entering a drawing mode, clear any existing marker-coordinates
       if (e.mode.startsWith('draw_')) {
         self.removeEditableMarker();
       }
@@ -485,7 +523,7 @@
     return el;
   };
 
-  MapboxMap.prototype.createMarker = function(latitude, longitude, color, iconClass) {
+  MapboxMap.prototype.createPinMarker = function(latitude, longitude, color, iconClass) {
     var styledMarker = this.getStyledMarker(color, iconClass);
     var markerOptions = {
       element: styledMarker.element,
@@ -494,18 +532,18 @@
       draggable: this.editable
     };
 
-    var marker = new mapboxgl.Marker(markerOptions)
+    var pinMarker = new mapboxgl.Marker(markerOptions)
       .setLngLat([longitude, latitude]);
 
     if (this.editable) {
-      marker.on("dragend", this.updateFormfieldsWithMarker.bind(this));
+      pinMarker.on("dragend", this.updateFormfieldsWithMarker.bind(this));
     }
-    marker.addTo(this.map);
+    pinMarker.addTo(this.map);
 
-    // Add marker to our markers array
-    this.markers.push(marker);
+    // Add pinMarker to our marker-coordinates array
+    this.pinMarkers.push(pinMarker);
 
-    return marker;
+    return pinMarker;
   };
 
   MapboxMap.prototype.updateFormfieldsWithMarker = function(e) {
@@ -617,8 +655,8 @@
   };
 
   MapboxMap.prototype.updateMarkerWithCategoryStyle = function() {
-    if (this.markers.length) {
-      this.markers.forEach(function(marker) {
+    if (this.pinMarkers.length) {
+      this.pinMarkers.forEach(function(marker) {
         marker.setIcon(this.getStyledMarker(null, null));
       }.bind(this));
     }
@@ -672,19 +710,14 @@
       })
   };
 
-  MapboxMap.prototype.renderMarkers = function() {
-    this.renderAdminShape();
-    this.renderProcessCoordinates();
-  };
-
   MapboxMap.prototype.renderAdminShape = function() {
     if (this.adminShape && this.showAdminShape) {
       this.addAdminShape();
     }
   };
 
-  MapboxMap.prototype.renderProcessCoordinates = function() {
-    if (!this.processCoordinates) return;
+  MapboxMap.prototype.renderMarkerCoordinates = function() {
+    if (!this.markerCoordinates) return;
 
     var markersGeoJSON = this.createMarkersGeoJSON();
     this.addMarkersSource(markersGeoJSON);
@@ -692,38 +725,68 @@
     this.addMarkerBackgroundLayer();
     this.loadMarkerImagesAndSetupIcons();
     this.setupClusterEventListeners();
-    this.renderNonMarkerShapes();
   };
 
   MapboxMap.prototype.createMarkersGeoJSON = function() {
+    var features = [];
+    var self = this;
+
+    this.markerCoordinates.forEach(function(coordinate) {
+      if (App.Mapbox.validCoordinates(coordinate)) {
+        // Regular point marker
+        features.push({
+          type: 'Feature',
+          id: coordinate.id,
+          geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(coordinate.long), parseFloat(coordinate.lat)]
+          },
+          properties: {
+            id: coordinate.id,
+            resource_type: coordinate.resource_type,
+            projekt_phase_id: coordinate.projekt_phase_id,
+            color: coordinate.color,
+            fa_icon_class: coordinate.fa_icon_class
+          }
+        });
+      // } else if (coordinate.features && Array.isArray(coordinate.features) && coordinate.type === "FeatureCollection") {
+      } else if (coordinate.features && Array.isArray(coordinate.features)) {
+        // Handle other coordinate structures that might represent shapes
+        coordinate.features.forEach(function(feature) {
+            var centroid = calculatePolygonCentroid(feature.geometry);
+            console.log("render shape with polygon marker", coordinate)
+            console.log("centroid", centroid)
+
+            if (centroid) {
+              features.push({
+                type: 'Feature',
+                id: (coordinate.id || 'shape_' + Date.now()) + '_centroid',
+                geometry: {
+                  type: 'Point',
+                  coordinates: centroid
+                },
+                properties: {
+                  id: coordinate.id,
+                  resource_type: coordinate.resource_type,
+                  projekt_phase_id: coordinate.projekt_phase_id,
+                  color: coordinate.color,
+                  fa_icon_class: coordinate.fa_icon_class,
+                  is_shape_centroid: true
+                }
+              });
+            }
+        })
+      }
+    });
+
     return {
       type: 'FeatureCollection',
-      features: this.processCoordinates
-        .filter(function(markerCoordinate) {
-          return App.Mapbox.validCoordinates(markerCoordinate);
-        })
-        .map(function(markerCoordinate) {
-          return {
-            type: 'Feature',
-            id: markerCoordinate.id,
-            geometry: {
-              type: 'Point',
-              coordinates: [parseFloat(markerCoordinate.long), parseFloat(markerCoordinate.lat)]
-            },
-            properties: {
-              id: markerCoordinate.id,
-              resource_type: markerCoordinate.resource_type,
-              projekt_phase_id: markerCoordinate.projekt_phase_id,
-              color: markerCoordinate.color,
-              fa_icon_class: markerCoordinate.fa_icon_class
-            }
-          };
-        })
+      features: features
     };
   };
 
   MapboxMap.prototype.addMarkersSource = function(markersGeoJSON) {
-    this.map.addSource('markers', {
+    this.map.addSource('marker-coordinates', {
       type: 'geojson',
       data: markersGeoJSON,
       cluster: true,
@@ -739,7 +802,7 @@
     this.map.addLayer({
       id: 'clusters',
       type: 'circle',
-      source: 'markers',
+      source: 'marker-coordinates',
       filter: ['has', 'point_count'],
       paint: {
         'circle-color': [
@@ -765,7 +828,7 @@
     this.map.addLayer({
       id: 'cluster-count',
       type: 'symbol',
-      source: 'markers',
+      source: 'marker-coordinates',
       filter: ['has', 'point_count'],
       layout: {
         'text-field': '{point_count_abbreviated}',
@@ -790,8 +853,12 @@
     this.map.addLayer({
       id: 'custom-marker',
       type: 'circle',
-      source: 'markers',
-      filter: ['!', ['has', 'point_count']],
+      source: 'marker-coordinates',
+      filter: [
+        'all',
+        ['!', ['has', 'is_shape_centroid']],
+        ['!', ['has', 'point_count']]
+      ],
       paint: {
         'circle-color': ['coalesce', ['get', 'color'], '#ff0000'],
         'circle-radius': [
@@ -811,10 +878,10 @@
 
     if (this.markerImages && this.markerImages.length) {
       this.loadMarkerImages(function() {
-        self.setupIconLayer();
+        self.renderIconLayer();
       });
     } else {
-      this.setupIconLayer();
+      this.renderIconLayer();
     }
   };
 
@@ -848,7 +915,7 @@
         layers: ['clusters']
       });
       var clusterId = features[0].properties.cluster_id;
-      self.map.getSource('markers').getClusterExpansionZoom(
+      self.map.getSource('marker-coordinates').getClusterExpansionZoom(
         clusterId,
         function(err, zoom) {
           if (err) return;
@@ -870,19 +937,19 @@
     });
   };
 
-  MapboxMap.prototype.renderNonMarkerShapes = function() {
+  MapboxMap.prototype.renderResourceShapes = function() {
     var self = this;
 
     if (!this.editable) {
-      this.processCoordinates.forEach(function(coordinates) {
+      this.markerCoordinates.forEach(function(coordinates) {
         if (!App.Mapbox.validCoordinates(coordinates)) {
-          self.drawCoordinateCustomShape(coordinates);
+          self.renderShape(coordinates);
         }
       });
     }
   };
 
-  MapboxMap.prototype.setupIconLayer = function(e) {
+  MapboxMap.prototype.renderIconLayer = function(e) {
     var self = this;
 
     // Remove existing layer if it exists
@@ -894,11 +961,16 @@
     self.map.addLayer({
       id: 'custom-marker-icon',
       type: 'symbol',
-      source: 'markers',
+      source: 'marker-coordinates',
       filter: ['!', ['has', 'point_count']],
       layout: {
         'icon-image': ['get', 'fa_icon_class'],
-        'icon-size': 0.35,
+        'icon-size': [
+          'case',
+          ['boolean', ['get', 'is_shape_centroid'], false],
+          0.4,  // 30% bigger for shape centroid icons (0.35 * 1.3)
+          0.35    // Normal size for regular markers
+        ],
         'icon-allow-overlap': true,
         'icon-ignore-placement': true,
         'icon-anchor': 'center',
@@ -930,13 +1002,13 @@
     if (e.features.length > 0) {
       if (this.hoveredFeature !== null) {
         this.map.setFeatureState(
-          { source: 'markers', id: this.hoveredFeature },
+          { source: 'marker-coordinates', id: this.hoveredFeature },
           { hover: false }
         );
       }
       this.hoveredFeature = e.features[0].id;
       this.map.setFeatureState(
-        { source: 'markers', id: this.hoveredFeature },
+        { source: 'marker-coordinates', id: this.hoveredFeature },
         { hover: true }
       );
     }
@@ -947,7 +1019,7 @@
 
     if (this.hoveredFeature !== null) {
       this.map.setFeatureState(
-        { source: 'markers', id: this.hoveredFeature },
+        { source: 'marker-coordinates', id: this.hoveredFeature },
         { hover: false }
       );
     }
@@ -957,7 +1029,7 @@
   MapboxMap.prototype.addAdminShape = function() {
     if (App.Mapbox.validCoordinates(this.adminShape)) {
       if (this.adminEditor) {
-        this.createMarker(
+        this.createPinMarker(
           this.adminShape.lat,
           this.adminShape.long,
           this.adminShapesColor,
@@ -979,7 +1051,7 @@
     }
   };
 
-  MapboxMap.prototype.drawCoordinateCustomShape = function(coordinates) {
+  MapboxMap.prototype.renderShape = function(coordinates) {
     var self = this;
     // Generate a unique ID if coordinates.id is undefined
     var shapeId = coordinates.id || 'shape-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
@@ -1029,6 +1101,7 @@
           }
         }]
       };
+
       self.openMarkerPopup(popupEvent);
     });
   };
@@ -1069,7 +1142,7 @@
     }
   };
 
-    // Add a method to clean up markers
+    // Add a method to clean up marker-coordinates
   MapboxMap.prototype.destroy = function() {
     if (!this.map) return; // Early return if map is already destroyed
 
@@ -1110,15 +1183,15 @@
         this.draw = null;
       }
 
-      // Clean up all markers
-      this.markers.forEach(function(marker) {
+      // Clean up all marker-coordinates
+      this.pinMarkers.forEach(function(marker) {
         try {
           marker.remove();
         } catch (e) {
           console.warn('Error removing marker:', e);
         }
       });
-      this.markers = [];
+      this.pinMarkers = [];
 
       if (this.adminMarker) {
         try {
@@ -1174,7 +1247,7 @@
 
     try {
       // Remove known sources
-      var sources = ['markers', 'admin-shape'];
+      var sources = ['marker-coordinates', 'admin-shape'];
       sources.forEach(function(sourceId) {
         if (this.map.getSource(sourceId)) {
           this.map.removeSource(sourceId);
@@ -1189,7 +1262,7 @@
   MapboxMap.prototype.forceCleanup = function() {
     this.map = null;
     this.draw = null;
-    this.markers = [];
+    this.pinMarkers = [];
     this.adminMarker = null;
     this.editableMarker = null;
     this.mapLoaded = false;

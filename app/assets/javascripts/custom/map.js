@@ -246,7 +246,9 @@
           route = "/projekt_point_of_interest_pins/" + e.target.options.id + "/json_data?projekt_phase_id=" + e.target.options.projekt_phase_id;
         }
 
-        console.log("openMarkerPopup", resourceType)
+        console.log("openMarkerPopup", resourceType, route)
+        console.log("e.target.options", e.target.options)
+
         if (!route) { return };
 
         marker = e.target;
@@ -430,15 +432,9 @@
               }
             });
 
-            if (process == "proposals") {
-              userShape.options.id = markerCoordinate.proposal_id
-            } else if (process == "deficiency-reports") {
-              userShape.options.id = markerCoordinate.deficiency_report_id
-            } else if (process == "projekts") {
-              userShape.options.id = markerCoordinate.projekt_id
-            } else {
-              userShape.options.id = markerCoordinate.investment_id
-            }
+            userShape.options.id = markerCoordinate.id
+            userShape.options.resource_type = markerCoordinate.resource_type
+            userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
             userShape.on("click", openMarkerPopup);
             userShape.addTo(deflateFeatures);

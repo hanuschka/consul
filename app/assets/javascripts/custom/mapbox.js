@@ -53,7 +53,17 @@
   }
 
   MapboxMap.prototype.initialize = function() {
-    this.initializeMap();
+    var self = this;
+
+    this.map = this.initializeMap();
+
+    // Wait for the map to load before adding markers
+    this.map.on('load', function() {
+      self.renderMarkers();
+    });
+
+    App.Mapbox.maps.push(this.map);
+
     this.setupEventListeners();
     this.addControls();
   };
@@ -62,19 +72,12 @@
     var self = this;
     mapboxgl.accessToken = this.element.dataset.mapboxPublicToken;
 
-    this.map = new mapboxgl.Map({
+    return new mapboxgl.Map({
       style: this.styleId,
       container: this.element,
       center: [this.mapCenterLongitude, this.mapCenterLatitude],
       zoom: this.zoom
     });
-
-    // Wait for the map to load before adding markers
-    this.map.on('load', function() {
-      self.addMarkers();
-    });
-
-    App.Mapbox.maps.push(this.map);
   };
 
   MapboxMap.prototype.setupEventListeners = function() {
@@ -678,26 +681,40 @@
     }
   }
 
-  MapboxMap.prototype.addMarkers = function() {
-    var self = this;
+  MapboxMap.prototype.renderMarkers = function() {
+    this.renderAdminShape();
+    this.renderProcessCoordinates();
+  };
 
+  MapboxMap.prototype.renderAdminShape = function() {
     if (this.adminShape && this.showAdminShape) {
       this.addAdminShape();
     }
+  };
 
-    if (this.processCoordinates) {
-      // console.log("processCoordinates", this.processCoordinates);
+  MapboxMap.prototype.renderProcessCoordinates = function() {
+    if (!this.processCoordinates) return;
 
-      // Create a GeoJSON source for all markers
-      var markers = {
-        type: 'FeatureCollection',
-        features: this.processCoordinates.filter(function(markerCoordinate) {
-          var isValid = App.Mapbox.validCoordinates(markerCoordinate);
-          return isValid;
-        }).map(function(markerCoordinate) {
-          var feature = {
+    var markersGeoJSON = this.createMarkersGeoJSON();
+    this.addMarkersSource(markersGeoJSON);
+    this.addClusterLayers();
+    this.addMarkerBackgroundLayer();
+    this.loadMarkerImagesAndSetupIcons();
+    this.setupClusterEventListeners();
+    this.renderNonMarkerShapes();
+  };
+
+  MapboxMap.prototype.createMarkersGeoJSON = function() {
+    return {
+      type: 'FeatureCollection',
+      features: this.processCoordinates
+        .filter(function(markerCoordinate) {
+          return App.Mapbox.validCoordinates(markerCoordinate);
+        })
+        .map(function(markerCoordinate) {
+          return {
             type: 'Feature',
-            id: markerCoordinate.id, // Add feature ID for feature-state
+            id: markerCoordinate.id,
             geometry: {
               type: 'Point',
               coordinates: [parseFloat(markerCoordinate.long), parseFloat(markerCoordinate.lat)]
@@ -707,151 +724,167 @@
               resource_type: markerCoordinate.resource_type,
               color: markerCoordinate.color,
               iconClass: markerCoordinate.fa_icon_class,
-              fa_icon_class: markerCoordinate.fa_icon_class // Ensure this matches the marker image name
+              fa_icon_class: markerCoordinate.fa_icon_class
             }
           };
-
-          return feature;
         })
-      };
+    };
+  };
 
-      // Add the source to the map
-      self.map.addSource('markers', {
-        type: 'geojson',
-        data: markers,
-        cluster: true,
-        clusterMaxZoom: 14,
-        clusterRadius: 50
+  MapboxMap.prototype.addMarkersSource = function(markersGeoJSON) {
+    this.map.addSource('markers', {
+      type: 'geojson',
+      data: markersGeoJSON,
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
+    });
+  };
+
+  MapboxMap.prototype.addClusterLayers = function() {
+    var clusterColor = this.getClusterColor();
+
+    // Add cluster layer
+    this.map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'markers',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step',
+          ['get', 'point_count'],
+          clusterColor,   // small clusters (e.g. < 10)
+          10, clusterColor, // medium clusters (e.g. < 30)
+          30, clusterColor  // large clusters (30+)
+        ],
+        'circle-radius': [
+          'step',
+          ['get', 'point_count'],
+          15,
+          10,
+          20,
+          30,
+          25
+        ]
+      }
+    });
+
+    // Add cluster count layer
+    this.map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'markers',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 12
+      }
+    });
+  };
+
+  MapboxMap.prototype.getClusterColor = function() {
+    var brandColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--brand-color').trim() || '#004a83';
+    return hexToRgba(brandColor, 0.5);
+  };
+
+  MapboxMap.prototype.addMarkerBackgroundLayer = function() {
+    var self = this;
+
+    this.map.addLayer({
+      id: 'custom-marker',
+      type: 'circle',
+      source: 'markers',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': ['coalesce', ['get', 'color'], '#ff0000'],
+        'circle-radius': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          self.defaultMarkerBackgroundCircleRadius + 1,
+          self.defaultMarkerBackgroundCircleRadius
+        ],
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#ffffff'
+      }
+    });
+  };
+
+  MapboxMap.prototype.loadMarkerImagesAndSetupIcons = function() {
+    var self = this;
+
+    if (this.markerImages && this.markerImages.length) {
+      this.loadMarkerImages(function() {
+        self.setupIconLayer();
       });
+    } else {
+      this.setupIconLayer();
+    }
+  };
 
-      // Get brand color from CSS variable with fallback
-      var brandColor = getComputedStyle(document.documentElement).getPropertyValue('--brand-color').trim() || '#004a83';
+  MapboxMap.prototype.loadMarkerImages = function(callback) {
+    var self = this;
+    var loadedImages = 0;
+    var totalImages = this.markerImages.length;
 
-      var clusterColor = hexToRgba(brandColor, 0.5);
-
-      // console.log("brandColor", brandColor)
-      // console.log("clusterColor", clusterColor)
-
-      // Add cluster layer
-      self.map.addLayer({
-        id: 'clusters',
-        type: 'circle',
-        source: 'markers',
-        filter: ['has', 'point_count'],
-        paint: {
-          'circle-color': [
-            'step',
-            ['get', 'point_count'],
-            clusterColor,   // small clusters (e.g. < 10)
-            10, clusterColor, // medium clusters (e.g. < 30)
-            30, clusterColor  // large clusters (30+)
-          ],
-          'circle-radius': [
-            'step',
-            ['get', 'point_count'],
-            15,
-            10,
-            20,
-            30,
-            25
-          ]
+    this.markerImages.forEach(function(markerImage) {
+      self.map.loadImage(markerImage.path, function(error, image) {
+        if (error) {
+          console.error('Error loading marker image:', error, markerImage);
+        } else {
+          self.map.addImage(markerImage.name, image);
+        }
+        
+        loadedImages++;
+        if (loadedImages === totalImages) {
+          callback();
         }
       });
+    });
+  };
 
-      // Add cluster count layer
-      self.map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'markers',
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-          'text-size': 12
-        }
+  MapboxMap.prototype.setupClusterEventListeners = function() {
+    var self = this;
+
+    // Add click handler for clusters
+    this.map.on('click', 'clusters', function(e) {
+      var features = self.map.queryRenderedFeatures(e.point, {
+        layers: ['clusters']
       });
+      var clusterId = features[0].properties.cluster_id;
+      self.map.getSource('markers').getClusterExpansionZoom(
+        clusterId,
+        function(err, zoom) {
+          if (err) return;
 
-      // Add background circle layer
-      self.map.addLayer({
-        id: 'custom-marker',
-        type: 'circle',
-        source: 'markers',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': ['coalesce', ['get', 'color'], '#ff0000'],
-          'circle-radius': [
-            'case',
-            ['boolean', ['feature-state', 'hover'], false],
-            self.defaultMarkerBackgroundCircleRadius + 1,
-            self.defaultMarkerBackgroundCircleRadius
-          ],
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#ffffff'
-        }
-      });
-
-      // Load all marker images
-      if (this.markerImages && this.markerImages.length) {
-        var loadedImages = 0;
-        var totalImages = this.markerImages.length;
-
-        this.markerImages.forEach(function(markerImage) {
-          self.map.loadImage(markerImage.path, function(error, image) {
-            if (error) {
-              console.error('Error loading marker image:', error, markerImage);
-              loadedImages++;
-            } else {
-              self.map.addImage(markerImage.name, image);
-              loadedImages++;
-            }
-
-            // When all images are loaded, add the unclustered point layer
-            if (loadedImages === totalImages) {
-              self.setupIconLayer()
-            }
+          self.map.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom
           });
-        });
-      } else {
-        self.setupIconLayer()
-      }
+        }
+      );
+    });
 
-      // Add click handler for clusters
-      self.map.on('click', 'clusters', function(e) {
-        var features = self.map.queryRenderedFeatures(e.point, {
-          layers: ['clusters']
-        });
-        var clusterId = features[0].properties.cluster_id;
-        self.map.getSource('markers').getClusterExpansionZoom(
-          clusterId,
-          function(err, zoom) {
-            if (err) return;
+    // Add cursor pointer on hover
+    this.map.on('mouseenter', 'clusters', function() {
+      self.map.getCanvas().style.cursor = 'pointer';
+    });
+    this.map.on('mouseleave', 'clusters', function() {
+      self.map.getCanvas().style.cursor = '';
+    });
+  };
 
-            self.map.easeTo({
-              center: features[0].geometry.coordinates,
-              zoom: zoom
-            });
-          }
-        );
+  MapboxMap.prototype.renderNonMarkerShapes = function() {
+    var self = this;
+
+    if (!this.editable) {
+      this.processCoordinates.forEach(function(coordinates) {
+        if (!App.Mapbox.validCoordinates(coordinates)) {
+          self.drawCoordinateCustomShape(coordinates);
+        }
       });
-
-      // Change cursor on hover
-      self.map.on('mouseenter', 'clusters', function() {
-        self.map.getCanvas().style.cursor = 'pointer';
-      });
-      self.map.on('mouseleave', 'clusters', function() {
-        self.map.getCanvas().style.cursor = '';
-      });
-
-      if (!this.editable) {
-        console.log("try to drawCoordinateCustomShape", this.processCoordinates)
-        // Add shapes for non-marker coordinates
-        this.processCoordinates.forEach(function(coordinates) {
-          if (!App.Mapbox.validCoordinates(coordinates)) {
-            console.log("drawCoordinateCustomShape", coordinates)
-            self.drawCoordinateCustomShape(coordinates);
-          }
-        });
-      }
     }
   };
 
@@ -980,6 +1013,14 @@
       }
     });
 
+    // Add cursor pointer on hover for user shapes
+    this.map.on('mouseenter', layerId, function() {
+      self.map.getCanvas().style.cursor = 'pointer';
+    });
+    this.map.on('mouseleave', layerId, function() {
+      self.map.getCanvas().style.cursor = '';
+    });
+
     this.map.on('click', layerId, function(e) {
       console.log("map on click")
       // Create a proper event structure for the popup
@@ -1014,6 +1055,14 @@
         'fill-color': color,
         'fill-opacity': 0.4
       }
+    });
+
+    // Add cursor pointer on hover for admin shapes
+    this.map.on('mouseenter', id + '-layer', function() {
+      self.map.getCanvas().style.cursor = 'pointer';
+    });
+    this.map.on('mouseleave', id + '-layer', function() {
+      self.map.getCanvas().style.cursor = '';
     });
 
     if (!this.editable) {

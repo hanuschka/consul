@@ -5,7 +5,7 @@ class Shared::MapBaseComponent < ApplicationComponent
   def initialize(
     mappable: nil,
     map_location: nil,
-    parent_class:,
+    parent_class: nil,
     editable: false,
     process_coordinates: nil,
     projekt: nil,

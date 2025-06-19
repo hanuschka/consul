@@ -27,15 +27,16 @@ class MapLocation < ApplicationRecord
     only: %i[shape latitude longitude],
     if: :audit_changes?
 
-  def json_data
-    resource_id = [
+  def resource_id
+    [
       investment_id,
       proposal_id,
       projekt_id,
       deficiency_report_id
     ].compact.first
+  end
 
-    resource_type =
+  def resource_type
       if investment_id.present?
         "investment"
       elsif proposal_id.present?
@@ -45,7 +46,9 @@ class MapLocation < ApplicationRecord
       elsif deficiency_report_id.present?
         "deficiency_report"
       end
+  end
 
+  def json_data
     {
       resource_type: resource_type,
       id: resource_id,
@@ -66,10 +69,8 @@ class MapLocation < ApplicationRecord
     end
 
     shape.merge({
-      investment_id: investment_id,
-      proposal_id: proposal_id,
-      projekt_id: projekt_id,
-      deficiency_report_id: deficiency_report_id,
+      resource_type: resource_type,
+      id: resource_id,
       color: get_pin_color,
       fa_icon_class: get_fa_icon_class
     })

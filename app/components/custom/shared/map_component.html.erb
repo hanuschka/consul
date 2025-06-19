@@ -1,1 +1,10 @@
 <%= map_div %>
+
+<% if use_mapbox?  %>
+  <% content_for :additional_plugin_styles do %>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet">
+  <% end %>
+  <% content_for :additional_plugin_scripts do %>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js" data-turbolinks-track="reload" ></script>
+  <% end %>
+<% end %>

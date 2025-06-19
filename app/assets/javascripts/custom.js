@@ -14,6 +14,7 @@ function initComponents() {
   initializeMjAccordion();
   App.LivesteamLivequestion.initialize();
   App.CollapseTextComponent.initialize();
+  App.Mapbox.initialize();
 }
 
 $(function() {

@@ -190,10 +190,6 @@
 
     // Store reference for cleanup
     this.instructionOverlay = overlay;
-
-    // Show overlay on various map interactions
-    this.map.on('mousedown', showOverlayTemporarily);
-    this.map.on('touchstart', showOverlayTemporarily);
   };
 
   MapboxMap.prototype.getDrawStyles = function() {

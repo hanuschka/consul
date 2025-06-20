@@ -1,13 +1,15 @@
 <% if @enable %>
   <div
-    class="js-projekt-section-data-wrapper <%= disabled_class %> projekt-section-data-wrapper"
+    class="js-projekt-section-data-wrapper js-toggle-section-with-setting <%= disabled_class %> toggle-section-with-setting"
     data-projekt-setting-key="<%= @setting_key %>"
     data-projekt-setting-active="<%= @setting_active %>"
     data-other-conditions-are-met="<%= @other_conditions_are_met %>"
   >
     <%= content %>
-    <button type="button"
-        class="js-sidebar-section-toggle-visibility sidebar--section-toggle-visibility">
+    <button
+      type="button"
+      class="js-sidebar-section-toggle-visibility sidebar--section-toggle-visibility"
+    >
       <i class="fas <%= icon_class %>"></i>
     </button>
   </div>

@@ -1,4 +1,4 @@
-class Projekts::WrapSectionWithSettingDataComponent < ViewComponent::Base
+class Projekts::ToggleSectionWithSettingComponent < ViewComponent::Base
   def initialize(setting_key:, enable: false, setting_active:, other_conditions_are_met: true)
     @enable = enable
     @setting_key = setting_key

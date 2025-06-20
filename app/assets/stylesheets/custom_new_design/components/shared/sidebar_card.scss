@@ -148,12 +148,12 @@
   border-top: 1px solid $border-color;
 }
 
-.projekt-section-data-wrapper {
+.toggle-section-with-setting {
   position: relative;
   width: 100%;
 }
 
-.projekt-section-data-wrapper.-deactivated {
+.toggle-section-with-setting.-deactivated {
   .sidebar-card {
     border-color: white;
   }

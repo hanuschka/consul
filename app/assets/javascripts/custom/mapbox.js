@@ -1056,7 +1056,7 @@
       source: sourceId,
       paint: {
         'fill-color': coordinates.color,
-        'fill-opacity': 0.5
+        'fill-opacity': 0.2
       }
     });
 

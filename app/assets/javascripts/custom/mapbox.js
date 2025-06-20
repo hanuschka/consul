@@ -670,7 +670,7 @@
       maxWidth: '250px'
     })
       .setLngLat(coordinates)
-      .setHTML('<div class="map-popup-status-message">Loading...</div>')
+      .setHTML('<div class="map-popup-status-message">Laden...</div>')
       .addTo(self.map);
 
     var popupDataUrl = App.MapPopup.getPopupDataUrl(resourceType, properties)

@@ -217,12 +217,12 @@
 
   MapboxMap.prototype.addMapInstructionOverlay = function() {
     var self = this;
-    
+
     // Create overlay container
     var overlay = document.createElement('div');
     overlay.className = 'mapbox-instruction-overlay';
     overlay.innerHTML = '<span class="mapbox-instruction-text">Right-click and drag to change map view angle</span>';
-    
+
     // Add CSS styles to match Mapbox attribution style
     overlay.style.cssText = `
       position: absolute;
@@ -243,21 +243,21 @@
       -webkit-backdrop-filter: blur(2px);
       border-top: 1px solid rgba(0, 0, 0, 0.1);
     `;
-    
+
     // Add overlay to map container
     this.element.style.position = 'relative';
     this.element.appendChild(overlay);
-    
+
     // Store reference for cleanup
     this.instructionOverlay = overlay;
-    
+
     // Auto-hide after 5 seconds
     setTimeout(function() {
       if (self.instructionOverlay) {
         self.instructionOverlay.style.opacity = '0.5';
       }
     }, 5000);
-    
+
     // Show on map interaction, then fade
     var showOverlayTemporarily = function() {
       if (self.instructionOverlay) {
@@ -270,7 +270,7 @@
         }, 3000);
       }
     };
-    
+
     // Show overlay on various map interactions
     this.map.on('mousedown', showOverlayTemporarily);
     this.map.on('touchstart', showOverlayTemporarily);
@@ -1119,6 +1119,7 @@
     var shapeId = coordinates.id || 'shape-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
     var sourceId = 'user-shape-' + shapeId;
     var layerId = 'user-shape-layer-' + shapeId;
+    var borderLayerId = 'user-shape-border-' + shapeId;
 
     // Check if source already exists to prevent duplicate source error
     if (this.map.getSource(sourceId)) {
@@ -1131,26 +1132,37 @@
       data: coordinates
     });
 
+    // Add fill layer
     this.map.addLayer({
       id: layerId,
       type: 'fill',
       source: sourceId,
       paint: {
         'fill-color': coordinates.color,
-        'fill-opacity': 0.55
+        'fill-opacity': 0.5
       }
     });
 
-    // Add cursor pointer on hover for user shapes
-    this.map.on('mouseenter', layerId, function() {
-      self.map.getCanvas().style.cursor = 'pointer';
-    });
-    this.map.on('mouseleave', layerId, function() {
-      self.map.getCanvas().style.cursor = '';
+    // Add border layer
+    this.map.addLayer({
+      id: borderLayerId,
+      type: 'line',
+      source: sourceId,
+      paint: {
+        'line-color': coordinates.color,
+        'line-width': 2,
+        'line-opacity': 0.8
+      }
     });
 
-    this.map.on('click', layerId, function(e) {
-      // console.log("map on click")
+    // Create shared event handlers
+    var setCursorPointer = function() {
+      self.map.getCanvas().style.cursor = 'pointer';
+    };
+    var resetCursor = function() {
+      self.map.getCanvas().style.cursor = '';
+    };
+    var handleShapeClick = function(e) {
       // Create a proper event structure for the popup
       var popupEvent = {
         features: [{
@@ -1165,6 +1177,14 @@
       };
 
       self.openMarkerPopup(popupEvent);
+    };
+
+    // Add event listeners for both fill and border layers
+    var layers = [layerId, borderLayerId];
+    layers.forEach(function(layer) {
+      self.map.on('mouseenter', layer, setCursorPointer);
+      self.map.on('mouseleave', layer, resetCursor);
+      self.map.on('click', layer, handleShapeClick);
     });
   };
 
@@ -1176,6 +1196,7 @@
       data: data
     });
 
+    // Add fill layer
     this.map.addLayer({
       id: id + '-layer',
       type: 'fill',
@@ -1186,20 +1207,45 @@
       }
     });
 
-    // Add cursor pointer on hover for admin shapes
-    this.map.on('mouseenter', id + '-layer', function() {
-      self.map.getCanvas().style.cursor = 'pointer';
+    // Add border layer
+    this.map.addLayer({
+      id: id + '-border',
+      type: 'line',
+      source: id,
+      paint: {
+        'line-color': color,
+        'line-width': 2,
+        'line-opacity': 0.8
+      }
     });
-    this.map.on('mouseleave', id + '-layer', function() {
+
+    // Create shared event handlers
+    var setCursorPointer = function() {
+      self.map.getCanvas().style.cursor = 'pointer';
+    };
+    var resetCursor = function() {
       self.map.getCanvas().style.cursor = '';
+    };
+
+    var layers = [id + '-layer', id + '-border'];
+    
+    // Add hover event listeners for both fill and border layers
+    layers.forEach(function(layer) {
+      self.map.on('mouseenter', layer, setCursorPointer);
+      self.map.on('mouseleave', layer, resetCursor);
     });
 
     if (!this.editable) {
-      this.map.on('click', id + '-layer', function() {
+      var handleAdminShapeClick = function() {
         new mapboxgl.Popup()
           .setLngLat(self.map.getCenter())
           .setHTML('Alle markierten Flächen und Pins in rot sind vom System vorgegeben')
           .addTo(self.map);
+      };
+
+      // Add click event listeners for both fill and border layers
+      layers.forEach(function(layer) {
+        self.map.on('click', layer, handleAdminShapeClick);
       });
     }
   };

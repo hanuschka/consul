@@ -221,7 +221,7 @@
     // Create overlay container
     var overlay = document.createElement('div');
     overlay.className = 'mapbox-instruction-overlay';
-    overlay.innerHTML = '<span class="mapbox-instruction-text">Right-click and drag to change map view angle</span>';
+    overlay.innerHTML = '<span class="mapbox-instruction-text">Halten Sie die Rechte Maustaste um den Kartenausschnitt zu verschieben</span>';
 
     // Add CSS styles to match Mapbox attribution style
     overlay.style.cssText = `
@@ -1228,7 +1228,7 @@
     };
 
     var layers = [id + '-layer', id + '-border'];
-    
+
     // Add hover event listeners for both fill and border layers
     layers.forEach(function(layer) {
       self.map.on('mouseenter', layer, setCursorPointer);

@@ -1,54 +1,6 @@
 (function() {
   "use strict";
 
-  // Convert hex color to RGBA with 50% opacity
-  function hexToRgba(hex, alpha) {
-    // Remove # if present
-    hex = hex.replace('#', '');
-
-    // Parse RGB values
-    var r = parseInt(hex.substring(0, 2), 16);
-    var g = parseInt(hex.substring(2, 4), 16);
-    var b = parseInt(hex.substring(4, 6), 16);
-
-    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
-  }
-
-  // Calculate centroid of a polygon
-  function calculatePolygonCentroid(geometry) {
-    // Handle different coordinate structures
-    var coords;
-
-    if (geometry.type === 'Polygon') {
-      coords = geometry.coordinates[0]; // Get outer ring
-    } else if (geometry.type === 'MultiPolygon') {
-      coords = geometry.coordinates[0][0]; // Get first polygon's outer ring
-    } else if (Array.isArray(geometry) && Array.isArray(geometry[0])) {
-      coords = geometry;
-    }
-
-    if (!coords || coords.length === 0) {
-      return null;
-    }
-
-    var x = 0, y = 0;
-    var validCoords = coords.filter(function(coord) {
-      return Array.isArray(coord) && coord.length >= 2 &&
-             !isNaN(coord[0]) && !isNaN(coord[1]);
-    });
-
-    if (validCoords.length === 0) {
-      return null;
-    }
-
-    validCoords.forEach(function(coord) {
-      x += parseFloat(coord[0]);
-      y += parseFloat(coord[1]);
-    });
-
-    return [x / validCoords.length, y / validCoords.length];
-  }
-
   // MapboxMap class definition
   function MapboxMap(element) {
     this.element = element;
@@ -183,13 +135,8 @@
         // - Not clicked on draw controls
         // - No existing draw features (to avoid conflicts)
         // Allow placing marker-coordinates even in drawing modes for better UX
-        // console.log("self.draw.getAll().features", self.draw.getAll().features)
-        // console.log("features.length", features.length)
-        // console.log("isDrawControl", isDrawControl)
-        // console.log("hasExistingDrawFeatures", hasExistingDrawFeatures)
 
         if (hasOnlyPointDrawFeatures || (features.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
-          // console.log("moveOrPlaceMarker")
           self.moveOrPlaceMarker(e);
         }
       });
@@ -205,10 +152,6 @@
       },
       trackUserLocation: true
     }));
-
-    // Add polygon drawing controls if editable
-    // console.log("this.editable", this.editable)
-    // console.log("MapboxDraw", MapboxDraw)
 
     if (this.editable && typeof MapboxDraw !== 'undefined') {
       this.initializePolygonEditor();
@@ -233,14 +176,11 @@
       color: rgba(0, 0, 0, 0.75);
       padding: 2px 6px;
       border-radius: 0;
-      font-size: 13px;
-      font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-size: 12px;
       z-index: 1000;
-      pointer-events: none;
       transition: opacity 0.3s ease;
       opacity: 0.8;
       backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
       border-top: 1px solid rgba(0, 0, 0, 0.1);
     `;
 
@@ -250,26 +190,6 @@
 
     // Store reference for cleanup
     this.instructionOverlay = overlay;
-
-    // Auto-hide after 5 seconds
-    setTimeout(function() {
-      if (self.instructionOverlay) {
-        self.instructionOverlay.style.opacity = '0.5';
-      }
-    }, 5000);
-
-    // Show on map interaction, then fade
-    var showOverlayTemporarily = function() {
-      if (self.instructionOverlay) {
-        self.instructionOverlay.style.opacity = '0.8';
-        clearTimeout(self.overlayTimeout);
-        self.overlayTimeout = setTimeout(function() {
-          if (self.instructionOverlay) {
-            self.instructionOverlay.style.opacity = '0.5';
-          }
-        }, 3000);
-      }
-    };
 
     // Show overlay on various map interactions
     this.map.on('mousedown', showOverlayTemporarily);
@@ -434,9 +354,6 @@
   };
 
   MapboxMap.prototype.initializePolygonEditor = function() {
-    var self = this;
-    // console.log("initializePolygonEditor")
-
     // Initialize Mapbox Draw with bigger point styles
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
@@ -1393,6 +1310,54 @@
     this.editableMarker = null;
     this.mapLoaded = false;
   };
+
+  // Convert hex color to RGBA with 50% opacity
+  function hexToRgba(hex, alpha) {
+    // Remove # if present
+    hex = hex.replace('#', '');
+
+    // Parse RGB values
+    var r = parseInt(hex.substring(0, 2), 16);
+    var g = parseInt(hex.substring(2, 4), 16);
+    var b = parseInt(hex.substring(4, 6), 16);
+
+    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+  }
+
+  // Calculate centroid of a polygon
+  function calculatePolygonCentroid(geometry) {
+    // Handle different coordinate structures
+    var coords;
+
+    if (geometry.type === 'Polygon') {
+      coords = geometry.coordinates[0]; // Get outer ring
+    } else if (geometry.type === 'MultiPolygon') {
+      coords = geometry.coordinates[0][0]; // Get first polygon's outer ring
+    } else if (Array.isArray(geometry) && Array.isArray(geometry[0])) {
+      coords = geometry;
+    }
+
+    if (!coords || coords.length === 0) {
+      return null;
+    }
+
+    var x = 0, y = 0;
+    var validCoords = coords.filter(function(coord) {
+      return Array.isArray(coord) && coord.length >= 2 &&
+             !isNaN(coord[0]) && !isNaN(coord[1]);
+    });
+
+    if (validCoords.length === 0) {
+      return null;
+    }
+
+    validCoords.forEach(function(coord) {
+      x += parseFloat(coord[0]);
+      y += parseFloat(coord[1]);
+    });
+
+    return [x / validCoords.length, y / validCoords.length];
+  }
 
   // Keep the existing App.Mapbox object
   App.Mapbox = {

@@ -647,7 +647,7 @@
   MapboxMap.prototype.openMarkerPopup = function(e) {
     var self = this;
 
-    console.log("handle click on marker")
+    // console.log("handle click on marker")
 
     // Check if we have features and at least one feature
     if (!e.features || !e.features.length || !e.features[0]) {
@@ -729,8 +729,8 @@
         // Handle other coordinate structures that might represent shapes
         coordinate.features.forEach(function(feature) {
             var centroid = calculatePolygonCentroid(feature.geometry);
-            console.log("render shape with polygon marker", coordinate)
-            console.log("centroid", centroid)
+            // console.log("render shape with polygon marker", coordinate)
+            // console.log("centroid", centroid)
 
             if (centroid) {
               features.push({

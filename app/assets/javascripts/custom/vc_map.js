@@ -158,31 +158,9 @@
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
         vectorProperties: {
-          altitudeMode: 'absolute'
+          altitudeMode: 'relativeToGround'
         }
       });
-
-      var fillColor = layerName === '_adminShapeLayer' ? '#ff0000' : app.customMapOptions.defaultColor;
-
-      // layer style
-      var style = new vcs.VectorStyleItem({
-        fill: {
-          color: fillColor
-        },
-        stroke: {
-          color: '#ffffff',
-          width: 3,
-        },
-        image: {
-          color: app.customMapOptions.defaultColor,
-          src: '/vcmap/assets/cesium/Assets/Textures/pin.svg',
-          stroke: {
-            color: '#ffffff',
-            width: 3,
-          },
-        },
-      });
-      layer.setStyle(style);
 
       // layer will not be serialized
       vcs.markVolatile(layer);
@@ -257,7 +235,7 @@
         })
 
         if ( feature.getGeometry() instanceof ol.geom.Polygon ) {
-          feature.set('olcs_altitudeMode', 'clampToGround');
+          feature.set('olcs_altitudeMode', 'relativeToGround');
         }
       });
 
@@ -317,13 +295,43 @@
     buildPinSvg: function(coordinates) {
       var svg =
         '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->' +
-          '<path fill="' + coordinates.color  + '" d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0z"/>' +
+          '<path fill="' + App.VCMap.colorWithOpacity(coordinates.color, 0.8) + '" d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0z"/>' +
         '</svg>';
 
       var encodedSvg = btoa(unescape(encodeURIComponent(svg)));
 
       return 'data:image/svg+xml;base64,' + encodedSvg;
     },
+
+    colorWithOpacity: function(color, opacity) {
+      if (!color || !opacity) {
+        return 'rgba(0,0,0,0.5)'; // default color with opacity
+      }
+
+      // Ensure color is in hex format
+      if (color.charAt(0) === '#') {
+        color = color.slice(1);
+      }
+
+      if (color.length === 3) {
+        // Convert shorthand hex to full hex
+        color = color.split('').map(function(c) { return c + c; }).join('');
+      }
+
+      if (color.length !== 6) {
+        console.error('Invalid color format. Expected hex format (e.g., #RRGGBB).');
+        return 'rgba(0,0,0,0.5)'; // default color with opacity
+      }
+
+      // Convert hex to RGB
+      var r = parseInt(color.slice(0, 2), 16);
+      var g = parseInt(color.slice(2, 4), 16);
+      var b = parseInt(color.slice(4, 6), 16);
+
+      // Return RGBA format with the specified opacity
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+    },
+
 
     drawPredefinedFeature: function(app, coordinates, layerName) {
       var layer = app.layers.getByKey(layerName) || App.VCMap.createMapLayer(app, layerName);
@@ -338,6 +346,8 @@
         });
         feature.setStyle(pinStyle.style);
 
+        feature.set('olcs_altitudeMode', 'absolute');
+
         feature.process = app.customMapOptions.process;
         feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
@@ -350,14 +360,14 @@
         feature = new ol.Feature({ geometry: new ol.geom.Polygon([polygoneCoordinates])});
 
         var polygonStyle = new vcs.VectorStyleItem({});
-        polygonStyle.fillColor = coordinates.color;
+        polygonStyle.fillColor = App.VCMap.colorWithOpacity(coordinates.color, 0.3);
         polygonStyle.stroke = new ol.style.Stroke({
-          color: "#000",
+          color: coordinates.color,
           width: 1
         });
         feature.setStyle(polygonStyle.style);
 
-        feature.set('olcs_altitudeMode', 'clampToGround');
+        feature.set('olcs_altitudeMode', 'relativeToGround');
 
         feature.process = app.customMapOptions.process;
         feature.resource_id = coordinates.id;
@@ -399,7 +409,7 @@
 
       // function to generate marker popup content
       var getPopupContent = function(data, feature) {
-        if (feature.process == "proposals" || data.proposal_id) {
+        if (feature.process == "proposals") {
           return proposalPopupContent(data)
         } else if ( feature.process == "deficiency-reports" ) {
           return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
@@ -411,7 +421,7 @@
 
         function proposalPopupContent(data) {
           var popupHtml = "";
-          popupHtml += "<h6 style='max-width:140px;margin-top:10px;'><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
+          popupHtml += "<h6 style='max-width:140px;margin-top:10px;'><a href='/proposals/" + data.id + "'>" + data.title + "</a></h6>"; //title
 
           if (data.image_url) {
             popupHtml += "<img src='" + data.image_url + "' style='margin-bottom:10px;'>"; //image

@@ -49,13 +49,11 @@
       window.vcsApp = vcsApp;
 
       // add predefined shapes
+      if (vcsApp.customMapOptions.editable) {
 
-
-      if (vcsApp.customMapOptions.adminEditor && vcsApp.customMapOptions.adminShape ) {
-        App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_editorLayer');
-
-      } else if (vcsApp.customMapOptions.editable) {
-        if (vcsApp.customMapOptions.adminShape && vcsApp.customMapOptions.showAdminShape) {
+        if (vcsApp.customMapOptions.adminEditor && vcsApp.customMapOptions.adminShape ) {
+          App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_editorLayer');
+        } else if (vcsApp.customMapOptions.adminShape && vcsApp.customMapOptions.showAdminShape) {
           App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_adminShapeLayer')
         }
         App.VCMap.drawPredefinedFeatures(vcsApp, '_editorLayer');
@@ -253,7 +251,6 @@
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
       var featureCreatedDestroy = session.featureCreated.addEventListener(function(feature) {
         layer.getFeatures().forEach(function(f) {
-          console.log(f.getId());
           if (f.getId() !== feature.getId()) {
             layer.removeFeaturesById([f.getId()])
           }
@@ -317,6 +314,17 @@
       });
     },
 
+    buildPinSvg: function(coordinates) {
+      var svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->' +
+          '<path fill="' + coordinates.color  + '" d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0z"/>' +
+        '</svg>';
+
+      var encodedSvg = btoa(unescape(encodeURIComponent(svg)));
+
+      return 'data:image/svg+xml;base64,' + encodedSvg;
+    },
+
     drawPredefinedFeature: function(app, coordinates, layerName) {
       var layer = app.layers.getByKey(layerName) || App.VCMap.createMapLayer(app, layerName);
       var feature;
@@ -326,14 +334,12 @@
 
         var pinStyle = new vcs.VectorStyleItem({});
         pinStyle.image = new ol.style.Icon({
-          color: coordinates.color,
-          src: '/vcmap/assets/cesium/Assets/Textures/pin.svg',
-          scale: 1,
+          src: App.VCMap.buildPinSvg(coordinates)
         });
         feature.setStyle(pinStyle.style);
 
         feature.process = app.customMapOptions.process;
-        feature.resource_id = getResourceId(coordinates);
+        feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
 
       } else { // geometryType === 'Polygon'
@@ -354,24 +360,8 @@
         feature.set('olcs_altitudeMode', 'clampToGround');
 
         feature.process = app.customMapOptions.process;
-        feature.resource_id = getResourceId(coordinates);
+        feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
-      }
-
-      function getResourceId(coordinates) {
-        var id;
-
-        if (app.customMapOptions.process == "proposals") {
-          id = coordinates.proposal_id
-        } else if (app.customMapOptions.process == "deficiency-reports") {
-          id = coordinates.deficiency_report_id
-        } else if (app.customMapOptions.process == "projekts") {
-          id = coordinates.projekt_id
-        } else {
-          id = coordinates.investment_id
-        }
-
-        return id
       }
     },
 

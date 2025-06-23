@@ -3,7 +3,7 @@ class ProjektPointOfInterestPinsController < ApplicationController
 
   before_action :set_projekt_phase
   before_action :set_pin, only: [:json_data]
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:json_data]
 
   skip_authorization_check only: [:json_data]
 

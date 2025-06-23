@@ -28,24 +28,6 @@ class MapLocation < ApplicationRecord
     if: :audit_changes?
 
   def json_data
-    resource_id = [
-      investment_id,
-      proposal_id,
-      projekt_id,
-      deficiency_report_id
-    ].compact.first
-
-    resource_type =
-      if investment_id.present?
-        "investment"
-      elsif proposal_id.present?
-        "proposal"
-      elsif projekt_id.present?
-        "projekt"
-      elsif deficiency_report_id.present?
-        "deficiency_report"
-      end
-
     {
       resource_type: resource_type,
       id: resource_id,
@@ -53,23 +35,17 @@ class MapLocation < ApplicationRecord
       long: longitude,
       alt: altitude,
       color: get_pin_color,
-      fa_icon_class: get_fa_icon_class
+      fa_icon_class: get_fa_icon_class,
+      fa_icon_path: ActionController::Base.helpers.asset_path("fontawesome_png/solid/#{get_fa_icon_class}_50px.png")
     }
   end
 
   def shape_json_data
-    return {} if shape == {} || shape == "{}"
-
-    if shape.is_a?(String)
-      # Sentry.capture_message("MapJSONBug. Shape: #{shape}")
-      return {}
-    end
+    return {} if shape == {} || shape.is_a?(String)
 
     shape.merge({
-      investment_id: investment_id,
-      proposal_id: proposal_id,
-      projekt_id: projekt_id,
-      deficiency_report_id: deficiency_report_id,
+      resource_type: resource_type,
+      id: resource_id,
       color: get_pin_color,
       fa_icon_class: get_fa_icon_class
     })
@@ -115,6 +91,27 @@ class MapLocation < ApplicationRecord
   end
 
   private
+
+  def resource_id
+    [
+      investment_id,
+      proposal_id,
+      projekt_id,
+      deficiency_report_id
+    ].compact.first
+  end
+
+  def resource_type
+    if investment_id.present?
+      "investment"
+    elsif proposal_id.present?
+      "proposal"
+    elsif projekt_id.present?
+      "projekt"
+    elsif deficiency_report_id.present?
+      "deficiency_report"
+    end
+  end
 
   def get_pin_color
     if proposal.present? && proposal.projekt_phase.projekt.overview_page?

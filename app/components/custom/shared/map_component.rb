@@ -21,7 +21,7 @@ class Shared::MapComponent < Shared::MapBaseComponent
       options[:enable_geoman_controls] = enable_geoman_controls?
       options[:map_layers] = map_layers if map_layers.present?
 
-      if use_mapbox?
+      if use_mapbox? && Rails.application.secrets.mapbox.present?
         options.delete(:map)
         options[:mapbox] = true
         options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]

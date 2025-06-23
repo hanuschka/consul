@@ -52,7 +52,7 @@
 
   <% if projekt_question.comments_enabled? && comment_tree.present? %>
     <div class="small-12 medium-9 projekt-question--comments-wrapper js-comments-liveupdate-wrapper" data-last-comment-id="<%= projekt_question.comments&.last&.id %>">
-      <%= render Shared::CommentsComponent.new(projekt_question, comment_tree) %>
+      <%= render Shared::NewCommentsComponent.new(projekt_question, comment_tree, force_remote: true) %>
     </div>
   <% end %>
 </section>

@@ -246,9 +246,6 @@
           route = "/projekt_point_of_interest_pins/" + e.target.options.id + "/json_data?projekt_phase_id=" + e.target.options.projekt_phase_id;
         }
 
-        console.log("openMarkerPopup", resourceType, route)
-        console.log("e.target.options", e.target.options)
-
         if (!route) { return };
 
         marker = e.target;
@@ -256,7 +253,7 @@
           type: "GET",
           dataType: "json",
           success: function(data) {
-            e.target.bindPopup(App.MapPopup.getPopupContent(data, resourceType), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
+            e.target.bindPopup(App.MapPopup.generatePopupContent(data, resourceType), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
           }
         });
       };

@@ -36,18 +36,19 @@ class Shared::MapComponent < Shared::MapBaseComponent
     end
 
     def mapbox_marker_images
-      @process_coordinates.map { |coordinate|
-        icon = coordinate[:fa_icon_class]
+      @process_coordinates
+        .uniq { |coordinate| coordinate[:fa_icon_class] }
+        .map { |coordinate|
+          icon = coordinate[:fa_icon_class]
 
-        if icon.present?
+          return if icon.blank?
+
           {
             name: icon,
             path: asset_path("fontawesome_png/solid/#{icon}_50px.png")
           }
-        end
-      }
+        }
         .compact
-        .uniq { |icon| icon[:name] }
     end
 
     def use_mapbox?

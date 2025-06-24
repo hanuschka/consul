@@ -170,16 +170,43 @@
     },
 
     updateMapLocation: function(coordinates, shouldScroll) {
-      var currentMap = App.Map.maps[0]
+      if (App.Mapbox.maps.length > 0) {
+        var currentMapInstance = App.Mapbox.maps[0]
 
-      if (currentMap && App.Map.maps.length <= 1) {
-        currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
-        App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
+        if (currentMapInstance && App.Mapbox.maps.length <= 1) {
+          // Move map to new coordinates (Mapbox uses [lng, lat] order)
+          // currentMapInstance.map.easeTo({
+          currentMapInstance.map.flyTo({
+            center: [coordinates[1], coordinates[0]], // lng, lat
+            duration: 1000 // smooth animation
+          });
 
-        if (shouldScroll) {
-          currentMap.getContainer().scrollIntoView({
-            block: "center", inline: "nearest"
-          })
+          // Place or update marker at the location
+          currentMapInstance.moveOrPlaceMarker({
+            lngLat: {
+              lng: coordinates[1],
+              lat: coordinates[0]
+            }
+          });
+
+          if (shouldScroll) {
+            currentMapInstance.map.getContainer().scrollIntoView({
+              block: "center", inline: "nearest"
+            })
+          }
+        }
+      } else if (App.Map.maps.length > 0) {
+        var currentMap = App.Map.maps[0]
+
+        if (currentMap && App.Map.maps.length <= 1) {
+          currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
+          App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
+
+          if (shouldScroll) {
+            currentMap.getContainer().scrollIntoView({
+              block: "center", inline: "nearest"
+            })
+          }
         }
       }
     },

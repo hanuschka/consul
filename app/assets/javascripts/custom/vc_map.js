@@ -389,22 +389,11 @@
       var resourceId = feature.data.id;
       var popup = $("#vc-popup");
       var popupContent = popup.find("#vc-popup-content")
+      var popupDataUrl = App.MapPopup.getPopupDataUrl(resourceType, feature.data);
 
-      if ( resourceType == "proposal" ) {
-        route = "/proposals/" + resourceId + "/json_data"
-      } else if ( resourceType == "deficiency_report") {
-        route = "/deficiency_reports/" + resourceId + "/json_data"
-      } else if ( resourceType == "projekt") {
-        route = "/projekts/" + resourceId + "/json_data"
-      } else if ( resourceType == "investment") {
-        route = "/investments/" + resourceId + "/json_data"
-      } else if (resourceType == "point_of_interest_pin") {
-        route = "/projekt_point_of_interest_pins/" + resourceId + "/json_data?projekt_phase_id=" + feature.data.projekt_phase_id;
-      }
+      if (!popupDataUrl) { return };
 
-      if (!route) { return };
-
-      $.ajax(route, {
+      $.ajax(popupDataUrl, {
         type: "GET",
         dataType: "json",
         success: function(data) {

@@ -47,11 +47,19 @@ module ProjektAdminActions
     authorize!(:update, @projekt)
 
     if @projekt.update(projekt_params)
-      redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
-        notice: t("custom.admin.projekts.edit.flash.update_notice")
+      if request.xhr?
+        head :ok
+      else
+        redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
+          notice: t("custom.admin.projekts.edit.flash.update_notice")
+      end
     else
-      redirect_to namespace_projekt_path(action: "edit"),
-        alert: @projekt.errors.messages.values.flatten.join("; ")
+      if request.xhr?
+        render json: { error: "Error updating projekt" }
+      else
+        redirect_to namespace_projekt_path(action: "edit"),
+          alert: @projekt.errors.messages.values.flatten.join("; ")
+      end
     end
   end
 

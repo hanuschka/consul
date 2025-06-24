@@ -76,7 +76,6 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_external_video": "",
           "option.form.description_max_length": "6000",
           "feature.form.voice_assistant": "",
->>>>>>> proposal-update
 
           "feature.resource.show_video_as_link": "",
           "feature.resource.enable_proposal_notifications_tab": "",
@@ -90,7 +89,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_community_button_in_proposal_sidebar": "",
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
-          "option.resource.votes_for_proposal_success": 100
+          "option.resource.votes_for_proposal_success": 100,
 
           "option.resource.votes_for_proposal_success": 100,
           "selectable_setting.general.default_order": "random",

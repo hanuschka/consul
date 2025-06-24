@@ -247,22 +247,10 @@
 
       // function to open marker popup
       var openMarkerPopup = function(e) {
-        var route;
         var resourceType = e.target.options.resource_type;
+        var route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options)
 
-        if ( resourceType == "proposal" ) {
-          route = "/proposals/" + e.target.options.id + "/json_data"
-        } else if ( resourceType == "deficiency_report") {
-          route = "/deficiency_reports/" + e.target.options.id + "/json_data"
-        } else if ( resourceType == "projekt") {
-          route = "/projekts/" + e.target.options.id + "/json_data"
-        } else if ( resourceType == "investment") {
-          route = "/investments/" + e.target.options.id + "/json_data"
-        } else if (resourceType == "point_of_interest_pin") {
-          route = "/projekt_point_of_interest_pins/" + e.target.options.id + "/json_data?projekt_phase_id=" + e.target.options.projekt_phase_id;
-        }
-
-        if (!route) { return };
+        if (!route) return;
 
         marker = e.target;
         $.ajax(route, {

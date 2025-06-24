@@ -55,7 +55,7 @@
       self.addMapInstructionOverlay();
     });
 
-    App.Mapbox.maps.push(this.map);
+    // App.Mapbox.maps.push(this.map);
 
     this.setupEventListeners();
     this.addControls();
@@ -1357,16 +1357,14 @@
 
   // Keep the existing App.Mapbox object
   App.Mapbox = {
-    maps: [],
-    mapInstances: [], // Store MapboxMap instances for proper cleanup
+    maps: [], // Store MapboxMap instances for proper cleanup
     initialize: function() {
       var self = this;
       $("[data-mapbox]").each(function() {
         var element = this;
         var mapInstance = self.initializeFor(element)
 
-        self.maps.push(mapInstance.map);
-        self.mapInstances.push(mapInstance);
+        self.maps.push(mapInstance);
       });
     },
     initializeFor: function(element) {
@@ -1374,7 +1372,7 @@
     },
     destroy: function() {
       // Use the proper destroy method for MapboxMap instances
-      this.mapInstances.forEach(function(mapInstance) {
+      this.maps.forEach(function(mapInstance) {
         try {
           mapInstance.destroy();
         } catch (e) {
@@ -1382,19 +1380,7 @@
         }
       });
 
-      // Fallback: remove any remaining maps directly
-      this.maps.forEach(function(map) {
-        try {
-          if (map && typeof map.remove === 'function') {
-            map.remove();
-          }
-        } catch (e) {
-          console.warn('Error removing map:', e);
-        }
-      });
-
       this.maps = [];
-      this.mapInstances = [];
     },
     validCoordinates: function(coordinates) {
       return !isNaN(parseFloat(coordinates.lat)) && !isNaN(parseFloat(coordinates.long));

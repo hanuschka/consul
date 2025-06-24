@@ -78,7 +78,11 @@ class DtApi
         }
       }
     else
-      {}
+      {
+        headers: {
+          Authorization: "Bearer #{@api_token}"
+        }
+      }
     end
   end
 

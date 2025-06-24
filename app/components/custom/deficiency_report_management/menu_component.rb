@@ -15,7 +15,8 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
       official_answer_templates_link,
       districts_link,
       officer_groups_link,
-      stats_link
+      stats_link,
+      intro_link
     ].compact
   end
 
@@ -106,4 +107,16 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
         controller_name == "stats"
       ]
     end
+
+    def intro_link
+      [
+        t("custom.admin.menu.deficiency_reports.intro"),
+        "https://mitmachen.smarte-region-linz.de/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa29HIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f767c4e5c2e65c20249eaddc1227f68b900ace5d/Anleitung%20M%C3%A4ngelmelder_Bearbeitung.pdf",
+        { target: "_blank" }
+      ]
+    end
+
+
+
+
 end

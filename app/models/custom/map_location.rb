@@ -35,8 +35,7 @@ class MapLocation < ApplicationRecord
       long: longitude,
       alt: altitude,
       color: get_pin_color,
-      fa_icon_class: get_fa_icon_class,
-      fa_icon_path: ActionController::Base.helpers.asset_path("fontawesome_png/solid/#{get_fa_icon_class}_50px.png")
+      fa_icon_class: get_fa_icon_class
     }
   end
 

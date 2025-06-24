@@ -15,7 +15,8 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
       official_answer_templates_link,
       districts_link,
       officer_groups_link,
-      stats_link
+      stats_link,
+      intro_link
     ].compact
   end
 
@@ -104,6 +105,14 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
         t("custom.admin.menu.deficiency_reports.stats"),
         deficiency_report_management_stats_path,
         controller_name == "stats"
+      ]
+    end
+
+    def intro_link
+      [
+        t("custom.admin.menu.deficiency_reports.intro"),
+        "https://mitmachen.rastatt.de/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBbkFJIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--0f0a33f3796071415de770b25ffdb3a1135193ef/Anleitung%20M%C3%A4ngelmelder%20Sachbearbeitende%20Stand%2017.06.25.pdf",
+        { target: "_blank" }
       ]
     end
 end

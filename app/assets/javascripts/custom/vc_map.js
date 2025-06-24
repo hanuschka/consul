@@ -349,6 +349,7 @@
 
         feature.set('olcs_altitudeMode', 'absolute');
 
+        feature.data = coordinates;
         feature.process = app.customMapOptions.process;
         feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
@@ -370,6 +371,7 @@
 
         feature.set('olcs_altitudeMode', 'relativeToGround');
 
+        feature.data = coordinates;
         feature.process = app.customMapOptions.process;
         feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
@@ -382,84 +384,34 @@
     },
 
     showFeatureInfo: function(feature) {
+      var route;
+      var resourceType = feature.data.resource_type;
+      var resourceId = feature.data.id;
+      var popup = $("#vc-popup");
+      var popupContent = popup.find("#vc-popup-content")
 
-      // function to open feature info popup
-      var openMarkerPopup = function(feature) {
-        var route;
+      if ( resourceType == "proposal" ) {
+        route = "/proposals/" + resourceId + "/json_data"
+      } else if ( resourceType == "deficiency_report") {
+        route = "/deficiency_reports/" + resourceId + "/json_data"
+      } else if ( resourceType == "projekt") {
+        route = "/projekts/" + resourceId + "/json_data"
+      } else if ( resourceType == "investment") {
+        route = "/investments/" + resourceId + "/json_data"
+      } else if (resourceType == "point_of_interest_pin") {
+        route = "/projekt_point_of_interest_pins/" + resourceId + "/json_data?projekt_phase_id=" + feature.data.projekt_phase_id;
+      }
 
-        if ( feature.process == "proposals" ) {
-          route = "/proposals/" + feature.resource_id + "/json_data"
-        } else if ( feature.process == "deficiency-reports") {
-          route = "/deficiency_reports/" + feature.resource_id + "/json_data"
-        } else if ( feature.process == "projekts") {
-          route = "/projekts/" + feature.resource_id + "/json_data"
-        } else {
-          route = "/investments/" + feature.resource_id + "/json_data"
+      if (!route) { return };
+
+      $.ajax(route, {
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          popupContent.html(App.MapPopup.generatePopupContent(data, resourceType));
+          popup.show();
         }
-
-        // marker = e.target;
-        $.ajax(route, {
-          type: "GET",
-          dataType: "json",
-          success: function(data) {
-            $("#vc-popup").html(getPopupContent(data, feature));
-            $("#vc-popup").show();
-          }
-        });
-      };
-
-      // function to generate marker popup content
-      var getPopupContent = function(data, feature) {
-        if (feature.process == "proposals") {
-          return proposalPopupContent(data)
-        } else if ( feature.process == "deficiency-reports" ) {
-          return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
-        } else if ( feature.process == "projekts" ) {
-          return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
-        } else {
-          return "<a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a>";
-        }
-
-        function proposalPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h6 style='max-width:140px;margin-top:10px;'><a href='/proposals/" + data.id + "'>" + data.title + "</a></h6>"; //title
-
-          if (data.image_url) {
-            popupHtml += "<img src='" + data.image_url + "' style='margin-bottom:10px;'>"; //image
-          }
-
-          if (data.labels.length || Object.keys(data.sentiment).length) {
-            popupHtml += "<div class='resource-taggings'>";
-
-            if (data.labels.length) {
-              var labels = "<div class='projekt-labels' style='max-width:120px;'>";
-              data.labels.forEach(function(label) {
-                labels += "<span class='projekt-label selected'>"
-                labels += "<i class='fas fa-" + label.icon + "' style='margin-right:4px;'></i>"
-                labels += label.name
-                labels += "</span>";
-              });
-              labels += "</div>";
-              popupHtml += labels;
-            }
-
-            if (Object.keys(data.sentiment).length) {
-              var sentiments = "<div class='sentiments' style='max-width:120px;'>";
-              sentiments += "<span class='sentiment' style='background-color:#454B1B;color:#ffffff'>" + data.sentiment.name + "</span>";
-              sentiments += "</div>";
-              popupHtml += sentiments;
-            }
-
-            popupHtml += "</div>";
-          }
-
-          popupHtml += "<a class='popup-close-button' onclick='$(\"#vc-popup\").hide();' href='#close' style='outline: none;'>×</a>"
-
-          return popupHtml;
-        }
-      };
-
-      openMarkerPopup(feature);
+      });
     }
   };
 }).call(this);

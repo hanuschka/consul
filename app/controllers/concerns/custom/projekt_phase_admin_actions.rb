@@ -123,7 +123,6 @@ module ProjektPhaseAdminActions
   def settings
     authorize!(:settings, @projekt_phase)
 
-
     set_setting_page_variables(@projekt_phase)
 
     render "custom/admin/projekt_phases/settings"
@@ -213,6 +212,22 @@ module ProjektPhaseAdminActions
       @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
       @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
     end
+
+    setting_ordered = []
+    proposal_setting_key_ordered.each do |setting_key|
+      setting = projekt_phase_settings_by_key[setting_key.to_s]
+      setting_ordered.push(setting)
+    end
+
+    all_settings = setting_ordered.compact.group_by(&:kind)
+
+    @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
+    @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
+
+    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
+    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
+
+    @apps = App.all
   end
 
   def proposals
@@ -454,6 +469,50 @@ module ProjektPhaseAdminActions
     @process = @projekt_phase.legislation_process
 
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
+  end
+
+  def ai_settings
+    authorize!(:ai_settings, @projekt_phase)
+
+    @assistant_codename = "proposal_voice_assistant"
+    @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
+
+    dt_api = DtApi::Client.new
+
+    ai_assistant_config_response =
+      dt_api
+        .ai_assistant_configs
+        .get(
+          codename: @assistant_codename,
+          consul_projekt_phase_id: @projekt_phase.id
+        )
+
+    @ai_assistant_config =
+      ai_assistant_config_response
+        .fetch("client_ai_assistant_config")
+
+    render "custom/admin/projekt_phases/ai_settings"
+  end
+
+  def update_ai_settings
+    authorize!(:ai_settings, @projekt_phase)
+
+    dt_api = DtApi::Client.new
+
+    @ai_assistant_config =
+      dt_api
+        .ai_assistant_configs
+        .update(
+          codename: params[:assistant_codename],
+          consul_projekt_phase_id: @projekt_phase.id,
+          params: {
+            questions: params[:projekt_phase][:questions],
+            criteria: params[:projekt_phase][:criteria],
+            parting_words: params[:projekt_phase][:parting_words]
+          }
+        )
+
+    redirect_to action: "ai_settings"
   end
 
   # def frame_phases_restrictions

@@ -81,6 +81,12 @@ de:
           official_answer: Offizielle Antwort
           officer_email: Email
           submit: Filter/Suche
+        ai_settings:
+          page_title: KI prompt
+          questions: Welche Fragen sollen den Bürgern gestellt werden?
+          criteria: Welche Kriterien müssen die Vorschläge erfüllen?
+          parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
+          update_button: Aktualisieren KI Prompt
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -348,6 +354,7 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
+          ai_settings: KI prompt
         ideas:
           officers: Sachbearbeiter*innen
           list: Ideen
@@ -687,6 +694,7 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
+          ai_settings: KI Anweisung
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -806,8 +814,11 @@ de:
           copy_from_projekt: vom Projekt übernehmen
           map_layers:
             title: Kartenebenen
-        projekt_events:
-          page_title: Veranstaltungen
+        ai_settings:
+          page_title: KI Prompt
+          questions: Welche Fragen sollen den Bürgern gestellt werden?
+          criteria: Welche Kriterien müssen die Vorschläge erfüllen?
+          parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
         projekt_notifications:
           page_title: Möchten Sie eine Benachrichtigung senden?
           button: Nachricht senden
@@ -884,6 +895,8 @@ de:
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen
+        projekt_events:
+          page_title: Veranstaltungen
         projekt_point_of_interest_pins:
           page_title: Pins
         projekt_point_of_interest_categories:

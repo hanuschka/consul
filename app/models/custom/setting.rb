@@ -1,6 +1,10 @@
 require_dependency Rails.root.join("app", "models", "setting").to_s
 
 class Setting < ApplicationRecord
+  PRO_SETTINGS = [
+    DEFICIENCY_REPORT_VOICE_ASSISTANT = "deficiency_reports.voice_assistant"
+  ]
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   def type
@@ -191,6 +195,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.admin_acceptance_required": false,
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
+        "deficiency_reports.voice_assistant": true,
 
         "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,

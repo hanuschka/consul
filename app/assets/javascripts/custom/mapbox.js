@@ -177,7 +177,7 @@
       padding: 2px 6px;
       border-radius: 0;
       font-size: 12px;
-      z-index: 1000;
+      z-index: 100;
       transition: opacity 0.3s ease;
       opacity: 0.8;
       backdrop-filter: blur(2px);

@@ -38,6 +38,7 @@ namespace :admin do
       get :map_resources_overview
       get :projekt_point_of_interest_pins
       get :projekt_point_of_interest_categories
+      post :send_notifications
     end
 
     resources :formular, only: [] do

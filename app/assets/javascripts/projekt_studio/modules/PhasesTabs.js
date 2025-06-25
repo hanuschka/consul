@@ -127,7 +127,7 @@ ProjektStudio.modules.PhasesTabs = {
   deleteProjektPhase(e) {
     const tab = e.currentTarget.closest(".js-projekt-phase-tab");
     const phaseName = tab.querySelector("h4").innerText;
-    const deleteConfirmed = confirm(`Do you really want to delete ${phaseName} phase?`)
+    const deleteConfirmed = confirm(`Möchten Sie die Phase ${phaseName} wirklich löschen?`)
 
     if (deleteConfirmed) {
       const phaseId = tab.dataset.projektPhaseId
@@ -151,19 +151,27 @@ ProjektStudio.modules.PhasesTabs = {
   sendNotificationsForProjektPhase(e) {
     const tab = e.currentTarget.closest(".js-projekt-phase-tab");
     const phaseName = tab.querySelector("h4").innerText;
-    const sendConfirmed = confirm(`Do you really want to send notifications for ${phaseName} phase?`)
+    const sendConfirmed = confirm(`Möchten Sie wirklich Benachrichtigungen für die Phase ${phaseName} senden?`)
 
     if (sendConfirmed) {
       const phaseId = tab.dataset.projektPhaseId
       const resource_type = e.currentTarget.dataset.resourceType
       const resource_id = e.currentTarget.dataset.resourceId
 
-      sendMessageToDtParentFrame(
-        "sendNotificationsForProjektPhase",
-        {
-          projekt_phase_id: phaseId, resource_type, resource_id
-        }
-      )
+      if (ProjektStudio.isEmbedded) {
+        ProjektStudio.utils.sendMessageToDtParentFrame(
+          "sendNotificationsForProjektPhase",
+          {
+            projekt_phase_id: phaseId, resource_type, resource_id
+          }
+        )
+      } else {
+        $.ajax({
+          url: `/admin/projekt_phases/${phaseId}/send_notifications`,
+          type: "POST",
+          dataType: "json"
+        })
+      }
     }
   },
 };

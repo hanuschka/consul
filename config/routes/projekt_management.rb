@@ -36,6 +36,7 @@ namespace :projekt_management do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      post :send_notifications
     end
 
     resources :formular, only: [] do

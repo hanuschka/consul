@@ -9,11 +9,10 @@ ProjektStudio.modules.Banner = {
   },
 
   initEventListeners() {
-    $(document).on("click", ".js-frame-edit-field-text-edit-button", this.turnOnTextEdit.bind(this));
-    $(document).on("click", ".js-frame-edit-field--text-edit-cancel", this.cancelTextEdit.bind(this));
-    $(document).on("click", ".js-frame-edit-field-text-edit-save", this.saveEditedText.bind(this));
-    $(document).on("change", ".js-projekt-image-upload-input", this.updateTitleImage.bind(this));
-    // $(document).on("keydown", ".projekt-content-block", this.handleShortcutSaveContentBlock.bind(this));
+    $(document).on("click", ".js-projekt-banner-text-edit-button", this.turnOnTextEdit.bind(this));
+    $(document).on("click", ".js-projekt-banner--text-edit-cancel", this.cancelTextEdit.bind(this));
+    $(document).on("click", ".js-projekt-banner--text-edit-save", this.saveEditedText.bind(this));
+    $(document).on("change", ".js-projekt-banner--image-upload-input", this.updateTitleImage.bind(this));
   },
 
   turnOnTextEdit(e) {
@@ -25,7 +24,7 @@ ProjektStudio.modules.Banner = {
     container.dataset.originalFieldHtml = field.innerHTML.trim();
 
     field.firstElementChild.contentEditable = true
-    focusContentEditableElement(field.firstElementChild)
+    ProjektStudio.utils.focusContentEditableElement(field.firstElementChild)
   },
 
   cancelTextEdit(e) {
@@ -39,8 +38,9 @@ ProjektStudio.modules.Banner = {
   },
 
   getFieldElementsForButton(button) {
-    const container = button.closest(".js-frame-edit-field-container")
-    const field = container.querySelector(".js-frame-edit-field-content")
+    const container = button.closest(".js-projekt-banner--edit-field-container")
+    console.log({button, container})
+    const field = container.querySelector(".js-projekt-banner--edit-field-content")
 
     return { button, container, field }
   },
@@ -57,9 +57,20 @@ ProjektStudio.modules.Banner = {
 
       const value = field.firstElementChild.innerHTML.trim()
 
-      sendMessageToDtParentFrame("updateProjektPage", {
-        [container.dataset.fieldName]: value
-      })
+      if (ProjektStudio.isEmbedded) {
+        ProjektStudio.utils.sendMessageToDtParentFrame("updateProjektPage", {
+          [container.dataset.fieldName]: value
+        })
+      } else {
+        $.ajax({
+          url: `/admin/projekts/${settingId}/settings/${projektId}`,
+          type: "PATCH",
+          dataType: "json",
+          data: {
+            "projekt_setting[value]": settingValue
+          }
+        })
+      }
     }
   },
 

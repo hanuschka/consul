@@ -47,19 +47,11 @@ module ProjektAdminActions
     authorize!(:update, @projekt)
 
     if @projekt.update(projekt_params)
-      if request.xhr?
-        head :ok
-      else
-        redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
-          notice: t("custom.admin.projekts.edit.flash.update_notice")
-      end
+      redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
+        notice: t("custom.admin.projekts.edit.flash.update_notice")
     else
-      if request.xhr?
-        render json: { error: "Error updating projekt" }
-      else
-        redirect_to namespace_projekt_path(action: "edit"),
-          alert: @projekt.errors.messages.values.flatten.join("; ")
-      end
+      redirect_to namespace_projekt_path(action: "edit"),
+        alert: @projekt.errors.messages.values.flatten.join("; ")
     end
   end
 
@@ -98,6 +90,35 @@ module ProjektAdminActions
     authorize!(:edit, @projekt)
 
     render "admin/projekt_phases/frame_new_phase_selector"
+  end
+
+  def update
+    if @projekt.update(projekt_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
+    else
+      render json: { message: "Error updating projekt" }
+    end
+  end
+
+  def update_page
+    if @projekt.page.update(projekt_page_params)
+      render json: { projekt: @projekt.serialize, status: { message: "Projekt page updated" }}
+    else
+      render json: { message: "Error updating projekt page" }
+    end
+  end
+
+  def update_title_image
+    @projekt.page.image = Image.new(
+      attachment: params[:title_image],
+      user: User.administrators.first
+    )
+
+    if @projekt.page.save
+      render json: { status: { message: "Projekt page title image updated" }}
+    else
+      render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
+    end
   end
 
   private

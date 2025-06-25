@@ -14,7 +14,7 @@ var ProjektStudio = {
 
       ProjektStudio.modules.Sidebar.initialize()
       ProjektStudio.modules.PhasesTabs.initialize()
-      // Banner.initialize()
+      ProjektStudio.modules.Banner.initialize()
       // ContentBlocks.initialize()
       // PreviewMode.initialize()
       // ExplainWithAi.initialize()

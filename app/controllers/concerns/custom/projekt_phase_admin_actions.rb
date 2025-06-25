@@ -9,8 +9,7 @@ module ProjektPhaseAdminActions
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
-      :create, :order_phases, :frame_phases_restrictions,
-      :update_position
+      :create, :order_phases, :frame_phases_restrictions
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -465,6 +464,17 @@ module ProjektPhaseAdminActions
     @process = @projekt_phase.legislation_process
 
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
+  end
+
+  def send_notifications
+    authorize!(:manage, @projekt_phase)
+
+    case params[:resource_type]
+    when "projekt_arguments"
+      NotificationServices::ProjektArgumentsNotifier.call(@projekt_phase.id)
+    when "projekt_questions"
+      NotificationServices::ProjektQuestionsNotifier.call(@projekt_phase.id)
+    end
   end
 
   # def frame_phases_restrictions

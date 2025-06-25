@@ -14,7 +14,7 @@ App.MapPopup = {
   },
 
   getPopupDataUrl: function(resourceType, properties) {
-    console.log("getPopupDataUrl", resourceType, properties)
+    // console.log("getPopupDataUrl", resourceType, properties)
     if (resourceType == "proposal") {
       return "/proposals/" + properties.id + "/json_data";
     } else if (resourceType == "deficiency_report") {
@@ -30,12 +30,14 @@ App.MapPopup = {
 
   getResourceUrl: function(data, resourceType) {
     switch(resourceType)  {
-      case  "proposals":
-        return "/proposals/" + data.proposal_id
+      case  "proposal":
+        return "/proposals/" + data.id
       case  "deficiency-reports":
-        return "/deficiency_reports/" + data.deficiency_report_id;
-      case "projekts":
-        return "/projekts/" + data.projekt_id;
+        return "/deficiency_reports/" + data.id;
+      case "projekt":
+        return "/projekts/" + data.id;
+      case "investment":
+        return "/budgets/" + data.budget_id + "/investments/" + data.id;
     }
   },
 
@@ -47,7 +49,13 @@ App.MapPopup = {
     }
 
     var popupHtml;
-    popupHtml = "<h5><a href='" + url + "'>" + data.title + "</a></h5>"; //title
+
+    if (url && url.length > 0) {
+      popupHtml = "<h5><a href='" + url + "'>" + data.title + "</a></h5>"; //title
+    }
+    else {
+      popupHtml = "<h5>" + data.title + "</h5>"; //title
+    }
 
     if (data.image_url) {
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
@@ -83,7 +91,7 @@ App.MapPopup = {
   },
 
   pointOfInterestPopupContent: function(data) {
-    console.log("pointOfInterestPopupContent", data)
+    // console.log("pointOfInterestPopupContent", data)
     var popupHtml = "<h5 style='color:" + data.category.color + "'>";
     popupHtml += "<i style='margin-right: 7px' class='icon-" + data.category.icon + "'></i>"
     popupHtml += data.category.name;

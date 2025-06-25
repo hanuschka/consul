@@ -187,6 +187,13 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
   end
 
+  create_table "apps", force: :cascade do |t|
+    t.integer "status"
+    t.string "codename"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "audits", id: :serial, force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"

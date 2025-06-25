@@ -27,27 +27,6 @@ class MapLocation < ApplicationRecord
     only: %i[shape latitude longitude],
     if: :audit_changes?
 
-  def resource_id
-    [
-      investment_id,
-      proposal_id,
-      projekt_id,
-      deficiency_report_id
-    ].compact.first
-  end
-
-  def resource_type
-      if investment_id.present?
-        "investment"
-      elsif proposal_id.present?
-        "proposal"
-      elsif projekt_id.present?
-        "projekt"
-      elsif deficiency_report_id.present?
-        "deficiency_report"
-      end
-  end
-
   def json_data
     {
       resource_type: resource_type,
@@ -61,12 +40,7 @@ class MapLocation < ApplicationRecord
   end
 
   def shape_json_data
-    return {} if shape == {} || shape == "{}"
-
-    if shape.is_a?(String)
-      # Sentry.capture_message("MapJSONBug. Shape: #{shape}")
-      return {}
-    end
+    return {} if shape == {} || shape.is_a?(String)
 
     shape.merge({
       resource_type: resource_type,
@@ -116,6 +90,27 @@ class MapLocation < ApplicationRecord
   end
 
   private
+
+  def resource_id
+    [
+      investment_id,
+      proposal_id,
+      projekt_id,
+      deficiency_report_id
+    ].compact.first
+  end
+
+  def resource_type
+    if investment_id.present?
+      "investment"
+    elsif proposal_id.present?
+      "proposal"
+    elsif projekt_id.present?
+      "projekt"
+    elsif deficiency_report_id.present?
+      "deficiency_report"
+    end
+  end
 
   def get_pin_color
     if proposal.present? && proposal.projekt_phase.projekt.overview_page?

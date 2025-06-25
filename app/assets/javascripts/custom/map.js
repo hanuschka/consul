@@ -217,6 +217,22 @@
         updateFormfieldsWithMarker();
       };
 
+      // Do not delete. This is interface function used to update
+      // map in other js componentns and in AI assistants
+      this.lastMapSetMarkerTo = function lastMapSetMarkerTo(lat, lng) {
+        if (App.Map.maps.length > 1) {
+          // Due to limitation of implementation of this functions
+          // it dosent work when there multiple instances of map
+          return
+        }
+        if (marker) {
+          marker.setLatLng([lat, lng]);
+        } else {
+          marker = createMarker(lat, lng);
+        }
+        updateFormfieldsWithMarker();
+      }
+
       // function to update form fields when marker is updated
       var updateFormfieldsWithMarker = function() {
         $(latitudeInputSelector).val(marker.getLatLng().lat);
@@ -231,32 +247,17 @@
 
       // function to open marker popup
       var openMarkerPopup = function(e) {
-        var route;
         var resourceType = e.target.options.resource_type;
+        var route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options)
 
-        if ( resourceType == "proposal" ) {
-          route = "/proposals/" + e.target.options.id + "/json_data"
-        } else if ( resourceType == "deficiency_report") {
-          route = "/deficiency_reports/" + e.target.options.id + "/json_data"
-        } else if ( resourceType == "projekt") {
-          route = "/projekts/" + e.target.options.id + "/json_data"
-        } else if ( resourceType == "investment") {
-          route = "/investments/" + e.target.options.id + "/json_data"
-        } else if (resourceType == "point_of_interest_pin") {
-          route = "/projekt_point_of_interest_pins/" + e.target.options.id + "/json_data?projekt_phase_id=" + e.target.options.projekt_phase_id;
-        }
-
-        console.log("openMarkerPopup", resourceType, route)
-        console.log("e.target.options", e.target.options)
-
-        if (!route) { return };
+        if (!route) return;
 
         marker = e.target;
         $.ajax(route, {
           type: "GET",
           dataType: "json",
           success: function(data) {
-            e.target.bindPopup(App.MapPopup.getPopupContent(data, resourceType), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
+            e.target.bindPopup(App.MapPopup.generatePopupContent(data, resourceType), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
           }
         });
       };

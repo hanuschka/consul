@@ -36,6 +36,8 @@ namespace :admin do
       get :budget_phases
       get :legislation_process_draft_versions
       get :map_resources_overview
+      get :ai_settings
+      patch :update_ai_settings
       get :projekt_point_of_interest_pins
       get :projekt_point_of_interest_categories
       post :send_notifications

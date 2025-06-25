@@ -146,12 +146,12 @@ class ProjektsController < ApplicationController
       sdg_target_codes = params[:sdg_targets].split(',')
       @projekts = @projekts.left_joins(sdg_global_targets: :local_targets)
 
-      @projekts = @projekts.where(sdg_targets: { code: sdg_target_codes}).or(@projekts.where(sdg_local_targets: { code: sdg_target_codes })).distinct
+      @projekts = @projekts.where(sdg_targets: { code: sdg_target_codes}).or(@projekts.where(sdg_local_targets: { code: sdg_target_codes }))
       return
     end
 
     if params[:sdg_goals].present?
-      @projekts = @projekts.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') }).distinct
+      @projekts = @projekts.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') })
     end
   end
 

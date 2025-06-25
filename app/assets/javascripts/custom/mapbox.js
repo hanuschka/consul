@@ -68,7 +68,8 @@
     var mapSettings = {
       container: this.element,
       center: [this.mapCenterLongitude, this.mapCenterLatitude],
-      zoom: this.zoom
+      zoom: this.zoom,
+      pitch: 53
     }
 
     if (this.styleId) {

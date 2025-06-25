@@ -68,7 +68,7 @@ $small-tablet-viewport-start: 750px;
 }
 
 .projekt-frame-icon-button {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   font-size: 17px;
@@ -91,6 +91,11 @@ $small-tablet-viewport-start: 750px;
     filter: grayscale(0.1);
     cursor: initial;
     opacity: 0.3;
+
+    &:hover {
+      background-color: transparent !important;
+      cursor: default !important;
+    }
   }
 }
 

@@ -100,6 +100,7 @@ namespace :admin do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
     resources :settings, controller: "projekt_settings", only: [:update] do

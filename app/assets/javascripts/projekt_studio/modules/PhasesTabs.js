@@ -1,6 +1,6 @@
 // import { sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
 
-ProjektStudio.PhasesTabs = {
+ProjektStudio.modules.PhasesTabs = {
   initialized: false,
   initialize() {
     if (!this.initialized) {
@@ -29,13 +29,29 @@ ProjektStudio.PhasesTabs = {
       scrollSensitivity: 100,
       handle: ".js-projekt-phase-move",
       update: (e) => {
-        var ordered_list = $(e.target).sortable("toArray", {
-          attribute: "data-record-id"
-        });
-
-        sendMessageToDtParentFrame("reorderProjektPhases", { ordered_list })
+        this.handleProjektPhaseSort(e)
       }
     });
+  },
+
+  handleProjektPhaseSort(e) {
+    var ordered_list = $(e.target).sortable("toArray", {
+      attribute: "data-projekt-phase-id"
+    });
+    const projektId = ProjektStudio.getCurrentProjektId();
+
+    if (ProjektStudio.isEmbedded) {
+      ProjektStudio.utils.sendMessageToDtParentFrame("reorderProjektPhases", { ordered_list })
+    } else {
+      $.ajax({
+        url: `/admin/projekts/${projektId}/projekt_phases/order_phases`,
+        type: "POST",
+        dataType: "json",
+        data: {
+          ordered_list
+        }
+      })
+    }
   },
 
   async toggleProjektPhaseActiveState(e) {
@@ -45,13 +61,28 @@ ProjektStudio.PhasesTabs = {
 
     const active = !tab.classList.contains("-deactivated")
     const icon = e.currentTarget.querySelector("i")
+    const projektId = ProjektStudio.getCurrentProjektId();
+    const projektPhaseId = tab.dataset.projektPhaseId
+
     icon.classList.toggle("fa-eye", !active)
     icon.classList.toggle("fa-eye-slash", active)
 
-    sendMessageToDtParentFrame("toggleProjektPhaseActiveState", { projekt_phase_id: tab.dataset.projektPhaseId, active })
-    // await patch(`/consul/projekt_phases/${projekt_phase_id}`, { body: {
-    //    projekt_phase: { active }
-    // }});
+    if (ProjektStudio.isEmbedded) {
+      ProjektStudio.utils.sendMessageToDtParentFrame("toggleProjektPhaseActiveState", { projekt_phase_id: tab.dataset.projektPhaseId, active })
+    } else {
+      $.ajax({
+        url: `/admin/projekts/${projektId}/projekt_phases/${projektPhaseId}/toggle_active_status`,
+        type: "PATCH",
+        dataType: "json",
+        data: {
+          projekt:  {
+            phase_attributes: {
+              active: active
+            }
+          }
+        }
+      })
+    }
   },
 
 
@@ -67,15 +98,30 @@ ProjektStudio.PhasesTabs = {
       .removeClass("fa-gem")
       .addClass("fa-thumbtack");
 
-    const is_default = tab.classList.contains("-default-phase")
+    const isDefault = tab.classList.contains("-default-phase")
     const icon = e.currentTarget.querySelector("i")
-    icon.classList.toggle("fa-thumbtack", !is_default)
-    icon.classList.toggle("fa-gem", is_default)
+    const projektId = ProjektStudio.getCurrentProjektId();
 
-    sendMessageToDtParentFrame(
-      "toggleProjektPhaseDefaultState",
-      { projekt_phase_id: phaseId, is_default }
-    )
+    icon.classList.toggle("fa-thumbtack", !isDefault)
+    icon.classList.toggle("fa-gem", isDefault)
+
+    if (ProjektStudio.isEmbedded) {
+      ProjektStudio.utils.sendMessageToDtParentFrame(
+        "toggleProjektPhaseDefaultState",
+        { projekt_phase_id: phaseId, is_default: isDefault }
+      )
+    } else {
+      $.ajax({
+        url: `/admin/projekts/${projektId}/update_standard_phase`,
+        type: "PATCH",
+        dataType: "json",
+        data: {
+          default_footer_tab: {
+            id: phaseId
+          }
+        }
+      })
+    }
   },
 
   deleteProjektPhase(e) {
@@ -87,10 +133,18 @@ ProjektStudio.PhasesTabs = {
       const phaseId = tab.dataset.projektPhaseId
       tab.remove()
 
-      sendMessageToDtParentFrame(
-        "deleteProjektPhase",
-        { projekt_phase_id: phaseId }
-      )
+      if (ProjektStudio.isEmbedded) {
+        ProjektStudio.utils.sendMessageToDtParentFrame(
+          "deleteProjektPhase",
+          { projekt_phase_id: phaseId }
+        )
+      } else {
+        $.ajax({
+          url: `/admin/projekt_phases/${phaseId}`,
+          type: "DELETE",
+          dataType: "json"
+        })
+      }
     }
   },
 

@@ -95,6 +95,7 @@ namespace :projekt_management do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
   end

@@ -10,6 +10,7 @@ module ProjektPhaseAdminActions
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
       :create, :order_phases, :frame_phases_restrictions,
+      :update_position
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -71,6 +72,16 @@ module ProjektPhaseAdminActions
 
     @projekt.projekt_phases.order_phases(params[:ordered_list])
     head :ok
+  end
+
+  def update_position
+    authorize!(:order_phases, @projekt)
+
+    if @projekt_phase.insert_at(params[:position].to_i)
+      head :ok
+    else
+      render json: { message: "Error updating content_block" }
+    end
   end
 
   def toggle_active_status

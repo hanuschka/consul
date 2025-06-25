@@ -9,6 +9,7 @@
 // import { sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
 
 // require_tree ./custom
+//= require sortablejs/Sortable.min.js
 //= require ./projekt_studio/main
 //= require_tree ./projekt_studio/utils
 //= require ./projekt_studio/modules/Sidebar

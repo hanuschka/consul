@@ -1,7 +1,3 @@
-// import { debounce } from "utils/functionUtils";
-// import { formElementToUrlParams } from "utils/formUtils";
-// import { sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
-
 window.ProjektStudio.modules.Sidebar = {
   initialized: false,
   initialize() {
@@ -10,7 +6,7 @@ window.ProjektStudio.modules.Sidebar = {
     }
 
     console.log("Sidebar initialized")
-    $(document).on("change", ".js-update-projekt-form input", ProjektStudio.utils.debounce(this.handleUpdateProjekt.bind(this), 1200));
+    $(document).on("change", ".js-update-projekt-form input", ProjektStudio.utils.debounce(this.handleUpdateProjekt.bind(this), 1000));
     $(document).on("click", ".js-sidebar-section-toggle-visibility", this.toggleSidebarSectionVisibility.bind(this));
 
     this.initialized = true;

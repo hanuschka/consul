@@ -91,12 +91,12 @@
       </div>
     <% end %>
 
-    <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || embedded? %>
+    <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || show_projekt_studio_controls?(@custom_page.projekt) %>
       <div class="js-anchor-navigation-content" id="projekt-particapation">
         <div class="projekt-footer-anchor" id="projekt-footer"> </div>
         <div class="projekt-footer flex-layout">
           <div class="full-width-column">
-            <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase) %>
+            <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase, namespace: @namespace) %>
             <% if @default_projekt_phase.present? %>
               <div id="footer-content" class="js-projekt-footer-content">
                 <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>

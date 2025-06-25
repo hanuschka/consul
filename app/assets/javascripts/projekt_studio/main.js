@@ -13,9 +13,9 @@ var ProjektStudio = {
       // this.requestLoadContentBlockTemplates()
 
       ProjektStudio.modules.Sidebar.initialize()
+      ProjektStudio.modules.PhasesTabs.initialize()
       // Banner.initialize()
       // ContentBlocks.initialize()
-      // PhasesTabs.initialize()
       // PreviewMode.initialize()
       // ExplainWithAi.initialize()
       // SavedContentBlocks.initialize()

@@ -1,12 +1,4 @@
 .custom-new-design {
-  .leaflet-popup-content {
-    padding-right: 0;
-
-    h4, h5 {
-      margin-bottom: 8px;
-    }
-  }
-
   #map-container {
     > label {
       display: none;
@@ -89,6 +81,7 @@
     display: flex;
     margin-bottom: 2px;
     gap: 3px;
+    flex-wrap: wrap;
   }
 }
 

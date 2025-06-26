@@ -1,4 +1,6 @@
 App.MapPopup = {
+  excludedProcesses: ["proposal", "deficiency_report", "projekt", "point_of_interest_pin"],
+
   generatePopupContent: function(data, resourceType) {
     if (resourceType == "proposal") {
       return this.standardResourcePopupContent(data, resourceType);

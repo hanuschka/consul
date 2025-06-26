@@ -425,7 +425,9 @@
             marker.options.resource_type = markerCoordinate.resource_type
             marker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-            marker.on("click", openMarkerPopup);
+            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+              marker.on("click", openMarkerPopup);
+            }
           } else {
             var userShape = L.geoJSON(markerCoordinate, {
               style: function(feature) {
@@ -437,7 +439,9 @@
             userShape.options.resource_type = markerCoordinate.resource_type
             userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-            userShape.on("click", openMarkerPopup);
+            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+              userShape.on("click", openMarkerPopup);
+            }
             userShape.addTo(deflateFeatures);
             userShape.addTo(map);
           }

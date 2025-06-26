@@ -49,13 +49,11 @@
       window.vcsApp = vcsApp;
 
       // add predefined shapes
+      if (vcsApp.customMapOptions.editable) {
 
-
-      if (vcsApp.customMapOptions.adminEditor && vcsApp.customMapOptions.adminShape ) {
-        App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_editorLayer');
-
-      } else if (vcsApp.customMapOptions.editable) {
-        if (vcsApp.customMapOptions.adminShape && vcsApp.customMapOptions.showAdminShape) {
+        if (vcsApp.customMapOptions.adminEditor && vcsApp.customMapOptions.adminShape ) {
+          App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_editorLayer');
+        } else if (vcsApp.customMapOptions.adminShape && vcsApp.customMapOptions.showAdminShape) {
           App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_adminShapeLayer')
         }
         App.VCMap.drawPredefinedFeatures(vcsApp, '_editorLayer');
@@ -160,31 +158,9 @@
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
         vectorProperties: {
-          altitudeMode: 'absolute'
+          altitudeMode: 'relativeToGround'
         }
       });
-
-      var fillColor = layerName === '_adminShapeLayer' ? '#ff0000' : app.customMapOptions.defaultColor;
-
-      // layer style
-      var style = new vcs.VectorStyleItem({
-        fill: {
-          color: fillColor
-        },
-        stroke: {
-          color: '#ffffff',
-          width: 3,
-        },
-        image: {
-          color: app.customMapOptions.defaultColor,
-          src: '/vcmap/assets/cesium/Assets/Textures/pin.svg',
-          stroke: {
-            color: '#ffffff',
-            width: 3,
-          },
-        },
-      });
-      layer.setStyle(style);
 
       // layer will not be serialized
       vcs.markVolatile(layer);
@@ -253,14 +229,13 @@
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
       var featureCreatedDestroy = session.featureCreated.addEventListener(function(feature) {
         layer.getFeatures().forEach(function(f) {
-          console.log(f.getId());
           if (f.getId() !== feature.getId()) {
             layer.removeFeaturesById([f.getId()])
           }
         })
 
         if ( feature.getGeometry() instanceof ol.geom.Polygon ) {
-          feature.set('olcs_altitudeMode', 'clampToGround');
+          feature.set('olcs_altitudeMode', 'relativeToGround');
         }
       });
 
@@ -317,6 +292,47 @@
       });
     },
 
+    buildPinSvg: function(coordinates) {
+      var svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->' +
+          '<path fill="' + App.VCMap.colorWithOpacity(coordinates.color, 0.8) + '" d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0z"/>' +
+        '</svg>';
+
+      var encodedSvg = btoa(unescape(encodeURIComponent(svg)));
+
+      return 'data:image/svg+xml;base64,' + encodedSvg;
+    },
+
+    colorWithOpacity: function(color, opacity) {
+      if (!color || !opacity) {
+        return 'rgba(0,0,0,0.5)'; // default color with opacity
+      }
+
+      // Ensure color is in hex format
+      if (color.charAt(0) === '#') {
+        color = color.slice(1);
+      }
+
+      if (color.length === 3) {
+        // Convert shorthand hex to full hex
+        color = color.split('').map(function(c) { return c + c; }).join('');
+      }
+
+      if (color.length !== 6) {
+        console.error('Invalid color format. Expected hex format (e.g., #RRGGBB).');
+        return 'rgba(0,0,0,0.5)'; // default color with opacity
+      }
+
+      // Convert hex to RGB
+      var r = parseInt(color.slice(0, 2), 16);
+      var g = parseInt(color.slice(2, 4), 16);
+      var b = parseInt(color.slice(4, 6), 16);
+
+      // Return RGBA format with the specified opacity
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+    },
+
+
     drawPredefinedFeature: function(app, coordinates, layerName) {
       var layer = app.layers.getByKey(layerName) || App.VCMap.createMapLayer(app, layerName);
       var feature;
@@ -326,14 +342,15 @@
 
         var pinStyle = new vcs.VectorStyleItem({});
         pinStyle.image = new ol.style.Icon({
-          color: coordinates.color,
-          src: '/vcmap/assets/cesium/Assets/Textures/pin.svg',
-          scale: 1,
+          src: App.VCMap.buildPinSvg(coordinates)
         });
         feature.setStyle(pinStyle.style);
 
+        feature.set('olcs_altitudeMode', 'absolute');
+
+        feature.data = coordinates;
         feature.process = app.customMapOptions.process;
-        feature.resource_id = getResourceId(coordinates);
+        feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
 
       } else { // geometryType === 'Polygon'
@@ -344,34 +361,19 @@
         feature = new ol.Feature({ geometry: new ol.geom.Polygon([polygoneCoordinates])});
 
         var polygonStyle = new vcs.VectorStyleItem({});
-        polygonStyle.fillColor = coordinates.color;
+        polygonStyle.fillColor = App.VCMap.colorWithOpacity(coordinates.color, 0.3);
         polygonStyle.stroke = new ol.style.Stroke({
-          color: "#000",
+          color: coordinates.color,
           width: 1
         });
         feature.setStyle(polygonStyle.style);
 
-        feature.set('olcs_altitudeMode', 'clampToGround');
+        feature.set('olcs_altitudeMode', 'relativeToGround');
 
+        feature.data = coordinates;
         feature.process = app.customMapOptions.process;
-        feature.resource_id = getResourceId(coordinates);
+        feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
-      }
-
-      function getResourceId(coordinates) {
-        var id;
-
-        if (app.customMapOptions.process == "proposals") {
-          id = coordinates.proposal_id
-        } else if (app.customMapOptions.process == "deficiency-reports") {
-          id = coordinates.deficiency_report_id
-        } else if (app.customMapOptions.process == "projekts") {
-          id = coordinates.projekt_id
-        } else {
-          id = coordinates.investment_id
-        }
-
-        return id
       }
     },
 
@@ -381,84 +383,23 @@
     },
 
     showFeatureInfo: function(feature) {
+      var route;
+      var resourceType = feature.data.resource_type;
+      var resourceId = feature.data.id;
+      var popup = $("#vc-popup");
+      var popupContent = popup.find("#vc-popup-content")
+      var popupDataUrl = App.MapPopup.getPopupDataUrl(resourceType, feature.data);
 
-      // function to open feature info popup
-      var openMarkerPopup = function(feature) {
-        var route;
+      if (!popupDataUrl) { return };
 
-        if ( feature.process == "proposals" ) {
-          route = "/proposals/" + feature.resource_id + "/json_data"
-        } else if ( feature.process == "deficiency-reports") {
-          route = "/deficiency_reports/" + feature.resource_id + "/json_data"
-        } else if ( feature.process == "projekts") {
-          route = "/projekts/" + feature.resource_id + "/json_data"
-        } else {
-          route = "/investments/" + feature.resource_id + "/json_data"
+      $.ajax(popupDataUrl, {
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          popupContent.html(App.MapPopup.generatePopupContent(data, resourceType));
+          popup.show();
         }
-
-        // marker = e.target;
-        $.ajax(route, {
-          type: "GET",
-          dataType: "json",
-          success: function(data) {
-            $("#vc-popup").html(getPopupContent(data, feature));
-            $("#vc-popup").show();
-          }
-        });
-      };
-
-      // function to generate marker popup content
-      var getPopupContent = function(data, feature) {
-        if (feature.process == "proposals" || data.proposal_id) {
-          return proposalPopupContent(data)
-        } else if ( feature.process == "deficiency-reports" ) {
-          return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
-        } else if ( feature.process == "projekts" ) {
-          return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
-        } else {
-          return "<a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a>";
-        }
-
-        function proposalPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h6 style='max-width:140px;margin-top:10px;'><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
-
-          if (data.image_url) {
-            popupHtml += "<img src='" + data.image_url + "' style='margin-bottom:10px;'>"; //image
-          }
-
-          if (data.labels.length || Object.keys(data.sentiment).length) {
-            popupHtml += "<div class='resource-taggings'>";
-
-            if (data.labels.length) {
-              var labels = "<div class='projekt-labels' style='max-width:120px;'>";
-              data.labels.forEach(function(label) {
-                labels += "<span class='projekt-label selected'>"
-                labels += "<i class='fas fa-" + label.icon + "' style='margin-right:4px;'></i>"
-                labels += label.name
-                labels += "</span>";
-              });
-              labels += "</div>";
-              popupHtml += labels;
-            }
-
-            if (Object.keys(data.sentiment).length) {
-              var sentiments = "<div class='sentiments' style='max-width:120px;'>";
-              sentiments += "<span class='sentiment' style='background-color:#454B1B;color:#ffffff'>" + data.sentiment.name + "</span>";
-              sentiments += "</div>";
-              popupHtml += sentiments;
-            }
-
-            popupHtml += "</div>";
-          }
-
-          popupHtml += "<a class='popup-close-button' onclick='$(\"#vc-popup\").hide();' href='#close' style='outline: none;'>×</a>"
-
-          return popupHtml;
-        }
-      };
-
-      openMarkerPopup(feature);
+      });
     }
   };
 }).call(this);

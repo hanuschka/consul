@@ -15,10 +15,10 @@ module ProjektPointOfInterestPinsAdminActions
 
     if @pin.destroy!
       redirect_to polymorphic_path([@namespace, @projekt_phase], action: :projekt_point_of_interest_pins),
-                  notice: t("custom.admin.point_of_interest.pins.destroy.notice")
+        notice: t("custom.admin.projekt_phases.point_of_interest.pins.destroy.notice")
     else
       redirect_to polymorphic_path([@namespace, @projekt_phase], action: :projekt_point_of_interest_pins),
-                  alert: t("custom.admin.point_of_interest.pins.destroy.error")
+        alert: t("custom.admin.projekt_phases.point_of_interest.pins.destroy.error")
     end
   end
 

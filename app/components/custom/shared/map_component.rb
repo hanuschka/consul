@@ -21,7 +21,7 @@ class Shared::MapComponent < Shared::MapBaseComponent
       options[:enable_geoman_controls] = enable_geoman_controls?
       options[:map_layers] = map_layers if map_layers.present?
 
-      if use_mapbox?
+      if use_mapbox? && Rails.application.secrets.mapbox.present?
         options.delete(:map)
         options[:mapbox] = true
         options[:mapbox_public_token] = Rails.application.secrets.mapbox[:public_token]
@@ -36,18 +36,19 @@ class Shared::MapComponent < Shared::MapBaseComponent
     end
 
     def mapbox_marker_images
-      @process_coordinates.map { |coordinate|
-        icon = coordinate[:fa_icon_class]
+      @process_coordinates
+        .uniq { |coordinate| coordinate[:fa_icon_class] }
+        .map { |coordinate|
+          icon = coordinate[:fa_icon_class]
 
-        if icon.present?
+          return if icon.blank?
+
           {
             name: icon,
             path: asset_path("fontawesome_png/solid/#{icon}_50px.png")
           }
-        end
-      }
+        }
         .compact
-        .uniq { |icon| icon[:name] }
     end
 
     def use_mapbox?

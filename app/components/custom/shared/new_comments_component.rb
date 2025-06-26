@@ -7,13 +7,15 @@ class Shared::NewCommentsComponent < ApplicationComponent
     comment_tree,
     show_title: true,
     remote_url: nil,
-    anchor: "comments"
+    anchor: "comments",
+    force_remote: false
   )
     @record = record
     @comment_tree = comment_tree
     @show_title = show_title
     @remote_url = remote_url
     @anchor = anchor
+    @force_remote = force_remote
   end
 
   private
@@ -70,7 +72,7 @@ class Shared::NewCommentsComponent < ApplicationComponent
     if params[:projekt_phase_id].present?
       paginate comment_tree.root_comments.where(hidden_at: nil), params: { action: "projekt_phase_footer_tab", scroll_to: "new_comments_component" }, remote: true
     else
-      paginate comment_tree.root_comments.where(hidden_at: nil), params: { anchor: "comments" }
+      paginate comment_tree.root_comments.where(hidden_at: nil), params: { anchor: "comments" }, remote: @force_remote
     end
   end
 end

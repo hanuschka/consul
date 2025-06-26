@@ -34,7 +34,7 @@ App.MapPopup = {
     switch(resourceType)  {
       case  "proposal":
         return "/proposals/" + data.id
-      case  "deficiency-reports":
+      case  "deficiency_report":
         return "/deficiency_reports/" + data.id;
       case "projekt":
         return "/projekts/" + data.id;

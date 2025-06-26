@@ -5,6 +5,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   invisible_captcha only: [:create, :create_guest], honeypot: :address, scope: :user
 
   def new
+    store_location_for(:user, CGI::unescape(params[:intended_path])) if params[:intended_path].present?
+
     super do |user|
       user.use_redeemable_code = true if params[:use_redeemable_code].present?
     end

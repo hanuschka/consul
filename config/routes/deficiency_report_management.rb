@@ -48,4 +48,5 @@ namespace :deficiency_report_management do
   end
 
   resource :stats, only: :show
+  resource :ai_settings, only: [:show, :update]
 end

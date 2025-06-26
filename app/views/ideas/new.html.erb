@@ -1,0 +1,5 @@
+<%= render UserResources::FormComponent.new(
+  @idea,
+  url: ideas_path,
+  title: t("new.start_new", scope: "ideas")
+) %>

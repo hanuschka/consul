@@ -2,16 +2,28 @@
   margin-bottom: 5px;
 }
 
-.width-100 {
+.width-100, .full-width {
   width: 100%;
 }
 
-.u-flex {
+.flex, .u-flex {
   display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
 }
 
 .u-justify-center {
   justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
 }
 
 .d-none, .custom-new-design .d-none {
@@ -48,4 +60,14 @@
 
 .margin-bottom-50 {
   margin-bottom: 50px;
+}
+
+.flex-centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-margin {
+  margin: 0;
 }

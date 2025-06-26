@@ -42,6 +42,9 @@ class User < ApplicationRecord
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :projekt_manager
   has_one :deficiency_report_manager
+  has_many :ideas, inverse_of: :author, foreign_key: :author_id
+  has_one :idea_officer, class_name: "Idea::Officer"
+  has_one :idea_manager
   has_one :officing_manager
   belongs_to :registered_address, optional: true
 
@@ -196,6 +199,10 @@ class User < ApplicationRecord
     deficiency_report_officer.present?
   end
 
+  def idea_officer?
+    idea_officer.present?
+  end
+
   def projekt_manager?(projekt = nil)
     if projekt.present?
       projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
@@ -294,6 +301,10 @@ class User < ApplicationRecord
 
   def deficiency_report_manager?
     deficiency_report_manager.present?
+  end
+
+  def idea_manager?
+    idea_manager.present?
   end
 
   def generate_frame_sign_in_token!

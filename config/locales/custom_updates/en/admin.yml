@@ -165,6 +165,7 @@ en:
               limitations: Limitations
               default_tab: Standard
               activated: Activated
+              frontend_visibility: Visible in projekt
               edit_link: Edit
             restriction_names:
               age: Age
@@ -418,6 +419,7 @@ en:
           restrictions: Restrictions
           settings: Settings
           map: Map
+          proposals: Proposals
           projekt_labels: Labels
           sentiments: Sentiments
           age_ranges_for_stats: Age ranges for stats
@@ -439,12 +441,14 @@ en:
         phase_tab_name: Name in Tab
         cta_button_name: Text in Button
         resource_form_title: Resource form title
-        resource_form_title_hint: Resource form title placeholder
         labels_name: Labels
         sentiments_name: Sentiments
-        projekt_selector_hint: Project tips
+        resource_form_intro: Resource form intro
         comment_form_title: Title of comment form
         comment_form_button: Comment form button
+        resource_form_title_placeholder: Text of the title placeholder
+        resource_form_description_placeholder: Text of the description placeholder
+        support_button_text: Support button text
         edit:
           title: Phase settings
         duration:

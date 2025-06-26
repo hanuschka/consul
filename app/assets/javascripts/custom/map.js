@@ -6,6 +6,8 @@
       $("*[data-map]:visible").each(function() {
         App.Map.initializeMap(this);
       });
+
+      App.Mapbox.initialize();
     },
     destroy: function() {
       App.Map.maps.forEach(function(map) {
@@ -13,9 +15,10 @@
         map.remove();
       });
       App.Map.maps = [];
+
+      App.Mapbox.destroy();
     },
     initializeMap: function(element) {
-
       // variables to set map view
       var mapCenterLatitude = $(element).data("map-center-latitude");
       var mapCenterLongitude = $(element).data("map-center-longitude");
@@ -53,6 +56,18 @@
       var marker = null;
       var markersGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
+      var markerCategoryIcon = null;
+      var markerCategoryColor = null;
+      var $categorySelect = $(".js-map-update-pin-style");
+
+      $categorySelect.on(
+        "change",
+        function(e) { updateMarkerStyleFromCategorySelect(e.target) }
+      )
+
+      if ($categorySelect.length) {
+        updateMarkerStyleFromCategorySelect($categorySelect.get(0))
+      }
 
       /* Create leaflet map start */
       var map = L.map(element.id, {
@@ -99,6 +114,21 @@
       })
       deflateFeatures.addTo(map);
 
+      function updateMarkerWithCategoryStyle() {
+        if (marker && markerCategoryIcon && markerCategoryColor) {
+          marker.setIcon(getMarkerIcon(null, null))
+        }
+      }
+
+      function updateMarkerStyleFromCategorySelect(element) {
+        var selectedOption = element.options[element.selectedIndex]
+
+        markerCategoryIcon = selectedOption.dataset.icon;
+        markerCategoryColor = selectedOption.dataset.color;
+
+        updateMarkerWithCategoryStyle()
+      }
+
       function getProcessId(shape) {
         var id;
 
@@ -132,11 +162,17 @@
       function getMarkerIconHTML(color, iconClass) {
         var markerIconHTML;
 
-        if ( !iconClass ) {
+        if (markerCategoryIcon) {
+          iconClass = markerCategoryIcon;
+        } else if (!iconClass ) {
           iconClass = 'circle';
         } else {
           iconClass = iconClass
         };
+
+        if (markerCategoryColor) {
+          color = markerCategoryColor;
+        }
 
         if ( adminEditor ) {
           color = adminShapesColor;
@@ -173,11 +209,29 @@
       var moveOrPlaceMarker = function(e) {
         if (marker) {
           marker.setLatLng(e.latlng);
+
+          updateMarkerWithCategoryStyle()
         } else {
           marker = createMarker(e.latlng.lat, e.latlng.lng);
         }
         updateFormfieldsWithMarker();
       };
+
+      // Do not delete. This is interface function used to update
+      // map in other js componentns and in AI assistants
+      this.lastMapSetMarkerTo = function lastMapSetMarkerTo(lat, lng) {
+        if (App.Map.maps.length > 1) {
+          // Due to limitation of implementation of this functions
+          // it dosent work when there multiple instances of map
+          return
+        }
+        if (marker) {
+          marker.setLatLng([lat, lng]);
+        } else {
+          marker = createMarker(lat, lng);
+        }
+        updateFormfieldsWithMarker();
+      }
 
       // function to update form fields when marker is updated
       var updateFormfieldsWithMarker = function() {
@@ -193,144 +247,22 @@
 
       // function to open marker popup
       var openMarkerPopup = function(e) {
-        var route;
+        var resourceType = e.target.options.resource_type;
+        var route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options)
 
-        if ( process == "proposals" ) {
-          route = "/proposals/" + e.target.options.id + "/json_data"
-        } else if ( process == "deficiency-reports") {
-          route = "/deficiency_reports/" + e.target.options.id + "/json_data"
-        } else if ( process == "projekts") {
-          route = "/projekts/" + e.target.options.id + "/json_data"
-        } else if ( process == "budgets") {
-          route = "/investments/" + e.target.options.id + "/json_data"
-        }
-
-        if (!route) { return };
+        if (!route) return;
 
         marker = e.target;
         $.ajax(route, {
           type: "GET",
           dataType: "json",
           success: function(data) {
-            e.target.bindPopup(getPopupContent(data), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
+            e.target.bindPopup(App.MapPopup.generatePopupContent(data, resourceType), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
           }
         });
       };
 
       // functions to generate markup for popup content
-      var getPopupContent = function(data) {
-        if (process == "proposals" || data.proposal_id) {
-          return proposalPopupContent(data);
-
-        } else if ( process == "deficiency-reports" ) {
-          return deficiencyReportPopupContent(data);
-
-        } else if ( process == "projekts" ) {
-          return projektPopupContent(data);
-
-        } else {
-          return budgetsPopupContent(data);
-        }
-
-        function proposalPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h6><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-          }
-
-          if (data.labels.length || Object.keys(data.sentiment).length) {
-            popupHtml += "<div class='resource-map-popup-details resource-taggings'>";
-
-            if (data.labels.length) {
-              var labels = "<div class='projekt-labels'>";
-              data.labels.forEach(function(label) {
-                labels += "<span class='projekt-label selected'>"
-                labels += "<i class='fas fa-" + label.icon + "' style='margin-right:4px;'></i>"
-                labels += label.name
-                labels += "</span>";
-              });
-              labels += "</div>";
-              popupHtml += labels;
-            }
-
-            if (Object.keys(data.sentiment).length) {
-              var sentiments = "<div class='sentiments'>";
-              sentiments += "<span class='sentiment' style='background-color:" + data.sentiment.backgroundColor + ";color:" + data.sentiment.color + "'>" + data.sentiment.name + "</span>";
-              sentiments += "</div>";
-              popupHtml += sentiments;
-            }
-
-            popupHtml += "</div>";
-          }
-          popupHtml = "<div class='proposal-map-popup-content'>" + popupHtml + "</div>"
-
-          return popupHtml;
-        }
-
-        function deficiencyReportPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h5><a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a></h5>";
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-          }
-
-          return popupHtml;
-        }
-
-        function budgetsPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h5><a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a></h5>";
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-          }
-
-          return popupHtml;
-        }
-
-        function projektPopupContent(data) {
-          // return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
-          var popupHtml = "";
-          popupHtml += "<h5 style=';word-wrap:break-word;'><a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a></h5>"; //title
-
-          if (data.image_url) {
-            popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' >"; //image
-          }
-
-          if (data.sdg_goals.length || data.tags.length ) {
-             popupHtml += "<div class='resource-map-popup-details'>";
-
-             if (data.sdg_goals && data.sdg_goals.length) {
-               var sdg_goals = "<div class='projekt-sdg-goals'>";
-               data.sdg_goals.forEach(function(sdg_goal) {
-                 sdg_goals += "<span class='projekt-sdg-goal'>"
-                 sdg_goals += "<img title='" + sdg_goal.title + "' src='" + sdg_goal.image + "' style='width:35px;margin-right:4px;margin-bottom:4px;'></i>"
-                 sdg_goals += "</span>";
-               });
-               sdg_goals += "</div>";
-               popupHtml += sdg_goals;
-             }
-
-             if (data.tags && data.tags.length) {
-               var tags = "<div class='tags'>";
-               data.tags.forEach(function(tag) {
-                 tags += "<span class='tag' style='font-size:0.75rem;padding:0.33333rem 0.5rem;margin-bottom:4px;'>" + tag + "</span>";
-               });
-               tags += "</div>";
-
-               popupHtml += tags;
-             }
-
-             popupHtml += "</div>";
-          }
-
-          return popupHtml;
-        }
-      };
-
       // function to add event listeners to the shape layer, used when shape layer is editable
       function addEventListenersToShapeLayer(layer) {
         layer.on('pm:edit', function(e) {
@@ -485,40 +417,31 @@
 
       // ads pins and shapes created by user
       if (processCoordinates) {
-        processCoordinates.forEach(function(coordinates) {
-          if (App.Map.validCoordinates(coordinates)) {
-            marker = createMarker(coordinates.lat, coordinates.long, coordinates.color, coordinates.fa_icon_class);
+        processCoordinates.forEach(function(markerCoordinate) {
+          if (App.Map.validCoordinates(markerCoordinate)) {
+            marker = createMarker(markerCoordinate.lat, markerCoordinate.long, markerCoordinate.color, markerCoordinate.fa_icon_class);
 
-            if (process == "proposals") {
-              marker.options.id = coordinates.proposal_id
-            } else if (process == "deficiency-reports") {
-              marker.options.id = coordinates.deficiency_report_id
-            } else if (process == "projekts") {
-              marker.options.id = coordinates.projekt_id
-            } else {
-              marker.options.id = coordinates.investment_id
+            marker.options.id = markerCoordinate.id
+            marker.options.resource_type = markerCoordinate.resource_type
+            marker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
+
+            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+              marker.on("click", openMarkerPopup);
             }
-
-            marker.on("click", openMarkerPopup);
-
           } else {
-            var userShape = L.geoJSON(coordinates, {
+            var userShape = L.geoJSON(markerCoordinate, {
               style: function(feature) {
-                return { color: coordinates.color };
+                return { color: markerCoordinate.color };
               }
             });
 
-            if (process == "proposals") {
-              userShape.options.id = coordinates.proposal_id
-            } else if (process == "deficiency-reports") {
-              userShape.options.id = coordinates.deficiency_report_id
-            } else if (process == "projekts") {
-              userShape.options.id = coordinates.projekt_id
-            } else {
-              userShape.options.id = coordinates.investment_id
-            }
+            userShape.options.id = markerCoordinate.id
+            userShape.options.resource_type = markerCoordinate.resource_type
+            userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-            userShape.on("click", openMarkerPopup);
+            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+              userShape.on("click", openMarkerPopup);
+            }
             userShape.addTo(deflateFeatures);
             userShape.addTo(map);
           }

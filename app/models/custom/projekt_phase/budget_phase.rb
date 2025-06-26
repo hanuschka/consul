@@ -4,11 +4,6 @@ class ProjektPhase::BudgetPhase < ProjektPhase
 
   after_create :copy_map_settings_from_projekt, :create_budget
 
-  def phase_activated?
-    # projekt.budget.present?
-    active?
-  end
-
   def name
     "budget_phase"
   end
@@ -33,19 +28,16 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     !selectable_by_users?
   end
 
-  def settings_categories
-    %w[form_author user_functions]
-  end
-
   def admin_nav_bar_items
     %w[
       budget_phases
       naming restrictions
       budget_edit budget_investments
-      form_author user_functions
+      general_settings form_author user_functions
       map age_ranges_for_stats
       projekt_labels sentiments
       officing_managers
+      ai_settings
     ]
   end
 
@@ -92,7 +84,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
         projekt_phase: self,
         name: [projekt.name, name_extension].compact.join(" "),
         currency_symbol: "€",
-        slug: "#{projekt.name.to_s.parameterize}-#{Budget.last.id + 1}",
+        slug: "#{projekt.name.to_s.parameterize}-#{(Budget.order(:id).last&.id || 0) + 1}",
         published: true
       )
 

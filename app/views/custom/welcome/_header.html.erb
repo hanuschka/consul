@@ -28,7 +28,7 @@
 %>
 
 <% if mobile_header_attachment_to_use&.attached? %>
-  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [750, nil], saver: { quality: 80 }, strip: true, format: 'jpeg') %>
+  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [nil, 550], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
 
   <style>
     @media(max-width: 750px) {
@@ -70,5 +70,17 @@
       </div>
     <% end %>
     <%= header_button_html %>
+
+    <% if Setting["welcomepage.projekt_search"].present? %>
+      <div class="homepage-search-form">
+        <%= render(
+          Shared::TextSearchFormComponent.new(
+            url: projekts_path,
+            disable_reset_button_submit: true,
+            i18n_namespace: "custom.projekts.homepage_search_form",
+          )
+        ) %>
+      </div>
+    <% end %>
   </div>
 </div>

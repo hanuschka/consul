@@ -5,7 +5,7 @@
     background: $brand-lighter;
     color: $dark;
     // padding: 40px 40px;
-    padding: 35px 40px;
+    padding: 30px 30px;
     border-radius: 10px;
     margin-bottom: 15px;
 
@@ -26,7 +26,6 @@
     }
 
     @media(max-width: $small-tablet-viewport-start) {
-      padding: 32px 20px;
       flex-direction: column;
     }
 
@@ -60,7 +59,6 @@
     min-height: 260px;
     max-height: 260px;
     border-radius: 8px;
-    overflow: hidden;
     cursor: zoom-in;
     position: relative;
 
@@ -78,6 +76,12 @@
 
     .resource-image {
       max-height: 260px;
+    }
+
+    .resource-image--credits {
+      text-align: center;
+      font-style: italic;
+      color: gray;
     }
   }
 

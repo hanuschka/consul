@@ -11,14 +11,6 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
-    def after_sign_in_path_for(resource)
-      if !verifying_via_email? && resource.show_welcome_screen?
-        welcome_path
-      else
-        super
-      end
-    end
-
     def after_sign_out_path_for(resource)
       @stored_location.present? && !@stored_location.match("management") ? @stored_location : super
     end

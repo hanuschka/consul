@@ -4,10 +4,6 @@ class ProjektPhase::FormularPhase < ProjektPhase
 
   after_create :create_formular
 
-  def phase_activated?
-    active?
-  end
-
   def name
     "formular_phase"
   end

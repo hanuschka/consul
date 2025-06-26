@@ -11,10 +11,10 @@
 
   App.AutosubmitFormElement = {
     initialize: function() {
-      $(".js-autosubmit-form input").on("change", debounce(this.saveForm, 500));
+      $(".js-autosubmit-form input, .js-autosubmit-form select").on("change", debounce(this.submitForm, 500));
     },
 
-    saveForm: function(e) {
+    submitForm: function(e) {
       var target = e.target;
       $(target.form).trigger("submit.rails");
     }

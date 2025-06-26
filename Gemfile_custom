@@ -11,7 +11,7 @@ group :development do
   gem 'pry-byebug', '~> 3.9'
   gem 'solargraph'
   gem 'pry-rails'
-  gem 'prosopite'
+  # gem 'prosopite'
   gem 'pg_query'
 end
 
@@ -30,3 +30,5 @@ gem "jwt"
 gem 'rack-cors'
 
 gem "prawn", "2.5.0"
+gem 'prawn-svg', '~> 0.37.0'
+gem "rqrcode", "~> 2.0"

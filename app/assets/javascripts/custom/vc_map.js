@@ -42,7 +42,9 @@
       vcsApp.customMapOptions.editable = $(element).data("editable")
 
       // create new feature info session to allow feature click interaction
-      App.VCMap.createFeatureInfoSession(vcsApp);
+      if ( App.MapPopup.excludedProcesses.indexOf(vcsApp.customMapOptions.process) == -1 ) {
+        App.VCMap.createFeatureInfoSession(vcsApp);
+      }
 
       // set cesium base url
       window.CESIUM_BASE_URL = '/vcmap/assets/cesium/';
@@ -237,6 +239,12 @@
 
         if ( feature.getGeometry() instanceof ol.geom.Polygon ) {
           feature.set('olcs_altitudeMode', 'relativeToGround');
+        } else if ( feature.getGeometry() instanceof ol.geom.Point ) {
+          var editorPinStyle = new vcs.VectorStyleItem({});
+          editorPinStyle.image = new ol.style.Icon({
+            src: '/vcmap/assets/cesium/Assets/Textures/pin.svg'
+          });
+          feature.setStyle(editorPinStyle.style);
         }
       });
 

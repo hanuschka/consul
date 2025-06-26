@@ -4,7 +4,7 @@
     <%= f.collection_check_boxes :projekt_label_ids, projekt_phase.projekt_labels, :id, :name do |cb| %>
       <%= cb.check_box %>
       <% iconn = content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") %>
-      <%= cb.label(id: dom_id(cb.object), class: "projekt-label", data: { "label-id" => cb.object.id }) { iconn + cb.text } %>
+      <%= cb.label(id: dom_id(cb.object), class: "projekt-label js-projekt-label", data: { "label-id" => cb.object.id }) { iconn + cb.text } %>
     <% end %>
   </div>
 </div>

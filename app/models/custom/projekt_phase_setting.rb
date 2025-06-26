@@ -74,8 +74,9 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_geoman_controls_in_maps": "active",
           "feature.form.allow_attached_documents": "",
           "feature.form.enable_external_video": "",
-          "option.form.description_max_length": "6000",
           "feature.form.voice_assistant": "",
+          "feature.form.anonimize_authors": "",
+          "option.form.description_max_length": "6000",
 
           "feature.resource.show_video_as_link": "",
           "feature.resource.enable_proposal_notifications_tab": "",

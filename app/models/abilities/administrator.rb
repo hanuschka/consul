@@ -207,6 +207,8 @@ module Abilities
       can [:create, :update, :destroy], Ckeditor::Document
 
       can :manage, RecipientGroup
+      can :manage, ProjektPointOfInterestPin
+      can :manage, ProjektPointOfInterestCategory
     end
   end
 end

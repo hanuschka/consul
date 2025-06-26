@@ -910,6 +910,26 @@ de:
             icon: Icon
             color: Farbe
             actions: Aktionen
+            create:
+              notice: Kategorie erfolgreich erstellt
+            update:
+              notice: Kategorie erfolgreich aktualisiert
+            destroy:
+              notice: Kategorie erfolgreich gelöscht
+              error: Fehler beim Löschen der Kategorie
+        point_of_interest:
+          categories:
+            index:
+              export_csv: CSV exportieren
+            destroy:
+              confirm: Sind Sie sicher, dass Sie diese Kategorie löschen möchten?
+              notice: Kategorie gelöscht
+              error: Fehler beim Löschen der Kategorie
+          pins:
+            destroy:
+              confirm: Möchten Sie den Pin wirklich löschen?
+              notice: Pin erfolgreich gelöscht
+              error: Fehler beim Löschen des Pins
       modal_notifications:
         index:
           create: Erstellen
@@ -978,15 +998,3 @@ de:
           tabs:
             list: Newsletter
             settings: Einstellungen
-      point_of_interest:
-        categories:
-          index:
-            export_csv: CSV exportieren
-          destroy:
-            notice: Kategorie gelöscht
-            error: Fehler beim Löschen der Kategorie
-        pins:
-          destroy:
-            confirm: Möchten Sie den Pin wirklich löschen?
-            notice: Pin erfolgreich gelöscht
-            error: Fehler beim Löschen des Pins

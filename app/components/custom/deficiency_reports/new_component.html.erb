@@ -1,7 +1,7 @@
 <% if Setting.new_design_enabled? %>
 
   <main class="user-resources-form <%= " -no-image" unless feature?(:allow_images) %>">
-    <% if true %>
+    <% if Setting["deficiency_reports.voice_assistant"].present?  %>
       <%= render Dt::VoiceAssistantComponent.new(
         assistant_codename: "deficiency_report_voice_assistant",
         custom_data: {

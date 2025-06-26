@@ -70,7 +70,7 @@
     <% end %>
     <%= header_button_html %>
 
-    <% if Setting["welcomepage.projekt_search"] %>
+    <% if Setting["welcomepage.projekt_search"].present? %>
       <div class="homepage-search-form">
         <%= render(
           Shared::TextSearchFormComponent.new(

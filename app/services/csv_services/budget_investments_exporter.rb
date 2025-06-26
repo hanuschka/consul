@@ -44,7 +44,7 @@ module CsvServices
           investment.id,
           sanitize_for_csv(investment.title),
           sanitize_for_csv(strip_tags(investment.description)),
-          investment.projekt_labels.map { |pl| pl.name }.join(", "),
+          investment.projekt_labels.map { |pl| pl.name }.join(" | "),
           investment.sentiment&.name,
           I18n.t("admin.budget_investments.index.feasibility.#{investment.feasibility}"),
           investment.formatted_price,

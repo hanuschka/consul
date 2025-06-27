@@ -341,6 +341,15 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def voice_assistant_codename
+    case self
+    when ProjektPhase::ProposalPhase
+      "proposal_voice_assistant"
+    when ProjektPhase::BudgetPhase
+      "budget_proposal_voice_assistant"
+    end
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)

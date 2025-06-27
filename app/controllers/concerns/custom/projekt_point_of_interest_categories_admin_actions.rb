@@ -46,7 +46,6 @@ module ProjektPointOfInterestCategoriesAdminActions
   def destroy
     authorize!(:destroy, @category)
 
-    debugger
     if @category.projekt_point_of_interest_pins.any?
       redirect_to polymorphic_path([@namespace, @projekt_phase, ProjektPointOfInterestCategory]),
         alert: t("custom.admin.projekt_phases.point_of_interest.categories.destroy.notice")

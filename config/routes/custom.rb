@@ -95,6 +95,8 @@ namespace :api do
 
   resources :images, only: [:create, :destroy]
 
+  resources :apps, only: [:update]
+
   scope path: "settings" do
     patch "enable", to: "settings#enable"
     patch "disable", to: "settings#disable"
@@ -104,3 +106,5 @@ end
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
 
 post "iframe_sessions", to: "iframe_sessions#create"
+
+post "/voice_assistant/create_session", to: "voice_assistant#create_session"

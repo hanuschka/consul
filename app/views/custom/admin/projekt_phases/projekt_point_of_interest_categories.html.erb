@@ -22,7 +22,7 @@
       <div class="margin-top">
         <div id="new-projekt-point-of-interest-category">
           <%= link_to t("custom.admin.projekt_phases.projekt_point_of_interest_categories.new"),
-            new_admin_projekt_phase_projekt_point_of_interest_category_path(@projekt_phase),
+            polymorphic_path([@namespace, @projekt_phase, @projekt_phase.projekt_point_of_interest_categories.new], action: :new),
             remote: true,
             class: "button" %>
         </div>
@@ -55,7 +55,8 @@
                 <%= render Admin::TableActionsComponent.new(
                   category,
                   edit_path: polymorphic_path([@namespace, @projekt_phase, category], action: :edit),
-                  destroy_path: polymorphic_path([@namespace, @projekt_phase, category])
+                  destroy_path: polymorphic_path([@namespace, @projekt_phase, category]),
+                  destroy_confirmation: t("custom.admin.projekt_phases.point_of_interest.categories.destroy.confirm")
                 ) %>
             </tr>
           <% end %>

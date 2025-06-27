@@ -103,7 +103,7 @@ class ProjektsController < ApplicationController
 
   def json_data
     projekt = Projekt.find(params[:id])
-    image_url = projekt.image.present? ? url_for(projekt.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+    image_url = projekt.image.present? ? url_for(projekt.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
     tags = projekt.tags.pluck(:name)
 
     sdg_goals = []
@@ -116,8 +116,9 @@ class ProjektsController < ApplicationController
     end
 
     data = {
-      projekt_id: projekt.id,
-      projekt_title: projekt.title,
+      resource_type: "projekt",
+      id: projekt.id,
+      title: projekt.title,
       image_url: image_url,
       tags: tags,
       sdg_goals: sdg_goals

@@ -16,21 +16,16 @@
         </div>
       </div>
     </div>
-    <%# <%= render Shared::SidebarCardComponent.new( %>
-    <%#   title: t("custom.deficiency_reports.form.category.title"), %>
-    <%#   icon_name: "th-large" %>
-    <%# ) do |c| %1> %>
-    <%#   <%= render Shared::ProjektPointOfInterestCategoriesComponent.new(projekt_phase_id: @projekt_phase.id) %1> %>
-    <%# <% end %1> %>
   </div>
 
 </div>
-<%= render Shared::MapComponent.new(
-  map_location: @projekt_phase.map_location,
-  parent_class: "point-of-interest-pin",
-  process_coordinates: @map_coordinates,
-  projekt_phase: @projekt_phase
-) %>
+<div class="resources-list--map">
+  <%= render Shared::MapComponent.new(
+    map_location: @projekt_phase.map_location,
+    process_coordinates: @map_coordinates,
+    projekt_phase: @projekt_phase
+  ) %>
+</div>
 <div class="flex-layout">
   <div class="main-column">
 

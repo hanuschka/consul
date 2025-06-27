@@ -94,6 +94,8 @@ class ProjektPhase < ApplicationRecord
   scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
   scope :special_phases, -> { where(type: SPECIAL_PROJEKT_PHASES) }
 
+  scope :frontend_visible, -> { where(frontend_visibility: true) }
+
   scope :active, -> { where(active: true) }
   scope :current, ->(timestamp = Time.zone.today) {
     active
@@ -324,6 +326,28 @@ class ProjektPhase < ApplicationRecord
 
   def url
     projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
+  end
+
+  def find_or_create_stats_version
+    @find_or_create_stats_version ||= begin
+      if stats_version.nil?
+        create_stats_version
+      elsif current? && stats_version.created_at < 10.minutes.ago
+        stats_version.destroy!
+        create_stats_version
+      else
+        stats_version
+      end
+    end
+  end
+
+  def voice_assistant_codename
+    case self
+    when ProjektPhase::ProposalPhase
+      "proposal_voice_assistant"
+    when ProjektPhase::BudgetPhase
+      "budget_proposal_voice_assistant"
+    end
   end
 
   private

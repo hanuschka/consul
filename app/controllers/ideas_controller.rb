@@ -83,12 +83,14 @@ class IdeasController < ApplicationController
   def json_data
     idea = Idea.find(params[:id])
 
-    image_url = idea.image.present? ? url_for(idea.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+    image_url = idea.image.present? ? url_for(idea.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+
 
     data = {
-      idea_id: idea.id,
+      resource_type: "idea",
+      id: idea.id,
       image_url: image_url,
-      idea_title: idea.title
+      title: idea.title
     }.to_json
 
     respond_to do |format|

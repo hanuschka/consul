@@ -27,7 +27,7 @@
     enableCKeditorFor: function(textarea) {
       var { ClassicEditor } = CKEDITOR;
 
-      var editorPromise =ClassicEditor.create(textarea, {
+      var editorPromise = ClassicEditor.create(textarea, {
         plugins: this.toolbarFor(textarea).plugins,
         toolbar: {
           items: this.toolbarFor(textarea).toolbarControls,
@@ -148,20 +148,9 @@
       })
 
       editorPromise.then((editor) => {
-        window.CKeditorInstancesGlobal[editor.sourceElement.id] = editor;
-
-        // if (editor.sourceElement.form) {
-        //   editor.sourceElement.form.addEventListener("submit", function(e) {
-        //     e.preventDefault();
-
-        //     var textarea = editor.sourceElement
-        //     var editorData = editor.getData();
-        //     var processedData = removeWrappingParagraphs(editorData);
-
-        //     textarea.value = processedData
-        //     textarea.form.submit();
-        //   })
-        // }
+        if (editor.sourceElement.classList.contains("js-user-resource-form-description")) {
+          window.CKeditorInstancesGlobal["userResourceFromEditor"] = editor;
+        }
       })
     },
 

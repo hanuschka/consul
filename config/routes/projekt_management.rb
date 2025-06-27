@@ -36,6 +36,11 @@ namespace :projekt_management do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      get :ai_settings
+      patch :update_ai_settings
+      get :projekt_point_of_interest_pins
+      get :projekt_point_of_interest_categories
+      get :map_resources_overview
     end
 
     resources :formular, only: [] do
@@ -78,6 +83,8 @@ namespace :projekt_management do
         post :send_notifications
       end
     end
+    resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+    resources :projekt_point_of_interest_categories, only: [:new, :create, :edit, :update, :destroy]
   end
   resources :projekt_phase_settings, only: [:update]
 
@@ -91,6 +98,7 @@ namespace :projekt_management do
     resources :projekt_phases, only: [:create] do
       member do
         patch :toggle_active_status
+        patch :toggle_frontend_visibility
       end
       collection do
         post :order_phases

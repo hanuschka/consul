@@ -35,7 +35,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
       duration naming restrictions general_settings form_author user_functions
       proposals
       projekt_labels sentiments map
-      officing_managers
+      officing_managers ai_settings
     ]
   end
 

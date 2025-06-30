@@ -5,7 +5,7 @@
 <% if @investments.any? %>
   <h3 class="inline-block"><%= page_entries_info @investments %></h3>
   <%= render "admin/shared/columns_selector",
-        cookie: "investments-columns", default: %w[id title total_votes total_ballot_votes winner feasibility price valuation_finished selected] %>
+        cookie: "investments-columns", default: %w[id title total_votes total_ballot_votes winner feasibility price valuation_finished preselected selected] %>
   <br>
 
   <%= render "admin/budget_investments/filters_description", i18n_namespace: "admin.budget_investments.index" %>
@@ -21,6 +21,7 @@
           <%= t("admin.budget_investments.index.list.valuation_finished") %>
         </th>
         <th data-field="total_votes"><%= link_to_investments_sorted_by :total_votes %></th>
+        <th data-field="preselected"><%= t("admin.budget_investments.index.list.preselected") %></th>
         <th data-field="selected"><%= t("admin.budget_investments.index.list.selected") %></th>
         <% if @budget.show_money? %>
           <th data-field="price"><%= t("admin.budget_investments.index.list.price") %></th>

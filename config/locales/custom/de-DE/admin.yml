@@ -240,6 +240,7 @@ de:
           under_valuation: Unter Bewertung
           valuation_finished: Bewertung beendet
           feasible: Entspricht den Kriterien
+          preselected: zur Prüfung zugelassen
           selected: Zulassung zur Abstimmung
           undecided: Nicht bewertet
           unfeasible: Entspricht nicht den Kriterien
@@ -275,6 +276,7 @@ de:
           geozone: Bezug der Vorschläge
           feasibility: Kriterien
           valuation_finished: Bewertung beendet
+          preselected: zur Prüfung zugelassen
           selected: Zulassung zur Abstimmung
           visible_to_valuators: Gutachter*innen zeigen
           author_username: Benutzer*innenname des/der Verfasser*in

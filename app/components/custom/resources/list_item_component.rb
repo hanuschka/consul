@@ -84,7 +84,8 @@ class Resources::ListItemComponent < ApplicationComponent
       @resource.is_a?(Proposal) ||
       @resource.is_a?(Budget::Investment) ||
       @resource.is_a?(DeficiencyReport) ||
-      @resource.is_a?(Topic)
+      @resource.is_a?(Topic) ||
+      @resource.is_a?(Idea)
   end
 
   def on_behalf_of?

@@ -11,7 +11,7 @@ class Officing::BudgetsController < Officing::BaseController
       @investments = @budget.investments.selected
       @investment_ids = @investments.ids
     elsif @budget.in? @officing_manager.selecting_budgets
-      debugger
+      Sentry.capture_message("Officing::BudgetsController#officing_desk called with selecting budget")
     else
       raise ActionController::RoutingError.new('Not Found')
     end

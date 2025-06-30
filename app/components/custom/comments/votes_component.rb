@@ -8,7 +8,8 @@ class Comments::VotesComponent < ApplicationComponent
     def allow_downvoting?
       return true if comment.commentable.is_a?(DeficiencyReport) ||
         comment.commentable.is_a?(Legislation::Annotation) ||
-        comment.commentable.is_a?(Topic)
+        comment.commentable.is_a?(Topic) ||
+        comment.commentable.is_a?(Idea)
 
       if comment.commentable.is_a?(Projekt)
         projekt_feature?(comment.commentable, "general.allow_downvoting_comments")

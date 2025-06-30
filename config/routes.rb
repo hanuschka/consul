@@ -26,8 +26,10 @@ Rails.application.routes.draw do
   draw :valuation
   draw :verification
   draw :projekt
+  draw :ideas
   draw :projekt_management
   draw :deficiency_report_management
+  draw :idea_management
   draw :custom
 
   root "welcome#index"

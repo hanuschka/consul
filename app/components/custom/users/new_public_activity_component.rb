@@ -69,7 +69,10 @@ class Users::NewPublicActivityComponent < ApplicationComponent
       if authorized_current_user?
         @proposals ||= Proposal.where(author_id: user.id)
       else
-        @proposals ||= Proposal.base_selection.where(author_id: user.id)
+        @proposals ||= Proposal.base_selection
+                               .where(author_id: user.id)
+                               .joins(:projekt_phase)
+                               .merge(ProjektPhase.with_feature("form.anonimize_authors", "off"))
       end
     end
 

@@ -9,11 +9,7 @@
       }
 
       // $('iframe').each( function() {
-<<<<<<< HEAD
       $('iframe').not('[name="votingFrame"], [sandbox="allow-scripts"], [src^="https://www75.muenchen.de/"][src*="action=optOut"]').each( function() {
-=======
-      $('iframe').not('[name="votingFrame"], [sandbox="allow-scripts"], .js-iframe-dont-render-overlay-note').each( function() {
->>>>>>> new-connection
         $(this).wrap( "<div class='iframe-wrapper'></div>" );
         $(this).after( expainerText )
       })

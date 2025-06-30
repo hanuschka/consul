@@ -80,6 +80,8 @@ class Resources::ListItemComponent < ApplicationComponent
   end
 
   def show_author_name?
+    return false if @resource.try(:submitted_anonymously?)
+
     @resource.is_a?(Debate) ||
       @resource.is_a?(Proposal) ||
       @resource.is_a?(Budget::Investment) ||

@@ -110,6 +110,12 @@ class ProjektPhase < ApplicationRecord
 
   scope :sorted, ->  {order(:given_order) }
 
+  scope :with_feature, ->(feature_key, state = "on") {
+    joins(:settings)
+      .where("projekt_phase_settings.key = ?", "feature.#{feature_key}")
+      .where(projekt_phase_settings: { value: (state == "on" ? "active" : [nil, ""]) })
+  }
+
   def self.order_phases(ordered_array)
     ordered_array.each_with_index do |phase_id, order|
       find(phase_id).update_column(:given_order, (order + 1))

@@ -91,9 +91,6 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
-
-          "option.resource.votes_for_proposal_success": 100,
-          "selectable_setting.general.default_order": "random",
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -111,8 +108,8 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::BudgetPhase" => {
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
-          "selectable_setting.general.default_order": "random",
           "feature.general.mapbox": "",
+          "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
@@ -123,11 +120,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_external_video": "",
           "feature.form.show_implementation_option_fields": "",
           "feature.form.show_user_cost_estimate": "",
-          "option.form.description_max_length": "6000",
           "feature.form.voice_assistant": "",
-
-          "feature.general.browse_mode_in_phase_footer": "",
-          "feature.general.browse_mode_in_phase_footer_by_default": "",
+          "option.form.description_max_length": "6000",
 
           "feature.resource.users_can_create_investment_proposals": "active",
           "feature.resource.show_report_button_in_sidebar": "active",

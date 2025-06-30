@@ -21,7 +21,7 @@
           <%= t("admin.budget_investments.index.list.valuation_finished") %>
         </th>
         <th data-field="total_votes"><%= link_to_investments_sorted_by :total_votes %></th>
-        <th data-field="preselected"><%= t("admin.budget_investments.index.list.preselected") %></th>
+        <th data-field="preselected"><%= t("admin.budget_investments.index.list.preselected", preselected_count: @budget.investments.preselected.count) %></th>
         <th data-field="selected"><%= t("admin.budget_investments.index.list.selected") %></th>
         <% if @budget.show_money? %>
           <th data-field="price"><%= t("admin.budget_investments.index.list.price") %></th>

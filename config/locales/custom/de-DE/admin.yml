@@ -276,11 +276,7 @@ de:
           geozone: Bezug der Vorschläge
           feasibility: Kriterien
           valuation_finished: Bewertung beendet
-<<<<<<< HEAD
-          preselected: zur Prüfung zugelassen
-=======
           preselected: Top %{preselected_count}
->>>>>>> b2e6833ebd5cb46dc56d700335e7e19a622b5e36
           selected: Zulassung zur Abstimmung
           visible_to_valuators: Gutachter*innen zeigen
           author_username: Benutzer*innenname des/der Verfasser*in

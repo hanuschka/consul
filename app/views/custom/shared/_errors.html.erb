@@ -17,10 +17,8 @@
 
       <ul>
         <% resource.errors.each do |error| %>
-          <% if error.attribute == :projekt_labels %>
-            <li><%= t("activerecord.errors.models.#{resource.model_name.param_key}.attributes.#{error.attribute}.#{error.type}") %></li>
-          <% elsif error.attribute == :sentiment_id %>
-            <li><%= t("activerecord.errors.models.#{resource.model_name.param_key}.attributes.sentiment.#{error.type}") %></li>
+          <% if error.attribute.in? %i[projekt_labels sentiment_id] %>
+            <li><%= error.message %></li>
           <% else %>
             <li><%= error.full_message %></li>
           <% end %>

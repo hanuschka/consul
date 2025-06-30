@@ -61,39 +61,8 @@ class ApplicationController < ActionController::Base
     def set_projekts_for_overview_page_navigation
       return if embedded?
 
-      @projekts_for_overview_page_navigation =
-        Projekt
-          .activated
-          .sort_by_order_number
-          .includes({page: [:translations]}, :projekt_settings, { children_projekts_show_in_navigation: :projekt_settings })
-          .joins(:projekt_settings)
-          .includes(:projekt_settings)
-          .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
-          .lazy
-          .select { |p| p.visible_for?(current_user) }
-
-      @projekts_for_navigation =
-        Projekt
-          .top_level
-          .activated
-          .includes(
-            :projekt_settings, :hard_individual_group_values,
-            page: [:translations]
-          )
-          .order(created_at: :asc)
-          .show_in_navigation
-          .sort_by_order_number
-          .select { |p| p.visible_for?(current_user) }
-
-      @draft_projekts_for_navigation =
-        Projekt
-          .regular
-          .not_activated
-          .includes(
-            page: [:translations]
-          )
-          .order(created_at: :asc)
-          .select { |p| p.visible_for?(current_user) }
+      @projekts_for_overview_page_navigation = Projekt.for_overview_page_navigation(current_user)
+      @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user)
     end
 
     def set_default_social_media_images

@@ -19,18 +19,22 @@ class DeficiencyReport < ApplicationRecord
   include ActsAsParanoidAliases
 
   audited only: %i[video_url on_behalf_of cached_votes_up cached_votes_down
-                   deficiency_report_status_id deficiency_report_officer_id deficiency_report_category_id]
+                   deficiency_report_status_id deficiency_report_category_id responsible_type responsible_id]
   has_associated_audits
   translation_class.class_eval do
     audited associated_with: :globalized_model,
             only: DeficiencyReport.translated_attribute_names
+
+    def destroy
+      run_callbacks :destroy
+      true
+    end
   end
 
   attr_accessor :officer_id, :officer_group_id
 
   belongs_to :category, class_name: "DeficiencyReport::Category", foreign_key: :deficiency_report_category_id
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
-  # belongs_to :officer, class_name: "DeficiencyReport::Officer", foreign_key: :deficiency_report_officer_id
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
   belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
@@ -46,6 +50,9 @@ class DeficiencyReport < ApplicationRecord
   validates_translation :title, presence: true
 
   before_save :calculate_hot_score
+
+  scope :assigned, -> { where.not(responsible_type: nil, responsible_id: nil) }
+  scope :not_assigned, -> { where(responsible_type: nil).or(where(responsible_id: nil)) }
 
   scope :sort_by_most_commented,       -> { reorder(comments_count: :desc) }
   scope :sort_by_hot_score,            -> { reorder(hot_score: :desc) }
@@ -95,17 +102,23 @@ class DeficiencyReport < ApplicationRecord
       ch_attrs["deficiency_report_status_id"] = [old_status_title, status&.title]
     end
 
-    if super.has_key?("deficiency_report_officer_id")
-      old_officer_name = DeficiencyReport::Officer.find_by(id: deficiency_report_officer_id_was)&.name
-      ch_attrs["deficiency_report_officer_id"] = [old_officer_name, officer&.name]
-    end
-
     if super.has_key?("deficiency_report_category_id")
       old_category_name = DeficiencyReport::Category.find_by(id: deficiency_report_category_id_was)&.name
       ch_attrs["deficiency_report_category_id"] = [old_category_name, category&.name]
     end
 
-    super.merge!(ch_attrs)
+    if super.has_key?("responsible_type") || super.has_key?("responsible_id")
+      if responsible_type_was.present?
+        old_responsible_name = responsible_type_was.constantize.find_by(id: responsible_id_was)&.name
+      else
+        old_responsible_name = ""
+      end
+      ch_attrs["responsible"] = [old_responsible_name, responsible&.name]
+    end
+
+    super.except(
+      "responsible_type", "responsible_id"
+    ).merge!(ch_attrs)
   end
 
   def self.search(terms)
@@ -191,5 +204,9 @@ class DeficiencyReport < ApplicationRecord
     else
       []
     end
+  end
+
+  def archived?
+    self.class.archived.exists?(id: id)
   end
 end

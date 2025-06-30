@@ -2,7 +2,7 @@
   margin-bottom: 5px;
 }
 
-.width-100 {
+.width-100, .full-width {
   width: 100%;
 }
 
@@ -60,4 +60,14 @@
 
 .margin-bottom-50 {
   margin-bottom: 50px;
+}
+
+.flex-centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-margin {
+  margin: 0;
 }

@@ -1,7 +1,6 @@
 class MapLocation < ApplicationRecord
   belongs_to :proposal, touch: true
   belongs_to :investment, class_name: "Budget::Investment", touch: true
-
   validates :longitude, :latitude, :zoom, presence: true, numericality: true
 
   def available?
@@ -10,10 +9,9 @@ class MapLocation < ApplicationRecord
 
   def json_data
     {
-      investment_id: investment_id,
-      proposal_id: proposal_id,
       lat: latitude,
-      long: longitude
+      long: longitude,
+      zoom: zoom
     }
   end
 

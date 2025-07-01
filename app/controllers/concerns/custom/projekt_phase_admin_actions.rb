@@ -480,7 +480,7 @@ module ProjektPhaseAdminActions
   def ai_settings
     authorize!(:ai_settings, @projekt_phase)
 
-    @assistant_codename = "proposal_voice_assistant"
+    @assistant_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
     dt_api = DtApi::Client.new

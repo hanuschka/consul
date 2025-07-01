@@ -163,6 +163,7 @@ class Budget
 
       ids = []
       ids += results.valuation_finished_feasible.ids if params[:advanced_filters].include?("feasible")
+      ids += results.where(preselected: true).ids    if params[:advanced_filters].include?("preselected")
       ids += results.where(selected: true).ids       if params[:advanced_filters].include?("selected")
       ids += results.undecided.ids                   if params[:advanced_filters].include?("undecided")
       ids += results.unfeasible.ids                  if params[:advanced_filters].include?("unfeasible")

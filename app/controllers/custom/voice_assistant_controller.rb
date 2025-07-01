@@ -21,6 +21,17 @@ class VoiceAssistantController < ActionController::Base
       })
     end
 
+    if params[:codename] == "budget_proposal_voice_assistant"
+      implementation_performers =
+        Budget::Investment.implementation_performers.map { |ip|
+          [ t("activerecord.attributes.budget/investment.implementation_performers.#{ip[0]}"), ip[0]]
+        }
+
+      data.merge!({
+        implementation_performers: implementation_performers
+      })
+    end
+
     if params[:codename] == "deficiency_report_voice_assistant"
       data.merge!({
         categories: DeficiencyReport::Category.all.as_json(only: [:id, :name])

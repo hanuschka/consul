@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_11_123206) do
+ActiveRecord::Schema.define(version: 2025_06_27_080901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1740,6 +1740,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.string "more_info_link"
     t.integer "next_question_id"
     t.string "more_info_iframe"
+    t.boolean "terminates_poll", default: false, null: false
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -1753,6 +1754,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.text "description"
     t.string "min_rating_scale_label"
     t.string "max_rating_scale_label"
+    t.text "intro"
     t.index ["hidden_at"], name: "index_poll_question_translations_on_hidden_at"
     t.index ["locale"], name: "index_poll_question_translations_on_locale"
     t.index ["poll_question_id"], name: "index_poll_question_translations_on_poll_question_id"

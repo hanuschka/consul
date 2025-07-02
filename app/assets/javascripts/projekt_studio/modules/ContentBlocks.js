@@ -1,17 +1,17 @@
-import { Idiomorph } from "idiomorph/dist/idiomorph.esm.js"
-import { Sortable } from 'sortablejs';
+// import { Idiomorph } from "idiomorph/dist/idiomorph.esm.js"
+// import { Sortable } from 'sortablejs';
 
-import ace from "ace-builds/src-min/ace"
-import 'ace-builds/src-noconflict/mode-html'
-import 'ace-builds/src-noconflict/worker-html';
+// import ace from "ace-builds/src-min/ace"
+// import 'ace-builds/src-noconflict/mode-html'
+// import 'ace-builds/src-noconflict/worker-html';
 
-import { resetFoundationAccordionStateFor } from "consul/utils/foundationUtils";
-import { addStudioControlsToContentBlock, addNewContentBlockButtonToContentBlockList, newContentBlockButtonSectionHtml } from "consul/projekt_studio_consul/templates/renderContentBlockControlsFunctions";
-import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
-import { getCurrentProjektId } from "lib/projekts";
-import { sendMessageToDtParentFrame, parseIframeEventData } from "consul/utils/iframeUtils";
+// import { resetFoundationAccordionStateFor } from "consul/utils/foundationUtils";
+// import { addStudioControlsToContentBlock, addNewContentBlockButtonToContentBlockList, newContentBlockButtonSectionHtml } from "consul/projekt_studio_consul/templates/renderContentBlockControlsFunctions";
+// import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
+// import { getCurrentProjektId } from "lib/projekts";
+// import { sendMessageToDtParentFrame, parseIframeEventData } from "consul/utils/iframeUtils";
 
-const ContentBlocks = {
+ ProjektStudio.modules.ContentBlocks = {
   initialized: false,
   draftContentBlockIndex: 0,
   aceInstances: {},
@@ -89,7 +89,7 @@ const ContentBlocks = {
     const contentBlocks = Array.from(doc.querySelectorAll('.projekt-content-block'));
     let wrappedContentBlocksHtml;
 
-    const projektId = getCurrentProjektId()
+    const projektId = ProjektStudio.getCurrentProjektId()
 
     if (contentBlocks.length > 0) {
       wrappedContentBlocksHtml = Array.from(contentBlocks).map((contentBlock) => {
@@ -671,4 +671,4 @@ const ContentBlocks = {
   }
 };
 
-export default ContentBlocks
+// export default ContentBlocks

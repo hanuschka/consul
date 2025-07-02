@@ -106,6 +106,8 @@ namespace :admin do
         patch :update_position
       end
     end
+    resources :projekt_content_blocks, only: [:create]
+
     resources :settings, controller: "projekt_settings", only: [:update] do
       member do
         patch :update_default_projekt_footer_tab
@@ -509,6 +511,11 @@ namespace :admin do
   end
 
   resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+    end
+  end
 end
 
 resolve "Milestone" do |milestone|

@@ -2,7 +2,7 @@ function html(content) {
   return content;
 }
 
-export function addNewContentBlockButtonToContentBlockList(contentBlocksHtml, projektId) {
+ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList = function(contentBlocksHtml, projektId) {
   return `
     <div
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
@@ -13,7 +13,7 @@ export function addNewContentBlockButtonToContentBlockList(contentBlocksHtml, pr
   `
 }
 
-export function addStudioControlsToContentBlock(contentBlockHTML, {contentBlockId, draftContentBlockIndex}) {
+ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex}) {
   return `
     <div
       class="js-projekt-content-block-edit-section projekt-content-block-edit-section projekt-content-block-wrapper"
@@ -169,7 +169,7 @@ export function addStudioControlsToContentBlock(contentBlockHTML, {contentBlockI
   `.trim()
 }
 
-export function newContentBlockButtonSectionHtml() {
+ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml = function() {
   return `
   <div class="js-projekt-content-block-edit-section projekt-content-block-edit-section projekt-content-block-wrapper">
   <div class="projekt-content-block--additional">

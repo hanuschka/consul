@@ -1,4 +1,4 @@
-var ProjektStudio = {
+window.ProjektStudio = {
   modules: {},
   templateFunctions: {},
   utils: {},
@@ -15,12 +15,11 @@ var ProjektStudio = {
       ProjektStudio.modules.Sidebar.initialize()
       ProjektStudio.modules.PhasesTabs.initialize()
       ProjektStudio.modules.Banner.initialize()
-      // ContentBlocks.initialize()
+      ProjektStudio.modules.ContentBlocks.initialize()
       // PreviewMode.initialize()
       // ExplainWithAi.initialize()
       // SavedContentBlocks.initialize()
 
-      // this.LockAiButtonsModule = LockAiButtonsModule.initialize();
 
       this.initialized = true;
     }

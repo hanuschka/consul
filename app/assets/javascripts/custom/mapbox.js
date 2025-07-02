@@ -11,6 +11,7 @@
     this.zoom = $element.data("map-zoom");
     this.resourcesName = $element.data("parent-class");
     this.markerCoordinates = $element.data("process-coordinates");
+    console.log(this.markerCoordinates)
     this.editable = $element.data("editable");
     this.adminEditor = $element.data("admin-editor");
     this.adminShape = $element.data("admin-shape");
@@ -295,8 +296,8 @@
         'paint': {
           'circle-radius': [
             'case',
-            ['==', ['get', 'active'], 'true'], 5,
-            3,
+            ['==', ['get', 'active'], 'true'], 10,
+            10,
           ],
           'circle-color': [
             'case',
@@ -341,8 +342,8 @@
         'paint': {
           'circle-radius': [
             'case',
-            ['==', ['get', 'active'], 'true'], 5,
-            7,
+            ['==', ['get', 'active'], 'true'], 10,
+            10,
           ],
           'circle-color': orange
         },
@@ -1039,6 +1040,41 @@
     if (this.map.getSource(sourceId)) {
       // console.warn('Source with ID', sourceId, 'already exists. Skipping...');
       return;
+    }
+
+        // Handle nested Point features from FeatureCollection
+    if (coordinates.features && Array.isArray(coordinates.features)) {
+      var pointFeatures = [];
+      
+      coordinates.features.forEach(function(feature) {
+        if (feature.geometry && feature.geometry.type === 'Point') {
+          // Extract Point features and add them to the marker layer
+          pointFeatures.push({
+            type: 'Feature',
+            id: (coordinates.id || 'shape_' + Date.now()) + '_point_' + Math.random().toString(36).substr(2, 9),
+            geometry: feature.geometry,
+            properties: {
+              id: coordinates.id,
+              resource_type: coordinates.resource_type,
+              projekt_phase_id: coordinates.projekt_phase_id,
+              color: coordinates.color,
+              fa_icon_class: coordinates.fa_icon_class,
+              is_shape_point: true
+            }
+          });
+        }
+      });
+
+      // Add point features to the existing marker-coordinates source if available
+      if (pointFeatures.length > 0 && self.map.getSource('marker-coordinates')) {
+        var existingData = self.map.getSource('marker-coordinates')._data;
+        var newFeatures = existingData.features.concat(pointFeatures);
+        
+        self.map.getSource('marker-coordinates').setData({
+          type: 'FeatureCollection',
+          features: newFeatures
+        });
+      }
     }
 
     this.map.addSource(sourceId, {

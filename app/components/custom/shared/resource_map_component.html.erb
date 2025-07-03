@@ -12,6 +12,7 @@
       <%= render Shared::MapComponent.new(
         parent_class: resources_name,
         process_coordinates: @marker_coordinates,
+        shape_data: @projekt_phase.map_location.shape.to_json,
         map_location: @map_location || @projekt_phase&.map_location,
         projekt_phase: @projekt_phase,
         show_admin_shape: @projekt_phase&.map_location&.show_admin_shape?

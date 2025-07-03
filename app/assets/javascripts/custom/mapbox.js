@@ -11,7 +11,7 @@
     this.zoom = $element.data("map-zoom");
     this.resourcesName = $element.data("parent-class");
     this.markerCoordinates = $element.data("process-coordinates");
-    console.log(this.markerCoordinates)
+    this.shapeData = $element.data("shape-data");
     this.editable = $element.data("editable");
     this.adminEditor = $element.data("admin-editor");
     this.adminShape = $element.data("admin-shape");
@@ -369,13 +369,13 @@
     this.map.addControl(this.draw);
 
     // Load existing shape data if available
-    this.loadExistingShape();
+    this.loadExistingShapeDataForEditor();
 
     // Set up event listeners for draw events
     this.setupDrawEventListeners();
   };
 
-  MapboxMap.prototype.loadExistingShape = function() {
+  MapboxMap.prototype.loadExistingShapeDataForEditor = function() {
     // Try to load existing shape data from the shape input field
     if (this.shapeInputSelector) {
       var shapeData = $(this.shapeInputSelector).val();
@@ -661,6 +661,10 @@
     var properties = e.features[0].properties;
     var resourceType = properties["resource_type"]
 
+    if (!properties.id) {
+      return
+    }
+
     // Show empty popup immediately
     var popup = new mapboxgl.Popup({
       offset: 20,
@@ -923,6 +927,11 @@
           self.renderShape(coordinates);
         }
       });
+
+      this.shapeData.color = "red";
+      this.shapeData.fill_opacity = 0.05;
+      this.shapeData.fill_border_opacity = 0.3;
+      self.renderShape(this.shapeData);
     }
   };
 
@@ -1045,7 +1054,7 @@
         // Handle nested Point features from FeatureCollection
     if (coordinates.features && Array.isArray(coordinates.features)) {
       var pointFeatures = [];
-      
+
       coordinates.features.forEach(function(feature) {
         if (feature.geometry && feature.geometry.type === 'Point') {
           // Extract Point features and add them to the marker layer
@@ -1054,14 +1063,10 @@
             id: (coordinates.id || 'shape_' + Date.now()) + '_point_' + Math.random().toString(36).substr(2, 9),
             geometry: feature.geometry,
             properties: {
-              id: coordinates.id,
-              resource_type: coordinates.resource_type,
-              projekt_phase_id: coordinates.projekt_phase_id,
-              color: coordinates.color,
-              fa_icon_class: coordinates.fa_icon_class,
-              is_shape_point: true
+              marker_size: 5
             }
           });
+          // pointFeatures.push(feature);
         }
       });
 
@@ -1069,7 +1074,7 @@
       if (pointFeatures.length > 0 && self.map.getSource('marker-coordinates')) {
         var existingData = self.map.getSource('marker-coordinates')._data;
         var newFeatures = existingData.features.concat(pointFeatures);
-        
+
         self.map.getSource('marker-coordinates').setData({
           type: 'FeatureCollection',
           features: newFeatures
@@ -1089,7 +1094,7 @@
       source: sourceId,
       paint: {
         'fill-color': coordinates.color,
-        'fill-opacity': 0.2
+        'fill-opacity': (coordinates.fill_opacity || 0.2)
       }
     });
 
@@ -1101,40 +1106,47 @@
       paint: {
         'line-color': coordinates.color,
         'line-width': 2,
-        'line-opacity': 0.8
+        'line-opacity': (coordinates.fill_border_opacity || 0.8)
       }
     });
 
-    // Create shared event handlers
-    var setCursorPointer = function() {
-      self.map.getCanvas().style.cursor = 'pointer';
-    };
-    var resetCursor = function() {
-      self.map.getCanvas().style.cursor = '';
-    };
-    var handleShapeClick = function(e) {
-      // Create a proper event structure for the popup
-      var popupEvent = {
-        features: [{
-          geometry: {
-            coordinates: e.lngLat ? [e.lngLat.lng, e.lngLat.lat] : [0, 0]
-          },
-          properties: {
-            id: coordinates.id || shapeId,
-            resource_type: coordinates.resource_type || 'shape'
-          }
-        }]
+    if (coordinates.id) {
+      // Create shared event handlers
+      var setCursorPointer = function() {
+        self.map.getCanvas().style.cursor = 'pointer';
+      };
+      var resetCursor = function() {
+        self.map.getCanvas().style.cursor = '';
       };
 
-      self.openMarkerPopup(popupEvent);
-    };
+      var handleShapeClick = function(e) {
+        // Create a proper event structure for the popup
+        var popupEvent = {
+          features: [{
+            geometry: {
+              coordinates: e.lngLat ? [e.lngLat.lng, e.lngLat.lat] : [0, 0]
+            },
+            properties: {
+              id: coordinates.id || shapeId,
+              resource_type: coordinates.resource_type || 'shape'
+            }
+          }]
+        };
+
+        self.openMarkerPopup(popupEvent);
+      };
+
+    }
 
     // Add event listeners for both fill and border layers
     var layers = [layerId, borderLayerId];
     layers.forEach(function(layer) {
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
-      self.map.on('click', layer, handleShapeClick);
+
+      if (coordinates.id) {
+        self.map.on('click', layer, handleShapeClick);
+      }
     });
   };
 

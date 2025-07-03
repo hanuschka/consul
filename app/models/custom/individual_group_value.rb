@@ -11,8 +11,13 @@ class IndividualGroupValue < ApplicationRecord
   around_save :update_user_assignments
 
   def add_from_csv(file_path)
-    CSV.foreach(file_path, headers: true) do |row|
-      user = User.find_by(email: row["email"])
+    return unless File.exist?(file_path)
+
+    CSV.foreach(file_path, headers: true, encoding: "bom|utf-8") do |row|
+      email = normalize_email(row["email"])
+      next if email.blank?
+
+      user = User.find_by(email: email)
       next unless user
       next if users.include?(user)
 
@@ -29,5 +34,11 @@ class IndividualGroupValue < ApplicationRecord
       end
 
       yield
+    end
+
+    def normalize_email(email)
+      return if email.blank?
+
+      email.strip.downcase.gsub(/[[:space:]\u200B\uFEFF]/, '')
     end
 end

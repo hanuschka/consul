@@ -61,8 +61,9 @@ class Shared::MapComponent < Shared::MapBaseComponent
 
     def enable_geoman_controls?
       return false unless @editable
+      return true if @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase)
 
-      if @mappable.is_a?(DeficiencyReport) || @mappable.is_a?(Projekt)
+      if @mappable.is_a?(DeficiencyReport)
         Setting["deficiency_reports.enable_geoman_controls_in_maps"].present?
 
       elsif @projekt_phase.present?

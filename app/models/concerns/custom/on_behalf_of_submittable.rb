@@ -2,6 +2,8 @@ module OnBehalfOfSubmittable
   extend ActiveSupport::Concern
 
   def author_name
+    return User.human_attribute_name(:guest) if author.guest?
+
     on_behalf_of.presence || author.name
   end
 

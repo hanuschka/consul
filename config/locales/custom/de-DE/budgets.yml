@@ -123,8 +123,8 @@ de:
           undecided: noch nicht definiert
           feasible: entspricht den Kriterien
           unfeasible: entspricht nicht den Kriterien
-          preselected: zur Prüfung zugelassen
-          not_preselected: zur Prüfung nicht zugelassen
+          preselected: unter den Top %{preselected_count}
+          not_preselected: nicht unter den Top %{preselected_count}
           selected: ausgewählt
           unselected: nicht für die Endabstimmung ausgewählt
           winners: Gewinner

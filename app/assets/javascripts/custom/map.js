@@ -78,7 +78,7 @@
 
       // update form fields when map center changes
       map.on("moveend", function() {
-        if ( adminEditor && !marker ) {
+        if ( adminEditor) {
           $(latitudeInputSelector).val(map.getCenter().lat);
           $(longitudeInputSelector).val(map.getCenter().lng);
           $(zoomInputSelector).val(map.getZoom());

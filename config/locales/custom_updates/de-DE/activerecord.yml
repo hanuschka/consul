@@ -221,6 +221,7 @@ de:
         date_of_birth: Geburtsdatum
         document_type: Dokument
         document_last_digits: Personalausweis / Passport (4 letzten Ziffern)
+        guest: Gast
       age_range:
         min_age: Mindestalter
         max_age: Maximalalter

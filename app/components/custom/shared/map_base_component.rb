@@ -8,7 +8,6 @@ class Shared::MapBaseComponent < ApplicationComponent
     parent_class: nil,
     editable: false,
     process_coordinates: nil,
-    shape_data: nil,
     projekt: nil,
     projekt_phase: nil,
     show_admin_shape: false
@@ -18,7 +17,6 @@ class Shared::MapBaseComponent < ApplicationComponent
     @parent_class = parent_class
     @editable = editable
     @process_coordinates = process_coordinates || get_process_coordinates
-    @shape_data = shape_data
     @projekt = projekt
     @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
@@ -39,7 +37,6 @@ class Shared::MapBaseComponent < ApplicationComponent
 
         parent_class: @parent_class,
         process_coordinates: @process_coordinates,
-        shape_data: @shape_data,
 
         latitude_input_selector: "##{map_location_input_id(@parent_class, "latitude")}",
         longitude_input_selector: "##{map_location_input_id(@parent_class, "longitude")}",

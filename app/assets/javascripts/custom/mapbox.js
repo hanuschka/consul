@@ -11,7 +11,6 @@
     this.zoom = $element.data("map-zoom");
     this.resourcesName = $element.data("parent-class");
     this.markerCoordinates = $element.data("process-coordinates");
-    this.shapeData = $element.data("shape-data");
     this.editable = $element.data("editable");
     this.adminEditor = $element.data("admin-editor");
     this.adminShape = $element.data("admin-shape");
@@ -296,8 +295,8 @@
         'paint': {
           'circle-radius': [
             'case',
-            ['==', ['get', 'active'], 'true'], 10,
-            10,
+            ['==', ['get', 'active'], 'true'], 5,
+            3,
           ],
           'circle-color': [
             'case',
@@ -342,8 +341,8 @@
         'paint': {
           'circle-radius': [
             'case',
-            ['==', ['get', 'active'], 'true'], 10,
-            10,
+            ['==', ['get', 'active'], 'true'], 5,
+            7,
           ],
           'circle-color': orange
         },
@@ -369,13 +368,13 @@
     this.map.addControl(this.draw);
 
     // Load existing shape data if available
-    this.loadExistingShapeDataForEditor();
+    this.loadExistingShape();
 
     // Set up event listeners for draw events
     this.setupDrawEventListeners();
   };
 
-  MapboxMap.prototype.loadExistingShapeDataForEditor = function() {
+  MapboxMap.prototype.loadExistingShape = function() {
     // Try to load existing shape data from the shape input field
     if (this.shapeInputSelector) {
       var shapeData = $(this.shapeInputSelector).val();
@@ -661,10 +660,6 @@
     var properties = e.features[0].properties;
     var resourceType = properties["resource_type"]
 
-    if (!properties.id) {
-      return
-    }
-
     // Show empty popup immediately
     var popup = new mapboxgl.Popup({
       offset: 20,
@@ -693,7 +688,28 @@
 
   MapboxMap.prototype.renderAdminShape = function() {
     if (this.adminShape && this.showAdminShape) {
-      this.addAdminShape();
+      if (App.Mapbox.validCoordinates(this.adminShape)) {
+        if (this.adminEditor) {
+          this.createPinMarker(
+            this.adminShape.lat,
+            this.adminShape.long,
+            this.adminShapesColor,
+            this.adminShape.fa_icon_class
+          );
+        } else {
+          var styledMarker = this.getStyledMarker(this.adminShapesColor, this.adminShape.fa_icon_class);
+          this.adminMarker = new mapboxgl.Marker({
+            element: styledMarker.element,
+            anchor: 'bottom',
+            offset: [0, -10]
+          })
+            .setLngLat([this.adminShape.long, this.adminShape.lat])
+            .setPopup(new mapboxgl.Popup().setHTML('Alle markierten Flächen und Pins in rot sind vom System vorgegeben'))
+            .addTo(this.map);
+        }
+      } else if (Object.keys(this.adminShape).length > 0) {
+        this.renderMultishapeAdminLayer('admin-shape', this.adminShape, this.adminShapesColor);
+      }
     }
   };
 
@@ -927,11 +943,6 @@
           self.renderShape(coordinates);
         }
       });
-
-      this.shapeData.color = "red";
-      this.shapeData.fill_opacity = 0.05;
-      this.shapeData.fill_border_opacity = 0.3;
-      self.renderShape(this.shapeData);
     }
   };
 
@@ -1012,31 +1023,6 @@
     this.hoveredFeature = null;
   };
 
-  MapboxMap.prototype.addAdminShape = function() {
-    if (App.Mapbox.validCoordinates(this.adminShape)) {
-      if (this.adminEditor) {
-        this.createPinMarker(
-          this.adminShape.lat,
-          this.adminShape.long,
-          this.adminShapesColor,
-          this.adminShape.fa_icon_class
-        );
-      } else {
-        var styledMarker = this.getStyledMarker(this.adminShapesColor, this.adminShape.fa_icon_class);
-        this.adminMarker = new mapboxgl.Marker({
-          element: styledMarker.element,
-          anchor: 'bottom',
-          offset: [0, -10]
-        })
-          .setLngLat([this.adminShape.long, this.adminShape.lat])
-          .setPopup(new mapboxgl.Popup().setHTML('Alle markierten Flächen und Pins in rot sind vom System vorgegeben'))
-          .addTo(this.map);
-      }
-    } else if (Object.keys(this.adminShape).length > 0) {
-      this.addShapeLayer('admin-shape', this.adminShape, this.adminShapesColor);
-    }
-  };
-
   MapboxMap.prototype.renderShape = function(coordinates) {
     var self = this;
     // Generate a unique ID if coordinates.id is undefined
@@ -1051,37 +1037,6 @@
       return;
     }
 
-        // Handle nested Point features from FeatureCollection
-    if (coordinates.features && Array.isArray(coordinates.features)) {
-      var pointFeatures = [];
-
-      coordinates.features.forEach(function(feature) {
-        if (feature.geometry && feature.geometry.type === 'Point') {
-          // Extract Point features and add them to the marker layer
-          pointFeatures.push({
-            type: 'Feature',
-            id: (coordinates.id || 'shape_' + Date.now()) + '_point_' + Math.random().toString(36).substr(2, 9),
-            geometry: feature.geometry,
-            properties: {
-              marker_size: 5
-            }
-          });
-          // pointFeatures.push(feature);
-        }
-      });
-
-      // Add point features to the existing marker-coordinates source if available
-      if (pointFeatures.length > 0 && self.map.getSource('marker-coordinates')) {
-        var existingData = self.map.getSource('marker-coordinates')._data;
-        var newFeatures = existingData.features.concat(pointFeatures);
-
-        self.map.getSource('marker-coordinates').setData({
-          type: 'FeatureCollection',
-          features: newFeatures
-        });
-      }
-    }
-
     this.map.addSource(sourceId, {
       type: 'geojson',
       data: coordinates
@@ -1094,7 +1049,7 @@
       source: sourceId,
       paint: {
         'fill-color': coordinates.color,
-        'fill-opacity': (coordinates.fill_opacity || 0.2)
+        'fill-opacity': 0.2
       }
     });
 
@@ -1105,77 +1060,6 @@
       source: sourceId,
       paint: {
         'line-color': coordinates.color,
-        'line-width': 2,
-        'line-opacity': (coordinates.fill_border_opacity || 0.8)
-      }
-    });
-
-    if (coordinates.id) {
-      // Create shared event handlers
-      var setCursorPointer = function() {
-        self.map.getCanvas().style.cursor = 'pointer';
-      };
-      var resetCursor = function() {
-        self.map.getCanvas().style.cursor = '';
-      };
-
-      var handleShapeClick = function(e) {
-        // Create a proper event structure for the popup
-        var popupEvent = {
-          features: [{
-            geometry: {
-              coordinates: e.lngLat ? [e.lngLat.lng, e.lngLat.lat] : [0, 0]
-            },
-            properties: {
-              id: coordinates.id || shapeId,
-              resource_type: coordinates.resource_type || 'shape'
-            }
-          }]
-        };
-
-        self.openMarkerPopup(popupEvent);
-      };
-
-    }
-
-    // Add event listeners for both fill and border layers
-    var layers = [layerId, borderLayerId];
-    layers.forEach(function(layer) {
-      self.map.on('mouseenter', layer, setCursorPointer);
-      self.map.on('mouseleave', layer, resetCursor);
-
-      if (coordinates.id) {
-        self.map.on('click', layer, handleShapeClick);
-      }
-    });
-  };
-
-  MapboxMap.prototype.addShapeLayer = function(id, data, color) {
-    var self = this;
-
-    this.map.addSource(id, {
-      type: 'geojson',
-      data: data
-    });
-
-    // Add fill layer
-    this.map.addLayer({
-      id: id + '-layer',
-      type: 'fill',
-      source: id,
-      paint: {
-        'fill-color': color,
-        'fill-opacity': 0.4
-      }
-    });
-
-    // Add border layer
-    this.map.addLayer({
-      id: id + '-border',
-      type: 'line',
-      source: id,
-      paint: {
-        'line-color': color,
         'line-width': 2,
         'line-opacity': 0.8
       }
@@ -1188,11 +1072,87 @@
     var resetCursor = function() {
       self.map.getCanvas().style.cursor = '';
     };
+    var handleShapeClick = function(e) {
+      // Create a proper event structure for the popup
+      var popupEvent = {
+        features: [{
+          geometry: {
+            coordinates: e.lngLat ? [e.lngLat.lng, e.lngLat.lat] : [0, 0]
+          },
+          properties: {
+            id: coordinates.id || shapeId,
+            resource_type: coordinates.resource_type || 'shape'
+          }
+        }]
+      };
 
-    var layers = [id + '-layer', id + '-border'];
+      self.openMarkerPopup(popupEvent);
+    };
 
-    // Add hover event listeners for both fill and border layers
+    // Add event listeners for both fill and border layers
+    var layers = [layerId, borderLayerId];
     layers.forEach(function(layer) {
+      self.map.on('mouseenter', layer, setCursorPointer);
+      self.map.on('mouseleave', layer, resetCursor);
+      self.map.on('click', layer, handleShapeClick);
+    });
+  };
+
+  MapboxMap.prototype.renderMultishapeAdminLayer = function(id, data, color) {
+    var self = this;
+
+    this.map.addSource(id, {
+      type: 'geojson',
+      data: data
+    });
+
+    // Define layer configurations
+    var layerConfigs = [
+      {
+        type: 'Polygon',
+        layers: [
+          { id: id + '-layer', type: 'fill', paint: { 'fill-color': color, 'fill-opacity': 0.1 } },
+          { id: id + '-border', type: 'line', paint: { 'line-color': color, 'line-width': 2, 'line-opacity': 0.2 } }
+        ]
+      },
+      {
+        type: 'MultiPolygon',
+        layers: [
+          { id: id + '-multipolygon-layer', type: 'fill', paint: { 'fill-color': color, 'fill-opacity': 0.1 } },
+          { id: id + '-multipolygon-border', type: 'line', paint: { 'line-color': color, 'line-width': 2, 'line-opacity': 0.2 } }
+        ]
+      },
+      {
+        type: 'Point',
+        layers: [
+          { id: id + '-points', type: 'circle', paint: { 'circle-color': color, 'circle-radius': (self.defaultMarkerBackgroundCircleRadius - 3), 'circle-stroke-width': 2, 'circle-stroke-color': '#ffffff' } }
+        ]
+      }
+    ];
+
+    // Add layers for each geometry type that exists in the data
+    var allLayers = [];
+    layerConfigs.forEach((config) => {
+      var hasGeometryType = self.hasGeometryType(data, config.type);
+      if (hasGeometryType) {
+        config.layers.forEach(function(layerConfig) {
+          self.map.addLayer({
+            id: layerConfig.id,
+            type: layerConfig.type,
+            source: id,
+            filter: ['==', '$type', config.type],
+            paint: layerConfig.paint
+          });
+          allLayers.push(layerConfig.id);
+        });
+      }
+    });
+
+    // Add event listeners
+    var setCursorPointer = function() { self.map.getCanvas().style.cursor = 'pointer'; };
+    var resetCursor = function() { self.map.getCanvas().style.cursor = ''; };
+
+    allLayers.forEach(function(layer) {
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
     });
@@ -1201,15 +1161,28 @@
       var handleAdminShapeClick = function() {
         new mapboxgl.Popup()
           .setLngLat(self.map.getCenter())
-          .setHTML('Alle markierten Flächen und Pins in rot sind vom System vorgegeben')
+          .setHTML('<div class="map-popup-status-message error">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>')
           .addTo(self.map);
       };
 
-      // Add click event listeners for both fill and border layers
-      layers.forEach(function(layer) {
+      allLayers.forEach(function(layer) {
         self.map.on('click', layer, handleAdminShapeClick);
       });
     }
+  };
+
+  // Helper method to check if data contains a specific geometry type
+  MapboxMap.prototype.hasGeometryType = function(data, geometryType) {
+    if (data.features && Array.isArray(data.features)) {
+      return data.features.some(function(feature) {
+        return feature.geometry && feature.geometry.type === geometryType;
+      });
+    } else if (data.type === 'Feature') {
+      return data.geometry && data.geometry.type === geometryType;
+    } else if (data.type === geometryType) {
+      return true;
+    }
+    return false;
   };
 
     // Add a method to clean up marker-coordinates

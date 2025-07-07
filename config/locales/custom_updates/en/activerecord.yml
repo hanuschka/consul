@@ -128,6 +128,7 @@ en:
         date_of_birth: Date of birth
         document_type: Document
         document_last_digits: Document (last 4 digits)
+        guest: Guest
       modal_notification:
         titel: Titel
         active_from: From

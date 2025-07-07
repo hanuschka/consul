@@ -216,7 +216,8 @@ class Budget
     end
 
     def self.search(terms)
-      pg_search(terms)
+      search_result_ids = pg_search(terms).pluck(:id)
+      where(id: search_result_ids)
     end
 
     def self.by_heading(heading)

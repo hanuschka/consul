@@ -40,6 +40,10 @@
 
     <div class="flex-layout">
       <div class="main-column">
+        <div class="show-on-small-tablet js-remove-on-desktop-section">
+          <%= category_select_html %>
+        </div>
+
         <div class="new-card" id='map-container'>
           <% i18n_scope = "test" %>
           <%= render("map_locations/form_fields",

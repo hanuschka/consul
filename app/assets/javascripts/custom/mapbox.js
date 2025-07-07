@@ -105,8 +105,43 @@
 
     // Add click and touch listeners for moveOrPlaceMarker functionality
     if (this.editable) {
-      // Handle both click and touch events for better mobile support
+      // Track touch state to distinguish between taps and drags
+      var touchStartTime = null;
+      var touchStartPoint = null;
+      var touchMoved = false;
+      var touchThreshold = 10; // pixels
+      var tapThreshold = 300; // milliseconds
+
+      // Handle touch start
+      this.map.on('touchstart', function(e) {
+        touchStartTime = Date.now();
+        touchStartPoint = e.point;
+        touchMoved = false;
+      });
+
+      // Handle touch move
+      this.map.on('touchmove', function(e) {
+        if (touchStartPoint) {
+          var distance = Math.sqrt(
+            Math.pow(e.point.x - touchStartPoint.x, 2) + 
+            Math.pow(e.point.y - touchStartPoint.y, 2)
+          );
+          if (distance > touchThreshold) {
+            touchMoved = true;
+          }
+        }
+      });
+
+      // Handle map interaction (click and touch)
       var handleMapInteraction = function(e) {
+        // For touch events, only proceed if it was a tap (not a drag)
+        if (e.type === 'touchend') {
+          var touchDuration = Date.now() - touchStartTime;
+          if (touchMoved || touchDuration > tapThreshold) {
+            return; // Don't place marker if touch moved or was too long
+          }
+        }
+
         // Check if interaction is on a draw control button
         var target = e.originalEvent ? e.originalEvent.target : e.target;
         var isDrawControl = target && (

@@ -126,10 +126,12 @@
 
         <%= render(Mobile::FixedBottomActionComponent.new) do %>
           <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
-            <div class='text-center margin-bottom'>
-              <i class="fas fa-clock"></i>
-              <%= t("ideas.remaining_days", count: @idea.remaining_days) %>
-            </div>
+            <% if @idea.remaining_days.present? %>
+              <div class='text-center margin-bottom'>
+                <i class="fas fa-clock"></i>
+                <%= t("ideas.remaining_days", count: @idea.remaining_days) %>
+              </div>
+            <% end %>
             <%= render Ideas::VotesComponent.new(@idea) %>
           <% end %>
         <% end %>

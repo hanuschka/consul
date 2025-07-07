@@ -120,6 +120,7 @@ class UploadFilesPlugin extends Plugin {
                     content:       this.dialogView,
                     onHide:        () => {
                         this.state = {
+                            editor_id:   this.state.editor_id,
                             type:        'picture',
                             page:        1,
                             search:      '',
@@ -129,7 +130,8 @@ class UploadFilesPlugin extends Plugin {
                             isLoading:   false
                         }
                         buttonView.isOn = false;
-                    }
+                    },
+                    position: 'screen-center'
                 });
 
                 // Fetch the initial files when the dialog opens

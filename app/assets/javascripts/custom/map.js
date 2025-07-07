@@ -409,7 +409,7 @@
         });
       }
 
-      return
+      // return
       // adds second attribution to tell about admin pins and shapes
       if ( showAdminShape ) {
         var adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';

@@ -163,6 +163,8 @@ namespace :projekt_management do
   resources :proposals, only: :index do
     put :hide, on: :member
     put :moderate, on: :collection
+    resources :milestones, controller: "proposal_milestones"
+    resources :progress_bars, except: :show, controller: "proposal_progress_bars"
   end
 
   resources :debates, only: :index do

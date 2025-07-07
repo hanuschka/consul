@@ -104,17 +104,18 @@
       });
     }
 
-    // Add click listener for moveOrPlaceMarker functionality
+    // Add click and touch listeners for moveOrPlaceMarker functionality
     if (this.editable) {
-      this.map.on('click', function(e) {
-        // Check if click is on a draw control button
-        var target = e.originalEvent.target;
+      // Handle both click and touch events for better mobile support
+      var handleMapInteraction = function(e) {
+        // Check if interaction is on a draw control button
+        var target = e.originalEvent ? e.originalEvent.target : e.target;
         var isDrawControl = target && (
           target.classList.contains('mapbox-gl-draw_ctrl-draw-btn') ||
           target.closest('.mapbox-gl-draw_ctrl')
         );
 
-        // Only handle clicks that aren't on existing marker-coordinates/features or draw controls
+        // Only handle interactions that aren't on existing marker-coordinates/features or draw controls
         var features = self.map.queryRenderedFeatures(e.point, {
           layers: ['custom-marker', 'custom-marker-icon', 'clusters']
         });
@@ -140,7 +141,11 @@
         if (hasOnlyPointDrawFeatures || (features.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
           self.moveOrPlaceMarker(e);
         }
-      });
+      };
+
+      // Add both click and touch event listeners
+      this.map.on('click', handleMapInteraction);
+      this.map.on('touchend', handleMapInteraction);
     }
   };
 
@@ -165,7 +170,7 @@
     // Create overlay container
     var overlay = document.createElement('div');
     overlay.className = 'mapbox-instruction-overlay';
-    overlay.innerHTML = '<span class="mapbox-instruction-text">Halten Sie die Rechte Maustaste um den Kartenausschnitt zu verschieben</span>';
+    overlay.innerHTML = '<span class="mapbox-instruction-text">Klicken Sie auf die Karte um Marker zu platzieren</span>';
 
     // Add CSS styles to match Mapbox attribution style
     overlay.style.cssText = `
@@ -906,8 +911,8 @@
   MapboxMap.prototype.setupClusterEventListeners = function() {
     var self = this;
 
-    // Add click handler for clusters
-    this.map.on('click', 'clusters', function(e) {
+    // Handle cluster interactions (both click and touch)
+    var handleClusterInteraction = function(e) {
       var features = self.map.queryRenderedFeatures(e.point, {
         layers: ['clusters']
       });
@@ -923,9 +928,13 @@
           });
         }
       );
-    });
+    };
 
-    // Add cursor pointer on hover
+    // Add both click and touch event listeners for clusters
+    this.map.on('click', 'clusters', handleClusterInteraction);
+    this.map.on('touchend', 'clusters', handleClusterInteraction);
+
+    // Add cursor pointer on hover (desktop only)
     this.map.on('mouseenter', 'clusters', function() {
       self.map.getCanvas().style.cursor = 'pointer';
     });
@@ -980,6 +989,7 @@
   MapboxMap.prototype.setupMarkerEventListeners = function() {
     var self = this;
 
+    // Desktop hover events
     self.map.on('mouseenter', 'custom-marker',
       self.handleMarkerMouseEnter.bind(self)
     );
@@ -987,8 +997,11 @@
       self.handleMarkerMouseLeave.bind(self)
     );
 
-    // Show popup on click
+    // Show popup on click and touch
     self.map.on('click', 'custom-marker',
+      self.openMarkerPopup.bind(self)
+    );
+    self.map.on('touchend', 'custom-marker',
       self.openMarkerPopup.bind(self)
     );
   };
@@ -1072,7 +1085,7 @@
     var resetCursor = function() {
       self.map.getCanvas().style.cursor = '';
     };
-    var handleShapeClick = function(e) {
+    var handleShapeInteraction = function(e) {
       // Create a proper event structure for the popup
       var popupEvent = {
         features: [{
@@ -1092,9 +1105,13 @@
     // Add event listeners for both fill and border layers
     var layers = [layerId, borderLayerId];
     layers.forEach(function(layer) {
+      // Desktop hover events
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
-      self.map.on('click', layer, handleShapeClick);
+      
+      // Click and touch events
+      self.map.on('click', layer, handleShapeInteraction);
+      self.map.on('touchend', layer, handleShapeInteraction);
     });
   };
 
@@ -1153,12 +1170,13 @@
     var resetCursor = function() { self.map.getCanvas().style.cursor = ''; };
 
     allLayers.forEach(function(layer) {
+      // Desktop hover events
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
     });
 
     if (!this.editable) {
-      var handleAdminShapeClick = function() {
+      var handleAdminShapeInteraction = function() {
         new mapboxgl.Popup()
           .setLngLat(self.map.getCenter())
           .setHTML('<div class="map-popup-status-message error">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>')
@@ -1166,7 +1184,9 @@
       };
 
       allLayers.forEach(function(layer) {
-        self.map.on('click', layer, handleAdminShapeClick);
+        // Click and touch events
+        self.map.on('click', layer, handleAdminShapeInteraction);
+        self.map.on('touchend', layer, handleAdminShapeInteraction);
       });
     }
   };
@@ -1341,6 +1361,8 @@
 
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
+
+
 
   // Calculate centroid of a polygon
   function calculatePolygonCentroid(geometry) {

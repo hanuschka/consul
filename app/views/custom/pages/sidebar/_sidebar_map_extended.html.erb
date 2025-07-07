@@ -11,6 +11,7 @@
       ) %>
     <% else %>
       <%= render Shared::MapComponent.new(
+        mappable: @current_projekt,
         map_location: @current_projekt.map_location,
         parent_class: "proposals_sidebar_extended",
         projekt: @current_projekt,

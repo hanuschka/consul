@@ -14,7 +14,7 @@
         process_coordinates: @marker_coordinates,
         map_location: @map_location || @projekt_phase&.map_location,
         projekt_phase: @projekt_phase,
-        show_admin_shape: @projekt_phase&.map_location&.show_admin_shape?
+        show_admin_shape: true
       ) %>
     <% end %>
   </div>

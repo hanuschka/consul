@@ -352,52 +352,64 @@
         L.control.layers({}, overlayLayers).addTo(map);
       }
 
-      // render marker or shape created by admin, if available
+      // render markers or shapes created by admin, if available
       if (adminShape && showAdminShape) {
-        if (App.Map.validCoordinates(adminShape)) {
-          if ( adminEditor ) {
-            marker = createMarker(adminShape.lat, adminShape.long, adminShapesColor, adminShape.fa_icon_class);
+        // Handle both single admin shape and array of admin shapes
+        var adminShapes = Array.isArray(adminShape) ? adminShape : [adminShape];
 
+        adminShapes.forEach(function(singleAdminShape) {
+          if (App.Map.validCoordinates(singleAdminShape)) {
+            if ( adminEditor ) {
+              marker = createMarker(singleAdminShape.lat, singleAdminShape.long, adminShapesColor, 'pin');
+            } else {
+              var markerLatLng = new L.LatLng(singleAdminShape.lat, singleAdminShape.long);
+              var adminMarker = L.marker(markerLatLng, {
+                icon: getMarkerIcon(adminShapesColor, 'circle')
+              });
+              adminMarker.pm.setOptions({ adminShape: true })
 
-          } else {
-            var markerLatLng = new L.LatLng(adminShape.lat, adminShape.long);
-            adminMarker = L.marker(markerLatLng, {
-              icon: getMarkerIcon(adminShapesColor, adminShape.fa_icon_class)
-            });
-            adminMarker.pm.setOptions({ adminShape: true })
+              adminMarker.on("click", function() {
+                if (!this._popup) {
+                  this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+                }
+              });
 
-            adminMarker.on("click", function() {
-              if (!this._popup) {
-                this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+              adminMarker.addTo(map);
+            }
+          } else if (Object.keys(singleAdminShape).length > 0) {
+            var adminShapeLayer = L.geoJSON(singleAdminShape, {
+              pointToLayer: function(feature, latlng) {
+                return L.marker(latlng, {
+                  icon: getMarkerIcon(
+                    feature.color || adminShapesColor,
+                    'circle'
+                  )
+                });
               }
             });
+            adminShapeLayer.pm.setOptions({ adminShape: true })
+            adminShapeLayer.setStyle({
+              color: adminShapesColor,
+              fillColor: adminShapesColor,
+              fillOpacity: 0.2,
+            })
 
-            adminMarker.addTo(map);
+            if (editable) {
+              addEventListenersToShapeLayer(adminShapeLayer)
+            } else {
+              adminShapeLayer.on("click", function() {
+                if (!this._popup) {
+                  this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+                }
+              });
+            }
+
+            adminShapeLayer.addTo(map);
           }
-
-        } else if (Object.keys(adminShape).length > 0) {
-          var adminShapeLayer = L.geoJSON(adminShape);
-          adminShapeLayer.pm.setOptions({ adminShape: true })
-          adminShapeLayer.setStyle({
-            color: adminShapesColor,
-            fillColor: adminShapesColor,
-            fillOpacity: 0.4,
-          })
-
-          if (editable) {
-            addEventListenersToShapeLayer(adminShapeLayer)
-          } else {
-            adminShapeLayer.on("click", function() {
-              if (!this._popup) {
-                this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
-              }
-            });
-          }
-
-          adminShapeLayer.addTo(map);
-        }
+        });
       }
 
+      return
       // adds second attribution to tell about admin pins and shapes
       if ( showAdminShape ) {
         var adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';

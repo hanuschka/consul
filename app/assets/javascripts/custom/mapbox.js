@@ -51,9 +51,9 @@
 
       self.renderAdminShape();
 
-      // self.renderMarkerCoordinates();
-      // self.renderResourceShapes();
-      // self.addMapInstructionOverlay();
+      self.renderMarkerCoordinates();
+      self.renderResourceShapes();
+      self.addMapInstructionOverlay();
     });
 
     this.setupEventListeners();

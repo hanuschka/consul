@@ -50,12 +50,11 @@
       self.mapLoaded = true;
 
       self.renderAdminShape();
-      self.renderMarkerCoordinates();
-      self.renderResourceShapes();
-      self.addMapInstructionOverlay();
-    });
 
-    // App.Mapbox.maps.push(this.map);
+      // self.renderMarkerCoordinates();
+      // self.renderResourceShapes();
+      // self.addMapInstructionOverlay();
+    });
 
     this.setupEventListeners();
     this.addControls();
@@ -1108,7 +1107,7 @@
       // Desktop hover events
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
-      
+
       // Click and touch events
       self.map.on('click', layer, handleShapeInteraction);
       self.map.on('touchend', layer, handleShapeInteraction);

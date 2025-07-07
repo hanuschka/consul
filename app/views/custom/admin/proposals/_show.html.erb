@@ -12,9 +12,11 @@
 
 <%= render "admin/memos/memos", memoable: @proposal %>
 
-<hr>
+<% unless @namespace == :projekt_management %>
+  <hr>
 
-<%= render "admin/milestones/milestones", milestoneable: @proposal %>
+  <%= render "admin/milestones/milestones", milestoneable: @proposal %>
+<% end %>
 
 <hr>
 

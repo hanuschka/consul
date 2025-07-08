@@ -11,7 +11,7 @@
 
   <div class="flex justify-between items-center">
     <div class="hide-on-small-tablet">
-      <% if @budget.current_phase.kind == "accepting" && params[:section] != "results" && params[:section] != "stats" %>
+      <% if can?(:create, Budget::Investment.new(budget: @projekt_phase.budget)) && params[:section] != "results" && params[:section] != "stats" %>
         <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %>">
           <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
         </div>

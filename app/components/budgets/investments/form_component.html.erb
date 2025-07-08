@@ -83,13 +83,13 @@
                     selected: investment.implementation_performer
                   },
                   {
-                    class: 'implementation-performer show-arrow',
+                    class: 'js-implementation-performer-select implementation-performer show-arrow',
                     style: "width:100%;", onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')"
                   } %>
               </div>
 
               <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
-                <%= f.text_field :implementation_contribution %>
+                <%= f.text_field :implementation_contribution, class: "js-budget-implementation-contribution" %>
               </div>
             <% end %>
           <% end %>
@@ -100,7 +100,7 @@
                           description: t("custom.budgets.investments.form.user_cost_estimate.description"),
                           icon_name: "euro-sign"
                        ) do |c| %>
-              <%= f.text_field :user_cost_estimate, label: false, placeholder: t("custom.budgets.investments.form.user_cost_estimate.placeholder") %>
+              <%= f.text_field :user_cost_estimate, label: false, placeholder: t("custom.budgets.investments.form.user_cost_estimate.placeholder"), class: "js-budget-user-cost-estimate-field" %>
 
             <% end %>
           <% end %>
@@ -244,11 +244,11 @@
 
       <% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>
         <div>
-          <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
+          <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'js-implementation-performer-select implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
         </div>
 
         <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
-          <%= f.text_field :implementation_contribution %>
+          <%= f.text_field :implementation_contribution, class: "js-budget-implementation-contribution" %>
         </div>
       <% end %>
 

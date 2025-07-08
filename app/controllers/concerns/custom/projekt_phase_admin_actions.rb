@@ -110,14 +110,20 @@ module ProjektPhaseAdminActions
   end
 
   def projekt_point_of_interest_pins
+    authorize!(:projekt_point_of_interest_pins, @projekt_phase)
     @pins = @projekt_phase.projekt_point_of_interest_pins.ordered
 
     respond_to do |format|
-      format.html
-      format.csv {
-        send_data CsvServices::PointOfInterestPinsExporter.call(@pins), filename: "point_of_interest_pins-#{Date.today}.csv"
-      }
+      format.html { render "custom/admin/projekt_phases/projekt_point_of_interest_pins" }
+      format.csv { send_data CsvServices::PointOfInterestPinsExporter.call(@pins), filename: "point_of_interest_pins-#{Date.today}.csv" }
     end
+  end
+
+  def projekt_point_of_interest_categories
+    authorize!(:projekt_point_of_interest_categories, @projekt_phase)
+    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+
+    render "custom/admin/projekt_phases/projekt_point_of_interest_categories"
   end
 
   def settings
@@ -474,7 +480,7 @@ module ProjektPhaseAdminActions
   def ai_settings
     authorize!(:ai_settings, @projekt_phase)
 
-    @assistant_codename = "proposal_voice_assistant"
+    @assistant_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
     dt_api = DtApi::Client.new

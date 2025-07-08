@@ -1,4 +1,6 @@
 App.MapPopup = {
+  excludedProcesses: ["proposal", "deficiency_report", "projekt", "point_of_interest_pin"],
+
   generatePopupContent: function(data, resourceType) {
     if (resourceType == "proposal") {
       return this.standardResourcePopupContent(data, resourceType);
@@ -32,7 +34,7 @@ App.MapPopup = {
     switch(resourceType)  {
       case  "proposal":
         return "/proposals/" + data.id
-      case  "deficiency-reports":
+      case  "deficiency_report":
         return "/deficiency_reports/" + data.id;
       case "projekt":
         return "/projekts/" + data.id;

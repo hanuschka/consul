@@ -122,6 +122,10 @@ class Proposal < ApplicationRecord
     cached_votes_down
   end
 
+  def submitted_anonymously?
+    projekt_phase.feature?("form.anonimize_authors")
+  end
+
   protected
 
     def set_responsible_name

@@ -6,7 +6,7 @@ class Budgets::Investments::FiltersComponent < ApplicationComponent
     def filters
       valid_filters.map do |filter|
         [
-          t("budgets.investments.index.filters.#{filter}"),
+          t("budgets.investments.index.filters.#{filter}", preselected_count: @budget.investments.preselected.count),
           link_path(filter),
           current_filter == filter,
           remote: remote?,

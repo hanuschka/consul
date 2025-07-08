@@ -43,6 +43,11 @@
         <% end %>
       </div>
     <% else %>
+      <%= render Shared::ResourceMapComponent.new(
+        marker_coordinates: @proposals_coordinates,
+        projekt_phase: @projekt_phase,
+        resource_type: Proposal
+      ) %>
       <div class="flex-layout flex-layout-reverse-on-mobile">
         <div class="main-column">
           <%= render(
@@ -50,7 +55,7 @@
               resources: @proposals,
               resource_type: Proposal,
               remote_url: projekt_footer_phase_filter_url(@projekt_phase),
-              map_coordinates: @proposals_coordinates, current_filter: @current_order,
+              current_filter: @current_order,
               filter_param: "order",
               filters: @valid_orders,
               text_search_enabled: true,

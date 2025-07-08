@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_21_093401) do
+ActiveRecord::Schema.define(version: 2025_07_02_100226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -185,6 +185,13 @@ ActiveRecord::Schema.define(version: 2025_05_21_093401) do
     t.datetime "updated_at", null: false
     t.string "service_api_token"
     t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
+  end
+
+  create_table "apps", force: :cascade do |t|
+    t.integer "status"
+    t.string "codename"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -1479,9 +1486,12 @@ ActiveRecord::Schema.define(version: 2025_05_21_093401) do
     t.string "approximated_address"
     t.bigint "registered_address_district_id"
     t.bigint "idea_id"
+    t.string "mappable_type"
+    t.bigint "mappable_id"
     t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
     t.index ["idea_id"], name: "index_map_locations_on_idea_id"
     t.index ["investment_id"], name: "index_map_locations_on_investment_id"
+    t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
     t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
     t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
@@ -1581,6 +1591,8 @@ ActiveRecord::Schema.define(version: 2025_05_21_093401) do
     t.text "subtitle"
     t.string "greeting"
     t.bigint "recipient_group_id"
+    t.string "title_color", default: "#000000", null: false
+    t.string "subtitle_color", default: "#000000", null: false
     t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 
@@ -1730,6 +1742,7 @@ ActiveRecord::Schema.define(version: 2025_05_21_093401) do
     t.string "more_info_link"
     t.integer "next_question_id"
     t.string "more_info_iframe"
+    t.boolean "terminates_poll", default: false, null: false
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -1743,6 +1756,7 @@ ActiveRecord::Schema.define(version: 2025_05_21_093401) do
     t.text "description"
     t.string "min_rating_scale_label"
     t.string "max_rating_scale_label"
+    t.text "intro"
     t.index ["hidden_at"], name: "index_poll_question_translations_on_hidden_at"
     t.index ["locale"], name: "index_poll_question_translations_on_locale"
     t.index ["poll_question_id"], name: "index_poll_question_translations_on_poll_question_id"
@@ -2067,9 +2081,32 @@ ActiveRecord::Schema.define(version: 2025_05_21_093401) do
     t.datetime "hidden_at"
     t.integer "user_status", default: 1
     t.date "lock_on"
+    t.boolean "frontend_visibility", default: true, null: false
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
+  end
+
+  create_table "projekt_point_of_interest_categories", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.string "name", null: false
+    t.string "color", null: false
+    t.string "icon", null: false
+    t.integer "position", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_categories_on_projekt_phase_id"
+  end
+
+  create_table "projekt_point_of_interest_pins", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.integer "projekt_point_of_interest_category_id"
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_projekt_point_of_interest_pins_on_author_id"
+    t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_pins_on_projekt_phase_id"
+    t.index ["projekt_point_of_interest_category_id"], name: "projekt_point_of_interest_category"
   end
 
   create_table "projekt_question_answers", force: :cascade do |t|
@@ -2252,6 +2289,7 @@ ActiveRecord::Schema.define(version: 2025_05_21_093401) do
     t.text "official_answer", default: ""
     t.integer "cached_votes_down", default: 0
     t.integer "officing_bulk_votes", default: 0
+    t.boolean "admin_accepted", default: true, null: false
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"

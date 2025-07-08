@@ -56,6 +56,7 @@ class PagesController < ApplicationController
       if @projekt.projekt_phases.active.any?
         @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
         @projekt_phase = @default_projekt_phase
+
         params[:projekt_phase_id] = @default_projekt_phase.id
         params[:projekt_id] ||= @projekt.id
         send("set_#{@default_projekt_phase.name}_footer_tab_variables")
@@ -73,6 +74,8 @@ class PagesController < ApplicationController
           @custom_page.content.include?("</iframe>")
         @custom_page.content = process_iframe_embeds(@custom_page.content)
       end
+
+      @custom_page.content = process_oembeds(@custom_page.content)
 
       render action: custom_page_name
 
@@ -162,6 +165,7 @@ class PagesController < ApplicationController
   end
 
   def set_proposal_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @valid_orders = Proposal.proposals_orders(current_user)
     @valid_orders.delete("archival_date")
     @valid_orders.delete("relevance")
@@ -175,8 +179,9 @@ class PagesController < ApplicationController
                        Setting["selectable_setting.proposals.default_order"]
                      end
 
-    @resources = @projekt_phase.proposals.includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]]).for_public_render
-
+    @resources = @projekt_phase.proposals
+                               .base_selection
+                               .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
     if params[:section] == "stats" && can?(:read_stats, @projekt_phase)
       @stats = ProjektPhase::ProposalPhase::Stats.new(@projekt_phase)
@@ -355,6 +360,15 @@ class PagesController < ApplicationController
     @projekt_notifications = @projekt_phase.projekt_notifications
   end
 
+  def set_point_of_interest_phase_footer_tab_variables
+    @map_coordinates =
+      @projekt_phase
+        .projekt_point_of_interest_pins
+        .by_categories(params[:category_ids])
+        .includes(:map_location)
+        .map(&:pin_json_data)
+  end
+
   def set_newsfeed_phase_footer_tab_variables
     @rss_id = @projekt_phase.settings.find_by(key: "option.general.newsfeed_id").value
     @rss_type = @projekt_phase.settings.find_by(key: "option.general.newsfeed_type").value
@@ -410,6 +424,7 @@ class PagesController < ApplicationController
   end
 
   def set_formular_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @formular = @projekt_phase.formular
 
     if params[:token].present?

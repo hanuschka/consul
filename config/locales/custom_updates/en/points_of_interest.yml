@@ -1,0 +1,8 @@
+en:
+  custom:
+    projekt_point_of_interest_pins:
+      index:
+        add_pin: Add a new pin
+      new:
+        category_hint: Please select the appropriate category first (required)
+        title: Create a new pin

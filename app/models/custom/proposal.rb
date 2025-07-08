@@ -23,10 +23,12 @@ class Proposal < ApplicationRecord
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
+  scope :admin_accepted, -> { where(admin_accepted: true) }
   scope :base_selection, -> {
     published
       .not_archived
       .not_retired
+      .admin_accepted
   }
 
   scope :with_current_projekt, -> { joins(projekt_phase: :projekt).merge(Projekt.current) }
@@ -91,12 +93,6 @@ class Proposal < ApplicationRecord
     Proposal.where(id: ids)
 	end
 
-  def description_sanitized
-    sanitized_description = ActionController::Base.helpers.strip_tags(description).gsub("\n", '').gsub("\r", '').gsub(" ", '').gsub(/^$\n/, '').gsub(/[\u202F\u00A0\u2000\u2001\u2003]/, "")
-    errors.add(:description, :too_long, message: 'too long text') if
-      sanitized_description.length > Setting[ "extended_option.proposals.description_max_length"].to_i
-  end
-
   def custom_votes_needed_for_success
     return Proposal.votes_needed_for_success unless projekt_phase.present?
 
@@ -124,6 +120,10 @@ class Proposal < ApplicationRecord
 
   def dislikes
     cached_votes_down
+  end
+
+  def submitted_anonymously?
+    projekt_phase.feature?("form.anonimize_authors")
   end
 
   protected

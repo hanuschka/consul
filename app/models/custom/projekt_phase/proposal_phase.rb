@@ -1,6 +1,6 @@
 class ProjektPhase::ProposalPhase < ProjektPhase
-  has_many :resources, -> { base_selection }, foreign_key: :projekt_phase_id, class_name: "Proposal",
-                                              inverse_of: :projekt_phase, dependent: :destroy
+  has_many :resources, foreign_key: :projekt_phase_id, class_name: "Proposal",
+                       inverse_of: :projekt_phase, dependent: :destroy
 
   alias_method :proposals, :resources
 
@@ -33,8 +33,9 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   def admin_nav_bar_items
     %w[
       duration naming restrictions general_settings form_author user_functions
+      proposals
       projekt_labels sentiments map
-      officing_managers
+      officing_managers ai_settings
     ]
   end
 

@@ -8,14 +8,21 @@
         show_admin_shape: @current_projekt.map_location.show_admin_shape?
       ) %>
       <% reinitialize_map = "App.VCMap.initializeMap(document.querySelector('#footer-content *[data-vcmap]'));" %>
+      ) %>
     <% else %>
       <%= render Shared::MapComponent.new(
+        mappable: @current_projekt,
         map_location: @current_projekt.map_location,
         parent_class: "proposals_sidebar_extended",
         projekt: @current_projekt,
         show_admin_shape: @current_projekt.map_location.show_admin_shape?
       ) %>
-      <% reinitialize_map = "" %>
+
+      <% if use_mapbox?(@current_projekt) %>
+        <% reinitialize_map = "App.Mapbox.initialize();" %>
+      <% else %>
+        <% reinitialize_map = "" %>
+      <% end %>
     <% end %>
 
     <button class="close-button" aria-label="Close modal" type="button" onclick="$('#extended-sidebar-map').html('');$('#extended-sidebar-map').css('position', 'relative');<%= reinitialize_map %>">

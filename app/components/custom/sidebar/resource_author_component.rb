@@ -6,6 +6,12 @@ class Sidebar::ResourceAuthorComponent < ApplicationComponent
     @user = resource.author
   end
 
+  def render?
+    return false if @resource.try(:submitted_anonymously?)
+
+    true
+  end
+
   private
 
     def on_behalf_of?

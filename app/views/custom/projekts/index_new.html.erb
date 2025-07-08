@@ -18,6 +18,10 @@
     </div>
   </div>
 
+  <%= render Shared::ResourceMapComponent.new(
+    marker_coordinates: @map_coordinates,
+    resource_type: Projekt
+  ) %>
   <div class="flex-layout padding-on-mobile flex-layout-reverse-on-mobile">
     <div class="main-column">
       <div class="projekts-overview-page--projekts-list">
@@ -25,7 +29,6 @@
           resources: @projekts,
           resource_type: Projekt,
           current_filter: @current_projekts_filter,
-          map_coordinates: @map_coordinates,
           text_search_enabled: true,
           filters: @active_projekts_filters,
           resource_link_additional_url_params: (@landing_page.present? ? { page_ref: @landing_page&.slug } : nil),

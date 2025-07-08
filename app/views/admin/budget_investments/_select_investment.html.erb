@@ -24,6 +24,10 @@
   <%= investment.total_votes %>
 </td>
 
+<td class="text-center" data-field="preselected">
+  <%= investment.preselected? ? t("shared.yes") : t("shared.no") %>
+</td>
+
 <td class="text-center" data-field="selected">
   <%= investment.selected? ? t("shared.yes") : t("shared.no") %>
 </td>

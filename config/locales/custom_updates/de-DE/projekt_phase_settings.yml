@@ -25,8 +25,14 @@ de:
       proposals:
         feature:
           general:
-            set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
-            set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
+            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
+            require_admin_acceptance: Adminfreigabe
+            require_admin_acceptance_description: Admins müssen vor Veröffentlichung Vorschläge freigeben
+            mapbox: Mapbox-Karte
+            mapbox_description: "Mapbox statt Leflet-Karte nutzen. (Nur wenn Leaflet als Standard definiert ist)"
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Teilnehmenden ein Titelbild hinzuzufügen.
@@ -44,6 +50,10 @@ de:
             allow_attached_documents_description: Ermöglicht es den Teilnehmenden Dokumente den Vorschlägen anzuhängen
             enable_external_video: Externes Video einbinden
             enable_external_video_description: Ermöglicht es den Teilnehmenden externe Videos über YouTube und Vimeo einzubinden
+            voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
+            voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
+            anonimize_authors: Beiträge anonym erstellen
+            anonimize_authors_description: Autorenkacheln werden im Frontend nicht angezeigt.
           resource:
             users_can_create_proposals: Vorschläge einreichen
             users_can_create_proposals_description: Nutzer können Vorschläge erstellen
@@ -71,11 +81,6 @@ de:
             show_comments_description: Aktivieren Sie "Kommentare" für das Vorschlagsmodul
             show_video_as_link: Videos als Link
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
-          general:
-            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
-            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
-            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
-            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
         option:
           resource:
             votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
@@ -115,8 +120,12 @@ de:
       budget:
         feature:
           general:
-            set_default_sorting_to_newest: Standardsortierung auf 'Neueste' umstellen
-            set_default_sorting_to_newest_description: Zeigt standardmäßig die neuesten Beiträge anstatt der aktivsten Beiträge an
+            mapbox: Mapbox-Karte
+            mapbox_description: "Mapbox statt Leflet-Karte nutzen. (Nur wenn Leaflet als Standard definiert ist)"
+            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
+            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
+            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
+            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Teilnehmenden ein Titelbild hinzuzufügen.
@@ -136,6 +145,8 @@ de:
             show_implementation_option_fields_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Umsetzung” hinzu
             show_user_cost_estimate: Preisschätzung
             show_user_cost_estimate_description: Fügt beim Erstellen eines Vorschlags ein Auswahlfeld “Preisliche Einschätzung” hinzu
+            voice_assistant: Sprachassistent zur Erstellung von Vorschlägen aktivieren
+            voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Vorschlägen unterstützt
           resource:
             users_can_create_investment_proposals: Vorschläge einreichen
             users_can_create_investment_proposals_description: Nutzer können Vorschläge erstellen
@@ -153,11 +164,6 @@ de:
             show_video_as_link_description: Zeigt die hinzugefügten Videos als Link an, anstatt als echtes Video
             conditional_balloting: Vereinfachte Stimmabgabe
             conditional_balloting_description: Stimmen werden vor der Verifizierung aufgenommen, aber erst nach der Verifizierung gezählt
-          general:
-            browse_mode_in_phase_footer: Blättern Modus im Vorschlags-Footer
-            browse_mode_in_phase_footer_description: Ermöglicht es einzeln durch die Vorschläge zu blättern
-            browse_mode_in_phase_footer_by_default: Blättern Modus als Standard festlegen
-            browse_mode_in_phase_footer_by_default_description: Nutzer, die auf die Seite kommen starten direkt im Blättern-Modus
         selectable_setting:
           general:
             default_order: Standardsortierung
@@ -198,6 +204,7 @@ de:
             primary_formular_cutoff_date_description: "Bitte das Format wie folgt angeben: dd.mm.jjjj"
             submissions_limit: Beschränkung der erlaubten Einreichungen pro Nutzer
             submissions_limit_description: Limitieren Sie die Anzahl der erlaubten Formulareinreichungen pro Nutzer
+            submissions_limit_description: Limitieren Sie die Anzahl der erlaubten Formulareinreichungen pro Nutzer
       iframe:
         option:
           general:
@@ -207,3 +214,13 @@ de:
             iframe_width_description: "Bitte definieren Sie hier die Breite des Iframes. Empfohlener Wert: 1260"
             iframe_height: Höhe des Iframes
             iframe_height_description: "Bitte definieren Sie hier die Höhe des Iframes. Empfohlener Wert: 1000"
+      projekt_point_of_interest_pins:
+        feature:
+          general:
+            users_can_create_pins: Pins setzen
+            users_can_create_pins_description: Nutzer können Pins erstellen 
+            mapbox: Mapbox-Karte
+            mapbox_description: "Mapbox statt Leflet-Karte nutzen. (Nur wenn Leaflet als Standard definiert ist)"
+        option:
+          general:
+            max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer

@@ -7,8 +7,12 @@
       <div class="margin-bottom">
         <%= render Shared::SidebarCardComponent.new(
           title: t("custom.deficiency_reports.form.category.title"),
+          opened_on_mobile: true,
           icon_name: "th-large"
         ) do |c| %>
+        <div style="margin-bottom: 10px;">
+          <%= t("custom.projekt_point_of_interest_pins.new.category_hint") %>
+        </div>
         <%= f.select :projekt_point_of_interest_category_id, options_for_select(
             @projekt_phase.projekt_point_of_interest_categories.map { |category|
               [
@@ -38,8 +42,14 @@
       </div>
     </div>
 
-    <div class="flex-layout">
-      <div class="main-column">
+    <div class="row">
+      <div class="small-12 medium-9">
+        <%= category_select_html %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12">
         <div class="new-card" id='map-container'>
           <% i18n_scope = "test" %>
           <%= render("map_locations/form_fields",
@@ -52,12 +62,6 @@
             parent_class:  "point-of-interest-map") %>
         </div>
       </div>
-
-      <aside class="sidebar">
-        <div class="hide-on-mobile js-remove-on-mobile-section">
-          <%= category_select_html %>
-        </div>
-      </aside>
     </div>
 
     <div class="user-resources-form--submit-section">

@@ -10,14 +10,14 @@ module ProjektPhasesHelper
   def link_to_footer_tab(projekt_phase)
   end
 
-  def proposal_browse_mode_in_footer_tab?(projekt_phase)
-    (
-      (
-       projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer") &&
-        params[:proposal_view_mode] != "overview"
-      ) ||
+  def browse_mode_in_projekt_footer_tab?(projekt_phase)
+    return false unless projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer")
+
+    if params[:proposal_view_mode].blank?
+      projekt_phase_feature?(projekt_phase, "general.browse_mode_in_phase_footer_by_default")
+    else
       params[:proposal_view_mode] == "browse"
-    )
+    end
   end
 
   def admin_projekt_phase_resources_link(projekt_phase)
@@ -108,5 +108,22 @@ module ProjektPhasesHelper
     when ProjektPhase::FormularPhase
       "fa-file-alt"
     end
+  end
+
+  def projekt_phase_view_permission_problem_message(permission_problem_key, projekt_phase)
+    return nil if permission_problem_key.blank?
+
+    sanitize(t("custom.projekt_phases.permission_problem.#{projekt_phase.resources_name}.#{permission_problem_key}",
+             sign_in: link_to_signin,
+             sign_up: link_to_signup,
+             guest_sign_in: link_to_guest_signin,
+             enter_missing_user_data: link_to_enter_missing_user_data,
+             verify: link_to_verify_account,
+             city: Setting["org_name"],
+             geozones: projekt_phase.geozone_restrictions_formatted,
+             age_restriction: projekt_phase.age_restriction_formatted,
+             restricted_streets: projekt_phase.street_restrictions_formatted,
+             individual_group_values: projekt_phase.individual_group_value_restriction_formatted
+            ))
   end
 end

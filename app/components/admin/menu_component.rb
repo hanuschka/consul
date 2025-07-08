@@ -390,6 +390,7 @@ class Admin::MenuComponent < ApplicationComponent
           administrators_link,
           projekt_managers_link,
           deficiency_report_managers_link,
+          idea_managers_link,
           officing_managers_link,
           organizations_link,
           officials_link,

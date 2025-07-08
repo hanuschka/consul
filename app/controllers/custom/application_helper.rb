@@ -6,6 +6,7 @@ module ApplicationHelper
     pagination_page: nil,
     filter: nil,
     order: nil,
+    category_ids: nil,
     projekt_label_ids: nil,
     sentiment_id: nil,
     section: nil,
@@ -20,6 +21,7 @@ module ApplicationHelper
       order: order || params[:order],
       projekt_label_ids: projekt_label_ids || params[:projekt_label_ids],
       sentiment_id: sentiment_id || params[:sentiment_id],
+      category_ids: category_ids || params[:category_ids],
       section: section || params[:section],
       annotation_id: params[:annotation_id]
     }

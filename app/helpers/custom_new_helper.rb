@@ -29,6 +29,8 @@ module CustomNewHelper
   def sentiment_color_style(sentiment)
     if sentiment.present?
       "background-color:#{sentiment.color};color: #{pick_text_color(sentiment.color)}"
+    else
+      "background-color:#ddeeff;color:#666; "
     end
   end
 

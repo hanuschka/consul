@@ -125,6 +125,7 @@ de:
         voting_phase: Abstimmungen
         argument_phase: Stimmen
         livestream_phase: Livestream
+        livestream_phase: Iframe
       projekt_events:
         index:
           title: Veranstaltungskalender
@@ -165,7 +166,6 @@ de:
           note: Stimme
       projekt_livestreams:
         links_title: Livestreams
-        current_livestream: Aktueller Livestream
         no_livestreams: Keine Livestreams
         video_platform_not_supported: "Videoplattform wird nicht unterstützt. Unterstützte Plattformen: YouTube, Vimeo"
       selector:

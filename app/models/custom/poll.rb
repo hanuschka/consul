@@ -38,24 +38,6 @@ class Poll < ApplicationRecord
     created_by_admin.not_budget
   end
 
-  def self.scoped_projekt_ids_for_index(current_user)
-    Projekt.top_level
-      .map { |p| p.all_children_projekts.unshift(p) }
-      .flatten.select do |projekt|
-        ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.main.activate").value.present? &&
-        ProjektSetting.find_by(projekt: projekt, key: "projekt_feature.general.show_in_sidebar_filter").value.present? &&
-        projekt.all_parent_projekts.unshift(projekt).none? { |p| p.hidden_for?(current_user) } &&
-        Poll.base_selection.joins(projekt_phase: :projekt).where(projekt_phases: { projekts: { id: projekt.all_children_ids.unshift(projekt.id) }}).any?
-      end.pluck(:id)
-  end
-
-  def self.scoped_projekt_ids_for_footer(projekt)
-    projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
-      ProjektSetting.find_by( projekt: projekt, key: 'projekt_feature.main.activate').value.present? &&
-      Poll.base_selection.joins(projekt_phase: :projekt).where(projekt_phases: { projekts: { id: projekt.all_children_ids.unshift(projekt.id) }}).any?
-    end.pluck(:id)
-  end
-
   def answerable_by?(user)
     @answerable ||= projekt_phase.permission_problem(user).blank?
   end

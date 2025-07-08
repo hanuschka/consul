@@ -5,7 +5,8 @@ module Abilities
     def self.resources_to_manage
       [
         ProjektQuestion, ProjektNotification, ProjektEvent, ProjektLivestream, ProjektArgument,
-        ProjektLabel, Sentiment, FormularField, FormularFollowUpLetter
+        Proposal, ProjektLabel, Sentiment, FormularField, FormularFollowUpLetter,
+        ProjektPointOfInterestPin, ProjektPointOfInterestCategory
       ]
     end
 

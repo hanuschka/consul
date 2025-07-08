@@ -67,6 +67,7 @@ class Admin::NewslettersController < Admin::BaseController
     end
 
     def allowed_params
-      [:subject, :recipient_group_id, :from, :body, :title, :subtitle, :greeting]
+      [:subject, :recipient_group_id, :from, :body, :title, :subtitle, :greeting,
+       :title_color, :subtitle_color]
     end
 end

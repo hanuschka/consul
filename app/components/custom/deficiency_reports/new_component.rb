@@ -23,4 +23,8 @@ class DeficiencyReports::NewComponent < ApplicationComponent
       [district.id, [district.map_location.latitude, district.map_location.longitude]]
     end.to_h
   end
+
+  def categories_serialized
+    DeficiencyReport::Category.all.as_json(only: [:name, :id, :warning_text])
+  end
 end

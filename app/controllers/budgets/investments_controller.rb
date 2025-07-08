@@ -134,11 +134,13 @@ module Budgets
     def json_data
       investment = Budget::Investment.find(params[:id])
 
-      image_url = investment.image.present? ? url_for(investment.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+      params[:projekt_phase_id] = investment.budget.projekt_phase_id
+      image_url = investment.image.present? ? url_for(investment.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
 
       data = {
-        investment_id: investment.id,
-        investment_title: investment.title,
+        resource_type: "investment",
+        id: investment.id,
+        title: investment.title,
         budget_id: investment.budget.id,
         image_url: image_url
       }.to_json

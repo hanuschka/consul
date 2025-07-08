@@ -88,6 +88,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
       "custom.polls.index"
     elsif resource_type == DeficiencyReport
       "custom.deficiency_reports.index"
+    elsif resource_type == Idea
+      "custom.ideas.index"
     elsif resource_type == Topic
       "custom.topics.list"
     end
@@ -130,6 +132,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
       Projekts::ProjektEvents::ListItemComponent.new(projekt_event: resource)
     when Topic
       Topics::ListItemComponent.new(topic: resource)
+    when Idea
+      Ideas::ListItemComponent.new(idea: resource)
     end
   end
 
@@ -138,12 +142,6 @@ class Shared::ResourcesListComponent < ApplicationComponent
       "newest",
       "oldest"
     ]
-  end
-
-  def render_map?
-    return false if @projekt_phase.present? && !projekt_phase_feature?(@projekt_phase, "form.show_map")
-
-    @map_coordinates.present? || @map_location.present? || @projekt_phase&.map_location.present?
   end
 
   def hide_list_line_divider?

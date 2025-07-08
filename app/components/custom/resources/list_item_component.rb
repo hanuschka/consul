@@ -40,15 +40,10 @@ class Resources::ListItemComponent < ApplicationComponent
 
   def component_class_name
     class_name = "#{@resource.class.name&.underscore}-list-item"
-    # class_name = "-list-item"
 
-    if @wide
-      class_name += " -wide"
-    end
-
-    if header.blank?
-      class_name += " -no-header"
-    end
+    class_name += " -wide" if @wide
+    class_name += " -no-header" if header.blank?
+    class_name += " -no-image" unless show_image?
 
     class_name
   end
@@ -80,16 +75,23 @@ class Resources::ListItemComponent < ApplicationComponent
   end
 
   def show_author_name?
+    return false if @resource.try(:submitted_anonymously?)
+
     @resource.is_a?(Debate) ||
       @resource.is_a?(Proposal) ||
       @resource.is_a?(Budget::Investment) ||
       @resource.is_a?(DeficiencyReport) ||
-      @resource.is_a?(Topic)
+      @resource.is_a?(Topic) ||
+      @resource.is_a?(Idea)
   end
 
   def on_behalf_of?
     return unless show_author_name?
 
     @resource.on_behalf_of.present?
+  end
+
+  def show_image?
+    !@resource.respond_to?(:projekt_phase) || @resource.projekt_phase.feature?("form.allow_attached_image")
   end
 end

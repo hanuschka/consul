@@ -10,7 +10,8 @@ class Shared::MapBaseComponent < ApplicationComponent
     process_coordinates: nil,
     projekt: nil,
     projekt_phase: nil,
-    show_admin_shape: false
+    show_admin_shape: false,
+    saturated_admin_shape: false
   )
     @mappable = mappable
     @map_location = map_location || MapLocation.new
@@ -20,6 +21,7 @@ class Shared::MapBaseComponent < ApplicationComponent
     @projekt = projekt
     @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
+    @saturated_admin_shape = saturated_admin_shape
   end
 
   private
@@ -34,6 +36,7 @@ class Shared::MapBaseComponent < ApplicationComponent
 
         show_admin_shape: @show_admin_shape,
         admin_shape: admin_shape,
+        saturated_admin_shape: @saturated_admin_shape,
 
         parent_class: @parent_class,
         process_coordinates: @process_coordinates,

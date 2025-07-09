@@ -14,6 +14,7 @@
     this.editable = $element.data("editable");
     this.adminEditor = $element.data("admin-editor");
     this.adminShape = $element.data("admin-shape");
+    this.saturatedAdminShape = $element.data("saturated-admin-shape")
     this.showAdminShape = $element.data("show-admin-shape");
     this.latitudeInputSelector = $element.data("latitude-input-selector");
     this.longitudeInputSelector = $element.data("longitude-input-selector");
@@ -123,7 +124,7 @@
       this.map.on('touchmove', function(e) {
         if (touchStartPoint) {
           var distance = Math.sqrt(
-            Math.pow(e.point.x - touchStartPoint.x, 2) + 
+            Math.pow(e.point.x - touchStartPoint.x, 2) +
             Math.pow(e.point.y - touchStartPoint.y, 2)
           );
           if (distance > touchThreshold) {
@@ -160,7 +161,7 @@
           currentMode = self.draw.getMode();
         }
 
-        var drawFetures = self.draw.getAll().features;
+        var drawFetures = self.draw ? self.draw.getAll().features : [];
 
         // Check if there are existing draw features
         var hasExistingDrawFeatures = self.draw && drawFetures.length > 0;
@@ -199,32 +200,22 @@
   };
 
   MapboxMap.prototype.addMapInstructionOverlay = function() {
-    var self = this;
+    if (this.element.offsetWidth <= 780) {
+      return;
+    }
 
-    // Create overlay container
     var overlay = document.createElement('div');
     overlay.className = 'mapbox-instruction-overlay';
-    overlay.innerHTML = '<span class="mapbox-instruction-text">Klicken Sie auf die Karte um Marker zu platzieren</span>';
 
-    // Add CSS styles to match Mapbox attribution style
-    overlay.style.cssText = `
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.5);
-      color: rgba(0, 0, 0, 0.75);
-      padding: 2px 6px;
-      border-radius: 0;
-      font-size: 12px;
-      z-index: 100;
-      transition: opacity 0.3s ease;
-      opacity: 0.8;
-      backdrop-filter: blur(2px);
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-    `;
+    // Build instruction text based on whether admin shapes are shown
+    var instructionText = '<span class="mapbox-instruction-text">Klicken Sie auf die Karte um Marker zu platzieren</span>';
 
-    // Add overlay to map container
+    if (this.showAdminShape) {
+      instructionText += '<div class="adminShapeInfo" style="color: ' + this.adminShapesColor + ';">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>';
+    }
+
+    overlay.innerHTML = instructionText;
+
     this.element.style.position = 'relative';
     this.element.appendChild(overlay);
 
@@ -233,10 +224,11 @@
   };
 
   MapboxMap.prototype.getDrawStyles = function() {
-    var color = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
     const blue = '#3bb2d0';
     const orange = '#fbb03b';
     const white = '#fff';
+    var circleColor = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
+    const shapesColor = this.adminEditor ? this.adminShapesColor : blue;
 
     return [
       // // Bigger points
@@ -245,7 +237,7 @@
       //   'type': 'circle',
       //   'filter': ['all', ['==', '$type', 'Point'], ['==', 'meta', 'feature'], ['!=', 'mode', 'static']],
       //   'paint': {
-      //     'circle-radius': 10,
+      //     'circle-radius': 12,
       //     'circle-color': color,
       //     'circle-stroke-width': 3,
       //     'circle-stroke-color': '#ffffff'
@@ -266,9 +258,13 @@
           'fill-color': [
             'case',
             ['==', ['get', 'active'], 'true'], orange,
-            blue,
+            shapesColor
           ],
-          'fill-opacity': 0.3,
+          'fill-opacity': [
+            'case',
+            ['==', ['get', 'active'], 'true'], 0.35,
+            0.15
+          ],
         },
       },
 
@@ -292,14 +288,18 @@
           'line-color': [
             'case',
             ['==', ['get', 'active'], 'true'], orange,
-            blue,
+            shapesColor,
           ],
           'line-dasharray': [
             'case',
-            ['==', ['get', 'active'], 'true'], [0.2, 2],
-            [2, 0],
+            ['==', ['get', 'active'], 'true'], [5, 5],
+            [5, 0],
           ],
-          'line-width': 3,
+          'line-width': [
+            'case',
+            ['==', ['get', 'active'], 'true'], 5,
+            2,
+          ]
         },
       },
 
@@ -317,8 +317,8 @@
         'paint': {
           'circle-radius': [
             'case',
-            ['==', ['get', 'active'], 'true'], 7,
-            5,
+            ['==', ['get', 'active'], 'true'], 15,
+            15,
           ],
           'circle-color': white,
         },
@@ -332,15 +332,20 @@
           ['==', 'meta', 'feature'],
         ],
         'paint': {
+          'line-color': [
+            'case',
+            ['==', ['get', 'active'], 'true'], white,
+            white,
+          ],
           'circle-radius': [
             'case',
-            ['==', ['get', 'active'], 'true'], 5,
-            3,
+            ['==', ['get', 'active'], 'true'], 12,
+            12,
           ],
           'circle-color': [
             'case',
             ['==', ['get', 'active'], 'true'], orange,
-            blue,
+            circleColor,
           ],
         },
       },
@@ -438,7 +443,7 @@
     this.map.on('draw.create', function(e) {
       // If not admin editor, ensure only one polygon exists
       if (!self.adminEditor) {
-        var allFeatures = self.draw.getAll();
+        var allFeatures = self.draw ? self.draw.getAll() : { features: [] };
         // If we have more than one feature, remove all but the newest one
         if (allFeatures.features.length > 1) {
           // Get the newly created feature(s) from the event
@@ -789,6 +794,8 @@
       } else if (coordinate.features && Array.isArray(coordinate.features)) {
         // Handle other coordinate structures that might represent shapes
         coordinate.features.forEach(function(feature) {
+            if (coordinate.fa_icon_class === "circle") return
+
             var centroid = calculatePolygonCentroid(feature.geometry);
             // console.log("render shape with polygon marker", coordinate)
             // console.log("centroid", centroid)
@@ -990,19 +997,22 @@
   };
 
   MapboxMap.prototype.renderIconLayer = function(e) {
-    var self = this;
-
     // Remove existing layer if it exists
-    if (self.map.getLayer('custom-marker-icon')) {
-      self.map.removeLayer('custom-marker-icon');
+    if (this.map.getLayer('custom-marker-icon')) {
+      this.map.removeLayer('custom-marker-icon');
     }
 
-    // Add the unclustered point layer
-    self.map.addLayer({
+    this.map.addLayer({
       id: 'custom-marker-icon',
       type: 'symbol',
       source: 'marker-coordinates',
-      filter: ['!', ['has', 'point_count']],
+      filter: [
+        'all',
+        ['!', ['has', 'point_count']],
+        ['has', 'fa_icon_class'],
+        ['!=', ['get', 'fa_icon_class'], ''],
+        ['!=', ['get', 'fa_icon_class'], null]
+      ],
       layout: {
         'icon-image': ['get', 'fa_icon_class'],
         'icon-size': [
@@ -1017,7 +1027,7 @@
       }
     }, null);
 
-    self.setupMarkerEventListeners(e);
+    this.setupMarkerEventListeners(e);
   }
 
   MapboxMap.prototype.setupMarkerEventListeners = function() {
@@ -1162,8 +1172,17 @@
       {
         type: 'Polygon',
         layers: [
-          { id: id + '-layer', type: 'fill', paint: { 'fill-color': color, 'fill-opacity': 0.1 } },
-          { id: id + '-border', type: 'line', paint: { 'line-color': color, 'line-width': 2, 'line-opacity': 0.2 } }
+          {
+            id: id + '-layer',
+            type: 'fill',
+            paint: {
+              'fill-color': color, 'fill-opacity': this.saturatedAdminShape ? 0.22 : 0.15 }
+          },
+          {
+            id: id + '-border',
+            type: 'line',
+            paint: { 'line-color': color, 'line-width': 2, 'line-opacity': 0.2 }
+          }
         ]
       },
       {
@@ -1181,7 +1200,6 @@
       }
     ];
 
-    // Add layers for each geometry type that exists in the data
     var allLayers = [];
     layerConfigs.forEach((config) => {
       var hasGeometryType = self.hasGeometryType(data, config.type);
@@ -1199,26 +1217,23 @@
       }
     });
 
-    // Add event listeners
     var setCursorPointer = function() { self.map.getCanvas().style.cursor = 'pointer'; };
     var resetCursor = function() { self.map.getCanvas().style.cursor = ''; };
 
     allLayers.forEach(function(layer) {
-      // Desktop hover events
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
     });
 
     if (!this.editable) {
-      var handleAdminShapeInteraction = function() {
+      var handleAdminShapeInteraction = function(e) {
         new mapboxgl.Popup()
-          .setLngLat(self.map.getCenter())
-          .setHTML('<div class="map-popup-status-message error">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>')
+          .setLngLat(e.lngLat)
+          .setHTML('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>')
           .addTo(self.map);
       };
 
       allLayers.forEach(function(layer) {
-        // Click and touch events
         self.map.on('click', layer, handleAdminShapeInteraction);
         self.map.on('touchend', layer, handleAdminShapeInteraction);
       });
@@ -1373,7 +1388,6 @@
     }
   };
 
-  // Force cleanup when errors occur
   MapboxMap.prototype.forceCleanup = function() {
     this.map = null;
     this.draw = null;
@@ -1383,7 +1397,6 @@
     this.mapLoaded = false;
   };
 
-  // Convert hex color to RGBA with 50% opacity
   function hexToRgba(hex, alpha) {
     // Remove # if present
     hex = hex.replace('#', '');
@@ -1396,9 +1409,6 @@
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
-
-
-  // Calculate centroid of a polygon
   function calculatePolygonCentroid(geometry) {
     // Handle different coordinate structures
     var coords;

@@ -958,6 +958,7 @@ de:
           kind: Art
           visible: Sichtbarkeit
           email: Email
+          remove_email: E-Mail entfernen
           remove_user: Profil entfernen
       individual_group_values:
         show:

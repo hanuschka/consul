@@ -134,6 +134,7 @@ namespace :admin do
       post :add_user, on: :member
       post :add_from_csv, on: :member
       delete :remove_user, on: :member
+      delete :remove_email_from_auto_join_emails, on: :member
     end
   end
 

@@ -267,13 +267,14 @@ class PagesController < ApplicationController
     @all_resources = []
 
     @valid_filters = @budget.investments_filters
-    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting", "valuating"])
+    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting"])
+    params[:filter] ||= "preselected" if @budget.current_phase.kind.in?(["valuating"])
     params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["publishing_prices", "balloting", "reviewing_ballots"])
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
     @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
-    @valid_orders.delete("total_votes") unless @budget.current_phase.kind == "selecting"
+    @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating", "publishing_prices"])
     @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
 
     sort_option = @projekt_phase.setting("selectable_setting.general.default_order")

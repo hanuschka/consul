@@ -11,6 +11,6 @@
 
 <% if @resource.respond_to?(:image) && @resource.image&.credits&.present? %>
   <div class="resource-image--credits">
-    <%= @resource.image.credits %>
+    <%= @resource.image.credits[0..54] %>
   </div>
 <% end %>

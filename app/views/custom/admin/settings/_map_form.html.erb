@@ -8,7 +8,6 @@
                     data-admin-editor="true"
 
                     data-editable="true"
-                    data-enable-geoman-controls="true"
 
                     data-latitude-input-selector="#latitude"
                     data-longitude-input-selector="#longitude"
@@ -26,7 +25,7 @@
   <%= hidden_field_tag :latitude, Setting["map.latitude"] %>
   <%= hidden_field_tag :longitude, Setting["map.longitude"] %>
   <%= hidden_field_tag :zoom, Setting["map.zoom"] %>
-  <%= hidden_field_tag :tab, '#tab-projekts-map' %>
+  <%= hidden_field_tag :tab, '#tab-projekt-map' %>
 
   <div class="small-12 medium-6 large-4 margin-top">
     <%= submit_tag t("admin.settings.index.map.form.submit"),

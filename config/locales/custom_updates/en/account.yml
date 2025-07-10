@@ -2,6 +2,7 @@ en:
   custom:
     account:
       show:
+        username_label: Username
         data_complete: User data complete
         data_missing: User data not complete
         change_credentials_link: Change login information

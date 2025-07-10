@@ -18,11 +18,24 @@ class IndividualGroupValue < ApplicationRecord
       next if email.blank?
 
       user = User.find_by(email: email)
-      next unless user
-      next if users.include?(user)
 
-      users << user
+      if user.present?
+        users << user unless users.include?(user)
+        auto_join_emails.delete(email) if auto_join_emails.include?(email)
+      else
+        auto_join_emails << email unless auto_join_emails.include?(email)
+      end
+
+      save!
     end
+  end
+
+  def remove_auto_join_email(email)
+    email = normalize_email(email)
+    return if email.blank?
+
+    auto_join_emails.delete(email) if auto_join_emails.include?(email)
+    save!
   end
 
   private

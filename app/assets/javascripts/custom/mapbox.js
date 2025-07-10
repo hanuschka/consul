@@ -74,9 +74,9 @@
 
     if (this.styleId) {
       mapSettings.style = this.styleId;
+      console.log("Using style", this.styleId)
     }
 
-    // console.log("Using style", this.styleId)
 
     return new mapboxgl.Map(mapSettings);
   };
@@ -194,6 +194,9 @@
       trackUserLocation: true
     }));
 
+    // Add POI labels toggle control
+    this.addPoiLabelsControl();
+
     if (this.editable && typeof MapboxDraw !== 'undefined') {
       this.initializePolygonEditor();
     }
@@ -221,6 +224,127 @@
 
     // Store reference for cleanup
     this.instructionOverlay = overlay;
+  };
+
+  MapboxMap.prototype.addPoiLabelsControl = function() {
+    var self = this;
+
+    // Only show POI control if map width is bigger than 780px
+    if (this.element.offsetWidth <= 780) {
+      return;
+    }
+
+    // Custom control for POI labels toggle
+    function PoiLabelsControl() {}
+
+    PoiLabelsControl.prototype.onAdd = function(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox--poi-labels-toggle';
+
+      var checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = 'poi-labels-toggle';
+      checkbox.checked = true; // Default to on
+
+      var label = document.createElement('label');
+      label.htmlFor = 'poi-labels-toggle';
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode('POI Labels'));
+
+      this._container.appendChild(label);
+
+      // Add event listener for checkbox
+      checkbox.addEventListener('change', function() {
+        self.togglePoiLabels(checkbox.checked);
+      });
+
+      return this._container;
+    };
+
+    PoiLabelsControl.prototype.onRemove = function() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    };
+
+    this.map.addControl(new PoiLabelsControl(), 'top-right');
+  };
+
+    MapboxMap.prototype.togglePoiLabels = function(visible) {
+    console.log("togglePoiLabels", visible)
+    var self = this;
+
+    // Wait for map to be fully loaded
+    if (!this.mapLoaded) {
+      console.log("Map not loaded yet, waiting...");
+      this.map.once('idle', function() {
+        self.togglePoiLabels(visible);
+      });
+      return;
+    }
+
+    try {
+      var layers = this.map.getStyle().layers;
+      var visibility = visible ? 'visible' : 'none';
+
+      console.log("Total layers found:", layers.length);
+      console.log("map style", this.map.getStyle())
+
+      // First, let's see all available layers for debugging
+      var allLayerIds = layers.map(function(layer) { return layer.id; });
+      console.log("All layer IDs:", allLayerIds);
+
+      // Find layers that might be POI-related
+      var potentialPoiLayers = layers.filter(function(layer) {
+        return layer.id.toLowerCase().includes('poi') ||
+               layer.id.toLowerCase().includes('place') ||
+               (layer.type === 'symbol' && layer.layout && layer.layout['text-field']);
+      });
+
+      console.log("Potential POI layers found:", potentialPoiLayers.map(function(l) { return l.id; }));
+
+      // More comprehensive POI detection
+      var toggledLayers = 0;
+      layers.forEach(function(layer) {
+        var layerId = layer.id.toLowerCase();
+
+        // Check for various POI layer patterns
+        var isPoiLayer = (
+          layerId.includes('poi') ||
+          layerId.includes('place-') ||
+          layerId.includes('landmark') ||
+          layerId.includes('building-') ||
+          (layer.type === 'symbol' &&
+           layer.layout &&
+           layer.layout['text-field'] &&
+           (layerId.includes('poi') || layerId.includes('place')))
+        ) && (
+          // Exclude non-POI labels
+          !layerId.includes('road') &&
+          !layerId.includes('route') &&
+          !layerId.includes('highway') &&
+          !layerId.includes('waterway') &&
+          !layerId.includes('country') &&
+          !layerId.includes('state') &&
+          !layerId.includes('admin')
+        );
+
+        if (isPoiLayer) {
+          try {
+            self.map.setLayoutProperty(layer.id, 'visibility', visibility);
+            toggledLayers++;
+            console.log('Toggled POI layer:', layer.id, 'to', visibility);
+          } catch (e) {
+            console.warn('Could not toggle visibility for layer:', layer.id, e);
+          }
+        }
+      });
+
+      console.log("Total layers toggled:", toggledLayers);
+
+    } catch (e) {
+      console.error('Error toggling POI labels:', e);
+    }
   };
 
   MapboxMap.prototype.getDrawStyles = function() {
@@ -787,7 +911,7 @@
             resource_type: coordinate.resource_type,
             projekt_phase_id: coordinate.projekt_phase_id,
             color: coordinate.color,
-            fa_icon_class: coordinate.fa_icon_class
+            fa_icon_class: `fa-${coordinate.fa_icon_class}`
           }
         });
       // } else if (coordinate.features && Array.isArray(coordinate.features) && coordinate.type === "FeatureCollection") {
@@ -813,7 +937,7 @@
                   resource_type: coordinate.resource_type,
                   projekt_phase_id: coordinate.projekt_phase_id,
                   color: coordinate.color,
-                  fa_icon_class: coordinate.fa_icon_class,
+                  fa_icon_class: `fa-${coordinate.fa_icon_class}`,
                   is_shape_centroid: true
                 }
               });
@@ -934,6 +1058,7 @@
     var totalImages = this.markerImages.length;
 
     this.markerImages.forEach(function(markerImage) {
+      // console.log('load image', {markerImage})
       self.map.loadImage(markerImage.path, function(error, image) {
         if (error) {
           console.error('Error loading marker image:', error, markerImage);
@@ -1295,6 +1420,19 @@
           console.warn('Error removing instruction overlay:', e);
         }
         this.instructionOverlay = null;
+      }
+
+      // Clean up POI labels control
+      var poiControl = document.getElementById('poi-labels-toggle');
+      if (poiControl && poiControl.parentNode) {
+        try {
+          var controlContainer = poiControl.closest('.mapboxgl-ctrl');
+          if (controlContainer && controlContainer.parentNode) {
+            controlContainer.parentNode.removeChild(controlContainer);
+          }
+        } catch (e) {
+          console.warn('Error removing POI control:', e);
+        }
       }
 
       // Clear overlay timeout

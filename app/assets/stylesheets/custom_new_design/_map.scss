@@ -34,3 +34,23 @@
   backdrop-filter: blur(2px);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
+
+.mapboxgl-ctrl-group {
+  border-radius: 7px;
+}
+
+.mapbox--poi-labels-toggle {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  font-size: 12px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+
+  input[type="checkbox"] {
+    margin-right: 5px;
+    margin-bottom: 0 !important;
+  }
+}

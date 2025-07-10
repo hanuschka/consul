@@ -86,14 +86,14 @@
 
   .homepage-image-header--title {
     opacity: 0.77;
-    background: white;
+    background: $brand;
     display: inline-block;
     padding: 20px 30px;
     line-height: 1.3;
-    color: $brand;
+    color: $white;
     font-size: 32px;
     margin-bottom: 30px;
-    border-radius: 4px;
+    border-radius: 10px;
     word-wrap: break-word;
     max-width: 100%;
   }
@@ -220,12 +220,12 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .top-bar[data-white-text="true"], .sticky-header .top-bar  {
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {
-        color: white;
+        color: $brand !important;
       }
 
       .locale .locale-form select {
         background: white !important;
-        color: black !important;
+        color: $brand !important;
       }
 
       .main-navigation-item--account--image-wrapper {
@@ -246,7 +246,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .top-bar {
       .header--navigation ul.main-menu li.nav-element a,
       .header--navigation ul.main-menu .projekt-name {
-        color: black !important;
+        color: $brand !important;
       }
 
       .main-navigation-item--account--image-wrapper {
@@ -372,7 +372,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .header--navigation ul.main-menu .projekt-name, .header--navigation ul.main-menu li.nav-element a {
-    color: black;
+    color: $brand !important;
   }
 
   .user-notification-badge--wrapper {

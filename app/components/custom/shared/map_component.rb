@@ -44,7 +44,7 @@ class Shared::MapComponent < Shared::MapBaseComponent
           return if icon.blank?
 
           {
-            name: icon,
+            name: "fa-#{icon}",
             path: asset_path("fontawesome_png/solid/#{icon}_50px.png")
           }
         }

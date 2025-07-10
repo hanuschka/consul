@@ -79,7 +79,9 @@ class Shared::MapComponent < Shared::MapBaseComponent
     end
 
     def map_layers
-      if @projekt_phase.present?
+      if @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase)
+        @mappable.map_layers_for_render.to_json
+      elsif @projekt_phase.present?
         @projekt_phase.map_layers_for_render.to_json
       elsif @projekt.present?
         @projekt.map_layers_for_render.to_json

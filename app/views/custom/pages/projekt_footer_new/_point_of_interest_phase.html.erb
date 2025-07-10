@@ -21,7 +21,8 @@
   <%= render Shared::MapComponent.new(
     map_location: @projekt_phase.map_location,
     process_coordinates: @map_coordinates,
-    projekt_phase: @projekt_phase
+    projekt_phase: @projekt_phase,
+    show_admin_shape: true
   ) %>
 </div>
 <div class="flex-layout">

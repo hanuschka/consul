@@ -19,7 +19,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def resource_count
-    proposals.for_public_render.count
+    proposals.base_selection.count
   end
 
   def selectable_by_users?

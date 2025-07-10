@@ -77,7 +77,6 @@
       console.log("Using style", this.styleId)
     }
 
-
     return new mapboxgl.Map(mapSettings);
   };
 
@@ -150,9 +149,23 @@
           target.closest('.mapbox-gl-draw_ctrl')
         );
 
-        // Only handle interactions that aren't on existing marker-coordinates/features or draw controls
-        var features = self.map.queryRenderedFeatures(e.point, {
+        // Check for all interactive features (markers, shapes, clusters)
+        var markerFeatures = self.map.queryRenderedFeatures(e.point, {
           layers: ['custom-marker', 'custom-marker-icon', 'clusters']
+        });
+        
+        var userShapeFeatures = [];
+        var allLayers = self.map.getStyle().layers;
+        allLayers.forEach(function(layer) {
+          // Only check user shapes - admin shapes should not prevent marker placement in edit mode
+          if (layer.id.includes('user-shape-')) {
+            var layerFeatures = self.map.queryRenderedFeatures(e.point, {
+              layers: [layer.id]
+            });
+            if (layerFeatures.length > 0) {
+              userShapeFeatures = userShapeFeatures.concat(layerFeatures);
+            }
+          }
         });
 
         // Check current draw mode
@@ -168,12 +181,12 @@
         var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
 
         // Place editable marker if:
-        // - No features clicked
+        // - No conflicting features clicked (markers, user shapes, or clusters)
         // - Not clicked on draw controls
         // - No existing draw features (to avoid conflicts)
-        // Allow placing marker-coordinates even in drawing modes for better UX
+        // Admin shapes do NOT prevent marker placement in edit mode
 
-        if (hasOnlyPointDrawFeatures || (features.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
+        if (hasOnlyPointDrawFeatures || (markerFeatures.length === 0 && userShapeFeatures.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
           self.moveOrPlaceMarker(e);
         }
       };
@@ -249,6 +262,7 @@
 
       var label = document.createElement('label');
       label.htmlFor = 'poi-labels-toggle';
+      label.className = "mapbox--label--poi-labels-toggle"
       label.appendChild(checkbox);
       label.appendChild(document.createTextNode('POI Labels'));
 
@@ -813,10 +827,70 @@
     }
   };
 
+  MapboxMap.prototype.handleUnifiedPopup = function(e) {
+    var self = this;
+    
+    // Check for clusters first - they should expand, not show popups
+    var clusterFeatures = self.map.queryRenderedFeatures(e.point, {
+      layers: ['clusters']
+    });
+    
+    if (clusterFeatures.length > 0) {
+      // Handle cluster expansion
+      var clusterId = clusterFeatures[0].properties.cluster_id;
+      self.map.getSource('marker-coordinates').getClusterExpansionZoom(
+        clusterId,
+        function(err, zoom) {
+          if (err) return;
+          self.map.easeTo({
+            center: clusterFeatures[0].geometry.coordinates,
+            zoom: zoom
+          });
+        }
+      );
+      return;
+    }
+    
+    // Query features in order of priority (most important first)
+    var markerFeatures = self.map.queryRenderedFeatures(e.point, {
+      layers: ['custom-marker', 'custom-marker-icon']
+    });
+    
+    var adminShapeFeatures = [];
+    var userShapeFeatures = [];
+    
+    // Check for admin and user shape layers
+    var allLayers = self.map.getStyle().layers;
+    allLayers.forEach(function(layer) {
+      if (layer.id.includes('admin-shape-') || layer.id.includes('user-shape-')) {
+        var features = self.map.queryRenderedFeatures(e.point, {
+          layers: [layer.id]
+        });
+        if (features.length > 0) {
+          if (layer.id.includes('admin-shape-')) {
+            adminShapeFeatures = adminShapeFeatures.concat(features);
+          } else {
+            userShapeFeatures = userShapeFeatures.concat(features);
+          }
+        }
+      }
+    });
+
+    // Handle popup based on priority: markers > user shapes > admin shapes
+    if (markerFeatures.length > 0) {
+      self.openMarkerPopup({
+        features: markerFeatures,
+        lngLat: e.lngLat
+      });
+    } else if (userShapeFeatures.length > 0) {
+      self.openShapePopup(e, 'user');
+    } else if (adminShapeFeatures.length > 0) {
+      self.openShapePopup(e, 'admin');
+    }
+  };
+
   MapboxMap.prototype.openMarkerPopup = function(e) {
     var self = this;
-
-    // console.log("handle click on marker")
 
     // Check if we have features and at least one feature
     if (!e.features || !e.features.length || !e.features[0]) {
@@ -852,6 +926,62 @@
       .fail(function() {
         popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
       })
+  };
+
+  MapboxMap.prototype.openShapePopup = function(e, shapeType) {
+    var self = this;
+    
+    if (shapeType === 'admin') {
+      new mapboxgl.Popup({
+        offset: 20,
+        closeButton: true,
+        maxWidth: '250px'
+      })
+        .setLngLat(e.lngLat)
+        .setHTML('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>')
+        .addTo(self.map);
+    } else {
+      // For user shapes, try to find the original coordinates data to get popup info
+      var shapeData = null;
+      if (self.markerCoordinates) {
+        self.markerCoordinates.forEach(function(coordinate) {
+          if (!App.Mapbox.validCoordinates(coordinate) && coordinate.id) {
+            // This is likely a shape coordinate
+            shapeData = coordinate;
+          }
+        });
+      }
+
+      var popup = new mapboxgl.Popup({
+        offset: 20,
+        closeButton: true,
+        maxWidth: '250px'
+      })
+        .setLngLat(e.lngLat)
+        .setHTML('<div class="map-popup-status-message">Laden...</div>')
+        .addTo(self.map);
+
+      if (shapeData && shapeData.resource_type) {
+        var popupDataUrl = App.MapPopup.getPopupDataUrl(shapeData.resource_type, shapeData);
+        
+        if (popupDataUrl) {
+          $.ajax(popupDataUrl, {
+            type: "GET",
+            dataType: "json"
+          })
+            .then(function(data) {
+              popup.setHTML(App.MapPopup.generatePopupContent(data, shapeData.resource_type));
+            })
+            .fail(function() {
+              popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
+            });
+        } else {
+          popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
+        }
+      } else {
+        popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
+      }
+    }
   };
 
   MapboxMap.prototype.renderAdminShape = function() {
@@ -916,33 +1046,7 @@
         });
       // } else if (coordinate.features && Array.isArray(coordinate.features) && coordinate.type === "FeatureCollection") {
       } else if (coordinate.features && Array.isArray(coordinate.features)) {
-        // Handle other coordinate structures that might represent shapes
-        coordinate.features.forEach(function(feature) {
-            if (coordinate.fa_icon_class === "circle") return
-
-            var centroid = calculatePolygonCentroid(feature.geometry);
-            // console.log("render shape with polygon marker", coordinate)
-            // console.log("centroid", centroid)
-
-            if (centroid) {
-              features.push({
-                type: 'Feature',
-                id: (coordinate.id || 'shape_' + Date.now()) + '_centroid',
-                geometry: {
-                  type: 'Point',
-                  coordinates: centroid
-                },
-                properties: {
-                  id: coordinate.id,
-                  resource_type: coordinate.resource_type,
-                  projekt_phase_id: coordinate.projekt_phase_id,
-                  color: coordinate.color,
-                  fa_icon_class: `fa-${coordinate.fa_icon_class}`,
-                  is_shape_centroid: true
-                }
-              });
-            }
-        })
+        // // Handle other coordinate structures that might represent shapes
       }
     });
 
@@ -1017,13 +1121,13 @@
   MapboxMap.prototype.addMarkerBackgroundLayer = function() {
     var self = this;
 
+    // Background layer for regular markers - add on top of shape layers
     this.map.addLayer({
       id: 'custom-marker',
       type: 'circle',
       source: 'marker-coordinates',
       filter: [
         'all',
-        ['!', ['has', 'is_shape_centroid']],
         ['!', ['has', 'point_count']]
       ],
       paint: {
@@ -1063,7 +1167,7 @@
         if (error) {
           console.error('Error loading marker image:', error, markerImage);
         } else {
-          self.map.addImage(markerImage.name, image);
+          self.map.addImage(markerImage.name, image, {sdf: true});
         }
 
         loadedImages++;
@@ -1077,30 +1181,7 @@
   MapboxMap.prototype.setupClusterEventListeners = function() {
     var self = this;
 
-    // Handle cluster interactions (both click and touch)
-    var handleClusterInteraction = function(e) {
-      var features = self.map.queryRenderedFeatures(e.point, {
-        layers: ['clusters']
-      });
-      var clusterId = features[0].properties.cluster_id;
-      self.map.getSource('marker-coordinates').getClusterExpansionZoom(
-        clusterId,
-        function(err, zoom) {
-          if (err) return;
-
-          self.map.easeTo({
-            center: features[0].geometry.coordinates,
-            zoom: zoom
-          });
-        }
-      );
-    };
-
-    // Add both click and touch event listeners for clusters
-    this.map.on('click', 'clusters', handleClusterInteraction);
-    this.map.on('touchend', 'clusters', handleClusterInteraction);
-
-    // Add cursor pointer on hover (desktop only)
+    // Only add hover events for clusters - clicks handled by unified handler
     this.map.on('mouseenter', 'clusters', function() {
       self.map.getCanvas().style.cursor = 'pointer';
     });
@@ -1127,6 +1208,7 @@
       this.map.removeLayer('custom-marker-icon');
     }
 
+    // Add icon layer on top of all other layers to ensure click priority
     this.map.addLayer({
       id: 'custom-marker-icon',
       type: 'symbol',
@@ -1140,17 +1222,15 @@
       ],
       layout: {
         'icon-image': ['get', 'fa_icon_class'],
-        'icon-size': [
-          'case',
-          ['boolean', ['get', 'is_shape_centroid'], false],
-          0.4,  // 30% bigger for shape centroid icons (0.35 * 1.3)
-          0.35    // Normal size for regular markers
-        ],
+        'icon-size': 0.35,
         'icon-allow-overlap': true,
         'icon-ignore-placement': true,
         'icon-anchor': 'center',
+      },
+      paint: {
+        'icon-color': '#ffffff'
       }
-    }, null);
+    });
 
     this.setupMarkerEventListeners(e);
   }
@@ -1158,7 +1238,7 @@
   MapboxMap.prototype.setupMarkerEventListeners = function() {
     var self = this;
 
-    // Desktop hover events
+    // Desktop hover events for markers only
     self.map.on('mouseenter', 'custom-marker',
       self.handleMarkerMouseEnter.bind(self)
     );
@@ -1166,13 +1246,16 @@
       self.handleMarkerMouseLeave.bind(self)
     );
 
-    // Show popup on click and touch
-    self.map.on('click', 'custom-marker',
-      self.openMarkerPopup.bind(self)
-    );
-    self.map.on('touchend', 'custom-marker',
-      self.openMarkerPopup.bind(self)
-    );
+    // Only add popup handlers when NOT in edit mode
+    if (!this.editable) {
+      // Consolidated popup handler for all interactive layers
+      self.map.on('click', function(e) {
+        self.handleUnifiedPopup(e);
+      });
+      self.map.on('touchend', function(e) {
+        self.handleUnifiedPopup(e);
+      });
+    }
   };
 
   MapboxMap.prototype.handleMarkerMouseEnter = function(e) {
@@ -1247,40 +1330,20 @@
       }
     });
 
-    // Create shared event handlers
+    // Create shared event handlers for hover only
     var setCursorPointer = function() {
       self.map.getCanvas().style.cursor = 'pointer';
     };
     var resetCursor = function() {
       self.map.getCanvas().style.cursor = '';
     };
-    var handleShapeInteraction = function(e) {
-      // Create a proper event structure for the popup
-      var popupEvent = {
-        features: [{
-          geometry: {
-            coordinates: e.lngLat ? [e.lngLat.lng, e.lngLat.lat] : [0, 0]
-          },
-          properties: {
-            id: coordinates.id || shapeId,
-            resource_type: coordinates.resource_type || 'shape'
-          }
-        }]
-      };
 
-      self.openMarkerPopup(popupEvent);
-    };
-
-    // Add event listeners for both fill and border layers
+    // Add event listeners for both fill and border layers (hover only)
     var layers = [layerId, borderLayerId];
     layers.forEach(function(layer) {
-      // Desktop hover events
+      // Desktop hover events only - clicks handled by unified handler
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
-
-      // Click and touch events
-      self.map.on('click', layer, handleShapeInteraction);
-      self.map.on('touchend', layer, handleShapeInteraction);
     });
   };
 
@@ -1345,24 +1408,11 @@
     var setCursorPointer = function() { self.map.getCanvas().style.cursor = 'pointer'; };
     var resetCursor = function() { self.map.getCanvas().style.cursor = ''; };
 
+    // Only add hover events - clicks handled by unified handler
     allLayers.forEach(function(layer) {
       self.map.on('mouseenter', layer, setCursorPointer);
       self.map.on('mouseleave', layer, resetCursor);
     });
-
-    if (!this.editable) {
-      var handleAdminShapeInteraction = function(e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>')
-          .addTo(self.map);
-      };
-
-      allLayers.forEach(function(layer) {
-        self.map.on('click', layer, handleAdminShapeInteraction);
-        self.map.on('touchend', layer, handleAdminShapeInteraction);
-      });
-    }
   };
 
   // Helper method to check if data contains a specific geometry type
@@ -1514,6 +1564,14 @@
     if (!this.map || !this.mapLoaded) return;
 
     try {
+      // Remove known layers first
+      var layersToRemove = ['custom-marker', 'custom-marker-icon', 'clusters', 'cluster-count'];
+      layersToRemove.forEach(function(layerId) {
+        if (this.map.getLayer(layerId)) {
+          this.map.removeLayer(layerId);
+        }
+      }.bind(this));
+
       // Remove known sources
       var sources = ['marker-coordinates', 'admin-shape'];
       sources.forEach(function(sourceId) {
@@ -1545,40 +1603,6 @@
     var b = parseInt(hex.substring(4, 6), 16);
 
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
-  }
-
-  function calculatePolygonCentroid(geometry) {
-    // Handle different coordinate structures
-    var coords;
-
-    if (geometry.type === 'Polygon') {
-      coords = geometry.coordinates[0]; // Get outer ring
-    } else if (geometry.type === 'MultiPolygon') {
-      coords = geometry.coordinates[0][0]; // Get first polygon's outer ring
-    } else if (Array.isArray(geometry) && Array.isArray(geometry[0])) {
-      coords = geometry;
-    }
-
-    if (!coords || coords.length === 0) {
-      return null;
-    }
-
-    var x = 0, y = 0;
-    var validCoords = coords.filter(function(coord) {
-      return Array.isArray(coord) && coord.length >= 2 &&
-             !isNaN(coord[0]) && !isNaN(coord[1]);
-    });
-
-    if (validCoords.length === 0) {
-      return null;
-    }
-
-    validCoords.forEach(function(coord) {
-      x += parseFloat(coord[0]);
-      y += parseFloat(coord[1]);
-    });
-
-    return [x / validCoords.length, y / validCoords.length];
   }
 
   // Keep the existing App.Mapbox object

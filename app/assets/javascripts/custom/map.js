@@ -72,9 +72,16 @@
       /* Create leaflet map start */
       var map = L.map(element.id, {
         gestureHandling: true,
-        maxZoom: 18
+        maxZoom: 18,
+        zoomControl: false
       }).setView(mapCenterLatLng, zoom);
       App.Map.maps.push(map);
+
+      var zoomControl = L.control.zoom({
+        zoomInTitle: 'Hineinzoomen',
+        zoomOutTitle: 'Herauszoomen'
+      });
+      map.addControl(zoomControl);
 
       // update form fields when map center changes
       map.on("moveend", function() {
@@ -89,7 +96,12 @@
 
       /* Leaflet basic plugins start */
       // Leaflet.Locate plugin: ads control to map
-      L.control.locate({icon: 'fa fa-map-marker'}).addTo(map);
+      L.control.locate({
+        icon: 'fa fa-map-marker',
+        strings: {
+          title: 'Meine Position anzeigen'
+        }
+      }).addTo(map);
 
       // Leaflet GeoSearch plugin: adds control to map
       var searchControl = new GeoSearch.GeoSearchControl({
@@ -98,6 +110,7 @@
         showMarker: false,
         searchLabel: 'Nach Adresse suchen',
         notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
+        clearSearchLabel: 'Suche zurücksetzen'
       });
       map.addControl(searchControl);
 
@@ -639,7 +652,7 @@
         map.pm.Toolbar.createCustomControl({
           name: 'clearMap',
           className: 'control-icon leaflet-pm-icon-delete',
-          title: 'Clear Map',
+          title: 'Karte zurücksetzen',
           block: 'edit',
           onClick: function() {
             removeShapesAndMarkers();

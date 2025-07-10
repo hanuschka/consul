@@ -1,6 +1,6 @@
 // brand_color
-$brand:                                           #ad0e36;
-$brand-hover:                                     rgba($brand, 0.05);
+$brand:                                           #44297A;
+$brand-hover:                                     #7C5AE2;
 $brand-secondary:                                 #002d50;
 $secondary:                                       lighten($brand, 70%);
 $accent:                                          lighten($brand, 50%);
@@ -10,7 +10,7 @@ $text-over-brand:                                 $white;
 $dt-base:                                         #004a83;
 $standard-accent-color:                                         #004a83;
 $dt-base-secondary:                               lighten($dt-base, 70%);
-$main-background-color: #F4F4F4;
+$main-background-color:                           #EBEBEB;
 // Menu variables
 
 $dark:                                            #222;

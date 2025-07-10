@@ -50,6 +50,8 @@
   user-select: none;
 
   label {
+    display: flex;
+    align-items: center;
     padding: 5px 12px;
     cursor: pointer;
 
@@ -59,7 +61,10 @@
   }
 
   input[type="checkbox"] {
-    margin-right: 5px;
+    margin-top: 0;
     margin-bottom: 0 !important;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
   }
 }

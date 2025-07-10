@@ -194,23 +194,23 @@
       }
     }
 
-    addControls() {
-      this.map.addControl(new mapboxgl.NavigationControl());
+          addControls() {
+        // Add POI labels toggle control first (top-right, before other controls)
+        this.addPoiLabelsControl();
 
-      this.map.addControl(new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        trackUserLocation: true
-      }));
+        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
-      // Add POI labels toggle control
-      this.addPoiLabelsControl();
+        this.map.addControl(new mapboxgl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true
+          },
+          trackUserLocation: true
+        }), 'top-left');
 
-      if (this.editable && typeof MapboxDraw !== 'undefined') {
-        this.initializePolygonEditor();
+        if (this.editable && typeof MapboxDraw !== 'undefined') {
+          this.initializePolygonEditor();
+        }
       }
-    }
 
     addMapInstructionOverlay() {
       if (this.element.offsetWidth <= 780) {
@@ -242,7 +242,7 @@
         return;
       }
 
-      this.map.addControl(new PoiLabelsControl(this), 'bottom-right');
+              this.map.addControl(new PoiLabelsControl(this), 'top-right');
     }
 
     togglePoiLabels(visible) {
@@ -1534,7 +1534,7 @@
       label.htmlFor = 'poi-labels-toggle';
       label.className = "mapbox--label--poi-labels-toggle"
       label.appendChild(checkbox);
-      label.appendChild(document.createTextNode('POI Labels. Orte von Interesse'));
+      label.appendChild(document.createTextNode('Orte von Interesse'));
 
       this._container.appendChild(label);
 

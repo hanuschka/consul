@@ -86,11 +86,11 @@
 
     if (this.$categorySelect) {
       this.$categorySelect.on("change", function(e) {
-        self.updateMarkerStyleFromCategorySelect(e.target);
+        // self.updateMarkerStyleFromCategorySelect(e.target);
       });
 
       if (this.$categorySelect.length) {
-        this.updateMarkerStyleFromCategorySelect(this.$categorySelect.get(0));
+        // this.updateMarkerStyleFromCategorySelect(this.$categorySelect.get(0));
       }
     }
 

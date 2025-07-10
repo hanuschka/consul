@@ -26,6 +26,7 @@ class Admin::BaseController < ApplicationController
         projekt_update_standard_phase_action ||
         projekt_phase_setting_update_action ||
         projekt_phase_toggle_active_status_action ||
+        projekt_phase_frontend_visibility_action ||
         page_update_action
     end
 
@@ -53,6 +54,10 @@ class Admin::BaseController < ApplicationController
 
     def projekt_phase_toggle_active_status_action
       controller_name == "projekt_phases" && action_name == "toggle_active_status"
+    end
+
+    def projekt_phase_frontend_visibility_action
+      controller_name == "projekt_phases" && action_name == "toggle_frontend_visibility"
     end
 
     def page_update_action

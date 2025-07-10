@@ -113,7 +113,7 @@
           <% end %>
         <% end %>
 
-        <% if projekt_phase_feature?(@poll.projekt_phase, "resource.show_comments") %>
+        <% if projekt_phase_feature?(@poll.projekt_phase, "resource.show_comments") || @poll.comments.exists? %>
           <%= render Shared::NewCommentsComponent.new(@poll, @comment_tree) %>
         <% end %>
       </div>

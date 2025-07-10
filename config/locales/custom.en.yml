@@ -1,0 +1,17 @@
+proposals:
+  navigation:
+    back: "back"
+    next: "next proposal"
+  show:
+    previous: "Previous proposal"
+    next: "Next proposal"
+    exit_quiz_mode: "Back to proposals list"
+
+budgets:
+  investments:
+    show:
+      back: "back"
+      next: "Next proposal"
+      previous: "Previous proposal"
+      next: "Next proposal"
+      exit_quiz_mode: "Back to proposals list" 

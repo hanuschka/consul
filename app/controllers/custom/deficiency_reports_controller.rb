@@ -208,6 +208,10 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def notify_responsible(dr)
+    if dr.responsible.is_a?(DeficiencyReport::OfficerGroup) && dr.responsible.default_email.present?
+      DeficiencyReportMailer.notify_default_officer_group_email(dr).deliver_later
+    end
+
     dr.responsible_officers.each do |officer|
       DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
       Notification.add(officer.user, dr)

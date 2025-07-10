@@ -1,18 +1,20 @@
 <% if Setting.new_design_enabled? %>
 
   <main class="user-resources-form <%= " -no-image" unless projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>">
+    <% if helpers.projekt_phase_pro_feature?(budget.projekt_phase, "form.voice_assistant") %>
+      <%= render Dt::VoiceAssistantComponent.new(
+        assistant_codename: "budget_proposal_voice_assistant",
+        projekt_phase: investment.projekt_phase
+      ) %>
+    <% end %>
+
     <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form" }) do |f| %>
       <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
       <div class="flex-layout">
         <div class="main-column">
-          <h1 class="user-resources-form--title">
-            <%= investment.projekt_phase.resource_form_title.presence || t("custom.budgets.investments.form.start_new") %>
-          </h1>
-
-          <div class="user-resources-form--description">
-            <%= render_custom_block "user_resource_form_budget_investment", default_content: t("custom.budgets.investments.form.page_description") %>
-          </div>
+          <h1 class="user-resources-form--title"><%= form_title %></h1>
+          <div class="user-resources-form--description"><%= AdminWYSIWYGSanitizer.new.sanitize(form_description) %></div>
 
           <%= render "shared/errors", resource: investment %>
         </div>
@@ -27,18 +29,19 @@
                 <%= translations_form.text_area :title,
                   data: suggest_data(investment),
                   label: false,
-                  class: "user-resources-form--banner-editor-title",
-                  placeholder: investment.projekt_phase&.resource_form_title_hint.presence || t("custom.budgets.investments.form.title_placeholder"),
+                  class: "user-resources-form--banner-editor-title js-user-resource-form-title",
+                  placeholder: title_placeholder,
                   autocomplete: "off" %>
               </div>
 
               <% if projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>
-                <div class="banner-editor-image-attachment js-banner-editor-image-attachment">
+                <div class="banner-editor-image-attachment">
                   <% if f.object.image.blank? %>
                     <% f.object.build_image %>
                   <% end %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                    <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
                   <% end %>
                 </div>
               <% end %>
@@ -47,8 +50,8 @@
             <%= translations_form.text_area :description,
               value: AdminWYSIWYGSanitizer.new.sanitize(investment.description),
               label: false,
-              placeholder: t("custom.budgets.investments.form.description_placeholder"),
-              class: "html-area #{ck_editor_class(current_user)}" %>
+              placeholder: description_placeholder,
+              class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description" %>
           <% end %>
 
           <% if projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
@@ -80,13 +83,13 @@
                     selected: investment.implementation_performer
                   },
                   {
-                    class: 'implementation-performer show-arrow',
+                    class: 'js-implementation-performer-select implementation-performer show-arrow',
                     style: "width:100%;", onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')"
                   } %>
               </div>
 
               <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
-                <%= f.text_field :implementation_contribution %>
+                <%= f.text_field :implementation_contribution, class: "js-budget-implementation-contribution" %>
               </div>
             <% end %>
           <% end %>
@@ -97,7 +100,7 @@
                           description: t("custom.budgets.investments.form.user_cost_estimate.description"),
                           icon_name: "euro-sign"
                        ) do |c| %>
-              <%= f.text_field :user_cost_estimate, label: false, placeholder: t("custom.budgets.investments.form.user_cost_estimate.placeholder") %>
+              <%= f.text_field :user_cost_estimate, label: false, placeholder: t("custom.budgets.investments.form.user_cost_estimate.placeholder"), class: "js-budget-user-cost-estimate-field" %>
 
             <% end %>
           <% end %>
@@ -111,18 +114,17 @@
                   <%= f.collection_check_boxes :projekt_label_ids, investment.projekt_phase.projekt_labels, :id, :name do |cb| %>
                     <%= cb.check_box %>
                     <% iconn = content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") %>
-                    <%= cb.label(id: dom_id(cb.object), class: "projekt-label") { iconn + cb.text } %>
+                    <%= cb.label(id: dom_id(cb.object), class: "projekt-label js-projekt-label", data: { "label-id" => cb.object.id }) { iconn + cb.text } %>
                   <% end %>
                 </div>
               </div>
 
-              <% if investment.errors.details[:projekt_labels].any? %>
-                <% investment.errors.details[:projekt_labels].each do |error| %>
-                  <small class='form-error is-visible'>
-                    <%= t("activerecord.errors.models.budget_investment.attributes.projekt_labels.#{error[:error]}") %>
-                  </small>
-                <% end %>
+              <% investment.errors.where(:projekt_labels).each do |error| %>
+                <small class='form-error is-visible'>
+                  <%= error.message %>
+                </small>
               <% end %>
+
             <% end %>
           <% end %>
 
@@ -136,18 +138,17 @@
                   <%= f.collection_radio_buttons :sentiment_id, investment.projekt_phase.sentiments, :id, :name, { include_hidden: false } do |rb| %>
                     <%= rb.radio_button %>
                     <% button_styles = "border-color:#{rb.object.color};background-color:#{rb.object.color};color:#{pick_text_color(rb.object.color)}" %>
-                    <%= rb.label(id: dom_id(rb.object), class: "sentiment", data: { "sentiment-color" =>  rb.object.color }, style: button_styles) { rb.text } %>
+                    <%= rb.label(id: dom_id(rb.object), class: "sentiment js-projekt-phase-sentiment", data: { "sentiment-id" => rb.object.id, "sentiment-color" =>  rb.object.color }, style: button_styles) { rb.text } %>
                   <% end %>
                 </div>
               </div>
 
-              <% if investment.errors.details[:sentiment_id].any? %>
-                <% investment.errors.details[:sentiment_id].each do |error| %>
-                  <small class="form-error is-visible">
-                    <%= t("activerecord.errors.models.budget_investment.attributes.sentiment.#{error[:error]}") %>
-                  </small>
-                <% end %>
+              <% investment.errors.where(:sentiment_id).each do |error| %>
+                <small class='form-error is-visible'>
+                  <%= error.message %>
+                </small>
               <% end %>
+
             <% end %>
           <% end %>
 
@@ -183,7 +184,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? || current_user.moderator? %>
+          <% if helpers.allowed_to_post_on_behalf_of?(current_user, investment.projekt_phase.projekt) %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.budgets.investments.form.on_behalf_of.title"),
                           description: t("custom.budgets.investments.form.on_behalf_of.description"),
@@ -243,11 +244,11 @@
 
       <% if projekt_phase_feature?(investment&.projekt_phase, "form.show_implementation_option_fields") %>
         <div>
-          <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
+          <%= f.select :implementation_performer, options_for_implementation_select, {}, { class: 'js-implementation-performer-select implementation-performer show-arrow', onChange: "$(this).val() === 'user' ? $('#implementation_contribution').css('display', 'block') : $('#implementation_contribution').css('display', 'none')" } %>
         </div>
 
         <div id='implementation_contribution' style="display:<%= investment.implementation_performer == 'user' ? 'block' : 'none' %>">
-          <%= f.text_field :implementation_contribution %>
+          <%= f.text_field :implementation_contribution, class: "js-budget-implementation-contribution" %>
         </div>
       <% end %>
 
@@ -344,5 +345,4 @@
       <%= f.submit %>
     </div>
   <% end %>
-
 <% end %>

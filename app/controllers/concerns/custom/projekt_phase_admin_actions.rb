@@ -80,6 +80,14 @@ module ProjektPhaseAdminActions
     @projekt_phase.update!(active: status_value)
   end
 
+  def toggle_frontend_visibility
+    authorize!(:toggle_frontend_visibility, @projekt_phase)
+
+    visibility_value = params[:projekt][:phase_attributes][:frontend_visibility]
+    @projekt_phase.update!(frontend_visibility: visibility_value)
+
+  end
+
   def duration
     authorize!(:duration, @projekt_phase)
 
@@ -101,37 +109,114 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/restrictions"
   end
 
+  def projekt_point_of_interest_pins
+    authorize!(:projekt_point_of_interest_pins, @projekt_phase)
+    @pins = @projekt_phase.projekt_point_of_interest_pins.ordered
+
+    respond_to do |format|
+      format.html { render "custom/admin/projekt_phases/projekt_point_of_interest_pins" }
+      format.csv { send_data CsvServices::PointOfInterestPinsExporter.call(@pins), filename: "point_of_interest_pins-#{Date.today}.csv" }
+    end
+  end
+
+  def projekt_point_of_interest_categories
+    authorize!(:projekt_point_of_interest_categories, @projekt_phase)
+    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+
+    render "custom/admin/projekt_phases/projekt_point_of_interest_categories"
+  end
+
   def settings
     authorize!(:settings, @projekt_phase)
 
-    if params[:category].present?
-      projekt_phase_features, projekt_phase_options =
-        get_all_settings_for_phase_and_category(
-          @projekt_phase, params[:category]
-        )
-      @projekt_phase_features = { params[:category] => projekt_phase_features }
-      @projekt_phase_options = { params[:category] => projekt_phase_options }
-    else
-      projekt_phase_features, projekt_phase_options =
-        get_all_settings_for_phase_and_category(
-          @projekt_phase, :base
-        )
-
-      @projekt_phase_features = projekt_phase_features&.group_by(&:band) || []
-      @projekt_phase_options = projekt_phase_options&.group_by(&:band) || []
-    end
-
-    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
-    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
+    set_setting_page_variables(@projekt_phase)
 
     render "custom/admin/projekt_phases/settings"
   end
 
-  def get_all_settings_for_phase_and_category(projekt_phase, category)
-    proposal_setting_key_ordered = ProjektPhaseSetting.defaults[projekt_phase.class.name][category.to_sym].keys
+  def general_settings
+    authorize!(:settings, @projekt_phase)
 
-    projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
-      result[item.key] = item
+    set_setting_page_variables(@projekt_phase)
+
+    @projekt_phase_features = @projekt_phase_features&.slice("general")
+    @projekt_phase_options = @projekt_phase_options&.slice("general")
+
+    options =
+      if @projekt_phase.resources_name == "proposals"
+        Proposal.proposals_orders
+      elsif @projekt_phase.resources_name == "budget"
+        Budget::Investment::DEFAULT_ORDERS
+      end
+
+    selectable_setting = @projekt_phase.settings.find_by(key: "selectable_setting.general.default_order")
+
+    if selectable_setting.present?
+      @projekt_phase_selectable_settings =
+        [
+          ProjektPhaseSetting::SelectableSettingSet.new(
+            setting: selectable_setting,
+            options: options
+          )
+        ]
+    end
+
+    render "custom/admin/projekt_phases/user_functions"
+  end
+
+  def map_resources_overview
+    @map_coordinates =
+      @projekt_phase
+        .projekt_point_of_interest_pins
+        .includes(:map_location)
+        .map(&:pin_json_data)
+  end
+
+  def user_functions
+    authorize!(:settings, @projekt_phase)
+
+    set_setting_page_variables(@projekt_phase)
+
+    @projekt_phase_features = @projekt_phase_features&.slice("resource")
+    @projekt_phase_options = @projekt_phase_options&.slice("resource")
+
+    render "custom/admin/projekt_phases/user_functions"
+  end
+
+  def form_author
+    authorize!(:settings, @projekt_phase)
+
+    set_setting_page_variables(@projekt_phase)
+
+    @projekt_phase_features = @projekt_phase_features&.slice("form")
+    @projekt_phase_options = @projekt_phase_options&.slice("form")
+
+    render "custom/admin/projekt_phases/form_author"
+  end
+
+  def set_setting_page_variables(projekt_phase)
+    phase_settings = ProjektPhaseSetting.defaults[projekt_phase.class.name]
+
+    if phase_settings.present?
+      proposal_setting_key_ordered = phase_settings.keys
+
+      projekt_phase_settings_by_key = projekt_phase.settings.each_with_object({}) do |item, result|
+        result[item.key] = item
+      end
+
+      setting_ordered = []
+      proposal_setting_key_ordered.each do |setting_key|
+        setting = projekt_phase_settings_by_key[setting_key.to_s]
+        setting_ordered.push(setting)
+      end
+
+      all_settings = setting_ordered.compact.group_by(&:kind)
+
+      @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
+      @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
+
+      @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
+      @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
     end
 
     setting_ordered = []
@@ -140,17 +225,26 @@ module ProjektPhaseAdminActions
       setting_ordered.push(setting)
     end
 
-    all_settings = setting_ordered.group_by(&:kind)
+    all_settings = setting_ordered.compact.group_by(&:kind)
 
-    projekt_phase_features = all_settings["feature"]
-    projekt_phase_options = all_settings["option"]
+    @projekt_phase_features = (all_settings["feature"]&.group_by(&:band).presence || {})
+    @projekt_phase_options = (all_settings["option"]&.group_by(&:band).presence || {})
 
-    [projekt_phase_features, projekt_phase_options]
+    @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
+    @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
+
+    @apps = App.all
+  end
+
+  def proposals
+    authorize!(:proposals, @projekt_phase)
+    @proposals = @projekt_phase.proposals.order(id: :desc).page(params[:page])
+
+    render "custom/admin/projekt_phases/proposals"
   end
 
   def projekt_labels
     authorize!(:projekt_labels, @projekt_phase)
-
     @projekt_labels = @projekt_phase.projekt_labels
 
     render "custom/admin/projekt_phases/projekt_labels"
@@ -166,18 +260,19 @@ module ProjektPhaseAdminActions
   def map
     authorize!(:map, @projekt_phase)
 
-    @projekt_phase.copy_map_settings unless @projekt_phase.map_location.present?
+    @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
     @map_location = @projekt_phase.map_location
 
     render "custom/admin/projekt_phases/map"
   end
 
   def update_map
-    map_location = MapLocation.find_by(projekt_phase_id: params[:id])
+    @projekt_phase = ProjektPhase.find(params[:id])
+    map_location = @projekt_phase.map_location || MapLocation.new(projekt_phase: @projekt_phase)
 
     authorize!(:update_map, map_location)
 
-    map_location.update!(map_location_params.except(:id))
+    map_location.update!(map_location_params)
 
     redirect_to namespace_projekt_phase_path(action: "map"),
       notice: t("admin.settings.index.map.flash.update")
@@ -382,6 +477,50 @@ module ProjektPhaseAdminActions
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
   end
 
+  def ai_settings
+    authorize!(:ai_settings, @projekt_phase)
+
+    @assistant_codename = @projekt_phase.voice_assistant_codename
+    @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
+
+    dt_api = DtApi::Client.new
+
+    ai_assistant_config_response =
+      dt_api
+        .ai_assistant_configs
+        .get(
+          codename: @assistant_codename,
+          consul_projekt_phase_id: @projekt_phase.id
+        )
+
+    @ai_assistant_config =
+      ai_assistant_config_response
+        .fetch("client_ai_assistant_config")
+
+    render "custom/admin/projekt_phases/ai_settings"
+  end
+
+  def update_ai_settings
+    authorize!(:ai_settings, @projekt_phase)
+
+    dt_api = DtApi::Client.new
+
+    @ai_assistant_config =
+      dt_api
+        .ai_assistant_configs
+        .update(
+          codename: params[:assistant_codename],
+          consul_projekt_phase_id: @projekt_phase.id,
+          params: {
+            questions: params[:projekt_phase][:questions],
+            criteria: params[:projekt_phase][:criteria],
+            parting_words: params[:projekt_phase][:parting_words]
+          }
+        )
+
+    redirect_to action: "ai_settings"
+  end
+
   # def frame_phases_restrictions
   #   @projekt = Projekt.find(params[:projekt_id])
   #   authorize!(:edit, @projekt)
@@ -419,11 +558,12 @@ module ProjektPhaseAdminActions
     end
 
     def map_location_params
-      if params[:map_location]
-        params.require(:map_location).permit(map_location_attributes)
-      else
-        params.permit(map_location_attributes)
-      end
+      phase_key = params.keys.find { |k| k.start_with?('projekt_phase_') }
+      return {} unless phase_key
+
+      params.require(phase_key)
+            .require(:map_location_attributes)
+            .permit(map_location_attributes)
     end
 
     def set_projekt_phase

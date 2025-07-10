@@ -80,3 +80,7 @@ en:
     proposal_created:
       hi: "Hello %{username},"
       text1: "Your proposal has been successfully submitted: %{proposal_link}"
+    new_valuator_assignment:
+      subject: New valuation assignment
+      hi: "Hello %{username},"
+      text1: "You have been assigned a proposal for evaluation: %{valuation_link}"

@@ -18,12 +18,13 @@ module DeficiencyReportsHelper
   def json_data
     deficiency_report = DeficiencyReport.find(params[:id])
 
-    image_url = deficiency_report.image.present? ? url_for(deficiency_report.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+    image_url = deficiency_report.image.present? ? url_for(deficiency_report.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
 
     data = {
-      deficiency_report_id: deficiency_report.id,
+      resource_type: "deficiency_report",
+      id: deficiency_report.id,
       image_url: image_url,
-      deficiency_report_title: deficiency_report.title
+      title: deficiency_report.title
     }.to_json
 
     respond_to do |format|
@@ -45,5 +46,10 @@ module DeficiencyReportsHelper
 
   def deficiency_reports_secondary_view
     deficiency_reports_current_view == "default" ? "minimal" : "default"
+  end
+
+  def deficiency_report_all_responsible_sorted
+    DeficiencyReport::OfficerGroup.all.order(:name) +
+      DeficiencyReport::Officer.joins(:user).order("users.username ASC")
   end
 end

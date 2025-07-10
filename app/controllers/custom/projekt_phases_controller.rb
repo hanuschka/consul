@@ -22,4 +22,15 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:id])
     @projekt = @projekt_phase.projekt
   end
+
+  def refresh_stats
+    @projekt_phase = ProjektPhase.find(params[:id])
+    authorize!(:refresh_stats, @projekt_phase)
+
+    @projekt_phase.stats_version&.destroy!
+
+    redirect_to page_path(@projekt_phase.projekt.page.slug,
+                          projekt_phase_id: @projekt_phase.id,
+                          section: "stats")
+  end
 end

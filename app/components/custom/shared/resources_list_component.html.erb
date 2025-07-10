@@ -1,29 +1,3 @@
-<% if render_map? %>
-  <% map = capture do %>
-    <% resources_name = resources.first&.class&.name&.underscore&.pluralize %>
-    <% resources_name = "deficiency-reports" if resources.first&.is_a?(DeficiencyReport) %>
-    <% resources_name = "budgets" if resources.first&.is_a?(Budget::Investment) %>
-    <div class="map resources-list--map not-print">
-      <% if @projekt_phase&.projekt&.vc_map_enabled? %>
-        <%= render Shared::VCMapComponent.new(
-          parent_class: resources_name,
-          process_coordinates: @map_coordinates,
-          map_location: @map_location || @projekt_phase&.map_location,
-          projekt_phase: @projekt_phase,
-          show_admin_shape: @projekt_phase&.map_location&.show_admin_shape?
-        ) %>
-      <% else %>
-        <%= render Shared::MapComponent.new(
-          parent_class: resources_name,
-          process_coordinates: @map_coordinates,
-          map_location: @map_location || @projekt_phase&.map_location,
-          projekt_phase: @projekt_phase,
-          show_admin_shape: @projekt_phase&.map_location&.show_admin_shape?
-        ) %>
-      <% end %>
-    </div>
-  <% end %>
-<% end %>
 
 <% if custom_body.present? %>
   <% body = capture do %>
@@ -55,13 +29,13 @@
       </h3>
     <% end %>
 
-    <%= map if render_map? %>
 
     <div class="resources-list--actions">
       <% if @text_search_enabled && i18n_namespace.present? %>
         <%= render(
           Shared::TextSearchFormComponent.new(
             url: @remote_url,
+            remote: @remote_url.present?,
             i18n_namespace: "#{i18n_namespace}.search_form",
           )
         ) %>

@@ -2,14 +2,12 @@
   <li class="nav-element main-navigation-item-account--wrapper top-level-item js-access-top-level-menu js-prevent-key-scroll"
       aria-label='<%= t('custom.links.menu.konto_icon') if placement == "desktop" %>'
       aria-expanded="false"
-      <%= "aria-haspopup=true'" if placement == 'desktop' %>
       <%= "tabindex=0" if placement == 'desktop' %>
       >
 
-      <%= link_to account_path, class: 'account-items-icon main-navigation-item-user-account', tabindex: "-1", aria: { hidden: true } do %>
+      <%= link_to account_path, class: 'account-items-icon main-navigation-item-user-account', tabindex: "-1" do %>
         <div
             class="main-navigation-item--account--image-wrapper"
-            aria-hidden="true"
             title="<%= t("custom.layouts.header.account_link") %>"
             aria-label="<%= t("custom.layouts.header.account_link") %>"
             >

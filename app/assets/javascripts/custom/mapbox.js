@@ -13,6 +13,7 @@
       this.markerCoordinates = $element.data("process-coordinates");
       this.editable = $element.data("editable");
       this.adminEditor = $element.data("admin-editor");
+      this.editable = this.editable || this.adminEditor;
       this.adminShape = $element.data("admin-shape");
       this.saturatedAdminShape = $element.data("saturated-admin-shape")
       this.showAdminShape = $element.data("show-admin-shape");
@@ -47,14 +48,14 @@
       this.mapLoaded = false; // Track map loading state
 
       // Wait for the map to load before adding marker-coordinates
-      this.map.on('load', function() {
-        self.mapLoaded = true;
+      this.map.on('load', () => {
+        this.mapLoaded = true;
 
-        self.renderAdminShape();
+        this.renderAdminShape();
 
-        self.renderMarkerCoordinates();
-        self.renderResourceShapes();
-        self.addMapInstructionOverlay();
+        this.renderMarkerCoordinates();
+        this.renderResourceShapes();
+        this.addMapInstructionOverlay();
       });
 
       this.setupEventListeners();
@@ -194,23 +195,29 @@
       }
     }
 
-          addControls() {
-        // Add POI labels toggle control first (top-right, before other controls)
-        this.addPoiLabelsControl();
+    addControls() {
+      // Add POI labels toggle control first (top-right, before other controls)
+      this.addPoiLabelsControl();
 
-        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+      this.map.addControl(new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+          countries: 'DE',
+          marker: false
+      }), 'top-left');
 
-        this.map.addControl(new mapboxgl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true
-          },
-          trackUserLocation: true
-        }), 'top-left');
+      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
-        if (this.editable && typeof MapboxDraw !== 'undefined') {
-          this.initializePolygonEditor();
-        }
+      this.map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true
+        }), 'top-left'
+      );
+
+      if (this.editable && typeof MapboxDraw !== 'undefined') {
+        this.initializePolygonEditor();
       }
+    }
 
     addMapInstructionOverlay() {
       if (this.element.offsetWidth <= 780) {

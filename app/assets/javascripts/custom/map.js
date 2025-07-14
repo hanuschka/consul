@@ -305,12 +305,12 @@
             };
             $(shapeInputSelector).val(JSON.stringify(featureCollection));
             // Clear single coordinate fields when using multiple items
-            $(latitudeInputSelector).val('');
-            $(longitudeInputSelector).val('');
+            // $(latitudeInputSelector).val('');
+            // $(longitudeInputSelector).val('');
           } else if (marker) {
             // Single marker case
-            $(latitudeInputSelector).val(marker.getLatLng().lat);
-            $(longitudeInputSelector).val(marker.getLatLng().lng);
+            // $(latitudeInputSelector).val(marker.getLatLng().lat);
+            // $(longitudeInputSelector).val(marker.getLatLng().lng);
             $(shapeInputSelector).val(JSON.stringify({}));
           }
 

@@ -62,9 +62,9 @@ class Shared::MapBaseComponent < ApplicationComponent
 
     def admin_shape
       if @projekt_phase.present?
-        @projekt_phase.map_location&.shape_json_data.presence || @projekt_phase.map_location&.json_data&.to_json
+        @projekt_phase.map_location&.shape_json_data.presence
       elsif @projekt.present?
-        @projekt.map_location.shape_json_data.presence || @projekt.map_location.json_data.to_json
+        @projekt.map_location.shape_json_data.presence
       end
     end
 

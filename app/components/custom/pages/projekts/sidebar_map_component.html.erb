@@ -19,6 +19,7 @@
       <% else %>
         <%= render Shared::MapComponent.new(
           map_location: projekt.map_location,
+          process_coordinates: [],
           parent_class: "proposals_sidebar",
           projekt: projekt,
           show_admin_shape: projekt.map_location.show_admin_shape?,

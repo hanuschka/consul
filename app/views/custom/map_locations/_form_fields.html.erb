@@ -13,6 +13,7 @@
 <div class="margin-bottom">
   <% if mappable.try(:vc_map_enabled?) || mappable.try(:projekt).try(:vc_map_enabled?) %>
     <%= render Shared::VCMapComponent.new(
+      process_coordinates: local_assigns[:marker_coordinates],
       mappable: mappable,
       map_location: map_location,
       parent_class: parent_class,
@@ -22,6 +23,7 @@
     ) %>
   <% else %>
     <%= render Shared::MapComponent.new(
+      process_coordinates: local_assigns[:marker_coordinates],
       mappable: mappable,
       map_location: map_location,
       parent_class: parent_class,

@@ -1,5 +1,8 @@
 en:
   custom:
+    accessibility:
+      banner-image:
+        glightbox-aria-label: "Banner image. Click to enlarge the image."
     map:
       aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
     links:

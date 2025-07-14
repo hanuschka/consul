@@ -1,7 +1,7 @@
 <div class="resource-image">
   <% if @image_url.present? && show_image_thumbnail?(@resource) %>
     <%= image_tag(@image_url, class: "resource-image--main", alt: alt_text) %>
-    <%= image_tag(@image_url, class: "resource-image--blur", alt: "") %>
+    <%= image_tag(@image_url, class: "resource-image--blur", "aria-hidden": "true") %>
   <% else %>
     <div class="resource-image--missing-image-placeholder">
       <i class="resource-image--missing-image-placeholder-icon fa <%= @image_placeholder_icon_class %>"></i>
@@ -11,6 +11,6 @@
 
 <% if @resource.respond_to?(:image) && @resource.image&.credits&.present? %>
   <div class="resource-image--credits">
-    <%= @resource.image.credits %>
+    <%= @resource.image.credits[0..54] %>
   </div>
 <% end %>

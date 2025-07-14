@@ -10,7 +10,6 @@ class ProposalsController
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
-  before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data], unless: -> { current_user&.guest? }
 
   def index_customization
     if params[:order].nil?

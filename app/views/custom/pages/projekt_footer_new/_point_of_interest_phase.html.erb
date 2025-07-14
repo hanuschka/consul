@@ -1,0 +1,32 @@
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
+
+<div class="flex wrap gap-10 margin-bottom items-center">
+  <div class="new-resource-cta">
+    <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
+  </div>
+
+  <div class="small-card">
+    <div class="flex items-center">
+      <h5 class="no-margin">
+        <%= t("custom.deficiency_reports.form.category.title") %>:
+      </h5>
+      <div class="margin-left">
+        <%= render Shared::ProjektPointOfInterestCategoriesComponent.new(projekt_phase_id: @projekt_phase.id) %>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="resources-list--map">
+  <%= render Shared::MapComponent.new(
+    map_location: @projekt_phase.map_location,
+    process_coordinates: @map_coordinates,
+    projekt_phase: @projekt_phase,
+    show_admin_shape: true
+  ) %>
+</div>
+<div class="flex-layout">
+  <div class="main-column">
+
+  </div>
+</div>

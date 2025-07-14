@@ -9,7 +9,7 @@ en:
         notification_icon: Notifications
         all_projekts: All Projekts
         draft_projekts: Drafts
-        projekt_name_label: "Project name: %{projekt_name} "
+        projekt_name_label: "Project name: %{projekt_name}. Control with the up and down arrow keys."
         archived_projekts_label: Archived projects
         deficiency_reports: Deficiency reports
         ideas: Ideas

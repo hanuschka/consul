@@ -2,6 +2,7 @@ de:
   custom:
     account:
       show:
+        username_label: Nutzername
         data_complete: Nutzerdaten sind vollständig
         data_missing: Nutzerdaten sind nicht vollständig
         change_credentials_link: Anmeldeinformationen ändern

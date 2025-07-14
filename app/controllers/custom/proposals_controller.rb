@@ -10,7 +10,6 @@ class ProposalsController
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
-  before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data], unless: -> { current_user&.guest? }
 
   def index_customization
     if params[:order].nil?
@@ -116,6 +115,7 @@ class ProposalsController
   def create
     @proposal = Proposal.new(proposal_params.merge(author: current_user))
     @projekt_phase = @proposal.projekt_phase
+    @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if params[:save_draft].present? && @proposal.save
       redirect_to user_path(@proposal.author, filter: "proposals"), notice: I18n.t("flash.actions.create.proposal")
@@ -238,6 +238,14 @@ class ProposalsController
   private
 
     def proposal_params
+      if params[:proposal][:map_location_attributes].present?
+        location = params[:proposal][:map_location_attributes]
+
+        if location["latitude"].blank? && location["longitude"].blank?
+          location["_destroy"] = "1"
+        end
+      end
+
       attributes = [:id, :video_url, :responsible_name, :tag_list, :on_behalf_of,
                     :geozone_id, :projekt_id, :projekt_phase_id, :related_sdg_list,
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,

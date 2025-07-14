@@ -24,7 +24,7 @@
     <% if params[:section].blank? || params[:section] == 'overview' %>
       <% if valid_filters&.any? %>
         <%= render Shared::SidebarCardComponent.new(title: "Filter", icon_name: "filter") do |c| %>
-          <%= render Budgets::Investments::FiltersComponent.new %>
+          <%= render Budgets::Investments::FiltersComponent.new(@budget) %>
         <% end %>
       <% end %>
     <% end %>

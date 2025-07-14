@@ -1,0 +1,3 @@
+class ProjektManagement::ProjektPointOfInterestPinsController < ProjektManagement::BaseController
+  include ProjektPointOfInterestPinsAdminActions
+end

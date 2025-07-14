@@ -57,11 +57,12 @@ de:
       projekt_phase/milestone_phase: Meilensteine
       projekt_phase/question_phase: Kurzumfrage
       projekt_phase/livestream_phase: Livestreams
-      projekt_phase/iframe_phase: Iframe
       projekt_phase/projekt_notification_phase: Benachrichtigungen
       projekt_phase/legislation_phase: Textbearbeitung
       projekt_phase/newsfeed_phase: News-Feed
       projekt_phase/formular_phase: Formular
+      projekt_phase/iframe_phase: Iframe
+      projekt_phase/point_of_interest_phase: Ort von Interesse
       formular_field: Formularfeld
       officing_manager:
         one: Abstimmungshelfer*innen
@@ -69,6 +70,9 @@ de:
       recipient_group:
         one: Adressatengruppe
         other: Adressatengruppen
+      projekt_point_of_interest_category:
+        one: Kategorie
+        other: Kategorien
     errors:
       messages:
         file_size_is_in: 'Dateigröße muss zwischen %{min} und %{max} liegen'
@@ -83,12 +87,12 @@ de:
         proposal:
           attributes:
             description:
-              too_long: 'ist zu lange'
+              too_long: ist zu lang
             projekt_id:
               blank: Bitte wählen Sie ein Projekt
             projekt_labels:
               blank: Bitte wählen Sie mindestens ein Label
-            sentiment:
+            sentiment_id:
               blank: Bitte wählen Sie ein Sentiment
         debate:
           attributes:
@@ -110,11 +114,13 @@ de:
           attributes:
             email:
               invalid: Bitte geben Sie ein gültiges E-Mail-Format ein
-        budget_investment:
+        budget/investment:
           attributes:
+            description:
+              too_long: ist zu lang
             projekt_labels:
               blank: Bitte wählen Sie mindestens ein Label
-            sentiment:
+            sentiment_id:
               blank: Bitte wählen Sie ein Sentiment
     attributes:
       map_location:
@@ -134,9 +140,12 @@ de:
         min_rating_scale_label: Linkes Label
         max_rating_scale_label: Rechtes Label
         show_hint_callout: Diese Textbox im Frontend anzeigen
+      poll/question/translation:
+        intro: Einleitungssatz
       poll/question/answer:
         more_info_link: Erklärungslink
         more_info_iframe: Iframe-Link
+        terminates_poll: Beendet die Umfrage
       poll/translation:
         closing_note: Text der Abschlussseite
       widget/card:
@@ -212,6 +221,7 @@ de:
         date_of_birth: Geburtsdatum
         document_type: Dokument
         document_last_digits: Personalausweis / Passport (4 letzten Ziffern)
+        guest: Gast
       age_range:
         min_age: Mindestalter
         max_age: Maximalalter
@@ -302,3 +312,7 @@ de:
         name: Gebiet
         default_idea_officer: Standardmäßig Sachbearbeiter*in
         default_deficiency_report_responsible: Standardmäßig Sachbearbeiter*in
+      projekt_point_of_interest_category:
+        name: Name
+        icon: Icon
+        color: Farbe

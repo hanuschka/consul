@@ -1,0 +1,21 @@
+<% if render_map? %>
+  <div class="resources-list--map not-print">
+    <% if @projekt_phase&.projekt&.vc_map_enabled? %>
+      <%= render Shared::VCMapComponent.new(
+        parent_class: resources_name,
+        process_coordinates: @marker_coordinates,
+        map_location: @map_location || @projekt_phase&.map_location,
+        projekt_phase: @projekt_phase,
+        show_admin_shape: @projekt_phase&.map_location&.show_admin_shape?
+      ) %>
+    <% else %>
+      <%= render Shared::MapComponent.new(
+        parent_class: resources_name,
+        process_coordinates: @marker_coordinates,
+        map_location: @map_location || @projekt_phase&.map_location,
+        projekt_phase: @projekt_phase,
+        show_admin_shape: true
+      ) %>
+    <% end %>
+  </div>
+<% end %>

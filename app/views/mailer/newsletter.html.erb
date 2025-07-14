@@ -91,13 +91,17 @@
                   <tbody>
                     <tr>
                       <td align="left">
-                        <h1 style="font-size:32px; color:#ffffff; margin:0 0 0 0; line-height:1.2">
-                          <div><%= @newsletter.title %></div>
-                        </h1>
-                        <div style="display:block; width:204px; height:0; margin-top:4px; margin-bottom:18px; padding-top:0.5em; border-style:solid; border-width:6px 6px 6px 0; border-color:transparent transparent <%= email_brand_color %> transparent"></div>
-                        <div style="font-size:19px; color:#ffffff; margin-top:0; margin-bottom:8px">
-                            <%= @newsletter.subtitle %>
-                        </div>
+                        <% if @newsletter.title.present? %>
+                          <h1 style="font-size:32px; color:<%= @newsletter.title_color %>; margin:0 0 0 0; line-height:1.2">
+                            <div><%= @newsletter.title %></div>
+                          </h1>
+                          <div style="display:block; width:204px; height:0; margin-top:4px; margin-bottom:18px; padding-top:0.5em; border-style:solid; border-width:6px 6px 6px 0; border-color:transparent transparent <%= email_brand_color %> transparent"></div>
+                        <% end %>
+                        <% if @newsletter.subtitle.present? %>
+                          <div style="font-size:19px; color:<%= @newsletter.subtitle_color %>; margin-top:0; margin-bottom:8px">
+                              <%= @newsletter.subtitle %>
+                          </div>
+                        <% end %>
                       </td>
                     </tr>
                   </tbody>
@@ -134,7 +138,7 @@
             >
             <tbody>
               <tr>
-                <td width="670" style="padding-top: 0;width:670px;padding-left:0;padding-right:0;">
+                <td width="670" style="padding-top:0;width:670px;padding:25px 40px 0 40px;">
                   <div style="<%= css_for_mailer_text %>;font-size: 15px;">
                       <%= auto_link_already_sanitized_html wysiwyg(@newsletter.body) %>
                   </div>

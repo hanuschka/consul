@@ -16,3 +16,55 @@
     }
   }
 }
+
+.mapbox-instruction-overlay {
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.75);
+  padding: 2px 6px;
+  border-radius: 0;
+  font-size: 12px;
+  z-index: 100;
+  transition: opacity 0.3s ease;
+  opacity: 0.8;
+  backdrop-filter: blur(2px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mapboxgl-ctrl-group {
+  border-radius: 7px;
+
+}
+
+.mapbox--poi-labels-toggle {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+
+  label {
+    display: flex;
+    align-items: center;
+    padding: 5px 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0000000d;
+    }
+  }
+
+  input[type="checkbox"] {
+    margin-top: 0;
+    margin-bottom: 0 !important;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+  }
+}

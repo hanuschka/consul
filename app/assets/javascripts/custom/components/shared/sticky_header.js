@@ -12,7 +12,11 @@
         return;
       }
 
-      window.onscroll = this.handleScroll.bind(this);
+      this.handleScroll = this.handleScroll.bind(this)
+
+      this.handleScroll()
+
+      window.onscroll = this.handleScroll;
 
       // Get the offset position of the header
       this.initialHeaderOffsetY = this.header().offsetTop;
@@ -21,6 +25,10 @@
 
     header() {
       return document.querySelector(".js-sticky-header");
+    },
+
+    destroy() {
+      window.onscroll = null;
     },
 
     handleScroll: function() {

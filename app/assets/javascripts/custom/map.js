@@ -466,16 +466,18 @@
             var features = singleAdminShape.features || [singleAdminShape];
 
             features.forEach(function(feature) {
-              var adminShapeLayer = L.geoJSON(feature, {
-                pointToLayer: function(geoFeature, latlng) {
-                  return L.marker(latlng, {
-                    icon: getMarkerIcon(
+              if (Object.keys(feature).length) {
+                var adminShapeLayer = L.geoJSON(feature, {
+                  pointToLayer: function(geoFeature, latlng) {
+                    return L.marker(latlng, {
+                      icon: getMarkerIcon(
                       geoFeature.properties.color || adminShapesColor,
                       geoFeature.properties.fa_icon_class || 'circle'
                     )
-                  });
-                }
-              });
+                    });
+                  }
+                });
+              }
 
               adminShapeLayer.pm.setOptions({ adminShape: true })
               adminShapeLayer.setStyle({
@@ -552,13 +554,15 @@
                 }
               } else {
                 // Render non-Point features as geoJSON layers
-                var userShape = L.geoJSON(feature, {
-                  style: function(geoFeature) {
-                    return {
-                      color: geoFeature.properties.color || markerCoordinate.color || feature.properties.color
-                    };
-                  }
-                });
+                if (Object.keys(feature).length) {
+                  var userShape = L.geoJSON(feature, {
+                    style: function(geoFeature) {
+                      return {
+                        color: geoFeature.properties.color || markerCoordinate.color || feature.properties.color
+                      };
+                    }
+                  });
+                }
 
                 userShape.options.id = markerCoordinate.id
                 userShape.options.resource_type = markerCoordinate.resource_type
@@ -573,21 +577,23 @@
             });
           } else {
             // Handle single GeoJSON feature or legacy format
-            var userShape = L.geoJSON(markerCoordinate, {
-              style: function(feature) {
-                return { color: markerCoordinate.color };
+            if (Object.keys(markerCoordinate).length) {
+              var userShape = L.geoJSON(markerCoordinate, {
+                style: function(feature) {
+                  return { color: markerCoordinate.color };
+                }
+              });
+
+              userShape.options.id = markerCoordinate.id
+              userShape.options.resource_type = markerCoordinate.resource_type
+              userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
+
+              if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                userShape.on("click", openMarkerPopup);
               }
-            });
-
-            userShape.options.id = markerCoordinate.id
-            userShape.options.resource_type = markerCoordinate.resource_type
-            userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
-
-            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
-              userShape.on("click", openMarkerPopup);
+              userShape.addTo(deflateFeatures);
+              userShape.addTo(map);
             }
-            userShape.addTo(deflateFeatures);
-            userShape.addTo(map);
           }
         });
       }

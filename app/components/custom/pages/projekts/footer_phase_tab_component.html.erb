@@ -3,8 +3,6 @@
   class="page-subnav-tab js-projekt-phase-tab projekt-footer-phase-tab  <%= additional_classes %>"
   data-projekt-phase-id="<%= phase.id %>"
   data-record-id="<%= phase.id %>"
-  role="tab"
-  aria-selected="<%= phase.id == params[:projekt_phase_id] %>"
 >
   <%= link_to tab_url,
     onclick: "$('#footer-content').addClass('show-loader');",

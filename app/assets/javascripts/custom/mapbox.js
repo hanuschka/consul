@@ -13,6 +13,8 @@
       this.markerCoordinates = $element.data("process-coordinates");
       this.editable = $element.data("editable");
       this.adminEditor = $element.data("admin-editor");
+      this.editable = this.editable || this.adminEditor;
+      this.enableGeomanControls = $element.data("enable-geoman-controls");
       this.adminShape = $element.data("admin-shape");
       this.saturatedAdminShape = $element.data("saturated-admin-shape")
       this.showAdminShape = $element.data("show-admin-shape");
@@ -41,20 +43,18 @@
     }
 
     initialize() {
-      var self = this;
-
       this.map = this.initializeMap();
       this.mapLoaded = false; // Track map loading state
 
       // Wait for the map to load before adding marker-coordinates
-      this.map.on('load', function() {
-        self.mapLoaded = true;
+      this.map.on('load', () => {
+        this.mapLoaded = true;
 
-        self.renderAdminShape();
+        this.renderAdminShape();
 
-        self.renderMarkerCoordinates();
-        self.renderResourceShapes();
-        self.addMapInstructionOverlay();
+        this.renderMarkerCoordinates();
+        this.renderResourceShapes();
+        this.addMapInstructionOverlay();
       });
 
       this.setupEventListeners();
@@ -194,23 +194,31 @@
       }
     }
 
-          addControls() {
-        // Add POI labels toggle control first (top-right, before other controls)
-        this.addPoiLabelsControl();
+    addControls() {
+      // Add POI labels toggle control first (top-right, before other controls)
+      this.addPoiLabelsControl();
 
-        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+      // Add zoom/navigation controls first (leftmost)
+      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
-        this.map.addControl(new mapboxgl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true
-          },
-          trackUserLocation: true
-        }), 'top-left');
+      // Add search bar to the right of zoom controls
+      this.map.addControl(new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+          countries: 'DE',
+          marker: false
+      }), 'top-left');
 
-        if (this.editable && typeof MapboxDraw !== 'undefined') {
-          this.initializePolygonEditor();
-        }
+      this.map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true
+        }), 'top-left'
+      );
+
+      if (this.editable && typeof MapboxDraw !== 'undefined') {
+        this.initializePolygonEditor();
       }
+    }
 
     addMapInstructionOverlay() {
       if (this.element.offsetWidth <= 780) {
@@ -440,15 +448,21 @@
     };
 
     initializePolygonEditor() {
-      // Initialize Mapbox Draw with bigger point styles
+      // Initialize Mapbox Draw with controls based on enableGeomanControls setting
+      var controls = {
+        trash: true
+      };
+
+      // Enable advanced drawing tools only if enableGeomanControls is true
+      if (this.enableGeomanControls) {
+        controls.point = true;
+        controls.polygon = true;
+        controls.line_string = true;
+      }
+
       this.draw = new MapboxDraw({
         displayControlsDefault: false,
-        controls: {
-          polygon: true,
-          point: true,
-          line_string: true,
-          trash: true
-        },
+        controls: controls,
         defaultMode: 'simple_select', // Start in selection mode, not drawing mode
         styles: this.getDrawStyles()
       });
@@ -1559,7 +1573,7 @@
     maps: [], // Store MapboxMap instances for proper cleanup
     initialize: function() {
       var self = this;
-      $("[data-mapbox]").each(function() {
+      $("[data-mapbox]:visible").each(function() {
         var element = this;
         var mapInstance = self.initializeFor(element)
 

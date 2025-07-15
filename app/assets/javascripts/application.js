@@ -234,6 +234,7 @@ var destroy_non_idempotent_modules = function() {
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
   App.SocialShare.destroy();
+  App.StikyHeader.destroy();
 };
 
 

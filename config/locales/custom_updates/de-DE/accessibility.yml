@@ -1,6 +1,15 @@
 de:
   custom:
     accessibility:
+      shared:
+        switch-view-button:
+          aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
+      google-translate:
+        widget-toggler:
+          aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."
+      account:
+        notifications:
+          aria-label: "Benachrichtigungsfilter"
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
       events:
@@ -11,7 +20,10 @@ de:
       menu:
         home_icon: Startseiten Link
         search_icon: Suchen
-        konto_icon: Mein Konto Link
+        konto_icon:
+          zero: "„Mein Konto“-Link"
+          one: "„Mein Konto“-Link. Es gibt eine neue Benachrichtigung."
+          other: "„Mein Konto“-Link. Es gibt %{count} neue Benachrichtigungen."
         admin_icon: Adminmenü Link
         notification_icon: Benachrichtigungen
         all_projekts: Alle Projekte

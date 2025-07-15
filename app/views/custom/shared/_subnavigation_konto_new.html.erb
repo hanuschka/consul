@@ -1,6 +1,6 @@
 <% if placement == 'desktop' %>
   <li class="nav-element main-navigation-item-account--wrapper top-level-item js-access-top-level-menu js-prevent-key-scroll"
-      aria-label='<%= t('custom.links.menu.konto_icon') if placement == "desktop" %>'
+      aria-label='<%= t('custom.links.menu.konto_icon', count: current_user.unread_notifications_count) if placement == "desktop" %>'
       aria-expanded="false"
       <%= "tabindex=0" if placement == 'desktop' %>
       >

@@ -1,6 +1,15 @@
 en:
   custom:
     accessibility:
+      shared:
+        switch-view-button:
+          aria-label: "Switch view button"
+      google-translate:
+        widget-toggler:
+          aria-label: "Click to toggle the Google Translate widget."
+      account:
+        notifications:
+          aria-label: "Filter notifications"
       banner-image:
         glightbox-aria-label: "Banner image. Click to enlarge the image."
       events:
@@ -11,7 +20,10 @@ en:
       menu:
         home_icon: Homepage link
         search_icon: Search
-        konto_icon: My account menu link
+        konto_icon:
+          zero: "'My account'-Link"
+          one: "'My account'-Link. There's one new notification."
+          other: "'My account'-Link. There are %{count} new notifications."
         admin_icon: Admin menu link
         notification_icon: Notifications
         all_projekts: All Projekts

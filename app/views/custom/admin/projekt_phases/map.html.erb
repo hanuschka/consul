@@ -20,6 +20,18 @@
         ) %>
       <% end %>
     </h2>
+
+    <% @projekt_phase.map_layers.each do |layer| %>
+      <%= render partial: "custom/admin/shared/map/map_layer", locals: { layer: layer, return_path: namespace_projekt_phase_path(action: :map) } %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <div id="new-map-layer">
+      <%= link_to t("custom.map_layer.buttons.new_layer"), polymorphic_path([@namespace, MapLayer.new], action: :new, return_path: namespace_projekt_phase_path(action: :map), mappable_id: @projekt_phase.id, mappable_type: @projekt_phase.class.name), class: "button success margin-bottom", remote: true %>
+    </div>
   </div>
 </div>
 

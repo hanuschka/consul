@@ -46,8 +46,8 @@
     <div class="projekt-event-item-new-body--details">
       <% if projekt_event.projekt.page.published? %>
         <div class="projekt-event-item-new-body--details-row">
-          <i class="fa fa-code-branch"></i>
-          <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"} do %>
+          <i class="fa fa-code-branch" aria-label="<%= t('custom.accessibility.events.projekt-aria-label', projekt_name: projekt_event.projekt.name) %>"></i>
+          <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"}, aria: { hidden: true }, tabindex: "-1" do %>
             <%= projekt_event.projekt.name %>
           <% end %>
         </div>

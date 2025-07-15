@@ -3,6 +3,8 @@ de:
     accessibility:
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
+      events:
+        projekt-aria-label: "Projekt: %{projekt_name}"
     map:
       aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
     links:

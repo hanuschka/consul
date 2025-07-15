@@ -1,5 +1,7 @@
 $("#filter-subnav li").removeClass("is-active")
+$("#filter-subnav li").attr("aria-selected", "false")
 $("li#filter-subnav-<%= @projekt_phase.id %>").addClass("is-active")
+$("li#filter-subnav-<%= @projekt_phase.id %>").attr("aria-selected", "true")
 $("#footer-content").removeClass("show-loader");
 <% footer_version = Setting.new_design_enabled? ? 'projekt_footer_new' : 'projekt_footer'  %>
 $("#footer-content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");

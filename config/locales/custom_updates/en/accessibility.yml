@@ -1,6 +1,9 @@
 en:
   custom:
     accessibility:
+      google-translate:
+        widget-toggler:
+          aria-label: "Click to toggle the Google Translate widget."
       account:
         notifications:
           aria-label: "Filter notifications"

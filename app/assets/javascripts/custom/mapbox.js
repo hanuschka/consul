@@ -27,8 +27,11 @@
       this.$categorySelect = $(".js-map-update-pin-style");
       this.markerImages = $element.data("mapbox-marker-images")
       this.styleId = $element.data("mapbox-style-id")
+      this.layersData = $element.data('map-layers')
 
       this.map = null;
+      this.baseLayers = {}; // Store base layer sources
+      this.overlayLayers = {}; // Store overlay layer sources
       this.pinMarkers = []; // Array to store all marker-coordinates
       this.adminMarker = null;
       this.editableMarker = null; // Single editable marker for user interaction
@@ -50,15 +53,18 @@
       this.map.on('load', () => {
         this.mapLoaded = true;
 
-        this.renderAdminShape();
+        // Render base and overlay layers first for proper layer ordering
+        this.renderLayers();
+        this.addLayerControl();
+        this.addControls();
 
+        this.renderAdminShape();
         this.renderMarkerCoordinates();
         this.renderResourceShapes();
         this.addMapInstructionOverlay();
       });
 
       this.setupEventListeners();
-      this.addControls();
     }
 
     initializeMap() {
@@ -250,7 +256,7 @@
         return;
       }
 
-              this.map.addControl(new PoiLabelsControl(this), 'top-right');
+      this.map.addControl(new PoiLabelsControl(this), 'top-right');
     }
 
     togglePoiLabels(visible) {
@@ -274,7 +280,7 @@
           }
         }
       });
-      }
+    }
 
     getDrawStyles() {
       const blue = '#3bb2d0';
@@ -445,7 +451,7 @@
           },
         },
       ];
-    };
+    }
 
     initializePolygonEditor() {
       // Initialize Mapbox Draw with controls based on enableGeomanControls setting
@@ -493,7 +499,7 @@
           }
         }
       }
-    };
+    }
 
     setupDrawEventListeners() {
       var self = this;
@@ -546,7 +552,7 @@
           self.removeEditableMarker();
         }
       });
-    };
+    }
 
     updateShapeFormFields() {
       if (!this.draw || !this.shapeInputSelector) return;
@@ -567,7 +573,7 @@
       if (this.adminEditor && this.showAdminShapeInputSelector) {
         $(this.showAdminShapeInputSelector).val(true);
       }
-    };
+    }
 
     getStyledMarker(color, iconClass) {
       if (this.markerCategoryIcon) {
@@ -588,7 +594,7 @@
         element: this.createMarkerElement(color, iconClass),
         anchor: [0, 0]
       };
-    };
+    }
 
     createMarkerElement(color, iconClass) {
       var el = document.createElement('div');
@@ -637,7 +643,7 @@
       if (this.adminEditor) {
         $(this.showAdminShapeInputSelector).val(true);
       }
-    };
+    }
 
     // Helper method to remove editable marker
     removeEditableMarker() {
@@ -645,7 +651,7 @@
         this.editableMarker.remove();
         this.editableMarker = null;
       }
-    };
+    }
 
     // function to create or move existing marker (similar to Leaflet version)
     moveOrPlaceMarker(e) {
@@ -672,7 +678,7 @@
         this.editableMarker = this.createEditableMarker(lngLat.lat, lngLat.lng);
       }
       this.updateFormfieldsFromEditableMarker();
-    };
+    }
 
     // function to update form fields when editable marker is updated
     updateFormfieldsFromEditableMarker() {
@@ -724,14 +730,14 @@
       // console.log("Marker created at:", marker.getLngLat());
 
       return marker;
-    };
+    }
 
     updateMarkerStyleFromCategorySelect(element) {
       var selectedOption = element.options[element.selectedIndex];
       this.markerCategoryIcon = selectedOption.dataset.icon;
       this.markerCategoryColor = selectedOption.dataset.color;
       this.updateMarkerWithCategoryStyle();
-    };
+    }
 
     updateMarkerWithCategoryStyle() {
       if (this.pinMarkers.length) {
@@ -746,7 +752,7 @@
         this.editableMarker.getElement().innerHTML = '';
         this.editableMarker.getElement().appendChild(newIcon.element);
       }
-    };
+    }
 
     handleUnifiedPopup(e) {
       var self = this;
@@ -808,7 +814,7 @@
       } else if (adminShapeFeatures.length > 0) {
         self.openShapePopup(e, 'admin');
       }
-    };
+    }
 
     openMarkerPopup(e) {
       var self = this;
@@ -847,7 +853,7 @@
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
         })
-    };
+    }
 
     openShapePopup(e, shapeType) {
       var self = this;
@@ -903,7 +909,7 @@
           popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
         }
       }
-    };
+    }
 
     renderAdminShape() {
       if (this.adminShape && this.showAdminShape) {
@@ -930,7 +936,7 @@
           this.renderMultishapeAdminLayer('admin-shape', this.adminShape, this.adminShapesColor);
         }
       }
-    };
+    }
 
     renderMarkerCoordinates() {
       if (!this.markerCoordinates) return;
@@ -941,7 +947,7 @@
       this.addMarkerBackgroundLayer();
       this.loadMarkerImagesAndSetupIcons();
       this.setupClusterEventListeners();
-    };
+    }
 
     createMarkersGeoJSON() {
       var features = [];
@@ -975,7 +981,7 @@
         type: 'FeatureCollection',
         features: features
       };
-    };
+    }
 
     addMarkersSource(markersGeoJSON) {
       this.map.addSource('marker-coordinates', {
@@ -985,7 +991,7 @@
         clusterMaxZoom: 14,
         clusterRadius: 50
       });
-    };
+    }
 
     addClusterLayers() {
       var clusterColor = this.getClusterColor();
@@ -1031,13 +1037,13 @@
           'text-color': 'white'
         }
       });
-    };
+    }
 
     getClusterColor() {
       var brandColor = getComputedStyle(document.documentElement)
         .getPropertyValue('--brand-color').trim() || '#004a83';
       return hexToRgba(brandColor, 0.5);
-    };
+    }
 
     addMarkerBackgroundLayer() {
       var self = this;
@@ -1063,19 +1069,19 @@
           'circle-stroke-color': '#ffffff'
         }
       });
-    };
+    }
 
     loadMarkerImagesAndSetupIcons() {
       var self = this;
 
       if (this.markerImages && this.markerImages.length) {
         this.loadMarkerImages(function() {
-          self.renderIconLayer();
+          self.loadIconLayer();
         });
       } else {
-        this.renderIconLayer();
+        this.loadIconLayer();
       }
-    };
+    }
 
     loadMarkerImages(callback) {
       var self = this;
@@ -1097,7 +1103,7 @@
           }
         });
       });
-    };
+    }
 
     setupClusterEventListeners() {
       if (!this.editable) {
@@ -1109,7 +1115,7 @@
           self.map.getCanvas().style.cursor = '';
         });
       }
-    };
+    }
 
     renderResourceShapes() {
       var self = this;
@@ -1121,9 +1127,153 @@
           }
         });
       }
-    };
+    }
 
-    renderIconLayer(e) {
+    renderLayers() {
+      if (this.layersData && typeof this.layersData !== "undefined") {
+        try {
+          var layersData = typeof this.layersData === 'string' ? JSON.parse(this.layersData) : this.layersData;
+
+          if (Array.isArray(layersData) && layersData.length > 0) {
+            layersData.forEach((layerData, index) => this.createLayer(layerData, index));
+
+            // this.ensureBaseLayerVisibility();
+            // this.showDefaultOverlayLayers();
+          } else {
+            console.log('No valid layers data found');
+          }
+        } catch (error) {
+          console.error('Error parsing layers data:', error, this.layersData);
+        }
+      } else {
+        console.log('No layers data available');
+      }
+    }
+
+    // ensureBaseLayerVisibility() {
+    //   var baseLayerKeys = Object.keys(this.baseLayers);
+    //   if (baseLayerKeys.length > 0) {
+    //     // Make the first base layer visible
+    //     var firstBaseLayer = this.baseLayers[baseLayerKeys[0]];
+    //     this.map.setLayoutProperty(firstBaseLayer.layerId, 'visibility', 'visible');
+    //   }
+    // }
+
+    // showDefaultOverlayLayers() {
+    //   Object.values(this.overlayLayers).forEach(layer => {
+    //     if (layer.layerData.show_by_default) {
+    //       this.map.setLayoutProperty(layer.layerId, 'visibility', 'visible');
+    //     }
+    //   });
+    // }
+
+    addLayerControl() {
+      if (this.element.offsetWidth <= 780) {
+        return;
+      }
+
+      var hasLayers = Object.keys(this.baseLayers).length > 0 || Object.keys(this.overlayLayers).length > 0;
+
+      if (!hasLayers) {
+        return;
+      }
+
+      this.map.addControl(new LayerControl(this), 'top-right');
+    }
+
+    toggleLayerVisibility(layerId, visible) {
+      if (!this.mapLoaded) {
+        this.map.once('idle', () => {
+          this.toggleLayerVisibility(layerId, visible);
+        });
+        return;
+      }
+
+      if (this.map.getLayer(layerId)) {
+        this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+      } else {
+        console.error('Layer not found:', layerId);
+        console.log('Available layers:', this.map.getStyle().layers.map(l => l.id));
+      }
+    }
+
+    createLayer(layerData, index) {
+      var sourceId = `layer-source-${index}`;
+      var layerId = `layer-${index}`;
+
+      try {
+        if (layerData.protocol == 'wms') {
+          // Build WMS URL properly following Mapbox GL JS format
+          var baseUrl = layerData.provider;
+          var separator = baseUrl.includes('?') ? '&' : '?';
+
+          // Validate required parameters
+          if (!layerData.layer_names || layerData.layer_names.trim() === '') {
+            return;
+          }
+
+          // Build WMS URL following the official Mapbox example format
+          // Use lowercase parameter names and don't URL-encode LAYERS
+          var wmsParams = [
+            'service=WMS',
+            'request=GetMap',
+            'layers=' + layerData.layer_names,
+            'format=image/png',
+            'styles=',
+            'transparent=' + (layerData.transparent ? 'true' : 'false'),
+            'version=1.1.1',
+            "show_by_default=false",
+            'width=256',
+            'height=256',
+            'srs=EPSG:3857',
+            'bbox={bbox-epsg-3857}',
+          ];
+
+          var wmsUrl = baseUrl + separator + wmsParams.join('&');
+
+          // Add WMS source
+          this.map.addSource(sourceId, {
+            type: 'raster',
+            tiles: [wmsUrl],
+            tileSize: 256
+          });
+        } else {
+          // Add regular tile source
+          this.map.addSource(sourceId, {
+            type: 'raster',
+            tiles: [layerData.provider],
+            tileSize: 256
+          });
+        }
+
+        // Add raster layer
+        this.map.addLayer({
+          id: layerId,
+          type: 'raster',
+          source: sourceId,
+          paint: {
+            'raster-opacity': parseFloat(layerData.opacity) || 1
+          },
+          layout: {
+            'visibility': (layerData.show_by_default) ? 'visible' : 'none'
+          }
+        });
+
+        // Store layer info for potential controls
+        if (layerData.base) {
+          console.log('Storing base layer:', layerData.name, 'with ID:', layerId);
+          this.baseLayers[layerData.name] = { sourceId, layerId, layerData };
+        } else {
+          console.log('Storing overlay layer:', layerData.name, 'with ID:', layerId);
+          this.overlayLayers[layerData.name] = { sourceId, layerId, layerData };
+        }
+      } catch (error) {
+        console.error('Error creating layer:', error, layerData);
+      }
+    }
+
+
+    loadIconLayer(e) {
       // Remove existing layer if it exists
       if (this.map.getLayer('custom-marker-icon')) {
         this.map.removeLayer('custom-marker-icon');
@@ -1177,7 +1327,7 @@
           self.handleUnifiedPopup(e);
         });
       }
-    };
+    }
 
     handleMarkerMouseEnter(e) {
       this.map.getCanvas().style.cursor = 'pointer';
@@ -1207,7 +1357,7 @@
         );
       }
       this.hoveredFeature = null;
-    };
+    }
 
     renderShape(coordinates) {
       var self = this;
@@ -1266,7 +1416,7 @@
         self.map.on('mouseenter', layer, setCursorPointer);
         self.map.on('mouseleave', layer, resetCursor);
       });
-    };
+    }
 
     renderMultishapeAdminLayer(id, data, color) {
       var self = this;
@@ -1334,7 +1484,7 @@
         self.map.on('mouseenter', layer, setCursorPointer);
         self.map.on('mouseleave', layer, resetCursor);
       });
-    };
+    }
 
     // Helper method to check if data contains a specific geometry type
     hasGeometryType(data, geometryType) {
@@ -1371,7 +1521,7 @@
         console.error('Error during map destruction:', e);
         this.forceCleanup();
       }
-    };
+    }
 
     // Separated destroy logic for better control
     performDestroy() {
@@ -1478,7 +1628,7 @@
         console.error('Error during map destruction:', e);
         this.forceCleanup();
       }
-    };
+    }
 
     // Clean up map sources and layers
     cleanupMapSources() {
@@ -1493,6 +1643,18 @@
           }
         }.bind(this));
 
+        // Remove custom layers (WMS and tile layers)
+        Object.values(this.baseLayers).forEach(layer => {
+          if (this.map.getLayer(layer.layerId)) {
+            this.map.removeLayer(layer.layerId);
+          }
+        });
+        Object.values(this.overlayLayers).forEach(layer => {
+          if (this.map.getLayer(layer.layerId)) {
+            this.map.removeLayer(layer.layerId);
+          }
+        });
+
         // Remove known sources
         var sources = ['marker-coordinates', 'admin-shape'];
         sources.forEach(function(sourceId) {
@@ -1500,6 +1662,22 @@
             this.map.removeSource(sourceId);
           }
         }.bind(this));
+
+        // Remove custom sources (WMS and tile sources)
+        Object.values(this.baseLayers).forEach(layer => {
+          if (this.map.getSource(layer.sourceId)) {
+            this.map.removeSource(layer.sourceId);
+          }
+        });
+        Object.values(this.overlayLayers).forEach(layer => {
+          if (this.map.getSource(layer.sourceId)) {
+            this.map.removeSource(layer.sourceId);
+          }
+        });
+
+        // Clear layer references
+        this.baseLayers = {};
+        this.overlayLayers = {};
       } catch (e) {
         console.warn('Error cleaning up map sources:', e);
       }
@@ -1512,6 +1690,8 @@
       this.adminMarker = null;
       this.editableMarker = null;
       this.mapLoaded = false;
+      this.baseLayers = {};
+      this.overlayLayers = {};
     }
   }
 
@@ -1527,6 +1707,130 @@
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
+
+  // Custom control for layer visibility toggle
+  class LayerControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox-layer-control';
+
+      // Create button to toggle dropdown
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-layer-control-button';
+      button.innerHTML = '<i class="fas fa-layer-group"></i>'; // Layers icon
+      button.title = 'Kartenebenen';
+
+      // Create dropdown container
+      var dropdown = document.createElement('div');
+      dropdown.className = 'mapbox-layer-control-dropdown';
+      dropdown.style.display = 'none';
+
+      // Add base layers section if any
+      if (Object.keys(this.mapboxMapInstance.baseLayers).length > 0) {
+        var baseSection = document.createElement('div');
+        baseSection.className = 'layer-section';
+
+        var baseTitle = document.createElement('div');
+        baseTitle.className = 'layer-section-title';
+        baseTitle.textContent = 'Grundkarten';
+        baseSection.appendChild(baseTitle);
+
+        Object.entries(this.mapboxMapInstance.baseLayers).forEach(([name, layer], index) => {
+          // Only the first base layer should be checked initially
+          var isVisible = index === 0;
+          var label = this.createLayerCheckbox(name, layer.layerId, isVisible, 'radio');
+          baseSection.appendChild(label);
+        });
+
+        dropdown.appendChild(baseSection);
+      }
+
+      // Add overlay layers section if any
+      if (Object.keys(this.mapboxMapInstance.overlayLayers).length > 0) {
+        var overlaySection = document.createElement('div');
+        overlaySection.className = 'layer-section';
+
+        var overlayTitle = document.createElement('div');
+        overlayTitle.className = 'layer-section-title';
+        overlayTitle.textContent = 'Überlagerungen';
+        overlaySection.appendChild(overlayTitle);
+
+        Object.entries(this.mapboxMapInstance.overlayLayers).forEach(([name, layer]) => {
+          var isVisible = layer.layerData.show_by_default;
+          var label = this.createLayerCheckbox(name, layer.layerId, isVisible, 'checkbox');
+          overlaySection.appendChild(label);
+        });
+
+        dropdown.appendChild(overlaySection);
+      }
+
+      this._container.appendChild(button);
+      this._container.appendChild(dropdown);
+
+      // Toggle dropdown on button click
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!this._container.contains(e.target)) {
+          dropdown.style.display = 'none';
+        }
+      });
+
+      return this._container;
+    }
+
+    createLayerCheckbox(name, layerId, isChecked, inputType) {
+      var label = document.createElement('label');
+      label.className = 'layer-checkbox-label';
+
+      var input = document.createElement('input');
+      input.type = inputType;
+      input.checked = isChecked;
+      if (inputType === 'radio') {
+        input.name = 'base-layer';
+      }
+
+      var span = document.createElement('span');
+      span.textContent = name;
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+             // Handle layer visibility changes
+       input.addEventListener('change', () => {
+         console.log('Layer control input changed:', layerId, 'checked:', input.checked, 'type:', inputType);
+         if (inputType === 'radio' && input.checked) {
+           console.log('Base layer selected:', layerId);
+           // For base layers (radio), hide all others and show selected
+           Object.values(this.mapboxMapInstance.baseLayers).forEach(layer => {
+             this.mapboxMapInstance.toggleLayerVisibility(layer.layerId, false);
+           });
+           this.mapboxMapInstance.toggleLayerVisibility(layerId, true);
+         } else if (inputType === 'checkbox') {
+           console.log('Overlay layer toggled:', layerId, input.checked);
+           // For overlay layers (checkbox), toggle individual layer
+           this.mapboxMapInstance.toggleLayerVisibility(layerId, input.checked);
+         }
+       });
+
+      return label;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+  }
 
   // Custom control for POI labels toggle
   class PoiLabelsControl {

@@ -1,6 +1,9 @@
 de:
   custom:
     accessibility:
+      shared:
+        switch-view-button:
+          aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
       google-translate:
         widget-toggler:
           aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."

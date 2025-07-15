@@ -1,6 +1,9 @@
 en:
   custom:
     accessibility:
+      shared:
+        switch-view-button:
+          aria-label: "Switch view button"
       google-translate:
         widget-toggler:
           aria-label: "Click to toggle the Google Translate widget."

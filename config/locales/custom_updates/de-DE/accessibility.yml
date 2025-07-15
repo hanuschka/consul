@@ -1,6 +1,9 @@
 de:
   custom:
     accessibility:
+      account:
+        notifications:
+          aria-label: "Benachrichtigungsfilter"
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
       events:

@@ -17,7 +17,10 @@ de:
       menu:
         home_icon: Startseiten Link
         search_icon: Suchen
-        konto_icon: Mein Konto Link
+        konto_icon:
+          zero: "„Mein Konto“-Link"
+          one: "„Mein Konto“-Link. Es gibt eine neue Benachrichtigung."
+          other: "„Mein Konto“-Link. Es gibt %{count} neue Benachrichtigungen."
         admin_icon: Adminmenü Link
         notification_icon: Benachrichtigungen
         all_projekts: Alle Projekte

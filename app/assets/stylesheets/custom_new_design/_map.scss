@@ -74,3 +74,10 @@
   height: 36px !important;
   padding: 6px 35px;
 }
+
+.mapboxgl-ctrl-top-left {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+}

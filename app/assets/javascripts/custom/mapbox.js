@@ -14,6 +14,7 @@
       this.editable = $element.data("editable");
       this.adminEditor = $element.data("admin-editor");
       this.editable = this.editable || this.adminEditor;
+      this.enableGeomanControls = $element.data("enable-geoman-controls");
       this.adminShape = $element.data("admin-shape");
       this.saturatedAdminShape = $element.data("saturated-admin-shape")
       this.showAdminShape = $element.data("show-admin-shape");
@@ -197,14 +198,16 @@
       // Add POI labels toggle control first (top-right, before other controls)
       this.addPoiLabelsControl();
 
+      // Add zoom/navigation controls first (leftmost)
+      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+      // Add search bar to the right of zoom controls
       this.map.addControl(new MapboxGeocoder({
           accessToken: mapboxgl.accessToken,
           mapboxgl: mapboxgl,
           countries: 'DE',
           marker: false
       }), 'top-left');
-
-      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
       this.map.addControl(new mapboxgl.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
@@ -445,15 +448,21 @@
     };
 
     initializePolygonEditor() {
-      // Initialize Mapbox Draw with bigger point styles
+      // Initialize Mapbox Draw with controls based on enableGeomanControls setting
+      var controls = {
+        trash: true
+      };
+
+      // Enable advanced drawing tools only if enableGeomanControls is true
+      if (this.enableGeomanControls) {
+        controls.point = true;
+        controls.polygon = true;
+        controls.line_string = true;
+      }
+
       this.draw = new MapboxDraw({
         displayControlsDefault: false,
-        controls: {
-          polygon: true,
-          point: true,
-          line_string: true,
-          trash: true
-        },
+        controls: controls,
         defaultMode: 'simple_select', // Start in selection mode, not drawing mode
         styles: this.getDrawStyles()
       });

@@ -12,14 +12,13 @@
         return;
       }
 
-      this.handleScroll = this.handleScroll.bind(this)
-
-      this.handleScroll()
-
-      window.onscroll = this.handleScroll;
+      this.updateHeaderStyles = this.updateHeaderStyles.bind(this)
 
       // Get the offset position of the header
       this.initialHeaderOffsetY = this.header().offsetTop;
+      this.updateHeaderStyles()
+
+      window.onscroll = this.updateHeaderStyles;
       this.initialized = true;
     },
 
@@ -31,11 +30,13 @@
       window.onscroll = null;
     },
 
-    handleScroll: function() {
-      if (window.pageYOffset > this.initialHeaderOffsetY) {
-        this.header().classList.add("sticky-header");
-      } else if (window.pageXOffset === this.initialHeaderOffsetY) {
-        this.header().classList.remove("sticky-header");
+    updateHeaderStyles() {
+      if (this.header()) {
+        if (window.pageYOffset > this.initialHeaderOffsetY) {
+          this.header().classList.add("sticky-header");
+        } else if (window.pageXOffset === this.initialHeaderOffsetY) {
+          this.header().classList.remove("sticky-header");
+        }
       }
     }
   };

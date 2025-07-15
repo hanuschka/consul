@@ -225,10 +225,6 @@ var initialize_modules = function() {
   }
 };
 
-function destroyModules() {
-  App.StikyHeader.destroy();
-}
-
 var destroy_non_idempotent_modules = function() {
   "use strict";
 
@@ -238,10 +234,10 @@ var destroy_non_idempotent_modules = function() {
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
   App.SocialShare.destroy();
+  App.StikyHeader.destroy();
 };
 
 
 App.Loader.initialize();
 $(document).on("turbolinks:load", initialize_modules);
-$(document).on("turbolinks:before-render", destroyModules);
 $(document).on("turbolinks:before-cache", destroy_non_idempotent_modules);

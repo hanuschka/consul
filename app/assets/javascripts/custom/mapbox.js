@@ -42,8 +42,6 @@
     }
 
     initialize() {
-      var self = this;
-
       this.map = this.initializeMap();
       this.mapLoaded = false; // Track map loading state
 
@@ -1566,7 +1564,7 @@
     maps: [], // Store MapboxMap instances for proper cleanup
     initialize: function() {
       var self = this;
-      $("[data-mapbox]").each(function() {
+      $("[data-mapbox]:visible").each(function() {
         var element = this;
         var mapInstance = self.initializeFor(element)
 

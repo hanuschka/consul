@@ -205,6 +205,11 @@
   height: 35px;
 }
 
+.mapbox-gl-draw_ctrl-draw-btn.active,
+.mapbox-gl-draw_ctrl-draw-btn.active:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 
 // .mapbox-layer-control-button {
 //  &:before {

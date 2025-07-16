@@ -1,6 +1,6 @@
 <div id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
 
-  <div class="projekt-event-item-new-calendar-column">
+  <div class="projekt-event-item-new-calendar-column" aria-hidden="true">
     <div class="projekt-event-item-new-calendar">
       <div class="projekt-event-item-new-calendar-dayname">
         <%= l(projekt_event.datetime, format: "%b").upcase %>

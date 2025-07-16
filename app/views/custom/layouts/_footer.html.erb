@@ -48,6 +48,12 @@
       </ul>
     </div>
 
+    <% if content_block("footer", I18n.locale).present? ||
+        setting["twitter_handle"] ||
+        setting["facebook_handle"] ||
+        setting["youtube_handle"] ||
+        setting["telegram_handle"] ||
+        setting["instagram_handle"] %>
     <div class="small-12 medium-4 column social">
       <div class="text-right">
         <ul>
@@ -100,6 +106,7 @@
         </ul>
       </div>
     </div>
+    <% end %>
   </div>
 
   <%= render Shared::ModalNotificationComponent.new %>

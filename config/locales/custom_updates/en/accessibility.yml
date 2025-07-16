@@ -6,6 +6,11 @@ en:
           aria-label: "Switch view button"
         missing-image:
           aria-label: "Image not available"
+      search:
+        search-input:
+          aria-label: "Search input field"
+        search-button:
+          aria-label: "Search button"
       google-translate:
         widget-toggler:
           aria-label: "Click to toggle the Google Translate widget."

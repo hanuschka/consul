@@ -6,6 +6,11 @@ de:
           aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
         missing-image:
           aria-label: "Kein Bild verfügbar"
+      search:
+        search_input:
+          aria-label: "Suchfeld. Geben Sie hier Ihren Suchbegriff ein."
+        search_button:
+          aria-label: "Suchbutton. Klicken Sie, um die Suche zu starten."
       google-translate:
         widget-toggler:
           aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."

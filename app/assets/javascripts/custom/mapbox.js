@@ -509,6 +509,8 @@
 
       // Update form fields when shapes are created, updated, or deleted
       this.map.on('draw.create', function(e) {
+        var wasInPointMode = self.draw.getMode() === 'draw_point';
+        
         // If not admin editor, ensure only one polygon exists
         if (!self.adminEditor) {
           var allFeatures = self.draw ? self.draw.getAll() : { features: [] };
@@ -537,6 +539,15 @@
         self.updateShapeFormFields();
         // Remove any existing marker-coordinates when a shape is created
         self.removeEditableMarker();
+        
+        // Keep point drawing mode active after creating a point
+        if (wasInPointMode && e.features.length > 0 && e.features[0].geometry.type === 'Point') {
+          setTimeout(function() {
+            if (self.draw) {
+              self.draw.changeMode('draw_point');
+            }
+          }, 50);
+        }
       });
 
       this.map.on('draw.update', function(e) {
@@ -553,6 +564,56 @@
         if (e.mode.startsWith('draw_')) {
           self.removeEditableMarker();
         }
+      });
+
+      // Track mouse state for distinguishing clicks from drags
+      var mouseDownPoint = null;
+      var isDragging = false;
+      
+      this.map.on('mousedown', function(e) {
+        mouseDownPoint = e.point;
+        isDragging = false;
+      });
+      
+      this.map.on('mousemove', function(e) {
+        if (mouseDownPoint) {
+          var distance = Math.sqrt(
+            Math.pow(e.point.x - mouseDownPoint.x, 2) + 
+            Math.pow(e.point.y - mouseDownPoint.y, 2)
+          );
+          if (distance > 3) { // 3 pixel threshold
+            isDragging = true;
+          }
+        }
+      });
+      
+      this.map.on('mouseup', function(e) {
+        if (self.draw && self.draw.getMode() === 'draw_point' && !isDragging && mouseDownPoint) {
+          // Check if we clicked on an existing draw feature
+          var clickedFeatures = self.map.queryRenderedFeatures(e.point);
+          var targetFeatureId = null;
+          
+          clickedFeatures.forEach(function(feature) {
+            if (feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot') {
+              if (feature.properties && feature.properties.id) {
+                targetFeatureId = feature.properties.id;
+              } else if (feature.properties && feature.properties.parent) {
+                targetFeatureId = feature.properties.parent;
+              }
+            }
+          });
+          
+          if (targetFeatureId) {
+            // Switch to select mode and select the clicked feature
+            self.draw.changeMode('simple_select', {
+              featureIds: [targetFeatureId]
+            });
+          }
+        }
+        
+        // Reset mouse tracking
+        mouseDownPoint = null;
+        isDragging = false;
       });
     }
 

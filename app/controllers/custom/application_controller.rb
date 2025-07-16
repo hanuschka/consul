@@ -119,6 +119,7 @@ class ApplicationController < ActionController::Base
       params[:user][:username] = guest_key
       params[:user][:terms_data_protection] = true
       params[:user][:terms_general] = true
+      params[:user][:terms_older_than_14] = true
 
       @guest_user = initialize_guest_user(guest_key)
       @guest_user.save!

@@ -139,6 +139,7 @@
 
         // Handle map interaction (click and touch)
         var handleMapInteraction = function(e) {
+          console.log("handle map interaction")
           // For touch events, only proceed if it was a tap (not a drag)
           if (e.type === 'touchend') {
             var touchDuration = Date.now() - touchStartTime;
@@ -178,6 +179,7 @@
           if (self.draw) {
             currentMode = self.draw.getMode();
           }
+          console.log({currentMode})
 
           var drawFetures = self.draw ? self.draw.getAll().features : [];
 
@@ -645,7 +647,9 @@
 
     // function to create or move existing marker (similar to Leaflet version)
     moveOrPlaceMarker(e) {
-      var self = this;
+      console.log("moveOrPlaceMarker", e)
+      console.log("moveOrPlaceMarker, this.draw", this.draw)
+      console.log("moveOrPlaceMarker, this.editableMarker", this.editableMarker)
       var lngLat = e.lngLat;
 
       // console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);

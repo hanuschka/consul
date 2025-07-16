@@ -18,6 +18,7 @@ de:
         edit_banner:
           aria-label: "Banner bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
         edit_avatar:
+          avatar_placeholder: "Avatar Platzhalter. Klicken Sie, um ein neues Bild hochzuladen."
           aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
         edit_username:
           edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."

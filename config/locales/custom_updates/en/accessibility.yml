@@ -18,6 +18,7 @@ en:
         edit_banner:
           aria-label: "Click to upload a new banner image."
         edit_avatar:
+          avatar_placeholder: "Avatar placeholder. Click to upload a new avatar image."
           aria-label: "Click to upload a new avatar image."
         edit_username:
           edit_button: "Click to show the username edit field."

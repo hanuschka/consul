@@ -30,7 +30,7 @@
           <%= f.fields_for :image do |image_builder| %>
             <%= render Images::DirectUploadComponent.new(image_builder, imageable: @user, submit_form: true) do |c| %>
               <% c.with_placeholder do %>
-                <div class="users-profile-banner--avatar-placeholder">
+                <div class="users-profile-banner--avatar-placeholder" aria-label="<%= t("custom.accessibility.account.edit_avatar.avatar_placeholder") %>">
                   <%= @user.first_letter_of_name %>
                 </div>
               <% end %>
@@ -48,7 +48,7 @@
         <%= image_tag(@user.image&.variant(:medium)) %>
       </div>
     <% else %>
-      <div class="users-profile-banner--avatar users-profile-banner--avatar-placeholder">
+      <div class="users-profile-banner--avatar users-profile-banner--avatar-placeholder" aria-label="<%= t("custom.accessibility.account.edit_avatar.avatar_placeholder") %>">
         <%= @user.first_letter_of_name %>
       </div>
     <% end %>

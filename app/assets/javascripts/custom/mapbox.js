@@ -484,6 +484,9 @@
 
       // Set up event listeners for draw events
       this.setupDrawEventListeners();
+
+      // Set up cursor hover effects for draw features
+      this.setupDrawCursorEffects();
     };
 
     loadExistingShape() {
@@ -614,6 +617,36 @@
         // Reset mouse tracking
         mouseDownPoint = null;
         isDragging = false;
+      });
+    }
+
+    setupDrawCursorEffects() {
+      var self = this;
+      var isDragging = false;
+      
+      // Helper function to check if point has draw features
+      function hasDrawFeature(point) {
+        var features = self.map.queryRenderedFeatures(point);
+        return features.some(function(feature) {
+          return feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot';
+        });
+      }
+      
+      // Track drag state
+      this.map.on('mousedown', function(e) {
+        isDragging = self.draw && hasDrawFeature(e.point);
+      });
+      
+      this.map.on('mouseup', function() {
+        isDragging = false;
+      });
+      
+      // Set cursor based on state
+      this.map.on('mousemove', function(e) {
+        if (!self.draw) return;
+        
+        var cursor = isDragging ? 'move' : hasDrawFeature(e.point) ? 'pointer' : '';
+        self.map.getCanvas().style.cursor = cursor;
       });
     }
 

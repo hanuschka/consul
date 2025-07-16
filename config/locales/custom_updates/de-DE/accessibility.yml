@@ -15,6 +15,14 @@ de:
         widget-toggler:
           aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."
       account:
+        edit_banner:
+          aria-label: "Banner bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+        edit_avatar:
+          aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+        edit_username:
+          edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."
+          cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
+          save_button: "Speichern Schaltfläche. Klicken Sie, um die Änderungen zu speichern."
         notifications:
           aria-label: "Benachrichtigungsfilter"
       banner-image:

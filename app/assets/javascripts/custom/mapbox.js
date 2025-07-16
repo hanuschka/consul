@@ -79,7 +79,6 @@
 
       if (this.styleId) {
         mapSettings.style = this.styleId;
-        // console.log("Using style", this.styleId)
       }
 
       return new mapboxgl.Map(mapSettings);
@@ -139,7 +138,6 @@
 
         // Handle map interaction (click and touch)
         var handleMapInteraction = function(e) {
-          console.log("handle map interaction")
           // For touch events, only proceed if it was a tap (not a drag)
           if (e.type === 'touchend') {
             var touchDuration = Date.now() - touchStartTime;
@@ -179,7 +177,6 @@
           if (self.draw) {
             currentMode = self.draw.getMode();
           }
-          console.log({currentMode})
 
           var drawFetures = self.draw ? self.draw.getAll().features : [];
 
@@ -249,9 +246,18 @@
       this.instructionOverlay = overlay;
     }
 
+    addCustomDeleteButton() {
+      if (!this.draw) return;
 
+      var customDeleteControl = new CustomDeleteControl(this);
+      this.map.addControl(customDeleteControl, 'top-right');
+
+      // Store reference for cleanup
+      this.customDeleteControl = customDeleteControl;
+    }
 
     togglePoiLabels(visible) {
+
       if (!this.mapLoaded) {
         console.log("Map not loaded yet, waiting...");
         this.map.once('idle', () => {
@@ -448,7 +454,7 @@
     initializePolygonEditor() {
       // Initialize Mapbox Draw with controls based on enableGeomanControls setting
       var controls = {
-        trash: true
+         // trash: true
       };
 
       // Enable advanced drawing tools only if enableGeomanControls is true
@@ -467,6 +473,9 @@
 
       // Add the draw control to the map
       this.map.addControl(this.draw);
+
+      // Add custom delete button right after draw controls
+      this.addCustomDeleteButton();
 
       // Load existing shape data if available
       this.loadExistingShape();
@@ -538,7 +547,6 @@
 
       // Listen for mode changes to help with conflict resolution
       this.map.on('draw.modechange', function(e) {
-        // console.log('Draw mode changed to:', e.mode);
         // If entering a drawing mode, clear any existing marker-coordinates
         if (e.mode.startsWith('draw_')) {
           self.removeEditableMarker();
@@ -647,12 +655,7 @@
 
     // function to create or move existing marker (similar to Leaflet version)
     moveOrPlaceMarker(e) {
-      console.log("moveOrPlaceMarker", e)
-      console.log("moveOrPlaceMarker, this.draw", this.draw)
-      console.log("moveOrPlaceMarker, this.editableMarker", this.editableMarker)
       var lngLat = e.lngLat;
-
-      // console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
 
       // Clear any existing draw features when placing an editable marker
       if (this.draw) {
@@ -1083,7 +1086,6 @@
       var totalImages = this.markerImages.length;
 
       this.markerImages.forEach(function(markerImage) {
-        // console.log('load image', {markerImage})
         self.map.loadImage(markerImage.path, function(error, image) {
           if (error) {
             console.error('Error loading marker image:', error, markerImage);
@@ -1250,10 +1252,8 @@
 
         // Store layer info for potential controls
         if (layerData.base) {
-          console.log('Storing base layer:', layerData.name, 'with ID:', layerId);
           this.baseLayers[layerData.name] = { sourceId, layerId, layerData };
         } else {
-          console.log('Storing overlay layer:', layerData.name, 'with ID:', layerId);
           this.overlayLayers[layerData.name] = { sourceId, layerId, layerData };
         }
       } catch (error) {
@@ -1550,6 +1550,16 @@
           this.draw = null;
         }
 
+        // Clean up custom delete control
+        if (this.customDeleteControl) {
+          try {
+            this.map.removeControl(this.customDeleteControl);
+          } catch (e) {
+            console.warn('Error removing custom delete control:', e);
+          }
+          this.customDeleteControl = null;
+        }
+
         // Clean up all marker-coordinates
         this.pinMarkers.forEach(function(marker) {
           try {
@@ -1685,6 +1695,40 @@
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
+  // Custom control for delete all functionality
+  class CustomDeleteControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-custom-delete-button';
+      button.innerHTML = '<i class="fas fa-trash"></i>';
+      button.title = 'Alle Formen löschen';
+
+      // Add click event listener
+      button.addEventListener('click', () => {
+        if (this.mapboxMapInstance.draw) {
+          this.mapboxMapInstance.draw.deleteAll();
+          this.mapboxMapInstance.updateShapeFormFields();
+        }
+      });
+
+      this._container.appendChild(button);
+      return this._container;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+  }
 
   // Custom control for layer visibility toggle
   class LayerControl {
@@ -1779,16 +1823,13 @@
 
              // Handle layer visibility changes
        input.addEventListener('change', () => {
-         console.log('Layer control input changed:', layerId, 'checked:', input.checked, 'type:', inputType);
          if (inputType === 'radio' && input.checked) {
-           console.log('Base layer selected:', layerId);
            // For base layers (radio), hide all others and show selected
            Object.values(this.mapboxMapInstance.baseLayers).forEach(layer => {
              this.mapboxMapInstance.toggleLayerVisibility(layer.layerId, false);
            });
            this.mapboxMapInstance.toggleLayerVisibility(layerId, true);
          } else if (inputType === 'checkbox') {
-           console.log('Overlay layer toggled:', layerId, input.checked);
            // For overlay layers (checkbox), toggle individual layer
            this.mapboxMapInstance.toggleLayerVisibility(layerId, input.checked);
          }

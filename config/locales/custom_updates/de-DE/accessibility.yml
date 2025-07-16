@@ -4,6 +4,8 @@ de:
       shared:
         switch-view-button:
           aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
+        missing-image:
+          aria-label: "Kein Bild verfügbar"
       google-translate:
         widget-toggler:
           aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."

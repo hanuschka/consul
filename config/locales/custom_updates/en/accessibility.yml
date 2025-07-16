@@ -4,6 +4,8 @@ en:
       shared:
         switch-view-button:
           aria-label: "Switch view button"
+        missing-image:
+          aria-label: "Image not available"
       google-translate:
         widget-toggler:
           aria-label: "Click to toggle the Google Translate widget."

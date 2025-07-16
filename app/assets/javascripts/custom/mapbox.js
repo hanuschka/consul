@@ -461,7 +461,7 @@
       if (this.enableGeomanControls) {
         controls.point = true;
         controls.polygon = true;
-        controls.line_string = true;
+        controls.line = true;
       }
 
       this.draw = new MapboxDraw({

@@ -193,9 +193,11 @@
           }
         };
 
-        // Add both click and touch event listeners
-        this.map.on('click', handleMapInteraction);
-        this.map.on('touchend', handleMapInteraction);
+        if (!this.adminEditor) {
+          // Add both click and touch event listeners
+          this.map.on('click', handleMapInteraction);
+          this.map.on('touchend', handleMapInteraction);
+        }
       }
     }
 

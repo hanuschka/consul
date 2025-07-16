@@ -454,7 +454,7 @@
     initializePolygonEditor() {
       // Initialize Mapbox Draw with controls based on enableGeomanControls setting
       var controls = {
-         // trash: true
+         trash: true
       };
 
       // Enable advanced drawing tools only if enableGeomanControls is true
@@ -1709,7 +1709,7 @@
       var button = document.createElement('button');
       button.type = 'button';
       button.className = 'mapbox-custom-delete-button';
-      button.innerHTML = '<i class="fas fa-trash"></i>';
+      button.innerHTML = '<i class="fas fa-eraser"></i>';
       button.title = 'Alle Formen löschen';
 
       // Add click event listener

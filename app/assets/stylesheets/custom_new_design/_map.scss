@@ -37,6 +37,15 @@
 
 .mapboxgl-ctrl-group {
   border-radius: 7px;
+
+  button {
+    background-size: 70%;
+    font-size: 18px;
+
+    i {
+      font-size: 18px;
+    }
+  }
 }
 
 .mapbox--poi-labels-toggle {

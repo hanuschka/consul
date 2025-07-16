@@ -42,7 +42,7 @@
 .mapbox--poi-labels-toggle {
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 14px;
   background: white;
   border: none;
   cursor: pointer;
@@ -59,12 +59,19 @@
     }
   }
 
+}
+
+.mapboxgl-ctrl {
   input[type="checkbox"] {
     margin-top: 0;
     margin-bottom: 0 !important;
     cursor: pointer;
-    width: 15px;
-    height: 15px;
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  label {
+    user-select: none !important;
   }
 }
 
@@ -111,57 +118,84 @@
   top: 100%;
   right: 0;
   margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 7px;
+  padding-left: 0;
+  padding-right: 0;
   background-color: white;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
+  border-radius: 8px;
   min-width: 200px;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
   z-index: 1000;
-  padding: 8px;
+  transform: translate(0);
+  // padding: 8px;
 }
 
-.layer-section {
+.mapboxgl-ctrl {
+  transform: none;
+}
+
+.mapbox-layer-select-section {
   margin-bottom: 8px;
 }
 
-.layer-section:last-child {
+.mapbox-layer-select-section:last-child {
   margin-bottom: 0;
 }
 
-.layer-section-title {
+.mapbox-layer-select-section-title {
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
   color: #333;
   margin-bottom: 4px;
   padding-bottom: 2px;
   border-bottom: 1px solid #ddd;
+  padding: 4px 0;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
-.layer-checkbox-label {
+.mapbox-layer-checkbox-label {
   display: flex;
   align-items: center;
-  padding: 4px 0;
+  padding: 4px 15px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   color: #333;
+
+  input {
+    margin: 0;
+  }
 }
 
-.layer-checkbox-label input[type="checkbox"],
-.layer-checkbox-label input[type="radio"] {
+.mapboxgl-control-container {
+  input {
+    margin: 0;
+  }
+}
+
+.mapbox-layer-checkbox-label input[type="checkbox"],
+.mapbox-layer-checkbox-label input[type="radio"] {
   margin-right: 8px;
   margin-left: 0;
 }
 
-.layer-checkbox-label:hover {
+.mapbox-layer-checkbox-label:hover {
   background-color: #f4f4f4;
 }
 
-.layer-checkbox-label span {
+.mapbox-layer-checkbox-label span {
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.mapboxgl-ctrl-group button {
+  width: 35px;
+  height: 35px;
+}
+
 
 // .mapbox-layer-control-button {
 //  &:before {

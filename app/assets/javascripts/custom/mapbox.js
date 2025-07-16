@@ -201,9 +201,6 @@
     }
 
     addControls() {
-      // Add POI labels toggle control first (top-right, before other controls)
-      this.addPoiLabelsControl();
-
       // Add zoom/navigation controls first (leftmost)
       this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
@@ -250,14 +247,7 @@
       this.instructionOverlay = overlay;
     }
 
-    addPoiLabelsControl() {
-      // Only show POI control if map width is bigger than 780px
-      if (this.element.offsetWidth <= 780) {
-        return;
-      }
 
-      this.map.addControl(new PoiLabelsControl(this), 'top-right');
-    }
 
     togglePoiLabels(visible) {
       if (!this.mapLoaded) {
@@ -1172,12 +1162,7 @@
         return;
       }
 
-      var hasLayers = Object.keys(this.baseLayers).length > 0 || Object.keys(this.overlayLayers).length > 0;
-
-      if (!hasLayers) {
-        return;
-      }
-
+      // Always show layer control since it now includes POI labels
       this.map.addControl(new LayerControl(this), 'top-right');
     }
 
@@ -1543,18 +1528,7 @@
           this.instructionOverlay = null;
         }
 
-        // Clean up POI labels control
-        var poiControl = document.getElementById('poi-labels-toggle');
-        if (poiControl && poiControl.parentNode) {
-          try {
-            var controlContainer = poiControl.closest('.mapboxgl-ctrl');
-            if (controlContainer && controlContainer.parentNode) {
-              controlContainer.parentNode.removeChild(controlContainer);
-            }
-          } catch (e) {
-            console.warn('Error removing POI control:', e);
-          }
-        }
+
 
         // Clear overlay timeout
         if (this.overlayTimeout) {
@@ -1731,43 +1705,36 @@
       dropdown.className = 'mapbox-layer-control-dropdown';
       dropdown.style.display = 'none';
 
+      // Add POI labels section
+      var dropdownList = document.createElement('div');
+      dropdownList.className = 'mapbox-layer-select-section';
+
+      var dropdownTitle = document.createElement('div');
+      dropdownTitle.className = 'mapbox-layer-select-section-title';
+      dropdownTitle.textContent = 'Kartenebenen';
+      dropdownList.appendChild(dropdownTitle);
+
+      var poiLabel = this.createPoiCheckbox();
+      dropdownList.appendChild(poiLabel);
+      dropdown.appendChild(dropdownList);
+
       // Add base layers section if any
       if (Object.keys(this.mapboxMapInstance.baseLayers).length > 0) {
-        var baseSection = document.createElement('div');
-        baseSection.className = 'layer-section';
-
-        var baseTitle = document.createElement('div');
-        baseTitle.className = 'layer-section-title';
-        baseTitle.textContent = 'Grundkarten';
-        baseSection.appendChild(baseTitle);
-
         Object.entries(this.mapboxMapInstance.baseLayers).forEach(([name, layer], index) => {
           // Only the first base layer should be checked initially
           var isVisible = index === 0;
           var label = this.createLayerCheckbox(name, layer.layerId, isVisible, 'radio');
-          baseSection.appendChild(label);
+          dropdownList.appendChild(label);
         });
-
-        dropdown.appendChild(baseSection);
       }
 
       // Add overlay layers section if any
       if (Object.keys(this.mapboxMapInstance.overlayLayers).length > 0) {
-        var overlaySection = document.createElement('div');
-        overlaySection.className = 'layer-section';
-
-        var overlayTitle = document.createElement('div');
-        overlayTitle.className = 'layer-section-title';
-        overlayTitle.textContent = 'Überlagerungen';
-        overlaySection.appendChild(overlayTitle);
-
         Object.entries(this.mapboxMapInstance.overlayLayers).forEach(([name, layer]) => {
           var isVisible = layer.layerData.show_by_default;
           var label = this.createLayerCheckbox(name, layer.layerId, isVisible, 'checkbox');
-          overlaySection.appendChild(label);
+          dropdownList.appendChild(label);
         });
-
-        dropdown.appendChild(overlaySection);
       }
 
       this._container.appendChild(button);
@@ -1791,7 +1758,7 @@
 
     createLayerCheckbox(name, layerId, isChecked, inputType) {
       var label = document.createElement('label');
-      label.className = 'layer-checkbox-label';
+      label.className = 'mapbox-layer-checkbox-label';
 
       var input = document.createElement('input');
       input.type = inputType;
@@ -1826,43 +1793,26 @@
       return label;
     }
 
-    onRemove() {
-      this._container.parentNode.removeChild(this._container);
-      this._map = undefined;
-    }
-  }
-
-  // Custom control for POI labels toggle
-  class PoiLabelsControl {
-    constructor(mapboxMapInstance) {
-      this.mapboxMapInstance = mapboxMapInstance;
-    }
-
-    onAdd(map) {
-      this._map = map;
-      this._container = document.createElement('div');
-      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox--poi-labels-toggle';
-
-      var checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = 'poi-labels-toggle';
-      checkbox.checked = true; // Default to on
-
+    createPoiCheckbox() {
       var label = document.createElement('label');
-      label.htmlFor = 'poi-labels-toggle';
-      label.className = "mapbox--label--poi-labels-toggle"
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode('Orte von Interesse'));
+      label.className = 'mapbox-layer-checkbox-label';
 
-      this._container.appendChild(label);
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = true; // Default to on
 
-      // Add event listener for checkbox
-      var self = this;
-      checkbox.addEventListener('change', function() {
-        self.mapboxMapInstance.togglePoiLabels(checkbox.checked);
+      var span = document.createElement('span');
+      span.textContent = 'Orte von Interesse';
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      // Handle POI labels visibility changes
+      input.addEventListener('change', () => {
+        this.mapboxMapInstance.togglePoiLabels(input.checked);
       });
 
-      return this._container;
+      return label;
     }
 
     onRemove() {
@@ -1870,6 +1820,8 @@
       this._map = undefined;
     }
   }
+
+
 
 
   // Keep the existing App.Mapbox object

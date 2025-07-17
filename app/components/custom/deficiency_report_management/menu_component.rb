@@ -111,7 +111,7 @@ class DeficiencyReportManagement::MenuComponent < ApplicationComponent
     def intro_link
       [
         t("custom.admin.menu.deficiency_reports.intro"),
-        "https://mitmachen.rastatt.de/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBbkFJIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--0f0a33f3796071415de770b25ffdb3a1135193ef/Anleitung%20M%C3%A4ngelmelder%20Sachbearbeitende%20Stand%2017.06.25.pdf",
+        "https://mitmachen.rastatt.de/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc2tKIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--34bd094082a7c3e80526f72554aab04a7e63769d/Anleitung%20M%C3%A4ngelmelder%20Sachbearbeitende%20Stand%2016.07.25.pdf",
         { target: "_blank" }
       ]
     end

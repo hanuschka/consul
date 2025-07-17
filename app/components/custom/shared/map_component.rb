@@ -1,9 +1,10 @@
 class Shared::MapComponent < Shared::MapBaseComponent
   def map_div
     content_tag :div, "",
-               id: "#{dom_id(@map_location)}_#{@parent_class}",
+                id: "#{dom_id(@map_location)}_#{@parent_class}",
                 class: "map_location map #{map_lib_class}",
                 aria: { hidden: true },
+                inert: true,
                 data: prepare_map_settings
   end
 

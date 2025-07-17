@@ -5,7 +5,8 @@
   }
 
   #extended-sidebar-map {
-    top: 150px;
+    top: 108px;
+    width: 80%;
     border-radius: 10px;
     // overflow: hidden;
 
@@ -210,6 +211,11 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+.extended-sidebar-map {
+  .mapboxgl-ctrl-top-right {
+    top: 62px;
+  }
+}
 
 // .mapbox-layer-control-button {
 //  &:before {

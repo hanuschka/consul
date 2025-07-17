@@ -202,6 +202,10 @@
     }
 
     addControls() {
+      if (this.element.offsetWidth <= 580) {
+        return;
+      }
+
       // Add zoom/navigation controls first (leftmost)
       this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
@@ -285,9 +289,10 @@
     getDrawStyles() {
       const blue = '#3bb2d0';
       const orange = '#fbb03b';
+      const brandColor =  App.Utils.getBrandColor();
       const white = '#fff';
       var circleColor = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
-      const shapesColor = this.adminEditor ? this.adminShapesColor : blue;
+      const shapesColor = this.adminEditor ? this.adminShapesColor : brandColor;
 
       return [
         // // Bigger points
@@ -454,12 +459,10 @@
     }
 
     initializePolygonEditor() {
-      // Initialize Mapbox Draw with controls based on enableGeomanControls setting
       var controls = {
          trash: true
       };
 
-      // Enable advanced drawing tools only if enableGeomanControls is true
       if (this.enableGeomanControls) {
         controls.point = true;
         controls.polygon = true;
@@ -469,23 +472,15 @@
       this.draw = new MapboxDraw({
         displayControlsDefault: false,
         controls: controls,
-        defaultMode: 'simple_select', // Start in selection mode, not drawing mode
+        defaultMode: 'simple_select',
         styles: this.getDrawStyles()
       });
 
-      // Add the draw control to the map
       this.map.addControl(this.draw);
-
-      // Add custom delete button right after draw controls
       this.addCustomDeleteButton();
-
-      // Load existing shape data if available
       this.loadExistingShape();
 
-      // Set up event listeners for draw events
       this.setupDrawEventListeners();
-
-      // Set up cursor hover effects for draw features
       this.setupDrawCursorEffects();
     };
 
@@ -513,7 +508,7 @@
       // Update form fields when shapes are created, updated, or deleted
       this.map.on('draw.create', function(e) {
         var wasInPointMode = self.draw.getMode() === 'draw_point';
-        
+
         // If not admin editor, ensure only one polygon exists
         if (!self.adminEditor) {
           var allFeatures = self.draw ? self.draw.getAll() : { features: [] };
@@ -542,7 +537,7 @@
         self.updateShapeFormFields();
         // Remove any existing marker-coordinates when a shape is created
         self.removeEditableMarker();
-        
+
         // Keep point drawing mode active after creating a point
         if (wasInPointMode && e.features.length > 0 && e.features[0].geometry.type === 'Point') {
           setTimeout(function() {
@@ -572,16 +567,16 @@
       // Track mouse state for distinguishing clicks from drags
       var mouseDownPoint = null;
       var isDragging = false;
-      
+
       this.map.on('mousedown', function(e) {
         mouseDownPoint = e.point;
         isDragging = false;
       });
-      
+
       this.map.on('mousemove', function(e) {
         if (mouseDownPoint) {
           var distance = Math.sqrt(
-            Math.pow(e.point.x - mouseDownPoint.x, 2) + 
+            Math.pow(e.point.x - mouseDownPoint.x, 2) +
             Math.pow(e.point.y - mouseDownPoint.y, 2)
           );
           if (distance > 3) { // 3 pixel threshold
@@ -589,13 +584,13 @@
           }
         }
       });
-      
+
       this.map.on('mouseup', function(e) {
         if (self.draw && self.draw.getMode() === 'draw_point' && !isDragging && mouseDownPoint) {
           // Check if we clicked on an existing draw feature
           var clickedFeatures = self.map.queryRenderedFeatures(e.point);
           var targetFeatureId = null;
-          
+
           clickedFeatures.forEach(function(feature) {
             if (feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot') {
               if (feature.properties && feature.properties.id) {
@@ -605,7 +600,7 @@
               }
             }
           });
-          
+
           if (targetFeatureId) {
             // Switch to select mode and select the clicked feature
             self.draw.changeMode('simple_select', {
@@ -613,7 +608,7 @@
             });
           }
         }
-        
+
         // Reset mouse tracking
         mouseDownPoint = null;
         isDragging = false;
@@ -623,7 +618,7 @@
     setupDrawCursorEffects() {
       var self = this;
       var isDragging = false;
-      
+
       // Helper function to check if point has draw features
       function hasDrawFeature(point) {
         var features = self.map.queryRenderedFeatures(point);
@@ -631,20 +626,19 @@
           return feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot';
         });
       }
-      
+
       // Track drag state
       this.map.on('mousedown', function(e) {
         isDragging = self.draw && hasDrawFeature(e.point);
       });
-      
+
       this.map.on('mouseup', function() {
         isDragging = false;
       });
-      
-      // Set cursor based on state
+
       this.map.on('mousemove', function(e) {
         if (!self.draw) return;
-        
+
         var cursor = isDragging ? 'move' : hasDrawFeature(e.point) ? 'pointer' : '';
         self.map.getCanvas().style.cursor = cursor;
       });
@@ -655,15 +649,12 @@
 
       var allFeatures = this.draw.getAll();
 
-      // Update the shape input field with the current polygon data
       $(this.shapeInputSelector).val(JSON.stringify(allFeatures));
 
-      // Clear coordinates if we have a polygon
       if (allFeatures.features.length > 0) {
         $(this.altitudeInputSelector).val(''); // Clear altitude when shape is present
       }
 
-      // Update zoom
       $(this.zoomInputSelector).val(this.map.getZoom());
 
       if (this.adminEditor && this.showAdminShapeInputSelector) {

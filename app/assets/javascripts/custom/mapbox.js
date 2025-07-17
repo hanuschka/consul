@@ -740,6 +740,41 @@
       }
     }
 
+    // Helper method to delete all user markers (but not admin markers)
+    deleteAllUserMarkers() {
+      // Remove all pin markers
+      this.pinMarkers.forEach(function(marker) {
+        try {
+          marker.remove();
+        } catch (e) {
+          console.warn('Error removing pin marker:', e);
+        }
+      });
+      this.pinMarkers = [];
+
+      // Remove editable marker
+      this.removeEditableMarker();
+
+      // Clear form fields since all user markers are gone
+      this.clearFormFields();
+    }
+
+    // Helper method to clear form fields
+    clearFormFields() {
+      if (this.latitudeInputSelector) {
+        $(this.latitudeInputSelector).val('');
+      }
+      if (this.longitudeInputSelector) {
+        $(this.longitudeInputSelector).val('');
+      }
+      if (this.altitudeInputSelector) {
+        $(this.altitudeInputSelector).val('');
+      }
+      if (this.shapeInputSelector) {
+        $(this.shapeInputSelector).val(JSON.stringify({}));
+      }
+    }
+
     // function to create or move existing marker (similar to Leaflet version)
     moveOrPlaceMarker(e) {
       var lngLat = e.lngLat;
@@ -1801,10 +1836,14 @@
 
       // Add click event listener
       button.addEventListener('click', () => {
+        // Delete all draw features (polygons, lines, points from draw tools)
         if (this.mapboxMapInstance.draw) {
           this.mapboxMapInstance.draw.deleteAll();
           this.mapboxMapInstance.updateShapeFormFields();
         }
+
+        // Delete all user markers (pin markers and editable marker)
+        this.mapboxMapInstance.deleteAllUserMarkers();
       });
 
       this._container.appendChild(button);

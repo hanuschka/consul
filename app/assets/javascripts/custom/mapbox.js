@@ -1615,21 +1615,17 @@
     destroy() {
       if (!this.map) return; // Early return if map is already destroyed
 
-      var self = this;
-
       try {
         // If map is still loading, wait for it to finish before destroying
         if (!this.mapLoaded && this.map.isStyleLoaded && !this.map.isStyleLoaded()) {
-          this.map.once('idle', function() {
-            self.performDestroy();
+          this.map.once('idle', () => {
+            this.performDestroy();
           });
           return;
         }
 
         this.performDestroy();
-
       } catch (e) {
-        console.error('Error during map destruction:', e);
         this.forceCleanup();
       }
     }
@@ -1639,8 +1635,13 @@
       var self = this;
 
       try {
+        this.map.remove();
+
+        // TODO try this
+        // return
+        //
         // Remove all event listeners first
-        this.map.off();
+        // this.map.off();
 
         // Clean up instruction overlay
         if (this.instructionOverlay) {
@@ -1662,15 +1663,6 @@
           this.overlayTimeout = null;
         }
 
-        // Clean up draw instance
-        if (this.draw) {
-          try {
-            this.map.removeControl(this.draw);
-          } catch (e) {
-            console.warn('Error removing draw control:', e);
-          }
-          this.draw = null;
-        }
 
         // Clean up custom delete control
         if (this.customDeleteControl) {
@@ -1680,25 +1672,6 @@
             console.warn('Error removing custom delete control:', e);
           }
           this.customDeleteControl = null;
-        }
-
-        // Clean up all marker-coordinates
-        this.pinMarkers.forEach(function(marker) {
-          try {
-            marker.remove();
-          } catch (e) {
-            console.warn('Error removing marker:', e);
-          }
-        });
-        this.pinMarkers = [];
-
-        if (this.adminMarker) {
-          try {
-            this.adminMarker.remove();
-          } catch (e) {
-            console.warn('Error removing admin marker:', e);
-          }
-          this.adminMarker = null;
         }
 
         if (this.editableMarker) {
@@ -1741,57 +1714,57 @@
     }
 
     // Clean up map sources and layers
-    cleanupMapSources() {
-      if (!this.map || !this.mapLoaded) return;
+    // cleanupMapSources() {
+    //   if (!this.map || !this.mapLoaded) return;
 
-      try {
-        // Remove known layers first
-        var layersToRemove = ['custom-marker', 'custom-marker-icon', 'clusters', 'cluster-count'];
-        layersToRemove.forEach(function(layerId) {
-          if (this.map.getLayer(layerId)) {
-            this.map.removeLayer(layerId);
-          }
-        }.bind(this));
+    //   try {
+    //     // Remove known layers first
+    //     var layersToRemove = ['custom-marker', 'custom-marker-icon', 'clusters', 'cluster-count'];
+    //     layersToRemove.forEach(function(layerId) {
+    //       if (this.map.getLayer(layerId)) {
+    //         this.map.removeLayer(layerId);
+    //       }
+    //     }.bind(this));
 
-        // Remove custom layers (WMS and tile layers)
-        Object.values(this.baseLayers).forEach(layer => {
-          if (this.map.getLayer(layer.layerId)) {
-            this.map.removeLayer(layer.layerId);
-          }
-        });
-        Object.values(this.overlayLayers).forEach(layer => {
-          if (this.map.getLayer(layer.layerId)) {
-            this.map.removeLayer(layer.layerId);
-          }
-        });
+    //     // Remove custom layers (WMS and tile layers)
+    //     Object.values(this.baseLayers).forEach(layer => {
+    //       if (this.map.getLayer(layer.layerId)) {
+    //         this.map.removeLayer(layer.layerId);
+    //       }
+    //     });
+    //     Object.values(this.overlayLayers).forEach(layer => {
+    //       if (this.map.getLayer(layer.layerId)) {
+    //         this.map.removeLayer(layer.layerId);
+    //       }
+    //     });
 
-        // Remove known sources
-        var sources = ['marker-coordinates', 'admin-shape'];
-        sources.forEach(function(sourceId) {
-          if (this.map.getSource(sourceId)) {
-            this.map.removeSource(sourceId);
-          }
-        }.bind(this));
+    //     // Remove known sources
+    //     var sources = ['marker-coordinates', 'admin-shape'];
+    //     sources.forEach(function(sourceId) {
+    //       if (this.map.getSource(sourceId)) {
+    //         this.map.removeSource(sourceId);
+    //       }
+    //     }.bind(this));
 
-        // Remove custom sources (WMS and tile sources)
-        Object.values(this.baseLayers).forEach(layer => {
-          if (this.map.getSource(layer.sourceId)) {
-            this.map.removeSource(layer.sourceId);
-          }
-        });
-        Object.values(this.overlayLayers).forEach(layer => {
-          if (this.map.getSource(layer.sourceId)) {
-            this.map.removeSource(layer.sourceId);
-          }
-        });
+    //     // Remove custom sources (WMS and tile sources)
+    //     Object.values(this.baseLayers).forEach(layer => {
+    //       if (this.map.getSource(layer.sourceId)) {
+    //         this.map.removeSource(layer.sourceId);
+    //       }
+    //     });
+    //     Object.values(this.overlayLayers).forEach(layer => {
+    //       if (this.map.getSource(layer.sourceId)) {
+    //         this.map.removeSource(layer.sourceId);
+    //       }
+    //     });
 
-        // Clear layer references
-        this.baseLayers = {};
-        this.overlayLayers = {};
-      } catch (e) {
-        console.warn('Error cleaning up map sources:', e);
-      }
-    };
+    //     // Clear layer references
+    //     this.baseLayers = {};
+    //     this.overlayLayers = {};
+    //   } catch (e) {
+    //     console.warn('Error cleaning up map sources:', e);
+    //   }
+    // };
 
    forceCleanup() {
       this.map = null;

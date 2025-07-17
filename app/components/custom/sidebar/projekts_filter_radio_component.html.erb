@@ -16,14 +16,14 @@
             aria-label="<%= t('custom.links.projekts_filter.arrow_label') %>" >
       </span>
     <% end %>
-  </li>
 
-  <% selectable_children.each do |projekt| %>
-    <%= render Sidebar::ProjektsFilterRadioComponent.new(
-      f: f,
-      projekt: projekt,
-      group: @group,
-      all_resources: @all_resources
-    ) %>
-  <% end %>
+    <% selectable_children.each do |projekt| %>
+      <%= render Sidebar::ProjektsFilterRadioComponent.new(
+        f: f,
+        projekt: projekt,
+        group: @group,
+        all_resources: @all_resources
+      ) %>
+    <% end %>
+  </li>
 </ul>

@@ -1690,7 +1690,7 @@
         });
 
         // Remove sources and layers if they exist
-        this.cleanupMapSources();
+        // this.cleanupMapSources();
 
         // Wait a bit before removing the map to allow cleanup
         setTimeout(function() {

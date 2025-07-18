@@ -464,15 +464,17 @@
       };
 
       if (this.enableGeomanControls) {
+        controls.line = true;
         controls.point = true;
         controls.polygon = true;
-        controls.line = true;
       }
+
+      const defaultMode = this.adminEditor ? 'draw_point' : 'simple_select';
 
       this.draw = new MapboxDraw({
         displayControlsDefault: false,
         controls: controls,
-        defaultMode: 'simple_select',
+        defaultMode,
         styles: this.getDrawStyles()
       });
 
@@ -755,8 +757,9 @@
       // Remove editable marker
       this.removeEditableMarker();
 
-      // Clear form fields since all user markers are gone
-      this.clearFormFields();
+      if (!this.adminEditor) {
+        this.clearFormFields();
+      }
     }
 
     // Helper method to clear form fields
@@ -804,7 +807,6 @@
       if (!this.editableMarker) return;
 
       var lngLat = this.editableMarker.getLngLat();
-      // console.log("Updating form fields with coordinates:", lngLat.lat, lngLat.lng);
 
       $(this.latitudeInputSelector).val(lngLat.lat);
       $(this.longitudeInputSelector).val(lngLat.lng);
@@ -826,8 +828,6 @@
     createEditableMarker(latitude, longitude) {
       var self = this;
 
-      // console.log("Creating editable marker at:", latitude, longitude);
-
       var styledMarker = this.getStyledMarker(null, null);
       var markerOptions = {
         element: styledMarker.element,
@@ -845,8 +845,6 @@
       });
 
       marker.addTo(this.map);
-
-      // console.log("Marker created at:", marker.getLngLat());
 
       return marker;
     }

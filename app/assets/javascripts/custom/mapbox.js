@@ -459,11 +459,10 @@
     }
 
     initializePolygonEditor() {
-      var controls = {
-         trash: true
-      };
+      var controls = {}
 
       if (this.enableGeomanControls) {
+        controls.trash = true;
         controls.line = true;
         controls.point = true;
         controls.polygon = true;

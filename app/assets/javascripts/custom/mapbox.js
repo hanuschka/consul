@@ -27,8 +27,11 @@
       this.$categorySelect = $(".js-map-update-pin-style");
       this.markerImages = $element.data("mapbox-marker-images")
       this.styleId = $element.data("mapbox-style-id")
+      this.layersData = $element.data('map-layers')
 
       this.map = null;
+      this.baseLayers = {}; // Store base layer sources
+      this.overlayLayers = {}; // Store overlay layer sources
       this.pinMarkers = []; // Array to store all marker-coordinates
       this.adminMarker = null;
       this.editableMarker = null; // Single editable marker for user interaction
@@ -50,15 +53,18 @@
       this.map.on('load', () => {
         this.mapLoaded = true;
 
-        this.renderAdminShape();
+        // Render base and overlay layers first for proper layer ordering
+        this.renderLayers();
+        this.addLayerControl();
+        this.addControls();
 
+        this.renderAdminShape();
         this.renderMarkerCoordinates();
         this.renderResourceShapes();
         this.addMapInstructionOverlay();
       });
 
       this.setupEventListeners();
-      this.addControls();
     }
 
     initializeMap() {
@@ -73,7 +79,6 @@
 
       if (this.styleId) {
         mapSettings.style = this.styleId;
-        // console.log("Using style", this.styleId)
       }
 
       return new mapboxgl.Map(mapSettings);
@@ -188,15 +193,18 @@
           }
         };
 
-        // Add both click and touch event listeners
-        this.map.on('click', handleMapInteraction);
-        this.map.on('touchend', handleMapInteraction);
+        if (!this.adminEditor) {
+          // Add both click and touch event listeners
+          this.map.on('click', handleMapInteraction);
+          this.map.on('touchend', handleMapInteraction);
+        }
       }
     }
 
     addControls() {
-      // Add POI labels toggle control first (top-right, before other controls)
-      this.addPoiLabelsControl();
+      if (this.element.offsetWidth <= 580) {
+        return;
+      }
 
       // Add zoom/navigation controls first (leftmost)
       this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
@@ -244,16 +252,18 @@
       this.instructionOverlay = overlay;
     }
 
-    addPoiLabelsControl() {
-      // Only show POI control if map width is bigger than 780px
-      if (this.element.offsetWidth <= 780) {
-        return;
-      }
+    addCustomDeleteButton() {
+      if (!this.draw) return;
 
-              this.map.addControl(new PoiLabelsControl(this), 'top-right');
+      var customDeleteControl = new CustomDeleteControl(this);
+      this.map.addControl(customDeleteControl, 'top-right');
+
+      // Store reference for cleanup
+      this.customDeleteControl = customDeleteControl;
     }
 
     togglePoiLabels(visible) {
+
       if (!this.mapLoaded) {
         console.log("Map not loaded yet, waiting...");
         this.map.once('idle', () => {
@@ -274,14 +284,15 @@
           }
         }
       });
-      }
+    }
 
     getDrawStyles() {
       const blue = '#3bb2d0';
       const orange = '#fbb03b';
+      const brandColor =  App.Utils.getBrandColor();
       const white = '#fff';
       var circleColor = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
-      const shapesColor = this.adminEditor ? this.adminShapesColor : blue;
+      const shapesColor = this.adminEditor ? this.adminShapesColor : brandColor;
 
       return [
         // // Bigger points
@@ -445,36 +456,34 @@
           },
         },
       ];
-    };
+    }
 
     initializePolygonEditor() {
-      // Initialize Mapbox Draw with controls based on enableGeomanControls setting
       var controls = {
-        trash: true
+         trash: true
       };
 
-      // Enable advanced drawing tools only if enableGeomanControls is true
       if (this.enableGeomanControls) {
+        controls.line = true;
         controls.point = true;
         controls.polygon = true;
-        controls.line_string = true;
       }
+
+      const defaultMode = this.adminEditor ? 'draw_point' : 'simple_select';
 
       this.draw = new MapboxDraw({
         displayControlsDefault: false,
         controls: controls,
-        defaultMode: 'simple_select', // Start in selection mode, not drawing mode
+        defaultMode,
         styles: this.getDrawStyles()
       });
 
-      // Add the draw control to the map
       this.map.addControl(this.draw);
-
-      // Load existing shape data if available
+      this.addCustomDeleteButton();
       this.loadExistingShape();
 
-      // Set up event listeners for draw events
       this.setupDrawEventListeners();
+      this.setupDrawCursorEffects();
     };
 
     loadExistingShape() {
@@ -493,13 +502,15 @@
           }
         }
       }
-    };
+    }
 
     setupDrawEventListeners() {
       var self = this;
 
       // Update form fields when shapes are created, updated, or deleted
       this.map.on('draw.create', function(e) {
+        var wasInPointMode = self.draw.getMode() === 'draw_point';
+
         // If not admin editor, ensure only one polygon exists
         if (!self.adminEditor) {
           var allFeatures = self.draw ? self.draw.getAll() : { features: [] };
@@ -528,6 +539,15 @@
         self.updateShapeFormFields();
         // Remove any existing marker-coordinates when a shape is created
         self.removeEditableMarker();
+
+        // Keep point drawing mode active after creating a point
+        if (wasInPointMode && e.features.length > 0 && e.features[0].geometry.type === 'Point') {
+          setTimeout(function() {
+            if (self.draw) {
+              self.draw.changeMode('draw_point');
+            }
+          }, 50);
+        }
       });
 
       this.map.on('draw.update', function(e) {
@@ -540,34 +560,109 @@
 
       // Listen for mode changes to help with conflict resolution
       this.map.on('draw.modechange', function(e) {
-        // console.log('Draw mode changed to:', e.mode);
         // If entering a drawing mode, clear any existing marker-coordinates
         if (e.mode.startsWith('draw_')) {
           self.removeEditableMarker();
         }
       });
-    };
+
+      // Track mouse state for distinguishing clicks from drags
+      var mouseDownPoint = null;
+      var isDragging = false;
+
+      this.map.on('mousedown', function(e) {
+        mouseDownPoint = e.point;
+        isDragging = false;
+      });
+
+      this.map.on('mousemove', function(e) {
+        if (mouseDownPoint) {
+          var distance = Math.sqrt(
+            Math.pow(e.point.x - mouseDownPoint.x, 2) +
+            Math.pow(e.point.y - mouseDownPoint.y, 2)
+          );
+          if (distance > 3) { // 3 pixel threshold
+            isDragging = true;
+          }
+        }
+      });
+
+      this.map.on('mouseup', function(e) {
+        if (self.draw && self.draw.getMode() === 'draw_point' && !isDragging && mouseDownPoint) {
+          // Check if we clicked on an existing draw feature
+          var clickedFeatures = self.map.queryRenderedFeatures(e.point);
+          var targetFeatureId = null;
+
+          clickedFeatures.forEach(function(feature) {
+            if (feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot') {
+              if (feature.properties && feature.properties.id) {
+                targetFeatureId = feature.properties.id;
+              } else if (feature.properties && feature.properties.parent) {
+                targetFeatureId = feature.properties.parent;
+              }
+            }
+          });
+
+          if (targetFeatureId) {
+            // Switch to select mode and select the clicked feature
+            self.draw.changeMode('simple_select', {
+              featureIds: [targetFeatureId]
+            });
+          }
+        }
+
+        // Reset mouse tracking
+        mouseDownPoint = null;
+        isDragging = false;
+      });
+    }
+
+    setupDrawCursorEffects() {
+      var self = this;
+      var isDragging = false;
+
+      // Helper function to check if point has draw features
+      function hasDrawFeature(point) {
+        var features = self.map.queryRenderedFeatures(point);
+        return features.some(function(feature) {
+          return feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot';
+        });
+      }
+
+      // Track drag state
+      this.map.on('mousedown', function(e) {
+        isDragging = self.draw && hasDrawFeature(e.point);
+      });
+
+      this.map.on('mouseup', function() {
+        isDragging = false;
+      });
+
+      this.map.on('mousemove', function(e) {
+        if (!self.draw) return;
+
+        var cursor = isDragging ? 'move' : hasDrawFeature(e.point) ? 'pointer' : '';
+        self.map.getCanvas().style.cursor = cursor;
+      });
+    }
 
     updateShapeFormFields() {
       if (!this.draw || !this.shapeInputSelector) return;
 
       var allFeatures = this.draw.getAll();
 
-      // Update the shape input field with the current polygon data
       $(this.shapeInputSelector).val(JSON.stringify(allFeatures));
 
-      // Clear coordinates if we have a polygon
       if (allFeatures.features.length > 0) {
         $(this.altitudeInputSelector).val(''); // Clear altitude when shape is present
       }
 
-      // Update zoom
       $(this.zoomInputSelector).val(this.map.getZoom());
 
       if (this.adminEditor && this.showAdminShapeInputSelector) {
         $(this.showAdminShapeInputSelector).val(true);
       }
-    };
+    }
 
     getStyledMarker(color, iconClass) {
       if (this.markerCategoryIcon) {
@@ -588,7 +683,7 @@
         element: this.createMarkerElement(color, iconClass),
         anchor: [0, 0]
       };
-    };
+    }
 
     createMarkerElement(color, iconClass) {
       var el = document.createElement('div');
@@ -637,7 +732,7 @@
       if (this.adminEditor) {
         $(this.showAdminShapeInputSelector).val(true);
       }
-    };
+    }
 
     // Helper method to remove editable marker
     removeEditableMarker() {
@@ -645,14 +740,47 @@
         this.editableMarker.remove();
         this.editableMarker = null;
       }
-    };
+    }
+
+    // Helper method to delete all user markers (but not admin markers)
+    deleteAllUserMarkers() {
+      // Remove all pin markers
+      this.pinMarkers.forEach(function(marker) {
+        try {
+          marker.remove();
+        } catch (e) {
+          console.warn('Error removing pin marker:', e);
+        }
+      });
+      this.pinMarkers = [];
+
+      // Remove editable marker
+      this.removeEditableMarker();
+
+      if (!this.adminEditor) {
+        this.clearFormFields();
+      }
+    }
+
+    // Helper method to clear form fields
+    clearFormFields() {
+      if (this.latitudeInputSelector) {
+        $(this.latitudeInputSelector).val('');
+      }
+      if (this.longitudeInputSelector) {
+        $(this.longitudeInputSelector).val('');
+      }
+      if (this.altitudeInputSelector) {
+        $(this.altitudeInputSelector).val('');
+      }
+      if (this.shapeInputSelector) {
+        $(this.shapeInputSelector).val(JSON.stringify({}));
+      }
+    }
 
     // function to create or move existing marker (similar to Leaflet version)
     moveOrPlaceMarker(e) {
-      var self = this;
       var lngLat = e.lngLat;
-
-      // console.log("moveOrPlaceMarker clicked at:", lngLat.lng, lngLat.lat);
 
       // Clear any existing draw features when placing an editable marker
       if (this.draw) {
@@ -672,14 +800,13 @@
         this.editableMarker = this.createEditableMarker(lngLat.lat, lngLat.lng);
       }
       this.updateFormfieldsFromEditableMarker();
-    };
+    }
 
     // function to update form fields when editable marker is updated
     updateFormfieldsFromEditableMarker() {
       if (!this.editableMarker) return;
 
       var lngLat = this.editableMarker.getLngLat();
-      // console.log("Updating form fields with coordinates:", lngLat.lat, lngLat.lng);
 
       $(this.latitudeInputSelector).val(lngLat.lat);
       $(this.longitudeInputSelector).val(lngLat.lng);
@@ -701,8 +828,6 @@
     createEditableMarker(latitude, longitude) {
       var self = this;
 
-      // console.log("Creating editable marker at:", latitude, longitude);
-
       var styledMarker = this.getStyledMarker(null, null);
       var markerOptions = {
         element: styledMarker.element,
@@ -721,17 +846,15 @@
 
       marker.addTo(this.map);
 
-      // console.log("Marker created at:", marker.getLngLat());
-
       return marker;
-    };
+    }
 
     updateMarkerStyleFromCategorySelect(element) {
       var selectedOption = element.options[element.selectedIndex];
       this.markerCategoryIcon = selectedOption.dataset.icon;
       this.markerCategoryColor = selectedOption.dataset.color;
       this.updateMarkerWithCategoryStyle();
-    };
+    }
 
     updateMarkerWithCategoryStyle() {
       if (this.pinMarkers.length) {
@@ -746,7 +869,7 @@
         this.editableMarker.getElement().innerHTML = '';
         this.editableMarker.getElement().appendChild(newIcon.element);
       }
-    };
+    }
 
     handleUnifiedPopup(e) {
       var self = this;
@@ -808,7 +931,7 @@
       } else if (adminShapeFeatures.length > 0) {
         self.openShapePopup(e, 'admin');
       }
-    };
+    }
 
     openMarkerPopup(e) {
       var self = this;
@@ -847,7 +970,7 @@
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
         })
-    };
+    }
 
     openShapePopup(e, shapeType) {
       var self = this;
@@ -903,7 +1026,7 @@
           popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
         }
       }
-    };
+    }
 
     renderAdminShape() {
       if (this.adminShape && this.showAdminShape) {
@@ -930,7 +1053,7 @@
           this.renderMultishapeAdminLayer('admin-shape', this.adminShape, this.adminShapesColor);
         }
       }
-    };
+    }
 
     renderMarkerCoordinates() {
       if (!this.markerCoordinates) return;
@@ -941,7 +1064,7 @@
       this.addMarkerBackgroundLayer();
       this.loadMarkerImagesAndSetupIcons();
       this.setupClusterEventListeners();
-    };
+    }
 
     createMarkersGeoJSON() {
       var features = [];
@@ -975,7 +1098,7 @@
         type: 'FeatureCollection',
         features: features
       };
-    };
+    }
 
     addMarkersSource(markersGeoJSON) {
       this.map.addSource('marker-coordinates', {
@@ -985,7 +1108,7 @@
         clusterMaxZoom: 14,
         clusterRadius: 50
       });
-    };
+    }
 
     addClusterLayers() {
       var clusterColor = this.getClusterColor();
@@ -1031,13 +1154,13 @@
           'text-color': 'white'
         }
       });
-    };
+    }
 
     getClusterColor() {
       var brandColor = getComputedStyle(document.documentElement)
         .getPropertyValue('--brand-color').trim() || '#004a83';
       return hexToRgba(brandColor, 0.5);
-    };
+    }
 
     addMarkerBackgroundLayer() {
       var self = this;
@@ -1063,19 +1186,19 @@
           'circle-stroke-color': '#ffffff'
         }
       });
-    };
+    }
 
     loadMarkerImagesAndSetupIcons() {
       var self = this;
 
       if (this.markerImages && this.markerImages.length) {
         this.loadMarkerImages(function() {
-          self.renderIconLayer();
+          self.loadIconLayer();
         });
       } else {
-        this.renderIconLayer();
+        this.loadIconLayer();
       }
-    };
+    }
 
     loadMarkerImages(callback) {
       var self = this;
@@ -1083,7 +1206,6 @@
       var totalImages = this.markerImages.length;
 
       this.markerImages.forEach(function(markerImage) {
-        // console.log('load image', {markerImage})
         self.map.loadImage(markerImage.path, function(error, image) {
           if (error) {
             console.error('Error loading marker image:', error, markerImage);
@@ -1097,7 +1219,7 @@
           }
         });
       });
-    };
+    }
 
     setupClusterEventListeners() {
       if (!this.editable) {
@@ -1109,7 +1231,7 @@
           self.map.getCanvas().style.cursor = '';
         });
       }
-    };
+    }
 
     renderResourceShapes() {
       var self = this;
@@ -1121,9 +1243,146 @@
           }
         });
       }
-    };
+    }
 
-    renderIconLayer(e) {
+    renderLayers() {
+      if (this.layersData && typeof this.layersData !== "undefined") {
+        try {
+          var layersData = typeof this.layersData === 'string' ? JSON.parse(this.layersData) : this.layersData;
+
+          if (Array.isArray(layersData) && layersData.length > 0) {
+            layersData.forEach((layerData, index) => this.createLayer(layerData, index));
+
+            // this.ensureBaseLayerVisibility();
+            // this.showDefaultOverlayLayers();
+          } else {
+            console.log('No valid layers data found');
+          }
+        } catch (error) {
+          console.error('Error parsing layers data:', error, this.layersData);
+        }
+      } else {
+        console.log('No layers data available');
+      }
+    }
+
+    // ensureBaseLayerVisibility() {
+    //   var baseLayerKeys = Object.keys(this.baseLayers);
+    //   if (baseLayerKeys.length > 0) {
+    //     // Make the first base layer visible
+    //     var firstBaseLayer = this.baseLayers[baseLayerKeys[0]];
+    //     this.map.setLayoutProperty(firstBaseLayer.layerId, 'visibility', 'visible');
+    //   }
+    // }
+
+    // showDefaultOverlayLayers() {
+    //   Object.values(this.overlayLayers).forEach(layer => {
+    //     if (layer.layerData.show_by_default) {
+    //       this.map.setLayoutProperty(layer.layerId, 'visibility', 'visible');
+    //     }
+    //   });
+    // }
+
+    addLayerControl() {
+      if (this.element.offsetWidth <= 780) {
+        return;
+      }
+
+      // Always show layer control since it now includes POI labels
+      this.map.addControl(new LayerControl(this), 'top-right');
+    }
+
+    toggleLayerVisibility(layerId, visible) {
+      if (!this.mapLoaded) {
+        this.map.once('idle', () => {
+          this.toggleLayerVisibility(layerId, visible);
+        });
+        return;
+      }
+
+      if (this.map.getLayer(layerId)) {
+        this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+      } else {
+        console.error('Layer not found:', layerId);
+        console.log('Available layers:', this.map.getStyle().layers.map(l => l.id));
+      }
+    }
+
+    createLayer(layerData, index) {
+      var sourceId = `layer-source-${index}`;
+      var layerId = `layer-${index}`;
+
+      try {
+        if (layerData.protocol == 'wms') {
+          // Build WMS URL properly following Mapbox GL JS format
+          var baseUrl = layerData.provider;
+          var separator = baseUrl.includes('?') ? '&' : '?';
+
+          // Validate required parameters
+          if (!layerData.layer_names || layerData.layer_names.trim() === '') {
+            return;
+          }
+
+          // Build WMS URL following the official Mapbox example format
+          // Use lowercase parameter names and don't URL-encode LAYERS
+          var wmsParams = [
+            'service=WMS',
+            'request=GetMap',
+            'layers=' + layerData.layer_names,
+            'format=image/png',
+            'styles=',
+            'transparent=' + (layerData.transparent ? 'true' : 'false'),
+            'version=1.1.1',
+            "show_by_default=false",
+            'width=256',
+            'height=256',
+            'srs=EPSG:3857',
+            'bbox={bbox-epsg-3857}',
+          ];
+
+          var wmsUrl = baseUrl + separator + wmsParams.join('&');
+
+          // Add WMS source
+          this.map.addSource(sourceId, {
+            type: 'raster',
+            tiles: [wmsUrl],
+            tileSize: 256
+          });
+        } else {
+          // Add regular tile source
+          this.map.addSource(sourceId, {
+            type: 'raster',
+            tiles: [layerData.provider],
+            tileSize: 256
+          });
+        }
+
+        // Add raster layer
+        this.map.addLayer({
+          id: layerId,
+          type: 'raster',
+          source: sourceId,
+          paint: {
+            'raster-opacity': parseFloat(layerData.opacity) || 1
+          },
+          layout: {
+            'visibility': (layerData.show_by_default) ? 'visible' : 'none'
+          }
+        });
+
+        // Store layer info for potential controls
+        if (layerData.base) {
+          this.baseLayers[layerData.name] = { sourceId, layerId, layerData };
+        } else {
+          this.overlayLayers[layerData.name] = { sourceId, layerId, layerData };
+        }
+      } catch (error) {
+        console.error('Error creating layer:', error, layerData);
+      }
+    }
+
+
+    loadIconLayer(e) {
       // Remove existing layer if it exists
       if (this.map.getLayer('custom-marker-icon')) {
         this.map.removeLayer('custom-marker-icon');
@@ -1177,7 +1436,7 @@
           self.handleUnifiedPopup(e);
         });
       }
-    };
+    }
 
     handleMarkerMouseEnter(e) {
       this.map.getCanvas().style.cursor = 'pointer';
@@ -1207,7 +1466,7 @@
         );
       }
       this.hoveredFeature = null;
-    };
+    }
 
     renderShape(coordinates) {
       var self = this;
@@ -1266,7 +1525,7 @@
         self.map.on('mouseenter', layer, setCursorPointer);
         self.map.on('mouseleave', layer, resetCursor);
       });
-    };
+    }
 
     renderMultishapeAdminLayer(id, data, color) {
       var self = this;
@@ -1334,7 +1593,7 @@
         self.map.on('mouseenter', layer, setCursorPointer);
         self.map.on('mouseleave', layer, resetCursor);
       });
-    };
+    }
 
     // Helper method to check if data contains a specific geometry type
     hasGeometryType(data, geometryType) {
@@ -1354,32 +1613,33 @@
     destroy() {
       if (!this.map) return; // Early return if map is already destroyed
 
-      var self = this;
-
       try {
         // If map is still loading, wait for it to finish before destroying
         if (!this.mapLoaded && this.map.isStyleLoaded && !this.map.isStyleLoaded()) {
-          this.map.once('idle', function() {
-            self.performDestroy();
+          this.map.once('idle', () => {
+            this.performDestroy();
           });
           return;
         }
 
         this.performDestroy();
-
       } catch (e) {
-        console.error('Error during map destruction:', e);
         this.forceCleanup();
       }
-    };
+    }
 
     // Separated destroy logic for better control
     performDestroy() {
       var self = this;
 
       try {
+        this.map.remove();
+
+        // TODO try this
+        // return
+        //
         // Remove all event listeners first
-        this.map.off();
+        // this.map.off();
 
         // Clean up instruction overlay
         if (this.instructionOverlay) {
@@ -1393,18 +1653,7 @@
           this.instructionOverlay = null;
         }
 
-        // Clean up POI labels control
-        var poiControl = document.getElementById('poi-labels-toggle');
-        if (poiControl && poiControl.parentNode) {
-          try {
-            var controlContainer = poiControl.closest('.mapboxgl-ctrl');
-            if (controlContainer && controlContainer.parentNode) {
-              controlContainer.parentNode.removeChild(controlContainer);
-            }
-          } catch (e) {
-            console.warn('Error removing POI control:', e);
-          }
-        }
+
 
         // Clear overlay timeout
         if (this.overlayTimeout) {
@@ -1412,33 +1661,15 @@
           this.overlayTimeout = null;
         }
 
-        // Clean up draw instance
-        if (this.draw) {
-          try {
-            this.map.removeControl(this.draw);
-          } catch (e) {
-            console.warn('Error removing draw control:', e);
-          }
-          this.draw = null;
-        }
 
-        // Clean up all marker-coordinates
-        this.pinMarkers.forEach(function(marker) {
+        // Clean up custom delete control
+        if (this.customDeleteControl) {
           try {
-            marker.remove();
+            this.map.removeControl(this.customDeleteControl);
           } catch (e) {
-            console.warn('Error removing marker:', e);
+            console.warn('Error removing custom delete control:', e);
           }
-        });
-        this.pinMarkers = [];
-
-        if (this.adminMarker) {
-          try {
-            this.adminMarker.remove();
-          } catch (e) {
-            console.warn('Error removing admin marker:', e);
-          }
-          this.adminMarker = null;
+          this.customDeleteControl = null;
         }
 
         if (this.editableMarker) {
@@ -1459,7 +1690,7 @@
         });
 
         // Remove sources and layers if they exist
-        this.cleanupMapSources();
+        // this.cleanupMapSources();
 
         // Wait a bit before removing the map to allow cleanup
         setTimeout(function() {
@@ -1478,32 +1709,60 @@
         console.error('Error during map destruction:', e);
         this.forceCleanup();
       }
-    };
+    }
 
     // Clean up map sources and layers
-    cleanupMapSources() {
-      if (!this.map || !this.mapLoaded) return;
+    // cleanupMapSources() {
+    //   if (!this.map || !this.mapLoaded) return;
 
-      try {
-        // Remove known layers first
-        var layersToRemove = ['custom-marker', 'custom-marker-icon', 'clusters', 'cluster-count'];
-        layersToRemove.forEach(function(layerId) {
-          if (this.map.getLayer(layerId)) {
-            this.map.removeLayer(layerId);
-          }
-        }.bind(this));
+    //   try {
+    //     // Remove known layers first
+    //     var layersToRemove = ['custom-marker', 'custom-marker-icon', 'clusters', 'cluster-count'];
+    //     layersToRemove.forEach(function(layerId) {
+    //       if (this.map.getLayer(layerId)) {
+    //         this.map.removeLayer(layerId);
+    //       }
+    //     }.bind(this));
 
-        // Remove known sources
-        var sources = ['marker-coordinates', 'admin-shape'];
-        sources.forEach(function(sourceId) {
-          if (this.map.getSource(sourceId)) {
-            this.map.removeSource(sourceId);
-          }
-        }.bind(this));
-      } catch (e) {
-        console.warn('Error cleaning up map sources:', e);
-      }
-    };
+    //     // Remove custom layers (WMS and tile layers)
+    //     Object.values(this.baseLayers).forEach(layer => {
+    //       if (this.map.getLayer(layer.layerId)) {
+    //         this.map.removeLayer(layer.layerId);
+    //       }
+    //     });
+    //     Object.values(this.overlayLayers).forEach(layer => {
+    //       if (this.map.getLayer(layer.layerId)) {
+    //         this.map.removeLayer(layer.layerId);
+    //       }
+    //     });
+
+    //     // Remove known sources
+    //     var sources = ['marker-coordinates', 'admin-shape'];
+    //     sources.forEach(function(sourceId) {
+    //       if (this.map.getSource(sourceId)) {
+    //         this.map.removeSource(sourceId);
+    //       }
+    //     }.bind(this));
+
+    //     // Remove custom sources (WMS and tile sources)
+    //     Object.values(this.baseLayers).forEach(layer => {
+    //       if (this.map.getSource(layer.sourceId)) {
+    //         this.map.removeSource(layer.sourceId);
+    //       }
+    //     });
+    //     Object.values(this.overlayLayers).forEach(layer => {
+    //       if (this.map.getSource(layer.sourceId)) {
+    //         this.map.removeSource(layer.sourceId);
+    //       }
+    //     });
+
+    //     // Clear layer references
+    //     this.baseLayers = {};
+    //     this.overlayLayers = {};
+    //   } catch (e) {
+    //     console.warn('Error cleaning up map sources:', e);
+    //   }
+    // };
 
    forceCleanup() {
       this.map = null;
@@ -1512,6 +1771,8 @@
       this.adminMarker = null;
       this.editableMarker = null;
       this.mapLoaded = false;
+      this.baseLayers = {};
+      this.overlayLayers = {};
     }
   }
 
@@ -1527,9 +1788,8 @@
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
-
-  // Custom control for POI labels toggle
-  class PoiLabelsControl {
+  // Custom control for delete all functionality
+  class CustomDeleteControl {
     constructor(mapboxMapInstance) {
       this.mapboxMapInstance = mapboxMapInstance;
     }
@@ -1537,27 +1797,27 @@
     onAdd(map) {
       this._map = map;
       this._container = document.createElement('div');
-      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox--poi-labels-toggle';
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
 
-      var checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = 'poi-labels-toggle';
-      checkbox.checked = true; // Default to on
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-custom-delete-button';
+      button.innerHTML = '<i class="fas fa-eraser"></i>';
+      button.title = 'Alle Formen löschen';
 
-      var label = document.createElement('label');
-      label.htmlFor = 'poi-labels-toggle';
-      label.className = "mapbox--label--poi-labels-toggle"
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode('Orte von Interesse'));
+      // Add click event listener
+      button.addEventListener('click', () => {
+        // Delete all draw features (polygons, lines, points from draw tools)
+        if (this.mapboxMapInstance.draw) {
+          this.mapboxMapInstance.draw.deleteAll();
+          this.mapboxMapInstance.updateShapeFormFields();
+        }
 
-      this._container.appendChild(label);
-
-      // Add event listener for checkbox
-      var self = this;
-      checkbox.addEventListener('change', function() {
-        self.mapboxMapInstance.togglePoiLabels(checkbox.checked);
+        // Delete all user markers (pin markers and editable marker)
+        this.mapboxMapInstance.deleteAllUserMarkers();
       });
 
+      this._container.appendChild(button);
       return this._container;
     }
 
@@ -1566,6 +1826,144 @@
       this._map = undefined;
     }
   }
+
+  // Custom control for layer visibility toggle
+  class LayerControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox-layer-control';
+
+      // Create button to toggle dropdown
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-layer-control-button';
+      button.innerHTML = '<i class="fas fa-layer-group"></i>'; // Layers icon
+      button.title = 'Kartenebenen';
+
+      // Create dropdown container
+      var dropdown = document.createElement('div');
+      dropdown.className = 'mapbox-layer-control-dropdown';
+      dropdown.style.display = 'none';
+
+      // Add POI labels section
+      var dropdownList = document.createElement('div');
+      dropdownList.className = 'mapbox-layer-select-section';
+
+      var dropdownTitle = document.createElement('div');
+      dropdownTitle.className = 'mapbox-layer-select-section-title';
+      dropdownTitle.textContent = 'Kartenebenen';
+      dropdownList.appendChild(dropdownTitle);
+
+      var poiLabel = this.createPoiCheckbox();
+      dropdownList.appendChild(poiLabel);
+      dropdown.appendChild(dropdownList);
+
+      // Add base layers section if any
+      if (Object.keys(this.mapboxMapInstance.baseLayers).length > 0) {
+        Object.entries(this.mapboxMapInstance.baseLayers).forEach(([name, layer], index) => {
+          // Only the first base layer should be checked initially
+          var isVisible = index === 0;
+          var label = this.createLayerCheckbox(name, layer.layerId, isVisible, 'radio');
+          dropdownList.appendChild(label);
+        });
+      }
+
+      // Add overlay layers section if any
+      if (Object.keys(this.mapboxMapInstance.overlayLayers).length > 0) {
+        Object.entries(this.mapboxMapInstance.overlayLayers).forEach(([name, layer]) => {
+          var isVisible = layer.layerData.show_by_default;
+          var label = this.createLayerCheckbox(name, layer.layerId, isVisible, 'checkbox');
+          dropdownList.appendChild(label);
+        });
+      }
+
+      this._container.appendChild(button);
+      this._container.appendChild(dropdown);
+
+      // Toggle dropdown on button click
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!this._container.contains(e.target)) {
+          dropdown.style.display = 'none';
+        }
+      });
+
+      return this._container;
+    }
+
+    createLayerCheckbox(name, layerId, isChecked, inputType) {
+      var label = document.createElement('label');
+      label.className = 'mapbox-layer-checkbox-label';
+
+      var input = document.createElement('input');
+      input.type = inputType;
+      input.checked = isChecked;
+      if (inputType === 'radio') {
+        input.name = 'base-layer';
+      }
+
+      var span = document.createElement('span');
+      span.textContent = name;
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+             // Handle layer visibility changes
+       input.addEventListener('change', () => {
+         if (inputType === 'radio' && input.checked) {
+           // For base layers (radio), hide all others and show selected
+           Object.values(this.mapboxMapInstance.baseLayers).forEach(layer => {
+             this.mapboxMapInstance.toggleLayerVisibility(layer.layerId, false);
+           });
+           this.mapboxMapInstance.toggleLayerVisibility(layerId, true);
+         } else if (inputType === 'checkbox') {
+           // For overlay layers (checkbox), toggle individual layer
+           this.mapboxMapInstance.toggleLayerVisibility(layerId, input.checked);
+         }
+       });
+
+      return label;
+    }
+
+    createPoiCheckbox() {
+      var label = document.createElement('label');
+      label.className = 'mapbox-layer-checkbox-label';
+
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = true; // Default to on
+
+      var span = document.createElement('span');
+      span.textContent = 'Orte von Interesse';
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      // Handle POI labels visibility changes
+      input.addEventListener('change', () => {
+        this.mapboxMapInstance.togglePoiLabels(input.checked);
+      });
+
+      return label;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+  }
+
+
 
 
   // Keep the existing App.Mapbox object

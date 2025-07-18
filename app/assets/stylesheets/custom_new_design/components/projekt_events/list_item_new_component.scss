@@ -22,10 +22,12 @@
   min-width: 300px;
 }
 
-h4.projekt-event-item-new-body--title {
+h3.projekt-event-item-new-body--title {
   font-size: 20px;
   padding-bottom: 0;
   font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
 
   a {
     color: inherit;
@@ -82,6 +84,7 @@ h4.projekt-event-item-new-body--title {
 
   a {
     color: inherit;
+    word-break: break-all;
 
      &:hover {
        text-decoration: none;

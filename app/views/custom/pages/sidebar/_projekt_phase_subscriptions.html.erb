@@ -3,10 +3,16 @@
     <h2 class="sidebar-title"><%= t("custom.projekts.page.sidebar.phases_subscription.title") %></h2>
 
     <div class="sidebar-projekt-phase-subscriptions">
-      <p>
+      <label for="projekt_subscription_toggler" class="form-label">
         <%= t("custom.projekts.page.sidebar.phases_subscription.description") %>
-      </p>
-      <%= render Shared::ToggleAttributeComponent.new(projekt_subscription, :active, toggle_subscription_projekt_subscription_path(projekt_subscription)) %>
+      </label>
+
+      <%= render Shared::ToggleAttributeComponent.new(
+        projekt_subscription,
+        :active,
+        toggle_subscription_projekt_subscription_path(projekt_subscription),
+        input_id: "projekt_subscription_toggler"
+      ) %>
     </div>
   </div>
 <% end %>

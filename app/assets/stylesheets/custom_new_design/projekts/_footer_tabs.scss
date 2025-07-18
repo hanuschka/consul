@@ -21,9 +21,11 @@
       border-radius: 0;
     }
 
-    h4 {
+    h2 {
       color: $brand;
       font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 0;
     }
 
     @media(max-width: $small-tablet-viewport-start) {
@@ -32,7 +34,7 @@
       width: 100%;
       max-width: 500px;
 
-      h4 {
+      h2 {
         font-size: 20px;
       }
     }

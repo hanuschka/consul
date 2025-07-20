@@ -51,7 +51,7 @@
 
   handleGlobalMessage(event) {
     if (event.data) {
-      const data = parseIframeEventData(event.data);
+      const data = ProjektStudio.utils.parseIframeEventData(event.data);
       const params = data.params
 
       switch(data.event_type) {
@@ -93,7 +93,7 @@
 
     if (contentBlocks.length > 0) {
       wrappedContentBlocksHtml = Array.from(contentBlocks).map((contentBlock) => {
-        return addStudioControlsToContentBlock(
+        return ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
           contentBlock.innerHTML,
           {
             projektId,
@@ -106,7 +106,7 @@
       wrappedContentBlocksHtml = newContentBlockButtonSectionHtml(projektId);
     }
 
-    const newHtml = addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
+    const newHtml = ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
 
     setTimeout(() => {
       this.morphElementHTML(".custom-page-content-inner", newHtml);
@@ -290,7 +290,7 @@
     if ($('.js-projekt-content-block-edit-section').length === 0) {
       const projektId = getCurrentProjektId()
       const wrappedContentBlocksHtml = newContentBlockButtonSectionHtml(projektId);
-      const newHtml = addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
+      const newHtml = ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
 
       this.morphElementHTML(".custom-page-content-inner", newHtml);
     }
@@ -335,13 +335,17 @@
       const eachTab = tabs.querySelectorAll(".tabs-title a");
       const eachTabPanel = tabsContent.querySelectorAll(".tabs-panel");
 
+      // console.log({eachTab})
+      // console.log({eachTabPanel})
+      // console.log({tabsId})
+
       // Make tab ID uniq for foundation tabs to work correctly
-      eachTab.forEach(function(tab, index) {
-        tab.href = "#" + tabsId + "-" + index;
-      });
-      eachTabPanel.forEach(function(tabPanel, index) {
-        tabPanel.id = tabsId + "-" + index;
-      });
+      // eachTab.forEach(function(tab, index) {
+      //   tab.href = "#" + tabsId + "-" + index;
+      // });
+      // eachTabPanel.forEach(function(tabPanel, index) {
+      //   tabPanel.id = tabsId + "-" + index;
+      // });
 
       templateContainer.replaceChildren(templateContent);
       // parentElement.classList.add("-templates-added")
@@ -365,7 +369,7 @@
     const previousContentBlockId = previousContentBlockSection.dataset.contentBlockId;
     const draftContentBlockIndex = this.draftContentBlockIndex;
 
-    const newContentBlockHTML = addStudioControlsToContentBlock(
+    const newContentBlockHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
       contentTemplate.innerHTML, {
         draftContentBlockIndex: this.draftContentBlockIndex
       }

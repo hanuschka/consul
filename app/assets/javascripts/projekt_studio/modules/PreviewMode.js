@@ -14,7 +14,7 @@ ProjektStudio.PreviewMode = {
 
   handleGlobalMessage(event) {
     if (event.data) {
-      const data = parseIframeEventData(event.data);
+      const data = ProjektStudio.utils.parseIframeEventData(event.data);
       const params = data.params
 
       switch(data.event_type) {

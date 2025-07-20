@@ -13,6 +13,10 @@
   <% end %>
 <% end %>
 
+<% if show_projekt_studio_controls %>
+  <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+<% end %>
+
 <% if @custom_page.landing? %>
   <%= render "pages/landing_page_content" %>
 <% else %>

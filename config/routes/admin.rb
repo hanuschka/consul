@@ -509,7 +509,6 @@ namespace :admin do
     post :execute, on: :collection
     delete :cancel, on: :collection
   end
-<<<<<<< HEAD
 
   resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
   resources :projekt_content_blocks, only: [:destroy, :update] do
@@ -517,8 +516,6 @@ namespace :admin do
       patch :update_position
     end
   end
-=======
->>>>>>> new-connection
 end
 
 resolve "Milestone" do |milestone|

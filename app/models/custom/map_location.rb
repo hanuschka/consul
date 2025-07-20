@@ -42,12 +42,21 @@ class MapLocation < ApplicationRecord
   def shape_json_data
     return {} if shape == {} || shape.is_a?(String)
 
-    shape.merge({
-      resource_type: resource_type,
-      id: resource_id,
-      color: get_pin_color,
-      fa_icon_class: get_fa_icon_class
-    })
+    shape_additional_data =
+      {
+        resource_type: resource_type,
+        id: resource_id,
+        color: get_pin_color,
+        fa_icon_class: get_fa_icon_class
+      }
+
+    if shape.is_a?(Array)
+      shape.map do |shape_item|
+        shape_item.merge(shape_additional_data)
+      end
+    else
+      shape.merge(shape_additional_data)
+    end
   end
 
   def get_approximated_address

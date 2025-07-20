@@ -10,10 +10,10 @@
       remote: true,
       "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
     } do %>
-    <h4>
+    <h2>
       <%= tab_title %>
       <%= "(#{phase.resource_count})" if phase.resource_count.present? %>
-    </h4>
+    </h2>
     <div class='tab-info-summary'>
       <% if phase.is_a?(ProjektPhase::MilestonePhase) && phase.milestones.any?  %>
         <span>

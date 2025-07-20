@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "models", "poll", "question").to_s
 
 class Poll::Question < ApplicationRecord
-  translates :description, :min_rating_scale_label, :max_rating_scale_label, touch: true
+  translates :description, :min_rating_scale_label, :max_rating_scale_label, :intro, touch: true
   has_many :nested_questions, -> { order "given_order asc" },
     class_name: "Poll::Question", dependent: :destroy, foreign_key: :parent_question_id
 

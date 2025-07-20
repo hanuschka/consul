@@ -24,6 +24,14 @@
   <%= f.translatable_fields do |translations_form| %>
     <div class="row">
       <div class="column">
+        <%= translations_form.text_area :intro,
+          value: AdminWYSIWYGSanitizer.new.sanitize(question.intro),
+          class: "html-area #{ck_editor_class(current_user)}" %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
         <% if bundle_question? %>
           <%= translations_form.text_field :title, label: "Themenkomplex" %>
         <% else %>

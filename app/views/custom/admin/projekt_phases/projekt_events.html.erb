@@ -43,10 +43,10 @@
               <% end %>
               <p>
                 <strong><%= t("custom.admin.projekt_phases.projekt_events.event_datetime") %>:</strong>
-                <%= event.datetime.strftime("%d.%m.%y %H:%m") %>
+                <%= event.datetime.strftime("%d.%m.%y %H:%M") %>
                 <% if event.end_datetime.present? %>
                   —
-                  <%= event.end_datetime.strftime("%d.%m.%y %H:%m") %>
+                  <%= event.end_datetime.strftime("%d.%m.%y %H:%M") %>
                 <% elsif event.open_ended? %>
                   (<%= t("custom.admin.projekt_phases.projekt_events.open_ended") %>)
                 <% end %>

@@ -1,8 +1,10 @@
 class Shared::MapComponent < Shared::MapBaseComponent
   def map_div
     content_tag :div, "",
-               id: "#{dom_id(@map_location)}_#{@parent_class}",
+                id: "#{dom_id(@map_location)}_#{@parent_class}",
                 class: "map_location map #{map_lib_class}",
+                aria: { hidden: true },
+                inert: true,
                 data: prepare_map_settings
   end
 
@@ -44,7 +46,7 @@ class Shared::MapComponent < Shared::MapBaseComponent
           return if icon.blank?
 
           {
-            name: icon,
+            name: "fa-#{icon}",
             path: asset_path("fontawesome_png/solid/#{icon}_50px.png")
           }
         }
@@ -61,8 +63,9 @@ class Shared::MapComponent < Shared::MapBaseComponent
 
     def enable_geoman_controls?
       return false unless @editable
+      return true if @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase)
 
-      if @mappable.is_a?(DeficiencyReport) || @mappable.is_a?(Projekt)
+      if @mappable.is_a?(DeficiencyReport)
         Setting["deficiency_reports.enable_geoman_controls_in_maps"].present?
 
       elsif @projekt_phase.present?
@@ -78,7 +81,9 @@ class Shared::MapComponent < Shared::MapBaseComponent
     end
 
     def map_layers
-      if @projekt_phase.present?
+      if @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase)
+        @mappable.map_layers_for_render.to_json
+      elsif @projekt_phase.present?
         @projekt_phase.map_layers_for_render.to_json
       elsif @projekt.present?
         @projekt.map_layers_for_render.to_json

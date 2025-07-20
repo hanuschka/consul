@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_11_123206) do
+ActiveRecord::Schema.define(version: 2025_07_08_143844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1164,6 +1164,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email_pattern", default: "", null: false
+    t.text "auto_join_emails", default: [], array: true
     t.index ["individual_group_id"], name: "index_individual_group_values_on_individual_group_id"
   end
 
@@ -1591,6 +1592,8 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.text "subtitle"
     t.string "greeting"
     t.bigint "recipient_group_id"
+    t.string "title_color", default: "#000000", null: false
+    t.string "subtitle_color", default: "#000000", null: false
     t.index ["recipient_group_id"], name: "index_newsletters_on_recipient_group_id"
   end
 
@@ -1740,6 +1743,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.string "more_info_link"
     t.integer "next_question_id"
     t.string "more_info_iframe"
+    t.boolean "terminates_poll", default: false, null: false
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
@@ -1753,6 +1757,7 @@ ActiveRecord::Schema.define(version: 2025_06_11_123206) do
     t.text "description"
     t.string "min_rating_scale_label"
     t.string "max_rating_scale_label"
+    t.text "intro"
     t.index ["hidden_at"], name: "index_poll_question_translations_on_hidden_at"
     t.index ["locale"], name: "index_poll_question_translations_on_locale"
     t.index ["poll_question_id"], name: "index_poll_question_translations_on_poll_question_id"

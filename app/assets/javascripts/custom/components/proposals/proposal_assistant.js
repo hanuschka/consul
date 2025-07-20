@@ -30,7 +30,7 @@
         const data = parseIframeEventData(event.data);
         const params = data.params
 
-        console.log("CONSUL handleGlobalMessage", data.event_type, data.params)
+        // console.log("CONSUL handleGlobalMessage", data.event_type, data.params)
 
         switch(data.event_type) {
           case "Consul.callbacks.VoiceAssistant.connected":
@@ -63,6 +63,9 @@
           case "Consul.ResourceForm.selectCategory":
             this.selectCategory(params.categoryId)
             break;
+          case "Consul.ResourceForm.selectImplementationPerformer":
+            this.selectImplementationPerformer(params.implementation_performer, params.shouldScroll)
+            break;
           case "Consul.ResourceForm.updateLocation":
             this.updateMapLocation(
               params.coordinates, params.shouldScroll
@@ -71,13 +74,17 @@
           case "Consul.ResourceForm.showImageGeneratingAnimation":
             this.showImageGeneratingAnimation()
             break;
+          case "Consul.ResourceForm.updateUserCostEstimate":
+            this.updateUserCostEstimate(params.user_cost_estimate, params.shouldScroll)
+            break;
+          case "Consul.ResourceForm.updateImplementaionContribution":
+            this.updateImplementaionContribution(params.implementaion_contribution, params.shouldScroll)
+            break;
         }
       }
     },
 
     tryToPushInitialDataToDtAssistant: function() {
-      console.log("Consul: push initialData for DT", this.initialData)
-
       this.postMessageToDtIframe(
         "Dt.VoiceAssistant.setInitialData", this.initialData
       )
@@ -139,6 +146,29 @@
       categorySelectElement.value = categoryId
 
       this.highlightAndScrollToContentCard(categorySelectElement, shouldScroll)
+    },
+
+    selectImplementationPerformer(implementationPerformer, shouldScroll) {
+      var implementationPerformerElement = document.querySelector(".js-implementation-performer-select")
+      implementationPerformerElement.value = implementationPerformer
+
+      implementationPerformerElement.dispatchEvent(new Event('change', { bubbles: true }));
+
+      this.highlightAndScrollToContentCard(implementationPerformerElement, shouldScroll)
+    },
+
+    updateImplementaionContribution(implementationContribution, shouldScroll) {
+      var implementationContributionElement = document.querySelector(".js-budget-implementation-contribution")
+      implementationContributionElement.value = implementationContribution;
+
+      this.highlightAndScrollToContentCard(implementationContributionElement, shouldScroll)
+    },
+
+    updateUserCostEstimate(userCostEstimate, shouldScroll) {
+      var userCostEstimateElement = document.querySelector(".js-budget-user-cost-estimate-field")
+      userCostEstimateElement.value = userCostEstimate
+
+      this.highlightAndScrollToContentCard(userCostEstimateElement, shouldScroll)
     },
 
     toggleLabels: function(labelIds, checked, shouldScroll) {

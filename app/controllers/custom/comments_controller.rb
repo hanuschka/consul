@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
     if @comment.save
       CommentNotifier.new(comment: @comment).process
       add_notification @comment
-      EvaluationCommentNotifier.new(comment: @comment).process if send_evaluation_notification?
+      # EvaluationCommentNotifier.new(comment: @comment).process if send_evaluation_notification?
       NotificationServices::NewCommentNotifier.new(@comment.id).call
     else
       render :new

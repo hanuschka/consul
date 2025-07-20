@@ -5,7 +5,7 @@
         map_location: @current_projekt.map_location,
         parent_class: "proposals_sidebar_extended",
         projekt: @current_projekt,
-        show_admin_shape: @current_projekt.map_location.show_admin_shape?
+        show_admin_shape: true
       ) %>
       <% reinitialize_map = "App.VCMap.initializeMap(document.querySelector('#footer-content *[data-vcmap]'));" %>
       ) %>
@@ -14,7 +14,8 @@
         map_location: @current_projekt.map_location,
         parent_class: "proposals_sidebar_extended",
         projekt: @current_projekt,
-        show_admin_shape: @current_projekt.map_location.show_admin_shape?
+        show_admin_shape: true,
+        saturated_admin_shape: true
       ) %>
 
       <% if use_mapbox?(@current_projekt) %>

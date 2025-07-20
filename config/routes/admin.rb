@@ -35,12 +35,12 @@ namespace :admin do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
-      get :map_resources_overview
       get :ai_settings
       patch :update_ai_settings
       get :projekt_point_of_interest_pins
       get :projekt_point_of_interest_categories
       post :send_notifications
+      get :map_resources_overview
     end
 
     resources :formular, only: [] do
@@ -83,6 +83,8 @@ namespace :admin do
         post :send_notifications
       end
     end
+    resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+    resources :projekt_point_of_interest_categories, only: [:new, :create, :edit, :update, :destroy]
   end
   resources :projekt_phase_settings, only: [:update]
 
@@ -136,6 +138,7 @@ namespace :admin do
       post :add_user, on: :member
       post :add_from_csv, on: :member
       delete :remove_user, on: :member
+      delete :remove_email_from_auto_join_emails, on: :member
     end
   end
 
@@ -486,9 +489,6 @@ namespace :admin do
   end
 
   resource :homepage, controller: :homepage, only: [:show]
-  resources :projekt_phases, only: [] do
-    resources :projekt_point_of_interest_categories
-  end
 
   namespace :widget do
     resources :cards
@@ -509,6 +509,7 @@ namespace :admin do
     post :execute, on: :collection
     delete :cancel, on: :collection
   end
+<<<<<<< HEAD
 
   resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
   resources :projekt_content_blocks, only: [:destroy, :update] do
@@ -516,6 +517,8 @@ namespace :admin do
       patch :update_position
     end
   end
+=======
+>>>>>>> new-connection
 end
 
 resolve "Milestone" do |milestone|

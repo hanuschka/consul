@@ -1,6 +1,6 @@
 <div id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
 
-  <div class="projekt-event-item-new-calendar-column">
+  <div class="projekt-event-item-new-calendar-column" aria-hidden="true">
     <div class="projekt-event-item-new-calendar">
       <div class="projekt-event-item-new-calendar-dayname">
         <%= l(projekt_event.datetime, format: "%b").upcase %>
@@ -25,13 +25,13 @@
   </div>
 
   <div class="projekt-event-item-new-body">
-    <h4 class="projekt-event-item-new-body--title">
+    <h3 class="projekt-event-item-new-body--title">
       <% if @show_projekt_link && projekt_event.projekt.published? %>
         <%= link_to(projekt_event.title, projekt_event.projekt.page.url) %>
       <% else %>
         <%= projekt_event.title %>
       <% end %>
-    </h4>
+    </h3>
     <% if projekt_event.description.present? %>
       <div class="projekt-event-item-new--description-text-wrapper">
         <%= render Shared::CollapseTextComponent.new(size: :small) do |component| %>
@@ -46,8 +46,8 @@
     <div class="projekt-event-item-new-body--details">
       <% if projekt_event.projekt.page.published? %>
         <div class="projekt-event-item-new-body--details-row">
-          <i class="fa fa-code-branch"></i>
-          <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"} do %>
+          <i class="fa fa-code-branch" aria-label="<%= t('custom.accessibility.events.projekt-aria-label', projekt_name: projekt_event.projekt.name) %>"></i>
+          <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"}, aria: { hidden: true }, tabindex: "-1" do %>
             <%= projekt_event.projekt.name %>
           <% end %>
         </div>

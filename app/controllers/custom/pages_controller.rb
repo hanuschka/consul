@@ -65,6 +65,7 @@ class PagesController < ApplicationController
       if @projekt.projekt_phases.active.any?
         @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
         @projekt_phase = @default_projekt_phase
+
         params[:projekt_phase_id] = @default_projekt_phase.id
         params[:projekt_id] ||= @projekt.id
         send("set_#{@default_projekt_phase.name}_footer_tab_variables")
@@ -173,6 +174,7 @@ class PagesController < ApplicationController
   end
 
   def set_proposal_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @valid_orders = Proposal.proposals_orders(current_user)
     @valid_orders.delete("archival_date")
     @valid_orders.delete("relevance")
@@ -274,13 +276,14 @@ class PagesController < ApplicationController
     @all_resources = []
 
     @valid_filters = @budget.investments_filters
-    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting", "valuating"])
+    params[:filter] ||= "feasible" if @budget.current_phase.kind.in?(["selecting"])
+    params[:filter] ||= "preselected" if @budget.current_phase.kind.in?(["valuating"])
     params[:filter] ||= "selected" if @budget.current_phase.kind.in?(["publishing_prices", "balloting", "reviewing_ballots"])
     params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
     @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
     @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
-    @valid_orders.delete("total_votes") unless @budget.current_phase.kind == "selecting"
+    @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating", "publishing_prices"])
     @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting"
 
     sort_option = @projekt_phase.setting("selectable_setting.general.default_order")
@@ -431,6 +434,7 @@ class PagesController < ApplicationController
   end
 
   def set_formular_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @formular = @projekt_phase.formular
 
     if params[:token].present?

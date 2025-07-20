@@ -25,7 +25,9 @@
             <% end %>
           <% else %>
             <div class="custom-page--banner-description">
-              <%= @custom_page.subtitle %>
+              <p style="font-size:inherit;">
+                <%= @custom_page.subtitle %>
+              </p>
             </div>
           <% end %>
         <% end %>
@@ -53,7 +55,7 @@
       <% end %>
 
       <% banner_image = capture do %>
-        <%= link_to big_projekt_image_url, target: "_blank", class: "glightbox" do %>
+        <%= link_to big_projekt_image_url, target: "_blank", class: "glightbox", role: "button", aria_label: t("custom.accessibility.banner-image.glightbox-aria-label") do %>
           <span class="image-maximize-button">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>

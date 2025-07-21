@@ -201,15 +201,15 @@ li.projekt-navigator.current-projekt::before {
     position: relative;
 
     .extended-sidebar-map {
-      height: 1500px;
+      height: 100vh;
       max-height: calc(100vh - 150px);
 
       @media screen and (min-width: 1920px) {
-        height: 700px;
+        max-height: calc(100vh - 250px);
       }
 
       @media screen and (min-width: 3000px) {
-        height: 1200px;
+        max-height: calc(100vh - 350px);
       }
 
       .map_location {

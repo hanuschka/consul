@@ -14,9 +14,9 @@ module PollsHelper
   end
 
   def link_to_poll(text, poll, class_name: "")
-    if can?(:results, poll)
+    if can?(:results, poll) && poll.expired?
       link_to text, results_poll_path(poll.id), class: class_name, data: { turbolinks: false }
-    elsif can?(:stats, poll)
+    elsif can?(:stats, poll) && poll.expired?
       link_to text, stats_poll_path(poll.id), class: class_name, data: { turbolinks: false }
     else
       link_to text, poll_path(poll.id), class: class_name, data: { turbolinks: false }

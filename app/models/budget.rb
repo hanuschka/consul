@@ -277,7 +277,7 @@ class Budget < ApplicationRecord
 
     preselected_investments.update_all(preselected: true)
 
-    investments.each do |investment|
+    investments.feasible.each do |investment|
       if investment.preselected?
         Mailer.budget_investment_preselected(investment).deliver_later
       else

@@ -56,8 +56,8 @@
       var marker = null;
       var markersGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
-      var markerCategoryIcon = null;
-      var markerCategoryColor = null;
+      var userMarkerCategoryIcon = null;
+      var userMarkerCategoryColor = null;
       var $categorySelect = $(".js-map-update-pin-style");
 
       $categorySelect.on(
@@ -72,9 +72,16 @@
       /* Create leaflet map start */
       var map = L.map(element.id, {
         gestureHandling: true,
-        maxZoom: 18
+        maxZoom: 18,
+        zoomControl: false
       }).setView(mapCenterLatLng, zoom);
       App.Map.maps.push(map);
+
+      var zoomControl = L.control.zoom({
+        zoomInTitle: 'Hineinzoomen',
+        zoomOutTitle: 'Herauszoomen'
+      });
+      map.addControl(zoomControl);
 
       // update form fields when map center changes
       map.on("moveend", function() {
@@ -89,7 +96,12 @@
 
       /* Leaflet basic plugins start */
       // Leaflet.Locate plugin: ads control to map
-      L.control.locate({icon: 'fa fa-map-marker'}).addTo(map);
+      L.control.locate({
+        icon: 'fa fa-map-marker',
+        strings: {
+          title: 'Meine Position anzeigen'
+        }
+      }).addTo(map);
 
       // Leaflet GeoSearch plugin: adds control to map
       var searchControl = new GeoSearch.GeoSearchControl({
@@ -98,6 +110,7 @@
         showMarker: false,
         searchLabel: 'Nach Adresse suchen',
         notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
+        clearSearchLabel: 'Suche zurücksetzen'
       });
       map.addControl(searchControl);
 
@@ -115,16 +128,16 @@
       deflateFeatures.addTo(map);
 
       function updateMarkerWithCategoryStyle() {
-        if (marker && markerCategoryIcon && markerCategoryColor) {
-          marker.setIcon(getMarkerIcon(null, null))
+        if (marker && userMarkerCategoryIcon && userMarkerCategoryColor) {
+          marker.setIcon(getMarkerIcon(userMarkerCategoryColor, userMarkerCategoryIcon))
         }
       }
 
       function updateMarkerStyleFromCategorySelect(element) {
         var selectedOption = element.options[element.selectedIndex]
 
-        markerCategoryIcon = selectedOption.dataset.icon;
-        markerCategoryColor = selectedOption.dataset.color;
+        userMarkerCategoryIcon = selectedOption.dataset.icon;
+        userMarkerCategoryColor = selectedOption.dataset.color;
 
         updateMarkerWithCategoryStyle()
       }
@@ -162,23 +175,17 @@
       function getMarkerIconHTML(color, iconClass) {
         var markerIconHTML;
 
-        if (markerCategoryIcon) {
-          iconClass = markerCategoryIcon;
-        } else if (!iconClass ) {
-          iconClass = 'circle';
-        } else {
+        if (iconClass && iconClass.length > 0) {
           iconClass = iconClass
+        } else {
+          iconClass = 'circle';
         };
 
-        if (markerCategoryColor) {
-          color = markerCategoryColor;
-        }
-
-        if ( adminEditor ) {
+        if (adminEditor) {
           color = adminShapesColor;
         }
 
-        if ( color ) {
+        if (color) {
           markerIconHTML = '<div class="map-icon icon-' + iconClass + '" style="background-color: ' + color + '"></div>'
         } else {
           markerIconHTML = '<div class="map-icon icon-' + iconClass + '"></div>'
@@ -189,6 +196,14 @@
 
       var createMarker = function(latitude, longitude, color, iconClass) {
         var markerLatLng = new L.LatLng(latitude, longitude);
+
+        if (userMarkerCategoryIcon) {
+          iconClass = userMarkerCategoryIcon;
+        }
+
+        if (userMarkerCategoryColor) {
+          color = userMarkerCategoryColor;
+        }
 
         marker = L.marker(markerLatLng, {
           icon: getMarkerIcon(color, iconClass),
@@ -207,12 +222,17 @@
 
       // function to create or move existing marker
       var moveOrPlaceMarker = function(e) {
-        if (marker) {
-          marker.setLatLng(e.latlng);
-
-          updateMarkerWithCategoryStyle()
-        } else {
+        if (adminEditor) {
+          // In admin mode, always create new markers
           marker = createMarker(e.latlng.lat, e.latlng.lng);
+        } else {
+          // In user mode, move existing or create new
+          if (marker) {
+            marker.setLatLng(e.latlng);
+            updateMarkerWithCategoryStyle()
+          } else {
+            marker = createMarker(e.latlng.lat, e.latlng.lng);
+          }
         }
         updateFormfieldsWithMarker();
       };
@@ -235,13 +255,71 @@
 
       // function to update form fields when marker is updated
       var updateFormfieldsWithMarker = function() {
-        $(latitudeInputSelector).val(marker.getLatLng().lat);
-        $(longitudeInputSelector).val(marker.getLatLng().lng);
         $(zoomInputSelector).val(map.getZoom());
-        $(shapeInputSelector).val(JSON.stringify({}));
 
-        if ( adminEditor ) {
+        if (adminEditor) {
+          // For admin editor, collect all markers and shapes
+          var allFeatures = [];
+
+          // Collect all drawn shapes
+          map.pm.getGeomanLayers().forEach(function(geomanLayer) {
+            if (geomanLayer.pm.options.adminShape != true) {
+              var layerCopy = geomanLayer;
+              if (geomanLayer.options.shape == 'Circle') {
+                layerCopy = L.PM.Utils.circleToPolygon(geomanLayer, 60);
+              }
+              var feature = layerCopy.toGeoJSON();
+              feature.properties = feature.properties || {};
+              feature.properties.color = adminShapesColor;
+              feature.properties.fa_icon_class = 'circle';
+              allFeatures.push(feature);
+            }
+          });
+
+          // Collect all markers that are not in the cluster group
+          map.eachLayer(function(layer) {
+            if (layer instanceof L.Marker &&
+                layer !== adminMarker &&
+                !layer.pm.options.adminShape &&
+                !markersGroup.hasLayer(layer)) {
+              var feature = {
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: [layer.getLatLng().lng, layer.getLatLng().lat]
+                },
+                properties: {
+                  color: adminShapesColor,
+                  fa_icon_class: 'circle'
+                }
+              };
+              allFeatures.push(feature);
+            }
+          });
+
+          if (allFeatures.length > 0) {
+            // Create FeatureCollection for multiple features
+            var featureCollection = {
+              type: 'FeatureCollection',
+              features: allFeatures
+            };
+            $(shapeInputSelector).val(JSON.stringify(featureCollection));
+            // Clear single coordinate fields when using multiple items
+            // $(latitudeInputSelector).val('');
+            // $(longitudeInputSelector).val('');
+          } else if (marker) {
+            // Single marker case
+            // $(latitudeInputSelector).val(marker.getLatLng().lat);
+            // $(longitudeInputSelector).val(marker.getLatLng().lng);
+            $(shapeInputSelector).val(JSON.stringify({}));
+          }
+
           $(showAdminShapeInputSelector).val(true);
+        } else {
+          // For regular users, single marker only
+          $(latitudeInputSelector).val(marker.getLatLng().lat);
+          $(longitudeInputSelector).val(marker.getLatLng().lng);
+          $(shapeInputSelector).val(JSON.stringify({}));
         }
       };
 
@@ -282,6 +360,13 @@
 
             e.layer._pmTempLayer = true;
             e.layer.remove();
+
+            // Update form fields after cut operation in admin mode
+            if (adminEditor) {
+              setTimeout(function() {
+                updateShapeFieldInForm(null);
+              }, 10);
+            }
           }
         })
       }
@@ -360,11 +445,11 @@
         adminShapes.forEach(function(singleAdminShape) {
           if (App.Map.validCoordinates(singleAdminShape)) {
             if ( adminEditor ) {
-              marker = createMarker(singleAdminShape.lat, singleAdminShape.long, adminShapesColor, 'pin');
+              marker = createMarker(singleAdminShape.lat, singleAdminShape.long, adminShapesColor, singleAdminShape.fa_icon_class || 'circle');
             } else {
               var markerLatLng = new L.LatLng(singleAdminShape.lat, singleAdminShape.long);
               var adminMarker = L.marker(markerLatLng, {
-                icon: getMarkerIcon(adminShapesColor, 'circle')
+                icon: getMarkerIcon(adminShapesColor, singleAdminShape.fa_icon_class || 'circle')
               });
               adminMarker.pm.setOptions({ adminShape: true })
 
@@ -377,39 +462,46 @@
               adminMarker.addTo(map);
             }
           } else if (Object.keys(singleAdminShape).length > 0) {
-            var adminShapeLayer = L.geoJSON(singleAdminShape, {
-              pointToLayer: function(feature, latlng) {
-                return L.marker(latlng, {
-                  icon: getMarkerIcon(
-                    feature.color || adminShapesColor,
-                    'circle'
-                  )
+            // Handle FeatureCollection with multiple features
+            var features = singleAdminShape.features || [singleAdminShape];
+
+            features.forEach(function(feature) {
+              if (Object.keys(feature).length) {
+                var adminShapeLayer = L.geoJSON(feature, {
+                  pointToLayer: function(geoFeature, latlng) {
+                    return L.marker(latlng, {
+                      icon: getMarkerIcon(
+                      geoFeature.properties.color || adminShapesColor,
+                      geoFeature.properties.fa_icon_class || 'circle'
+                    )
+                    });
+                  }
                 });
               }
+
+              adminShapeLayer.pm.setOptions({ adminShape: true })
+              adminShapeLayer.setStyle({
+                color: feature.properties.color || adminShapesColor,
+                fillColor: feature.properties.color || adminShapesColor,
+                fillOpacity: 0.2,
+              })
+
+              if (adminEditor) {
+                addEventListenersToShapeLayer(adminShapeLayer)
+              } else {
+                adminShapeLayer.on("click", function() {
+                  if (!this._popup) {
+                    this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+                  }
+                });
+              }
+
+              adminShapeLayer.addTo(map);
             });
-            adminShapeLayer.pm.setOptions({ adminShape: true })
-            adminShapeLayer.setStyle({
-              color: adminShapesColor,
-              fillColor: adminShapesColor,
-              fillOpacity: 0.2,
-            })
-
-            if (editable) {
-              addEventListenersToShapeLayer(adminShapeLayer)
-            } else {
-              adminShapeLayer.on("click", function() {
-                if (!this._popup) {
-                  this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
-                }
-              });
-            }
-
-            adminShapeLayer.addTo(map);
           }
         });
       }
 
-      return
       // adds second attribution to tell about admin pins and shapes
       if ( showAdminShape ) {
         var adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
@@ -440,22 +532,68 @@
             if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
               marker.on("click", openMarkerPopup);
             }
-          } else {
-            var userShape = L.geoJSON(markerCoordinate, {
-              style: function(feature) {
-                return { color: markerCoordinate.color };
+          } else if (markerCoordinate.features && Array.isArray(markerCoordinate.features)) {
+            // Handle GeoJSON FeatureCollection
+            markerCoordinate.features.forEach(function(feature) {
+              if (feature.geometry.type === 'Point') {
+                // Render Point features as regular markers
+                var coords = feature.geometry.coordinates;
+                var featureMarker = createMarker(
+                  coords[1], // latitude
+                  coords[0], // longitude
+                  feature.properties.color || markerCoordinate.color,
+                  feature.properties.fa_icon_class || markerCoordinate.fa_icon_class
+                );
+
+                featureMarker.options.id = markerCoordinate.id
+                featureMarker.options.resource_type = markerCoordinate.resource_type
+                featureMarker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
+
+                if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                  featureMarker.on("click", openMarkerPopup);
+                }
+              } else {
+                // Render non-Point features as geoJSON layers
+                if (Object.keys(feature).length) {
+                  var userShape = L.geoJSON(feature, {
+                    style: function(geoFeature) {
+                      return {
+                        color: geoFeature.properties.color || markerCoordinate.color || feature.properties.color
+                      };
+                    }
+                  });
+                }
+
+                userShape.options.id = markerCoordinate.id
+                userShape.options.resource_type = markerCoordinate.resource_type
+                userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
+
+                if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                  userShape.on("click", openMarkerPopup);
+                }
+                userShape.addTo(deflateFeatures);
+                userShape.addTo(map);
               }
             });
+          } else {
+            // Handle single GeoJSON feature or legacy format
+            if (Object.keys(markerCoordinate).length) {
+              var userShape = L.geoJSON(markerCoordinate, {
+                style: function(feature) {
+                  return { color: markerCoordinate.color };
+                }
+              });
 
-            userShape.options.id = markerCoordinate.id
-            userShape.options.resource_type = markerCoordinate.resource_type
-            userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
+              userShape.options.id = markerCoordinate.id
+              userShape.options.resource_type = markerCoordinate.resource_type
+              userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
-              userShape.on("click", openMarkerPopup);
+              if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                userShape.on("click", openMarkerPopup);
+              }
+              userShape.addTo(deflateFeatures);
+              userShape.addTo(map);
             }
-            userShape.addTo(deflateFeatures);
-            userShape.addTo(map);
           }
         });
       }
@@ -502,7 +640,10 @@
             title: 'Marker setzen',
             block: 'draw',
             onClick: function() {
-              removeShapesAndMarkers();
+              // Only clear markers when turning ON the tool (not admin editor) or when explicitly requested
+              if (!this.toggleStatus && !adminEditor) {
+                removeShapesAndMarkers();
+              }
 
               if (this.toggleStatus) {
                 map.off("click", moveOrPlaceMarker);
@@ -517,7 +658,7 @@
         map.pm.Toolbar.createCustomControl({
           name: 'clearMap',
           className: 'control-icon leaflet-pm-icon-delete',
-          title: 'Clear Map',
+          title: 'Karte zurücksetzen',
           block: 'edit',
           onClick: function() {
             removeShapesAndMarkers();
@@ -535,9 +676,11 @@
               $(".control-icon.leaflet-pm-icon-delete").closest(".active").removeClass("active")
             }
 
-            if ( !adminEditor ) {
-              $(latitudeInputSelector).val('');
-              $(longitudeInputSelector).val('');
+            // Don't clear latitude and longitude fields, only clear shape data
+            $(shapeInputSelector).val(JSON.stringify({}));
+
+            if (adminEditor) {
+              $(showAdminShapeInputSelector).val(false);
             }
           }
         });
@@ -566,13 +709,16 @@
           })
         }
 
-        // remove past elements when new element is started, except for cutting
-        map.on('pm:drawstart', function(e) {
-          if (e.shape == 'Cut') {
-            return
-          }
+              // remove past elements when new element is started, except for cutting
+      map.on('pm:drawstart', function(e) {
+        if (e.shape == 'Cut') {
+          return
+        }
+        // Only remove existing elements if not in admin editor mode
+        if (!adminEditor) {
           removeShapesAndMarkers();
-        });
+        }
+      });
 
         // function to clear previously created shapes (only one shaped allowed)
         function removeShapesAndMarkers() {
@@ -587,8 +733,12 @@
             }
           })
 
-          $(shapeInputSelector).val({});
-          $(showAdminShapeInputSelector).val(false);
+          // Clear shape data but preserve latitude and longitude
+          $(shapeInputSelector).val(JSON.stringify({}));
+
+          if (!adminEditor) {
+            $(showAdminShapeInputSelector).val(false);
+          }
         }
 
         // add newly created shape to form field
@@ -603,22 +753,58 @@
           addEventListenersToShapeLayer(layer)
         })
 
+        // Handle shape deletion in admin mode
+        map.on('pm:remove', function(e) {
+          if (adminEditor) {
+            // Update form fields after deletion
+            setTimeout(function() {
+              updateShapeFieldInForm(null);
+            }, 10);
+          }
+        })
+
         // update shape field in form
         var updateShapeFieldInForm = function(layer) {
           if (layer.options.shape == 'Circle') {
             layer = L.PM.Utils.circleToPolygon(layer, 60)
           }
 
-          var shape = layer.toGeoJSON();
-          var shapeString = JSON.stringify(shape);
-
           $(latitudeInputSelector).val(map.getCenter().lat);
           $(longitudeInputSelector).val(map.getCenter().lng);
           $(zoomInputSelector).val(map.getZoom());
-          $(shapeInputSelector).val(shapeString);
 
           if (adminEditor) {
+            // For admin editor, collect all shapes and markers
+            var allFeatures = [];
+
+            // Collect all drawn shapes
+            map.pm.getGeomanLayers().forEach(function(geomanLayer) {
+              if (geomanLayer.pm.options.adminShape != true) {
+                var layerCopy = geomanLayer;
+                if (geomanLayer.options.shape == 'Circle') {
+                  layerCopy = L.PM.Utils.circleToPolygon(geomanLayer, 60);
+                }
+                var feature = layerCopy.toGeoJSON();
+                feature.properties = feature.properties || {};
+                feature.properties.color = adminShapesColor;
+                feature.properties.fa_icon_class = 'circle';
+                allFeatures.push(feature);
+              }
+            });
+
+            // Create FeatureCollection for multiple features
+            var featureCollection = {
+              type: 'FeatureCollection',
+              features: allFeatures
+            };
+
+            $(shapeInputSelector).val(JSON.stringify(featureCollection));
             $(showAdminShapeInputSelector).val(true);
+          } else {
+            // For regular users, single shape only
+            var shape = layer.toGeoJSON();
+            var shapeString = JSON.stringify(shape);
+            $(shapeInputSelector).val(shapeString);
           }
         };
       }

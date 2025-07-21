@@ -77,7 +77,7 @@ namespace :admin do
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
-    resources :projekt_arguments, only: [:create, :update, :destroy] do
+    resources :projekt_arguments, only: [:new, :create, :edit, :update, :destroy] do
       collection do
         post :send_notifications
       end
@@ -134,6 +134,7 @@ namespace :admin do
       post :add_user, on: :member
       post :add_from_csv, on: :member
       delete :remove_user, on: :member
+      delete :remove_email_from_auto_join_emails, on: :member
     end
   end
 

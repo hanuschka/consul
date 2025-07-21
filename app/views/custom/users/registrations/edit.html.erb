@@ -10,6 +10,7 @@
         <%= f.email_field :email,
           label: t("devise_views.users.registrations.edit.email_label"),
           placeholder: t("devise_views.users.registrations.edit.email_label"),
+          autocomplete: "email",
           autofocus: true %>
       </div>
 
@@ -23,15 +24,15 @@
         <%= f.password_field :current_password,
           label: t("devise_views.users.registrations.edit.current_password_label"),
           placeholder: t("devise_views.users.registrations.edit.current_password_label"),
-          autocomplete: "off",
+          autocomplete: "current-password",
           hint: t("devise_views.users.registrations.edit.need_current") %>
       </div>
 
       <div class="small-12 column">
         <%= f.password_field :password,
-          autocomplete: "off",
           label: t("devise_views.users.registrations.edit.password_label"),
           placeholder: t("devise_views.users.registrations.edit.password_label"),
+          autocomplete: "new-password",
           hint: t("devise_views.users.registrations.edit.leave_blank") %>
       </div>
 
@@ -39,7 +40,7 @@
         <%= f.password_field :password_confirmation,
           label: t("devise_views.users.registrations.edit.password_confirmation_label"),
           placeholder: t("devise_views.users.registrations.edit.password_confirmation_label"),
-          autocomplete: "off" %>
+          autocomplete: "new-password" %>
       </div>
 
       <div class="small-12 column" style="margin-bottom:20px;">

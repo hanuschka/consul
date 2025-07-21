@@ -4,10 +4,26 @@ en:
       shared:
         switch-view-button:
           aria-label: "Switch view button"
+        missing-image:
+          aria-label: "Image not available"
+      search:
+        search-input:
+          aria-label: "Search input field"
+        search-button:
+          aria-label: "Search button"
       google-translate:
         widget-toggler:
           aria-label: "Click to toggle the Google Translate widget."
       account:
+        edit_banner:
+          aria-label: "Click to upload a new banner image."
+        edit_avatar:
+          avatar_placeholder: "Avatar placeholder. Click to upload a new avatar image."
+          aria-label: "Click to upload a new avatar image."
+        edit_username:
+          edit_button: "Click to show the username edit field."
+          cancel_button: "Cancel button. Click to cancel the changes."
+          save_button: "Save button. Click to save the changes."
         notifications:
           aria-label: "Filter notifications"
       banner-image:

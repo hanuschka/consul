@@ -293,6 +293,7 @@
       const white = '#fff';
       var circleColor = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
       const shapesColor = this.adminEditor ? this.adminShapesColor : brandColor;
+      console.log({shapesColor, circleColor})
 
       return [
         // // Bigger points
@@ -459,11 +460,10 @@
     }
 
     initializePolygonEditor() {
-      var controls = {
-         trash: true
-      };
+      var controls = {}
 
       if (this.enableGeomanControls) {
+        controls.trash = true;
         controls.line = true;
         controls.point = true;
         controls.polygon = true;

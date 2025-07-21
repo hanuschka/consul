@@ -1,6 +1,6 @@
 <div id="<%= dom_id(projekt_event) %>" class="new-card projekt-event-item-new">
 
-  <div class="projekt-event-item-new-calendar-column">
+  <div class="projekt-event-item-new-calendar-column" aria-hidden="true">
     <div class="projekt-event-item-new-calendar">
       <div class="projekt-event-item-new-calendar-dayname">
         <%= l(projekt_event.datetime, format: "%b").upcase %>
@@ -25,13 +25,13 @@
   </div>
 
   <div class="projekt-event-item-new-body">
-    <h4 class="projekt-event-item-new-body--title">
+    <h3 class="projekt-event-item-new-body--title">
       <% if @show_projekt_link && projekt_event.projekt.published? %>
         <%= link_to(projekt_event.title, projekt_event.projekt.page.url) %>
       <% else %>
         <%= projekt_event.title %>
       <% end %>
-    </h4>
+    </h3>
     <% if projekt_event.description.present? %>
       <div class="projekt-event-item-new--description-text-wrapper">
         <%= render Shared::CollapseTextComponent.new(size: :small) do |component| %>

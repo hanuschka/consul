@@ -168,8 +168,7 @@ ul.projekt-navigator {
   list-style-type: none;
 }
 
-li.current-projekt,
-li.current-projekt a {
+li.current-projekt > a {
   font-weight: bold;
 }
 
@@ -202,15 +201,15 @@ li.projekt-navigator.current-projekt::before {
     position: relative;
 
     .extended-sidebar-map {
-      height: 1500px;
+      height: 100vh;
       max-height: calc(100vh - 150px);
 
       @media screen and (min-width: 1920px) {
-        height: 700px;
+        max-height: calc(100vh - 250px);
       }
 
       @media screen and (min-width: 3000px) {
-        height: 1200px;
+        max-height: calc(100vh - 350px);
       }
 
       .map_location {
@@ -308,14 +307,13 @@ span.geo-affiliation-icon:before {
 
 li.projekt-navigator {
   position: relative;
-  padding-right: 14px;
   color: #878787;
 
   a {
     color: $dt-base !important;
   }
 
-  &~ul.projekt-navigator {
+  &>ul.projekt-navigator {
     display: none;
   }
 
@@ -337,7 +335,7 @@ li.projekt-navigator {
 }
 
 li.projekt-navigator[aria-expanded="true"] {
-  &~ul.projekt-navigator {
+  &>ul.projekt-navigator {
     display: block;
   }
 
@@ -347,7 +345,7 @@ li.projekt-navigator[aria-expanded="true"] {
 }
 
 li.projekt-navigator[aria-expanded="false"] {
-  &~ul.projekt-navigator {
+  &>ul.projekt-navigator {
     display: none;
   }
 
@@ -443,7 +441,7 @@ li.projekt-navigator[aria-expanded="false"] {
   }
 
   .page-subnav-tab {
-    h4 {
+    h2 {
       margin-right: 30px;
 
       @media screen and (max-width: $small-tablet-viewport-start) {

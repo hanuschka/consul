@@ -10,7 +10,7 @@ ProjektStudio.utils.postMessageToParentFromIframe = function(eventType, params) 
 }
 
 ProjektStudio.utils.sendMessageToDtParentFrame = function(eventType, params) {
-  postMessageToParentFromIframe(eventType, params)
+  ProjektStudio.utils.postMessageToParentFromIframe(eventType, params)
 }
 
 ProjektStudio.utils.parseIframeEventData = function(eventData) {

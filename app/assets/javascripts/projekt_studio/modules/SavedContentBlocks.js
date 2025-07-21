@@ -1,7 +1,7 @@
 import ace from "ace-builds/src-min/ace"
 import 'ace-builds/src-noconflict/mode-html'
 import 'ace-builds/src-noconflict/worker-html';
-import { sendMessageToDtParentFrame, parseIframeEventData } from "consul/utils/iframeUtils";
+import { ProjektStudio.utils.sendMessageToDtParentFrame, parseIframeEventData } from "consul/utils/iframeUtils";
 import { validateHTML } from "utils/htmlUtils"
 
 // Access the session's worker
@@ -111,7 +111,7 @@ const SavedContentBlocks = {
 
     this.turnOffEditModeForItem(container)
 
-    sendMessageToDtParentFrame("Dt.ProjektStudio.updateSavedContentBlock", {
+    ProjektStudio.utils.sendMessageToDtParentFrame("Dt.ProjektStudio.updateSavedContentBlock", {
       id: savedContentBlockId,
       content
     })
@@ -144,7 +144,7 @@ const SavedContentBlocks = {
       container.classList.remove("-form-opened")
     }, 10)
 
-    sendMessageToDtParentFrame(
+    ProjektStudio.utils.sendMessageToDtParentFrame(
       "Dt.ProjektStudio.createSavedContentBlock",
       { content }
     )
@@ -167,7 +167,7 @@ const SavedContentBlocks = {
     if (deleteConfirmed) {
       const savedContentBlockId = container.dataset.savedContentBlockId
 
-      sendMessageToDtParentFrame(
+      ProjektStudio.utils.sendMessageToDtParentFrame(
        "Dt.ProjektStudio.deleteSavedContentBlock",
         { id: savedContentBlockId }
       )

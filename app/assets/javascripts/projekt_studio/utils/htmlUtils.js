@@ -9,3 +9,10 @@ ProjektStudio.utils.focusContentEditableElement = function(element) {
   selection.addRange(range);
 }
 
+ProjektStudio.utils.htmlToDomElement = function(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+
+  return div
+}
+

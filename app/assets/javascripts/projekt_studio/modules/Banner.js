@@ -1,6 +1,6 @@
 // import { resetFoundationAccordionStateFor } from "consul/utils/foundationUtils";
 // import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
-// import { sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
+// import { ProjektStudio.utils.sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
 
 ProjektStudio.modules.Banner = {
   initialized: false,
@@ -58,7 +58,7 @@ ProjektStudio.modules.Banner = {
       const value = field.firstElementChild.innerHTML.trim()
 
       if (ProjektStudio.isEmbedded) {
-        ProjektStudio.utils.sendMessageToDtParentFrame("updateProjektPage", {
+        ProjektStudio.utils.ProjektStudio.utils.sendMessageToDtParentFrame("updateProjektPage", {
           [container.dataset.fieldName]: value
         })
       } else {
@@ -81,11 +81,11 @@ ProjektStudio.modules.Banner = {
   },
 
   saveContentBlockWithNewContent(contentBlock, contentBlockId, newContent) {
-    const newContentBlock = htmlToDomElement(newContent);
+    const newContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
 
     resetFoundationAccordionStateFor(newContentBlock)
 
-    sendMessageToDtParentFrame("updateContentBlock", {
+    ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
       content_block_id: contentBlockId,
       html: newContentBlock.innerHTML
     })
@@ -107,7 +107,7 @@ ProjektStudio.modules.Banner = {
 
       const title_image_searialized = await serializeFileToBase64(file);
 
-      sendMessageToDtParentFrame("Dt.ProjektStudio.updateTitleImage", {
+      ProjektStudio.utils.sendMessageToDtParentFrame("Dt.ProjektStudio.updateTitleImage", {
         title_image_searialized,
         original_image_name: file.name
       })

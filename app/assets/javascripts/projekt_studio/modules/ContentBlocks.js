@@ -9,7 +9,7 @@
 // import { addStudioControlsToContentBlock, addNewContentBlockButtonToContentBlockList, newContentBlockButtonSectionHtml } from "consul/projekt_studio_consul/templates/renderContentBlockControlsFunctions";
 // import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
 // import { getCurrentProjektId } from "lib/projekts";
-// import { sendMessageToDtParentFrame, parseIframeEventData } from "consul/utils/iframeUtils";
+// import { ProjektStudio.utils.sendMessageToDtParentFrame, parseIframeEventData } from "consul/utils/iframeUtils";
 
  ProjektStudio.modules.ContentBlocks = {
   initialized: false,
@@ -140,7 +140,7 @@
 
     this.storePreviousVersionOfContentBlock(contentBlock, contentBlockSection)
 
-    sendMessageToDtParentFrame("regenerateContentBlock", {
+    ProjektStudio.utils.sendMessageToDtParentFrame("regenerateContentBlock", {
       regenerate_type: regenerateType,
       content_block_id: contentBlockSection.dataset.contentBlockId,
       html: contentBlockHTML
@@ -156,7 +156,7 @@
     // this.toggleLockAiFunctions(true);
     // this.toggleLockContentBlockEdit(contentBlockSection.dataset.contentBlockId, true)
 
-    sendMessageToDtParentFrame("aiEditContentBlock", {
+    ProjektStudio.utils.sendMessageToDtParentFrame("aiEditContentBlock", {
       content_block_id: contentBlockSection.dataset.contentBlockId,
       html: contentBlock.innerHTML
     })
@@ -221,7 +221,7 @@
   handleContentBlockMovedOnUi(e) {
     const contentBlockId = e.item.dataset.contentBlockId
 
-    sendMessageToDtParentFrame("moveContentBlock", {
+    ProjektStudio.utils.sendMessageToDtParentFrame("moveContentBlock", {
       content_block_id: contentBlockId,
       new_position: e.newIndex + 1
     })
@@ -299,7 +299,7 @@
       scrollTo.scrollIntoView({block: "center"});
     }
 
-    sendMessageToDtParentFrame("deleteContentBlock", {
+    ProjektStudio.utils.sendMessageToDtParentFrame("deleteContentBlock", {
       content_block_id: contentBlockId
     })
   },
@@ -340,12 +340,12 @@
       // console.log({tabsId})
 
       // Make tab ID uniq for foundation tabs to work correctly
-      // eachTab.forEach(function(tab, index) {
-      //   tab.href = "#" + tabsId + "-" + index;
-      // });
-      // eachTabPanel.forEach(function(tabPanel, index) {
-      //   tabPanel.id = tabsId + "-" + index;
-      // });
+      eachTab.forEach(function(tab, index) {
+        tab.href = "#" + tabsId + "-" + index;
+      });
+      eachTabPanel.forEach(function(tabPanel, index) {
+        tabPanel.id = tabsId + "-" + index;
+      });
 
       templateContainer.replaceChildren(templateContent);
       // parentElement.classList.add("-templates-added")
@@ -376,7 +376,7 @@
     )
     this.draftContentBlockIndex++;
 
-    const newContentBlock = htmlToDomElement(newContentBlockHTML).firstChild;
+    const newContentBlock = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
     newContentBlock.dataset.draft = true;
     newContentBlock.classList.add('-draft')
     newContentBlock.classList.add('-highlight-changed')
@@ -398,7 +398,7 @@
       App.ImageGallery.initialize();
     }, 0)
 
-    sendMessageToDtParentFrame("createContentBlock",  {
+    ProjektStudio.utils.sendMessageToDtParentFrame("createContentBlock",  {
       previous_content_block_id: previousContentBlockId,
       draft_content_block_index: draftContentBlockIndex,
       enter_ai_mode: contentTemplate.dataset.enterAiMode,
@@ -555,11 +555,11 @@
   },
 
   saveContentBlock(contentBlock, contentBlockId, newContent) {
-    const newContentBlock = htmlToDomElement(newContent);
+    const newContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
 
     resetFoundationAccordionStateFor(newContentBlock)
 
-    sendMessageToDtParentFrame("updateContentBlock", {
+    ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
       content_block_id: contentBlockId,
       html: newContentBlock.innerHTML
     })
@@ -626,7 +626,7 @@
         contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
         this.resetPreviosVersionOfContentBlock(contentBlock, contentBlockSection)
 
-        sendMessageToDtParentFrame("updateContentBlock", {
+        ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
           content_block_id: contentBlockSection.dataset.contentBlockId,
           html: contentBlock.innerHTML
         })
@@ -653,7 +653,7 @@
 
     const path = event.currentTarget.dataset.path;
 
-    sendMessageToDtParentFrame("Dt.openAdminPage", { path })
+    ProjektStudio.utils.sendMessageToDtParentFrame("Dt.openAdminPage", { path })
   },
 
    removeWrappingParagraphsFromCkeditorHtml(html) {

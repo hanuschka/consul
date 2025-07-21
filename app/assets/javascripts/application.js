@@ -51,6 +51,8 @@
 //= require jquery-ui/ui/widgets/autocomplete
 //= require jquery-ui/ui/widgets/sortable
 //= require jquery-fileupload/basic
+//= require leaflet/dist/leaflet
+//= require leaflet.markercluster/dist/leaflet.markercluster
 //= require foundation
 //= require turbolinks
 //= require turbolinks_anchors
@@ -102,8 +104,6 @@
 //= require tree_navigator
 //= require tag_autocomplete
 //= require polls_admin
-//= require leaflet/dist/leaflet
-//= require leaflet.markercluster/dist/leaflet.markercluster
 //= require map
 //= require polls
 //= require sortable
@@ -123,11 +123,11 @@
 //= require_tree ./admin
 //= require_tree ./sdg
 //= require_tree ./sdg_management
-//= require leaflet.locatecontrol
-//= require leaflet-geosearch/dist/geosearch.umd
-//= require leaflet-gesture-handling/dist/leaflet-gesture-handling
-//= require Leaflet.Deflate/dist/L.Deflate
-//= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
+// require leaflet.locatecontrol
+// require leaflet-geosearch/dist/geosearch.umd
+// require leaflet-gesture-handling/dist/leaflet-gesture-handling
+// require Leaflet.Deflate/dist/L.Deflate
+// require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
 //= require ckeditor5/ckeditor5.umd
 //= require ckeditor5/file-upload-manager
 //= require html2canvas/dist/html2canvas.min

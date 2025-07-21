@@ -4,10 +4,26 @@ de:
       shared:
         switch-view-button:
           aria-label: "Schaltﬂäche zum Umschalten der Ansicht"
+        missing-image:
+          aria-label: "Kein Bild verfügbar"
+      search:
+        search_input:
+          aria-label: "Suchfeld. Geben Sie hier Ihren Suchbegriff ein."
+        search_button:
+          aria-label: "Suchbutton. Klicken Sie, um die Suche zu starten."
       google-translate:
         widget-toggler:
           aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."
       account:
+        edit_banner:
+          aria-label: "Banner bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+        edit_avatar:
+          avatar_placeholder: "Avatar Platzhalter. Klicken Sie, um ein neues Bild hochzuladen."
+          aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+        edit_username:
+          edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."
+          cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
+          save_button: "Speichern Schaltfläche. Klicken Sie, um die Änderungen zu speichern."
         notifications:
           aria-label: "Benachrichtigungsfilter"
       banner-image:

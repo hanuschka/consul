@@ -44,7 +44,7 @@
     margin-bottom: 20px;
     z-index: 1004;
 
-    @media(max-width: $small-tablet-viewport-start) {
+    @media(max-width: $mobile-viewport-start) {
       display: flex;
       width: 100vw;
       margin-left: (-$mobile-side-padding);

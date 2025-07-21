@@ -30,7 +30,7 @@
           mark_all_as_read_notifications_path, method: :put,
           class: "button hollow float-right-medium" %>
 
-        <ul class="menu simple clear">
+        <ul class="menu simple clear" role="navigation" aria-label="<%= t('custom.accessibility.account.notifications.aria-label') %>">
           <li class="<%= params[:notifications] == "read" ? "" : "is-active" %>">
             <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
           </li>
@@ -59,7 +59,7 @@
       <% end %>
 
       <% if !current_user.level_three_verified? %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description"),  icon_name: "check") do |c| %>
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description_html"),  icon_name: "check") do |c| %>
           <div class="verify-account">
             <% if current_user.level_two_verified? %>
               <%= link_to t("account.show.finish_verification"), verification_path, class: "button" %>

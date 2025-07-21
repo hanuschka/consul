@@ -1,5 +1,5 @@
 <% if render_map? %>
-  <div class="resources-list--map not-print">
+  <div class="resources-list--map not-print" aria-label="<%= t('custom.map.aria-label') %>">
     <% if @projekt_phase&.projekt&.vc_map_enabled? %>
       <%= render Shared::VCMapComponent.new(
         parent_class: resources_name,

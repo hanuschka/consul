@@ -293,6 +293,7 @@
       const white = '#fff';
       var circleColor = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
       const shapesColor = this.adminEditor ? this.adminShapesColor : brandColor;
+      console.log({shapesColor, circleColor})
 
       return [
         // // Bigger points

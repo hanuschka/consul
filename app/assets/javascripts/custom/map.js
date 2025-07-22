@@ -751,11 +751,13 @@
             });
             adminMarker.pm.setOptions({ adminShape: true })
 
-            adminMarker.on("click", function() {
-              if (!this._popup) {
-                this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
-              }
-            });
+            if (!editable) {
+              adminMarker.on("click", function() {
+                if (!this._popup) {
+                  this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+                }
+              });
+            }
 
             adminMarker.addTo(map);
             }
@@ -769,7 +771,7 @@
                   pointToLayer: function(geoFeature, latlng) {
                     return L.marker(latlng, {
                       icon: getMarkerIcon(
-                      geoFeature.properties.color || adminShapesColor,
+                      geoFeature.properties.color || "green",
                       geoFeature.properties.fa_icon_class || 'circle'
                     )
                     });
@@ -779,8 +781,8 @@
 
               adminShapeLayer.pm.setOptions({ adminShape: true })
               adminShapeLayer.setStyle({
-                color: feature.properties.color || adminShapesColor,
-                fillColor: feature.properties.color || adminShapesColor,
+                color: feature.properties.color || "violet",
+                fillColor: feature.properties.color || "violet",
                 fillOpacity: 0.2,
               })
 
@@ -827,8 +829,10 @@
             marker.options.resource_type = markerCoordinate.resource_type
             marker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
-              marker.on("click", openMarkerPopup);
+            if (!editable) {
+              if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                marker.on("click", openMarkerPopup);
+              }
             }
           } else if (markerCoordinate.features && Array.isArray(markerCoordinate.features)) {
             // Handle GeoJSON FeatureCollection
@@ -847,8 +851,10 @@
                 featureMarker.options.resource_type = markerCoordinate.resource_type
                 featureMarker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-                if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
-                  featureMarker.on("click", openMarkerPopup);
+                if (editable) {
+                  if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                    featureMarker.on("click", openMarkerPopup);
+                  }
                 }
               } else {
                 // Render non-Point features as geoJSON layers
@@ -866,8 +872,10 @@
                 userShape.options.resource_type = markerCoordinate.resource_type
                 userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-                if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
-                  userShape.on("click", openMarkerPopup);
+                if (!editable) {
+                  if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                    userShape.on("click", openMarkerPopup);
+                  }
                 }
                 userShape.addTo(deflateFeatures);
                 userShape.addTo(map);
@@ -886,8 +894,10 @@
               userShape.options.resource_type = markerCoordinate.resource_type
               userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-              if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
-                userShape.on("click", openMarkerPopup);
+              if (!editable) {
+                if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                  userShape.on("click", openMarkerPopup);
+                }
               }
               userShape.addTo(deflateFeatures);
               userShape.addTo(map);
@@ -1005,6 +1015,15 @@
             templineStyle: { color: adminShapesColor },
             hintlineStyle: { color: adminShapesColor, dashArray: [5, 5]  }
           })
+        }
+        else {
+          const brandColor = App.Utils.getBrandColor();
+
+          map.pm.setPathOptions({
+            color: brandColor,
+            fillColor: brandColor,
+            fillOpacity: 0.4
+          });
         }
 
               // remove past elements when new element is started, except for cutting

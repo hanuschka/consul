@@ -2,6 +2,8 @@
   <%= form.label :map_location, label %>
 <% end %>
 
+<% admin_editor = local_assigns[:admin_editor] || false %>
+
 <% mappable = @proposal || @deficiency_report || @investment || local_assigns[:mappable] || nil %>
 <% projekt_phase ||= nil %>
 
@@ -25,7 +27,7 @@
       map_location: map_location,
       parent_class: parent_class,
       editable: true,
-      admin_editor: true,
+      admin_editor: admin_editor,
       projekt_phase: projekt_phase,
     ) %>
   <% end %>

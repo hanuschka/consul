@@ -205,38 +205,35 @@
     }
 
     addControls() {
-      if (this.element.offsetWidth <= 580) {
-        return;
-      }
-
-      // Add zoom/navigation controls first (leftmost)
-      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-
-      // Add search bar to the right of zoom controls
-      this.map.addControl(new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-          countries: 'DE',
-          marker: false
-      }), 'top-left');
-
-      this.map.addControl(new mapboxgl.GeolocateControl({
-        positionOptions: { enableHighAccuracy: true },
-        trackUserLocation: true
-        }), 'top-left'
-      );
-
-      // Only add fullscreen modal control if not already in a modal
+      // Always add fullscreen control on all screen sizes (if not in modal)
       if (!this.element.dataset.modalMap) {
         this.map.addControl(new FullscreenModalControl(this), 'top-right');
+      }
+
+      // Only add other controls on larger screens to avoid clutter
+      if (this.element.offsetWidth > 580) {
+        // Add zoom/navigation controls first (leftmost)
+        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+        // Add search bar to the right of zoom controls
+        this.map.addControl(new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl,
+            countries: 'DE',
+            marker: false
+        }), 'top-left');
+
+        this.map.addControl(new mapboxgl.GeolocateControl({
+          positionOptions: { enableHighAccuracy: true },
+          trackUserLocation: true
+          }), 'top-left'
+        );
       }
 
       if (this.editable && typeof MapboxDraw !== 'undefined') {
         this.initializePolygonEditor();
       }
     }
-
-
 
     addMapInstructionOverlay() {
       if (this.element.offsetWidth <= 780) {
@@ -1919,31 +1916,52 @@
       var modal = document.getElementById(this.modalId);
       var self = this;
 
-      // Foundation reveal close event
+      // Foundation reveal close event (for programmatic closes)
       modal.addEventListener('closed.zf.reveal', () => {
-        // self.closeModal();
-          setTimeout(() => {
+        console.log("🔴 Foundation closed.zf.reveal fired");
+        if (self.isInModal) {
+          self.closeModal();
+        }
+      });
+
+      // Manual overlay click handler since map captures clicks
+      modal.addEventListener('click', (e) => {
+        console.log('🟠 Modal clicked, target:', e.target.className);
+        // Check if click was on the modal backdrop (not on content)
+        if (e.target === modal || e.target.classList.contains('reveal-overlay')) {
+          console.log('🟠 Overlay clicked - closing modal...');
+          e.preventDefault();
+          e.stopPropagation();
+          self.closeModal();
+        }
+      });
+
+      // Add click handler to the actual Foundation overlay
+      setTimeout(() => {
+        var overlay = document.querySelector('.reveal-overlay');
+        if (overlay) {
+          overlay.addEventListener('click', (e) => {
+            console.log('🟠 Foundation overlay clicked');
             if (self.isInModal) {
               self.closeModal();
             }
-          }, 100);
-      });
+          });
+        }
+      }, 100);
 
-      // Direct close button click
+      // Close button click handler
       var closeButton = modal.querySelector('.map-modal--close-button');
       if (closeButton) {
         closeButton.addEventListener('click', () => {
-          setTimeout(() => {
-            if (self.isInModal) {
-              self.closeModal();
-            }
-          }, 100);
+          console.log('🟢 Close button clicked');
+          self.closeModal();
         });
       }
 
       // ESC key handler
       var escHandler = function(e) {
         if (e.key === 'Escape' && self.isInModal) {
+          console.log('🔵 ESC key pressed');
           self.closeModal();
           document.removeEventListener('keydown', escHandler);
         }

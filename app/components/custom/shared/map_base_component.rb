@@ -10,6 +10,7 @@ class Shared::MapBaseComponent < ApplicationComponent
     process_coordinates: nil,
     projekt: nil,
     projekt_phase: nil,
+    admin_editor: false,
     show_admin_shape: true,
     saturated_admin_shape: false
   )
@@ -21,6 +22,7 @@ class Shared::MapBaseComponent < ApplicationComponent
     @projekt = projekt
     @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
+    @admin_editor = admin_editor
     @saturated_admin_shape = saturated_admin_shape
   end
 
@@ -32,7 +34,7 @@ class Shared::MapBaseComponent < ApplicationComponent
         map_center_longitude: map_location_longitude(@map_location),
         map_zoom: map_location_zoom(@map_location),
 
-        admin_editor: admin_editor?,
+        admin_editor: @admin_editor,
 
         show_admin_shape: @show_admin_shape,
         admin_shape: admin_shape,
@@ -51,7 +53,7 @@ class Shared::MapBaseComponent < ApplicationComponent
 
     def get_process_coordinates
       if @mappable.present? && @mappable.persisted? && @mappable.map_location.present?
-        if admin_editor?
+        if @admin_editor
           [
             @mappable.map_location.shape_json_data
           ]
@@ -72,9 +74,5 @@ class Shared::MapBaseComponent < ApplicationComponent
       elsif @projekt.present?
         @projekt.map_location.shape_json_data.presence
       end
-    end
-
-    def admin_editor?
-      @parent_class == "projekts" || @parent_class == "projekt_phases"
     end
 end

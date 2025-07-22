@@ -11,7 +11,6 @@
       this.zoom = $element.data("map-zoom");
       this.resourcesName = $element.data("parent-class");
       this.markerCoordinates = $element.data("process-coordinates");
-      this.editable = $element.data("editable");
       this.adminEditor = $element.data("admin-editor");
       this.editable = this.editable || this.adminEditor;
       this.enableGeomanControls = $element.data("enable-geoman-controls");
@@ -231,6 +230,7 @@
       }
 
       if (this.editable && typeof MapboxDraw !== 'undefined') {
+        console.log("this.editable", this.editable)
         this.initializePolygonEditor();
       }
     }
@@ -260,13 +260,11 @@
     }
 
     addCustomDeleteButton() {
+      console.log("addCustomDeleteButton")
       if (!this.draw) return;
 
       var customDeleteControl = new CustomDeleteControl(this);
       this.map.addControl(customDeleteControl, 'top-right');
-
-      // Store reference for cleanup
-      this.customDeleteControl = customDeleteControl;
     }
 
     togglePoiLabels(visible) {
@@ -466,6 +464,7 @@
     }
 
     initializePolygonEditor() {
+      console.log("initializePolygonEditor")
       var controls = {}
 
       if (this.enableGeomanControls) {

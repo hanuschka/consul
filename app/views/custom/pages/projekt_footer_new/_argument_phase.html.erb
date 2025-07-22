@@ -3,6 +3,21 @@
 <% unless embedded? %>
   <div class="main-column">
     <div class="projekt-arguments-containerr">
+      <%= check_box_tag :show_cons %>
+
+      <nav class="projekt-arguments-nav">
+        <ul class="projekt-arguments-nav-list">
+          <li class="projekt-arguments-nav-item">
+            <%= link_to t("custom.projekts.projekt_arguments.pro"), "#", class: "pro",
+                        onclick: "event.preventDefault();document.getElementById('show_cons').checked = false;" %>
+          </li>
+          <li class="projekt-arguments-nav-item">
+            <%= link_to t("custom.projekts.projekt_arguments.cons"), "#", class: "contra",
+                        onclick: "event.preventDefault();document.getElementById('show_cons').checked = true;" %>
+          </li>
+        </ul>
+      </nav>
+
       <div class="projekt-arguments --pro">
         <% if @projekt_arguments_pro.any? %>
           <h3 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.pro") %></h3>

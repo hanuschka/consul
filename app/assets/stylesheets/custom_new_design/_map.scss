@@ -302,3 +302,34 @@
 
 .map-modal {
 }
+
+/* Leaflet Fullscreen Control Styles */
+.leaflet-control-fullscreen {
+  .leaflet-control-fullscreen-button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 14px;
+    
+    &:hover {
+      background-color: #f4f4f4;
+      color: black;
+    }
+    
+    &:focus {
+      outline: none;
+    }
+    
+    i {
+      font-size: 14px;
+    }
+  }
+}

@@ -212,7 +212,7 @@
 }
 
 .extended-sidebar-map {
-  .mapboxgl-ctrl-top-right {
+  .mapboxgl-ctrl-top-right, .leaflet-top.leaflet-right {
     top: 62px;
   }
 }

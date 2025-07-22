@@ -1,17 +1,17 @@
 App.MapPopup = {
   excludedProcesses: ["proposal", "deficiency_report", "projekt", "point_of_interest_pin"],
 
-  generatePopupContent: function(data, resourceType) {
+  generatePopupContent: function(data, resourceType, isInModal) {
     if (resourceType == "proposal") {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, isInModal);
     } else if (resourceType == "deficiency_report") {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, isInModal);
     } else if (resourceType == "projekt") {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, isInModal);
     } else if (resourceType == "point_of_interest_pin") {
       return this.pointOfInterestPopupContent(data);
     } else {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, isInModal);
     }
   },
 
@@ -43,7 +43,7 @@ App.MapPopup = {
     }
   },
 
-  standardResourcePopupContent: function(data, resourceType) {
+  standardResourcePopupContent: function(data, resourceType, isInModal) {
     var url = this.getResourceUrl(data, resourceType)
 
     if (data.projekt_phase_id) {
@@ -53,7 +53,8 @@ App.MapPopup = {
     var popupHtml;
 
     if (url && url.length > 0) {
-      popupHtml = "<h5><a href='" + url + "'>" + data.title + "</a></h5>"; //title
+      var targetAttribute = isInModal ? " target='_top'" : "";
+      popupHtml = "<h5><a href='" + url + "'" + targetAttribute + ">" + data.title + "</a></h5>"; //title
     }
     else {
       popupHtml = "<h5>" + data.title + "</h5>"; //title

@@ -539,7 +539,8 @@
           type: "GET",
           dataType: "json",
           success: function(data) {
-            e.target.bindPopup(App.MapPopup.generatePopupContent(data, resourceType), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
+            var isInModal = !!$(element).data('modal-map');
+            e.target.bindPopup(App.MapPopup.generatePopupContent(data, resourceType, isInModal), { autoPanPadding: [0, 80], minWidth: 200, offset:  L.point(0, -30) }).openPopup();
           }
         });
       };

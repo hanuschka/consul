@@ -404,7 +404,7 @@
         type: "GET",
         dataType: "json",
         success: function(data) {
-          popupContent.html(App.MapPopup.generatePopupContent(data, resourceType));
+          popupContent.html(App.MapPopup.generatePopupContent(data, resourceType, false));
           popup.show();
         }
       });

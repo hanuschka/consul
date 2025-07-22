@@ -971,7 +971,8 @@
         dataType: "json"
       })
         .then(function(data) {
-          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType));
+          var isInModal = !!self.element.dataset.modalMap;
+          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, isInModal));
         })
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
@@ -1020,7 +1021,8 @@
               dataType: "json"
             })
               .then(function(data) {
-                popup.setHTML(App.MapPopup.generatePopupContent(data, shapeData.resource_type));
+                var isInModal = !!self.element.dataset.modalMap;
+                popup.setHTML(App.MapPopup.generatePopupContent(data, shapeData.resource_type, isInModal));
               })
               .fail(function() {
                 popup.setHTML('<div class="map-popup-status-message">Shape information</div>');

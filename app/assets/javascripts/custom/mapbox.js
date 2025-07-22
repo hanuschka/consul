@@ -205,38 +205,35 @@
     }
 
     addControls() {
-      if (this.element.offsetWidth <= 580) {
-        return;
-      }
-
-      // Add zoom/navigation controls first (leftmost)
-      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-
-      // Add search bar to the right of zoom controls
-      this.map.addControl(new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-          countries: 'DE',
-          marker: false
-      }), 'top-left');
-
-      this.map.addControl(new mapboxgl.GeolocateControl({
-        positionOptions: { enableHighAccuracy: true },
-        trackUserLocation: true
-        }), 'top-left'
-      );
-
-      // Only add fullscreen modal control if not already in a modal
+      // Always add fullscreen control on all screen sizes (if not in modal)
       if (!this.element.dataset.modalMap) {
         this.map.addControl(new FullscreenModalControl(this), 'top-right');
+      }
+
+      // Only add other controls on larger screens to avoid clutter
+      if (this.element.offsetWidth > 580) {
+        // Add zoom/navigation controls first (leftmost)
+        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+        // Add search bar to the right of zoom controls
+        this.map.addControl(new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl,
+            countries: 'DE',
+            marker: false
+        }), 'top-left');
+
+        this.map.addControl(new mapboxgl.GeolocateControl({
+          positionOptions: { enableHighAccuracy: true },
+          trackUserLocation: true
+          }), 'top-left'
+        );
       }
 
       if (this.editable && typeof MapboxDraw !== 'undefined') {
         this.initializePolygonEditor();
       }
     }
-
-
 
     addMapInstructionOverlay() {
       if (this.element.offsetWidth <= 780) {
@@ -1311,6 +1308,40 @@
       }
     }
 
+    toggleAdminShapeVisibility(visible) {
+      if (!this.mapLoaded) {
+        this.map.once('idle', () => {
+          this.toggleAdminShapeVisibility(visible);
+        });
+        return;
+      }
+
+      // Toggle admin marker visibility by controlling the element display
+      if (this.adminMarker) {
+        var markerElement = this.adminMarker.getElement();
+        if (markerElement) {
+          markerElement.style.display = visible ? 'block' : 'none';
+        }
+      }
+
+      // Toggle admin shape layers visibility
+      var adminLayerIds = [
+        'admin-shape-layer',
+        'admin-shape-border',
+        'admin-shape-multipolygon-layer',
+        'admin-shape-multipolygon-border',
+        'admin-shape-points'
+      ];
+
+      adminLayerIds.forEach(layerId => {
+        if (this.map.getLayer(layerId)) {
+          this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+        }
+      });
+
+      console.log('Admin shapes visibility toggled:', visible);
+    }
+
     createWmsLayers(layerData, index) {
       var sourceId = `layer-source-${index}`;
       var layerId = `layer-${index}`;
@@ -1740,6 +1771,10 @@
 
       var poiLabel = this.createPoiCheckbox();
       dropdownList.appendChild(poiLabel);
+
+      var adminShapeLabel = this.createAdminShapeCheckbox();
+      dropdownList.appendChild(adminShapeLabel);
+
       dropdown.appendChild(dropdownList);
 
       // Add base layers section if any
@@ -1836,6 +1871,28 @@
       return label;
     }
 
+    createAdminShapeCheckbox() {
+      var label = document.createElement('label');
+      label.className = 'mapbox-layer-checkbox-label';
+
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = true; // Default to on (show admin shapes by default)
+
+      var span = document.createElement('span');
+      span.textContent = 'Verwaltungseinträge';
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      // Handle admin shapes visibility changes
+      input.addEventListener('change', () => {
+        this.mapboxMapInstance.toggleAdminShapeVisibility(input.checked);
+      });
+
+      return label;
+    }
+
     onRemove() {
       this._container.parentNode.removeChild(this._container);
       this._map = undefined;
@@ -1873,10 +1930,8 @@
     }
 
     onRemove() {
-      // Clean up modal if it exists
       this.closeModal();
 
-      // Clean up escape handler if it exists
       if (this.escHandler) {
         document.removeEventListener('keydown', this.escHandler);
         this.escHandler = null;
@@ -1912,39 +1967,23 @@
         </div>
       `;
 
-      // Add modal to body
       document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-      // Set up multiple close event listeners to ensure map destruction
       var modal = document.getElementById(this.modalId);
-      var self = this;
 
-      // Foundation reveal close event
-      modal.addEventListener('closed.zf.reveal', () => {
-        // self.closeModal();
-          setTimeout(() => {
-            if (self.isInModal) {
-              self.closeModal();
-            }
-          }, 100);
+      $(modal).on('closed.zf.reveal', () => {
+        this.closeModal();
       });
 
-      // Direct close button click
       var closeButton = modal.querySelector('.map-modal--close-button');
       if (closeButton) {
-        closeButton.addEventListener('click', () => {
-          setTimeout(() => {
-            if (self.isInModal) {
-              self.closeModal();
-            }
-          }, 100);
-        });
+        closeButton.addEventListener('click', () => { this.closeModal()});
       }
 
       // ESC key handler
       var escHandler = function(e) {
-        if (e.key === 'Escape' && self.isInModal) {
-          self.closeModal();
+        if (e.key === 'Escape' && this.isInModal) {
+          this.closeModal();
           document.removeEventListener('keydown', escHandler);
         }
       };
@@ -2024,7 +2063,6 @@
           }
         }
 
-        // Clean up escape key handler
         if (this.escHandler) {
           document.removeEventListener('keydown', this.escHandler);
           this.escHandler = null;
@@ -2041,7 +2079,6 @@
 
       } catch (e) {
         console.error('Error closing modal:', e);
-        // Force cleanup even if there were errors
         this.modalMapInstance = null;
         this.isInModal = false;
       }

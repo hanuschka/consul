@@ -1,14 +1,16 @@
 <div class="extended-sidebar-map-wrapper">
   <div class="extended-sidebar-map">
     <% if @current_projekt.vc_map_enabled? %>
-      <%= render Shared::VCMapComponent.new(
-        map_location: @current_projekt.map_location,
-        parent_class: "proposals_sidebar_extended",
-        projekt: @current_projekt,
-        show_admin_shape: true
-      ) %>
-      <% reinitialize_map = "App.VCMap.initializeMap(document.querySelector('#footer-content *[data-vcmap]'));" %>
-      ) %>
+      <%= link_to extended_sidebar_map_page_path(projekt.page.slug), remote: true do %>
+        <%= render Shared::VCMapComponent.new(
+          map_location: @current_projekt.map_location,
+          parent_class: "proposals_sidebar_extended",
+          projekt: @current_projekt,
+          show_admin_shape: true
+        ) %>
+        <% reinitialize_map = "App.VCMap.initializeMap(document.querySelector('#footer-content *[data-vcmap]'));" %>
+        ) %>
+      <% end %>
     <% else %>
       <%= render Shared::MapComponent.new(
         map_location: @current_projekt.map_location,

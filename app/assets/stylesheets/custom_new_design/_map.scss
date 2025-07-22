@@ -123,6 +123,89 @@
   background-color: #f4f4f4;
 }
 
+.mapbox-fullscreen-modal-button {
+  width: 29px;
+  height: 29px;
+  background-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.mapbox-fullscreen-modal-button:hover {
+  background-color: #f4f4f4;
+}
+
+/* Fullscreen Modal Styles */
+.map-modal {
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  height: 100vh;
+  max-height: calc(100vh - 100px);
+  max-width: calc(100vw - 100px);
+  width: 100vw;
+
+  @media screen and (min-width: 1920px) {
+    max-height: calc(100vh - 150px);
+    max-width: calc(100vw - 250px);
+  }
+
+  @media screen and (min-width: 3000px) {
+    max-height: calc(100vh - 350px);
+    max-width: calc(100vw - 550px);
+  }
+
+  .mapboxgl-ctrl-top-right, .leaflet-top.leaflet-right {
+    top: 62px;
+  }
+
+  .map-modal--close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+    font-size: 35px;
+    line-height: 1;
+    z-index: 10;
+    border-radius: 50%;
+
+    span {
+      margin-top: -7px;
+    }
+
+
+    &:hover {
+      background-color: #f2f2f2;
+    }
+
+    &:active {
+      background-color: #f2f2f2;
+    }
+  }
+}
+
 .mapbox-layer-control-dropdown {
   position: absolute;
   top: 100%;
@@ -212,14 +295,10 @@
 }
 
 .extended-sidebar-map {
-  .mapboxgl-ctrl-top-right {
+  .mapboxgl-ctrl-top-right, .leaflet-top.leaflet-right {
     top: 62px;
   }
 }
 
-// .mapbox-layer-control-button {
-//  &:before {
-//    content: 'f5fd';
-//    display: block;
-//  }
-// }
+.map-modal {
+}

@@ -559,7 +559,7 @@
                   var userShape = L.geoJSON(feature, {
                     style: function(geoFeature) {
                       return {
-                        color: geoFeature.properties.color || markerCoordinate.color || feature.properties.color
+                        color: geoFeature.properties.color || markerCoordinate.color || feature.properties.color || App.Utils.getBrandColor()
                       };
                     }
                   });
@@ -581,7 +581,7 @@
             if (Object.keys(markerCoordinate).length) {
               var userShape = L.geoJSON(markerCoordinate, {
                 style: function(feature) {
-                  return { color: markerCoordinate.color };
+                  return { color: (markerCoordinate.color || App.Utils.getBrandColor()) };
                 }
               });
 

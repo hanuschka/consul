@@ -754,7 +754,7 @@
             if (!editable) {
               adminMarker.on("click", function() {
                 if (!this._popup) {
-                  this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+                  this.bindPopup(App.MapPopup.adminShapePopupHtml()).openPopup();
                 }
               });
             }
@@ -791,7 +791,7 @@
               } else {
                 adminShapeLayer.on("click", function() {
                   if (!this._popup) {
-                    this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+                    this.bindPopup(App.MapPopup.adminShapePopupHtml()).openPopup();
                   }
                 });
               }

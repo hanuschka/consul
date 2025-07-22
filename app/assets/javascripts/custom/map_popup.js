@@ -103,4 +103,8 @@ App.MapPopup = {
     return popupHtml;
   },
 
+
+  adminShapePopupHtml() {
+    return `<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>`;
+  }
 }

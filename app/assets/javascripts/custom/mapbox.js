@@ -988,7 +988,7 @@
           maxWidth: '250px'
         })
           .setLngLat(e.lngLat)
-          .setHTML('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>')
+          .setHTML(App.MapPopup.adminShapePopupHtml())
           .addTo(self.map);
       } else {
         // For user shapes, try to find the original coordinates data to get popup info
@@ -1053,7 +1053,7 @@
               offset: [0, -10]
             })
               .setLngLat([this.adminShape.long, this.adminShape.lat])
-              .setPopup(new mapboxgl.Popup().setHTML('Alle markierten Flächen und Pins in rot sind vom System vorgegeben'))
+              .setPopup(new mapboxgl.Popup().setHTML(App.MapPopup.adminShapePopupHtml()))
               .addTo(this.map);
           }
         } else if (Object.keys(this.adminShape).length > 0) {

@@ -28,14 +28,12 @@ module HasEmbeddableShortcodes
             map_location: projekt.map_location,
             parent_class: "shortcode",
             projekt: projekt,
-            show_admin_shape: projekt.map_location.show_admin_shape?
           ).render_in(view_context)
         else
           Shared::MapComponent.new(
             map_location: projekt.map_location,
             parent_class: "shortcode",
             projekt: projekt,
-            show_admin_shape: projekt.map_location.show_admin_shape?
           ).render_in(view_context)
         end
       end

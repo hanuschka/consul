@@ -7,7 +7,6 @@
           map_location: @proposal.map_location || @proposal.projekt_phase.map_location_with_admin_shape,
           parent_class: "proposal",
           projekt_phase: @proposal.projekt_phase,
-          show_admin_shape: @proposal.projekt_phase.map_location.show_admin_shape?
         ) %>
       </div>
     <% else %>
@@ -17,7 +16,6 @@
           map_location: @proposal.map_location || @proposal.projekt_phase.map_location_with_admin_shape,
           parent_class: "proposal",
           projekt_phase: @proposal.projekt_phase,
-          show_admin_shape: @proposal.projekt_phase.map_location.show_admin_shape?
         ) %>
       </div>
     <% end %>

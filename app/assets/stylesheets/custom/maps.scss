@@ -1,5 +1,5 @@
 // Map icon
-.map .map-marker .map-icon::before {
+.map-marker .map-icon::before {
   font-family: "Font Awesome 5 Free";
   font-weight: bold;
   color: $white;
@@ -14,7 +14,7 @@
   margin: 0;
 }
 
-.map .map-marker .map-icon {
+.map-marker .map-icon {
   background: $brand;
 }
 

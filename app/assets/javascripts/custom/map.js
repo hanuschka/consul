@@ -16,35 +16,35 @@
 
     onAdd: function(map) {
       this._map = map;
-      
+
       // Create control container
       var container = L.DomUtil.create('div', 'leaflet-control-fullscreen leaflet-bar leaflet-control');
-      
+
       // Create button
       var button = L.DomUtil.create('a', 'leaflet-control-fullscreen-button', container);
       button.href = '#';
       button.title = 'Vollbild-Modus';
       button.innerHTML = '<i class="fas fa-expand"></i>';
-      
+
       // Prevent map events when clicking button
       L.DomEvent.disableClickPropagation(button);
       L.DomEvent.disableScrollPropagation(button);
-      
+
       // Add click handler
       L.DomEvent.on(button, 'click', this.openModal, this);
-      
+
       return container;
     },
 
     openModal: function(e) {
       L.DomEvent.preventDefault(e);
-      
+
       if (this.isInModal) return;
-      
+
       this.createModalStructure();
       this.initializeModalMap();
       this.showFoundationModal();
-      
+
       this.isInModal = true;
     },
 
@@ -87,36 +87,51 @@
 
     initializeModalMap: function() {
       var modalContainer = document.getElementById(this.modalId + '-map-container');
-      
+
       // Copy all data attributes from original element
       this.copyDataAttributes(this.originalElement, modalContainer);
-      
+
       // Mark as modal map
       modalContainer.setAttribute('data-modal-map', 'true');
-      
+
       // Get current map state
       var center = this._map.getCenter();
       var zoom = this._map.getZoom();
-      
+
       // Override center and zoom with current values
       modalContainer.setAttribute('data-map-center-latitude', center.lat);
       modalContainer.setAttribute('data-map-center-longitude', center.lng);
       modalContainer.setAttribute('data-map-zoom', zoom);
-      
+
       // Set unique ID for modal map
       modalContainer.id = this.modalId + '-map';
-      
+
       // Store reference for cleanup
       this.modalMapElement = modalContainer;
-      
-      // Initialize new Leaflet map in modal after a short delay
+
+      // Initialize new Leaflet map in modal
+      console.log('Initializing modal map with container:', modalContainer);
+      console.log('Container data:', $(modalContainer).data());
+
+      App.Map.initializeMap(modalContainer);
+
+      // Find the newly created map and sync view with proper timing
       setTimeout(() => {
-        App.Map.initializeMap(modalContainer);
-        
-        // Find the newly created map and sync view
         var modalMap = App.Map.maps[App.Map.maps.length - 1];
         if (modalMap) {
+          console.log('Modal map created successfully:', modalMap);
+
+          // Ensure map container is properly sized
+          modalMap.invalidateSize();
+          // Set the view to match original map
           modalMap.setView(center, zoom);
+          // Force another resize after view is set
+          setTimeout(() => {
+            modalMap.invalidateSize(true);
+            console.log('Modal map final resize completed');
+          }, 50);
+        } else {
+          console.error('Failed to create modal map');
         }
       }, 100);
     },
@@ -124,13 +139,22 @@
     copyDataAttributes: function(sourceElement, targetElement) {
       // Copy all data attributes using jQuery
       var data = $(sourceElement).data();
-      
+
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
+          var value = data[key];
+
+          // Handle complex data structures (like process-coordinates)
+          if (typeof value === 'object' && value !== null) {
+            value = JSON.stringify(value);
+          }
+
           $(targetElement).data(key, data[key]);
-          targetElement.setAttribute('data-' + this.camelToKebab(key), data[key]);
+          targetElement.setAttribute('data-' + this.camelToKebab(key), value);
         }
       }
+
+      console.log('Copied data attributes to modal map:', $(targetElement).data());
     },
 
     camelToKebab: function(str) {
@@ -144,16 +168,16 @@
 
     closeModal: function() {
       if (!this.isInModal) return;
-      
+
       console.log('Closing Leaflet modal and destroying map...');
-      
+
       try {
         this.isInModal = false;
-        
+
         // Find and destroy the modal map
         if (this.modalMapElement) {
           var modalMapId = this.modalMapElement.id;
-          
+
           // Find the map instance in App.Map.maps array
           var mapIndex = -1;
           App.Map.maps.forEach((map, index) => {
@@ -162,7 +186,7 @@
               mapIndex = index;
             }
           });
-          
+
           // Remove and destroy the map
           if (mapIndex >= 0) {
             var modalMap = App.Map.maps[mapIndex];
@@ -171,16 +195,16 @@
             App.Map.maps.splice(mapIndex, 1);
             console.log('Modal map destroyed');
           }
-          
+
           this.modalMapElement = null;
         }
-        
+
         // Clean up escape handler
         if (this.escHandler) {
           document.removeEventListener('keydown', this.escHandler);
           this.escHandler = null;
         }
-        
+
         // Remove modal HTML
         setTimeout(() => {
           var modalElement = document.getElementById(this.modalId);
@@ -189,7 +213,7 @@
             console.log('Modal HTML removed');
           }
         }, 50);
-        
+
       } catch (e) {
         console.error('Error closing Leaflet modal:', e);
         this.isInModal = false;

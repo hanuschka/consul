@@ -3,9 +3,18 @@
     display: flex;
     justify-content: left;
 
+    @media (max-width: 640px) {
+      flex-direction: column;
+      align-items: center;
+    }
+
     .projekt-arguments-separator {
       border-left: 1px solid #e5e5e5;
       margin: 0 30px;
+
+      @media (max-width: 640px) {
+        display: none;
+      }
     }
 
     .projekt-arguments-title {
@@ -13,12 +22,20 @@
       font-weight: bold;
     }
 
+    .projekt-arguments.--pro {
+      .projekt-arguments-title {
+        @media (min-width: 640px) {
+          text-align: right;
+        }
+      }
+    }
+
     .projekt-argument {
       border: 1px solid #e5e5e5;
       border-radius: 8px;
       background-color: #fff;
       overflow: hidden;
-      width: 437px;
+      max-width: 437px;
       margin-bottom: 24px;
 
       > * {

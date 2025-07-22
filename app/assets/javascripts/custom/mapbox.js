@@ -1870,10 +1870,8 @@
     }
 
     onRemove() {
-      // Clean up modal if it exists
       this.closeModal();
 
-      // Clean up escape handler if it exists
       if (this.escHandler) {
         document.removeEventListener('keydown', this.escHandler);
         this.escHandler = null;
@@ -1909,60 +1907,23 @@
         </div>
       `;
 
-      // Add modal to body
       document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-      // Set up multiple close event listeners to ensure map destruction
       var modal = document.getElementById(this.modalId);
-      var self = this;
 
-      // Foundation reveal close event (for programmatic closes)
-      modal.addEventListener('closed.zf.reveal', () => {
-        console.log("🔴 Foundation closed.zf.reveal fired");
-        if (self.isInModal) {
-          self.closeModal();
-        }
+      $(modal).on('closed.zf.reveal', () => {
+        this.closeModal();
       });
 
-      // Manual overlay click handler since map captures clicks
-      modal.addEventListener('click', (e) => {
-        console.log('🟠 Modal clicked, target:', e.target.className);
-        // Check if click was on the modal backdrop (not on content)
-        if (e.target === modal || e.target.classList.contains('reveal-overlay')) {
-          console.log('🟠 Overlay clicked - closing modal...');
-          e.preventDefault();
-          e.stopPropagation();
-          self.closeModal();
-        }
-      });
-
-      // Add click handler to the actual Foundation overlay
-      setTimeout(() => {
-        var overlay = document.querySelector('.reveal-overlay');
-        if (overlay) {
-          overlay.addEventListener('click', (e) => {
-            console.log('🟠 Foundation overlay clicked');
-            if (self.isInModal) {
-              self.closeModal();
-            }
-          });
-        }
-      }, 100);
-
-      // Close button click handler
       var closeButton = modal.querySelector('.map-modal--close-button');
       if (closeButton) {
-        closeButton.addEventListener('click', () => {
-          console.log('🟢 Close button clicked');
-          self.closeModal();
-        });
+        closeButton.addEventListener('click', () => { this.closeModal()});
       }
 
       // ESC key handler
       var escHandler = function(e) {
-        if (e.key === 'Escape' && self.isInModal) {
-          console.log('🔵 ESC key pressed');
-          self.closeModal();
+        if (e.key === 'Escape' && this.isInModal) {
+          this.closeModal();
           document.removeEventListener('keydown', escHandler);
         }
       };
@@ -2042,7 +2003,6 @@
           }
         }
 
-        // Clean up escape key handler
         if (this.escHandler) {
           document.removeEventListener('keydown', this.escHandler);
           this.escHandler = null;
@@ -2059,7 +2019,6 @@
 
       } catch (e) {
         console.error('Error closing modal:', e);
-        // Force cleanup even if there were errors
         this.modalMapInstance = null;
         this.isInModal = false;
       }

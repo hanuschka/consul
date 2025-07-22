@@ -226,10 +226,17 @@
         }), 'top-left'
       );
 
+      // Only add fullscreen modal control if not already in a modal
+      if (!this.element.dataset.modalMap) {
+        this.map.addControl(new FullscreenModalControl(this), 'top-right');
+      }
+
       if (this.editable && typeof MapboxDraw !== 'undefined') {
         this.initializePolygonEditor();
       }
     }
+
+
 
     addMapInstructionOverlay() {
       if (this.element.offsetWidth <= 780) {
@@ -1626,141 +1633,15 @@
       }
     }
 
-    // Separated destroy logic for better control
     performDestroy() {
-      var self = this;
-
       try {
+        this.map.off();
         this.map.remove();
-
-        // TODO try this
-        // return
-        //
-        // Remove all event listeners first
-        // this.map.off();
-
-        // Clean up instruction overlay
-        if (this.instructionOverlay) {
-          try {
-            if (this.instructionOverlay.parentNode) {
-              this.instructionOverlay.parentNode.removeChild(this.instructionOverlay);
-            }
-          } catch (e) {
-            console.warn('Error removing instruction overlay:', e);
-          }
-          this.instructionOverlay = null;
-        }
-
-
-
-        // Clear overlay timeout
-        if (this.overlayTimeout) {
-          clearTimeout(this.overlayTimeout);
-          this.overlayTimeout = null;
-        }
-
-
-        // Clean up custom delete control
-        if (this.customDeleteControl) {
-          try {
-            this.map.removeControl(this.customDeleteControl);
-          } catch (e) {
-            console.warn('Error removing custom delete control:', e);
-          }
-          this.customDeleteControl = null;
-        }
-
-        if (this.editableMarker) {
-          try {
-            this.editableMarker.remove();
-          } catch (e) {
-            console.warn('Error removing editable marker:', e);
-          }
-          this.editableMarker = null;
-        }
-
-        // Clean up any popups
-        var popups = document.querySelectorAll('.mapboxgl-popup');
-        popups.forEach(function(popup) {
-          if (popup.parentNode) {
-            popup.parentNode.removeChild(popup);
-          }
-        });
-
-        // Remove sources and layers if they exist
-        // this.cleanupMapSources();
-
-        // Wait a bit before removing the map to allow cleanup
-        setTimeout(function() {
-          if (self.map) {
-            try {
-              self.map.remove();
-            } catch (e) {
-              console.warn('Error removing map:', e);
-            }
-            self.map = null;
-            self.mapLoaded = false;
-          }
-        }, 100);
-
       } catch (e) {
         console.error('Error during map destruction:', e);
         this.forceCleanup();
       }
     }
-
-    // Clean up map sources and layers
-    // cleanupMapSources() {
-    //   if (!this.map || !this.mapLoaded) return;
-
-    //   try {
-    //     // Remove known layers first
-    //     var layersToRemove = ['custom-marker', 'custom-marker-icon', 'clusters', 'cluster-count'];
-    //     layersToRemove.forEach(function(layerId) {
-    //       if (this.map.getLayer(layerId)) {
-    //         this.map.removeLayer(layerId);
-    //       }
-    //     }.bind(this));
-
-    //     // Remove custom layers (WMS and tile layers)
-    //     Object.values(this.baseLayers).forEach(layer => {
-    //       if (this.map.getLayer(layer.layerId)) {
-    //         this.map.removeLayer(layer.layerId);
-    //       }
-    //     });
-    //     Object.values(this.overlayLayers).forEach(layer => {
-    //       if (this.map.getLayer(layer.layerId)) {
-    //         this.map.removeLayer(layer.layerId);
-    //       }
-    //     });
-
-    //     // Remove known sources
-    //     var sources = ['marker-coordinates', 'admin-shape'];
-    //     sources.forEach(function(sourceId) {
-    //       if (this.map.getSource(sourceId)) {
-    //         this.map.removeSource(sourceId);
-    //       }
-    //     }.bind(this));
-
-    //     // Remove custom sources (WMS and tile sources)
-    //     Object.values(this.baseLayers).forEach(layer => {
-    //       if (this.map.getSource(layer.sourceId)) {
-    //         this.map.removeSource(layer.sourceId);
-    //       }
-    //     });
-    //     Object.values(this.overlayLayers).forEach(layer => {
-    //       if (this.map.getSource(layer.sourceId)) {
-    //         this.map.removeSource(layer.sourceId);
-    //       }
-    //     });
-
-    //     // Clear layer references
-    //     this.baseLayers = {};
-    //     this.overlayLayers = {};
-    //   } catch (e) {
-    //     console.warn('Error cleaning up map sources:', e);
-    //   }
-    // };
 
    forceCleanup() {
       this.map = null;
@@ -1961,8 +1842,207 @@
     }
   }
 
+  // Custom control for fullscreen modal functionality
+  class FullscreenModalControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+      this.modalId = 'mapbox-fullscreen-modal-' + Date.now();
+      this.modalMapInstance = null;
+      this.escHandler = null;
+      this.isInModal = false;
+    }
 
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
 
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-fullscreen-modal-button';
+      button.innerHTML = '<i class="fas fa-expand"></i>';
+      button.title = 'Vollbild-Modus';
+
+      // Add click event listener
+      button.addEventListener('click', () => {
+        this.openModal();
+      });
+
+      this._container.appendChild(button);
+      return this._container;
+    }
+
+    onRemove() {
+      // Clean up modal if it exists
+      this.closeModal();
+
+      // Clean up escape handler if it exists
+      if (this.escHandler) {
+        document.removeEventListener('keydown', this.escHandler);
+        this.escHandler = null;
+      }
+
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+
+    openModal() {
+      if (this.isInModal) return;
+
+      // Create modal HTML structure
+      this.createModalStructure();
+
+      // Initialize new map in modal container
+      this.initializeModalMap();
+
+      // Open Foundation reveal modal
+      this.showFoundationModal();
+
+      this.isInModal = true;
+    }
+
+    createModalStructure() {
+      // Create modal container
+      var modalHtml = `
+        <div class="reveal map-modal" id="${this.modalId}" data-reveal data-close-on-click="false" data-close-on-esc="true">
+          <button class="map-modal--close-button" data-close aria-label="Modal schließen" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div id="${this.modalId}-map-container" style="width: 100%; height: 100%;"></div>
+        </div>
+      `;
+
+      // Add modal to body
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      // Set up multiple close event listeners to ensure map destruction
+      var modal = document.getElementById(this.modalId);
+      var self = this;
+
+      // Foundation reveal close event
+      modal.addEventListener('closed.zf.reveal', () => {
+        self.closeModal();
+      });
+
+      // Direct close button click
+      var closeButton = modal.querySelector('.map-modal--close-button');
+      if (closeButton) {
+        closeButton.addEventListener('click', () => {
+          // Small delay to allow Foundation to handle the close first
+          setTimeout(() => {
+            if (self.isInModal) {
+              self.closeModal();
+            }
+          }, 100);
+        });
+      }
+
+      // ESC key handler
+      var escHandler = function(e) {
+        if (e.key === 'Escape' && self.isInModal) {
+          self.closeModal();
+          document.removeEventListener('keydown', escHandler);
+        }
+      };
+      document.addEventListener('keydown', escHandler);
+
+      // Store escape handler reference for cleanup
+      this.escHandler = escHandler;
+    }
+
+    initializeModalMap() {
+      var modalContainer = document.getElementById(this.modalId + '-map-container');
+
+      // Copy all data attributes from original map element
+      this.copyDataAttributes(this.mapboxMapInstance.element, modalContainer);
+
+      // Mark this as a modal map to prevent adding fullscreen control
+      modalContainer.setAttribute('data-modal-map', 'true');
+
+      // Get current map state from original map
+      var center = this._map.getCenter();
+      var zoom = this._map.getZoom();
+      var bearing = this._map.getBearing();
+      var pitch = this._map.getPitch();
+
+      // Override center and zoom with current values
+      modalContainer.setAttribute('data-map-center-latitude', center.lat);
+      modalContainer.setAttribute('data-map-center-longitude', center.lng);
+      modalContainer.setAttribute('data-map-zoom', zoom);
+
+      // Wait for modal to be fully rendered before initializing map
+      setTimeout(() => {
+        // Initialize new MapboxMap instance in modal
+        this.modalMapInstance = new MapboxMap(modalContainer);
+
+        // Apply current view state after map loads
+        this.modalMapInstance.map.on('load', () => {
+          this.modalMapInstance.map.setCenter(center);
+          this.modalMapInstance.map.setZoom(zoom);
+          this.modalMapInstance.map.setBearing(bearing);
+          this.modalMapInstance.map.setPitch(pitch);
+        });
+      }, 100);
+    }
+
+    copyDataAttributes(sourceElement, targetElement) {
+      // Get all data attributes from source element
+      var dataset = sourceElement.dataset;
+
+      // Copy each data attribute to target element
+      for (var key in dataset) {
+        if (dataset.hasOwnProperty(key)) {
+          targetElement.setAttribute('data-' + this.camelToKebab(key), dataset[key]);
+        }
+      }
+    }
+
+    camelToKebab(str) {
+      return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+    }
+
+    showFoundationModal() {
+      // Initialize and open Foundation reveal modal
+      var modal = new Foundation.Reveal($('#' + this.modalId));
+      modal.open();
+    }
+
+    closeModal() {
+      if (!this.isInModal) return;
+
+      try {
+        this.isInModal = false;
+
+        if (this.modalMapInstance) {
+          if (this.modalMapInstance.map) {
+            this.modalMapInstance.map.off();
+            this.modalMapInstance.map.remove();
+          }
+        }
+
+        // Clean up escape key handler
+        if (this.escHandler) {
+          document.removeEventListener('keydown', this.escHandler);
+          this.escHandler = null;
+        }
+
+        // Clean up modal HTML with delay to allow any pending operations
+        setTimeout(() => {
+          var modalElement = document.getElementById(this.modalId);
+          if (modalElement) {
+            modalElement.remove();
+            console.log('Modal HTML removed');
+          }
+        }, 50);
+
+      } catch (e) {
+        console.error('Error closing modal:', e);
+        // Force cleanup even if there were errors
+        this.modalMapInstance = null;
+        this.isInModal = false;
+      }
+    }
+  }
 
   // Keep the existing App.Mapbox object
   App.Mapbox = {

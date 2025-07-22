@@ -318,18 +318,22 @@
     border-radius: 2px;
     cursor: pointer;
     font-size: 14px;
-    
+
     &:hover {
       background-color: #f4f4f4;
       color: black;
     }
-    
+
     &:focus {
       outline: none;
     }
-    
+
     i {
       font-size: 14px;
     }
   }
+}
+
+.leaflet-control-layers {
+  display: block;
 }

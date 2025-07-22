@@ -384,10 +384,72 @@
 
         return id
       }
-      /* Leaflet basic plugins end */
 
+      function addAdminShapesToggleToLayerControl(layerControl, map) {
+          // Wait for the layer control to be rendered
+          setTimeout(function() {
+            var layerControlContainer = layerControl.getContainer();
+            if (layerControlContainer) {
+              var form = layerControlContainer.querySelector('.leaflet-control-layers-list');
+              if (form) {
+                var adminLabel = document.createElement('label');
 
-      /* Function definitions start */
+                var adminCheckbox = document.createElement('input');
+                adminCheckbox.type = 'checkbox';
+                adminCheckbox.checked = true;
+                adminCheckbox.className = 'admin-shapes-toggle';
+                adminCheckbox.style.marginRight = '5px';
+
+                var adminText = document.createElement('span');
+                adminText.textContent = 'Verwaltungseinträge';
+
+                adminLabel.appendChild(adminCheckbox);
+                adminLabel.appendChild(adminText);
+
+                form.insertBefore(adminLabel, form.firstChild);
+
+                adminCheckbox.addEventListener('change', function() {
+                  toggleAdminShapes(map, this.checked);
+                });
+              }
+            }
+          }, 100);
+        }
+
+      // function to toggle admin shapes visibility
+      function toggleAdminShapes(map, visible) {
+        map.eachLayer(function(layer) {
+          // Check for admin shapes (marked with adminShape property)
+          if (layer.pm && layer.pm.options && layer.pm.options.adminShape) {
+            if (visible) {
+              // Show admin shapes
+              if (layer.setStyle) {
+                layer.setStyle({ opacity: 1, fillOpacity: layer.options.fillOpacity || 0.2 });
+              }
+              if (layer.setOpacity) {
+                layer.setOpacity(1);
+              }
+            } else {
+              // Hide admin shapes
+              if (layer.setStyle) {
+                layer.setStyle({ opacity: 0, fillOpacity: 0 });
+              }
+              if (layer.setOpacity) {
+                layer.setOpacity(0);
+              }
+            }
+          }
+
+          // Also handle admin markers
+          if (layer.options && layer.options.adminMarker) {
+            var element = layer.getElement ? layer.getElement() : null;
+            if (element) {
+              element.style.display = visible ? 'block' : 'none';
+            }
+          }
+        });
+      }
+
       // function to create a marker
 
       function getMarkerIcon(color, iconClass) {
@@ -660,10 +722,16 @@
       }
 
       // adds layer control to map if there are more than one base and/or overlay layers
+      var layerControl = null;
       if ( Object.keys(baseLayers).length > 1 && Object.keys(overlayLayers).length > 0 ) {
-        L.control.layers(baseLayers, overlayLayers).addTo(map);
+        layerControl = L.control.layers(baseLayers, overlayLayers).addTo(map);
       } else if ( Object.keys(overlayLayers).length > 0 ) {
-        L.control.layers({}, overlayLayers).addTo(map);
+        layerControl = L.control.layers({}, overlayLayers).addTo(map);
+      }
+
+      // Add admin shapes toggle to layer control if admin shapes exist
+      if (layerControl && showAdminShape) {
+        addAdminShapesToggleToLayerControl(layerControl, map);
       }
 
       // render markers or shapes created by admin, if available
@@ -676,19 +744,20 @@
             if ( adminEditor ) {
               marker = createMarker(singleAdminShape.lat, singleAdminShape.long, adminShapesColor, singleAdminShape.fa_icon_class || 'circle');
             } else {
-              var markerLatLng = new L.LatLng(singleAdminShape.lat, singleAdminShape.long);
-              var adminMarker = L.marker(markerLatLng, {
-                icon: getMarkerIcon(adminShapesColor, singleAdminShape.fa_icon_class || 'circle')
-              });
-              adminMarker.pm.setOptions({ adminShape: true })
+                          var markerLatLng = new L.LatLng(singleAdminShape.lat, singleAdminShape.long);
+            var adminMarker = L.marker(markerLatLng, {
+              icon: getMarkerIcon(adminShapesColor, singleAdminShape.fa_icon_class || 'circle'),
+              adminMarker: true
+            });
+            adminMarker.pm.setOptions({ adminShape: true })
 
-              adminMarker.on("click", function() {
-                if (!this._popup) {
-                  this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
-                }
-              });
+            adminMarker.on("click", function() {
+              if (!this._popup) {
+                this.bindPopup('Alle markierten Flächen und Pins in rot sind vom System vorgegeben').openPopup();
+              }
+            });
 
-              adminMarker.addTo(map);
+            adminMarker.addTo(map);
             }
           } else if (Object.keys(singleAdminShape).length > 0) {
             // Handle FeatureCollection with multiple features

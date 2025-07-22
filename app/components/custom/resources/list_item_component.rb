@@ -92,6 +92,10 @@ class Resources::ListItemComponent < ApplicationComponent
   end
 
   def show_image?
-    !@resource.respond_to?(:projekt_phase) || @resource.projekt_phase.feature?("form.allow_attached_image")
+    if @resource.is_a?(Debate) || @resource.is_a?(Proposal) || @resource.is_a?(Budget::Investment)
+      @resource.projekt_phase.feature?("form.allow_attached_image")
+    else
+      @resource.respond_to?(:image)
+    end
   end
 end

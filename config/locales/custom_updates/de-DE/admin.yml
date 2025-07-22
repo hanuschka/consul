@@ -829,7 +829,7 @@ de:
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           argument_pro: Pro
           argument_cons: Contra
-          button: Stimme erlstellen
+          button: Stimme erstellen
           argument_image: Bild
         projekt_events:
           page_title: Veranstaltungen
@@ -958,6 +958,7 @@ de:
           kind: Art
           visible: Sichtbarkeit
           email: Email
+          remove_email: E-Mail entfernen
           remove_user: Profil entfernen
       individual_group_values:
         show:

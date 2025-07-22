@@ -10,7 +10,8 @@ class Shared::MapBaseComponent < ApplicationComponent
     process_coordinates: nil,
     projekt: nil,
     projekt_phase: nil,
-    show_admin_shape: false
+    show_admin_shape: true,
+    saturated_admin_shape: false
   )
     @mappable = mappable
     @map_location = map_location || MapLocation.new
@@ -20,6 +21,7 @@ class Shared::MapBaseComponent < ApplicationComponent
     @projekt = projekt
     @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
+    @saturated_admin_shape = saturated_admin_shape
   end
 
   private
@@ -34,6 +36,7 @@ class Shared::MapBaseComponent < ApplicationComponent
 
         show_admin_shape: @show_admin_shape,
         admin_shape: admin_shape,
+        saturated_admin_shape: @saturated_admin_shape,
 
         parent_class: @parent_class,
         process_coordinates: @process_coordinates,
@@ -48,10 +51,16 @@ class Shared::MapBaseComponent < ApplicationComponent
 
     def get_process_coordinates
       if @mappable.present? && @mappable.persisted? && @mappable.map_location.present?
-        [
-          @mappable.map_location.shape_json_data.presence ||
-            @mappable.map_location.json_data
-        ]
+        if admin_editor?
+          [
+            @mappable.map_location.shape_json_data
+          ]
+        else
+          [
+            @mappable.map_location.shape_json_data.presence ||
+              @mappable.map_location.json_data
+          ]
+        end
       else
         []
       end
@@ -59,9 +68,9 @@ class Shared::MapBaseComponent < ApplicationComponent
 
     def admin_shape
       if @projekt_phase.present?
-        @projekt_phase.map_location&.shape_json_data.presence || @projekt_phase.map_location&.json_data&.to_json
+        @projekt_phase.map_location&.shape_json_data.presence
       elsif @projekt.present?
-        @projekt.map_location.shape_json_data.presence || @projekt.map_location.json_data.to_json
+        @projekt.map_location.shape_json_data.presence
       end
     end
 

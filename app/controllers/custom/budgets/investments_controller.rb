@@ -59,7 +59,7 @@ module Budgets
         if params[:budget_investment][:map_location_attributes].present?
           location = params[:budget_investment][:map_location_attributes]
 
-          if location["latitude"].blank? && location["longitude"].blank?
+          if location["latitude"].blank? && location["longitude"].blank? && location["shape"].blank?
             location["_destroy"] = "1"
           end
         end

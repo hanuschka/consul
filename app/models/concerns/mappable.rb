@@ -8,7 +8,10 @@ module Mappable
     # custom accepts_nested_attributes_for
     accepts_nested_attributes_for :map_location,
       allow_destroy: true,
-      reject_if: proc { |attributes| attributes["latitude"].blank? && attributes["longitude"].blank? }
+      reject_if: proc { |attributes|
+        attributes["latitude"].blank? && attributes["longitude"].blank? &&
+        attributes["shape"].blank?
+      }
   end
 
   def map_layers_for_render

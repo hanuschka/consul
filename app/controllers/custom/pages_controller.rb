@@ -332,7 +332,7 @@ class PagesController < ApplicationController
 
       @investments = @resources.send(@current_filter)
       @investment_ids = @investments.ids
-      @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+      @investment_coordinates = @investments.map(&:map_location).compact.map(&:coordinate_json_data)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 

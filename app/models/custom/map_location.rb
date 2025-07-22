@@ -27,6 +27,10 @@ class MapLocation < ApplicationRecord
     only: %i[shape latitude longitude],
     if: :audit_changes?
 
+  def coordinate_json_data
+    shape_json_data.presence || json_data
+  end
+
   def json_data
     {
       resource_type: resource_type,
@@ -127,13 +131,13 @@ class MapLocation < ApplicationRecord
     elsif proposal.present? && proposal.sentiment.present?
       proposal.sentiment.color
     elsif investment.present?
-      investment.projekt&.color || "#004a83"
+      investment.projekt&.color || nil
     elsif deficiency_report.present?
       deficiency_report.category.color
     elsif projekt.present? || projekt_phase.present?
       "#ff0000"
     else
-      "#004a83"
+      nil
     end
   end
 

@@ -54,13 +54,16 @@
         this.mapLoaded = true;
 
         // Render base and overlay layers first for proper layer ordering
-        this.renderLayers();
+        this.renderWmsLayers();
         this.addLayerControl();
         this.addControls();
 
         this.renderAdminShape();
+
+        // User shapes
         this.renderMarkerCoordinates();
         this.renderResourceShapes();
+
         this.addMapInstructionOverlay();
       });
 
@@ -287,13 +290,12 @@
     }
 
     getDrawStyles() {
-      const blue = '#3bb2d0';
+      // const blue = '#3bb2d0';
       const orange = '#fbb03b';
       const brandColor =  App.Utils.getBrandColor();
       const white = '#fff';
       var circleColor = this.markerCategoryColor || (this.adminEditor ? this.adminShapesColor : '#ff0000');
       const shapesColor = this.adminEditor ? this.adminShapesColor : brandColor;
-      console.log({shapesColor, circleColor})
 
       return [
         // // Bigger points
@@ -480,13 +482,13 @@
 
       this.map.addControl(this.draw);
       this.addCustomDeleteButton();
-      this.loadExistingShape();
+      this.loadFormInputShape();
 
       this.setupDrawEventListeners();
       this.setupDrawCursorEffects();
     };
 
-    loadExistingShape() {
+    loadFormInputShape() {
       // Try to load existing shape data from the shape input field
       if (this.shapeInputSelector) {
         var shapeData = $(this.shapeInputSelector).val();
@@ -1175,7 +1177,7 @@
           ['!', ['has', 'point_count']]
         ],
         paint: {
-          'circle-color': ['coalesce', ['get', 'color'], '#ff0000'],
+          'circle-color': ['coalesce', ['get', 'color'], App.Utils.getBrandColor()],
           'circle-radius': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
@@ -1245,24 +1247,19 @@
       }
     }
 
-    renderLayers() {
+    renderWmsLayers() {
       if (this.layersData && typeof this.layersData !== "undefined") {
         try {
           var layersData = typeof this.layersData === 'string' ? JSON.parse(this.layersData) : this.layersData;
 
           if (Array.isArray(layersData) && layersData.length > 0) {
-            layersData.forEach((layerData, index) => this.createLayer(layerData, index));
-
-            // this.ensureBaseLayerVisibility();
-            // this.showDefaultOverlayLayers();
-          } else {
-            console.log('No valid layers data found');
+            layersData.forEach((layerData, index) =>  {
+              this.createWmsLayers(layerData, index)
+            });
           }
         } catch (error) {
           console.error('Error parsing layers data:', error, this.layersData);
         }
-      } else {
-        console.log('No layers data available');
       }
     }
 
@@ -1304,11 +1301,10 @@
         this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
       } else {
         console.error('Layer not found:', layerId);
-        console.log('Available layers:', this.map.getStyle().layers.map(l => l.id));
       }
     }
 
-    createLayer(layerData, index) {
+    createWmsLayers(layerData, index) {
       var sourceId = `layer-source-${index}`;
       var layerId = `layer-${index}`;
 
@@ -1487,13 +1483,15 @@
         data: coordinates
       });
 
+      const shapeColor = coordinates.color || App.Utils.getBrandColor();
+
       // Add fill layer
       this.map.addLayer({
         id: layerId,
         type: 'fill',
         source: sourceId,
         paint: {
-          'fill-color': coordinates.color,
+          'fill-color': shapeColor,
           'fill-opacity': 0.2
         }
       });
@@ -1504,7 +1502,7 @@
         type: 'line',
         source: sourceId,
         paint: {
-          'line-color': coordinates.color,
+          'line-color': shapeColor,
           'line-width': 2,
           'line-opacity': 0.8
         }

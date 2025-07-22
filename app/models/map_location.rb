@@ -1,10 +1,12 @@
 class MapLocation < ApplicationRecord
   belongs_to :proposal, touch: true
   belongs_to :investment, class_name: "Budget::Investment", touch: true
-  validates :longitude, :latitude, :zoom, presence: true, numericality: true
+  validates :longitude, :latitude, :zoom, presence: true, numericality: true, unless: -> {
+    shape.present?
+  }
 
   def available?
-    latitude.present? && longitude.present? && zoom.present?
+    latitude.present? && longitude.present? && zoom.present? || shape.present?
   end
 
   def json_data

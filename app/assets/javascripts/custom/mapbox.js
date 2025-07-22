@@ -1308,6 +1308,40 @@
       }
     }
 
+    toggleAdminShapeVisibility(visible) {
+      if (!this.mapLoaded) {
+        this.map.once('idle', () => {
+          this.toggleAdminShapeVisibility(visible);
+        });
+        return;
+      }
+
+      // Toggle admin marker visibility by controlling the element display
+      if (this.adminMarker) {
+        var markerElement = this.adminMarker.getElement();
+        if (markerElement) {
+          markerElement.style.display = visible ? 'block' : 'none';
+        }
+      }
+
+      // Toggle admin shape layers visibility
+      var adminLayerIds = [
+        'admin-shape-layer',
+        'admin-shape-border',
+        'admin-shape-multipolygon-layer',
+        'admin-shape-multipolygon-border',
+        'admin-shape-points'
+      ];
+
+      adminLayerIds.forEach(layerId => {
+        if (this.map.getLayer(layerId)) {
+          this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+        }
+      });
+
+      console.log('Admin shapes visibility toggled:', visible);
+    }
+
     createWmsLayers(layerData, index) {
       var sourceId = `layer-source-${index}`;
       var layerId = `layer-${index}`;
@@ -1737,6 +1771,10 @@
 
       var poiLabel = this.createPoiCheckbox();
       dropdownList.appendChild(poiLabel);
+
+      var adminShapeLabel = this.createAdminShapeCheckbox();
+      dropdownList.appendChild(adminShapeLabel);
+
       dropdown.appendChild(dropdownList);
 
       // Add base layers section if any
@@ -1828,6 +1866,28 @@
       // Handle POI labels visibility changes
       input.addEventListener('change', () => {
         this.mapboxMapInstance.togglePoiLabels(input.checked);
+      });
+
+      return label;
+    }
+
+    createAdminShapeCheckbox() {
+      var label = document.createElement('label');
+      label.className = 'mapbox-layer-checkbox-label';
+
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.checked = true; // Default to on (show admin shapes by default)
+
+      var span = document.createElement('span');
+      span.textContent = 'Verwaltungseinträge';
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      // Handle admin shapes visibility changes
+      input.addEventListener('change', () => {
+        this.mapboxMapInstance.toggleAdminShapeVisibility(input.checked);
       });
 
       return label;

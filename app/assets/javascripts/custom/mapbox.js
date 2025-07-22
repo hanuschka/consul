@@ -205,8 +205,8 @@
     }
 
     addControls() {
-      // Always add fullscreen control on all screen sizes (if not in modal)
-      if (!this.element.dataset.modalMap) {
+      // Always add fullscreen control on all screen sizes (if not in modal and not editable)
+      if (!this.element.dataset.modalMap && !this.editable) {
         this.map.addControl(new FullscreenModalControl(this), 'top-right');
       }
 
@@ -1689,7 +1689,6 @@
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
-  // Custom control for delete all functionality
   class CustomDeleteControl {
     constructor(mapboxMapInstance) {
       this.mapboxMapInstance = mapboxMapInstance;

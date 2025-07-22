@@ -304,8 +304,8 @@
       });
       map.addControl(zoomControl);
 
-      // Add fullscreen modal control if not already in modal
-      if (!$(element).data('modal-map')) {
+      // Add fullscreen modal control if not already in modal and not editable
+      if (!$(element).data('modal-map') && !editable) {
         var fullscreenControl = new L.Control.FullscreenModal({ element: element });
         map.addControl(fullscreenControl);
       }

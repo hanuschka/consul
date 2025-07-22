@@ -1904,7 +1904,7 @@
     createModalStructure() {
       // Create modal container
       var modalHtml = `
-        <div class="reveal map-modal" id="${this.modalId}" data-reveal data-close-on-click="false" data-close-on-esc="true">
+        <div class="reveal map-modal" id="${this.modalId}" data-reveal data-close-on-click="true" data-close-on-esc="true">
           <button class="map-modal--close-button" data-close aria-label="Modal schließen" type="button">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -1921,14 +1921,18 @@
 
       // Foundation reveal close event
       modal.addEventListener('closed.zf.reveal', () => {
-        self.closeModal();
+        // self.closeModal();
+          setTimeout(() => {
+            if (self.isInModal) {
+              self.closeModal();
+            }
+          }, 100);
       });
 
       // Direct close button click
       var closeButton = modal.querySelector('.map-modal--close-button');
       if (closeButton) {
         closeButton.addEventListener('click', () => {
-          // Small delay to allow Foundation to handle the close first
           setTimeout(() => {
             if (self.isInModal) {
               self.closeModal();

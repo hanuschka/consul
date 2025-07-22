@@ -1316,15 +1316,6 @@
         return;
       }
 
-      // Toggle admin marker visibility by controlling the element display
-      if (this.adminMarker) {
-        var markerElement = this.adminMarker.getElement();
-        if (markerElement) {
-          markerElement.style.display = visible ? 'block' : 'none';
-        }
-      }
-
-      // Toggle admin shape layers visibility
       var adminLayerIds = [
         'admin-shape-layer',
         'admin-shape-border',
@@ -1338,8 +1329,6 @@
           this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
         }
       });
-
-      console.log('Admin shapes visibility toggled:', visible);
     }
 
     createWmsLayers(layerData, index) {

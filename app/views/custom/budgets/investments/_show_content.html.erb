@@ -111,6 +111,7 @@
                 map_location: @investment.map_location || @investment.projekt_phase.map_location_with_admin_shape,
                 parent_class: "investment",
                 projekt_phase: @investment.projekt_phase,
+                dont_open_marker_popup: true
               ) %>
             </div>
           <% end %>

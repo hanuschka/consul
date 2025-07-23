@@ -27,6 +27,7 @@
       this.markerImages = $element.data("mapbox-marker-images")
       this.styleId = $element.data("mapbox-style-id")
       this.layersData = $element.data('map-layers')
+      this.dontOpenMarkerPopup = $element.data('dont-open-marker-popup')
 
       this.map = null;
       this.baseLayers = {}; // Store base layer sources
@@ -927,12 +928,16 @@
 
       // Handle popup based on priority: markers > user shapes > admin shapes
       if (markerFeatures.length > 0) {
-        self.openMarkerPopup({
-          features: markerFeatures,
-          lngLat: e.lngLat
-        });
+        if (!this.dontOpenMarkerPopup) {
+          self.openMarkerPopup({
+            features: markerFeatures,
+            lngLat: e.lngLat
+          });
+        }
       } else if (userShapeFeatures.length > 0) {
-        self.openShapePopup(e, 'user');
+        if (!this.dontOpenMarkerPopup) {
+          self.openShapePopup(e, 'user');
+        }
       } else if (adminShapeFeatures.length > 0) {
         self.openShapePopup(e, 'admin');
       }
@@ -980,6 +985,10 @@
 
     openShapePopup(e, shapeType) {
       var self = this;
+
+      if (this.editable || !this.dontOpenMarkerPopup) {
+        return
+      }
 
       if (shapeType === 'admin') {
         new mapboxgl.Popup({

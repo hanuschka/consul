@@ -12,7 +12,8 @@ class Shared::MapBaseComponent < ApplicationComponent
     projekt_phase: nil,
     admin_editor: false,
     show_admin_shape: true,
-    saturated_admin_shape: false
+    saturated_admin_shape: false,
+    dont_open_marker_popup: false
   )
     @mappable = mappable
     @map_location = map_location || MapLocation.new
@@ -24,6 +25,7 @@ class Shared::MapBaseComponent < ApplicationComponent
     @show_admin_shape = show_admin_shape
     @admin_editor = admin_editor
     @saturated_admin_shape = saturated_admin_shape
+    @dont_open_marker_popup = dont_open_marker_popup
   end
 
   private
@@ -47,7 +49,8 @@ class Shared::MapBaseComponent < ApplicationComponent
         longitude_input_selector: "##{map_location_input_id(@parent_class, "longitude")}",
         zoom_input_selector: "##{map_location_input_id(@parent_class, "zoom")}",
         shape_input_selector: "##{map_location_input_id(@parent_class, "shape")}",
-        editable: @editable
+        editable: @editable,
+        dont_open_marker_popup: @dont_open_marker_popup
       }
     end
 

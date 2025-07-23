@@ -1,5 +1,5 @@
 App.MapPopup = {
-  excludedProcesses: ["proposal", "deficiency_report", "projekt", "point_of_interest_pin"],
+  excludedProcesses: ["deficiency_report", "projekt", "point_of_interest_pin"],
 
   generatePopupContent: function(data, resourceType, isInModal) {
     if (resourceType == "proposal") {

@@ -272,6 +272,7 @@
       // defines if it's allowed to edit map
       var editable = $(element).data("editable");
       var enableGeomanControls = $(element).data("enable-geoman-controls");
+      var dontOpenMarkerPopup = $(element).data('dont-open-marker-popup')
 
       // biolerplate for marker
       var marker = null;
@@ -781,8 +782,8 @@
 
               adminShapeLayer.pm.setOptions({ adminShape: true })
               adminShapeLayer.setStyle({
-                color: feature.properties.color || "violet",
-                fillColor: feature.properties.color || "violet",
+                color: feature.properties.color || adminShapesColor,
+                fillColor: feature.properties.color || adminShapesColor,
                 fillOpacity: 0.2,
               })
 
@@ -829,7 +830,7 @@
             marker.options.resource_type = markerCoordinate.resource_type
             marker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-            if (!editable) {
+            if (!editable && (!dontOpenMarkerPopup)) {
               if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
                 marker.on("click", openMarkerPopup);
               }
@@ -894,7 +895,7 @@
               userShape.options.resource_type = markerCoordinate.resource_type
               userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-              if (!editable) {
+              if (!editable && (!dontOpenMarkerPopup)) {
                 if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
                   userShape.on("click", openMarkerPopup);
                 }

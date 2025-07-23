@@ -47,15 +47,27 @@
           display: none;
         }
 
-        &:checked ~ .projekt-arguments-nav {
+        &:not(:checked) ~ .projekt-arguments-nav {
           a.pro {
             text-decoration: underline;
+            font-weight: bold;
+          }
+
+          a.contra {
+            text-decoration: none;
+            font-weight: normal;
           }
         }
 
-        &:not(:checked) ~ .projekt-arguments-nav {
+        &:checked ~ .projekt-arguments-nav {
+          a.pro {
+            text-decoration: none;
+            font-weight: normal;
+          }
+
           a.contra {
             text-decoration: underline;
+            font-weight: bold;
           }
         }
       }

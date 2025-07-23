@@ -17,7 +17,7 @@ class IdeasController < ApplicationController
   def index
     authorize! :index, Idea
 
-    @ideas = Idea.accepted
+    @ideas = Idea.accepted.includes(:map_location)
 
     filter_by_category
     filter_by_status
@@ -83,8 +83,9 @@ class IdeasController < ApplicationController
   def json_data
     idea = Idea.find(params[:id])
 
-    image_url = idea.image.present? ? url_for(idea.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+    authorize! :json_data, idea
 
+    image_url = idea.image.present? ? url_for(idea.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
 
     data = {
       resource_type: "idea",

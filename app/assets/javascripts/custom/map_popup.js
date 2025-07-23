@@ -16,7 +16,6 @@ App.MapPopup = {
   },
 
   getPopupDataUrl: function(resourceType, properties) {
-    // console.log("getPopupDataUrl", resourceType, properties)
     if (resourceType == "proposal") {
       return "/proposals/" + properties.id + "/json_data";
     } else if (resourceType == "deficiency_report") {
@@ -27,6 +26,8 @@ App.MapPopup = {
       return "/investments/" + properties.id + "/json_data";
     } else if (resourceType == "point_of_interest_pin") {
       return "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projekt_phase_id;
+    } else if (resourceType == "idea") {
+      return "/ideas/" + properties.id + "/json_data"
     }
   },
 

@@ -109,7 +109,8 @@ class MapLocation < ApplicationRecord
       investment_id,
       proposal_id,
       projekt_id,
-      deficiency_report_id
+      deficiency_report_id,
+      idea_id
     ].compact.first
   end
 
@@ -122,6 +123,8 @@ class MapLocation < ApplicationRecord
       "projekt"
     elsif deficiency_report_id.present?
       "deficiency_report"
+    elsif idea_id.present?
+      "idea"
     end
   end
 

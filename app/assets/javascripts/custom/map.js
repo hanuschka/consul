@@ -258,6 +258,7 @@
       var editable = $(element).data("editable");
       var enableGeomanControls = $(element).data("enable-geoman-controls");
       var dontOpenMarkerPopup = $(element).data('dont-open-marker-popup')
+      var setAdminCenterWithMarker = $(element).data('set-admin-center-with-marker')
 
       // biolerplate for marker
       var marker = null;
@@ -298,7 +299,7 @@
 
       // update form fields when map center changes
       map.on("moveend", function() {
-        if ( adminEditor) {
+        if (adminEditor && !setAdminCenterWithMarker) {
           $(latitudeInputSelector).val(map.getCenter().lat);
           $(longitudeInputSelector).val(map.getCenter().lng);
           $(zoomInputSelector).val(map.getZoom());
@@ -497,19 +498,28 @@
 
       // function to create or move existing marker
       var moveOrPlaceMarker = function(e) {
-        if (adminEditor) {
-          // In admin mode, always create new markers
-          marker = createMarker(e.latlng.lat, e.latlng.lng);
-        } else {
-          // In user mode, move existing or create new
+        // Only handle single user markers: not adminEditor OR adminEditor with setAdminCenterWithMarker
+        if (!adminEditor || (adminEditor && setAdminCenterWithMarker)) {
+          // In user mode or admin center mode, move existing or create new
           if (marker) {
             marker.setLatLng(e.latlng);
             updateMarkerWithCategoryStyle()
           } else {
             marker = createMarker(e.latlng.lat, e.latlng.lng);
           }
+          updateFormfieldsWithMarker();
         }
-        updateFormfieldsWithMarker();
+      };
+
+      // function to place multiple admin markers
+      var placeAdminMarker = function(e) {
+        if (adminEditor) {
+          // In admin mode, always create new markers for multiple placement
+          var newMarker = createMarker(e.latlng.lat, e.latlng.lng);
+          // Store the latest marker as the active marker
+          marker = newMarker;
+          updateFormfieldsWithMarker();
+        }
       };
 
       // Do not delete. This is interface function used to update
@@ -933,18 +943,48 @@
           map.pm.Toolbar.createCustomControl({
             name: 'consulMarker',
             className: 'control-icon leaflet-pm-icon-marker',
-            title: 'Marker setzen',
+            title: 'Einzelner Marker',
             block: 'draw',
             onClick: function() {
-              // Only clear markers when turning ON the tool (not admin editor) or when explicitly requested
-              if (!this.toggleStatus && !adminEditor) {
+              // Always handle single marker placement
+
+              // Only clear markers when turning ON the tool for single marker mode
+              if (!this.toggleStatus) {
                 removeShapesAndMarkers();
               }
 
               if (this.toggleStatus) {
                 map.off("click", moveOrPlaceMarker);
+                map.off("click", placeAdminMarker);
               } else {
+                // Turn off multiple marker mode if active
+                if (adminEditor) {
+                  map.pm.Toolbar.toggleButton('multipleMarkers', false);
+                }
+                map.off("click", placeAdminMarker);
                 map.on("click", moveOrPlaceMarker);
+              }
+            }
+          });
+        }
+
+        // add separate control for multiple markers
+        if (adminEditor) {
+          map.pm.Toolbar.createCustomControl({
+            name: 'multipleMarkers',
+            className: 'control-icon leaflet-pm-icon-circle-marker',
+            title: 'Mehrere Marker setzen',
+            block: 'draw',
+            onClick: function() {
+              if (this.toggleStatus) {
+                map.off("click", placeAdminMarker);
+              } else {
+                // Turn off single marker mode if active
+                if (enableGeomanControls) {
+                  map.pm.Toolbar.toggleButton('consulMarker', false);
+                }
+                map.off("click", moveOrPlaceMarker);
+                map.on("click", placeAdminMarker);
               }
             }
           });
@@ -960,10 +1000,15 @@
             removeShapesAndMarkers();
             if ( enableGeomanControls ) {
               map.pm.Toolbar.toggleButton('clearMap', true);
+              if (adminEditor) {
+                map.pm.Toolbar.toggleButton('multipleMarkers', false);
+              }
               map.off("click", moveOrPlaceMarker);
+              map.off("click", placeAdminMarker);
             } else {
               map.pm.Toolbar.toggleButton('clearMap', false);
               map.pm.Toolbar.toggleButton('consulMarker', true);
+              map.off("click", placeAdminMarker);
               map.on("click", moveOrPlaceMarker);
             }
           },
@@ -981,16 +1026,27 @@
           }
         });
 
-        // toggle consul marker button by default for regular users
-        if ( !adminEditor ) {
-          map.pm.Toolbar.toggleButton('consulMarker', true)
+        // toggle appropriate marker button by default
+        if ( !adminEditor || (adminEditor && setAdminCenterWithMarker) ) {
+          // For regular users or admin center mode, use single marker
+          if (enableGeomanControls) {
+            map.pm.Toolbar.toggleButton('consulMarker', true)
+          }
           map.on("click", moveOrPlaceMarker);
+        } else if (adminEditor && !setAdminCenterWithMarker) {
+          // For admin multiple marker mode, use multiple markers control
+          map.pm.Toolbar.toggleButton('multipleMarkers', true)
+          map.on("click", placeAdminMarker);
         }
 
         // reorder geoman controls
-        map.pm.Toolbar.changeControlOrder([
-          'consulMarker'
-        ]);
+        if (enableGeomanControls) {
+          var controlOrder = ['consulMarker'];
+          if (adminEditor) {
+            controlOrder.push('multipleMarkers');
+          }
+          map.pm.Toolbar.changeControlOrder(controlOrder);
+        }
 
         // set colors of shapes for admin
         if ( adminEditor ) {

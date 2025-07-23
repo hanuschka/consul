@@ -7,7 +7,9 @@
       mappable:      mappable,
       admin_editor: true,
       marker_coordinates: local_assigns[:marker_coordinates],
-      parent_class:  mappable.class.table_name %>
+      parent_class:  mappable.class.table_name,
+      set_admin_center_with_marker: local_assigns[:set_admin_center_with_marker]
+    %>
   </div>
 
   <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button") %>

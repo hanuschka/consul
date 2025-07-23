@@ -89,9 +89,11 @@
     .projekt-arguments-title {
       font-size: 30px;
       font-weight: bold;
+    }
 
-      @media (max-width: 640px) {
-        // display: none;
+    .projekt-arguments.--pro {
+      .projekt-arguments-title {
+        text-align: right;
       }
     }
 

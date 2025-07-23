@@ -616,6 +616,7 @@
 
       // function to open marker popup
       var openMarkerPopup = function(e) {
+        console.log("openMarkerPopup")
         var resourceType = e.target.options.resource_type;
         var route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options)
 
@@ -852,7 +853,7 @@
                 featureMarker.options.resource_type = markerCoordinate.resource_type
                 featureMarker.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-                if (editable) {
+                if (!editable && (!dontOpenMarkerPopup)) {
                   if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
                     featureMarker.on("click", openMarkerPopup);
                   }
@@ -895,6 +896,7 @@
               userShape.options.resource_type = markerCoordinate.resource_type
               userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
+              console.log({editable, dontOpenMarkerPopup})
               if (!editable && (!dontOpenMarkerPopup)) {
                 if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
                   userShape.on("click", openMarkerPopup);

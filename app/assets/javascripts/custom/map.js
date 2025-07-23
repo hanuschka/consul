@@ -110,16 +110,12 @@
       this.modalMapElement = modalContainer;
 
       // Initialize new Leaflet map in modal
-      console.log('Initializing modal map with container:', modalContainer);
-      console.log('Container data:', $(modalContainer).data());
-
       App.Map.initializeMap(modalContainer);
 
       // Find the newly created map and sync view with proper timing
       setTimeout(() => {
         var modalMap = App.Map.maps[App.Map.maps.length - 1];
         if (modalMap) {
-          console.log('Modal map created successfully:', modalMap);
 
           // Ensure map container is properly sized
           modalMap.invalidateSize();
@@ -128,10 +124,7 @@
           // Force another resize after view is set
           setTimeout(() => {
             modalMap.invalidateSize(true);
-            console.log('Modal map final resize completed');
           }, 50);
-        } else {
-          console.error('Failed to create modal map');
         }
       }, 100);
     },
@@ -153,8 +146,6 @@
           targetElement.setAttribute('data-' + this.camelToKebab(key), value);
         }
       }
-
-      console.log('Copied data attributes to modal map:', $(targetElement).data());
     },
 
     camelToKebab: function(str) {
@@ -169,16 +160,12 @@
     closeModal: function() {
       if (!this.isInModal) return;
 
-      console.log('Closing Leaflet modal and destroying map...');
-
       try {
         this.isInModal = false;
 
-        // Find and destroy the modal map
         if (this.modalMapElement) {
           var modalMapId = this.modalMapElement.id;
 
-          // Find the map instance in App.Map.maps array
           var mapIndex = -1;
           App.Map.maps.forEach((map, index) => {
             var container = map.getContainer();
@@ -193,7 +180,6 @@
             modalMap.off();
             modalMap.remove();
             App.Map.maps.splice(mapIndex, 1);
-            console.log('Modal map destroyed');
           }
 
           this.modalMapElement = null;
@@ -210,7 +196,6 @@
           var modalElement = document.getElementById(this.modalId);
           if (modalElement) {
             modalElement.remove();
-            console.log('Modal HTML removed');
           }
         }, 50);
 
@@ -567,25 +552,25 @@
           });
 
           // Collect all markers that are not in the cluster group
-          map.eachLayer(function(layer) {
-            if (layer instanceof L.Marker &&
-                layer !== adminMarker &&
-                !layer.pm.options.adminShape &&
-                !markersGroup.hasLayer(layer)) {
-              var feature = {
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates: [layer.getLatLng().lng, layer.getLatLng().lat]
-                },
-                properties: {
-                  color: adminShapesColor,
-                  fa_icon_class: 'circle'
-                }
-              };
-              allFeatures.push(feature);
-            }
-          });
+          // map.eachLayer(function(layer) {
+          //   if (layer instanceof L.Marker &&
+          //       layer !== adminMarker &&
+          //       !layer.pm.options.adminShape &&
+          //       !markersGroup.hasLayer(layer)) {
+          //     var feature = {
+          //       type: 'Feature',
+          //       geometry: {
+          //         type: 'Point',
+          //         coordinates: [layer.getLatLng().lng, layer.getLatLng().lat]
+          //       },
+          //       properties: {
+          //         color: adminShapesColor,
+          //         fa_icon_class: 'circle'
+          //       }
+          //     };
+          //     allFeatures.push(feature);
+          //   }
+          // });
 
           if (allFeatures.length > 0) {
             // Create FeatureCollection for multiple features
@@ -595,8 +580,8 @@
             };
             $(shapeInputSelector).val(JSON.stringify(featureCollection));
             // Clear single coordinate fields when using multiple items
-            $(latitudeInputSelector).val('');
-            $(longitudeInputSelector).val('');
+            // $(latitudeInputSelector).val('');
+            // $(longitudeInputSelector).val('');
           } else if (marker) {
             // Single marker case
             $(latitudeInputSelector).val(marker.getLatLng().lat);
@@ -616,7 +601,6 @@
 
       // function to open marker popup
       var openMarkerPopup = function(e) {
-        console.log("openMarkerPopup")
         var resourceType = e.target.options.resource_type;
         var route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options)
 
@@ -744,7 +728,9 @@
         adminShapes.forEach(function(singleAdminShape) {
           if (App.Map.validCoordinates(singleAdminShape)) {
             if ( adminEditor ) {
-              marker = createMarker(singleAdminShape.lat, singleAdminShape.long, adminShapesColor, singleAdminShape.fa_icon_class || 'circle');
+              var adminShapeMarker = createMarker(singleAdminShape.lat, singleAdminShape.long, adminShapesColor, singleAdminShape.fa_icon_class || 'circle');
+              adminMarkers.push(adminShapeMarker);
+              marker = adminShapeMarker; // Keep reference to latest marker
             } else {
                           var markerLatLng = new L.LatLng(singleAdminShape.lat, singleAdminShape.long);
             var adminMarker = L.marker(markerLatLng, {
@@ -896,7 +882,6 @@
               userShape.options.resource_type = markerCoordinate.resource_type
               userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
 
-              console.log({editable, dontOpenMarkerPopup})
               if (!editable && (!dontOpenMarkerPopup)) {
                 if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
                   userShape.on("click", openMarkerPopup);

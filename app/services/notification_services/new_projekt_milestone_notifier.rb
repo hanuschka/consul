@@ -17,7 +17,7 @@ module NotificationServices
 
       def users_to_notify
         [projekt_phase_subscribers]
-          .flatten.uniq(&:id)
+          .flatten.uniq(&:id).reject(&:not_actual?)
       end
 
       def projekt_phase_subscribers

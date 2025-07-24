@@ -111,6 +111,14 @@ class User < ApplicationRecord
     end
   end
 
+  def actual?
+    self.class.actual.include?(self)
+  end
+
+  def not_actual?
+    !actual?
+  end
+
   def validate_registered_address?
     return false unless extended_registration?
     return false unless RegisteredAddress.present?

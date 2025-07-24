@@ -307,7 +307,7 @@ class Mailer < ApplicationMailer
     end
 
     def prevent_delivery_to_users_without_email
-      if @email_to.blank?
+      if @email_to.blank? || @email_to.include?("@example.com")
         mail.perform_deliveries = false
       end
     end

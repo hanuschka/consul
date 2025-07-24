@@ -39,6 +39,7 @@ class MapLocation < ApplicationRecord
       long: longitude,
       alt: altitude,
       color: get_pin_color,
+      center_marker: true,
       fa_icon_class: get_fa_icon_class
     }
   end
@@ -138,7 +139,7 @@ class MapLocation < ApplicationRecord
     elsif deficiency_report.present?
       deficiency_report.category.color
     elsif projekt.present? || projekt_phase.present?
-      "#ff0000"
+      "#004a83"
     else
       nil
     end

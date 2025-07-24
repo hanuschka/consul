@@ -20,17 +20,22 @@ class Shared::MapBaseComponent < ApplicationComponent
     @map_location = map_location || MapLocation.new
     @parent_class = parent_class
     @editable = editable
-    @process_coordinates = process_coordinates || get_process_coordinates
+    @set_admin_center_with_marker = set_admin_center_with_marker
+    @admin_editor = admin_editor
     @projekt = projekt
     @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
-    @admin_editor = admin_editor
     @saturated_admin_shape = saturated_admin_shape
     @dont_open_marker_popup = dont_open_marker_popup
-    @set_admin_center_with_marker = set_admin_center_with_marker
+    @process_coordinates = process_coordinates
   end
 
   private
+
+    def process_coordinates_to_use
+      @_process_coordinates_to_use ||=
+        (@process_coordinates || get_process_coordinates)
+    end
 
     def common_map_settings
       {
@@ -45,7 +50,7 @@ class Shared::MapBaseComponent < ApplicationComponent
         saturated_admin_shape: @saturated_admin_shape,
 
         parent_class: @parent_class,
-        process_coordinates: @process_coordinates,
+        process_coordinates: process_coordinates_to_use,
 
         latitude_input_selector: "##{map_location_input_id(@parent_class, "latitude")}",
         longitude_input_selector: "##{map_location_input_id(@parent_class, "longitude")}",
@@ -60,9 +65,15 @@ class Shared::MapBaseComponent < ApplicationComponent
     def get_process_coordinates
       if @mappable.present? && @mappable.persisted? && @mappable.map_location.present?
         if @admin_editor
-          [
-            @mappable.map_location.shape_json_data
-          ]
+          if @set_admin_center_with_marker
+            [
+              @mappable.map_location.json_data, @mappable.map_location.shape_json_data
+            ]
+          else
+            [
+              @mappable.map_location.shape_json_data
+            ]
+          end
         else
           [
             @mappable.map_location.shape_json_data.presence ||

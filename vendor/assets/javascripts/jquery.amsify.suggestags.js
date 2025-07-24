@@ -38,7 +38,7 @@ var AmsifySuggestags;
 			noSuggestionMsg   : '',
 			showAllSuggestions: false,
 			keepLastOnHoverTag: true,
-			printValues 	  : true,
+			printValues 	  : false,
 			checkSimilar 	  : true,
 			delimiters 		  : [],
 			showPlusAfter 	  : 0

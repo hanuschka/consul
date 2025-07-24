@@ -1,7 +1,7 @@
 {
   "name": "consuldemocracy",
   "dependencies": {
-    "@geoman-io/leaflet-geoman-free": "^2.15.0",
+    "@geoman-io/leaflet-geoman-free": "2.15.0",
     "eslint": "^9.28.0",
     "glightbox": "^3.3.0",
     "html2canvas": "^1.4.1",
@@ -9,10 +9,10 @@
     "jquery-ui": "^1.13.2",
     "jquery-ujs": "^1.2.3",
     "leaflet": "^1.9.4",
-    "leaflet-geosearch": "^3.11.0",
+    "leaflet-geosearch": "4.2.0",
     "leaflet-gesture-handling": "^1.2.2",
     "Leaflet.Deflate": "^2.1.0",
-    "leaflet.locatecontrol": "^0.79.0",
+    "leaflet.locatecontrol": "0.84.2",
     "leaflet.markercluster": "^1.5.3",
     "mapbox-gl": "^3.12.0",
     "select2": "^4.1.0-rc.0"

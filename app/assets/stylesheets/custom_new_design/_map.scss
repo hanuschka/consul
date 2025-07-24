@@ -337,3 +337,10 @@
 .leaflet-control-layers {
   display: block;
 }
+
+.sidebar-projekt-map {
+  .leaflet-control-layers {
+    display: none;
+  }
+}
+

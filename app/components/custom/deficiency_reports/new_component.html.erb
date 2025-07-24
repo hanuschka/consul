@@ -37,7 +37,8 @@
           <%= render Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.form.category.title"),
             description: t("custom.deficiency_reports.form.category.description"),
-            icon_name: "th-large"
+            icon_name: "th-large",
+            opened_on_mobile: true
           ) do |c| %>
 
           <%= f.select :deficiency_report_category_id,
@@ -159,7 +160,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? %>
+          <% if current_user.administrator? || current_user.deficiency_report_manager? %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.deficiency_reports.form.on_behalf_of.title"),
                           description: t("custom.deficiency_reports.form.on_behalf_of.description"),

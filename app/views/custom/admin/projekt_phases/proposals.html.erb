@@ -55,7 +55,7 @@
                     ) %>
                   </td>
                 <% end %>
-                <td><%= link_to(proposal.title, polymorphic_path([@namespace, @projekt_phase, proposal], action: :edit), remote: true) %></td>
+                <td><%= link_to proposal.title, polymorphic_path([@namespace, @projekt_phase, proposal]) %></td>
                 <td><%= proposal.author.username %></td>
               </tr>
             <% end %>

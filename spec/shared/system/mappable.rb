@@ -102,7 +102,7 @@ shared_examples "mappable" do |mappable_factory_name, mappable_association_name,
         within ".map_location" do
           expect(page).not_to have_css(".map-icon")
         end
-        expect(page.execute_script("return App.Map.maps[0].getZoom();")).to eq(10)
+        expect(page.execute_script("return App.Map.instances[0].getZoom();")).to eq(10)
 
         map_zoom_in
         find("#new_map_location").click
@@ -125,7 +125,7 @@ shared_examples "mappable" do |mappable_factory_name, mappable_association_name,
 
         within ".map_location" do
           expect(page).to have_css(".map-icon")
-          expect(page.execute_script("return App.Map.maps[0].getZoom();")).to eq(11)
+          expect(page.execute_script("return App.Map.instances[0].getZoom();")).to eq(11)
         end
       end
 

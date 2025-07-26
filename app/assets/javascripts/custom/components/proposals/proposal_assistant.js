@@ -225,10 +225,10 @@
             })
           }
         }
-      } else if (App.Map.maps.length > 0) {
-        var currentMap = App.Map.maps[0]
+      } else if (App.Map.instances.length > 0) {
+        var currentMap = App.Map.instances[0]
 
-        if (currentMap && App.Map.maps.length <= 1) {
+        if (currentMap && App.Map.instances.length <= 1) {
           currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
           App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
 

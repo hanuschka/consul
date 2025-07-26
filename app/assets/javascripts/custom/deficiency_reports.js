@@ -156,7 +156,7 @@
         coordinates = JSON.parse(event.target.dataset.allDistrictMapCoordinates)[event.target.value];
       }
 
-      App.Map.maps.forEach(function(map) {
+      App.Map.instances.forEach(function(map) {
         map.panTo(coordinates);
       });
     },

@@ -306,9 +306,9 @@
 /* Leaflet Fullscreen Control Styles */
 .leaflet-control-fullscreen {
   .leaflet-control-fullscreen-button {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
+    width: 48px !important;
+    height: 48px !important;
+    // line-height: 30px;
     display: block;
     text-align: center;
     text-decoration: none;
@@ -329,7 +329,7 @@
     }
 
     i {
-      font-size: 14px;
+      font-size: 28px;
     }
   }
 }

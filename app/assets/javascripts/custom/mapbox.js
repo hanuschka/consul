@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  class MapboxMap {
+  class MapboxMapController {
     constructor(element) {
       this.element = element;
       var $element = $(element);
@@ -37,10 +37,22 @@
       this.editableMarker = null; // Single editable marker for user interaction
       this.markerCategoryIcon = null;
       this.markerCategoryColor = null;
-      this.adminShapesColor = 'red';
+
+      this.colors = $element.data("colors");
+      this.adminShapesColor = this.colors.admin_shapes;
+      this.projektCenterMarkerColor = this.colors.projekt_center_marker;
+
       this.defaultMarkerBackgroundCircleRadius = 14;
       this.hoveredFeature = null;
       this.draw = null; // Mapbox Draw instance for polygon editing
+
+      if (this.editable) {
+        this.touchStartTime = null;
+        this.touchStartPoint = null;
+        this.touchMoved = false;
+        this.touchThreshold = 10; // pixels
+        this.tapThreshold = 300; // milliseconds
+      }
 
       this.initialize();
     }
@@ -88,121 +100,117 @@
     }
 
    setupEventListeners() {
-      var self = this;
-
       if (this.$categorySelect) {
         this.$categorySelect.on("change", function(e) {
+          // TODO
           // self.updateMarkerStyleFromCategorySelect(e.target);
         });
 
         if (this.$categorySelect.length) {
+          // TODO
           // this.updateMarkerStyleFromCategorySelect(this.$categorySelect.get(0));
         }
       }
 
       if (this.adminEditor && !this.pinMarkers.length) {
-        this.map.on("moveend", function() {
-          var center = self.map.getCenter();
-          $(self.latitudeInputSelector).val(center.lat);
-          $(self.longitudeInputSelector).val(center.lng);
-          $(self.altitudeInputSelector).val(0); // Set altitude to 0 for map center updates
-          $(self.zoomInputSelector).val(self.map.getZoom());
-        });
+        this.map.on("moveend", this.handleMoveEnd);
       }
 
       // Add click and touch listeners for moveOrPlaceMarker functionality
       if (this.editable) {
         // Track touch state to distinguish between taps and drags
-        var touchStartTime = null;
-        var touchStartPoint = null;
-        var touchMoved = false;
-        var touchThreshold = 10; // pixels
-        var tapThreshold = 300; // milliseconds
 
-        // Handle touch start
-        this.map.on('touchstart', function(e) {
-          touchStartTime = Date.now();
-          touchStartPoint = e.point;
-          touchMoved = false;
-        });
-
-        // Handle touch move
-        this.map.on('touchmove', function(e) {
-          if (touchStartPoint) {
-            var distance = Math.sqrt(
-              Math.pow(e.point.x - touchStartPoint.x, 2) +
-              Math.pow(e.point.y - touchStartPoint.y, 2)
-            );
-            if (distance > touchThreshold) {
-              touchMoved = true;
-            }
-          }
-        });
-
-        // Handle map interaction (click and touch)
-        var handleMapInteraction = function(e) {
-          // For touch events, only proceed if it was a tap (not a drag)
-          if (e.type === 'touchend') {
-            var touchDuration = Date.now() - touchStartTime;
-            if (touchMoved || touchDuration > tapThreshold) {
-              return; // Don't place marker if touch moved or was too long
-            }
-          }
-
-          // Check if interaction is on a draw control button
-          var target = e.originalEvent ? e.originalEvent.target : e.target;
-          var isDrawControl = target && (
-            target.classList.contains('mapbox-gl-draw_ctrl-draw-btn') ||
-            target.closest('.mapbox-gl-draw_ctrl')
-          );
-
-          // Check for all interactive features (markers, shapes, clusters)
-          var markerFeatures = self.map.queryRenderedFeatures(e.point, {
-            layers: ['custom-marker', 'custom-marker-icon', 'clusters']
-          });
-
-          var userShapeFeatures = [];
-          var allLayers = self.map.getStyle().layers;
-          allLayers.forEach(function(layer) {
-            // Only check user shapes - admin shapes should not prevent marker placement in edit mode
-            if (layer.id.includes('user-shape-')) {
-              var layerFeatures = self.map.queryRenderedFeatures(e.point, {
-                layers: [layer.id]
-              });
-              if (layerFeatures.length > 0) {
-                userShapeFeatures = userShapeFeatures.concat(layerFeatures);
-              }
-            }
-          });
-
-          // Check current draw mode
-          var currentMode = 'simple_select';
-          if (self.draw) {
-            currentMode = self.draw.getMode();
-          }
-
-          var drawFetures = self.draw ? self.draw.getAll().features : [];
-
-          // Check if there are existing draw features
-          var hasExistingDrawFeatures = self.draw && drawFetures.length > 0;
-          var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
-
-          // Place editable marker if:
-          // - No conflicting features clicked (markers, user shapes, or clusters)
-          // - Not clicked on draw controls
-          // - No existing draw features (to avoid conflicts)
-          if (hasOnlyPointDrawFeatures || (markerFeatures.length === 0 && userShapeFeatures.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
-            self.moveOrPlaceMarker(e);
-          }
-        };
+        this.map.on('touchstart', this.handleTouchStart);
+        this.map.on('touchmove', this.handleTouchMove);
 
         if (!this.adminEditor) {
-          // Add both click and touch event listeners
-          this.map.on('click', handleMapInteraction);
-          this.map.on('touchend', handleMapInteraction);
+          this.map.on('click', this.handleMapInteraction);
+          this.map.on('touchend', this.handleMapInteraction);
         }
       }
     }
+
+    handleMoveEnd = (e) => {
+      var center = this.map.getCenter();
+      $(this.latitudeInputSelector).val(center.lat);
+      $(this.longitudeInputSelector).val(center.lng);
+      $(this.altitudeInputSelector).val(0); // Set altitude to 0 for map center updates
+      $(this.zoomInputSelector).val(this.map.getZoom());
+    }
+
+    handleTouchStart = (e) => {
+      this.touchStartTime = Date.now();
+      this.touchStartPoint = e.point;
+      this.touchMoved = false;
+    }
+
+    handleTouchMove = (e) => {
+      if (this.touchStartPoint) {
+        var distance = Math.sqrt(
+          Math.pow(e.point.x - this.touchStartPoint.x, 2) +
+          Math.pow(e.point.y - this.touchStartPoint.y, 2)
+        );
+        if (distance > this.touchThreshold) {
+          this.touchMoved = true;
+        }
+      }
+    }
+
+    handleMapInteraction = (e) => {
+      // For touch events, only proceed if it was a tap (not a drag)
+      if (e.type === 'touchend') {
+        var touchDuration = Date.now() - this.touchStartTime;
+        if (this.touchMoved || touchDuration > this.tapThreshold) {
+          return; // Don't place marker if touch moved or was too long
+        }
+      }
+
+      // Check if interaction is on a draw control button
+      var target = e.originalEvent ? e.originalEvent.target : e.target;
+      var isDrawControl = target && (
+        target.classList.contains('mapbox-gl-draw_ctrl-draw-btn') ||
+        target.closest('.mapbox-gl-draw_ctrl')
+      );
+
+      // Check for all interactive features (markers, shapes, clusters)
+      var markerFeatures = self.map.queryRenderedFeatures(e.point, {
+        layers: ['custom-marker', 'custom-marker-icon', 'clusters']
+      });
+
+      var userShapeFeatures = [];
+      var allLayers = self.map.getStyle().layers;
+      allLayers.forEach(function(layer) {
+        // Only check user shapes - admin shapes should not prevent marker placement in edit mode
+        if (layer.id.includes('user-shape-')) {
+          var layerFeatures = self.map.queryRenderedFeatures(e.point, {
+            layers: [layer.id]
+          });
+          if (layerFeatures.length > 0) {
+            userShapeFeatures = userShapeFeatures.concat(layerFeatures);
+          }
+        }
+      });
+
+      // Check current draw mode
+      var currentMode = 'simple_select';
+      if (self.draw) {
+        currentMode = self.draw.getMode();
+      }
+
+      var drawFetures = self.draw ? self.draw.getAll().features : [];
+
+      // Check if there are existing draw features
+      var hasExistingDrawFeatures = self.draw && drawFetures.length > 0;
+      var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
+
+      // Place editable marker if:
+      // - No conflicting features clicked (markers, user shapes, or clusters)
+      // - Not clicked on draw controls
+      // - No existing draw features (to avoid conflicts)
+      if (hasOnlyPointDrawFeatures || (markerFeatures.length === 0 && userShapeFeatures.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
+        self.moveOrPlaceMarker(e);
+      }
+    };
 
     addControls() {
       // Always add fullscreen control on all screen sizes (if not in modal and not editable)
@@ -231,7 +239,6 @@
       }
 
       if (this.editable && typeof MapboxDraw !== 'undefined') {
-        console.log("this.editable", this.editable)
         this.initializePolygonEditor();
       }
     }
@@ -261,7 +268,6 @@
     }
 
     addCustomDeleteButton() {
-      console.log("addCustomDeleteButton")
       if (!this.draw) return;
 
       var customDeleteControl = new CustomDeleteControl(this);
@@ -271,7 +277,6 @@
     togglePoiLabels(visible) {
 
       if (!this.mapLoaded) {
-        console.log("Map not loaded yet, waiting...");
         this.map.once('idle', () => {
           this.togglePoiLabels(visible);
         });
@@ -465,7 +470,6 @@
     }
 
     initializePolygonEditor() {
-      console.log("initializePolygonEditor")
       var controls = {}
 
       if (this.enableGeomanControls) {
@@ -948,7 +952,6 @@
 
       // Check if we have features and at least one feature
       if (!e.features || !e.features.length || !e.features[0]) {
-        console.warn("No features found in popup event:", e);
         return;
       }
 
@@ -986,7 +989,7 @@
     openShapePopup(e, shapeType) {
       var self = this;
 
-      if (this.editable || !this.dontOpenMarkerPopup) {
+      if (this.editable || this.dontOpenMarkerPopup) {
         return
       }
 
@@ -1004,7 +1007,7 @@
         var shapeData = null;
         if (self.markerCoordinates) {
           self.markerCoordinates.forEach(function(coordinate) {
-            if (!App.Mapbox.validCoordinates(coordinate) && coordinate.id) {
+            if (!App.Map.validCoordinates(coordinate) && coordinate.id) {
               // This is likely a shape coordinate
               shapeData = coordinate;
             }
@@ -1032,28 +1035,42 @@
                 var isInModal = !!self.element.dataset.modalMap;
                 popup.setHTML(App.MapPopup.generatePopupContent(data, shapeData.resource_type, isInModal));
               })
-              .fail(function() {
-                popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
-              });
-          } else {
-            popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
           }
-        } else {
-          popup.setHTML('<div class="map-popup-status-message">Shape information</div>');
+
         }
       }
     }
 
     renderAdminShape() {
       if (this.adminShape && this.showAdminShape) {
-        if (App.Mapbox.validCoordinates(this.adminShape)) {
+        if (App.Map.validCoordinates(this.adminShape)) {
           if (this.adminEditor) {
-            this.createPinMarker(
-              this.adminShape.lat,
-              this.adminShape.long,
-              this.adminShapesColor,
-              this.adminShape.fa_icon_class
-            );
+            // Use the same approach as non-admin mode but make it draggable
+            var styledMarker = this.getStyledMarker(this.adminShapesColor, this.adminShape.fa_icon_class);
+            this.adminMarker = new mapboxgl.Marker({
+              element: styledMarker.element,
+              anchor: 'bottom',
+              offset: [0, -10],
+              draggable: true  // Make it draggable in admin editor mode
+            })
+              .setLngLat([this.adminShape.long, this.adminShape.lat])
+              .setPopup(new mapboxgl.Popup().setHTML(App.MapPopup.adminShapePopupHtml()))
+              .addTo(this.map);
+
+            // Add drag event handler for form updates
+            var self = this;
+            this.adminMarker.on("dragend", function(e) {
+              var marker = e.target;
+              var lngLat = marker.getLngLat();
+              $(self.latitudeInputSelector).val(lngLat.lat);
+              $(self.longitudeInputSelector).val(lngLat.lng);
+              $(self.altitudeInputSelector).val(0);
+              $(self.zoomInputSelector).val(self.map.getZoom());
+              if (self.showAdminShapeInputSelector) {
+                $(self.showAdminShapeInputSelector).val(true);
+              }
+            });
+
           } else {
             var styledMarker = this.getStyledMarker(this.adminShapesColor, this.adminShape.fa_icon_class);
             this.adminMarker = new mapboxgl.Marker({
@@ -1074,12 +1091,11 @@
     renderMarkerCoordinates() {
       if (!this.markerCoordinates) return;
 
-      var markersGeoJSON = this.createMarkersGeoJSON();
-      this.addMarkersSource(markersGeoJSON);
+      this.addMarkersSource(this.createMarkersGeoJSON());
       this.addClusterLayers();
       this.addMarkerBackgroundLayer();
       this.loadMarkerImagesAndSetupIcons();
-      this.setupClusterEventListeners();
+      // this.setupClusterEventListeners();
     }
 
     createMarkersGeoJSON() {
@@ -1087,7 +1103,7 @@
       var self = this;
 
       this.markerCoordinates.forEach(function(coordinate) {
-        if (App.Mapbox.validCoordinates(coordinate)) {
+        if (App.Map.validCoordinates(coordinate)) {
           // Regular point marker
           features.push({
             type: 'Feature',
@@ -1205,11 +1221,9 @@
     }
 
     loadMarkerImagesAndSetupIcons() {
-      var self = this;
-
       if (this.markerImages && this.markerImages.length) {
-        this.loadMarkerImages(function() {
-          self.loadIconLayer();
+        this.loadMarkerImages(() => {
+          this.loadIconLayer();
         });
       } else {
         this.loadIconLayer();
@@ -1254,7 +1268,7 @@
 
       if (!this.editable) {
         this.markerCoordinates.forEach(function(coordinates) {
-          if (!App.Mapbox.validCoordinates(coordinates)) {
+          if (!App.Map.validCoordinates(coordinates)) {
             self.renderShape(coordinates);
           }
         });
@@ -1449,24 +1463,21 @@
     }
 
     setupMarkerEventListeners() {
-      var self = this;
-
-      // Desktop hover events for markers only
-      self.map.on('mouseenter', 'custom-marker',
-        self.handleMarkerMouseEnter.bind(self)
+      this.map.on('mouseenter', 'custom-marker',
+        this.handleMarkerMouseEnter.bind(this)
       );
-      self.map.on('mouseleave', 'custom-marker',
-        self.handleMarkerMouseLeave.bind(self)
+      this.map.on('mouseleave', 'custom-marker',
+        this.handleMarkerMouseLeave.bind(this)
       );
 
       // Only add popup handlers when NOT in edit mode
       if (!this.editable) {
         // Consolidated popup handler for all interactive layers
-        self.map.on('click', function(e) {
-          self.handleUnifiedPopup(e);
+        this.map.on('click', (e) => {
+          this.handleUnifiedPopup(e);
         });
-        self.map.on('touchend', function(e) {
-          self.handleUnifiedPopup(e);
+        this.map.on('touchend', (e) => {
+          this.handleUnifiedPopup(e);
         });
       }
     }
@@ -2014,7 +2025,7 @@
       // Wait for modal to be fully rendered before initializing map
       setTimeout(() => {
         // Initialize new MapboxMap instance in modal
-        this.modalMapInstance = new MapboxMap(modalContainer);
+        this.modalMapInstance = new MapboxMapController(modalContainer);
 
         // Apply current view state after map loads
         this.modalMapInstance.map.on('load', () => {
@@ -2071,7 +2082,6 @@
           var modalElement = document.getElementById(this.modalId);
           if (modalElement) {
             modalElement.remove();
-            console.log('Modal HTML removed');
           }
         }, 50);
 
@@ -2081,40 +2091,18 @@
         this.isInModal = false;
       }
     }
+
+    // Public interface method for external use
+    setMarkerTo(lat, lng) {
+      // TODO
+      // if (this.centerMarker) {
+      //   this.centerMarker.setLatLng([lat, lng]);
+      // } else {
+      //   this.centerMarker = this.createMarker(lat, lng);
+      // }
+      // this.updateCenterMarkerFormFields();
+    }
   }
 
-  // Keep the existing App.Mapbox object
-  App.Mapbox = {
-    maps: [], // Store MapboxMap instances for proper cleanup
-    initialize: function() {
-      var self = this;
-      $("[data-mapbox]:visible").each(function() {
-        var element = this;
-        var mapInstance = self.initializeFor(element)
-
-        self.maps.push(mapInstance);
-      });
-    },
-    initializeFor: function(element) {
-      return new MapboxMap(element);
-    },
-    destroy: function() {
-      // Use the proper destroy method for MapboxMap instances
-      this.maps.forEach(function(mapInstance) {
-        try {
-          mapInstance.destroy();
-        } catch (e) {
-          console.warn('Error destroying map instance:', e);
-        }
-      });
-
-      this.maps = [];
-    },
-    validCoordinates: function(coordinates) {
-      return !isNaN(parseFloat(coordinates.lat)) && !isNaN(parseFloat(coordinates.long));
-    },
-    isNumeric: function(n) {
-      return !isNaN(parseFloat(n)) && isFinite(n);
-    }
-  };
+  App.MapboxMapController = MapboxMapController;
 }).call(this);

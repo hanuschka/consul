@@ -20,7 +20,7 @@ if (window.L) {
       var container = L.DomUtil.create('div', 'leaflet-control-fullscreen leaflet-bar leaflet-control');
 
       // Create button
-      var button = L.DomUtil.create('a', 'leaflet-control-fullscreen-button', container);
+      var button = L.DomUtil.create('button', 'leaflet-control-fullscreen-button', container);
       button.href = '#';
       button.title = 'Vollbild-Modus';
       button.innerHTML = '<i class="fas fa-expand"></i>';
@@ -109,7 +109,7 @@ if (window.L) {
       this.modalMapElement = modalContainer;
 
       // Initialize new Leaflet map in modal
-      App.Map.initializeMap(modalContainer);
+      App.Map.initializeMapFor(modalContainer);
 
       // Find the newly created map and sync view with proper timing
       setTimeout(() => {

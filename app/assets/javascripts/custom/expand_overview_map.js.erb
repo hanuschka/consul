@@ -15,9 +15,9 @@
         $mapDiv.attr("aria-expanded","true")
         $toggler.attr("aria-expanded","true")
         $toggler.text("<%= I18n.t('custom.proposals.index.show_smaller_map') %>")
-      } 
+      }
 
-      App.Map.maps.forEach(function(map) { map.invalidateSize() } )
+      App.Map.instances.forEach(function(map) { map.invalidateSize() } )
     },
 
     initialize: function() {

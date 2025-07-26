@@ -8,11 +8,11 @@
       });
     },
     destroy: function() {
-      App.Map.maps.forEach(function(map) {
+      App.Map.instances.forEach(function(map) {
         map.off();
         map.remove();
       });
-      App.Map.maps = [];
+      App.Map.instances = [];
     },
     initializeMap: function(element) {
       var addMarkerInvestments, clearFormfields, createMarker, dataCoordinates, editable, formCoordinates,
@@ -118,7 +118,7 @@
       };
       mapCenterLatLng = new L.LatLng(mapCenterLatitude, mapCenterLongitude);
       map = L.map(element.id).setView(mapCenterLatLng, zoom);
-      App.Map.maps.push(map);
+      App.Map.instances.push(map);
       L.tileLayer(mapTilesProvider, {
         attribution: mapAttribution
       }).addTo(map);

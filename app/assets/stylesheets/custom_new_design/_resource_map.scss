@@ -10,6 +10,10 @@
   }
 }
 
+.leaflet-popup-content {
+  padding: 0;
+}
+
 .resources-list--map {
   .leaflet-container a.leaflet-popup-close-button {
     top: 4px;

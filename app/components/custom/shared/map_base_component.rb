@@ -58,7 +58,8 @@ class Shared::MapBaseComponent < ApplicationComponent
         shape_input_selector: "##{map_location_input_id(@parent_class, "shape")}",
         editable: @editable,
         dont_open_marker_popup: @dont_open_marker_popup,
-        set_admin_center_with_marker: @set_admin_center_with_marker
+        set_admin_center_with_marker: @set_admin_center_with_marker,
+        colors: colors
       }
     end
 
@@ -91,5 +92,12 @@ class Shared::MapBaseComponent < ApplicationComponent
       elsif @projekt.present?
         @projekt.map_location.shape_json_data.presence
       end
+    end
+
+    def colors
+      {
+        admin_shapes: "red",
+        projekt_center_marker: "#004a83"
+      }.to_json
     end
 end

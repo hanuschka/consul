@@ -57,6 +57,7 @@
         <% else %>
           <%= render Shared::ResourceMapComponent.new(
             marker_coordinates: @investment_coordinates,
+            projekt_phase: @projekt_phase,
             resource_type: Budget::Investment
           ) %>
           <div class="flex-layout">

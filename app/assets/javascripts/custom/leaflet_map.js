@@ -63,7 +63,7 @@
       this.markersGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
       this.isRemovingShapes = false;
 
-      // Marker styling
+      // Marker styling for Point of Interest etc
       this.userMarkerCategoryIcon = null;
       this.userMarkerCategoryColor = null;
 
@@ -334,7 +334,7 @@
     }
 
     createMarker(latitude, longitude, color, iconClass, center_marker = false) {
-      console.log("createMarker", latitude, longitude, color, iconClass);
+      // console.log("createMarker", latitude, longitude, color, iconClass);
       const markerLatLng = new L.LatLng(latitude, longitude);
 
       if (this.userMarkerCategoryIcon) {

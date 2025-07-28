@@ -12,7 +12,7 @@
       this.resourcesName = $element.data("parent-class");
       this.markerCoordinates = $element.data("process-coordinates");
       this.adminEditor = $element.data("admin-editor");
-      this.editable = this.editable || this.adminEditor;
+      this.editable = $element.data("editable") || this.adminEditor;
       this.enableGeomanControls = $element.data("enable-geoman-controls");
       this.adminShape = $element.data("admin-shape");
       this.saturatedAdminShape = $element.data("saturated-admin-shape")
@@ -80,6 +80,8 @@
       });
 
       this.setupEventListeners();
+
+      this.setupMarkerCategorySelection();
     }
 
     initializeMap() {
@@ -124,9 +126,21 @@
         this.map.on('touchmove', this.handleTouchMove);
 
         if (!this.adminEditor) {
-          this.map.on('click', this.handleMapInteraction);
-          this.map.on('touchend', this.handleMapInteraction);
+          this.map.on('click', this.handleMapInteraction.bind(this));
+          this.map.on('touchend', this.handleMapInteraction.bind(this));
         }
+      }
+    }
+
+    setupMarkerCategorySelection() {
+      const $categorySelect = $(".js-map-update-pin-style");
+
+      $categorySelect.on("change", (e) => {
+        this.updateMarkerStyleFromCategorySelect(e.target);
+      });
+
+      if ($categorySelect.length) {
+        this.updateMarkerStyleFromCategorySelect($categorySelect.get(0));
       }
     }
 
@@ -173,16 +187,17 @@
       );
 
       // Check for all interactive features (markers, shapes, clusters)
-      var markerFeatures = self.map.queryRenderedFeatures(e.point, {
+      var markerFeatures = this.map.queryRenderedFeatures(e.point, {
         layers: ['custom-marker', 'custom-marker-icon', 'clusters']
       });
 
       var userShapeFeatures = [];
-      var allLayers = self.map.getStyle().layers;
-      allLayers.forEach(function(layer) {
+      var allLayers = this.map.getStyle().layers;
+
+      allLayers.forEach((layer) => {
         // Only check user shapes - admin shapes should not prevent marker placement in edit mode
         if (layer.id.includes('user-shape-')) {
-          var layerFeatures = self.map.queryRenderedFeatures(e.point, {
+          var layerFeatures = this.map.queryRenderedFeatures(e.point, {
             layers: [layer.id]
           });
           if (layerFeatures.length > 0) {
@@ -193,14 +208,14 @@
 
       // Check current draw mode
       var currentMode = 'simple_select';
-      if (self.draw) {
-        currentMode = self.draw.getMode();
+      if (this.draw) {
+        currentMode = this.draw.getMode();
       }
 
-      var drawFetures = self.draw ? self.draw.getAll().features : [];
+      var drawFetures = this.draw ? this.draw.getAll().features : [];
 
       // Check if there are existing draw features
-      var hasExistingDrawFeatures = self.draw && drawFetures.length > 0;
+      var hasExistingDrawFeatures = this.draw && drawFetures.length > 0;
       var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
 
       // Place editable marker if:
@@ -208,7 +223,7 @@
       // - Not clicked on draw controls
       // - No existing draw features (to avoid conflicts)
       if (hasOnlyPointDrawFeatures || (markerFeatures.length === 0 && userShapeFeatures.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
-        self.moveOrPlaceMarker(e);
+        this.moveOrPlaceMarker(e);
       }
     };
 
@@ -265,6 +280,13 @@
 
       // Store reference for cleanup
       this.instructionOverlay = overlay;
+    }
+
+    updateMarkerStyleFromCategorySelect(element) {
+      const selectedOption = element.options[element.selectedIndex];
+      this.userMarkerCategoryIcon = selectedOption.dataset.icon;
+      this.userMarkerCategoryColor = selectedOption.dataset.color;
+      this.updateMarkerWithCategoryStyle();
     }
 
     addCustomDeleteButton() {
@@ -515,64 +537,62 @@
     }
 
     setupDrawEventListeners() {
-      var self = this;
-
       // Update form fields when shapes are created, updated, or deleted
-      this.map.on('draw.create', function(e) {
-        var wasInPointMode = self.draw.getMode() === 'draw_point';
+      this.map.on('draw.create', (e) => {
+        var wasInPointMode = this.draw.getMode() === 'draw_point';
 
         // If not admin editor, ensure only one polygon exists
-        if (!self.adminEditor) {
-          var allFeatures = self.draw ? self.draw.getAll() : { features: [] };
+        if (!this.adminEditor) {
+          var allFeatures = this.draw ? this.draw.getAll() : { features: [] };
           // If we have more than one feature, remove all but the newest one
           if (allFeatures.features.length > 1) {
             // Get the newly created feature(s) from the event
-            var newFeatureIds = e.features.map(function(feature) {
+            var newFeatureIds = e.features.map((feature) => {
               return feature.id;
             });
 
             // Delete all features except the newly created ones
-            var featuresToDelete = allFeatures.features.filter(function(feature) {
+            var featuresToDelete = allFeatures.features.filter((feature) => {
               return newFeatureIds.indexOf(feature.id) === -1;
             });
 
-            var idsToDelete = featuresToDelete.map(function(feature) {
+            var idsToDelete = featuresToDelete.map((feature) => {
               return feature.id;
             });
 
             if (idsToDelete.length > 0) {
-              self.draw.delete(idsToDelete);
+              this.draw.delete(idsToDelete);
             }
           }
         }
 
-        self.updateShapeFormFields();
+        this.updateShapeFormFields();
         // Remove any existing marker-coordinates when a shape is created
-        self.removeEditableMarker();
+        this.removeEditableMarker();
 
         // Keep point drawing mode active after creating a point
         if (wasInPointMode && e.features.length > 0 && e.features[0].geometry.type === 'Point') {
-          setTimeout(function() {
-            if (self.draw) {
-              self.draw.changeMode('draw_point');
+          setTimeout(() => {
+            if (this.draw) {
+              this.draw.changeMode('draw_point');
             }
           }, 50);
         }
       });
 
-      this.map.on('draw.update', function(e) {
-        self.updateShapeFormFields();
+      this.map.on('draw.update', (e) => {
+        this.updateShapeFormFields();
       });
 
-      this.map.on('draw.delete', function(e) {
-        self.updateShapeFormFields();
+      this.map.on('draw.delete', (e) => {
+        this.updateShapeFormFields();
       });
 
       // Listen for mode changes to help with conflict resolution
-      this.map.on('draw.modechange', function(e) {
+      this.map.on('draw.modechange', (e) => {
         // If entering a drawing mode, clear any existing marker-coordinates
         if (e.mode.startsWith('draw_')) {
-          self.removeEditableMarker();
+          this.removeEditableMarker();
         }
       });
 
@@ -597,13 +617,13 @@
         }
       });
 
-      this.map.on('mouseup', function(e) {
-        if (self.draw && self.draw.getMode() === 'draw_point' && !isDragging && mouseDownPoint) {
+      this.map.on('mouseup', (e) => {
+        if (this.draw && this.draw.getMode() === 'draw_point' && !isDragging && mouseDownPoint) {
           // Check if we clicked on an existing draw feature
-          var clickedFeatures = self.map.queryRenderedFeatures(e.point);
+          var clickedFeatures = this.map.queryRenderedFeatures(e.point);
           var targetFeatureId = null;
 
-          clickedFeatures.forEach(function(feature) {
+          clickedFeatures.forEach((feature) => {
             if (feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot') {
               if (feature.properties && feature.properties.id) {
                 targetFeatureId = feature.properties.id;
@@ -615,7 +635,7 @@
 
           if (targetFeatureId) {
             // Switch to select mode and select the clicked feature
-            self.draw.changeMode('simple_select', {
+            this.draw.changeMode('simple_select', {
               featureIds: [targetFeatureId]
             });
           }
@@ -628,20 +648,19 @@
     }
 
     setupDrawCursorEffects() {
-      var self = this;
       var isDragging = false;
 
       // Helper function to check if point has draw features
-      function hasDrawFeature(point) {
-        var features = self.map.queryRenderedFeatures(point);
-        return features.some(function(feature) {
+      const hasDrawFeature = (point) => {
+        var features = this.map.queryRenderedFeatures(point);
+        return features.some((feature) => {
           return feature.source === 'mapbox-gl-draw-cold' || feature.source === 'mapbox-gl-draw-hot';
         });
       }
 
       // Track drag state
       this.map.on('mousedown', function(e) {
-        isDragging = self.draw && hasDrawFeature(e.point);
+        isDragging = this.draw && hasDrawFeature(e.point);
       });
 
       this.map.on('mouseup', function() {
@@ -649,10 +668,10 @@
       });
 
       this.map.on('mousemove', function(e) {
-        if (!self.draw) return;
+        if (!this.draw) return;
 
         var cursor = isDragging ? 'move' : hasDrawFeature(e.point) ? 'pointer' : '';
-        self.map.getCanvas().style.cursor = cursor;
+        this.map.getCanvas().style.cursor = cursor;
       });
     }
 
@@ -1522,7 +1541,6 @@
 
       // Check if source already exists to prevent duplicate source error
       if (this.map.getSource(sourceId)) {
-        // console.warn('Source with ID', sourceId, 'already exists. Skipping...');
         return;
       }
 
@@ -2086,7 +2104,6 @@
         }, 50);
 
       } catch (e) {
-        console.error('Error closing modal:', e);
         this.modalMapInstance = null;
         this.isInModal = false;
       }

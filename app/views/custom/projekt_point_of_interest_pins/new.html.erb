@@ -42,27 +42,25 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="small-12 medium-9">
-        <%= category_select_html %>
+
+    <div class="small-12 medium-9">
+      <%= category_select_html %>
+    </div>
+
+    <div class="small-12">
+      <div class="new-card" id='map-container'>
+        <% i18n_scope = "test" %>
+        <%= render("map_locations/form_fields",
+                   form:          f,
+                   map_location:  @pin.map_location_with_default,
+                   label:         t("#{i18n_scope}.form.map_location"),
+                   help:          t("custom.user_resources.form.map_location_instructions"),
+                   mappable:      @pin,
+                   projekt_phase: @projekt_phase,
+                   parent_class:  "point-of-interest-map") %>
       </div>
     </div>
 
-    <div class="row">
-      <div class="small-12">
-        <div class="new-card" id='map-container'>
-          <% i18n_scope = "test" %>
-          <%= render("map_locations/form_fields",
-            form:          f,
-            map_location:  @pin.map_location_with_default,
-            label:         t("#{i18n_scope}.form.map_location"),
-            help:          t("custom.user_resources.form.map_location_instructions"),
-            mappable:      @pin,
-            projekt_phase: @projekt_phase,
-            parent_class:  "point-of-interest-map") %>
-        </div>
-      </div>
-    </div>
 
     <div class="user-resources-form--submit-section">
       <%= f.submit t("custom.user_resources.form.submit_button"), class: "button" %>

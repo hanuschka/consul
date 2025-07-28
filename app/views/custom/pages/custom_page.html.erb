@@ -69,5 +69,7 @@
 </main>
 
 <script>
-  App.Projekts.toggleDefaultProjekts();
+  $(document).on('turbolinks:load', function() {
+    App.Projekts.toggleDefaultProjekts();
+  });
 </script>

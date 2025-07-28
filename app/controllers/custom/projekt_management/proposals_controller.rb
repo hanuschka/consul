@@ -26,15 +26,11 @@ class ProjektManagement::ProposalsController < ProjektManagement::BaseController
     end
   end
 
-  def edit
-    @projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
+  def show
     @proposal = Proposal.find(params[:id])
+    @projekt_phase = @proposal.projekt_phase
 
-    respond_to do |format|
-      format.js do
-        render "custom/admin/proposals/edit"
-      end
-    end
+    render "custom/admin/proposals/show"
   end
 
   def update

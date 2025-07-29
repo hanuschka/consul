@@ -43,6 +43,7 @@
       // Process configuration
       this.process = $element.data("parent-class");
       this.processCoordinates = $element.data("process-coordinates");
+      console.log("this.processCoordinates", this.processCoordinates)
 
       // Form selectors
       this.latitudeInputSelector = $element.data("latitude-input-selector");
@@ -101,14 +102,15 @@
         this.map.addControl(fullscreenControl);
       }
 
-      // Set up map events
-      this.map.on("moveend", () => {
-        if (this.adminEditor && !this.setAdminCenterWithMarker) {
-          $(this.latitudeInputSelector).val(this.map.getCenter().lat);
-          $(this.longitudeInputSelector).val(this.map.getCenter().lng);
-          $(this.zoomInputSelector).val(this.map.getZoom());
-        }
-      });
+      this.map.on("moveend", this.handleMapMoveEnd);
+    }
+
+    handleMapMoveEnd = () => {
+      if (this.adminEditor && !this.setAdminCenterWithMarker) {
+        $(this.latitudeInputSelector).val(this.map.getCenter().lat);
+        $(this.longitudeInputSelector).val(this.map.getCenter().lng);
+        $(this.zoomInputSelector).val(this.map.getZoom());
+      }
     }
 
     setupBasicPlugins() {
@@ -479,7 +481,7 @@
       adminShapes.forEach((singleAdminShape) => {
         if (App.Map.isCenterMarkerCoordinate(singleAdminShape)) {
           if (this.adminEditor) {
-            const adminShapeMarker = this.createMarker(
+            this.createMarker(
               singleAdminShape.lat,
               singleAdminShape.long,
               this.adminShapesColor,
@@ -869,12 +871,14 @@
     }
 
     renderGeoJsonPoint(feature, markerCoordinate) {
+      console.log("renderGeoJsonPoint", feature, markerCoordinate)
       // Render Point features as regular markers
       const coords = feature.geometry.coordinates;
       let markerColor = '';
       const iconClass = (feature.properties.fa_icon_class || markerCoordinate.fa_icon_class);
 
-      if (feature.properties.from_admin) {
+      // if (feature.properties.from_admin) {
+      if (this.adminEditor) {
         markerColor = this.adminShapesColor;
       } else {
         markerColor = (feature.properties.color || markerCoordinate.color);

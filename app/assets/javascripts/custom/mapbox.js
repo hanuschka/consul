@@ -46,6 +46,8 @@
       this.defaultMarkerBackgroundCircleRadius = 14;
       this.hoveredFeature = null;
       this.draw = null; // Mapbox Draw instance for polygon editing
+      this.centerMarkerControl = null; // Reference to center marker control
+      this.centerMarkerMode = (!this.adminEditor && this.editable) ; // Track center marker placement mode
 
       if (this.editable) {
         this.touchStartTime = null;
@@ -72,7 +74,6 @@
         this.addControls();
 
         this.renderAdminShape();
-
         // // User shapes
         this.renderMarkerCoordinates();
         this.renderResourceShapes();
@@ -171,7 +172,9 @@
       var target = e.originalEvent ? e.originalEvent.target : e.target;
       var isDrawControl = target && (
         target.classList.contains('mapbox-gl-draw_ctrl-draw-btn') ||
-        target.closest('.mapbox-gl-draw_ctrl')
+        target.closest('.mapbox-gl-draw_ctrl') ||
+        target.classList.contains('mapbox-center-marker-button') ||
+        target.closest('.mapbox-center-marker-control')
       );
 
       // Check for all interactive features (markers, shapes, clusters)
@@ -207,12 +210,10 @@
       var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
 
       // Place editable marker if:
-      // - No conflicting features clicked (markers, user shapes, or clusters)
+      // - In center marker mode OR in simple_select mode with no conflicting features
       // - Not clicked on draw controls
-      // - No existing draw features (to avoid conflicts)
-      // if (hasOnlyPointDrawFeatures || (markerFeatures.length === 0 && userShapeFeatures.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
-      if (currentMode === "simple_select") {
-        this.moveOrPlaceMarker(e);
+      if ((this.centerMarkerMode) && !isDrawControl) {
+        this.moveOrPlaceCenterMarker(e);
       }
     };
 
@@ -243,6 +244,8 @@
       }
 
       if (this.editable && typeof MapboxDraw !== 'undefined') {
+        // Add center marker control before draw controls
+        this.addCenterMarkerControl();
         this.initializePolygonEditor();
       }
     }
@@ -283,6 +286,13 @@
 
       var customDeleteControl = new CustomDeleteControl(this);
       this.map.addControl(customDeleteControl, 'top-right');
+    }
+
+    addCenterMarkerControl() {
+      if (!this.editable) return;
+
+      this.centerMarkerControl = new CenterMarkerControl(this);
+      this.map.addControl(this.centerMarkerControl, 'top-right');
     }
 
     togglePoiLabels(visible) {
@@ -485,9 +495,12 @@
 
       if (this.enableGeomanControls) {
         controls.trash = true;
-        controls.line = true;
-        controls.point = true;
+        controls.line_string = true;
         controls.polygon = true;
+
+        if (this.adminEditor) {
+          controls.point = true;
+        }
       }
 
       // const defaultMode = this.adminEditor ? 'draw_point' : 'simple_select';
@@ -540,11 +553,20 @@
 
       // Listen for mode changes to help with conflict resolution
       this.map.on('draw.modechange', (e) => {
-        // If entering a drawing mode, clear any existing marker-coordinates
+        console.log('Draw mode changed to:', e.mode);
+
+        // If entering any drawing mode, deactivate center marker mode
         if (e.mode.startsWith('draw_')) {
+          // Deactivate center marker mode when entering draw mode
+          if (this.centerMarkerControl) {
+            this.centerMarkerControl.deactivate();
+          }
         //   this.removeCenterMarker();
         }
       });
+
+      // Also listen for draw control button clicks directly
+      this.setupDrawControlClickListeners();
 
       // Track mouse state for distinguishing clicks from drags
       var mouseDownPoint = null;
@@ -600,6 +622,23 @@
       });
     }
 
+    setupDrawControlClickListeners() {
+      // Wait for draw controls to be added to the DOM
+      setTimeout(() => {
+        var drawControls = document.querySelectorAll('.mapbox-gl-draw_ctrl-draw-btn');
+        drawControls.forEach((button) => {
+          button.addEventListener('click', () => {
+            // Small delay to ensure the mode change has been processed
+            setTimeout(() => {
+              if (this.centerMarkerControl) {
+                this.centerMarkerControl.deactivate();
+              }
+            }, 50);
+          });
+        });
+      }, 100);
+    }
+
     handleDrawCreate = (e) => {
       console.log("handleDrawCreate")
       var wasInPointMode = this.draw.getMode() === 'draw_point';
@@ -631,7 +670,10 @@
 
       this.updateShapeFormFields();
       // Remove any existing marker-coordinates when a shape is created
-      this.removeCenterMarker();
+
+      if (!this.adminEditor) {
+        this.removeCenterMarker();
+      }
 
       // Keep point drawing mode active after creating a point
       // if (wasInPointMode && e.features.length > 0 && e.features[0].geometry.type === 'Point') {
@@ -676,6 +718,10 @@
       if (!this.draw || !this.shapeInputSelector) return;
 
       var allFeatures = this.draw.getAll();
+
+      if (this.adminEditor) {
+        console.log({allFeatures})
+      }
 
       $(this.shapeInputSelector).val(JSON.stringify(allFeatures));
 
@@ -773,7 +819,7 @@
     }
 
     // Helper method to delete all user markers (but not admin markers)
-    deleteAllUserMarkers() {
+    clearAllMarkersAndShapes() {
       // Remove all pin markers
       // this.pinMarkers.forEach(function(marker) {
       //   try {
@@ -783,11 +829,13 @@
       //   }
       // });
       // this.pinMarkers = [];
-
-      // Remove editable marker
-      this.removeCenterMarker();
+      if (this.draw) {
+        this.draw.deleteAll();
+        this.updateShapeFormFields();
+      }
 
       if (!this.adminEditor) {
+        this.removeCenterMarker();
         this.clearFormFields();
       }
     }
@@ -809,17 +857,22 @@
     }
 
     // function to create or move existing marker (similar to Leaflet version)
-    moveOrPlaceMarker(e) {
-      console.log("moveOrPlaceMarker")
+    moveOrPlaceCenterMarker(e) {
+      console.log("moveOrPlaceCenterMarker")
       var lngLat = e.lngLat;
 
       // Clear any existing draw features when placing an editable marker
       console.log("this.draw", this.draw)
       if (this.draw) {
         var allFeatures = this.draw.getAll();
-        if (allFeatures.features.length > 0) {
-          this.draw.deleteAll();
+        console.log({allFeatures})
+
+        if (!this.adminEditor) {
+          if (allFeatures.features.length > 0) {
+            this.draw.deleteAll();
+          }
         }
+
         console.log("switch draw mode to simple_select")
         // Switch draw mode to simple_select to avoid conflicts
         this.draw.changeMode('simple_select');
@@ -835,6 +888,15 @@
       this.updateFormfieldsFromEditableMarker();
     }
 
+    // Methods for center marker mode management
+    setCenterMarkerMode(enabled) {
+      this.centerMarkerMode = enabled;
+
+      if (enabled && this.draw) {
+        this.draw.changeMode('simple_select');
+      }
+    }
+
     // function to update form fields when editable marker is updated
     updateFormfieldsFromEditableMarker() {
       if (!this.centerMarker) return;
@@ -848,9 +910,9 @@
       $(this.shapeInputSelector).val(JSON.stringify({}));
 
       // Clear any existing polygons when updating marker coordinates
-      if (this.draw) {
-        this.draw.deleteAll();
-      }
+      // if (this.draw) {
+      //   this.draw.deleteAll();
+      // }
 
       if (this.adminEditor) {
         $(this.showAdminShapeInputSelector).val(true);
@@ -1752,14 +1814,7 @@
 
       // Add click event listener
       button.addEventListener('click', () => {
-        // Delete all draw features (polygons, lines, points from draw tools)
-        if (this.mapboxMapInstance.draw) {
-          this.mapboxMapInstance.draw.deleteAll();
-          this.mapboxMapInstance.updateShapeFormFields();
-        }
-
-        // Delete all user markers (pin markers and editable marker)
-        this.mapboxMapInstance.deleteAllUserMarkers();
+        this.mapboxMapInstance.clearAllMarkersAndShapes();
       });
 
       this._container.appendChild(button);
@@ -2126,6 +2181,123 @@
       //   this.centerMarker = this.createMarker(lat, lng);
       // }
       // this.updateCenterMarkerFormFields();
+    }
+  }
+
+  // Custom control for center marker placement
+  class CenterMarkerControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+      this.isActive = false;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox-center-marker-control';
+
+      this._button = document.createElement('button');
+      this._button.type = 'button';
+      this._button.className = 'mapbox-center-marker-button';
+      this._button.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+      this._button.title = 'Mittelpunkt-Marker platzieren';
+
+      // Add click event listener
+      this._button.addEventListener('click', () => {
+        this.toggleCenterMarkerMode();
+      });
+
+      this._container.appendChild(this._button);
+      return this._container;
+    }
+
+    toggleCenterMarkerMode() {
+      this.isActive = !this.isActive;
+
+      // Update button appearance
+      if (this.isActive) {
+        this._button.classList.add('active');
+        this._button.style.backgroundColor = '#0078A8';
+        this._button.style.color = 'white';
+
+        // Ensure any active draw modes are deactivated
+        if (this.mapboxMapInstance.draw) {
+          this.mapboxMapInstance.draw.changeMode('simple_select');
+        }
+      }
+      else {
+        this._button.classList.remove('active');
+        this._button.style.backgroundColor = '';
+        this._button.style.color = '';
+      }
+
+      // Update the map controller's center marker mode
+      this.mapboxMapInstance.setCenterMarkerMode(this.isActive);
+
+      // // Provide visual feedback
+      // if (this.isActive) {
+      //   this.showModeInstruction();
+      // } else {
+      //   this.hideModeInstruction();
+      // }
+    }
+
+    // showModeInstruction() {
+      // // Remove any existing instruction
+      // this.hideModeInstruction();
+
+      // var instruction = document.createElement('div');
+      // instruction.className = 'mapbox-center-marker-instruction';
+      // instruction.innerHTML = '<span>Klicken Sie auf die Karte, um den Mittelpunkt-Marker zu platzieren</span>';
+      // instruction.style.cssText = `
+      //   position: absolute;
+      //   top: 10px;
+      //   left: 50%;
+      //   transform: translateX(-50%);
+      //   background: rgba(0, 120, 168, 0.9);
+      //   color: white;
+      //   padding: 8px 16px;
+      //   border-radius: 4px;
+      //   font-size: 14px;
+      //   z-index: 1000;
+      //   pointer-events: none;
+      //   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      // `;
+
+      // this.mapboxMapInstance.element.style.position = 'relative';
+      // this.mapboxMapInstance.element.appendChild(instruction);
+      // this._instruction = instruction;
+
+      // // Auto-hide after 4 seconds
+      // setTimeout(() => {
+      //   this.hideModeInstruction();
+      // }, 4000);
+    // }
+
+    hideModeInstruction() {
+      if (this._instruction) {
+        this._instruction.remove();
+        this._instruction = null;
+      }
+    }
+
+    // Deactivate center marker mode (called externally when other draw modes are activated)
+    deactivate() {
+      if (this.isActive) {
+        this.isActive = false;
+        this._button.classList.remove('active');
+        this._button.style.backgroundColor = '';
+        this._button.style.color = '';
+        this._button.title = 'Mittelpunkt-Marker platzieren';
+        this.mapboxMapInstance.setCenterMarkerMode(false);
+        this.hideModeInstruction();
+      }
+    }
+
+    onRemove() {
+      this.hideModeInstruction();
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
     }
   }
 

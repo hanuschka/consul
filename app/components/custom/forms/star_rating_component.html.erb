@@ -1,0 +1,6 @@
+<div class="star-rating">
+  <% @scale.downto(1) do |i| %>
+    <%= @f.radio_button @attribute.to_s, i, id: "star_#{@attribute}_#{i}", label: false %>
+    <label for="<%= "star_#{@attribute}_#{i}" %>"><span class="empty">&#9734;</span><span class="full">&#9733;</span></label>
+  <% end %>
+</div>

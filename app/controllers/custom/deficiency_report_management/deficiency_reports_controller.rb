@@ -140,6 +140,11 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
 
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
+
+      if Setting["deficiency_reports.send_feedback_form_link"].present? &&
+          dr.deficiency_report_status_id.in?(DeficiencyReport::Status.where(archive_reports: true).pluck(:id))
+        DeficiencyReportMailer.send_feedback_form_link(dr).deliver_later(wait: 24.hours)
+      end
     end
 
     def update_status_change_date(dr)

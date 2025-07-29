@@ -200,6 +200,10 @@ module Abilities
       can [:create], ProjektPointOfInterestPin do |pin|
         pin.projekt_phase.permission_problem(user).blank?
       end
+
+      can [:create], DeficiencyReport::FeedbackForm do |ff|
+        ff.deficiency_report.author_id == user.id
+      end
     end
   end
 end

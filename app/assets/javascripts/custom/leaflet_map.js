@@ -102,10 +102,10 @@
         this.map.addControl(fullscreenControl);
       }
 
-      this.map.on("moveend", this.handleMapMoveEnd);
+      this.map.on("moveend", this.handleMapMoveEnd.bind(this));
     }
 
-    handleMapMoveEnd = () => {
+    handleMapMoveEnd() {
       if (this.adminEditor && !this.setAdminCenterWithMarker) {
         $(this.latitudeInputSelector).val(this.map.getCenter().lat);
         $(this.longitudeInputSelector).val(this.map.getCenter().lng);

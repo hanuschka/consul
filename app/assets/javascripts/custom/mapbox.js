@@ -92,6 +92,7 @@
       this.handleTouchStart = this.handleTouchStart.bind(this);
       this.handleTouchMove = this.handleTouchMove.bind(this);
       this.handleMapInteractionForMoveOrPlaceCenterMarker = this.handleMapInteractionForMoveOrPlaceCenterMarker.bind(this);
+      this.handleDrawCreate = this.handleDrawCreate.bind(this);
     }
 
     initializeMap() {
@@ -647,7 +648,7 @@
       }, 100);
     }
 
-    handleDrawCreate = (e) => {
+    handleDrawCreate(e) {
       console.log("handleDrawCreate")
       var wasInPointMode = this.draw.getMode() === 'draw_point';
 

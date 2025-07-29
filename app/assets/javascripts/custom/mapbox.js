@@ -63,6 +63,7 @@
     initialize() {
       this.map = this.initializeMap();
       this.mapLoaded = false; // Track map loading state
+      this.bindEventListeners();
 
       // Wait for the map to load before adding marker-coordinates
       this.map.on('load', () => {
@@ -86,6 +87,13 @@
       this.setupMarkerCategorySelection();
     }
 
+    bindEventListeners() {
+      this.handleMoveEnd = this.handleMoveEnd.bind(this);
+      this.handleTouchStart = this.handleTouchStart.bind(this);
+      this.handleTouchMove = this.handleTouchMove.bind(this);
+      this.handleMapInteractionForMoveOrPlaceCenterMarker = this.handleMapInteractionForMoveOrPlaceCenterMarker.bind(this);
+    }
+
     initializeMap() {
       mapboxgl.accessToken = this.element.dataset.mapboxPublicToken;
 
@@ -105,7 +113,7 @@
 
    setupEventListeners() {
       if (this.adminEditor) {
-        this.map.on("moveend", this.handleMoveEnd);
+        this.map.on("moveend", this.handleMoveEnd.bind(this));
       }
 
       if (this.editable) {
@@ -132,7 +140,7 @@
       }
     }
 
-    handleMoveEnd = (e) => {
+    handleMoveEnd(e) {
       var center = this.map.getCenter();
       $(this.latitudeInputSelector).val(center.lat);
       $(this.longitudeInputSelector).val(center.lng);
@@ -140,13 +148,13 @@
       $(this.zoomInputSelector).val(this.map.getZoom());
     }
 
-    handleTouchStart = (e) => {
+    handleTouchStart(e) {
       this.touchStartTime = Date.now();
       this.touchStartPoint = e.point;
       this.touchMoved = false;
     }
 
-    handleTouchMove = (e) => {
+    handleTouchMove(e) {
       if (this.touchStartPoint) {
         var distance = Math.sqrt(
           Math.pow(e.point.x - this.touchStartPoint.x, 2) +
@@ -158,7 +166,7 @@
       }
     }
 
-    handleMapInteractionForMoveOrPlaceCenterMarker = (e) => {
+    handleMapInteractionForMoveOrPlaceCenterMarker(e) {
       console.log("handleMapInteractionForMoveOrPlaceCenterMarker")
       // For touch events, only proceed if it was a tap (not a drag)
       if (e.type === 'touchend') {
@@ -206,8 +214,8 @@
       var drawFetures = this.draw ? this.draw.getAll().features : [];
 
       // Check if there are existing draw features
-      var hasExistingDrawFeatures = this.draw && drawFetures.length > 0;
-      var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
+      // var hasExistingDrawFeatures = this.draw && drawFetures.length > 0;
+      // var hasOnlyPointDrawFeatures = drawFetures.length === 1 && drawFetures[0].geometry.type.toLowerCase() === "point"
 
       // Place editable marker if:
       // - In center marker mode OR in simple_select mode with no conflicting features

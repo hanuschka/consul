@@ -40,8 +40,6 @@
       this.adminShapesColor = this.colors.admin_shapes;
       this.projektCenterMarkerColor = this.colors.projekt_center_marker;
 
-      this.setAdminCenterWithMarker = $element.data('set-admin-center-with-marker');
-
       // Process configuration
       this.process = $element.data("parent-class");
       this.processCoordinates = $element.data("process-coordinates");
@@ -57,6 +55,7 @@
       this.editable = $element.data("editable");
       this.enableGeomanControls = $element.data("enable-geoman-controls");
       this.dontOpenMarkerPopup = $element.data('dont-open-marker-popup');
+      this.setAdminCenterWithMarker = $element.data('set-admin-center-with-marker');
 
       // State
       this.centerMarker = null;
@@ -367,16 +366,14 @@
       if (this.adminEditor && !this.setAdminCenterWithMarker) return;
 
       if (this.centerMarker) {
-        console.log("update existing marker");
         this.centerMarker.setLatLng(e.latlng);
         this.updateMarkerWithCategoryStyle();
       } else {
         let markerColor = null;
 
         if (this.process === "projekts") {
-          markerColor = this.colors.projekt_center_marker;
+          markerColor = this.projektCenterMarkerColor;
         }
-        console.log('update custom marker. markerColor:', markerColor);
         this.centerMarker = this.createMarker(e.latlng.lat, e.latlng.lng, markerColor, null, true);
       }
 

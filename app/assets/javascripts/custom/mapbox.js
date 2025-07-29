@@ -28,13 +28,14 @@
       this.styleId = $element.data("mapbox-style-id")
       this.layersData = $element.data('map-layers')
       this.dontOpenMarkerPopup = $element.data('dont-open-marker-popup')
+      this.setAdminCenterWithMarker = $element.data('set-admin-center-with-marker');
 
       this.map = null;
       this.baseLayers = {}; // Store base layer sources
       this.overlayLayers = {}; // Store overlay layer sources
-      this.pinMarkers = []; // Array to store all marker-coordinates
+      // this.pinMarkers = []; // Array to store all marker-coordinates
       this.adminMarker = null;
-      this.editableMarker = null; // Single editable marker for user interaction
+      this.centerMarker = null; // Single editable marker for user interaction
       this.markerCategoryIcon = null;
       this.markerCategoryColor = null;
 
@@ -72,7 +73,7 @@
 
         this.renderAdminShape();
 
-        // User shapes
+        // // User shapes
         this.renderMarkerCoordinates();
         this.renderResourceShapes();
 
@@ -102,32 +103,18 @@
     }
 
    setupEventListeners() {
-      if (this.$categorySelect) {
-        this.$categorySelect.on("change", function(e) {
-          // TODO
-          // self.updateMarkerStyleFromCategorySelect(e.target);
-        });
-
-        if (this.$categorySelect.length) {
-          // TODO
-          // this.updateMarkerStyleFromCategorySelect(this.$categorySelect.get(0));
-        }
-      }
-
-      if (this.adminEditor && !this.pinMarkers.length) {
+      if (this.adminEditor) {
         this.map.on("moveend", this.handleMoveEnd);
       }
 
-      // Add click and touch listeners for moveOrPlaceMarker functionality
       if (this.editable) {
         // Track touch state to distinguish between taps and drags
-
         this.map.on('touchstart', this.handleTouchStart);
         this.map.on('touchmove', this.handleTouchMove);
 
-        if (!this.adminEditor) {
-          this.map.on('click', this.handleMapInteraction.bind(this));
-          this.map.on('touchend', this.handleMapInteraction.bind(this));
+        if (!this.adminEditor || (this.adminEditor && this.setAdminCenterWithMarker)) {
+          this.map.on('click', this.handleMapInteractionForMoveOrPlaceCenterMarker.bind(this));
+          this.map.on('touchend', this.handleMapInteractionForMoveOrPlaceCenterMarker.bind(this));
         }
       }
     }
@@ -170,7 +157,8 @@
       }
     }
 
-    handleMapInteraction = (e) => {
+    handleMapInteractionForMoveOrPlaceCenterMarker = (e) => {
+      console.log("handleMapInteractionForMoveOrPlaceCenterMarker")
       // For touch events, only proceed if it was a tap (not a drag)
       if (e.type === 'touchend') {
         var touchDuration = Date.now() - this.touchStartTime;
@@ -222,7 +210,8 @@
       // - No conflicting features clicked (markers, user shapes, or clusters)
       // - Not clicked on draw controls
       // - No existing draw features (to avoid conflicts)
-      if (hasOnlyPointDrawFeatures || (markerFeatures.length === 0 && userShapeFeatures.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
+      // if (hasOnlyPointDrawFeatures || (markerFeatures.length === 0 && userShapeFeatures.length === 0 && !isDrawControl && !hasExistingDrawFeatures)) {
+      if (currentMode === "simple_select") {
         this.moveOrPlaceMarker(e);
       }
     };
@@ -501,7 +490,8 @@
         controls.polygon = true;
       }
 
-      const defaultMode = this.adminEditor ? 'draw_point' : 'simple_select';
+      // const defaultMode = this.adminEditor ? 'draw_point' : 'simple_select';
+      const defaultMode = 'simple_select';
 
       this.draw = new MapboxDraw({
         displayControlsDefault: false,
@@ -538,47 +528,7 @@
 
     setupDrawEventListeners() {
       // Update form fields when shapes are created, updated, or deleted
-      this.map.on('draw.create', (e) => {
-        var wasInPointMode = this.draw.getMode() === 'draw_point';
-
-        // If not admin editor, ensure only one polygon exists
-        if (!this.adminEditor) {
-          var allFeatures = this.draw ? this.draw.getAll() : { features: [] };
-          // If we have more than one feature, remove all but the newest one
-          if (allFeatures.features.length > 1) {
-            // Get the newly created feature(s) from the event
-            var newFeatureIds = e.features.map((feature) => {
-              return feature.id;
-            });
-
-            // Delete all features except the newly created ones
-            var featuresToDelete = allFeatures.features.filter((feature) => {
-              return newFeatureIds.indexOf(feature.id) === -1;
-            });
-
-            var idsToDelete = featuresToDelete.map((feature) => {
-              return feature.id;
-            });
-
-            if (idsToDelete.length > 0) {
-              this.draw.delete(idsToDelete);
-            }
-          }
-        }
-
-        this.updateShapeFormFields();
-        // Remove any existing marker-coordinates when a shape is created
-        this.removeEditableMarker();
-
-        // Keep point drawing mode active after creating a point
-        if (wasInPointMode && e.features.length > 0 && e.features[0].geometry.type === 'Point') {
-          setTimeout(() => {
-            if (this.draw) {
-              this.draw.changeMode('draw_point');
-            }
-          }, 50);
-        }
-      });
+      this.map.on('draw.create', this.handleDrawCreate);
 
       this.map.on('draw.update', (e) => {
         this.updateShapeFormFields();
@@ -592,7 +542,7 @@
       this.map.on('draw.modechange', (e) => {
         // If entering a drawing mode, clear any existing marker-coordinates
         if (e.mode.startsWith('draw_')) {
-          this.removeEditableMarker();
+        //   this.removeCenterMarker();
         }
       });
 
@@ -618,6 +568,9 @@
       });
 
       this.map.on('mouseup', (e) => {
+        console.log("handleMouseUp")
+
+        console.log("this.draw.getMode",this.draw.getMode())
         if (this.draw && this.draw.getMode() === 'draw_point' && !isDragging && mouseDownPoint) {
           // Check if we clicked on an existing draw feature
           var clickedFeatures = this.map.queryRenderedFeatures(e.point);
@@ -645,6 +598,50 @@
         mouseDownPoint = null;
         isDragging = false;
       });
+    }
+
+    handleDrawCreate = (e) => {
+      console.log("handleDrawCreate")
+      var wasInPointMode = this.draw.getMode() === 'draw_point';
+
+      // If not admin editor, ensure only one polygon exists
+      if (!this.adminEditor) {
+        var allFeatures = this.draw ? this.draw.getAll() : { features: [] };
+        // If we have more than one feature, remove all but the newest one
+        if (allFeatures.features.length > 1) {
+          // Get the newly created feature(s) from the event
+          var newFeatureIds = e.features.map((feature) => {
+            return feature.id;
+          });
+
+          // Delete all features except the newly created ones
+          var featuresToDelete = allFeatures.features.filter((feature) => {
+            return newFeatureIds.indexOf(feature.id) === -1;
+          });
+
+          var idsToDelete = featuresToDelete.map((feature) => {
+            return feature.id;
+          });
+
+          if (idsToDelete.length > 0) {
+            this.draw.delete(idsToDelete);
+          }
+        }
+      }
+
+      this.updateShapeFormFields();
+      // Remove any existing marker-coordinates when a shape is created
+      this.removeCenterMarker();
+
+      // Keep point drawing mode active after creating a point
+      // if (wasInPointMode && e.features.length > 0 && e.features[0].geometry.type === 'Point') {
+      //   setTimeout(() => {
+      //     if (this.draw) {
+      //       console.log("changeMode to draw_point")
+      //       this.draw.changeMode('draw_point');
+      //     }
+      //   }, 50);
+      // }
     }
 
     setupDrawCursorEffects() {
@@ -700,13 +697,17 @@
         iconClass = 'circle';
       }
 
+      if (this.resourcesName === "projekts") {
+        color = this.projektCenterMarkerColor;
+      }
+
       if (this.markerCategoryColor) {
         color = this.markerCategoryColor;
       }
 
-      if (this.adminEditor) {
-        color = this.adminShapesColor;
-      }
+      // if (this.adminEditor) {
+      //   color = this.adminShapesColor;
+      // }
 
       return {
         element: this.createMarkerElement(color, iconClass),
@@ -726,28 +727,28 @@
       return el;
     };
 
-    createPinMarker(latitude, longitude, color, iconClass) {
-      var styledMarker = this.getStyledMarker(color, iconClass);
-      var markerOptions = {
-        element: styledMarker.element,
-        anchor: 'bottom',
-        offset: [0, -10],
-        draggable: this.editable
-      };
+    // createPinMarker(latitude, longitude, color, iconClass) {
+    //   var styledMarker = this.getStyledMarker(color, iconClass);
+    //   var markerOptions = {
+    //     element: styledMarker.element,
+    //     anchor: 'bottom',
+    //     offset: [0, -10],
+    //     draggable: this.editable
+    //   };
 
-      var pinMarker = new mapboxgl.Marker(markerOptions)
-        .setLngLat([longitude, latitude]);
+    //   var pinMarker = new mapboxgl.Marker(markerOptions)
+    //     .setLngLat([longitude, latitude]);
 
-      if (this.editable) {
-        pinMarker.on("dragend", this.updateFormfieldsWithMarker.bind(this));
-      }
-      pinMarker.addTo(this.map);
+    //   if (this.editable) {
+    //     pinMarker.on("dragend", this.updateFormfieldsWithMarker.bind(this));
+    //   }
+    //   pinMarker.addTo(this.map);
 
-      // Add pinMarker to our marker-coordinates array
-      this.pinMarkers.push(pinMarker);
+    //   // Add pinMarker to our marker-coordinates array
+    //   this.pinMarkers.push(pinMarker);
 
-      return pinMarker;
-    };
+    //   return pinMarker;
+    // };
 
     updateFormfieldsWithMarker(e) {
       var marker = e.target;
@@ -764,27 +765,27 @@
     }
 
     // Helper method to remove editable marker
-    removeEditableMarker() {
-      if (this.editableMarker) {
-        this.editableMarker.remove();
-        this.editableMarker = null;
+    removeCenterMarker() {
+      if (this.centerMarker) {
+        this.centerMarker.remove();
+        this.centerMarker = null;
       }
     }
 
     // Helper method to delete all user markers (but not admin markers)
     deleteAllUserMarkers() {
       // Remove all pin markers
-      this.pinMarkers.forEach(function(marker) {
-        try {
-          marker.remove();
-        } catch (e) {
-          console.warn('Error removing pin marker:', e);
-        }
-      });
-      this.pinMarkers = [];
+      // this.pinMarkers.forEach(function(marker) {
+      //   try {
+      //     marker.remove();
+      //   } catch (e) {
+      //     console.warn('Error removing pin marker:', e);
+      //   }
+      // });
+      // this.pinMarkers = [];
 
       // Remove editable marker
-      this.removeEditableMarker();
+      this.removeCenterMarker();
 
       if (!this.adminEditor) {
         this.clearFormFields();
@@ -809,33 +810,36 @@
 
     // function to create or move existing marker (similar to Leaflet version)
     moveOrPlaceMarker(e) {
+      console.log("moveOrPlaceMarker")
       var lngLat = e.lngLat;
 
       // Clear any existing draw features when placing an editable marker
+      console.log("this.draw", this.draw)
       if (this.draw) {
         var allFeatures = this.draw.getAll();
         if (allFeatures.features.length > 0) {
           this.draw.deleteAll();
         }
+        console.log("switch draw mode to simple_select")
         // Switch draw mode to simple_select to avoid conflicts
         this.draw.changeMode('simple_select');
       }
 
       // Move existing marker or create new one
-      if (this.editableMarker) {
-        this.editableMarker.setLngLat([lngLat.lng, lngLat.lat]);
+      if (this.centerMarker) {
+        this.centerMarker.setLngLat([lngLat.lng, lngLat.lat]);
         this.updateMarkerWithCategoryStyle();
       } else {
-        this.editableMarker = this.createEditableMarker(lngLat.lat, lngLat.lng);
+        this.centerMarker = this.createCenterMarker(lngLat.lat, lngLat.lng);
       }
       this.updateFormfieldsFromEditableMarker();
     }
 
     // function to update form fields when editable marker is updated
     updateFormfieldsFromEditableMarker() {
-      if (!this.editableMarker) return;
+      if (!this.centerMarker) return;
 
-      var lngLat = this.editableMarker.getLngLat();
+      var lngLat = this.centerMarker.getLngLat();
 
       $(this.latitudeInputSelector).val(lngLat.lat);
       $(this.longitudeInputSelector).val(lngLat.lng);
@@ -854,9 +858,7 @@
     };
 
     // function to create an editable marker
-    createEditableMarker(latitude, longitude) {
-      var self = this;
-
+    createCenterMarker(latitude, longitude) {
       var styledMarker = this.getStyledMarker(null, null);
       var markerOptions = {
         element: styledMarker.element,
@@ -869,8 +871,8 @@
         (new mapboxgl.Marker(markerOptions))
         .setLngLat([longitude, latitude]);
 
-      marker.on("dragend", function() {
-        self.updateFormfieldsFromEditableMarker();
+      marker.on("dragend", () => {
+        this.updateFormfieldsFromEditableMarker();
       });
 
       marker.addTo(this.map);
@@ -886,17 +888,17 @@
     }
 
     updateMarkerWithCategoryStyle() {
-      if (this.pinMarkers.length) {
-        this.pinMarkers.forEach(function(marker) {
-          marker.setIcon(this.getStyledMarker(null, null));
-        }.bind(this));
-      }
+      // if (this.pinMarkers.length) {
+      //   this.pinMarkers.forEach(function(marker) {
+      //     marker.setIcon(this.getStyledMarker(null, null));
+      //   }.bind(this));
+      // }
 
-      // Also update editable marker if it exists
-      if (this.editableMarker) {
+      if (this.centerMarker) {
         var newIcon = this.getStyledMarker(null, null);
-        this.editableMarker.getElement().innerHTML = '';
-        this.editableMarker.getElement().appendChild(newIcon.element);
+
+        this.centerMarker.getElement().innerHTML = '';
+        this.centerMarker.getElement().appendChild(newIcon.element);
       }
     }
 
@@ -1108,13 +1110,19 @@
     }
 
     renderMarkerCoordinates() {
+      console.log("this.markerCoordinates", this.markerCoordinates)
       if (!this.markerCoordinates) return;
 
-      this.addMarkersSource(this.createMarkersGeoJSON());
-      this.addClusterLayers();
-      this.addMarkerBackgroundLayer();
-      this.loadMarkerImagesAndSetupIcons();
-      // this.setupClusterEventListeners();
+      if (this.adminEditor && this.setAdminCenterWithMarker) {
+        this.centerMarker = this.createCenterMarker(this.markerCoordinates[0].lat, this.markerCoordinates[0].long);
+      }
+      else {
+        this.addMarkersSource(this.createMarkersGeoJSON());
+        this.addClusterLayers();
+        this.addMarkerBackgroundLayer();
+        this.loadMarkerImagesAndSetupIcons();
+        // this.setupClusterEventListeners();
+      }
     }
 
     createMarkersGeoJSON() {
@@ -1705,9 +1713,9 @@
    forceCleanup() {
       this.map = null;
       this.draw = null;
-      this.pinMarkers = [];
+      // this.pinMarkers = [];
       this.adminMarker = null;
-      this.editableMarker = null;
+      this.centerMarker = null;
       this.mapLoaded = false;
       this.baseLayers = {};
       this.overlayLayers = {};

@@ -6,6 +6,7 @@
       this.element = element;
 
       this.initializeProperties();
+      this.bindEventListeners();
 
       this.createMap();
       this.setupBasicPlugins();
@@ -68,6 +69,12 @@
       this.userMarkerCategoryColor = null;
 
       this.setupMarkerCategorySelection();
+    }
+
+    bindEventListeners() {
+      this.moveOrPlaceCenterMarker = this.moveOrPlaceCenterMarker.bind(this);
+      this.placeMultiMarker = this.placeMultiMarker.bind(this);
+      this.openMarkerPopup = this.openMarkerPopup.bind(this);
     }
 
     setupMarkerCategorySelection() {
@@ -363,7 +370,7 @@
     }
 
     // Event handlers
-    moveOrPlaceCenterMarker = (e) => {
+    moveOrPlaceCenterMarker(e) {
       // Only handle single user markers: not adminEditor OR adminEditor with setAdminCenterWithMarker
       if (this.adminEditor && !this.setAdminCenterWithMarker) return;
 
@@ -382,7 +389,7 @@
       this.updateCenterMarkerFormFields();
     }
 
-    placeMultiMarker = (e) => {
+    placeMultiMarker(e) {
       if (this.adminEditor) {
         // In admin mode, always create new markers for multiple placement
         const newMarker = this.createMarker(e.latlng.lat, e.latlng.lng, this.adminShapesColor);
@@ -390,7 +397,7 @@
       }
     }
 
-    openMarkerPopup = (e) => {
+    openMarkerPopup(e) {
       const resourceType = e.target.options.resource_type;
       const route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options);
 

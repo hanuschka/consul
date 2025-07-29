@@ -71,4 +71,13 @@ class Budgets::Investments::FormComponent < ApplicationComponent
       investment.projekt_phase&.resource_form_description_placeholder.presence ||
         t("custom.budgets.investments.form.description_placeholder")
     end
+
+    def map_location
+      investment.map_location ||
+        investment.build_map_location(
+          latitude: investment.projekt_phase&.map_location&.latitude,
+          longitude: investment.projekt_phase&.map_location&.longitude,
+          zoom: investment.projekt_phase&.map_location&.zoom
+        )
+    end
 end

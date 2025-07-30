@@ -38,6 +38,7 @@ class DeficiencyReport < ApplicationRecord
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
   belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  has_one :feedback_form, class_name: "DeficiencyReport::FeedbackForm", dependent: :destroy
 
   delegate :approximated_address, to: :map_location, allow_nil: true
 

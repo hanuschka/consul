@@ -1,0 +1,34 @@
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+
+  label {
+    font-size: 40px !important;
+
+    span.full {
+      display: none;
+    }
+
+    &:hover,
+    &:hover ~ label {
+      color: #facc15 !important;
+    }
+  }
+
+  input[type="radio"] {
+    display: none;
+
+    &:checked ~ label {
+      color: #facc15 !important;
+
+      span.full {
+        display: inline-block;
+      }
+
+      span.empty {
+        display: none;
+      }
+    }
+  }
+}

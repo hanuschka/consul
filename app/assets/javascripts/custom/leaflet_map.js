@@ -567,6 +567,8 @@
           markerCoordinate.features.forEach((feature) => {
             this.renderGeoJsonFeature(feature, markerCoordinate)
           });
+        } else if (isKeyEmpty(markerCoordinate, "lat") && isKeyEmpty(markerCoordinate, "long")) {
+          return
         } else {
           // Handle single GeoJSON feature or legacy format
           if (Object.keys(markerCoordinate).length) {
@@ -1045,6 +1047,15 @@
     panTo(coordinates) {
       this.map.panTo(coordinates)
     }
+  }
+
+  function isKeyEmpty(obj, key) {
+    return obj.hasOwnProperty(key) && (
+      obj[key] === null ||
+      obj[key] === undefined ||
+      obj[key] === '' ||
+      (typeof obj[key] === 'object' && Object.keys(obj[key]).length === 0)
+    );
   }
 
   window.App.LeafletMapController = LeafletMapController;

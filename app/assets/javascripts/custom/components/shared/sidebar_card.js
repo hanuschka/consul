@@ -22,12 +22,13 @@
         $sidebarCard.find(".icon-chevron-down").toggleClass("-rotated");
       }
 
-      this.reInitializeMap();
+      this.reInitializeMap($sidebarCard.get(0));
     },
 
-    reInitializeMap: function() {
-      App.Map.destroy();
-      App.Map.initialize();
+    reInitializeMap: function(sidebarContainer) {
+      window.App.Map.initializeMapInsideContainer(sidebarContainer)
+      // App.Map.destroy();
+      // App.Map.initialize();
     }
   };
 }).call(this);

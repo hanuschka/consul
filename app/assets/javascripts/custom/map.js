@@ -5,17 +5,23 @@
     instances: [],
 
     initialize() {
-      $("*[data-map]:visible").each((_index, element) => {
+      this.initializeMapInsideContainer(document)
+    },
+
+    initializeMapInsideContainer(containerElement) {
+      const $containerElement = $(containerElement)
+
+      $containerElement.find("*[data-map]:visible:not([data-map-initialized='true'])").each((_index, element) => {
         this.initializeLeafletMap(element);
       });
 
-      $("[data-mapbox]:visible").each((_index, element) => {
+      $containerElement.find("[data-mapbox]:visible:not([data-map-initialized='true'])").each((_index, element) => {
         this.initializeMapboxMap(element)
       });
     },
 
     initializeMapFor(element) {
-      console.log("initializeMapFor", element)
+      console.log("initialize map for", element)
 
       if (element.hasAttribute('data-map')) {
         this.initializeLeafletMap(element);

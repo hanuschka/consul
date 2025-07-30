@@ -80,6 +80,9 @@
         this.renderResourceShapes();
 
         this.addMapInstructionOverlay();
+
+        // this.element.classList.add("js-map-initialized")
+        this.element.setAttribute("data-map-initialized", "true");
       });
 
       this.setupEventListeners();

@@ -96,6 +96,7 @@
         zoomControl: false
       }).setView(this.mapCenterLatLng, this.zoom);
 
+
       // Add zoom control
       const zoomControl = L.control.zoom({
         zoomInTitle: 'Hineinzoomen',
@@ -110,6 +111,9 @@
       }
 
       this.map.on("moveend", this.handleMapMoveEnd.bind(this));
+
+      // this.element.classList.add("js-map-initialized")
+      this.element.setAttribute("data-map-initialized", "true");
     }
 
     handleMapMoveEnd() {

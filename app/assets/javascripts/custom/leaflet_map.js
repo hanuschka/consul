@@ -1029,12 +1029,21 @@
 
     // Public Interface method for assistant map update and external use
     // DO NOT DELETE
-    setMarkerTo(lat, lng) {
+    setMarkerTo(lat, lng, shouldScroll) {
+      this.map.panTo(new L.LatLng(lat, lng));
+
       if (this.centerMarker) {
         this.centerMarker.setLatLng([lat, lng]);
       } else {
         this.centerMarker = this.createMarker(lat, lng);
       }
+
+      if (shouldScroll) {
+        this.map.getContainer().scrollIntoView({
+          block: "center", inline: "nearest"
+        })
+      }
+
       this.updateCenterMarkerFormFields();
     }
 

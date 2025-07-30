@@ -894,7 +894,8 @@
       } else {
         this.centerMarker = this.createCenterMarker(lngLat.lat, lngLat.lng);
       }
-      this.updateFormfieldsFromEditableMarker();
+
+      this.updateFormFieldsForCenterMarker();
     }
 
     // Methods for center marker mode management
@@ -907,7 +908,7 @@
     }
 
     // function to update form fields when editable marker is updated
-    updateFormfieldsFromEditableMarker() {
+    updateFormFieldsForCenterMarker() {
       if (!this.centerMarker) return;
 
       var lngLat = this.centerMarker.getLngLat();
@@ -943,7 +944,7 @@
         .setLngLat([longitude, latitude]);
 
       marker.on("dragend", () => {
-        this.updateFormfieldsFromEditableMarker();
+        this.updateFormFieldsForCenterMarker();
       });
 
       marker.addTo(this.map);
@@ -1781,6 +1782,27 @@
       }
     }
 
+  // Public interface method for external use
+  setMarkerTo(lat, lng, shouldScroll) {
+    this.map.flyTo({
+      center: [lng, lat], // lng, lat
+      duration: 1000 // smooth animation
+    });
+
+    this.moveOrPlaceCenterMarker({
+      lngLat: {
+        lng: lng,
+        lat: lat
+      }
+    });
+
+    if (shouldScroll) {
+      this.map.getContainer().scrollIntoView({
+        block: "center", inline: "nearest"
+      })
+    }
+  }
+
    forceCleanup() {
       this.map = null;
       this.draw = null;
@@ -2181,16 +2203,6 @@
       }
     }
 
-    // Public interface method for external use
-    setMarkerTo(lat, lng) {
-      // TODO
-      // if (this.centerMarker) {
-      //   this.centerMarker.setLatLng([lat, lng]);
-      // } else {
-      //   this.centerMarker = this.createMarker(lat, lng);
-      // }
-      // this.updateCenterMarkerFormFields();
-    }
   }
 
   // Custom control for center marker placement

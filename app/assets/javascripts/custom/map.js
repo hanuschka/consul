@@ -48,9 +48,10 @@
 
     // Public Interface method for assistant map update and external use
     // DO NOT DELETE
-    lastMapSetMarkerTo(lat, lng) {
+    lastMapSetMarkerTo(lat, lng, shouldScroll) {
       if (App.Map.instances.length > 0) {
-        App.Map.instances[0].setMarkerTo(lat, lng);
+        console.log(App.Map.instances[0])
+        App.Map.instances[0].setMarkerTo(lat, lng, shouldScroll);
       }
     },
 

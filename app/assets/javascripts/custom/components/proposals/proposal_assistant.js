@@ -200,6 +200,15 @@
     },
 
     updateMapLocation: function(coordinates, shouldScroll) {
+      if (App.Map.instances) {
+        // lat, lng
+        App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1], shouldScroll)
+      } else if (App.Mapbox.maps || App.Map.maps) {
+        this.legacyUpdateMapLocation(coordinates, shouldScroll)
+      }
+    },
+
+    legacyUpdateMapLocation(coordinates, shouldScroll) {
       if (App.Mapbox.maps.length > 0) {
         var currentMapInstance = App.Mapbox.maps[0]
 
@@ -225,12 +234,11 @@
             })
           }
         }
-      } else if (App.Map.instances.length > 0) {
+      } else if (App.Map.maps.length > 0) {
         var currentMap = App.Map.instances[0]
 
         if (currentMap && App.Map.instances.length <= 1) {
           currentMap.panTo(new L.LatLng(coordinates[0], coordinates[1]));
-          App.Map.lastMapSetMarkerTo(coordinates[0], coordinates[1])
 
           if (shouldScroll) {
             currentMap.getContainer().scrollIntoView({

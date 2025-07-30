@@ -570,7 +570,7 @@
         } else {
           // Handle single GeoJSON feature or legacy format
           if (Object.keys(markerCoordinate).length) {
-            console.log("handle single GeoJSON");
+            console.log("handle single GeoJSON", markerCoordinate);
             const userShape = L.geoJSON(markerCoordinate, {
               style: () => {
                 return { color: (markerCoordinate.color || App.Utils.getBrandColor()) };

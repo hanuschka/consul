@@ -190,6 +190,12 @@ de:
         districts:
           index:
             title: Gebiete
+        stats:
+          show:
+            type:
+              status: Status
+              category: Kategorie
+              responsible: Verantwortlich
       ideas:
         index:
           title: Ideenplattform

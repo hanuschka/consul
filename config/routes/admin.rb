@@ -57,7 +57,7 @@ namespace :admin do
       end
     end
 
-    resources :proposals, only: %i[edit update] do
+    resources :proposals, only: %i[show update] do
       patch :toggle_admin_accepted, on: :member
       patch :toggle_image_concealed, on: :member
     end

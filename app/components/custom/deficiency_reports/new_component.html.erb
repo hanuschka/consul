@@ -160,7 +160,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? %>
+          <% if current_user.administrator? || current_user.deficiency_report_manager? %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.deficiency_reports.form.on_behalf_of.title"),
                           description: t("custom.deficiency_reports.form.on_behalf_of.description"),

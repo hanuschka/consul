@@ -31,17 +31,17 @@
           </div>
 
           <div class="margin-bottom">
-            <h4><%= t('custom.deficiency_reports.feedback_form.new.response_time_satisfaction') %></h4>
+            <h5><%= t('custom.deficiency_reports.feedback_form.new.response_time_satisfaction') %></h5>
             <%= render Forms::StarRatingComponent.new(f: f, attribute: :response_time_satisfaction) %>
           </div>
 
           <div class="margin-bottom">
-            <h4><%= t('custom.deficiency_reports.feedback_form.new.communication_satisfaction') %></h4>
+            <h5><%= t('custom.deficiency_reports.feedback_form.new.communication_satisfaction') %></h5>
             <%= render Forms::StarRatingComponent.new(f: f, attribute: :communication_satisfaction) %>
           </div>
 
           <div class="margin-bottom">
-            <h4><%= t('custom.deficiency_reports.feedback_form.new.resolved') %></h4>
+            <h5><%= t('custom.deficiency_reports.feedback_form.new.resolved') %></h5>
             <%= f.collection_radio_buttons :resolved, [[true, t("shared.yes")], [false, t("shared.no")]], :first, :last do |b| %>
               <div class="" style="display:inline-block;margin-right:20px;">
                 <%= b.label(style: "display:flex;align-items:center;gap:5px;font-weight:normal;cursor:pointer;") do %>
@@ -53,17 +53,17 @@
           </div>
 
           <div class="margin-bottom">
-            <h4><%= t('custom.deficiency_reports.feedback_form.new.what_liked_note') %></h4>
+            <h5><%= t('custom.deficiency_reports.feedback_form.new.what_liked_note') %></h5>
             <%= f.text_area :what_liked_note, label: false, rows: 7 %>
           </div>
 
           <div class="margin-bottom">
-            <h4><%= t('custom.deficiency_reports.feedback_form.new.what_improve_note') %></h4>
+            <h5><%= t('custom.deficiency_reports.feedback_form.new.what_improve_note') %></h5>
             <%= f.text_area :what_improve_note, label: false, rows: 7 %>
           </div>
 
           <div class="margin-bottom">
-            <h4><%= f.submit t('custom.deficiency_reports.feedback_form.new.submit'), class: "button button--primary" %></h4>
+            <%= f.submit t('custom.deficiency_reports.feedback_form.new.submit'), class: "button button--primary" %>
           </div>
         <% end %>
       </div>

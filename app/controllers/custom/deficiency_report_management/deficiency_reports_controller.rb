@@ -95,6 +95,13 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
     redirect_to polymorphic_path([@namespace, @deficiency_report], action: :edit)
   end
 
+  def feedback_form
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize! :feedback_form, @deficiency_report
+
+    @feedback_form = @deficiency_report.feedback_form
+  end
+
   private
 
     def deficiency_report_params

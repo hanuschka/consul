@@ -39,7 +39,7 @@ class Admin::ProjektContentBlocksController < Admin::BaseController
   end
 
   def destroy
-    authorize!(:manage, @projekt)
+    authorize!(:manage, @content_block.projekt)
 
     if @content_block.destroy
       render json: { status: { message: "Content block destroyed" }}
@@ -49,12 +49,12 @@ class Admin::ProjektContentBlocksController < Admin::BaseController
   end
 
   def update_position
-    authorize!(:manage, @projekt)
+    authorize!(:manage, @content_block.projekt)
 
     if @content_block.insert_at(params[:position].to_i)
-      render json: { status: { message: "Content block updated" }}
+      render json: { status: { message: "Content block position updated" }}
     else
-      render json: { message: "Error updating content_block" }
+      render json: { message: "Error updating content block position" }
     end
   end
 

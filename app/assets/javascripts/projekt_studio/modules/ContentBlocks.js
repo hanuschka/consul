@@ -9,29 +9,30 @@
   },
 
   initEventListeners() {
-    $(document).on("click", ".js-show-content-block-templates", this.showContentBlockTemplates.bind(this));
-    $(document).on("click", ".js-add-new-content-block", this.addNewContentBlock.bind(this));
+    const $document = $(document);
+    $document.on("click", ".js-show-content-block-templates", this.showContentBlockTemplates.bind(this));
+    $document.on("click", ".js-add-new-content-block", this.addNewContentBlock.bind(this));
 
-    $(document).on("click", ".js-projekt-content-block--regenerate", this.handleRegenerateContentBlock.bind(this));
-    $(document).on("click", ".js-projekt-content-block--ai-edit", this.enterAiEditMode.bind(this));
-    $(document).on("click", ".js-delete-projekt-content-block", this.deleteContrentBlock.bind(this));
+    $document.on("click", ".js-projekt-content-block--regenerate", this.handleRegenerateContentBlock.bind(this));
+    $document.on("click", ".js-projekt-content-block--ai-edit", this.enterAiEditMode.bind(this));
+    $document.on("click", ".js-delete-projekt-content-block", this.deleteContrentBlock.bind(this));
 
-    $(document).on("click", ".js-edit-text-projekt-content-block", this.enterTextEditMode.bind(this));
-    $(document).on("click", ".js-html-edit-content-block", this.enterHtmlEditMode.bind(this));
-    $(document).on("click", ".js-code-edit-content-block", this.enterCodeEditMode.bind(this));
+    $document.on("click", ".js-edit-text-projekt-content-block", this.enterTextEditMode.bind(this));
+    $document.on("click", ".js-html-edit-content-block", this.enterHtmlEditMode.bind(this));
+    $document.on("click", ".js-code-edit-content-block", this.enterCodeEditMode.bind(this));
 
-    $(document).on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelTextEditMode.bind(this));
-    $(document).on("click", ".js-projekt-content-block--html-edit-cancel", this.cancelHtmlEditMode.bind(this));
-    $(document).on("click", ".js-projekt-content-block--ai-edit-cancel", this.cancelAiEditMode.bind(this));
+    $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelTextEditMode.bind(this));
+    $document.on("click", ".js-projekt-content-block--html-edit-cancel", this.cancelHtmlEditMode.bind(this));
+    $document.on("click", ".js-projekt-content-block--ai-edit-cancel", this.cancelAiEditMode.bind(this));
 
-    $(document).on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockEditedText.bind(this));
-    $(document).on("click", ".js-save-edit-html-projekt-content-block", this.saveContentBlockEditedHtml.bind(this));
+    $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockEditedText.bind(this));
+    $document.on("click", ".js-save-edit-html-projekt-content-block", this.saveContentBlockEditedHtml.bind(this));
 
-    $(document).on("click", ".js-content-block-reset-to-prev-version", this.resetToPreviousVersion.bind(this));
+    $document.on("click", ".js-content-block-reset-to-prev-version", this.resetContentBlockToPreviousVersion.bind(this));
 
-    $(document).on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
+    $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
 
-    $(document).on("click", ".js-frame-open-admin-page", this.handleOpenAdminPage.bind(this));
+    $document.on("click", ".js-frame-open-admin-page", this.handleOpenAdminPage.bind(this));
 
     window.addEventListener('message', this.handleGlobalMessage.bind(this));
   },
@@ -201,18 +202,30 @@
           dragClass: "content-block-dnd-move",
           scrollSensitivity: 2,
           scrollSpeed: 3,
-          onUpdate: (e) => { this.handleContentBlockMovedOnUi(e) },
+          onUpdate: (e) => { this.moveContentBlock(e) },
         });
     }, 3000)
   },
 
-  handleContentBlockMovedOnUi(e) {
+  moveContentBlock(e) {
     const contentBlockId = e.item.dataset.contentBlockId
+    const newPosition = e.newIndex + 1;
 
-    ProjektStudio.utils.sendMessageToDtParentFrame("moveContentBlock", {
-      content_block_id: contentBlockId,
-      new_position: e.newIndex + 1
-    })
+    if (ProjektStudio.isEmbedded) {
+      ProjektStudio.utils.sendMessageToDtParentFrame("moveContentBlock", {
+        content_block_id: contentBlockId,
+        new_position: newPosition
+      })
+    } else {
+      $.ajax({
+        url: `/admin/projekt_content_blocks/${contentBlockId}/update_position`,
+        type: "PATCH",
+        dataType: "json",
+        data: {
+          position: newPosition
+        }
+      })
+    }
   },
 
   setDataForFreshContentBlockOnUI(params) {
@@ -287,9 +300,17 @@
       scrollTo.scrollIntoView({block: "center"});
     }
 
-    ProjektStudio.utils.sendMessageToDtParentFrame("deleteContentBlock", {
-      content_block_id: contentBlockId
-    })
+    if (ProjektStudio.isEmbedded) {
+      ProjektStudio.utils.sendMessageToDtParentFrame("deleteContentBlock", {
+        content_block_id: contentBlockId
+      })
+    } else {
+      $.ajax({
+        url: `/admin/projekt_content_blocks/${contentBlockId}`,
+        type: "DELETE",
+        dataType: "json"
+      })
+    }
   },
 
   closeAllOpenedContentBlockTemplatesDialogs: function() {
@@ -355,6 +376,8 @@
     const previousContentBlockSection = this.findParentContentBlockSection(e.currentTarget);
     const previousContentBlockId = previousContentBlockSection.dataset.contentBlockId;
     const draftContentBlockIndex = this.draftContentBlockIndex;
+    console.log("e.currentTarget", e.currentTarget)
+    console.log({contentTemplate})
 
     const newContentBlockHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
       contentTemplate.innerHTML, {
@@ -384,8 +407,6 @@
       $(newContentBlock).find('.projekt-content-block').foundation();
       App.ImageGallery.initialize();
     }, 0)
-
-
 
     if (ProjektStudio.isEmbedded) {
       ProjektStudio.utils.sendMessageToDtParentFrame("createContentBlock",  {
@@ -556,7 +577,6 @@
 
       const editorId = this.genTextEditorIdForTextarea(contentBlockSection.dataset.contentBlockId)
 
-      console.log({editorId})
       let newContent = window.CKeditorInstancesGlobal[editorId].getData().trim()
       newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
 
@@ -581,7 +601,7 @@
     } else {
       $.ajax({
         url: `/admin/projekt_content_blocks/${contentBlockId}`,
-        type: "PATCh",
+        type: "PATCH",
         dataType: "json",
         data: {
           html: updatedContentBlock.innerHTML
@@ -642,20 +662,29 @@
     returnToPrevButton.disabled = true
   },
 
-  resetToPreviousVersion(e) {
-    const confirmed = confirm("Möchten Sie die letzte Änderung wirklich zurücksetzen?")
+  resetContentBlockToPreviousVersion(e) {
+    const resetConfirmed = confirm("Möchten Sie die letzte Änderung wirklich zurücksetzen?")
 
-    if (confirmed) {
+    if (resetConfirmed) {
       const { contentBlock, contentBlockSection } = this.getContentBlockAndSection(e.target);
 
       if (contentBlock.dataset.previousContentBlockHtml) {
         contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
         this.resetPreviosVersionOfContentBlock(contentBlock, contentBlockSection)
 
-        ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
-          content_block_id: contentBlockSection.dataset.contentBlockId,
-          html: contentBlock.innerHTML
-        })
+
+        if (ProjektStudio.isEmbedded) {
+          ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
+            content_block_id: contentBlockSection.dataset.contentBlockId,
+            html: contentBlock.innerHTML
+          })
+        } else {
+          this.updateContentBlock(
+            contentBlock,
+            contentBlockSection.dataset.contentBlockId,
+            contentBlock.innerHTML.trim()
+          )
+        }
 
         $(contentBlock).foundation();
       }

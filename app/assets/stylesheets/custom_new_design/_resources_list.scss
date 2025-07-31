@@ -58,16 +58,17 @@
     font-size: 28px;
     margin-bottom: 0;
     padding-bottom: 0;
+    color: #44297A;
 
     @media(max-width: $small-tablet-viewport-start) {
       margin-bottom: 0;
     }
 
     a {
-      color: black;
+      color: #44297A;
 
       &:hover {
-        color: black;
+        color: #44297A;
         text-decoration: none;
       }
     }

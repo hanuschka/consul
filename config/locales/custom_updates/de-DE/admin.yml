@@ -190,6 +190,12 @@ de:
         districts:
           index:
             title: Gebiete
+        stats:
+          show:
+            type:
+              status: Status
+              category: Kategorie
+              responsible: Verantwortlich
       ideas:
         index:
           title: Ideenplattform
@@ -829,7 +835,7 @@ de:
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           argument_pro: Pro
           argument_cons: Contra
-          button: Stimme erlstellen
+          button: Stimme erstellen
           argument_image: Bild
         projekt_events:
           page_title: Veranstaltungen

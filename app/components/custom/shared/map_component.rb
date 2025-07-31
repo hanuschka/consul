@@ -4,7 +4,6 @@ class Shared::MapComponent < Shared::MapBaseComponent
                 id: "#{dom_id(@map_location)}_#{@parent_class}",
                 class: "map_location map #{map_lib_class}",
                 aria: { hidden: true },
-                inert: true,
                 data: prepare_map_settings
   end
 

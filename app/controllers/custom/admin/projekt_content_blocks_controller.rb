@@ -1,4 +1,4 @@
-class Custom::Admin::ProjektContentBlocksController < Admin::BaseController
+class Admin::ProjektContentBlocksController < Admin::BaseController
   before_action :find_projekt, only: [:create]
   before_action :find_content_block, only: [
     :destroy, :update, :update_position
@@ -22,19 +22,19 @@ class Custom::Admin::ProjektContentBlocksController < Admin::BaseController
         @content_block.move_to_top
       end
 
-      render json: { content_block: {id: @content_block.id}, status: { message: "Content block updated" }}
+      render json: { content_block: {id: @content_block.id}, status: { message: "Content block created" }}
     else
-      render json: { message: "Error updating content_block" }
+      render json: { message: "Error creating content block" }
     end
   end
 
   def update
-    authorize!(:manage, @projekt)
+    authorize!(:manage, @content_block.projekt)
 
     if @content_block.update(body: params[:html])
       render json: { status: { message: "Content block updated" }}
     else
-      render json: { message: "Error updating content_block" }
+      render json: { message: "Error updating content block" }
     end
   end
 

@@ -1,16 +1,3 @@
-// import { Idiomorph } from "idiomorph/dist/idiomorph.esm.js"
-// import { Sortable } from 'sortablejs';
-
-// import ace from "ace-builds/src-min/ace"
-// import 'ace-builds/src-noconflict/mode-html'
-// import 'ace-builds/src-noconflict/worker-html';
-
-// import { resetFoundationAccordionStateFor } from "consul/utils/foundationUtils";
-// import { addStudioControlsToContentBlock, addNewContentBlockButtonToContentBlockList, newContentBlockButtonSectionHtml } from "consul/projekt_studio_consul/templates/renderContentBlockControlsFunctions";
-// import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
-// import { getCurrentProjektId } from "lib/projekts";
-// import { ProjektStudio.utils.sendMessageToDtParentFrame, parseIframeEventData } from "consul/utils/iframeUtils";
-
  ProjektStudio.modules.ContentBlocks = {
   initialized: false,
   draftContentBlockIndex: 0,
@@ -103,7 +90,7 @@
       }).join("")
     }
     else {
-      wrappedContentBlocksHtml = newContentBlockButtonSectionHtml(projektId);
+      wrappedContentBlocksHtml = ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml(projektId);
     }
 
     const newHtml = ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
@@ -184,6 +171,7 @@
   },
 
   morphElementHTML(selector, html, afterUpdate = null) {
+    console.log("morphElementHTML", selector, html)
     const element = document.querySelector(selector);
     // e.innerHTML = data.html;
     //
@@ -288,8 +276,8 @@
     contentBlockSection.remove()
 
     if ($('.js-projekt-content-block-edit-section').length === 0) {
-      const projektId = getCurrentProjektId()
-      const wrappedContentBlocksHtml = newContentBlockButtonSectionHtml(projektId);
+      const projektId = ProjektStudio.getCurrentProjektId()
+      const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml(projektId);
       const newHtml = ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
 
       this.morphElementHTML(".custom-page-content-inner", newHtml);
@@ -321,9 +309,8 @@
 
     // if (!parentElement.classList.contains("-templates-added")) {
     if (parentElement.classList.contains("-opened")) {
-      const template = document.querySelector('.js-projekt-content-block-templates-selector')
-      // const templateContent = template.content.cloneNode(true)
-      const templateContent = template.firstElementChild.cloneNode(true)
+      const templateSelector = document.querySelector('.js-projekt-content-block-templates-selector')
+      const templateContent = templateSelector.content.cloneNode(true)
       const contentBlockSection = this.findParentContentBlockSection(templateContainer);
       const tabsId = "projekt-content-block-templates-tabs-" + contentBlockSection.dataset.contentBlockId;
       const tabs = templateContent.querySelector(".tabs");
@@ -398,12 +385,38 @@
       App.ImageGallery.initialize();
     }, 0)
 
-    ProjektStudio.utils.sendMessageToDtParentFrame("createContentBlock",  {
-      previous_content_block_id: previousContentBlockId,
-      draft_content_block_index: draftContentBlockIndex,
-      enter_ai_mode: contentTemplate.dataset.enterAiMode,
-      html: contentTemplate.innerHTML
-    });
+
+
+    if (ProjektStudio.isEmbedded) {
+      ProjektStudio.utils.sendMessageToDtParentFrame("createContentBlock",  {
+        previous_content_block_id: previousContentBlockId,
+        draft_content_block_index: draftContentBlockIndex,
+        enter_ai_mode: contentTemplate.dataset.enterAiMode,
+        html: contentTemplate.innerHTML
+      });
+    } else {
+      const projektId = ProjektStudio.getCurrentProjektId()
+
+      $.ajax({
+        url: `/admin/projekts/${projektId}/projekt_content_blocks`,
+        type: "POST",
+        dataType: "json",
+        data: {
+          previous_content_block_id: previousContentBlockId,
+          draft_content_block_index: draftContentBlockIndex,
+          html: contentTemplate.innerHTML
+        }
+      }).then((response) => {
+        const contentBlockID = response.content_block.id;
+
+        this.setDataForFreshContentBlockOnUI({
+          previous_content_block_id: previousContentBlockId,
+          enter_ai_mode: contentTemplate.dataset.enterAiMode,
+          draft_content_block_index: draftContentBlockIndex,
+          content_block_id: contentBlockID
+        })
+      })
+    }
   },
 
   enterTextEditMode(e) {
@@ -502,7 +515,7 @@
     if (elements.length === 0) {
       if (contentEditable) {
         contentBlock.contentEditable = contentEditable;
-        focusContentEditableElement(contentBlock)
+        ProjektStudio.utils.focusContentEditableElement(contentBlock)
       }
       else {
         contentBlock.removeAttribute("contenteditable")
@@ -510,7 +523,7 @@
     }
     else {
       const lastElement = elements[elements.length - 1]
-      focusContentEditableElement(lastElement)
+      ProjektStudio.utils.focusContentEditableElement(lastElement)
     }
   },
 
@@ -527,7 +540,7 @@
       contentBlockSection.classList.remove("-text-edit-mode")
       this.toggleContentEditableForContentBlock(contentBlock, false);
 
-      this.saveContentBlock(
+      this.updateContentBlock(
         contentBlock,
         contentBlockSection.dataset.contentBlockId,
         contentBlock.innerHTML.trim()
@@ -543,10 +556,11 @@
 
       const editorId = this.genTextEditorIdForTextarea(contentBlockSection.dataset.contentBlockId)
 
+      console.log({editorId})
       let newContent = window.CKeditorInstancesGlobal[editorId].getData().trim()
       newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
 
-      this.saveContentBlock(
+      this.updateContentBlock(
         contentBlock,
         contentBlockSection.dataset.contentBlockId,
         newContent
@@ -554,18 +568,30 @@
     }
   },
 
-  saveContentBlock(contentBlock, contentBlockId, newContent) {
-    const newContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
+  updateContentBlock(contentBlock, contentBlockId, newContent) {
+    const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
 
-    resetFoundationAccordionStateFor(newContentBlock)
+    ProjektStudio.utils.resetFoundationAccordionStateFor(updatedContentBlock)
 
-    ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
-      content_block_id: contentBlockId,
-      html: newContentBlock.innerHTML
-    })
+    if (ProjektStudio.isEmbedded) {
+      ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
+        content_block_id: contentBlockId,
+        html: updatedContentBlock.innerHTML
+      })
+    } else {
+      $.ajax({
+        url: `/admin/projekt_content_blocks/${contentBlockId}`,
+        type: "PATCh",
+        dataType: "json",
+        data: {
+          html: updatedContentBlock.innerHTML
+        }
+      })
+    }
 
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
-    contentBlock.innerHTML = newContentBlock.innerHTML;
+    // DO NOT DELETE
+    contentBlock.innerHTML = updatedContentBlock.innerHTML;
     $(contentBlock).foundation();
   },
 

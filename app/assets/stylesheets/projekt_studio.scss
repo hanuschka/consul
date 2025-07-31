@@ -839,6 +839,12 @@ body.-preview-mode {
   }
 }
 
+.projekt-studio {
+  .ai-button-wrapper {
+    display: none;
+  }
+}
+
 body.-ai-functions-locked {
   .ai-button-wrapper--inner {
     filter: grayscale(0.1);

@@ -52,6 +52,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     sign_in_with :wordpress_login, :wordpress_oauth2
   end
 
+  def open_rathaus
+    sign_in_with :open_rathaus_login, :open_rathaus
+  end
+
   def after_sign_in_path_for(resource)
     if resource.registering_with_oauth
       finish_signup_path
@@ -104,7 +108,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       full_street_address = auth_data.extra.raw_info.street_address
       regex = /(?<street_name>[\p{L}\d\s,.-]+?)\s*(?<street_number>\d+)\s*(?<street_number_extension>[a-zA-Z\s]*)/
-      match = full_street_address.match(regex)
+      match = full_street_address&.match(regex)
       registered_address = nil
 
       if match

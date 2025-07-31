@@ -39,14 +39,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def finish_signup
     current_user.registering_with_oauth = false
     current_user.email = current_user.oauth_email if current_user.email.blank?
-    # current_user.validate # cli
+    current_user.validate
   end
 
   def do_finish_signup
     current_user.registering_with_oauth = false
     if current_user.update(sign_up_params)
-      # current_user.send_oauth_confirmation_instructions # cli
-      flash[:notice] = "Vielen Dank! Sie können das Dialog- und Beteiligungsportal nun nutzen" # cli
+      current_user.send_oauth_confirmation_instructions
+      flash[:notice] = "Vielen Dank! Sie können das Dialog- und Beteiligungsportal nun nutzen" if current_user.confirmed?
       current_user.verify! if current_user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
       sign_in_and_redirect current_user, event: :authentication
     else

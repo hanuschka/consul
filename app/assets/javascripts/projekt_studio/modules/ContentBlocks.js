@@ -375,7 +375,6 @@
     const previousContentBlockSection = this.findParentContentBlockSection(e.currentTarget);
     const previousContentBlockId = previousContentBlockSection.dataset.contentBlockId;
     const draftContentBlockIndex = this.draftContentBlockIndex;
-    console.log("e.currentTarget", e.currentTarget)
     console.log({contentTemplate})
 
     const newContentBlockHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(

@@ -172,16 +172,15 @@
   },
 
   morphElementHTML(selector, html, afterUpdate = null) {
-    console.log("morphElementHTML", selector, html)
     const element = document.querySelector(selector);
+
     // e.innerHTML = data.html;
-    //
     setTimeout(() => {
-      Idiomorph.morph(element, html, {
-        morphStyle:'innerHTML',
-        callbacks: {
-        }
-      })
+      element.innerHTML = html;
+      // Idiomorph.morph(element, html, {
+      //   morphStyle:'innerHTML',
+      //   callbacks: { }
+      // })
 
       setTimeout(() => {
         this.initSortable();

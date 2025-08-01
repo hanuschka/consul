@@ -1,5 +1,5 @@
 //= require sortablejs/Sortable.min.js
-//= require idiomorph/dist/idiomorph.min.js
+// require idiomorph/dist/idiomorph.js
 //
 //= require ./projekt_studio/main
 //= require_tree ./projekt_studio/utils

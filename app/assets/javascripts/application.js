@@ -127,7 +127,8 @@
 // require Leaflet.Deflate/dist/L.Deflate
 // require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min
 //= require ckeditor5/ckeditor5.umd
-//= require ckeditor5/file-upload-manager
+//= require ckeditor5/file-upload-plugin
+// require ckeditor5/file-upload-manager
 //= require html2canvas/dist/html2canvas.min
 //= require select2/dist/js/select2.full
 //= require custom

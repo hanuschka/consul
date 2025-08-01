@@ -236,7 +236,7 @@
     newContentBlock.dataset.draft = false;
     newContentBlock.classList.remove('-draft')
 
-    if (params.enter_ai_mode === "true") {
+    if (ProjektStudio.isEmbedded && params.enter_ai_mode === "true") {
       this.turnOnAiEditContentBlockMode(newContentBlock);
     }
   },
@@ -431,7 +431,7 @@
 
         this.setDataForFreshContentBlockOnUI({
           previous_content_block_id: previousContentBlockId,
-          enter_ai_mode: contentTemplate.dataset.enterAiMode,
+          enter_ai_mode: false,
           draft_content_block_index: draftContentBlockIndex,
           content_block_id: contentBlockID
         })

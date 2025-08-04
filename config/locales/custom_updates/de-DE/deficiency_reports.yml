@@ -138,3 +138,19 @@ de:
         admin_actions:
           title: Admin
         submit_official_answer_button: Antwort speichern
+      feedback_form:
+        new:
+          already_submitted: Sie haben bereits eine Rückmeldung zu diesem Anliegen abgegeben.
+          title: Wir sind sehr an Ihrer Meinung interessiert!
+          subtitle: "Feedback zur Bearbeitung Ihres Anliegens: <strong>%{title}</strong>"
+          overall_satisfaction: "1. Wie zufrieden sind Sie mit der Bearbeitung Ihres Anliegens? (Pflichtangabe)"
+          response_time_satisfaction: "2. Wie bewerten Sie die Reaktionszeit?"
+          communication_satisfaction: "3. Wie höflich und hilfsbereit war der Kontakt?"
+          resolved: "4. Wurde Ihr Anliegen vollständig gelöst?"
+          what_liked_note: "5. Was hat Ihnen besonders gut gefallen?"
+          what_improve_note: "6. Was können wir verbessern?"
+          submit: Absenden
+          errors:
+            overall_satisfaction: "Bitte wählen Sie eine Option aus."
+        create:
+          success: Danke für Ihr Feedback!

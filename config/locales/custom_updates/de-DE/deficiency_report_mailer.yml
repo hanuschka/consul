@@ -13,3 +13,12 @@ de:
           subject: Neue Mangelmeldung %{identifier}
           hi: Liebe/r Sachbearbeiter*in,
           p1: Ihnen wurde ein Mangel vom Admin zugewiesen.
+        send_feedback_form_link:
+          subject: Feedback zu Ihrem Anliegen
+          hi: Guten Tag %{username},
+          p1: "Ihr Anliegen %{deficiency_report_link} wurde mit folgendem Status abgeschlossen: <strong>%{status}.</strong>"
+          p2: Wir hoffen, dass Sie mit der Bearbeitung zufrieden sind.
+          p3: "Um unseren Service weiter zu verbessern, freuen wir uns über Ihr kurzes Feedback: %{feedback_form_link}."
+          feedback_form_link_text: Feedback-Formular
+          p4: Vielen Dank für Ihre Unterstützung!
+

@@ -22,9 +22,7 @@ class DeficiencyReportsController < ApplicationController
   helper_method :resource_model, :resource_name
 
   def index
-    @deficiency_report_count = @deficiency_reports.count
-
-    @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
+    @deficiency_reports = @deficiency_reports.admin_accepted
 
     @categories = DeficiencyReport::Category.all.order(created_at: :asc)
     @selected_categories_ids = (params[:dr_categories] || '').split(',')
@@ -41,6 +39,8 @@ class DeficiencyReportsController < ApplicationController
     filter_by_selected_officer if @selected_officer.present?
     filter_by_archived_status
     filter_by_my_posts
+
+    @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
 

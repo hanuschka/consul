@@ -45,6 +45,7 @@ Rails.application.routes.draw do
 
   # Deficiency reports
   resources :deficiency_reports, only: [:index, :show, :new, :create, :destroy] do
+    resource :feedback_form, only: [:new, :create], controller: "deficiency_reports/feedback_form"
     member do
       get     :json_data
       post    :vote

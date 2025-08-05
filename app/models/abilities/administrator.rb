@@ -17,7 +17,6 @@ module Abilities
 
       can :create, Legislation::Proposal
       can :show, Legislation::Proposal
-      can :proposals, ::Legislation::Process
 
       can :restore, Legislation::Proposal
       cannot :restore, Legislation::Proposal, hidden_at: nil
@@ -122,9 +121,7 @@ module Abilities
       can :access, :ckeditor
       can :manage, Ckeditor::Picture
 
-      can [:read, :debate, :draft_publication, :allegations, :result_publication,
-           :milestones], Legislation::Process
-      can [:create, :update, :destroy], Legislation::Process
+      can [:manage], ::Legislation::Process
       can [:manage], ::Legislation::DraftVersion
       can [:manage], ::Legislation::Question
       can [:manage], ::Legislation::Proposal

@@ -58,7 +58,7 @@ namespace :projekt_management do
       end
     end
 
-    resources :proposals, only: %i[edit update] do
+    resources :proposals, only: %i[show update] do
       patch :toggle_admin_accepted, on: :member
       patch :toggle_image_concealed, on: :member
     end
@@ -78,7 +78,7 @@ namespace :projekt_management do
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
-    resources :projekt_arguments, only: [:create, :update, :destroy] do
+    resources :projekt_arguments, only: [:new, :create, :edit, :update, :destroy] do
       collection do
         post :send_notifications
       end

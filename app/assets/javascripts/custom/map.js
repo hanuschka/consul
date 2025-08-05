@@ -72,9 +72,16 @@
       /* Create leaflet map start */
       var map = L.map(element.id, {
         gestureHandling: true,
-        maxZoom: 18
+        maxZoom: 18,
+        zoomControl: false
       }).setView(mapCenterLatLng, zoom);
       App.Map.maps.push(map);
+
+      var zoomControl = L.control.zoom({
+        zoomInTitle: 'Hineinzoomen',
+        zoomOutTitle: 'Herauszoomen'
+      });
+      map.addControl(zoomControl);
 
       // update form fields when map center changes
       map.on("moveend", function() {
@@ -89,7 +96,12 @@
 
       /* Leaflet basic plugins start */
       // Leaflet.Locate plugin: ads control to map
-      L.control.locate({icon: 'fa fa-map-marker'}).addTo(map);
+      L.control.locate({
+        icon: 'fa fa-map-marker',
+        strings: {
+          title: 'Meine Position anzeigen'
+        }
+      }).addTo(map);
 
       // Leaflet GeoSearch plugin: adds control to map
       var searchControl = new GeoSearch.GeoSearchControl({
@@ -98,6 +110,7 @@
         showMarker: false,
         searchLabel: 'Nach Adresse suchen',
         notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
+        clearSearchLabel: 'Suche zurücksetzen'
       });
       map.addControl(searchControl);
 
@@ -292,12 +305,12 @@
             };
             $(shapeInputSelector).val(JSON.stringify(featureCollection));
             // Clear single coordinate fields when using multiple items
-            $(latitudeInputSelector).val('');
-            $(longitudeInputSelector).val('');
+            // $(latitudeInputSelector).val('');
+            // $(longitudeInputSelector).val('');
           } else if (marker) {
             // Single marker case
-            $(latitudeInputSelector).val(marker.getLatLng().lat);
-            $(longitudeInputSelector).val(marker.getLatLng().lng);
+            // $(latitudeInputSelector).val(marker.getLatLng().lat);
+            // $(longitudeInputSelector).val(marker.getLatLng().lng);
             $(shapeInputSelector).val(JSON.stringify({}));
           }
 
@@ -453,16 +466,18 @@
             var features = singleAdminShape.features || [singleAdminShape];
 
             features.forEach(function(feature) {
-              var adminShapeLayer = L.geoJSON(feature, {
-                pointToLayer: function(geoFeature, latlng) {
-                  return L.marker(latlng, {
-                    icon: getMarkerIcon(
+              if (Object.keys(feature).length) {
+                var adminShapeLayer = L.geoJSON(feature, {
+                  pointToLayer: function(geoFeature, latlng) {
+                    return L.marker(latlng, {
+                      icon: getMarkerIcon(
                       geoFeature.properties.color || adminShapesColor,
                       geoFeature.properties.fa_icon_class || 'circle'
                     )
-                  });
-                }
-              });
+                    });
+                  }
+                });
+              }
 
               adminShapeLayer.pm.setOptions({ adminShape: true })
               adminShapeLayer.setStyle({
@@ -539,13 +554,15 @@
                 }
               } else {
                 // Render non-Point features as geoJSON layers
-                var userShape = L.geoJSON(feature, {
-                  style: function(geoFeature) {
-                    return {
-                      color: geoFeature.properties.color || markerCoordinate.color || feature.properties.color
-                    };
-                  }
-                });
+                if (Object.keys(feature).length) {
+                  var userShape = L.geoJSON(feature, {
+                    style: function(geoFeature) {
+                      return {
+                        color: geoFeature.properties.color || markerCoordinate.color || feature.properties.color
+                      };
+                    }
+                  });
+                }
 
                 userShape.options.id = markerCoordinate.id
                 userShape.options.resource_type = markerCoordinate.resource_type
@@ -560,21 +577,23 @@
             });
           } else {
             // Handle single GeoJSON feature or legacy format
-            var userShape = L.geoJSON(markerCoordinate, {
-              style: function(feature) {
-                return { color: markerCoordinate.color };
+            if (Object.keys(markerCoordinate).length) {
+              var userShape = L.geoJSON(markerCoordinate, {
+                style: function(feature) {
+                  return { color: markerCoordinate.color };
+                }
+              });
+
+              userShape.options.id = markerCoordinate.id
+              userShape.options.resource_type = markerCoordinate.resource_type
+              userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
+
+              if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
+                userShape.on("click", openMarkerPopup);
               }
-            });
-
-            userShape.options.id = markerCoordinate.id
-            userShape.options.resource_type = markerCoordinate.resource_type
-            userShape.options.projekt_phase_id = markerCoordinate.projekt_phase_id
-
-            if ( App.MapPopup.excludedProcesses.indexOf(process) == -1 ) {
-              userShape.on("click", openMarkerPopup);
+              userShape.addTo(deflateFeatures);
+              userShape.addTo(map);
             }
-            userShape.addTo(deflateFeatures);
-            userShape.addTo(map);
           }
         });
       }
@@ -639,7 +658,7 @@
         map.pm.Toolbar.createCustomControl({
           name: 'clearMap',
           className: 'control-icon leaflet-pm-icon-delete',
-          title: 'Clear Map',
+          title: 'Karte zurücksetzen',
           block: 'edit',
           onClick: function() {
             removeShapesAndMarkers();

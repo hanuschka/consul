@@ -1,15 +1,50 @@
 en:
   custom:
+    accessibility:
+      shared:
+        switch-view-button:
+          aria-label: "Switch view button"
+        missing-image:
+          aria-label: "Image not available"
+      search:
+        search-input:
+          aria-label: "Search input field"
+        search-button:
+          aria-label: "Search button"
+      google-translate:
+        widget-toggler:
+          aria-label: "Click to toggle the Google Translate widget."
+      account:
+        edit_banner:
+          aria-label: "Click to upload a new banner image."
+        edit_avatar:
+          avatar_placeholder: "Avatar placeholder. Click to upload a new avatar image."
+          aria-label: "Click to upload a new avatar image."
+        edit_username:
+          edit_button: "Click to show the username edit field."
+          cancel_button: "Cancel button. Click to cancel the changes."
+          save_button: "Save button. Click to save the changes."
+        notifications:
+          aria-label: "Filter notifications"
+      banner-image:
+        glightbox-aria-label: "Banner image. Click to enlarge the image."
+      events:
+        projekt-aria-label: "Project: %{projekt_name}"
+    map:
+      aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
     links:
       menu:
         home_icon: Homepage link
         search_icon: Search
-        konto_icon: My account menu link
+        konto_icon:
+          zero: "'My account'-Link"
+          one: "'My account'-Link. There's one new notification."
+          other: "'My account'-Link. There are %{count} new notifications."
         admin_icon: Admin menu link
         notification_icon: Notifications
         all_projekts: All Projekts
         draft_projekts: Drafts
-        projekt_name_label: "Project name: %{projekt_name} "
+        projekt_name_label: "Project name: %{projekt_name}. Control with the up and down arrow keys."
         archived_projekts_label: Archived projects
         deficiency_reports: Deficiency reports
         ideas: Ideas

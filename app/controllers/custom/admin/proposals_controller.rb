@@ -23,6 +23,7 @@ class Admin::ProposalsController < Admin::BaseController
 
   def show
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @projekt_phase = @proposal.projekt_phase
   end
 
   def edit

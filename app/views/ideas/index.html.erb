@@ -44,7 +44,7 @@
             <%= t("ideas.index.sidebar.count") %>
           </span>
           <span>
-            <%= Idea.all.count %>
+            <%= @ideas.total_count %>
           </span>
         </div>
 
@@ -78,7 +78,7 @@
         title: t("ideas.index.sidebar.quorum_filter.title")
       ) %>
 
-      <div class="show-on-mobile">
+      <div class="show-on-small-tablet">
         <%= render(Mobile::FixedBottomActionComponent.new) do %>
           <%= link_to t("ideas.index.sidebar.button_new"), new_idea_path,
             class: "button -orange", style: "display:inline-flex;" %>

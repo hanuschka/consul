@@ -197,6 +197,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,
+        "deficiency_reports.send_feedback_form_link": false,
 
         "ideas.show_in_main_menu": false,
         "ideas.admins_must_assign_officer": false,

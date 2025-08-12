@@ -7,7 +7,7 @@ en:
         missing-image:
           aria-label: "Image not available"
       search:
-        search-input:
+        search_input:
           aria-label: "Search input field"
         search-button:
           aria-label: "Search button"

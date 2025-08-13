@@ -424,6 +424,7 @@ class PagesController < ApplicationController
   end
 
   def set_formular_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @formular = @projekt_phase.formular
 
     if params[:token].present?

@@ -1,5 +1,5 @@
 class ProjektPointOfInterestPin < ApplicationRecord
-  include NewMappable
+  include Mappable
 
   belongs_to :projekt_phase
   belongs_to :author, class_name: "User"

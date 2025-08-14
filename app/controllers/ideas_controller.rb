@@ -9,7 +9,7 @@ class IdeasController < ApplicationController
   feature_flag :ideas
 
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_idea, only: [:show, :vote, :unvote]
+  before_action :set_idea, only: [:show, :vote, :unvote, :json_data]
 
   has_orders ->(c) { Idea.idea_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
@@ -81,9 +81,11 @@ class IdeasController < ApplicationController
   end
 
   def json_data
-    idea = Idea.find(params[:id])
-
-    image_url = idea.image.present? ? url_for(idea.image.attachment.variant(resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE, format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+    image_url = url_for @idea.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+    ) if @idea.image&.attachment&.attached?
 
 
     data = {
@@ -113,7 +115,7 @@ class IdeasController < ApplicationController
     def all_idea_map_locations(ideas_for_map)
       ids = ideas_for_map.except(:limit, :offset, :order).ids.uniq
 
-      MapLocation.where(idea_id: ids).map do |map_location|
+      MapLocation.where(mappable_id: ids, mappable_type: "Idea").map do |map_location|
         map_location.shape_json_data.presence || map_location.json_data
       end
     end

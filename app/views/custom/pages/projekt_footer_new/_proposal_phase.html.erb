@@ -43,10 +43,9 @@
         <% end %>
       </div>
     <% else %>
-      <%= render Shared::ResourceMapComponent.new(
-        marker_coordinates: @proposals_coordinates,
-        projekt_phase: @projekt_phase,
-        resource_type: Proposal
+      <%= render Shared::MapComponent.new(
+        mappable: @projekt_phase,
+        features: @marker_coordinates
       ) %>
       <div class="flex-layout flex-layout-reverse-on-mobile">
         <div class="main-column">

@@ -18,7 +18,7 @@ class Shared::ResourceMapComponent < ApplicationComponent
     @resource_type.name&.underscore&.pluralize
   end
 
-  def render_map?
+  def render?
     return false if @projekt_phase.present? && !projekt_phase_feature?(@projekt_phase, "form.show_map")
 
     @marker_coordinates.present? || @map_location.present? || @projekt_phase&.map_location.present?

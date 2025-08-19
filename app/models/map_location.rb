@@ -11,20 +11,19 @@ class MapLocation < ApplicationRecord
     "RegisteredAddress::District": "district"
   }.freeze
 
-  enum rendering_library: { leaflet: 0, mapbox: 1, vc_maps: 2 }
+  enum rendering_library: { leaflet: 0, mapbox: 1, virtualcity: 2 }
 
   belongs_to :mappable, polymorphic: true, touch: true
   has_one_attached :screenshot
 
   validates :longitude, :latitude, :zoom, presence: true, numericality: true
 
-  before_save :ensure_shape_is_json
   after_save :update_geocoder_data
 
   reverse_geocoded_by :latitude, :longitude
 
   audited associated_with: :deficiency_report,
-    only: %i[shape latitude longitude],
+    only: %i[features latitude longitude],
     if: :audit_changes?
 
   def available?
@@ -43,24 +42,16 @@ class MapLocation < ApplicationRecord
     }
   end
 
-  def shape_json_data
-    return {} if shape == {} || shape.is_a?(String)
+  def features_json_data
+    return {} if features == {} || features.is_a?(String)
 
-    shape_additional_data =
-      {
-        resource_type: RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
-        id: mappable_id,
-        color: get_feature_color,
-        fa_icon_class: get_fa_icon_class
-      }
+    features.merge({
+      resource_type: RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
+      id: mappable_id,
+      color: get_feature_color,
+      fa_icon_class: get_fa_icon_class
+    })
 
-    if shape.is_a?(Array)
-      shape.map do |shape_item|
-        shape_item.merge(shape_additional_data)
-      end
-    else
-      shape.merge(shape_additional_data)
-    end
   end
 
   def get_district
@@ -122,12 +113,6 @@ class MapLocation < ApplicationRecord
       end
     end
 
-    def ensure_shape_is_json
-      self.shape = JSON.parse(shape) if shape.is_a?(String)
-    rescue JSON::ParserError
-      self.shape = {}
-    end
-
     def update_geocoder_data
       return unless latitude.present? && longitude.present?
 
@@ -141,6 +126,6 @@ class MapLocation < ApplicationRecord
     def audit_changes?
       return false unless mappable.is_a?(DeficiencyReport)
 
-      mappable.previous_changes.any? { |k, _v| k.in?(%w[shape latitude longitude]) }
+      mappable.previous_changes.any? { |k, _v| k.in?(%w[features latitude longitude]) }
     end
 end

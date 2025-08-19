@@ -268,7 +268,7 @@ module ProjektPhaseAdminActions
 
   def update_map
     @projekt_phase = ProjektPhase.find(params[:id])
-    map_location = @projekt_phase.map_location || MapLocation.new(projekt_phase: @projekt_phase)
+    map_location = @projekt_phase.map_location || @projekt_phase.build_map_location
 
     authorize!(:update_map, map_location)
 

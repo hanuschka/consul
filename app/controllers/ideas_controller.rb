@@ -116,7 +116,7 @@ class IdeasController < ApplicationController
       ids = ideas_for_map.except(:limit, :offset, :order).ids.uniq
 
       MapLocation.where(mappable_id: ids, mappable_type: "Idea").map do |map_location|
-        map_location.shape_json_data.presence || map_location.json_data
+        map_location.features_json_data.presence || map_location.json_data
       end
     end
 

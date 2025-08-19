@@ -11,7 +11,7 @@ module ProposalsHelper
         .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment])
 
     map_locations.map do |map_location|
-      map_location.shape_json_data.presence || map_location.json_data
+      map_location.features_json_data.presence || map_location.json_data
     end
   end
 

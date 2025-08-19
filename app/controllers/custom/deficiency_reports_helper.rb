@@ -11,7 +11,7 @@ module DeficiencyReportsHelper
     ids = deficiency_reports_for_map.except(:limit, :offset, :order).ids.uniq
 
     MapLocation.where(mappable_id: ids, mappable_type: "DeficiencyReport").map do |map_location|
-      map_location.shape_json_data.presence || map_location.json_data
+      map_location.features_json_data.presence || map_location.json_data
     end
   end
 

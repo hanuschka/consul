@@ -362,6 +362,7 @@ class PagesController < ApplicationController
   end
 
   def set_point_of_interest_phase_footer_tab_variables
+    auto_sign_in_guest_for(@projekt_phase)
     @map_coordinates =
       @projekt_phase
         .projekt_point_of_interest_pins

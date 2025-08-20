@@ -39,6 +39,8 @@ en:
         index_order_drafts_title: "Entwürfe"
       search_form:
         placeholder: Search...
+      homepage_search_form:
+        placeholder: Search projects...
       page:
         footer:
           sidebar:

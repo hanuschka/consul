@@ -1,17 +1,21 @@
 class Shared::MapComponent < ApplicationComponent
   def initialize(
     mappable: nil, # map center, zoom, altitu
-    features: nil, # map features, e.g. markers, polygons (comes from collection)
-    editable: false # if true user can edit the features
+    features: {}, # map features, e.g. markers, polygons (comes from collection)
+    editable: false, # if true user can edit the features
+    process: nil,
+    placement: nil # used to determine the placement of the map (e.g. in a modal or on a page
   )
     @mappable = mappable
-    @features = features || @mappable&.map_location&.features
+    @features = features
     @editable = editable
+    @process = process
+    @placement = placement
   end
 
   def map_div
     content_tag :div, "",
-                id: dom_id(@mappable, "map"),
+                id: dom_id(@mappable, [@placement, "map"].compact.join("_")),
                 class: "map_location map #{rendering_library}",
                 aria: { hidden: true },
                 data: prepare_map_settings
@@ -21,6 +25,8 @@ class Shared::MapComponent < ApplicationComponent
 
     def prepare_map_settings
       options = { map: true }
+
+      options[:process] = @process if @process
 
       options[:map_center_latitude] = map_location&.latitude || Setting["map.latitude"]
       options[:map_center_longitude] = map_location&.longitude || Setting["map.longitude"]
@@ -35,6 +41,7 @@ class Shared::MapComponent < ApplicationComponent
       options[:editable] = @editable
       options[:enable_shapes] = enable_shapes
       options[:admin_editor] = admin_editor?
+      options[:editing_projekt_map] = editing_projekt_map?
 
 
       if rendering_library == "mapbox"
@@ -59,9 +66,10 @@ class Shared::MapComponent < ApplicationComponent
     def admin_features
       return {} if admin_editor?
       return {} unless @mappable
+      return map_location.features.to_json if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
 
-      @mappable.try(:projekt_phase)&.map_location&.features ||
-        @mappable.try(:projekt)&.map_location&.features
+      @mappable.try(:projekt_phase)&.map_location&.features&.to_json ||
+        @mappable.try(:projekt)&.map_location&.features&.to_json
     end
 
     def layers
@@ -71,7 +79,14 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def admin_editor?
+      return false unless @editable
+      return false unless @mappable
+
       @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase)
+    end
+
+    def editing_projekt_map?
+      admin_editor? && @mappable.is_a?(Projekt)
     end
 
     def enable_shapes

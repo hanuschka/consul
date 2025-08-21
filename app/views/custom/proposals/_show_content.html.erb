@@ -62,7 +62,8 @@
         <% if projekt_phase_feature?(proposal.projekt_phase, "form.show_map") %>
           <div class="margin-bottom not-print">
             <%= render Shared::MapComponent.new(
-              mappable: proposal
+              mappable: proposal,
+              features: proposal.map_location&.features_json_data
             ) %>
           </div>
         <% end %>

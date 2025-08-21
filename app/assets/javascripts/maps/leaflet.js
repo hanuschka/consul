@@ -35,13 +35,16 @@
 
       // Features configuration
       this.features = $element.data("features");
+      this.process = $element.data("process");
 
       // Editing configuration
       this.editable = $element.data("editable");
       this.adminEditor = $element.data("admin-editor");
+      this.editingProjektMap = $element.data("editing-projekt-map");
       this.enableShapes = $element.data("enable-shapes");
       this.editableLayers = [];
       this.centerMarker = null;
+      this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
@@ -51,9 +54,7 @@
     }
 
     bindEventListeners() {
-      // this.moveOrPlaceCenterMarker = this.moveOrPlaceCenterMarker.bind(this);
-      // this.placeMultiMarker = this.placeMultiMarker.bind(this);
-      // this.openMarkerPopup = this.openMarkerPopup.bind(this);
+      this.openMarkerPopup = this.openMarkerPopup.bind(this);
     }
 
     createMap() {
@@ -74,7 +75,7 @@
 
       this.map.pm.setGlobalOptions({
         markerStyle: {
-          icon: App.Utils.getLeafletMarkerHTML(undefined, this.adminEditor),
+          icon: App.Utils.getLeafletMarkerHTML(this.defaultFeatureColor),
         },
         pathOptions: {
           weight: 2,
@@ -92,13 +93,17 @@
       const self = this;
 
       self.map.on('pm:create', function(e) {
+        if (e.shape === 'Circle') {
+          e.layer.options.shape = 'Circle';
+        }
+
         self.setupEventListenersForEditableFeature(self.map, e.layer);
       })
     }
 
     setupLayers() {
       if (this.adminFeatures && Object.keys(this.adminFeatures).length > 0) {
-				this.addAdminFeaturesAsLayer();
+        this.addAdminFeaturesAsLayer();
       };
 
       // Create layers
@@ -169,6 +174,11 @@
 
     addAdminFeaturesAsLayer() {
       const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
+        pointToLayer: function(feature, latlng) {
+          return L.marker(latlng, {
+            icon: App.Utils.getLeafletMarkerHTML('#ff0000')
+          });
+        },
         style: {
           color: '#ff0000',
           weight: 2,
@@ -245,7 +255,7 @@
         this.featuresLayer = L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
             return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(feature, self.adminEditor),
+              icon: App.Utils.getLeafletMarkerHTML(self.defaultFeatureColor),
             });
           },
           style: function (feature) {
@@ -257,16 +267,50 @@
           onEachFeature: function (feature, layer) {
             if (self.editable) {
               self.setupEventListenersForEditableFeature(self.map, layer)
+              self.editableLayers.push(layer);
 
               layer.on('pm:edit', function(e) {
                 self.updateFeaturesInput(self.featuresInput, self.editableLayers);
               });
 
-              self.editableLayers.push(layer);
+            } else {
+
+              if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
+                layer.options.resource_type = feature.properties.resource_type || null;
+                layer.options.id = feature.properties.id || null;
+                layer.options.color = feature.properties.color || self.defaultFeatureColor;
+                layer.options.fa_icon_class = feature.properties.fa_icon_class || 'circle';
+
+                layer.on("click", self.openMarkerPopup);
+              }
+
             }
           }
         }).addTo(this.map);
       }
+
+      if (this.editingProjektMap) {
+        this.placeCenterMarker(this.mapCenterLatLng, this);
+      }
+    }
+
+    openMarkerPopup(e) {
+      const resourceType = e.target.options.resource_type;
+      const route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options);
+
+      if (!route) return;
+
+      $.ajax(route, {
+        type: "GET",
+        dataType: "json",
+        success: (data) => {
+          const isInModal = true // !!$(this.element).data('modal-map');
+          e.target.bindPopup(
+            App.MapPopup.generatePopupContent(data, resourceType, isInModal),
+            { autoPanPadding: [0, 80], minWidth: 200, offset: L.point(0, -30) }
+          ).openPopup();
+        }
+      });
     }
 
     setupEditingControls() {
@@ -275,6 +319,10 @@
       const self = this;
 
       this.map.pm.setLang('de');
+
+      this.map.pm.Toolbar.setBlockPosition('custom', 'topright');
+      this.map.pm.Toolbar.setBlockPosition('draw', 'topright');
+      this.map.pm.Toolbar.setBlockPosition('edit', 'topright');
 
       // Ads geoman controls to the map, changing some defaults
       this.map.pm.addControls({
@@ -288,38 +336,26 @@
         editMode: this.enableShapes,
         dragMode: this.enableShapes,
         cutPolygon: this.enableShapes,
-        rotateMode: this.enableShapes,
-        positions: {
-          custom: 'topright',
-          edit: 'topright',
-          draw: 'topright'
-        }
+        rotateMode: this.enableShapes
       })
 
-      if (this.adminEditor) {
+      if (this.editingProjektMap) {
         this.map.pm.Toolbar.createCustomControl({
           name: 'centerMarker',
           className: 'control-icon circle leaflet-pm-icon-circle-marker',
           title: 'Zentrum markieren',
           block: 'custom',
+          toggle: true,
           onClick: function() {
-            console.log('Zentrum markieren');
+            const isToggled = !self.map.pm.Toolbar.buttons.centerMarker.toggled();
 
-            self.map.on('click', function(e) {
-              const centerMarker = L.marker(e.latlng, {
-                draggable: true,
-                icon: App.Utils.getLeafletMarkerHTML(undefined, self.adminEditor)
-              })
-
-              if (self.centerMarker) {
-                self.map.removeLayer(self.centerMarker);
-              }
-
-              self.centerMarker = centerMarker;
-              self.map.addLayer(centerMarker);
-              self.latitudeInput.value = centerMarker.getLatLng().lat.toFixed(6);
-              self.longitudeInput.value = centerMarker.getLatLng().lng.toFixed(6);
-            })
+            if (isToggled) {
+              self.map.on('click', function(e) {
+                self.placeCenterMarker(e.latlng, self);
+              });
+            } else {
+              self.map.off('click');
+            }
           }
         })
       }
@@ -340,6 +376,22 @@
           }
         });
       }
+    }
+
+    placeCenterMarker(centerLatLng, instance) {
+      if (instance.centerMarker) {
+        instance.map.removeLayer(instance.centerMarker);
+      }
+
+      const centerMarker = L.marker(centerLatLng, {
+        draggable: true,
+        icon: App.Utils.getLeafletMarkerHTML()
+      })
+
+      instance.centerMarker = centerMarker;
+      instance.map.addLayer(centerMarker);
+      instance.latitudeInput.value = centerMarker.getLatLng().lat.toFixed(6);
+      instance.longitudeInput.value = centerMarker.getLatLng().lng.toFixed(6);
     }
 
     setupEventListenersForEditableFeature(map, layer) {
@@ -367,9 +419,10 @@
       const self = this;
 
       this.map.on('move', function() {
-        if (!self.adminEditor) {
+        if (!self.editingProjektMap) {
           self.latitudeInput.value = self.map.getCenter().lat.toFixed(6);
           self.longitudeInput.value = self.map.getCenter().lng.toFixed(6);
+          self.zoomInput.value = self.map.getZoom();
         }
       });
 
@@ -387,19 +440,25 @@
 
         self.editableLayers.push(e.layer);
         self.updateFeaturesInput(self.featuresInput, self.editableLayers);
+        self.zoomInput.value = self.map.getZoom();
       });
 
       this.map.on('pm:dragend', function(e) {
-        if (!self.adminEditor) {
+        if (!self.editingProjektMap) {
           self.latitudeInput.value = self.map.getCenter().lat.toFixed(6);
           self.longitudeInput.value = self.map.getCenter().lng.toFixed(6);
+          self.zoomInput.value = self.map.getZoom();
         }
       });
     }
 
     updateFeaturesInput(featuresInput, editableLayers) {
-      var featuresData = editableLayers.map(function(layer) {
-        return layer.toGeoJSON();
+      const featuresData = editableLayers.map(function(layer) {
+        if ( layer.options.shape == 'Circle' ) {
+          return L.PM.Utils.circleToPolygon(layer, 60).toGeoJSON();
+        } else {
+          return layer.toGeoJSON();
+        }
       })
 
       var featureCollection = {

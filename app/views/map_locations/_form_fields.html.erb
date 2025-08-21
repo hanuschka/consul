@@ -7,50 +7,46 @@
   <p class="<%= help_text_class %>" id="tag-list-help-text"><%= help %></p>
 <% end %>
 
+<% mappable.build_map_location unless mappable.map_location %>
+
 <div class="margin-bottom">
   <%= render Shared::MapComponent.new(
     mappable: mappable,
+    features: mappable.map_location.features,
     editable: true
   ) %>
 </div>
 
-<% map_location = mappable.map_location || mappable.build_map_location(
-                                             latitude: Setting["map.latitude"],
-                                             longitude: Setting["map.longitude"],
-                                             zoom: Setting["map.zoom"]
-) %>
-
-
-<%= form.fields_for :map_location, map_location do |m_l_fields| %>
+<%= form.fields_for :map_location, mappable.map_location do |m_l_fields| %>
   <%= m_l_fields.hidden_field :id,
-                              value: map_location.id,
+                              value: mappable.map_location.id,
                               id: "#{nesting_prefix}_map_location_attributes_id" %>
   <%= m_l_fields.hidden_field :latitude,
-                              value: map_location.latitude,
+                              value: mappable.map_location.latitude,
                               id: "#{nesting_prefix}_map_location_attributes_latitude",
                               data: {
                                 latitude_input_for: dom_id(mappable, "map")
                               } %>
   <%= m_l_fields.hidden_field :longitude,
-                              value: map_location.longitude,
+                              value: mappable.map_location.longitude,
                               id: "#{nesting_prefix}_map_location_attributes_longitude",
                               data: {
                                 longitude_input_for: dom_id(mappable, "map")
                               } %>
   <%= m_l_fields.hidden_field :altitude,
-                              value: map_location.altitude,
+                              value: mappable.map_location.altitude,
                               id: "#{nesting_prefix}_map_location_attributes_altitude",
                               data: {
                                 altitude_input_for: dom_id(mappable, "map")
                               } %>
   <%= m_l_fields.hidden_field :zoom,
-                              value: map_location.zoom,
+                              value: mappable.map_location.zoom,
                               id: "#{nesting_prefix}_map_location_attributes_zoom",
                               data: {
                                 zoom_input_for: dom_id(mappable, "map")
                               } %>
   <%= m_l_fields.hidden_field :features,
-                              value: map_location.features,
+                              value: mappable.map_location.features,
                               id: "#{nesting_prefix}_map_location_attributes_features",
                               data: {
                                 features_input_for: dom_id(mappable, "map")

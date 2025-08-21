@@ -18,6 +18,8 @@ class MapLocation < ApplicationRecord
 
   validates :longitude, :latitude, :zoom, presence: true, numericality: true
 
+  after_initialize :set_default_values
+  before_save :parse_features_string
   after_save :update_geocoder_data
 
   reverse_geocoded_by :latitude, :longitude
@@ -31,6 +33,7 @@ class MapLocation < ApplicationRecord
   end
 
   def json_data
+    debugger
     {
       resource_type: RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
       id: mappable_id,
@@ -43,15 +46,31 @@ class MapLocation < ApplicationRecord
   end
 
   def features_json_data
+    if features.is_a?(String)
+      Sentry.capture_message("MapLocation #{id} features is a String")
+    end
+
     return {} if features == {} || features.is_a?(String)
 
-    features.merge({
-      resource_type: RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
-      id: mappable_id,
-      color: get_feature_color,
-      fa_icon_class: get_fa_icon_class
-    })
+    extra_properties = {
+      "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
+      "id" => mappable_id,
+      "color" => get_feature_color,
+      "fa_icon_class" => get_fa_icon_class
+    }
 
+    if features["type"] == "FeatureCollection"
+      features["features"].each do |feature|
+        feature["properties"].merge!(extra_properties)
+      end
+    elsif features["type"] == "Feature"
+      features["properties"].merge!(extra_properties)
+    else
+      Sentry.capture_message("MapLocation #{id} features is not a FeatureCollection or Feature")
+      return {}
+    end
+
+    features
   end
 
   def get_district
@@ -75,6 +94,22 @@ class MapLocation < ApplicationRecord
   end
 
   private
+
+    def set_default_values
+      return unless new_record?
+
+      if parent = mappable.respond_to?(:projekt_phase) ? mappable.projekt_phase : mappable.try(:projekt)
+        self.latitude  ||= parent.map_location.latitude
+        self.longitude ||= parent.map_location.longitude
+        self.zoom      ||= parent.map_location.zoom
+        self.altitude  ||= parent.map_location.altitude
+      else
+        self.latitude  ||= Setting["map.latitude"]
+        self.longitude ||= Setting["map.longitude"]
+        self.zoom      ||= Setting["map.zoom"]
+        self.altitude  ||= 80
+      end
+    end
 
     def get_approximated_address
       return unless geocoder_data.present?
@@ -127,5 +162,17 @@ class MapLocation < ApplicationRecord
       return false unless mappable.is_a?(DeficiencyReport)
 
       mappable.previous_changes.any? { |k, _v| k.in?(%w[features latitude longitude]) }
+    end
+
+    def parse_features_string
+      if features.is_a?(String)
+        begin
+          self.features = JSON.parse(features)
+        rescue JSON::ParserError => e
+          Sentry.capture_exception(e)
+          self.features = {}
+          self.features_bu = features
+        end
+      end
     end
 end

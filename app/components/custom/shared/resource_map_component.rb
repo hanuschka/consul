@@ -12,6 +12,7 @@ class Shared::ResourceMapComponent < ApplicationComponent
   end
 
   def resources_name
+    debugger
     return "deficiency-reports" if @resource_type == DeficiencyReport
     return "budgets" if @resource_type == Budget::Investment
 

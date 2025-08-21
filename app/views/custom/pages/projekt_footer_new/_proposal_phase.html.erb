@@ -45,7 +45,8 @@
     <% else %>
       <%= render Shared::MapComponent.new(
         mappable: @projekt_phase,
-        features: @marker_coordinates
+        features: @proposals_coordinates,
+        process: 'proposals'
       ) %>
       <div class="flex-layout flex-layout-reverse-on-mobile">
         <div class="main-column">

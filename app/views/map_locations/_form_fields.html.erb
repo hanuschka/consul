@@ -46,7 +46,7 @@
                                 zoom_input_for: dom_id(mappable, "map")
                               } %>
   <%= m_l_fields.hidden_field :features,
-                              value: mappable.map_location.features,
+                              value: mappable.map_location.features.to_json,
                               id: "#{nesting_prefix}_map_location_attributes_features",
                               data: {
                                 features_input_for: dom_id(mappable, "map")

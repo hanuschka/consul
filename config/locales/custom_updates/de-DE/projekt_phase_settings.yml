@@ -85,6 +85,9 @@ de:
           resource:
             votes_for_proposal_success: "Anzahl der notwendigen Stimmen zur Genehmigung eines Vorschlags"
             votes_for_proposal_success_description: "Wenn ein Antrag diese Anzahl von Unterstützungen erreicht, kann er nicht mehr mehr unterstützt werden und gilt als erfolgreich"
+          form:
+            map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+            map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
 
         selectable_setting:
           general:
@@ -174,6 +177,10 @@ de:
               total_votes: Aktuelles Ranking
               newest: Neueste zuerst
               comments_count: Meist kommentiert
+        option:
+          form:
+            map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+            map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
       projekt_questions:
         feature:
           general:
@@ -224,3 +231,6 @@ de:
         option:
           general:
             max_number_of_pins_per_user: Maximale Anzahl an Pins pro Nutzer
+          form:
+            map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
+            map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.

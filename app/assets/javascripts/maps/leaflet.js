@@ -43,6 +43,7 @@
       this.editingProjektMap = $element.data("editing-projekt-map");
       this.enableShapes = $element.data("enable-shapes");
       this.editableLayers = [];
+      this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
 
@@ -87,6 +88,10 @@
         templineStyle: { color: defaultColor, dashArray: '5, 10' },
         hintlineStyle: { color: defaultColor, dashArray: '5, 10' }
       });
+
+      if (this.editableLayersLimit && this.editableLayersLimit > 1) {
+        this.addHintAboutEditableLayersLimit();
+      }
     }
 
     setupEventListenersForNewFeatures() {
@@ -197,6 +202,23 @@
       this.renderAdminFeaturesNote();
     }
 
+    addHintAboutEditableLayersLimit() {
+      const hintText = 'Sie dürfen insgesamt ' + this.editableLayersLimit + ' Pins setzen.'
+      const hintControl = L.control({
+        position: 'bottomleft'
+      })
+
+      hintControl.onAdd = () => {
+        const container = L.DomUtil.create('div', 'feature-limit-hint');
+        container.innerHTML = hintText;
+        container.className += ' leaflet-control-attribution';
+        container.style.color = '#ff0000';
+        return container;
+      };
+
+      hintControl.addTo(this.map);
+    }
+
     renderAdminFeaturesNote() {
       const adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
       const adminShapeExplainer = L.control({
@@ -255,7 +277,7 @@
         this.featuresLayer = L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
             return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(self.defaultFeatureColor),
+              icon: App.Utils.getLeafletMarkerHTML(feature.properties.color || self.defaultFeatureColor, feature.properties.fa_icon_class ),
             });
           },
           style: function (feature) {
@@ -431,11 +453,8 @@
       });
 
       this.map.on('pm:create', function(e) {
-        if (!self.adminEditor) {
-          self.editableLayers.forEach((layer) => {
-            self.map.removeLayer(layer);
-          });
-          self.editableLayers = [];
+        if (!self.adminEditor && self.editableLayers.length >= self.editableLayersLimit) {
+          self.map.removeLayer(self.editableLayers.pop());
         }
 
         self.editableLayers.push(e.layer);

@@ -42,7 +42,7 @@ class Shared::MapComponent < ApplicationComponent
       options[:enable_shapes] = enable_shapes
       options[:admin_editor] = admin_editor?
       options[:editing_projekt_map] = editing_projekt_map?
-
+      options[:map_features_limit] = map_features_limit if @editable
 
       if rendering_library == "mapbox"
         options[:mapbox_public_token] = Rails.application.secrets.dig(:mapbox, :public_token)
@@ -104,6 +104,14 @@ class Shared::MapComponent < ApplicationComponent
 
       else
         false
+      end
+    end
+
+    def map_features_limit
+      if @mappable.respond_to?(:projekt_phase)
+        @mappable.projekt_phase.option("form.map_features_limit")
+      else
+        1
       end
     end
 end

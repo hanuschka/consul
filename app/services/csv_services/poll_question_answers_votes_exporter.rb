@@ -9,7 +9,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: false, col_sep: ";") do |csv|
+      CSV.generate(headers: false, col_sep: ";", force_quotes: true) do |csv|
         csv << headers(@question)
 
         @other_poll_questions.each do |question|

@@ -9,13 +9,7 @@
       this.bindEventListeners();
 
       this.createMap();
-      // this.setupLayers();
-      this.setupPlugins();
-      // this.renderFeatures();
-
-      // this.setupEditingControls();
-      this.setupEventListenersForNewFeatures();
-      // this.setupEventListenersForUpdatingFormInputs();
+      // this.setupEventListenersForNewFeatures();
     }
 
     initializeProperties() {
@@ -26,6 +20,7 @@
       this.mapCenterLongitude = $element.data("map-center-longitude");
       this.mapCenterLatLng = new L.LatLng(this.mapCenterLatitude, this.mapCenterLongitude);
       this.zoom = $element.data("map-zoom");
+      this.placement = $element.data("placement");
 
       // Layer configuration
       this.layersData = $element.data('layers-data');
@@ -132,18 +127,7 @@
 
       this.initMap(function(map) {
         instance.map = map;
-        instance.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-        instance.map.addControl(new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            mapboxgl: mapboxgl,
-            countries: 'DE',
-            marker: false
-        }), 'top-left');
-        instance.map.addControl(new mapboxgl.GeolocateControl({
-          positionOptions: { enableHighAccuracy: true },
-          trackUserLocation: true
-          }), 'top-left'
-        );
+        instance.setupPlugins();
         instance.setupLayers();
         instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
@@ -397,37 +381,20 @@
     }
 
     setupPlugins() {
-    //  // Leaflet.Locate plugin
-    //  L.control.locate({
-    //    icon: 'fa fa-map-marker',
-    //    strings: {
-    //      title: 'Meine Position anzeigen'
-    //    }
-    //  }).addTo(this.map);
+      if (this.placement == 'sidebar') return;
 
-    //  // Leaflet GeoSearch plugin
-    //  const searchControl = new GeoSearch.GeoSearchControl({
-    //    provider: new GeoSearch.OpenStreetMapProvider(),
-    //    style: 'bar',
-    //    showMarker: false,
-    //    searchLabel: 'Nach Adresse suchen',
-    //    notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
-    //    clearSearchLabel: 'Suche zurücksetzen'
-    //  });
-    //  this.map.addControl(searchControl);
-
-    //  // Leaflet.Deflate plugin
-    //  this.deflateFeatures = L.deflate({
-    //    minSize: 10,
-    //    markerLayer: this.markersGroup,
-    //    markerOptions: (shape) => {
-    //      return {
-    //        icon: this.getMarkerIcon(shape.feature.color, shape.feature.fa_icon_class),
-    //        id: this.getProcessId(shape)
-    //      }
-    //    }
-    //  });
-    //  this.deflateFeatures.addTo(this.map);
+      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+      this.map.addControl(new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+          countries: 'DE',
+          marker: false
+      }), 'top-left');
+      this.map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true
+        }), 'top-left'
+      );
     }
 
     formattedFeaturesForRendering() {

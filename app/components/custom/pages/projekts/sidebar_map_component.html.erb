@@ -10,7 +10,8 @@
   <%= link_to extended_sidebar_map_page_path(projekt.page.slug), remote: true do %>
 		<div class='sidebar-projekt-map'>
       <%= render Shared::MapComponent.new(
-        mappable: projekt
+        mappable: projekt,
+        placement: 'sidebar'
       ) %>
 		</div>
   <% end %>

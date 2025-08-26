@@ -31,6 +31,7 @@ class Shared::MapComponent < ApplicationComponent
       options[:map_center_latitude] = map_location&.latitude || Setting["map.latitude"]
       options[:map_center_longitude] = map_location&.longitude || Setting["map.longitude"]
       options[:map_zoom] = map_location&.zoom || Setting["map.zoom"]
+      options[:placement] = @placement if @placement
 
       options[:layers_data] = layers
 

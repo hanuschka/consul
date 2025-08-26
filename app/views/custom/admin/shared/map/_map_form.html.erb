@@ -2,7 +2,6 @@
   <% i18n_scope = "shared.map_component" %>
   <div class="new-card" id='map-container'>
     <%= render "map_locations/form_fields",
-      label:          t("#{i18n_scope}.form.map_location"),
       form:           f,
       mappable:       mappable,
       nesting_prefix: mappable.class.table_name %>

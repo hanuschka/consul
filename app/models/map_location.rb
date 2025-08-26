@@ -33,7 +33,6 @@ class MapLocation < ApplicationRecord
   end
 
   def json_data
-    debugger
     {
       resource_type: RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
       id: mappable_id,
@@ -99,10 +98,11 @@ class MapLocation < ApplicationRecord
       return unless new_record?
 
       if parent = mappable.respond_to?(:projekt_phase) ? mappable.projekt_phase : mappable.try(:projekt)
-        self.latitude  ||= parent.map_location.latitude
-        self.longitude ||= parent.map_location.longitude
-        self.zoom      ||= parent.map_location.zoom
-        self.altitude  ||= parent.map_location.altitude
+        self.latitude          ||= parent.map_location.latitude
+        self.longitude         ||= parent.map_location.longitude
+        self.zoom              ||= parent.map_location.zoom
+        self.altitude          ||= parent.map_location.altitude
+        self.rendering_library = parent.map_location.rendering_library
       else
         self.latitude  ||= Setting["map.latitude"]
         self.longitude ||= Setting["map.longitude"]

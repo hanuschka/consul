@@ -4,4 +4,9 @@ $("#extended-sidebar-map").css('position', 'fixed');
 $('#extended-sidebar-map').foundation();
 
 var map = document.querySelector("#extended-sidebar-map *[data-map]")
-App.Map.initializeLeafletMap(map);
+
+if (map.classList.contains("leaflet")) {
+  App.Map.initializeLeafletMap(map);
+} else if (map.classList.contains("mapbox")) {
+  App.Map.initializeMapboxMap(map);
+}

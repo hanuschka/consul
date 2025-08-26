@@ -73,6 +73,8 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def layers
+      return @mappable.map_layers if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
+
       @mappable.try(:projekt_phase)&.map_layers ||
         @mappable.try(:projekt)&.map_layers ||
         MapLayer.general

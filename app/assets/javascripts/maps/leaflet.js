@@ -458,6 +458,11 @@
         }
 
         self.editableLayers.push(e.layer);
+
+        e.layer.on('pm:edit', function(e) {
+          self.updateFeaturesInput(self.featuresInput, self.editableLayers);
+        });
+
         self.updateFeaturesInput(self.featuresInput, self.editableLayers);
         self.zoomInput.value = self.map.getZoom();
       });

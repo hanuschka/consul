@@ -51,16 +51,9 @@ class Shared::MapBaseComponent < ApplicationComponent
 
     def get_process_coordinates
       if @mappable.present? && @mappable.persisted? && @mappable.map_location.present?
-        if admin_editor?
-          [
-            @mappable.map_location.features_json_data
-          ]
-        else
-          [
-            @mappable.map_location.features_json_data.presence ||
-              @mappable.map_location.json_data
-          ]
-        end
+        [
+          @mappable.map_location.features_json_data
+        ]
       else
         []
       end

@@ -47,7 +47,6 @@ class Shared::MapComponent < ApplicationComponent
       if rendering_library == "mapbox"
         options[:mapbox_public_token] = Rails.application.secrets.dig(:mapbox, :public_token)
         options[:mapbox_style_id] = Rails.application.secrets.dig(:mapbox, :style_id)
-        # options[:mapbox_marker_images] = mapbox_marker_images
       elsif rendering_library == "virtualcity"
         options[:map_center_altitude] = map_location&.altitude 
       end

@@ -108,10 +108,11 @@ class MapLocation < ApplicationRecord
         self.altitude          ||= parent.map_location.altitude
         self.rendering_library = parent.map_location.rendering_library
       else
-        self.latitude  ||= 52.5209410025777
-        self.longitude ||= 13.409421034146195
-        self.zoom      ||= 15
-        self.altitude  ||= 80
+        self.latitude          ||= 52.5209410025777
+        self.longitude         ||= 13.409421034146195
+        self.zoom              ||= 15
+        self.altitude          ||= 80
+        self.rendering_library = self.class.default.rendering_library
       end
     end
 

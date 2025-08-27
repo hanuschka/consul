@@ -444,14 +444,19 @@
               });
 
               instance.map.addLayer({
-                id: 'user-features-circles',
+                id: 'user-features-circles-outer',
                 type: 'circle',
                 source: 'user-features',
                 filter: ['==', '$type', 'Point'],
-                paint: {
-                  'circle-radius': 6,
-                  'circle-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor]
-                }
+                paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 15 ], 'circle-color': instance.defaultFeatureColor }
+              });
+
+              instance.map.addLayer({
+                id: 'user-features-circles-inner',
+                type: 'circle',
+                source: 'user-features',
+                filter: ['==', '$type', 'Point'],
+                paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': '#fff' }
               });
 
               instance.map.addLayer({
@@ -482,7 +487,7 @@
               });
 
               if (instance.process && App.MapPopup.excludedProcesses.indexOf(instance.process) === -1) {
-                const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
+                const userFeaturesLayers = ['user-features-circles-outer', 'user-features-circles-inner', 'user-features-lines', 'user-features-polygons'];
                 userFeaturesLayers.forEach(function(layerId) {
                   instance.map.on('click', layerId, instance.openMarkerPopup);
                 })
@@ -513,7 +518,7 @@
         closeButton: true,
         maxWidth: '250px'
       })
-        .setLngLat(coordinates[0][0])
+        .setLngLat(coordinates[0][0] || coordinates)
         .setHTML('<div class="map-popup-status-message">Laden...</div>')
         .addTo(this);
 

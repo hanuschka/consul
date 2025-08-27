@@ -100,7 +100,6 @@ class MapLocation < ApplicationRecord
 
     def set_default_values
       return unless new_record?
-      return if default?
 
       if parent = mappable.respond_to?(:projekt_phase) ? mappable.projekt_phase : mappable.try(:projekt)
         self.latitude          ||= parent.map_location.latitude
@@ -113,7 +112,7 @@ class MapLocation < ApplicationRecord
         self.longitude         ||= 13.409421034146195
         self.zoom              ||= 15
         self.altitude          ||= 80
-        self.rendering_library = self.class.default.rendering_library
+        self.rendering_library =  default ? "leaflet" : self.class.default.rendering_library
       end
     end
 

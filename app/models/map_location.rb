@@ -28,6 +28,10 @@ class MapLocation < ApplicationRecord
     only: %i[features latitude longitude],
     if: :audit_changes?
 
+  def self.default
+    MapLocation.find_or_create_by!(default: true)
+  end
+
   def available?
     latitude.present? && longitude.present? && zoom.present?
   end
@@ -104,9 +108,9 @@ class MapLocation < ApplicationRecord
         self.altitude          ||= parent.map_location.altitude
         self.rendering_library = parent.map_location.rendering_library
       else
-        self.latitude  ||= Setting["map.latitude"]
-        self.longitude ||= Setting["map.longitude"]
-        self.zoom      ||= Setting["map.zoom"]
+        self.latitude  ||= 52.5209410025777
+        self.longitude ||= 13.409421034146195
+        self.zoom      ||= 15
         self.altitude  ||= 80
       end
     end

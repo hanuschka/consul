@@ -15,7 +15,7 @@ class Shared::MapComponent < ApplicationComponent
 
   def map_div
     content_tag :div, "",
-                id: dom_id(@mappable, [@placement, "map"].compact.join("_")),
+                id: map_id,
                 class: "map_location map #{rendering_library}",
                 aria: { hidden: true },
                 data: prepare_map_settings
@@ -55,8 +55,20 @@ class Shared::MapComponent < ApplicationComponent
       options
     end
 
+    def map_id
+      return dom_id(@mappable, [@placement, "map"].compact.join("_")) if @mappable
+      return "#{@process}_map" if @process
+      return "default_map" if map_location.default?
+
+      "map"
+    end
+
     def map_location
-      @map_location ||= @mappable.map_location || MapLocation.new(mappable: @mappable)
+      @map_location ||= if @mappable.present?
+                          @mappable.map_location || MapLocation.new(mappable: @mappable)
+                        else
+                          MapLocation.default
+                        end
     end
 
     def rendering_library
@@ -82,9 +94,8 @@ class Shared::MapComponent < ApplicationComponent
 
     def admin_editor?
       return false unless @editable
-      return false unless @mappable
 
-      @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase)
+      @mappable.is_a?(Projekt) || @mappable.is_a?(ProjektPhase) || map_location.default?
     end
 
     def editing_projekt_map?

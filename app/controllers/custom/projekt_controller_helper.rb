@@ -5,7 +5,7 @@ module ProjektControllerHelper
       mappable_id: projekt_ids,
       show_admin_shape: true
     ).map do |map_location|
-      map_location.features_json_data
+      map_location.json_data
     end
   end
 end

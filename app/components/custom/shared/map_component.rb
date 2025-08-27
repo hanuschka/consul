@@ -77,8 +77,7 @@ class Shared::MapComponent < ApplicationComponent
 
     def admin_features
       return {} if admin_editor?
-      return {} unless @mappable
-      return map_location.features.to_json if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
+      return map_location.features.to_json if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt) || map_location.default?
 
       @mappable.try(:projekt_phase)&.map_location&.features&.to_json ||
         @mappable.try(:projekt)&.map_location&.features&.to_json

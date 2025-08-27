@@ -94,11 +94,11 @@
           <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
         </div>
 
-        <% if projekt_phase_feature?(@investment.projekt_phase, "form.show_map") && map_location_available?(@investment) %>
+        <% if @investment.map_location.present? %>
           <div class="margin-bottom not-print">
             <%= render Shared::MapComponent.new(
-              mappable: proposal,
-              features: proposal.map_location&.features_json_data
+              mappable: @investment,
+              features: @investment.map_location.features_json_data
             ) %>
           </div>
         <% end %>

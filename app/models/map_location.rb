@@ -38,13 +38,21 @@ class MapLocation < ApplicationRecord
 
   def json_data
     {
-      resource_type: RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
-      id: mappable_id,
-      lat: latitude,
-      long: longitude,
-      alt: altitude,
-      color: get_feature_color,
-      fa_icon_class: get_fa_icon_class
+      "type" => "FeatureCollection",
+      "features" => [{
+        "type" => "Feature",
+        "geometry" => {
+          "type" => "Point",
+          "coordinates" => [longitude, latitude]
+        },
+        "properties" => {
+          "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
+          "id" => mappable_id,
+          "color" => get_feature_color,
+          "fa_icon_class" => get_fa_icon_class
+        }
+      }]
+
     }
   end
 

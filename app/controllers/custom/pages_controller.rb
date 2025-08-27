@@ -362,7 +362,7 @@ class PagesController < ApplicationController
   end
 
   def set_point_of_interest_phase_footer_tab_variables
-    @map_coordinates =
+    @pin_coordinates =
       @projekt_phase
         .projekt_point_of_interest_pins
         .by_categories(params[:category_ids])

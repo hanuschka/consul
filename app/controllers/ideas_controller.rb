@@ -8,8 +8,10 @@ class IdeasController < ApplicationController
 
   feature_flag :ideas
 
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :json_data]
   before_action :set_idea, only: [:show, :vote, :unvote, :json_data]
+
+  skip_authorization_check only: [:json_data]
 
   has_orders ->(c) { Idea.idea_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
@@ -90,9 +92,9 @@ class IdeasController < ApplicationController
 
     data = {
       resource_type: "idea",
-      id: idea.id,
+      id: @idea.id,
       image_url: image_url,
-      title: idea.title
+      title: @idea.title
     }.to_json
 
     respond_to do |format|

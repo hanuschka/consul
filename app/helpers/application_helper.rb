@@ -93,12 +93,4 @@ module ApplicationHelper
   
     count
   end
-
-  def use_mapbox?(projekt = nil)
-    if projekt.present?
-      Setting["feature.mapbox"].present? || projekt_feature?(projekt, "general.mapbox")
-    else
-      Setting["feature.mapbox"].present?
-    end
-  end
 end

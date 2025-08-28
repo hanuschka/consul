@@ -7,10 +7,12 @@
     <%= render_custom_block("investments_index_welcome", default_content: t("custom.budgets.investments.index.welcome_default_text_html")) %>
   </div>
 
-  <%= render Shared::ResourceMapComponent.new(
-    marker_coordinates: @investment_coordinates,
-    resource_type: Budget::Investment
-  ) %>
+  <%= render Shared::MapComponent.new(
+     mappable: @projekt_phase,
+     features: @investment_coordinates,
+     process: 'investments'
+   ) %>
+
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
       <%= render "shared/loader_spinner" %>

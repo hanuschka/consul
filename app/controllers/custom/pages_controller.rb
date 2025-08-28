@@ -332,7 +332,7 @@ class PagesController < ApplicationController
 
       @investments = @resources.send(@current_filter)
       @investment_ids = @investments.ids
-      @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+      @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment", mappable_id: @investment_ids).map(&:json_data)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 
@@ -363,7 +363,7 @@ class PagesController < ApplicationController
 
   def set_point_of_interest_phase_footer_tab_variables
     auto_sign_in_guest_for(@projekt_phase)
-    @map_coordinates =
+    @pin_coordinates =
       @projekt_phase
         .projekt_point_of_interest_pins
         .by_categories(params[:category_ids])

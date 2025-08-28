@@ -15,11 +15,13 @@
     </div>
   <% end %>
 
-  <%= render Shared::ResourceMapComponent.new(
-    map_location: @map_location,
-    marker_coordinates: @deficiency_reports_coordinates,
-    resource_type: DeficiencyReport
-  ) %>
+  <div class="margin-bottom">
+    <%= render Shared::MapComponent.new(
+      features: @deficiency_reports_coordinates,
+      process: 'deficiency_reports'
+    ) %>
+  </div>
+
   <div class="flex-layout">
     <div class="main-column">
       <%= render(

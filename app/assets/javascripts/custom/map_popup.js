@@ -1,10 +1,12 @@
 App.MapPopup = {
-  excludedProcesses: ["proposal", "deficiency_report", "projekt", "point_of_interest_pin"],
+  excludedProcesses: ["proposal", "deficiency_report", "idea", "projekt", "point_of_interest_pin"],
 
   generatePopupContent: function(data, resourceType) {
     if (resourceType == "proposal") {
       return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "deficiency_report") {
+      return this.standardResourcePopupContent(data, resourceType);
+    } else if (resourceType == "idea") {
       return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "projekt") {
       return this.standardResourcePopupContent(data, resourceType);
@@ -21,6 +23,8 @@ App.MapPopup = {
       return "/proposals/" + properties.id + "/json_data";
     } else if (resourceType == "deficiency_report") {
       return "/deficiency_reports/" + properties.id + "/json_data";
+    } else if (resourceType == "idea") {
+      return "/ideas/" + properties.id + "/json_data";
     } else if (resourceType == "projekt") {
       return "/projekts/" + properties.id + "/json_data";
     } else if (resourceType == "investment") {
@@ -36,6 +40,8 @@ App.MapPopup = {
         return "/proposals/" + data.id
       case  "deficiency_report":
         return "/deficiency_reports/" + data.id;
+      case  "idea":
+        return "/ideas/" + data.id;
       case "projekt":
         return "/projekts/" + data.id;
       case "investment":

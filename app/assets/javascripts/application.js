@@ -134,6 +134,7 @@
 //= require select2/dist/js/select2.full
 //= require custom
 //= require_tree ./custom
+//= require_tree ./maps
 
 var initialize_modules = function() {
   "use strict";

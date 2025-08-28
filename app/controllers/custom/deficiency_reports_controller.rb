@@ -143,6 +143,25 @@ class DeficiencyReportsController < ApplicationController
     head :ok
   end
 
+  def json_data
+    image_url = url_for @deficiency_report.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                ) if @deficiency_report.image&.attachment&.attached?
+
+    data = {
+      resource_type: "deficiency_report",
+      id: @deficiency_report.id,
+      image_url: image_url,
+      title: @deficiency_report.title
+    }.to_json
+
+    respond_to do |format|
+      format.json { render json: data }
+    end
+  end
+
   private
 
   def filter_by_my_posts

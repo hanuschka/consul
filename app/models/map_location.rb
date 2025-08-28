@@ -109,7 +109,7 @@ class MapLocation < ApplicationRecord
     def set_default_values
       return unless new_record?
 
-      if parent = mappable.respond_to?(:projekt_phase) ? mappable.projekt_phase : mappable.try(:projekt)
+      if parent = mappable.try(:projekt_phase) || mappable.try(:projekt) || mappable.try(:parent)
         self.latitude          ||= parent.map_location.latitude
         self.longitude         ||= parent.map_location.longitude
         self.zoom              ||= parent.map_location.zoom

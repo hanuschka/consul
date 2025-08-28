@@ -604,7 +604,7 @@
             ['==', 'meta', 'feature'],
           ],
           'paint': {
-            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 15 ],
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 17, 15 ],
             'circle-color': this.defaultFeatureColor
           },
         },
@@ -704,15 +704,29 @@
       });
 
       this.map.on('draw.create', function(e) {
+        const currentMode = instance.draw.getMode();
         const newFeature = e.features[0];
 
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
         }
 
+        setTimeout(() => {
+          instance.draw.changeMode(currentMode);
+        }, 0);
+
         instance.editableLayers.push(newFeature.id);
         instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
         instance.zoomInput.value = instance.map.getZoom();
+      });
+
+      this.map.on('draw.delete', function(e) {
+        e.features.forEach(function(feature) {
+          instance.editableLayers = instance.editableLayers.filter(function(id) { return id !== feature.id; });
+          instance.draw.delete(feature.id);
+        });
+
+        instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
       });
 
       this.map.on('dragend', function(e) {

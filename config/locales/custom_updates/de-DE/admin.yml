@@ -68,6 +68,7 @@ de:
           no_deficiency_reports: Keine Mängelmeldungen
           id: ID
           admin_accepted: Sichtbarkeit
+          archived: Archiviert
           created_at: Veröffentlichung
           title: Titel
           author: Autor
@@ -75,10 +76,17 @@ de:
           approximater_location: Standort
           category_name: Kategorie
           responsible_name: Sachbearbeiter*in
+          only_hidden: Nur gelöschte Meldungen anzeigen
           actions: Aktionen
           official_answer: Offizielle Antwort
           officer_email: Email
           submit: Filter/Suche
+        ai_settings:
+          page_title: KI prompt
+          questions: Welche Fragen sollen den Bürgern gestellt werden?
+          criteria: Welche Kriterien müssen die Vorschläge erfüllen?
+          parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
+          update_button: Aktualisieren KI Prompt
         update:
           success_notice: Die Mängelmeldung wurde aktualisiert
         destroy:
@@ -182,6 +190,12 @@ de:
         districts:
           index:
             title: Gebiete
+        stats:
+          show:
+            type:
+              status: Status
+              category: Kategorie
+              responsible: Verantwortlich
       ideas:
         index:
           title: Ideenplattform
@@ -346,6 +360,7 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
+          ai_settings: KI prompt
         ideas:
           officers: Sachbearbeiter*innen
           list: Ideen
@@ -375,6 +390,9 @@ de:
           list: Newsletter-Abonnenten
         recipient_groups: Adressatengruppen
         matomo: Matomo
+      proposals:
+        index:
+          admin_accepted: Sichtbarkeit
       polls:
         show:
           table:
@@ -450,6 +468,7 @@ de:
               limitations: Beschränkung
               default_tab: Standard
               activated: Aktiviert
+              frontend_visibility: Sichtbarkeit im Projekt
               edit_link: Bearbeiten
             restriction_names:
               age: Alter
@@ -654,6 +673,7 @@ de:
           restrictions: Beschränkung
           settings: Funktionen
           map: Karte
+          proposals: Vorschläge
           projekt_labels: Labels
           sentiments: Sentimente
           age_ranges_for_stats: Alterskohorten
@@ -677,6 +697,10 @@ de:
           budget_investments: Vorschläge
           budget_phases: Phasen
           legislation_process_draft_versions: Entwurfsfassungen
+          projekt_point_of_interest_categories: Kategorien
+          projekt_point_of_interest_pins: Pins
+          map_resources_overview: Kartenübersicht
+          ai_settings: KI Anweisung
         notice:
           created: Phase wurde erstellt
           updated: Phase wurde aktualisiert
@@ -739,13 +763,12 @@ de:
             resource: Individueller Beitrag
             form_author: Formular Autor
             user_functions: Funktionen Nutzer
-
         form_author:
           page_title: Welche Funktionen wollen Sie den Nutzern zur Verfügung stellen?
-
         user_functions:
           page_title: Welche Funktionen wollen Sie den Nutzern zur Verfügung stellen?
-
+        proposals:
+          page_title: Vorschläge
         projekt_labels:
           new_block_title: Möchten Sie ein Label hinzufügen?
           list_title: Hier ist die Liste aller Labels
@@ -797,8 +820,11 @@ de:
           copy_from_projekt: vom Projekt übernehmen
           map_layers:
             title: Kartenebenen
-        projekt_events:
-          page_title: Veranstaltungen
+        ai_settings:
+          page_title: KI Prompt
+          questions: Welche Fragen sollen den Bürgern gestellt werden?
+          criteria: Welche Kriterien müssen die Vorschläge erfüllen?
+          parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
         projekt_notifications:
           page_title: Möchten Sie eine Benachrichtigung senden?
           button: Nachricht senden
@@ -809,9 +835,10 @@ de:
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           argument_pro: Pro
           argument_cons: Contra
-          button: Stimme erlstellen
+          button: Stimme erstellen
           argument_image: Bild
         projekt_events:
+          page_title: Veranstaltungen
           button: Event erstellen
           event_created_at: Hergestellt in
           event_datetime: Datum
@@ -875,6 +902,39 @@ de:
         legislation_process_draft_versions:
           new_block_title: Möchten Sie eine Version hinzufügen?
           list_title: Dies ist die Lister aller Textversionen
+        projekt_point_of_interest_pins:
+          page_title: Pins
+        projekt_point_of_interest_categories:
+          page_title: Kategorien
+          new: Neue Kategorie
+        map_resources_overview:
+          title: Kartenübersicht
+        point_of_interest_phases:
+          categories:
+            name: Name
+            icon: Icon
+            color: Farbe
+            actions: Aktionen
+            create:
+              notice: Kategorie erfolgreich erstellt
+            update:
+              notice: Kategorie erfolgreich aktualisiert
+            destroy:
+              notice: Kategorie erfolgreich gelöscht
+              error: Fehler beim Löschen der Kategorie
+        point_of_interest:
+          categories:
+            index:
+              export_csv: CSV exportieren
+            destroy:
+              confirm: Sind Sie sicher, dass Sie diese Kategorie löschen möchten?
+              notice: Kategorie gelöscht
+              error: Fehler beim Löschen der Kategorie
+          pins:
+            destroy:
+              confirm: Möchten Sie den Pin wirklich löschen?
+              notice: Pin erfolgreich gelöscht
+              error: Fehler beim Löschen des Pins
       modal_notifications:
         index:
           create: Erstellen
@@ -904,6 +964,7 @@ de:
           kind: Art
           visible: Sichtbarkeit
           email: Email
+          remove_email: E-Mail entfernen
           remove_user: Profil entfernen
       individual_group_values:
         show:

@@ -7,50 +7,11 @@ module ProposalsHelper
 
     map_locations =
       MapLocation
-        .includes(proposal: [:projekt_labels, :projekt_phase, :sentiment])
-        .includes(investment: [:projekt])
-        .includes(deficiency_report: [:category])
-        .includes(:projekt)
-        .where(proposal_id: ids)
+        .where(mappable_type: "Proposal", mappable_id: ids)
+        .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment])
 
     map_locations.map do |map_location|
-      map_location.shape_json_data.presence || map_location.json_data
-    end
-  end
-
-  def json_data
-    proposal = Proposal.find(params[:id])
-
-    labels = []
-    proposal.projekt_labels.each do |label|
-      label = {
-        name: label.name,
-        icon: label.icon
-      }
-      labels.push(label)
-    end
-
-    sentiment = {}
-    if proposal.sentiment.present?
-      sentiment["name"] = proposal.sentiment.name
-      sentiment["backgroundColor"] = proposal.sentiment.color
-      sentiment["color"] = helpers.pick_text_color(proposal.sentiment.color)
-    end
-
-    image_url = proposal.image.present? ? url_for(proposal.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
-
-    data = {
-      proposal_id: proposal.id,
-      proposal_title: proposal.title,
-      projekt_phase_id: proposal.projekt_phase_id,
-      # description: ActionController::Base.helpers.truncate(ActionController::Base.helpers.strip_tags(proposal.description), length: 100),
-      image_url: image_url,
-      labels: labels,
-      sentiment: sentiment
-    }.to_json
-
-    respond_to do |format|
-      format.json { render json: data }
+      map_location.features_json_data
     end
   end
 

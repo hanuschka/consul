@@ -55,7 +55,13 @@ class Users::LatestActivityComponent < ApplicationComponent
     end
 
     def proposals
-      @proposals ||= Proposal.published.not_archived.not_retired.where(author_id: current_user.id)
+      @proposals ||= Proposal.base_selection.where(author_id: current_user.id)
+        .includes(
+          :translations, :author, :community, :followers,
+          image: [attachment_attachment: :blob],
+          projekt_labels: [:translations], sentiment: [:translations],
+          projekt_phase: [:settings, :translations, projekt: [:parent]]
+        )
     end
 
     def debates

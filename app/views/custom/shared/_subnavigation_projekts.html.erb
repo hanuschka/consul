@@ -1,14 +1,13 @@
 <% accesskey = 1 %>
-<% @projekts_for_navigation.each do |active_projekt| %>
+<% Projekt.top_level.for_navigation(current_user).each do |active_projekt| %>
   <% accesskey += 1 %>
-  <% projekt_children_to_show_in_menu = active_projekt.children_projekts_show_in_navigation.includes(:projekt_settings, :hard_individual_group_values).select { |p| p.visible_for?(current_user) } %>
+  <% projekt_children_to_show_in_menu = active_projekt.children.for_navigation(current_user) %>
   <% projekt_children_to_show_in_menu = Projekt.where(id: projekt_children_to_show_in_menu.map(&:id)).sort_by_order_number.includes(:projekt_settings, page: [:translations]) %>
 
   <li class='nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll'
       <%= "tabindex=0" if placement == "desktop" %>
       aria-label='<%= t('custom.links.menu.projekt_name_label', projekt_name: active_projekt.page.title) if placement == "desktop" %>'
       <%= "aria-expanded=false" if projekt_children_to_show_in_menu.any? %>
-      <%= "aria-haspopup=true" if projekt_children_to_show_in_menu.any? && placement == "desktop" %>
       <%= "accesskey=#{accesskey}" if accesskey < 9 && placement == "desktop" %> >
 
     <div class='flyout-item-name projekt-name'>
@@ -19,8 +18,6 @@
       <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
         tabindex="0"
         aria-label='<%= t('custom.links.menu.mobile.arrow_projekts') %>'
-        aria-haspopup=true
-        aria-expanded=false
       >
       </div>
     <% end %>

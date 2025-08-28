@@ -12,11 +12,11 @@ class Budget < ApplicationRecord
   def investments_filters
     [
       ("all" if selecting? || valuating? || publishing_prices? || balloting? || reviewing_ballots? || finished?),
-      ("undecided" if selecting? || valuating?),
+      ("undecided" if (selecting? || valuating?) && investments.undecided.any?),
       ("feasible" if (selecting? || valuating_or_later?) && investments.feasible.any?),
       ("unfeasible" if (selecting? || valuating_or_later?) && investments.unfeasible.any?),
-      ("preselected" if finished? && investments.preselected.any? && max_preselected > 0),
-      ("not_preselected" if finished? && investments.not_preselected.any? && max_preselected > 0),
+      ("preselected" if valuating_or_later? && investments.preselected.any? && max_preselected > 0),
+      ("not_preselected" if valuating_or_later? && investments.not_preselected.any? && max_preselected > 0),
       ("selected" if publishing_prices_or_later? && investments.selected.any?),
       ("unselected" if finished? && investments.unselected.any?),
       ("winners" if finished?)

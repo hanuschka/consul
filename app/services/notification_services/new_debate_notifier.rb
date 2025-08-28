@@ -16,7 +16,7 @@ module NotificationServices
 
       def users_to_notify
         [administrators, moderators, projekt_managers, projekt_phase_subscribers]
-          .flatten.uniq(&:id).reject { |user| user.id == @debate.author_id }
+          .flatten.uniq(&:id).reject { |user| user.id == @debate.author_id || user.not_actual? }
       end
 
       def administrators

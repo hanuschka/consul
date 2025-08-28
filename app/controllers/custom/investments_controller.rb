@@ -18,7 +18,7 @@ class InvestmentsController < ApplicationController
     filter_by_status
     filter_by_searched
 
-    @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+    @investment_coordinates = MapLocation.where(mappable: @investments).map(&:features_json_data)
     @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(12)
   end
 

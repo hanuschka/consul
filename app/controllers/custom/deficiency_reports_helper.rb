@@ -10,24 +10,8 @@ module DeficiencyReportsHelper
   def all_deficiency_report_map_locations(deficiency_reports_for_map)
     ids = deficiency_reports_for_map.except(:limit, :offset, :order).ids.uniq
 
-    MapLocation.where(deficiency_report_id: ids).map do |map_location|
-      map_location.shape_json_data.presence || map_location.json_data
-    end
-  end
-
-  def json_data
-    deficiency_report = DeficiencyReport.find(params[:id])
-
-    image_url = deficiency_report.image.present? ? url_for(deficiency_report.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
-
-    data = {
-      deficiency_report_id: deficiency_report.id,
-      image_url: image_url,
-      deficiency_report_title: deficiency_report.title
-    }.to_json
-
-    respond_to do |format|
-      format.json { render json: data }
+    MapLocation.where(mappable_id: ids, mappable_type: "DeficiencyReport").map do |map_location|
+      map_location.features_json_data
     end
   end
 

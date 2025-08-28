@@ -43,6 +43,9 @@ en:
       recipient_group:
         one: Recipient group
         other: Recipient groups
+      projekt_point_of_interest_category:
+        one: Category
+        other: Categories
     errors:
       models:
         proposal:
@@ -125,6 +128,7 @@ en:
         date_of_birth: Date of birth
         document_type: Document
         document_last_digits: Document (last 4 digits)
+        guest: Guest
       modal_notification:
         titel: Titel
         active_from: From
@@ -196,3 +200,7 @@ en:
       formular_answer_document:
         title: Title
         attachment: Attachment
+      projekt_point_of_interest_category:
+        name: Name
+        icon: Icon
+        color: Farbe

@@ -83,7 +83,9 @@ module AdminActions::Poll::Questions
     redirect_to destroy_path, notice: t("admin.questions.destroy.notice")
   end
 
-  def edit_votation_type; end
+  def edit_votation_type;
+    render "admin/poll/questions/edit_votation_type"
+  end
 
   def update_votation_type
     @votation_type = @question.votation_type

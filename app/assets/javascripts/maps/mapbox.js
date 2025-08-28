@@ -129,9 +129,9 @@
         instance.map = map;
         instance.setupPlugins();
         instance.setupLayers();
+        instance.renderFeatures();
         instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
-        instance.renderFeatures();
       });
 
 
@@ -155,11 +155,11 @@
     setupLayers() {
       const instance = this;
 
+      instance.addLayerControl();
+
       instance.map.on('style.load', function() {
         if (!instance.layersRendered) {
           instance.layersRendered = true;
-
-          instance.addLayerControl();
 
           if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
             instance.addAdminFeaturesAsLayer();
@@ -421,80 +421,69 @@
     }
 
     renderFeatures() {
+      if (this.editable) return;
+
       if (this.features && Object.keys(this.features).length > 0) {
         const instance = this;
 
-        if (instance.editable) {
-          instance.features.features.forEach(function(feature) {
-            instance.editableLayers.push(feature.id);
-            instance.draw.add(feature);
-          });
+        instance.map.on('style.load', function() {
+          if (!instance.map.getSource('user-features')) {
+            instance.map.addSource('user-features', {
+              type: 'geojson',
+              data: instance.formattedFeaturesForRendering()
+            });
 
-          instance.map.on('draw.update', function(e) {
-            instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
-          });
+            instance.map.addLayer({
+              id: 'user-features-circles-outer',
+              type: 'circle',
+              source: 'user-features',
+              filter: ['==', '$type', 'Point'],
+              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 15 ], 'circle-color': instance.defaultFeatureColor }
+            });
 
-        } else {
+            instance.map.addLayer({
+              id: 'user-features-circles-inner',
+              type: 'circle',
+              source: 'user-features',
+              filter: ['==', '$type', 'Point'],
+              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': '#fff' }
+            });
 
-          instance.map.on('style.load', function() {
-            if (!instance.map.getSource('user-features')) {
-              instance.map.addSource('user-features', {
-                type: 'geojson',
-                data: instance.formattedFeaturesForRendering()
-              });
-
-              instance.map.addLayer({
-                id: 'user-features-circles-outer',
-                type: 'circle',
-                source: 'user-features',
-                filter: ['==', '$type', 'Point'],
-                paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 15 ], 'circle-color': instance.defaultFeatureColor }
-              });
-
-              instance.map.addLayer({
-                id: 'user-features-circles-inner',
-                type: 'circle',
-                source: 'user-features',
-                filter: ['==', '$type', 'Point'],
-                paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': '#fff' }
-              });
-
-              instance.map.addLayer({
-                id: 'user-features-lines',
-                type: 'line',
-                source: 'user-features',
-                filter: ['==', '$type', 'LineString'],
-                layout: {
-                  'line-join': 'round',
-                  'line-cap': 'round'
-                },
-                paint: {
-                  'line-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor],
-                  'line-width': 4
-                }
-              });
-
-              instance.map.addLayer({
-                id: 'user-features-polygons',
-                type: 'fill',
-                source: 'user-features',
-                filter: ['==', '$type', 'Polygon'],
-                layout: {},
-                paint: {
-                  'fill-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor],
-                  'fill-opacity': 0.5
-                }
-              });
-
-              if (instance.process && App.MapPopup.excludedProcesses.indexOf(instance.process) === -1) {
-                const userFeaturesLayers = ['user-features-circles-outer', 'user-features-circles-inner', 'user-features-lines', 'user-features-polygons'];
-                userFeaturesLayers.forEach(function(layerId) {
-                  instance.map.on('click', layerId, instance.openMarkerPopup);
-                })
+            instance.map.addLayer({
+              id: 'user-features-lines',
+              type: 'line',
+              source: 'user-features',
+              filter: ['==', '$type', 'LineString'],
+              layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+              },
+              paint: {
+                'line-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor],
+                'line-width': 4
               }
+            });
+
+            instance.map.addLayer({
+              id: 'user-features-polygons',
+              type: 'fill',
+              source: 'user-features',
+              filter: ['==', '$type', 'Polygon'],
+              layout: {},
+              paint: {
+                'fill-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor],
+                'fill-opacity': 0.5
+              }
+            });
+
+            if (instance.process && App.MapPopup.excludedProcesses.indexOf(instance.process) === -1) {
+              const userFeaturesLayers = ['user-features-circles-outer', 'user-features-circles-inner', 'user-features-lines', 'user-features-polygons'];
+              userFeaturesLayers.forEach(function(layerId) {
+                instance.map.on('click', layerId, instance.openMarkerPopup);
+              })
             }
-          });
-        }
+          }
+        });
       }
 
       if (this.editingProjektMap) {
@@ -541,29 +530,30 @@
     setupEditingControls() {
       if (!this.editable)  return;
 
-      const controls = {
-        point: true
-      }
+      const instance = this;
 
-      if (this.enableShapes) {
-        controls.trash = true;
-        controls.line_string = true;
-        controls.polygon = true;
-      }
-
-      this.draw = new MapboxDraw({
+      instance.draw = new MapboxDraw({
         displayControlsDefault: false,
-        controls: controls,
+        controls: {
+          point: true,
+          line_string: instance.enableShapes,
+          polygon: instance.enableShapes,
+          trash: instance.enableShapes
+        },
         defaultMode: 'draw_point',
-        styles: this.getDrawStyles()
+        styles: instance.getDrawStyles()
       });
 
-      this.map.addControl(this.draw);
-      // this.addCustomDeleteButton();
-      // this.loadExistingShape();
+      instance.map.on('draw.update', function(e) {
+        instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
+      });
 
-      // this.setupDrawEventListeners();
-      // this.setupDrawCursorEffects();
+      this.map.addControl(this.draw, 'top-right');
+
+      instance.features.features.forEach(function(feature) {
+        instance.editableLayers.push(feature.id);
+        instance.draw.add(feature);
+      });
     }
 
     getDrawStyles() {

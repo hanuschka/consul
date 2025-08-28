@@ -102,6 +102,7 @@
 /* Mapbox Layer Control Styles */
 .mapbox-layer-control {
   position: relative;
+  z-index: 3;
 }
 
 .mapbox-layer-control-button {

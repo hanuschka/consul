@@ -554,7 +554,7 @@
       this.draw = new MapboxDraw({
         displayControlsDefault: false,
         controls: controls,
-        drawingMode: 'draw_point',
+        defaultMode: 'draw_point',
         styles: this.getDrawStyles()
       });
 

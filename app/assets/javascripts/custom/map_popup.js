@@ -1,5 +1,5 @@
 App.MapPopup = {
-  excludedProcesses: ["proposal", "deficiency_report", "idea", "projekt", "point_of_interest_pin"],
+  excludedProcesses: ["proposal", "deficiency_report", "idea", "projekt", "projekt_point_of_interest_pin"],
 
   generatePopupContent: function(data, resourceType) {
     if (resourceType == "proposal") {
@@ -10,7 +10,7 @@ App.MapPopup = {
       return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "projekt") {
       return this.standardResourcePopupContent(data, resourceType);
-    } else if (resourceType == "point_of_interest_pin") {
+    } else if (resourceType == "projekt_point_of_interest_pin") {
       return this.pointOfInterestPopupContent(data);
     } else {
       return this.standardResourcePopupContent(data, resourceType);
@@ -29,8 +29,8 @@ App.MapPopup = {
       return "/projekts/" + properties.id + "/json_data";
     } else if (resourceType == "investment") {
       return "/investments/" + properties.id + "/json_data";
-    } else if (resourceType == "point_of_interest_pin") {
-      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projekt_phase_id;
+    } else if (resourceType == "projekt_point_of_interest_pin") {
+      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data";
     }
   },
 

@@ -324,7 +324,7 @@ class PagesController < ApplicationController
 
       @investments = @resources.send(@current_filter)
       @investment_ids = @investments.ids
-      @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment", mappable_id: @investment_ids).map(&:json_data)
+      @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment", mappable_id: @investment_ids).map(&:features_json_data)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 
@@ -360,7 +360,7 @@ class PagesController < ApplicationController
         .projekt_point_of_interest_pins
         .by_categories(params[:category_ids])
         .includes(:map_location)
-        .map(&:pin_json_data)
+        .map { |pin| pin.map_location.features_json_data if pin.map_location.present? }
   end
 
   def set_newsfeed_phase_footer_tab_variables

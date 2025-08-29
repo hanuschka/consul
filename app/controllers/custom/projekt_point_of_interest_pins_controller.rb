@@ -2,8 +2,7 @@ class ProjektPointOfInterestPinsController < ApplicationController
   include MapLocationAttributes
   include GuestUsers
 
-  before_action :set_projekt_phase
-  before_action :set_pin, only: [:json_data]
+  before_action :set_projekt_phase, except: [:json_data]
 
   skip_authorization_check only: [:json_data]
 
@@ -26,6 +25,8 @@ class ProjektPointOfInterestPinsController < ApplicationController
   end
 
   def json_data
+    @pin = ProjektPointOfInterestPin.find(params[:id])
+
     render json: {
       category: @pin.projekt_point_of_interest_category.as_json(only: [:name, :color, :icon])
     }
@@ -35,10 +36,6 @@ class ProjektPointOfInterestPinsController < ApplicationController
 
     def set_projekt_phase
       @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
-    end
-
-    def set_pin
-      @pin = @projekt_phase.projekt_point_of_interest_pins.find(params[:id])
     end
 
     def pin_params

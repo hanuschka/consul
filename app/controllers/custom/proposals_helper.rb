@@ -5,14 +5,9 @@ module ProposalsHelper
   def all_proposal_map_locations(proposals_for_map)
     ids = proposals_for_map.except(:limit, :offset, :order).ids.uniq
 
-    map_locations =
-      MapLocation
-        .where(mappable_type: "Proposal", mappable_id: ids)
-        .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment])
-
-    map_locations.map do |map_location|
-      map_location.features_json_data
-    end
+    map_locations = MapLocation.where(mappable_type: "Proposal", mappable_id: ids)
+                               .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment])
+                               .map(&:features_json_data)
   end
 
   def label_error_class?(field)

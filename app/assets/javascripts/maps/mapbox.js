@@ -130,6 +130,7 @@
         instance.setupPlugins();
         instance.setupLayers();
         instance.renderFeatures();
+        instance.setupExpandControl();
         instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
@@ -150,6 +151,10 @@
 
     //    self.setupEventListenersForEditableFeature(self.map, e.layer);
     //  })
+    }
+
+    setupExpandControl() {
+      this.map.addControl(new ExpandConrol(this), 'top-right');
     }
 
     setupLayers() {
@@ -267,14 +272,19 @@
         });
 
         instance.map.addLayer({
-          id: 'admin-features-circles',
+          id: 'admin-features-circles-outer',
           type: 'circle',
           source: 'admin-features',
           filter: ['==', '$type', 'Point'],
-          paint: {
-            'circle-radius': 6,
-            'circle-color': '#ff0000',
-          }
+          paint: { 'circle-radius': 15, 'circle-color': '#ff0000' }
+        });
+
+        instance.map.addLayer({
+          id: 'admin-features-circles-inner',
+          type: 'circle',
+          source: 'admin-features',
+          filter: ['==', '$type', 'Point'],
+          paint: { 'circle-radius': 12, 'circle-color': '#fff' }
         });
 
         instance.map.addLayer({
@@ -282,14 +292,8 @@
           type: 'line',
           source: 'admin-features',
           filter: ['==', '$type', 'LineString'],
-          layout: {
-            'line-join': 'round',
-            'line-cap': 'round'
-          },
-          paint: {
-            'line-color': '#ff0000',
-            'line-width': 4
-          }
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': '#ff0000', 'line-width': 4 }
         });
 
         instance.map.addLayer({
@@ -298,10 +302,7 @@
           source: 'admin-features',
           filter: ['==', '$type', 'Polygon'],
           layout: {},
-          paint: {
-            'fill-color': '#ff0000',
-            'fill-opacity': 0.2
-          }
+          paint: { 'fill-color': '#ff0000', 'fill-opacity': 0.2 }
         });
       }
 
@@ -397,29 +398,6 @@
       );
     }
 
-    formattedFeaturesForRendering() {
-      if (Array.isArray(this.features)) {
-        // Merge multiple FeatureCollections into one
-        let merged = {
-          type: 'FeatureCollection',
-          features: []
-        };
-
-        this.features.forEach(function(fc) {
-          if (fc && fc.type === 'FeatureCollection' && Array.isArray(fc.features)) {
-            Array.prototype.push.apply(merged.features, fc.features);
-          } else {
-            console.warn('Invalid FeatureCollection:', fc);
-          }
-        });
-
-        return merged;
-      } else {
-        // Assume it's already a FeatureCollection
-        return this.features;
-      }
-    }
-
     renderFeatures() {
       if (this.editable) return;
 
@@ -430,7 +408,7 @@
           if (!instance.map.getSource('user-features')) {
             instance.map.addSource('user-features', {
               type: 'geojson',
-              data: instance.formattedFeaturesForRendering()
+              data: App.Utils.formattedFeatures(instance.features)
             });
 
             instance.map.addLayer({
@@ -454,14 +432,8 @@
               type: 'line',
               source: 'user-features',
               filter: ['==', '$type', 'LineString'],
-              layout: {
-                'line-join': 'round',
-                'line-cap': 'round'
-              },
-              paint: {
-                'line-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor],
-                'line-width': 4
-              }
+              layout: { 'line-join': 'round', 'line-cap': 'round' },
+              paint: { 'line-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor], 'line-width': 4 }
             });
 
             instance.map.addLayer({
@@ -470,10 +442,7 @@
               source: 'user-features',
               filter: ['==', '$type', 'Polygon'],
               layout: {},
-              paint: {
-                'fill-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor],
-                'fill-opacity': 0.5
-              }
+              paint: { 'fill-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor], 'fill-opacity': 0.5 }
             });
 
             if (instance.process && App.MapPopup.excludedProcesses.indexOf(instance.process) === -1) {
@@ -550,7 +519,8 @@
 
       this.map.addControl(this.draw, 'top-right');
 
-      instance.features.features.forEach(function(feature) {
+      App.Utils.formattedFeatures(instance.features).features.forEach(function(feature) {
+        console.log('Feature to add:', feature);
         instance.editableLayers.push(feature.id);
         instance.draw.add(feature);
       });
@@ -853,6 +823,41 @@
     onRemove() {
       this._container.parentNode.removeChild(this._container);
       this._map = undefined;
+    }
+  }
+
+  class ExpandConrol {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+      this.mapContainer = mapboxMapInstance.element;
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+
+      let button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-expand-control-button';
+      button.innerHTML = '<i class="fas fa-expand"></i>';
+      button.title = 'Vollbild-Modus';
+
+      this._container.appendChild(button);
+
+      button.addEventListener('click', () => {
+        if (this.mapContainer.classList.contains('expanded')) {
+          this.mapContainer.classList.remove('expanded');
+          button.innerHTML = '<i class="fas fa-expand"></i>';
+          map.resize();
+        } else {
+          this.mapContainer.classList.add('expanded');
+          button.innerHTML = '<i class="fas fa-compress"></i>';
+          map.resize();
+        }
+      });
+
+      return this._container;
     }
   }
 

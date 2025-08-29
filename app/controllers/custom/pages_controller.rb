@@ -122,14 +122,6 @@ class PagesController < ApplicationController
     end
   end
 
-  def extended_sidebar_map
-    @current_projekt = SiteCustomization::Page.find_by(slug: params[:id]).projekt
-
-    respond_to do |format|
-      format.js { render "pages/sidebar/extended_map" }
-    end
-  end
-
   private
 
   def set_comment_phase_footer_tab_variables

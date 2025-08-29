@@ -12,7 +12,7 @@
       this.setupLayers();
       this.setupPlugins();
       this.renderFeatures();
-
+      this.setupExpandControl();
       this.setupEditingControls();
       this.setupEventListenersForNewFeatures();
       this.setupEventListenersForUpdatingFormInputs();
@@ -26,6 +26,7 @@
       this.mapCenterLongitude = $element.data("map-center-longitude");
       this.mapCenterLatLng = new L.LatLng(this.mapCenterLatitude, this.mapCenterLongitude);
       this.zoom = $element.data("map-zoom");
+      this.placement = $element.data("placement");
 
       // Layer configuration
       this.layersData = $element.data('layers-data');
@@ -106,6 +107,46 @@
       })
     }
 
+    setupExpandControl() {
+      const instance = this;
+
+      L.Control.Expand = L.Control.extend({
+        onAdd: function(map) {
+          let container = document.createElement('div');
+          container.className = 'control-container';
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'control-button';
+          button.innerHTML = '<i class="fas fa-expand"></i>';
+          button.title = 'Vollbild-Modus';
+
+          container.appendChild(button);
+
+          container.addEventListener('click', () => {
+            if (instance.element.classList.contains('expanded')) {
+              instance.element.classList.remove('expanded');
+              button.innerHTML = '<i class="fas fa-expand"></i>';
+              map.invalidateSize();
+            } else {
+              instance.element.classList.add('expanded');
+              button.innerHTML = '<i class="fas fa-compress"></i>';
+              map.invalidateSize();
+            }
+          });
+
+          return container;
+        },
+
+        onRemove() {
+          container.remove();
+        }
+      })
+
+      const expandControl = new L.Control.Expand({ position: 'topright' })
+      this.map.addControl(expandControl);
+    }
+
     setupLayers() {
       if (this.adminFeatures && Object.keys(this.adminFeatures).length > 0) {
         this.addAdminFeaturesAsLayer();
@@ -128,7 +169,9 @@
       }
 
       // Add layer control if needed
-      this.addLayerControl();
+      if (this.placement != 'sidebar') {
+        this.addLayerControl();
+      }
     }
 
     createLayer(item) {
@@ -237,24 +280,26 @@
     }
 
     setupPlugins() {
-      // Leaflet.Locate plugin
-      L.control.locate({
-        icon: 'fa fa-map-marker',
-        strings: {
-          title: 'Meine Position anzeigen'
-        }
-      }).addTo(this.map);
+      if (this.placement != 'sidebar') {
+        L.control.locate({
+          icon: 'fa fa-map-marker',
+          strings: {
+            title: 'Meine Position anzeigen'
+          }
+        }).addTo(this.map);
+      }
 
-      // Leaflet GeoSearch plugin
-      const searchControl = new GeoSearch.GeoSearchControl({
-        provider: new GeoSearch.OpenStreetMapProvider(),
-        style: 'bar',
-        showMarker: false,
-        searchLabel: 'Nach Adresse suchen',
-        notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
-        clearSearchLabel: 'Suche zurücksetzen'
-      });
-      this.map.addControl(searchControl);
+      if (this.placement != 'sidebar') {
+        const searchControl = new GeoSearch.GeoSearchControl({
+          provider: new GeoSearch.OpenStreetMapProvider(),
+          style: 'bar',
+          showMarker: false,
+          searchLabel: 'Nach Adresse suchen',
+          notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
+          clearSearchLabel: 'Suche zurücksetzen'
+        });
+        this.map.addControl(searchControl);
+      }
 
       // Leaflet.Deflate plugin
       this.deflateFeatures = L.deflate({

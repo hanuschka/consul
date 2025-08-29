@@ -52,14 +52,12 @@
       <div class="small-12">
         <div class="new-card" id='map-container'>
           <% i18n_scope = "test" %>
-          <%= render("map_locations/form_fields",
-            form:          f,
-            map_location:  @pin.map_location_with_default,
-            label:         t("#{i18n_scope}.form.map_location"),
-            help:          t("custom.user_resources.form.map_location_instructions"),
-            mappable:      @pin,
-            projekt_phase: @projekt_phase,
-            parent_class:  "point-of-interest-map") %>
+          <%= render "map_locations/form_fields",
+            label:           t("#{i18n_scope}.form.map_location"),
+            help:            t("custom.user_resources.form.map_location_instructions"),
+            form:            f,
+            mappable:        @pin,
+            nesting_prefix: "point-of-interest-map" %>
         </div>
       </div>
     </div>

@@ -132,8 +132,8 @@ en:
         new:
           already_submitted: You have already submitted feedback for this request.
           title: We	are very interested in your opinion!
-          subtitle: Feedback on the processing of your request
-          overall_satisfaction: "1. How satisfied are you with the processing of your request?*"
+          subtitle: "Feedback on the processing of your request: <strong>%{title}</strong>"
+          overall_satisfaction: "1. How satisfied are you with the processing of your request? (mandatory)"
           response_time_satisfaction: "2. How do you rate the response time?"
           communication_satisfaction: "3. How polite and helpful was the contact?"
           resolved: "4. Was your request fully resolved?"

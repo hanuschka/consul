@@ -19,10 +19,9 @@
 </div>
 <div class="resources-list--map">
   <%= render Shared::MapComponent.new(
-    map_location: @projekt_phase.map_location,
-    process_coordinates: @map_coordinates,
-    projekt_phase: @projekt_phase,
-    show_admin_shape: true
+    mappable: @projekt_phase,
+    features: @pin_coordinates,
+    process: 'point_of_interest_pins'
   ) %>
 </div>
 <div class="flex-layout">

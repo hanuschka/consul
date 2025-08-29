@@ -43,12 +43,11 @@
           <%= auto_link_already_sanitized_html wysiwyg(@idea.description) %>
         </div>
 
-        <% if map_location_available?(@idea) %>
+        <% if @idea.map_location.present? %>
           <div class="margin-bottom not-print">
             <%= render Shared::MapComponent.new(
               mappable: @idea,
-              map_location: @idea.map_location,
-              parent_class: "idea"
+              features: @idea.map_location&.features_json_data
             ) %>
           </div>
         <% end %>

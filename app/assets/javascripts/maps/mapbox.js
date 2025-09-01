@@ -272,19 +272,11 @@
         });
 
         instance.map.addLayer({
-          id: 'admin-features-circles-outer',
+          id: 'admin-features-circles',
           type: 'circle',
           source: 'admin-features',
           filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 15, 'circle-color': '#ff0000' }
-        });
-
-        instance.map.addLayer({
-          id: 'admin-features-circles-inner',
-          type: 'circle',
-          source: 'admin-features',
-          filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 12, 'circle-color': '#fff' }
+          paint: { 'circle-radius': 12, 'circle-color': '#ff0000', 'circle-opacity': 0.2 }
         });
 
         instance.map.addLayer({
@@ -328,23 +320,27 @@
 
       this.layerControl.dropdownList.appendChild(label);
 
-    //  const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
-    //    pointToLayer: function(feature, latlng) {
-    //      return L.marker(latlng, {
-    //        icon: App.Utils.getLeafletMarkerHTML('#ff0000')
-    //      });
-    //    },
-    //    onEachFeature: (feature, layer) => {
-    //      layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
-    //      layer.pm.disable();
-    //      layer.pm.setOptions({
-    //        draggable: false,
-    //        editable: false
-    //      });
-    //    }
-    //  }).addTo(this.map);
-    //  this.overlayLayers['Verwaltungseinträge'] = adminFeaturesLayer;
-    //  this.renderAdminFeaturesNote();
+      const popupContent = '<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>';
+      instance.map.on('click', 'admin-features-circles', function(e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(popupContent)
+          .addTo(instance.map);
+      });
+
+      instance.map.on('click', 'admin-features-lines', function(e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(popupContent)
+          .addTo(instance.map);
+      });
+
+      instance.map.on('click', 'admin-features-polygons', function(e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(popupContent)
+          .addTo(instance.map);
+      });
     }
 
     addHintAboutEditableLayersLimit() {
@@ -412,19 +408,11 @@
             });
 
             instance.map.addLayer({
-              id: 'user-features-circles-outer',
+              id: 'user-features-circles',
               type: 'circle',
               source: 'user-features',
               filter: ['==', '$type', 'Point'],
-              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 15 ], 'circle-color': instance.defaultFeatureColor }
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-circles-inner',
-              type: 'circle',
-              source: 'user-features',
-              filter: ['==', '$type', 'Point'],
-              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': '#fff' }
+              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': instance.defaultFeatureColor, 'circle-opacity': 0.5 }
             });
 
             instance.map.addLayer({
@@ -446,7 +434,7 @@
             });
 
             if (instance.process && App.MapPopup.excludedProcesses.indexOf(instance.process) === -1) {
-              const userFeaturesLayers = ['user-features-circles-outer', 'user-features-circles-inner', 'user-features-lines', 'user-features-polygons'];
+              const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
               userFeaturesLayers.forEach(function(layerId) {
                 instance.map.on('click', layerId, instance.openMarkerPopup);
               })
@@ -569,18 +557,6 @@
             'line-color': [ 'case', ['==', ['get', 'active'], 'true'], this.defaultFeatureColor, this.defaultFeatureColor ],
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
-          },
-        },
-        {
-          'id': 'gl-draw-point-outer',
-          'type': 'circle',
-          'filter': [ 'all',
-            ['==', '$type', 'Point'],
-            ['==', 'meta', 'feature'],
-          ],
-          'paint': {
-            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 17, 15 ],
-            'circle-color': this.defaultFeatureColor
           },
         },
         {

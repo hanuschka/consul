@@ -127,10 +127,10 @@
 
       this.initMap(function(map) {
         instance.map = map;
+        instance.setupExpandControl();
         instance.setupPlugins();
         instance.setupLayers();
         instance.renderFeatures();
-        instance.setupExpandControl();
         instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
@@ -454,10 +454,6 @@
           }
         });
       }
-
-      if (this.editingProjektMap) {
-        this.placeCenterMarker(this.mapCenterLatLng, this);
-      }
     }
 
     openMarkerPopup(e) {
@@ -517,13 +513,17 @@
         instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
       });
 
-      this.map.addControl(this.draw, 'top-right');
+      instance.map.addControl(this.draw, 'top-right');
 
       App.Utils.formattedFeatures(instance.features).features.forEach(function(feature) {
         console.log('Feature to add:', feature);
         instance.editableLayers.push(feature.id);
         instance.draw.add(feature);
       });
+
+      if (instance.editingProjektMap) {
+        instance.map.addControl(new CenterMarkerControl(instance), 'top-right');
+      }
     }
 
     getDrawStyles() {
@@ -858,6 +858,83 @@
       });
 
       return this._container;
+    }
+  }
+
+  class CenterMarkerControl {
+    constructor(mapboxMapInstance) {
+      this.mapboxMapInstance = mapboxMapInstance;
+      this.mapContainer = mapboxMapInstance.element;
+      this.active = false;
+      this.currentMarker = new mapboxgl.Marker({ color: App.Utils.getBrandColor() })
+        .setLngLat([this.mapboxMapInstance.mapCenterLongitude, this.mapboxMapInstance.mapCenterLatitude])
+        .addTo(this.mapboxMapInstance.map);
+    }
+
+    onAdd(map) {
+      this._map = map;
+      this._container = document.createElement('div');
+      this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+
+      let button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-center-marker-control-button';
+      button.innerHTML = '<i class="fas fa-crosshairs"></i>';
+      button.title = 'Zentrum markieren';
+
+      this._container.appendChild(button);
+
+      this._container.addEventListener('click', () => {
+        if (this.active) {
+          console.log('Center marker mode deactivated');
+          this.deactivateCenterMarkerMode();
+        } else {
+          console.log('Center marker mode activated');
+          this.activateCenterMarkerMode();
+        }
+      });
+
+      return this._container;
+    }
+
+    onRemove() {
+      this.deactivateCenterMarkerMode();
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
+    }
+
+    activateCenterMarkerMode() {
+      this.active = true;
+      this._container.style.backgroundColor = '#f2f2f2';
+      this.mapboxMapInstance.draw.changeMode('simple_select')
+
+      const instance = this;
+
+      this.clickHandler = function(e) {
+        if (instance.currentMarker) {
+          instance.currentMarker.remove();
+        }
+
+        instance.currentMarker = new mapboxgl.Marker({ color: App.Utils.getBrandColor() })
+          .setLngLat(e.lngLat)
+          .addTo(instance.mapboxMapInstance.map);
+
+        instance.mapboxMapInstance.latitudeInput.value = e.lngLat.lat.toFixed(6);
+        instance.mapboxMapInstance.longitudeInput.value = e.lngLat.lng.toFixed(6);
+        instance.mapboxMapInstance.zoomInput.value = instance.mapboxMapInstance.map.getZoom();
+      }
+
+      this._map.on('click', this.clickHandler);
+    }
+
+    deactivateCenterMarkerMode() {
+      this.active = false;
+      this._container.style.backgroundColor = '';
+
+      if (this.clickHandler) {
+        this.mapboxMapInstance.map.off('click', this.clickHandler);
+        this.clickHandler = null;
+      }
     }
   }
 

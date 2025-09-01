@@ -492,6 +492,20 @@
         })
     }
 
+    addSwitchToSimpleSelectControl() {
+      let button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-switch-to-simple-select-control-button';
+      button.innerHTML = '<i class="fas fa-hand-pointer"></i>';
+      button.title = 'Auswahlmodus';
+
+      this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point').insertAdjacentElement('afterend', button);
+
+      button.addEventListener('click', () => {
+        this.draw.changeMode('simple_select')
+      });
+    }
+
     setupEditingControls() {
       if (!this.editable)  return;
 
@@ -514,6 +528,7 @@
       });
 
       instance.map.addControl(this.draw, 'top-right');
+      this.addSwitchToSimpleSelectControl();
 
       App.Utils.formattedFeatures(instance.features).features.forEach(function(feature) {
         console.log('Feature to add:', feature);
@@ -576,9 +591,8 @@
             ['==', 'meta', 'feature'],
           ],
           'paint': {
-            'line-color': [ 'case', ['==', ['get', 'active'], 'true'], '#fff', '#fff' ],
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': [ 'case', ['==', ['get', 'active'], 'true'], '#fff', '#fff' ],
+            'circle-color': this.defaultFeatureColor
           },
         },
 

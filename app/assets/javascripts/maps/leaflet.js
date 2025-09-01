@@ -9,10 +9,10 @@
       this.bindEventListeners();
 
       this.createMap();
+      this.setupExpandControl();
       this.setupLayers();
       this.setupPlugins();
       this.renderFeatures();
-      this.setupExpandControl();
       this.setupEditingControls();
       this.setupEventListenersForNewFeatures();
       this.setupEventListenersForUpdatingFormInputs();

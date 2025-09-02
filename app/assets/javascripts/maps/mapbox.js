@@ -169,7 +169,9 @@
 
         instance.layersData.forEach(function(layerData) {
           instance.createLayer(layerData);
-          instance.addLayerToControl(layerData);
+          if (instance.layerControl) {
+            instance.addLayerToControl(layerData);
+          }
         });
       }
     }
@@ -294,27 +296,30 @@
         });
       }
 
-      // add to layer control
-      const label = document.createElement('label');
-      label.className = 'mapbox-layer-checkbox-label';
+      if (this.layerControl) {
 
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.checked = true;
+        // add to layer control
+        const label = document.createElement('label');
+        label.className = 'mapbox-layer-checkbox-label';
 
-      const span = document.createElement('span');
-      span.textContent = 'Verwaltungseinträge';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
 
-      label.appendChild(input);
-      label.appendChild(span);
+        const span = document.createElement('span');
+        span.textContent = 'Verwaltungseinträge';
 
-      input.addEventListener('change', () => {
-        instance.toggleLayer('admin-features-circles', instance.map, input.checked);
-        instance.toggleLayer('admin-features-lines', instance.map, input.checked);
-        instance.toggleLayer('admin-features-polygons', instance.map, input.checked);
-      });
+        label.appendChild(input);
+        label.appendChild(span);
 
-      this.layerControl.dropdownList.appendChild(label);
+        input.addEventListener('change', () => {
+          instance.toggleLayer('admin-features-circles', instance.map, input.checked);
+          instance.toggleLayer('admin-features-lines', instance.map, input.checked);
+          instance.toggleLayer('admin-features-polygons', instance.map, input.checked);
+        });
+
+        this.layerControl.dropdownList.appendChild(label);
+      }
 
       const popupContent = '<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>';
       instance.map.on('click', 'admin-features-circles', function(e) {
@@ -885,6 +890,11 @@
       });
 
       return this._container;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
     }
   }
 

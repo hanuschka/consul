@@ -518,7 +518,7 @@
       let button = document.createElement('button');
       button.type = 'button';
       button.className = 'mapbox-switch-to-simple-select-control-button';
-      button.innerHTML = '<i class="fas fa-hand-pointer"></i>';
+      button.innerHTML = '<i class="fas fa-hand-spock"></i>';
       button.title = 'Auswahlmodus';
 
       this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point').insertAdjacentElement('afterend', button);

@@ -127,10 +127,12 @@
 
       this.initMap(function(map) {
         instance.map = map;
+        map.on('load', function() {
+          instance.setupLayers();
+          instance.renderFeatures();
+        });
         instance.setupExpandControl();
         instance.setupPlugins();
-        instance.setupLayers();
-        instance.renderFeatures();
         instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
@@ -162,20 +164,18 @@
 
       instance.addLayerControl();
 
-      instance.map.on('style.load', function() {
-        if (!instance.layersRendered) {
-          instance.layersRendered = true;
+      if (!instance.layersRendered) {
+        instance.layersRendered = true;
 
-          if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
-            instance.addAdminFeaturesAsLayer();
-          };
+        if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
+          instance.addAdminFeaturesAsLayer();
+        };
 
-          instance.layersData.forEach(function(layerData) {
-            instance.createLayer(layerData);
-            instance.addLayerToControl(layerData);
-          });
-        }
-      });
+        instance.layersData.forEach(function(layerData) {
+          instance.createLayer(layerData);
+          instance.addLayerToControl(layerData);
+        });
+      }
     }
 
     addLayerControl() {
@@ -397,50 +397,97 @@
     renderFeatures() {
       if (this.editable) return;
 
+      const allFeatures = App.Utils.formattedFeatures(this.features);
+      const pointFeatures = {
+        type: 'FeatureCollection',
+        features: allFeatures.features.filter(function(f) {
+          return f.geometry.type === 'Point';
+        })
+      }
+
+      const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.5);
+
       if (this.features && Object.keys(this.features).length > 0) {
-        const instance = this;
-
-        instance.map.on('style.load', function() {
-          if (!instance.map.getSource('user-features')) {
-            instance.map.addSource('user-features', {
-              type: 'geojson',
-              data: App.Utils.formattedFeatures(instance.features)
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-circles',
-              type: 'circle',
-              source: 'user-features',
-              filter: ['==', '$type', 'Point'],
-              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': instance.defaultFeatureColor, 'circle-opacity': 0.5 }
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-lines',
-              type: 'line',
-              source: 'user-features',
-              filter: ['==', '$type', 'LineString'],
-              layout: { 'line-join': 'round', 'line-cap': 'round' },
-              paint: { 'line-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor], 'line-width': 4 }
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-polygons',
-              type: 'fill',
-              source: 'user-features',
-              filter: ['==', '$type', 'Polygon'],
-              layout: {},
-              paint: { 'fill-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor], 'fill-opacity': 0.5 }
-            });
-
-            if (instance.process && App.MapPopup.excludedProcesses.indexOf(instance.process) === -1) {
-              const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
-              userFeaturesLayers.forEach(function(layerId) {
-                instance.map.on('click', layerId, instance.openMarkerPopup);
-              })
-            }
-          }
+        this.map.addSource('user-features-points', {
+          type: 'geojson',
+          data: pointFeatures,
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50
         });
+
+        this.map.addLayer({
+          id: 'user-features-circles-clusters',
+          type: 'circle',
+          source: 'user-features-points',
+          filter: ['has', 'point_count'],
+          paint: {
+            'circle-color': [ 'step', ['get', 'point_count'], clusterColor, 10, clusterColor, 30, clusterColor ],
+            'circle-radius': [ 'step', ['get', 'point_count'], 18, 10, 22, 28, 25 ]
+          }
+
+        });
+
+        this.map.addLayer({
+          id: 'user-features-circles-cluster-count',
+          type: 'symbol',
+          source: 'user-features-points',
+          filter: ['has', 'point_count'],
+          layout: { 'text-field': '{point_count_abbreviated}', 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'], 'text-size': 12 }
+        });
+
+        this.map.addLayer({
+          id: 'user-features-circles',
+          type: 'circle',
+          source: 'user-features-points',
+          filter: ['!', ['has', 'point_count']],
+          paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': this.defaultFeatureColor, 'circle-opacity': 0.5 }
+        });
+
+        this.map.on('click', 'user-features-circles-clusters', (e) => {
+          const features = this.map.queryRenderedFeatures(e.point, {
+            layers: ['user-features-circles-clusters']
+          });
+          const clusterId = features[0].properties.cluster_id;
+          this.map.getSource('user-features-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
+            this.map.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom + 1
+            });
+          });
+        });
+
+        this.map.addSource('user-features-shapes', {
+          type: 'geojson',
+          data: App.Utils.formattedFeatures(this.features)
+        });
+
+        this.map.addLayer({
+          id: 'user-features-lines',
+          type: 'line',
+          source: 'user-features-shapes',
+          filter: ['==', '$type', 'LineString'],
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': ['coalesce', ['get', 'color'], this.defaultFeatureColor], 'line-width': 4 }
+        });
+
+        this.map.addLayer({
+          id: 'user-features-polygons',
+          type: 'fill',
+          source: 'user-features-shapes',
+          filter: ['==', '$type', 'Polygon'],
+          layout: {},
+          paint: { 'fill-color': ['coalesce', ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
+        });
+
+        if (this.process && App.MapPopup.excludedProcesses.indexOf(this.process) === -1) {
+          const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
+          const instance = this;
+          userFeaturesLayers.forEach(function(layerId) {
+            instance.map.on('click', layerId, instance.openMarkerPopup);
+          })
+        }
       }
     }
 
@@ -519,7 +566,6 @@
       this.addSwitchToSimpleSelectControl();
 
       App.Utils.formattedFeatures(instance.features).features.forEach(function(feature) {
-        console.log('Feature to add:', feature);
         instance.editableLayers.push(feature.id);
         instance.draw.add(feature);
       });

@@ -793,20 +793,11 @@ class Projekt < ApplicationRecord
       return if map_location.present?
 
       if overview_page?
-        MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"],
-          projekt_id: id
-        )
+        MapLocation.create!(mappable: self)
       else
-        map_location = parent&.map_location&.dup || MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"]
-        )
+        map_location = parent&.map_location&.dup || MapLocation.create!
 
-        map_location.projekt_id = id
+        map_location.mappable = self
         map_location.save!
 
         (parent&.map_layers.presence || MapLayer.general).each do |map_layer|

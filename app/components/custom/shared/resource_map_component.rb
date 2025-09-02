@@ -12,13 +12,14 @@ class Shared::ResourceMapComponent < ApplicationComponent
   end
 
   def resources_name
+    debugger
     return "deficiency-reports" if @resource_type == DeficiencyReport
     return "budgets" if @resource_type == Budget::Investment
 
     @resource_type.name&.underscore&.pluralize
   end
 
-  def render_map?
+  def render?
     return false if @projekt_phase.present? && !projekt_phase_feature?(@projekt_phase, "form.show_map")
 
     @marker_coordinates.present? || @map_location.present? || @projekt_phase&.map_location.present?

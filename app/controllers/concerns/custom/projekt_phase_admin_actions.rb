@@ -278,7 +278,7 @@ module ProjektPhaseAdminActions
 
   def update_map
     @projekt_phase = ProjektPhase.find(params[:id])
-    map_location = @projekt_phase.map_location || MapLocation.new(projekt_phase: @projekt_phase)
+    map_location = @projekt_phase.map_location || @projekt_phase.build_map_location
 
     authorize!(:update_map, map_location)
 
@@ -426,14 +426,6 @@ module ProjektPhaseAdminActions
 
     @audits = Audit.where(auditable: poll_voters)
                    .page(params[:page]).per(50)
-  end
-
-  def poll_results
-    authorize!(:poll_results, @projekt_phase)
-    @poll = @projekt_phase.poll
-    @partial_results = @poll.partial_results
-
-    render "custom/admin/projekt_phases/poll_results"
   end
 
   def budget_edit

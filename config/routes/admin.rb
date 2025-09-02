@@ -30,7 +30,6 @@ namespace :admin do
       get :officing_managers
       get :officing_manager_audits
       patch :update_officing_manager_assignments
-      get :poll_results
       get :budget_edit
       get :budget_investments
       get :budget_phases

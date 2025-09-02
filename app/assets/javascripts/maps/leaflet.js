@@ -409,10 +409,12 @@
         drawPolygon: this.enableShapes,
         drawCircle: this.enableShapes,
         editMode: this.enableShapes,
-        dragMode: this.enableShapes,
+        dragMode: false,
         cutPolygon: this.enableShapes,
         rotateMode: this.enableShapes
       })
+
+      this.map.pm.enableDraw('Marker');
 
       if (this.editingProjektMap) {
         this.map.pm.Toolbar.createCustomControl({
@@ -436,6 +438,13 @@
       }
 
       if (this.enableShapes || this.adminEditor) {
+        this.map.pm.Toolbar.createCustomControl({
+          name: 'customDragMode',
+          className: 'control-icon leaflet-pm-icon-custom-drag',
+          title: 'Auswahl modus',
+          disableGlobalEditMode: true
+        });
+
         this.map.pm.Toolbar.createCustomControl({
           name: 'clearMap',
           className: 'control-icon leaflet-pm-icon-delete',

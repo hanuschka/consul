@@ -272,7 +272,7 @@
           type: 'circle',
           source: 'admin-features',
           filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 12, 'circle-color': '#ff0000', 'circle-opacity': 0.2 }
+          paint: { 'circle-radius': 12, 'circle-color': '#ff0000', 'circle-opacity': 0.5 }
         });
 
         instance.map.addLayer({
@@ -391,7 +391,7 @@
         })
       }
 
-      const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.5);
+      const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.75);
 
       if (this.features && Object.keys(this.features).length > 0) {
         this.map.addSource('user-features-points', {
@@ -419,7 +419,8 @@
           type: 'symbol',
           source: 'user-features-points',
           filter: ['has', 'point_count'],
-          layout: { 'text-field': '{point_count_abbreviated}', 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'], 'text-size': 12 }
+          layout: { 'text-field': '{point_count_abbreviated}', 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'], 'text-size': 12 },
+          paint: { 'text-color': '#ffffff' }
         });
 
         this.map.addLayer({
@@ -427,7 +428,7 @@
           type: 'circle',
           source: 'user-features-points',
           filter: ['!', ['has', 'point_count']],
-          paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': this.defaultFeatureColor, 'circle-opacity': 0.5 }
+          paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': this.defaultFeatureColor, 'circle-opacity': 0.75 }
         });
 
         this.map.on('click', 'user-features-circles-clusters', (e) => {

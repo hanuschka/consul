@@ -301,17 +301,20 @@
         this.map.addControl(searchControl);
       }
 
+      this.clusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
+
       // Leaflet.Deflate plugin
       this.deflateFeatures = L.deflate({
-        minSize: 10,
-        markerLayer: this.markersGroup,
+        minSize: 30,
+        markerLayer: this.clusterGroup,
         markerOptions: (shape) => {
           return {
-            icon: this.getMarkerIcon(shape.feature.color, shape.feature.fa_icon_class),
-            id: this.getProcessId(shape)
+            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.fa_icon_class )
           }
         }
+
       });
+
       this.deflateFeatures.addTo(this.map);
     }
 
@@ -341,6 +344,11 @@
               });
 
             } else {
+              if (feature.geometry.type === 'Point') {
+                self.clusterGroup.addLayer(layer);
+              } else {
+                self.deflateFeatures.addLayer(layer);
+              }
 
               if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
                 layer.options.resource_type = feature.properties.resource_type || null;

@@ -131,16 +131,12 @@
           instance.setupLayers();
           instance.renderFeatures();
         });
+        instance.addInstructionOverlay();
         instance.setupExpandControl();
         instance.setupPlugins();
         instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
-
-
-    //  if (this.editableLayersLimit && this.editableLayersLimit > 1) {
-    //    this.addHintAboutEditableLayersLimit();
-    //  }
     }
 
     setupEventListenersForNewFeatures() {
@@ -341,40 +337,30 @@
           .setHTML(popupContent)
           .addTo(instance.map);
       });
+
+      this.renderAdminFeaturesNote();
     }
 
+    addInstructionOverlay() {
+      const overlay = document.createElement('div');
+      overlay.className = 'mapbox-instruction-overlay';
+
+      const displayStyle = this.element.offsetWidth <= 780 ? 'none' : 'block';
+      overlay.style = 'display: ' + displayStyle + ';';
+
+      this.element.style.position = 'relative';
+      this.element.appendChild(overlay);
+
+      this.instructionOverlay = overlay;
+    }
+
+
     addHintAboutEditableLayersLimit() {
-    //  const hintText = 'Sie dürfen insgesamt ' + this.editableLayersLimit + ' Pins setzen.'
-    //  const hintControl = L.control({
-    //    position: 'bottomleft'
-    //  })
-
-    //  hintControl.onAdd = () => {
-    //    const container = L.DomUtil.create('div', 'feature-limit-hint');
-    //    container.innerHTML = hintText;
-    //    container.className += ' leaflet-control-attribution';
-    //    container.style.color = '#ff0000';
-    //    return container;
-    //  };
-
-    //  hintControl.addTo(this.map);
+      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="feature-limit-hint" style="color:#ff0000;">Sie dürfen insgesamt ' + this.editableLayersLimit + ' Pins setzen.');
     }
 
     renderAdminFeaturesNote() {
-    //  const adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
-    //  const adminShapeExplainer = L.control({
-    //    position: 'bottomleft'
-    //  });
-
-    //  adminShapeExplainer.onAdd = () => {
-    //    const container = L.DomUtil.create('div', 'my-attribution');
-    //    container.innerHTML = adminShapeExplainerText;
-    //    container.className += ' leaflet-control-attribution';
-    //    container.style.color = '#ff0000';
-    //    return container;
-    //  };
-
-    //  adminShapeExplainer.addTo(this.map);
+      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#ff0000;">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
     }
 
     setupPlugins() {
@@ -572,6 +558,10 @@
 
       if (instance.editingProjektMap) {
         instance.map.addControl(new CenterMarkerControl(instance), 'top-right');
+      }
+
+      if (instance.editableLayersLimit && instance.editableLayersLimit > 1) {
+        instance.addHintAboutEditableLayersLimit();
       }
     }
 

@@ -127,18 +127,16 @@
 
       this.initMap(function(map) {
         instance.map = map;
+        map.on('load', function() {
+          instance.setupLayers();
+          instance.renderFeatures();
+        });
+        instance.addInstructionOverlay();
         instance.setupExpandControl();
         instance.setupPlugins();
-        instance.setupLayers();
-        instance.renderFeatures();
         instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
-
-
-    //  if (this.editableLayersLimit && this.editableLayersLimit > 1) {
-    //    this.addHintAboutEditableLayersLimit();
-    //  }
     }
 
     setupEventListenersForNewFeatures() {
@@ -162,20 +160,18 @@
 
       instance.addLayerControl();
 
-      instance.map.on('style.load', function() {
-        if (!instance.layersRendered) {
-          instance.layersRendered = true;
+      if (!instance.layersRendered) {
+        instance.layersRendered = true;
 
-          if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
-            instance.addAdminFeaturesAsLayer();
-          };
+        if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
+          instance.addAdminFeaturesAsLayer();
+        };
 
-          instance.layersData.forEach(function(layerData) {
-            instance.createLayer(layerData);
-            instance.addLayerToControl(layerData);
-          });
-        }
-      });
+        instance.layersData.forEach(function(layerData) {
+          instance.createLayer(layerData);
+          instance.addLayerToControl(layerData);
+        });
+      }
     }
 
     addLayerControl() {
@@ -272,19 +268,11 @@
         });
 
         instance.map.addLayer({
-          id: 'admin-features-circles-outer',
+          id: 'admin-features-circles',
           type: 'circle',
           source: 'admin-features',
           filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 15, 'circle-color': '#ff0000' }
-        });
-
-        instance.map.addLayer({
-          id: 'admin-features-circles-inner',
-          type: 'circle',
-          source: 'admin-features',
-          filter: ['==', '$type', 'Point'],
-          paint: { 'circle-radius': 12, 'circle-color': '#fff' }
+          paint: { 'circle-radius': 12, 'circle-color': '#ff0000', 'circle-opacity': 0.2 }
         });
 
         instance.map.addLayer({
@@ -328,57 +316,51 @@
 
       this.layerControl.dropdownList.appendChild(label);
 
-    //  const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
-    //    pointToLayer: function(feature, latlng) {
-    //      return L.marker(latlng, {
-    //        icon: App.Utils.getLeafletMarkerHTML('#ff0000')
-    //      });
-    //    },
-    //    onEachFeature: (feature, layer) => {
-    //      layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
-    //      layer.pm.disable();
-    //      layer.pm.setOptions({
-    //        draggable: false,
-    //        editable: false
-    //      });
-    //    }
-    //  }).addTo(this.map);
-    //  this.overlayLayers['Verwaltungseinträge'] = adminFeaturesLayer;
-    //  this.renderAdminFeaturesNote();
+      const popupContent = '<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>';
+      instance.map.on('click', 'admin-features-circles', function(e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(popupContent)
+          .addTo(instance.map);
+      });
+
+      instance.map.on('click', 'admin-features-lines', function(e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(popupContent)
+          .addTo(instance.map);
+      });
+
+      instance.map.on('click', 'admin-features-polygons', function(e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(popupContent)
+          .addTo(instance.map);
+      });
+
+      this.renderAdminFeaturesNote();
     }
 
+    addInstructionOverlay() {
+      const overlay = document.createElement('div');
+      overlay.className = 'mapbox-instruction-overlay';
+
+      const displayStyle = this.element.offsetWidth <= 780 ? 'none' : 'block';
+      overlay.style = 'display: ' + displayStyle + ';';
+
+      this.element.style.position = 'relative';
+      this.element.appendChild(overlay);
+
+      this.instructionOverlay = overlay;
+    }
+
+
     addHintAboutEditableLayersLimit() {
-    //  const hintText = 'Sie dürfen insgesamt ' + this.editableLayersLimit + ' Pins setzen.'
-    //  const hintControl = L.control({
-    //    position: 'bottomleft'
-    //  })
-
-    //  hintControl.onAdd = () => {
-    //    const container = L.DomUtil.create('div', 'feature-limit-hint');
-    //    container.innerHTML = hintText;
-    //    container.className += ' leaflet-control-attribution';
-    //    container.style.color = '#ff0000';
-    //    return container;
-    //  };
-
-    //  hintControl.addTo(this.map);
+      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="feature-limit-hint" style="color:#ff0000;">Sie dürfen insgesamt ' + this.editableLayersLimit + ' Pins setzen.');
     }
 
     renderAdminFeaturesNote() {
-    //  const adminShapeExplainerText = 'Alle markierten Flächen und Pins in rot sind vom System vorgegeben';
-    //  const adminShapeExplainer = L.control({
-    //    position: 'bottomleft'
-    //  });
-
-    //  adminShapeExplainer.onAdd = () => {
-    //    const container = L.DomUtil.create('div', 'my-attribution');
-    //    container.innerHTML = adminShapeExplainerText;
-    //    container.className += ' leaflet-control-attribution';
-    //    container.style.color = '#ff0000';
-    //    return container;
-    //  };
-
-    //  adminShapeExplainer.addTo(this.map);
+      this.instructionOverlay.insertAdjacentHTML('beforeend', '<div class="adminShapeInfo" style="color:#ff0000;">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>');
     }
 
     setupPlugins() {
@@ -401,58 +383,97 @@
     renderFeatures() {
       if (this.editable) return;
 
+      const allFeatures = App.Utils.formattedFeatures(this.features);
+      const pointFeatures = {
+        type: 'FeatureCollection',
+        features: allFeatures.features.filter(function(f) {
+          return f.geometry.type === 'Point';
+        })
+      }
+
+      const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.5);
+
       if (this.features && Object.keys(this.features).length > 0) {
-        const instance = this;
-
-        instance.map.on('style.load', function() {
-          if (!instance.map.getSource('user-features')) {
-            instance.map.addSource('user-features', {
-              type: 'geojson',
-              data: App.Utils.formattedFeatures(instance.features)
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-circles-outer',
-              type: 'circle',
-              source: 'user-features',
-              filter: ['==', '$type', 'Point'],
-              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 15 ], 'circle-color': instance.defaultFeatureColor }
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-circles-inner',
-              type: 'circle',
-              source: 'user-features',
-              filter: ['==', '$type', 'Point'],
-              paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': '#fff' }
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-lines',
-              type: 'line',
-              source: 'user-features',
-              filter: ['==', '$type', 'LineString'],
-              layout: { 'line-join': 'round', 'line-cap': 'round' },
-              paint: { 'line-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor], 'line-width': 4 }
-            });
-
-            instance.map.addLayer({
-              id: 'user-features-polygons',
-              type: 'fill',
-              source: 'user-features',
-              filter: ['==', '$type', 'Polygon'],
-              layout: {},
-              paint: { 'fill-color': ['coalesce', ['get', 'color'], instance.defaultFeatureColor], 'fill-opacity': 0.5 }
-            });
-
-            if (instance.process && App.MapPopup.excludedProcesses.indexOf(instance.process) === -1) {
-              const userFeaturesLayers = ['user-features-circles-outer', 'user-features-circles-inner', 'user-features-lines', 'user-features-polygons'];
-              userFeaturesLayers.forEach(function(layerId) {
-                instance.map.on('click', layerId, instance.openMarkerPopup);
-              })
-            }
-          }
+        this.map.addSource('user-features-points', {
+          type: 'geojson',
+          data: pointFeatures,
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50
         });
+
+        this.map.addLayer({
+          id: 'user-features-circles-clusters',
+          type: 'circle',
+          source: 'user-features-points',
+          filter: ['has', 'point_count'],
+          paint: {
+            'circle-color': [ 'step', ['get', 'point_count'], clusterColor, 10, clusterColor, 30, clusterColor ],
+            'circle-radius': [ 'step', ['get', 'point_count'], 18, 10, 22, 28, 25 ]
+          }
+
+        });
+
+        this.map.addLayer({
+          id: 'user-features-circles-cluster-count',
+          type: 'symbol',
+          source: 'user-features-points',
+          filter: ['has', 'point_count'],
+          layout: { 'text-field': '{point_count_abbreviated}', 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'], 'text-size': 12 }
+        });
+
+        this.map.addLayer({
+          id: 'user-features-circles',
+          type: 'circle',
+          source: 'user-features-points',
+          filter: ['!', ['has', 'point_count']],
+          paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': this.defaultFeatureColor, 'circle-opacity': 0.5 }
+        });
+
+        this.map.on('click', 'user-features-circles-clusters', (e) => {
+          const features = this.map.queryRenderedFeatures(e.point, {
+            layers: ['user-features-circles-clusters']
+          });
+          const clusterId = features[0].properties.cluster_id;
+          this.map.getSource('user-features-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
+            this.map.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom + 1
+            });
+          });
+        });
+
+        this.map.addSource('user-features-shapes', {
+          type: 'geojson',
+          data: App.Utils.formattedFeatures(this.features)
+        });
+
+        this.map.addLayer({
+          id: 'user-features-lines',
+          type: 'line',
+          source: 'user-features-shapes',
+          filter: ['==', '$type', 'LineString'],
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': ['coalesce', ['get', 'color'], this.defaultFeatureColor], 'line-width': 4 }
+        });
+
+        this.map.addLayer({
+          id: 'user-features-polygons',
+          type: 'fill',
+          source: 'user-features-shapes',
+          filter: ['==', '$type', 'Polygon'],
+          layout: {},
+          paint: { 'fill-color': ['coalesce', ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
+        });
+
+        if (this.process && App.MapPopup.excludedProcesses.indexOf(this.process) === -1) {
+          const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
+          const instance = this;
+          userFeaturesLayers.forEach(function(layerId) {
+            instance.map.on('click', layerId, instance.openMarkerPopup);
+          })
+        }
       }
     }
 
@@ -492,6 +513,20 @@
         })
     }
 
+    addSwitchToSimpleSelectControl() {
+      let button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mapbox-switch-to-simple-select-control-button';
+      button.innerHTML = '<i class="fas fa-hand-pointer"></i>';
+      button.title = 'Auswahlmodus';
+
+      this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point').insertAdjacentElement('afterend', button);
+
+      button.addEventListener('click', () => {
+        this.draw.changeMode('simple_select')
+      });
+    }
+
     setupEditingControls() {
       if (!this.editable)  return;
 
@@ -514,15 +549,19 @@
       });
 
       instance.map.addControl(this.draw, 'top-right');
+      this.addSwitchToSimpleSelectControl();
 
       App.Utils.formattedFeatures(instance.features).features.forEach(function(feature) {
-        console.log('Feature to add:', feature);
         instance.editableLayers.push(feature.id);
         instance.draw.add(feature);
       });
 
       if (instance.editingProjektMap) {
         instance.map.addControl(new CenterMarkerControl(instance), 'top-right');
+      }
+
+      if (instance.editableLayersLimit && instance.editableLayersLimit > 1) {
+        instance.addHintAboutEditableLayersLimit();
       }
     }
 
@@ -557,18 +596,6 @@
           },
         },
         {
-          'id': 'gl-draw-point-outer',
-          'type': 'circle',
-          'filter': [ 'all',
-            ['==', '$type', 'Point'],
-            ['==', 'meta', 'feature'],
-          ],
-          'paint': {
-            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 17, 15 ],
-            'circle-color': this.defaultFeatureColor
-          },
-        },
-        {
           'id': 'gl-draw-point-inner',
           'type': 'circle',
           'filter': [ 'all',
@@ -576,9 +603,8 @@
             ['==', 'meta', 'feature'],
           ],
           'paint': {
-            'line-color': [ 'case', ['==', ['get', 'active'], 'true'], '#fff', '#fff' ],
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': [ 'case', ['==', ['get', 'active'], 'true'], '#fff', '#fff' ],
+            'circle-color': this.defaultFeatureColor
           },
         },
 

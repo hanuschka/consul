@@ -71,6 +71,10 @@
       font-size: 18px;
     }
   }
+
+  .mapbox-switch-to-simple-select-control-button.active {
+    background-color: rgba(0, 0, 0, 0.1)
+  }
 }
 
 .mapbox--poi-labels-toggle {

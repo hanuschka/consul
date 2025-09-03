@@ -61,7 +61,7 @@
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(coalesce: true, gravity: "center", resize_to_fill: [620, 390]),
+              image_url: @custom_page.image&.attachment&.variant(coalesce: true, gravity: "center", resize_to_fill: [930, 585]),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page
             )

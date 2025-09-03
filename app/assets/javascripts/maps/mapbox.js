@@ -130,6 +130,7 @@
         map.on('load', function() {
           instance.setupLayers();
           instance.renderFeatures();
+          instance.toggleControlVisibility();
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
@@ -152,7 +153,7 @@
     }
 
     setupExpandControl() {
-      this.map.addControl(new ExpandConrol(this), 'top-right');
+      this.map.addControl(new ExpandControl(this), 'top-right');
     }
 
     setupLayers() {
@@ -177,10 +178,6 @@
     }
 
     addLayerControl() {
-      if (this.element.offsetWidth <= 780) {
-        return;
-      }
-
       this.layerControl = new LayerControl(this);
       this.map.addControl(this.layerControl, 'top-right');
     }
@@ -350,9 +347,6 @@
       const overlay = document.createElement('div');
       overlay.className = 'mapbox-instruction-overlay';
 
-      const displayStyle = this.element.offsetWidth <= 780 ? 'none' : 'block';
-      overlay.style = 'display: ' + displayStyle + ';';
-
       this.element.style.position = 'relative';
       this.element.appendChild(overlay);
 
@@ -369,8 +363,6 @@
     }
 
     setupPlugins() {
-      if (this.placement == 'sidebar') return;
-
       this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
       this.map.addControl(new MapboxGeocoder({
           accessToken: mapboxgl.accessToken,
@@ -520,6 +512,7 @@
     }
 
     addSwitchToSimpleSelectControl() {
+      const instance = this;
       let button = document.createElement('button');
       button.type = 'button';
       button.className = 'mapbox-switch-to-simple-select-control-button';
@@ -529,8 +522,30 @@
       this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point').insertAdjacentElement('afterend', button);
 
       button.addEventListener('click', () => {
-        this.draw.changeMode('simple_select')
+        if (button.classList.contains('active')) {
+          toggleInactive();
+        } else {
+          toggleActive();
+        }
       });
+
+      instance.map.on('draw.modechange', function(e) {
+        button.classList.remove('active');
+      });
+
+      function toggleActive() {
+        button.classList.add('active')
+        document.querySelectorAll('.mapbox-gl-draw_ctrl-draw-btn').forEach(function(btn) {
+          btn.classList.remove('active');
+        });
+        instance.draw.changeMode('simple_select');
+      }
+
+      function toggleInactive() {
+        button.classList.remove('active')
+        document.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point').classList.add('active');
+        instance.draw.changeMode('draw_point');
+      }
     }
 
     setupEditingControls() {
@@ -568,6 +583,33 @@
 
       if (instance.editableLayersLimit && instance.editableLayersLimit > 1) {
         instance.addHintAboutEditableLayersLimit();
+      }
+
+      instance.rearrangeEditingControls();
+    }
+
+    rearrangeEditingControls() {
+      const pointControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point');
+      const lineControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line');
+      const polygonControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon');
+
+      const drawingControlsGroup = pointControl.parentElement;
+
+      if (pointControl && lineControl && polygonControl) {
+        drawingControlsGroup.insertBefore(pointControl, drawingControlsGroup.firstChild);
+        drawingControlsGroup.insertBefore(lineControl, pointControl.nextSibling);
+      }
+
+      const simpleSelectControl = this.element.querySelector('.mapbox-switch-to-simple-select-control-button');
+      const trashControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash');
+
+      if (simpleSelectControl || trashControl) {
+        const editControlsGroup = document.createElement('div');
+        editControlsGroup.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox-edit-controls-group';
+        drawingControlsGroup.insertAdjacentElement('afterend', editControlsGroup);
+
+        if (simpleSelectControl) editControlsGroup.appendChild(simpleSelectControl);
+        if (trashControl) editControlsGroup.appendChild(trashControl);
       }
     }
 
@@ -742,6 +784,22 @@
 
       featuresInput.value = JSON.stringify(featureCollection);
     }
+
+    toggleControlVisibility() {
+      const topLeftControls = this.element.querySelector('.mapboxgl-ctrl-top-left');
+      const layerControl = this.element.querySelector('.mapbox-layer-control');
+      const instructionOverlay = this.element.querySelector('.mapbox-instruction-overlay');
+
+      if ( this.element.offsetWidth < 700 ) {
+        [topLeftControls, layerControl, instructionOverlay].forEach(control => {
+          if (control) control.style.display = 'none';
+        });
+      } else {
+        [topLeftControls, layerControl, instructionOverlay].forEach(control => {
+          if (control) control.style.display = '';
+        });
+      }
+    }
   }
 
   // Custom control for layer visibility toggle
@@ -858,7 +916,7 @@
     }
   }
 
-  class ExpandConrol {
+  class ExpandControl {
     constructor(mapboxMapInstance) {
       this.mapboxMapInstance = mapboxMapInstance;
       this.mapContainer = mapboxMapInstance.element;
@@ -882,10 +940,12 @@
           this.mapContainer.classList.remove('expanded');
           button.innerHTML = '<i class="fas fa-expand"></i>';
           map.resize();
+          this.mapboxMapInstance.toggleControlVisibility();
         } else {
           this.mapContainer.classList.add('expanded');
           button.innerHTML = '<i class="fas fa-compress"></i>';
           map.resize();
+          this.mapboxMapInstance.toggleControlVisibility();
         }
       });
 

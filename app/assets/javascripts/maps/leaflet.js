@@ -16,6 +16,7 @@
       this.setupEditingControls();
       this.setupEventListenersForNewFeatures();
       this.setupEventListenersForUpdatingFormInputs();
+      this.toggleControlVisibility();
     }
 
     initializeProperties() {
@@ -128,10 +129,12 @@
               instance.element.classList.remove('expanded');
               button.innerHTML = '<i class="fas fa-expand"></i>';
               map.invalidateSize();
+              instance.toggleControlVisibility();
             } else {
               instance.element.classList.add('expanded');
               button.innerHTML = '<i class="fas fa-compress"></i>';
               map.invalidateSize();
+              instance.toggleControlVisibility();
             }
           });
 
@@ -169,9 +172,7 @@
       }
 
       // Add layer control if needed
-      if (this.placement != 'sidebar') {
-        this.addLayerControl();
-      }
+      this.addLayerControl();
     }
 
     createLayer(item) {
@@ -280,26 +281,22 @@
     }
 
     setupPlugins() {
-      if (this.placement != 'sidebar') {
-        L.control.locate({
-          icon: 'fa fa-map-marker',
-          strings: {
-            title: 'Meine Position anzeigen'
-          }
-        }).addTo(this.map);
-      }
+      L.control.locate({
+        icon: 'fa fa-map-marker',
+        strings: {
+          title: 'Meine Position anzeigen'
+        }
+      }).addTo(this.map);
 
-      if (this.placement != 'sidebar') {
-        const searchControl = new GeoSearch.GeoSearchControl({
-          provider: new GeoSearch.OpenStreetMapProvider(),
-          style: 'bar',
-          showMarker: false,
-          searchLabel: 'Nach Adresse suchen',
-          notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
-          clearSearchLabel: 'Suche zurücksetzen'
-        });
-        this.map.addControl(searchControl);
-      }
+      const searchControl = new GeoSearch.GeoSearchControl({
+        provider: new GeoSearch.OpenStreetMapProvider(),
+        style: 'bar',
+        showMarker: false,
+        searchLabel: 'Nach Adresse suchen',
+        notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
+        clearSearchLabel: 'Suche zurücksetzen'
+      });
+      this.map.addControl(searchControl);
 
       this.clusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
@@ -441,6 +438,7 @@
         this.map.pm.Toolbar.createCustomControl({
           name: 'customDragMode',
           className: 'control-icon leaflet-pm-icon-custom-drag',
+          block: 'edit',
           title: 'Auswahl modus',
           disableGlobalEditMode: true
         });
@@ -460,6 +458,18 @@
           }
         });
       }
+
+      this.rearrangeEditingControls();
+    }
+
+    rearrangeEditingControls() {
+      const editToolbar = this.element.querySelector('.leaflet-pm-toolbar.leaflet-pm-edit')
+      if ( !editToolbar ) return;
+
+      const customDragButtonContainer = editToolbar.querySelector('.leaflet-pm-icon-custom-drag').closest('.button-container');
+      if ( !customDragButtonContainer ) return;
+
+      editToolbar.insertBefore(customDragButtonContainer, editToolbar.firstChild);
     }
 
     placeCenterMarker(centerLatLng, instance) {
@@ -553,6 +563,22 @@
       };
 
       featuresInput.value = JSON.stringify(featureCollection);
+    }
+
+    toggleControlVisibility() {
+      const layerControl = this.element.querySelector('.leaflet-control-layers');
+      const locateControl = this.element.querySelector('.leaflet-control-locate');
+      const geoSearchControl = this.element.querySelector('.leaflet-control-container > .leaflet-control-geosearch.leaflet-geosearch-bar');
+
+      if ( this.element.offsetWidth < 700 ) {
+        [layerControl, locateControl, geoSearchControl].forEach(control => {
+          if (control) control.style.display = 'none';
+        });
+      } else {
+        [layerControl, locateControl, geoSearchControl].forEach(control => {
+          if (control) control.style.display = '';
+        });
+      }
     }
   }
 

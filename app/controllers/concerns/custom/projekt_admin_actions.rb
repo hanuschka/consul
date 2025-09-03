@@ -109,10 +109,12 @@ module ProjektAdminActions
   end
 
   def update_title_image
-    @projekt.page.image = Image.new(
-      attachment: params[:title_image],
-      user: User.administrators.first
+    image = Image.new(
+      attachment: params[:site_customization_page][:image],
+      user: current_user
     )
+
+    @projekt.page.image = image
 
     if @projekt.page.save
       render json: { status: { message: "Projekt page title image updated" }}
@@ -136,6 +138,12 @@ module ProjektAdminActions
         projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
       ]
       params.require(:projekt).permit(attributes, translation_params(Projekt))
+    end
+
+    def projekt_page_params
+      params.require(:site_customization_page).permit(
+        :title, :subtitle, :image
+      )
     end
 
     def process_tags

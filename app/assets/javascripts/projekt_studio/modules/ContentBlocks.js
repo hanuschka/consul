@@ -670,7 +670,6 @@
         contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
         this.resetPreviosVersionOfContentBlock(contentBlock, contentBlockSection)
 
-
         if (ProjektStudio.isEmbedded) {
           ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
             content_block_id: contentBlockSection.dataset.contentBlockId,

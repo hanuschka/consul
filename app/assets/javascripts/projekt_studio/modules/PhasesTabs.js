@@ -66,6 +66,8 @@ ProjektStudio.modules.PhasesTabs = {
 
     icon.classList.toggle("fa-eye", !active)
     icon.classList.toggle("fa-eye-slash", active)
+    const dataset = currentTarget.dataset;
+    currentTarget.title = active ? dataset.hideTitle : dataset.showTitle;
 
     if (ProjektStudio.isEmbedded) {
       ProjektStudio.utils.sendMessageToDtParentFrame("toggleProjektPhaseActiveState", { projekt_phase_id: tab.dataset.projektPhaseId, active })

@@ -66,17 +66,22 @@
   <% if helpers.show_projekt_studio_controls?(phase.projekt) %>
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">
-        <button type="button" class="js-toggle-projekt-phase-visibility-button projekt-frame-icon-button">
+        <button
+           type="button"
+           title="Sichtbarkeit umschalten"
+           class="js-toggle-projekt-phase-visibility-button projekt-frame-icon-button"
+          >
           <i class="fas <%= phase.active? ? 'fa-eye-slash' : 'fa-eye' %>">
           </i>
         </button>
-        <button type="button" class="js-toggle-projekt-phase-default projekt-frame-icon-button">
+        <button type="button" title="Als Standard festlegen" class="js-toggle-projekt-phase-default projekt-frame-icon-button">
           <i class="fas <%= phase == @default_projekt_phase ? 'fa-gem' : 'fa-thumbtack' %>">
           </i>
         </button>
         <% if show_send_notification_button? %>
           <button
             type="button"
+            title="Benachrichtigung senden"
             class="js-send-notifications-for-projekt-phase projekt-frame-icon-button"
             data-resource-type="<%= resource_type %>"
             data-resource-id="<%= resource_id %>"
@@ -86,7 +91,7 @@
           </button>
         <% end %>
         <% if helpers.native_projekt_studio?(@projekt) %>
-          <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), class: "projekt-frame-icon-button", target: "_blank" do %>
+          <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "_blank" do %>
             <i class="fas fa-edit">
             </i>
           <% end %>
@@ -94,6 +99,7 @@
           <button
             type="button"
             data-path="/projekt_phases/<%= phase.id %>/duration"
+            title="Bearbeiten"
             class="js-frame-open-admin-page projekt-frame-icon-button"
           >
             <i class="fas fa-edit">

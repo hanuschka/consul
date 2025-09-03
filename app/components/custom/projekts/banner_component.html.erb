@@ -71,7 +71,7 @@
 
       <div class="custom-page--banner-image">
         <% if show_projekt_studio_controls?(@custom_page.projekt) %>
-          <div class="projekt-image-upload-wrapper js-projekt-image-uploader">
+          <div data-field-name="site_customization_page[image]" class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="">
             <label for="projektImageUploadInput" class="button -round-icon-button projekt-image-upload-button flex-centered-content">
@@ -80,7 +80,7 @@
             <input
               id="projektImageUploadInput"
               type="file"
-              class="d-none js-projekt-image-upload-input"
+              class="d-none js-projekt-banner--image-upload-input"
             >
             </input>
           </div>

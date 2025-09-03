@@ -697,7 +697,11 @@ body.-preview-mode {
   }
 
   i {
-    /* color: #b4b4b4; */
+    color: #b4b4b4;
+  }
+
+  &:hover {
+    text-decoration: none;
   }
 }
 
@@ -758,7 +762,7 @@ body.-preview-mode {
 
 .frame-edit-field-content {
   max-width: 100%;
-  padding-right: 20px;
+  padding-right: 15px;
 
   > *:focus-visible {
     outline: none;

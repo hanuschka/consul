@@ -46,15 +46,14 @@ ProjektStudio.modules.Banner = {
   },
 
   saveEditedText(e) {
-    const {
-      container, field
-    } = this.getFieldElementsForButton(e.currentTarget)
+    const { container, field } = this.getFieldElementsForButton(e.currentTarget)
 
     if (container.classList.contains("-text-edit-mode")) {
       container.classList.remove("-text-edit-mode")
       field.firstElementChild.contentEditable = false
       container.dataset.originalFieldHtml = ""
 
+      const projektId = ProjektStudio.getCurrentProjektId();
       const value = field.firstElementChild.innerHTML.trim()
 
       if (ProjektStudio.isEmbedded) {
@@ -63,11 +62,11 @@ ProjektStudio.modules.Banner = {
         })
       } else {
         $.ajax({
-          url: `/admin/projekts/${settingId}/settings/${projektId}`,
+          url: `/admin/projekts/${projektId}/update_page`,
           type: "PATCH",
           dataType: "json",
           data: {
-            "projekt_setting[value]": settingValue
+            [container.dataset.fieldName]: value
           }
         })
       }
@@ -102,15 +101,31 @@ ProjektStudio.modules.Banner = {
 
     if (file) {
       const imagePreview = imageUploaderContainer.querySelector(".js-projekt-image-upload-preview")
+
       imagePreview.src = URL.createObjectURL(file)
       imagePreview.classList.add("-image-set")
 
-      const title_image_searialized = await serializeFileToBase64(file);
+      const projektId = ProjektStudio.getCurrentProjektId();
 
-      ProjektStudio.utils.sendMessageToDtParentFrame("Dt.ProjektStudio.updateTitleImage", {
-        title_image_searialized,
-        original_image_name: file.name
-      })
+      if (ProjektStudio.isEmbedded) {
+        const title_image_searialized = await serializeFileToBase64(file);
+
+        ProjektStudio.utils.sendMessageToDtParentFrame("Dt.ProjektStudio.updateTitleImage", {
+          title_image_searialized,
+          original_image_name: file.name
+        })
+      } else {
+        let formData = new FormData();
+        formData.append(imageUploaderContainer.dataset.fieldName, file);
+
+        $.ajax({
+          url: `/admin/projekts/${projektId}/update_title_image`,
+          type: "PATCH",
+          processData: false,
+          contentType: false,
+          data: formData
+        })
+      }
     }
   }
 };

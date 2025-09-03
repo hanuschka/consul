@@ -124,7 +124,7 @@ class Projekt < ApplicationRecord
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
-  attribute :new_content_block_mode, :boolean, default: false
+  attribute :new_content_block_mode, :boolean, default: true
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -793,20 +793,11 @@ class Projekt < ApplicationRecord
       return if map_location.present?
 
       if overview_page?
-        MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"],
-          projekt_id: id
-        )
+        MapLocation.create!(mappable: self)
       else
-        map_location = parent&.map_location&.dup || MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"]
-        )
+        map_location = parent&.map_location&.dup || MapLocation.create!
 
-        map_location.projekt_id = id
+        map_location.mappable = self
         map_location.save!
 
         (parent&.map_layers.presence || MapLayer.general).each do |map_layer|

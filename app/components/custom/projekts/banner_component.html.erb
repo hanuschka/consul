@@ -3,8 +3,8 @@
     <div class="custom-page--banner-text-section-wrapper">
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
-          <% if show_embedded_controlls? %>
-            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
+          <% if show_projekt_studio_controls?(@custom_page.projekt) %>
+            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
               <h1 class="custom-page--banner-title">
                 <%= @custom_page.title %>
               </h1>
@@ -16,15 +16,11 @@
           <% end %>
         </div>
 
-        <% if @custom_page.subtitle.present? || show_embedded_controlls? %>
-          <% if show_embedded_controlls? %>
-            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
+        <% if @custom_page.subtitle.present? || show_projekt_studio_controls?(@custom_page.projekt) %>
+          <% if show_projekt_studio_controls?(@custom_page.projekt) %>
+            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
               <div class="custom-page--banner-description">
-                <% if show_embedded_controlls? %>
-                  <%= @custom_page.subtitle.presence || " " %>
-                <% else %>
-                  <%= @custom_page.subtitle %>
-                <% end %>
+                <%= @custom_page.subtitle.presence || " " %>
               </div>
             <% end %>
           <% else %>
@@ -44,7 +40,7 @@
       <% end %>
     </div>
 
-    <% if @custom_page.image.present? || show_embedded_controlls? %>
+    <% if @custom_page.image.present? || show_projekt_studio_controls?(@custom_page.projekt) %>
       <%#= image_tag(url_for(@custom_page.image.attachment), class: "custom-page--banner-image" )  %>
 
       <% if @custom_page.image.present? %>
@@ -74,8 +70,8 @@
       <% end %>
 
       <div class="custom-page--banner-image">
-        <% if show_embedded_controlls? %>
-          <div class="projekt-image-upload-wrapper js-projekt-image-uploader">
+        <% if show_projekt_studio_controls?(@custom_page.projekt) %>
+          <div data-field-name="site_customization_page[image]" class="projekt-image-upload-wrapper js-projekt-image-uploader">
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="">
             <label for="projektImageUploadInput" class="button -round-icon-button projekt-image-upload-button flex-centered-content">
@@ -84,7 +80,7 @@
             <input
               id="projektImageUploadInput"
               type="file"
-              class="d-none js-projekt-image-upload-input"
+              class="d-none js-projekt-banner--image-upload-input"
             >
             </input>
           </div>

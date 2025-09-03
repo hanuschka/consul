@@ -37,6 +37,15 @@ class PagesController < ApplicationController
       set_landing_page_topbar_ui_variables(@custom_page)
     end
 
+    if current_user.present?
+      @namespace =
+        if current_user.administrator?
+          :admin
+        elsif current_user.projekt_manager?(@custom_page.projekt)
+          :projekt_manager
+        end
+    end
+
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 
@@ -119,14 +128,6 @@ class PagesController < ApplicationController
             filename: "proposals-#{Time.current.strftime("%d-%m-%Y-%H-%M-%S")}.csv"
         end
       end
-    end
-  end
-
-  def extended_sidebar_map
-    @current_projekt = SiteCustomization::Page.find_by(slug: params[:id]).projekt
-
-    respond_to do |format|
-      format.js { render "pages/sidebar/extended_map" }
     end
   end
 
@@ -332,7 +333,7 @@ class PagesController < ApplicationController
 
       @investments = @resources.send(@current_filter)
       @investment_ids = @investments.ids
-      @investment_coordinates = @investments.map(&:map_location).compact.map(&:coordinate_json_data)
+      @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment", mappable_id: @investment_ids).map(&:features_json_data)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 
@@ -362,12 +363,13 @@ class PagesController < ApplicationController
   end
 
   def set_point_of_interest_phase_footer_tab_variables
-    @map_coordinates =
+    auto_sign_in_guest_for(@projekt_phase)
+    @pin_coordinates =
       @projekt_phase
         .projekt_point_of_interest_pins
         .by_categories(params[:category_ids])
         .includes(:map_location)
-        .map(&:pin_json_data)
+        .map { |pin| pin.map_location.features_json_data if pin.map_location.present? }
   end
 
   def set_newsfeed_phase_footer_tab_variables

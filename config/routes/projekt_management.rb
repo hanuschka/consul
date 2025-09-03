@@ -31,11 +31,11 @@ namespace :projekt_management do
       get :officing_managers
       get :officing_manager_audits
       patch :update_officing_manager_assignments
-      get :poll_results
       get :budget_edit
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      post :send_notifications
       get :ai_settings
       patch :update_ai_settings
       get :projekt_point_of_interest_pins
@@ -58,7 +58,7 @@ namespace :projekt_management do
       end
     end
 
-    resources :proposals, only: %i[edit update] do
+    resources :proposals, only: %i[show update] do
       patch :toggle_admin_accepted, on: :member
       patch :toggle_image_concealed, on: :member
     end
@@ -78,7 +78,7 @@ namespace :projekt_management do
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
-    resources :projekt_arguments, only: [:create, :update, :destroy] do
+    resources :projekt_arguments, only: [:new, :create, :edit, :update, :destroy] do
       collection do
         post :send_notifications
       end
@@ -102,6 +102,7 @@ namespace :projekt_management do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
   end

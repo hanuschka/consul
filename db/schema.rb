@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_07_08_143844) do
+ActiveRecord::Schema.define(version: 2025_08_27_080845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -733,6 +733,19 @@ ActiveRecord::Schema.define(version: 2025_07_08_143844) do
     t.string "name"
     t.index ["deficiency_report_category_id"], name: "index_d61b31ba5bbffdea13be0cd92b8cb671cb6d18b5"
     t.index ["locale"], name: "index_deficiency_report_category_translations_on_locale"
+  end
+
+  create_table "deficiency_report_feedback_forms", force: :cascade do |t|
+    t.bigint "deficiency_report_id"
+    t.integer "overall_satisfaction"
+    t.integer "response_time_satisfaction"
+    t.integer "communication_satisfaction"
+    t.boolean "resolved"
+    t.text "what_liked_note"
+    t.text "what_improve_note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_id"], name: "index_deficiency_report_feedback_forms_on_deficiency_report_id"
   end
 
   create_table "deficiency_report_managers", force: :cascade do |t|
@@ -1474,30 +1487,19 @@ ActiveRecord::Schema.define(version: 2025_07_08_143844) do
     t.float "latitude"
     t.float "longitude"
     t.integer "zoom"
-    t.integer "proposal_id"
-    t.integer "investment_id"
-    t.bigint "projekt_id"
     t.string "pin_color"
-    t.bigint "deficiency_report_id"
-    t.jsonb "shape", default: {}, null: false
+    t.jsonb "features", default: {}, null: false
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
-    t.bigint "projekt_phase_id"
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
-    t.bigint "registered_address_district_id"
-    t.bigint "idea_id"
     t.string "mappable_type"
     t.bigint "mappable_id"
-    t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
-    t.index ["idea_id"], name: "index_map_locations_on_idea_id"
-    t.index ["investment_id"], name: "index_map_locations_on_investment_id"
+    t.integer "rendering_library", default: 0, null: false
+    t.jsonb "features_bu", default: {}, null: false
+    t.boolean "default", default: false, null: false
+    t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
-    t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
-    t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
-    t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
-    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
-    t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
   end
 
   create_table "memos", force: :cascade do |t|
@@ -2981,6 +2983,7 @@ ActiveRecord::Schema.define(version: 2025_07_08_143844) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_feedback_forms", "deficiency_reports"
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
@@ -3021,11 +3024,6 @@ ActiveRecord::Schema.define(version: 2025_07_08_143844) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
-  add_foreign_key "map_locations", "deficiency_reports"
-  add_foreign_key "map_locations", "ideas"
-  add_foreign_key "map_locations", "projekt_phases"
-  add_foreign_key "map_locations", "projekts"
-  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "newsletters", "recipient_groups"

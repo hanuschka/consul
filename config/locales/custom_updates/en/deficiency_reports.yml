@@ -128,3 +128,19 @@ en:
         admin_actions:
           title: Admin
         submit_official_answer_button: Save reply
+      feedback_form:
+        new:
+          already_submitted: You have already submitted feedback for this request.
+          title: We	are very interested in your opinion!
+          subtitle: "Feedback on the processing of your request: <strong>%{title}</strong>"
+          overall_satisfaction: "1. How satisfied are you with the processing of your request? (mandatory)"
+          response_time_satisfaction: "2. How do you rate the response time?"
+          communication_satisfaction: "3. How polite and helpful was the contact?"
+          resolved: "4. Was your request fully resolved?"
+          what_liked_note: "5. What did you particularly like?"
+          what_improve_note: "6. What can we improve?"
+          submit: Submit feedback
+          errors:
+            overall_satisfaction: "Please select an option."
+        create:
+          success: Danke für Ihr Feedback!

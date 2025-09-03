@@ -1,5 +1,22 @@
 <% content_for :wrapper_class, "has-custom-fixed-tabs" %>
 
+<% show_admin_controls = current_user&.email.in?(@partner_emails) || current_user&.has_pm_permission_to?(:manage, @projekt) %>
+<% show_projekt_studio_controls_in_embeded = embedded_and_frame_access_code_valid?(@projekt) %>
+<% show_projekt_studio_controls = show_admin_controls || show_projekt_studio_controls_in_embeded %>
+
+<% if show_projekt_studio_controls %>
+  <%= content_for :additional_styles do %>
+    <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+  <% end %>
+  <%= content_for :additional_scripts do %>
+    <%= javascript_include_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+  <% end %>
+<% end %>
+
+<% if show_projekt_studio_controls %>
+  <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+<% end %>
+
 <% if @custom_page.landing? %>
   <%= render "pages/landing_page_content" %>
 <% else %>
@@ -31,7 +48,9 @@
     <% end %>
   </style>
 
-  <main class="projekt-page js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
+  <% additional_main_class = show_admin_controls ? "projekt-studio" : "" %>
+
+  <main class="projekt-page <%= additional_main_class %> js-projekt-page" data-projekt-id="<%= @custom_page.projekt&.id %>">
     <% if @custom_page.projekt.present? %>
       <div class="custom-fixed-tabs margin-bottom">
         <div class="custom-fixed-tabs--content">
@@ -78,12 +97,12 @@
       </div>
     <% end %>
 
-    <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || embedded? %>
+    <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || show_projekt_studio_controls?(@custom_page.projekt) %>
       <div class="js-anchor-navigation-content" id="projekt-particapation">
         <div class="projekt-footer-anchor" id="projekt-footer"> </div>
         <div class="projekt-footer flex-layout">
           <div class="full-width-column">
-            <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase) %>
+            <%= render Pages::Projekts::FooterPhasesComponent.new(@custom_page.projekt, @default_projekt_phase, namespace: @namespace) %>
             <% if @default_projekt_phase.present? %>
               <div id="footer-content" class="js-projekt-footer-content">
                 <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>

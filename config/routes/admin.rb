@@ -30,7 +30,6 @@ namespace :admin do
       get :officing_managers
       get :officing_manager_audits
       patch :update_officing_manager_assignments
-      get :poll_results
       get :budget_edit
       get :budget_investments
       get :budget_phases
@@ -39,6 +38,7 @@ namespace :admin do
       patch :update_ai_settings
       get :projekt_point_of_interest_pins
       get :projekt_point_of_interest_categories
+      post :send_notifications
       get :map_resources_overview
     end
 
@@ -57,7 +57,7 @@ namespace :admin do
       end
     end
 
-    resources :proposals, only: %i[edit update] do
+    resources :proposals, only: %i[show update] do
       patch :toggle_admin_accepted, on: :member
       patch :toggle_image_concealed, on: :member
     end
@@ -77,7 +77,7 @@ namespace :admin do
     resources :milestones, controller: "projekt_phase_milestones", except: [:index, :show]
     resources :progress_bars, controller: "projekt_phase_progress_bars"
     resources :projekt_notifications, only: [:create, :update, :destroy]
-    resources :projekt_arguments, only: [:create, :update, :destroy] do
+    resources :projekt_arguments, only: [:new, :create, :edit, :update, :destroy] do
       collection do
         post :send_notifications
       end
@@ -94,6 +94,8 @@ namespace :admin do
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :quick_update
+      patch :update_page
+      patch :update_title_image
       patch :update_map
     end
 
@@ -104,8 +106,11 @@ namespace :admin do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
+    resources :projekt_content_blocks, only: [:create]
+
     resources :settings, controller: "projekt_settings", only: [:update] do
       member do
         patch :update_default_projekt_footer_tab
@@ -504,6 +509,13 @@ namespace :admin do
   resource :machine_learning, controller: :machine_learning, only: [:show] do
     post :execute, on: :collection
     delete :cancel, on: :collection
+  end
+
+  resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+    end
   end
 end
 

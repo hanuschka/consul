@@ -110,12 +110,11 @@
 
           <div class="new-card" id='map-container'>
             <%= render "map_locations/form_fields",
-              form:     f,
-              map_location: deficiency_report.map_location || MapLocation.new,
-              label: t("proposals.form.map_location"),
-              help:     t("custom.deficiency_reports.form.map.hint"),
-              parent_class: "deficiency_report",
-              i18n_namespace: "deficiency_reports" %>
+              label:           t("proposals.form.map_location"),
+              help:            t("custom.deficiency_reports.form.map.hint"),
+              form:            f,
+              mappable:        deficiency_report,
+              nesting_prefix: "deficiency_report" %>
           </div>
         </div>
 
@@ -160,7 +159,7 @@
             <% end %>
           <% end %>
 
-          <% if current_user.administrator? %>
+          <% if current_user.administrator? || current_user.deficiency_report_manager? %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.deficiency_reports.form.on_behalf_of.title"),
                           description: t("custom.deficiency_reports.form.on_behalf_of.description"),

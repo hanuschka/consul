@@ -77,7 +77,8 @@
         container: this.element,
         center: [this.mapCenterLongitude, this.mapCenterLatitude],
         zoom: this.zoom,
-        pitch: 53
+        pitch: 53,
+        preserveDrawingBuffer: true
       }
 
       if (this.styleId) {

@@ -18,6 +18,30 @@
   }
 }
 
+.map_location.map.expanded {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5000;
+  border-radius: 0 !important;
+}
+
+.control-container {
+  &.leaflet-control {
+    width: 34px;
+    height: 34px;
+    background-color: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
+
 .mapbox-instruction-overlay {
   position: absolute;
   text-align: center;
@@ -102,6 +126,7 @@
 /* Mapbox Layer Control Styles */
 .mapbox-layer-control {
   position: relative;
+  z-index: 3;
 }
 
 .mapbox-layer-control-button {
@@ -285,8 +310,8 @@
 }
 
 .mapboxgl-ctrl-group button {
-  width: 35px;
-  height: 35px;
+  width: 35px !important;
+  height: 35px !important;
 }
 
 .mapbox-gl-draw_ctrl-draw-btn.active,

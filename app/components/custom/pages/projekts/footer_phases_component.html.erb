@@ -15,14 +15,20 @@
       </div>
 
       <div class='footer-phases-filter-subnav'>
-        <% if helpers.embedded? %>
-          <button data-path="/projekts/<%= @projekt.id %>/frame_new_phase_selector" class="page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-frame-open-admin-page" title="Neue Phase hinzufügen">
-            <i class="fas fa-plus"></i>
-          </button>
+        <% if helpers.show_admin_controls_for_projekt?(@projekt) %>
+          <% if helpers.embedded? %>
+            <button data-path="/projekts/<%= @projekt.id %>/frame_new_phase_selector" class="page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-frame-open-admin-page" title="Neue Phase hinzufügen">
+              <i class="fas fa-plus"></i>
+            </button>
+          <% else %>
+            <%= link_to(edit_admin_projekt_path(@projekt, anchor: "tab-projekt-phases"), class: "page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new") do %>
+              <i class="fas fa-plus"></i>
+            <% end %>
+          <% end %>
         <% end %>
         <ul id='filter-subnav' class='key-dates js-phases-list' role='tablist'>
           <% projekt_phases.each do |projekt_phase| %>
-            <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt_phase, @default_projekt_phase) %>
+            <%= render Pages::Projekts::FooterPhaseTabComponent.new(projekt_phase, @default_projekt_phase, namespace: @namespace) %>
           <% end %>
         </ul>
       </div>

@@ -1,0 +1,22 @@
+<% if @enable %>
+  <div
+    class="js-projekt-section-data-wrapper js-toggle-section-with-setting <%= disabled_class %> toggle-section-with-setting"
+    data-projekt-setting-key="<%= @setting_key %>"
+    data-projekt-setting-id="<%= get_setting_id %>"
+    data-projekt-setting-active="<%= @setting_active %>"
+    data-other-conditions-are-met="<%= @other_conditions_are_met %>"
+  >
+    <%= content %>
+    <button
+      type="button"
+      class="js-sidebar-section-toggle-visibility sidebar--section-toggle-visibility"
+      title="<%= default_title %>"
+      data-on-title="Show"
+      data-off-title="Hide"
+    >
+      <i class="fas <%= icon_class %>"></i>
+    </button>
+  </div>
+<% else %>
+  <%= content %>
+<% end %>

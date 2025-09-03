@@ -148,6 +148,10 @@
       })
 
       editorPromise.then((editor) => {
+        // DO NOT DELETE
+        // IMPORTANT: it's used in projekt studio for content blocks
+        window.CKeditorInstancesGlobal[editor.sourceElement.id] = editor;
+
         if (editor.sourceElement.classList.contains("js-user-resource-form-description")) {
           window.CKeditorInstancesGlobal["userResourceFromEditor"] = editor;
         }

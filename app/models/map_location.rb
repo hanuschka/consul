@@ -131,11 +131,11 @@ class MapLocation < ApplicationRecord
         self.features            = MapLocation.default.features
         self.rendering_library   = MapLocation.default.rendering_library
       elsif mappable.respond_to?(:projekt_phase) && mappable.projekt_phase.present?
-        self.latitude            = mappable.projekt_phase.projekt.map_location.latitude
-        self.longitude           = mappable.projekt_phase.projekt.map_location.longitude
-        self.zoom                = mappable.projekt_phase.projekt.map_location.zoom
-        self.altitude            = mappable.projekt_phase.projekt.map_location.altitude
-        self.rendering_library   = mappable.projekt_phase.projekt.map_location.rendering_library
+        self.latitude            = mappable.projekt_phase.map_location.latitude
+        self.longitude           = mappable.projekt_phase.map_location.longitude
+        self.zoom                = mappable.projekt_phase.map_location.zoom
+        self.altitude            = mappable.projekt_phase.map_location.altitude
+        self.rendering_library   = mappable.projekt_phase.map_location.rendering_library
       else
         self.latitude            = 52.5209410025777
         self.longitude           = 13.409421034146195

@@ -66,8 +66,8 @@ ProjektStudio.modules.PhasesTabs = {
 
     icon.classList.toggle("fa-eye", !active)
     icon.classList.toggle("fa-eye-slash", active)
-    const dataset = currentTarget.dataset;
-    currentTarget.title = active ? dataset.hideTitle : dataset.showTitle;
+    const dataset = e.currentTarget.dataset;
+    e.currentTarget.title = active ? dataset.hideTitle : dataset.showTitle;
 
     if (ProjektStudio.isEmbedded) {
       ProjektStudio.utils.sendMessageToDtParentFrame("toggleProjektPhaseActiveState", { projekt_phase_id: tab.dataset.projektPhaseId, active })
@@ -106,6 +106,8 @@ ProjektStudio.modules.PhasesTabs = {
 
     icon.classList.toggle("fa-thumbtack", !isDefault)
     icon.classList.toggle("fa-gem", isDefault)
+    const dataset = e.currentTarget.dataset;
+    e.currentTarget.title = isDefault ? dataset.makeDefaultTitle : dataset.unsetDefaultTitle;
 
     if (ProjektStudio.isEmbedded) {
       ProjektStudio.utils.sendMessageToDtParentFrame(

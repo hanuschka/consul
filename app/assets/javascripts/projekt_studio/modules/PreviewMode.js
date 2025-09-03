@@ -55,7 +55,7 @@ ProjektStudio.PreviewMode = {
     // const $sidebarAdminControlls = $('.js-sidebar-admin-controlls');
     //
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)
-    $(".frame-edit-field--controlls").toggle(!previewModeEnabled)
+    $(".projekt-banner-edit-field--controlls").toggle(!previewModeEnabled)
 
     if (previewModeEnabled) {
       if (!anyCheckedSDG) {

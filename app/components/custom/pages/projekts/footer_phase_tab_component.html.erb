@@ -66,15 +66,31 @@
   <% if helpers.show_projekt_studio_controls?(phase.projekt) %>
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">
+        <%
+          hide_phase_title = "Versteckphase"
+          show_phase_title = "Showphase"
+        %>
         <button
            type="button"
-           title="Sichtbarkeit umschalten"
            class="js-toggle-projekt-phase-visibility-button projekt-frame-icon-button"
+           title="<%= phase.active? ? hide_phase_title : show_phase_title %>"
+           data-hide-title="<%= hide_phase_title %>"
+           data-show-title="<%= show_phase_title %>"
           >
           <i class="fas <%= phase.active? ? 'fa-eye-slash' : 'fa-eye' %>">
           </i>
         </button>
-        <button type="button" title="Als Standard festlegen" class="js-toggle-projekt-phase-default projekt-frame-icon-button">
+        <%
+          make_default = "Standardphase festlegen"
+          unset_default_title = "Standardphase aufheben"
+        %>
+        <button
+          type="button"
+          class="js-toggle-projekt-phase-default projekt-frame-icon-button"
+          title="<%= phase == @default_projekt_phase ? unset_default_title : make_default %>"
+          data-unset-default-title="<%= unset_default_title %>"
+          data-make-default-title="<%= make_default %>"
+        >
           <i class="fas <%= phase == @default_projekt_phase ? 'fa-gem' : 'fa-thumbtack' %>">
           </i>
         </button>

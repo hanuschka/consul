@@ -4,7 +4,7 @@
       <div class="custom-page--banner-text-section">
         <div class="custom-page--banner-title-wrapper">
           <% if show_projekt_studio_controls?(@custom_page.projekt) %>
-            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
+            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[title]') do %>
               <h1 class="custom-page--banner-title">
                 <%= @custom_page.title %>
               </h1>
@@ -18,7 +18,7 @@
 
         <% if @custom_page.subtitle.present? || show_projekt_studio_controls?(@custom_page.projekt) %>
           <% if show_projekt_studio_controls?(@custom_page.projekt) %>
-            <%= render Admin::Frame::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
+            <%= render Admin::FieldEditComponent.new(field_name: 'site_customization_page[subtitle]') do %>
               <div class="custom-page--banner-description">
                 <%= @custom_page.subtitle.presence || " " %>
               </div>

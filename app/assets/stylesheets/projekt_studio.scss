@@ -84,7 +84,7 @@ $small-tablet-viewport-start: 750px;
   }
 
   &:active {
-    background-color: #eef3f8;
+    background-color: #d2d1d1;
   }
 
   &:disabled {
@@ -624,11 +624,22 @@ body.-preview-mode {
 
 .sidebar--section-toggle-visibility {
   position: absolute;
-  top: 17px;
-  right: 25px;
+  top: 10px;
+  right: 21px;
   font-size: 18px;
-  width: 30px;
+  width: 40px;
+  height: 40px;
   z-index: 2;
+  border-radius: 50%;
+  transition: 100ms ease background;
+
+  &:hover:not(:disabled) {
+    background-color: #dfebf5;
+  }
+
+  &:active {
+    background-color: #bbcedf;
+  }
 
   @media(max-width: $small-tablet-viewport-start) {
     top: 20px;

@@ -68,7 +68,7 @@ class MapLocation < ApplicationRecord
       "id" => mappable_id,
       "color" => get_feature_color,
       "fa_icon_class" => get_fa_icon_class
-    }
+    }.reject { |_k, v| v.in?([nil, ""]) }
 
     if features["type"] == "FeatureCollection"
       features["features"].each do |feature|

@@ -41,6 +41,9 @@
       this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
+      this.markerCategoryIcon = null;
+      this.markerCategoryColor = null;
+
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
@@ -131,11 +134,11 @@
           instance.setupLayers();
           instance.renderFeatures();
           instance.toggleControlVisibility();
+          instance.setupEditingControls();
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
         instance.setupPlugins();
-        instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
     }
@@ -425,7 +428,11 @@
           type: 'circle',
           source: 'user-features-points',
           filter: ['!', ['has', 'point_count']],
-          paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': this.defaultFeatureColor, 'circle-opacity': 0.75 }
+          paint: {
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ],
+            'circle-color':  [ 'case', ['has', 'color'], ['get', 'color'], this.defaultFeatureColor],
+            'circle-opacity': 0.75
+          }
         });
 
         this.map.on('click', 'user-features-circles-clusters', (e) => {
@@ -585,6 +592,7 @@
         instance.addHintAboutEditableLayersLimit();
       }
 
+      instance.setupEventListenersForMarkerStyleChanges();
       instance.rearrangeEditingControls();
     }
 
@@ -622,7 +630,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': [ 'case', ['==', ['get', 'active'], 'true'], this.defaultFeatureColor, this.defaultFeatureColor ],
+            'fill-color': this.defaultFeatureColor,
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -638,7 +646,7 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': [ 'case', ['==', ['get', 'active'], 'true'], this.defaultFeatureColor, this.defaultFeatureColor ],
+            'line-color': this.defaultFeatureColor,
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
           },
@@ -652,7 +660,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': this.defaultFeatureColor
+            'circle-color': ['case', ['has', 'color'], ['get', 'color'], this.markerCategoryColor || this.defaultFeatureColor],
           },
         },
 
@@ -741,6 +749,20 @@
         const currentMode = instance.draw.getMode();
         const newFeature = e.features[0];
 
+        instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
+        instance.draw.setFeatureProperty(newFeature.id, 'icon', instance.markerCategoryIcon);
+
+        // //////////////////////////////
+
+        // e.features.forEach(feature => {
+        //   instance.draw.setFeatureProperty(feature.id, 'color', '#ff0000');
+        //   feature.properties.color = '#ff0000';
+        //   feature.color = '#ff0000';
+        // });
+
+
+        // //////////////////////////////
+
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
         }
@@ -799,6 +821,31 @@
           if (control) control.style.display = '';
         });
       }
+    }
+
+    setupEventListenersForMarkerStyleChanges() {
+      const selector = document.querySelector(".js-map-change-marker-style");
+
+      if (!selector) return;
+
+      const instance = this;
+
+      instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
+      instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+
+      //   instance.draw.set({
+      //     styles: instance.getDrawStyles()
+      //   });
+      // }
+
+      selector.addEventListener("change", function() {
+        instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
+        instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+
+        // if (instance.draw) {
+        //   instance.draw.setStyles(instance.getDrawStyles());
+        // }
+      });
     }
   }
 

@@ -569,6 +569,7 @@
           trash: instance.enableShapes
         },
         defaultMode: 'draw_point',
+        userProperties: true,
         styles: instance.getDrawStyles()
       });
 
@@ -630,7 +631,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': this.defaultFeatureColor,
+            'fill-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -646,7 +647,7 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': this.defaultFeatureColor,
+            'line-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
           },
@@ -660,7 +661,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': ['case', ['has', 'color'], ['get', 'color'], this.markerCategoryColor || this.defaultFeatureColor],
+            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
           },
         },
 
@@ -674,7 +675,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 8, 9],
-            'circle-color': this.defaultFeatureColor
+            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
           },
         },
         {
@@ -750,18 +751,7 @@
         const newFeature = e.features[0];
 
         instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
-        instance.draw.setFeatureProperty(newFeature.id, 'icon', instance.markerCategoryIcon);
-
-        // //////////////////////////////
-
-        // e.features.forEach(feature => {
-        //   instance.draw.setFeatureProperty(feature.id, 'color', '#ff0000');
-        //   feature.properties.color = '#ff0000';
-        //   feature.color = '#ff0000';
-        // });
-
-
-        // //////////////////////////////
+        instance.draw.setFeatureProperty(newFeature.id, 'fa_icon_class', instance.markerCategoryIcon);
 
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
@@ -833,6 +823,8 @@
       instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
       instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
 
+      console.log("markerCategoryColor", instance.markerCategoryColor);
+
       //   instance.draw.set({
       //     styles: instance.getDrawStyles()
       //   });
@@ -841,6 +833,8 @@
       selector.addEventListener("change", function() {
         instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
         instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+
+        console.log("markerCategoryColor", instance.markerCategoryColor);
 
         // if (instance.draw) {
         //   instance.draw.setStyles(instance.getDrawStyles());

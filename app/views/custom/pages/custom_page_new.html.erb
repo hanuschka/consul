@@ -71,6 +71,16 @@
 
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 
+    <% if show_admin_controls && !embedded? %>
+      <button
+        class="projekt-studio--peview-button js-turn-on-preview-mode-button"
+        title="Vorschaumodus umschalten"
+        type="button"
+      >
+        <i class="fas fa-laptop"></i>
+      </button>
+    <% end %>
+
     <% if @custom_page.projekt.present? %>
       <div class="flex-layout">
         <div class="main-column">

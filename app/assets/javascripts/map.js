@@ -13,6 +13,10 @@
           }
         }
 
+        if ( mapInstance && this.dataset.placement == 'sidebar' ) {
+          return;
+        }
+
         if (mapInstance) {
           mapInstance.map.off();
           mapInstance.map.remove();

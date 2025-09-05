@@ -14,8 +14,8 @@
       this.setupPlugins();
       this.renderFeatures();
       this.setupEditingControls();
-      this.setupEventListenersForNewFeatures();
       this.setupEventListenersForUpdatingFormInputs();
+      this.toggleControlVisibility();
     }
 
     initializeProperties() {
@@ -47,6 +47,8 @@
       this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
+      this.markerCategoryIcon = null;
+      this.markerCategoryColor = null;
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
@@ -60,8 +62,6 @@
     }
 
     createMap() {
-      const defaultColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor()
-
       this.map = L.map(this.element.id, {
         gestureHandling: true,
         maxZoom: 18,
@@ -81,13 +81,13 @@
         },
         pathOptions: {
           weight: 2,
-          color: defaultColor,
+          color: this.defaultFeatureColor,
           opacity: 1,
-          fillColor: defaultColor,
+          fillColor: this.defaultFeatureColor,
           fillOpacity: 0.2
         },
-        templineStyle: { color: defaultColor, dashArray: '5, 10' },
-        hintlineStyle: { color: defaultColor, dashArray: '5, 10' }
+        templineStyle: { color: this.defaultFeatureColor, dashArray: '5, 10' },
+        hintlineStyle: { color: this.defaultFeatureColor, dashArray: '5, 10' }
       });
 
       if (this.editableLayersLimit && this.editableLayersLimit > 1) {
@@ -96,14 +96,14 @@
     }
 
     setupEventListenersForNewFeatures() {
-      const self = this;
+      const instance = this;
 
-      self.map.on('pm:create', function(e) {
+      instance.map.on('pm:create', function(e) {
         if (e.shape === 'Circle') {
           e.layer.options.shape = 'Circle';
         }
 
-        self.setupEventListenersForEditableFeature(self.map, e.layer);
+        instance.setupEventListenersForEditableFeature(instance.map, e.layer);
       })
     }
 
@@ -123,15 +123,21 @@
 
           container.appendChild(button);
 
-          container.addEventListener('click', () => {
+          L.DomEvent.disableClickPropagation(container);
+
+          container.addEventListener('click', (e) => {
+            L.DomEvent.stopPropagation(e);
+
             if (instance.element.classList.contains('expanded')) {
               instance.element.classList.remove('expanded');
               button.innerHTML = '<i class="fas fa-expand"></i>';
               map.invalidateSize();
+              instance.toggleControlVisibility();
             } else {
               instance.element.classList.add('expanded');
               button.innerHTML = '<i class="fas fa-compress"></i>';
               map.invalidateSize();
+              instance.toggleControlVisibility();
             }
           });
 
@@ -169,9 +175,7 @@
       }
 
       // Add layer control if needed
-      if (this.placement != 'sidebar') {
-        this.addLayerControl();
-      }
+      this.addLayerControl();
     }
 
     createLayer(item) {
@@ -280,26 +284,22 @@
     }
 
     setupPlugins() {
-      if (this.placement != 'sidebar') {
-        L.control.locate({
-          icon: 'fa fa-map-marker',
-          strings: {
-            title: 'Meine Position anzeigen'
-          }
-        }).addTo(this.map);
-      }
+      L.control.locate({
+        icon: 'fa fa-map-marker',
+        strings: {
+          title: 'Meine Position anzeigen'
+        }
+      }).addTo(this.map);
 
-      if (this.placement != 'sidebar') {
-        const searchControl = new GeoSearch.GeoSearchControl({
-          provider: new GeoSearch.OpenStreetMapProvider(),
-          style: 'bar',
-          showMarker: false,
-          searchLabel: 'Nach Adresse suchen',
-          notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
-          clearSearchLabel: 'Suche zurücksetzen'
-        });
-        this.map.addControl(searchControl);
-      }
+      const searchControl = new GeoSearch.GeoSearchControl({
+        provider: new GeoSearch.OpenStreetMapProvider(),
+        style: 'bar',
+        showMarker: false,
+        searchLabel: 'Nach Adresse suchen',
+        notFoundMessage: 'Entschuldigung! Die Adresse wurde nicht gefunden.',
+        clearSearchLabel: 'Suche zurücksetzen'
+      });
+      this.map.addControl(searchControl);
 
       this.clusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
 
@@ -409,10 +409,12 @@
         drawPolygon: this.enableShapes,
         drawCircle: this.enableShapes,
         editMode: this.enableShapes,
-        dragMode: this.enableShapes,
+        dragMode: false,
         cutPolygon: this.enableShapes,
         rotateMode: this.enableShapes
       })
+
+      this.map.pm.enableDraw('Marker');
 
       if (this.editingProjektMap) {
         this.map.pm.Toolbar.createCustomControl({
@@ -437,6 +439,14 @@
 
       if (this.enableShapes || this.adminEditor) {
         this.map.pm.Toolbar.createCustomControl({
+          name: 'customDragMode',
+          className: 'control-icon leaflet-pm-icon-custom-drag',
+          block: 'edit',
+          title: 'Auswahl modus',
+          disableGlobalEditMode: true
+        });
+
+        this.map.pm.Toolbar.createCustomControl({
           name: 'clearMap',
           className: 'control-icon leaflet-pm-icon-delete',
           title: 'Karte zurücksetzen',
@@ -451,6 +461,20 @@
           }
         });
       }
+
+      this.rearrangeEditingControls();
+      this.setupEventListenersForMarkerStyleChanges();
+      this.setupEventListenersForNewFeatures();
+    }
+
+    rearrangeEditingControls() {
+      const editToolbar = this.element.querySelector('.leaflet-pm-toolbar.leaflet-pm-edit')
+      if ( !editToolbar ) return;
+
+      const customDragButtonContainer = editToolbar.querySelector('.leaflet-pm-icon-custom-drag').closest('.button-container');
+      if ( !customDragButtonContainer ) return;
+
+      editToolbar.insertBefore(customDragButtonContainer, editToolbar.firstChild);
     }
 
     placeCenterMarker(centerLatLng, instance) {
@@ -544,6 +568,50 @@
       };
 
       featuresInput.value = JSON.stringify(featureCollection);
+    }
+
+    toggleControlVisibility() {
+      const layerControl = this.element.querySelector('.leaflet-control-layers');
+      const locateControl = this.element.querySelector('.leaflet-control-locate');
+      const geoSearchControl = this.element.querySelector('.leaflet-control-container > .leaflet-control-geosearch.leaflet-geosearch-bar');
+
+      if ( this.element.offsetWidth < 700 ) {
+        [layerControl, locateControl, geoSearchControl].forEach(control => {
+          if (control) control.style.display = 'none';
+        });
+      } else {
+        [layerControl, locateControl, geoSearchControl].forEach(control => {
+          if (control) control.style.display = '';
+        });
+      }
+    }
+
+    setupEventListenersForMarkerStyleChanges() {
+      const selector = document.querySelector(".js-map-change-marker-style");
+
+      if (!selector) return;
+
+      const instance = this;
+
+      instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
+      instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+
+      instance.map.pm.setGlobalOptions({
+        markerStyle: {
+          icon: App.Utils.getLeafletMarkerHTML(instance.markerCategoryColor || instance.defaultFeatureColor, instance.markerCategoryIcon || 'circle'),
+        }
+      });
+
+      selector.addEventListener("change", function() {
+        instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
+        instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+
+        instance.map.pm.setGlobalOptions({
+          markerStyle: {
+            icon: App.Utils.getLeafletMarkerHTML(instance.markerCategoryColor || instance.defaultFeatureColor, instance.markerCategoryIcon || 'circle'),
+          }
+        });
+      });
     }
   }
 

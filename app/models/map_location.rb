@@ -68,7 +68,7 @@ class MapLocation < ApplicationRecord
       "id" => mappable_id,
       "color" => get_feature_color,
       "fa_icon_class" => get_fa_icon_class
-    }
+    }.reject { |_k, v| v.in?([nil, ""]) }
 
     if features["type"] == "FeatureCollection"
       features["features"].each do |feature|
@@ -109,18 +109,39 @@ class MapLocation < ApplicationRecord
     def set_default_values
       return unless new_record?
 
-      if parent = mappable.try(:projekt_phase) || mappable.try(:projekt) || mappable.try(:parent)
-        self.latitude          ||= parent.map_location.latitude
-        self.longitude         ||= parent.map_location.longitude
-        self.zoom              ||= parent.map_location.zoom
-        self.altitude          ||= parent.map_location.altitude
-        self.rendering_library = parent.map_location.rendering_library
+      if mappable.is_a?(ProjektPhase)
+        self.latitude            = mappable.projekt.map_location.latitude
+        self.longitude           = mappable.projekt.map_location.longitude
+        self.zoom                = mappable.projekt.map_location.zoom
+        self.altitude            = mappable.projekt.map_location.altitude
+        self.features            = mappable.projekt.map_location.features
+        self.rendering_library   = mappable.projekt.map_location.rendering_library
+      elsif mappable.is_a?(Projekt) && mappable.parent.present?
+        self.latitude            = mappable.parent.map_location.latitude
+        self.longitude           = mappable.parent.map_location.longitude
+        self.zoom                = mappable.parent.map_location.zoom
+        self.altitude            = mappable.parent.map_location.altitude
+        self.features            = mappable.parent.map_location.features
+        self.rendering_library   = mappable.parent.map_location.rendering_library
+      elsif mappable.is_a?(Projekt)
+        self.latitude            = MapLocation.default.latitude
+        self.longitude           = MapLocation.default.longitude
+        self.zoom                = MapLocation.default.zoom
+        self.altitude            = MapLocation.default.altitude
+        self.features            = MapLocation.default.features
+        self.rendering_library   = MapLocation.default.rendering_library
+      elsif mappable.respond_to?(:projekt_phase) && mappable.projekt_phase.present?
+        self.latitude            = mappable.projekt_phase.map_location.latitude
+        self.longitude           = mappable.projekt_phase.map_location.longitude
+        self.zoom                = mappable.projekt_phase.map_location.zoom
+        self.altitude            = mappable.projekt_phase.map_location.altitude
+        self.rendering_library   = mappable.projekt_phase.map_location.rendering_library
       else
-        self.latitude          ||= 52.5209410025777
-        self.longitude         ||= 13.409421034146195
-        self.zoom              ||= 15
-        self.altitude          ||= 80
-        self.rendering_library =  default ? "leaflet" : self.class.default.rendering_library
+        self.latitude            = 52.5209410025777
+        self.longitude           = 13.409421034146195
+        self.zoom                = 15
+        self.altitude            = 80
+        self.rendering_library   = default ? "leaflet" : self.class.default.rendering_library
       end
     end
 

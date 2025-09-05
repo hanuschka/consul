@@ -355,12 +355,26 @@ class PagesController < ApplicationController
 
   def set_point_of_interest_phase_footer_tab_variables
     auto_sign_in_guest_for(@projekt_phase)
-    @pin_coordinates =
-      @projekt_phase
-        .projekt_point_of_interest_pins
-        .by_categories(params[:category_ids])
-        .includes(:map_location)
-        .map { |pin| pin.map_location.features_json_data if pin.map_location.present? }
+
+    map_locations = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins)
+    selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
+
+    features = if selected_categories.present?
+                 map_locations.map do |ml|
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id}) }
+                   ml.features["features"].select { |f| f["properties"]["fa_icon_class"].in? selected_categories.pluck(:icon) }
+                 end.flatten.compact
+               else
+                 map_locations.map do |ml|
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id}) }
+                   ml.features["features"]
+                 end.flatten
+               end
+
+    @pin_coordinates = {
+      type: "FeatureCollection",
+      features: features
+    }
   end
 
   def set_newsfeed_phase_footer_tab_variables

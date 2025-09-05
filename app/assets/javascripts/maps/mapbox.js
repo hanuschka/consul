@@ -41,15 +41,16 @@
       this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
+      this.markerCategoryIcon = null;
+      this.markerCategoryColor = null;
+      this.markerCategoryName = null;
+
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
       this.longitudeInput = document.querySelector('[data-longitude-input-for="' + this.element.id + '"]');
       this.zoomInput = document.querySelector('[data-zoom-input-for="' + this.element.id + '"]');
       this.featuresInput = document.querySelector('[data-features-input-for="' + this.element.id + '"]');
-
-      // State variables
-      this.layersRendered = false;
     }
 
     bindEventListeners() {
@@ -131,11 +132,11 @@
           instance.setupLayers();
           instance.renderFeatures();
           instance.toggleControlVisibility();
+          instance.setupEditingControls();
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
         instance.setupPlugins();
-        instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
     }
@@ -161,20 +162,17 @@
 
       instance.addLayerControl();
 
-      if (!instance.layersRendered) {
-        instance.layersRendered = true;
 
-        if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
-          instance.addAdminFeaturesAsLayer();
-        };
+      if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
+        instance.addAdminFeaturesAsLayer();
+      };
 
-        instance.layersData.forEach(function(layerData) {
-          instance.createLayer(layerData);
-          if (instance.layerControl) {
-            instance.addLayerToControl(layerData);
-          }
-        });
-      }
+      instance.layersData.forEach(function(layerData) {
+        instance.createLayer(layerData);
+        if (instance.layerControl) {
+          instance.addLayerToControl(layerData);
+        }
+      });
     }
 
     addLayerControl() {
@@ -425,7 +423,11 @@
           type: 'circle',
           source: 'user-features-points',
           filter: ['!', ['has', 'point_count']],
-          paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': this.defaultFeatureColor, 'circle-opacity': 0.75 }
+          paint: {
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ],
+            'circle-color':  [ 'case', ['has', 'color'], ['get', 'color'], this.defaultFeatureColor],
+            'circle-opacity': 0.75
+          }
         });
 
         this.map.on('click', 'user-features-circles-clusters', (e) => {
@@ -504,7 +506,7 @@
         dataType: "json"
       })
         .then(function(data) {
-          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType));
+          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties));
         })
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
@@ -562,6 +564,7 @@
           trash: instance.enableShapes
         },
         defaultMode: 'draw_point',
+        userProperties: true,
         styles: instance.getDrawStyles()
       });
 
@@ -585,6 +588,7 @@
         instance.addHintAboutEditableLayersLimit();
       }
 
+      instance.setupEventListenersForMarkerStyleChanges();
       instance.rearrangeEditingControls();
     }
 
@@ -622,7 +626,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': [ 'case', ['==', ['get', 'active'], 'true'], this.defaultFeatureColor, this.defaultFeatureColor ],
+            'fill-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -638,7 +642,7 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': [ 'case', ['==', ['get', 'active'], 'true'], this.defaultFeatureColor, this.defaultFeatureColor ],
+            'line-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
           },
@@ -652,7 +656,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': this.defaultFeatureColor
+            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
           },
         },
 
@@ -666,7 +670,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 8, 9],
-            'circle-color': this.defaultFeatureColor
+            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
           },
         },
         {
@@ -741,6 +745,10 @@
         const currentMode = instance.draw.getMode();
         const newFeature = e.features[0];
 
+        instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
+        instance.draw.setFeatureProperty(newFeature.id, 'fa_icon_class', instance.markerCategoryIcon);
+        instance.draw.setFeatureProperty(newFeature.id, 'category_name', instance.markerCategoryName);
+
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
         }
@@ -799,6 +807,27 @@
           if (control) control.style.display = '';
         });
       }
+    }
+
+    setupEventListenersForMarkerStyleChanges() {
+      const selectors = document.querySelectorAll(".js-map-change-marker-style");
+
+      if (selectors.length == 0) return;
+
+      const instance = this;
+      const currentSelector = selectors[0];
+
+      instance.markerCategoryIcon = currentSelector.dataset.icon
+      instance.markerCategoryColor = currentSelector.dataset.color;
+      instance.markerCategoryName = currentSelector.dataset.categoryName;
+
+      selectors.forEach(function(selector) {
+        selector.addEventListener("click", function() {
+          instance.markerCategoryIcon = this.dataset.icon
+          instance.markerCategoryColor = this.dataset.color;
+          instance.markerCategoryName = this.dataset.categoryName;
+        });
+      });
     }
   }
 

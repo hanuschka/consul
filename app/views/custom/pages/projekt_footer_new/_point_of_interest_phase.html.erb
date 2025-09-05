@@ -11,7 +11,7 @@
         <%= t("custom.deficiency_reports.form.category.title") %>:
       </h5>
       <div class="margin-left">
-        <%= render Shared::ProjektPointOfInterestCategoriesComponent.new(projekt_phase_id: @projekt_phase.id) %>
+        <%= render ProjektPointOfInterestPins::CategoryFilterComponent.new(projekt_phase_id: @projekt_phase.id) %>
       </div>
     </div>
   </div>

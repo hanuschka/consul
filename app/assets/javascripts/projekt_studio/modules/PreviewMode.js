@@ -9,6 +9,7 @@ ProjektStudio.PreviewMode = {
 
     window.addEventListener('message', this.handleGlobalMessage.bind(this));
 
+    const $document = $(document);
     $document.on("click", ".js-turn-on-preview-mode-button", this.handlePreviewModeButtonToggle.bind(this));
 
     this.initialized = true;
@@ -28,7 +29,6 @@ ProjektStudio.PreviewMode = {
   },
 
   handlePreviewModeButtonToggle(e) {
-    console.log("handlePreviewModeButtonToggle")
     const button = e.currentTarget;
     button.classList.toggle("-enabled")
     // const previewModeEnabled = button.classList.has("-enabled");
@@ -63,6 +63,7 @@ ProjektStudio.PreviewMode = {
     const anyCheckedCategory = categoriesList.querySelector('.js-add-tag-link.selected')
     const categoriesSidebarCard = categoriesList.closest(".js-sidebar-card")
     const deactivatedPhases = document.querySelectorAll(".js-projekt-phase-tab.-deactivated")
+
     // const $sidebarAdminControlls = $('.js-sidebar-admin-controlls');
     //
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)

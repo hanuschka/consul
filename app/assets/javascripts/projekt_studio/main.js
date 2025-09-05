@@ -6,17 +6,14 @@ window.ProjektStudio = {
   initialized: false,
 
   initialize() {
-    console.log("initialize ProjektStudio")
     if (this.initialized) return
 
     if (window.parent) {
-      // this.requestLoadContentBlockTemplates()
-
       ProjektStudio.modules.Sidebar.initialize()
       ProjektStudio.modules.PhasesTabs.initialize()
       ProjektStudio.modules.Banner.initialize()
       ProjektStudio.modules.ContentBlocks.initialize()
-      // PreviewMode.initialize()
+      ProjektStudio.PreviewMode.initialize()
       // ExplainWithAi.initialize()
       // SavedContentBlocks.initialize()
 
@@ -35,7 +32,6 @@ window.ProjektStudio = {
 
   reinitializeUI() {
     console.log("reinitialize ProjektStudio")
-    // this.requestLoadContentBlockTemplates()
 
     // ContentBlocks.initUI()
     // PhasesTabs.initUI()

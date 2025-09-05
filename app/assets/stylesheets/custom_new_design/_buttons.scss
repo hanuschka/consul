@@ -251,3 +251,26 @@ button {
     color: white;
   }
 }
+
+.projekt-studio--peview-button {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  border-radius: 50% !important;
+  width: 60px;
+  height: 60px;
+  font-size: 23px;
+  color: $medium-gray-3 !important;
+  background-color: white !important;
+  border: 1px solid #8c8c8c;
+  box-shadow: 3px 3px 7px 2px #cecece;
+
+  &.-enabled {
+    background-color: #004a83;
+    color: white;
+  }
+
+  &:hover {
+    background-color: #f7f7f7 !important;
+  }
+}

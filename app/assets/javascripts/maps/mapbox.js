@@ -41,6 +41,9 @@
       this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
+      this.markerCategoryIcon = null;
+      this.markerCategoryColor = null;
+
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
@@ -130,11 +133,12 @@
         map.on('load', function() {
           instance.setupLayers();
           instance.renderFeatures();
+          instance.toggleControlVisibility();
+          instance.setupEditingControls();
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
         instance.setupPlugins();
-        instance.setupEditingControls();
         instance.setupEventListenersForUpdatingFormInputs();
       });
     }
@@ -152,7 +156,7 @@
     }
 
     setupExpandControl() {
-      this.map.addControl(new ExpandConrol(this), 'top-right');
+      this.map.addControl(new ExpandControl(this), 'top-right');
     }
 
     setupLayers() {
@@ -169,16 +173,14 @@
 
         instance.layersData.forEach(function(layerData) {
           instance.createLayer(layerData);
-          instance.addLayerToControl(layerData);
+          if (instance.layerControl) {
+            instance.addLayerToControl(layerData);
+          }
         });
       }
     }
 
     addLayerControl() {
-      if (this.element.offsetWidth <= 780) {
-        return;
-      }
-
       this.layerControl = new LayerControl(this);
       this.map.addControl(this.layerControl, 'top-right');
     }
@@ -294,27 +296,30 @@
         });
       }
 
-      // add to layer control
-      const label = document.createElement('label');
-      label.className = 'mapbox-layer-checkbox-label';
+      if (this.layerControl) {
 
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.checked = true;
+        // add to layer control
+        const label = document.createElement('label');
+        label.className = 'mapbox-layer-checkbox-label';
 
-      const span = document.createElement('span');
-      span.textContent = 'Verwaltungseinträge';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
 
-      label.appendChild(input);
-      label.appendChild(span);
+        const span = document.createElement('span');
+        span.textContent = 'Verwaltungseinträge';
 
-      input.addEventListener('change', () => {
-        instance.toggleLayer('admin-features-circles', instance.map, input.checked);
-        instance.toggleLayer('admin-features-lines', instance.map, input.checked);
-        instance.toggleLayer('admin-features-polygons', instance.map, input.checked);
-      });
+        label.appendChild(input);
+        label.appendChild(span);
 
-      this.layerControl.dropdownList.appendChild(label);
+        input.addEventListener('change', () => {
+          instance.toggleLayer('admin-features-circles', instance.map, input.checked);
+          instance.toggleLayer('admin-features-lines', instance.map, input.checked);
+          instance.toggleLayer('admin-features-polygons', instance.map, input.checked);
+        });
+
+        this.layerControl.dropdownList.appendChild(label);
+      }
 
       const popupContent = '<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>';
       instance.map.on('click', 'admin-features-circles', function(e) {
@@ -345,9 +350,6 @@
       const overlay = document.createElement('div');
       overlay.className = 'mapbox-instruction-overlay';
 
-      const displayStyle = this.element.offsetWidth <= 780 ? 'none' : 'block';
-      overlay.style = 'display: ' + displayStyle + ';';
-
       this.element.style.position = 'relative';
       this.element.appendChild(overlay);
 
@@ -364,8 +366,6 @@
     }
 
     setupPlugins() {
-      if (this.placement == 'sidebar') return;
-
       this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
       this.map.addControl(new MapboxGeocoder({
           accessToken: mapboxgl.accessToken,
@@ -428,7 +428,11 @@
           type: 'circle',
           source: 'user-features-points',
           filter: ['!', ['has', 'point_count']],
-          paint: { 'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ], 'circle-color': this.defaultFeatureColor, 'circle-opacity': 0.75 }
+          paint: {
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ],
+            'circle-color':  [ 'case', ['has', 'color'], ['get', 'color'], this.defaultFeatureColor],
+            'circle-opacity': 0.75
+          }
         });
 
         this.map.on('click', 'user-features-circles-clusters', (e) => {
@@ -515,17 +519,40 @@
     }
 
     addSwitchToSimpleSelectControl() {
+      const instance = this;
       let button = document.createElement('button');
       button.type = 'button';
       button.className = 'mapbox-switch-to-simple-select-control-button';
-      button.innerHTML = '<i class="fas fa-hand-pointer"></i>';
+      button.innerHTML = '<i class="fas fa-hand-spock"></i>';
       button.title = 'Auswahlmodus';
 
       this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point').insertAdjacentElement('afterend', button);
 
       button.addEventListener('click', () => {
-        this.draw.changeMode('simple_select')
+        if (button.classList.contains('active')) {
+          toggleInactive();
+        } else {
+          toggleActive();
+        }
       });
+
+      instance.map.on('draw.modechange', function(e) {
+        button.classList.remove('active');
+      });
+
+      function toggleActive() {
+        button.classList.add('active')
+        document.querySelectorAll('.mapbox-gl-draw_ctrl-draw-btn').forEach(function(btn) {
+          btn.classList.remove('active');
+        });
+        instance.draw.changeMode('simple_select');
+      }
+
+      function toggleInactive() {
+        button.classList.remove('active')
+        document.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point').classList.add('active');
+        instance.draw.changeMode('draw_point');
+      }
     }
 
     setupEditingControls() {
@@ -564,6 +591,34 @@
       if (instance.editableLayersLimit && instance.editableLayersLimit > 1) {
         instance.addHintAboutEditableLayersLimit();
       }
+
+      instance.setupEventListenersForMarkerStyleChanges();
+      instance.rearrangeEditingControls();
+    }
+
+    rearrangeEditingControls() {
+      const pointControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point');
+      const lineControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line');
+      const polygonControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon');
+
+      const drawingControlsGroup = pointControl.parentElement;
+
+      if (pointControl && lineControl && polygonControl) {
+        drawingControlsGroup.insertBefore(pointControl, drawingControlsGroup.firstChild);
+        drawingControlsGroup.insertBefore(lineControl, pointControl.nextSibling);
+      }
+
+      const simpleSelectControl = this.element.querySelector('.mapbox-switch-to-simple-select-control-button');
+      const trashControl = this.element.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash');
+
+      if (simpleSelectControl || trashControl) {
+        const editControlsGroup = document.createElement('div');
+        editControlsGroup.className = 'mapboxgl-ctrl mapboxgl-ctrl-group mapbox-edit-controls-group';
+        drawingControlsGroup.insertAdjacentElement('afterend', editControlsGroup);
+
+        if (simpleSelectControl) editControlsGroup.appendChild(simpleSelectControl);
+        if (trashControl) editControlsGroup.appendChild(trashControl);
+      }
     }
 
     getDrawStyles() {
@@ -575,7 +630,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': [ 'case', ['==', ['get', 'active'], 'true'], this.defaultFeatureColor, this.defaultFeatureColor ],
+            'fill-color': this.defaultFeatureColor,
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -591,7 +646,7 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': [ 'case', ['==', ['get', 'active'], 'true'], this.defaultFeatureColor, this.defaultFeatureColor ],
+            'line-color': this.defaultFeatureColor,
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
           },
@@ -605,7 +660,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': this.defaultFeatureColor
+            'circle-color': ['case', ['has', 'color'], ['get', 'color'], this.markerCategoryColor || this.defaultFeatureColor],
           },
         },
 
@@ -694,6 +749,20 @@
         const currentMode = instance.draw.getMode();
         const newFeature = e.features[0];
 
+        instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
+        instance.draw.setFeatureProperty(newFeature.id, 'icon', instance.markerCategoryIcon);
+
+        // //////////////////////////////
+
+        // e.features.forEach(feature => {
+        //   instance.draw.setFeatureProperty(feature.id, 'color', '#ff0000');
+        //   feature.properties.color = '#ff0000';
+        //   feature.color = '#ff0000';
+        // });
+
+
+        // //////////////////////////////
+
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
         }
@@ -736,6 +805,47 @@
       };
 
       featuresInput.value = JSON.stringify(featureCollection);
+    }
+
+    toggleControlVisibility() {
+      const topLeftControls = this.element.querySelector('.mapboxgl-ctrl-top-left');
+      const layerControl = this.element.querySelector('.mapbox-layer-control');
+      const instructionOverlay = this.element.querySelector('.mapbox-instruction-overlay');
+
+      if ( this.element.offsetWidth < 700 ) {
+        [topLeftControls, layerControl, instructionOverlay].forEach(control => {
+          if (control) control.style.display = 'none';
+        });
+      } else {
+        [topLeftControls, layerControl, instructionOverlay].forEach(control => {
+          if (control) control.style.display = '';
+        });
+      }
+    }
+
+    setupEventListenersForMarkerStyleChanges() {
+      const selector = document.querySelector(".js-map-change-marker-style");
+
+      if (!selector) return;
+
+      const instance = this;
+
+      instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
+      instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+
+      //   instance.draw.set({
+      //     styles: instance.getDrawStyles()
+      //   });
+      // }
+
+      selector.addEventListener("change", function() {
+        instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
+        instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+
+        // if (instance.draw) {
+        //   instance.draw.setStyles(instance.getDrawStyles());
+        // }
+      });
     }
   }
 
@@ -853,7 +963,7 @@
     }
   }
 
-  class ExpandConrol {
+  class ExpandControl {
     constructor(mapboxMapInstance) {
       this.mapboxMapInstance = mapboxMapInstance;
       this.mapContainer = mapboxMapInstance.element;
@@ -877,14 +987,21 @@
           this.mapContainer.classList.remove('expanded');
           button.innerHTML = '<i class="fas fa-expand"></i>';
           map.resize();
+          this.mapboxMapInstance.toggleControlVisibility();
         } else {
           this.mapContainer.classList.add('expanded');
           button.innerHTML = '<i class="fas fa-compress"></i>';
           map.resize();
+          this.mapboxMapInstance.toggleControlVisibility();
         }
       });
 
       return this._container;
+    }
+
+    onRemove() {
+      this._container.parentNode.removeChild(this._container);
+      this._map = undefined;
     }
   }
 

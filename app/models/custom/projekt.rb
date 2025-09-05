@@ -792,17 +792,10 @@ class Projekt < ApplicationRecord
     def copy_map_settings
       return if map_location.present?
 
-      if overview_page?
-        MapLocation.create!(mappable: self)
-      else
-        map_location = parent&.map_location&.dup || MapLocation.create!
+      create_map_location
 
-        map_location.mappable = self
-        map_location.save!
-
-        (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
-          map_layers << map_layer.dup
-        end
+      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 

@@ -175,11 +175,7 @@ module ProjektPhaseAdminActions
   end
 
   def map_resources_overview
-    @map_coordinates =
-      @projekt_phase
-        .projekt_point_of_interest_pins
-        .includes(:map_location)
-        .map(&:pin_json_data)
+    @map_coordinates = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins).map(&:features_json_data)
   end
 
   def user_functions

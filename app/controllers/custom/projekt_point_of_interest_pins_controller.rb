@@ -27,9 +27,7 @@ class ProjektPointOfInterestPinsController < ApplicationController
   def json_data
     @pin = ProjektPointOfInterestPin.find(params[:id])
 
-    render json: {
-      category: @pin.projekt_point_of_interest_category.as_json(only: [:name, :color, :icon])
-    }
+    render json: {}
   end
 
   private

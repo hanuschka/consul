@@ -43,6 +43,7 @@
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
       this.markerCategoryIcon = null;
       this.markerCategoryColor = null;
+      this.markerCategoryName = null;
 
 
       // Form inputs
@@ -50,9 +51,6 @@
       this.longitudeInput = document.querySelector('[data-longitude-input-for="' + this.element.id + '"]');
       this.zoomInput = document.querySelector('[data-zoom-input-for="' + this.element.id + '"]');
       this.featuresInput = document.querySelector('[data-features-input-for="' + this.element.id + '"]');
-
-      // State variables
-      this.layersRendered = false;
     }
 
     bindEventListeners() {
@@ -164,20 +162,17 @@
 
       instance.addLayerControl();
 
-      if (!instance.layersRendered) {
-        instance.layersRendered = true;
 
-        if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
-          instance.addAdminFeaturesAsLayer();
-        };
+      if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
+        instance.addAdminFeaturesAsLayer();
+      };
 
-        instance.layersData.forEach(function(layerData) {
-          instance.createLayer(layerData);
-          if (instance.layerControl) {
-            instance.addLayerToControl(layerData);
-          }
-        });
-      }
+      instance.layersData.forEach(function(layerData) {
+        instance.createLayer(layerData);
+        if (instance.layerControl) {
+          instance.addLayerToControl(layerData);
+        }
+      });
     }
 
     addLayerControl() {
@@ -511,7 +506,7 @@
         dataType: "json"
       })
         .then(function(data) {
-          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType));
+          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties));
         })
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
@@ -752,6 +747,7 @@
 
         instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
         instance.draw.setFeatureProperty(newFeature.id, 'fa_icon_class', instance.markerCategoryIcon);
+        instance.draw.setFeatureProperty(newFeature.id, 'category_name', instance.markerCategoryName);
 
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
@@ -814,31 +810,23 @@
     }
 
     setupEventListenersForMarkerStyleChanges() {
-      const selector = document.querySelector(".js-map-change-marker-style");
+      const selectors = document.querySelectorAll(".js-map-change-marker-style");
 
-      if (!selector) return;
+      if (selectors.length == 0) return;
 
       const instance = this;
+      const currentSelector = selectors[0];
 
-      instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
-      instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+      instance.markerCategoryIcon = currentSelector.dataset.icon
+      instance.markerCategoryColor = currentSelector.dataset.color;
+      instance.markerCategoryName = currentSelector.dataset.categoryName;
 
-      console.log("markerCategoryColor", instance.markerCategoryColor);
-
-      //   instance.draw.set({
-      //     styles: instance.getDrawStyles()
-      //   });
-      // }
-
-      selector.addEventListener("change", function() {
-        instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
-        instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
-
-        console.log("markerCategoryColor", instance.markerCategoryColor);
-
-        // if (instance.draw) {
-        //   instance.draw.setStyles(instance.getDrawStyles());
-        // }
+      selectors.forEach(function(selector) {
+        selector.addEventListener("click", function() {
+          instance.markerCategoryIcon = this.dataset.icon
+          instance.markerCategoryColor = this.dataset.color;
+          instance.markerCategoryName = this.dataset.categoryName;
+        });
       });
     }
   }

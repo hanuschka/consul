@@ -6,7 +6,7 @@ module Mappable
 
     accepts_nested_attributes_for :map_location,
       allow_destroy: true,
-      reject_if: proc { |attributes| attributes["latitude"].blank? && attributes["longitude"].blank? }
+      reject_if: proc { |attrs| attrs["features"] == "{}" && !attrs["mappable_type"].in?(%w[Projekt ProjektPhase]) }
   end
 
   def map_layers_for_render
@@ -15,14 +15,5 @@ module Mappable
     end
 
     map_layers
-  end
-
-  def map_location_with_default
-    map_location ||
-      build_map_location(
-        latitude: try(:projekt_phase)&.map_location&.latitude,
-        longitude: try(:projekt_phase)&.map_location&.longitude,
-        zoom: try(:projekt_phase)&.map_location&.zoom
-      )
   end
 end

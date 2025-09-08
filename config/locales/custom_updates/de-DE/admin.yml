@@ -489,6 +489,7 @@ de:
               create_on_behalf_of: erstellen im Namen von jemanden
               get_notifications: benachrichtigt werden
               access_graphql: GraphQL-Zugriff
+              review: Projekt überprüfen
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:

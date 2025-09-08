@@ -745,9 +745,17 @@
         const currentMode = instance.draw.getMode();
         const newFeature = e.features[0];
 
-        instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
-        instance.draw.setFeatureProperty(newFeature.id, 'fa_icon_class', instance.markerCategoryIcon);
-        instance.draw.setFeatureProperty(newFeature.id, 'category_name', instance.markerCategoryName);
+        if (instance.markerCategoryColor) {
+          instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
+        }
+
+        if (instance.markerCategoryIcon) {
+          instance.draw.setFeatureProperty(newFeature.id, 'fa_icon_class', instance.markerCategoryIcon);
+        }
+
+        if (instance.markerCategoryName) {
+          instance.draw.setFeatureProperty(newFeature.id, 'category_name', instance.markerCategoryName);
+        }
 
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
@@ -817,15 +825,29 @@
       const instance = this;
       const currentSelector = selectors[0];
 
-      instance.markerCategoryIcon = currentSelector.dataset.icon
-      instance.markerCategoryColor = currentSelector.dataset.color;
-      instance.markerCategoryName = currentSelector.dataset.categoryName;
+      if (currentSelector.dataset.icon) {
+        instance.markerCategoryIcon = currentSelector.dataset.icon
+      }
+
+      if (currentSelector.dataset.color) {
+        instance.markerCategoryColor = currentSelector.dataset.color;
+      }
+
+      if (currentSelector.dataset.categoryName) {
+        instance.markerCategoryName = currentSelector.dataset.categoryName;
+      }
 
       selectors.forEach(function(selector) {
         selector.addEventListener("click", function() {
-          instance.markerCategoryIcon = this.dataset.icon
-          instance.markerCategoryColor = this.dataset.color;
-          instance.markerCategoryName = this.dataset.categoryName;
+          if (this.dataset.icon) {
+            instance.markerCategoryIcon = this.dataset.icon
+          }
+          if (this.dataset.color) {
+            instance.markerCategoryColor = this.dataset.color;
+          }
+          if (this.dataset.categoryName) {
+            instance.markerCategoryName = this.dataset.categoryName;
+          }
         });
       });
     }

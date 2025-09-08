@@ -53,7 +53,6 @@ class Setting < ApplicationRecord
         "feature.user.recommendations_on_proposals": true,
         "feature.community": true,
         "feature.map": nil,
-        "feature.mapbox": false,
         "feature.allow_attached_documents": true,
         "feature.allow_images": true,
         "feature.help_page": true,

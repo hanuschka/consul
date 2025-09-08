@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_07_24_171059) do
+ActiveRecord::Schema.define(version: 2025_08_27_080845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1487,30 +1487,19 @@ ActiveRecord::Schema.define(version: 2025_07_24_171059) do
     t.float "latitude"
     t.float "longitude"
     t.integer "zoom"
-    t.integer "proposal_id"
-    t.integer "investment_id"
-    t.bigint "projekt_id"
     t.string "pin_color"
-    t.bigint "deficiency_report_id"
-    t.jsonb "shape", default: {}, null: false
+    t.jsonb "features", default: {}, null: false
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
-    t.bigint "projekt_phase_id"
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
-    t.bigint "registered_address_district_id"
-    t.bigint "idea_id"
     t.string "mappable_type"
     t.bigint "mappable_id"
-    t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
-    t.index ["idea_id"], name: "index_map_locations_on_idea_id"
-    t.index ["investment_id"], name: "index_map_locations_on_investment_id"
+    t.integer "rendering_library", default: 0, null: false
+    t.jsonb "features_bu", default: {}, null: false
+    t.boolean "default", default: false, null: false
+    t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
-    t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
-    t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
-    t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
-    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
-    t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
   end
 
   create_table "memos", force: :cascade do |t|
@@ -3035,11 +3024,6 @@ ActiveRecord::Schema.define(version: 2025_07_24_171059) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
-  add_foreign_key "map_locations", "deficiency_reports"
-  add_foreign_key "map_locations", "ideas"
-  add_foreign_key "map_locations", "projekt_phases"
-  add_foreign_key "map_locations", "projekts"
-  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "newsletters", "recipient_groups"

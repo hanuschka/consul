@@ -64,7 +64,6 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
           "feature.general.require_admin_acceptance": "",
-          "feature.general.mapbox": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -76,6 +75,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_external_video": "",
           "feature.form.voice_assistant": "",
           "feature.form.anonimize_authors": "",
+          "option.form.map_features_limit": "1",
           "option.form.description_max_length": "6000",
 
           "feature.resource.show_video_as_link": "",
@@ -108,7 +108,6 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::BudgetPhase" => {
           "feature.general.browse_mode_in_phase_footer": "",
           "feature.general.browse_mode_in_phase_footer_by_default": "",
-          "feature.general.mapbox": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -121,6 +120,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.show_implementation_option_fields": "",
           "feature.form.show_user_cost_estimate": "",
           "feature.form.voice_assistant": "",
+          "option.form.map_features_limit": "1",
           "option.form.description_max_length": "6000",
 
           "feature.resource.users_can_create_investment_proposals": "active",
@@ -167,8 +167,8 @@ class ProjektPhaseSetting < ApplicationRecord
         },
         "ProjektPhase::PointOfInterestPhase" => {
           "feature.general.users_can_create_pins": "active",
-          "feature.general.mapbox": "",
           "option.general.max_number_of_pins_per_user": "",
+          "option.form.map_features_limit": "1",
         },
       }
     end

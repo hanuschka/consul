@@ -13,10 +13,11 @@
     </div>
   <% end %>
 
-  <%= render Shared::ResourceMapComponent.new(
-    marker_coordinates: @ideas_coordinates,
-    resource_type: Idea
+  <%= render Shared::MapComponent.new(
+    features: @ideas_coordinates,
+    process: 'ideas'
   ) %>
+
   <div class="flex-layout">
     <div class="main-column">
       <%= render(
@@ -44,7 +45,7 @@
             <%= t("ideas.index.sidebar.count") %>
           </span>
           <span>
-            <%= Idea.all.count %>
+            <%= @ideas.total_count %>
           </span>
         </div>
 

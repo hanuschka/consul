@@ -170,14 +170,11 @@
         <% if show_map_input? %>
           <div class="new-card" id='map-container'>
             <%= render "map_locations/form_fields",
-              form:          f,
-              map_location:  map_location,
-              label:         t("#{i18n_scope}.form.map_location"),
-              help:          t("custom.user_resources.form.map_location_instructions"),
-              mappable:      resource,
-              projekt_phase: projekt_phase,
-              show_admin_shape: true,
-              parent_class:  "proposal" %>
+              label:           t("#{i18n_scope}.form.map_location"),
+              help:            t("custom.user_resources.form.map_location_instructions"),
+              form:            f,
+              mappable:        resource,
+              nesting_prefix: "proposals" %>
           </div>
         <% end %>
 

@@ -7,7 +7,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: false, col_sep: ";") do |csv|
+      CSV.generate(headers: false, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         @poll.questions.root_questions.each do |root_question|
           csv << question_headers(root_question)
 
@@ -52,7 +52,14 @@ module CsvServices
         row = []
         row.push question_answer.title
         row.push question_answer.total_votes
-        row.push question_answer.total_votes_percentage.round(2)
+        row.push number_to_percentage(
+                   question_answer.total_votes_percentage,
+                   precision: 2,
+                   strip_insignificant_zeros: true,
+                   separator: ",",
+                   format: "%n%"
+                 )
+
         row
       end
 

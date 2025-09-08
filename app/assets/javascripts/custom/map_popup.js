@@ -1,15 +1,17 @@
 App.MapPopup = {
-  excludedProcesses: ["proposal", "deficiency_report", "projekt", "point_of_interest_pin"],
+  excludedProcesses: ["proposal", "deficiency_report", "idea", "projekt", "projekt_point_of_interest_pin"],
 
-  generatePopupContent: function(data, resourceType) {
+  generatePopupContent: function(data, resourceType, properties) {
     if (resourceType == "proposal") {
       return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "deficiency_report") {
       return this.standardResourcePopupContent(data, resourceType);
+    } else if (resourceType == "idea") {
+      return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "projekt") {
       return this.standardResourcePopupContent(data, resourceType);
-    } else if (resourceType == "point_of_interest_pin") {
-      return this.pointOfInterestPopupContent(data);
+    } else if (resourceType == "projekt_point_of_interest_pin") {
+      return this.pointOfInterestPopupContent(data, properties);
     } else {
       return this.standardResourcePopupContent(data, resourceType);
     }
@@ -21,12 +23,14 @@ App.MapPopup = {
       return "/proposals/" + properties.id + "/json_data";
     } else if (resourceType == "deficiency_report") {
       return "/deficiency_reports/" + properties.id + "/json_data";
+    } else if (resourceType == "idea") {
+      return "/ideas/" + properties.id + "/json_data";
     } else if (resourceType == "projekt") {
       return "/projekts/" + properties.id + "/json_data";
     } else if (resourceType == "investment") {
       return "/investments/" + properties.id + "/json_data";
-    } else if (resourceType == "point_of_interest_pin") {
-      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projekt_phase_id;
+    } else if (resourceType == "projekt_point_of_interest_pin") {
+      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data";
     }
   },
 
@@ -36,6 +40,8 @@ App.MapPopup = {
         return "/proposals/" + data.id
       case  "deficiency_report":
         return "/deficiency_reports/" + data.id;
+      case  "idea":
+        return "/ideas/" + data.id;
       case "projekt":
         return "/projekts/" + data.id;
       case "investment":
@@ -92,14 +98,12 @@ App.MapPopup = {
     return popupHtml;
   },
 
-  pointOfInterestPopupContent: function(data) {
-    // console.log("pointOfInterestPopupContent", data)
-    var popupHtml = "<h5 style='color:" + data.category.color + "'>";
-    popupHtml += "<i style='margin-right: 7px' class='icon-" + data.category.icon + "'></i>"
-    popupHtml += data.category.name;
+  pointOfInterestPopupContent: function(data, properties) {
+    var popupHtml = "<h5 style='color:" + properties.color + "'>";
+    popupHtml += "<i style='margin-right: 7px' class='icon-" + properties.fa_icon_class + "'></i>"
+    popupHtml += properties.category_name || "Point of Interest";
     popupHtml += "</h5>";
 
     return popupHtml;
-  },
-
+  }
 }

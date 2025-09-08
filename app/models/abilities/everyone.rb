@@ -81,6 +81,10 @@ module Abilities
         can [:create, :update], FormularAnswer do |formular_answer|
           formular_answer.formular.projekt_phase.permission_problem(user).blank?
         end
+
+        can [:create], ProjektPointOfInterestPin do |pin|
+          pin.projekt_phase.permission_problem(user).blank?
+        end
       end
 
       can :read_stats, Budget::Investment do |investment|

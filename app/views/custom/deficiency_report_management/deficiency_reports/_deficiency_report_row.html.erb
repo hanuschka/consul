@@ -19,7 +19,12 @@
   <td>
     <%= link_to deficiency_report.title, deficiency_report_management_deficiency_report_path(deficiency_report), target: "_blank" %>
     <br>
-    <small><%= link_to "Front-end", deficiency_report_path(deficiency_report), target: "_blank" %></small>
+    <div style="display:flex;gap:1rem;">
+      <small><%= link_to "Front-end", deficiency_report_path(deficiency_report), target: "_blank" %></small>
+      <% if deficiency_report.feedback_form.present?  %>
+        <small><%= link_to "Feedback Form", feedback_form_deficiency_report_management_deficiency_report_path(deficiency_report), target: "_blank" %></small>
+      <% end %>
+    </div>
   </td>
   <td><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank" %></td>
   <td><%= deficiency_report.status&.title %></td>

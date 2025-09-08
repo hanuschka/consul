@@ -1,16 +1,65 @@
-<%= form.label :map_location, label %>
-<p class="help-text" id="tag-list-help-text"><%= help %></p>
+<% if local_assigns[:label] %>
+  <%= form.label :map_location, label %>
+<% end %>
 
-<%= render_map(map_location, parent_class, editable = true, remove_marker_label) %>
+<% if local_assigns[:help] %>
+  <% help_text_class = mappable.errors[:map_location].present? ? "form-error is-visible" : "help-text" %>
+  <p class="<%= help_text_class %>" id="tag-list-help-text"><%= help %></p>
+<% end %>
 
-<%= form.fields_for :map_location, map_location do |m_l_fields| %>
+<% mappable.build_map_location unless mappable.map_location %>
+
+<div class="margin-bottom">
+  <%= render Shared::MapComponent.new(
+    mappable: mappable,
+    features: mappable.map_location.features,
+    editable: true
+  ) %>
+</div>
+
+<%= form.fields_for :map_location, mappable.map_location do |m_l_fields| %>
+
+  <% if mappable.is_a?(Projekt) || mappable.is_a?(ProjektPhase) %>
+    <%= m_l_fields.collection_radio_buttons :rendering_library, MapLocation.rendering_libraries.keys.map { |key| [key, key] }, :first, :last do |b| %>
+      <div style="display: inline-block; margin-right: 1rem;">
+        <%= b.radio_button id: "#{nesting_prefix}_map_location_attributes_rendering_library_#{b.value}" %>
+        <%= b.label(class: "inline", for: "#{nesting_prefix}_map_location_attributes_rendering_library_#{b.value}") %>
+      </div>
+    <% end %>
+  <% end %>
+
+
   <%= m_l_fields.hidden_field :id,
-                              value: map_location.id,
-                              id: map_location_input_id(parent_class, "id") %>
+                              value: mappable.map_location.id,
+                              id: "#{nesting_prefix}_map_location_attributes_id" %>
   <%= m_l_fields.hidden_field :latitude,
-                              value: map_location.latitude,
-                              id: map_location_input_id(parent_class, "latitude") %>
+                              value: mappable.map_location.latitude,
+                              id: "#{nesting_prefix}_map_location_attributes_latitude",
+                              data: {
+                                latitude_input_for: dom_id(mappable, "map")
+                              } %>
   <%= m_l_fields.hidden_field :longitude,
-                              value: map_location.longitude,
-                              id: map_location_input_id(parent_class, "longitude") %>
+                              value: mappable.map_location.longitude,
+                              id: "#{nesting_prefix}_map_location_attributes_longitude",
+                              data: {
+                                longitude_input_for: dom_id(mappable, "map")
+                              } %>
+  <%= m_l_fields.hidden_field :altitude,
+                              value: mappable.map_location.altitude,
+                              id: "#{nesting_prefix}_map_location_attributes_altitude",
+                              data: {
+                                altitude_input_for: dom_id(mappable, "map")
+                              } %>
+  <%= m_l_fields.hidden_field :zoom,
+                              value: mappable.map_location.zoom,
+                              id: "#{nesting_prefix}_map_location_attributes_zoom",
+                              data: {
+                                zoom_input_for: dom_id(mappable, "map")
+                              } %>
+  <%= m_l_fields.hidden_field :features,
+                              value: mappable.map_location.features.is_a?(String) ? mappable.map_location.features : mappable.map_location.features.to_json,
+                              id: "#{nesting_prefix}_map_location_attributes_features",
+                              data: {
+                                features_input_for: dom_id(mappable, "map")
+                              } %>
 <% end %>

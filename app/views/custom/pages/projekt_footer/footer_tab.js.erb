@@ -29,7 +29,6 @@ $('#footer-content').foundation();
   var map = document.querySelector("#footer-content *[data-vcmap]")
   App.VCMap.initializeMap(map);
 <% else %>
-  App.Map.destroy();
   App.Map.initialize();
 <% end %>
 

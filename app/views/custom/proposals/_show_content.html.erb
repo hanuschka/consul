@@ -59,28 +59,13 @@
           <%= auto_link_already_sanitized_html wysiwyg(proposal.description) %>
         </div>
 
-        <% if projekt_phase_feature?(proposal.projekt_phase, "form.show_map") && map_location_available?(proposal) %>
-          <% if proposal.projekt.vc_map_enabled? %>
-            <div class="margin-bottom not-print">
-              <%= render Shared::VCMapComponent.new(
-                mappable: proposal,
-                map_location: proposal.map_location || proposal.projekt_phase.map_location_with_admin_shape,
-                parent_class: "proposal",
-                projekt_phase: proposal.projekt_phase,
-                show_admin_shape: proposal.projekt_phase.map_location.show_admin_shape?
-              ) %>
-            </div>
-          <% else %>
-            <div class="margin-bottom not-print">
-              <%= render Shared::MapComponent.new(
-                mappable: proposal,
-                map_location: proposal.map_location || proposal.projekt_phase.map_location_with_admin_shape,
-                parent_class: "proposal",
-                projekt_phase: proposal.projekt_phase,
-                show_admin_shape: proposal.projekt_phase.map_location.show_admin_shape?
-              ) %>
-            </div>
-          <% end %>
+        <% if projekt_phase_feature?(proposal.projekt_phase, "form.show_map") %>
+          <div class="margin-bottom not-print">
+            <%= render Shared::MapComponent.new(
+              mappable: proposal,
+              features: proposal.map_location&.features_json_data
+            ) %>
+          </div>
         <% end %>
 
         <% if proposal.video_url.present? && !projekt_phase_feature?(proposal.projekt_phase, "resource.show_video_as_link") %>

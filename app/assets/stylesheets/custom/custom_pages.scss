@@ -126,14 +126,6 @@ span.sidebar-projekt-phases-title {
   height: 250px;
   cursor: pointer;
   border-radius: 7px;
-
-  .leaflet-control-container {
-    .leaflet-control-zoom,
-    .leaflet-control-locate,
-    .leaflet-control-geosearch {
-      display: none;
-    }
-  }
 }
 
 // .projekt-phase {

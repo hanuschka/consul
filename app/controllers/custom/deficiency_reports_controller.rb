@@ -22,9 +22,7 @@ class DeficiencyReportsController < ApplicationController
   helper_method :resource_model, :resource_name
 
   def index
-    @deficiency_report_count = @deficiency_reports.count
-
-    @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
+    @deficiency_reports = @deficiency_reports.admin_accepted
 
     @categories = DeficiencyReport::Category.all.order(created_at: :asc)
     @selected_categories_ids = (params[:dr_categories] || '').split(',')
@@ -41,6 +39,8 @@ class DeficiencyReportsController < ApplicationController
     filter_by_selected_officer if @selected_officer.present?
     filter_by_archived_status
     filter_by_my_posts
+
+    @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
     @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
 
@@ -141,6 +141,25 @@ class DeficiencyReportsController < ApplicationController
     end
 
     head :ok
+  end
+
+  def json_data
+    image_url = url_for @deficiency_report.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                ) if @deficiency_report.image&.attachment&.attached?
+
+    data = {
+      resource_type: "deficiency_report",
+      id: @deficiency_report.id,
+      image_url: image_url,
+      title: @deficiency_report.title
+    }.to_json
+
+    respond_to do |format|
+      format.json { render json: data }
+    end
   end
 
   private

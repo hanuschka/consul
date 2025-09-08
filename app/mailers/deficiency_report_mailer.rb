@@ -45,6 +45,18 @@ class DeficiencyReportMailer < ApplicationMailer
     end
   end
 
+  def send_feedback_form_link(deficiency_report)
+    @deficiency_report = deficiency_report
+    @email_to = deficiency_report.author.email
+    subject = t("custom.deficiency_reports.mailers.send_feedback_form_link.subject")
+
+    with_user(@deficiency_report.author) do
+      mail(to: @email_to, subject: subject) do |format|
+        format.html { render "deficiency_report_mailer/send_feedback_form_link" }
+      end
+    end
+  end
+
   private
 
     def with_user(user)

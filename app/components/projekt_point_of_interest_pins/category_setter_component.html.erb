@@ -1,0 +1,15 @@
+<div class="projekt-point-of-interest-categories">
+  <% @projekt_phase.projekt_point_of_interest_categories.each do |category| %>
+
+    <span class="projekt-point-of-interest-category js-map-change-marker-style"
+          data-color="<%= category.color %>"
+          data-icon="<%= category.icon %>"
+          data-category-name="<%= category.name %>"
+          style="background-color:<%= category_button_color(category) %>;cursor:pointer;"
+          onclick="$(this).siblings().attr('style', 'background-color:gray;cursor:pointer;'); $(this).attr('style', 'background-color:<%= category.color %>;cursor:pointer;');">
+      <i class="fas fa-<%= category.icon %>"></i>
+      <%= category.name %>
+    </span>
+
+  <% end %>
+</div>

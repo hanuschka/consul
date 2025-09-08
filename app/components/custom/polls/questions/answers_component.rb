@@ -25,6 +25,10 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
       if count_of_rating_scale_cells >= 7
         classes.push("vertical-rating-scale-answers")
       end
+    elsif show_additional_info_images?
+      classes.push("regular")
+      classes.push("regular-with-images")
+
     else
       classes.push("regular")
       classes.push("row")

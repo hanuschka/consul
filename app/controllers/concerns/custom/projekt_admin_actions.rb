@@ -92,11 +92,22 @@ module ProjektAdminActions
     render "admin/projekt_phases/frame_new_phase_selector"
   end
 
+  def notify_reviewers
+    @projekt = Projekt.find(params[:id])
+
+    authorize!(:edit, @projekt)
+
+    NotificationServices::NewProjektNotifier.call(@projekt)
+
+    redirect_to page_path(@projekt.page.slug),
+                notice: "Benachrichtigung erfolgreich gesendet"
+  end
+
   private
 
     def projekt_params
       attributes = [
-        :name, :parent_id, :total_duration_start, :total_duration_end, :color, :icon,
+        :name, :parent_id, :total_duration_start, :total_duration_end,
         :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated, :tag_list, :related_sdg_list, landing_page_ids: [], geozone_affiliation_ids: [], sdg_goal_ids: [],
         individual_group_value_ids: [],

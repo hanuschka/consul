@@ -11,6 +11,7 @@ class MigrateFeaturesInMapLocations < ActiveRecord::Migration[6.1]
 
     MapLocation.find_each(batch_size: 1000) do |loc|
       next unless loc.latitude && loc.longitude
+      next if loc.mappable_type.in?(%w[Projekt ProjektPhase])
 
       if loc.features.nil? || loc.features == {} || loc.features == "{}"
         geojson_point = {

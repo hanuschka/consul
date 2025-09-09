@@ -51,9 +51,9 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     ]
   end
 
-  # def saved_content_blocks
-  #   current_client.saved_content_blocks.order(:created_at)
-  # end
+  def saved_content_blocks
+    SavedContentBlock.all.order(:created_at)
+  end
 
   def example_title
     "Title"

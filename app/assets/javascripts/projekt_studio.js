@@ -11,3 +11,5 @@
 //= require ./projekt_studio/modules/PreviewMode
 //= require ./projekt_studio/modules/SavedContentBlocks
 //= require ace-builds/src-min/ace
+//= require ace-builds/src-noconflict/mode-html
+//= require ace-builds/src-noconflict/worker-html

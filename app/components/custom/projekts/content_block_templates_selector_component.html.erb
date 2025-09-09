@@ -51,6 +51,7 @@
               </div>
               <div class="js-saved-content-block-form saved-content-block-form">
                 <h3>Neue Inhaltsblockvorlage erstellen</h3>
+                <p><i>Put html code here</i></p>
                 <textarea
                     id="saved-content-block-form--textarea"
                     name="content"
@@ -69,11 +70,11 @@
               </div>
           </div>
 
-          <!-- <div class="saved-content-blocks-list js-saved-content-blocks-list"> -->
-          <!--   <%# saved_content_blocks.each do |saved_content_block| %> -->
-          <!--     <%# render Consul::SavedContentBlockItem::Component.new(saved_content_block: saved_content_block) %> -->
-          <!--   <%# end %> -->
-          <!-- </div> -->
+          <div class="saved-content-blocks-list js-saved-content-blocks-list">
+            <% saved_content_blocks.each do |saved_content_block| %>
+              <%= render SavedContentBlocks::ItemComponent.new(saved_content_block: saved_content_block) %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

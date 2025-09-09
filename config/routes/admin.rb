@@ -517,6 +517,8 @@ namespace :admin do
       patch :update_position
     end
   end
+
+  resources :saved_content_blocks, only: [:create, :update, :destroy]
 end
 
 resolve "Milestone" do |milestone|

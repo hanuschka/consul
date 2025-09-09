@@ -15,8 +15,7 @@ window.ProjektStudio = {
       ProjektStudio.modules.ContentBlocks.initialize()
       ProjektStudio.PreviewMode.initialize()
       // ExplainWithAi.initialize()
-      // SavedContentBlocks.initialize()
-
+      ProjektStudio.SavedContentBlocks.initialize()
 
       this.initialized = true;
     }

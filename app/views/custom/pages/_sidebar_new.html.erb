@@ -5,7 +5,7 @@
     <% end %>
   <% end %>
 
-  <% if show_projekt_studio_controls?(@projekt) %>
+  <% if embedded? && show_projekt_studio_controls?(@projekt) %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
       <button type="button" data-path="/projekts/<%= @projekt.id %>/edit" class="button hollow expanded left-aligned js-frame-open-admin-page">
         <i class="fas fa-cog"></i>

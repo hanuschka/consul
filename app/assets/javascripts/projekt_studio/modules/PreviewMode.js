@@ -56,11 +56,9 @@ ProjektStudio.modules.PreviewMode = {
 
     const sdgList = document.querySelector(".js-sidebar-card .js-sdg-goal-tag-list")
     const anyCheckedSDG = sdgList.querySelector('input:checked')
-    console.log({anyCheckedSDG})
     const sdgSidebarCard = sdgList.closest(".js-sidebar-card")
     const categoriesList = document.querySelector(".js-sidebar-card .categories--simple-selector")
     const anyCheckedCategory = categoriesList.querySelector('.js-add-tag-link.selected')
-    console.log({anyCheckedCategory})
     const categoriesSidebarCard = categoriesList.closest(".js-sidebar-card")
     const deactivatedPhases = document.querySelectorAll(".js-projekt-phase-tab.-deactivated")
 

@@ -94,6 +94,7 @@ namespace :admin do
       get :frame_new_phase_selector
       patch :quick_update
       patch :update_map
+      post :notify_reviewers
     end
 
     resources :projekt_phases, only: [:create] do

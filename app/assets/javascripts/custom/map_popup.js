@@ -99,9 +99,9 @@ App.MapPopup = {
   },
 
   pointOfInterestPopupContent: function(data, properties) {
-    var popupHtml = "<h5 style='color:" + properties.color + "'>";
-    popupHtml += "<i style='margin-right: 7px' class='icon-" + properties.fa_icon_class + "'></i>"
-    popupHtml += properties.category_name || "Point of Interest";
+    var popupHtml = "<h5 style='color:" + properties.feature_color + "'>";
+    popupHtml += "<i style='margin-right: 7px' class='icon-" + properties.feature_icon_name + "'></i>"
+    popupHtml += properties.feature_category_name || "Point of Interest";
     popupHtml += "</h5>";
 
     return popupHtml;

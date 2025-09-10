@@ -112,7 +112,14 @@
                   <%= f.collection_check_boxes :projekt_label_ids, investment.projekt_phase.projekt_labels, :id, :name do |cb| %>
                     <%= cb.check_box %>
                     <% iconn = content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") %>
-                    <%= cb.label(id: dom_id(cb.object), class: "projekt-label js-projekt-label", data: { "label-id" => cb.object.id }) { iconn + cb.text } %>
+                    <%= cb.label(id: dom_id(cb.object),
+                                 class: "projekt-label js-projekt-label js-map-change-feature-style #{'marked' if investment.projekt_label_ids.include?(cb.object.id)}",
+                                 data: {
+                                   "label-id" => cb.object.id,
+                                   "feature-icon-name" => cb.object.icon,
+                                   "feature-icon-unicode" => AwesomeIcon.find_by(name: cb.object.icon)&.unicode,
+                                   "feature-multiple-allowed" => true
+                                 }) { iconn + cb.text } %>
                   <% end %>
                 </div>
               </div>
@@ -136,7 +143,12 @@
                   <%= f.collection_radio_buttons :sentiment_id, investment.projekt_phase.sentiments, :id, :name, { include_hidden: false } do |rb| %>
                     <%= rb.radio_button %>
                     <% button_styles = "border-color:#{rb.object.color};background-color:#{rb.object.color};color:#{pick_text_color(rb.object.color)}" %>
-                    <%= rb.label(id: dom_id(rb.object), class: "sentiment js-projekt-phase-sentiment", data: { "sentiment-id" => rb.object.id, "sentiment-color" =>  rb.object.color }, style: button_styles) { rb.text } %>
+                    <%= rb.label(id: dom_id(rb.object),
+                                 class: "sentiment js-projekt-phase-sentiment js-map-change-feature-style #{'marked' if investment.sentiment_id == rb.object.id}",
+                                 data: {
+                                   "sentiment-id" => rb.object.id, "sentiment-color" =>  rb.object.color,
+                                   "feature-color" => rb.object.color
+                                 }, style: button_styles) { rb.text } %>
                   <% end %>
                 </div>
               </div>

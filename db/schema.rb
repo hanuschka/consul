@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_08_27_080845) do
+ActiveRecord::Schema.define(version: 2025_09_09_143716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -214,6 +214,15 @@ ActiveRecord::Schema.define(version: 2025_08_27_080845) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "awesome_icons", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "unicode", null: false
+    t.boolean "shortlisted", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_awesome_icons_on_name", unique: true
   end
 
   create_table "bam_street_polls", force: :cascade do |t|

@@ -97,6 +97,7 @@ namespace :admin do
       patch :update_page
       patch :update_title_image
       patch :update_map
+      post :notify_reviewers
     end
 
     resources :projekt_phases, only: [:create] do

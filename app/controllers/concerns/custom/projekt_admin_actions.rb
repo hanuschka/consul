@@ -92,7 +92,6 @@ module ProjektAdminActions
     render "admin/projekt_phases/frame_new_phase_selector"
   end
 
-<<<<<<< HEAD
   def update
     if @projekt.update(projekt_params)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}

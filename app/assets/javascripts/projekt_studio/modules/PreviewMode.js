@@ -1,6 +1,6 @@
 // import { parseIframeEventData } from "consul/utils/iframeUtils";
 
-ProjektStudio.PreviewMode = {
+ProjektStudio.modules.PreviewMode = {
   initialized: false,
   initialize() {
     if (this.initialized) {

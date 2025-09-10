@@ -13,9 +13,9 @@ window.ProjektStudio = {
       ProjektStudio.modules.PhasesTabs.initialize()
       ProjektStudio.modules.Banner.initialize()
       ProjektStudio.modules.ContentBlocks.initialize()
-      ProjektStudio.PreviewMode.initialize()
+      ProjektStudio.modules.PreviewMode.initialize()
+      ProjektStudio.modules.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()
-      ProjektStudio.SavedContentBlocks.initialize()
 
       this.initialized = true;
     }

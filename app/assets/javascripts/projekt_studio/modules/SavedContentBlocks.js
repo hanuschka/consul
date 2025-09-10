@@ -1,4 +1,4 @@
-ProjektStudio.SavedContentBlocks = {
+ProjektStudio.modules.SavedContentBlocks = {
   initialize() {
     this.initEventListeners()
 

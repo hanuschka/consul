@@ -62,7 +62,10 @@
                               data: {
                                 features_input_for: dom_id(mappable, "map")
                               } %>
-  <%= m_l_fields.hidden_field :rendering_library,
-                              value: mappable.map_location.rendering_library,
-                              id: "#{nesting_prefix}_map_location_attributes_rendering_library" %>
+
+  <% unless mappable.is_a?(Projekt) || mappable.is_a?(ProjektPhase) %>
+    <%= m_l_fields.hidden_field :rendering_library,
+                                value: mappable.map_location.rendering_library,
+                                id: "#{nesting_prefix}_map_location_attributes_rendering_library" %>
+  <% end %>
 <% end %>

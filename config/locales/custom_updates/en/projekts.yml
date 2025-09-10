@@ -64,9 +64,15 @@ en:
             title: Administration
             copy_code: Copy source code
             edit_projekt: Edit projekt
-            edit_projekt_settings: Project settings
+            edit_map: Edit map
             edit_projekt_page: Edit projekt page
+            edit_projekt_phases: Projekt phases
+            edit_projekt_settings: Project settings
+            edit_projekt_managers: Projekt managers
+            edit_projekt_map: Edit map
+            edit_projekt_sdg: SDGs & Tags
             create_newsletter_draft: Create newsletter
+            notify_reviewers: Notify reviewers
           projekt_information:
             title: Project information
           map:

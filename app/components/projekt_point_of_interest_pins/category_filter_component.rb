@@ -1,18 +1,9 @@
-class Shared::ProjektPointOfInterestCategoriesComponent < ApplicationComponent
+class ProjektPointOfInterestPins::CategoryFilterComponent < ApplicationComponent
   delegate :toggle_element_in_array, to: :helpers
 
-  def initialize(projekt_phase_id: nil, resource: nil)
-    if projekt_phase_id
-      @projekt_phase = ProjektPhase.find(projekt_phase_id)
-      @categories = @projekt_phase.projekt_point_of_interest_categories
-    elsif resource
-      @projekt_phase = resource.projekt_phase
-      @categories = @projekt_phase.projekt_point_of_interest_categories
-    end
-  end
-
-  def filter_link?
-    controller_name == "pages"
+  def initialize(projekt_phase_id:)
+    @projekt_phase = ProjektPhase.find(projekt_phase_id)
+    @categories = @projekt_phase.projekt_point_of_interest_categories
   end
 
   def category_selected?(category)
@@ -35,4 +26,12 @@ class Shared::ProjektPointOfInterestCategoriesComponent < ApplicationComponent
       "empty"
     end
   end
-end 
+
+  def category_button_color(category)
+    if category_selected?(category)
+      category.color
+    else
+      "gray"
+    end
+  end
+end

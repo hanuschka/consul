@@ -30,6 +30,8 @@ class Idea < ApplicationRecord
 
   delegate :approximated_address, to: :map_location, allow_nil: true
 
+  validates_translation :title, presence: true
+  validates_translation :description, presence: true
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }

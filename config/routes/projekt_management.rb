@@ -93,6 +93,7 @@ namespace :projekt_management do
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :update_map
+      post :notify_reviewers
     end
 
     resources :projekt_phases, only: [:create] do

@@ -43,6 +43,7 @@
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
       this.markerCategoryIcon = null;
       this.markerCategoryColor = null;
+      this.markerCategoryName = null;
 
 
       // Form inputs
@@ -50,9 +51,6 @@
       this.longitudeInput = document.querySelector('[data-longitude-input-for="' + this.element.id + '"]');
       this.zoomInput = document.querySelector('[data-zoom-input-for="' + this.element.id + '"]');
       this.featuresInput = document.querySelector('[data-features-input-for="' + this.element.id + '"]');
-
-      // State variables
-      this.layersRendered = false;
     }
 
     bindEventListeners() {
@@ -164,20 +162,17 @@
 
       instance.addLayerControl();
 
-      if (!instance.layersRendered) {
-        instance.layersRendered = true;
 
-        if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
-          instance.addAdminFeaturesAsLayer();
-        };
+      if (instance.adminFeatures && Object.keys(instance.adminFeatures).length > 0) {
+        instance.addAdminFeaturesAsLayer();
+      };
 
-        instance.layersData.forEach(function(layerData) {
-          instance.createLayer(layerData);
-          if (instance.layerControl) {
-            instance.addLayerToControl(layerData);
-          }
-        });
-      }
+      instance.layersData.forEach(function(layerData) {
+        instance.createLayer(layerData);
+        if (instance.layerControl) {
+          instance.addLayerToControl(layerData);
+        }
+      });
     }
 
     addLayerControl() {
@@ -511,7 +506,7 @@
         dataType: "json"
       })
         .then(function(data) {
-          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType));
+          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties));
         })
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
@@ -569,6 +564,7 @@
           trash: instance.enableShapes
         },
         defaultMode: 'draw_point',
+        userProperties: true,
         styles: instance.getDrawStyles()
       });
 
@@ -630,7 +626,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': this.defaultFeatureColor,
+            'fill-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -646,7 +642,7 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': this.defaultFeatureColor,
+            'line-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
           },
@@ -660,7 +656,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': ['case', ['has', 'color'], ['get', 'color'], this.markerCategoryColor || this.defaultFeatureColor],
+            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
           },
         },
 
@@ -674,7 +670,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 8, 9],
-            'circle-color': this.defaultFeatureColor
+            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
           },
         },
         {
@@ -749,19 +745,17 @@
         const currentMode = instance.draw.getMode();
         const newFeature = e.features[0];
 
-        instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
-        instance.draw.setFeatureProperty(newFeature.id, 'icon', instance.markerCategoryIcon);
+        if (instance.markerCategoryColor) {
+          instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
+        }
 
-        // //////////////////////////////
+        if (instance.markerCategoryIcon) {
+          instance.draw.setFeatureProperty(newFeature.id, 'fa_icon_class', instance.markerCategoryIcon);
+        }
 
-        // e.features.forEach(feature => {
-        //   instance.draw.setFeatureProperty(feature.id, 'color', '#ff0000');
-        //   feature.properties.color = '#ff0000';
-        //   feature.color = '#ff0000';
-        // });
-
-
-        // //////////////////////////////
+        if (instance.markerCategoryName) {
+          instance.draw.setFeatureProperty(newFeature.id, 'category_name', instance.markerCategoryName);
+        }
 
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
           instance.draw.delete(instance.editableLayers.pop());
@@ -824,27 +818,37 @@
     }
 
     setupEventListenersForMarkerStyleChanges() {
-      const selector = document.querySelector(".js-map-change-marker-style");
+      const selectors = document.querySelectorAll(".js-map-change-marker-style");
 
-      if (!selector) return;
+      if (selectors.length == 0) return;
 
       const instance = this;
+      const currentSelector = selectors[0];
 
-      instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
-      instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+      if (currentSelector.dataset.icon) {
+        instance.markerCategoryIcon = currentSelector.dataset.icon
+      }
 
-      //   instance.draw.set({
-      //     styles: instance.getDrawStyles()
-      //   });
-      // }
+      if (currentSelector.dataset.color) {
+        instance.markerCategoryColor = currentSelector.dataset.color;
+      }
 
-      selector.addEventListener("change", function() {
-        instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
-        instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+      if (currentSelector.dataset.categoryName) {
+        instance.markerCategoryName = currentSelector.dataset.categoryName;
+      }
 
-        // if (instance.draw) {
-        //   instance.draw.setStyles(instance.getDrawStyles());
-        // }
+      selectors.forEach(function(selector) {
+        selector.addEventListener("click", function() {
+          if (this.dataset.icon) {
+            instance.markerCategoryIcon = this.dataset.icon
+          }
+          if (this.dataset.color) {
+            instance.markerCategoryColor = this.dataset.color;
+          }
+          if (this.dataset.categoryName) {
+            instance.markerCategoryName = this.dataset.categoryName;
+          }
+        });
       });
     }
   }

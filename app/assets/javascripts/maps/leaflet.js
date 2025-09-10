@@ -49,6 +49,7 @@
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
       this.markerCategoryIcon = null;
       this.markerCategoryColor = null;
+      this.markerCategoryName = null;
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
@@ -102,6 +103,10 @@
         if (e.shape === 'Circle') {
           e.layer.options.shape = 'Circle';
         }
+
+        e.layer.options.color = instance.markerCategoryColor;
+        e.layer.options.fa_icon_class = instance.markerCategoryIcon;
+        e.layer.options.category_name = instance.markerCategoryName;
 
         instance.setupEventListenersForEditableFeature(instance.map, e.layer);
       })
@@ -355,6 +360,7 @@
                 layer.options.id = feature.properties.id || null;
                 layer.options.color = feature.properties.color || self.defaultFeatureColor;
                 layer.options.fa_icon_class = feature.properties.fa_icon_class || 'circle';
+                layer.options.category_name = feature.properties.category_name || null;
 
                 layer.on("click", self.openMarkerPopup);
               }
@@ -372,6 +378,7 @@
     openMarkerPopup(e) {
       const resourceType = e.target.options.resource_type;
       const route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options);
+      const properties = { color: e.target.options.color, fa_icon_class: e.target.options.fa_icon_class, category_name: e.target.options.category_name };
 
       if (!route) return;
 
@@ -379,9 +386,8 @@
         type: "GET",
         dataType: "json",
         success: (data) => {
-          const isInModal = true // !!$(this.element).data('modal-map');
           e.target.bindPopup(
-            App.MapPopup.generatePopupContent(data, resourceType, isInModal),
+            App.MapPopup.generatePopupContent(data, resourceType, properties),
             { autoPanPadding: [0, 80], minWidth: 200, offset: L.point(0, -30) }
           ).openPopup();
         }
@@ -554,11 +560,27 @@
     }
 
     updateFeaturesInput(featuresInput, editableLayers) {
+      L.Layer.include({
+        toGeoJSONWithOptions: function() {
+          const layer = this;
+          const allowedOptions = ['color', 'fa_icon_class', 'category_name'];
+          const geojson = this.toGeoJSON();
+          geojson.properties = geojson.properties || {};
+
+          allowedOptions.forEach( function(option) {
+            if ( option in layer.options ) {
+              geojson.properties[option] = layer.options[option];
+            }
+          })
+          return geojson;
+        }
+      })
+
       const featuresData = editableLayers.map(function(layer) {
         if ( layer.options.shape == 'Circle' ) {
-          return L.PM.Utils.circleToPolygon(layer, 60).toGeoJSON();
+          return L.PM.Utils.circleToPolygon(layer, 60).toGeoJSONWithOptions();
         } else {
-          return layer.toGeoJSON();
+          return layer.toGeoJSONWithOptions();
         }
       })
 
@@ -587,14 +609,16 @@
     }
 
     setupEventListenersForMarkerStyleChanges() {
-      const selector = document.querySelector(".js-map-change-marker-style");
+      const selectors = document.querySelectorAll(".js-map-change-marker-style");
 
-      if (!selector) return;
+      if (selectors.length == 0) return;
 
       const instance = this;
+      const currentSelector = selectors[0];
 
-      instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
-      instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+      instance.markerCategoryIcon = currentSelector.dataset.icon
+      instance.markerCategoryColor = currentSelector.dataset.color;
+      instance.markerCategoryName = currentSelector.dataset.categoryName;
 
       instance.map.pm.setGlobalOptions({
         markerStyle: {
@@ -602,14 +626,17 @@
         }
       });
 
-      selector.addEventListener("change", function() {
-        instance.markerCategoryIcon = selector.options[selector.selectedIndex].dataset.icon
-        instance.markerCategoryColor = selector.options[selector.selectedIndex].dataset.color;
+      selectors.forEach(function(selector) {
+        selector.addEventListener("click", function() {
+          instance.markerCategoryIcon = this.dataset.icon
+          instance.markerCategoryColor = this.dataset.color;
+          instance.markerCategoryName = this.dataset.categoryName;
 
-        instance.map.pm.setGlobalOptions({
-          markerStyle: {
-            icon: App.Utils.getLeafletMarkerHTML(instance.markerCategoryColor || instance.defaultFeatureColor, instance.markerCategoryIcon || 'circle'),
-          }
+          instance.map.pm.setGlobalOptions({
+            markerStyle: {
+              icon: App.Utils.getLeafletMarkerHTML(instance.markerCategoryColor || instance.defaultFeatureColor, instance.markerCategoryIcon || 'circle'),
+            }
+          });
         });
       });
     }

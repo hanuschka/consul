@@ -92,6 +92,7 @@ module ProjektAdminActions
     render "admin/projekt_phases/frame_new_phase_selector"
   end
 
+<<<<<<< HEAD
   def update
     if @projekt.update(projekt_params)
       render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
@@ -121,6 +122,17 @@ module ProjektAdminActions
     else
       render json: { message: "Error updating projekt page title image", errors: @projekt.page.errors.messages }
     end
+  end
+
+  def notify_reviewers
+    @projekt = Projekt.find(params[:id])
+
+    authorize!(:edit, @projekt)
+
+    NotificationServices::NewProjektNotifier.call(@projekt)
+
+    redirect_to page_path(@projekt.page.slug),
+                notice: "Benachrichtigung erfolgreich gesendet"
   end
 
   private

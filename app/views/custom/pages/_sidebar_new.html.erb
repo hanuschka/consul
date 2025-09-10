@@ -17,7 +17,15 @@
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
   <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) || show_projekt_studio_controls?(@projekt) %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.projekt_information.title"), icon_name: "info-circle", class_name: "js-sidebar-projekt-info") do |c| %>
-      <% return_path = show_projekt_studio_controls?(@projekt) ? URI.encode_www_form_component(projekt.frame_url) : nil  %>
+      <%
+        return_path =
+          if show_projekt_studio_controls?(@projekt) && embedded?
+            URI.encode_www_form_component(projekt.frame_url)
+          else
+            page_path(@projekt.page.slug)
+          end
+      %>
+
       <%= render_custom_block(content_block_sidebar_name, projekt: @projekt, show_controlls_on_embedded: embedded_and_frame_access_code_valid?(@projekt), return_path: return_path) %>
     <% end %>
   <% end %>

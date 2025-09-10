@@ -562,7 +562,8 @@
       this.updateContentBlock(
         contentBlock,
         contentBlockSection.dataset.contentBlockId,
-        contentBlock.innerHTML.trim()
+        contentBlock.innerHTML.trim(),
+        true
       )
     }
   },
@@ -586,10 +587,12 @@
     }
   },
 
-  updateContentBlock(contentBlock, contentBlockId, newContent) {
+  updateContentBlock(contentBlock, contentBlockId, newContent, resetFoundationState = false) {
     const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
 
-    ProjektStudio.utils.resetFoundationAccordionStateFor(updatedContentBlock)
+    if (resetFoundationState) {
+      ProjektStudio.utils.resetFoundationAccordionStateFor(updatedContentBlock)
+    }
 
     if (ProjektStudio.isEmbedded) {
       ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {

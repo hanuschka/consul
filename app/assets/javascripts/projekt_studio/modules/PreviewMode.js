@@ -20,7 +20,7 @@ ProjektStudio.modules.PreviewMode = {
 
       switch(data.event_type) {
         case "togglePreviewMode":
-          this.togglePreviewMode(params);
+          this.togglePreviewMode(params.activated);
           break;
       }
     }
@@ -29,12 +29,12 @@ ProjektStudio.modules.PreviewMode = {
   handlePreviewModeButtonToggle(e) {
     const button = e.currentTarget;
     button.classList.toggle("-enabled")
-    // const previewModeEnabled = button.classList.has("-enabled");
+    const previewModeEnabled = button.classList.contains("-enabled");
 
-    this.togglePreviewMode()
+    this.togglePreviewMode(previewModeEnabled)
   },
 
-  togglePreviewMode(params) {
+  togglePreviewMode(activated) {
     window.scrollTo(0, 0);
 
     document
@@ -50,7 +50,7 @@ ProjektStudio.modules.PreviewMode = {
       const projektInfoContent = projektInfo.querySelector(".custom-content-block-body")
 
       if (!projektInfoContent) {
-        projektInfo.classList.toggle("hide", params.activated)
+        projektInfo.classList.toggle("hide", activated)
       }
     }
 
@@ -65,9 +65,9 @@ ProjektStudio.modules.PreviewMode = {
     const deactivatedPhases = document.querySelectorAll(".js-projekt-phase-tab.-deactivated")
 
     // const $sidebarAdminControlls = $('.js-sidebar-admin-controlls');
-    //
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)
     $(".projekt-banner-edit-field--controlls").toggle(!previewModeEnabled)
+    $(".js-projekt-footer-phase-tab--add-new").toggle(!previewModeEnabled)
 
     if (previewModeEnabled) {
       if (!anyCheckedSDG) {

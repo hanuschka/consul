@@ -35,7 +35,7 @@
     <% end %>
   <% end %>
 
-<% elsif !user_signed_in? %>
+<% elsif current_user.nil? %>
   <%= button_to new_user_session_path,
                 method: :get,
                 title: t("poll_questions.show.vote_answer", answer: question_answer.title),

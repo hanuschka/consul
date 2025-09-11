@@ -173,7 +173,9 @@ class MapLocation < ApplicationRecord
     def get_feature_color
       if mappable.is_a?(Proposal) && mappable.sentiment.present?
         mappable.sentiment.color
-      elsif mappable.is_a?(DeficiencyReport)
+      elsif mappable.is_a?(DeficiencyReport) && mappable.category.present?
+        mappable.category.color
+      elsif mappable.is_a?(Idea) && mappable.category.present?
         mappable.category.color
       end
     end
@@ -182,7 +184,9 @@ class MapLocation < ApplicationRecord
       @icon_name ||= begin
         if mappable.is_a?(Proposal) && mappable.projekt_labels.any?
           mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
-        elsif mappable.is_a?(DeficiencyReport)
+        elsif mappable.is_a?(DeficiencyReport) && mappable.category.present?
+          mappable.category.icon
+        elsif mappable.is_a?(Idea) && mappable.category.present?
           mappable.category.icon
         end
       end

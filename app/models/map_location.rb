@@ -171,22 +171,18 @@ class MapLocation < ApplicationRecord
     end
 
     def get_feature_color
-      if mappable.is_a?(Proposal) && mappable.sentiment.present?
+      if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.sentiment.present?
         mappable.sentiment.color
-      elsif mappable.is_a?(DeficiencyReport) && mappable.category.present?
-        mappable.category.color
-      elsif mappable.is_a?(Idea) && mappable.category.present?
+      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
         mappable.category.color
       end
     end
 
     def get_feature_icon_name
       @icon_name ||= begin
-        if mappable.is_a?(Proposal) && mappable.projekt_labels.any?
+        if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.projekt_labels.any?
           mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
-        elsif mappable.is_a?(DeficiencyReport) && mappable.category.present?
-          mappable.category.icon
-        elsif mappable.is_a?(Idea) && mappable.category.present?
+        elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
           mappable.category.icon
         end
       end

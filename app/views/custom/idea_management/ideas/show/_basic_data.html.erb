@@ -48,8 +48,7 @@
       <% if idea.map_location.present? %>
         <%= render Shared::MapComponent.new(
           mappable: idea,
-          map_location: idea.map_location,
-          parent_class: "idea"
+          features: idea.map_location.features_json_data
         ) %>
       <% end %>
     <% end %>

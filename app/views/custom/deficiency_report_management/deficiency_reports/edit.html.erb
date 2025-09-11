@@ -61,13 +61,9 @@
 
         <div class="small-12 margin-bottom" id='map-for-new-deficiency_report'>
           <%= render "map_locations/form_fields",
-                     form:     f,
-                     map_location: @deficiency_report.map_location || MapLocation.new,
-                     label:    t("proposals.form.map_location"),
-                     help:     t("proposals.form.map_location_instructions"),
-                     remove_marker_label: t("proposals.form.map_remove_marker"),
-                     parent_class: "proposal",
-                     i18n_namespace: "proposals" %>
+            form:            f,
+            mappable:        @deficiency_report,
+            nesting_prefix: "deficiency_report" %>
         </div>
 
         <div>

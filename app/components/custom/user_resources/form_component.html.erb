@@ -40,7 +40,19 @@
           <div id="idea_category_selector" class="">
             <p class="small" style="margin-bottom:0.25rem;"><%= t("ideas.form.category_hint") %></p>
 
-            <%= f.select :idea_category_id, Idea::Category.all.map { |category| [category.name, category.id] }, { include_blank: true, label: false }, class: "select" %>
+            <%= f.select :idea_category_id,
+              Idea::Category.all.map { |category|
+                [
+                  category.name, category.id,
+                  {
+                    "data-feature-color": category.color,
+                    "data-feature-icon-name": category.icon,
+                    "data-feature-icon-unicode": AwesomeIcon.find_by(name: category.icon)&.unicode
+                  }
+                ]
+              },
+              { include_blank: true, label: false },
+              class: "select js-map-change-feature-style-on-select" %>
           </div>
         <% end %>
       <% end %>

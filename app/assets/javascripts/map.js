@@ -85,8 +85,33 @@
           instance.featureCategoryName = el.dataset.featureCategoryName || null
         }
 
+        if (instance.element.classList.contains("leaflet")) {
+          instance.map.pm.setGlobalOptions({
+            markerStyle: {
+              icon: App.Utils.getLeafletMarkerHTML(instance.featureColor || instance.defaultFeatureColor, instance.featureIconName || 'circle'),
+            }
+          });
+        }
+      }
 
-        if (instance.constructor.name === 'LeafletMapController') {
+      const updateFeatureVariablesFromSelectOption = function(option) {
+        if (option.dataset.featureColor) {
+          instance.featureColor = option.dataset.featureColor;
+        }
+
+        if (option.dataset.featureIconName) {
+          instance.featureIconName = option.dataset.featureIconName;
+        }
+
+        if (option.dataset.featureIconUnicode) {
+          instance.featureIconUnicode = option.dataset.featureIconUnicode;
+        }
+
+        if (option.dataset.featureCategoryName) {
+          instance.featureCategoryName = option.dataset.featureCategoryName;
+        }
+
+        if (instance.element.classList.contains("leaflet")) {
           instance.map.pm.setGlobalOptions({
             markerStyle: {
               icon: App.Utils.getLeafletMarkerHTML(instance.featureColor || instance.defaultFeatureColor, instance.featureIconName || 'circle'),
@@ -110,8 +135,25 @@
           updateFeatureVariables();
         });
       });
+
+      document.querySelectorAll(".js-map-change-feature-style-on-select").forEach(function(selector) {
+        selector.addEventListener("change", function() {
+          const value = this.value;
+          if (!value) return;
+
+          const option = this.querySelector(`option[value='${value}']`);
+          if (!option) return;
+
+          updateFeatureVariablesFromSelectOption(option);
+        });
+
+        const currentValue = selector.value;
+        const currentOption = selector.querySelector(`option[value='${currentValue}']`);
+
+        if (!currentOption) return;
+
+        updateFeatureVariablesFromSelectOption(currentOption);
+      });
     }
-
-
   };
 }).call(this);

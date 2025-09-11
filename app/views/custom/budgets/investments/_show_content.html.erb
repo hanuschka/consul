@@ -49,7 +49,7 @@
             <% end %>
 
             <% if @investment.valuator_explanation.present? %>
-              <p><%= auto_link_already_sanitized_html wysiwyg(@investment.valuator_explanation) %></p>
+              <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@investment.valuator_explanation) %>
             <% end %>
           </div>
 

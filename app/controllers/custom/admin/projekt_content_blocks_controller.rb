@@ -67,6 +67,6 @@ class Admin::ProjektContentBlocksController < Admin::BaseController
   end
 
   def find_content_block
-    @content_block = SiteCustomization::ContentBlock.find(params[:id])
+    @content_block = ::SiteCustomization::ContentBlock.find(params[:id])
   end
 end

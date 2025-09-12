@@ -65,6 +65,11 @@ en:
             email:
               invalid: Please enter a valid email format
     attributes:
+      map_location:
+        latitude: Latitude
+        longitude: Longitude
+        zoom: Zoom
+        show_admin_shape: Show in project overview map
       projekt:
         show_start_date_in_frontend: Visible in front end
         show_end_date_in_frontend: Visible in front end

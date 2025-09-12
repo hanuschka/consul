@@ -28,6 +28,10 @@
     <% end %>
   <% end %>
 
+  <% if mappable.is_a?(Projekt) %>
+    <%= m_l_fields.check_box :show_admin_shape,
+                            id: "#{nesting_prefix}_map_location_attributes_show_admin_shape" %>
+  <% end %>
 
   <%= m_l_fields.hidden_field :id,
                               value: mappable.map_location.id,

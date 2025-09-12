@@ -53,7 +53,6 @@ class MapLocation < ApplicationRecord
           "feature_icon_unicode" => get_feature_icon_unicode
         }
       }]
-
     }
   end
 
@@ -176,6 +175,8 @@ class MapLocation < ApplicationRecord
         mappable.sentiment.color
       elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
         mappable.category.color
+      elsif mappable.is_a?(Projekt)
+        "#ff0000"
       end
     end
 

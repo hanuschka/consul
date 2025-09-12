@@ -325,10 +325,9 @@
     const parentElement = e.currentTarget.parentElement;
     const templateContainer = parentElement.querySelector(".js-show-content-block-templates-content")
 
-    parentElement.classList.toggle("-opened")
+    const isOpened = parentElement.classList.toggle("-opened")
 
-    // if (!parentElement.classList.contains("-templates-added")) {
-    if (parentElement.classList.contains("-opened")) {
+    if (!parentElement.classList.contains("-templates-added") && isOpened) {
       const templateSelector = document.querySelector('.js-projekt-content-block-templates-selector')
       const templateContent = templateSelector.content.cloneNode(true)
       const contentBlockSection = this.findParentContentBlockSection(templateContainer);
@@ -342,10 +341,6 @@
       const eachTab = tabs.querySelectorAll(".tabs-title a");
       const eachTabPanel = tabsContent.querySelectorAll(".tabs-panel");
 
-      // console.log({eachTab})
-      // console.log({eachTabPanel})
-      // console.log({tabsId})
-
       // Make tab ID uniq for foundation tabs to work correctly
       eachTab.forEach(function(tab, index) {
         tab.href = "#" + tabsId + "-" + index;
@@ -355,7 +350,7 @@
       });
 
       templateContainer.replaceChildren(templateContent);
-      // parentElement.classList.add("-templates-added")
+      parentElement.classList.add("-templates-added")
 
       const $tabs = $(templateContainer.querySelector('.tabs'))
       $tabs.foundation()
@@ -363,8 +358,6 @@
       $tabs.on('change.zf.tabs', () => {
         'tab changed'
       });
-    } else {
-      templateContainer.replaceChildren('')
     }
   },
 
@@ -520,7 +513,7 @@
   },
 
   toggleContentEditableForContentBlock(contentBlock, contentEditable) {
-    const elements = Array.from(contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, .js-text-editable"))
+    const elements = Array.from(contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable"))
 
     elements.forEach((element) => {
       if (contentEditable) {
@@ -577,7 +570,8 @@
       const editorId = this.genTextEditorIdForTextarea(contentBlockSection.dataset.contentBlockId)
 
       let newContent = window.CKeditorInstancesGlobal[editorId].getData().trim()
-      newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
+      console.log(newContent)
+      // newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
 
       this.updateContentBlock(
         contentBlock,

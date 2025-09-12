@@ -16,6 +16,12 @@ ProjektStudio.utils.htmlToDomElement = function(html) {
   return div
 }
 
+const voidElements = [
+  "base", "br", "col", "embed", "hr",
+  "img", "link", "param",
+  "source", "track", "wbr"
+];
+
 ProjektStudio.utils.validateHTML = function(htmlContent) {
   const parser = new DOMParser();
   const parsedDoc = parser.parseFromString(htmlContent, 'text/html');
@@ -30,14 +36,21 @@ ProjektStudio.utils.validateHTML = function(htmlContent) {
   }
 
   const originalTags = htmlContent.match(/<\s*([a-zA-Z0-9]+)\b[^>]*>/g) || [];
-  const closedTags = htmlContent.match(/<\/\s*([a-zA-Z0-9]+)\s*>/g) || [];
   const originalTagNames = originalTags.map(tag => tag.match(/<\s*([a-zA-Z0-9]+)/)[1]);
+  const closedTags = htmlContent.match(/<\/\s*([a-zA-Z0-9]+)\s*>/g) || [];
   const closedTagNames = closedTags.map(tag => tag.match(/<\/\s*([a-zA-Z0-9]+)/)[1]);
+
+  voidElements.forEach((tagNameToRemove) => {
+    if (originalTagNames.includes(tagNameToRemove)) {
+      originalTagNames.splice(originalTagNames.indexOf(tagNameToRemove), 1);
+    }
+  })
 
   const tagStack = [];
   const issues = [];
 
   originalTagNames.forEach(tag => tagStack.push(tag));
+
   closedTagNames.forEach(tag => {
     if (tagStack.includes(tag)) {
       tagStack.splice(tagStack.indexOf(tag), 1);

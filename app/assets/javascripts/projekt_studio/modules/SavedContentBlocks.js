@@ -103,6 +103,14 @@ ProjektStudio.modules.SavedContentBlocks = {
         templateContentElement.innerHTML = content
       })
 
+      const templateElement =
+        document
+          .querySelector(`.js-projekt-content-block-templates-selector`)
+          .content
+          .querySelector(`[data-saved-content-block-id="${savedContentBlockId}"] .js-content-block-template-content`)
+
+      templateElement.innerHTML = content;
+
       this.turnOffEditModeForItem(container)
     }
 
@@ -163,7 +171,8 @@ ProjektStudio.modules.SavedContentBlocks = {
         container.classList.remove("-form-opened")
 
         this.addNewSavedContentBlockOnUI({
-          saved_content_block_item_html
+          saved_content_block_item_html,
+          container
         })
       })
     }
@@ -207,12 +216,16 @@ ProjektStudio.modules.SavedContentBlocks = {
     }
   },
 
-  addNewSavedContentBlockOnUI({saved_content_block_item_html}) {
+  addNewSavedContentBlockOnUI({saved_content_block_item_html, container}) {
     const templatesLists = document.querySelectorAll(".js-saved-content-blocks-list")
 
     templatesLists.forEach((templatesListElement) => {
       templatesListElement.insertAdjacentHTML("beforeend", saved_content_block_item_html)
     })
+
+    const lastItem = templatesLists.querySelector(".js-saved-content-block-item:last-child")
+
+    lastItem.scrollIntoView({ block: "start" })
   },
 
   setupAceEditor(container, currentHTML = '') {

@@ -55,11 +55,13 @@
             </div>
           <% end %>
         <% else %>
-          <%= render Shared::MapComponent.new(
-            mappable: @projekt_phase,
-            features: @investment_coordinates,
-            process: 'investments'
-          ) %>
+          <% if projekt_phase_feature?(@projekt_phase, "form.show_map") %>
+            <%= render Shared::MapComponent.new(
+              mappable: @projekt_phase,
+              features: @investment_coordinates,
+              process: 'investments'
+            ) %>
+          <% end %>
 
           <div class="flex-layout">
             <% budget_investments_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>

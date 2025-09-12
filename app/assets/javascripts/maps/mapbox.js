@@ -379,7 +379,7 @@
     renderFeatures() {
       if (this.editable) return;
 
-      const allFeatures = App.Utils.formattedFeatures(this.features);
+      const allFeatures = App.Map.formattedFeatures(this.features);
       let pointFeatures = {
         type: 'FeatureCollection',
         features: allFeatures.features.filter(function(f) {
@@ -431,7 +431,7 @@
           filter: ['!', ['has', 'point_count']],
           paint: {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 16, 16 ],
-            'circle-color':  [ 'case', ['has', 'feature_color'], ['get', 'feature_color'], ['has', 'color'], ['get', 'color'], this.defaultFeatureColor],
+            'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'circle-opacity': 0.75
           }
         });
@@ -466,7 +466,7 @@
 
         this.map.addSource('user-features-shapes', {
           type: 'geojson',
-          data: App.Utils.formattedFeatures(this.features)
+          data: App.Map.formattedFeatures(this.features)
         });
 
         this.map.addLayer({
@@ -475,7 +475,7 @@
           source: 'user-features-shapes',
           filter: ['==', '$type', 'LineString'],
           layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': [ 'case', ['has', 'feature_color'], ['get', 'feature_color'], ['has', 'color'], ['get', 'color'], this.defaultFeatureColor], 'line-width': 4 }
+          paint: { 'line-color': [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor], 'line-width': 4 }
         });
 
         this.map.addLayer({
@@ -484,7 +484,7 @@
           source: 'user-features-shapes',
           filter: ['==', '$type', 'Polygon'],
           layout: {},
-          paint: { 'fill-color': [ 'case', ['has', 'feature_color'], ['get', 'feature_color'], ['has', 'color'], ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
+          paint: { 'fill-color': [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
         });
 
         if (this.process && App.MapPopup.excludedProcesses.indexOf(this.process) === -1) {
@@ -608,7 +608,7 @@
       instance.map.addControl(this.draw, 'top-right');
       this.addSwitchToSimpleSelectControl();
 
-      App.Utils.formattedFeatures(instance.features).features.forEach(function(feature) {
+      App.Map.formattedFeatures(instance.features).features.forEach(function(feature) {
         instance.editableLayers.push(feature.id);
         instance.draw.add(feature);
       });

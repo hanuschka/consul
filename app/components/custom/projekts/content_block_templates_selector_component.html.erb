@@ -1,4 +1,4 @@
-<template class="js-projekt-content-block-templates-selector">
+<template class="projekt-content-block-templates-selector-wrapper js-projekt-content-block-templates-selector">
   <div class="projekt-content-block-templates-selector">
     <div class="projekt-content-block-templates-selector--inner">
       <ul class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
@@ -9,16 +9,13 @@
           <a data-tabs-target="" href="">Media</a>
         </li>
         <li class="tabs-title projekt-content-block-templates-selector--tab">
-          <a data-tabs-target="" href="">Karten</a>
-        </li>
-        <li class="tabs-title projekt-content-block-templates-selector--tab">
-          <a data-tabs-target="" href="">Andere</a>
+          <a data-tabs-target="" href="">Eigene Inhaltsblöcke</a>
         </li>
       </ul>
       <div class="tabs-content" data-tabs-content="projekt-content-block-templates-tabs">
         <div class="tabs-panel is-active">
           <% description_content_block_templates.each do |component| %>
-            <div class="custom-content-template--item js-add-new-projekt-content-block">
+            <div class="custom-content-template--item js-add-new-content-block">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
@@ -29,7 +26,7 @@
         </div>
         <div class="tabs-panel">
           <% media_content_block_templates.each do |component| %>
-            <div class="custom-content-template--item js-add-new-projekt-content-block">
+            <div class="custom-content-template--item js-add-new-content-block">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
@@ -39,26 +36,45 @@
           <% end %>
         </div>
         <div class="tabs-panel">
-          <% card_content_block_templates.each do |component| %>
-            <div class="custom-content-template--item js-add-new-projekt-content-block">
-              <div class="custom-content-template--item-overlay">
+          <div
+              class="add-new-saved-content-block-section js-show-content-block-templates-section"
+              data-editor-name="new-saved-content-block-form"
+              >
+              <div class="add-new-content-block-section--plus-button-wrapper">
+                <button
+                    title="Neue Inhaltsblockvorlage erstellen"
+                    type="button"
+                    class="-transparent-round-icon-button js-toggle-saved-content-block-form add-new-saved-content-block-button"
+                    >
+                    <i class="fas fa-plus"></i>
+                </button>
               </div>
-              <div class="content-block-template">
-                <%= render component %>
+              <div class="js-saved-content-block-form saved-content-block-form">
+                <h3>Neue Inhaltsblockvorlage erstellen</h3>
+                <p><i>Put html code here</i></p>
+                <textarea
+                    id="saved-content-block-form--textarea"
+                    name="content"
+                    class="saved-content-block-form--textarea"
+                    ></textarea>
               </div>
-            </div>
-          <% end %>
-        </div>
-        <div class="tabs-panel">
-          <% other_conent_block_templates.each do |component| %>
-            <div class="custom-content-template--item js-add-new-projekt-content-block">
-              <div class="custom-content-template--item-overlay">
+              <div class="saved-content-block-form--controlls">
+                <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
+                  <i class="fas fa-save"></i>
+                  Speichern
+                </button>
+                <button type="button" class="projekt-content-block-edit--button js-cancel-create-saved-content-block">
+                  <i class="fas fa-xmark"></i>
+                  Abbrechen
+                </button>
               </div>
-              <div class="content-block-template">
-                <%= render component %>
-              </div>
-            </div>
-          <% end %>
+          </div>
+
+          <div class="saved-content-blocks-list js-saved-content-blocks-list">
+            <% saved_content_blocks.each do |saved_content_block| %>
+              <%= render SavedContentBlocks::ItemComponent.new(saved_content_block: saved_content_block) %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

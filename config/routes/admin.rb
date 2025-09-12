@@ -38,6 +38,7 @@ namespace :admin do
       patch :update_ai_settings
       get :projekt_point_of_interest_pins
       get :projekt_point_of_interest_categories
+      post :send_notifications
       get :map_resources_overview
     end
 
@@ -93,6 +94,8 @@ namespace :admin do
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :quick_update
+      patch :update_page
+      patch :update_title_image
       patch :update_map
       post :notify_reviewers
     end
@@ -104,8 +107,11 @@ namespace :admin do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
+    resources :projekt_content_blocks, only: [:create]
+
     resources :settings, controller: "projekt_settings", only: [:update] do
       member do
         patch :update_default_projekt_footer_tab
@@ -505,6 +511,15 @@ namespace :admin do
     post :execute, on: :collection
     delete :cancel, on: :collection
   end
+
+  resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+    end
+  end
+
+  resources :saved_content_blocks, only: [:create, :update, :destroy]
 end
 
 resolve "Milestone" do |milestone|

@@ -241,8 +241,11 @@ class Projekt < ApplicationRecord
         .select(:id)
 
       excluded_projekt_ids = Projekt.joins(:individual_group_values)
-        .where.not(individual_group_values: { id: user_hard_group_value_ids })
-        .select(:id)
+                                    .where.not(id: Projekt
+                                      .joins(:individual_group_values)
+                                      .where(individual_group_values: { id: user_hard_group_value_ids })
+                                    )
+                                    .select(:id)
 
       permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
 

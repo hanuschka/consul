@@ -159,15 +159,15 @@ class ProjektsController < ApplicationController
     when 'all_resources'
       @projekts
     when 'no_affiliation'
-      @projekts = @projekts.where(geozone_affiliated: 'no_affiliation').distinct
+      @projekts = @projekts.where(geozone_affiliated: 'no_affiliation')
     when 'entire_city'
-      @projekts = @projekts.where(geozone_affiliated: 'entire_city').distinct
+      @projekts = @projekts.where(geozone_affiliated: 'entire_city')
     when 'only_geozones'
-      @projekts = @projekts.where(geozone_affiliated: 'only_geozones').distinct
+      @projekts = @projekts.where(geozone_affiliated: 'only_geozones')
       if @affiliated_geozones.present?
-        @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones }).distinct
+        @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
       else
-        @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil }).distinct
+        @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
       end
     end
   end

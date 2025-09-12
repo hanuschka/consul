@@ -2,7 +2,7 @@
   <div class="small-12 medium-8 columns margin-bottom">
     <%= link_to t("custom.shared.download_pdf"), idea_management_idea_path(idea, format: :pdf),
       class: "float-right small clear #{'js-update-screenshot' if idea.map_location.present?}",
-      data: { "map-container-id": idea.map_location.present? ? "#{dom_id(idea.map_location)}_idea" : "" } %>
+      data: { "map-container-id": idea.map_location.present? ? "map_idea_#{idea.id}" : "" } %>
   </div>
 </div>
 

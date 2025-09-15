@@ -9,7 +9,7 @@ module ProjektPhaseAdminActions
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
-      :create, :order_phases, :frame_phases_restrictions
+      :create, :order_phases, :frame_phases_restrictions,
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -71,16 +71,6 @@ module ProjektPhaseAdminActions
 
     @projekt.projekt_phases.order_phases(params[:ordered_list])
     head :ok
-  end
-
-  def update_position
-    authorize!(:order_phases, @projekt)
-
-    if @projekt_phase.insert_at(params[:position].to_i)
-      head :ok
-    else
-      render json: { message: "Error updating content_block" }
-    end
   end
 
   def toggle_active_status
@@ -473,17 +463,6 @@ module ProjektPhaseAdminActions
     @process = @projekt_phase.legislation_process
 
     render "custom/admin/projekt_phases/legislation_process_draft_versions"
-  end
-
-  def send_notifications
-    authorize!(:manage, @projekt_phase)
-
-    case params[:resource_type]
-    when "projekt_arguments"
-      NotificationServices::ProjektArgumentsNotifier.call(@projekt_phase.id)
-    when "projekt_questions"
-      NotificationServices::ProjektQuestionsNotifier.call(@projekt_phase.id)
-    end
   end
 
   def ai_settings

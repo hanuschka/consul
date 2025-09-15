@@ -153,12 +153,12 @@
   border-top: 1px solid $border-color;
 }
 
-.toggle-section-with-setting {
+.projekt-section-data-wrapper {
   position: relative;
   width: 100%;
 }
 
-.toggle-section-with-setting.-deactivated {
+.projekt-section-data-wrapper.-deactivated {
   .sidebar-card {
     border-color: white;
   }

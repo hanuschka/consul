@@ -37,15 +37,6 @@ class PagesController < ApplicationController
       set_landing_page_topbar_ui_variables(@custom_page)
     end
 
-    if current_user.present?
-      @namespace =
-        if current_user.administrator?
-          :admin
-        elsif current_user.projekt_manager?(@custom_page.projekt)
-          :projekt_manager
-        end
-    end
-
     if @custom_page.present? && @custom_page.projekt.present? && @custom_page_page_visible
       @projekt = @custom_page.projekt
 

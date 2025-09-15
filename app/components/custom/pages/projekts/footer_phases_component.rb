@@ -1,10 +1,9 @@
 class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
   attr_reader :projekt, :default_projekt_phase
 
-  def initialize(projekt, default_projekt_phase, namespace: nil)
+  def initialize(projekt, default_projekt_phase)
     @projekt = projekt
     @default_projekt_phase = default_projekt_phase
-    @namespace = namespace
   end
 
   private
@@ -19,12 +18,12 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
     end
 
     def projekt_phases
-      phases = projekt.projekt_phases.includes(:translations, :age_restriction)
+      phases = projekt.projekt_phases.frontend_visible.includes(:translations, :age_restriction)
 
-      if helpers.show_projekt_studio_controls?(projekt)
+      if embedded_and_frame_access_code_valid?(projekt)
         phases
       else
-        phases.active.frontend_visible
+        phases.active
       end
     end
 end

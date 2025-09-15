@@ -124,7 +124,7 @@ class Projekt < ApplicationRecord
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
-  attribute :new_content_block_mode, :boolean, default: true
+  attribute :new_content_block_mode, :boolean, default: false
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }

@@ -140,6 +140,7 @@
         instance.setupExpandControl();
         instance.setupPlugins();
         instance.setupEventListenersForUpdatingFormInputs();
+        instance.setupEventListenersForUpdatingMapCenter();
       });
     }
 
@@ -874,6 +875,32 @@
           if (control) control.style.display = '';
         });
       }
+    }
+
+    setupEventListenersForUpdatingMapCenter() {
+      if (!this.editable) return;
+
+      const selectElement = document.querySelector('.js-update-map-center');
+      if (!selectElement) return;
+
+      selectElement.addEventListener('change', (event) => {
+        const selectedOption = event.target.selectedOptions[0];
+        const latitude = parseFloat(
+          selectedOption.dataset.latitude ||
+          event.target.dataset.defaultLatitude ||
+          this.mapCenterLatitude
+        );
+        const longitude = parseFloat(
+          selectedOption.dataset.longitude ||
+          event.target.dataset.defaultLongitude ||
+          this.mapCenterLongitude
+        );
+
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+          this.map.setCenter([longitude, latitude]);
+          this.map.setZoom(this.map.getZoom());
+        }
+      });
     }
   }
 

@@ -5,6 +5,9 @@
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
           <a href="" aria-selected="true">Projektbeschreibung</a>
         </li>
+        <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
+          <a href="" aria-selected="true">Quotes</a>
+        </li>
         <li class="tabs-title projekt-content-block-templates-selector--tab">
           <a data-tabs-target="" href="">Media</a>
         </li>
@@ -19,7 +22,18 @@
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <%= render component %>
+                <%= render component.htlm_safe %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="tabs-panel">
+          <% quotes_content_block_templates.each do |component| %>
+            <div class="custom-content-template--item js-add-new-content-block">
+              <div class="custom-content-template--item-overlay">
+              </div>
+              <div class="content-block-template">
+                <%= component %>
               </div>
             </div>
           <% end %>

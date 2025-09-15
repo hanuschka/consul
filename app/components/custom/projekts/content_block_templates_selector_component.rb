@@ -1,6 +1,6 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     def quotes_content_block_templates
-
+      []
     end
 
     def description_content_block_templates

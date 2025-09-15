@@ -1,5 +1,10 @@
 <div id="sentiment_selector" class="sentiments">
-  <p class="small" style="margin-bottom:0.25rem;"><%= t("custom.shared.form.sentiment_hint") %></p>
+  <h2 class="rich-form-label">
+    <i class="fas fa-heart"></i>
+    <%= projekt_phase.sentiments_name.presence || I18n.t("custom.shared.form.sentiment_label") %>
+    <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+    <span class="small"><%= t("custom.shared.form.sentiment_hint") %></span>
+  </h2>
 
   <div class="projekt-sentiments-selector--checkboxes">
     <%= f.collection_radio_buttons :sentiment_id, projekt_phase.sentiments, :id, :name, { include_hidden: false } do |rb| %>

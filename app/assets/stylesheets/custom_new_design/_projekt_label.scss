@@ -2,12 +2,35 @@
   margin-top: 0;
   margin-bottom: 0;
 
-  p.small {
-    margin-bottom: 0.5em !important;
-  }
-
   label:not(.projekt-label) {
     display: none;
+  }
+
+  input {
+    display: none;
+  }
+
+  .projekt-label {
+    color: #fff !important;
+
+    i {
+      margin-right: 7px;
+    }
+  }
+
+  input:checked + .projekt-label {
+    color: #fff !important;
+    background-color: $brand !important;
+  }
+
+  .projekt-labels-selector--checkboxes {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 8px;
+
+    .projekt-label {
+      margin-bottom: 0.3em;
+    }
   }
 }
 
@@ -17,15 +40,3 @@
   }
 }
 
-.custom-new-design {
-  .projekt-labels-selector--checkboxes, .projekt-sentiments-selector--checkboxes {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 10px;
-
-    .projekt-label {
-      margin-bottom: 0.3em;
-    }
-  }
-}

@@ -70,6 +70,7 @@
           pitch: 53,
           preserveDrawingBuffer: true,
           style: instance.element.dataset.mapboxStyleId,
+          cooperativeGestures: true
         });
 
         if (callback) callback(map);

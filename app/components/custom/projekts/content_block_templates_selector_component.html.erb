@@ -5,6 +5,9 @@
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
           <a href="" aria-selected="true">Projektbeschreibung</a>
         </li>
+        <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
+          <a href="" aria-selected="true">Quotes</a>
+        </li>
         <li class="tabs-title projekt-content-block-templates-selector--tab">
           <a data-tabs-target="" href="">Media</a>
         </li>
@@ -14,12 +17,25 @@
       </ul>
       <div class="tabs-content" data-tabs-content="projekt-content-block-templates-tabs">
         <div class="tabs-panel is-active">
-          <% description_content_block_templates.each do |component| %>
+          <% description_content_block_templates.each do |template_name| %>
             <div class="custom-content-template--item js-add-new-content-block">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <%= render component %>
+                <%= render "projekts/content_block_templates/descriptions/#{template_name}" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="tabs-panel">
+          <% quotes_content_block_templates.each do |template_name| %>
+            <div class="custom-content-template--item js-add-new-content-block">
+              <div class="custom-content-template--item-overlay">
+              </div>
+              <div class="content-block-template">
+                <div class="js-content-block-template-content">
+                  <%= render "projekts/content_block_templates/quotes/#{template_name}" %>
+                </div>
               </div>
             </div>
           <% end %>

@@ -16,6 +16,7 @@
       this.setupEditingControls();
       this.setupEventListenersForUpdatingFormInputs();
       this.toggleControlVisibility();
+      this.setupEventListenersForUpdatingMapCenter();
     }
 
     initializeProperties() {
@@ -606,6 +607,24 @@
           if (control) control.style.display = '';
         });
       }
+    }
+
+    setupEventListenersForUpdatingMapCenter() {
+      if (!this.editable) return;
+
+      const selectElement = document.querySelector('.js-update-map-center');
+      if ( !selectElement ) return;
+
+      selectElement.addEventListener('change', (event) => {
+        const selectedOption = event.target.selectedOptions[0];
+        const latitude = selectedOption.dataset.latitude || event.target.dataset.defaultLatitude || this.mapCenterLatitude;
+        const longitude = selectedOption.dataset.longitude || event.target.dataset.defaultLongitude || this.mapCenterLongitude;
+
+        if (latitude && longitude) {
+          const newCenter = new L.LatLng(latitude, longitude);
+          this.map.setView(newCenter, this.map.getZoom());
+        }
+      });
     }
   }
 

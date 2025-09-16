@@ -1687,44 +1687,6 @@ span.projekt-backlink:before {
 
 // tagging in selector
 
-#projekt_labels_selector {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-
-  input {
-    display: none;
-  }
-
-  .projekt-label {
-    color: #fff !important;
-
-    i {
-      margin-right: 7px;
-    }
-  }
-
-  input:checked + .projekt-label {
-    color: #fff !important;
-    background-color: $brand !important;
-  }
-}
-
-#sentiment_selector {
-  margin-top:2rem;
-  margin-bottom:1rem;
-
-  input {
-    display: none;
-  }
-
-  input:checked + .sentiment {
-    &::before {
-      content: "\f192";
-    }
-  }
-}
-
-
 .projekt-footer-navigation {
   position: relative;
 }

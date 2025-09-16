@@ -361,12 +361,12 @@ class PagesController < ApplicationController
 
     features = if selected_categories.present?
                  map_locations.map do |ml|
-                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id}) }
-                   ml.features["features"].select { |f| f["properties"]["fa_icon_class"].in? selected_categories.pluck(:icon) }
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id, feature_icon_unicode: AwesomeIcon.find_by(name: (f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"] ))&.unicode }) }
+                   ml.features["features"].select { |f| f["properties"]["feature_icon_name"].in?(selected_categories.pluck(:icon)) || f["properties"]["fa_icon_class"].in?(selected_categories.pluck(:icon)) }
                  end.flatten.compact
                else
                  map_locations.map do |ml|
-                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id}) }
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id, feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"])&.unicode }) }
                    ml.features["features"]
                  end.flatten
                end

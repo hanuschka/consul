@@ -2,17 +2,29 @@
   margin-top: 0;
   margin-bottom: 0;
 
-  p.small {
-    margin-bottom: 0.5em !important;
-  }
-
   label:not(.sentiment) {
     display: none;
   }
 
-  .sentiment {
-    margin-bottom: 0.3em;
-    font-size: 0.9em;
-    border-radius: 5px;
+  input {
+    display: none;
+  }
+
+  input:checked + .sentiment {
+    &::before {
+      content: "\f192";
+    }
+  }
+
+  .projekt-sentiments-selector--checkboxes {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 8px;
+
+    .sentiment {
+      margin-bottom: 0.3em;
+      font-size: 0.9em;
+      border-radius: 5px;
+    }
   }
 }

@@ -1,36 +1,56 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     def quotes_content_block_templates
-      []
+      %w(
+        picture_on_left_classic
+        picture_on_the_right
+        image_above_text_below
+        image_left_square_larger_size
+        image_right_round_purple_color
+        classic_white_background
+        greeting_image_left_horizontal
+      )
     end
 
     def description_content_block_templates
-    [
-      Projekts::ContentBlockTemplates::BlankComponent.new,
-      Projekts::ContentBlockTemplates::TitleComponent.new(
-        title: example_title
-      ),
-      Projekts::ContentBlockTemplates::TextComponent.new(
-        text: example_description
-      ),
-      Projekts::ContentBlockTemplates::TextWithTitleComponent.new(
-        title: example_title,
-        text:  example_description
-      ),
-      Projekts::ContentBlockTemplates::BulletpointListComponent.new,
-      Projekts::ContentBlockTemplates::GreetingComponent.new(
-        title: example_title,
-        text:  example_description,
-        quote: example_description.split[0,11].join(" "),
-        image_url: nil
-      ),
-      Projekts::ContentBlockTemplates::AccordionComponent.new(
-        title: example_title,
-        items: accordion_items
-      ),
-      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new,
-      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://placehold.co/200x200")
-    ].compact
-  end
+      %w(
+        h3 h4 h5 h6 text_block_h3_heading
+        text_block_two_columns
+        textblock download_section
+        futher_information
+        submit_ideas
+        favorites_supported
+        select_suggestions
+      )
+    end
+
+    # def description_content_block_templates
+    # [
+    #   Projekts::ContentBlockTemplates::BlankComponent.new,
+    #   Projekts::ContentBlockTemplates::TitleComponent.new(
+    #     title: example_title
+    #   ),
+    #   Projekts::ContentBlockTemplates::TextComponent.new(
+    #     text: example_description
+    #   ),
+    #   Projekts::ContentBlockTemplates::TextWithTitleComponent.new(
+    #     title: example_title,
+    #     text:  example_description
+    #   ),
+    #   Projekts::ContentBlockTemplates::BulletpointListComponent.new,
+    #   Projekts::ContentBlockTemplates::GreetingComponent.new(
+    #     title: example_title,
+    #     text:  example_description,
+    #     quote: example_description.split[0,11].join(" "),
+    #     image_url: nil
+    #   ),
+    #   Projekts::ContentBlockTemplates::AccordionComponent.new(
+    #     title: example_title,
+    #     items: accordion_items
+    #   ),
+    #   Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new,
+    #   Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://placehold.co/200x200")
+    # ].compact
+  # end
 
   def media_content_block_templates
     [

@@ -13,9 +13,25 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
 
     def description_content_block_templates
       %w(
-        h3 h4 h5 h6 text_block_h3_heading
+        h3 h4 h5 h6
+        text_block_h3_heading
         text_block_two_columns
-        textblock download_section
+        textblock
+        download_section
+        futher_information
+        submit_ideas
+        favorites_supported
+        select_suggestions
+      )
+    end
+
+    def media_content_block_templates
+      %w(
+        h3 h4 h5 h6
+        text_block_h3_heading
+        text_block_two_columns
+        textblock
+        download_section
         futher_information
         submit_ideas
         favorites_supported
@@ -52,28 +68,28 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     # ].compact
   # end
 
-  def media_content_block_templates
-    [
-      Projekts::ContentBlockTemplates::ImageGalleryComponent.new(
-        title: example_title,
-        images: [
-          { url: "https://placehold.co/426x212" },
-          { url: "https://placehold.co/426x212" },
-          { url: "https://placehold.co/426x212" },
-          { url: "https://placehold.co/426x212" }
-        ]
-      ),
-      Projekts::ContentBlockTemplates::SingleImageComponent.new(
-        image: { url: "https://placehold.co/426x212" }
-      ),
-      Projekts::ContentBlockTemplates::ExternalVideoPlayerComponent.new(
-        url: nil
-      ),
-      Projekts::ContentBlockTemplates::ImageSliderComponent.new,
-      Projekts::ContentBlockTemplates::SuccessComponent.new,
-      Projekts::ContentBlockTemplates::WarningComponent.new,
-    ]
-  end
+  # def media_content_block_templates
+  #   [
+  #     Projekts::ContentBlockTemplates::ImageGalleryComponent.new(
+  #       title: example_title,
+  #       images: [
+  #         { url: "https://placehold.co/426x212" },
+  #         { url: "https://placehold.co/426x212" },
+  #         { url: "https://placehold.co/426x212" },
+  #         { url: "https://placehold.co/426x212" }
+  #       ]
+  #     ),
+  #     Projekts::ContentBlockTemplates::SingleImageComponent.new(
+  #       image: { url: "https://placehold.co/426x212" }
+  #     ),
+  #     Projekts::ContentBlockTemplates::ExternalVideoPlayerComponent.new(
+  #       url: nil
+  #     ),
+  #     Projekts::ContentBlockTemplates::ImageSliderComponent.new,
+  #     Projekts::ContentBlockTemplates::SuccessComponent.new,
+  #     Projekts::ContentBlockTemplates::WarningComponent.new,
+  #   ]
+  # end
 
   def saved_content_blocks
     SavedContentBlock.all.order(:created_at)

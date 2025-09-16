@@ -73,7 +73,8 @@
           cooperativeGestures: true,
           locale: {
             "ScrollZoomBlocker.CtrlMessage": "Zum Zoomen der Karte Strg + Scrollen verwenden",
-            "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen"
+            "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen",
+            'TouchPanBlocker.Message': 'Zum Verschieben der Karte zwei Finger verwenden'
           },
         });
 
@@ -406,7 +407,7 @@
           type: 'geojson',
           data: pointFeatures,
           cluster: true,
-          clusterMaxZoom: 18,
+          clusterMaxZoom: 17,
           clusterRadius: 50
         });
 

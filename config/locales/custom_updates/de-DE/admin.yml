@@ -190,6 +190,12 @@ de:
         districts:
           index:
             title: Gebiete
+        stats:
+          show:
+            type:
+              status: Status
+              category: Kategorie
+              responsible: Verantwortlich
       ideas:
         index:
           title: Ideenplattform
@@ -483,6 +489,7 @@ de:
               create_on_behalf_of: erstellen im Namen von jemanden
               get_notifications: benachrichtigt werden
               access_graphql: GraphQL-Zugriff
+              review: Projekt überprüfen
           projekt_map_tab:
             name: Ind. Kartenkonfiguration
           projekt_sdg_tab:
@@ -686,7 +693,6 @@ de:
           poll_questions: Fragen
           officing_managers: Abstimmungshelfer
           officing_manager_audits: Logs
-          poll_results: Ergebnisse
           budget_edit: Editieren
           budget_investments: Vorschläge
           budget_phases: Phasen
@@ -829,7 +835,7 @@ de:
           notifications_sent_notice: Benachrichtigungen erfolgreich gesendet
           argument_pro: Pro
           argument_cons: Contra
-          button: Stimme erlstellen
+          button: Stimme erstellen
           argument_image: Bild
         projekt_events:
           page_title: Veranstaltungen
@@ -958,6 +964,7 @@ de:
           kind: Art
           visible: Sichtbarkeit
           email: Email
+          remove_email: E-Mail entfernen
           remove_user: Profil entfernen
       individual_group_values:
         show:

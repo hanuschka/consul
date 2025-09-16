@@ -29,7 +29,7 @@
     </div>
     <aside id="proposals-sidebar" class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
-        <%= render_custom_block "projekt_events_index_sidebar_new", default_content: t("custom.projekt_events.index.sidebar_info") %>
+        <%= render_custom_block "projekt_events_index_sidebar_new" %>
       <% end %>
       <%= render(Shared::SidebarCardComponent.new(title: t("custom.common.share"), icon_name: "share")) do |c| %>
         <%= render "shared/social_share",

@@ -29,13 +29,15 @@
     <%= f.text_area :note, { id: "projekt_argument_note_#{projekt_argument.id}", required: true } %>
   </div>
 
-  <div class='small-12 medium-12 margin-bottom'>
-    <%= f.file_field "image_attributes[attachment]", { required: projekt_argument.new_record?, id: "projekt_argument_image_#{projekt_argument.id}", label: t("custom.admin.projekt_phases.projekt_arguments.argument_image") } %>
-    <%= f.hidden_field "image_attributes[title]", value: "photo" %>
-    <%= f.hidden_field "image_attributes[user_id]", value: current_user.id %>
+  <div class="row margin-bottom">
+    <div class="column images small-12">
+      <%= render Images::NestedComponent.new(f) %>
+    </div>
   </div>
 
   <div>
-    <%= f.submit(t("custom.admin.projekt_phases.projekt_arguments.button"), class: "button") %>
+    <%= f.submit class: "button" %>
   </div>
 <% end %>
+
+<hr>

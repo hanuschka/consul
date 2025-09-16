@@ -88,6 +88,19 @@ module BundIdServices
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.5.5.7.9.2" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.2.40.0.10.2.1.1.261.94" }
 
+        akdb_display_information = akdb_authentication_request.add_element "akdb:DisplayInformation"
+        classic_ui_version = akdb_display_information.add_element "classic-ui:Version", { "xmlns:classic-ui" => "https://www.akdb.de/request/2018/09/classic-ui/v1" }
+        # classic_ui_purpose = classic_ui_version.add_element "classic-ui:Purpose"
+        # classic_ui_purpose.text = "<h1>My HTML</h1>"
+        classic_ui_organization_display_name = classic_ui_version.add_element "classic-ui:OrganizationDisplayName"
+        classic_ui_organization_display_name.text = Setting["org_name"]
+        classic_ui_lang = classic_ui_version.add_element "classic-ui:Lang"
+        classic_ui_lang.text = "de"
+        classic_ui_back_url = classic_ui_version.add_element "classic-ui:BackURL"
+        classic_ui_back_url.text = Setting["url"]
+        classic_ui_online_service_id = classic_ui_version.add_element "classic-ui:OnlineServiceID"
+        classic_ui_online_service_id.text = Rails.application.secrets.bund_id[:online_service_id]
+
         akdb_authentication_request.add_element "akdb:Berechtigungszertifikat", { "Bundesland" => settings[:bundesland_code] }
 
         requested_authn_context = root.add_element "saml2p:RequestedAuthnContext", { "Comparison" => "minimum" }

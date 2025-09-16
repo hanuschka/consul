@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_07_02_100226) do
+ActiveRecord::Schema.define(version: 2025_09_15_153348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -214,6 +214,15 @@ ActiveRecord::Schema.define(version: 2025_07_02_100226) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "awesome_icons", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "unicode", null: false
+    t.boolean "shortlisted", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_awesome_icons_on_name", unique: true
   end
 
   create_table "bam_street_polls", force: :cascade do |t|
@@ -735,6 +744,19 @@ ActiveRecord::Schema.define(version: 2025_07_02_100226) do
     t.index ["locale"], name: "index_deficiency_report_category_translations_on_locale"
   end
 
+  create_table "deficiency_report_feedback_forms", force: :cascade do |t|
+    t.bigint "deficiency_report_id"
+    t.integer "overall_satisfaction"
+    t.integer "response_time_satisfaction"
+    t.integer "communication_satisfaction"
+    t.boolean "resolved"
+    t.text "what_liked_note"
+    t.text "what_improve_note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_id"], name: "index_deficiency_report_feedback_forms_on_deficiency_report_id"
+  end
+
   create_table "deficiency_report_managers", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
@@ -1164,6 +1186,7 @@ ActiveRecord::Schema.define(version: 2025_07_02_100226) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email_pattern", default: "", null: false
+    t.text "auto_join_emails", default: [], array: true
     t.index ["individual_group_id"], name: "index_individual_group_values_on_individual_group_id"
   end
 
@@ -1473,30 +1496,19 @@ ActiveRecord::Schema.define(version: 2025_07_02_100226) do
     t.float "latitude"
     t.float "longitude"
     t.integer "zoom"
-    t.integer "proposal_id"
-    t.integer "investment_id"
-    t.bigint "projekt_id"
     t.string "pin_color"
-    t.bigint "deficiency_report_id"
-    t.jsonb "shape", default: {}, null: false
+    t.jsonb "features", default: {}, null: false
     t.boolean "show_admin_shape", default: false
     t.float "altitude"
-    t.bigint "projekt_phase_id"
     t.jsonb "geocoder_data", default: {}
     t.string "approximated_address"
-    t.bigint "registered_address_district_id"
-    t.bigint "idea_id"
     t.string "mappable_type"
     t.bigint "mappable_id"
-    t.index ["deficiency_report_id"], name: "index_map_locations_on_deficiency_report_id"
-    t.index ["idea_id"], name: "index_map_locations_on_idea_id"
-    t.index ["investment_id"], name: "index_map_locations_on_investment_id"
+    t.integer "rendering_library", null: false
+    t.jsonb "features_bu", default: {}, null: false
+    t.boolean "default", default: false, null: false
+    t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
-    t.index ["projekt_id"], name: "index_map_locations_on_projekt_id"
-    t.index ["projekt_phase_id"], name: "index_map_locations_on_projekt_phase_id"
-    t.index ["proposal_id"], name: "index_map_locations_on_proposal_id"
-    t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
-    t.index ["shape"], name: "index_map_locations_on_shape", using: :gin
   end
 
   create_table "memos", force: :cascade do |t|
@@ -2980,6 +2992,7 @@ ActiveRecord::Schema.define(version: 2025_07_02_100226) do
   add_foreign_key "debates", "projekt_phases"
   add_foreign_key "debates", "projekts"
   add_foreign_key "debates", "sentiments"
+  add_foreign_key "deficiency_report_feedback_forms", "deficiency_reports"
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
@@ -3020,11 +3033,6 @@ ActiveRecord::Schema.define(version: 2025_07_02_100226) do
   add_foreign_key "machine_learning_jobs", "users"
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
-  add_foreign_key "map_locations", "deficiency_reports"
-  add_foreign_key "map_locations", "ideas"
-  add_foreign_key "map_locations", "projekt_phases"
-  add_foreign_key "map_locations", "projekts"
-  add_foreign_key "map_locations", "registered_address_districts"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "newsletters", "recipient_groups"

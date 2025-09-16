@@ -41,12 +41,11 @@
           <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.description) %>
         </div>
 
-        <% if map_location_available?(@deficiency_report) %>
+        <% if @deficiency_report.map_location.present? %>
           <div class="margin-bottom not-print">
             <%= render Shared::MapComponent.new(
               mappable: @deficiency_report,
-              map_location: @deficiency_report.map_location || @deficiency_report.projekt_phase.map_location_with_admin_shape,
-              parent_class: "deficiency_report"
+              features: @deficiency_report.map_location.features_json_data
             ) %>
           </div>
         <% end %>

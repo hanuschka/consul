@@ -2,10 +2,9 @@
   <% i18n_scope = "shared.map_component" %>
   <div class="new-card" id='map-container'>
     <%= render "map_locations/form_fields",
-      form:          f,
-      map_location:  map_location,
-      mappable:      mappable,
-      parent_class:  mappable.class.table_name %>
+      form:           f,
+      mappable:       mappable,
+      nesting_prefix: mappable.class.table_name %>
   </div>
 
   <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button") %>

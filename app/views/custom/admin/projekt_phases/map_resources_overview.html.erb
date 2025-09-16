@@ -6,27 +6,10 @@
 
 <div class="row">
   <div class="column">
-    <h2>
-      <%= t("custom.admin.projekt_phases.map_resources_overview.title") %>
-      <% if embedded? %>
-        <%= render Shared::ExplainButtonComponent.new(
-          explain: "#{@projekt_phase.name} map"
-        ) %>
-      <% end %>
-    </h2>
-    <% @projekt_phase.map_layers.each do |layer| %>
-      <%= render partial: "custom/admin/shared/map/map_layer", locals: { layer: layer, return_path: namespace_projekt_phase_path(action: :map) } %>
-    <% end %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="column">
     <%= render Shared::MapComponent.new(
-      map_location: @projekt_phase.map_location,
-      parent_class: "point-of-interest-map",
-      process_coordinates: @map_coordinates,
-      projekt_phase: @projekt_phase
+      mappable: @projekt_phase,
+      features: @map_coordinates,
+      process: 'point-of-interest-map'
     ) %>
   </div>
 </div>

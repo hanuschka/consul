@@ -406,7 +406,7 @@
           type: 'geojson',
           data: pointFeatures,
           cluster: true,
-          clusterMaxZoom: 15,
+          clusterMaxZoom: 16,
           clusterRadius: 50
         });
 

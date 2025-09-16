@@ -70,7 +70,11 @@
           pitch: 53,
           preserveDrawingBuffer: true,
           style: instance.element.dataset.mapboxStyleId,
-          cooperativeGestures: true
+          cooperativeGestures: true,
+          locale: {
+            "ScrollZoomBlocker.CtrlMessage": "Zum Zoomen der Karte Strg + Scrollen verwenden",
+            "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen"
+          },
         });
 
         if (callback) callback(map);
@@ -402,7 +406,7 @@
           type: 'geojson',
           data: pointFeatures,
           cluster: true,
-          clusterMaxZoom: 14,
+          clusterMaxZoom: 18,
           clusterRadius: 50
         });
 

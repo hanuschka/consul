@@ -22,7 +22,9 @@
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <%= render "projekts/content_block_templates/descriptions/#{template_name}" %>
+                <div class="js-content-block-template-content">
+                  <%= render "projekts/content_block_templates/descriptions/#{template_name}" %>
+                </div>
               </div>
             </div>
           <% end %>

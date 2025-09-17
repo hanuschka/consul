@@ -76,3 +76,11 @@ ProjektStudio.utils.validateHTML = function(htmlContent) {
     message: "HTML is valid."
   };
 }
+
+ProjektStudio.utils.removeChildHtmlAttributes = function(element, attributes = []) {
+  attributes.forEach((attribute) => {
+    element
+      .querySelectorAll(`[${attribute}]`)
+      .forEach(el => el.removeAttribute(attribute));
+  })
+}

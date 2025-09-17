@@ -7,37 +7,23 @@
       <span class="show-for-sr">Nächstes Bild</span>&#9654;
     </button>
 
-    <li class="is-active orbit-slide">
-      <figure class="orbit-figure">
-        <img
-            class="orbit-image"
-            src="https://placehold.co/893x600"
-            alt="Platzhalterbild 1"
-            />
-        <figcaption class="orbit-caption">
-          Um ein Bild auszutauschen, setzen Sie den Slider genau an die
-          Stelle des gewünschten Bildes. Wenn Sie mehrere Bilder ändern
-          möchten, öffnen und speichern Sie den Editor bitte jeweils einzeln
-          für jedes Bild.
-        </figcaption>
-      </figure>
-    </li>
-
-    <li class="orbit-slide">
-      <figure class="orbit-figure">
-        <img
-            class="orbit-image"
-            src="https://placehold.co/893x600"
-            alt="Platzhalterbild 2"
-            />
-        <figcaption class="orbit-caption">
-          Um ein Bild auszutauschen, setzen Sie den Slider genau an die
-          Stelle des gewünschten Bildes. Wenn Sie mehrere Bilder ändern
-          möchten, öffnen und speichern Sie den Editor bitte jeweils einzeln
-          für jedes Bild.
-        </figcaption>
-      </figure>
-    </li>
+    <% 2.times do %>
+      <li class="is-active orbit-slide">
+        <figure class="orbit-figure">
+          <img
+              class="orbit-image"
+              src="https://placehold.co/893x600"
+              alt="Platzhalterbild 1"
+              />
+          <figcaption class="orbit-caption">
+            Um ein Bild auszutauschen, setzen Sie den Slider genau an die
+            Stelle des gewünschten Bildes. Wenn Sie mehrere Bilder ändern
+            möchten, öffnen und speichern Sie den Editor bitte jeweils einzeln
+            für jedes Bild.
+          </figcaption>
+        </figure>
+      </li>
+    <% end %>
   </ul>
 
   <nav class="orbit-bullets">

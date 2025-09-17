@@ -17,15 +17,16 @@
     $document.on("click", ".js-projekt-content-block--ai-edit", this.enterAiEditMode.bind(this));
     $document.on("click", ".js-delete-projekt-content-block", this.deleteContrentBlock.bind(this));
 
-    $document.on("click", ".js-edit-text-projekt-content-block", this.enterTextEditMode.bind(this));
+    $document.on("click", ".js-edit-text-projekt-content-block", this.enterSimpleEditMode.bind(this));
+    $document.on("click", ".js-projekt-content-block--add-new-item", this.addNewItemToList.bind(this))
     $document.on("click", ".js-html-edit-content-block", this.enterHtmlEditMode.bind(this));
     $document.on("click", ".js-code-edit-content-block", this.enterCodeEditMode.bind(this));
 
-    $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelTextEditMode.bind(this));
+    $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
     $document.on("click", ".js-projekt-content-block--html-edit-cancel", this.cancelHtmlEditMode.bind(this));
     $document.on("click", ".js-projekt-content-block--ai-edit-cancel", this.cancelAiEditMode.bind(this));
 
-    $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockEditedText.bind(this));
+    $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
     $document.on("click", ".js-save-edit-html-projekt-content-block", this.saveContentBlockEditedHtml.bind(this));
 
     $document.on("click", ".js-content-block-reset-to-prev-version", this.resetContentBlockToPreviousVersion.bind(this));
@@ -430,16 +431,85 @@
     }
   },
 
-  enterTextEditMode(e) {
+  enterSimpleEditMode(e) {
     const { contentBlockSection, contentBlock } = this.getContentBlockAndSection(e.target)
 
     contentBlockSection.classList.remove("-highlight-changed")
-    contentBlockSection.classList.add("-text-edit-mode")
+    contentBlockSection.classList.add("-simple-edit-mode")
     $accordion = $(contentBlock).find('.accordion a');
     $accordion.off("keydown")
 
-    this.toggleContentEditableForContentBlock(contentBlock, true)
     this.storePreviousVersionOfContentBlock(contentBlock, contentBlockSection)
+    this.toggleContentEditableForContentBlock(contentBlock, true)
+
+    this.addSimpleModeListControls(contentBlock)
+  },
+
+  addSimpleModeListControls(contentBlock) {
+    contentBlock
+      .querySelectorAll("ul")
+      .forEach((ul) => {
+        this.addNewItemButton(ul)
+      })
+  },
+
+  addNewItemButton(ul) {
+    const buttonWrapper = document.createElement("li");
+    buttonWrapper.className = "content-block--add-new-item-wrapper js-content-block--inline-control";
+    buttonWrapper.style = "list-style: none;"
+
+    const lastLi = ul.querySelector("li:last-child")
+
+    if (ul.classList.contains("row") && lastLi.classList.contains("column")) {
+      buttonWrapper.style = "float: left;"
+    }
+
+    if (lastLi) {
+      const lastStyles = getComputedStyle(lastLi)
+      const props = ["width", "height", "max-width"];
+
+      props.forEach(prop => {
+        const value = lastStyles.getPropertyValue(prop);
+        if (value && value !== "auto" && value !== "0px") {
+          buttonWrapper.style.setProperty(prop, value);
+        }
+      });
+    }
+
+    buttonWrapper.className = `${lastLi.classList} ${buttonWrapper.classList}`
+
+    buttonWrapper.innerHTML = `
+          <div class="content-block--add-new-item-wrapper--inner">
+            <button class="content-block--add-new-item js-projekt-content-block--add-new-item">
+              <i class="fa fas fa-plus"></i>
+            </button>
+          </div>
+        `
+
+    ul.appendChild(buttonWrapper);
+  },
+
+  addNewItemToList(e) {
+    let ul = e.currentTarget.closest("ul")
+    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+    const ulParent = ul.parentElement;
+
+    ProjektStudio.utils.resetFoundationAccordionStateFor(ulParent)
+    const clonedLi = lastLi.cloneNode(true);
+
+    ProjektStudio.utils.removeChildHtmlAttributes(
+      clonedLi,
+      // ["id"]
+      ["id", "aria-labelledby", "aria-controls", "aria-expanded"]
+    )
+    const copyId = Date.now();
+    ul.dataset.contentBlockCopyId = copyId;
+    ul.outerHTML = ul.outerHTML;
+
+    const newUl = ulParent.querySelector(`ul[data-content-block-copy-id="${copyId}"]`)
+
+    newUl.insertBefore(clonedLi, newUl.lastElementChild);
+    $(newUl).foundation()
   },
 
   enterHtmlEditMode(e) {
@@ -540,15 +610,17 @@
 
   handleSaveContentBlockEditedTextShortcut(e) {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-      this.saveContentBlockEditedText(e);
+      this.saveContentBlockFromSimpleMode(e);
     }
   },
 
-  saveContentBlockEditedText(e) {
+  saveContentBlockFromSimpleMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
-    if (contentBlockSection.classList.contains("-text-edit-mode")) {
-      contentBlockSection.classList.remove("-text-edit-mode")
+    this.removeSimpleEditModeInlineControls(contentBlock);
+
+    if (contentBlockSection.classList.contains("-simple-edit-mode")) {
+      contentBlockSection.classList.remove("-simple-edit-mode")
       this.toggleContentEditableForContentBlock(contentBlock, false);
 
       this.updateContentBlock(
@@ -569,8 +641,7 @@
       const editorId = this.genTextEditorIdForTextarea(contentBlockSection.dataset.contentBlockId)
 
       let newContent = window.CKeditorInstancesGlobal[editorId].getData().trim()
-      console.log(newContent)
-      // newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
+      newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
 
       this.updateContentBlock(
         contentBlock,
@@ -616,14 +687,22 @@
     return { contentBlockSection, contentBlock};
   },
 
-  cancelTextEditMode(e) {
+  cancelSimpleEditMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
-    contentBlockSection.classList.remove("-text-edit-mode")
+    this.removeSimpleEditModeInlineControls(contentBlock);
+
+    contentBlockSection.classList.remove("-simple-edit-mode")
     contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
     this.toggleContentEditableForContentBlock(contentBlock, false);
 
     $(contentBlock).foundation();
+  },
+
+  removeSimpleEditModeInlineControls(container) {
+    container
+      .querySelectorAll(".js-content-block--inline-control")
+      .forEach((e) => e.remove())
   },
 
   cancelHtmlEditMode(e) {
@@ -722,5 +801,3 @@
     return tempDiv.innerHTML;
   }
 };
-
-// export default ContentBlocks

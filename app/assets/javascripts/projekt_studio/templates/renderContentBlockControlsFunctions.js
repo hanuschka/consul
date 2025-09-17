@@ -38,7 +38,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </button>
             </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-text-edit-mode-controlls">
+            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls">
               <button type="button" class="projekt-content-block-edit--button -green js-save-edit-text-projekt-content-block">
                 <i class="fas fa-save"></i>
                 Speichern

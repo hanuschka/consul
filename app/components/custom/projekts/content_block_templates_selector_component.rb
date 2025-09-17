@@ -1,6 +1,26 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
-    def quotes_content_block_templates
-      %w(
+  def description_content_block_templates
+    %w(
+        h3 h4 h5 h6
+        text_block_h3_heading
+        text_block_two_columns
+        textblock
+        download_section
+        futher_information
+        submit_ideas
+        favorites_supported
+        select_suggestions
+    )
+  end
+
+  def accordions_content_block_templates
+    %w(
+      two_items
+    )
+  end
+
+  def quotes_content_block_templates
+    %w(
         picture_on_left_classic
         picture_on_the_right
         image_above_text_below
@@ -8,88 +28,18 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
         image_right_round_purple_color
         classic_white_background
         greeting_image_left_horizontal
-      )
-    end
+    )
+  end
 
-    def description_content_block_templates
-      %w(
-        h3 h4 h5 h6
-        text_block_h3_heading
-        text_block_two_columns
-        textblock
-        download_section
-        futher_information
-        submit_ideas
-        favorites_supported
-        select_suggestions
-      )
-    end
-
-    def media_content_block_templates
-      %w(
-        h3 h4 h5 h6
-        text_block_h3_heading
-        text_block_two_columns
-        textblock
-        download_section
-        futher_information
-        submit_ideas
-        favorites_supported
-        select_suggestions
-      )
-    end
-
-    # def description_content_block_templates
-    # [
-    #   Projekts::ContentBlockTemplates::BlankComponent.new,
-    #   Projekts::ContentBlockTemplates::TitleComponent.new(
-    #     title: example_title
-    #   ),
-    #   Projekts::ContentBlockTemplates::TextComponent.new(
-    #     text: example_description
-    #   ),
-    #   Projekts::ContentBlockTemplates::TextWithTitleComponent.new(
-    #     title: example_title,
-    #     text:  example_description
-    #   ),
-    #   Projekts::ContentBlockTemplates::BulletpointListComponent.new,
-    #   Projekts::ContentBlockTemplates::GreetingComponent.new(
-    #     title: example_title,
-    #     text:  example_description,
-    #     quote: example_description.split[0,11].join(" "),
-    #     image_url: nil
-    #   ),
-    #   Projekts::ContentBlockTemplates::AccordionComponent.new(
-    #     title: example_title,
-    #     items: accordion_items
-    #   ),
-    #   Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new,
-    #   Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://placehold.co/200x200")
-    # ].compact
-  # end
-
-  # def media_content_block_templates
-  #   [
-  #     Projekts::ContentBlockTemplates::ImageGalleryComponent.new(
-  #       title: example_title,
-  #       images: [
-  #         { url: "https://placehold.co/426x212" },
-  #         { url: "https://placehold.co/426x212" },
-  #         { url: "https://placehold.co/426x212" },
-  #         { url: "https://placehold.co/426x212" }
-  #       ]
-  #     ),
-  #     Projekts::ContentBlockTemplates::SingleImageComponent.new(
-  #       image: { url: "https://placehold.co/426x212" }
-  #     ),
-  #     Projekts::ContentBlockTemplates::ExternalVideoPlayerComponent.new(
-  #       url: nil
-  #     ),
-  #     Projekts::ContentBlockTemplates::ImageSliderComponent.new,
-  #     Projekts::ContentBlockTemplates::SuccessComponent.new,
-  #     Projekts::ContentBlockTemplates::WarningComponent.new,
-  #   ]
-  # end
+  def media_content_block_templates
+    %w(
+        tile
+        three_tile
+        one_card
+        three_cards
+        image_slider_two_images
+    )
+  end
 
   def saved_content_blocks
     SavedContentBlock.all.order(:created_at)

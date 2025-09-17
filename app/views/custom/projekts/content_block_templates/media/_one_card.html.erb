@@ -1,0 +1,10 @@
+<% text_variants = [
+  "Kurzer Beschreibungstext zum Projekt. Hier kann ein Überblick über die Inhalte stehen.",
+]
+%>
+
+<div style="display: flex; gap: 10px;">
+  <% text_variants.each do |text| %>
+    <%= render "custom/projekts/content_block_templates/media/card", text: text %>
+  <% end %>
+</div>

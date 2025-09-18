@@ -52,7 +52,7 @@ class DeficiencyReport < ApplicationRecord
 
   before_save :calculate_hot_score
 
-  scope :assigned, -> { where.not(responsible_type: nil, responsible_id: nil) }
+  scope :assigned, -> { where.not(responsible_type: nil, responsible_id: nil, assigned_at: nil) }
   scope :not_assigned, -> { where(responsible_type: nil).or(where(responsible_id: nil)) }
 
   scope :sort_by_most_commented,       -> { reorder(comments_count: :desc) }
@@ -66,6 +66,7 @@ class DeficiencyReport < ApplicationRecord
   scope :admin_accepted, -> { Setting["deficiency_reports.admin_acceptance_required"].present? ? where(admin_accepted: true) : all }
 
   scope :closed, -> { joins(:status).where(deficiency_report_statuses: { archive_reports: true }) }
+  scope :not_closed, -> { joins(:status).where(deficiency_report_statuses: { archive_reports: false }) }
   scope :archived, -> { where.not(archived_at: nil) }
   scope :not_archived, -> { where(archived_at: nil) }
   scope :closed_to_archive, -> { closed.not_archived.where("status_changed_at < ?", 7.days.ago) }

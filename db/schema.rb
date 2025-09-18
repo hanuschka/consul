@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_15_153348) do
+ActiveRecord::Schema.define(version: 2025_09_17_101351) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -814,6 +814,7 @@ ActiveRecord::Schema.define(version: 2025_09_15_153348) do
     t.integer "given_order"
     t.text "notice_text", default: ""
     t.boolean "archive_reports", default: false
+    t.integer "reminder_delay", default: 14, null: false
   end
 
   create_table "deficiency_report_translations", force: :cascade do |t|

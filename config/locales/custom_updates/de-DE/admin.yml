@@ -182,9 +182,10 @@ de:
           new:
             creating: Neue Mangelstatus erstellen
           status:
-            color: Farbe
-            icon: Icon
             title: Name
+            icon: Icon
+            color: Farbe
+            reminder_delay: Erinnerung (Tage)
             archive_reports: Archivieren
             notice_text: E-Mail-Benachrichtigungstext
         districts:

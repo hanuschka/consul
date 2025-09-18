@@ -134,6 +134,7 @@
 //= require select2/dist/js/select2.full
 //= require custom
 //= require_tree ./custom
+//= require_tree ./maps
 
 var initialize_modules = function() {
   "use strict";
@@ -234,6 +235,7 @@ var destroy_non_idempotent_modules = function() {
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
   App.SocialShare.destroy();
+  App.StikyHeader.destroy();
 };
 
 

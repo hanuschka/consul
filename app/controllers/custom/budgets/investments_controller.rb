@@ -56,14 +56,6 @@ module Budgets
     private
 
       def investment_params
-        if params[:budget_investment][:map_location_attributes].present?
-          location = params[:budget_investment][:map_location_attributes]
-
-          if location["latitude"].blank? && location["longitude"].blank?
-            location["_destroy"] = "1"
-          end
-        end
-
         attributes = [:heading_id, :tag_list, :organization_name, :location, :on_behalf_of, :video_url,
                       :related_sdg_list, :implementation_performer, :implementation_contribution, :user_cost_estimate,
                       :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,

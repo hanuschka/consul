@@ -47,27 +47,44 @@
           <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note") %>
         </div>
 
-        <div>
-          <%= label_tag "Schnellauswahl Kartenausschnitt" %>
-          <%= select_tag :registered_address_district_id, options_for_select(@districts.map { |district| [district.name, district.id] }),
-            { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: t("custom.deficiency_reports.form.district.title"),
-              class: "js-dr-form-update-map",
+        <div class="custom-new-design">
+          <div class="margin-bottom">
+            <%= render partial: "custom/shared/user_resources_form/deficiency_report_category", locals: { f: f } %>
+          </div>
+
+          <div class="" style="display:flex;align-items:baseline;">
+            <h2 class="rich-form-label" style="flex-grow:1;">
+              <i class="fas fa-map"></i>
+              <%= t("custom.user_resources.form.map_location_label") %>
+              <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+              <span class="small"><%= t("custom.user_resources.form.map_location_instructions_mandatory") %></span>
+            </h2>
+
+            <%= select_tag :deficiency_report_district, options_for_select(RegisteredAddress::District.joins(:map_location).order(id: :asc).all.map { |district|
+              [
+                district.name, district.id,
+                {
+                  data: {
+                    latitude: district.map_location.latitude,
+                    longitude: district.map_location.longitude
+                  }
+                }
+              ]
+            }),
+            { prompt: t("custom.deficiency_reports.form.district.placeholder"), label: false,
+              class: "js-update-map-center hide-on-big-tablet",
+              style: "width:unset;",
               data: {
-                all_district_map_coordinates: @map_coordinates_for_districts,
-                default_map_coordinates: [Setting["map.latitude"], Setting["map.longitude"]]
+                default_latitude: MapLocation.default.latitude,
+                default_longitude: MapLocation.default.longitude
               }
             } %>
-        </div>
+          </div>
 
-        <div class="small-12 margin-bottom" id='map-for-new-deficiency_report'>
           <%= render "map_locations/form_fields",
-                     form:     f,
-                     map_location: @deficiency_report.map_location || MapLocation.new,
-                     label:    t("proposals.form.map_location"),
-                     help:     t("proposals.form.map_location_instructions"),
-                     remove_marker_label: t("proposals.form.map_remove_marker"),
-                     parent_class: "proposal",
-                     i18n_namespace: "proposals" %>
+            form:            f,
+            mappable:        @deficiency_report,
+            nesting_prefix: "deficiency_report" %>
         </div>
 
         <div>

@@ -8,7 +8,10 @@
   <div class="d-flex">
     <div class="column">
       <h2><%= t("custom.admin.projekt_phases.projekt_arguments.page_title") %></h2>
-      <%= render partial: "custom/admin/projekt_phases/projekt_arguments/form", locals: { projekt_argument: @projekt_argument } %>
+
+      <div id="new-projekt-argument">
+        <%= link_to t("custom.admin.projekt_phases.projekt_arguments.button"), polymorphic_path([@namespace, @projekt_phase, ProjektArgument.new], action: :new), class: "button", remote: true %>
+      </div>
     </div>
     <div class="column">
       <div class="float-right">

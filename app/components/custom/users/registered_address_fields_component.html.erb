@@ -4,6 +4,7 @@
       <%= label_tag :form_registered_address_city_id, t("custom.devise_views.users.registrations.new.form_registered_address_city_label") %>
       <%= select_tag :form_registered_address_city_id, options_for_select(options_for_city_select, @selected_city_id), {
           prompt: t("custom.helpers.select.prompt_city"),
+          autocomplete: "address-level2",
           class: "js-registered-address-choose show-arrow #{"is-invalid-input" if highlight_error?(@selected_city_id)}"
         } %>
 

@@ -9,6 +9,9 @@ class DeficiencyReport::Status < ApplicationRecord
 
   default_scope { order(given_order: :asc) }
 
+  validates :reminder_delay, presence: true,
+                             numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
   def self.create_default_objects
     return if DeficiencyReport::Status.count > 0
     DeficiencyReport::Status.create(
@@ -26,6 +29,10 @@ class DeficiencyReport::Status < ApplicationRecord
       color: 'green',
       icon: 'hourglass-end'
     )
+  end
+
+  def self.default
+    order(:given_order).first
   end
 
   def safe_to_destroy?

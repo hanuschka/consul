@@ -11,6 +11,7 @@ namespace :deficiency_report_management do
       get :audits
       patch :accept
       patch :toggle_image
+      get :feedback_form
     end
   end
 

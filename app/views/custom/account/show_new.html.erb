@@ -30,7 +30,7 @@
           mark_all_as_read_notifications_path, method: :put,
           class: "button hollow float-right-medium" %>
 
-        <ul class="menu simple clear">
+        <ul class="menu simple clear" role="navigation" aria-label="<%= t('custom.accessibility.account.notifications.aria-label') %>">
           <li class="<%= params[:notifications] == "read" ? "" : "is-active" %>">
             <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
           </li>
@@ -52,14 +52,11 @@
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.users.settings"), icon_name: "cog") do |c| %>
         <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
-        <% if @account.extended_registration? %>
-          <%= link_to t("custom.account.show.edit_details_link"), edit_details_account_path, class: "button hollow expanded" %>
-        <% end %>
         <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow expanded delete alert" %>
       <% end %>
 
-      <% if !current_user.level_three_verified? %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description"),  icon_name: "check") do |c| %>
+      <% if @account.extended_registration? %>
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.verification_title_html"), description: t("custom.account.show.verification_description_html"),  icon_name: "check") do |c| %>
           <div class="verify-account">
             <% if current_user.level_two_verified? %>
               <%= link_to t("account.show.finish_verification"), verification_path, class: "button" %>

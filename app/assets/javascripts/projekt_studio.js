@@ -14,5 +14,6 @@
 //= require ./projekt_studio/modules/Banner
 //= require ./projekt_studio/modules/PhasesTabs
 //= require ./projekt_studio/modules/ContentBlocks
+//= require ./projekt_studio/modules/ContentBlockSimpleEdit
 //= require ./projekt_studio/modules/PreviewMode
 //= require ./projekt_studio/modules/SavedContentBlocks

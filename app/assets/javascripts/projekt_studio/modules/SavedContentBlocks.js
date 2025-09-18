@@ -1,4 +1,4 @@
-ProjektStudio.modules.SavedContentBlocks = {
+ProjektStudio.SavedContentBlocks = {
   initialize() {
     this.initEventListeners()
 
@@ -98,7 +98,7 @@ ProjektStudio.modules.SavedContentBlocks = {
     const selector = `.js-saved-content-block-item[data-saved-content-block-id="${savedContentBlockId}"] .js-content-block-template-content`
     const allContentBlocksWithThisId = document.querySelectorAll(selector)
 
-    const saveContentBlock = () => {
+    const updateOtherContentBlocks = () => {
       allContentBlocksWithThisId.forEach((templateContentElement) => {
         templateContentElement.innerHTML = content
       })
@@ -119,14 +119,14 @@ ProjektStudio.modules.SavedContentBlocks = {
         id: savedContentBlockId,
         content
       })
-      saveContentBlock()
+      updateOtherContentBlocks()
     } else {
       $.ajax({
         url: `/admin/saved_content_blocks/${savedContentBlockId}`,
         type: "PATCH",
         data: { saved_content_block: { content }}
       }).then(() => {
-        saveContentBlock()
+        updateOtherContentBlocks()
       })
     }
   },

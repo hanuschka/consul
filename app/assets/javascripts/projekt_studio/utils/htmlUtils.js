@@ -16,6 +16,10 @@ ProjektStudio.utils.htmlToDomElement = function(html) {
   return div
 }
 
+ProjektStudio.utils.htmlToSingleDomElement = function(html) {
+  return ProjektStudio.utils.htmlToDomElement(html).firstElementChild;
+}
+
 const voidElements = [
   "base", "br", "col", "embed", "hr",
   "img", "link", "param",

@@ -11,6 +11,7 @@ namespace :deficiency_report_management do
       get :audits
       patch :accept
       patch :toggle_image
+      get :feedback_form
     end
   end
 
@@ -48,4 +49,5 @@ namespace :deficiency_report_management do
   end
 
   resource :stats, only: :show
+  resource :ai_settings, only: [:show, :update]
 end

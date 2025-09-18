@@ -99,6 +99,10 @@ class UserResources::FormComponent < ApplicationComponent
     projekt_phase_feature?(projekt_phase, "form.sentiments")
   end
 
+  def show_idea_category_selector?
+    resource.is_a?(Idea) && Idea::Category.exists?
+  end
+
   def show_documents_input?
     return ideas_feature?("document_upload") if resource.is_a?(Idea)
 

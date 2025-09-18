@@ -21,6 +21,13 @@
         $content.toggle();
         $sidebarCard.find(".icon-chevron-down").toggleClass("-rotated");
       }
+
+      this.reInitializeMap();
+    },
+
+    reInitializeMap: function() {
+      App.Map.destroy();
+      App.Map.initialize();
     }
   };
 }).call(this);

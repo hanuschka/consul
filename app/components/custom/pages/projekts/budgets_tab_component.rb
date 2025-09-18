@@ -36,7 +36,7 @@ class Pages::Projekts::BudgetsTabComponent < ApplicationComponent
     end
 
     MapLocation.where(investment_id: investments).map do |map_location|
-      map_location.shape_json_data.presence || map_location.json_data
+      map_location.features_json_data
     end
   end
 end

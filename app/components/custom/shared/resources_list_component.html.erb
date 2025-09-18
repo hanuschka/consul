@@ -24,9 +24,9 @@
 <% else %>
   <div class="resources-list js-resources-list <%= class_names %>">
     <% if @title.present? %>
-      <h3 class="resources-list--title">
+      <h2 class="resources-list--title">
         <%= @title %>
-      </h3>
+      </h2>
     <% end %>
 
 
@@ -59,7 +59,12 @@
       <% end %>
 
       <% unless @hide_view_mode_button %>
-        <div class="resources-list--switch-view-button js-resource-list-switch-view-button">
+        <div class="resources-list--switch-view-button js-resource-list-switch-view-button"
+             role="button"
+             tabindex="0"
+             aria-label="<%= t('custom.accessibility.shared.switch-view-button.aria-label') %>"
+             onkeydown="if (event.key === 'Enter') { this.click(); }"
+             >
           <i class="fa <%= switch_view_mode_icon %>"></i>
         </div>
       <% end %>

@@ -22,9 +22,13 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
         count_of_rating_scale_cells += 1 if question.votation_type.max_rating_scale_label.present?
       end
 
-      if count_of_rating_scale_cells >= 8
+      if count_of_rating_scale_cells >= 7
         classes.push("vertical-rating-scale-answers")
       end
+    elsif show_additional_info_images?
+      classes.push("regular")
+      classes.push("regular-with-images")
+
     else
       classes.push("regular")
       classes.push("row")

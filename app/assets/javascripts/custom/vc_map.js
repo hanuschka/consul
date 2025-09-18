@@ -15,30 +15,55 @@
 
       // custom map options
       vcsApp.customMapOptions = {}
-      vcsApp.customMapOptions.editable = $(element).data("editable")
+
+      // variables to set map view
+      vcsApp.customMapOptions.mapCenterLatitude = $(element).data("map-center-latitude");
+      vcsApp.customMapOptions.mapCenterLongitude = $(element).data("map-center-longitude");
+      vcsApp.customMapOptions.mapCenterZoom = $(element).data("map-zoom");
+
+      vcsApp.customMapOptions.adminShape = $(element).data("admin-shape");
+      vcsApp.customMapOptions.showAdminShape = $(element).data("show-admin-shape");
+
+      vcsApp.customMapOptions.adminEditor = $(element).data("admin-editor");
+
+      // variables that define location and tooltips of process coordinates (both pins and shapes)
+      vcsApp.customMapOptions.processCoordinates = $(element).data("process-coordinates");
+      vcsApp.customMapOptions.process = $(element).data("parent-class");
+
+      // variables to define map form input selectors
       vcsApp.customMapOptions.latitudeInputSelector = $(element).data("latitude-input-selector");
       vcsApp.customMapOptions.longitudeInputSelector = $(element).data("longitude-input-selector");
       vcsApp.customMapOptions.altitudeInputSelector = $(element).data("altitude-input-selector");
       vcsApp.customMapOptions.zoomInputSelector = $(element).data("zoom-input-selector");
       vcsApp.customMapOptions.shapeInputSelector = $(element).data("shape-input-selector");
+
       vcsApp.customMapOptions.defaultColor = $(element).data("default-color");
-      vcsApp.customMapOptions.mapCenterLatitude = $(element).data("map-center-latitude");
-      vcsApp.customMapOptions.mapCenterLongitude = $(element).data("map-center-longitude");
-      vcsApp.customMapOptions.mapCenterZoom = $(element).data("map-zoom");
+      vcsApp.customMapOptions.editable = $(element).data("editable")
 
       // create new feature info session to allow feature click interaction
-      App.VCMap.createFeatureInfoSession(vcsApp);
+      if ( App.MapPopup.excludedProcesses.indexOf(vcsApp.customMapOptions.process) == -1 ) {
+        App.VCMap.createFeatureInfoSession(vcsApp);
+      }
 
       // set cesium base url
-      window.CESIUM_BASE_URL = '../vcmap/assets/cesium/';
+      window.CESIUM_BASE_URL = '/vcmap/assets/cesium/';
       // adding helper instance to window
       window.vcsApp = vcsApp;
 
-      // add base layer
-      App.VCMap.createSimpleEditorLayer(vcsApp);
-
       // add predefined shapes
-      App.VCMap.drawPredefinedFeatures(vcsApp, element);
+      if (vcsApp.customMapOptions.editable) {
+
+        if (vcsApp.customMapOptions.adminEditor && vcsApp.customMapOptions.adminShape ) {
+          App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_editorLayer');
+        } else if (vcsApp.customMapOptions.adminShape && vcsApp.customMapOptions.showAdminShape) {
+          App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_adminShapeLayer')
+        }
+        App.VCMap.drawPredefinedFeatures(vcsApp, '_editorLayer');
+
+      } else {
+        App.VCMap.drawPredefinedFeature(vcsApp, vcsApp.customMapOptions.adminShape, '_adminShapeLayer');
+        App.VCMap.drawPredefinedFeatures(vcsApp, '_processCoordinatesLayer');
+      }
 
       vcsApp.maps.mapActivated.addEventListener(function(map) {
         // set default view
@@ -129,35 +154,15 @@
       };
     },
 
-    createSimpleEditorLayer: function(app) {
+    createMapLayer: function(app, layerName) {
       var layer = new vcs.VectorLayer({
-        name: '_demoDrawingLayer',
+        name: layerName,
         projection: vcs.wgs84Projection.toJSON(),
         zIndex: vcs.maxZIndex - 1,
         vectorProperties: {
-          altitudeMode: 'absolute'
+          altitudeMode: 'relativeToGround'
         }
       });
-
-      // layer style
-      var style = new vcs.VectorStyleItem({
-        fill: {
-          color: app.customMapOptions.defaultColor,
-        },
-        stroke: {
-          color: '#ffffff',
-          width: 3,
-        },
-        image: {
-          color: app.customMapOptions.defaultColor,
-          src: '../vcmap/assets/cesium/Assets/Textures/pin.svg',
-          stroke: {
-            color: '#ffffff',
-            width: 3,
-          },
-        },
-      });
-      layer.setStyle(style);
 
       // layer will not be serialized
       vcs.markVolatile(layer);
@@ -219,38 +224,34 @@
     },
 
     drawFeature: function(app, geometryType) {
-      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
+      var layer = app.layers.getByKey('_editorLayer') || App.VCMap.createMapLayer(app, '_editorLayer');
       layer.activate();
-      // layer.removeAllFeatures();
+
+      var adminShapeLayer = app.layers.getByKey('_adminShapeLayer');
       var session = vcs.startCreateFeatureSession(app, layer, geometryType);
-      // adapt the features style
       var featureCreatedDestroy = session.featureCreated.addEventListener(function(feature) {
-        if (layer.getFeatures().length > 1) {
-            layer.removeFeaturesById(['_shape']);
-        }
-        feature.setId('_shape');
+        layer.getFeatures().forEach(function(f) {
+          if (f.getId() !== feature.getId()) {
+            layer.removeFeaturesById([f.getId()])
+          }
+        })
 
         if ( feature.getGeometry() instanceof ol.geom.Polygon ) {
-          feature.set('olcs_altitudeMode', 'clampToGround');
+          feature.set('olcs_altitudeMode', 'relativeToGround');
+        } else if ( feature.getGeometry() instanceof ol.geom.Point ) {
+          var editorPinStyle = new vcs.VectorStyleItem({});
+          editorPinStyle.image = new ol.style.Icon({
+            src: '/vcmap/assets/cesium/Assets/Textures/pin.svg'
+          });
+          feature.setStyle(editorPinStyle.style);
         }
-
-        // if (feature.getGeometry() instanceof ol.geom.Point && layer.getFeatures().length > 2) {
-        //   var pinStyle = new vcs.VectorStyleItem({});
-        //     pinStyle.image = new ol.style.Icon({
-        //       color: '#0000ff',
-        //       src: '../vcmap/assets/cesium/Assets/Textures/pin.svg',
-        //       scale: 1,
-        //     });
-        //   feature.setStyle(pinStyle.style);
-        // }
       });
 
       // to draw only a single feature, stop the session, after creationFinished was fired
       var finishedDestroy = session.creationFinished.addEventListener(function(feature) {
-        feature = feature || layer.getFeaturesById(['_shape'])[0];
+        feature = feature
 
         if ( !feature ) { return; }
-
 
         // convert Mercator coordinates to WGS84
         var geometry = feature.getGeometry();
@@ -285,12 +286,6 @@
           $(app.customMapOptions.zoomInputSelector).val(app.customMapOptions.mapCenterZoom);
           $(app.customMapOptions.shapeInputSelector).val(shapeString);
         }
-
-        // session.stop();
-
-        // Launch the same function
-        // reactivate feature info by creating new feature info session
-        // App.VCMap.createFeatureInfoSession(app);
       });
       var destroy = function() {
         featureCreatedDestroy();
@@ -299,17 +294,55 @@
       return destroy;
     },
 
-    drawPredefinedFeatures: function(app, element) {
-      var processCoordinates = $(element).data("process-coordinates");
-      var process = $(element).data("parent-class");
-
-      processCoordinates.forEach(function(coordinates) {
-        App.VCMap.drawPredefinedFeature(app, coordinates, process)
+    drawPredefinedFeatures: function(app, layerName) {
+      app.customMapOptions.processCoordinates.forEach(function(coordinates) {
+        App.VCMap.drawPredefinedFeature(app, coordinates, layerName)
       });
     },
 
-    drawPredefinedFeature: function(app, coordinates, process) {
-      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
+    buildPinSvg: function(coordinates) {
+      var svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->' +
+          '<path fill="' + App.VCMap.colorWithOpacity(coordinates.color, 0.8) + '" d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0z"/>' +
+        '</svg>';
+
+      var encodedSvg = btoa(unescape(encodeURIComponent(svg)));
+
+      return 'data:image/svg+xml;base64,' + encodedSvg;
+    },
+
+    colorWithOpacity: function(color, opacity) {
+      if (!color || !opacity) {
+        return 'rgba(0,0,0,0.5)'; // default color with opacity
+      }
+
+      // Ensure color is in hex format
+      if (color.charAt(0) === '#') {
+        color = color.slice(1);
+      }
+
+      if (color.length === 3) {
+        // Convert shorthand hex to full hex
+        color = color.split('').map(function(c) { return c + c; }).join('');
+      }
+
+      if (color.length !== 6) {
+        console.error('Invalid color format. Expected hex format (e.g., #RRGGBB).');
+        return 'rgba(0,0,0,0.5)'; // default color with opacity
+      }
+
+      // Convert hex to RGB
+      var r = parseInt(color.slice(0, 2), 16);
+      var g = parseInt(color.slice(2, 4), 16);
+      var b = parseInt(color.slice(4, 6), 16);
+
+      // Return RGBA format with the specified opacity
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+    },
+
+
+    drawPredefinedFeature: function(app, coordinates, layerName) {
+      var layer = app.layers.getByKey(layerName) || App.VCMap.createMapLayer(app, layerName);
       var feature;
 
       if (App.Map.validCoordinates(coordinates)) { // geometryType === 'Point'
@@ -317,14 +350,15 @@
 
         var pinStyle = new vcs.VectorStyleItem({});
         pinStyle.image = new ol.style.Icon({
-          color: coordinates.color,
-          src: '../vcmap/assets/cesium/Assets/Textures/pin.svg',
-          scale: 1,
+          src: App.VCMap.buildPinSvg(coordinates)
         });
         feature.setStyle(pinStyle.style);
 
-        feature.process = process;
-        feature.resource_id = getResourceId(coordinates);
+        feature.set('olcs_altitudeMode', 'absolute');
+
+        feature.data = coordinates;
+        feature.process = app.customMapOptions.process;
+        feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
 
       } else { // geometryType === 'Polygon'
@@ -333,120 +367,47 @@
         });
 
         feature = new ol.Feature({ geometry: new ol.geom.Polygon([polygoneCoordinates])});
-        // var polygonStyle = new vcs.VectorStyleItem({});
-        // polygonStyle.fillColor = coordinates.color;
-        // polygonStyle.strokeColor = "#000000";
-        // polygonStyle.strokeWidth = 2;
-        // feature.setStyle(polygonStyle.style);
-        //
-        feature.set('olcs_altitudeMode', 'clampToGround');
 
-        feature.process = process;
-        feature.resource_id = getResourceId(coordinates);
+        var polygonStyle = new vcs.VectorStyleItem({});
+        polygonStyle.fillColor = App.VCMap.colorWithOpacity(coordinates.color, 0.3);
+        polygonStyle.stroke = new ol.style.Stroke({
+          color: coordinates.color,
+          width: 1
+        });
+        feature.setStyle(polygonStyle.style);
+
+        feature.set('olcs_altitudeMode', 'relativeToGround');
+
+        feature.data = coordinates;
+        feature.process = app.customMapOptions.process;
+        feature.resource_id = coordinates.id;
         layer.addFeatures([feature]);
-      }
-
-      function getResourceId(coordinates) {
-        var id;
-
-        if (process == "proposals") {
-          id = coordinates.proposal_id
-        } else if (process == "deficiency-reports") {
-          id = coordinates.deficiency_report_id
-        } else if (process == "projekts") {
-          id = coordinates.projekt_id
-        } else {
-          id = coordinates.investment_id
-        }
-
-        return id
       }
     },
 
     clearFeatures: function(app) {
-      var layer = app.layers.getByKey('_demoDrawingLayer') || App.VCMap.createSimpleEditorLayer(app);
+      var layer = app.layers.getByKey('_editorLayer') || App.VCMap.createMapLayer(app, '_editorLayer');
       layer.removeFeaturesById(['_shape']);
     },
 
     showFeatureInfo: function(feature) {
+      var route;
+      var resourceType = feature.data.resource_type;
+      var resourceId = feature.data.id;
+      var popup = $("#vc-popup");
+      var popupContent = popup.find("#vc-popup-content")
+      var popupDataUrl = App.MapPopup.getPopupDataUrl(resourceType, feature.data);
 
-      // function to open feature info popup
-      var openMarkerPopup = function(feature) {
-        var route;
+      if (!popupDataUrl) { return };
 
-        if ( feature.process == "proposals" ) {
-          route = "/proposals/" + feature.resource_id + "/json_data"
-        } else if ( feature.process == "deficiency-reports") {
-          route = "/deficiency_reports/" + feature.resource_id + "/json_data"
-        } else if ( feature.process == "projekts") {
-          route = "/projekts/" + feature.resource_id + "/json_data"
-        } else {
-          route = "/investments/" + feature.resource_id + "/json_data"
+      $.ajax(popupDataUrl, {
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          popupContent.html(App.MapPopup.generatePopupContent(data, resourceType));
+          popup.show();
         }
-
-        // marker = e.target;
-        $.ajax(route, {
-          type: "GET",
-          dataType: "json",
-          success: function(data) {
-            $("#vc-popup").html(getPopupContent(data, feature));
-            $("#vc-popup").show();
-          }
-        });
-      };
-
-      // function to generate marker popup content
-      var getPopupContent = function(data, feature) {
-        if (feature.process == "proposals" || data.proposal_id) {
-          return proposalPopupContent(data)
-        } else if ( feature.process == "deficiency-reports" ) {
-          return "<a href='/deficiency_reports/" + data.deficiency_report_id + "'>" + data.deficiency_report_title + "</a>";
-        } else if ( feature.process == "projekts" ) {
-          return "<a href='/projekts/" + data.projekt_id + "'>" + data.projekt_title + "</a>";
-        } else {
-          return "<a href='/budgets/" + data.budget_id + "/investments/" + data.investment_id + "'>" + data.investment_title + "</a>";
-        }
-
-        function proposalPopupContent(data) {
-          var popupHtml = "";
-          popupHtml += "<h6 style='max-width:140px;margin-top:10px;'><a href='/proposals/" + data.proposal_id + "'>" + data.proposal_title + "</a></h6>"; //title
-
-          if (data.image_url) {
-            popupHtml += "<img src='" + data.image_url + "' style='margin-bottom:10px;'>"; //image
-          }
-
-          if (data.labels.length || Object.keys(data.sentiment).length) {
-            popupHtml += "<div class='resource-taggings'>";
-
-            if (data.labels.length) {
-              var labels = "<div class='projekt-labels' style='max-width:120px;'>";
-              data.labels.forEach(function(label) {
-                labels += "<span class='projekt-label selected'>"
-                labels += "<i class='fas fa-" + label.icon + "' style='margin-right:4px;'></i>"
-                labels += label.name
-                labels += "</span>";
-              });
-              labels += "</div>";
-              popupHtml += labels;
-            }
-
-            if (Object.keys(data.sentiment).length) {
-              var sentiments = "<div class='sentiments' style='max-width:120px;'>";
-              sentiments += "<span class='sentiment' style='background-color:#454B1B;color:#ffffff'>" + data.sentiment.name + "</span>";
-              sentiments += "</div>";
-              popupHtml += sentiments;
-            }
-
-            popupHtml += "</div>";
-          }
-
-          popupHtml += "<a class='popup-close-button' onclick='$(\"#vc-popup\").hide();' href='#close' style='outline: none;'>×</a>"
-
-          return popupHtml;
-        }
-      };
-
-      openMarkerPopup(feature);
+      });
     }
   };
 }).call(this);

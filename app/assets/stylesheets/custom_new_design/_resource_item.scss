@@ -50,12 +50,23 @@
         line-height: 1.5 !important;
       }
     }
+
+    &.-no-image {
+      .resource-item--header {
+        margin-bottom: 1rem;
+      }
+
+      .resource-item--image-container {
+        display: none;
+      }
+    }
   }
 
   .projekt-labels .projekt-label {
     font-size: 14px;
     padding: 5px 8px;
     border-radius: 5px;
+    cursor: pointer;
 
     i {
       font-size: 12px;

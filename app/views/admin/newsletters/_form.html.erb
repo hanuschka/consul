@@ -17,5 +17,6 @@
 
   <div class="margin-top">
     <%= f.submit class: "button success" %>
+    <%= link_to 'Send Test', send_test_admin_newsletter_path(@newsletter), method: :post, class: "button secondary", data: { confirm: t("custom.admin.newsletters.send_test_confirm") } %>
   </div>
 <% end %>

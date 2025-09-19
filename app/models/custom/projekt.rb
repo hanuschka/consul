@@ -241,8 +241,11 @@ class Projekt < ApplicationRecord
         .select(:id)
 
       excluded_projekt_ids = Projekt.joins(:individual_group_values)
-        .where.not(individual_group_values: { id: user_hard_group_value_ids })
-        .select(:id)
+                                    .where.not(id: Projekt
+                                      .joins(:individual_group_values)
+                                      .where(individual_group_values: { id: user_hard_group_value_ids })
+                                    )
+                                    .select(:id)
 
       permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
 
@@ -792,26 +795,10 @@ class Projekt < ApplicationRecord
     def copy_map_settings
       return if map_location.present?
 
-      if overview_page?
-        MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"],
-          projekt_id: id
-        )
-      else
-        map_location = parent&.map_location&.dup || MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"]
-        )
+      create_map_location
 
-        map_location.projekt_id = id
-        map_location.save!
-
-        (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
-          map_layers << map_layer.dup
-        end
+      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 

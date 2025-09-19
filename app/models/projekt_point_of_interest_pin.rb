@@ -1,9 +1,8 @@
 class ProjektPointOfInterestPin < ApplicationRecord
-  include NewMappable
+  include Mappable
 
   belongs_to :projekt_phase
   belongs_to :author, class_name: "User"
-  belongs_to :projekt_point_of_interest_category, optional: false
 
   scope :ordered, -> { order(created_at: :desc) }
   scope :by_categories, -> (category_ids) {
@@ -13,19 +12,6 @@ class ProjektPointOfInterestPin < ApplicationRecord
   }
 
   validate :validate_max_point_of_interest_pins_per_user
-
-  def pin_json_data
-    {
-      id: id,
-      resource_type: "point_of_interest_pin",
-      projekt_phase_id: projekt_phase.id,
-      lat: map_location.latitude,
-      long: map_location.longitude,
-      zoom: map_location.zoom,
-      color: projekt_point_of_interest_category.color,
-      fa_icon_class: projekt_point_of_interest_category.icon
-    }
-  end
 
   private
 

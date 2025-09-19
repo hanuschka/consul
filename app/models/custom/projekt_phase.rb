@@ -323,7 +323,7 @@ class ProjektPhase < ApplicationRecord
     return if map_location.present?
 
     map_location = projekt.map_location&.dup
-    map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+    map_location.update!(mappable: self) if map_location.present?
 
     projekt.map_layers.each do |map_layer|
       map_layers << map_layer.dup

@@ -56,5 +56,10 @@
       <i class="fas fa-tag"></i>
       <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_sdg") %>
     <% end %>
+
+    <%= link_to polymorphic_path([namespace, @projekt], action: :notify_reviewers), method: "post", role: "button", class: "button hollow expanded left-aligned" do %>
+      <i class="fas fa-bell"></i>
+      <%= t("custom.projekts.page.sidebar.admin_controls.notify_reviewers") %>
+    <% end %>
   <% end %>
 </div>

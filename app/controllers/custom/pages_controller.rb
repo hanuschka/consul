@@ -122,14 +122,6 @@ class PagesController < ApplicationController
     end
   end
 
-  def extended_sidebar_map
-    @current_projekt = SiteCustomization::Page.find_by(slug: params[:id]).projekt
-
-    respond_to do |format|
-      format.js { render "pages/sidebar/extended_map" }
-    end
-  end
-
   private
 
   def set_comment_phase_footer_tab_variables
@@ -332,7 +324,7 @@ class PagesController < ApplicationController
 
       @investments = @resources.send(@current_filter)
       @investment_ids = @investments.ids
-      @investment_coordinates = MapLocation.where(investment_id: @investments).map(&:json_data)
+      @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment", mappable_id: @investment_ids).map(&:features_json_data)
       @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
     end
 
@@ -363,12 +355,26 @@ class PagesController < ApplicationController
 
   def set_point_of_interest_phase_footer_tab_variables
     auto_sign_in_guest_for(@projekt_phase)
-    @map_coordinates =
-      @projekt_phase
-        .projekt_point_of_interest_pins
-        .by_categories(params[:category_ids])
-        .includes(:map_location)
-        .map(&:pin_json_data)
+
+    map_locations = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins)
+    selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
+
+    features = if selected_categories.present?
+                 map_locations.map do |ml|
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id, feature_icon_unicode: AwesomeIcon.find_by(name: (f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"] ))&.unicode }) }
+                   ml.features["features"].select { |f| f["properties"]["feature_icon_name"].in?(selected_categories.pluck(:icon)) || f["properties"]["fa_icon_class"].in?(selected_categories.pluck(:icon)) }
+                 end.flatten.compact
+               else
+                 map_locations.map do |ml|
+                   ml.features["features"].map { |f| f["properties"].merge!({"resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id, feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"])&.unicode }) }
+                   ml.features["features"]
+                 end.flatten
+               end
+
+    @pin_coordinates = {
+      type: "FeatureCollection",
+      features: features
+    }
   end
 
   def set_newsfeed_phase_footer_tab_variables

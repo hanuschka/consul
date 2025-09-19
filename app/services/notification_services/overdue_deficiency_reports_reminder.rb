@@ -1,9 +1,5 @@
 module NotificationServices
   class OverdueDeficiencyReportsReminder < ApplicationService
-    def initialize
-      @threshold_date = 14.days.ago
-    end
-
     def call
       officers_with_overdue_reports_ids.each do |officer_id|
         NotificationServiceMailer.overdue_deficiency_reports(officer_id, overdue_reports_ids_for_officer(officer_id)).deliver_later
@@ -13,8 +9,20 @@ module NotificationServices
     private
 
       def overdue_reports
-        DeficiencyReport.where(official_answer: [nil, ""])
-                        .where(assigned_at: @threshold_date.midnight..@threshold_date.end_of_day)
+        DeficiencyReport.assigned.not_closed
+          .where.not(status_changed_at: nil)
+          .where(official_answer: [nil, ""])
+          .where(
+            Arel.sql("
+              (
+                CASE
+                  WHEN abs(EXTRACT(EPOCH FROM (deficiency_reports.assigned_at - CURRENT_TIMESTAMP))) <
+                       abs(EXTRACT(EPOCH FROM (deficiency_reports.status_changed_at - CURRENT_TIMESTAMP))) THEN deficiency_reports.assigned_at
+                  ELSE deficiency_reports.status_changed_at
+                END
+              )::date = CURRENT_DATE - (deficiency_report_statuses.reminder_delay || ' days')::interval
+            ")
+          )
       end
 
       def officers_with_overdue_reports_ids

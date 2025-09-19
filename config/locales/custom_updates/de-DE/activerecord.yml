@@ -130,6 +130,7 @@ de:
         latitude: Breitengrad
         longitude: Längengrad
         zoom: Zoom
+        show_admin_shape: In Projektübersicht anzeigen
       projekt:
         total_duration_start: Anfangsdatum
         total_duration_end: Enddatum

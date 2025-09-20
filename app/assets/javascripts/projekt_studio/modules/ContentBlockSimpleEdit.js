@@ -9,7 +9,8 @@
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-edit-text-projekt-content-block", this.enterSimpleEditMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--add-new-item", this.addNewItemToList.bind(this))
+    $document.on("click", ".js-projekt-content-block--add-item", this.addNewItemToList.bind(this))
+    $document.on("click", ".js-projekt-content-block--delete-last-item", this.deleteLastItemFromList.bind(this))
 
     $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
     $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
@@ -45,39 +46,40 @@
   },
 
   addNewItemButton(ul) {
-    const buttonWrapper = this.createNewItemButtonWrapper(ul, { elementType: "li", copyStyles: true})
-    buttonWrapper.style = "list-style: none;"
+    const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "li", copyStyles: true})
 
     ul.appendChild(buttonWrapper);
   },
 
   addNewSliderItemButton(ul) {
-    const buttonWrapper = this.createNewItemButtonWrapper(ul, { elementType: "div", copyStyles: false })
-    buttonWrapper.style = "list-style: none;"
+    const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "div", copyStyles: false })
 
     const foundationSlider = ul.closest(".orbit")
     buttonWrapper.dataset.outsideList = true
     foundationSlider.after(buttonWrapper);
   },
 
-  createNewItemButtonWrapper(ul, { elementType, copyStyles = false } ) {
+  buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
     const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = "content-block--add-new-item-wrapper js-content-block--inline-control";
+    buttonWrapper.className = "content-block--item-action-wrapper js-content-block--inline-control";
+    buttonWrapper.style.listStyle = "none";
 
     const lastLi = ul.querySelector("li:last-child")
 
-    if (ul.classList.contains("row") && lastLi.classList.contains("column")) {
-      buttonWrapper.style = "float: left;"
-    }
 
     if (copyStyles) {
       buttonWrapper.className = `${lastLi.classList} ${buttonWrapper.classList}`
     }
 
     buttonWrapper.innerHTML = `
-          <div class="content-block--add-new-item-wrapper--inner">
-            <button class="content-block--add-new-item js-projekt-content-block--add-new-item">
+         <div class="content-block--item-action-wrapper--inner">
+            <button class="content-block--item-action js-projekt-content-block--add-item">
               <i class="fa fas fa-plus"></i>
+              Weiteres Element hinzufügen
+            </button>
+            <button class="content-block--item-action js-projekt-content-block--delete-last-item -delete">
+              <i class="fa fas fa-trash"></i>
+              Letztes Element löschen
             </button>
           </div>
         `
@@ -85,7 +87,7 @@
     if (copyStyles) {
       if (lastLi) {
         const lastStyles = getComputedStyle(lastLi)
-        const props = ["width", "height", "max-width"];
+        const props = ["width", "max-width"];
 
         props.forEach(prop => {
           const value = lastStyles.getPropertyValue(prop);
@@ -96,22 +98,28 @@
       }
     }
 
+    // if (ul.classList.contains("row") && lastLi.classList.contains("column")) {
+    //   buttonWrapper.style.height = `${lastLi.offsetHeight / 3}px`;
+    //   console.log(`${lastLi.offsetHeight / 3}px`)
+    // }
+
     return buttonWrapper
   },
 
   addNewItemToList(e) {
     const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
     let ul = null;
+    let ulParent;
 
     if (wrapper.dataset.outsideList === "true") {
-      ul = wrapper.previousElementSibling.querySelector("ul");
+      ulParent = wrapper.previousElementSibling;
+      ul = ulParent.querySelector("ul");
     }
     else {
       ul = e.currentTarget.closest("ul")
     }
 
     const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
-    // ProjektStudio.utils.resetFoundationAccordionStateFor(ulParent)
     ProjektStudio.utils.resetFoundationAccordionStateFor(ul)
     const clonedLi = lastLi.cloneNode(true);
 
@@ -140,6 +148,34 @@
     }
 
     $(newElementToReinitialize).foundation()
+  },
+
+  deleteLastItemFromList(e) {
+    const deleteConfirmed = confirm("Möchten Sie das letzte Element wirklich aus der Liste löschen?")
+
+    if (!deleteConfirmed) return;
+
+    const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
+    let ul = null;
+
+    if (wrapper.dataset.outsideList === "true") {
+      ul = wrapper.previousElementSibling.querySelector("ul");
+    }
+    else {
+      ul = e.currentTarget.closest("ul")
+    }
+    const isSlider = ul.classList.contains("orbit-container")
+
+    if (isSlider) {
+      const lastBullet = ul.parentElement.querySelector(".orbit-bullets > button:last-child")
+      if (lastBullet.classList.contains("is-active")) {
+        lastBullet.previousElementSibling.click()
+      }
+      lastBullet.remove()
+    }
+
+    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+    lastLi.remove()
   },
 
   addBulletToSlider(ul) {

@@ -1,4 +1,5 @@
 $dt-base: #004a83;
+$dt-base-hover: #15629c;
 $small-tablet-viewport-start: 750px;
 
 @keyframes content-block-additional-appear {
@@ -72,12 +73,10 @@ $small-tablet-viewport-start: 750px;
   justify-content: center;
   align-items: center;
   font-size: 17px;
-  /* margin-right: 8px; */
   color: #004a83;
   border-radius: 50%;
   width: 1.8em;
   height: 1.8em;
-  // margin-right: -1px;
 
   &:hover:not(:disabled) {
     background-color: #dfebf5;
@@ -85,6 +84,14 @@ $small-tablet-viewport-start: 750px;
 
   &:active {
     background-color: #d2d1d1;
+  }
+
+  &.-delete {
+    color: #a41717;
+
+    &:hover {
+      background-color: #ffdede;
+    }
   }
 
   &:disabled {
@@ -147,10 +154,13 @@ body.custom-new-design {
   margin-top: 3px;
   margin-bottom: 5px;
   min-height: 26px;
+  margin-bottom: 10px;
 
   &.-opened {
     .add-new-content-block-button {
-      transform: rotate(45deg);
+      i {
+        transform: rotate(45deg);
+      }
     }
 
     .projekt-content-block-templates-selector {
@@ -234,10 +244,16 @@ body.custom-new-design {
 
 .add-new-content-block-button {
   color: #b4b4b4 !important;
-  font-size: 25px !important;
-  margin-bottom: 3px;
-  width: 1.5em;
-  height: 1.5em;
+  font-size: 17px !important;
+  margin-bottom: 18px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+
+  i {
+    font-size: 18px !important;
+    margin-right: 5px;
+  }
 
   &:hover {
     color: #9a9a9a !important;
@@ -897,20 +913,23 @@ body.-ai-functions-locked {
 
 .projekt-studio--peview-button {
   position: fixed;
-  bottom: 30px;
-  right: 50px;
-  border-radius: 50% !important;
-  width: 60px;
-  height: 60px;
-  font-size: 23px;
-  color: #737373 !important;
-  background-color: white !important;
-  border: 1px solid #cacaca;
+  bottom: 12px;
+  right: 12px;
+  border-radius: 10px !important;
+  padding: 12px 20px;
+  color: white !important;
+  background-color: $dt-base !important;
   box-shadow: 3px 3px 7px 2px #00000030;
   z-index: 10;
+  transition: background-color 100ms ease;
+  font-size: 17px;
+
+  i {
+    font-size: 19px;
+  }
 
   &:hover {
-    background-color: #f7f7f7 !important;
+    background-color: $dt-base-hover !important;
   }
 
   &.-enabled {
@@ -920,34 +939,56 @@ body.-ai-functions-locked {
   }
 }
 
-.content-block--add-new-item-wrapper {
-  max-height: 100px;
+.content-block--item-action-wrapper {
   list-style: none;
   margin-bottom: 10px;
+
+  &.column {
+    height: 125px;
+
+    .content-block--item-action-wrapper--inner {
+      gap: 10px;
+    }
+  }
 }
 
-.content-block--add-new-item-wrapper--inner {
+.content-block--item-action-wrapper--inner {
   display: flex;
   justify-content: center;
   align-items: center;
+  align-content: center;
   width: 100%;
   height: 100%;
   background-color: #def1ff;
   border-radius: 12px;
+  min-height: 50px;
+  gap: 5px;
+  flex-wrap: wrap;;
 }
 
-.content-block--add-new-item {
+.content-block--item-action {
   display: flex;
   justify-content: center;
   align-items: center;
   color: gray;
-  font-size: 23px;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  font-size: 15px;
+  border-radius: 10px;
   color: $dt-base;
+  padding: 10px 15px;
+
+  i {
+    margin-right: 5px;
+  }
 
   &:hover {
     background-color: #cce2f6 !important;
+  }
+
+  &.-delete {
+    color: #a41717;
+
+    &:hover {
+      background-color: #ffdede !important;
+    }
   }
 }

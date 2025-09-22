@@ -39,9 +39,11 @@ class Verification::ResidenceController < ApplicationController
         redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
       end
     else
-      if @residence.user.verified? && Setting["feature.melderegister"].present?
+      if Setting["feature.melderegister"].present? && @residence.user.verified?
         NotificationServices::UserReverificationFailedNotifier.call(@residence.user.id)
         @residence.user.unverify!
+      elsif Setting["feature.melderegister"].present?
+        Mailer.user_verification_failed(@residence.user).deliver_later
       end
       render :new #, alert: t("custom.verification.residence.create.flash.error")
     end

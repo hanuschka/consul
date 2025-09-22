@@ -1,5 +1,9 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
-  def description_content_block_templates
+    def quotes_content_block_templates
+
+    end
+
+    def description_content_block_templates
     [
       Projekts::ContentBlockTemplates::BlankComponent.new,
       Projekts::ContentBlockTemplates::TitleComponent.new(
@@ -16,13 +20,15 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
       Projekts::ContentBlockTemplates::GreetingComponent.new(
         title: example_title,
         text:  example_description,
-        quote: example_description.split[0, 11].join(" "),
+        quote: example_description.split[0,11].join(" "),
         image_url: nil
       ),
       Projekts::ContentBlockTemplates::AccordionComponent.new(
         title: example_title,
         items: accordion_items
-      )
+      ),
+      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new,
+      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://placehold.co/200x200")
     ].compact
   end
 
@@ -30,7 +36,6 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     [
       Projekts::ContentBlockTemplates::ImageGalleryComponent.new(
         title: example_title,
-        template_mode: true,
         images: [
           { url: "https://placehold.co/426x212" },
           { url: "https://placehold.co/426x212" },
@@ -44,24 +49,14 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
       Projekts::ContentBlockTemplates::ExternalVideoPlayerComponent.new(
         url: nil
       ),
-      Projekts::ContentBlockTemplates::ImageSliderComponent.new
-    ]
-  end
-
-  def card_content_block_templates
-    [
-      # Projekts::ContentBlockTemplates::ResourceCard::Component.new
-      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new,
-      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://placehold.co/200x200")
-    ]
-  end
-
-  def other_conent_block_templates
-    [
+      Projekts::ContentBlockTemplates::ImageSliderComponent.new,
       Projekts::ContentBlockTemplates::SuccessComponent.new,
       Projekts::ContentBlockTemplates::WarningComponent.new,
-      # Projekts::ContentBlockTemplates::Map::Component.new
     ]
+  end
+
+  def saved_content_blocks
+    SavedContentBlock.all.order(:created_at)
   end
 
   def example_title
@@ -69,7 +64,9 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
   end
 
   def example_description
-    "Qui nemo id necessitatibus in rerum exercitationem accusantium in minima quo esse quo eius nam iste consequatur quasi qui doloribus officiis omnis nesciunt sit beatae ut est reprehenderit dolore rerum."
+    "Qui nemo id necessitatibus in rerum exercitationem" +
+    "accusantium in minima quo esse quo eius nam iste consequatur quasi qui doloribus" +
+    "officiis omnis nesciunt sit beatae ut est reprehenderit dolore rerum."
   end
 
   def accordion_items

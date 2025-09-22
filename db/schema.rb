@@ -2442,6 +2442,12 @@ ActiveRecord::Schema.define(version: 2025_09_19_153128) do
     t.index ["sentimentable_type", "sentimentable_id"], name: "index_resource_sentiments_on_sentimentable"
   end
 
+  create_table "saved_content_blocks", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "sdg_goals", force: :cascade do |t|
     t.integer "code", null: false
     t.datetime "created_at", null: false

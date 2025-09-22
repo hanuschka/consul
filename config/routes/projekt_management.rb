@@ -35,6 +35,7 @@ namespace :projekt_management do
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      post :send_notifications
       get :ai_settings
       patch :update_ai_settings
       get :projekt_point_of_interest_pins
@@ -102,6 +103,7 @@ namespace :projekt_management do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
   end

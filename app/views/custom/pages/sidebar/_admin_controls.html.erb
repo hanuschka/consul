@@ -27,35 +27,35 @@
       <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt") %>
     <% end %>
 
-    <%= link_to polymorphic_path([namespace, @projekt], action: :edit, origin: "public_page", anchor: "tab-projekt-page"), class: "button hollow expanded left-aligned" do %>
-      <i class="fas fa-window-maximize"></i>
-      <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_page") %>
-    <% end %>
+    <%# <%= link_to polymorphic_path([namespace, @projekt], action: :edit, origin: "public_page", anchor: "tab-projekt-page"), class: "button hollow expanded left-aligned" do %1> %>
+    <%#   <i class="fas fa-window-maximize"></i> %>
+    <%#   <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_page") %1> %>
+    <%# <% end %1> %>
 
-    <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"), class: "button hollow expanded left-aligned" do %>
-      <i class="fas fa-stream"></i>
-      <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_phases") %>
-    <% end %>
+    <%# <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"), class: "button hollow expanded left-aligned" do %1> %>
+    <%#   <i class="fas fa-stream"></i> %>
+    <%#   <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_phases") %1> %>
+    <%# <% end %1> %>
 
-    <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-settings"), class: "button hollow expanded left-aligned" do %>
-      <i class="fas fa-edit"></i>
-      <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_settings") %>
-    <% end %>
+    <%# <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-settings"), class: "button hollow expanded left-aligned" do %1> %>
+    <%#   <i class="fas fa-edit"></i> %>
+    <%#   <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_settings") %1> %>
+    <%# <% end %1> %>
 
-    <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-managers"), class: "button hollow expanded left-aligned" do %>
-      <i class="fas fa-user-cog"></i>
-      <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_managers") %>
-    <% end %>
+    <%# <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-managers"), class: "button hollow expanded left-aligned" do %1> %>
+    <%#   <i class="fas fa-user-cog"></i> %>
+    <%#   <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_managers") %1> %>
+    <%# <% end %1> %>
 
-    <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-map"), class: "button hollow expanded left-aligned" do %>
-      <i class="fas fa-map"></i>
-      <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_map") %>
-    <% end %>
+    <%# <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-map"), class: "button hollow expanded left-aligned" do %1> %>
+    <%#   <i class="fas fa-map"></i> %>
+    <%#   <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_map") %1> %>
+    <%# <% end %1> %>
 
-    <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-sdg"), class: "button hollow expanded left-aligned" do %>
-      <i class="fas fa-tag"></i>
-      <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_sdg") %>
-    <% end %>
+    <%# <%= link_to polymorphic_path([namespace, @projekt], action: :edit, anchor: "tab-projekt-sdg"), class: "button hollow expanded left-aligned" do %1> %>
+    <%#   <i class="fas fa-tag"></i> %>
+    <%#   <%= t("custom.projekts.page.sidebar.admin_controls.edit_projekt_sdg") %1> %>
+    <%# <% end %1> %>
 
     <%= link_to polymorphic_path([namespace, @projekt], action: :notify_reviewers), method: "post", role: "button", class: "button hollow expanded left-aligned" do %>
       <i class="fas fa-bell"></i>

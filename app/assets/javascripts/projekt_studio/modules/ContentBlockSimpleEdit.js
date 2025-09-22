@@ -128,7 +128,7 @@
     )
     const copyId = Date.now();
 
-    let elementToReinitialize = isSlider ? ul.parentElement : ul;
+    let elementToReinitialize = isSlider ? ul.closest(".orbit") : ul;
     elementToReinitialize.id = '';
 
     let elementToReinitializeParent = elementToReinitialize.parentElement;
@@ -139,24 +139,29 @@
     const newUl = isSlider ? elementToReinitializeParent.querySelector('ul') : newElementToReinitialize;
 
     if (isSlider) {
-      const previousSlideNumber = Number.parseInt(lastLi.dataset.slide);
-      const newSlideNumber = previousSlideNumber + 1;
-      clonedLi.dataset.slide = newSlideNumber;
-      this.addBulletToSlider(newUl, newSlideNumber)
-
-      const previousImg = lastLi.querySelector('img')
-      const clonedImg = clonedLi.querySelector('img')
-
-      clonedImg.setAttribute("src", previousImg.getAttribute("src").replace(`text=Slide-${previousSlideNumber + 1}`, `text=Slide-${newSlideNumber + 1}`))
-      clonedLi.querySelector(".orbit-caption").innerHTML = `Slide ${newSlideNumber + 1}`;
-
       newUl.append(clonedLi);
+
+      this.updateSliderItemAttributes(lastLi, clonedLi)
     }
     else {
       newUl.insertBefore(clonedLi, newUl.lastElementChild);
     }
 
     $(newElementToReinitialize).foundation()
+  },
+
+  updateSliderItemAttributes(lastLi, clonedLi) {
+    const previousSlideNumber = Number.parseInt(lastLi.dataset.slide);
+    const newSlideNumber = previousSlideNumber + 1;
+    clonedLi.dataset.slide = newSlideNumber;
+
+    this.addBulletToSlider(clonedLi.closest("ul"), newSlideNumber)
+
+    const previousImg = lastLi.querySelector('img')
+    const clonedImg = clonedLi.querySelector('img')
+
+    clonedImg.setAttribute("src", previousImg.getAttribute("src").replace(`text=Slide-${previousSlideNumber + 1}`, `text=Slide-${newSlideNumber + 1}`))
+    clonedLi.querySelector(".orbit-caption").innerHTML = `Slide ${newSlideNumber + 1}`;
   },
 
   deleteLastItemFromList(e) {

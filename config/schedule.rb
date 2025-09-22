@@ -64,9 +64,9 @@ every 1.day, at: "2:30 am", roles: [:cron] do
   rake "projekt_phases:check_currentness_change"
 end
 
-every 1.day, at: "3:00 am", roles: [:cron] do
-  rake "maintenance:reverify_users"
-end
+# every 1.day, at: "3:00 am", roles: [:cron] do
+#   rake "maintenance:reverify_users"
+# end
 
 every 1.day, at: "3:30 am", roles: [:cron] do
   rake "deficiency_reports:archive_closed"

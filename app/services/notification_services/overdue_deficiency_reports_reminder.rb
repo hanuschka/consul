@@ -11,6 +11,7 @@ module NotificationServices
       def overdue_reports
         DeficiencyReport.assigned.not_closed
           .where.not(status_changed_at: nil)
+          .where.not(deficiency_report_statuses: { reminder_delay: nil })
           .where(official_answer: [nil, ""])
           .where(
             Arel.sql("

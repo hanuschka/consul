@@ -34,9 +34,7 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
   def media_content_block_templates
     %w(
         tile
-        three_tile
         one_card
-        three_cards
         image_slider_two_images
     )
   end

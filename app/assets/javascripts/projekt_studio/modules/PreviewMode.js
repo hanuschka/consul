@@ -1,4 +1,4 @@
-ProjektStudio.modules.PreviewMode = {
+ProjektStudio.PreviewMode = {
   initialized: false,
   initialize() {
     if (this.initialized) {

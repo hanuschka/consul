@@ -158,10 +158,11 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       <div class="add-new-content-block-section js-show-content-block-templates-section">
         <button
           type="button"
-          class="-transparent-round-icon-button projekt-frame-icon-button js-show-content-block-templates add-new-content-block-button"
+          class="js-show-content-block-templates add-new-content-block-button"
           title="Neuen Inhaltsblock hinzufügen"
         >
           <i class="fas fa-plus"></i>
+          Neuen Inhaltsblock hinzufügen
         </button>
 
         <div class="add-new-content-block-content js-show-content-block-templates-content">
@@ -178,7 +179,7 @@ ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml = function() {
     <div class="add-new-content-block-section js-show-content-block-templates-section">
       <button
         type="button"
-        class="projekt-frame-icon-button js-show-content-block-templates add-new-content-block-button add-intial-content-block-button"
+        class="js-show-content-block-templates add-new-content-block-button add-intial-content-block-button"
         title="Neuen Inhaltsblock hinzufügen"
       >
         <i class="fas fa-plus"></i>

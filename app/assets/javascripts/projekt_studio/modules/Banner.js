@@ -2,7 +2,7 @@
 // import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
 // import { ProjektStudio.utils.sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
 
-ProjektStudio.modules.Banner = {
+ProjektStudio.Banner = {
   initialized: false,
   initialize() {
     this.initEventListeners()

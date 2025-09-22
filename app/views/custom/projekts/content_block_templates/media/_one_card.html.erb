@@ -3,7 +3,7 @@
 ]
 %>
 
-<ul style="display: flex; gap: 10px;">
+<ul class="row" style="list-style: none;">
   <% text_variants.each do |text| %>
     <%= render "custom/projekts/content_block_templates/media/card", text: text %>
   <% end %>

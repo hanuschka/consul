@@ -183,6 +183,7 @@ ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml = function() {
         title="Neuen Inhaltsblock hinzufügen"
       >
         <i class="fas fa-plus"></i>
+        Neuen Inhaltsblock hinzufügen
       </button>
 
       <div class="add-new-content-block-content js-show-content-block-templates-content">

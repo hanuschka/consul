@@ -98,7 +98,8 @@ class UploadFilesPlugin extends Plugin {
       buttonView.set({
         label:   'Dateien hochladen',
         icon:    icons.browseFiles,
-        tooltip: true
+        tooltip: true,
+        withText: true
       });
 
       buttonView.on('execute', () => {

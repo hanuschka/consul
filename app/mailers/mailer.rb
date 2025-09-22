@@ -315,6 +315,15 @@ class Mailer < ApplicationMailer
     mail(to: @email_to, subject: t("mailers.existing_stamp_notify_new_user.subject"))
   end
 
+  def user_verification_failed(user)
+    @user = user
+    @email_to = @user.email
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.user_verification_failed.subject"))
+    end
+  end
+
   private
 
     def with_user(user, &block)

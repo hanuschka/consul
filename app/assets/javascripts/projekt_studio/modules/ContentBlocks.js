@@ -1,4 +1,4 @@
- ProjektStudio.modules.ContentBlocks = {
+ ProjektStudio.ContentBlocks = {
   initialized: false,
   draftContentBlockIndex: 0,
   aceInstances: {},
@@ -17,21 +17,13 @@
     $document.on("click", ".js-projekt-content-block--ai-edit", this.enterAiEditMode.bind(this));
     $document.on("click", ".js-delete-projekt-content-block", this.deleteContrentBlock.bind(this));
 
-    $document.on("click", ".js-edit-text-projekt-content-block", this.enterTextEditMode.bind(this));
     $document.on("click", ".js-html-edit-content-block", this.enterHtmlEditMode.bind(this));
     $document.on("click", ".js-code-edit-content-block", this.enterCodeEditMode.bind(this));
-
-    $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelTextEditMode.bind(this));
     $document.on("click", ".js-projekt-content-block--html-edit-cancel", this.cancelHtmlEditMode.bind(this));
     $document.on("click", ".js-projekt-content-block--ai-edit-cancel", this.cancelAiEditMode.bind(this));
-
-    $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockEditedText.bind(this));
-    $document.on("click", ".js-save-edit-html-projekt-content-block", this.saveContentBlockEditedHtml.bind(this));
+    $document.on("click", ".js-save-edit-html-projekt-content-block", this.saveConventBlockFromCkeditor.bind(this));
 
     $document.on("click", ".js-content-block-reset-to-prev-version", this.resetContentBlockToPreviousVersion.bind(this));
-
-    $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
-
     $document.on("click", ".js-frame-open-admin-page", this.handleOpenAdminPage.bind(this));
 
     window.addEventListener('message', this.handleGlobalMessage.bind(this));
@@ -174,13 +166,8 @@
   morphElementHTML(selector, html, afterUpdate = null) {
     const element = document.querySelector(selector);
 
-    // e.innerHTML = data.html;
     setTimeout(() => {
       element.innerHTML = html;
-      // Idiomorph.morph(element, html, {
-      //   morphStyle:'innerHTML',
-      //   callbacks: { }
-      // })
 
       setTimeout(() => {
         this.initSortable();
@@ -246,9 +233,6 @@
   },
 
   updateContentBlockOnUi(params) {
-    // const contentBlock = document.querySelector(
-    //   '.js-projekt-content-block-edit-section[data-content-block-id="' + params.content_block_id + '"] .projekt-content-block'
-    // )
     const contentBlockSection = this.getContentBlockSectionForId(params.content_block_id)
     const contentBlock = contentBlockSection.querySelector('.projekt-content-block')
 
@@ -368,7 +352,6 @@
     const previousContentBlockSection = this.findParentContentBlockSection(e.currentTarget);
     const previousContentBlockId = previousContentBlockSection.dataset.contentBlockId;
     const draftContentBlockIndex = this.draftContentBlockIndex;
-    console.log({contentTemplate})
 
     const newContentBlockHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
       contentTemplate.innerHTML, {
@@ -429,18 +412,6 @@
         })
       })
     }
-  },
-
-  enterTextEditMode(e) {
-    const { contentBlockSection, contentBlock } = this.getContentBlockAndSection(e.target)
-
-    contentBlockSection.classList.remove("-highlight-changed")
-    contentBlockSection.classList.add("-text-edit-mode")
-    $accordion = $(contentBlock).find('.accordion a');
-    $accordion.off("keydown")
-
-    this.toggleContentEditableForContentBlock(contentBlock, true)
-    this.storePreviousVersionOfContentBlock(contentBlock, contentBlockSection)
   },
 
   enterHtmlEditMode(e) {
@@ -512,56 +483,7 @@
     return `content-block-html-editor-${contentBlockId}`
   },
 
-  toggleContentEditableForContentBlock(contentBlock, contentEditable) {
-    const elements = Array.from(contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable"))
-
-    elements.forEach((element) => {
-      if (contentEditable) {
-        element.contentEditable = contentEditable;
-      }
-      else {
-        element.removeAttribute("contenteditable")
-      }
-    })
-
-    if (elements.length === 0) {
-      if (contentEditable) {
-        contentBlock.contentEditable = contentEditable;
-        ProjektStudio.utils.focusContentEditableElement(contentBlock)
-      }
-      else {
-        contentBlock.removeAttribute("contenteditable")
-      }
-    }
-    else {
-      const lastElement = elements[elements.length - 1]
-      ProjektStudio.utils.focusContentEditableElement(lastElement)
-    }
-  },
-
-  handleSaveContentBlockEditedTextShortcut(e) {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-      this.saveContentBlockEditedText(e);
-    }
-  },
-
-  saveContentBlockEditedText(e) {
-    const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
-
-    if (contentBlockSection.classList.contains("-text-edit-mode")) {
-      contentBlockSection.classList.remove("-text-edit-mode")
-      this.toggleContentEditableForContentBlock(contentBlock, false);
-
-      this.updateContentBlock(
-        contentBlock,
-        contentBlockSection.dataset.contentBlockId,
-        contentBlock.innerHTML.trim(),
-        true
-      )
-    }
-  },
-
-  saveContentBlockEditedHtml(e) {
+  saveConventBlockFromCkeditor(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
     if (contentBlockSection.classList.contains("-html-edit-mode")) {
@@ -570,7 +492,6 @@
       const editorId = this.genTextEditorIdForTextarea(contentBlockSection.dataset.contentBlockId)
 
       let newContent = window.CKeditorInstancesGlobal[editorId].getData().trim()
-      console.log(newContent)
       // newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
 
       this.updateContentBlock(
@@ -602,6 +523,9 @@
           html: updatedContentBlock.innerHTML
         }
       })
+      .catch(() => {
+        console.log("Fehler beim Speichern des Inhaltsblocks")
+      })
     }
 
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
@@ -615,16 +539,6 @@
     const contentBlock = contentBlockSection.querySelector(".projekt-content-block")
 
     return { contentBlockSection, contentBlock};
-  },
-
-  cancelTextEditMode(e) {
-    const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
-
-    contentBlockSection.classList.remove("-text-edit-mode")
-    contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
-    this.toggleContentEditableForContentBlock(contentBlock, false);
-
-    $(contentBlock).foundation();
   },
 
   cancelHtmlEditMode(e) {
@@ -704,24 +618,4 @@
 
     ProjektStudio.utils.sendMessageToDtParentFrame("Dt.openAdminPage", { path })
   },
-
-   removeWrappingParagraphsFromCkeditorHtml(html) {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-
-    // Remove <p> tags wrapping only <a> elements
-    tempDiv.querySelectorAll('ul.accordion p').forEach(p => {
-      if (p.childNodes.length === 1 && p.firstChild.tagName === 'A') {
-        p.replaceWith(p.firstChild); // Replace <p> with the <a> itself
-      }
-    });
-
-    tempDiv.querySelectorAll('br[data-cke-filler="true"], br[data-cke-filler="false"]').forEach(br => {
-      br.parentElement.remove()
-    });
-
-    return tempDiv.innerHTML;
-  }
 };
-
-// export default ContentBlocks

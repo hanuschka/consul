@@ -1,4 +1,4 @@
-window.ProjektStudio.modules.Sidebar = {
+window.ProjektStudio.Sidebar = {
   initialized: false,
   initialize() {
     if (this.initialized) {

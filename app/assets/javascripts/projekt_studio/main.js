@@ -9,12 +9,13 @@ window.ProjektStudio = {
     if (this.initialized) return
 
     if (window.parent) {
-      ProjektStudio.modules.Sidebar.initialize()
-      ProjektStudio.modules.PhasesTabs.initialize()
-      ProjektStudio.modules.Banner.initialize()
-      ProjektStudio.modules.ContentBlocks.initialize()
-      ProjektStudio.modules.PreviewMode.initialize()
-      ProjektStudio.modules.SavedContentBlocks.initialize()
+      ProjektStudio.Sidebar.initialize()
+      ProjektStudio.PhasesTabs.initialize()
+      ProjektStudio.Banner.initialize()
+      ProjektStudio.ContentBlocks.initialize()
+      ProjektStudio.ContentBlockSimpleEdit.initialize()
+      ProjektStudio.PreviewMode.initialize()
+      ProjektStudio.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()
 
       this.initialized = true;

@@ -16,6 +16,10 @@ ProjektStudio.utils.htmlToDomElement = function(html) {
   return div
 }
 
+ProjektStudio.utils.htmlToSingleDomElement = function(html) {
+  return ProjektStudio.utils.htmlToDomElement(html).firstElementChild;
+}
+
 const voidElements = [
   "base", "br", "col", "embed", "hr",
   "img", "link", "param",
@@ -75,4 +79,12 @@ ProjektStudio.utils.validateHTML = function(htmlContent) {
     isValid: true,
     message: "HTML is valid."
   };
+}
+
+ProjektStudio.utils.removeChildHtmlAttributes = function(element, attributes = []) {
+  attributes.forEach((attribute) => {
+    element
+      .querySelectorAll(`[${attribute}]`)
+      .forEach(el => el.removeAttribute(attribute));
+  })
 }

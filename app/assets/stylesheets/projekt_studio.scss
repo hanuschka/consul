@@ -541,7 +541,7 @@ body.custom-new-design {
   }
 
   .is-active {
-    background-color: #21963e;
+    // background-color: white;
   }
 }
 
@@ -873,7 +873,11 @@ body.-preview-mode {
 }
 
 .add-intial-content-block-button {
-  font-size: 35px !important;
+  font-size: 22px !important;
+
+  i {
+    font-size: 25px;
+  }
 }
 
 .ai-button--lock-overlay {

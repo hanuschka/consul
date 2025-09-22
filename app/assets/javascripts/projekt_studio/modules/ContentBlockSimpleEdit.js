@@ -98,11 +98,6 @@
       }
     }
 
-    // if (ul.classList.contains("row") && lastLi.classList.contains("column")) {
-    //   buttonWrapper.style.height = `${lastLi.offsetHeight / 3}px`;
-    //   console.log(`${lastLi.offsetHeight / 3}px`)
-    // }
-
     return buttonWrapper
   },
 
@@ -110,26 +105,28 @@
     const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
     let ul = null;
     let ulParent;
+    let lastLi;
 
     if (wrapper.dataset.outsideList === "true") {
       ulParent = wrapper.previousElementSibling;
       ul = ulParent.querySelector("ul");
+      lastLi = ul.querySelector("li:last-child")
     }
     else {
       ul = e.currentTarget.closest("ul")
+      lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
     }
 
-    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+    const isSlider = ul.classList.contains("orbit-container")
+
     ProjektStudio.utils.resetFoundationAccordionStateFor(ul)
     const clonedLi = lastLi.cloneNode(true);
 
     ProjektStudio.utils.removeChildHtmlAttributes(
       clonedLi,
-      // ["id"]
       ["id", "aria-labelledby", "aria-controls", "aria-expanded", "data-slide"]
     )
     const copyId = Date.now();
-    const isSlider = ul.classList.contains("orbit-container")
 
     let elementToReinitialize = isSlider ? ul.parentElement : ul;
     elementToReinitialize.id = '';
@@ -141,10 +138,22 @@
     const newElementToReinitialize = elementToReinitializeParent.querySelector(`[data-content-block-copy-id="${copyId}"]`)
     const newUl = isSlider ? elementToReinitializeParent.querySelector('ul') : newElementToReinitialize;
 
-    newUl.insertBefore(clonedLi, newUl.lastElementChild);
-
     if (isSlider) {
-      this.addBulletToSlider(newUl)
+      const previousSlideNumber = Number.parseInt(lastLi.dataset.slide);
+      const newSlideNumber = previousSlideNumber + 1;
+      clonedLi.dataset.slide = newSlideNumber;
+      this.addBulletToSlider(newUl, newSlideNumber)
+
+      const previousImg = lastLi.querySelector('img')
+      const clonedImg = clonedLi.querySelector('img')
+
+      clonedImg.setAttribute("src", previousImg.getAttribute("src").replace(`text=Slide-${previousSlideNumber + 1}`, `text=Slide-${newSlideNumber + 1}`))
+      clonedLi.querySelector(".orbit-caption").innerHTML = `Slide ${newSlideNumber + 1}`;
+
+      newUl.append(clonedLi);
+    }
+    else {
+      newUl.insertBefore(clonedLi, newUl.lastElementChild);
     }
 
     $(newElementToReinitialize).foundation()
@@ -178,13 +187,15 @@
     lastLi.remove()
   },
 
-  addBulletToSlider(ul) {
-    const bulletsElement = ul.parentElement.querySelector(".orbit-bullets")
-    const slideNumber = ul.querySelector("li:last-of-type").dataset.slide;
+  addBulletToSlider(ul, newSlideNumber) {
+    const bulletsElement = ul.closest(".orbit").querySelector(".orbit-bullets")
+
+    console.log("addBulletToSlider", newSlideNumber)
+
     const newBulletHTML = `
-      <button data-slide="${slideNumber}" class="">
+      <button data-slide="${newSlideNumber}" class="">
         <span class="show-for-sr">
-          Bild ${slideNumber}
+          Bild ${newSlideNumber}
         </span>
       </button>
     `

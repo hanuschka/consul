@@ -1,0 +1,39 @@
+<td style="<%= css_for_mailer_content %>">
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.user_verification_failed.hi", username: @user.username) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.user_verification_failed.p1") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= t("mailers.user_verification_failed.b1_title") %></strong>
+  </p>
+
+  <ul style="<%= css_for_mailer_text %>">
+    <li><%= t("mailers.user_verification_failed.b1_item1") %></li>
+    <li><%= t("mailers.user_verification_failed.b1_item2") %></li>
+    <li><%= t("mailers.user_verification_failed.b1_item3") %></li>
+    <li><%= t("mailers.user_verification_failed.b1_item4") %></li>
+    <li><%= t("mailers.user_verification_failed.b1_item5") %></li>
+    <li><%= t("mailers.user_verification_failed.b1_item6") %></li>
+  </ul>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= t("mailers.user_verification_failed.b2_title") %></strong>
+  </p>
+
+  <ol style="<%= css_for_mailer_text %>">
+    <li><%= sanitize t("mailers.user_verification_failed.b2_item1", link: link_to(new_residence_url, new_residence_url, target: '_blank') ) %></li>
+    <li><%= t("mailers.user_verification_failed.b2_item2") %></li>
+    <li><%= t("mailers.user_verification_failed.b2_item3") %></li>
+    <li><%= t("mailers.user_verification_failed.b2_item4") %></li>
+  </ol>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.shared.sincerely") %>
+    <br>
+    <%= t("mailers.shared.signature") %>
+  </p>
+</td>

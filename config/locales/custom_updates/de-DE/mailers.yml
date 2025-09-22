@@ -86,3 +86,13 @@ de:
       subject: Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen
       hi: "Hallo %{username},"
       text1: "Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen: %{valuation_link}"
+    existing_stamp_notify_existing_user:
+      subject: Verifizierungsversuch über eine andere E-Mail-Adresse
+      hi: "Hallo %{username},"
+      p1: soeben wurde ein Verifizierungsversuch mit Ihren Daten über eine andere E-Mail-Adresse unternommen. Bitte verwenden Sie weiterhin diese E-Mail-Adresse für Ihren Zugang zu Consul.
+      p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit dieser Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.
+    existing_stamp_notify_new_user:
+      subject: Verwendung der bestehenden E-Mail-Adresse
+      hi: "Hallo,"
+      p1: bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
+      p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit der bestehenden Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.

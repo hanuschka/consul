@@ -84,3 +84,13 @@ en:
       subject: New valuation assignment
       hi: "Hello %{username},"
       text1: "You have been assigned a proposal for evaluation: %{valuation_link}"
+    existing_stamp_notify_existing_user:
+      subject: Verification attempt using a different email address
+      hi: "Hello %{username},"
+      p1: This is to inform you that a verification attempt was made using your details with a different email address. Please continue to use this email address to access Consul.
+      p2: If you would like to change your email address, please log in to Consul using this address and make the change in your account settings.
+    existing_stamp_notify_new_user:
+      subject: Use of existing email address
+      hi: "Hello,"
+      p1: Please use the email address you originally registered with to log in to your account.
+      p2: If you would like to change your email address, please log in to Consul using this address and make the change in your account settings.

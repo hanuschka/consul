@@ -300,6 +300,21 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def existing_stamp_notify_existing_user(user)
+    @user = user
+    @email_to = @user.email
+
+    with_user(@user) do
+      mail(to: @email_to, subject: t("mailers.existing_stamp_notify_existing_user.subject"))
+    end
+  end
+
+  def existing_stamp_notify_new_user(email)
+    @email_to = email
+
+    mail(to: @email_to, subject: t("mailers.existing_stamp_notify_new_user.subject"))
+  end
+
   private
 
     def with_user(user, &block)

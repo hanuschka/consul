@@ -2,6 +2,7 @@
   "name": "consuldemocracy",
   "dependencies": {
     "@geoman-io/leaflet-geoman-free": "^2.15.0",
+    "@kern-ux/native": "^2.3.1",
     "ace-builds": "^1.43.3",
     "eslint": "^9.28.0",
     "glightbox": "^3.3.0",
@@ -16,7 +17,15 @@
     "leaflet.locatecontrol": "^0.79.0",
     "leaflet.markercluster": "^1.5.3",
     "mapbox-gl": "^3.12.0",
+    "sass": "^1.93.1",
     "select2": "^4.1.0-rc.0",
     "sortablejs": "^1.15.6"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:css": "sass ./app/assets/stylesheets/application.kern.scss:./app/assets/builds/application-kern.css --no-source-map --load-path=node_modules"
   }
 }

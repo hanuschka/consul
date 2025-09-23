@@ -13,3 +13,5 @@
 //= link_tree ../javascripts/klaro
 //= link custom_new_design.css
 //= link projekt_studio.css
+
+//= link_tree ../builds

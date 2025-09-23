@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
+  draw :adm
   draw :account
   draw :admin
   draw :budget

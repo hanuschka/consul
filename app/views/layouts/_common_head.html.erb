@@ -5,8 +5,10 @@
 
 <title><%= content_for?(:title) ? yield(:title) : default_title %></title>
 
-<%= content_for :additional_plugin_styles %>
+<%= csrf_meta_tags %>
+<%= favicon_link_tag "favicon.ico" %>
 
+<%= content_for :additional_plugin_styles %>
 <% if rtl? %>
   <%= stylesheet_link_tag "application-rtl" %>
 <% else %>
@@ -14,7 +16,4 @@
 <% end %>
 
 <%= content_for :additional_plugin_scripts %>
-
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
-<%= csrf_meta_tags %>
-<%= favicon_link_tag "favicon.ico" %>

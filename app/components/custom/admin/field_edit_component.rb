@@ -1,4 +1,4 @@
-class Admin::Frame::FieldEditComponent < ViewComponent::Base
+class Admin::FieldEditComponent < ViewComponent::Base
   def initialize(field_name:)
     @field_name = field_name
   end

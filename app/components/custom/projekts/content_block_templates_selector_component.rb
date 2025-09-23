@@ -1,67 +1,46 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
   def description_content_block_templates
-    [
-      Projekts::ContentBlockTemplates::BlankComponent.new,
-      Projekts::ContentBlockTemplates::TitleComponent.new(
-        title: example_title
-      ),
-      Projekts::ContentBlockTemplates::TextComponent.new(
-        text: example_description
-      ),
-      Projekts::ContentBlockTemplates::TextWithTitleComponent.new(
-        title: example_title,
-        text:  example_description
-      ),
-      Projekts::ContentBlockTemplates::BulletpointListComponent.new,
-      Projekts::ContentBlockTemplates::GreetingComponent.new(
-        title: example_title,
-        text:  example_description,
-        quote: example_description.split[0, 11].join(" "),
-        image_url: nil
-      ),
-      Projekts::ContentBlockTemplates::AccordionComponent.new(
-        title: example_title,
-        items: accordion_items
-      )
-    ].compact
+    %w(
+        h3 h4 h5 h6
+        text_block_h3_heading
+        text_block_two_columns
+        textblock
+        download_section
+        futher_information
+        submit_ideas
+        favorites_supported
+        select_suggestions
+    )
+  end
+
+  def accordions_content_block_templates
+    %w(
+      two_items
+    )
+  end
+
+  def quotes_content_block_templates
+    %w(
+        picture_on_left_classic
+        picture_on_the_right
+        image_above_text_below
+        image_left_square_larger_size
+        image_right_round_purple_color
+        classic_white_background
+        greeting_image_left_horizontal
+    )
   end
 
   def media_content_block_templates
-    [
-      Projekts::ContentBlockTemplates::ImageGalleryComponent.new(
-        title: example_title,
-        template_mode: true,
-        images: [
-          { url: "https://placehold.co/426x212" },
-          { url: "https://placehold.co/426x212" },
-          { url: "https://placehold.co/426x212" },
-          { url: "https://placehold.co/426x212" }
-        ]
-      ),
-      Projekts::ContentBlockTemplates::SingleImageComponent.new(
-        image: { url: "https://placehold.co/426x212" }
-      ),
-      Projekts::ContentBlockTemplates::ExternalVideoPlayerComponent.new(
-        url: nil
-      ),
-      Projekts::ContentBlockTemplates::ImageSliderComponent.new
-    ]
+    %w(
+        tile
+        one_card
+        image_slider_two_images
+    )
   end
 
-  def card_content_block_templates
-    [
-      # Projekts::ContentBlockTemplates::ResourceCard::Component.new
-      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new,
-      Projekts::ContentBlockTemplates::ColorCardWithImageComponent.new(image_url: "https://placehold.co/200x200")
-    ]
-  end
-
-  def other_conent_block_templates
-    [
-      Projekts::ContentBlockTemplates::SuccessComponent.new,
-      Projekts::ContentBlockTemplates::WarningComponent.new,
-      # Projekts::ContentBlockTemplates::Map::Component.new
-    ]
+  def saved_content_blocks
+    SavedContentBlock.all.order(:created_at)
   end
 
   def example_title
@@ -69,7 +48,9 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
   end
 
   def example_description
-    "Qui nemo id necessitatibus in rerum exercitationem accusantium in minima quo esse quo eius nam iste consequatur quasi qui doloribus officiis omnis nesciunt sit beatae ut est reprehenderit dolore rerum."
+    "Qui nemo id necessitatibus in rerum exercitationem" +
+    "accusantium in minima quo esse quo eius nam iste consequatur quasi qui doloribus" +
+    "officiis omnis nesciunt sit beatae ut est reprehenderit dolore rerum."
   end
 
   def accordion_items

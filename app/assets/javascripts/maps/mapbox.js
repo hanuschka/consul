@@ -70,7 +70,12 @@
           pitch: 53,
           preserveDrawingBuffer: true,
           style: instance.element.dataset.mapboxStyleId,
-          cooperativeGestures: true
+          cooperativeGestures: true,
+          locale: {
+            "ScrollZoomBlocker.CtrlMessage": "Zum Zoomen der Karte Strg + Scrollen verwenden",
+            "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen",
+            'TouchPanBlocker.Message': 'Zum Verschieben der Karte zwei Finger verwenden'
+          },
         });
 
         if (callback) callback(map);
@@ -402,7 +407,7 @@
           type: 'geojson',
           data: pointFeatures,
           cluster: true,
-          clusterMaxZoom: 14,
+          clusterMaxZoom: 17,
           clusterRadius: 50
         });
 
@@ -611,8 +616,11 @@
       this.addSwitchToSimpleSelectControl();
 
       App.Map.formattedFeatures(instance.features).features.forEach(function(feature) {
-        instance.editableLayers.push(feature.id);
-        instance.draw.add(feature);
+        const added = instance.draw.add(feature);
+
+        if (added && added.length > 0) {
+          instance.editableLayers.push(added[0]);
+        }
       });
 
       if (instance.editingProjektMap) {
@@ -661,7 +669,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': [ 'case', ['has', 'user_feature_color'], ['get', 'user_feature_color'], this.defaultFeatureColor],
+            'fill-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -677,7 +685,7 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': [ 'case', ['has', 'user_feature_color'], ['get', 'user_feature_color'], this.defaultFeatureColor],
+            'line-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
           },
@@ -691,7 +699,7 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': [ 'case', ['has', 'user_feature_color'], ['get', 'user_feature_color'], this.defaultFeatureColor]
+            'circle-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
           },
         },
 

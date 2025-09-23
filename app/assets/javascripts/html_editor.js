@@ -211,9 +211,9 @@
 
         toolbarControls = [
           "bulletedList", "numberedList", "|", "indent", "outdent", "|", "blockQuote", "|", "alignment:left", "alignment:center", "alignment:right", "alignment:justify", "|",
-          "heading", "|", "link", "|", "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "|", "removeFormat", "|",
+          "heading", "|", "link", "|", "bold", "italic", "underline", "|",
           "fontColor", "fontBackgroundColor", "|",
-          "insertTable", "horizontalLine", "specialCharacters"
+          "insertTable", "horizontalLine"
         ]
 
       } else if ( $(element).hasClass("extended-a") ) {
@@ -230,13 +230,12 @@
 
         toolbarControls = [
           "bulletedList", "numberedList", "|", "indent", "outdent", "|", "blockQuote", "|", "alignment:left", "alignment:center", "alignment:right", "alignment:justify", "|",
-          "uploadFiles", "|",
-          "fontSize", "|",
-          "heading", "|", "link", "|", "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "|", "removeFormat", "|",
+          "|", "fontSize", "|",
+          "heading", "|", "link", "|", "bold", "italic", "underline", "|",
           "fontColor", "fontBackgroundColor", "|",
-          "insertTable", "horizontalLine", "specialCharacters", "|",
+          "insertTable", "horizontalLine","|",
           "mediaEmbed", "sourceEditing", "|",
-          "htmlEmbed"
+          "htmlEmbed", "uploadFiles"
         ]
 
       } else {

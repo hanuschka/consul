@@ -328,7 +328,7 @@
       if (this.features && Object.keys(this.features).length > 0) {
         const self = this;
 
-        this.featuresLayer = L.geoJSON(this.features, {
+        L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
             return L.marker(latlng, {
               icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name),
@@ -348,7 +348,6 @@
               layer.on('pm:edit', function(e) {
                 self.updateFeaturesInput(self.featuresInput, self.editableLayers);
               });
-
             } else {
               if (feature.geometry.type === 'Point') {
                 self.clusterGroup.addLayer(layer);
@@ -365,12 +364,10 @@
 
                 layer.on("click", self.openMarkerPopup);
               }
-
             }
           }
-        }).addTo(this.map);
+        });
       }
-
       if (this.editingProjektMap) {
         this.placeCenterMarker(this.mapCenterLatLng, this);
       }

@@ -3,8 +3,6 @@
   <%= render "shared/globalize_locales", resource: deficiency_report %>
   <%= render "shared/errors", resource: deficiency_report %>
 
-  <%= f.select :deficiency_report_category_id, DeficiencyReport::Category.all.map { |df| [df.name, df.id] } %>
-
   <%= f.label :responsible %>
   <div style="column-count:3;margin-top:5px;">
     <%= f.collection_radio_buttons :officer_group_id, DeficiencyReport::OfficerGroup.all.order(:name), :id, :name do |rb| %>

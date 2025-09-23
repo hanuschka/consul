@@ -7,8 +7,8 @@ de:
       overdue_deficiency_reports:
         subject: Mangel wurde noch nicht bearbeitet
         hi: Liebe/r Sachbearbeiter*in,
-        p1_s: Ihnen wurde vor zwei Woche ein Mangel zur Bearbeitung zugewiesen, welcher noch nicht bearbeitet wurde.
-        p1_p: Ihnen wurde vor zwei Wochen mehrere Mängel zur Bearbeitung zugewiesen, die noch nicht bearbeitet wurden.
+        p1_s: Ihnen wurde ein Mangel zur Bearbeitung zugewiesen, welcher noch nicht bearbeitet wurde.
+        p1_p: Ihnen wurden mehrere Mängel zur Bearbeitung zugewiesen, die noch nicht bearbeitet wurden.
       new_comments_for_deficiency_report:
         subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
         hi: Liebe/r SachbearbeiterIn,

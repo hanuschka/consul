@@ -16,6 +16,7 @@
       this.setupEditingControls();
       this.setupEventListenersForUpdatingFormInputs();
       this.toggleControlVisibility();
+      this.setupEventListenersForUpdatingMapCenter();
     }
 
     initializeProperties() {
@@ -47,9 +48,9 @@
       this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
-      this.markerCategoryIcon = null;
-      this.markerCategoryColor = null;
-      this.markerCategoryName = null;
+      this.featureColor = null;
+      this.featureIconName = null;
+      this.featureCategoryName = null;
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
@@ -104,9 +105,9 @@
           e.layer.options.shape = 'Circle';
         }
 
-        e.layer.options.color = instance.markerCategoryColor;
-        e.layer.options.fa_icon_class = instance.markerCategoryIcon;
-        e.layer.options.category_name = instance.markerCategoryName;
+        e.layer.options.feature_color = instance.featureColor;
+        e.layer.options.feature_icon_name = instance.featureIconName;
+        e.layer.options.feature_category_name = instance.featureCategoryName;
 
         instance.setupEventListenersForEditableFeature(instance.map, e.layer);
       })
@@ -314,7 +315,7 @@
         markerLayer: this.clusterGroup,
         markerOptions: (shape) => {
           return {
-            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.fa_icon_class )
+            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name ),
           }
         }
 
@@ -327,16 +328,16 @@
       if (this.features && Object.keys(this.features).length > 0) {
         const self = this;
 
-        this.featuresLayer = L.geoJSON(this.features, {
+        L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
             return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(feature.properties.color || self.defaultFeatureColor, feature.properties.fa_icon_class ),
+              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name),
             });
           },
           style: function (feature) {
             return {
               weight: 2,
-              color: self.adminEditor ? "#ff0000" : feature.properties.color || App.Utils.getBrandColor()
+              color: self.adminEditor ? "#ff0000" : feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
             };
           },
           onEachFeature: function (feature, layer) {
@@ -347,7 +348,6 @@
               layer.on('pm:edit', function(e) {
                 self.updateFeaturesInput(self.featuresInput, self.editableLayers);
               });
-
             } else {
               if (feature.geometry.type === 'Point') {
                 self.clusterGroup.addLayer(layer);
@@ -358,18 +358,16 @@
               if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
                 layer.options.resource_type = feature.properties.resource_type || null;
                 layer.options.id = feature.properties.id || null;
-                layer.options.color = feature.properties.color || self.defaultFeatureColor;
-                layer.options.fa_icon_class = feature.properties.fa_icon_class || 'circle';
-                layer.options.category_name = feature.properties.category_name || null;
+                layer.options.feature_color = feature.properties.feature_color || self.defaultFeatureColor;
+                layer.options.feature_icon_name = feature.properties.feature_icon_name || 'circle';
+                layer.options.feature_category_name = feature.properties.feature_category_name || null;
 
                 layer.on("click", self.openMarkerPopup);
               }
-
             }
           }
-        }).addTo(this.map);
+        });
       }
-
       if (this.editingProjektMap) {
         this.placeCenterMarker(this.mapCenterLatLng, this);
       }
@@ -378,7 +376,7 @@
     openMarkerPopup(e) {
       const resourceType = e.target.options.resource_type;
       const route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options);
-      const properties = { color: e.target.options.color, fa_icon_class: e.target.options.fa_icon_class, category_name: e.target.options.category_name };
+      const properties = { feature_color: e.target.options.feature_color, feature_icon_name: e.target.options.feature_icon_name, feature_category_name: e.target.options.feature_category_name };
 
       if (!route) return;
 
@@ -469,7 +467,7 @@
       }
 
       this.rearrangeEditingControls();
-      this.setupEventListenersForMarkerStyleChanges();
+      App.Map.setupEventListenersForMarkerStyleChanges(this);
       this.setupEventListenersForNewFeatures();
     }
 
@@ -563,7 +561,7 @@
       L.Layer.include({
         toGeoJSONWithOptions: function() {
           const layer = this;
-          const allowedOptions = ['color', 'fa_icon_class', 'category_name'];
+          const allowedOptions = ['feature_color', 'feature_icon_name', 'feature_category_name'];
           const geojson = this.toGeoJSON();
           geojson.properties = geojson.properties || {};
 
@@ -608,36 +606,21 @@
       }
     }
 
-    setupEventListenersForMarkerStyleChanges() {
-      const selectors = document.querySelectorAll(".js-map-change-marker-style");
+    setupEventListenersForUpdatingMapCenter() {
+      if (!this.editable) return;
 
-      if (selectors.length == 0) return;
+      const selectElement = document.querySelector('.js-update-map-center');
+      if ( !selectElement ) return;
 
-      const instance = this;
-      const currentSelector = selectors[0];
+      selectElement.addEventListener('change', (event) => {
+        const selectedOption = event.target.selectedOptions[0];
+        const latitude = selectedOption.dataset.latitude || event.target.dataset.defaultLatitude || this.mapCenterLatitude;
+        const longitude = selectedOption.dataset.longitude || event.target.dataset.defaultLongitude || this.mapCenterLongitude;
 
-      instance.markerCategoryIcon = currentSelector.dataset.icon
-      instance.markerCategoryColor = currentSelector.dataset.color;
-      instance.markerCategoryName = currentSelector.dataset.categoryName;
-
-      instance.map.pm.setGlobalOptions({
-        markerStyle: {
-          icon: App.Utils.getLeafletMarkerHTML(instance.markerCategoryColor || instance.defaultFeatureColor, instance.markerCategoryIcon || 'circle'),
+        if (latitude && longitude) {
+          const newCenter = new L.LatLng(latitude, longitude);
+          this.map.setView(newCenter, this.map.getZoom());
         }
-      });
-
-      selectors.forEach(function(selector) {
-        selector.addEventListener("click", function() {
-          instance.markerCategoryIcon = this.dataset.icon
-          instance.markerCategoryColor = this.dataset.color;
-          instance.markerCategoryName = this.dataset.categoryName;
-
-          instance.map.pm.setGlobalOptions({
-            markerStyle: {
-              icon: App.Utils.getLeafletMarkerHTML(instance.markerCategoryColor || instance.defaultFeatureColor, instance.markerCategoryIcon || 'circle'),
-            }
-          });
-        });
       });
     }
   }

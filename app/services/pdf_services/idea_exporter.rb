@@ -36,10 +36,12 @@ module PdfServices
           { text: I18n.t("ideas.status.#{@idea.status}"), size: 10 }
         ]
 
-        pdf.formatted_text [
-          { text: "#{I18n.t("custom.admin.ideas.show.category")}: ", size: 10, styles: [:bold] },
-          { text: @idea.category&.name, size: 10 }
-        ]
+        if @idea.category.present?
+          pdf.formatted_text [
+            { text: "#{I18n.t("custom.admin.ideas.show.category")}: ", size: 10, styles: [:bold] },
+            { text: @idea.category&.name, size: 10 }
+          ]
+        end
 
         pdf.move_down 10
 

@@ -41,9 +41,10 @@
       this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
-      this.markerCategoryIcon = null;
-      this.markerCategoryColor = null;
-      this.markerCategoryName = null;
+      this.featureColor = null;
+      this.featureIconName = null;
+      this.featureIconUnicode = null;
+      this.featureCategoryName = null;
 
 
       // Form inputs
@@ -69,6 +70,12 @@
           pitch: 53,
           preserveDrawingBuffer: true,
           style: instance.element.dataset.mapboxStyleId,
+          cooperativeGestures: true,
+          locale: {
+            "ScrollZoomBlocker.CtrlMessage": "Zum Zoomen der Karte Strg + Scrollen verwenden",
+            "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen",
+            'TouchPanBlocker.Message': 'Zum Verschieben der Karte zwei Finger verwenden'
+          },
         });
 
         if (callback) callback(map);
@@ -138,6 +145,7 @@
         instance.setupExpandControl();
         instance.setupPlugins();
         instance.setupEventListenersForUpdatingFormInputs();
+        instance.setupEventListenersForUpdatingMapCenter();
       });
     }
 
@@ -378,13 +386,19 @@
     renderFeatures() {
       if (this.editable) return;
 
-      const allFeatures = App.Utils.formattedFeatures(this.features);
-      const pointFeatures = {
+      const allFeatures = App.Map.formattedFeatures(this.features);
+      let pointFeatures = {
         type: 'FeatureCollection',
         features: allFeatures.features.filter(function(f) {
           return f.geometry.type === 'Point';
         })
       }
+
+      pointFeatures.features.forEach(function(feature) {
+        if (feature.properties && feature.properties.feature_icon_unicode) {
+          feature.properties.feature_icon_unicode_processed = String.fromCharCode(parseInt(feature.properties.feature_icon_unicode, 16));
+        }
+      });
 
       const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.75);
 
@@ -393,7 +407,7 @@
           type: 'geojson',
           data: pointFeatures,
           cluster: true,
-          clusterMaxZoom: 14,
+          clusterMaxZoom: 17,
           clusterRadius: 50
         });
 
@@ -406,7 +420,6 @@
             'circle-color': [ 'step', ['get', 'point_count'], clusterColor, 10, clusterColor, 30, clusterColor ],
             'circle-radius': [ 'step', ['get', 'point_count'], 18, 10, 22, 28, 25 ]
           }
-
         });
 
         this.map.addLayer({
@@ -424,10 +437,24 @@
           source: 'user-features-points',
           filter: ['!', ['has', 'point_count']],
           paint: {
-            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12 ],
-            'circle-color':  [ 'case', ['has', 'color'], ['get', 'color'], this.defaultFeatureColor],
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 16, 16 ],
+            'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'circle-opacity': 0.75
           }
+        });
+
+        this.map.addLayer({
+          id: 'user-features-circles-icons',
+          type: 'symbol',
+          source: 'user-features-points',
+          filter: ['all', ['!', ['has', 'point_count']], ['has', 'feature_icon_unicode_processed']],
+          layout: {
+            'text-field': ['get', 'feature_icon_unicode_processed'],
+            'text-font': ['Font Awesome 5 Free Regular', 'Font Awesome 5 Free Solid', 'Font Awesome 5 Brands Regular'],
+            'text-size': 14,
+            'text-offset': [0, 0.2]
+          },
+          paint: { 'text-color': '#ffffff' }
         });
 
         this.map.on('click', 'user-features-circles-clusters', (e) => {
@@ -446,7 +473,7 @@
 
         this.map.addSource('user-features-shapes', {
           type: 'geojson',
-          data: App.Utils.formattedFeatures(this.features)
+          data: App.Map.formattedFeatures(this.features)
         });
 
         this.map.addLayer({
@@ -455,7 +482,7 @@
           source: 'user-features-shapes',
           filter: ['==', '$type', 'LineString'],
           layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': ['coalesce', ['get', 'color'], this.defaultFeatureColor], 'line-width': 4 }
+          paint: { 'line-color': [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor], 'line-width': 4 }
         });
 
         this.map.addLayer({
@@ -464,13 +491,21 @@
           source: 'user-features-shapes',
           filter: ['==', '$type', 'Polygon'],
           layout: {},
-          paint: { 'fill-color': ['coalesce', ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
+          paint: { 'fill-color': [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor], 'fill-opacity': 0.5 }
         });
 
         if (this.process && App.MapPopup.excludedProcesses.indexOf(this.process) === -1) {
           const userFeaturesLayers = ['user-features-circles', 'user-features-lines', 'user-features-polygons'];
           const instance = this;
           userFeaturesLayers.forEach(function(layerId) {
+            instance.map.on('mouseenter', layerId, () => {
+              instance.map.getCanvas().style.cursor = 'pointer';
+            });
+
+            instance.map.on('mouseleave', layerId, () => {
+              instance.map.getCanvas().style.cursor = '';
+            });
+
             instance.map.on('click', layerId, instance.openMarkerPopup);
           })
         }
@@ -478,12 +513,14 @@
     }
 
     openMarkerPopup(e) {
+      if (this._popupOpen) return;
+      this._popupOpen = true;
+
       if (!e.features || !e.features.length || !e.features[0]) {
         console.warn("No features found in popup event:", e);
         return;
       }
 
-      const coordinates = e.features[0].geometry.coordinates.slice();
       const properties = e.features[0].properties;
       const resourceType = properties["resource_type"]
 
@@ -493,7 +530,7 @@
         closeButton: true,
         maxWidth: '250px'
       })
-        .setLngLat(coordinates[0][0] || coordinates)
+        .setLngLat(e.lngLat)
         .setHTML('<div class="map-popup-status-message">Laden...</div>')
         .addTo(this);
 
@@ -511,6 +548,9 @@
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');
         })
+        .always(function() {
+          this._popupOpen = false;
+        }.bind(this));
     }
 
     addSwitchToSimpleSelectControl() {
@@ -575,9 +615,12 @@
       instance.map.addControl(this.draw, 'top-right');
       this.addSwitchToSimpleSelectControl();
 
-      App.Utils.formattedFeatures(instance.features).features.forEach(function(feature) {
-        instance.editableLayers.push(feature.id);
-        instance.draw.add(feature);
+      App.Map.formattedFeatures(instance.features).features.forEach(function(feature) {
+        const added = instance.draw.add(feature);
+
+        if (added && added.length > 0) {
+          instance.editableLayers.push(added[0]);
+        }
       });
 
       if (instance.editingProjektMap) {
@@ -588,7 +631,7 @@
         instance.addHintAboutEditableLayersLimit();
       }
 
-      instance.setupEventListenersForMarkerStyleChanges();
+      App.Map.setupEventListenersForMarkerStyleChanges(instance);
       instance.rearrangeEditingControls();
     }
 
@@ -626,7 +669,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
+            'fill-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -642,7 +685,7 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor],
+            'line-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
           },
@@ -656,7 +699,27 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
+            'circle-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
+          },
+        },
+
+        {
+          'id': 'gl-draw-point-icon',
+          'type': 'symbol',
+          'filter': [ 'all',
+            ['==', '$type', 'Point'],
+            ['==', 'meta', 'feature'],
+            ['has', 'user_feature_icon_unicode']
+          ],
+
+          'layout': {
+            'text-field': ['get', 'user_feature_icon_unicode'],
+            'text-font': ['Font Awesome 5 Free Regular', 'Font Awesome 5 Free Solid', 'Font Awesome 5 Brands Regular'],
+            'text-size': 10,
+            'text-offset': [0, 0.2]
+          },
+          'paint': {
+            'text-color': '#ffffff'
           },
         },
 
@@ -670,9 +733,10 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 8, 9],
-            'circle-color': [ 'case', ['has', 'user_color'], ['get', 'user_color'], this.defaultFeatureColor]
+            'circle-color': [ 'case', ['has', 'user_feature_color'], ['get', 'user_feature_color'], this.defaultFeatureColor]
           },
         },
+
         {
           'id': 'gl-draw-vertex-inner',
           'type': 'circle',
@@ -745,16 +809,20 @@
         const currentMode = instance.draw.getMode();
         const newFeature = e.features[0];
 
-        if (instance.markerCategoryColor) {
-          instance.draw.setFeatureProperty(newFeature.id, 'color', instance.markerCategoryColor);
+        if (instance.featureColor) {
+          instance.draw.setFeatureProperty(newFeature.id, 'feature_color', instance.featureColor);
         }
 
-        if (instance.markerCategoryIcon) {
-          instance.draw.setFeatureProperty(newFeature.id, 'fa_icon_class', instance.markerCategoryIcon);
+        if (instance.featureIconName) {
+          instance.draw.setFeatureProperty(newFeature.id, 'feature_icon_name', instance.featureIconName);
         }
 
-        if (instance.markerCategoryName) {
-          instance.draw.setFeatureProperty(newFeature.id, 'category_name', instance.markerCategoryName);
+        if (instance.featureIconUnicode) {
+          instance.draw.setFeatureProperty(newFeature.id, 'feature_icon_unicode', String.fromCharCode(parseInt(instance.featureIconUnicode, 16)));
+        }
+
+        if (instance.featureCategoryName) {
+          instance.draw.setFeatureProperty(newFeature.id, 'feature_category_name', instance.featureCategoryName);
         }
 
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
@@ -817,38 +885,29 @@
       }
     }
 
-    setupEventListenersForMarkerStyleChanges() {
-      const selectors = document.querySelectorAll(".js-map-change-marker-style");
+    setupEventListenersForUpdatingMapCenter() {
+      if (!this.editable) return;
 
-      if (selectors.length == 0) return;
+      const selectElement = document.querySelector('.js-update-map-center');
+      if (!selectElement) return;
 
-      const instance = this;
-      const currentSelector = selectors[0];
+      selectElement.addEventListener('change', (event) => {
+        const selectedOption = event.target.selectedOptions[0];
+        const latitude = parseFloat(
+          selectedOption.dataset.latitude ||
+          event.target.dataset.defaultLatitude ||
+          this.mapCenterLatitude
+        );
+        const longitude = parseFloat(
+          selectedOption.dataset.longitude ||
+          event.target.dataset.defaultLongitude ||
+          this.mapCenterLongitude
+        );
 
-      if (currentSelector.dataset.icon) {
-        instance.markerCategoryIcon = currentSelector.dataset.icon
-      }
-
-      if (currentSelector.dataset.color) {
-        instance.markerCategoryColor = currentSelector.dataset.color;
-      }
-
-      if (currentSelector.dataset.categoryName) {
-        instance.markerCategoryName = currentSelector.dataset.categoryName;
-      }
-
-      selectors.forEach(function(selector) {
-        selector.addEventListener("click", function() {
-          if (this.dataset.icon) {
-            instance.markerCategoryIcon = this.dataset.icon
-          }
-          if (this.dataset.color) {
-            instance.markerCategoryColor = this.dataset.color;
-          }
-          if (this.dataset.categoryName) {
-            instance.markerCategoryName = this.dataset.categoryName;
-          }
-        });
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+          this.map.setCenter([longitude, latitude]);
+          this.map.setZoom(this.map.getZoom());
+        }
       });
     }
   }

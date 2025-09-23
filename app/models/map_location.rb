@@ -48,11 +48,11 @@ class MapLocation < ApplicationRecord
         "properties" => {
           "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
           "id" => mappable_id,
-          "color" => get_feature_color,
-          "fa_icon_class" => get_fa_icon_class
+          "feature_color" => get_feature_color,
+          "feature_icon_name" => get_feature_icon_name,
+          "feature_icon_unicode" => get_feature_icon_unicode
         }
       }]
-
     }
   end
 
@@ -66,8 +66,9 @@ class MapLocation < ApplicationRecord
     extra_properties = {
       "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
       "id" => mappable_id,
-      "color" => get_feature_color,
-      "fa_icon_class" => get_fa_icon_class
+      "feature_color" => get_feature_color,
+      "feature_icon_name" => get_feature_icon_name,
+      "feature_icon_unicode" => get_feature_icon_unicode
     }.reject { |_k, v| v.in?([nil, ""]) }
 
     if features["type"] == "FeatureCollection"
@@ -170,21 +171,29 @@ class MapLocation < ApplicationRecord
     end
 
     def get_feature_color
-      if mappable.is_a?(Proposal) && mappable.sentiment.present?
+      if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.sentiment.present?
         mappable.sentiment.color
-      elsif mappable.is_a?(DeficiencyReport)
+      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
         mappable.category.color
+      elsif mappable.is_a?(Projekt)
+        "#ff0000"
       end
     end
 
-    def get_fa_icon_class
-      if mappable.is_a?(Proposal) && mappable.projekt_labels.any?
-        mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
-      elsif mappable.is_a?(DeficiencyReport)
-        mappable.category.icon
-      else
-        "circle"
+    def get_feature_icon_name
+      @icon_name ||= begin
+        if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.projekt_labels.any?
+          mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
+        elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
+          mappable.category.icon
+        end
       end
+    end
+
+    def get_feature_icon_unicode
+      return unless get_feature_icon_name.present?
+
+      AwesomeIcon.find_by(name: get_feature_icon_name)&.unicode
     end
 
     def update_geocoder_data

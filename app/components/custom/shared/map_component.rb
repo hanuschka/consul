@@ -27,6 +27,7 @@ class Shared::MapComponent < ApplicationComponent
       options = { map: true }
 
       options[:process] = @process if @process
+      options[:map_location_id] = @mappable.map_location.id if @mappable&.map_location
 
       options[:map_center_latitude] = map_location&.latitude || Setting["map.latitude"]
       options[:map_center_longitude] = map_location&.longitude || Setting["map.longitude"]

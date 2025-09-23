@@ -6,11 +6,9 @@ class ProjektPointOfInterestPins::CategorySetterComponent < ApplicationComponent
     @categories = @projekt_phase.projekt_point_of_interest_categories
   end
 
-  def category_button_color(category)
-    if @categories.first == category
-      category.color
-    else
-      "gray"
+  private
+
+    def icon_unicode_for(category)
+      AwesomeIcon.find_by(name: category.icon)&.unicode
     end
-  end
 end

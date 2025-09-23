@@ -397,6 +397,7 @@ namespace :admin do
   resources :newsletters do
     member do
       post :deliver
+      post :send_test
     end
 
     collection do

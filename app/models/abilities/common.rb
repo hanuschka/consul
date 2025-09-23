@@ -103,7 +103,7 @@ module Abilities
       # can :create, Budget::Investment,               budget: { phase: "accepting" }
       can :edit, Budget::Investment,                 budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
       can :update, Budget::Investment,               budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
-      can :suggest, Budget::Investment,              budget: { id: Budget.accepting.pluck(:id) }
+      can :suggest, Budget::Investment,              budget: { id: Budget.accepting.pluck(:id) + Budget.reviewing.pluck(:id) }
       can :destroy, Budget::Investment,              budget: { id: (Budget.accepting.pluck(:id) + Budget.reviewing.pluck(:id)) }, author_id: user.id
       can [:create, :destroy], ActsAsVotable::Vote,
         voter_id: user.id,
@@ -145,8 +145,8 @@ module Abilities
       can :create, Budget::Investment do |investment|
         projekt_phase = investment.budget.projekt_phase
 
-        investment.budget.current_phase.kind == "accepting" &&
-          (projekt_phase.selectable_by_users? || user.has_pm_permission_to?("manage", projekt_phase.projekt))
+        (investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?) ||
+          (investment.budget.current_phase.kind.in?(%w[accepting reviewing]) && user.has_pm_permission_to?("manage", projekt_phase.projekt))
       end
 
       can [:create, :vote], Comment do |comment|
@@ -199,6 +199,10 @@ module Abilities
       can [:create], Idea
       can [:create], ProjektPointOfInterestPin do |pin|
         pin.projekt_phase.permission_problem(user).blank?
+      end
+
+      can [:create], DeficiencyReport::FeedbackForm do |ff|
+        ff.deficiency_report.author_id == user.id
       end
     end
   end

@@ -321,6 +321,10 @@ de:
         document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
         external_video: Externes Video einbinden
         external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
+        voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
+        voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
+        send_feedback_form_link: Feedback-Formular
+        send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
       ideas:
         show_in_main_menu: Ideen in Navigation anzeigen
         show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an

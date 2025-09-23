@@ -30,6 +30,7 @@ class User < ApplicationRecord
   after_create :take_votes_from_erased_user
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
+  after_create :assign_individual_group_values_based_on_auto_join_emails
 
   has_secure_token :frame_sign_in_token
 
@@ -107,6 +108,14 @@ class User < ApplicationRecord
     def administrators_ids
       joins(:administrator).ids
     end
+  end
+
+  def actual?
+    self.class.actual.include?(self)
+  end
+
+  def not_actual?
+    !actual?
   end
 
   def validate_registered_address?
@@ -409,6 +418,15 @@ class User < ApplicationRecord
         next unless email.ends_with?(group_value.email_pattern)
 
         group_value.users << self
+      end
+    end
+
+    def assign_individual_group_values_based_on_auto_join_emails
+      return unless email.present?
+
+      IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
+        group_value.users << self unless group_value.users.include?(self)
+        group_value.remove_auto_join_email(email)
       end
     end
 end

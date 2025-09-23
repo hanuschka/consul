@@ -85,7 +85,8 @@
     </table>
     <% unless question.bundle_question? %>
       <% if helpers.can? :csv_answers_streets, question %>
-        <%= link_to t('custom.polls.results.question_street_details_csv_link'), polls_question_csv_answers_streets_path(question.id, format: :csv) %>
+        <%= link_to t('custom.polls.results.question_street_details_csv_link'), polls_question_csv_answers_streets_path(question.id, format: :csv),
+                    onclick: "this.parentElement.insertAdjacentHTML('beforeend', '<p style=\"font-size:smaller;color:red;\">Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist.</p>');" %>
         &nbsp;|&nbsp;
       <% end %>
       <% if helpers.can? :csv_answers_votes, question %>

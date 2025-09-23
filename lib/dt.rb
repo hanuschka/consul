@@ -18,6 +18,10 @@ module Dt
     "#{url}/apps"
   end
 
+  def self.navigate_to_app_url(codename)
+    "#{url}/apps/navigate/#{codename}"
+  end
+
   def self.ticket_system_url
     "https://demokratie.atlassian.net/servicedesk/customer/portal/4/group/15"
   end

@@ -27,7 +27,7 @@
     enableCKeditorFor: function(textarea) {
       var { ClassicEditor } = CKEDITOR;
 
-      var editorPromise =ClassicEditor.create(textarea, {
+      var editorPromise = ClassicEditor.create(textarea, {
         plugins: this.toolbarFor(textarea).plugins,
         toolbar: {
           items: this.toolbarFor(textarea).toolbarControls,
@@ -148,20 +148,13 @@
       })
 
       editorPromise.then((editor) => {
+        // DO NOT DELETE
+        // IMPORTANT: it's used in projekt studio for content blocks
         window.CKeditorInstancesGlobal[editor.sourceElement.id] = editor;
 
-        // if (editor.sourceElement.form) {
-        //   editor.sourceElement.form.addEventListener("submit", function(e) {
-        //     e.preventDefault();
-
-        //     var textarea = editor.sourceElement
-        //     var editorData = editor.getData();
-        //     var processedData = removeWrappingParagraphs(editorData);
-
-        //     textarea.value = processedData
-        //     textarea.form.submit();
-        //   })
-        // }
+        if (editor.sourceElement.classList.contains("js-user-resource-form-description")) {
+          window.CKeditorInstancesGlobal["userResourceFromEditor"] = editor;
+        }
       })
     },
 
@@ -218,9 +211,9 @@
 
         toolbarControls = [
           "bulletedList", "numberedList", "|", "indent", "outdent", "|", "blockQuote", "|", "alignment:left", "alignment:center", "alignment:right", "alignment:justify", "|",
-          "heading", "|", "link", "|", "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "|", "removeFormat", "|",
+          "heading", "|", "link", "|", "bold", "italic", "underline", "|",
           "fontColor", "fontBackgroundColor", "|",
-          "insertTable", "horizontalLine", "specialCharacters"
+          "insertTable", "horizontalLine"
         ]
 
       } else if ( $(element).hasClass("extended-a") ) {
@@ -237,13 +230,12 @@
 
         toolbarControls = [
           "bulletedList", "numberedList", "|", "indent", "outdent", "|", "blockQuote", "|", "alignment:left", "alignment:center", "alignment:right", "alignment:justify", "|",
-          "uploadFiles", "|",
-          "fontSize", "|",
-          "heading", "|", "link", "|", "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "|", "removeFormat", "|",
+          "|", "fontSize", "|",
+          "heading", "|", "link", "|", "bold", "italic", "underline", "|",
           "fontColor", "fontBackgroundColor", "|",
-          "insertTable", "horizontalLine", "specialCharacters", "|",
+          "insertTable", "horizontalLine","|",
           "mediaEmbed", "sourceEditing", "|",
-          "htmlEmbed"
+          "htmlEmbed", "uploadFiles"
         ]
 
       } else {

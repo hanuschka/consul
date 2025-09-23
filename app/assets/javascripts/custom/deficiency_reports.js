@@ -147,20 +147,6 @@
       window.location.href = url;
     },
 
-    updateMapInForm: function() {
-      var coordinates;
-
-      if (event.target.value == 0) {
-        coordinates = JSON.parse(event.target.dataset.defaultMapCoordinates)
-      } else {
-        coordinates = JSON.parse(event.target.dataset.allDistrictMapCoordinates)[event.target.value];
-      }
-
-      App.Map.maps.forEach(function(map) {
-        map.panTo(coordinates);
-      });
-    },
-
     initialize: function() {
       $("body").on("click", ".js-filter-dr-category", function() {
 				var $checkbox = $(this)
@@ -205,10 +191,6 @@
 
       $("body").on("click", ".js-update-dr-categories", function() {
         App.DeficiencyReports.updateSelectedDeficiencyCategoriesParamFromTag();
-      });
-
-      $("body").on("change", ".js-dr-form-update-map", function() {
-        App.DeficiencyReports.updateMapInForm();
       });
     }
   };

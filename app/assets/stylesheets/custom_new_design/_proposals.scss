@@ -15,17 +15,26 @@
   padding-top: 30px;
 }
 
-.proposal-assistant-iframe {
-  height: 100px;
-  width: 500px;
+.voice-assistant-iframe {
+  height: 118px;
+  width: 350px;
   position: fixed;
   bottom: 20px;
   left: 0;
   right: 0;
-  background-color: white;
   border-radius: 20px;
+  border: 1px solid #959595;
+  background-color: #383838;
   margin: auto;
-  z-index: 10;
-  box-shadow: 2px 3px 5px 4px rgba(0, 0, 0, 0.10);
+  z-index: 500;
+  box-shadow: 2px 3px 5px 4px rgba(0, 0, 0, 0.12);
+  transition: width 500ms ease;
+
+  &.-running {
+    width: 500px;
+  }
 }
 
+// .voice-assistant-iframe {
+//   // backdrop-filter: blur(8px);
+// }

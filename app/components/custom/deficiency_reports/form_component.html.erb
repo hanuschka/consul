@@ -38,7 +38,7 @@
 
   <%= f.invisible_captcha :subtitle %>
 
-  <% if current_user.administrator? || current_user.moderator? %>
+  <% if current_user.administrator? || current_user.deficiency_report_manager? %>
     <div>
       <%= f.text_field :on_behalf_of %>
     </div>

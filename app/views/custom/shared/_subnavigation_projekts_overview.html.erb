@@ -12,7 +12,7 @@
             projekts_path
           end
     %>
-    <%= link_to t('custom.links.menu.projekts_overview'), projekt_link_path, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), aria: { hidden: true }, data: { turbolinks: false } %>
+    <%= link_to t('custom.links.menu.projekts_overview'), projekt_link_path, class: '', tabindex: ( placement == 'desktop' ? '-1' : '0' ), data: { turbolinks: false } %>
   </div>
 
   <% unless use_landing_projekts_for_overview_link %>
@@ -20,8 +20,6 @@
       <div class='nav-toggle-arrow js-toggle-mobile-flyout-item focusable'
         tabindex="0"
         aria-label='<%= t('custom.links.menu.mobile.arrow_projekts') %>'
-        aria-haspopup=true
-        aria-expanded=false
         >
       </div>
     <% end %>

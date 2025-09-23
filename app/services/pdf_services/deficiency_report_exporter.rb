@@ -7,6 +7,10 @@ module PdfServices
 
     def call
       Prawn::Document.new(page_size: "A4", margin: 30) do |pdf|
+        font_path = Rails.root.join("app/assets/fonts/custom/Asap-Variable.ttf")
+        pdf.font_families.update("Asap" => { normal: font_path, bold: font_path, italic: font_path, bold_italic: font_path })
+        pdf.font "Asap"
+
         pdf.text @deficiency_report.title, size: 20, style: :bold
 
         pdf.move_down 10

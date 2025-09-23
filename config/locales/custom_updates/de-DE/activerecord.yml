@@ -34,6 +34,9 @@ de:
       individual_group_value:
         one: Gruppenwert
         other: Gruppenwerte
+      projekt_argument:
+        one: Stimme
+        other: Stimmen
       projekt_event:
         one: Veranstaltung
         other: Veranstaltungen
@@ -127,6 +130,7 @@ de:
         latitude: Breitengrad
         longitude: Längengrad
         zoom: Zoom
+        show_admin_shape: In Projektübersicht anzeigen
       projekt:
         total_duration_start: Anfangsdatum
         total_duration_end: Enddatum
@@ -140,9 +144,12 @@ de:
         min_rating_scale_label: Linkes Label
         max_rating_scale_label: Rechtes Label
         show_hint_callout: Diese Textbox im Frontend anzeigen
+      poll/question/translation:
+        intro: Einleitungssatz
       poll/question/answer:
         more_info_link: Erklärungslink
         more_info_iframe: Iframe-Link
+        terminates_poll: Beendet die Umfrage
       poll/translation:
         closing_note: Text der Abschlussseite
       widget/card:
@@ -218,6 +225,7 @@ de:
         date_of_birth: Geburtsdatum
         document_type: Dokument
         document_last_digits: Personalausweis / Passport (4 letzten Ziffern)
+        guest: Gast
       age_range:
         min_age: Mindestalter
         max_age: Maximalalter

@@ -94,6 +94,8 @@ class ProjektPhase < ApplicationRecord
   scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
   scope :special_phases, -> { where(type: SPECIAL_PROJEKT_PHASES) }
 
+  scope :frontend_visible, -> { where(frontend_visibility: true) }
+
   scope :active, -> { where(active: true) }
   scope :current, ->(timestamp = Time.zone.today) {
     active
@@ -107,6 +109,12 @@ class ProjektPhase < ApplicationRecord
   }
 
   scope :sorted, ->  {order(:given_order) }
+
+  scope :with_feature, ->(feature_key, state = "on") {
+    joins(:settings)
+      .where("projekt_phase_settings.key = ?", "feature.#{feature_key}")
+      .where(projekt_phase_settings: { value: (state == "on" ? "active" : [nil, ""]) })
+  }
 
   def self.order_phases(ordered_array)
     ordered_array.each_with_index do |phase_id, order|
@@ -315,7 +323,7 @@ class ProjektPhase < ApplicationRecord
     return if map_location.present?
 
     map_location = projekt.map_location&.dup
-    map_location.update(projekt_phase_id: id, projekt_id: nil) if map_location.present?
+    map_location.update!(mappable: self) if map_location.present?
 
     projekt.map_layers.each do |map_layer|
       map_layers << map_layer.dup
@@ -324,6 +332,28 @@ class ProjektPhase < ApplicationRecord
 
   def url
     projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
+  end
+
+  def find_or_create_stats_version
+    @find_or_create_stats_version ||= begin
+      if stats_version.nil?
+        create_stats_version
+      elsif current? && stats_version.created_at < 10.minutes.ago
+        stats_version.destroy!
+        create_stats_version
+      else
+        stats_version
+      end
+    end
+  end
+
+  def voice_assistant_codename
+    case self
+    when ProjektPhase::ProposalPhase
+      "proposal_voice_assistant"
+    when ProjektPhase::BudgetPhase
+      "budget_proposal_voice_assistant"
+    end
   end
 
   private

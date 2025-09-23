@@ -1,6 +1,10 @@
 class ProjektPhaseSetting < ApplicationRecord
   SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
 
+  PRO_SETTINGS = [
+    "feature.form.voice_assistant"
+  ]
+
   SETTING_KINDS = %w[feature option selectable_setting].freeze
   SETTING_BANDS = %w[general form resource].freeze
 
@@ -69,6 +73,9 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_geoman_controls_in_maps": "active",
           "feature.form.allow_attached_documents": "",
           "feature.form.enable_external_video": "",
+          "feature.form.voice_assistant": "",
+          "feature.form.anonimize_authors": "",
+          "option.form.map_features_limit": "1",
           "option.form.description_max_length": "6000",
 
           "feature.resource.show_video_as_link": "",
@@ -83,7 +90,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_community_button_in_proposal_sidebar": "",
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
-          "option.resource.votes_for_proposal_success": 100
+          "option.resource.votes_for_proposal_success": 100,
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -112,6 +119,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.enable_external_video": "",
           "feature.form.show_implementation_option_fields": "",
           "feature.form.show_user_cost_estimate": "",
+          "feature.form.voice_assistant": "",
+          "option.form.map_features_limit": "1",
           "option.form.description_max_length": "6000",
 
           "feature.resource.users_can_create_investment_proposals": "active",
@@ -159,6 +168,7 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::PointOfInterestPhase" => {
           "feature.general.users_can_create_pins": "active",
           "option.general.max_number_of_pins_per_user": "",
+          "option.form.map_features_limit": "1",
         },
       }
     end

@@ -1,36 +1,29 @@
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<div class="flex margin-bottom items-center">
+<div class="flex wrap gap-10 margin-bottom items-center">
   <div class="new-resource-cta">
     <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
   </div>
 
-  <div class="margin-left">
-    <div class="small-card">
-      <div class="flex items-center">
-        <h5 class="no-margin">
-          <%= t("custom.deficiency_reports.form.category.title") %>:
-        </h5>
-        <div class="margin-left">
-          <%= render Shared::ProjektPointOfInterestCategoriesComponent.new(projekt_phase_id: @projekt_phase.id) %>
-        </div>
+  <div class="small-card">
+    <div class="flex items-center">
+      <h5 class="no-margin">
+        <%= t("custom.deficiency_reports.form.category.title") %>:
+      </h5>
+      <div class="margin-left">
+        <%= render ProjektPointOfInterestPins::CategoryFilterComponent.new(projekt_phase_id: @projekt_phase.id) %>
       </div>
     </div>
-    <%# <%= render Shared::SidebarCardComponent.new( %>
-    <%#   title: t("custom.deficiency_reports.form.category.title"), %>
-    <%#   icon_name: "th-large" %>
-    <%# ) do |c| %1> %>
-    <%#   <%= render Shared::ProjektPointOfInterestCategoriesComponent.new(projekt_phase_id: @projekt_phase.id) %1> %>
-    <%# <% end %1> %>
   </div>
 
 </div>
-<%= render Shared::MapComponent.new(
-  map_location: @projekt_phase.map_location,
-  parent_class: "point-of-interest-pin",
-  process_coordinates: @map_coordinates,
-  projekt_phase: @projekt_phase
-) %>
+<div class="resources-list--map">
+  <%= render Shared::MapComponent.new(
+    mappable: @projekt_phase,
+    features: @pin_coordinates,
+    process: 'point_of_interest_pins'
+  ) %>
+</div>
 <div class="flex-layout">
   <div class="main-column">
 

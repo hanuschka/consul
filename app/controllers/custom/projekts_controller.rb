@@ -102,25 +102,21 @@ class ProjektsController < ApplicationController
   end
 
   def json_data
-    projekt = Projekt.find(params[:id])
-    image_url = projekt.image.present? ? url_for(projekt.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
-    tags = projekt.tags.pluck(:name)
+    @projekt = Projekt.find(params[:id])
 
-    sdg_goals = []
-    projekt.sdg_goals.each do |goal|
-      sdg_goals.push({
-        code: goal.code,
-        title: goal.title,
-        image: "sdg/goal_#{goal.code}.png"
-      })
-    end
+    image_url = url_for @projekt.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                ) if @projekt.image&.attachment&.attached?
 
     data = {
-      projekt_id: projekt.id,
-      projekt_title: projekt.title,
+      resource_type: "projekt",
+      id: @projekt.id,
+      title: @projekt.title,
       image_url: image_url,
-      tags: tags,
-      sdg_goals: sdg_goals
+      tags: @projekt.tags.pluck(:name),
+      sdg_goals: @projekt.sdg_goals.map { |goal| { code: goal.code, title: goal.title, image: "sdg/goal_#{goal.code}.png"} }
     }.to_json
 
     respond_to do |format|
@@ -145,12 +141,12 @@ class ProjektsController < ApplicationController
       sdg_target_codes = params[:sdg_targets].split(',')
       @projekts = @projekts.left_joins(sdg_global_targets: :local_targets)
 
-      @projekts = @projekts.where(sdg_targets: { code: sdg_target_codes}).or(@projekts.where(sdg_local_targets: { code: sdg_target_codes })).distinct
+      @projekts = @projekts.where(sdg_targets: { code: sdg_target_codes}).or(@projekts.where(sdg_local_targets: { code: sdg_target_codes }))
       return
     end
 
     if params[:sdg_goals].present?
-      @projekts = @projekts.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') }).distinct
+      @projekts = @projekts.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') })
     end
   end
 

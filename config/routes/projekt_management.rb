@@ -31,11 +31,11 @@ namespace :projekt_management do
       get :officing_managers
       get :officing_manager_audits
       patch :update_officing_manager_assignments
-      get :poll_results
       get :budget_edit
       get :budget_investments
       get :budget_phases
       get :legislation_process_draft_versions
+      post :send_notifications
       get :ai_settings
       patch :update_ai_settings
       get :projekt_point_of_interest_pins
@@ -93,6 +93,7 @@ namespace :projekt_management do
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :update_map
+      post :notify_reviewers
     end
 
     resources :projekt_phases, only: [:create] do
@@ -102,6 +103,7 @@ namespace :projekt_management do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
   end

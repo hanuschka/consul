@@ -1,7 +1,7 @@
 App.MapPopup = {
-  excludedProcesses: ["proposal", "deficiency_report", "idea", "projekt", "point_of_interest_pin"],
+  excludedProcesses: ["proposal", "deficiency_report", "idea", "projekt", "projekt_point_of_interest_pin"],
 
-  generatePopupContent: function(data, resourceType) {
+  generatePopupContent: function(data, resourceType, properties) {
     if (resourceType == "proposal") {
       return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "deficiency_report") {
@@ -10,8 +10,8 @@ App.MapPopup = {
       return this.standardResourcePopupContent(data, resourceType);
     } else if (resourceType == "projekt") {
       return this.standardResourcePopupContent(data, resourceType);
-    } else if (resourceType == "point_of_interest_pin") {
-      return this.pointOfInterestPopupContent(data);
+    } else if (resourceType == "projekt_point_of_interest_pin") {
+      return this.pointOfInterestPopupContent(data, properties);
     } else {
       return this.standardResourcePopupContent(data, resourceType);
     }
@@ -29,8 +29,8 @@ App.MapPopup = {
       return "/projekts/" + properties.id + "/json_data";
     } else if (resourceType == "investment") {
       return "/investments/" + properties.id + "/json_data";
-    } else if (resourceType == "point_of_interest_pin") {
-      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data?projekt_phase_id=" + properties.projekt_phase_id;
+    } else if (resourceType == "projekt_point_of_interest_pin") {
+      return "/projekt_point_of_interest_pins/" + properties.id + "/json_data";
     }
   },
 
@@ -98,14 +98,12 @@ App.MapPopup = {
     return popupHtml;
   },
 
-  pointOfInterestPopupContent: function(data) {
-    // console.log("pointOfInterestPopupContent", data)
-    var popupHtml = "<h5 style='color:" + data.category.color + "'>";
-    popupHtml += "<i style='margin-right: 7px' class='icon-" + data.category.icon + "'></i>"
-    popupHtml += data.category.name;
+  pointOfInterestPopupContent: function(data, properties) {
+    var popupHtml = "<h5 style='color:" + properties.feature_color + "'>";
+    popupHtml += "<i style='margin-right: 7px' class='icon-" + properties.feature_icon_name + "'></i>"
+    popupHtml += properties.feature_category_name || "Point of Interest";
     popupHtml += "</h5>";
 
     return popupHtml;
-  },
-
+  }
 }

@@ -180,6 +180,13 @@ en:
           projekt_managers_tab:
             name: Projekt managers
             main_block_title: Projekt managers
+            permissions:
+              manage: administer
+              moderate: moderate
+              create_on_behalf_of: create on behalf of users
+              get_notifications: get notifications
+              access_graphql: access to GraphQL
+              review: review projects
           projekt_map_tab:
             name: Ind. map configuration
           projekt_sdg_tab:

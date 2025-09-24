@@ -124,7 +124,7 @@ class Projekt < ApplicationRecord
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
-  attribute :new_content_block_mode, :boolean, default: false
+  attribute :new_content_block_mode, :boolean, default: true
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -241,8 +241,11 @@ class Projekt < ApplicationRecord
         .select(:id)
 
       excluded_projekt_ids = Projekt.joins(:individual_group_values)
-        .where.not(individual_group_values: { id: user_hard_group_value_ids })
-        .select(:id)
+                                    .where.not(id: Projekt
+                                      .joins(:individual_group_values)
+                                      .where(individual_group_values: { id: user_hard_group_value_ids })
+                                    )
+                                    .select(:id)
 
       permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
 
@@ -792,17 +795,10 @@ class Projekt < ApplicationRecord
     def copy_map_settings
       return if map_location.present?
 
-      if overview_page?
-        MapLocation.create!(mappable: self)
-      else
-        map_location = parent&.map_location&.dup || MapLocation.create!
+      create_map_location
 
-        map_location.mappable = self
-        map_location.save!
-
-        (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
-          map_layers << map_layer.dup
-        end
+      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 

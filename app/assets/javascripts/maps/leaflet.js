@@ -9,13 +9,14 @@
       this.bindEventListeners();
 
       this.createMap();
+      this.setupExpandControl();
       this.setupLayers();
       this.setupPlugins();
       this.renderFeatures();
-
       this.setupEditingControls();
-      this.setupEventListenersForNewFeatures();
       this.setupEventListenersForUpdatingFormInputs();
+      this.toggleControlVisibility();
+      this.setupEventListenersForUpdatingMapCenter();
     }
 
     initializeProperties() {
@@ -26,6 +27,7 @@
       this.mapCenterLongitude = $element.data("map-center-longitude");
       this.mapCenterLatLng = new L.LatLng(this.mapCenterLatitude, this.mapCenterLongitude);
       this.zoom = $element.data("map-zoom");
+      this.placement = $element.data("placement");
 
       // Layer configuration
       this.layersData = $element.data('layers-data');
@@ -46,6 +48,9 @@
       this.editableLayersLimit = $element.data("map-features-limit")
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
+      this.featureColor = null;
+      this.featureIconName = null;
+      this.featureCategoryName = null;
 
       // Form inputs
       this.latitudeInput = document.querySelector('[data-latitude-input-for="' + this.element.id + '"]');
@@ -59,8 +64,6 @@
     }
 
     createMap() {
-      const defaultColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor()
-
       this.map = L.map(this.element.id, {
         gestureHandling: true,
         maxZoom: 18,
@@ -80,13 +83,13 @@
         },
         pathOptions: {
           weight: 2,
-          color: defaultColor,
+          color: this.defaultFeatureColor,
           opacity: 1,
-          fillColor: defaultColor,
+          fillColor: this.defaultFeatureColor,
           fillOpacity: 0.2
         },
-        templineStyle: { color: defaultColor, dashArray: '5, 10' },
-        hintlineStyle: { color: defaultColor, dashArray: '5, 10' }
+        templineStyle: { color: this.defaultFeatureColor, dashArray: '5, 10' },
+        hintlineStyle: { color: this.defaultFeatureColor, dashArray: '5, 10' }
       });
 
       if (this.editableLayersLimit && this.editableLayersLimit > 1) {
@@ -95,15 +98,65 @@
     }
 
     setupEventListenersForNewFeatures() {
-      const self = this;
+      const instance = this;
 
-      self.map.on('pm:create', function(e) {
+      instance.map.on('pm:create', function(e) {
         if (e.shape === 'Circle') {
           e.layer.options.shape = 'Circle';
         }
 
-        self.setupEventListenersForEditableFeature(self.map, e.layer);
+        e.layer.options.feature_color = instance.featureColor;
+        e.layer.options.feature_icon_name = instance.featureIconName;
+        e.layer.options.feature_category_name = instance.featureCategoryName;
+
+        instance.setupEventListenersForEditableFeature(instance.map, e.layer);
       })
+    }
+
+    setupExpandControl() {
+      const instance = this;
+
+      L.Control.Expand = L.Control.extend({
+        onAdd: function(map) {
+          let container = document.createElement('div');
+          container.className = 'control-container';
+
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'control-button';
+          button.innerHTML = '<i class="fas fa-expand"></i>';
+          button.title = 'Vollbild-Modus';
+
+          container.appendChild(button);
+
+          L.DomEvent.disableClickPropagation(container);
+
+          container.addEventListener('click', (e) => {
+            L.DomEvent.stopPropagation(e);
+
+            if (instance.element.classList.contains('expanded')) {
+              instance.element.classList.remove('expanded');
+              button.innerHTML = '<i class="fas fa-expand"></i>';
+              map.invalidateSize();
+              instance.toggleControlVisibility();
+            } else {
+              instance.element.classList.add('expanded');
+              button.innerHTML = '<i class="fas fa-compress"></i>';
+              map.invalidateSize();
+              instance.toggleControlVisibility();
+            }
+          });
+
+          return container;
+        },
+
+        onRemove() {
+          container.remove();
+        }
+      })
+
+      const expandControl = new L.Control.Expand({ position: 'topright' })
+      this.map.addControl(expandControl);
     }
 
     setupLayers() {
@@ -237,7 +290,6 @@
     }
 
     setupPlugins() {
-      // Leaflet.Locate plugin
       L.control.locate({
         icon: 'fa fa-map-marker',
         strings: {
@@ -245,7 +297,6 @@
         }
       }).addTo(this.map);
 
-      // Leaflet GeoSearch plugin
       const searchControl = new GeoSearch.GeoSearchControl({
         provider: new GeoSearch.OpenStreetMapProvider(),
         style: 'bar',
@@ -256,17 +307,20 @@
       });
       this.map.addControl(searchControl);
 
+      this.clusterGroup = L.markerClusterGroup({ removeOutsideVisibleBounds: false });
+
       // Leaflet.Deflate plugin
       this.deflateFeatures = L.deflate({
-        minSize: 10,
-        markerLayer: this.markersGroup,
+        minSize: 30,
+        markerLayer: this.clusterGroup,
         markerOptions: (shape) => {
           return {
-            icon: this.getMarkerIcon(shape.feature.color, shape.feature.fa_icon_class),
-            id: this.getProcessId(shape)
+            icon: App.Utils.getLeafletMarkerHTML(shape.feature.properties.color || this.defaultFeatureColor, shape.feature.properties.feature_icon_name ),
           }
         }
+
       });
+
       this.deflateFeatures.addTo(this.map);
     }
 
@@ -274,16 +328,16 @@
       if (this.features && Object.keys(this.features).length > 0) {
         const self = this;
 
-        this.featuresLayer = L.geoJSON(this.features, {
+        L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
             return L.marker(latlng, {
-              icon: App.Utils.getLeafletMarkerHTML(feature.properties.color || self.defaultFeatureColor, feature.properties.fa_icon_class ),
+              icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name),
             });
           },
           style: function (feature) {
             return {
               weight: 2,
-              color: self.adminEditor ? "#ff0000" : feature.properties.color || App.Utils.getBrandColor()
+              color: self.adminEditor ? "#ff0000" : feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
             };
           },
           onEachFeature: function (feature, layer) {
@@ -294,23 +348,26 @@
               layer.on('pm:edit', function(e) {
                 self.updateFeaturesInput(self.featuresInput, self.editableLayers);
               });
-
             } else {
+              if (feature.geometry.type === 'Point') {
+                self.clusterGroup.addLayer(layer);
+              } else {
+                self.deflateFeatures.addLayer(layer);
+              }
 
               if (self.process && App.MapPopup.excludedProcesses.indexOf(self.process) === -1) {
                 layer.options.resource_type = feature.properties.resource_type || null;
                 layer.options.id = feature.properties.id || null;
-                layer.options.color = feature.properties.color || self.defaultFeatureColor;
-                layer.options.fa_icon_class = feature.properties.fa_icon_class || 'circle';
+                layer.options.feature_color = feature.properties.feature_color || self.defaultFeatureColor;
+                layer.options.feature_icon_name = feature.properties.feature_icon_name || 'circle';
+                layer.options.feature_category_name = feature.properties.feature_category_name || null;
 
                 layer.on("click", self.openMarkerPopup);
               }
-
             }
           }
-        }).addTo(this.map);
+        });
       }
-
       if (this.editingProjektMap) {
         this.placeCenterMarker(this.mapCenterLatLng, this);
       }
@@ -319,6 +376,7 @@
     openMarkerPopup(e) {
       const resourceType = e.target.options.resource_type;
       const route = App.MapPopup.getPopupDataUrl(resourceType, e.target.options);
+      const properties = { feature_color: e.target.options.feature_color, feature_icon_name: e.target.options.feature_icon_name, feature_category_name: e.target.options.feature_category_name };
 
       if (!route) return;
 
@@ -326,9 +384,8 @@
         type: "GET",
         dataType: "json",
         success: (data) => {
-          const isInModal = true // !!$(this.element).data('modal-map');
           e.target.bindPopup(
-            App.MapPopup.generatePopupContent(data, resourceType, isInModal),
+            App.MapPopup.generatePopupContent(data, resourceType, properties),
             { autoPanPadding: [0, 80], minWidth: 200, offset: L.point(0, -30) }
           ).openPopup();
         }
@@ -356,10 +413,12 @@
         drawPolygon: this.enableShapes,
         drawCircle: this.enableShapes,
         editMode: this.enableShapes,
-        dragMode: this.enableShapes,
+        dragMode: false,
         cutPolygon: this.enableShapes,
         rotateMode: this.enableShapes
       })
+
+      this.map.pm.enableDraw('Marker');
 
       if (this.editingProjektMap) {
         this.map.pm.Toolbar.createCustomControl({
@@ -384,6 +443,14 @@
 
       if (this.enableShapes || this.adminEditor) {
         this.map.pm.Toolbar.createCustomControl({
+          name: 'customDragMode',
+          className: 'control-icon leaflet-pm-icon-custom-drag',
+          block: 'edit',
+          title: 'Auswahl modus',
+          disableGlobalEditMode: true
+        });
+
+        this.map.pm.Toolbar.createCustomControl({
           name: 'clearMap',
           className: 'control-icon leaflet-pm-icon-delete',
           title: 'Karte zurücksetzen',
@@ -398,6 +465,20 @@
           }
         });
       }
+
+      this.rearrangeEditingControls();
+      App.Map.setupEventListenersForMarkerStyleChanges(this);
+      this.setupEventListenersForNewFeatures();
+    }
+
+    rearrangeEditingControls() {
+      const editToolbar = this.element.querySelector('.leaflet-pm-toolbar.leaflet-pm-edit')
+      if ( !editToolbar ) return;
+
+      const customDragButtonContainer = editToolbar.querySelector('.leaflet-pm-icon-custom-drag').closest('.button-container');
+      if ( !customDragButtonContainer ) return;
+
+      editToolbar.insertBefore(customDragButtonContainer, editToolbar.firstChild);
     }
 
     placeCenterMarker(centerLatLng, instance) {
@@ -477,11 +558,27 @@
     }
 
     updateFeaturesInput(featuresInput, editableLayers) {
+      L.Layer.include({
+        toGeoJSONWithOptions: function() {
+          const layer = this;
+          const allowedOptions = ['feature_color', 'feature_icon_name', 'feature_category_name'];
+          const geojson = this.toGeoJSON();
+          geojson.properties = geojson.properties || {};
+
+          allowedOptions.forEach( function(option) {
+            if ( option in layer.options ) {
+              geojson.properties[option] = layer.options[option];
+            }
+          })
+          return geojson;
+        }
+      })
+
       const featuresData = editableLayers.map(function(layer) {
         if ( layer.options.shape == 'Circle' ) {
-          return L.PM.Utils.circleToPolygon(layer, 60).toGeoJSON();
+          return L.PM.Utils.circleToPolygon(layer, 60).toGeoJSONWithOptions();
         } else {
-          return layer.toGeoJSON();
+          return layer.toGeoJSONWithOptions();
         }
       })
 
@@ -491,6 +588,40 @@
       };
 
       featuresInput.value = JSON.stringify(featureCollection);
+    }
+
+    toggleControlVisibility() {
+      const layerControl = this.element.querySelector('.leaflet-control-layers');
+      const locateControl = this.element.querySelector('.leaflet-control-locate');
+      const geoSearchControl = this.element.querySelector('.leaflet-control-container > .leaflet-control-geosearch.leaflet-geosearch-bar');
+
+      if ( this.element.offsetWidth < 700 ) {
+        [layerControl, locateControl, geoSearchControl].forEach(control => {
+          if (control) control.style.display = 'none';
+        });
+      } else {
+        [layerControl, locateControl, geoSearchControl].forEach(control => {
+          if (control) control.style.display = '';
+        });
+      }
+    }
+
+    setupEventListenersForUpdatingMapCenter() {
+      if (!this.editable) return;
+
+      const selectElement = document.querySelector('.js-update-map-center');
+      if ( !selectElement ) return;
+
+      selectElement.addEventListener('change', (event) => {
+        const selectedOption = event.target.selectedOptions[0];
+        const latitude = selectedOption.dataset.latitude || event.target.dataset.defaultLatitude || this.mapCenterLatitude;
+        const longitude = selectedOption.dataset.longitude || event.target.dataset.defaultLongitude || this.mapCenterLongitude;
+
+        if (latitude && longitude) {
+          const newCenter = new L.LatLng(latitude, longitude);
+          this.map.setView(newCenter, this.map.getZoom());
+        }
+      });
     }
   }
 

@@ -48,11 +48,11 @@ class MapLocation < ApplicationRecord
         "properties" => {
           "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
           "id" => mappable_id,
-          "color" => get_feature_color,
-          "fa_icon_class" => get_fa_icon_class
+          "feature_color" => get_feature_color,
+          "feature_icon_name" => get_feature_icon_name,
+          "feature_icon_unicode" => get_feature_icon_unicode
         }
       }]
-
     }
   end
 
@@ -66,9 +66,10 @@ class MapLocation < ApplicationRecord
     extra_properties = {
       "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
       "id" => mappable_id,
-      "color" => get_feature_color,
-      "fa_icon_class" => get_fa_icon_class
-    }
+      "feature_color" => get_feature_color,
+      "feature_icon_name" => get_feature_icon_name,
+      "feature_icon_unicode" => get_feature_icon_unicode
+    }.reject { |_k, v| v.in?([nil, ""]) }
 
     if features["type"] == "FeatureCollection"
       features["features"].each do |feature|
@@ -108,19 +109,45 @@ class MapLocation < ApplicationRecord
 
     def set_default_values
       return unless new_record?
+      return if mappable.is_a?(Budget::Investment) && mappable.budget.blank?
 
-      if parent = mappable.try(:projekt_phase) || mappable.try(:projekt) || mappable.try(:parent)
-        self.latitude          ||= parent.map_location.latitude
-        self.longitude         ||= parent.map_location.longitude
-        self.zoom              ||= parent.map_location.zoom
-        self.altitude          ||= parent.map_location.altitude
-        self.rendering_library = parent.map_location.rendering_library
+      if mappable.is_a?(ProjektPhase)
+        self.latitude          ||= mappable.projekt.map_location.latitude
+        self.longitude         ||= mappable.projekt.map_location.longitude
+        self.zoom              ||= mappable.projekt.map_location.zoom
+        self.altitude          ||= mappable.projekt.map_location.altitude
+        self.features          ||= mappable.projekt.map_location.features
+        self.rendering_library ||= mappable.projekt.map_location.rendering_library
+
+      elsif mappable.is_a?(Projekt) && mappable.parent.present?
+        self.latitude          ||= mappable.parent.map_location.latitude
+        self.longitude         ||= mappable.parent.map_location.longitude
+        self.zoom              ||= mappable.parent.map_location.zoom
+        self.altitude          ||= mappable.parent.map_location.altitude
+        self.features          ||= mappable.parent.map_location.features
+        self.rendering_library ||= mappable.parent.map_location.rendering_library
+
+      elsif mappable.is_a?(Projekt)
+        self.latitude          ||= MapLocation.default.latitude
+        self.longitude         ||= MapLocation.default.longitude
+        self.zoom              ||= MapLocation.default.zoom
+        self.altitude          ||= MapLocation.default.altitude
+        self.features          ||= MapLocation.default.features
+        self.rendering_library ||= MapLocation.default.rendering_library
+
+      elsif mappable.respond_to?(:projekt_phase) && mappable.projekt_phase.present?
+        self.latitude          ||= mappable.projekt_phase.map_location.latitude
+        self.longitude         ||= mappable.projekt_phase.map_location.longitude
+        self.zoom              ||= mappable.projekt_phase.map_location.zoom
+        self.altitude          ||= mappable.projekt_phase.map_location.altitude
+        self.rendering_library = mappable.projekt_phase.map_location.rendering_library
+
       else
-        self.latitude          ||= 52.5209410025777
-        self.longitude         ||= 13.409421034146195
-        self.zoom              ||= 15
-        self.altitude          ||= 80
-        self.rendering_library =  default ? "leaflet" : self.class.default.rendering_library
+        self.latitude          ||= default ? Setting["map.latitude"] : self.class.default.latitude
+        self.longitude         ||= default ? Setting["map.longitude"] : self.class.default.longitude
+        self.zoom              ||= default ? Setting["map.zoom"] : self.class.default.zoom
+        self.altitude          ||= default ? 80 : self.class.default.altitude
+        self.rendering_library ||= default ? "leaflet" : self.class.default.rendering_library
       end
     end
 
@@ -144,21 +171,29 @@ class MapLocation < ApplicationRecord
     end
 
     def get_feature_color
-      if mappable.is_a?(Proposal) && mappable.sentiment.present?
+      if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.sentiment.present?
         mappable.sentiment.color
-      elsif mappable.is_a?(DeficiencyReport)
+      elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
         mappable.category.color
+      elsif mappable.is_a?(Projekt)
+        "#ff0000"
       end
     end
 
-    def get_fa_icon_class
-      if mappable.is_a?(Proposal) && mappable.projekt_labels.any?
-        mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
-      elsif mappable.is_a?(DeficiencyReport)
-        mappable.category.icon
-      else
-        "circle"
+    def get_feature_icon_name
+      @icon_name ||= begin
+        if (mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment)) && mappable.projekt_labels.any?
+          mappable.projekt_labels.size == 1 ? mappable.projekt_labels.first.icon : "tags"
+        elsif (mappable.is_a?(DeficiencyReport) || mappable.is_a?(Idea)) && mappable.category.present?
+          mappable.category.icon
+        end
       end
+    end
+
+    def get_feature_icon_unicode
+      return unless get_feature_icon_name.present?
+
+      AwesomeIcon.find_by(name: get_feature_icon_name)&.unicode
     end
 
     def update_geocoder_data

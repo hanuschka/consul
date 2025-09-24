@@ -13,43 +13,6 @@
     <%= translatable_form_for(deficiency_report, html: { class: "deficiency-report-form" }) do |f| %>
       <%= back_link_to(deficiency_reports_path) %>
 
-      <% district_select_html = capture do %>
-        <div class="margin-bottom">
-          <%= render Shared::SidebarCardComponent.new(
-                        title: t("custom.deficiency_reports.form.district.title"),
-                        description: t("custom.deficiency_reports.form.district.description"),
-                        icon_name: "map-pin"
-                     ) do |c| %>
-            <%= select_tag :deficiency_report_district, options_for_select(districts.all.map { |district| [district.name, district.id] }),
-              { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false,
-                class: "js-dr-form-update-map",
-                data: {
-                  all_district_map_coordinates: map_coordinates_for_districts,
-                  default_map_coordinates: [Setting["map.latitude"], Setting["map.longitude"]]
-                }
-              } %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <% category_select_html = capture do %>
-        <div class="margin-bottom">
-          <%= render Shared::SidebarCardComponent.new(
-            title: t("custom.deficiency_reports.form.category.title"),
-            description: t("custom.deficiency_reports.form.category.description"),
-            icon_name: "th-large",
-            opened_on_mobile: true
-          ) do |c| %>
-
-          <%= f.select :deficiency_report_category_id,
-            DeficiencyReport::Category.all.map { |category| [category.name, category.id, category.warning_text.present? ? { "data-warning-popup" => dom_id(category, :warning_popup) } : {}] },
-            { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false },
-            { class: "js-user-resource-select-category", onChange: "var warningPopupId = this.options[this.selectedIndex].getAttribute('data-warning-popup'); if (warningPopupId) { $('#' + warningPopupId).foundation('open'); }" } %>
-
-        <% end %>
-        </div>
-      <% end %>
-
       <div class="flex-layout">
         <div class="main-column">
           <h1 class="user-resources-form--title">
@@ -68,14 +31,6 @@
 
       <div class="flex-layout">
         <div class="main-column">
-          <div class="show-on-small-tablet js-remove-on-desktop-section">
-            <%= category_select_html %>
-          </div>
-          <% if districts.any? %>
-            <div class="show-on-small-tablet js-remove-on-desktop-section">
-              <%= district_select_html %>
-            </div>
-          <% end %>
           <%= f.translatable_fields do |translations_form| %>
             <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
@@ -109,28 +64,49 @@
           <% end %>
 
           <div class="new-card" id='map-container'>
+            <div class="margin-bottom">
+              <%= render partial: "custom/shared/user_resources_form/deficiency_report_category", locals: { f: f } %>
+            </div>
+
+            <div class="" style="display:flex;align-items:baseline;">
+              <h2 class="rich-form-label" style="flex-grow:1;">
+                <i class="fas fa-map"></i>
+                <%= t("custom.user_resources.form.map_location_label") %>
+                <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+                <span class="small"><%= t("custom.user_resources.form.map_location_instructions_mandatory") %></span>
+              </h2>
+
+              <% if districts.any? %>
+                <%= select_tag :deficiency_report_district, options_for_select(districts.all.map { |district|
+                  [
+                    district.name, district.id,
+                    {
+                      data: {
+                        latitude: district.map_location.latitude,
+                        longitude: district.map_location.longitude
+                      }
+                    }
+                  ]
+                }),
+                { prompt: t("custom.deficiency_reports.form.district.placeholder"), label: false,
+                  class: "js-update-map-center hide-on-big-tablet",
+                  style: "width:unset;",
+                  data: {
+                    default_latitude: MapLocation.default.latitude,
+                    default_longitude: MapLocation.default.longitude
+                  }
+                } %>
+              <% end %>
+            </div>
+
             <%= render "map_locations/form_fields",
-              form:     f,
-              map_location: deficiency_report.map_location || MapLocation.new,
-              label: t("proposals.form.map_location"),
-              help:     t("custom.deficiency_reports.form.map.hint"),
-              parent_class: "deficiency_report",
-              i18n_namespace: "deficiency_reports" %>
+              form:            f,
+              mappable:        deficiency_report,
+              nesting_prefix: "deficiency_report" %>
           </div>
         </div>
 
         <aside class="sidebar">
-
-          <div class="hide-on-mobile js-remove-on-mobile-section">
-            <%= category_select_html %>
-          </div>
-
-          <% if districts.any? %>
-            <div class="hide-on-mobile js-remove-on-mobile-section">
-              <%= district_select_html %>
-            </div>
-          <% end %>
-
           <% if Setting["deficiency_reports.document_upload"].present? %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.deficiency_reports.form.documents.title"),

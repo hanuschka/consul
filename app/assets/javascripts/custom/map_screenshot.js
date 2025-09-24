@@ -10,12 +10,7 @@
         return;
       }
 
-      var map_location_id_match = mapContainerId.match(/map_location_(\d+)/);
-      if (!map_location_id_match) {
-        console.error("MapLocationIdNotFound:", mapContainerId);
-        return;
-      }
-      var map_location_id = map_location_id_match[1];
+      var map_location_id = element.dataset.mapLocationId;
 
       var canvas = element.querySelector('canvas');
 

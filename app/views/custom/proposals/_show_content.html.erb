@@ -59,7 +59,7 @@
           <%= auto_link_already_sanitized_html wysiwyg(proposal.description) %>
         </div>
 
-        <% if projekt_phase_feature?(proposal.projekt_phase, "form.show_map") %>
+        <% if projekt_phase_feature?(proposal.projekt_phase, "form.show_map") && proposal.map_location.present? %>
           <div class="margin-bottom not-print">
             <%= render Shared::MapComponent.new(
               mappable: proposal,

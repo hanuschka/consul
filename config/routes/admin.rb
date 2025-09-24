@@ -30,7 +30,6 @@ namespace :admin do
       get :officing_managers
       get :officing_manager_audits
       patch :update_officing_manager_assignments
-      get :poll_results
       get :budget_edit
       get :budget_investments
       get :budget_phases
@@ -39,6 +38,7 @@ namespace :admin do
       patch :update_ai_settings
       get :projekt_point_of_interest_pins
       get :projekt_point_of_interest_categories
+      post :send_notifications
       get :map_resources_overview
     end
 
@@ -94,7 +94,10 @@ namespace :admin do
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :quick_update
+      patch :update_page
+      patch :update_title_image
       patch :update_map
+      post :notify_reviewers
     end
 
     resources :projekt_phases, only: [:create] do
@@ -104,8 +107,11 @@ namespace :admin do
       end
       collection do
         post :order_phases
+        patch :update_position
       end
     end
+    resources :projekt_content_blocks, only: [:create]
+
     resources :settings, controller: "projekt_settings", only: [:update] do
       member do
         patch :update_default_projekt_footer_tab
@@ -391,6 +397,7 @@ namespace :admin do
   resources :newsletters do
     member do
       post :deliver
+      post :send_test
     end
 
     collection do
@@ -505,6 +512,15 @@ namespace :admin do
     post :execute, on: :collection
     delete :cancel, on: :collection
   end
+
+  resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+    end
+  end
+
+  resources :saved_content_blocks, only: [:create, :update, :destroy]
 end
 
 resolve "Milestone" do |milestone|

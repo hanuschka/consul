@@ -56,8 +56,8 @@ class Projekt < ApplicationRecord
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
 
-  has_many :debates, through: :debate_phases
-  has_many :proposals, through: :proposal_phases
+  has_many :debates, through: :debate_phases, source: :resources
+  has_many :proposals, through: :proposal_phases, source: :resources
   has_many :budgets, through: :budget_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases

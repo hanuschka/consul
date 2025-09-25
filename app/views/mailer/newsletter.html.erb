@@ -54,11 +54,11 @@
         <%# Top header with logo %>
         <% logo_newsletter = SiteCustomization::Image.find_or_create_by(name: "logo_newsletter_email") %>
         <% if logo_newsletter.image.attached? %>
-          <table style="background-color:<%= email_brand_color %>">
+          <table style="background-color:<%= email_brand_color %>" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
                 <td style="padding-top:20px;padding-bottom:20px;" align="left">
-                  <table align="center" style="max-width: 670px">
+                  <table align="center" style="max-width: 670px" border="0" cellpadding="0" cellspacing="0">
                     <tbody>
                       <tr>
                         <td align="left">
@@ -80,7 +80,7 @@
 
         <%# Main header %>
         <% if @newsletter.image&.attachment&.attached? && @newsletter.title.blank? && @newsletter.subtitle.blank? %>
-          <table style="background:<%= email_brand_color %>;">
+          <table border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
                 <td style="text-align:center">
@@ -102,11 +102,11 @@
           </table>
         <% else %>
           <% header_background_style = @newsletter.image&.attachment&.attached? ? "background-image:url(#{url_for(@newsletter.image.attachment)});background-position:top center;background-repeat:no-repeat;background-size:cover;height:420px;" : "background: #{email_brand_color};height:420px;" %>
-          <table style="<%= header_background_style %>" cellspacing="0">
+          <table style="<%= header_background_style %>" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
                 <td style="vertical-align:top; padding:120px 40px 0 40px" valign="top" align="left">
-                  <table align="center" style="max-width:580px">
+                  <table align="center" style="max-width:580px" border="0" cellpadding="0" cellspacing="0">
                     <tbody>
                       <tr>
                         <td align="left">
@@ -150,6 +150,7 @@
         <table
           class="newsletter-template-content"
           style="max-width:670px;font-family:Arial,sans-serif; font-size: 15px; margin: 0; background: #fff; margin: 0 auto; background:#ffffff; margin-bottom:40px;"
+          border="0" cellpadding="0" cellspacing="0"
         >
           <tbody>
             <tr>
@@ -163,11 +164,11 @@
         </table>
 
         <%# Footer %>
-        <table style="background-color:<%= email_brand_color %>">
+        <table style="background-color:<%= email_brand_color %>" border="0" cellpadding="0" cellspacing="0">
           <tbody>
             <tr>
               <td style="">
-                <table style="max-width: 580px;" align="center" style="">
+                <table style="max-width: 580px;" align="center" style="" border="0" cellpadding="0" cellspacing="0">
                   <tbody>
                     <tr>
                       <td style="padding-top:40px;padding-bottom:40px;color:white;">
@@ -196,8 +197,8 @@
           <%= notification_service_mailer_unsubscribe_block(action_name, projekt_phase: @projekt_phase) %>
         <% end %>
         <% if unsubscribe_path.present? %>
-          <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif; margin: 0;padding: 0;line-height: 1.5em;color: #222; font-size: 10px; margin-top: 12px;">
-          <%= link_to(t("mailers.config.unsubscribe_notifications_link_short"), unsubscribe_path, style: "text-decoration: undescore;") %>
+          <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif; margin: 0;padding: 0;line-height: 1.5em;color: #222; font-size: 10px; margin-top: 12px; margin-bottom: 30px;">
+            <%= link_to(t("mailers.config.unsubscribe_notifications_link_short"), unsubscribe_path, style: "text-decoration: undescore;") %>
           </p>
         <% end %>
       </td>

@@ -1,7 +1,3 @@
-// import { resetFoundationAccordionStateFor } from "consul/utils/foundationUtils";
-// import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
-// import { ProjektStudio.utils.sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
-
 ProjektStudio.Banner = {
   initialized: false,
   initialize() {

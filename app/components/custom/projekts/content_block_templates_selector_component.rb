@@ -35,38 +35,11 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     %w(
         tile
         one_card
-        image_slider_two_images
+        image_slider
     )
   end
 
   def saved_content_blocks
     SavedContentBlock.all.order(:created_at)
-  end
-
-  def example_title
-    "Title"
-  end
-
-  def example_description
-    "Qui nemo id necessitatibus in rerum exercitationem" +
-    "accusantium in minima quo esse quo eius nam iste consequatur quasi qui doloribus" +
-    "officiis omnis nesciunt sit beatae ut est reprehenderit dolore rerum."
-  end
-
-  def accordion_items
-    [
-      {
-        title: example_title,
-        text: example_description
-      },
-      {
-        title: example_title,
-        text: example_description
-      },
-      {
-        title: example_title,
-        text: example_description
-      }
-    ]
   end
 end

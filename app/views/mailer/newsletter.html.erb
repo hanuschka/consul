@@ -79,7 +79,7 @@
         <% end %>
 
         <%# Main header %>
-        <% if @newsletter.image&.attachment&.attached? && @newsletter.title.blank? && @newsletter.subtitle.present? %>
+        <% if @newsletter.image&.attachment&.attached? && @newsletter.title.blank? && @newsletter.subtitle.blank? %>
           <table style="background:<%= email_brand_color %>;">
             <tbody>
               <tr>

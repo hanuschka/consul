@@ -5,10 +5,19 @@ ProjektStudio.Banner = {
   },
 
   initEventListeners() {
-    $(document).on("click", ".js-projekt-banner-text-edit-button", this.turnOnTextEdit.bind(this));
-    $(document).on("click", ".js-projekt-banner--text-edit-cancel", this.cancelTextEdit.bind(this));
-    $(document).on("click", ".js-projekt-banner--text-edit-save", this.saveEditedText.bind(this));
-    $(document).on("change", ".js-projekt-banner--image-upload-input", this.updateTitleImage.bind(this));
+    const $document = $(document);
+
+    $document.on("click", ".js-projekt-banner-text-edit-button", this.turnOnTextEdit.bind(this));
+    $document.on("click", ".js-projekt-banner--text-edit-cancel", this.cancelTextEdit.bind(this));
+    $document.on("click", ".js-projekt-banner--text-edit-save", this.saveEditedText.bind(this));
+    $document.on("change", ".js-projekt-banner--image-upload-input", this.updateTitleImage.bind(this));
+    // $document.on("change", ".js-projekt-banner--image-upload-input", this.handleInputType.bind(this));
+  },
+
+  handleInputType() {
+    editor.addEventListener('input', () => {
+      editor.innerHTML = editor.innerHTML.replace(/<br\s*\/?>/gi, ' ');
+    });
   },
 
   turnOnTextEdit(e) {
@@ -50,7 +59,20 @@ ProjektStudio.Banner = {
       container.dataset.originalFieldHtml = ""
 
       const projektId = ProjektStudio.getCurrentProjektId();
-      const value = field.firstElementChild.innerHTML.trim()
+      let value =
+        field
+          .firstElementChild
+          .innerHTML
+          .trim()
+
+      if (container.dataset.allowBrTags === "true") {
+        value = value.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+      }
+      else {
+        value = value.replace(/<br\s*\/?>/gi, ' ');
+      }
+
+      field.firstElementChild.innerHTML = value;
 
       if (ProjektStudio.isEmbedded) {
         ProjektStudio.utils.ProjektStudio.utils.sendMessageToDtParentFrame("updateProjektPage", {

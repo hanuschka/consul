@@ -996,3 +996,23 @@ body.-ai-functions-locked {
     }
   }
 }
+
+.content-block-image-wrapper {
+  position: relative;
+}
+
+.content-block-image-change-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 42px;
+  height: 42px;
+  font-size: 20px;
+  background-color: #b6b6b6;
+  color: #434343;
+  border-radius: 50%;
+}
+
+.content-block-image-change-input {
+  display: none;
+}

@@ -56,9 +56,9 @@
     contentBlock
       .querySelectorAll("img")
       .forEach((img) => {
-        if (img.width > 150 && img.height > 100) {
+        // if (img.width > 150 && img.height > 100) {
           this.wrapImageWithControls(img)
-        }
+        // }
       })
   },
 
@@ -79,6 +79,8 @@
   },
 
   changeImage(e) {
+    e.stopPropagation()
+
     const wrapper = e.currentTarget.parentElement;
     const img = wrapper.querySelector("img")
     const fileInput = document.querySelector(".js-content-block-image-change-input")

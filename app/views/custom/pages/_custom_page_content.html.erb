@@ -14,6 +14,10 @@
         <% end %>
       </div>
     </div>
+
+    <% if show_projekt_studio_controls?(@custom_page&.projekt)  %>
+      <input type="file" class="js-content-block-image-change-input content-block-image-change-input" accept="image/*">
+    <% end %>
   <% else %>
     <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>
   <% end %>

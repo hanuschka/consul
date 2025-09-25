@@ -27,6 +27,16 @@ class Ckeditor::Picture < Ckeditor::Asset
     end
   end
 
+  def content_block_thumb_url(editor_id: nil)
+    if data_content_type == "image/gif"
+      rails_blob_url(storage_data, only_path: true)
+    else
+      rails_representation_url(
+        storage_data.variant(coalesce: true, gravity: "center", resize_to_limit: [890, 890], saver: { quality: 85 } , loader: { page: nil }), only_path: true
+      )
+    end
+  end
+
   def type
     "Ckeditor::Picture"
   end

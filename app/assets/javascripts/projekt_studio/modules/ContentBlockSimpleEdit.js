@@ -12,8 +12,11 @@
     $document.on("click", ".js-projekt-content-block--add-item", this.addNewItemToList.bind(this))
     $document.on("click", ".js-projekt-content-block--delete-last-item", this.deleteLastItemFromList.bind(this))
 
+    $document.on("click", ".js-content-block-image-change-button", this.changeImage.bind(this));
+
     $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
     $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
+    $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     // $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
   },
 
@@ -25,13 +28,17 @@
     $accordion = $(contentBlock).find('.accordion a');
     $accordion.off("keydown")
 
-    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(contentBlock, contentBlockSection)
-    this.toggleContentEditableForContentBlock(contentBlock, true)
+    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(
+      contentBlock, contentBlockSection
+    )
 
-    this.addSimpleModeListControls(contentBlock)
+    this.addListControls(contentBlock)
+    this.addImageControls(contentBlock)
+
+    this.toggleSimpleEditModeFor(contentBlock, true)
   },
 
-  addSimpleModeListControls(contentBlock) {
+  addListControls(contentBlock) {
     contentBlock
       .querySelectorAll("ul")
       .forEach((ul) => {
@@ -44,6 +51,88 @@
         }
       })
   },
+
+  addImageControls(contentBlock) {
+    contentBlock
+      .querySelectorAll("img")
+      .forEach((img) => {
+        if (img.width > 150 && img.height > 100) {
+          this.wrapImageWithControls(img)
+        }
+      })
+  },
+
+  wrapImageWithControls(img) {
+    const imageWrapper = document.createElement("div")
+    imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
+
+    imageWrapper.innerHTML = `
+      <button
+        type="button"
+        class="content-block-image-change-button js-content-block-image-change-button js-content-block--inline-control">
+          <i class="fa fas fa-pencil-alt"></i>
+      </button>
+      ${img.outerHTML}
+    `
+
+    img.outerHTML = imageWrapper.outerHTML;
+  },
+
+  changeImage(e) {
+    const wrapper = e.currentTarget.parentElement;
+    const img = wrapper.querySelector("img")
+    const fileInput = document.querySelector(".js-content-block-image-change-input")
+    fileInput.click()
+
+    document.body.addEventListener('change', (e) => {
+      this.handleImageAttach(e, img)
+    }, { once: true });
+  },
+
+   handleImageAttach(e, img) {
+     const file = e.target.files && e.target.files[0];
+     if (!file) return;
+
+     const reader = new FileReader();
+     reader.onload = (evt) => { img.setAttribute('src', evt.target.result); };
+     reader.readAsDataURL(file);
+
+     const formData = new FormData();
+     formData.append('upload', file); // change key to e.g. "user[avatar]" if needed
+
+     const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+     $.ajax({
+       method: 'POST',
+       url: '/ckeditor/pictures',
+       headers: {
+         'X-CSRF-TOKEN': csrfToken,
+       },
+       data: formData,
+       processData: false,
+       contentType: false,
+     }).then((response) => {
+       this.handleImageUpload(img, response)
+     })
+   },
+
+   handleImageUpload(img, response) {
+     const previousPictureId = img.dataset.pictureId;
+     img.src = response.url
+     img.dataset.pictureId = response.id
+
+     if (previousPictureId && previousPictureId.length > 0) {
+       const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+       $.ajax({
+         method: 'DELETE',
+         url: `/ckeditor/pictures/${previousPictureId}`,
+         headers: {
+           'X-CSRF-TOKEN': csrfToken,
+         },
+       })
+     }
+   },
 
   addNewItemButton(ul) {
     const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "li", copyStyles: true})
@@ -218,11 +307,11 @@
   saveContentBlockFromSimpleMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
-    this.removeSimpleEditModeInlineControls(contentBlock);
+    this.removeSimpleEditControls(contentBlock);
 
     if (contentBlockSection.classList.contains("-simple-edit-mode")) {
       contentBlockSection.classList.remove("-simple-edit-mode")
-      this.toggleContentEditableForContentBlock(contentBlock, false);
+      this.toggleSimpleEditModeFor(contentBlock, false);
 
        ProjektStudio.ContentBlocks.updateContentBlock(
         contentBlock,
@@ -236,45 +325,75 @@
   cancelSimpleEditMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
-    this.removeSimpleEditModeInlineControls(contentBlock);
+    this.removeSimpleEditControls(contentBlock);
 
     contentBlockSection.classList.remove("-simple-edit-mode")
     contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
-    this.toggleContentEditableForContentBlock(contentBlock, false);
+
+    this.toggleSimpleEditModeFor(contentBlock, false);
 
     $(contentBlock).foundation();
   },
 
-  removeSimpleEditModeInlineControls(container) {
+  removeSimpleEditControls(container) {
     container
       .querySelectorAll(".js-content-block--inline-control")
       .forEach((e) => e.remove())
+
+    container
+      .querySelectorAll(".js-content-block-image-wrapper")
+      .forEach((imgWrapper) => {
+        const img = imgWrapper.querySelector("img")
+        imgWrapper.outerHTML = img.outerHTML
+      })
   },
 
-  toggleContentEditableForContentBlock(contentBlock, contentEditable) {
-    const elements = Array.from(contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable"))
+   toggleSimpleEditModeFor(contentBlock, state) {
+     this.toggleContentEditableFor(contentBlock, state)
+     this.toggleLinksClickModeFor(contentBlock, state)
+   },
 
-    elements.forEach((element) => {
-      if (contentEditable) {
-        element.contentEditable = contentEditable;
-      }
-      else {
-        element.removeAttribute("contenteditable")
-      }
-    })
+   toggleLinksClickModeFor(contentBlock, state) {
+     $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
+   },
 
-    if (elements.length === 0) {
-      if (contentEditable) {
-        contentBlock.contentEditable = contentEditable;
-        ProjektStudio.utils.focusContentEditableElement(contentBlock)
-      }
-      else {
-        contentBlock.removeAttribute("contenteditable")
-      }
-    }
-    else {
-      const lastElement = elements[elements.length - 1]
-      ProjektStudio.utils.focusContentEditableElement(lastElement)
-    }
-  },
- }
+   toggleContentEditableFor(contentBlock, contentEditable) {
+     const elements = Array.from(
+       contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable")
+     );
+
+     const hasBlockChildren = (element) => {
+       const blockSelectors = [
+         "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
+         "h1","h2","h3","h4","h5","h6", "blockquote", "pre"
+       ];
+       return element.querySelector(blockSelectors.join(", ")) !== null;
+     };
+
+     elements.forEach((element) => {
+       if (!hasBlockChildren(element)) {
+         if (contentEditable) {
+           element.contentEditable = true;
+            ProjektStudio.utils.focusContentEditableElement(contentBlock);
+         } else {
+           element.removeAttribute("contenteditable");
+         }
+       } else {
+         element.removeAttribute("contenteditable");
+       }
+     });
+
+     if (elements.length === 0) {
+       if (contentEditable) {
+         contentBlock.contentEditable = true;
+         ProjektStudio.utils.focusContentEditableElement(contentBlock);
+       } else {
+         contentBlock.removeAttribute("contenteditable");
+       }
+     }
+   },
+
+   disableLinkClick(e) {
+     e.preventDefault()
+   }
+}

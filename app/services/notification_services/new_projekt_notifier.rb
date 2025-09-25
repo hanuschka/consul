@@ -20,6 +20,7 @@ module NotificationServices
 
       def projekt_reviewers
         User.joins(projekt_manager: :projekt_manager_assignments)
+            .where(projekt_manager_assignments: { projekt_id: @projekt.id })
             .where("projekt_manager_assignments.permissions @> ARRAY[?]::text[]", ["review"]).to_a
       end
   end

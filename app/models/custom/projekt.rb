@@ -247,7 +247,7 @@ class Projekt < ApplicationRecord
                                     )
                                     .select(:id)
 
-      permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
+      permitted_projekt_ids = Projekt.with_pm_permission_to(["manage", "review"], user.projekt_manager).select(:id)
 
       arel = Projekt.arel_table
 
@@ -317,11 +317,15 @@ class Projekt < ApplicationRecord
     )
   end
 
-  def self.with_pm_permission_to(permission, projekt_manager)
+  def self.with_pm_permission_to(permissions, projekt_manager)
     return Projekt.none unless projekt_manager.present?
+    return Projekt.none if permissions.blank?
 
-    joins(:projekt_manager_assignments)
-      .where("projekt_manager_assignments.projekt_manager_id = ? AND ? = ANY(projekt_manager_assignments.permissions)", projekt_manager.id, permission)
+    joins(:projekt_manager_assignments).where(
+      "projekt_manager_assignments.projekt_manager_id = ? AND projekt_manager_assignments.permissions && ARRAY[?]::text[]",
+      projekt_manager.id,
+      Array(permissions)
+    )
   end
 
   def self.selectable_in_selector(controller_name, current_user, resource = nil)

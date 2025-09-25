@@ -5,16 +5,18 @@
   </button>
 
   <ul class="orbit-container">
-    <li>
-      <button class="orbit-previous">
-        <span class="show-for-sr"><%= t("shared.orbit.previous_slide") %></span>&#9664;&#xFE0E;
-      </button>
-    </li>
-    <li>
-      <button class="orbit-next">
-        <span class="show-for-sr"><%= t("shared.orbit.next_slide") %></span>&#9654;&#xFE0E;
-      </button>
-    </li>
+    <% if answer.images.count > 1 %>
+      <li>
+        <button class="orbit-previous">
+          <span class="show-for-sr"><%= t("shared.orbit.previous_slide") %></span>&#9664;&#xFE0E;
+        </button>
+      </li>
+      <li>
+        <button class="orbit-next">
+          <span class="show-for-sr"><%= t("shared.orbit.next_slide") %></span>&#9654;&#xFE0E;
+        </button>
+      </li>
+    <% end %>
 
     <% answer.images.each_with_index do |image, index| %>
       <li class="orbit-slide <%= is_active_class(index) %>">
@@ -29,11 +31,13 @@
 
   </ul>
 
-  <nav class="orbit-bullets">
-    <% answer.images.each_with_index do |image, index| %>
-      <button class="<%= is_active_class(index) %>" data-slide="<%= index %>">
-        <span class="show-for-sr"><%= image.title.unicode_normalize %></span>
-      </button>
-    <% end %>
-  </nav>
+  <% if answer.images.count > 1 %>
+    <nav class="orbit-bullets">
+      <% answer.images.each_with_index do |image, index| %>
+        <button class="<%= is_active_class(index) %>" data-slide="<%= index %>">
+          <span class="show-for-sr"><%= image.title.unicode_normalize %></span>
+        </button>
+      <% end %>
+    </nav>
+  <% end %>
 </div>

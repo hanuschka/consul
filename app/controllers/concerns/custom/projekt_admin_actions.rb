@@ -47,11 +47,25 @@ module ProjektAdminActions
     authorize!(:update, @projekt)
 
     if @projekt.update(projekt_params)
-      redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
-        notice: t("custom.admin.projekts.edit.flash.update_notice")
+      respond_to do |f|
+        f.html do
+          redirect_to namespace_projekt_path(action: "edit", anchor: params[:tab]),
+            notice: t("custom.admin.projekts.edit.flash.update_notice")
+        end
+        f.json do
+          render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
+        end
+      end
     else
-      redirect_to namespace_projekt_path(action: "edit"),
-        alert: @projekt.errors.messages.values.flatten.join("; ")
+      respond_to do |f|
+        f.html do
+          redirect_to namespace_projekt_path(action: "edit"),
+            alert: @projekt.errors.messages.values.flatten.join("; ")
+        end
+        f.json do
+          render json: { message: "Error updating projekt" }
+        end
+      end
     end
   end
 
@@ -90,14 +104,6 @@ module ProjektAdminActions
     authorize!(:edit, @projekt)
 
     render "admin/projekt_phases/frame_new_phase_selector"
-  end
-
-  def update
-    if @projekt.update(projekt_params)
-      render json: { projekt: @projekt.serialize, status: { message: "Projekt updated" }}
-    else
-      render json: { message: "Error updating projekt" }
-    end
   end
 
   def update_page

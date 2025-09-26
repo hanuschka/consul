@@ -76,7 +76,7 @@
     contentBlock
       .querySelectorAll("img")
       .forEach((img) => {
-        // this.wrapImageWithControls(img)
+        this.wrapImageWithControls(img)
       })
   },
 
@@ -84,10 +84,12 @@
     const imageWrapper = document.createElement("div")
     imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
 
+    const smallButton = img.height < 120;
+
     imageWrapper.innerHTML = `
       <button
         type="button"
-        class="content-block-image-change-button js-content-block-image-change-button js-content-block--simple-edit-control">
+        class="content-block-image-change-button image-change-button js-content-block-image-change-button js-content-block--simple-edit-control ${smallButton ? '-small' : ''}">
           <i class="fa fas fa-pencil-alt"></i>
       </button>
       ${img.outerHTML}
@@ -98,6 +100,8 @@
 
   changeImage(e) {
     e.stopPropagation()
+    e.stopImmediatePropagation()
+    e.preventDefault()
 
     const wrapper = e.currentTarget.parentElement;
     const img = wrapper.querySelector("img")
@@ -356,7 +360,7 @@
         contentBlock
           .innerHTML
           .trim()
-          // .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+          .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
 
        ProjektStudio.ContentBlocks.updateContentBlock(
         contentBlock,
@@ -442,5 +446,6 @@
 
    disableLinkClick(e) {
      e.preventDefault()
+     console.log("disableLinkClick")
    }
 }

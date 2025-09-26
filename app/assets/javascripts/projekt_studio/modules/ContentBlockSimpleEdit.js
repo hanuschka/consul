@@ -122,7 +122,9 @@
      reader.readAsDataURL(file);
 
      const formData = new FormData();
-     formData.append('upload', file); // change key to e.g. "user[avatar]" if needed
+     formData.append('upload', file);
+    formData.append('thumb_width', img.width + 30)
+    formData.append('thumb_height', img.width + 30)
 
      const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -142,7 +144,8 @@
 
    handleImageUpload(img, response) {
      const previousPictureId = img.dataset.pictureId;
-     img.src = response.url
+     img.src = response.custom_thumb_url
+     img.dataset.fullImageUrl = response.url
      img.dataset.pictureId = response.id
 
      if (previousPictureId && previousPictureId.length > 0) {

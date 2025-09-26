@@ -53,14 +53,13 @@
       })
 
     contentBlock
-      .querySelectorAll("li")
+      .querySelectorAll("li:not(.js-content-block--inline-control)")
       .forEach((li) => {
         this.addItemDeleteButton(li)
       })
   },
 
    addItemDeleteButton(li) {
-
      const buttonHTML = `
         <button class="content-block--item-delete-button js-projekt-content-block--delete-item -delete">
         <i class="fa fas fa-trash"></i>

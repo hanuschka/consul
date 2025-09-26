@@ -356,7 +356,7 @@
         contentBlock
           .innerHTML
           .trim()
-          .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+          // .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
 
        ProjektStudio.ContentBlocks.updateContentBlock(
         contentBlock,

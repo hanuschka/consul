@@ -491,7 +491,7 @@
 
       const editorId = this.genTextEditorIdForTextarea(contentBlockSection.dataset.contentBlockId)
 
-      let newContent = window.CKeditorInstancesGlobal[editorId].getData().trim()
+      let newContent = App.HTMLEditor.instances[editorId].getData().trim()
       // newContent = this.removeWrappingParagraphsFromCkeditorHtml(newContent)
 
       this.updateContentBlock(

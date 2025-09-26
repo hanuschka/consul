@@ -33,6 +33,7 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
 
   def media_content_block_templates
     %w(
+        gallery
         tile
         one_card
         image_slider

@@ -1,4 +1,4 @@
- ProjektStudio.ContentBlockSimpleEdit = {
+ProjektStudio.ContentBlockSimpleEdit = {
   initialized: false,
 
   initialize() {
@@ -59,18 +59,20 @@
       })
   },
 
-   addItemDeleteButton(li) {
-     const buttonHTML = `
+  addItemDeleteButton(li) {
+    const buttonHTML = `
         <button class="content-block--item-delete-button js-projekt-content-block--delete-item js-content-block--simple-edit-control -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
 
-     const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
+    const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
 
-     li.style.position = "relative"
-     li.appendChild(buttonElement);
-   },
+    if (!li.style.positon || li.style.positon === "static") {
+      li.style.position = "relative"
+    }
+    li.appendChild(buttonElement);
+  },
 
   addImageControls(contentBlock) {
     contentBlock
@@ -87,6 +89,9 @@
     const smallButton = img.height < 120;
 
     imageWrapper.innerHTML = `
+      <div class="content-block-image-loading-overlay">
+        <div class="loading-spinner-inline"></div>
+      </div>
       <button
         type="button"
         class="content-block-image-change-button image-change-button js-content-block-image-change-button js-content-block--simple-edit-control ${smallButton ? '-small' : ''}">
@@ -109,57 +114,81 @@
     fileInput.click()
 
     document.body.addEventListener('change', (e) => {
-      this.handleImageAttach(e, img)
+      this.handleImageAttach(e, img, wrapper)
     }, { once: true });
   },
 
-   handleImageAttach(e, img) {
-     const file = e.target.files && e.target.files[0];
-     if (!file) return;
+  handleImageAttach(e, img, imageWrapper) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
 
-     const reader = new FileReader();
-     reader.onload = (evt) => { img.setAttribute('src', evt.target.result); };
-     reader.readAsDataURL(file);
+    const { contentBlockSection } = this.getContentBlockAndSection(img)
 
-     const formData = new FormData();
-     formData.append('upload', file);
-    formData.append('thumb_width', img.width + 30)
-    formData.append('thumb_height', img.width + 30)
+    this.toggleLockSaveCancel(contentBlockSection, true)
 
-     const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    imageWrapper.classList.add("-loading")
+    const sliderContainer = imageWrapper.closest('.orbit-container')
+    const isSlider = !!sliderContainer;
 
-     $.ajax({
-       method: 'POST',
-       url: '/ckeditor/pictures',
-       headers: {
-         'X-CSRF-TOKEN': csrfToken,
-       },
-       data: formData,
-       processData: false,
-       contentType: false,
-     }).then((response) => {
-       this.handleImageUpload(img, response)
-     })
-   },
+    const reader = new FileReader();
+    reader.onload = (evt) => { img.setAttribute('src', evt.target.result); };
+    reader.readAsDataURL(file);
 
-   handleImageUpload(img, response) {
-     const previousPictureId = img.dataset.pictureId;
-     img.src = response.custom_thumb_url
-     img.dataset.fullImageUrl = response.url
-     img.dataset.pictureId = response.id
+    const formData = new FormData();
+    formData.append('upload', file);
+    formData.append('thumb_width', img.width + 50)
+    formData.append('thumb_height', img.height + 50)
 
-     if (previousPictureId && previousPictureId.length > 0) {
-       const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-       $.ajax({
-         method: 'DELETE',
-         url: `/ckeditor/pictures/${previousPictureId}`,
-         headers: {
-           'X-CSRF-TOKEN': csrfToken,
-         },
-       })
-     }
-   },
+    $.ajax({
+      method: 'POST',
+      url: '/ckeditor/pictures',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      data: formData,
+      processData: false,
+      contentType: false,
+    })
+      .then((response) => {
+        this.handleImageUpload(img, response)
+      })
+      .always(() => {
+        img.addEventListener("load", () => {
+          if (isSlider) {
+
+          }
+          else {
+            this.toggleLockForImage(imageWrapper, contentBlockSection)
+          }
+        }, { once: true })
+      })
+  },
+
+  toggleLockForImage(imageWrapper, contentBlockSection) {
+    imageWrapper.classList.remove("-loading")
+    this.toggleLockSaveCancel(contentBlockSection, false)
+  },
+
+  handleImageUpload(img, response) {
+    const previousPictureId = img.dataset.pictureId;
+    img.src = response.custom_thumb_url
+    img.dataset.fullImageUrl = response.url
+    img.dataset.pictureId = response.id
+
+    if (previousPictureId && previousPictureId.length > 0) {
+      const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+      $.ajax({
+        method: 'DELETE',
+        url: `/ckeditor/pictures/${previousPictureId}`,
+        headers: {
+          'X-CSRF-TOKEN': csrfToken,
+        },
+      })
+    }
+  },
 
   addNewItemButton(ul) {
     const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "li", copyStyles: true})
@@ -361,11 +390,11 @@
 
       const content =
         contentBlock
-          .innerHTML
-          .trim()
-          .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+        .innerHTML
+        .trim()
+        .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
 
-       ProjektStudio.ContentBlocks.updateContentBlock(
+      ProjektStudio.ContentBlocks.updateContentBlock(
         contentBlock,
         contentBlockSection.dataset.contentBlockId,
         content,
@@ -398,57 +427,65 @@
       })
   },
 
-   toggleSimpleEditModeFor(contentBlock, state) {
-     this.toggleContentEditableFor(contentBlock, state)
-     this.toggleLinksClickModeFor(contentBlock, state)
+  toggleSimpleEditModeFor(contentBlock, state) {
+    this.toggleContentEditableFor(contentBlock, state)
+    this.toggleLinksClickModeFor(contentBlock, state)
 
-     if (!state) {
-       this.removeSimpleEditControls(contentBlock)
-     }
-   },
+    if (!state) {
+      this.removeSimpleEditControls(contentBlock)
+    }
+  },
 
-   toggleLinksClickModeFor(contentBlock, state) {
-     $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
-   },
+  toggleLinksClickModeFor(contentBlock, state) {
+    $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
+  },
 
-   toggleContentEditableFor(contentBlock, contentEditable) {
-     const elements = Array.from(
-       contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable")
-     );
+  toggleContentEditableFor(contentBlock, contentEditable) {
+    const elements = Array.from(
+      contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable")
+    );
 
-     const hasBlockChildren = (element) => {
-       const blockSelectors = [
-         "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
-         "h1","h2","h3","h4","h5","h6", "blockquote", "pre"
-       ];
-       return element.querySelector(blockSelectors.join(", ")) !== null;
-     };
+    const hasBlockChildren = (element) => {
+      const blockSelectors = [
+        "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
+        "h1","h2","h3","h4","h5","h6", "blockquote", "pre"
+      ];
+      return element.querySelector(blockSelectors.join(", ")) !== null;
+    };
 
-     elements.forEach((element) => {
-       if (!hasBlockChildren(element)) {
-         if (contentEditable) {
-           element.contentEditable = true;
-            ProjektStudio.utils.focusContentEditableElement(contentBlock);
-         } else {
-           element.removeAttribute("contenteditable");
-         }
-       } else {
-         element.removeAttribute("contenteditable");
-       }
-     });
+    elements.forEach((element) => {
+      if (!hasBlockChildren(element)) {
+        if (contentEditable) {
+          element.contentEditable = true;
+          ProjektStudio.utils.focusContentEditableElement(contentBlock);
+        } else {
+          element.removeAttribute("contenteditable");
+        }
+      } else {
+        element.removeAttribute("contenteditable");
+      }
+    });
 
-     if (elements.length === 0) {
-       if (contentEditable) {
-         contentBlock.contentEditable = true;
-         ProjektStudio.utils.focusContentEditableElement(contentBlock);
-       } else {
-         contentBlock.removeAttribute("contenteditable");
-       }
-     }
-   },
+    if (elements.length === 0) {
+      if (contentEditable) {
+        contentBlock.contentEditable = true;
+        ProjektStudio.utils.focusContentEditableElement(contentBlock);
+      } else {
+        contentBlock.removeAttribute("contenteditable");
+      }
+    }
+  },
 
-   disableLinkClick(e) {
-     e.preventDefault()
-     console.log("disableLinkClick")
-   }
+  toggleLockSaveCancel(contentBlockSection, locked) {
+    console.log("contentBlockSection", contentBlockSection)
+    console.log("toggleLockSaveCancel", locked)
+
+    contentBlockSection.querySelectorAll('.js-simple-edit-mode-controlls button').forEach((button) => {
+      button.disabled = locked
+    })
+  },
+
+  disableLinkClick(e) {
+    e.preventDefault()
+  }
 }

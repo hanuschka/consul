@@ -53,7 +53,7 @@
       })
 
     contentBlock
-      .querySelectorAll("li:not(.js-content-block--inline-control)")
+      .querySelectorAll("li:not(.js-content-block--simple-edit-control)")
       .forEach((li) => {
         this.addItemDeleteButton(li)
       })
@@ -61,7 +61,7 @@
 
    addItemDeleteButton(li) {
      const buttonHTML = `
-        <button class="content-block--item-delete-button js-projekt-content-block--delete-item -delete">
+        <button class="content-block--item-delete-button js-projekt-content-block--delete-item js-content-block--simple-edit-control -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
@@ -76,9 +76,7 @@
     contentBlock
       .querySelectorAll("img")
       .forEach((img) => {
-        // if (img.width > 150 && img.height > 100) {
-          this.wrapImageWithControls(img)
-        // }
+        // this.wrapImageWithControls(img)
       })
   },
 
@@ -89,7 +87,7 @@
     imageWrapper.innerHTML = `
       <button
         type="button"
-        class="content-block-image-change-button js-content-block-image-change-button js-content-block--inline-control">
+        class="content-block-image-change-button js-content-block-image-change-button js-content-block--simple-edit-control">
           <i class="fa fas fa-pencil-alt"></i>
       </button>
       ${img.outerHTML}
@@ -172,7 +170,7 @@
 
   buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
     const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = "content-block--item-action-wrapper js-content-block--inline-control";
+    buttonWrapper.className = "content-block--item-action-wrapper js-content-block--simple-edit-control";
     buttonWrapper.style.listStyle = "none";
 
     const lastLi = ul.querySelector("li:last-child")
@@ -187,10 +185,6 @@
             <button class="content-block--item-action js-projekt-content-block--add-item">
               <i class="fa fas fa-plus"></i>
               Weiteres Element hinzufügen
-            </button>
-            <button class="content-block--item-action js-projekt-content-block--delete-last-item -delete">
-              <i class="fa fas fa-trash"></i>
-              Letztes Element löschen
             </button>
           </div>
         `
@@ -213,7 +207,7 @@
   },
 
   addItem(e) {
-    const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
+    const wrapper = e.currentTarget.closest(".js-content-block--simple-edit-control")
     let ul = null;
     let ulParent;
     let lastLi;
@@ -225,10 +219,11 @@
     }
     else {
       ul = e.currentTarget.closest("ul")
-      lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+      lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--simple-edit-control)")
     }
 
     const isSlider = ul.classList.contains("orbit-container")
+    const isAccordion = ul.classList.contains("accordion")
 
     ProjektStudio.utils.resetFoundationAccordionStateFor(ul)
     const clonedLi = lastLi.cloneNode(true);
@@ -244,7 +239,10 @@
 
     let elementToReinitializeParent = elementToReinitialize.parentElement;
     elementToReinitialize.dataset.contentBlockCopyId = copyId;
-    elementToReinitialize.outerHTML = elementToReinitialize.outerHTML;
+
+    if (isSlider || isAccordion) {
+      elementToReinitialize.outerHTML = elementToReinitialize.outerHTML;
+    }
 
     const newElementToReinitialize = elementToReinitializeParent.querySelector(`[data-content-block-copy-id="${copyId}"]`)
     const newUl = isSlider ? elementToReinitializeParent.querySelector('ul') : newElementToReinitialize;
@@ -280,7 +278,7 @@
 
     if (!deleteConfirmed) return;
 
-    const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
+    const wrapper = e.currentTarget.closest(".js-content-block--simple-edit-control")
     let ul = null;
 
     if (wrapper.dataset.outsideList === "true") {
@@ -299,7 +297,7 @@
       lastBullet.remove()
     }
 
-    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--simple-edit-control)")
     lastLi.remove()
   },
 
@@ -308,15 +306,9 @@
 
     if (!deleteConfirmed) return;
 
-    const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
-    let ul = null;
+    const li = e.currentTarget.closest("li")
+    const ul = li.closest("ul")
 
-    if (wrapper.dataset.outsideList === "true") {
-      ul = wrapper.previousElementSibling.querySelector("ul");
-    }
-    else {
-      ul = e.currentTarget.closest("ul")
-    }
     const isSlider = ul.classList.contains("orbit-container")
 
     if (isSlider) {
@@ -327,8 +319,7 @@
       lastBullet.remove()
     }
 
-    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
-    lastLi.remove()
+    li.remove()
   },
 
   addBulletToSlider(ul, newSlideNumber) {
@@ -357,16 +348,20 @@
   saveContentBlockFromSimpleMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
-    this.removeSimpleEditControls(contentBlock);
-
     if (contentBlockSection.classList.contains("-simple-edit-mode")) {
       contentBlockSection.classList.remove("-simple-edit-mode")
       this.toggleSimpleEditModeFor(contentBlock, false);
 
+      const content =
+        contentBlock
+          .innerHTML
+          .trim()
+          .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+
        ProjektStudio.ContentBlocks.updateContentBlock(
         contentBlock,
         contentBlockSection.dataset.contentBlockId,
-        contentBlock.innerHTML.trim(),
+        content,
         true
       )
     }
@@ -374,8 +369,6 @@
 
   cancelSimpleEditMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
-
-    this.removeSimpleEditControls(contentBlock);
 
     contentBlockSection.classList.remove("-simple-edit-mode")
     contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
@@ -387,7 +380,7 @@
 
   removeSimpleEditControls(container) {
     container
-      .querySelectorAll(".js-content-block--inline-control")
+      .querySelectorAll(".js-content-block--simple-edit-control")
       .forEach((e) => e.remove())
 
     container
@@ -401,6 +394,10 @@
    toggleSimpleEditModeFor(contentBlock, state) {
      this.toggleContentEditableFor(contentBlock, state)
      this.toggleLinksClickModeFor(contentBlock, state)
+
+     if (!state) {
+       this.removeSimpleEditControls(contentBlock)
+     }
    },
 
    toggleLinksClickModeFor(contentBlock, state) {

@@ -948,7 +948,7 @@ body.-ai-functions-locked {
   margin-bottom: 10px;
 
   &.column {
-    height: 125px;
+    height: 75px;
 
     .content-block--item-action-wrapper--inner {
       gap: 10px;
@@ -1033,16 +1033,17 @@ body.-ai-functions-locked {
 
 .content-block--item-delete-button {
   position: absolute;
-  top: 0;
+  top: -10px;
   right: 0;
   border-radius: 50%;
   color: #a41717;
   width: 40px;
   height: 40px;
   font-size: 19px;
-    background-color: #ffdede;
+  background-color: #ffdede;
+  transition: 100ms ease background-color;
 
   &:hover {
-    background-color: #ffdede;
+    background-color: #facdcd;
   }
 }

@@ -9,8 +9,9 @@
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-edit-text-projekt-content-block", this.enterSimpleEditMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--add-item", this.addNewItemToList.bind(this))
+    $document.on("click", ".js-projekt-content-block--add-item", this.addItem.bind(this))
     $document.on("click", ".js-projekt-content-block--delete-last-item", this.deleteLastItemFromList.bind(this))
+    $document.on("click", ".js-projekt-content-block--delete-item", this.deleteItem.bind(this))
 
     $document.on("click", ".js-content-block-image-change-button", this.changeImage.bind(this));
 
@@ -50,7 +51,27 @@
           this.addNewItemButton(ul)
         }
       })
+
+    contentBlock
+      .querySelectorAll("li")
+      .forEach((li) => {
+        this.addItemDeleteButton(li)
+      })
   },
+
+   addItemDeleteButton(li) {
+
+     const buttonHTML = `
+        <button class="content-block--item-delete-button js-projekt-content-block--delete-item -delete">
+        <i class="fa fas fa-trash"></i>
+       </button>
+     `
+
+     const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
+
+     li.style.position = "relative"
+     li.appendChild(buttonElement);
+   },
 
   addImageControls(contentBlock) {
     contentBlock
@@ -192,7 +213,7 @@
     return buttonWrapper
   },
 
-  addNewItemToList(e) {
+  addItem(e) {
     const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
     let ul = null;
     let ulParent;
@@ -256,6 +277,34 @@
   },
 
   deleteLastItemFromList(e) {
+    const deleteConfirmed = confirm("Möchten Sie das letzte Element wirklich aus der Liste löschen?")
+
+    if (!deleteConfirmed) return;
+
+    const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
+    let ul = null;
+
+    if (wrapper.dataset.outsideList === "true") {
+      ul = wrapper.previousElementSibling.querySelector("ul");
+    }
+    else {
+      ul = e.currentTarget.closest("ul")
+    }
+    const isSlider = ul.classList.contains("orbit-container")
+
+    if (isSlider) {
+      const lastBullet = ul.parentElement.querySelector(".orbit-bullets > button:last-child")
+      if (lastBullet.classList.contains("is-active")) {
+        lastBullet.previousElementSibling.click()
+      }
+      lastBullet.remove()
+    }
+
+    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+    lastLi.remove()
+  },
+
+  deleteItem(e) {
     const deleteConfirmed = confirm("Möchten Sie das letzte Element wirklich aus der Liste löschen?")
 
     if (!deleteConfirmed) return;

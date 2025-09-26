@@ -1006,10 +1006,10 @@ body.-ai-functions-locked {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  width: 42px;
-  height: 42px;
-  font-size: 20px;
-  background-color: #b6b6b6;
+  width: 40px;
+  height: 40px;
+  font-size: 21px;
+  background-color: #c7c7c7;
   color: #434343;
   border-radius: 50%;
 }
@@ -1023,4 +1023,26 @@ body.-ai-functions-locked {
 
 .content-block-image-change-input {
   display: none;
+}
+
+.projekt-content-block {
+  .orbit-image {
+    object-fit: cover;
+  }
+}
+
+.content-block--item-delete-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  color: #a41717;
+  width: 40px;
+  height: 40px;
+  font-size: 19px;
+    background-color: #ffdede;
+
+  &:hover {
+    background-color: #ffdede;
+  }
 }

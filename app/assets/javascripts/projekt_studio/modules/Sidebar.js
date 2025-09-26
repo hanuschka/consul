@@ -1,13 +1,16 @@
-window.ProjektStudio.Sidebar = {
+ProjektStudio.Sidebar = {
   initialized: false,
   initialize() {
     if (this.initialized) {
       return
     }
 
-    console.log("Sidebar initialized")
-    $(document).on("change", ".js-update-projekt-form input", ProjektStudio.utils.debounce(this.handleUpdateProjekt.bind(this), 1000));
-    $(document).on("click", ".js-sidebar-section-toggle-visibility", this.toggleSidebarSectionVisibility.bind(this));
+    $(document).on("change", ".js-update-projekt-form input",
+      ProjektStudio.utils.debounce(this.handleUpdateProjekt.bind(this), 1000)
+    );
+    $(document).on("click", ".js-sidebar-section-toggle-visibility",
+      this.toggleSidebarSectionVisibility.bind(this)
+    );
 
     this.initialized = true;
   },
@@ -63,5 +66,3 @@ window.ProjektStudio.Sidebar = {
     }
   }
 };
-
-console.log("After sidebar define")

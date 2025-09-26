@@ -1002,6 +1002,20 @@ body.-ai-functions-locked {
   position: relative;
 }
 
+.image-change-button {
+  background-color: #c7c7c7;
+  color: #434343;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #bcbcbc;
+  }
+}
+
 .content-block-image-change-button {
   position: absolute;
   bottom: 10px;
@@ -1009,9 +1023,12 @@ body.-ai-functions-locked {
   width: 40px;
   height: 40px;
   font-size: 21px;
-  background-color: #c7c7c7;
-  color: #434343;
-  border-radius: 50%;
+
+  &.-small {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
 }
 
 .orbit-figure {

@@ -21,22 +21,24 @@
       <div class="tabs-content" data-tabs-content="projekt-content-block-templates-tabs">
         <div class="tabs-panel is-active">
           <% description_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <%= render "projekts/content_block_templates/descriptions/#{template_name}" %>
+                <div class="js-content-block-template-content">
+                  <%= render "projekts/content_block_templates/descriptions/#{template_name}" %>
+                </div>
               </div>
             </div>
           <% end %>
         </div>
         <div class="tabs-panel">
           <% accordions_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <div class="js-content-block-template-content" data-content-block-name="h5">
+                <div class="js-content-block-template-content" >
                   <%= render "projekts/content_block_templates/accordions/#{template_name}" %>
                 </div>
               </div>
@@ -45,11 +47,11 @@
         </div>
         <div class="tabs-panel">
           <% media_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <div class="js-content-block-template-content" data-content-block-name="h5">
+                <div class="js-content-block-template-content" >
                   <%= render "custom/projekts/content_block_templates/media/#{template_name}" %>
                 </div>
               </div>
@@ -58,11 +60,13 @@
         </div>
         <div class="tabs-panel">
           <% quotes_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <%= render "projekts/content_block_templates/quotes/#{template_name}" %>
+                <div class="js-content-block-template-content">
+                  <%= render "projekts/content_block_templates/quotes/#{template_name}" %>
+                </div>
               </div>
             </div>
           <% end %>

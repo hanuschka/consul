@@ -956,9 +956,10 @@ body.-ai-functions-locked {
 .content-block--item-action-wrapper {
   list-style: none;
   margin-bottom: 10px;
+  max-height: 55px;
 
   &.column {
-    height: 75px;
+    height: 55px;
 
     .content-block--item-action-wrapper--inner {
       gap: 10px;

@@ -13,6 +13,12 @@
     object-fit:cover
     /* margin-bottom: 5px; */
   }
+
+  &.-single-image {
+    img {
+      border-radius: 10px;
+    }
+  }
 }
 
 .accordion-title {

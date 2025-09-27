@@ -1,5 +1,6 @@
 ProjektStudio.ContentBlockSimpleEdit = {
   initialized: false,
+  listControlClass: "js-content-block--list-control",
 
   initialize() {
     this.initEventListeners()
@@ -32,36 +33,39 @@ ProjektStudio.ContentBlockSimpleEdit = {
     ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(
       contentBlock, contentBlockSection
     )
-
-    this.addListControls(contentBlock)
-    this.addImageControls(contentBlock)
-
     this.toggleSimpleEditModeFor(contentBlock, true)
   },
 
-  addListControls(contentBlock) {
-    contentBlock
-      .querySelectorAll("ul")
-      .forEach((ul) => {
-        const foundationSlider = ul.closest(".orbit")
+  toggleListControls(contentBlock, enabled) {
+    if (enabled) {
+      contentBlock
+        .querySelectorAll("ul")
+        .forEach((ul) => {
+          const foundationSlider = ul.closest(".orbit")
 
-        if (foundationSlider) {
-          this.addNewSliderItemButton(ul)
-        } else {
-          this.addNewItemButton(ul)
-        }
-      })
+          if (foundationSlider) {
+            this.addNewSliderItemButton(ul)
+          } else {
+            this.addNewItemButton(ul)
+          }
+        })
 
-    contentBlock
-      .querySelectorAll("li:not(.js-content-block--simple-edit-control)")
-      .forEach((li) => {
-        this.addItemDeleteButton(li)
-      })
+      contentBlock
+        .querySelectorAll(`li:not(.${this.listControlClass})`)
+        .forEach((li) => {
+          this.addItemDeleteButton(li)
+        })
+    }
+    else {
+      contentBlock
+        .querySelectorAll(`.${this.listControlClass}`)
+        .forEach((e) => e.remove())
+    }
   },
 
   addItemDeleteButton(li) {
     const buttonHTML = `
-        <button class="content-block--item-delete-button js-projekt-content-block--delete-item js-content-block--simple-edit-control -delete">
+        <button class="content-block--item-delete-button js-projekt-content-block--delete-item ${this.listControlClass} -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
@@ -74,12 +78,21 @@ ProjektStudio.ContentBlockSimpleEdit = {
     li.appendChild(buttonElement);
   },
 
-  addImageControls(contentBlock) {
-    contentBlock
-      .querySelectorAll("img")
-      .forEach((img) => {
-        this.wrapImageWithControls(img)
-      })
+  toggleImageControls(contentBlock, enabled) {
+    if (enabled) {
+      contentBlock
+        .querySelectorAll("img")
+        .forEach((img) => {
+          this.wrapImageWithControls(img)
+        })
+    } else {
+      contentBlock
+        .querySelectorAll(".js-content-block-image-wrapper")
+        .forEach((imgWrapper) => {
+          const img = imgWrapper.querySelector("img")
+          imgWrapper.outerHTML = img.outerHTML
+        })
+    }
   },
 
   wrapImageWithControls(img) {
@@ -94,7 +107,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
       </div>
       <button
         type="button"
-        class="content-block-image-change-button image-change-button js-content-block-image-change-button js-content-block--simple-edit-control ${smallButton ? '-small' : ''}">
+        class="content-block-image-change-button image-change-button js-content-block-image-change-button ${this.listControlClass} ${smallButton ? '-small' : ''}">
           <i class="fa fas fa-pencil-alt"></i>
       </button>
       ${img.outerHTML}
@@ -177,6 +190,12 @@ ProjektStudio.ContentBlockSimpleEdit = {
     img.dataset.fullImageUrl = response.url
     img.dataset.pictureId = response.id
 
+    const glightboxItem = img.closest(".glightbox-disabled");
+
+    if (glightboxItem) {
+      glightboxItem.href = response.url
+    }
+
     if (previousPictureId && previousPictureId.length > 0) {
       const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -206,7 +225,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
   buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
     const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = "content-block--item-action-wrapper js-content-block--simple-edit-control";
+    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass}`;
     buttonWrapper.style.listStyle = "none";
 
     const lastLi = ul.querySelector("li:last-child")
@@ -243,7 +262,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
   },
 
   addItem(e) {
-    const wrapper = e.currentTarget.closest(".js-content-block--simple-edit-control")
+    const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
     let ul = null;
     let ulParent;
     let lastLi;
@@ -255,7 +274,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
     }
     else {
       ul = e.currentTarget.closest("ul")
-      lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--simple-edit-control)")
+      lastLi = ul.querySelector(`li:nth-last-child(2):not(.${this.listControlClass})`)
     }
 
     const isSlider = ul.classList.contains("orbit-container")
@@ -314,7 +333,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
     if (!deleteConfirmed) return;
 
-    const wrapper = e.currentTarget.closest(".js-content-block--simple-edit-control")
+    const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
     let ul = null;
 
     if (wrapper.dataset.outsideList === "true") {
@@ -333,7 +352,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
       lastBullet.remove()
     }
 
-    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--simple-edit-control)")
+    const lastLi = ul.querySelector(`li:nth-last-child(2):not(.${this.listControlClass})`)
     lastLi.remove()
   },
 
@@ -360,8 +379,6 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
   addBulletToSlider(ul, newSlideNumber) {
     const bulletsElement = ul.closest(".orbit").querySelector(".orbit-bullets")
-
-    console.log("addBulletToSlider", newSlideNumber)
 
     const newBulletHTML = `
       <button data-slide="${newSlideNumber}" class="">
@@ -410,29 +427,38 @@ ProjektStudio.ContentBlockSimpleEdit = {
     contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
 
     this.toggleSimpleEditModeFor(contentBlock, false);
-
-    $(contentBlock).foundation();
   },
 
-  removeSimpleEditControls(container) {
-    container
-      .querySelectorAll(".js-content-block--simple-edit-control")
-      .forEach((e) => e.remove())
+  toggleSimpleEditModeFor(contentBlock, enabled) {
+    this.toggleContentEditableFor(contentBlock, enabled)
+    this.toggleLinksClickModeFor(contentBlock, enabled)
+    this.toggleListControls(contentBlock, enabled)
+    this.toggleImageControls(contentBlock, enabled)
+    // Should be always last item
+    this.toggleGlighboxGallery(contentBlock, enabled)
 
-    container
-      .querySelectorAll(".js-content-block-image-wrapper")
-      .forEach((imgWrapper) => {
-        const img = imgWrapper.querySelector("img")
-        imgWrapper.outerHTML = img.outerHTML
+    if (!enabled) {
+      $(contentBlock).foundation();
+    }
+  },
+
+  toggleGlighboxGallery(contentBlock, enabled) {
+    const $contentBlock = $(contentBlock);
+
+    if (enabled) {
+      contentBlock.querySelectorAll("a.glightbox").forEach((a) => {
+        a.outerHTML = a.outerHTML
       })
-  },
 
-  toggleSimpleEditModeFor(contentBlock, state) {
-    this.toggleContentEditableFor(contentBlock, state)
-    this.toggleLinksClickModeFor(contentBlock, state)
+      $contentBlock.find("a.glightbox").addClass("glightbox-disabled")
+      $contentBlock.find("a.glightbox").removeClass("glightbox")
+    } else {
+      $contentBlock.find("a.glightbox-disabled").addClass("glightbox")
+      $contentBlock.find("a.glightbox-disabled").removeClass("glightbox-disabled")
 
-    if (!state) {
-      this.removeSimpleEditControls(contentBlock)
+      setTimeout(() => {
+        App.ImageGallery.initialize();
+      }, 0)
     }
   },
 
@@ -477,9 +503,6 @@ ProjektStudio.ContentBlockSimpleEdit = {
   },
 
   toggleLockSaveCancel(contentBlockSection, locked) {
-    console.log("contentBlockSection", contentBlockSection)
-    console.log("toggleLockSaveCancel", locked)
-
     contentBlockSection.querySelectorAll('.js-simple-edit-mode-controlls button').forEach((button) => {
       button.disabled = locked
     })

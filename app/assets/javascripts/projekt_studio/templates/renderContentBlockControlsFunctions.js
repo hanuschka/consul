@@ -1,6 +1,6 @@
-function html(content) {
-  return content;
-}
+const html = (strings, ...values) => {
+  return String.raw(strings, ...values);
+};
 
 ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList = function(contentBlocksHtml, projektId) {
   return `
@@ -174,22 +174,22 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
 ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml = function() {
   return `
-  <div class="js-projekt-content-block-edit-section projekt-content-block-edit-section projekt-content-block-wrapper">
-  <div class="projekt-content-block--additional">
-    <div class="add-new-content-block-section js-show-content-block-templates-section">
-      <button
-        type="button"
-        class="js-show-content-block-templates add-new-content-block-button add-intial-content-block-button"
-        title="Neuen Inhaltsblock hinzufügen"
-      >
-        <i class="fas fa-plus"></i>
-        Neuen Inhaltsblock hinzufügen
-      </button>
+    <div class="js-projekt-content-block-edit-section projekt-content-block-edit-section projekt-content-block-wrapper">
+      <div class="projekt-content-block--additional">
+        <div class="add-new-content-block-section js-show-content-block-templates-section">
+          <button
+            type="button"
+            class="js-show-content-block-templates add-new-content-block-button add-intial-content-block-button"
+            title="Neuen Inhaltsblock hinzufügen"
+          >
+            <i class="fas fa-plus"></i>
+            Neuen Inhaltsblock hinzufügen
+          </button>
 
-      <div class="add-new-content-block-content js-show-content-block-templates-content">
+          <div class="add-new-content-block-content js-show-content-block-templates-content">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
   `.trim()
 }

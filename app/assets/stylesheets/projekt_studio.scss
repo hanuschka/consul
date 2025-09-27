@@ -1,5 +1,6 @@
 $dt-base: #004a83;
 $dt-base-hover: #15629c;
+$dt-base-transparent-background-hover: #dfebf5;
 $small-tablet-viewport-start: 750px;
 
 @keyframes content-block-additional-appear {
@@ -88,7 +89,7 @@ $small-tablet-viewport-start: 750px;
   height: 1.8em;
 
   &:hover:not(:disabled) {
-    background-color: #dfebf5;
+    background-color: $dt-base-transparent-background-hover;
   }
 
   &:active {
@@ -252,7 +253,7 @@ body.custom-new-design {
 }
 
 .add-new-content-block-button {
-  color: #b4b4b4 !important;
+  color: $dt-base !important;
   font-size: 17px !important;
   margin-bottom: 18px;
   padding: 8px 10px;
@@ -265,8 +266,7 @@ body.custom-new-design {
   }
 
   &:hover {
-    color: #9a9a9a !important;
-    background-color: #ebebeb !important;
+    background-color: $dt-base-transparent-background-hover !important;
   }
 
   &:active {
@@ -1124,5 +1124,12 @@ body.-ai-functions-locked {
 
   &:hover {
     background-color: #facdcd;
+  }
+}
+
+.projekt-content-block-templates-selector {
+  .tabs .tabs-title > a[aria-selected="true"], .tabs .tabs-title > a.is-active,
+  .tabs .tabs-title > a:hover {
+    color: $dt-base;
   }
 }

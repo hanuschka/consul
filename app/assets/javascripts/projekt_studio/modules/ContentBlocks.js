@@ -5,7 +5,7 @@
 
   initialize() {
     this.initEventListeners()
-    this.initUI()
+    this.renderContentBlocks()
   },
 
   initEventListeners() {
@@ -57,7 +57,7 @@
     }
   },
 
-  initUI() {
+  renderContentBlocks() {
     const projektPageContent =  document.querySelector(".custom-page-content");
 
     if (!projektPageContent) return
@@ -83,15 +83,18 @@
       }).join("")
     }
     else {
-      wrappedContentBlocksHtml = ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml(projektId);
+      wrappedContentBlocksHtml =
+        ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml(
+          projektId
+        );
     }
 
-    const newHtml = ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
+    const newHtml =
+      ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(
+        wrappedContentBlocksHtml, projektId
+      )
 
-    setTimeout(() => {
-      this.morphElementHTML(".custom-page-content-inner", newHtml);
-      App.ImageGallery.initialize();
-    }, 0)
+    this.morphElementHTML(".custom-page-content-inner", newHtml);
   },
 
   setContentBlockTemplates(params) {
@@ -166,14 +169,13 @@
   morphElementHTML(selector, html, afterUpdate = null) {
     const element = document.querySelector(selector);
 
-    setTimeout(() => {
-      element.innerHTML = html;
+    element.innerHTML = html;
 
-      setTimeout(() => {
-        this.initSortable();
-        $(element).foundation();
-      }, 100)
-    }, 0)
+    setTimeout(() => {
+      $(element).foundation();
+      this.initSortable();
+      App.ImageGallery.initialize();
+    }, 10)
   },
 
   initSortable() {

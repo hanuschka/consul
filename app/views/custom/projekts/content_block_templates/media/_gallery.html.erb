@@ -1,15 +1,9 @@
-<div class="image-gallery-with-ligthbox" style="display:grid;grid-template-columns: repeat(2, 1fr);gap:5px">
+<ul class="image-gallery-with-ligthbox" style="list-style: none;display:grid;grid-template-columns: repeat(2, 1fr);gap:5px">
   <% 2.times do |i| %>
-    <%= link_to("https://placehold.co/1200x700", class: "glightbox template-thumb-image", target: "_blank") do %>
-      <%= image_tag("https://placehold.co/426x212", referrerpolicy: "no-referer", style: "aspect-ratio: 1 / 0.5") %>
-    <% end %>
+    <li>
+      <%= link_to("https://placehold.co/1200x700", class: "glightbox", target: "_blank") do %>
+        <%= image_tag("https://placehold.co/426x212", referrerpolicy: "no-referer", style: "aspect-ratio: 1 / 0.5") %>
+      <% end %>
+    </li>
   <% end %>
-</div>
-<div class="content-block-template-hints">
-  <div class="content-block-template-hint">
-    AI will add as much images as you attached in dialog
-  </div>
-  <div class="content-block-template-hint">
-    You also can ask AI to change count of images displayed per one row (by default there is 2 images per row)
-  </div>
-</div>
+</ul>

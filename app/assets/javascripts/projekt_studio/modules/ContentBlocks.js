@@ -596,7 +596,10 @@
           )
         }
 
-        $(contentBlock).foundation();
+        setTimeout(() => {
+          App.ImageGallery.initialize();
+          $(contentBlock).foundation();
+        }, 0)
       }
     }
   },

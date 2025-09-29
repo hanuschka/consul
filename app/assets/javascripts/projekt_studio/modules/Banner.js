@@ -72,6 +72,8 @@ ProjektStudio.Banner = {
         value = value.replace(/<br\s*\/?>/gi, ' ');
       }
 
+      value = value.trim()
+
       field.firstElementChild.innerHTML = value;
 
       if (ProjektStudio.isEmbedded) {

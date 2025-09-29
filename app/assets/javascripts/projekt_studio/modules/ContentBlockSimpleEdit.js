@@ -431,11 +431,14 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
   toggleSimpleEditModeFor(contentBlock, enabled) {
     this.toggleContentEditableFor(contentBlock, enabled)
-    this.toggleLinksClickModeFor(contentBlock, enabled)
-    this.toggleListControls(contentBlock, enabled)
-    this.toggleImageControls(contentBlock, enabled)
-    // Should be always last item
-    this.toggleGlighboxGallery(contentBlock, enabled)
+
+    setTimeout(() => {
+      this.toggleLinksClickModeFor(contentBlock, enabled)
+      this.toggleListControls(contentBlock, enabled)
+      this.toggleImageControls(contentBlock, enabled)
+      // Should be always last item
+      this.toggleGlighboxGallery(contentBlock, enabled)
+    }, 1000)
 
     if (!enabled) {
       $(contentBlock).foundation();
@@ -468,7 +471,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
   toggleContentEditableFor(contentBlock, contentEditable) {
     const elements = Array.from(
-      contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable")
+      contentBlock.querySelectorAll("h2, h3, h4, p,  ol, .js-text-editable")
     );
 
     const hasBlockChildren = (element) => {
@@ -492,14 +495,15 @@ ProjektStudio.ContentBlockSimpleEdit = {
       }
     });
 
-    if (elements.length === 0) {
-      if (contentEditable) {
-        contentBlock.contentEditable = true;
-        ProjektStudio.utils.focusContentEditableElement(contentBlock);
-      } else {
-        contentBlock.removeAttribute("contenteditable");
-      }
-    }
+    // if (elements.length === 0) {
+    //   console.log("turn contentEditable for entire block")
+    //   if (contentEditable) {
+    //     contentBlock.contentEditable = true;
+    //     ProjektStudio.utils.focusContentEditableElement(contentBlock);
+    //   } else {
+    //     contentBlock.removeAttribute("contenteditable");
+    //   }
+    // }
   },
 
   toggleLockSaveCancel(contentBlockSection, locked) {

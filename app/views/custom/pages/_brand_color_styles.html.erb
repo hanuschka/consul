@@ -1,0 +1,23 @@
+<% if page.brand_color.present? %>
+  <%= content_for :additional_styles do %>
+    <style>
+      .custom-new-design .homepage-image-header--title,
+      .custom-new-design .button.hollow,
+      .custom-new-design .projekt-footer-phase-tab h2,
+      .custom-new-design .projekt-footer-phase-tab .projekt-frame-icon-button
+      {
+        color: <%= page.brand_color %>;
+      }
+
+      .custom-new-design .resource-item--header,
+      .custom-new-design .button
+      {
+        background-color: <%= page.brand_color %>;
+      }
+
+      .custom-new-design .button.hollow {
+        border-color: <%= page.brand_color %>;
+      }
+    </style>
+  <% end %>
+<% end %>

@@ -14,6 +14,7 @@ class Projekt < ApplicationRecord
   include SDG::Relatable
   include Taggable
   include Searchable
+  include Notifiable
 
   translates :description
   include Globalizable

@@ -337,7 +337,7 @@
           style: function (feature) {
             return {
               weight: 2,
-              color: self.adminEditor ? "#ff0000" : feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
+              color: feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
             };
           },
           onEachFeature: function (feature, layer) {

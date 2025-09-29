@@ -1,6 +1,7 @@
 ProjektStudio.ContentBlockSimpleEdit = {
   initialized: false,
   listControlClass: "js-content-block--list-control",
+  contentBlocksState: {},
 
   initialize() {
     this.initEventListeners()
@@ -127,11 +128,11 @@ ProjektStudio.ContentBlockSimpleEdit = {
     fileInput.click()
 
     document.body.addEventListener('change', (e) => {
-      this.handleImageAttach(e, img, wrapper)
+      this.uploadImage(e, img, wrapper)
     }, { once: true });
   },
 
-  handleImageAttach(e, img, imageWrapper) {
+  uploadImage(e, img, imageWrapper) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
@@ -169,12 +170,12 @@ ProjektStudio.ContentBlockSimpleEdit = {
       })
       .always(() => {
         img.addEventListener("load", () => {
-          if (isSlider) {
+          // if (isSlider) {
 
-          }
-          else {
+          // }
+          // else {
             this.toggleLockForImage(imageWrapper, contentBlockSection)
-          }
+          // }
         }, { once: true })
       })
   },
@@ -507,9 +508,11 @@ ProjektStudio.ContentBlockSimpleEdit = {
   },
 
   toggleLockSaveCancel(contentBlockSection, locked) {
-    contentBlockSection.querySelectorAll('.js-simple-edit-mode-controlls button').forEach((button) => {
-      button.disabled = locked
-    })
+    contentBlockSection
+      .querySelectorAll('.js-simple-edit-mode-controlls button')
+      .forEach((button) => {
+        button.disabled = locked
+      })
   },
 
   disableLinkClick(e) {

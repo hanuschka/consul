@@ -10,7 +10,7 @@ de:
       text1: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Leider entspricht dieser nicht den Kriterien."
       text2: "Er wird somit nicht zur nächsten Phase des %{projekt_link} zugelassen."
       reason: "Begründung:"
-      text3: "Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Vorschlag einzureichen."
+      text3: "Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne."
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     manual_verification_confirmation:

@@ -20,6 +20,11 @@
 <% if @custom_page.landing? %>
   <%= render "pages/landing_page_content" %>
 <% else %>
+  <% landing_page = @custom_page.projekt.landing_pages.first %>
+  <% if landing_page.present? %>
+    <%= render "pages/brand_color_styles", page: landing_page %>
+  <% end %>
+
   <%= content_for :body_class, "custom-page" %>
   <% provide :title do %><%= @custom_page.title %><% end %>
 

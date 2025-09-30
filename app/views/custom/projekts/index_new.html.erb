@@ -4,6 +4,10 @@
     social_description: t("custom.projekts.index.welcome_default_text_html") %>
 <% end %>
 
+<% if @landing_page.present? %>
+  <%= render "pages/brand_color_styles", page: @landing_page %>
+<% end %>
+
 <main class="projekts-page projekts-overview-page">
   <div class="main-column projekts-overview-page--heading">
     <div class="padding-on-mobile">

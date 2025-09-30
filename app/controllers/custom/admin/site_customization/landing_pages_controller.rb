@@ -98,6 +98,7 @@ class Admin::SiteCustomization::LandingPagesController < Admin::SiteCustomizatio
         :landing_mobile_header_image,
         :landing_site_logo_for_transparent_background,
         :landing_site_logo_for_white_background,
+        :brand_color,
         image_attributes: image_attributes
       ]
 

@@ -76,6 +76,22 @@ $small-tablet-viewport-start: 750px;
   i {
     margin-right: 5px;
   }
+
+  &.-with-background {
+    background: #d6e7f6;
+
+    &:hover {
+      background-color: #c3daee;
+    }
+
+    &.-green {
+      background-color: #dff1e1;
+
+      &:hover {
+        background-color: #d5e9d7;
+      }
+    }
+  }
 }
 
 .projekt-frame-icon-button {
@@ -311,7 +327,7 @@ body.custom-new-design {
   z-index: 1;
 }
 
-.projekt-content-block-edit-section {
+.projekt-content-block-wrapper {
   position: relative;
 
   .projekt-content-block {
@@ -375,7 +391,7 @@ body.custom-new-design {
   }
 }
 
-.projekt-content-block-edit-section {
+.projekt-content-block-wrapper {
   transition: 500ms ease background-color;
 
   &.-draft {
@@ -390,6 +406,7 @@ body.custom-new-design {
     .projekt-content-block-edit {
       border-bottom: none;
       padding-bottom: 9px;
+      padding-right: 55px;
     }
   }
   &.-highlight-changed {
@@ -1133,4 +1150,39 @@ body.-ai-functions-locked {
   .tabs .tabs-title > a:hover {
     color: $dt-base;
   }
+}
+
+.content-block-link-popup {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 15px;
+  box-shadow: 3px 3px 12px 4px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 100;
+  border-radius: 10px;
+  width: 450px;
+
+  .content-block-link-popup-url-label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .content-block-link-popup-checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+
+    input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      margin-right: 10px;
+    }
+  }
+}
+
+.content-block-link-popup textarea {
+  width: 100%;
 }

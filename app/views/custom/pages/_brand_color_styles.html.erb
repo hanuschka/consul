@@ -1,18 +1,22 @@
 <% if page.brand_color.present? %>
   <%= content_for :additional_styles do %>
-    <style>
+    <style data-turbolinks-track="reload">
+      :root {
+        --page-brand-color: <%= page.brand_color %>;
+      }
+
       .custom-new-design .homepage-image-header--title,
-      .custom-new-design .button.hollow,
-      .custom-new-design .projekt-footer-phase-tab h2,
-      .custom-new-design .projekt-footer-phase-tab .projekt-frame-icon-button
-      {
+      .custom-new-design .button.hollow {
         color: <%= page.brand_color %>;
       }
 
       .custom-new-design .resource-item--header,
-      .custom-new-design .button
-      {
+      .custom-new-design .button {
         background-color: <%= page.brand_color %>;
+      }
+
+      .custom-new-design .button:hover {
+        background-color: color-mix(in srgb, var(--page-brand-color) 94%, white 6%);
       }
 
       .custom-new-design .button.hollow {

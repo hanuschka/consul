@@ -1,5 +1,7 @@
- ProjektStudio.ContentBlockSimpleEdit = {
+ProjektStudio.ContentBlockSimpleEdit = {
   initialized: false,
+  listControlClass: "js-content-block--list-control",
+  contentBlocksState: {},
 
   initialize() {
     this.initEventListeners()
@@ -9,11 +11,15 @@
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-edit-text-projekt-content-block", this.enterSimpleEditMode.bind(this));
-    $document.on("click", ".js-projekt-content-block--add-item", this.addNewItemToList.bind(this))
+    $document.on("click", ".js-projekt-content-block--add-item", this.addItem.bind(this))
     $document.on("click", ".js-projekt-content-block--delete-last-item", this.deleteLastItemFromList.bind(this))
+    $document.on("click", ".js-projekt-content-block--delete-item", this.deleteItem.bind(this))
+
+    $document.on("click", ".js-content-block-image-change-button", this.changeImage.bind(this));
 
     $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
     $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
+    $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     // $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
   },
 
@@ -25,24 +31,183 @@
     $accordion = $(contentBlock).find('.accordion a');
     $accordion.off("keydown")
 
-    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(contentBlock, contentBlockSection)
-    this.toggleContentEditableForContentBlock(contentBlock, true)
-
-    this.addSimpleModeListControls(contentBlock)
+    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(
+      contentBlock, contentBlockSection
+    )
+    this.toggleSimpleEditModeFor(contentBlock, true)
   },
 
-  addSimpleModeListControls(contentBlock) {
-    contentBlock
-      .querySelectorAll("ul")
-      .forEach((ul) => {
-        const foundationSlider = ul.closest(".orbit")
+  toggleListControls(contentBlock, enabled) {
+    if (enabled) {
+      contentBlock
+        .querySelectorAll("ul")
+        .forEach((ul) => {
+          const foundationSlider = ul.closest(".orbit")
 
-        if (foundationSlider) {
-          this.addNewSliderItemButton(ul)
-        } else {
-          this.addNewItemButton(ul)
-        }
+          if (foundationSlider) {
+            this.addNewSliderItemButton(ul)
+          } else {
+            this.addNewItemButton(ul)
+          }
+        })
+
+      contentBlock
+        .querySelectorAll(`li:not(.${this.listControlClass})`)
+        .forEach((li) => {
+          this.addItemDeleteButton(li)
+        })
+    }
+    else {
+      contentBlock
+        .querySelectorAll(`.${this.listControlClass}`)
+        .forEach((e) => e.remove())
+    }
+  },
+
+  addItemDeleteButton(li) {
+    const buttonHTML = `
+        <button class="content-block--item-delete-button js-projekt-content-block--delete-item ${this.listControlClass} -delete">
+        <i class="fa fas fa-trash"></i>
+       </button>
+     `
+
+    const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
+
+    if (!li.style.positon || li.style.positon === "static") {
+      li.style.position = "relative"
+    }
+    li.appendChild(buttonElement);
+  },
+
+  toggleImageControls(contentBlock, enabled) {
+    if (enabled) {
+      contentBlock
+        .querySelectorAll("img")
+        .forEach((img) => {
+          this.wrapImageWithControls(img)
+        })
+    } else {
+      contentBlock
+        .querySelectorAll(".js-content-block-image-wrapper")
+        .forEach((imgWrapper) => {
+          const img = imgWrapper.querySelector("img")
+          imgWrapper.outerHTML = img.outerHTML
+        })
+    }
+  },
+
+  wrapImageWithControls(img) {
+    const imageWrapper = document.createElement("div")
+    imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
+
+    const smallButton = img.height < 120;
+
+    imageWrapper.innerHTML = `
+      <div class="content-block-image-loading-overlay">
+        <div class="loading-spinner-inline"></div>
+      </div>
+      <button
+        type="button"
+        class="content-block-image-change-button image-change-button js-content-block-image-change-button ${this.listControlClass} ${smallButton ? '-small' : ''}">
+          <i class="fa fas fa-pencil-alt"></i>
+      </button>
+      ${img.outerHTML}
+    `
+
+    img.outerHTML = imageWrapper.outerHTML;
+  },
+
+  changeImage(e) {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+    e.preventDefault()
+
+    const wrapper = e.currentTarget.parentElement;
+    const img = wrapper.querySelector("img")
+    const fileInput = document.querySelector(".js-content-block-image-change-input")
+    fileInput.click()
+
+    document.body.addEventListener('change', (e) => {
+      this.uploadImage(e, img, wrapper)
+    }, { once: true });
+  },
+
+  uploadImage(e, img, imageWrapper) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    const { contentBlockSection } = this.getContentBlockAndSection(img)
+
+    this.toggleLockSaveCancel(contentBlockSection, true)
+
+    imageWrapper.classList.add("-loading")
+    const sliderContainer = imageWrapper.closest('.orbit-container')
+    const isSlider = !!sliderContainer;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => { img.setAttribute('src', evt.target.result); };
+    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append('upload', file);
+    formData.append('thumb_width', img.width + 50)
+    formData.append('thumb_height', img.height + 50)
+
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+      method: 'POST',
+      url: '/ckeditor/pictures',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      data: formData,
+      processData: false,
+      contentType: false,
+    })
+      .then((response) => {
+        this.handleImageUpload(img, response)
       })
+      .always(() => {
+        img.addEventListener("load", () => {
+          // if (isSlider) {
+
+          // }
+          // else {
+            this.toggleLockForImage(imageWrapper, contentBlockSection)
+          // }
+        }, { once: true })
+      })
+  },
+
+  toggleLockForImage(imageWrapper, contentBlockSection) {
+    imageWrapper.classList.remove("-loading")
+    this.toggleLockSaveCancel(contentBlockSection, false)
+  },
+
+  handleImageUpload(img, response) {
+    const previousPictureId = img.dataset.pictureId;
+    img.src = response.custom_thumb_url
+    img.dataset.fullImageUrl = response.url
+    img.dataset.pictureId = response.id
+
+    const glightboxItem = img.closest(".glightbox-disabled");
+
+    if (glightboxItem) {
+      glightboxItem.href = response.url
+    }
+
+    if (previousPictureId && previousPictureId.length > 0) {
+      const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+      $.ajax({
+        method: 'DELETE',
+        url: `/ckeditor/pictures/${previousPictureId}`,
+        headers: {
+          'X-CSRF-TOKEN': csrfToken,
+        },
+      })
+    }
   },
 
   addNewItemButton(ul) {
@@ -61,7 +226,7 @@
 
   buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
     const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = "content-block--item-action-wrapper js-content-block--inline-control";
+    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass}`;
     buttonWrapper.style.listStyle = "none";
 
     const lastLi = ul.querySelector("li:last-child")
@@ -76,10 +241,6 @@
             <button class="content-block--item-action js-projekt-content-block--add-item">
               <i class="fa fas fa-plus"></i>
               Weiteres Element hinzufügen
-            </button>
-            <button class="content-block--item-action js-projekt-content-block--delete-last-item -delete">
-              <i class="fa fas fa-trash"></i>
-              Letztes Element löschen
             </button>
           </div>
         `
@@ -101,8 +262,8 @@
     return buttonWrapper
   },
 
-  addNewItemToList(e) {
-    const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
+  addItem(e) {
+    const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
     let ul = null;
     let ulParent;
     let lastLi;
@@ -114,10 +275,11 @@
     }
     else {
       ul = e.currentTarget.closest("ul")
-      lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+      lastLi = ul.querySelector(`li:nth-last-child(2):not(.${this.listControlClass})`)
     }
 
     const isSlider = ul.classList.contains("orbit-container")
+    const isAccordion = ul.classList.contains("accordion")
 
     ProjektStudio.utils.resetFoundationAccordionStateFor(ul)
     const clonedLi = lastLi.cloneNode(true);
@@ -133,7 +295,10 @@
 
     let elementToReinitializeParent = elementToReinitialize.parentElement;
     elementToReinitialize.dataset.contentBlockCopyId = copyId;
-    elementToReinitialize.outerHTML = elementToReinitialize.outerHTML;
+
+    if (isSlider || isAccordion) {
+      elementToReinitialize.outerHTML = elementToReinitialize.outerHTML;
+    }
 
     const newElementToReinitialize = elementToReinitializeParent.querySelector(`[data-content-block-copy-id="${copyId}"]`)
     const newUl = isSlider ? elementToReinitializeParent.querySelector('ul') : newElementToReinitialize;
@@ -169,7 +334,7 @@
 
     if (!deleteConfirmed) return;
 
-    const wrapper = e.currentTarget.closest(".js-content-block--inline-control")
+    const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
     let ul = null;
 
     if (wrapper.dataset.outsideList === "true") {
@@ -188,14 +353,33 @@
       lastBullet.remove()
     }
 
-    const lastLi = ul.querySelector("li:nth-last-child(2):not(.js-content-block--inline-control)")
+    const lastLi = ul.querySelector(`li:nth-last-child(2):not(.${this.listControlClass})`)
     lastLi.remove()
+  },
+
+  deleteItem(e) {
+    const deleteConfirmed = confirm("Möchten Sie das letzte Element wirklich aus der Liste löschen?")
+
+    if (!deleteConfirmed) return;
+
+    const li = e.currentTarget.closest("li")
+    const ul = li.closest("ul")
+
+    const isSlider = ul.classList.contains("orbit-container")
+
+    if (isSlider) {
+      const lastBullet = ul.parentElement.querySelector(".orbit-bullets > button:last-child")
+      if (lastBullet.classList.contains("is-active")) {
+        lastBullet.previousElementSibling.click()
+      }
+      lastBullet.remove()
+    }
+
+    li.remove()
   },
 
   addBulletToSlider(ul, newSlideNumber) {
     const bulletsElement = ul.closest(".orbit").querySelector(".orbit-bullets")
-
-    console.log("addBulletToSlider", newSlideNumber)
 
     const newBulletHTML = `
       <button data-slide="${newSlideNumber}" class="">
@@ -218,16 +402,20 @@
   saveContentBlockFromSimpleMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
-    this.removeSimpleEditModeInlineControls(contentBlock);
-
     if (contentBlockSection.classList.contains("-simple-edit-mode")) {
       contentBlockSection.classList.remove("-simple-edit-mode")
-      this.toggleContentEditableForContentBlock(contentBlock, false);
+      this.toggleSimpleEditModeFor(contentBlock, false);
 
-       ProjektStudio.ContentBlocks.updateContentBlock(
+      const content =
+        contentBlock
+        .innerHTML
+        .trim()
+        .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+
+      ProjektStudio.ContentBlocks.updateContentBlock(
         contentBlock,
         contentBlockSection.dataset.contentBlockId,
-        contentBlock.innerHTML.trim(),
+        content,
         true
       )
     }
@@ -236,45 +424,98 @@
   cancelSimpleEditMode(e) {
     const { contentBlockSection, contentBlock} = this.getContentBlockAndSection(e.target);
 
-    this.removeSimpleEditModeInlineControls(contentBlock);
-
     contentBlockSection.classList.remove("-simple-edit-mode")
     contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
-    this.toggleContentEditableForContentBlock(contentBlock, false);
 
-    $(contentBlock).foundation();
+    this.toggleSimpleEditModeFor(contentBlock, false);
   },
 
-  removeSimpleEditModeInlineControls(container) {
-    container
-      .querySelectorAll(".js-content-block--inline-control")
-      .forEach((e) => e.remove())
+  toggleSimpleEditModeFor(contentBlock, enabled) {
+    this.toggleContentEditableFor(contentBlock, enabled)
+
+    setTimeout(() => {
+      this.toggleLinksClickModeFor(contentBlock, enabled)
+      this.toggleListControls(contentBlock, enabled)
+      this.toggleImageControls(contentBlock, enabled)
+      // Should be always last item
+      this.toggleGlighboxGallery(contentBlock, enabled)
+    }, 1000)
+
+    if (!enabled) {
+      $(contentBlock).foundation();
+    }
   },
 
-  toggleContentEditableForContentBlock(contentBlock, contentEditable) {
-    const elements = Array.from(contentBlock.querySelectorAll("h2, h3, h4, p, a, .accordion-content, li, ol, .js-text-editable"))
+  toggleGlighboxGallery(contentBlock, enabled) {
+    const $contentBlock = $(contentBlock);
+
+    if (enabled) {
+      contentBlock.querySelectorAll("a.glightbox").forEach((a) => {
+        a.outerHTML = a.outerHTML
+      })
+
+      $contentBlock.find("a.glightbox").addClass("glightbox-disabled")
+      $contentBlock.find("a.glightbox").removeClass("glightbox")
+    } else {
+      $contentBlock.find("a.glightbox-disabled").addClass("glightbox")
+      $contentBlock.find("a.glightbox-disabled").removeClass("glightbox-disabled")
+
+      setTimeout(() => {
+        App.ImageGallery.initialize();
+      }, 0)
+    }
+  },
+
+  toggleLinksClickModeFor(contentBlock, state) {
+    $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
+  },
+
+  toggleContentEditableFor(contentBlock, contentEditable) {
+    const elements = Array.from(
+      contentBlock.querySelectorAll("h2, h3, h4, p,  ol, .js-text-editable")
+    );
+
+    const hasBlockChildren = (element) => {
+      const blockSelectors = [
+        "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
+        "h1","h2","h3","h4","h5","h6", "blockquote", "pre"
+      ];
+      return element.querySelector(blockSelectors.join(", ")) !== null;
+    };
 
     elements.forEach((element) => {
-      if (contentEditable) {
-        element.contentEditable = contentEditable;
+      if (!hasBlockChildren(element)) {
+        if (contentEditable) {
+          element.contentEditable = true;
+          ProjektStudio.utils.focusContentEditableElement(contentBlock);
+        } else {
+          element.removeAttribute("contenteditable");
+        }
+      } else {
+        element.removeAttribute("contenteditable");
       }
-      else {
-        element.removeAttribute("contenteditable")
-      }
-    })
+    });
 
-    if (elements.length === 0) {
-      if (contentEditable) {
-        contentBlock.contentEditable = contentEditable;
-        ProjektStudio.utils.focusContentEditableElement(contentBlock)
-      }
-      else {
-        contentBlock.removeAttribute("contenteditable")
-      }
-    }
-    else {
-      const lastElement = elements[elements.length - 1]
-      ProjektStudio.utils.focusContentEditableElement(lastElement)
-    }
+    // if (elements.length === 0) {
+    //   console.log("turn contentEditable for entire block")
+    //   if (contentEditable) {
+    //     contentBlock.contentEditable = true;
+    //     ProjektStudio.utils.focusContentEditableElement(contentBlock);
+    //   } else {
+    //     contentBlock.removeAttribute("contenteditable");
+    //   }
+    // }
   },
- }
+
+  toggleLockSaveCancel(contentBlockSection, locked) {
+    contentBlockSection
+      .querySelectorAll('.js-simple-edit-mode-controlls button')
+      .forEach((button) => {
+        button.disabled = locked
+      })
+  },
+
+  disableLinkClick(e) {
+    e.preventDefault()
+  }
+}

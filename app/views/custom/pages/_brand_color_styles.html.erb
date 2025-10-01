@@ -1,10 +1,8 @@
 <% if page.brand_color.present? %>
   <%= content_for :additional_styles do %>
-    <style>
+    <style data-turbolinks-track="reload">
       .custom-new-design .homepage-image-header--title,
-      .custom-new-design .button.hollow,
-      .custom-new-design .projekt-footer-phase-tab h2,
-      .custom-new-design .projekt-footer-phase-tab .projekt-frame-icon-button
+      .custom-new-design .button.hollow
       {
         color: <%= page.brand_color %>;
       }

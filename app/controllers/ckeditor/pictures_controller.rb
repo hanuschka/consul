@@ -10,6 +10,11 @@ class Ckeditor::PicturesController < ApplicationController
       render json: picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
         url: picture.url_content(editor_id: params[:editor_id]),
         thumb_url: picture.url_thumb(editor_id: params[:editor_id]),
+        custom_thumb_url: picture.custom_thumb_url(
+          editor_id: params[:editor_id],
+          width: params[:thumb_width],
+          height: params[:thumb_height]
+        ),
         created_at: picture.created_at.strftime("%d.%m.%Y")
       )
     else

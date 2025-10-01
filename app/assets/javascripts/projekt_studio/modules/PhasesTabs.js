@@ -1,5 +1,3 @@
-// import { sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
-
 ProjektStudio.PhasesTabs = {
   initialized: false,
   initialize() {

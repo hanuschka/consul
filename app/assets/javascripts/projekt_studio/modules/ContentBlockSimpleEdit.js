@@ -73,10 +73,10 @@ ProjektStudio.ContentBlockSimpleEdit = {
     this.toggleContentEditableFor(contentBlock, enabled)
 
     setTimeout(() => {
-      this.toggleLinksClickModeFor(contentBlock, enabled)
+      this.toggleLinksInteration(contentBlock, enabled)
+
       ProjektStudio.ContentBlockSimpleEdit.ListEdit.toggleListControls(
-        contentBlock,
-        enabled
+        contentBlock, enabled
       )
       ProjektStudio.ContentBlockSimpleEdit.ImageEdit.toggleImageControls(
         contentBlock, enabled
@@ -113,7 +113,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
     }
   },
 
-  toggleLinksClickModeFor(contentBlock, state) {
+  toggleLinksInteration(contentBlock, state) {
     $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
   },
 

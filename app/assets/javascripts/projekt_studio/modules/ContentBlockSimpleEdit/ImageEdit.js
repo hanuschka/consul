@@ -31,9 +31,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
 
     const smallButton = img.height < 120;
+    const borderRadius = getComputedStyle(img).borderRadius;
 
     imageWrapper.innerHTML = `
-      <div class="content-block-image-loading-overlay">
+      <div
+        style="border-radius: ${borderRadius}"
+        class="content-block-image-loading-overlay"
+      >
         <div class="loading-spinner-inline"></div>
       </div>
       <button
@@ -134,5 +138,4 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       })
     }
   },
-
 }

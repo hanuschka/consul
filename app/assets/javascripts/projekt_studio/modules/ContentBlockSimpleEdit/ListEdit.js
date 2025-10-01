@@ -86,13 +86,15 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     elementToReinitialize.id = '';
 
     let elementToReinitializeParent = elementToReinitialize.parentElement;
-    elementToReinitialize.dataset.contentBlockCopyId = copyId;
+    elementToReinitialize.dataset.contentBlockListItemCopyId = copyId;
 
     if (isSlider || isAccordion) {
       elementToReinitialize.outerHTML = elementToReinitialize.outerHTML;
     }
 
-    const newElementToReinitialize = elementToReinitializeParent.querySelector(`[data-content-block-copy-id="${copyId}"]`)
+    const newElementToReinitialize = elementToReinitializeParent.querySelector(`[data-content-block-list-item-copy-id="${copyId}"]`)
+    newElementToReinitialize.removeAttribute("data-content-block-list-item-copy-id")
+
     const newUl = isSlider ? elementToReinitializeParent.querySelector('ul') : newElementToReinitialize;
 
     if (isSlider) {

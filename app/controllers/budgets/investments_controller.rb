@@ -232,7 +232,7 @@ module Budgets
       end
 
       def load_map
-        @map_location = MapLocation.load_from_heading(@heading) if @heading.present?
+        @map_location = @heading.budget.projekt_phase.map_location if @heading.present?
       end
   end
 end

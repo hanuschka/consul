@@ -213,6 +213,14 @@
           position: newPosition
         }
       })
+      .catch((response) => {
+        if (response.error && response.error.message) {
+          alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
+        }
+        else {
+          alert("Fehler beim Speichern des Inhaltsblocks")
+        }
+      })
     }
   },
 
@@ -294,6 +302,14 @@
         url: `/admin/projekt_content_blocks/${contentBlockId}`,
         type: "DELETE",
         dataType: "json"
+      })
+      .catch((response) => {
+        if (response.error && response.error.message) {
+          alert(`Fehler beim Löschen des Inhaltsblocks: ${response.error.message}`)
+        }
+        else {
+          alert("Fehler beim Löschen des Inhaltsblocks")
+        }
       })
     }
   },
@@ -413,6 +429,14 @@
           content_block_id: contentBlockID
         })
       })
+      .catch((response) => {
+        if (response.error && response.error.message) {
+          alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
+        }
+        else {
+          alert("Fehler beim Speichern des Inhaltsblocks")
+        }
+      })
     }
   },
 
@@ -525,8 +549,13 @@
           html: updatedContentBlock.innerHTML
         }
       })
-      .catch(() => {
-        console.log("Fehler beim Speichern des Inhaltsblocks")
+      .catch((response) => {
+        if (response.error && response.error.message) {
+          alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
+        }
+        else {
+          alert("Fehler beim Speichern des Inhaltsblocks")
+        }
       })
     }
 

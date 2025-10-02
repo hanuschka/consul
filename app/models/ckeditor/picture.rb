@@ -27,7 +27,7 @@ class Ckeditor::Picture < Ckeditor::Asset
     end
   end
 
-  def custom_thumb_url(editor_id: nil, width: 890, height: 890)
+  def custom_thumb_url(width: 890, height: 890)
     width_to_use = [Integer(width), 890].min
     height_to_use = [Integer(height), 890].min
 

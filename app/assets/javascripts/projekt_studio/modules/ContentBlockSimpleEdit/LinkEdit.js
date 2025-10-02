@@ -38,20 +38,24 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     const linkWrapper = document.createElement("div")
     linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
 
-    linkWrapper.innerHTML = `
-      ${link.outerHTML}
-      <button type="button" title="Link bearbeiten" class="content-block-edit-link-button js-content-block-edit-link">
-        <i class="fas fa-pencil-alt"></i>
-      </button>
-    `
-
-    link.outerHTML =  linkWrapper.outerHTML
+    link.parentNode.insertBefore(linkWrapper, link);
+    linkWrapper.appendChild(link);
+    linkWrapper.insertAdjacentHTML(
+      "beforeend",
+      `
+        <button type="button" title="Link bearbeiten" class="content-block-edit-link-button js-content-block-edit-link">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+      `
+    );
   },
 
   hideLinkEditButton(e) {
     const wrapper = e.currentTarget
     const a = wrapper.querySelector("a")
-    wrapper.outerHTML = a.outerHTML
+
+    wrapper.parentNode.insertBefore(a, wrapper);
+    wrapper.remove();
   },
 
   restoreSelection() {

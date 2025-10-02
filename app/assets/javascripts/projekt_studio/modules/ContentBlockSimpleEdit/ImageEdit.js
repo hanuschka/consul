@@ -22,8 +22,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       contentBlock
         .querySelectorAll(".js-content-block-image-wrapper")
         .forEach((imgWrapper) => {
-          const img = imgWrapper.querySelector("img")
-          imgWrapper.outerHTML = img.outerHTML
+          this.removeImageControls(imgWrapper)
         })
     }
   },
@@ -51,22 +50,31 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const smallButton = img.height < 120;
     const borderRadius = getComputedStyle(img).borderRadius;
 
-    imageWrapper.innerHTML = `
-      <div
-        style="border-radius: ${borderRadius}"
-        class="content-block-image-loading-overlay"
-      >
-        <div class="loading-spinner-inline"></div>
-      </div>
-      <button
-        type="button"
-        class="content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}">
-          <i class="fa fas fa-pencil-alt"></i>
-      </button>
-      ${img.outerHTML}
-    `
+    img.parentNode.insertBefore(imageWrapper, img);
+    imageWrapper.appendChild(img);
+    imageWrapper.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div
+          style="border-radius: ${borderRadius}"
+          class="content-block-image-loading-overlay"
+        >
+          <div class="loading-spinner-inline"></div>
+        </div>
+        <button
+          type="button"
+          class="content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}">
+            <i class="fa fas fa-pencil-alt"></i>
+        </button>
+      `
+    );
+  },
 
-    img.outerHTML = imageWrapper.outerHTML;
+  removeImageControls(imgWrapper) {
+    const img = imgWrapper.querySelector("img")
+
+    imgWrapper.parentNode.insertBefore(img, imgWrapper);
+    imgWrapper.remove();
   },
 
   changeImage(e) {

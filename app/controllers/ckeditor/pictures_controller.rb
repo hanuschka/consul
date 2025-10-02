@@ -15,7 +15,7 @@ class Ckeditor::PicturesController < ApplicationController
         ImageProcessing::MiniMagick
           .source(image)
           .convert('jpg')
-          .resize_to_fit(
+          .resize_to_fill(
             image_max_width,
             image_max_height
           )

@@ -14,7 +14,7 @@ window.ProjektStudio = {
       ProjektStudio.Banner.initialize()
       ProjektStudio.ContentBlocks.initialize()
       ProjektStudio.ContentBlockSimpleEdit.initialize()
-      // ProjektStudio.ContentBlockSimpleEdit.LinkEdit.initialize()
+      ProjektStudio.ContentBlockSimpleEdit.LinkEdit.initialize()
       ProjektStudio.ContentBlockSimpleEdit.ListEdit.initialize()
       ProjektStudio.ContentBlockSimpleEdit.ImageEdit.initialize()
       ProjektStudio.PreviewMode.initialize()

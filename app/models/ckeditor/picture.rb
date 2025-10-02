@@ -1,5 +1,5 @@
 class Ckeditor::Picture < Ckeditor::Asset
-  ALLOWED_CONTENT_TYPES = %w[image/jpg image/jpeg image/png image/gif].freeze
+  ALLOWED_CONTENT_TYPES = %w[image/jpg image/jpeg image/png image/gif image/webp].freeze
   MAX_FILE_SIZE = Setting["uploads.images.max_size"].to_i.megabytes
 
   validates :storage_data, file_content_type: { allow: ALLOWED_CONTENT_TYPES },

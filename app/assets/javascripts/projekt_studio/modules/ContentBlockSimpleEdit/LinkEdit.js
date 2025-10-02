@@ -27,7 +27,11 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     if (link.parentElement.classList.contains("js-content-block-link-wrapper")) {
       return
     }
-    if (["glightbox", "glightbox-disabled"].some(c => link.classList.contains(c))) {
+    const linkClassesToIgnore = [
+      "glightbox", "glightbox-disabled", "accordion-title"
+    ]
+
+    if (linkClassesToIgnore.some(c => link.classList.contains(c))) {
       return
     }
 

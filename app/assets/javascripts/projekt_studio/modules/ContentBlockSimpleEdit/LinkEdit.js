@@ -172,6 +172,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     if (this.savedSelection) {
       const a = document.createElement("a");
       a.href = url;
+      a.classList.add("js-content-block-disable-link-click")
 
       if (blankCheckbox.checked) {
         a.target = "_blank";
@@ -213,9 +214,11 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     addLinkButton.disabled = true
 
     $(".js-content-block-link-popup .js-content-block-url-input").val("")
+    $(".js-content-block-url-black-checkbox").prop("checked", true)
 
     this.savedSelection = null;
     this.currentContentBlockWrapper = null;
+
 
     if (this.savedLinkIdToEdit) {
       const currentLinkToEdit = document.querySelector(`[data-content-block-edit-link-id="${this.savedLinkIdToEdit}"]`)

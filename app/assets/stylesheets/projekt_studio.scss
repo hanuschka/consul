@@ -1191,18 +1191,18 @@ body.-ai-functions-locked {
   position: absolute;
   left: 0;
   right: 0;
-  margin: auto;
   top: -1.5em;
+  display: none;
+  width: 1.8em;
+  height: 1.8em;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
   cursor: pointer;
   color: black;
   background-color: #bedced;
   border-radius: 50%;
-  width: 1.8em;
-  height: 1.8em;
   transition: color 0.2s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   z-index: 10;
 
   &:hover {
@@ -1214,5 +1214,13 @@ body.-ai-functions-locked {
 .content-block-link-wrapper {
   display: inline-block;
   position: relative;
+
+  &:hover {
+    .content-block-edit-link-button {
+      display: flex;
+    }
+  }
+  // &.-show-controls {
+  // }
 }
 

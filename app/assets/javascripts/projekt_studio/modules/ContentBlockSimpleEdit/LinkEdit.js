@@ -3,6 +3,10 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
   currentContentBlockWrapper: null,
   savedLinkIdToEdit: null,
 
+  linkClassesToIgnore: [
+    "glightbox", "glightbox-disabled", "accordion-title"
+  ],
+
   initialize() {
     this.initEventListeners()
     this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
@@ -15,25 +19,43 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     $document.on("selectionchange", this.handleTextSelectionChange.bind(this))
     $document.on("click", ".js-content-block-accept-link-edit", this.acceptLinkEdit.bind(this));
     $document.on("click", ".js-content-block-cancel-link-edit", this.cancelLinkEdit.bind(this));
-    $document.on("mouseover", ".js-projekt-content-block-wrapper.-simple-edit-mode .js-projekt-content-block a",
-      this.showLinkEditButton.bind(this)
-    );
-    $document.on("mouseleave", ".js-content-block-link-wrapper", this.hideLinkEditButton.bind(this));
     $document.on("click", ".js-content-block-edit-link", this.editLink.bind(this))
+
+    // Currently this implement with CSS hover
+    // $document.on("mouseover", ".js-projekt-content-block-wrapper.-simple-edit-mode .js-projekt-content-block a",
+    //   this.showLinkEditButton.bind(this)
+    // );
+    // $document.on("mouseleave", ".js-content-block-link-wrapper", this.hideLinkEditButton.bind(this));
   },
 
-  showLinkEditButton(e) {
-    const link = e.currentTarget
+  toggleLinkControls(contentBlock, enabled) {
+    if (enabled) {
+      const ignoreSelector = this.linkClassesToIgnore.map(cls => `:not(.${cls})`).join("")
+
+      contentBlock.querySelectorAll(`a${ignoreSelector}`).forEach((link) => {
+        this.wrapLinkWithControls(link)
+      })
+    }
+    else {
+      contentBlock
+        .querySelectorAll(".js-content-block-link-wrapper")
+        .forEach((linkWrapper) => {
+          this.removeLinkControls(linkWrapper)
+        })
+    }
+  },
+
+  wrapLinkWithControls(link) {
     if (link.parentElement.classList.contains("js-content-block-link-wrapper")) {
       return
     }
-    const linkClassesToIgnore = [
-      "glightbox", "glightbox-disabled", "accordion-title"
-    ]
+    // const linkClassesToIgnore = [
+    //   "glightbox", "glightbox-disabled", "accordion-title"
+    // ]
 
-    if (linkClassesToIgnore.some(c => link.classList.contains(c))) {
-      return
-    }
+    // if (linkClassesToIgnore.some(c => link.classList.contains(c))) {
+    //   return
+    // }
 
     const linkWrapper = document.createElement("div")
     linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
@@ -41,22 +63,31 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     link.parentNode.insertBefore(linkWrapper, link);
     linkWrapper.appendChild(link);
     linkWrapper.insertAdjacentHTML(
-      "beforeend",
+    "beforeend",
       `
-        <button type="button" title="Link bearbeiten" class="content-block-edit-link-button js-content-block-edit-link">
+      <button type="button" title="Link bearbeiten" class="content-block-edit-link-button js-content-block-edit-link">
           <i class="fas fa-pencil-alt"></i>
         </button>
       `
     );
   },
 
-  hideLinkEditButton(e) {
-    const wrapper = e.currentTarget
-    const a = wrapper.querySelector("a")
+  removeLinkControls(linkWrapper) {
+    const link = linkWrapper.querySelector("> a")
 
-    wrapper.parentNode.insertBefore(a, wrapper);
-    wrapper.remove();
+    linkWrapper.parentNode.insertBefore(link, linkWrapper);
+    linkWrapper.remove();
   },
+
+  // showLinkEditButton(e) {
+  //   const link = e.currentTarget
+  //   link.parentElement.classList.add("-show-controls")
+  // },
+
+  // hideLinkEditButton(e) {
+  //   const linkWrapper = e.currentTarget
+  //   linkWrapper.classList.remove("-show-controls")
+  // },
 
   restoreSelection() {
     if (this.savedSelection) {

@@ -71,7 +71,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   removeImageControls(imgWrapper) {
-    const img = imgWrapper.querySelector("img")
+    const img = imgWrapper.querySelector("> img")
 
     imgWrapper.parentNode.insertBefore(img, imgWrapper);
     imgWrapper.remove();

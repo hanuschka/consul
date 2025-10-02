@@ -81,6 +81,9 @@ ProjektStudio.ContentBlockSimpleEdit = {
       ProjektStudio.ContentBlockSimpleEdit.ImageEdit.toggleImageControls(
         contentBlock, enabled
       )
+      ProjektStudio.ContentBlockSimpleEdit.LinkEdit.toggleLinkControls(
+        contentBlock, enabled
+      )
       // Should be always last item
       this.toggleGlighboxGallery(contentBlock, enabled)
       if (!enabled) {

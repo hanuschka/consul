@@ -218,14 +218,6 @@ class RemoteCensusApi
                     }
                   }
                 }
-                b.steuerungsinformationen {
-                  b.send("option.auskunft", listURI: "urn:de:xmeld:schluesseltabelle:melderegisterauskunft.optionen", listVersionID: 2) {
-                    b.code {
-                      b.parent.content = "01"
-                      b.parent.namespace = nil
-                    }
-                  }
-                }
                 b.send("technische.einzelidentifikation") {
                   b.ereigniszeitpunkt(Time.current.strftime("%Y-%m-%dT%H:%M:%S"))
                   b.zeicheneinzelfall("TESTANFRAGE")

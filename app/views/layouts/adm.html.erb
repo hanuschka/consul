@@ -7,6 +7,14 @@
   </head>
 
   <body class="adm">
-    <%= yield %>
+    <div class="kern-container">
+      <nav>
+        <ul>
+          <li><%= link_to "Dashboard", adm_root_path %></li>
+          <li><%= link_to "Projekte", adm_projekts_path %></li>
+        </ul>
+      </nav>
+      <%= yield %>
+    </div>
   </body>
 </html>

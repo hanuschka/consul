@@ -14,6 +14,9 @@ window.ProjektStudio = {
       ProjektStudio.Banner.initialize()
       ProjektStudio.ContentBlocks.initialize()
       ProjektStudio.ContentBlockSimpleEdit.initialize()
+      ProjektStudio.ContentBlockSimpleEdit.LinkEdit.initialize()
+      ProjektStudio.ContentBlockSimpleEdit.ListEdit.initialize()
+      ProjektStudio.ContentBlockSimpleEdit.ImageEdit.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()
@@ -31,20 +34,8 @@ window.ProjektStudio = {
   },
 
   reinitializeUI() {
-    console.log("reinitialize ProjektStudio")
-
-    // ContentBlocks.initUI()
-    // PhasesTabs.initUI()
-    // ExplainWithAi.initUI()
+    // console.log("reinitialize ProjektStudio")
   },
-
-  // requestLoadContentBlockTemplates() {
-  //   if (this.isProjektPage()) {
-  //     sendMessageToDtParentFrame(
-  //       "Dt.ProjektStudio.loadContentBlockTemplates"
-  //     )
-  //   }
-  // },
 
   isProjektPage() {
     return !!document.querySelector(".js-projekt-page")

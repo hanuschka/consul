@@ -262,7 +262,7 @@ ProjektStudio.SavedContentBlocks = {
 
     const surroundingContentBlockId =
       container
-        .closest(".js-projekt-content-block-edit-section")
+        .closest(".js-projekt-content-block-wrapper")
         .dataset
         .contentBlockId
 

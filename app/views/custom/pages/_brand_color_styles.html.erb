@@ -3,10 +3,21 @@
     <style data-turbolinks-track="reload">
       :root {
         --page-brand-color: <%= page.brand_color %>;
+        --page-brand-color-lighter: rgb(from var(--page-brand-color) r g b / 0.1);
+        --brand-color: <%= page.brand_color %>;
       }
 
       *::selection {
         background-color: var(--page-brand-color);
+      }
+
+      .custom-new-design .custom-page--banner {
+        background-color: rgb(from var(--page-brand-color) r g b / 0.1);
+        /* background-color: color-mix(in srgb, var(--page-brand-color) 20%, white 80%); */
+      }
+
+      .custom-new-design .custom-page--banner-breadcrumbs .custom-breadcrumbs .breadcrumbs-item, .custom-new-design .custom-page--banner-breadcrumbs .custom-breadcrumbs .breadcrumbs-divider {
+        color: var(--page-brand-color);
       }
 
       .custom-new-design .homepage-image-header--title,
@@ -15,7 +26,7 @@
       }
 
       .custom-new-design .button.hollow:hover {
-        background: rgb(from var(--page-brand-color) r g b / 0.1);
+        background: var(--page-brand-color-lighter);
       }
 
       .custom-new-design .resource-item--header,

@@ -122,19 +122,11 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
   toggleContentEditableFor(contentBlock, contentEditable) {
     const elements = Array.from(
-      contentBlock.querySelectorAll("h2, h3, h4, p,  ol, .js-text-editable")
+      contentBlock.querySelectorAll("h2, h3, h4, p,  ol, .js-text-editable, a.accordion-title")
     );
 
-    const hasBlockChildren = (element) => {
-      const blockSelectors = [
-        "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
-        "h1","h2","h3","h4","h5","h6", "blockquote", "pre"
-      ];
-      return element.querySelector(blockSelectors.join(", ")) !== null;
-    };
-
     elements.forEach((element) => {
-      if (!hasBlockChildren(element)) {
+      if (ProjektStudio.utils.hasNoBlockChildren(element)) {
         if (contentEditable) {
           element.contentEditable = true;
           ProjektStudio.utils.focusContentEditableElement(contentBlock);

@@ -88,3 +88,16 @@ ProjektStudio.utils.removeChildHtmlAttributes = function(element, attributes = [
       .forEach(el => el.removeAttribute(attribute));
   })
 }
+
+ProjektStudio.utils.hasBlockChildren = (element) => {
+  const blockSelectors = [
+    "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
+    "h1","h2","h3","h4","h5","h6", "blockquote", "pre"
+  ];
+
+  return element.querySelector(blockSelectors.join(", ")) !== null;
+};
+
+ProjektStudio.utils.hasNoBlockChildren = (element) => {
+  return !ProjektStudio.utils.hasBlockChildren(element);
+};

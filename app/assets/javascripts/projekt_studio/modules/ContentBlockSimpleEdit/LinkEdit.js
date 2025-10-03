@@ -45,8 +45,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       return
     }
 
-    const linkWrapper = document.createElement("div")
-    linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
+    const linkWrapper = this.buildLinkWrapper()
 
     link.parentNode.insertBefore(linkWrapper, link);
     linkWrapper.appendChild(link);
@@ -58,6 +57,14 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
         </button>
       `
     );
+
+    return linkWrapper
+  },
+
+  buildLinkWrapper() {
+    const linkWrapper = document.createElement("div")
+    linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
+    linkWrapper.contentEditable = false;
 
     return linkWrapper
   },
@@ -157,8 +164,9 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
 
-    const linkWrapper = document.createElement("div");
-    linkWrapper.className = "-js-draft-link js-content-block-link-wrapper content-block-link-wrapper";
+    const linkWrapper = this.buildLinkWrapper()
+    linkWrapper.classList.add("-js-draft-link")
+
     linkWrapper.appendChild(range.extractContents());
     range.insertNode(linkWrapper);
 
@@ -177,8 +185,16 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       display: "block"
     });
 
+    const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
     const urlInput = document.querySelector(".js-content-block-link-popup .js-content-block-url-input");
     const link = linkWrapper.querySelector("a")
+
+    // console.log(link)
+
+    // if (link && link.childNodes.length === 1 && link.childNodes[0].nodeType === Node.TEXT_NODE) {
+    //   $(textInput).show()
+    //   textInput.value = link.childNodes[0].textContent
+    // }
 
     if (link) {
       urlInput.value = link.href
@@ -204,7 +220,8 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     if (this.savedSelection) {
       const a = document.createElement("a");
       a.href = url;
-      a.classList.add("js-content-block-disable-link-click")
+      a.classList.add("js-content-block-disable-link-click", "js-text-editable")
+      a.contentEditable = true
 
       if (blankCheckbox.checked) {
         a.target = "_blank";

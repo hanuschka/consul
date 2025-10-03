@@ -92,7 +92,7 @@ ProjektStudio.utils.removeChildHtmlAttributes = function(element, attributes = [
 ProjektStudio.utils.hasBlockChildren = (element) => {
   const blockSelectors = [
     "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
-    "h1","h2","h3","h4","h5","h6", "blockquote", "pre"
+    "h1","h2","h3","h4","h5","h6", "blockquote", "pre", "img"
   ];
 
   return element.querySelector(blockSelectors.join(", ")) !== null;
@@ -101,3 +101,39 @@ ProjektStudio.utils.hasBlockChildren = (element) => {
 ProjektStudio.utils.hasNoBlockChildren = (element) => {
   return !ProjektStudio.utils.hasBlockChildren(element);
 };
+
+
+ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [] }) => {
+  const ALLOWED_TAGS = new Set(allowedTags.map(tag => tag.toUpperCase())); // uppercase tagNames
+  const ALLOWED_ATTRS = new Set(['class']); // only class allowed
+
+  const container = document.createElement('div');
+  container.innerHTML = input;
+
+  // remove comments
+  const commentWalker = document.createTreeWalker(container, NodeFilter.SHOW_COMMENT, null, false);
+  const comments = [];
+  let c;
+  while ((c = commentWalker.nextNode())) comments.push(c);
+  comments.forEach(node => node.remove());
+
+  // sanitize elements
+  const elements = Array.from(container.querySelectorAll('*'));
+  for (const el of elements) {
+    if (!ALLOWED_TAGS.has(el.tagName)) {
+      // unwrap disallowed tag (keep children)
+      while (el.firstChild) el.parentNode.insertBefore(el.firstChild, el);
+      el.remove();
+    } else {
+      // allowed: strip all attributes except "class"
+      const attrs = Array.from(el.attributes);
+      for (const a of attrs) {
+        if (!ALLOWED_ATTRS.has(a.name.toLowerCase())) {
+          el.removeAttribute(a.name);
+        }
+      }
+    }
+  }
+
+  return container.innerHTML;
+}

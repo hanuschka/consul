@@ -189,12 +189,16 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     const urlInput = document.querySelector(".js-content-block-link-popup .js-content-block-url-input");
     const link = linkWrapper.querySelector("a")
 
-    // console.log(link)
+    console.log(link)
 
     // if (link && link.childNodes.length === 1 && link.childNodes[0].nodeType === Node.TEXT_NODE) {
-    //   $(textInput).show()
+    //   $(textInput.parentElement).show()
     //   textInput.value = link.childNodes[0].textContent
     // }
+    if (ProjektStudio.utils.hasNoBlockChildren(link)) {
+      $(textInput.parentElement).show()
+      textInput.value = link.innerHTML.trim()
+    }
 
     if (link) {
       urlInput.value = link.href
@@ -218,25 +222,9 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     this.restoreSelection();
 
     if (this.savedSelection) {
-      const a = document.createElement("a");
-      a.href = url;
-      a.classList.add("js-content-block-disable-link-click", "js-text-editable")
-      a.contentEditable = true
-
-      if (blankCheckbox.checked) {
-        a.target = "_blank";
-      }
-
-      const html = this.currentLinkWrapper.innerHTML;
-
-      a.insertAdjacentHTML("beforeend", html);
-
-      this.currentLinkWrapper.parentNode.insertBefore(a, this.currentLinkWrapper);
-      this.currentLinkWrapper.remove()
-      this.currentLinkWrapper = this.wrapLinkWithControls(a)
+      this.currentLinkWrapper = this.createNewLink(this.currentLinkWrapper)
     }
-
-    if (this.savedLinkIdToEdit) {
+    else if (this.savedLinkIdToEdit) {
       const link = document.querySelector(`[data-content-block-edit-link-id="${this.savedLinkIdToEdit}"]`)
 
       link.href = url;
@@ -246,6 +234,14 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       } else {
         link.removeAttribute("target")
       }
+
+      const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
+
+      link.innerHTML =
+        ProjektStudio.utils.sanitizeHtml(
+          textInput.value,
+          { allowedTags: ['b','strong','i','span']}
+        )
     }
 
     this.hidePopup()
@@ -253,6 +249,26 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
 
     $urlInput.val("");
     blankCheckbox.checked = true;
+  },
+
+  createNewLink(linkWrapper) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.classList.add("js-content-block-disable-link-click")
+    // a.contentEditable = true
+
+    if (blankCheckbox.checked) {
+      a.target = "_blank";
+    }
+
+    const html = this.currentLinkWrapper.innerHTML;
+
+    a.insertAdjacentHTML("beforeend", html);
+
+    linkWrapper.parentNode.insertBefore(a, linkWrapper);
+    linkWrapper.remove()
+
+    return this.wrapLinkWithControls(a)
   },
 
   cancelLinkEdit() {
@@ -273,6 +289,11 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       addLinkButton.disabled = true
     }
 
+    $(".js-content-block-link-popup .js-content-block-text-input")
+      .val("")
+      .parent()
+      .hide()
+
     if (this.currentLinkWrapper) {
       this.currentLinkWrapper.classList.remove("-highlight-active")
       this.currentLinkWrapper = null;
@@ -286,7 +307,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
 
     if (this.savedLinkIdToEdit) {
       const currentLinkToEdit = document.querySelector(`[data-content-block-edit-link-id="${this.savedLinkIdToEdit}"]`)
-      currentLinkToEdit.removeAttribute("data-content-block-edit-link-id")
+      delete currentLinkToEdit.dataset.contentBlockEditLinkId;
 
       this.savedLinkIdToEdit = null;
     }

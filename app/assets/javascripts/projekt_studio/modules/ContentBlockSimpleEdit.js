@@ -122,7 +122,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
   toggleContentEditableFor(contentBlock, contentEditable) {
     const elements = Array.from(
-      contentBlock.querySelectorAll("h2, h3, h4, p,  ol, .js-text-editable")
+      contentBlock.querySelectorAll("h2, h3, h4, p,  ol, .js-text-editable, a.accordion-title")
     );
 
     const hasBlockChildren = (element) => {

@@ -5,17 +5,13 @@
   role="tablist"
 >
 
-  <%= render(
-    "projekts/content_block_templates/accordions/accordion_item",
-    title: "Häufige Fragen",
-    content: "Platzhalter-Inhalt zu den häufigsten Fragen.")
-  %>
-
-  <%= render(
-    "projekts/content_block_templates/accordions/accordion_item",
-    title: "Ablauf der Beteiligung",
-    content: "Platzhalter-Inhalt zum Ablauf der Beteiligung.")
-  %>
+  <% 2.times do %>
+    <%= render(
+      "projekts/content_block_templates/accordions/accordion_item",
+      title: "Akkordeon Menüpunkt",
+      content: "Bitte hier Ihren Text einfügen.")
+    %>
+  <% end %>
 </ul>
 
 

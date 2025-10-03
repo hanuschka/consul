@@ -45,8 +45,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       return
     }
 
-    const linkWrapper = document.createElement("div")
-    linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
+    const linkWrapper = this.buildLinkWrapper()
 
     link.parentNode.insertBefore(linkWrapper, link);
     linkWrapper.appendChild(link);
@@ -58,6 +57,14 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
         </button>
       `
     );
+
+    return linkWrapper
+  },
+
+  buildLinkWrapper() {
+    const linkWrapper = document.createElement("div")
+    linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
+    linkWrapper.contentEditable = false;
 
     return linkWrapper
   },
@@ -157,8 +164,9 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
 
-    const linkWrapper = document.createElement("div");
-    linkWrapper.className = "-js-draft-link js-content-block-link-wrapper content-block-link-wrapper";
+    const linkWrapper = this.buildLinkWrapper()
+    linkWrapper.classList.add("-js-draft-link")
+
     linkWrapper.appendChild(range.extractContents());
     range.insertNode(linkWrapper);
 

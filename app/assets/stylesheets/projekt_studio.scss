@@ -1215,14 +1215,28 @@ body.-ai-functions-locked {
   display: inline-block;
   position: relative;
 
-  &.-highlight-active {
-    // background-color: #b9e5ff;
-
+  &:hover {
     &::before {
       content: '';
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #10a6ff24;
+      pointer-events: none;
+      z-index: 2;
+    }
+  }
+
+  &.-highlight-active {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background-color: #10a6ff4d;
       pointer-events: none;
       z-index: 2;

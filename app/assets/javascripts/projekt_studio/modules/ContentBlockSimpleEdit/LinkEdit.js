@@ -185,8 +185,16 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       display: "block"
     });
 
+    const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
     const urlInput = document.querySelector(".js-content-block-link-popup .js-content-block-url-input");
     const link = linkWrapper.querySelector("a")
+
+    // console.log(link)
+
+    // if (link && link.childNodes.length === 1 && link.childNodes[0].nodeType === Node.TEXT_NODE) {
+    //   $(textInput).show()
+    //   textInput.value = link.childNodes[0].textContent
+    // }
 
     if (link) {
       urlInput.value = link.href
@@ -212,7 +220,8 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     if (this.savedSelection) {
       const a = document.createElement("a");
       a.href = url;
-      a.classList.add("js-content-block-disable-link-click")
+      a.classList.add("js-content-block-disable-link-click", "js-text-editable")
+      a.contentEditable = true
 
       if (blankCheckbox.checked) {
         a.target = "_blank";

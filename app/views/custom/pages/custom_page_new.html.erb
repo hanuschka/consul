@@ -17,7 +17,12 @@
   <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
   <div class="js-content-block-link-popup content-block-link-popup">
     <div>
-      <label class="content-block-link-popup-url-label">
+      <label class="content-block-link-popup-label" style="display: none">
+        Link text: <textarea type="text" class="js-content-block-text-input"></textarea>
+      </label>
+    </div>
+    <div>
+      <label class="content-block-link-popup-label">
         Link URL: <textarea type="text" class="js-content-block-url-input"></textarea>
       </label>
     </div>

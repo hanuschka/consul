@@ -1,4 +1,6 @@
 ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
+  contentBlockImageLoadingState: {},
+
   initialize() {
     this.initEventListeners()
     this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
@@ -20,10 +22,25 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       contentBlock
         .querySelectorAll(".js-content-block-image-wrapper")
         .forEach((imgWrapper) => {
-          const img = imgWrapper.querySelector("img")
-          imgWrapper.outerHTML = img.outerHTML
+          this.removeImageControls(imgWrapper)
         })
     }
+  },
+
+  incrementImageLoadingCountForContentBlock(contentBlockId) {
+    if (!this.contentBlockImageLoadingState[contentBlockId]) {
+      this.contentBlockImageLoadingState[contentBlockId] = 0;
+    }
+
+    this.contentBlockImageLoadingState[contentBlockId] += 1
+  },
+
+  decrementImageLoadingCountForContentBlock(contentBlockId) {
+    if (!this.contentBlockImageLoadingState[contentBlockId]) {
+      return
+    }
+
+    this.contentBlockImageLoadingState[contentBlockId] -= 1
   },
 
   wrapImageWithControls(img) {
@@ -33,22 +50,31 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const smallButton = img.height < 120;
     const borderRadius = getComputedStyle(img).borderRadius;
 
-    imageWrapper.innerHTML = `
-      <div
-        style="border-radius: ${borderRadius}"
-        class="content-block-image-loading-overlay"
-      >
-        <div class="loading-spinner-inline"></div>
-      </div>
-      <button
-        type="button"
-        class="content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}">
-          <i class="fa fas fa-pencil-alt"></i>
-      </button>
-      ${img.outerHTML}
-    `
+    img.parentNode.insertBefore(imageWrapper, img);
+    imageWrapper.appendChild(img);
+    imageWrapper.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div
+          style="border-radius: ${borderRadius}"
+          class="content-block-image-loading-overlay"
+        >
+          <div class="loading-spinner-inline"></div>
+        </div>
+        <button
+          type="button"
+          class="content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}">
+            <i class="fa fas fa-pencil-alt"></i>
+        </button>
+      `
+    );
+  },
 
-    img.outerHTML = imageWrapper.outerHTML;
+  removeImageControls(imgWrapper) {
+    const img = imgWrapper.querySelector("img")
+
+    imgWrapper.parentNode.insertBefore(img, imgWrapper);
+    imgWrapper.remove();
   },
 
   changeImage(e) {
@@ -61,7 +87,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const fileInput = document.querySelector(".js-content-block-image-change-input")
     fileInput.click()
 
-    document.body.addEventListener('change', (e) => {
+    fileInput.addEventListener('change', (e) => {
       this.uploadImage(e, img, wrapper)
     }, { once: true });
   },
@@ -75,8 +101,11 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(contentBlockWrapper, true)
 
     imageWrapper.classList.add("-loading")
-    const sliderContainer = imageWrapper.closest('.orbit-container')
-    const isSlider = !!sliderContainer;
+    // const sliderContainer = imageWrapper.closest('.orbit-container')
+    // const isSlider = !!sliderContainer;
+    const isGallery = !!img.closest(".glightbox-disabled")
+
+    img.dataset.previousSrc = img.src;
 
     const reader = new FileReader();
     reader.onload = (evt) => { img.setAttribute('src', evt.target.result); };
@@ -84,10 +113,19 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
     const formData = new FormData();
     formData.append('upload', file);
-    formData.append('thumb_width', img.width + 50)
-    formData.append('thumb_height', img.height + 50)
+    formData.append('width', img.width + 50)
+    formData.append('height', img.height + 50)
+
+    if (!isGallery) {
+      formData.append('resize_original', "true")
+    }
+
+    e.target.value = null;
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+
+    this.incrementImageLoadingCountForContentBlock(contentBlockId)
 
     $.ajax({
       method: 'POST',
@@ -102,16 +140,37 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       .then((response) => {
         this.handleImageUploaded(img, response)
       })
+      .catch((response) => {
+        img.src = img.dataset.previousSrc;
+
+        this.toggleLockForImage(imageWrapper, contentBlockWrapper, contentBlockId)
+
+        if (response.error && response.error.message) {
+          alert(`Fehler beim Hochladen des Bildes: ${response.error.message}`)
+        }
+        else {
+          alert("Fehler beim Hochladen des Bildes")
+        }
+      })
       .always(() => {
+        img.dataset.previousSrc = ""
+
         img.addEventListener("load", () => {
-          this.toggleLockForImage(imageWrapper, contentBlockWrapper)
+          this.toggleLockForImage(imageWrapper, contentBlockWrapper, contentBlockId)
         }, { once: true })
       })
   },
 
-  toggleLockForImage(imageWrapper, contentBlockWrapper) {
+  toggleLockForImage(imageWrapper, contentBlockWrapper, contentBlockId) {
     imageWrapper.classList.remove("-loading")
-    ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(contentBlockWrapper, false)
+    this.decrementImageLoadingCountForContentBlock(contentBlockId)
+
+    if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
+      ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(
+        contentBlockWrapper,
+        false
+      )
+    }
   },
 
   handleImageUploaded(img, response) {

@@ -31,8 +31,6 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
 
     else
       classes.push("regular")
-      classes.push("row")
-      classes.push("gutter-small")
     end
 
     classes.join(" ")

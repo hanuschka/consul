@@ -69,9 +69,6 @@
 
       if (alreadyAnsweredOption && alreadyAnsweredOption.dataset.nextQuestionId) {
         nextQuestion = this.getQuestionById(alreadyAnsweredOption.dataset.nextQuestionId);
-      }
-      else if (currentQuestion.dataset.nextQuestionId) {
-        nextQuestion = this.getQuestionById(currentQuestion.dataset.nextQuestionId);
       } else {
         nextQuestion = currentQuestion.nextElementSibling;
       }

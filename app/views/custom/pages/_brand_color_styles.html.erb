@@ -5,6 +5,10 @@
         --page-brand-color: <%= page.brand_color %>;
       }
 
+      *::selection {
+        background-color: var(--page-brand-color);
+      }
+
       .custom-new-design .homepage-image-header--title,
       .custom-new-design .button.hollow {
         color: <%= page.brand_color %>;

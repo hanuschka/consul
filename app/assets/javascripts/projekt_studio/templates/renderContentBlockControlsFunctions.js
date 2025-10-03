@@ -40,7 +40,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
             <div
               class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
-              <div class="d-flex">
+              <div class="d-flex u-gap-10">
                 <button type="button" class="projekt-content-block-edit--button -green js-save-edit-text-projekt-content-block">
                   <i class="fas fa-save"></i>
                   Speichern
@@ -51,7 +51,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </button>
               </div>
 
-              <button type="button" disabled class="projekt-content-block-edit--button js-content-block-add-link">
+              <button type="button" disabled class="projekt-content-block-edit--button -transparent js-content-block-add-link">
                 <i class="fas fa-link"></i>
                 Link hinzufügen
               </button>

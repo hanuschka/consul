@@ -103,9 +103,9 @@ ProjektStudio.utils.hasNoBlockChildren = (element) => {
 };
 
 
-ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [] }) => {
+ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes = [] }) => {
   const ALLOWED_TAGS = new Set(allowedTags.map(tag => tag.toUpperCase())); // uppercase tagNames
-  const ALLOWED_ATTRS = new Set(['class']); // only class allowed
+  const ALLOWED_ATTRS = new Set(allowedAttributes); // only class allowed
 
   const container = document.createElement('div');
   container.innerHTML = input;

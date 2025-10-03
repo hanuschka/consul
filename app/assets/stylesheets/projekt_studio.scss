@@ -48,49 +48,57 @@ $small-tablet-viewport-start: 750px;
   align-items: center;
   font-size: 17px;
   color: #004a83;
+  background: #d6e7f6;
   border-radius: 7px;
   padding: 7px 12px;
   transition: background-color ease 50ms;
 
   &:hover {
-    background: #d6e7f6;
+    background-color: #c3daee;
   }
 
   &.-green {
     color: #00830e;
+    background-color: #dff1e1;
 
     &:hover {
-      background-color: #dff1e1;
+      background-color: #d5e9d7;
     }
   }
 
   &:disabled {
     color: #939393;
     cursor: not-allowed;
+    background-color: #e4e4e4;
 
     &:hover {
-      background-color: transparent;
+      background-color: #e4e4e4;
+    }
+  }
+
+  &.-transparent {
+    background-color: transparent;
+
+    &:hover {
+      background: #d6e7f6;
+    }
+
+    &.-green {
+
+      &:hover {
+        background-color: #dff1e1;
+      }
+    }
+
+    &:disabled {
+      &:hover {
+        background-color: transparent;
+      }
     }
   }
 
   i {
     margin-right: 5px;
-  }
-
-  &.-with-background {
-    background: #d6e7f6;
-
-    &:hover {
-      background-color: #c3daee;
-    }
-
-    &.-green {
-      background-color: #dff1e1;
-
-      &:hover {
-        background-color: #d5e9d7;
-      }
-    }
   }
 }
 

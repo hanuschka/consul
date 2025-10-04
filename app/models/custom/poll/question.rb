@@ -12,7 +12,7 @@ class Poll::Question < ApplicationRecord
   belongs_to :contexted_clone_of, class_name: "Poll::Question",
                                   foreign_key: :contexted_clone_of_poll_question_id,
                                   optional: true,
-                                  inverse_of: :contextted_clones
+                                  inverse_of: :contexted_clones
   has_many :contexted_clones, class_name: "Poll::Question",
                               foreign_key: :contexted_clone_of_poll_question_id,
                               inverse_of: :contexted_clone_of,

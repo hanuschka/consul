@@ -62,6 +62,8 @@
 
     navigateToNextQuestion: function() {
       var currentQuestion = this.currentQuestion();
+      this.toggleContextedQuestions(currentQuestion);
+
       var alreadyAnsweredOption = document.querySelector(
         ".js-question-wizard-item.-visible .js-question-answered"
       );
@@ -70,12 +72,31 @@
       if (alreadyAnsweredOption && alreadyAnsweredOption.dataset.nextQuestionId) {
         nextQuestion = this.getQuestionById(alreadyAnsweredOption.dataset.nextQuestionId);
       } else {
-        nextQuestion = currentQuestion.nextElementSibling;
+        nextQuestion = $(currentQuestion).nextAll('.question-wizard-item[data-question-hidden="false"]').first().get(0)
       }
 
       this.markQuestionsAsDisabledBetween(currentQuestion, nextQuestion);
       this.navigateToQuestion(nextQuestion);
       this.scrollToWizardTop();
+    },
+
+    toggleContextedQuestions: function(currentQuestion) {
+      if ( currentQuestion.dataset.questionContextSource !== "true" ) return;
+
+      var notSelectedAnswersIds = [];
+      document.querySelectorAll('.js-question-answer:not(.js-question-answered)').forEach(function(answer) {
+        notSelectedAnswersIds.push(answer.dataset.answerId);
+      });
+
+      notSelectedAnswersIds.forEach(function(answerId) {
+        var contextedQuestions = document.querySelectorAll(
+          ".js-question-wizard-item[data-question-context-id='" + answerId + "']"
+        );
+
+        contextedQuestions.forEach(function(question) {
+          question.dataset.questionHidden = "true";
+        });
+      });
     },
 
     markQuestionsAsDisabledBetween: function(currentQuestion, nextQuestion) {
@@ -108,7 +129,6 @@
         nextQuestion.classList.add("-visible");
         nextQuestion.classList.remove("-disabled");
 
-        // $(".js-question-wizard--progress-current-page").text(nextQuestion.dataset.questionNumber);
         this.updateProgress(nextQuestion);
 
         var $nextButton = $(".js-question-wizard-next");

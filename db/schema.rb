@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_29_100040) do
+ActiveRecord::Schema.define(version: 2025_10_03_123439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1793,7 +1793,13 @@ ActiveRecord::Schema.define(version: 2025_09_29_100040) do
     t.boolean "bundle_question", default: false
     t.integer "next_question_id"
     t.boolean "answer_mandatory", default: false
+    t.bigint "contextualize_by_poll_question_id"
+    t.bigint "contexted_clone_of_poll_question_id"
+    t.bigint "context_id"
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
+    t.index ["context_id"], name: "index_poll_questions_on_context_id"
+    t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
+    t.index ["contextualize_by_poll_question_id"], name: "index_poll_questions_on_contextualize_by_poll_question_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
@@ -3059,6 +3065,9 @@ ActiveRecord::Schema.define(version: 2025_09_29_100040) do
   add_foreign_key "poll_partial_results", "users", column: "author_id"
   add_foreign_key "poll_question_answer_videos", "poll_question_answers", column: "answer_id"
   add_foreign_key "poll_question_answers", "poll_questions", column: "question_id"
+  add_foreign_key "poll_questions", "poll_question_answers", column: "context_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contexted_clone_of_poll_question_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contextualize_by_poll_question_id"
   add_foreign_key "poll_questions", "polls"
   add_foreign_key "poll_questions", "proposals"
   add_foreign_key "poll_questions", "users", column: "author_id"

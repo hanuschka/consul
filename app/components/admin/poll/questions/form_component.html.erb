@@ -73,6 +73,16 @@
     </div>
   <% end %>
 
+  <% if poll_questions_for_context_sources.any? %>
+    <div class="row">
+      <div class="small-12 medium-6 large-4 column">
+        <%= f.select :contextualize_by_poll_question_id,
+                      options_for_select(select_options_for_context_sources, @question.contextualize_by_poll_question_id),
+                      include_blank: true %>
+      </div>
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="small-12 medium-4 large-2 margin-top column">
       <%= f.submit(class: "button success expanded", value: t("shared.save")) %>

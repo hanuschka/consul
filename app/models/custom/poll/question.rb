@@ -6,8 +6,24 @@ class Poll::Question < ApplicationRecord
     class_name: "Poll::Question", dependent: :destroy, foreign_key: :parent_question_id
 
   belongs_to :parent_question, class_name: "Poll::Question", optional: true
+  belongs_to :contextualize_by, class_name: "Poll::Question",
+                                foreign_key: :contextualize_by_poll_question_id,
+                                optional: true
+  belongs_to :contexted_clone_of, class_name: "Poll::Question",
+                                  foreign_key: :contexted_clone_of_poll_question_id,
+                                  optional: true,
+                                  inverse_of: :contextted_clones
+  has_many :contexted_clones, class_name: "Poll::Question",
+                              foreign_key: :contexted_clone_of_poll_question_id,
+                              inverse_of: :contexted_clone_of,
+                              dependent: :destroy
+  belongs_to :context, class_name: "Poll::Question::Answer",
+                       foreign_key: :context_id,
+                       optional: true
 
   validate :validate_parent_question_id
+
+  after_save :regenerate_contexted_clones, if: proc { |question| question.contextualize_by.present? }
 
   scope :root_questions, -> {
     where(parent_question_id: nil)
@@ -55,4 +71,50 @@ class Poll::Question < ApplicationRecord
   def can_accept_open_answer?
     votation_type.unique? || votation_type.multiple?
   end
+
+  def find_or_clone_for_context(ctx)
+    return unless template_for_context?
+    return if context.present?
+
+    poll.questions.with_context(ctx).find_by(title: title) || clone_for_context(ctx)
+  end
+
+  private
+
+    def regenerate_contexted_clones
+      contexted_clones.destroy_all
+
+      contextualize_by.question_answers.each do |qa|
+        clone_for_context(qa)
+      end
+    end
+
+    def clone_for_context(context)
+      new_question = dup
+      new_question.contextualize_by_poll_question_id = nil
+      new_question.contexted_clone_of = self
+      new_question.context = context
+
+      new_question.comments_count = 0
+
+      new_question.title = title
+      new_question.description = description
+      new_question.min_rating_scale_label = min_rating_scale_label
+      new_question.max_rating_scale_label = max_rating_scale_label
+      new_question.intro = intro
+
+      question_answers.each do |question_answer|
+        new_question_answer = question_answer.dup
+        new_question_answer.title = question_answer.title
+        new_question_answer.description = question_answer.description
+        new_question.question_answers << new_question_answer
+      end
+
+      new_question.votation_type = votation_type.dup
+
+      # Also clone nested questions
+      # Also clone videos, documents and images for answers
+
+      new_question.save!
+    end
 end

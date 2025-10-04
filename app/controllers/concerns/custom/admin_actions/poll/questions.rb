@@ -113,7 +113,7 @@ module AdminActions::Poll::Questions
         :parent_question_id,
         :bundle_question,
         :answer_mandatory,
-        :next_question_id,
+        :contextualize_by_poll_question_id,
         translation_params(Poll::Question)
       )
     end

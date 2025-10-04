@@ -11,10 +11,12 @@ ProjektStudio.PhasesTabs = {
   },
 
   initEventListeners() {
-    $(document).on("click", ".js-toggle-projekt-phase-visibility-button", this.toggleProjektPhaseActiveState.bind(this));
-    $(document).on("click", ".js-toggle-projekt-phase-default", this.toggleProjektPhaseDefaultState.bind(this));
-    $(document).on("click", ".js-delete-projekt-phase", this.deleteProjektPhase.bind(this));
-    $(document).on("click", ".js-send-notifications-for-projekt-phase", this.sendNotificationsForProjektPhase.bind(this));
+    const $document = $(document);
+
+    $document.on("click", ".js-toggle-projekt-phase-visibility-button", this.toggleProjektPhaseActiveState.bind(this));
+    $document.on("click", ".js-toggle-projekt-phase-default", this.toggleProjektPhaseDefaultState.bind(this));
+    $document.on("click", ".js-delete-projekt-phase", this.deleteProjektPhase.bind(this));
+    $document.on("click", ".js-send-notifications-for-projekt-phase", this.sendNotificationsForProjektPhase.bind(this));
   },
 
   initUI() {

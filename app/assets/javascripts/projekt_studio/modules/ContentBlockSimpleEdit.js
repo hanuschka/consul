@@ -23,7 +23,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-simple-edit-mode")
-    $accordion = $(contentBlock).find('.accordion a');
+    const $accordion = $(contentBlock).find('.accordion a');
     $accordion.off("keydown")
 
     ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(

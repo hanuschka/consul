@@ -2,7 +2,7 @@ const html = (strings, ...values) => {
   return String.raw(strings, ...values);
 };
 
-ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList = function(contentBlocksHtml, projektId) {
+ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocksHtml, projektId) {
   return `
     <div
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
@@ -172,17 +172,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
           <i class="fas fa-plus"></i>
           Neuen Inhaltsblock hinzufügen
         </button>
-
-        <div class="add-new-content-block-content js-show-content-block-templates-content">
-        </div>
       </div>
     </div>
   `.trim()
 }
 
-ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml = function() {
+ProjektStudio.templateFunctions.initialContentBlockWrapperHtml = function() {
   return `
-    <div class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
+    <div data-initial-content-block-button="true" class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
       <div class="projekt-content-block--additional">
         <div class="add-new-content-block-section js-show-content-block-templates-section">
           <button
@@ -193,9 +190,6 @@ ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml = function() {
             <i class="fas fa-plus"></i>
             Neuen Inhaltsblock hinzufügen
           </button>
-
-          <div class="add-new-content-block-content js-show-content-block-templates-content">
-          </div>
         </div>
       </div>
     </div>

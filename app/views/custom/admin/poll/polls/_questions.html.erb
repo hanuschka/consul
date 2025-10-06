@@ -47,6 +47,12 @@
                             target: "_blank" %>
               </small>
             <% end %>
+
+            <% if question.contextualize_by_poll_question_id.present? %>
+              <small style="display: block; margin-top: 0.5em;">
+                <%= t("admin.questions.index.contextualized_by") %>
+                <%= question.contextualize_by_question.title %>
+            <% end %>
           </td>
           <td>
             <% if question.bundle_question? %>

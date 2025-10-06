@@ -6,9 +6,9 @@ class Poll::Question < ApplicationRecord
     class_name: "Poll::Question", dependent: :destroy, foreign_key: :parent_question_id
 
   belongs_to :parent_question, class_name: "Poll::Question", optional: true
-  belongs_to :contextualize_by, class_name: "Poll::Question",
-                                foreign_key: :contextualize_by_poll_question_id,
-                                optional: true
+  belongs_to :contextualize_by_question, class_name: "Poll::Question",
+                                         foreign_key: :contextualize_by_poll_question_id,
+                                         optional: true
   belongs_to :contexted_clone_of, class_name: "Poll::Question",
                                   foreign_key: :contexted_clone_of_poll_question_id,
                                   optional: true,
@@ -23,7 +23,7 @@ class Poll::Question < ApplicationRecord
 
   validate :validate_parent_question_id
 
-  after_save :regenerate_contexted_clones, if: proc { |question| question.contextualize_by.present? }
+  after_save :regenerate_contexted_clones, if: proc { |question| question.contextualize_by_question.present? }
 
   scope :root_questions, -> {
     where(parent_question_id: nil)
@@ -84,7 +84,7 @@ class Poll::Question < ApplicationRecord
     def regenerate_contexted_clones
       contexted_clones.destroy_all
 
-      contextualize_by.question_answers.each do |qa|
+      contextualize_by_question.question_answers.each do |qa|
         clone_for_context(qa)
       end
     end

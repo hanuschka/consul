@@ -79,21 +79,13 @@ class Poll::Question < ApplicationRecord
     poll.questions.with_context(ctx).find_by(title: title) || clone_for_context(ctx)
   end
 
-  private
+  protected
 
-    def regenerate_contexted_clones
-      contexted_clones.destroy_all
-
-      contextualize_by_question.question_answers.each do |qa|
-        clone_for_context(qa)
-      end
-    end
-
-    def clone_for_context(context)
+    def clone_for_context(context, nested: false)
       new_question = dup
       new_question.contextualize_by_poll_question_id = nil
-      new_question.contexted_clone_of = self
-      new_question.context = context
+      new_question.contexted_clone_of = self unless nested
+      new_question.context = context unless nested
 
       new_question.comments_count = 0
 
@@ -110,11 +102,30 @@ class Poll::Question < ApplicationRecord
         new_question.question_answers << new_question_answer
       end
 
-      new_question.votation_type = votation_type.dup
-
-      # Also clone nested questions
-      # Also clone videos, documents and images for answers
+      new_votation_type = votation_type.dup
+      new_votation_type.save!
+      new_question.votation_type = new_votation_type
 
       new_question.save!
+
+      if bundle_question?
+        nested_questions.each do |nested_question|
+          nested_question_clone = nested_question.clone_for_context(context, nested: true)
+          new_question.nested_questions << nested_question_clone
+        end
+      end
+
+      new_question
+    end
+
+  private
+
+    def regenerate_contexted_clones
+      contexted_clones.destroy_all
+
+      contextualize_by_question.question_answers.each do |qa|
+        clone_for_context(qa)
+      end
     end
 end
+# Also clone videos, documents and images for answers

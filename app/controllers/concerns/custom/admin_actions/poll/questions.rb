@@ -26,6 +26,8 @@ module AdminActions::Poll::Questions
     @question.poll = @poll
     @question.votation_type = VotationType.new
 
+    @question.parent_question = Poll::Question.find(params[:parent_question_id]) if params[:parent_question_id].present?
+
     render "admin/poll/questions/new"
   end
 

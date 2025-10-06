@@ -73,7 +73,7 @@
     </div>
   <% end %>
 
-  <% if poll_questions_for_context_sources.any? %>
+  <% if show_contextualize_by_question_selector? %>
     <div class="row">
       <div class="small-12 medium-6 large-4 column">
         <%= f.select :contextualize_by_poll_question_id,

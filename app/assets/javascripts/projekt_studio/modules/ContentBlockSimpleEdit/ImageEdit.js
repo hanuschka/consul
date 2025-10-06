@@ -27,7 +27,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     }
   },
 
-  incrementImageLoadingCountForContentBlock(contentBlockId) {
+  incrementImageLoadingCount(contentBlockId) {
     if (!this.contentBlockImageLoadingState[contentBlockId]) {
       this.contentBlockImageLoadingState[contentBlockId] = 0;
     }
@@ -35,7 +35,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     this.contentBlockImageLoadingState[contentBlockId] += 1
   },
 
-  decrementImageLoadingCountForContentBlock(contentBlockId) {
+  decrementImageLoadingCount(contentBlockId) {
     if (!this.contentBlockImageLoadingState[contentBlockId]) {
       return
     }
@@ -125,7 +125,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    this.incrementImageLoadingCountForContentBlock(contentBlockId)
+    this.incrementImageLoadingCount(contentBlockId)
 
     $.ajax({
       method: 'POST',
@@ -138,7 +138,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       contentType: false,
     })
       .then((response) => {
-        this.handleImageUploaded(img, response)
+        this.setImageAfterUpload(img, response)
       })
       .catch((response) => {
         img.src = img.dataset.previousSrc;
@@ -163,7 +163,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
   toggleLockForImage(imageWrapper, contentBlockWrapper, contentBlockId) {
     imageWrapper.classList.remove("-loading")
-    this.decrementImageLoadingCountForContentBlock(contentBlockId)
+    this.decrementImageLoadingCount(contentBlockId)
 
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
       ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(
@@ -173,7 +173,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     }
   },
 
-  handleImageUploaded(img, response) {
+  setImageAfterUpload(img, response) {
     const previousPictureId = img.dataset.pictureId;
     img.src = response.custom_thumb_url
     img.dataset.fullImageUrl = response.url

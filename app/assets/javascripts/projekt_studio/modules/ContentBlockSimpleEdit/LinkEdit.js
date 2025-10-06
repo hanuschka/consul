@@ -106,7 +106,10 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     const surroundingContentBlock = container.closest(".js-projekt-content-block")
 
     if (!surroundingContentBlock) {
-      button.disabled = true
+      if (button) {
+        button.disabled = true
+      }
+
       return
     }
 

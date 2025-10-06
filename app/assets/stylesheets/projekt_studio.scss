@@ -18,8 +18,9 @@ $small-tablet-viewport-start: 750px;
     outline: 1px solid transparent;
   }
   20%, 80% {
+    // outline: 1px solid #b0d7f8;
     background-color:  #f4faff;
-    /* background-color:  #f0ffec; */
+    // background-color:  #f0ffec;
 
     /* outline: 1px solid #b0d7f8; */
     /* outline: 1px solid #d6ecff; */
@@ -301,6 +302,15 @@ body.custom-new-design {
   &:focused {
     outline: none !important;
   }
+
+  &:disabled {
+    color: #a0a0a0 !important;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
 }
 
 .add-new-saved-content-block-button {
@@ -403,9 +413,13 @@ body.custom-new-design {
   transition: 500ms ease background-color;
 
   &.-draft {
-    .projekt-content-block-edit {
+    opacity: 0.7;
+
+    .projekt-content-block--toolsets,
+    .projekt-content-block--move-button {
+      // visibility: hidden;
       pointer-events: none;
-      opacity: 0.7;
+      opacity: 0.3;
       filter: grayscale(1);
     }
   }
@@ -420,7 +434,7 @@ body.custom-new-design {
   &.-highlight-changed {
     .projekt-content-block--overlay {
       display: block;
-      animation: content-block-added-highlight 1.8s both;
+      animation: content-block-added-highlight 1500ms both;
     }
   }
   &.-loading {
@@ -518,26 +532,35 @@ body.custom-new-design {
 }
 
 .projekt-content-block-templates-selector-wrapper {
-  display: none;
+  max-width: 955px;
+  width: 100%;
+  padding: 0;
+  border-radius: 12px;
+  top: 3vh !important;
+
+  h3 {
+    font-size: 25px;
+  }
 }
 
 .projekt-content-block-templates-selector {
   border-radius: 8px;
   border: 1px solid #e0e0e0;
-  /* padding: 10px 20px; */
   padding: 10px 15px;
   padding-bottom: 1px;
   background-color: #f8f8f8;
-  display: none;
   width: 100%;
   margin-bottom: 20px;
+  padding-top: 20px;
+  padding-left: 25px;
+  padding-right: 0;
 }
 
 .projekt-content-block-templates-selector--inner {
-  /* transform: scale(0.8); */
-
   .tabs-content {
     background-color: transparent !important;
+    max-height: calc(100vh - (140px + 3vh));
+    overflow: auto;
   }
 
   h3 {
@@ -551,7 +574,8 @@ body.custom-new-design {
   }
 
   .tabs-panel {
-    padding: 0;
+    padding: 2px;
+    padding-right: 25px;
   }
 }
 
@@ -972,9 +996,8 @@ body.-ai-functions-locked {
   }
 
   &.-enabled {
-    background-color: #59ca66 !important;
+    background-color: #45ac50 !important;
     color: white !important;
-    border-color: #62c66d;
   }
 }
 

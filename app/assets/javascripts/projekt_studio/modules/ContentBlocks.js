@@ -1,7 +1,7 @@
  ProjektStudio.ContentBlocks = {
   initialized: false,
-  draftContentBlockIndex: 0,
   aceInstances: {},
+  addContentBlockAfter: null,
 
   initialize() {
     this.initEventListeners()
@@ -10,7 +10,7 @@
 
   initEventListeners() {
     const $document = $(document);
-    $document.on("click", ".js-show-content-block-templates", this.showContentBlockTemplates.bind(this));
+    $document.on("click", ".js-show-content-block-templates", this.openContentBlockTemplateSelector.bind(this));
     $document.on("click", ".js-add-new-content-block", this.addNewContentBlock.bind(this));
 
     $document.on("click", ".js-projekt-content-block--regenerate", this.handleRegenerateContentBlock.bind(this));
@@ -58,7 +58,7 @@
   },
 
   renderContentBlocks() {
-    const projektPageContent =  document.querySelector(".custom-page-content");
+    const projektPageContent =  document.querySelector(".js-custom-page-content");
 
     if (!projektPageContent) return
 
@@ -84,17 +84,17 @@
     }
     else {
       wrappedContentBlocksHtml =
-        ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml(
+        ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(
           projektId
         );
     }
 
     const newHtml =
-      ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(
+      ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(
         wrappedContentBlocksHtml, projektId
       )
 
-    this.morphElementHTML(".custom-page-content-inner", newHtml);
+    this.morphElementHTML(".js-custom-page-content", newHtml);
   },
 
   setContentBlockTemplates(params) {
@@ -104,11 +104,11 @@
   },
 
   enterAiEditMode(e) {
-    this.turnOnAiEditContentBlockMode(this.findParentContentBlockWrapper(e.target))
+    this.turnOnAiEditContentBlockMode(this.getParentContentBlockWrapper(e.target))
   },
 
   handleRegenerateContentBlock(e) {
-    this.regenerateContentBlock(this.findParentContentBlockWrapper(e.target), e.currentTarget.dataset.regenerateType)
+    this.regenerateContentBlock(this.getParentContentBlockWrapper(e.target), e.currentTarget.dataset.regenerateType)
   },
 
   regenerateContentBlock(contentBlockWrapper, regenerateType) {
@@ -229,9 +229,16 @@
       `.js-projekt-content-block-wrapper[data-draft-index='${params.draft_content_block_index}']`
     )
 
+    newContentBlock.classList.add('-highlight-changed')
+
+    setTimeout(() => {
+      newContentBlock.classList.remove('-highlight-changed')
+    }, 1700)
+
     newContentBlock.dataset.contentBlockId = params.content_block_id;
     newContentBlock.dataset.draft = false;
     newContentBlock.classList.remove('-draft')
+    $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", false)
 
     if (ProjektStudio.isEmbedded && params.enter_ai_mode === "true") {
       this.turnOnAiEditContentBlockMode(newContentBlock);
@@ -262,18 +269,16 @@
       .remove("-ai-edit-mode")
   },
 
-  findParentContentBlockWrapper(element) {
+  getParentContentBlockWrapper(element) {
     return element.closest('.js-projekt-content-block-wrapper');
   },
 
   deleteContrentBlock(e) {
-    this.closeAllOpenedContentBlockTemplatesDialogs();
-
     const deleteConfirmed = confirm("Soll dieser Inhaltsblock wirklich gelöscht werden?")
 
     if (!deleteConfirmed) return
 
-    const contentBlockWrapper = this.findParentContentBlockWrapper(e.target);
+    const contentBlockWrapper = this.getParentContentBlockWrapper(e.target);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
     const nextContentBlockSection = contentBlockWrapper.nextElementSibling;
     const prevContentBlockSection = contentBlockWrapper.previousElementSibling;
@@ -283,10 +288,10 @@
 
     if ($('.js-projekt-content-block-wrapper').length === 0) {
       const projektId = ProjektStudio.getCurrentProjektId()
-      const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml(projektId);
-      const newHtml = ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList(wrappedContentBlocksHtml, projektId)
+      const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
+      const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
 
-      this.morphElementHTML(".custom-page-content-inner", newHtml);
+      this.morphElementHTML(".js-custom-page-content", newHtml);
     }
 
     if (scrollTo) {
@@ -314,8 +319,12 @@
     }
   },
 
-  closeAllOpenedContentBlockTemplatesDialogs: function() {
-    $('.js-show-content-block-templates-section.-opened').removeClass('-opened');
+  openContentBlockTemplatesDialog() {
+    $('#contentBlockTemplatesModal').foundation('open');
+  },
+
+  closeContentBlockTemplatesDialog() {
+    $('#contentBlockTemplatesModal').foundation('close');
   },
 
   cancelAllContentBlockRegenerateLoadStates: function() {
@@ -323,75 +332,38 @@
     $('.js-projekt-content-block-wrapper.-ai-edit-mode').removeClass('-ai-edit-mode');
   },
 
-  showContentBlockTemplates(e) {
-    const parentElement = e.currentTarget.parentElement;
-    const templateContainer = parentElement.querySelector(".js-show-content-block-templates-content")
+  openContentBlockTemplateSelector(e) {
+    this.addContentBlockAfter = this.getParentContentBlockWrapper(e.currentTarget);
 
-    const isOpened = parentElement.classList.toggle("-opened")
-
-    if (!parentElement.classList.contains("-templates-added") && isOpened) {
-      const templateSelector = document.querySelector('.js-projekt-content-block-templates-selector')
-      const templateContent = templateSelector.content.cloneNode(true)
-      const contentBlockWrapper = this.findParentContentBlockWrapper(templateContainer);
-      const tabsId = "projekt-content-block-templates-tabs-" + contentBlockWrapper.dataset.contentBlockId;
-      const tabs = templateContent.querySelector(".tabs");
-      const tabsContent = templateContent.querySelector(".tabs-content");
-
-      tabs.id = tabsId;
-      tabsContent.dataset.tabsContent = tabsId;
-
-      const eachTab = tabs.querySelectorAll(".tabs-title a");
-      const eachTabPanel = tabsContent.querySelectorAll(".tabs-panel");
-
-      // Make tab ID uniq for foundation tabs to work correctly
-      eachTab.forEach(function(tab, index) {
-        tab.href = "#" + tabsId + "-" + index;
-      });
-      eachTabPanel.forEach(function(tabPanel, index) {
-        tabPanel.id = tabsId + "-" + index;
-      });
-
-      templateContainer.replaceChildren(templateContent);
-      parentElement.classList.add("-templates-added")
-
-      const $tabs = $(templateContainer.querySelector('.tabs'))
-      $tabs.foundation()
-
-      $tabs.on('change.zf.tabs', () => {
-        'tab changed'
-      });
-    }
+    this.openContentBlockTemplatesDialog()
   },
 
   addNewContentBlock(e) {
-    this.closeAllOpenedContentBlockTemplatesDialogs();
-
+    const previousContentBlockWrapper = this.addContentBlockAfter
     const contentTemplate = e.currentTarget.querySelector(".js-content-block-template-content");
-    const previousContentBlockSection = this.findParentContentBlockWrapper(e.currentTarget);
-    const previousContentBlockId = previousContentBlockSection.dataset.contentBlockId;
-    const draftContentBlockIndex = this.draftContentBlockIndex;
+    const previousContentBlockId = previousContentBlockWrapper.dataset.contentBlockId;
+    const draftContentBlockIndex = Date.now();
+
+    this.closeContentBlockTemplatesDialog()
 
     const newContentBlockHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
       contentTemplate.innerHTML, {
-        draftContentBlockIndex: this.draftContentBlockIndex
+        draftContentBlockIndex: draftContentBlockIndex
       }
     )
-    this.draftContentBlockIndex++;
 
     const newContentBlock = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
     newContentBlock.dataset.draft = true;
     newContentBlock.classList.add('-draft')
-    newContentBlock.classList.add('-highlight-changed')
 
-    setTimeout(() => {
-      newContentBlock.classList.remove('-highlight-changed')
-    }, 2000)
-
-    if (previousContentBlockId) {
-      $(previousContentBlockSection).after(newContentBlock)
-    } else {
-      $(".js-projekt-content-block-wrapper").remove();
-      $('.custom-page-content').append(newContentBlock);
+    if (previousContentBlockWrapper && previousContentBlockWrapper.dataset.initialContentBlockButton === "true") {
+      previousContentBlockWrapper.remove()
+      // $('.custom-page-content').append(newContentBlock);
+      $(".js-content-blocks-container").append(newContentBlock);
+    }
+    else if (previousContentBlockWrapper) {
+      $(previousContentBlockWrapper).after(newContentBlock)
+      $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", true)
     }
 
     setTimeout(() => {
@@ -420,13 +392,11 @@
           html: contentTemplate.innerHTML
         }
       }).then((response) => {
-        const contentBlockID = response.content_block.id;
-
         this.setDataForFreshContentBlockOnUI({
           previous_content_block_id: previousContentBlockId,
           enter_ai_mode: false,
           draft_content_block_index: draftContentBlockIndex,
-          content_block_id: contentBlockID
+          content_block_id: response.content_block.id
         })
       })
       .catch((response) => {
@@ -566,7 +536,7 @@
   },
 
   getContentBlockAndWrapper(element) {
-    const contentBlockWrapper = this.findParentContentBlockWrapper(element)
+    const contentBlockWrapper = this.getParentContentBlockWrapper(element)
 
     if (!contentBlockWrapper) return {}
 
@@ -654,5 +624,5 @@
     const path = event.currentTarget.dataset.path;
 
     ProjektStudio.utils.sendMessageToDtParentFrame("Dt.openAdminPage", { path })
-  },
+  }
 };

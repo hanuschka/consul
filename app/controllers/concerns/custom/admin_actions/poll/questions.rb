@@ -26,6 +26,8 @@ module AdminActions::Poll::Questions
     @question.poll = @poll
     @question.votation_type = VotationType.new
 
+    @question.parent_question = Poll::Question.find(params[:parent_question_id]) if params[:parent_question_id].present?
+
     render "admin/poll/questions/new"
   end
 
@@ -113,7 +115,7 @@ module AdminActions::Poll::Questions
         :parent_question_id,
         :bundle_question,
         :answer_mandatory,
-        :next_question_id,
+        :contextualize_by_poll_question_id,
         translation_params(Poll::Question)
       )
     end

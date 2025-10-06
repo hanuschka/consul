@@ -1,6 +1,6 @@
-function html(content) {
-  return content;
-}
+const html = (strings, ...values) => {
+  return String.raw(strings, ...values);
+};
 
 ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList = function(contentBlocksHtml, projektId) {
   return `
@@ -16,12 +16,12 @@ ProjektStudio.templateFunctions.addNewContentBlockButtonToContentBlockList = fun
 ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex}) {
   return `
     <div
-      class="js-projekt-content-block-edit-section projekt-content-block-edit-section projekt-content-block-wrapper"
+      class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper"
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       >
       <div class="relative">
-        <div class="projekt-content-block">
+        <div class="projekt-content-block js-projekt-content-block">
           ${contentBlockHTML}
         </div>
 
@@ -38,14 +38,22 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </button>
             </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls">
-              <button type="button" class="projekt-content-block-edit--button -green js-save-edit-text-projekt-content-block">
-                <i class="fas fa-save"></i>
-                Speichern
-              </button>
-              <button type="button" class="projekt-content-block-edit--button js-projekt-content-block--text-edit-cancel">
-                <i class="fas fa-xmark"></i>
-                Abbrechen
+            <div
+              class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
+              <div class="d-flex">
+                <button type="button" class="projekt-content-block-edit--button -green js-save-edit-text-projekt-content-block">
+                  <i class="fas fa-save"></i>
+                  Speichern
+                </button>
+                <button type="button" class="projekt-content-block-edit--button js-projekt-content-block--text-edit-cancel">
+                  <i class="fas fa-xmark"></i>
+                  Abbrechen
+                </button>
+              </div>
+
+              <button type="button" disabled class="projekt-content-block-edit--button js-content-block-add-link">
+                <i class="fas fa-link"></i>
+                Link hinzufügen
               </button>
             </div>
 
@@ -174,22 +182,22 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
 ProjektStudio.templateFunctions.newContentBlockButtonSectionHtml = function() {
   return `
-  <div class="js-projekt-content-block-edit-section projekt-content-block-edit-section projekt-content-block-wrapper">
-  <div class="projekt-content-block--additional">
-    <div class="add-new-content-block-section js-show-content-block-templates-section">
-      <button
-        type="button"
-        class="js-show-content-block-templates add-new-content-block-button add-intial-content-block-button"
-        title="Neuen Inhaltsblock hinzufügen"
-      >
-        <i class="fas fa-plus"></i>
-        Neuen Inhaltsblock hinzufügen
-      </button>
+    <div class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
+      <div class="projekt-content-block--additional">
+        <div class="add-new-content-block-section js-show-content-block-templates-section">
+          <button
+            type="button"
+            class="js-show-content-block-templates add-new-content-block-button add-intial-content-block-button"
+            title="Neuen Inhaltsblock hinzufügen"
+          >
+            <i class="fas fa-plus"></i>
+            Neuen Inhaltsblock hinzufügen
+          </button>
 
-      <div class="add-new-content-block-content js-show-content-block-templates-content">
+          <div class="add-new-content-block-content js-show-content-block-templates-content">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
   `.trim()
 }

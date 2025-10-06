@@ -15,11 +15,40 @@
 
 <% if show_projekt_studio_controls %>
   <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+  <div class="js-content-block-link-popup content-block-link-popup">
+    <div>
+      <label class="content-block-link-popup-url-label">
+        Link URL: <textarea type="text" class="js-content-block-url-input"></textarea>
+      </label>
+    </div>
+    <div>
+      <label class="content-block-link-popup-checkbox-label">
+        <input type="checkbox" checked class="js-content-block-url-black-checkbox">
+        In neuem Tab öffnen
+      </label>
+    </div>
+    <div class="d-flex u-gap-10">
+      <button class="projekt-content-block-edit--button -green -with-background js-content-block-accept-link-edit" >
+        <i class="fas fa-save"></i>
+        Akzeptieren
+      </button>
+      <button class="projekt-content-block-edit--button -with-background js-content-block-cancel-link-edit" >
+        <i class="fas fa-xmark"></i>
+        Abbrechen
+      </button>
+    </div>
+  </div>
+
 <% end %>
 
 <% if @custom_page.landing? %>
   <%= render "pages/landing_page_content" %>
 <% else %>
+  <% landing_page = @custom_page.projekt.landing_pages.first %>
+  <% if landing_page.present? %>
+    <%= render "pages/brand_color_styles", page: landing_page %>
+  <% end %>
+
   <%= content_for :body_class, "custom-page" %>
   <% provide :title do %><%= @custom_page.title %><% end %>
 
@@ -78,7 +107,9 @@
         type="button"
       >
         <i class="fas fa-laptop"></i>
-        Vorschaumodus umschalten
+        <span class="js-projekt-studio-preview-button-text">
+          Vorschaumodus
+        </span>
       </button>
     <% end %>
 

@@ -23,8 +23,6 @@ class Poll::Question < ApplicationRecord
 
   validate :validate_parent_question_id
 
-  after_save :regenerate_contexted_clones, if: proc { |question| question.contextualize_by_question.present? }
-
   scope :root_questions, -> {
     where(parent_question_id: nil)
   }
@@ -79,6 +77,14 @@ class Poll::Question < ApplicationRecord
     poll.questions.with_context(ctx).find_by(title: title) || clone_for_context(ctx)
   end
 
+  def regenerate_contexted_clones
+    contexted_clones.destroy_all
+
+    contextualize_by_question.question_answers.each do |qa|
+      clone_for_context(qa)
+    end
+  end
+
   protected
 
     def clone_for_context(context, nested: false)
@@ -116,16 +122,6 @@ class Poll::Question < ApplicationRecord
       end
 
       new_question
-    end
-
-  private
-
-    def regenerate_contexted_clones
-      contexted_clones.destroy_all
-
-      contextualize_by_question.question_answers.each do |qa|
-        clone_for_context(qa)
-      end
     end
 end
 # Also clone videos, documents and images for answers

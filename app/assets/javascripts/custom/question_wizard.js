@@ -134,7 +134,7 @@
         var $nextButton = $(".js-question-wizard-next");
         var $closingNoteButton = $(".js-poll-closing-note");
 
-        if (nextQuestion.nextElementSibling) {
+        if ($(nextQuestion).nextAll('.question-wizard-item[data-question-hidden="false"]').length > 0) {
           $nextButton.show();
           $closingNoteButton.hide();
         } else {

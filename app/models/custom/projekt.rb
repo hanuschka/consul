@@ -14,6 +14,7 @@ class Projekt < ApplicationRecord
   include SDG::Relatable
   include Taggable
   include Searchable
+  include Notifiable
 
   translates :description
   include Globalizable
@@ -56,8 +57,8 @@ class Projekt < ApplicationRecord
     after_add: :touch_updated_at, after_remove: :touch_updated_at
   has_and_belongs_to_many :hard_individual_group_values, -> { hard }, class_name: "IndividualGroupValue"
 
-  has_many :debates, through: :debate_phases
-  has_many :proposals, through: :proposal_phases
+  has_many :debates, through: :debate_phases, source: :resources
+  has_many :proposals, through: :proposal_phases, source: :resources
   has_many :budgets, through: :budget_phases
   has_many :polls, through: :voting_phases
   has_many :projekt_arguments, through: :argument_phases
@@ -124,7 +125,7 @@ class Projekt < ApplicationRecord
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
-  attribute :new_content_block_mode, :boolean, default: false
+  attribute :new_content_block_mode, :boolean, default: true
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -241,10 +242,13 @@ class Projekt < ApplicationRecord
         .select(:id)
 
       excluded_projekt_ids = Projekt.joins(:individual_group_values)
-        .where.not(individual_group_values: { id: user_hard_group_value_ids })
-        .select(:id)
+                                    .where.not(id: Projekt
+                                      .joins(:individual_group_values)
+                                      .where(individual_group_values: { id: user_hard_group_value_ids })
+                                    )
+                                    .select(:id)
 
-      permitted_projekt_ids = Projekt.with_pm_permission_to("manage", user.projekt_manager).select(:id)
+      permitted_projekt_ids = Projekt.with_pm_permission_to(["manage", "review"], user.projekt_manager).select(:id)
 
       arel = Projekt.arel_table
 
@@ -314,11 +318,15 @@ class Projekt < ApplicationRecord
     )
   end
 
-  def self.with_pm_permission_to(permission, projekt_manager)
+  def self.with_pm_permission_to(permissions, projekt_manager)
     return Projekt.none unless projekt_manager.present?
+    return Projekt.none if permissions.blank?
 
-    joins(:projekt_manager_assignments)
-      .where("projekt_manager_assignments.projekt_manager_id = ? AND ? = ANY(projekt_manager_assignments.permissions)", projekt_manager.id, permission)
+    joins(:projekt_manager_assignments).where(
+      "projekt_manager_assignments.projekt_manager_id = ? AND projekt_manager_assignments.permissions && ARRAY[?]::text[]",
+      projekt_manager.id,
+      Array(permissions)
+    )
   end
 
   def self.selectable_in_selector(controller_name, current_user, resource = nil)
@@ -792,26 +800,10 @@ class Projekt < ApplicationRecord
     def copy_map_settings
       return if map_location.present?
 
-      if overview_page?
-        MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"],
-          projekt_id: id
-        )
-      else
-        map_location = parent&.map_location&.dup || MapLocation.create!(
-          latitude: Setting["map.latitude"],
-          longitude: Setting["map.longitude"],
-          zoom: Setting["map.zoom"]
-        )
+      create_map_location
 
-        map_location.projekt_id = id
-        map_location.save!
-
-        (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
-          map_layers << map_layer.dup
-        end
+      (parent&.map_layers.presence || MapLayer.general).each do |map_layer|
+        map_layers << map_layer.dup
       end
     end
 

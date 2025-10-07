@@ -238,14 +238,6 @@ class ProposalsController
   private
 
     def proposal_params
-      if params[:proposal][:map_location_attributes].present?
-        location = params[:proposal][:map_location_attributes]
-
-        if location["latitude"].blank? && location["longitude"].blank?
-          location["_destroy"] = "1"
-        end
-      end
-
       attributes = [:id, :video_url, :responsible_name, :tag_list, :on_behalf_of,
                     :geozone_id, :projekt_id, :projekt_phase_id, :related_sdg_list,
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,

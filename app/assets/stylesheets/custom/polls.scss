@@ -435,7 +435,29 @@ td.answers-column  {
   }
 }
 
+.poll-question-answers.regular-with-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+
+  .poll-answer-group,
+  .poll-open-answer-form {
+    width: 275px !important;
+  }
+
+  .poll-open-answer-form {
+    float: none !important;
+    padding: 0 !important;
+  }
+
+  button {
+    word-break: normal;
+  }
+}
+
 .poll-question-answers.rating-scale.vertical-rating-scale-answers {
+  margin-top: 25px !important;
+
   .rating-scale-answer-container {
     flex-direction: column;
   }

@@ -81,16 +81,22 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def create
-    status = DeficiencyReport::Status.first
-
     if deficiency_report_params["image_attributes"]["cached_attachment"].blank?
       filtered_deficiency_report_params = deficiency_report_params.except("image_attributes")
     else
       filtered_deficiency_report_params = deficiency_report_params
     end
 
-    @deficiency_report = DeficiencyReport.new(filtered_deficiency_report_params.merge(author: current_user, status: status))
+    @deficiency_report = DeficiencyReport.new(
+      filtered_deficiency_report_params.merge(
+        author: current_user,
+        status: DeficiencyReport::Status.default,
+        status_changed_at: Time.zone.now
+      )
+    )
+
     @deficiency_report.responsible = @deficiency_report.get_default_responsible
+    @deficiency_report.assigned_at = Time.zone.now if @deficiency_report.responsible.present?
 
     if @deficiency_report.save
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
@@ -141,6 +147,25 @@ class DeficiencyReportsController < ApplicationController
     end
 
     head :ok
+  end
+
+  def json_data
+    image_url = url_for @deficiency_report.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                ) if @deficiency_report.image&.attachment&.attached?
+
+    data = {
+      resource_type: "deficiency_report",
+      id: @deficiency_report.id,
+      image_url: image_url,
+      title: @deficiency_report.title
+    }.to_json
+
+    respond_to do |format|
+      format.json { render json: data }
+    end
   end
 
   private

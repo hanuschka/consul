@@ -16,10 +16,11 @@
     </div>
   </div>
 
-  <%= render Shared::ResourceMapComponent.new(
-    marker_coordinates: @proposals_coordinates,
-    resource_type: Proposal
+  <%= render Shared::MapComponent.new(
+    features: @proposals_coordinates,
+    process: 'proposals'
   ) %>
+
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
       <%= render(

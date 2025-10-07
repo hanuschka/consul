@@ -1,5 +1,7 @@
 module CsvServices
   class BaseService < ApplicationService
+    include ActionView::Helpers::NumberHelper
+
     def sanitize_for_csv(value)
       value.to_s.gsub(/^[=+@-]/, "^")
     end

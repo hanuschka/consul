@@ -1,0 +1,2 @@
+class SavedContentBlock < ApplicationRecord
+end

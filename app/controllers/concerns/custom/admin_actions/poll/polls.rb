@@ -101,6 +101,14 @@ module AdminActions::Poll::Polls
     redirect_to polymorphic_path([@namespace, @poll]), notice: t("custom.admin.polls.poll.notifications_sent")
   end
 
+  def regenerate_contexted_clones
+    @poll.questions.joins(:contextualize_by_question).each do |question|
+      question.regenerate_contexted_clones
+    end
+
+    redirect_to polymorphic_path([@namespace, @poll]), notice: t("custom.admin.polls.poll.contexted_clones_regenerated")
+  end
+
   private
 
     def load_geozones

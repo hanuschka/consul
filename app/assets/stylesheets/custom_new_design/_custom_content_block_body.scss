@@ -18,20 +18,20 @@
 
       @media print, screen and (min-width: 40em) {
         .row {
-          margin-right: -0.9375rem;
-          margin-left: -0.9375rem;
+          // margin-right: -0.9375rem;
+          // margin-left: -0.9375rem;
         }
 
         .column, .columns {
-          padding-right: 0.9375rem;
-          padding-left: 0.9375rem;
+          // padding-right: 0.9375rem;
+          // padding-left: 0.9375rem;
         }
       }
 
 
       // Image height
       img {
-        height: auto !important;
+        height: auto;
       }
 
 

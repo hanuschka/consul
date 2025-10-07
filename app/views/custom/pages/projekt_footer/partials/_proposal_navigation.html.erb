@@ -1,0 +1,23 @@
+<% if @previous_proposal || @next_proposal %>
+  <div class="proposal-navigation-links">
+    <% if @previous_proposal %>
+      <%= link_to proposal_path(@previous_proposal, request.query_parameters), class: "proposal-navigation-link previous" do %>
+        <span class="icon-angle-left"></span>
+        <span class="proposal-navigation-text">
+          <span class="proposal-navigation-label"><%= t("custom.proposals.show.previous") %></span>
+          <span class="proposal-navigation-title"><%= @previous_proposal.title %></span>
+        </span>
+      <% end %>
+    <% end %>
+
+    <% if @next_proposal %>
+      <%= link_to proposal_path(@next_proposal, request.query_parameters), class: "proposal-navigation-link next" do %>
+        <span class="proposal-navigation-text">
+          <span class="proposal-navigation-label"><%= t("custom.proposals.show.next") %></span>
+          <span class="proposal-navigation-title"><%= @next_proposal.title %></span>
+        </span>
+        <span class="icon-angle-right"></span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

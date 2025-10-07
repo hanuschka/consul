@@ -10,7 +10,7 @@ de:
       text1: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Leider entspricht dieser nicht den Kriterien."
       text2: "Er wird somit nicht zur nächsten Phase des %{projekt_link} zugelassen."
       reason: "Begründung:"
-      text3: "Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne. Sie sind herzlich eingeladen, einen neuen Vorschlag einzureichen."
+      text3: "Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne."
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     manual_verification_confirmation:
@@ -67,7 +67,7 @@ de:
       subject: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       title: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       hi: "Hallo %{username},"
-      text1: Ihr Vorshlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
+      text1: Ihr Vorschlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
       text2: Das Ergebnis der Prüfung wird zu Beginn der nächsten Phase des %{projekt_link} veröffentlicht.
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
@@ -82,3 +82,33 @@ de:
     proposal_created:
       hi: "Hallo %{username},"
       text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
+    new_valuator_assignment:
+      subject: Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen
+      hi: "Hallo %{username},"
+      text1: "Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen: %{valuation_link}"
+    existing_stamp_notify_existing_user:
+      subject: Verifizierungsversuch über eine andere E-Mail-Adresse
+      hi: "Hallo %{username},"
+      p1: soeben wurde ein Verifizierungsversuch mit Ihren Daten über eine andere E-Mail-Adresse unternommen. Bitte verwenden Sie weiterhin diese E-Mail-Adresse für Ihren Zugang zu Consul.
+      p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit dieser Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.
+    existing_stamp_notify_new_user:
+      subject: Verwendung der bestehenden E-Mail-Adresse
+      hi: "Hallo,"
+      p1: bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
+      p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit der bestehenden Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.
+    user_verification_failed:
+      subject: Verifizierungsversuch fehlgeschlagen
+      hi: "Hallo %{username},"
+      p1: bei der Verifizierung über das Melderegister gab es leider keinen Treffer. Das passiert gelegentlich – meist aus formalen Gründen.
+      b1_title: Häufige Ursachen
+      b1_item1: Schreibweise weicht ab (Umlaute, Bindestriche, Zweitnamen, Reihenfolge der Vornamen).
+      b1_item2: Adresse nicht exakt wie im Melderegister (Hausnummer-Zusätze, Treppenhaus/Etage, PLZ/Ortsteil).
+      b1_item3: Vor kurzem umgemeldet – Datenbank noch nicht aktualisiert.
+      b1_item4: Geburtsdatum oder -ort weicht ab.
+      b1_item5: Auskunfts- oder Übermittlungssperre beim Einwohnermeldeamt.
+      b1_item6: Tippfehler (z. B. „ß/ss“, Leerzeichen, führende Nullen).
+      b2_title: So lösen Sie das Problem
+      b2_item1: "Öffnen Sie Ihre Verifizierung erneut: %{link}"
+      b2_item2: "Übernehmen Sie Namen und Adresse exakt wie im Ausweis/Meldebescheinigung. – Mehrteilig? Bitte vollständig angeben (z. B. „Müller-Schmidt“)."
+      b2_item3: "Wenn Sie sich kürzlich umgemeldet haben: Warten Sie 1–2 Werktage und versuchen Sie es erneut."
+      b2_item4: "Bei Auskunfts-/Übermittlungssperre: Kontaktieren Sie uns direkt"

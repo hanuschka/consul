@@ -1,10 +1,10 @@
 class DtApi
   include HTTParty
 
-  base_uri "#{Rails.application.secrets.dt[:url]}/api"
+  base_uri "#{Dt.url}/api"
 
   def initialize(api_token = nil)
-    @api_token = api_token
+    @api_token = api_token || ApiClient&.dt&.service_api_token
   end
 
   def connect(**params)
@@ -78,7 +78,11 @@ class DtApi
         }
       }
     else
-      {}
+      {
+        headers: {
+          Authorization: "Bearer #{@api_token}"
+        }
+      }
     end
   end
 

@@ -9,8 +9,8 @@ class ProposalsController < ApplicationController
 
   before_action :load_categories, only: [:index, :map, :summary]
   before_action :load_geozones, only: [:edit, :map, :summary]
-  # before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data]
-  before_action :destroy_map_location_association, only: :update
+  before_action :authenticate_user!, except: [:index, :show, :map, :summary, :json_data], unless: -> { current_user&.guest? }
+  # before_action :destroy_map_location_association, only: :update
   before_action :set_view, only: :index
   before_action :proposals_recommendations, only: :index, if: :current_user
 
@@ -87,6 +87,28 @@ class ProposalsController < ApplicationController
   def publish
     @proposal.publish
     redirect_to share_proposal_path(@proposal), notice: t("proposals.notice.published")
+  end
+
+  def json_data
+    image_url = url_for @proposal.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                ) if @proposal.image&.attachment&.attached?
+
+    data = {
+      resource_type: "proposal",
+      id: @proposal.id,
+      title: @proposal.title,
+      projekt_phase_id: @proposal.projekt_phase_id,
+      image_url: image_url,
+      labels: @proposal.projekt_labels.map { |pl| pl.attributes.slice("name", "icon") },
+      sentiment: @proposal.sentiment.present? ? { name: @proposal.sentiment.name, backgroundColor: @proposal.sentiment.color, color: helpers.pick_text_color(@proposal.sentiment.color) } : {},
+    }.to_json
+
+    respond_to do |format|
+      format.json { render json: data }
+    end
   end
 
   private

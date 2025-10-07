@@ -9,7 +9,31 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    @projekts = Projekt.regular
+    if params[:landing_page_slug].present?
+      @landing_page =
+        SiteCustomization::Page
+          .published
+          .landing
+          .where(landing_show_projekts_overview: true)
+          .find_by(slug: params[:landing_page_slug])
+
+      if @landing_page.nil?
+        raise ActionController::RoutingError.new('Not Found')
+      end
+
+      if @landing_page.present?
+        set_landing_page_topbar_ui_variables(@landing_page)
+      end
+    end
+
+    base_projekts =
+      if @landing_page.present?
+        @landing_page.landing_projekts
+      else
+        Projekt
+      end
+
+    @projekts = base_projekts.regular
     @projekts = @projekts.search(@search_terms) if @search_terms.present?
 
     @all_projekts = @projekts.index_order_all
@@ -41,11 +65,15 @@ class ProjektsController < ApplicationController
 
     @show_comments = Setting["extended_feature.projekts_overview_page_footer.show_in_#{@current_projekts_filter}"].present?
 
+    if @show_comments && @landing_page.present?
+      @show_comments = false
+    end
+
     if @show_comments
       set_variables_for_footer_comments
     end
 
-    @projekts = @projekts.sort_by_order_number.select { |p| p.visible_for?(current_user) }
+    @projekts = @projekts.visible_for(current_user).sort_by_order_number
     @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id))
     @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(24)
 
@@ -74,25 +102,21 @@ class ProjektsController < ApplicationController
   end
 
   def json_data
-    projekt = Projekt.find(params[:id])
-    image_url = projekt.image.present? ? url_for(projekt.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
-    tags = projekt.tags.pluck(:name)
+    @projekt = Projekt.find(params[:id])
 
-    sdg_goals = []
-    projekt.sdg_goals.each do |goal|
-      sdg_goals.push({
-        code: goal.code,
-        title: goal.title,
-        image: "sdg/goal_#{goal.code}.png"
-      })
-    end
+    image_url = url_for @projekt.image.attachment.variant(
+                  resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                  format: "jpeg",
+                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                ) if @projekt.image&.attachment&.attached?
 
     data = {
-      projekt_id: projekt.id,
-      projekt_title: projekt.title,
+      resource_type: "projekt",
+      id: @projekt.id,
+      title: @projekt.title,
       image_url: image_url,
-      tags: tags,
-      sdg_goals: sdg_goals
+      tags: @projekt.tags.pluck(:name),
+      sdg_goals: @projekt.sdg_goals.map { |goal| { code: goal.code, title: goal.title, image: "sdg/goal_#{goal.code}.png"} }
     }.to_json
 
     respond_to do |format|
@@ -117,12 +141,12 @@ class ProjektsController < ApplicationController
       sdg_target_codes = params[:sdg_targets].split(',')
       @projekts = @projekts.left_joins(sdg_global_targets: :local_targets)
 
-      @projekts = @projekts.where(sdg_targets: { code: sdg_target_codes}).or(@projekts.where(sdg_local_targets: { code: sdg_target_codes })).distinct
+      @projekts = @projekts.where(sdg_targets: { code: sdg_target_codes}).or(@projekts.where(sdg_local_targets: { code: sdg_target_codes }))
       return
     end
 
     if params[:sdg_goals].present?
-      @projekts = @projekts.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') }).distinct
+      @projekts = @projekts.joins(:sdg_goals).where(sdg_goals: { code: params[:sdg_goals].split(',') })
     end
   end
 
@@ -131,15 +155,15 @@ class ProjektsController < ApplicationController
     when 'all_resources'
       @projekts
     when 'no_affiliation'
-      @projekts = @projekts.where(geozone_affiliated: 'no_affiliation').distinct
+      @projekts = @projekts.where(geozone_affiliated: 'no_affiliation')
     when 'entire_city'
-      @projekts = @projekts.where(geozone_affiliated: 'entire_city').distinct
+      @projekts = @projekts.where(geozone_affiliated: 'entire_city')
     when 'only_geozones'
-      @projekts = @projekts.where(geozone_affiliated: 'only_geozones').distinct
+      @projekts = @projekts.where(geozone_affiliated: 'only_geozones')
       if @affiliated_geozones.present?
-        @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones }).distinct
+        @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
       else
-        @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil }).distinct
+        @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
       end
     end
   end

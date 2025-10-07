@@ -1,7 +1,9 @@
 class DeficiencyReportManagement::OfficerGroupsController < DeficiencyReportManagement::BaseController
   load_and_authorize_resource :officer_group, class: "DeficiencyReport::OfficerGroup"
 
-  def index; end
+  def index
+    @officer_groups = DeficiencyReport::OfficerGroup.all.order(:name)
+  end
 
   def new; end
 
@@ -35,6 +37,7 @@ class DeficiencyReportManagement::OfficerGroupsController < DeficiencyReportMana
     def officer_group_params
       params.require(:deficiency_report_officer_group).permit(
         :name,
+        :default_email,
         officer_ids: []
       )
     end

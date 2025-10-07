@@ -2,13 +2,11 @@ module Mappable
   extend ActiveSupport::Concern
 
   included do
-    has_one :map_location, dependent: :destroy
-    # accepts_nested_attributes_for :map_location, allow_destroy: true, reject_if: :all_blank
+    has_one :map_location, as: :mappable, dependent: :destroy
 
-    # custom accepts_nested_attributes_for
     accepts_nested_attributes_for :map_location,
       allow_destroy: true,
-      reject_if: proc { |attributes| attributes["latitude"].blank? && attributes["longitude"].blank? }
+      reject_if: proc { |attrs| attrs["features"] == "{}" && !attrs["mappable_type"].in?(%w[Projekt ProjektPhase]) }
   end
 
   def map_layers_for_render

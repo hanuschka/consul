@@ -1,0 +1,30 @@
+.projekt-point-of-interest-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+
+  a:active {
+    outline: none;
+  }
+
+  .projekt-point-of-interest-category {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    padding: 5px 8px;
+    border-radius: 5px;
+    line-height: 1;
+    color: white;
+    gap: 3px;
+    background-color: gray;
+
+    &.marked {
+      background-color: var(--category-color, inherit);
+    }
+
+    i {
+      margin-right: 0.5rem;
+      font-size: 0.8rem;
+    }
+  }
+}

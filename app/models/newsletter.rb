@@ -1,6 +1,8 @@
 class Newsletter < ApplicationRecord
   include Imageable
 
+  after_initialize :set_default_body, if: :new_record?
+
   has_many :activities, as: :actionable, inverse_of: :actionable
   belongs_to :recipient_group
 
@@ -13,6 +15,12 @@ class Newsletter < ApplicationRecord
 
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
+
+  def self.default_body
+    @default_body_html ||= File.read(
+      Rails.root.join("app", "views", "admin", "newsletters", "_default_body.html.erb")
+    )
+  end
 
   def list_of_recipient_emails
     return recipient_group.user_emails if recipient_group
@@ -70,5 +78,9 @@ class Newsletter < ApplicationRecord
     def log_delivery(recipient_email)
       user = User.find_by(email: recipient_email)
       Activity.log(user, :email, self)
+    end
+
+    def set_default_body
+      self.body ||= self.class.default_body
     end
 end

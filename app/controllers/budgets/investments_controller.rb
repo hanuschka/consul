@@ -53,7 +53,7 @@ module Budgets
       @investments = investments.page(params[:page]).per(PER_PAGE).for_render
 
       @investment_ids = @investments.ids
-      @investments_map_coordinates = MapLocation.where(investment: investments).map(&:json_data)
+      @investments_map_coordinates = MapLocation.where(mappable: investments).map(&:features_json_data)
 
       @tag_cloud = tag_cloud
       @remote_translations = detect_remote_translations(@investments)
@@ -71,6 +71,18 @@ module Budgets
       @milestones = @investment.milestones
       @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
                                   .page(params[:page]).per(5)
+
+      if params[:page_ref].present?
+        @landing_page =
+          @investment
+          .projekt
+          .landing_pages
+          .find_by(slug: params[:page_ref])
+
+        if @landing_page.present?
+          set_landing_page_topbar_ui_variables(@landing_page)
+        end
+      end
 
       if !@investment.projekt.visible_for?(current_user)
         @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)
@@ -121,12 +133,16 @@ module Budgets
 
     def json_data
       investment = Budget::Investment.find(params[:id])
-
-      image_url = investment.image.present? ? url_for(investment.image.attachment.variant(resize_to_fill: [221, 170], format: "jpeg", saver: { strip: true, interlace: "JPEG", quality: 80 })) : nil
+      image_url = url_for investment.image.attachment.variant(
+                    resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
+                    format: "jpeg",
+                    saver: { strip: true, interlace: "JPEG", quality: 80 }
+                  ) if investment.image&.attachment&.attached?
 
       data = {
-        investment_id: investment.id,
-        investment_title: investment.title,
+        resource_type: "investment",
+        id: investment.id,
+        title: investment.title,
         budget_id: investment.budget.id,
         image_url: image_url
       }.to_json
@@ -216,7 +232,7 @@ module Budgets
       end
 
       def load_map
-        @map_location = MapLocation.load_from_heading(@heading) if @heading.present?
+        @map_location = @heading.budget.projekt_phase.map_location if @heading.present?
       end
   end
 end

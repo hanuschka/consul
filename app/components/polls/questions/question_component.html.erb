@@ -1,8 +1,21 @@
 <div id="<%= dom_id(question) %>" class="poll-question js-poll-question" data-answer-mandatory="<%= question.answer_mandatory? ? 'true' : 'false' %>">
+
+  <% if question.intro.present? %>
+    <div class="poll-question--intro">
+      <%= auto_link_already_sanitized_html wysiwyg(question.intro) %>
+    </div>
+  <% end %>
+
   <h3 class="poll-question--title">
     <%= question.title %>
     <%= "*" if question.answer_mandatory? %>
   </h3>
+
+  <% if question.context.present? %>
+    <div class="callout primary">
+      <%= question.context&.title %>
+    </div>
+  <% end %>
 
   <div class="poll-question--description">
     <%= auto_link_already_sanitized_html wysiwyg(question.description) %>

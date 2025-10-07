@@ -5,10 +5,12 @@ ProjektStudio.Sidebar = {
       return
     }
 
-    $(document).on("change", ".js-update-projekt-form input",
+    const $document = $(document);
+
+    $document.on("change", ".js-update-projekt-form input",
       ProjektStudio.utils.debounce(this.handleUpdateProjekt.bind(this), 1000)
     );
-    $(document).on("click", ".js-sidebar-section-toggle-visibility",
+    $document.on("click", ".js-sidebar-section-toggle-visibility",
       this.toggleSidebarSectionVisibility.bind(this)
     );
 

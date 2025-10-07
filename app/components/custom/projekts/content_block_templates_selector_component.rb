@@ -1,37 +1,64 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
-  def description_content_block_templates
+  def basic_content_templates
     %w(
       h3 h4 h5 h6
       text_block_h3_heading
       text_block_two_columns
       textblock
+      accordion
+      bullet_points
       download_section
       futher_information
       submit_ideas
       favorites_supported
       select_suggestions
+
+      quote_picture_on_left_classic
+      quote_picture_on_the_right
+      quote_image_above_text_below
+      quote_image_left_square_larger_size
+      quote_image_right_round_purple_color
+      quote_picture_left_square
+      quote_classic_white_background
+      quote_greeting_image_left_horizontal
+      quote_greeting_centered_above
+      quote_greeting_image_left_vertical
+      quote_greeting_image_right_vertical
+      quote_greeting_round_picture_right
     )
   end
 
-  def accordions_content_block_templates
+  def status_and_notes_templates
     %w(
-      two_items
+      callout_warning
+      callout_warning_2
+      callout_warning_3
+      callout_success
+      callout_success_2
+      callout_alert
+      callout_alert_2
+      callout_alert_3
+      callout_info
+      callout_info_2
+      callout_info_3
+
+      timeline_1
+      timeline_2
+      timeline_3
+      timeline_4
+
+      kpi_1
+      kpi_2
+      kpi_3
     )
   end
 
-  def quotes_content_block_templates
+  def teasers_and_promotions
     %w(
-      picture_on_left_classic
-      picture_on_the_right
-      image_above_text_below
-      image_left_square_larger_size
-      image_right_round_purple_color
-      classic_white_background
-      greeting_image_left_horizontal
     )
   end
 
-  def media_content_block_templates
+  def media_and_resources_templates
     %w(
       single_image
       gallery

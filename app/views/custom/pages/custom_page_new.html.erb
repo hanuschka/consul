@@ -17,7 +17,12 @@
   <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
   <div class="js-content-block-link-popup content-block-link-popup">
     <div>
-      <label class="content-block-link-popup-url-label">
+      <label class="content-block-link-popup-label" style="display: none">
+        Link text: <textarea type="text" class="js-content-block-text-input"></textarea>
+      </label>
+    </div>
+    <div>
+      <label class="content-block-link-popup-label">
         Link URL: <textarea type="text" class="js-content-block-url-input"></textarea>
       </label>
     </div>
@@ -30,7 +35,7 @@
     <div class="d-flex u-gap-10">
       <button class="projekt-content-block-edit--button -green -with-background js-content-block-accept-link-edit" >
         <i class="fas fa-save"></i>
-        Akzeptieren
+        Speichern
       </button>
       <button class="projekt-content-block-edit--button -with-background js-content-block-cancel-link-edit" >
         <i class="fas fa-xmark"></i>

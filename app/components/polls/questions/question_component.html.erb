@@ -11,6 +11,12 @@
     <%= "*" if question.answer_mandatory? %>
   </h3>
 
+  <% if question.context.present? %>
+    <div class="callout primary">
+      <%= question.context&.title %>
+    </div>
+  <% end %>
+
   <div class="poll-question--description">
     <%= auto_link_already_sanitized_html wysiwyg(question.description) %>
   </div>

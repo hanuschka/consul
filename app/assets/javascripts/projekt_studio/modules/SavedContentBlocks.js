@@ -9,16 +9,18 @@ ProjektStudio.SavedContentBlocks = {
   aceInstances: {},
 
   initEventListeners() {
-    $(document).on("click", ".js-toggle-saved-content-block-form", this.toggleNewSavedContentBlockForm.bind(this));
+    const $document = $(document)
 
-    $(document).on("click", ".js-create-saved-content-block", this.createSavedContentBlock.bind(this));
-    $(document).on("click", ".js-cancel-create-saved-content-block", this.cancelCreatingNewSavedContentBlock.bind(this));
+    $document.on("click", ".js-toggle-saved-content-block-form", this.toggleNewSavedContentBlockForm.bind(this));
 
-    $(document).on("click", ".js-edit-saved-content-block", this.editSavedContentBlock.bind(this));
-    $(document).on("click", ".js-update-saved-content-block", this.updateSavedContentBlock.bind(this));
-    $(document).on("click", ".js-cancel-update-saved-content-block", this.cancelUpdateSavedContentBlock.bind(this));
+    $document.on("click", ".js-create-saved-content-block", this.createSavedContentBlock.bind(this));
+    $document.on("click", ".js-cancel-create-saved-content-block", this.cancelCreatingNewSavedContentBlock.bind(this));
 
-    $(document).on("click", ".js-delete-saved-content-block", this.deleteSavedContentBlock.bind(this));
+    $document.on("click", ".js-edit-saved-content-block", this.editSavedContentBlock.bind(this));
+    $document.on("click", ".js-update-saved-content-block", this.updateSavedContentBlock.bind(this));
+    $document.on("click", ".js-cancel-update-saved-content-block", this.cancelUpdateSavedContentBlock.bind(this));
+
+    $document.on("click", ".js-delete-saved-content-block", this.deleteSavedContentBlock.bind(this));
 
     window.addEventListener('message', this.handleGlobalMessage.bind(this));
   },
@@ -95,38 +97,27 @@ ProjektStudio.SavedContentBlocks = {
     const templateContentElement = container.querySelector(".js-content-block-template-content")
     templateContentElement.innerHTML = content
 
-    const selector = `.js-saved-content-block-item[data-saved-content-block-id="${savedContentBlockId}"] .js-content-block-template-content`
-    const allContentBlocksWithThisId = document.querySelectorAll(selector)
-
-    const updateOtherContentBlocks = () => {
-      allContentBlocksWithThisId.forEach((templateContentElement) => {
-        templateContentElement.innerHTML = content
-      })
-
-      const templateElement =
-        document
-          .querySelector(`.js-projekt-content-block-templates-selector`)
-          .content
-          .querySelector(`[data-saved-content-block-id="${savedContentBlockId}"] .js-content-block-template-content`)
-
-      templateElement.innerHTML = content;
-
-      this.turnOffEditModeForItem(container)
-    }
+    // this.turnOffEditModeForItem(container)
 
     if (ProjektStudio.isEmbedded) {
       ProjektStudio.utils.sendMessageToDtParentFrame("Dt.ProjektStudio.updateSavedContentBlock", {
         id: savedContentBlockId,
         content
       })
-      updateOtherContentBlocks()
     } else {
       $.ajax({
         url: `/admin/saved_content_blocks/${savedContentBlockId}`,
         type: "PATCH",
         data: { saved_content_block: { content }}
       }).then(() => {
-        updateOtherContentBlocks()
+      })
+      .catch((response) => {
+        if (response.error && response.error.message) {
+          alert(`Fehler beim Speichern der Inhaltsblockvorlage: ${response.error.message}`)
+        }
+        else {
+          alert("Fehler beim Speichern der Inhaltsblockvorlage")
+        }
       })
     }
   },
@@ -211,19 +202,16 @@ ProjektStudio.SavedContentBlocks = {
 
       const selector =`.js-saved-content-block-item[data-saved-content-block-id="${savedContentBlockId}"]`
       const elementsToRemove = document.querySelectorAll(selector)
-      // console.log({elementsToRemove})
       elementsToRemove.forEach((element) => element.remove())
     }
   },
 
   addNewSavedContentBlockOnUI({saved_content_block_item_html, container}) {
-    const templatesLists = document.querySelectorAll(".js-saved-content-blocks-list")
+    const templatesList = document.querySelector(".js-saved-content-blocks-list")
 
-    templatesLists.forEach((templatesListElement) => {
-      templatesListElement.insertAdjacentHTML("beforeend", saved_content_block_item_html)
-    })
+    templatesList.insertAdjacentHTML("beforeend", saved_content_block_item_html)
 
-    const lastItem = templatesLists.querySelector(".js-saved-content-block-item:last-child")
+    const lastItem = templatesList.querySelector(".js-saved-content-block-item:last-child")
 
     lastItem.scrollIntoView({ block: "start" })
   },
@@ -261,8 +249,7 @@ ProjektStudio.SavedContentBlocks = {
     const editorName = container.dataset.editorName
 
     const surroundingContentBlockId =
-      container
-        .closest(".js-projekt-content-block-edit-section")
+        ProjektStudio.ContentBlocks.addContentBlockAfter
         .dataset
         .contentBlockId
 

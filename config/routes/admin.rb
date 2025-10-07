@@ -340,6 +340,7 @@ namespace :admin do
       get :booth_assignments, on: :collection
       patch :add_question, on: :member
       post :send_notifications, on: :member
+      post :regenerate_contexted_clones, on: :member
 
       resources :booth_assignments, only: [:index, :show, :create, :destroy] do
         get :search_booths, on: :collection

@@ -31,6 +31,10 @@ ProjektStudio.PreviewMode = {
     button.classList.toggle("-enabled")
     const previewModeEnabled = button.classList.contains("-enabled");
 
+    const textElement = button.querySelector(".js-projekt-studio-preview-button-text")
+    const text = previewModeEnabled ? "Vorschaumodus aktiv" : "Vorschaumodus"
+    textElement.innerText = text
+
     this.togglePreviewMode(previewModeEnabled)
   },
 
@@ -66,6 +70,7 @@ ProjektStudio.PreviewMode = {
     $(".js-sidebar-card-edit-link").toggle(!previewModeEnabled)
     $(".projekt-banner-edit-field--controlls").toggle(!previewModeEnabled)
     $(".js-projekt-footer-phase-tab--add-new").toggle(!previewModeEnabled)
+    $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
 
     if (previewModeEnabled) {
       if (!anyCheckedSDG) {

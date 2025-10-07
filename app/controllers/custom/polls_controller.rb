@@ -72,7 +72,7 @@ class PollsController < ApplicationController
     auto_sign_in_guest_for(@poll.projekt_phase)
 
     @projekt_phase = @poll.projekt_phase
-    @questions = @poll.questions.for_render.root_questions.sort_for_list
+    @questions = @poll.questions.for_render.root_questions.order(given_order: :asc, id: :asc)
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 
     @answers_by_question_id = {}

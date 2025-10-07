@@ -1,7 +1,7 @@
-$dt-base: #004a83;
-$dt-base-hover: #15629c;
-$dt-base-transparent-background-hover: #dfebf5;
 $small-tablet-viewport-start: 750px;
+
+@import "projekt_studio/1_colors";
+@import "projekt_studio/image_upload_gallery_dialog";
 
 @keyframes content-block-additional-appear {
   0% {
@@ -1056,17 +1056,6 @@ body.-ai-functions-locked {
       background-color: #ffdede !important;
     }
   }
-}
-
-.loading-spinner-inline {
-  width: 48px;
-  height: 48px;
-  border: 5px solid #FFF;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
 }
 
 @keyframes rotation {

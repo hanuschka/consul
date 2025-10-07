@@ -14,7 +14,7 @@ class Ckeditor::AssetsController < ApplicationController
                 @assets.order(id: :desc)
               end
 
-    @assets = @assets.page(params[:page]).per(12)
+    @assets = @assets.page(params[:page]).per(15)
 
     render json: json
   end

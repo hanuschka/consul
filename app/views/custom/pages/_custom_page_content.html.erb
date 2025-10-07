@@ -19,6 +19,98 @@
 
 <% if show_projekt_studio_controls?(@custom_page&.projekt)  %>
   <input type="file" class="js-content-block-image-change-input content-block-image-change-input" accept="image/*">
+
+  <!-- Image Management Dialog -->
+  <div class="cb-img-dialog js-cb-img-dialog">
+    <div class="cb-img-dialog__overlay js-cb-img-dialog-close"></div>
+    <div class="cb-img-dialog__content">
+      <div class="cb-img-dialog__header">
+        <h3>Bildergalerie</h3>
+        <button class="close-button button -round-icon-button js-cb-img-dialog-close" data-close="" aria-label="Close Accessible Modal" type="button">
+          <i class="fa fa-xmark">
+          </i>
+        </button>
+      </div>
+
+      <!-- Controls Bar -->
+      <div class="cb-img-dialog__toolbar">
+        <div class="cb-img-dialog__toolbar-left">
+          <div class="cb-img-dialog__search-wrapper">
+            <input type="text" class="cb-img-dialog__search-input js-cb-img-search" placeholder="Suchen...">
+            <button type="button" class="cb-img-dialog__search-clear js-cb-img-search-clear" style="display: none;">×</button>
+            <span class="cb-img-dialog__search-icon"></span>
+          </div>
+
+          <%# <div class="cb-img-dialog__filter-wrapper"> %>
+          <%#   <span>Filter:</span> %>
+          <%#   <button type="button" class="button js-cb-img-filter active" data-type="picture"> %>
+          <%#     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> %>
+          <%#       <path d="M21.75 3.75H2.25C1.83516 3.75 1.5 4.08516 1.5 4.5V19.5C1.5 19.9148 1.83516 20.25 2.25 20.25H21.75C22.1648 20.25 22.5 19.9148 22.5 19.5V4.5C22.5 4.08516 22.1648 3.75 21.75 3.75Z" fill="currentColor"/> %>
+          <%#     </svg> %>
+          <%#     Bilder %>
+          <%#   </button> %>
+          <%# </div> %>
+        </div>
+
+        <div class="cb-img-dialog__toolbar-right">
+          <button type="button" class="button js-cb-img-edit" style="display: none;">Bild editieren</button>
+          <button type="button" class="button js-cb-img-upload">Neues Bild hochladen</button>
+        </div>
+      </div>
+
+      <!-- Main content area -->
+      <div class="cb-img-dialog__body">
+        <div class="cb-img-dialog__grid js-cb-img-grid">
+          <div class="cb-img-dialog__loading">Wird geladen...</div>
+        </div>
+        <div class="cb-img-dialog__pagination js-cb-img-pagination"></div>
+      </div>
+
+      <div class="cb-img-dialog__footer">
+        <button type="button" class="button image-upload-gallery--select-image-btn js-cb-img-select">
+          Wählen
+        </button>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="cb-img-edit-modal js-cb-img-edit-modal">
+      <div class="cb-img-edit-modal__overlay js-cb-img-edit-close"></div>
+      <div class="cb-img-edit-modal__content">
+        <div class="cb-img-edit-modal__header">
+          <span>Einstellungen zum Bild</span>
+          <button class="close-button button -round-icon-button js-cb-img-edit-close" data-close="" aria-label="Close Accessible Modal" type="button">
+            <i class="fa fa-xmark">
+            </i>
+          </button>
+        </div>
+        <div class="cb-img-edit-modal__body">
+          <div class="cb-img-edit-modal__field">
+            <label>Titel</label>
+            <input type="text" class="js-cb-img-edit-title" placeholder="Titel">
+          </div>
+          <div class="cb-img-edit-modal__field">
+            <label>Beschreibung</label>
+            <textarea class="js-cb-img-edit-description" placeholder="Beschreibung"></textarea>
+          </div>
+          <div class="cb-img-edit-modal__field">
+            <label>Alternativer Text</label>
+            <input type="text" class="js-cb-img-edit-alt" placeholder="Alternativer Text (empfohlen)">
+          </div>
+        </div>
+        <div class="cb-img-edit-modal__footer">
+          <button type="button" class="cb-img-dialog__btn-danger js-cb-img-delete">
+            <i class="fa fa-trash"></i>
+            Löschen
+          </button>
+          <button type="button" class="cb-img-dialog__btn-primary js-cb-img-update">
+            <i class="fa fa-save"></i>
+            Aktualisieren
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>
 
 <% if @custom_page.print_content_flag %>

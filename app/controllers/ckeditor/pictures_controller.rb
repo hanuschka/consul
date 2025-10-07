@@ -7,11 +7,13 @@ class Ckeditor::PicturesController < ApplicationController
 
     image = params[:upload]
     resize_original = params[:resize_original] == "true"
-    image_max_width = resize_original ? params[:width].to_i.presence : 1920
-    image_max_height = resize_original ? params[:height].to_i.presence : 1080
+    image_max_width = params[:width].to_i.presence || 1920
+    image_max_height = params[:height].to_i.presence || 1080
+    thumb_max_width = params[:width].to_i.presence || 860
+    thumb_max_height = params[:height].to_i.presence || 430
 
     convered_image =
-      if image.content_type != "image/gif"
+      if image.content_type != "image/gif" && resize_original
         ImageProcessing::MiniMagick
           .source(image)
           .convert('jpg')
@@ -42,8 +44,8 @@ class Ckeditor::PicturesController < ApplicationController
           original_url
         else
           picture.custom_thumb_url(
-            width: image_max_width,
-            height: image_max_height
+            width: thumb_max_width,
+            height: thumb_max_height
           )
         end
 

@@ -116,9 +116,10 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     formData.append('width', img.width + 50)
     formData.append('height', img.height + 50)
 
-    if (!isGallery) {
-      formData.append('resize_original', "true")
-    }
+    // DO NOTO resize original image
+    // if (!isGallery) {
+    //   formData.append('resize_original', "true")
+    // }
 
     e.target.value = null;
 
@@ -185,16 +186,17 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       glightboxItem.href = response.url
     }
 
-    if (previousPictureId && previousPictureId.length > 0) {
-      const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    // DO NOT DELETE PREVIOUS IMAGE
+    // if (previousPictureId && previousPictureId.length > 0) {
+    //   const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-      $.ajax({
-        method: 'DELETE',
-        url: `/ckeditor/pictures/${previousPictureId}`,
-        headers: {
-          'X-CSRF-TOKEN': csrfToken,
-        },
-      })
-    }
+    //   $.ajax({
+    //     method: 'DELETE',
+    //     url: `/ckeditor/pictures/${previousPictureId}`,
+    //     headers: {
+    //       'X-CSRF-TOKEN': csrfToken,
+    //     },
+    //   })
+    // }
   },
 }

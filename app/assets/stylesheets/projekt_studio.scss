@@ -1077,16 +1077,28 @@ body.-ai-functions-locked {
   display: none;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(20px);
+  overflow: hidden;
   z-index: 3;
 
   .loading-spinner-inline {
     width: 70px;
     height: 70px;
+    position: relative;
+    z-index: 3;
   }
 }
 
-.content-block-image-blur-overlay {
+.content-block-image-loading-overlay-blur-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(15px);
+  z-index: 2;
+}
+
+.content-block-image-loading-overlay-blur {
   position: absolute;
   top: 0;
   left: 0;
@@ -1095,8 +1107,7 @@ body.-ai-functions-locked {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: blur(8px);
-  transition: opacity 0.2s ease-in-out;
+  z-index: 1;
   pointer-events: none;
 }
 
@@ -1105,6 +1116,7 @@ body.-ai-functions-locked {
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 
   &.-loading {
     .content-block-image-loading-overlay {

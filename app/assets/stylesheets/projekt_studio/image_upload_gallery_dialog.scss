@@ -215,6 +215,18 @@
   padding-top: 120px;
 }
 
+.cb-img-dialog__item-thumb-overlay-backdrop {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(15px);
+  z-index: 1;
+  border-radius: 8px;
+}
+
 .cb-img-dialog__item {
   position: relative;
   border: 1px solid #dedede;
@@ -231,6 +243,13 @@
   &.-active {
     border-color: #40d0ff;
     outline: 5px solid #40d0ff;
+  }
+
+  &.-uploading {
+
+    .cb-img-dialog__item-thumb-overlay-backdrop {
+      display: block;
+    }
   }
 }
 
@@ -463,8 +482,4 @@
   left: 0;
   right: 0;
   margin: auto;
-}
-
-.cb-img-dialog__item-uploading {
-
 }

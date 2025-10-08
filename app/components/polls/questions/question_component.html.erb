@@ -2,7 +2,7 @@
 
   <% if question.intro.present? %>
     <div class="poll-question--intro">
-      <%= auto_link_already_sanitized_html wysiwyg(question.intro) %>
+      <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(question.intro) %>
     </div>
   <% end %>
 
@@ -18,7 +18,7 @@
   <% end %>
 
   <div class="poll-question--description">
-    <%= auto_link_already_sanitized_html wysiwyg(question.description) %>
+    <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(question.description) %>
   </div>
 
   <% if question.votation_type&.show_hint_callout? && !question.bundle_question? %>

@@ -106,6 +106,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   replaceImage(selectedImage) {
+    console.log("replaceImage", selectedImage)
+
     if (!selectedImage || !this.currentImg || !this.currentImageWrapper) {
       return;
     }

@@ -5,7 +5,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     search: '',
     total_pages: 0,
     items: [],
-    chosen: null,
+    selectedImage: null,
     isLoading: false
   },
   onSelectCallback: null,
@@ -40,7 +40,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     $document.on("click", ".js-cb-img-update", this.updateImage.bind(this));
     $document.on("click", ".js-cb-img-delete", this.deleteImage.bind(this));
 
-    $document.on("click", ".js-cb-img-select", this.handleSelectClick.bind(this));
+    $document.on("click", ".js-cb-img-select", this.handleImageSelected.bind(this));
     $document.on("click", ".cb-img-dialog__item", this.handleItemClick.bind(this));
     $document.on("click", ".js-cb-img-page-btn", this.handlePaginationClick.bind(this));
   },
@@ -56,7 +56,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       search: '',
       total_pages: 0,
       items: [],
-      chosen: null,
+      selectedImage: null,
       isLoading: false
     };
 
@@ -90,7 +90,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     }
 
     // Reset state
-    this.state.chosen = null;
+    this.state.selectedImage = null;
     this.onSelectCallback = null;
     this.contentBlockId = null;
     this.contentBlockWrapper = null;
@@ -158,10 +158,37 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     fileInput.addEventListener('change', (event) => {
       const files = event.target.files;
       if (files && files.length > 0) {
-        const formData = new FormData();
-        formData.append('upload', files[0]);
+        const file = files[0];
 
-        this.uploadNewImage(formData);
+        // Create a preview using FileReader
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const previewUrl = e.target.result;
+
+          // Create temporary item with preview
+          const tempItem = {
+            id: `temp-${Date.now()}`,
+            thumb_url: previewUrl,
+            url: previewUrl,
+            title: file.name,
+            data_file_name: file.name,
+            alt_text: '',
+            description: '',
+            data_content_type: file.type,
+            isUploading: true
+          };
+
+          // Add to beginning of items
+          this.state.items.unshift(tempItem);
+          this.updateItemsUI();
+
+          // Start upload
+          const formData = new FormData();
+          formData.append('upload', file);
+          this.uploadNewImage(formData, tempItem.id);
+        };
+
+        reader.readAsDataURL(file);
       }
     });
 
@@ -170,14 +197,15 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
   handleItemClick(e) {
     const item = e.currentTarget;
-    const itemId = parseInt(item.dataset.id);
-    const selectedItem = this.state.items.find(i => i.id === itemId);
+    const itemId = item.dataset.id;
+    // Handle both numeric IDs and temp string IDs
+    const selectedItem = this.state.items.find(i => String(i.id) === String(itemId));
 
     if (selectedItem) {
-      if (this.state.chosen && this.state.chosen.id === itemId) {
-        this.state.chosen = null;
+      if (this.state.selectedImage && String(this.state.selectedImage.id) === String(itemId)) {
+        this.state.selectedImage = null;
       } else {
-        this.state.chosen = selectedItem;
+        this.state.selectedImage = selectedItem;
       }
 
       this.updateItemsUI();
@@ -186,15 +214,11 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     }
   },
 
-  handleSelectClick(e) {
-    e.preventDefault();
-
-    if (!this.state.chosen) {
-      return;
-    }
+  handleImageSelected() {
+    if (!this.state.selectedImage) return
 
     if (this.onSelectCallback && typeof this.onSelectCallback === 'function') {
-      this.onSelectCallback(this.state.chosen);
+      this.onSelectCallback(this.state.selectedImage);
     }
 
     this.closeDialog();
@@ -235,7 +259,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       });
   },
 
-  uploadNewImage(formData) {
+  uploadNewImage(formData, tempItemId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     // Track loading state if we have content block context
@@ -255,14 +279,42 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       .then(resp => {
         if (resp.error) {
           alert(resp.error.message);
+          // Remove temp item on error
+          this.state.items = this.state.items.filter(item => String(item.id) !== String(tempItemId));
+          // Clear selection if the failed upload was selected
+          if (this.state.selectedImage && String(this.state.selectedImage.id) === String(tempItemId)) {
+            this.state.selectedImage = null;
+            this.updateEditButtonVisibility();
+            this.updateSelectButtonState();
+          }
         } else {
-          this.state.items.unshift(resp);
-          this.updateItemsUI();
+          // Replace temp item with real uploaded item
+          const index = this.state.items.findIndex(item => String(item.id) === String(tempItemId));
+          if (index !== -1) {
+            this.state.items[index] = resp;
+
+            // If the temp item was selected, update selectedImage to the real item
+            if (this.state.selectedImage && String(this.state.selectedImage.id) === String(tempItemId)) {
+              this.state.selectedImage = resp;
+              this.updateEditButtonVisibility();
+              this.updateSelectButtonState();
+            }
+          }
         }
+        this.updateItemsUI();
       })
       .catch(error => {
         console.error('Error uploading image:', error);
         alert('Fehler beim Hochladen des Bildes');
+        // Remove temp item on error
+        this.state.items = this.state.items.filter(item => String(item.id) !== String(tempItemId));
+        // Clear selection if the failed upload was selected
+        if (this.state.selectedImage && String(this.state.selectedImage.id) === String(tempItemId)) {
+          this.state.selectedImage = null;
+          this.updateEditButtonVisibility();
+          this.updateSelectButtonState();
+        }
+        this.updateItemsUI();
       })
       .finally(() => {
         if (this.contentBlockId && this.contentBlockWrapper) {
@@ -300,7 +352,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   },
 
   renderImageItem(item, grid) {
-    const isActive = this.state.chosen && this.state.chosen.id === item.id;
+    // Use string comparison to handle both numeric and temp string IDs
+    const isActive = this.state.selectedImage && String(this.state.selectedImage.id) === String(item.id);
+    const isUploading = item.isUploading === true;
     const imageSrc = item.thumb_url || item.url;
     const imageAlt = item.alt_text || item.title || 'Image';
     const title = item.title || item.data_file_name || 'Untitled';
@@ -308,13 +362,14 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     const isImage = item.data_content_type && item.data_content_type.startsWith('image/');
 
     const template = `
-      <div class="cb-img-dialog__item ${isActive ? '-active' : ''}" data-id="${item.id}">
+      <div class="cb-img-dialog__item ${isActive ? '-active' : ''} ${isUploading ? '-uploading' : ''}" data-id="${item.id}">
         <div class="cb-img-dialog__item-thumb">
-          ${isImage ? `<img src="${imageSrc}" alt="${imageAlt}">` : ''}
+          ${isImage ? `<img src="${imageSrc}" alt="${imageAlt}" style="${isUploading ? 'filter: blur(4px); opacity: 0.7;' : ''}">` : ''}
+          ${isUploading ? '<div class="cb-img-dialog__item-uploading"><div class="loading-spinner-inline"></div></div>' : ''}
         </div>
         <div class="cb-img-dialog__item-meta">
           <p class="cb-img-dialog__item-title" title="${title}">${title}</p>
-          <div class="cb-img-dialog__item-alt">${altText}</div>
+          <div class="cb-img-dialog__item-alt">${isUploading ? 'Wird hochgeladen...' : altText}</div>
         </div>
       </div>
     `;
@@ -429,22 +484,25 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   updateEditButtonVisibility() {
     const editBtn = document.querySelector(".js-cb-img-edit");
     if (editBtn) {
-      editBtn.style.display = this.state.chosen ? 'block' : 'none';
+      editBtn.style.display = this.state.selectedImage ? 'block' : 'none';
     }
   },
 
   updateSelectButtonState() {
     const selectBtn = document.querySelector(".js-cb-img-select");
     if (selectBtn) {
-      const hasSelection = this.state.chosen && Object.keys(this.state.chosen).length > 0;
-      selectBtn.disabled = !hasSelection;
+      const hasSelection = this.state.selectedImage && Object.keys(this.state.selectedImage).length > 0;
+      const isChosenUploading = this.state.selectedImage && this.state.selectedImage.isUploading === true;
+
+      // Disable if no selection OR if selected item is still uploading
+      selectBtn.disabled = !hasSelection || isChosenUploading;
     }
   },
 
   openEditModal(e) {
     e.preventDefault();
 
-    if (!this.state.chosen) return;
+    if (!this.state.selectedImage) return;
 
     const modal = document.querySelector(".js-cb-img-edit-modal");
     if (!modal) return;
@@ -455,9 +513,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     const descInput = modal.querySelector(".js-cb-img-edit-description");
     const altInput = modal.querySelector(".js-cb-img-edit-alt");
 
-    if (titleInput) titleInput.value = this.state.chosen.title || '';
-    if (descInput) descInput.value = this.state.chosen.description || '';
-    if (altInput) altInput.value = this.state.chosen.alt_text || '';
+    if (titleInput) titleInput.value = this.state.selectedImage.title || '';
+    if (descInput) descInput.value = this.state.selectedImage.description || '';
+    if (altInput) altInput.value = this.state.selectedImage.alt_text || '';
   },
 
   closeEditModal(e) {
@@ -475,7 +533,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   updateImage(e) {
     e.preventDefault();
 
-    if (!this.state.chosen) return;
+    if (!this.state.selectedImage) return;
 
     const modal = document.querySelector(".js-cb-img-edit-modal");
     if (!modal) return;
@@ -491,7 +549,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    fetch(`/ckeditor/pictures/${this.state.chosen.id}`, {
+    fetch(`/ckeditor/pictures/${this.state.selectedImage.id}`, {
       method: 'PATCH',
       headers: {
         'X-CSRF-TOKEN': csrfToken
@@ -505,7 +563,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
           this.state.items = this.state.items.map(o => o.id === data.id ? data : o);
           const chosenArr = this.state.items.filter(o => o.id === data.id);
           if (chosenArr.length) {
-            this.state.chosen = chosenArr[0];
+            this.state.selectedImage = chosenArr[0];
           }
           this.updateItemsUI();
           this.closeEditModal();
@@ -520,13 +578,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   deleteImage(e) {
     e.preventDefault();
 
-    if (!this.state.chosen) return;
+    if (!this.state.selectedImage) return;
 
     if (!confirm('Möchten Sie dieses Bild wirklich löschen?')) {
       return;
     }
 
-    const chosenId = this.state.chosen.id;
+    const chosenId = this.state.selectedImage.id;
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     fetch(`/ckeditor/pictures/${chosenId}`, {
@@ -539,7 +597,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       .then(data => {
         if (data.status && data.status === 'no_content') {
           this.state.items = this.state.items.filter(o => o.id !== chosenId);
-          this.state.chosen = null;
+          this.state.selectedImage = null;
           this.updateItemsUI();
           this.updatePagination();
           this.updateEditButtonVisibility();

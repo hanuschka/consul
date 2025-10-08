@@ -94,7 +94,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     this.onSelectCallback = null;
     this.contentBlockId = null;
     this.contentBlockWrapper = null;
-    
+
     // Reset button states
     this.updateSelectButtonState();
   },
@@ -335,9 +335,43 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       return;
     }
 
+    const currentPage = this.state.page;
+    const totalPages = this.state.total_pages;
+    const isFirstPage = currentPage === 1;
+    const isLastPage = currentPage === totalPages;
+
     const buttons = [];
-    for (let i = 1; i <= this.state.total_pages; i++) {
-      const isActive = i === this.state.page;
+
+    // First button
+    buttons.push(`
+      <button
+        type="button"
+        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav cb-img-dialog__page-btn--text js-cb-img-page-btn"
+        data-page="1"
+        ${isFirstPage ? 'disabled' : ''}
+        title="Erste Seite"
+      >
+        <i class="fa fa-angles-left"></i>
+        <span>Erste</span>
+      </button>
+    `);
+
+    // Previous button
+    buttons.push(`
+      <button
+        type="button"
+        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav js-cb-img-page-btn"
+        data-page="${currentPage - 1}"
+        ${isFirstPage ? 'disabled' : ''}
+        title="Vorherige Seite"
+      >
+        <i class="fa fa-angle-left"></i>
+      </button>
+    `);
+
+    // Page number buttons
+    for (let i = 1; i <= totalPages; i++) {
+      const isActive = i === currentPage;
       buttons.push(`
         <button
           type="button"
@@ -350,6 +384,33 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       `);
     }
 
+    // Next button
+    buttons.push(`
+      <button
+        type="button"
+        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav js-cb-img-page-btn"
+        data-page="${currentPage + 1}"
+        ${isLastPage ? 'disabled' : ''}
+        title="Nächste Seite"
+      >
+        <i class="fa fa-angle-right"></i>
+      </button>
+    `);
+
+    // Last button
+    buttons.push(`
+      <button
+        type="button"
+        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav cb-img-dialog__page-btn--text js-cb-img-page-btn"
+        data-page="${totalPages}"
+        ${isLastPage ? 'disabled' : ''}
+        title="Letzte Seite"
+      >
+        <span>Letzte</span>
+        <i class="fa fa-angles-right"></i>
+      </button>
+    `);
+
     pagination.innerHTML = buttons.join('');
   },
 
@@ -358,7 +419,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
     if (pageNumber && pageNumber !== this.state.page) {
       $(".js-cb-img-page-btn.-active").removeClass("-active").prop("disabled", false)
-      $(e.currentTarget).addClass("-active").prop("disabled", true)
+      $(`.js-cb-img-page-btn[data-page=${pageNumber}]`).addClass("-active").prop("disabled", true)
 
       this.state.page = pageNumber;
       this.fetchImages();

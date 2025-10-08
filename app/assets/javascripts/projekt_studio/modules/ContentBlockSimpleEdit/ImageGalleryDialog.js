@@ -262,7 +262,6 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(this.contentBlockWrapper, true);
     }
 
-    return
     fetch('/ckeditor/pictures', {
       method: 'POST',
       headers: {

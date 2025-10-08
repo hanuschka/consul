@@ -95,16 +95,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     this.contentBlockId = null;
     this.contentBlockWrapper = null;
 
-    // Reset button states
     this.updateSelectButtonState();
   },
 
   handleSearchInputType(e) {
     this.state.search = e.target.value;
 
-    // if (this.state.search.length >= 2 || this.state.search.length === 0) {
     this.debouncedSearch();
-    // }
   },
 
   handleSearchKeydown(e) {
@@ -293,7 +290,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
             ...resp,
             previewUrl: resp.thumb_url || resp.url
           };
-          
+
           const index = this.state.items.findIndex(item => String(item.id) === String(tempItemId));
           if (index !== -1) {
             this.state.items[index] = uploadedItem;

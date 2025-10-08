@@ -57,6 +57,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     imageWrapper.insertAdjacentHTML(
       "beforeend",
       `
+        <div class="content-block-image-blur-overlay"></div>
         <div
           style="border-radius: ${borderRadius}"
           class="content-block-image-loading-overlay"
@@ -106,8 +107,6 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   replaceImage(selectedImage) {
-    console.log("replaceImage", selectedImage)
-
     if (!selectedImage || !this.currentImg || !this.currentImageWrapper) {
       return;
     }
@@ -123,17 +122,16 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
     imageWrapper.classList.add("-loading")
 
-    // Create blurred preview overlay
-    const previewUrl = selectedImage.previewUrl || selectedImage.thumb_url || selectedImage.custom_thumb_url;
-    if (previewUrl) {
-      const blurOverlay = document.createElement('div');
-      blurOverlay.className = 'content-block-image-blur-overlay';
-      blurOverlay.style.backgroundImage = `url(${previewUrl})`;
-      imageWrapper.appendChild(blurOverlay);
-    }
+    const blurOverlay = imageWrapper.querySelector('.content-block-image-blur-overlay');
+    const previewUrl = selectedImage.thumb_url || selectedImage.custom_thumb_url;
+
+    blurOverlay.style.backgroundImage = `url(${previewUrl})`;
 
     const onImageLoadComplete = () => {
-      $(imageWrapper).find('.content-block-image-blur-overlay').remove();
+      if (blurOverlay) {
+        blurOverlay.style.backgroundImage = '';
+        imageWrapper.classList.remove("-loading")
+      }
 
       this.finishImageLoading(imageWrapper, contentBlockWrapper, contentBlockId);
 
@@ -157,7 +155,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     this.decrementImageLoadingCount(contentBlockId)
 
     // If all images in this content block are done loading, unlock the save/cancel buttons
-    console.log(this.contentBlockImageLoadingState)
+    // console.log(this.contentBlockImageLoadingState)
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
       ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(
         contentBlockWrapper,
@@ -167,7 +165,10 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   setImageSrc(img, response) {
-    img.src = response.custom_thumb_url || response.url
+    console.log("setImageSrc", img, response)
+    // img.src = response.custom_thumb_url || response.url
+    img.src = response.url
+    console.log("img.src", img.src)
     img.dataset.fullImageUrl = response.url
     img.dataset.pictureId = response.id
 

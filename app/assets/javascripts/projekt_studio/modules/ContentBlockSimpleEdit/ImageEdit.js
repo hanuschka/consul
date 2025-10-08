@@ -128,60 +128,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     this.finishImageLoading(imageWrapper, contentBlockWrapper, contentBlockId);
     // }, { once: true });
 
-<<<<<<< HEAD
     this.currentImg = null;
     this.currentImageWrapper = null;
-=======
-    const formData = new FormData();
-    formData.append('upload', file);
-    formData.append('width', img.width + 50)
-    formData.append('height', img.height + 50)
-
-    // DO NOTO resize original image
-    // if (!isGallery) {
-    //   formData.append('resize_original', "true")
-    // }
-
-    e.target.value = null;
-
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
-
-    this.incrementImageLoadingCount(contentBlockId)
-
-    $.ajax({
-      method: 'POST',
-      url: '/ckeditor/pictures',
-      headers: {
-        'X-CSRF-TOKEN': csrfToken,
-      },
-      data: formData,
-      processData: false,
-      contentType: false,
-    })
-      .then((response) => {
-        this.setImageAfterUpload(img, response)
-      })
-      .catch((response) => {
-        img.src = img.dataset.previousSrc;
-
-        this.toggleLockForImage(imageWrapper, contentBlockWrapper, contentBlockId)
-
-        if (response.error && response.error.message) {
-          alert(`Fehler beim Hochladen des Bildes: ${response.error.message}`)
-        }
-        else {
-          alert("Fehler beim Hochladen des Bildes")
-        }
-      })
-      .always(() => {
-        img.dataset.previousSrc = ""
-
-        img.addEventListener("load", () => {
-          this.toggleLockForImage(imageWrapper, contentBlockWrapper, contentBlockId)
-        }, { once: true })
-      })
->>>>>>> new-connection
   },
 
   finishImageLoading(imageWrapper, contentBlockWrapper, contentBlockId) {
@@ -208,18 +156,5 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     if (glightboxItem) {
       glightboxItem.href = response.url
     }
-
-    // DO NOT DELETE PREVIOUS IMAGE
-    // if (previousPictureId && previousPictureId.length > 0) {
-    //   const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-    //   $.ajax({
-    //     method: 'DELETE',
-    //     url: `/ckeditor/pictures/${previousPictureId}`,
-    //     headers: {
-    //       'X-CSRF-TOKEN': csrfToken,
-    //     },
-    //   })
-    // }
   },
 }

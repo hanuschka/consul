@@ -163,8 +163,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
   setImageSrc(img, response) {
     console.log("setImageSrc", img, response)
-    // img.src = response.custom_thumb_url || response.url
-    img.src = response.url
+    img.src = response.custom_thumb_url || response.url
+    // img.src = response.url
     console.log("img.src", img.src)
     img.dataset.fullImageUrl = response.url
     img.dataset.pictureId = response.id

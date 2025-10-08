@@ -86,15 +86,15 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
     const wrapper = e.currentTarget.parentElement;
     const img = wrapper.querySelector("img")
-    
+
     // Store current image reference
     this.currentImg = img;
     this.currentImageWrapper = wrapper;
-    
+
     // Get content block context for loading state tracking
     const { contentBlockWrapper } = this.getContentBlockAndWrapper(img);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
-    
+
     // Open the image gallery dialog with callback and content block context
     ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog.openDialog(
       (selectedImage) => {
@@ -109,25 +109,25 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     if (!selectedImage || !this.currentImg || !this.currentImageWrapper) {
       return;
     }
- 
+
     const img = this.currentImg;
     const imageWrapper = this.currentImageWrapper;
     const { contentBlockWrapper } = this.getContentBlockAndWrapper(img);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
- 
+
     // Lock the content block and track loading state
     this.incrementImageLoadingCount(contentBlockId);
     ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(contentBlockWrapper, true)
- 
+
     imageWrapper.classList.add("-loading")
- 
+
     this.setImageSrc(img, selectedImage);
- 
+
     // Wait for the image to actually load before unlocking
-    img.addEventListener("load", () => {
-      this.finishImageLoading(imageWrapper, contentBlockWrapper, contentBlockId);
-    }, { once: true });
- 
+    // img.addEventListener("load", () => {
+    this.finishImageLoading(imageWrapper, contentBlockWrapper, contentBlockId);
+    // }, { once: true });
+
     this.currentImg = null;
     this.currentImageWrapper = null;
   },

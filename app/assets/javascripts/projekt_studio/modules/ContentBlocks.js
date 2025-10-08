@@ -58,7 +58,7 @@
   },
 
   renderContentBlocks() {
-    const projektPageContent =  document.querySelector(".js-custom-page-content");
+    const projektPageContent =  document.querySelector(".js-custom-page-content--inner");
 
     if (!projektPageContent) return
 
@@ -94,7 +94,7 @@
         wrappedContentBlocksHtml, projektId
       )
 
-    this.morphElementHTML(".js-custom-page-content", newHtml);
+    this.morphElementHTML(".js-custom-page-content--inner", newHtml);
   },
 
   setContentBlockTemplates(params) {
@@ -291,7 +291,7 @@
       const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
       const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
 
-      this.morphElementHTML(".js-custom-page-content", newHtml);
+      this.morphElementHTML(".js-custom-page-content--inner", newHtml);
     }
 
     if (scrollTo) {

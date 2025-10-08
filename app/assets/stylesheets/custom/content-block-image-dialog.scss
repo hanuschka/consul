@@ -4,7 +4,7 @@
 .cb-img-dialog__item.-uploading {
   pointer-events: none;
   position: relative;
-  
+
   .cb-img-dialog__item-thumb {
     position: relative;
   }
@@ -19,9 +19,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
-  z-index: 1;
-  
+  z-index: 3;
+
   .loading-spinner-inline {
     width: 48px;
     height: 48px;

@@ -57,11 +57,12 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     imageWrapper.insertAdjacentHTML(
       "beforeend",
       `
-        <div class="content-block-image-blur-overlay"></div>
         <div
           style="border-radius: ${borderRadius}"
           class="content-block-image-loading-overlay"
         >
+          <div class="content-block-image-loading-overlay-blur-backdrop"></div>
+          <div class="content-block-image-loading-overlay-blur"></div>
           <div class="loading-spinner-inline"></div>
         </div>
         <button
@@ -92,11 +93,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     this.currentImg = img;
     this.currentImageWrapper = wrapper;
 
-    // Get content block context for loading state tracking
     const { contentBlockWrapper } = this.getContentBlockAndWrapper(img);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    // Open the image gallery dialog with callback and content block context
     ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog.openDialog(
       (selectedImage) => {
         this.replaceImage(selectedImage);
@@ -122,7 +121,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
     imageWrapper.classList.add("-loading")
 
-    const blurOverlay = imageWrapper.querySelector('.content-block-image-blur-overlay');
+    const blurOverlay = imageWrapper.querySelector('.content-block-image-loading-overlay-blur');
     const previewUrl = selectedImage.thumb_url || selectedImage.custom_thumb_url;
 
     blurOverlay.style.backgroundImage = `url(${previewUrl})`;
@@ -139,11 +138,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       img.removeEventListener('error', onImageLoadComplete);
     };
 
-    // Add event listeners
     img.addEventListener('load', onImageLoadComplete);
     img.addEventListener('error', onImageLoadComplete);
 
-    // Set the actual image source directly
     this.setImageSrc(img, selectedImage);
 
     this.currentImg = null;

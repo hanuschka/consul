@@ -1,4 +1,4 @@
-post "ckeditor/assets", to: "ckeditor/assets#index"
+get "ckeditor/assets", to: "ckeditor/assets#index"
 
 namespace :ckeditor do
   resources :pictures, only: [:create, :update, :destroy]

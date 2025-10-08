@@ -226,19 +226,16 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     this.updateItemsUI();
     this.updatePagination();
 
+    const { type, page, search } = this.state;
+
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    fetch('/ckeditor/assets', {
-      method: 'POST',
+    fetch(`/ckeditor/assets?${new URLSearchParams({ type, page, search })}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': csrfToken
-      },
-      body: JSON.stringify({
-        type: this.state.type,
-        page: this.state.page,
-        search: this.state.search
-      })
+      }
     })
       .then(response => response.json())
       .then(data => {
@@ -265,6 +262,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(this.contentBlockWrapper, true);
     }
 
+    return
     fetch('/ckeditor/pictures', {
       method: 'POST',
       headers: {
@@ -354,7 +352,6 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   },
 
   renderImageItem(item, grid) {
-    // Use string comparison to handle both numeric and temp string IDs
     const isActive = this.state.selectedImage && String(this.state.selectedImage.id) === String(item.id);
     const isUploading = item.isUploading === true;
     const imageSrc = item.thumb_url || item.url;
@@ -366,7 +363,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     const template = `
       <div class="cb-img-dialog__item ${isActive ? '-active' : ''} ${isUploading ? '-uploading' : ''}" data-id="${item.id}">
         <div class="cb-img-dialog__item-thumb">
-          ${isImage ? `<img src="${imageSrc}" alt="${imageAlt}" style="${isUploading ? 'filter: blur(4px); opacity: 0.7;' : ''}">` : ''}
+          <div class="cb-img-dialog__item-thumb-overlay-backdrop"></div>
+          ${isImage ? `<img src="${imageSrc}" alt="${imageAlt}">` : ''}
           ${isUploading ? '<div class="cb-img-dialog__item-uploading"><div class="loading-spinner-inline"></div></div>' : ''}
         </div>
         <div class="cb-img-dialog__item-meta">

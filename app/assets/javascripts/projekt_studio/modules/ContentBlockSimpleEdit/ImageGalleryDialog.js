@@ -288,14 +288,19 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
             this.updateSelectButtonState();
           }
         } else {
-          // Replace temp item with real uploaded item
+          // Replace temp item with real uploaded item, add previewUrl
+          const uploadedItem = {
+            ...resp,
+            previewUrl: resp.thumb_url || resp.url
+          };
+          
           const index = this.state.items.findIndex(item => String(item.id) === String(tempItemId));
           if (index !== -1) {
-            this.state.items[index] = resp;
+            this.state.items[index] = uploadedItem;
 
             // If the temp item was selected, update selectedImage to the real item
             if (this.state.selectedImage && String(this.state.selectedImage.id) === String(tempItemId)) {
-              this.state.selectedImage = resp;
+              this.state.selectedImage = uploadedItem;
               this.updateEditButtonVisibility();
               this.updateSelectButtonState();
             }

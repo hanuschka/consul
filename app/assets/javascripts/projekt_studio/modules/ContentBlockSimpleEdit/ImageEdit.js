@@ -123,12 +123,30 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
     imageWrapper.classList.add("-loading")
 
-    this.setImageSrc(img, selectedImage);
+    // Create blurred preview overlay
+    const previewUrl = selectedImage.previewUrl || selectedImage.thumb_url || selectedImage.custom_thumb_url;
+    if (previewUrl) {
+      const blurOverlay = document.createElement('div');
+      blurOverlay.className = 'content-block-image-blur-overlay';
+      blurOverlay.style.backgroundImage = `url(${previewUrl})`;
+      imageWrapper.appendChild(blurOverlay);
+    }
 
-    // Wait for the image to actually load before unlocking
-    // img.addEventListener("load", () => {
-    this.finishImageLoading(imageWrapper, contentBlockWrapper, contentBlockId);
-    // }, { once: true });
+    const onImageLoadComplete = () => {
+      $(imageWrapper).find('.content-block-image-blur-overlay').remove();
+
+      this.finishImageLoading(imageWrapper, contentBlockWrapper, contentBlockId);
+
+      img.removeEventListener('load', onImageLoadComplete);
+      img.removeEventListener('error', onImageLoadComplete);
+    };
+
+    // Add event listeners
+    img.addEventListener('load', onImageLoadComplete);
+    img.addEventListener('error', onImageLoadComplete);
+
+    // Set the actual image source directly
+    this.setImageSrc(img, selectedImage);
 
     this.currentImg = null;
     this.currentImageWrapper = null;

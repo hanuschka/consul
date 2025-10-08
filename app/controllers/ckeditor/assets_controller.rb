@@ -37,7 +37,7 @@ class Ckeditor::AssetsController < ApplicationController
       @assets.map do |asset|
         asset.attributes.symbolize_keys.slice(*allowed_attributes).merge(
           url: asset.url_content(editor_id: params[:editor_id]),
-          thumb_url: asset.url_thumb(editor_id: params[:editor_id]),
+          thumb_url: asset.custom_thumb_url(width: 232, height: 190),
           created_at: asset.created_at.strftime("%d.%m.%Y")
         )
       end

@@ -42,7 +42,7 @@ class Admin::ProjektsController < Admin::BaseController
     @projekt = Projekt.new(projekt_params)
 
     if @projekt.save
-      redirect_to admin_projekts_path
+      redirect_to page_path(@projekt.page.slug)
     else
       @projekts = Projekt.top_level.page(params[:page])
       render :index

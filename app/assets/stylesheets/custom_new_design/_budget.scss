@@ -77,6 +77,7 @@
     .ballot-section, .price-section, .votes-section, .show-votes-count-section {
       width: 100%;
       min-height: unset !important;
+      max-width: 100% !important;
     }
 
     .ballot-section, .votes-section, .show-votes-count-section {

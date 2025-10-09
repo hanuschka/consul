@@ -1,73 +1,97 @@
-<template class="projekt-content-block-templates-selector-wrapper js-projekt-content-block-templates-selector">
+<div data-reveal id="contentBlockTemplatesModal" class="reveal projekt-content-block-templates-selector-wrapper js-projekt-content-block-templates-selector">
   <div class="projekt-content-block-templates-selector">
+    <div class="d-flex">
+      <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
+      <button class="close-button button -round-icon-button" data-close aria-label="Close Accessible Modal" type="button">
+        <i class="fa fa-xmark">
+        </i>
+      </button>
+    </div>
     <div class="projekt-content-block-templates-selector--inner">
-      <ul class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
+      <ul id="contentBlockSelectorTabs" class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
-          <a href="" aria-selected="true">Projektbeschreibung</a>
+          <a href="#contentBlockSelectorTab--basicContent" aria-selected="true">Basisinhalte</a>
         </li>
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-          <a href="" aria-selected="true">Accordions</a>
+          <a href="#contentBlockSelectorTab--satatusAndNotes" >Status & Hinweise</a>
         </li>
-        <li class="tabs-title projekt-content-block-templates-selector--tab">
-          <a data-tabs-target="" href="">Media</a>
-        </li>
+        <%# <li class="tabs-title projekt-content-block-templates-selector--tab"> %>
+        <%#   <a href="#contentBlockSelectorTab--teasersAndPromotions"  href="">Teaser & Aktionen</a> %>
+        <%# </li> %>
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-          <a href="" aria-selected="true">Zitate</a>
+          <a href="#contentBlockSelectorTab--mediaAndResources" >Medien & Ressourcen</a>
         </li>
         <li class="tabs-title projekt-content-block-templates-selector--tab">
-          <a data-tabs-target="" href="">Eigene Inhaltsblöcke</a>
+          <a  href="#contentBlockSelectorTab--savedContentBlocks">Eigene Inhaltsblöcke</a>
         </li>
       </ul>
-      <div class="tabs-content" data-tabs-content="projekt-content-block-templates-tabs">
-        <div class="tabs-panel is-active">
-          <% description_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
+      <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
+        <div id="contentBlockSelectorTab--basicContent" class="tabs-panel is-active">
+          <% basic_content_templates.each do |template_name| %>
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <%= render "projekts/content_block_templates/descriptions/#{template_name}" %>
-              </div>
-            </div>
-          <% end %>
-        </div>
-        <div class="tabs-panel">
-          <% accordions_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <div class="js-content-block-template-content" data-content-block-name="h5">
-                  <%= render "projekts/content_block_templates/accordions/#{template_name}" %>
+                <div class="js-content-block-template-content">
+                  <%= render "projekts/content_block_templates/basic_content/#{template_name}" %>
                 </div>
               </div>
             </div>
           <% end %>
         </div>
-        <div class="tabs-panel">
-          <% media_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
+        <div id="contentBlockSelectorTab--satatusAndNotes" class="tabs-panel">
+          <% status_and_notes_templates.each do |template_name| %>
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <div class="js-content-block-template-content" data-content-block-name="h5">
-                  <%= render "custom/projekts/content_block_templates/media/#{template_name}" %>
+                <div class="js-content-block-template-content" >
+                  <%= render "projekts/content_block_templates/status_and_notes/#{template_name}" %>
                 </div>
               </div>
             </div>
           <% end %>
         </div>
-        <div class="tabs-panel">
-          <% quotes_content_block_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block">
+        <div id="contentBlockSelectorTab--teasersAndPromotions" class="tabs-panel">
+          <% teasers_and_promotions.each do |template_name| %>
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
               <div class="custom-content-template--item-overlay">
               </div>
               <div class="content-block-template">
-                <%= render "projekts/content_block_templates/quotes/#{template_name}" %>
+                <div class="js-content-block-template-content" >
+                  <%= render "projekts/content_block_templates/teasers_and_promotions/#{template_name}" %>
+                </div>
               </div>
             </div>
           <% end %>
         </div>
-        <div class="tabs-panel">
+        <div id="contentBlockSelectorTab--mediaAndResources" class="tabs-panel">
+          <% media_and_resources_templates.each do |template_name| %>
+            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
+              <div class="custom-content-template--item-overlay">
+              </div>
+              <div class="content-block-template">
+                <div class="js-content-block-template-content" >
+                  <%= render "custom/projekts/content_block_templates/media_and_resources/#{template_name}" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <%# <div class="tabs-panel"> %>
+        <%#   <% messages_content_block_templates.each do |template_name| %1> %>
+        <%#     <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %1>"> %>
+        <%#       <div class="custom-content-template--item-overlay"> %>
+        <%#       </div> %>
+        <%#       <div class="content-block-template"> %>
+        <%#         <div class="js-content-block-template-content" > %>
+        <%#           <%= render "custom/projekts/content_block_templates/messages/#{template_name}" %1> %>
+        <%#         </div> %>
+        <%#       </div> %>
+        <%#     </div> %>
+        <%#   <% end %1> %>
+        <%# </div> %>
+        <div id="contentBlockSelectorTab--savedContentBlocks" class="tabs-panel">
           <div
               class="add-new-saved-content-block-section js-show-content-block-templates-section"
               data-editor-name="new-saved-content-block-form"
@@ -90,7 +114,7 @@
                     class="saved-content-block-form--textarea"
                     ></textarea>
               </div>
-              <div class="saved-content-block-form--controlls">
+              <div class="saved-content-block-form--controlls d-flex u-gap-10">
                 <button type="button" class="projekt-content-block-edit--button -green js-create-saved-content-block">
                   <i class="fas fa-save"></i>
                   Speichern
@@ -111,4 +135,4 @@
       </div>
     </div>
   </div>
-</template>
+</div>

@@ -55,6 +55,19 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
 
   def teasers_and_promotions
     %w(
+      cta_1
+      cta_2
+      cta_4
+      cta_5
+      cta_6
+
+      content_card_1
+      content_card_2
+      content_card_3
+
+      event_1
+      event_2
+      event_3
     )
   end
 
@@ -65,6 +78,10 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
       tile
       one_card
       image_slider
+
+      download_1
+      download_2
+      download_3
     )
   end
 

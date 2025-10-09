@@ -11,6 +11,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-content-block-image-change-button", this.openDialog.bind(this));
+    $document.on("click", ".js-content-block-image-crop-button", this.toggleObjectFit.bind(this));
   },
 
   toggleImageControls(contentBlock, enabled) {
@@ -50,10 +51,23 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     imageWrapper.classList.add("content-block-image-wrapper", "js-content-block-image-wrapper")
 
     const smallButton = img.height < 120;
-    const borderRadius = getComputedStyle(img).borderRadius;
+    const computedStyle = getComputedStyle(img);
+    const borderRadius = computedStyle.borderRadius;
+    const hasObjectFitContain = computedStyle.objectFit === "contain";
 
     img.parentNode.insertBefore(imageWrapper, img);
     imageWrapper.appendChild(img);
+
+    const showCropButton = true;
+
+    const cropButton = showCropButton ? `
+      <button
+        type="button"
+        class="content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${hasObjectFitContain ? '-active' : ''}">
+          <i class="fa fas fa-crop-alt"></i>
+      </button>
+    ` : '';
+
     imageWrapper.insertAdjacentHTML(
       "beforeend",
       `
@@ -70,6 +84,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
           class="content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}">
             <i class="fa fas fa-pencil-alt"></i>
         </button>
+        ${cropButton}
       `
     );
   },
@@ -103,6 +118,25 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
       contentBlockId,
       contentBlockWrapper
     );
+  },
+
+  toggleObjectFit(e) {
+    const button = e.currentTarget;
+    const wrapper = button.parentElement;
+    const img = wrapper.querySelector("img")
+
+    const isActive = button.classList.contains("-active");
+
+    if (isActive) {
+      button.classList.remove("-active");
+      img.style.objectFit = "";
+      img.style.height = img.dataset.previousHeight
+    } else {
+      img.dataset.previousHeight = img.style.height
+      button.classList.add("-active");
+      img.style.objectFit = "contain";
+      img.style.height = "auto"
+    }
   },
 
   replaceImage(selectedImage) {

@@ -1118,16 +1118,17 @@ body.-ai-functions-locked {
   height: 100%;
   // overflow: hidden;
 
-  &.-loading {
-    .content-block-image-loading-overlay {
-      display: flex;
-    }
+    &.-loading {
+      .content-block-image-loading-overlay {
+        display: flex;
+      }
 
-    .content-block-image-change-button {
-      display: none;
+      .content-block-image-change-button,
+      .content-block-image-crop-button {
+        display: none;
+      }
     }
   }
-}
 
 .image-change-button {
   background-color: #c7c7c7;
@@ -1137,6 +1138,7 @@ body.-ai-functions-locked {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: 100ms background-color;
 
   &:hover {
     background-color: #bcbcbc;
@@ -1160,10 +1162,41 @@ body.-ai-functions-locked {
   }
 }
 
+.content-block-image-crop-button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  font-size: 21px;
+
+  &.-small {
+    width: 30px;
+    height: 30px;
+    bottom: 5px;
+    left: 5px;
+    font-size: 20px;
+  }
+
+  &.-active {
+    background-color: #45ac50;
+    color: white;
+
+    &:hover {
+      background-color: #4aba56;
+    }
+  }
+}
+
 .orbit-figure {
   .content-block-image-change-button {
     bottom: 50px;
     right: 15px;
+  }
+
+  .content-block-image-crop-button {
+    bottom: 50px;
+    left: 15px;
   }
 }
 

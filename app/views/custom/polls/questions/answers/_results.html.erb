@@ -33,7 +33,7 @@
                   <% if open_answers.count > 0 %>
                   <div class='poll-results-open-answers-list' style="display:none;">
                     <% page_name = ("page_a" + @question_answer.id.to_s).to_sym %>
-                    <% open_answers.page(params[page_name]).per(5).each do |open_answer| %>
+                    <% open_answers.page(params[page_name]).each do |open_answer| %>
                       <div class='poll-results-open-answer'>
                         <div class='open-answer-info'>
                             <%= avatar_image(open_answer.author, size: 32, class: "float-left user-avatar") %>
@@ -51,7 +51,6 @@
                         </div>
                       </div>
                     <% end %>
-                    <%= paginate open_answers.page(params[page_name]).per(5), param_name: page_name %>
                   </div>
                   <% end %>
 

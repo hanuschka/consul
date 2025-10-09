@@ -26,6 +26,8 @@ class Image < ApplicationRecord
   validates :imageable_type, presence: true,       if: -> { persisted? }
   validate :validate_image_dimensions, if: -> { attachment.attached? && attachment.new_record? }
 
+  default_scope { with_attached_attachment }
+
   def self.max_file_size
     Setting["uploads.images.max_size"].to_i
   end

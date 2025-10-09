@@ -441,30 +441,28 @@
         })
       }
 
-      if (this.enableShapes || this.adminEditor) {
-        this.map.pm.Toolbar.createCustomControl({
-          name: 'customDragMode',
-          className: 'control-icon leaflet-pm-icon-custom-drag',
-          block: 'edit',
-          title: 'Auswahl modus',
-          disableGlobalEditMode: true
-        });
+      this.map.pm.Toolbar.createCustomControl({
+        name: 'customDragMode',
+        className: 'control-icon leaflet-pm-icon-custom-drag',
+        block: 'edit',
+        title: 'Auswahl modus',
+        disableGlobalEditMode: true
+      });
 
-        this.map.pm.Toolbar.createCustomControl({
-          name: 'clearMap',
-          className: 'control-icon leaflet-pm-icon-delete',
-          title: 'Karte zurücksetzen',
-          block: 'edit',
-          onClick: () => {
-            self.editableLayers.forEach(function(layer) {
-              self.map.removeLayer(layer);
-            });
+      this.map.pm.Toolbar.createCustomControl({
+        name: 'clearMap',
+        className: 'control-icon leaflet-pm-icon-delete',
+        title: 'Karte zurücksetzen',
+        block: 'edit',
+        onClick: () => {
+          self.editableLayers.forEach(function(layer) {
+            self.map.removeLayer(layer);
+          });
 
-            self.editableLayers = [];
-            self.featuresInput.value = JSON.stringify({});
-          }
-        });
-      }
+          self.editableLayers = [];
+          self.featuresInput.value = JSON.stringify({});
+        }
+      });
 
       this.rearrangeEditingControls();
       App.Map.setupEventListenersForMarkerStyleChanges(this);

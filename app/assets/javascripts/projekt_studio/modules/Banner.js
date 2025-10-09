@@ -1,7 +1,3 @@
-// import { resetFoundationAccordionStateFor } from "consul/utils/foundationUtils";
-// import { htmlToDomElement, focusContentEditableElement } from "utils/htmlUtils";
-// import { ProjektStudio.utils.sendMessageToDtParentFrame } from "consul/utils/iframeUtils";
-
 ProjektStudio.Banner = {
   initialized: false,
   initialize() {
@@ -75,6 +71,8 @@ ProjektStudio.Banner = {
       else {
         value = value.replace(/<br\s*\/?>/gi, ' ');
       }
+
+      value = value.trim()
 
       field.firstElementChild.innerHTML = value;
 

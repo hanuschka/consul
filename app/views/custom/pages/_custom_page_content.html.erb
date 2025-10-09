@@ -1,9 +1,6 @@
 <div class="custom-page-content" id='page-content'>
   <% if @custom_page&.projekt&.new_content_block_mode? %>
-    <div class="js-content-block-templates-load-container">
-    </div>
-
-    <div class="custom-page-content-inner">
+    <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">
         <% if @custom_page.projekt.content_blocks.any? %>
           <% @custom_page.projekt.content_blocks.order(:position).each do |content_block| %>
@@ -14,10 +11,15 @@
         <% end %>
       </div>
     </div>
+
   <% else %>
     <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@custom_page.content) %>
   <% end %>
 </div>
+
+<% if show_projekt_studio_controls?(@custom_page&.projekt)  %>
+  <input type="file" class="js-content-block-image-change-input content-block-image-change-input" accept="image/*">
+<% end %>
 
 <% if @custom_page.print_content_flag %>
   <%= render "/shared/print" %>

@@ -6,6 +6,8 @@ class Poll::Question::Answer < ApplicationRecord
 
   delegate :author_id, to: :question
 
+  default_scope { includes(:translations, :images, :documents, :videos) }
+
   def self.model_name
     mname = super
     mname.instance_variable_set(:@route_key, "answers")

@@ -250,6 +250,10 @@
     .cb-img-dialog__item-thumb-overlay-backdrop {
       display: block;
     }
+
+    .cb-img-dialog__item-uploading {
+      z-index: 3;
+    }
   }
 }
 

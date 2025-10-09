@@ -206,7 +206,7 @@
       })
     } else {
       $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}/update_position`,
+        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`,
         type: "PATCH",
         dataType: "json",
         data: {
@@ -304,7 +304,7 @@
       })
     } else {
       $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}`,
+        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
         type: "DELETE",
         dataType: "json"
       })
@@ -383,7 +383,7 @@
       const projektId = ProjektStudio.getCurrentProjektId()
 
       $.ajax({
-        url: `/admin/projekts/${projektId}/projekt_content_blocks`,
+        url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`,
         type: "POST",
         dataType: "json",
         data: {
@@ -512,7 +512,7 @@
       })
     } else {
       $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}`,
+        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
         type: "PATCH",
         dataType: "json",
         data: {

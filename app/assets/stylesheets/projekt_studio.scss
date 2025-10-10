@@ -345,6 +345,16 @@ body.custom-new-design {
   z-index: 1;
 }
 
+.content-blocks-container:has(>.projekt-content-block-wrapper:only-child) {
+  .add-new-content-block-button {
+    font-size: 22px !important;
+
+    i {
+      font-size: 25px;
+    }
+  }
+}
+
 .projekt-content-block-wrapper {
   position: relative;
 
@@ -561,8 +571,6 @@ body.custom-new-design {
 .projekt-content-block-templates-selector--inner {
   .tabs-content {
     background-color: transparent !important;
-    max-height: calc(100vh - (140px + 3vh));
-    overflow: auto;
   }
 
   h3 {
@@ -578,6 +586,8 @@ body.custom-new-design {
   .tabs-panel {
     padding: 2px;
     padding-right: 25px;
+    max-height: calc(100vh - (140px + 3vh));
+    overflow: auto;
   }
 }
 
@@ -929,14 +939,6 @@ body.-preview-mode {
 .js-text-editable {
   &:focus-visible {
     outline: none;
-  }
-}
-
-.add-intial-content-block-button {
-  font-size: 22px !important;
-
-  i {
-    font-size: 25px;
   }
 }
 

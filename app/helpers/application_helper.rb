@@ -103,7 +103,7 @@ module ApplicationHelper
   end
 
   def show_admin_controls_for_projekt?(projekt)
-    current_user&.email.in?(@partner_emails) || current_user&.has_pm_permission_to?(:manage, projekt)
+    projekt.present? && (current_user&.email.in?(@partner_emails) || current_user&.has_pm_permission_to?(:manage, projekt))
   end
 
   def show_projekt_studio_controls?(projekt)

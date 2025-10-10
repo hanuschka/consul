@@ -1,23 +1,11 @@
 (function() {
   "use strict";
 
-  window.CKeditorInstancesGlobal = {};
-
-  function removeWrappingParagraphs(html) {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-
-    // Remove <p> tags wrapping only <a> elements
-    tempDiv.querySelectorAll('ul.accordion p').forEach(p => {
-      if (p.childNodes.length === 1 && p.firstChild.tagName === 'A') {
-        p.replaceWith(p.firstChild); // Replace <p> with the <a> itself
-      }
-    });
-
-    return tempDiv.innerHTML;
-  }
-
   App.HTMLEditor = {
+    // DO NOT DELETE
+    // IMPORTANT: it's used in projekt studio for content blocks
+    instances: {},
+
     initialize: function() {
       document.querySelectorAll('textarea.html-area').forEach(textarea => {
         this.enableCKeditorFor(textarea)
@@ -150,10 +138,10 @@
       editorPromise.then((editor) => {
         // DO NOT DELETE
         // IMPORTANT: it's used in projekt studio for content blocks
-        window.CKeditorInstancesGlobal[editor.sourceElement.id] = editor;
+        App.HTMLEditor.instances[editor.sourceElement.id] = editor;
 
         if (editor.sourceElement.classList.contains("js-user-resource-form-description")) {
-          window.CKeditorInstancesGlobal["userResourceFromEditor"] = editor;
+          App.HTMLEditor.instances["userResourceFromEditor"] = editor;
         }
       })
     },
@@ -246,4 +234,41 @@
       return { plugins: plugins, toolbarControls: toolbarControls }
     }
   };
+
+  function removeWrappingParagraphs(html) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    // Helper: check if element only contains a single element of a given tag
+    function hasSingleChildOfType(node, tag) {
+      if (node.childNodes.length !== 1) return false;
+      const child = node.firstElementChild;
+      return child && child.tagName === tag.toUpperCase();
+    }
+
+    // Remove <p> tags wrapping only <a> elements
+    tempDiv.querySelectorAll('ul.accordion p').forEach(p => {
+      if (hasSingleChildOfType(p, 'a')) {
+        p.replaceWith(p.firstElementChild);
+      }
+    });
+
+    // Replace <div> containing only <br> with <br>
+    tempDiv.querySelectorAll('div').forEach(div => {
+      // Trim out empty text nodes
+      const nonEmptyChildren = Array.from(div.childNodes).filter(node => {
+        return !(node.nodeType === Node.TEXT_NODE && !node.textContent.trim());
+      });
+
+      if (
+        nonEmptyChildren.length === 1 &&
+        nonEmptyChildren[0].nodeType === Node.ELEMENT_NODE &&
+        nonEmptyChildren[0].tagName === 'BR'
+      ) {
+        div.replaceWith(nonEmptyChildren[0]);
+      }
+    });
+
+    return tempDiv.innerHTML;
+  }
 }).call(this);

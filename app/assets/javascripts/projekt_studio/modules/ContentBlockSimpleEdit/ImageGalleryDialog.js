@@ -228,19 +228,15 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
   handleItemClick(e) {
     const item = e.currentTarget;
-    const itemId = item.dataset.id;
 
-    // Toggle selection
-    if (this.state.selectedImage && String(this.state.selectedImage.id) === String(itemId)) {
+    if (this.state.selectedImage === item) {
       this.state.selectedImage = null;
     } else {
-      // Create a minimal selected image object from DOM data
-      this.state.selectedImage = {
-        id: itemId,
-        title: item.querySelector('.cb-img-dialog__item-title')?.textContent || '',
-        alt_text: item.querySelector('.cb-img-dialog__item-alt')?.textContent || ''
-      };
+      this.state.selectedImage = item;
     }
+
+    $(".cb-img-dialog__item.-active").removeClass("-active")
+    item.classList.toggle("-active", this.state.selectedImage === item)
 
     this.updateEditButtonVisibility();
     this.updateSelectButtonState();
@@ -250,7 +246,16 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     if (!this.state.selectedImage) return
 
     if (this.onSelectCallback && typeof this.onSelectCallback === 'function') {
-      this.onSelectCallback(this.state.selectedImage);
+      const imageData = {
+        id: this.state.selectedImage.dataset.id,
+        title: this.state.selectedImage.querySelector('.cb-img-dialog__item-title')?.textContent || '',
+        alt_text: this.state.selectedImage.querySelector('.cb-img-dialog__item-alt')?.textContent || '',
+        description: this.state.selectedImage.dataset.description || '',
+        url: this.state.selectedImage.dataset.url || '',
+        thumb_url: this.state.selectedImage.dataset.thumbUrl || '',
+        custom_thumb_url: this.state.selectedImage.dataset.customThumbUrl || ''
+      };
+      this.onSelectCallback(imageData);
     }
 
     this.closeDialog();
@@ -401,8 +406,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   updateSelectButtonState() {
     const selectBtn = document.querySelector(".js-cb-img-select");
     if (selectBtn) {
-      const hasSelection = this.state.selectedImage && Object.keys(this.state.selectedImage).length > 0;
-      const isChosenUploading = this.state.selectedImage && this.state.selectedImage.isUploading === true;
+      const hasSelection = this.state.selectedImage !== null;
+      const isChosenUploading = this.state.selectedImage && this.state.selectedImage.classList.contains('-uploading');
 
       // Disable if no selection OR if selected item is still uploading
       selectBtn.disabled = !hasSelection || isChosenUploading;
@@ -414,35 +419,23 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
     if (!this.state.selectedImage) return;
 
-    const modal = document.querySelector(".js-cb-img-edit-modal");
-    if (!modal) return;
+    const editModal = document.querySelector(".js-cb-img-edit-modal");
+    editModal.classList.add("-active");
 
-    modal.classList.add("-active");
+    const titleInput = editModal.querySelector(".js-cb-img-edit-title");
+    const descInput = editModal.querySelector(".js-cb-img-edit-description");
+    const altInput = editModal.querySelector(".js-cb-img-edit-alt");
 
-    const titleInput = modal.querySelector(".js-cb-img-edit-title");
-    const descInput = modal.querySelector(".js-cb-img-edit-description");
-    const altInput = modal.querySelector(".js-cb-img-edit-alt");
-
-    if (titleInput) titleInput.value = this.state.selectedImage.title || '';
-    if (descInput) descInput.value = this.state.selectedImage.description || '';
-    if (altInput) altInput.value = this.state.selectedImage.alt_text || '';
+    if (titleInput) titleInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-title')?.textContent || '').trim();
+    if (descInput) descInput.value = (this.state.selectedImage.dataset.description || '').trim();
+    if (altInput) altInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-alt')?.textContent || '').trim();
   },
 
   closeEditModal(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    const modal = document.querySelector(".js-cb-img-edit-modal");
-    if (modal) {
-      modal.classList.remove("-active");
-    }
+    $(".js-cb-img-edit-modal").removeClass("-active")
   },
 
   updateImage(e) {
-    e.preventDefault();
-
     if (!this.state.selectedImage) return;
 
     const modal = document.querySelector(".js-cb-img-edit-modal");
@@ -459,7 +452,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    fetch(`/ckeditor/pictures/${this.state.selectedImage.id}`, {
+    fetch(`/ckeditor/pictures/${this.state.selectedImage.dataset.id}`, {
       method: 'PATCH',
       headers: {
         'X-CSRF-TOKEN': csrfToken
@@ -469,14 +462,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       .then(response => response.json())
       .then(data => {
         if (data.id) {
-          // Update selected image with new data
-          this.state.selectedImage = {
-            id: data.id,
-            title: data.title,
-            alt_text: data.alt_text
-          };
           this.closeEditModal();
-          // Refresh to show updated data
           this.fetchImageItems();
         }
       })
@@ -487,15 +473,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   },
 
   deleteImage(e) {
-    e.preventDefault();
-
     if (!this.state.selectedImage) return;
 
     if (!confirm('Möchten Sie dieses Bild wirklich löschen?')) {
       return;
     }
 
-    const chosenId = this.state.selectedImage.id;
+    const chosenId = this.state.selectedImage.dataset.id;
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     fetch(`/ckeditor/pictures/${chosenId}`, {

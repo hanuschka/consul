@@ -121,6 +121,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     searchInput.disabled = isUploading;
 
     if (pagination) {
+      // console.log("update pagination", pagination)
+      // console.log("isUploading", isUploading)
+      // console.log("this.state.uploadingCount", this.state.uploadingCount)
       pagination.classList.toggle('-disabled', isUploading);
       $(".js-cb-img-page-btn").prop("disabled", isUploading)
       $(`.js-cb-img-page-btn[data-page=${this.state.page}]`).prop("disabled", true)
@@ -302,6 +305,27 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       });
   },
 
+  fetchImageItemsForPagination() {
+    const { type, page, search } = this.state;
+
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    return fetch(`/ckeditor/assets?${new URLSearchParams({ type, page, search })}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.state.total_pages = data.total_pages;
+
+        this.updatePagination();
+        this.updateUploadingState()
+      })
+  },
+
   handleUploadError(tempItemId, errorMessage) {
     alert(errorMessage);
 
@@ -366,6 +390,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
             this.updateSelectButtonState();
 
             this.updateItemsUI();
+
+            // Fetch items list to get updated total count and re-render pagination
+            this.fetchImageItemsForPagination();
           };
 
           preloadImg.onload = finishPreload;

@@ -1,0 +1,19 @@
+<div class="cb-img-dialog__item"
+     data-id="<%= picture.id %>"
+     data-description="<%= picture.description.presence || '' %>"
+     data-url="<%= picture.url_content(editor_id: params[:editor_id]) %>"
+     data-thumb-url="<%= picture.custom_thumb_url(width: 232, height: 190) %>"
+     data-custom-thumb-url="<%= picture.custom_thumb_url(width: 232, height: 190) %>">
+     <div class="cb-img-dialog__item-thumb">
+       <div class="cb-img-dialog__item-thumb-overlay-backdrop"></div>
+       <% if picture.data_content_type&.start_with?('image/') %>
+         <img src="<%= picture.custom_thumb_url(width: 232, height: 190) %>" alt="<%= picture.alt_text.presence || picture.title.presence || 'Image' %>">
+       <% end %>
+     </div>
+     <div class="cb-img-dialog__item-meta">
+       <p class="cb-img-dialog__item-title" title="<%= picture.title.presence || picture.data_file_name.presence || 'Untitled' %>">
+       <%= picture.title.presence || picture.data_file_name.presence || 'Untitled' %>
+       </p>
+       <div class="cb-img-dialog__item-alt"><%= picture.alt_text.presence || '' %></div>
+     </div>
+</div>

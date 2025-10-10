@@ -6,7 +6,7 @@
   inset: 0;
   z-index: 10000;
 
-  &.-active {
+  &.-opened {
     display: block;
   }
 }
@@ -239,7 +239,7 @@
     box-shadow: 0 0 5px #c1c1c1;
   }
 
-  &.-active {
+  &.-selected {
     border-color: #40d0ff;
     outline: 5px solid #40d0ff;
   }
@@ -330,13 +330,19 @@
   }
 
   .pagination {
+    li.current {
+      background-color: $dt-base;
+    }
     li a, li.current {
-      padding: 10px 14px;
       border: 1px solid #d9d9d9;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 17px;
-      min-width: 32px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      min-width: 42px;
+      min-height: 42px;
     }
   }
 }
@@ -407,7 +413,7 @@
   inset: 0;
   z-index: 10001;
 
-  &.-active {
+  &.-opened {
     display: block;
   }
 }

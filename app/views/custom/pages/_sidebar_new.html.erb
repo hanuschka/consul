@@ -31,9 +31,17 @@
   <% end %>
 
   <%= render(Mobile::FixedBottomActionComponent.new) do %>
-    <div id="sidebar-cta" class="<%= "hide show-on-small-tablet" unless projekt_feature?(projekt, "sidebar.new_resource_button_in_sidebar") %>">
-      <%= render Pages::Projekts::SidebarCtaComponent.new(@default_projekt_phase) %>
-    </div>
+    <% show_sidebar_cta = projekt_feature?(projekt, "sidebar.new_resource_button_in_sidebar") || show_projekt_studio_controls?(@projekt) %>
+    <%= render Projekts::ToggleSectionWithSettingComponent.new(
+      enable: show_projekt_studio_controls?(@projekt),
+      projekt: @projekt,
+      setting_key: "projekt_feature.sidebar.new_resource_button_in_sidebar",
+      setting_active: projekt_feature?(@projekt, 'sidebar.new_resource_button_in_sidebar')
+    ) do %>
+      <div id="sidebar-cta" class="<%= "hide show-on-small-tablet" unless show_sidebar_cta %>">
+        <%= render Pages::Projekts::SidebarCtaComponent.new(@default_projekt_phase) %>
+      </div>
+    <% end %>
   <% end %>
 
   <div class="hide-on-small-tablet width-100">

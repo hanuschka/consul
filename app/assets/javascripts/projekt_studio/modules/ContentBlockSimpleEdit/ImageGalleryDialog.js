@@ -3,17 +3,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     type: 'picture',
     page: 1,
     search: '',
-    total_pages: 0,
-    items: [],
     selectedImage: null,
     isLoading: false,
-    uploadingCount: 0,
-    removedItemsStack: []
+    uploadingCount: 0
   },
   onSelectCallback: null,
   contentBlockId: null,
   contentBlockWrapper: null,
-  itemsPerPage: 15,
 
   initialize() {
     this.initEventListeners()
@@ -45,7 +41,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
     $document.on("click", ".js-cb-img-select", this.handleImageSelected.bind(this));
     $document.on("click", ".cb-img-dialog__item", this.handleItemClick.bind(this));
-    $document.on("click", ".js-cb-img-page-btn", this.handlePaginationClick.bind(this));
+    $document.on("click", ".pagination a", this.handleKaminariPaginationClick.bind(this));
   },
 
   openDialog(onSelectCallback, contentBlockId = null, contentBlockWrapper = null) {
@@ -57,12 +53,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       type: 'picture',
       page: 1,
       search: '',
-      total_pages: 0,
-      items: [],
       selectedImage: null,
       isLoading: false,
-      uploadingCount: 0,
-      removedItemsStack: []
+      uploadingCount: 0
     };
 
     const dialog = document.querySelector(".js-cb-img-dialog");
@@ -218,15 +211,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
               isUploading: true
             };
 
-            this.state.items.unshift(tempItem);
 
-            // If list exceeds page size, remove last item and store in stack
-            if (this.state.items.length > this.itemsPerPage) {
-              const removedItem = this.state.items.pop();
-              this.state.removedItemsStack.push(removedItem);
-            }
-
-            this.updateItemsUI();
 
             const formData = new FormData();
             formData.append('upload', file);
@@ -244,19 +229,21 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   handleItemClick(e) {
     const item = e.currentTarget;
     const itemId = item.dataset.id;
-    const selectedItem = this.state.items.find(i => String(i.id) === String(itemId));
 
-    if (selectedItem) {
-      if (this.state.selectedImage && String(this.state.selectedImage.id) === String(itemId)) {
-        this.state.selectedImage = null;
-      } else {
-        this.state.selectedImage = selectedItem;
-      }
-
-      this.updateItemsUI();
-      this.updateEditButtonVisibility();
-      this.updateSelectButtonState();
+    // Toggle selection
+    if (this.state.selectedImage && String(this.state.selectedImage.id) === String(itemId)) {
+      this.state.selectedImage = null;
+    } else {
+      // Create a minimal selected image object from DOM data
+      this.state.selectedImage = {
+        id: itemId,
+        title: item.querySelector('.cb-img-dialog__item-title')?.textContent || '',
+        alt_text: item.querySelector('.cb-img-dialog__item-alt')?.textContent || ''
+      };
     }
+
+    this.updateEditButtonVisibility();
+    this.updateSelectButtonState();
   },
 
   handleImageSelected() {
@@ -271,24 +258,33 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
   fetchImageItems(fetchCallback) {
     this.state.isLoading = true;
-    this.updateItemsUI();
-    this.updatePagination();
 
     const { type, page, search } = this.state;
 
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    return fetch(`/ckeditor/assets?${new URLSearchParams({ type, page, search })}`, {
+    return fetch(`/ckeditor/pictures?${new URLSearchParams({ type, page, search })}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Accept': 'text/html',
         'X-CSRF-TOKEN': csrfToken
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        this.state.total_pages = data.total_pages;
-        this.state.items = data.items;
+      .then(response => response.text())
+      .then(html => {
+        // Parse the HTML response to extract body content
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const bodyContent = doc.querySelector('.cb-img-dialog__body');
+
+        if (bodyContent) {
+          // Update the dialog body with the complete content
+          const dialogBody = document.querySelector('.cb-img-dialog__body');
+          if (dialogBody) {
+            dialogBody.innerHTML = bodyContent.innerHTML;
+          }
+        }
+
 
         if (fetchCallback) {
           fetchCallback()
@@ -300,8 +296,6 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       })
       .finally(() => {
         this.state.isLoading = false;
-        this.updateItemsUI();
-        this.updatePagination();
       });
   },
 
@@ -328,17 +322,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
   handleUploadError(tempItemId, errorMessage) {
     alert(errorMessage);
-
-    // Remove temp item
-    this.state.items = this.state.items.filter(item => String(item.id) !== String(tempItemId));
-
-    // Restore last removed item from stack if available
-    if (this.state.removedItemsStack.length > 0) {
-      const restoredItem = this.state.removedItemsStack.shift();
-      this.state.items.push(restoredItem);
-    }
-
-    this.updateItemsUI();
+    // Refresh the page to get updated server state
+    this.fetchImageItems();
   },
 
   uploadNewImage(formData, tempItemId) {
@@ -365,40 +350,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
         if (resp.error) {
           this.handleUploadError(tempItemId, resp.error.message);
         } else {
-          const tempItemIndex = this.state.items.findIndex(item => String(item.id) === String(tempItemId));
-          this.state.items[tempItemIndex] = {
-            ...resp,
-            in_memory_preview_url: this.state.items[tempItemIndex].in_memory_preview_url,
-            isUploading: true
-          };
-
-          // this.updateItemsUI();
-
-          const thumbUrl = resp.thumb_url || resp.url;
-          const preloadImg = new Image();
-
-          const finishPreload = () => {
-            const finalItem = {
-              ...resp,
-              isUploading: false
-            };
-            delete finalItem.in_memory_preview_url;
-
-            const index = this.state.items.findIndex(item => String(item.id) === String(resp.id));
-
-            this.state.items[index] = finalItem;
-            this.updateSelectButtonState();
-
-            this.updateItemsUI();
-
-            // Fetch items list to get updated total count and re-render pagination
-            this.fetchImageItemsForPagination();
-          };
-
-          preloadImg.onload = finishPreload;
-          preloadImg.onerror = finishPreload;
-
-          preloadImg.src = thumbUrl;
+          // Refresh the page to show the newly uploaded image
+          this.fetchImageItems();
         }
       })
       .catch(error => {
@@ -419,161 +372,23 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       });
   },
 
-  updateItemsUI() {
-    const grid = document.querySelector(".js-cb-img-grid");
-    if (!grid) return;
 
-    if (this.state.isLoading) {
-      grid.innerHTML = `
-        <div class="loading-spinner-inline -gray cb-loading-spinner"></div>
-      `;
-      return;
-    }
 
-    if (this.state.items.length === 0) {
-      grid.innerHTML = '<div class="cb-img-dialog__loading">Keine Bilder gefunden.</div>';
-      return;
-    }
-
-    grid.innerHTML = '';
-
-    this.state.items.forEach(item => {
-      this.renderImageItem(item, grid)
-    });
-  },
-
-  renderImageItem(item, grid) {
-    const isActive = this.state.selectedImage && String(this.state.selectedImage.id) === String(item.id);
-    const isUploading = item.isUploading === true;
-    const hasInMemoryPreview = item.in_memory_preview_url && isUploading;
-    const imageSrc = item.thumb_url || item.url;
-    const imageAlt = item.alt_text || item.title || 'Image';
-    const title = item.title || item.data_file_name || 'Untitled';
-    const altText = item.alt_text || '';
-    const isImage = item.data_content_type && item.data_content_type.startsWith('image/');
-
-    let imageContent = '';
-    if (isImage) {
-      if (hasInMemoryPreview) {
-        imageContent = `<div class="cb-img-dialog__item-preview" style="background-image: url('${item.in_memory_preview_url}');"></div>`;
-      } else {
-        imageContent = `<img src="${imageSrc}" alt="${imageAlt}">`;
-      }
-    }
-
-    const template = `
-      <div class="cb-img-dialog__item ${isActive ? '-active' : ''} ${isUploading ? '-uploading' : ''}" data-id="${item.id}">
-        <div class="cb-img-dialog__item-thumb">
-          <div class="cb-img-dialog__item-thumb-overlay-backdrop"></div>
-          ${imageContent}
-          ${isUploading ? '<div class="cb-img-dialog__item-uploading"><div class="loading-spinner-inline"></div></div>' : ''}
-        </div>
-        <div class="cb-img-dialog__item-meta">
-          <p class="cb-img-dialog__item-title" title="${title}">${title}</p>
-          <div class="cb-img-dialog__item-alt">${isUploading ? 'Wird hochgeladen...' : altText}</div>
-        </div>
-      </div>
-    `;
-
-    grid.insertAdjacentHTML('beforeend', template);
-  },
-
-  updatePagination() {
-    const pagination = document.querySelector(".js-cb-img-pagination");
-    if (!pagination) return;
-
-    if (this.state.isLoading) {
-      return;
-    }
-
-    if (this.state.total_pages < 2) {
-      pagination.innerHTML = '';
-      return;
-    }
-
-    const currentPage = this.state.page;
-    const totalPages = this.state.total_pages;
-    const isFirstPage = currentPage === 1;
-    const isLastPage = currentPage === totalPages;
-
-    const buttons = [];
-
-    // First button
-    buttons.push(`
-      <button
-        type="button"
-        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav cb-img-dialog__page-btn--text js-cb-img-page-btn"
-        data-page="1"
-        ${isFirstPage ? 'disabled' : ''}
-        title="Erste Seite"
-      >
-        <i class="fa fa-angles-left"></i>
-        <span>Erste</span>
-      </button>
-    `);
-
-    // Previous button
-    buttons.push(`
-      <button
-        type="button"
-        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav js-cb-img-page-btn"
-        data-page="${currentPage - 1}"
-        ${isFirstPage ? 'disabled' : ''}
-        title="Vorherige Seite"
-      >
-        <i class="fa fa-angle-left"></i>
-      </button>
-    `);
-
-    // Page number buttons
-    for (let i = 1; i <= totalPages; i++) {
-      const isActive = i === currentPage;
-      buttons.push(`
-        <button
-          type="button"
-          class="cb-img-dialog__page-btn js-cb-img-page-btn ${isActive ? '-active' : ''}"
-          data-page="${i}"
-          ${isActive ? 'disabled' : ''}
-        >
-          ${i}
-        </button>
-      `);
-    }
-
-    // Next button
-    buttons.push(`
-      <button
-        type="button"
-        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav js-cb-img-page-btn"
-        data-page="${currentPage + 1}"
-        ${isLastPage ? 'disabled' : ''}
-        title="Nächste Seite"
-      >
-        <i class="fa fa-angle-right"></i>
-      </button>
-    `);
-
-    // Last button
-    buttons.push(`
-      <button
-        type="button"
-        class="cb-img-dialog__page-btn cb-img-dialog__page-btn--nav cb-img-dialog__page-btn--text js-cb-img-page-btn"
-        data-page="${totalPages}"
-        ${isLastPage ? 'disabled' : ''}
-        title="Letzte Seite"
-      >
-        <span>Letzte</span>
-        <i class="fa fa-angles-right"></i>
-      </button>
-    `);
-
-    pagination.innerHTML = buttons.join('');
-  },
 
   handlePaginationClick(e) {
     const pageNumber = parseInt(e.currentTarget.dataset.page);
 
     this.navigateToPage(pageNumber)
+  },
+
+  handleKaminariPaginationClick(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation()
+
+    const url = new URL(e.currentTarget.href);
+    const pageNumber = parseInt(url.searchParams.get('page')) || 1;
+
+    this.navigateToPage(pageNumber);
   },
 
   updateEditButtonVisibility() {
@@ -654,14 +469,15 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       .then(response => response.json())
       .then(data => {
         if (data.id) {
-          // Update the item in state
-          this.state.items = this.state.items.map(o => o.id === data.id ? data : o);
-          const chosenArr = this.state.items.filter(o => o.id === data.id);
-          if (chosenArr.length) {
-            this.state.selectedImage = chosenArr[0];
-          }
-          this.updateItemsUI();
+          // Update selected image with new data
+          this.state.selectedImage = {
+            id: data.id,
+            title: data.title,
+            alt_text: data.alt_text
+          };
           this.closeEditModal();
+          // Refresh to show updated data
+          this.fetchImageItems();
         }
       })
       .catch(error => {
@@ -691,12 +507,11 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       .then(response => response.json())
       .then(data => {
         if (data.status && data.status === 'no_content') {
-          this.state.items = this.state.items.filter(o => o.id !== chosenId);
           this.state.selectedImage = null;
-          this.updateItemsUI();
-          this.updatePagination();
           this.updateEditButtonVisibility();
           this.closeEditModal();
+          // Refresh to show updated data
+          this.fetchImageItems();
         }
       })
       .catch(error => {
@@ -705,4 +520,3 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       });
   }
 }
-

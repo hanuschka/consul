@@ -1,7 +1,7 @@
 get "ckeditor/assets", to: "ckeditor/assets#index"
 
 namespace :ckeditor do
-  resources :pictures, only: [:create, :update, :destroy]
+  resources :pictures, only: [:index, :create, :update, :destroy]
   resources :documents, only: [:create, :update, :destroy]
 end
 

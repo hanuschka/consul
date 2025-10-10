@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 class Ckeditor::PicturesController < ApplicationController
+  include Search
+
+  def index
+    authorize! :index, Ckeditor::Picture
+    @pictures = Ckeditor::Picture.joins(:storage_data_attachment)
+
+    if @search_terms.present?
+      @pictures = @pictures.search(@search_terms)
+    else
+      @pictures = @pictures.order(id: :desc)
+    end
+
+    @pictures = @pictures.page(params[:page]).per(15)
+
+    respond_to do |format|
+      format.html { render layout: false }
+      format.json { render json: json_response }
+    end
+  end
+
   def create
     picture = Ckeditor::Picture.new
     authorize! :create, picture
@@ -84,5 +104,23 @@ class Ckeditor::PicturesController < ApplicationController
 
     def allowed_attributes
       %i[id data_file_name data_content_type data_file_size width height title description alt_text url thumb_url]
+    end
+
+    def pictures_json
+      @pictures.map do |picture|
+        picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
+          url: picture.url_content(editor_id: params[:editor_id]),
+          thumb_url: picture.custom_thumb_url(width: 232, height: 190),
+          created_at: picture.created_at.strftime("%d.%m.%Y")
+        )
+      end
+    end
+
+    def json_response
+      {
+        items: pictures_json,
+        total_pages: @pictures.total_pages,
+        items_per_page: @pictures.limit_value
+      }
     end
 end

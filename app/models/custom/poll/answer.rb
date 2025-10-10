@@ -8,6 +8,9 @@ class Poll::Answer < ApplicationRecord
     def max_votes
       return if !question || question&.unique? || question.votation_type&.rating_scale?
 
+
+      Rails.logger.info "Checking max votes for author #{author.id} on question #{question.id}, #{author.changed.inspect}"
+
       author.save! if author.guest? && author.changed == ["locale"]
       author.lock!
 

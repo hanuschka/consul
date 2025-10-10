@@ -41,17 +41,44 @@
     <!-- Main content area -->
     <div class="cb-img-dialog__body">
       <div class="cb-img-dialog__grid js-cb-img-grid">
-        <div class="cb-img-dialog__loading">Wird geladen...</div>
       </div>
       <div class="cb-img-dialog__pagination js-cb-img-pagination"></div>
     </div>
 
+    <!-- Loading overlay for navigation -->
+    <div class="cb-img-dialog__loading-overlay js-cb-img-loading-overlay" style="display: none;">
+      <div class="cb-img-dialog__loading-spinner">
+        <div class="loading-spinner-inline"></div>
+        <%# <span>Wird geladen...</span> %>
+      </div>
+    </div>
+
+    <!-- Template for temporary uploading images -->
+    <template id="cb-img-uploading-template">
+      <div class="cb-img-dialog__item -uploading" data-id="">
+        <div class="cb-img-dialog__item-thumb">
+          <div class="cb-img-dialog__item-uploading">
+            <div class="cb-img-dialog__item-thumb-overlay-backdrop"></div>
+            <div class="cb-img-dialog__item-preview" style="background-image: url('');"></div>
+            <div class="loading-spinner-inline"></div>
+          </div>
+         <img class="js-cb-img-dialog_item-image" src="" alt="">
+        </div>
+        <div class="cb-img-dialog__item-meta">
+          <p class="cb-img-dialog__item-title" title=""></p>
+          <div class="cb-img-dialog__item-alt">Wird hochgeladen...</div>
+        </div>
+      </div>
+    </template>
 
     <div class="cb-img-dialog__footer">
       <button type="button" class="button image-upload-gallery--select-image-btn js-cb-img-select">
         Wählen
       </button>
     </div>
+
+    <!-- Hidden file input for uploads -->
+    <input type="file" class="js-cb-img-file-input" accept="image/*" style="display: none;">
   </div>
 
   <!-- Edit Modal -->

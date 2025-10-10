@@ -35,7 +35,7 @@ class Ckeditor::Picture < Ckeditor::Asset
       rails_blob_url(storage_data, only_path: true)
     else
       rails_representation_url(
-        storage_data.variant(coalesce: true, gravity: "center", resize_to_fit: [width_to_use, height_to_use], saver: { quality: 85 } , loader: { page: nil }), only_path: true
+        storage_data.variant(coalesce: true, gravity: "center", resize_to_fit: [width_to_use, height_to_use], saver: { quality: 88 } , loader: { page: nil }), only_path: true
       )
     end
   end

@@ -30,8 +30,8 @@ class Ckeditor::PicturesController < ApplicationController
     height = params[:height].to_i
 
     resize_original = params[:resize_original] == "true"
-    image_max_width = 1920 if width.zero?
-    image_max_height = 1080 if height.zero?
+    image_max_width = 3000 if width.zero?
+    image_max_height = 2000 if height.zero?
     thumb_max_width = 860 if width.zero?
     thumb_max_height = 430 if height.zero?
 
@@ -44,7 +44,7 @@ class Ckeditor::PicturesController < ApplicationController
             image_max_width,
             image_max_height
           )
-          .saver(quality: 85, interlace: 'Line')
+          .saver(quality: 87, interlace: 'Line')
           .call
       else
         image
@@ -59,6 +59,10 @@ class Ckeditor::PicturesController < ApplicationController
         picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
           url: original_url,
           thumb_url: picture.url_thumb(editor_id: params[:editor_id]),
+          gallery_thumb_url: picture.custom_thumb_url(
+            width: 300,
+            height: 230
+          ),
           created_at: picture.created_at.strftime("%d.%m.%Y")
         )
 

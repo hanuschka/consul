@@ -12,6 +12,7 @@
     const $document = $(document);
     $document.on("click", ".js-show-content-block-templates", this.openContentBlockTemplateSelector.bind(this));
     $document.on("click", ".js-add-new-content-block", this.addNewContentBlock.bind(this));
+    $document.on("click", ".js-copy-content-block-template", this.copyContentBlockTemplate.bind(this));
 
     $document.on("click", ".js-projekt-content-block--regenerate", this.handleRegenerateContentBlock.bind(this));
     $document.on("click", ".js-projekt-content-block--ai-edit", this.enterAiEditMode.bind(this));
@@ -408,6 +409,65 @@
         }
       })
     }
+  },
+
+  copyContentBlockTemplate(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const templateItem = e.currentTarget.closest('.custom-content-template--item');
+    const contentTemplate = templateItem.querySelector('.js-content-block-template-content');
+    const templateContent = contentTemplate.innerHTML;
+
+    // Copy to clipboard
+    if (navigator.clipboard && window.isSecureContext) {
+      // Use modern clipboard API
+      navigator.clipboard.writeText(templateContent).then(() => {
+        this.showCopySuccessFeedback(e.currentTarget);
+      }).catch((err) => {
+        console.error('Failed to copy: ', err);
+        this.fallbackCopyToClipboard(templateContent, e.currentTarget);
+      });
+    } else {
+      // Fallback for older browsers
+      this.fallbackCopyToClipboard(templateContent, e.currentTarget);
+    }
+  },
+
+  fallbackCopyToClipboard(text, button) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      this.showCopySuccessFeedback(button);
+    } catch (err) {
+      console.error('Fallback copy failed: ', err);
+      alert('Kopieren fehlgeschlagen. Bitte manuell kopieren.');
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  },
+
+  showCopySuccessFeedback(button) {
+    const originalIcon = button.querySelector('i');
+    const originalClass = originalIcon.className;
+
+    // Change icon to checkmark
+    originalIcon.className = 'fa fas fa-check';
+    button.classList.add("-copied")
+
+    // Reset after 2 seconds
+    setTimeout(() => {
+      originalIcon.className = originalClass;
+      button.classList.remove("-copied")
+    }, 300);
   },
 
   enterHtmlEditMode(e) {

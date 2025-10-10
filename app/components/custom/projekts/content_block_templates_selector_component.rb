@@ -1,17 +1,16 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
   def basic_content_templates
     %w(
-      h3 h4 h5 h6
-      text_block_h3_heading
-      text_block_two_columns
-      textblock
+      empty
+      h3
+      h4
+      text_block_with_title
+      text_block
+      text_block_h3_two_columns
       accordion
       bullet_points
       download_section
       futher_information
-      submit_ideas
-      favorites_supported
-      select_suggestions
 
       quote_picture_on_left_classic
       quote_picture_on_the_right
@@ -25,11 +24,16 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
       quote_greeting_image_left_vertical
       quote_greeting_image_right_vertical
       quote_greeting_round_picture_right
+
+      submit_ideas
+      favorites_supported
+      select_suggestions
     )
   end
 
   def status_and_notes_templates
     %w(
+      callout_1
       callout_warning
       callout_warning_2
       callout_warning_3
@@ -55,6 +59,19 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
 
   def teasers_and_promotions
     %w(
+      cta_1
+      cta_2
+      cta_4
+      cta_5
+      cta_6
+
+      content_card_1
+      content_card_2
+      content_card_3
+
+      event_1
+      event_2
+      event_3
     )
   end
 
@@ -65,6 +82,10 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
       tile
       one_card
       image_slider
+
+      download_1
+      download_2
+      download_3
     )
   end
 

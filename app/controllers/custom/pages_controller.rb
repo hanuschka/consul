@@ -42,7 +42,7 @@ class PagesController < ApplicationController
         if current_user.administrator?
           :admin
         elsif current_user.projekt_manager?(@custom_page.projekt)
-          :projekt_manager
+          :projekt_management
         end
     end
 

@@ -123,7 +123,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
   // TODO: Make first element foused
   toggleContentEditableFor(contentBlock, contentEditable) {
     const elements = Array.from(
-      contentBlock.querySelectorAll("div, h2, h3, h4, h5, p,  ol, .js-text-editable, a.accordion-title")
+      contentBlock.querySelectorAll("div, h2, h3, h4, h5, p, figcaption, ol, .js-text-editable, a.accordion-title")
     );
 
     let firstEditableElement = null;

@@ -33,6 +33,7 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
 
   def status_and_notes_templates
     %w(
+      callout_1
       callout_warning
       callout_warning_2
       callout_warning_3

@@ -67,7 +67,7 @@
     let doc = parser.parseFromString(html, 'text/html');
 
     const contentBlocks = Array.from(doc.querySelectorAll('.projekt-content-block'));
-    let wrappedContentBlocksHtml;
+    let wrappedContentBlocksHtml = '';
 
     const projektId = ProjektStudio.getCurrentProjektId()
 
@@ -82,12 +82,12 @@
         );
       }).join("")
     }
-    else {
-      wrappedContentBlocksHtml =
-        ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(
-          projektId
-        );
-    }
+    // else {
+    //   wrappedContentBlocksHtml =
+    //     ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(
+    //       projektId
+    //     );
+    // }
 
     const newHtml =
       ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(
@@ -286,13 +286,13 @@
 
     contentBlockWrapper.remove()
 
-    if ($('.js-projekt-content-block-wrapper').length === 0) {
-      const projektId = ProjektStudio.getCurrentProjektId()
-      const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
-      const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
+    // if ($('.js-projekt-content-block-wrapper').length === 0) {
+    //   const projektId = ProjektStudio.getCurrentProjektId()
+    //   const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
+    //   const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
 
-      this.morphElementHTML(".js-custom-page-content--inner", newHtml);
-    }
+    //   this.morphElementHTML(".js-custom-page-content--inner", newHtml);
+    // }
 
     if (scrollTo) {
       scrollTo.scrollIntoView({block: "center"});
@@ -356,14 +356,14 @@
     newContentBlock.dataset.draft = true;
     newContentBlock.classList.add('-draft')
 
-    if (previousContentBlockWrapper && previousContentBlockWrapper.dataset.initialContentBlockButton === "true") {
-      previousContentBlockWrapper.remove()
-      // $('.custom-page-content').append(newContentBlock);
-      $(".js-content-blocks-container").append(newContentBlock);
-    }
-    else if (previousContentBlockWrapper) {
-      $(previousContentBlockWrapper).after(newContentBlock)
-      $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", true)
+    if (previousContentBlockWrapper) {
+      if ($(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0) {
+        previousContentBlockWrapper.after(newContentBlock)
+      }
+      else {
+        $(previousContentBlockWrapper).after(newContentBlock)
+        $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", true)
+      }
     }
 
     setTimeout(() => {

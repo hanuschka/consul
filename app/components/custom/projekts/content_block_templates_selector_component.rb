@@ -1,17 +1,16 @@
 class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
   def basic_content_templates
     %w(
-      h3 h4 h5 h6
-      text_block_h3_heading
-      text_block_two_columns
-      textblock
+      empty
+      h3
+      h4
+      text_block_with_title
+      text_block
+      text_block_h3_two_columns
       accordion
       bullet_points
       download_section
       futher_information
-      submit_ideas
-      favorites_supported
-      select_suggestions
 
       quote_picture_on_left_classic
       quote_picture_on_the_right
@@ -25,6 +24,10 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
       quote_greeting_image_left_vertical
       quote_greeting_image_right_vertical
       quote_greeting_round_picture_right
+
+      submit_ideas
+      favorites_supported
+      select_suggestions
     )
   end
 

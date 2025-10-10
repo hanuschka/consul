@@ -601,7 +601,7 @@
           point: true,
           line_string: instance.enableShapes,
           polygon: instance.enableShapes,
-          trash: instance.enableShapes
+          trash: true
         },
         defaultMode: 'draw_point',
         userProperties: true,
@@ -691,6 +691,18 @@
           },
         },
         {
+          'id': 'gl-draw-point-outer',
+          'type': 'circle',
+          'filter': [ 'all',
+            ['==', '$type', 'Point'],
+            ['==', 'meta', 'feature'],
+          ],
+          'paint': {
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 12],
+            'circle-color': [ 'case', ['==', ['get', 'active'], 'true'], '#fff', [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor] ]
+          },
+        },
+        {
           'id': 'gl-draw-point-inner',
           'type': 'circle',
           'filter': [ 'all',
@@ -702,7 +714,6 @@
             'circle-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
           },
         },
-
         {
           'id': 'gl-draw-point-icon',
           'type': 'symbol',

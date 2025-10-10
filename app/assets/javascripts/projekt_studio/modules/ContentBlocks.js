@@ -417,7 +417,7 @@
 
     const templateItem = e.currentTarget.closest('.custom-content-template--item');
     const contentTemplate = templateItem.querySelector('.js-content-block-template-content');
-    const templateContent = contentTemplate.innerHTML;
+    const templateContent = contentTemplate.innerHTML.trim();
 
     // Copy to clipboard
     if (navigator.clipboard && window.isSecureContext) {

@@ -12,6 +12,7 @@
     const $document = $(document);
     $document.on("click", ".js-show-content-block-templates", this.openContentBlockTemplateSelector.bind(this));
     $document.on("click", ".js-add-new-content-block", this.addNewContentBlock.bind(this));
+    $document.on("click", ".js-copy-content-block-template", this.copyContentBlockTemplate.bind(this));
 
     $document.on("click", ".js-projekt-content-block--regenerate", this.handleRegenerateContentBlock.bind(this));
     $document.on("click", ".js-projekt-content-block--ai-edit", this.enterAiEditMode.bind(this));
@@ -67,7 +68,7 @@
     let doc = parser.parseFromString(html, 'text/html');
 
     const contentBlocks = Array.from(doc.querySelectorAll('.projekt-content-block'));
-    let wrappedContentBlocksHtml;
+    let wrappedContentBlocksHtml = '';
 
     const projektId = ProjektStudio.getCurrentProjektId()
 
@@ -82,12 +83,12 @@
         );
       }).join("")
     }
-    else {
-      wrappedContentBlocksHtml =
-        ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(
-          projektId
-        );
-    }
+    // else {
+    //   wrappedContentBlocksHtml =
+    //     ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(
+    //       projektId
+    //     );
+    // }
 
     const newHtml =
       ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(
@@ -206,7 +207,7 @@
       })
     } else {
       $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}/update_position`,
+        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`,
         type: "PATCH",
         dataType: "json",
         data: {
@@ -286,13 +287,13 @@
 
     contentBlockWrapper.remove()
 
-    if ($('.js-projekt-content-block-wrapper').length === 0) {
-      const projektId = ProjektStudio.getCurrentProjektId()
-      const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
-      const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
+    // if ($('.js-projekt-content-block-wrapper').length === 0) {
+    //   const projektId = ProjektStudio.getCurrentProjektId()
+    //   const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
+    //   const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
 
-      this.morphElementHTML(".js-custom-page-content--inner", newHtml);
-    }
+    //   this.morphElementHTML(".js-custom-page-content--inner", newHtml);
+    // }
 
     if (scrollTo) {
       scrollTo.scrollIntoView({block: "center"});
@@ -304,7 +305,7 @@
       })
     } else {
       $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}`,
+        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
         type: "DELETE",
         dataType: "json"
       })
@@ -356,14 +357,14 @@
     newContentBlock.dataset.draft = true;
     newContentBlock.classList.add('-draft')
 
-    if (previousContentBlockWrapper && previousContentBlockWrapper.dataset.initialContentBlockButton === "true") {
-      previousContentBlockWrapper.remove()
-      // $('.custom-page-content').append(newContentBlock);
-      $(".js-content-blocks-container").append(newContentBlock);
-    }
-    else if (previousContentBlockWrapper) {
-      $(previousContentBlockWrapper).after(newContentBlock)
-      $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", true)
+    if (previousContentBlockWrapper) {
+      if ($(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0) {
+        previousContentBlockWrapper.after(newContentBlock)
+      }
+      else {
+        $(previousContentBlockWrapper).after(newContentBlock)
+        $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", true)
+      }
     }
 
     setTimeout(() => {
@@ -383,7 +384,7 @@
       const projektId = ProjektStudio.getCurrentProjektId()
 
       $.ajax({
-        url: `/admin/projekts/${projektId}/projekt_content_blocks`,
+        url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`,
         type: "POST",
         dataType: "json",
         data: {
@@ -408,6 +409,65 @@
         }
       })
     }
+  },
+
+  copyContentBlockTemplate(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const templateItem = e.currentTarget.closest('.custom-content-template--item');
+    const contentTemplate = templateItem.querySelector('.js-content-block-template-content');
+    const templateContent = contentTemplate.innerHTML.trim();
+
+    // Copy to clipboard
+    if (navigator.clipboard && window.isSecureContext) {
+      // Use modern clipboard API
+      navigator.clipboard.writeText(templateContent).then(() => {
+        this.showCopySuccessFeedback(e.currentTarget);
+      }).catch((err) => {
+        console.error('Failed to copy: ', err);
+        this.fallbackCopyToClipboard(templateContent, e.currentTarget);
+      });
+    } else {
+      // Fallback for older browsers
+      this.fallbackCopyToClipboard(templateContent, e.currentTarget);
+    }
+  },
+
+  fallbackCopyToClipboard(text, button) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      this.showCopySuccessFeedback(button);
+    } catch (err) {
+      console.error('Fallback copy failed: ', err);
+      alert('Kopieren fehlgeschlagen. Bitte manuell kopieren.');
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  },
+
+  showCopySuccessFeedback(button) {
+    const originalIcon = button.querySelector('i');
+    const originalClass = originalIcon.className;
+
+    // Change icon to checkmark
+    originalIcon.className = 'fa fas fa-check';
+    button.classList.add("-copied")
+
+    // Reset after 2 seconds
+    setTimeout(() => {
+      originalIcon.className = originalClass;
+      button.classList.remove("-copied")
+    }, 300);
   },
 
   enterHtmlEditMode(e) {
@@ -512,7 +572,7 @@
       })
     } else {
       $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}`,
+        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
         type: "PATCH",
         dataType: "json",
         data: {

@@ -86,12 +86,6 @@ namespace :projekt_management do
     resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
     resources :projekt_point_of_interest_categories, only: [:new, :create, :edit, :update, :destroy]
 
-    resources :projekt_content_blocks, only: [:destroy, :update] do
-      member do
-        patch :update_position
-      end
-    end
-
     resources :saved_content_blocks, only: [:create, :update, :destroy]
   end
   resources :projekt_phase_settings, only: [:update]
@@ -118,6 +112,12 @@ namespace :projekt_management do
     end
 
     resources :projekt_content_blocks, only: [:create]
+  end
+
+  resources :projekt_content_blocks, only: [:destroy, :update] do
+    member do
+      patch :update_position
+    end
   end
 
   resources :budgets, except: [:create, :new] do

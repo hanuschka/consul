@@ -6,11 +6,14 @@ class Ckeditor::PicturesController < ApplicationController
     authorize! :create, picture
 
     image = params[:upload]
+    width =  params[:width].to_i
+    height = params[:height].to_i
+
     resize_original = params[:resize_original] == "true"
-    image_max_width = params[:width].to_i.presence || 1920
-    image_max_height = params[:height].to_i.presence || 1080
-    thumb_max_width = params[:width].to_i.presence || 860
-    thumb_max_height = params[:height].to_i.presence || 430
+    image_max_width = 1920 if width.zero?
+    image_max_height = 1080 if height.zero?
+    thumb_max_width = 860 if width.zero?
+    thumb_max_height = 430 if height.zero?
 
     convered_image =
       if image.content_type != "image/gif" && resize_original

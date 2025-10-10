@@ -383,6 +383,7 @@ class User < ApplicationRecord
                                last_name: last_name,
                                street_name: registered_address&.registered_address_street&.name.presence || street_name,
                                street_number: registered_address&.street_number.presence || street_number,
+                               street_number_extension: registered_address&.street_number_extension.presence || street_number_extension,
                                plz: registered_address&.registered_address_street&.plz.presence || plz,
                                city_name: registered_address&.registered_address_city&.name.presence || city_name,
                                date_of_birth: date_of_birth&.strftime("%Y-%m-%d"),

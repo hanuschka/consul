@@ -255,6 +255,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
     imageItem.dataset.id = imageData.id;
     imageItem.dataset.url = imageData.url || '';
+    imageItem.dataset.customThumbUrl = imageData.custom_thumb_url
 
     if (imageData.gallery_thumb_url) {
       $imageItem.find('.js-cb-img-dialog_item-image').attr('src', imageData.gallery_thumb_url)
@@ -300,13 +301,16 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     if (!this.state.selectedImage) return
 
     if (this.onSelectCallback && typeof this.onSelectCallback === 'function') {
+      const selectedImage = this.state.selectedImage;
+
       const imageData = {
-        id: this.state.selectedImage.dataset.id,
-        title: this.state.selectedImage.querySelector('.cb-img-dialog__item-title')?.textContent || '',
-        alt_text: this.state.selectedImage.querySelector('.cb-img-dialog__item-alt')?.textContent || '',
-        description: this.state.selectedImage.dataset.description || '',
-        url: this.state.selectedImage.dataset.url || '',
-        gallery_thumb_url: this.state.selectedImage.querySelector("img").src
+        id: selectedImage.dataset.id,
+        title: selectedImage.querySelector('.cb-img-dialog__item-title')?.textContent || '',
+        alt_text: selectedImage.querySelector('.cb-img-dialog__item-alt')?.textContent || '',
+        description: selectedImage.dataset.description || '',
+        url: selectedImage.dataset.url || '',
+        gallery_thumb_url: selectedImage.querySelector("img").src,
+        custom_thumb_url: selectedImage.dataset.customThumbUrl
       };
       this.onSelectCallback(imageData);
     }

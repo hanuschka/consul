@@ -3,10 +3,14 @@
   data-id="<%= asset.id %>"
   data-description="<%= asset.description.presence || '' %>"
   data-url="<%= asset.url_content(editor_id: params[:editor_id]) %>"
+  data-custom-thumb-url="<%= asset.custom_thumb_url(width: 870) %>"
 >
   <div class="cb-img-dialog__item-thumb">
     <% if asset.data_content_type&.start_with?('image/') %>
-      <img src="<%= asset.gallery_thumb_url %>" alt="<%= asset.alt_text.presence || asset.title.presence || 'Image' %>">
+      <img
+       src="<%= asset.gallery_thumb_url %>"
+       alt="<%= asset.alt_text.presence || asset.title.presence || 'Image' %>"
+      >
     <% end %>
   </div>
   <div class="cb-img-dialog__item-meta">

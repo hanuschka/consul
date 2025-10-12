@@ -39,18 +39,16 @@
     </div>
 
     <!-- Main content area -->
-    <div class="cb-img-dialog__body">
-      <div class="cb-img-dialog__grid js-cb-img-grid">
+    <div class="cb-img-dialog__body js-cb-img-dialog__body">
+      <div class="cb-img-dialog__grid-wrapper">
+        <div class="cb-img-dialog__grid js-cb-img-grid">
+        </div>
+        <div class="cb-img-dialog__loading-overlay js-cb-img-loading-overlay" style="display: none;">
+          <div class="loading-spinner-inline"></div>
+          <%# <span>Wird geladen...</span> %>
+        </div>
       </div>
       <div class="cb-img-dialog__pagination js-cb-img-pagination"></div>
-    </div>
-
-    <!-- Loading overlay for navigation -->
-    <div class="cb-img-dialog__loading-overlay js-cb-img-loading-overlay" style="display: none;">
-      <div class="cb-img-dialog__loading-spinner">
-        <div class="loading-spinner-inline"></div>
-        <%# <span>Wird geladen...</span> %>
-      </div>
     </div>
 
     <!-- Template for temporary uploading images -->

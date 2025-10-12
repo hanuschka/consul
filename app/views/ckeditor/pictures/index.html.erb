@@ -1,9 +1,0 @@
-<% unless params[:pagination_only] == "true" %>
-  <div class="cb-img-dialog__grid js-cb-img-grid">
-    <%= render 'image_items' %>
-  </div>
-<% end %>
-
-<div class="cb-img-dialog__pagination js-cb-img-pagination">
-  <%= render 'pagination', remote: false %>
-</div>

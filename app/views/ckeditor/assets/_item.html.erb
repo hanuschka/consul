@@ -1,0 +1,18 @@
+<div
+  class="cb-img-dialog__item"
+  data-id="<%= asset.id %>"
+  data-description="<%= asset.description.presence || '' %>"
+  data-url="<%= asset.url_content(editor_id: params[:editor_id]) %>"
+>
+  <div class="cb-img-dialog__item-thumb">
+    <% if asset.data_content_type&.start_with?('image/') %>
+      <img src="<%= asset.gallery_thumb_url %>" alt="<%= asset.alt_text.presence || asset.title.presence || 'Image' %>">
+    <% end %>
+  </div>
+  <div class="cb-img-dialog__item-meta">
+    <p class="cb-img-dialog__item-title" title="<%= asset.title.presence || asset.data_file_name.presence || 'Untitled' %>">
+    <%= asset.title.presence || asset.data_file_name.presence || 'Untitled' %>
+    </p>
+    <div class="cb-img-dialog__item-alt"><%= asset.alt_text.presence || '' %></div>
+  </div>
+</div>

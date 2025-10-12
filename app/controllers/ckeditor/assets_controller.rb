@@ -16,7 +16,10 @@ class Ckeditor::AssetsController < ApplicationController
 
     @assets = @assets.page(params[:page]).per(15)
 
-    render json: json
+    respond_to do |format|
+      format.html { render layout: false }
+      format.json { render json: json }
+    end
   end
 
   private

@@ -1,7 +1,9 @@
 get "ckeditor/assets", to: "ckeditor/assets#index"
 
 namespace :ckeditor do
-  resources :pictures, only: [:index, :create, :update, :destroy]
+  resources :pictures, only: [:create, :update, :destroy] do
+    get :custom_thumb_url, on: :member
+  end
   resources :documents, only: [:create, :update, :destroy]
 end
 

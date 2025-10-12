@@ -72,7 +72,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
   closeDialog(_e) {
     $(".js-cb-img-dialog").removeClass("-opened")
-    $(".cb-img-dialog__body").empty()
+    $(".js-cb-img-grid, .js-cb-img-pagination").empty()
 
     this.state.selectedImage = null;
     this.onSelectCallback = null;
@@ -239,15 +239,14 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   },
 
   updateUploadItemWithData(uploadItemId, imageData) {
-    const uploadingItem = document.querySelector(`[data-id="${uploadItemId}"]`);
-
-    // Preload image
+    const uploadItemElement = document.querySelector(`[data-id="${uploadItemId}"]`);
     const image = new Image()
-    image.src = imageData.thumb_url
+    image.src = imageData.gallery_thumb_url
+
     image.onload = () => {
-      this.updateImageItem(uploadingItem, imageData)
-      uploadingItem.classList.remove('-uploading');
-      uploadingItem.querySelector(".cb-img-dialog__item-uploading").remove()
+      this.updateImageItem(uploadItemElement, imageData)
+      uploadItemElement.classList.remove('-uploading');
+      uploadItemElement.querySelector(".cb-img-dialog__item-uploading").remove()
     }
   },
 
@@ -256,11 +255,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
     imageItem.dataset.id = imageData.id;
     imageItem.dataset.url = imageData.url || '';
-    imageItem.dataset.thumbUrl = imageData.thumb_url || '';
-    imageItem.dataset.customThumbUrl = imageData.custom_thumb_url || '';
 
-    if (imageData.thumb_url) {
-      $imageItem.find('.js-cb-img-dialog_item-image').attr('src', imageData.thumb_url)
+    if (imageData.gallery_thumb_url) {
+      $imageItem.find('.js-cb-img-dialog_item-image').attr('src', imageData.gallery_thumb_url)
     }
 
     if (imageData.in_memory_preview_url) {
@@ -309,8 +306,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
         alt_text: this.state.selectedImage.querySelector('.cb-img-dialog__item-alt')?.textContent || '',
         description: this.state.selectedImage.dataset.description || '',
         url: this.state.selectedImage.dataset.url || '',
-        thumb_url: this.state.selectedImage.dataset.thumbUrl || '',
-        custom_thumb_url: this.state.selectedImage.dataset.customThumbUrl || ''
+        gallery_thumb_url: this.state.selectedImage.querySelector("img").src
       };
       this.onSelectCallback(imageData);
     }
@@ -325,7 +321,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     try {
       const response = await this.fetchImageData();
       const html = await response.text();
-      const dialogBody = document.querySelector('.cb-img-dialog__body');
+      const dialogBody = document.querySelector('.js-cb-img-dialog__body');
       dialogBody.innerHTML = html;
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -349,7 +345,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   async fetchImageData(params = {}) {
     const { type, page, search } = this.state;
 
-    return await fetch(`/ckeditor/pictures?${new URLSearchParams({ type, page, search, ...params })}`, {
+    return await fetch(`/ckeditor/assets?${new URLSearchParams({ type, page, search, ...params })}`, {
       method: 'GET',
       headers: {
         'Accept': 'text/html',
@@ -417,7 +413,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
   async fetchAndUpdatePagination() {
     const response = await this.fetchImageData({ pagination_only: "true"});
     const html = await response.text();
-    $(".js-cb-img-pagination").replace(html);
+    $(".js-cb-img-pagination").replaceWith(html);
   },
 
   async handleKaminariPaginationClick(e) {

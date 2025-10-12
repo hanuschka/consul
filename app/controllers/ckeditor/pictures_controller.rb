@@ -3,24 +3,6 @@
 class Ckeditor::PicturesController < ApplicationController
   include Search
 
-  def index
-    authorize! :index, Ckeditor::Picture
-    @pictures = Ckeditor::Picture.joins(:storage_data_attachment)
-
-    if @search_terms.present?
-      @pictures = @pictures.search(@search_terms)
-    else
-      @pictures = @pictures.order(id: :desc)
-    end
-
-    @pictures = @pictures.page(params[:page]).per(15)
-
-    respond_to do |format|
-      format.html { render layout: false }
-      format.json { render json: json_response }
-    end
-  end
-
   def create
     picture = Ckeditor::Picture.new
     authorize! :create, picture
@@ -29,54 +11,37 @@ class Ckeditor::PicturesController < ApplicationController
     width =  params[:width].to_i
     height = params[:height].to_i
 
-    resize_original = params[:resize_original] == "true"
     image_max_width = 3000 if width.zero?
     image_max_height = 2000 if height.zero?
-    thumb_max_width = 860 if width.zero?
-    thumb_max_height = 430 if height.zero?
 
-    convered_image =
-      if image.content_type != "image/gif" && resize_original
-        ImageProcessing::MiniMagick
-          .source(image)
+    image_processing_pipeline = ImageProcessing::MiniMagick.source(image)
+
+    image_processing_pipeline =
+      if image.content_type != "image/gif"
+        image_processing_pipeline
           .convert('jpg')
-          .resize_to_fill(
+          .resize_to_fit(
             image_max_width,
             image_max_height
           )
           .saver(quality: 87, interlace: 'Line')
-          .call
       else
-        image
+        image_processing_pipeline
       end
 
-    picture.attach_uploaded_file(image, convered_image)
+    picture.attach_uploaded_file(
+      image,
+      image_processing_pipeline.call
+    )
 
     if picture.save
-      original_url = picture.url_content(editor_id: params[:editor_id])
-
-      json_to_render =
+      render json:
         picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
-          url: original_url,
+          url: picture.url_content(editor_id: params[:editor_id]),
           thumb_url: picture.url_thumb(editor_id: params[:editor_id]),
-          gallery_thumb_url: picture.custom_thumb_url(
-            width: 300,
-            height: 230
-          ),
+          gallery_thumb_url: picture.gallery_thumb_url,
           created_at: picture.created_at.strftime("%d.%m.%Y")
         )
-
-      json_to_render[:custom_thumb_url] =
-        if resize_original
-          original_url
-        else
-          picture.custom_thumb_url(
-            width: thumb_max_width,
-            height: thumb_max_height
-          )
-        end
-
-      render json: json_to_render
     else
       render json: { error: { message: picture.errors.messages.values.flatten.join(", ") }}, status: :unprocessable_entity
     end
@@ -100,6 +65,27 @@ class Ckeditor::PicturesController < ApplicationController
     render json: { status: :no_content }
   end
 
+  def custom_thumb_url
+    picture = Ckeditor::Picture.find(params[:id])
+    authorize! :update, picture
+
+    width =  params[:width]
+    height = params[:height]
+
+    width = 1200 if width.blank?
+    height = 1200 if height.blank?
+
+    thumb_url = picture.custom_thumb_url(
+      width: width,
+      height: height
+    )
+
+    render json: {
+      id: picture.id,
+      custom_thumb_url: thumb_url
+    }
+  end
+
   private
 
     def picture_params
@@ -108,23 +94,5 @@ class Ckeditor::PicturesController < ApplicationController
 
     def allowed_attributes
       %i[id data_file_name data_content_type data_file_size width height title description alt_text url thumb_url]
-    end
-
-    def pictures_json
-      @pictures.map do |picture|
-        picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
-          url: picture.url_content(editor_id: params[:editor_id]),
-          thumb_url: picture.custom_thumb_url(width: 232, height: 190),
-          created_at: picture.created_at.strftime("%d.%m.%Y")
-        )
-      end
-    end
-
-    def json_response
-      {
-        items: pictures_json,
-        total_pages: @pictures.total_pages,
-        items_per_page: @pictures.limit_value
-      }
     end
 end

@@ -1,5 +1,0 @@
-<% if @pictures.any? %>
-  <%= render collection: @pictures, partial: "ckeditor/pictures/image_item", as: :picture %>
-<% else %>
-  <div class="cb-img-dialog__loading">Keine Bilder gefunden.</div>
-<% end %>

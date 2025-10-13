@@ -135,13 +135,18 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     if (this.isImageCropped(img)) {
       button.classList.remove("-active");
       img.style.objectFit = "contain";
+      img.dataset.previousMargin = img.style.margin
+      img.dataset.previousDisplay = img.style.display
       img.style.width = "auto"
+      img.style.margin = "auto"
+      img.style.display = "block"
       // img.style.height = img.dataset.previousHeight
     } else {
-      img.dataset.previousHeight = img.style.height
       button.classList.add("-active");
       img.style.objectFit = "cover";
       img.style.width = "100%"
+      img.style.margin = img.dataset.previousMargin
+      img.style.display = img.dataset.previousDisplay
     }
   },
   // toggleCropImage(e) {

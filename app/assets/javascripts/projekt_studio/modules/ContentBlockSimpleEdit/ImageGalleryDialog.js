@@ -305,8 +305,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
 
       const imageData = {
         id: selectedImage.dataset.id,
-        title: selectedImage.querySelector('.cb-img-dialog__item-title')?.textContent || '',
-        alt_text: selectedImage.querySelector('.cb-img-dialog__item-alt')?.textContent || '',
+        title: selectedImage.querySelector('.cb-img-dialog__item-title').textContent || '',
+        alt_text: selectedImage.querySelector('.cb-img-dialog__item-alt').textContent || '',
         description: selectedImage.dataset.description || '',
         url: selectedImage.dataset.url || '',
         gallery_thumb_url: selectedImage.querySelector("img").src,

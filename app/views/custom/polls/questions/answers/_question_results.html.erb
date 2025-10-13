@@ -28,7 +28,7 @@
           </td>
           <td class='answers-column <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>'>
             <% if question.open_question_answer == answer %>
-              <% open_answers = answer.all_open_answers %>
+              <% open_answers = answer.all_open_answers_connected_to(question_answer) %>
               <div class='poll-results-open-answers' id='<%= dom_id(answer, :open_answers) %>'>
                 <div class='open-answers-title js-show-open-answers <%= "no-open-answers" if open_answers.count == 0 %>'>
                   <%= answer.title %>

@@ -110,11 +110,9 @@
     updateTitle: function(title, scroll) {
       var scroll = scroll || true;
 
-      var titleElement = document.querySelector(
-        ".js-user-resource-form-title"
-      )
+      var titleElement = $(".js-user-resource-form-title:visible").get(0)
 
-      titleElement.value = title
+      $(".js-user-resource-form-title").val(title)
 
       if (scroll) {
         titleElement.scrollIntoView({block: "center", inline: "nearest"})

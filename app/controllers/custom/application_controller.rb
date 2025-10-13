@@ -62,7 +62,8 @@ class ApplicationController < ActionController::Base
       return if embedded?
 
       @projekts_for_overview_page_navigation = Projekt.for_overview_page_navigation(current_user)
-      @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user)
+                                                      .includes([page: :translations])
+      @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user).includes([page: :translations])
     end
 
     def set_default_social_media_images

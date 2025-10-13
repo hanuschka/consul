@@ -48,7 +48,9 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
 
     const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
 
-    if (!li.style.positon || li.style.positon === "static") {
+    const elementStyle = getComputedStyle(li);
+
+    if (elementStyle.position === "static") {
       li.style.position = "relative"
     }
     li.appendChild(buttonElement);
@@ -134,7 +136,7 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     const isSlider = ul.classList.contains("orbit-container")
 
     if (isSlider) {
-      const lastBullet = ul.parentElement.querySelector(".orbit-bullets > button:last-child")
+      const lastBullet = ul.closest(".orbit").querySelector(".orbit-bullets > button:last-child")
       if (lastBullet.classList.contains("is-active")) {
         lastBullet.previousElementSibling.click()
       }

@@ -15,11 +15,11 @@
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
           <a href="#contentBlockSelectorTab--satatusAndNotes" >Status & Hinweise</a>
         </li>
-        <%# <li class="tabs-title projekt-content-block-templates-selector--tab"> %>
-        <%#   <a href="#contentBlockSelectorTab--teasersAndPromotions"  href="">Teaser & Aktionen</a> %>
-        <%# </li> %>
         <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
           <a href="#contentBlockSelectorTab--mediaAndResources" >Medien & Ressourcen</a>
+        </li>
+        <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
+          <a href="#contentBlockSelectorTab--teasersAndPromotions" >Teaser und Werbeaktionen</a>
         </li>
         <li class="tabs-title projekt-content-block-templates-selector--tab">
           <a  href="#contentBlockSelectorTab--savedContentBlocks">Eigene Inhaltsblöcke</a>
@@ -28,69 +28,36 @@
       <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
         <div id="contentBlockSelectorTab--basicContent" class="tabs-panel is-active">
           <% basic_content_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <div class="js-content-block-template-content">
-                  <%= render "projekts/content_block_templates/basic_content/#{template_name}" %>
-                </div>
-              </div>
-            </div>
+            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "projekts/content_block_templates/basic_content"
+            ) %>
           <% end %>
         </div>
         <div id="contentBlockSelectorTab--satatusAndNotes" class="tabs-panel">
           <% status_and_notes_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <div class="js-content-block-template-content" >
-                  <%= render "projekts/content_block_templates/status_and_notes/#{template_name}" %>
-                </div>
-              </div>
-            </div>
+            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "projekts/content_block_templates/status_and_notes"
+            ) %>
           <% end %>
         </div>
         <div id="contentBlockSelectorTab--teasersAndPromotions" class="tabs-panel">
           <% teasers_and_promotions.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <div class="js-content-block-template-content" >
-                  <%= render "projekts/content_block_templates/teasers_and_promotions/#{template_name}" %>
-                </div>
-              </div>
-            </div>
+            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "projekts/content_block_templates/teasers_and_promotions"
+            ) %>
           <% end %>
         </div>
         <div id="contentBlockSelectorTab--mediaAndResources" class="tabs-panel">
           <% media_and_resources_templates.each do |template_name| %>
-            <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %>">
-              <div class="custom-content-template--item-overlay">
-              </div>
-              <div class="content-block-template">
-                <div class="js-content-block-template-content" >
-                  <%= render "custom/projekts/content_block_templates/media_and_resources/#{template_name}" %>
-                </div>
-              </div>
-            </div>
+            <%= render Custom::Projekts::ContentBlockTemplateItemComponent.new(
+              template_name: template_name,
+              template_dir: "custom/projekts/content_block_templates/media_and_resources"
+            ) %>
           <% end %>
         </div>
-        <%# <div class="tabs-panel"> %>
-        <%#   <% messages_content_block_templates.each do |template_name| %1> %>
-        <%#     <div class="custom-content-template--item js-add-new-content-block" data-content-block-name="<%= template_name %1>"> %>
-        <%#       <div class="custom-content-template--item-overlay"> %>
-        <%#       </div> %>
-        <%#       <div class="content-block-template"> %>
-        <%#         <div class="js-content-block-template-content" > %>
-        <%#           <%= render "custom/projekts/content_block_templates/messages/#{template_name}" %1> %>
-        <%#         </div> %>
-        <%#       </div> %>
-        <%#     </div> %>
-        <%#   <% end %1> %>
-        <%# </div> %>
         <div id="contentBlockSelectorTab--savedContentBlocks" class="tabs-panel">
           <div
               class="add-new-saved-content-block-section js-show-content-block-templates-section"
@@ -100,14 +67,15 @@
                 <button
                     title="Neue Inhaltsblockvorlage erstellen"
                     type="button"
-                    class="-transparent-round-icon-button js-toggle-saved-content-block-form add-new-saved-content-block-button"
+                    class="js-toggle-saved-content-block-form add-new-content-block-button"
                     >
                     <i class="fas fa-plus"></i>
+                    Neuen eigenen Inhaltsblock hinzufügen
                 </button>
               </div>
               <div class="js-saved-content-block-form saved-content-block-form">
                 <h3>Neue Inhaltsblockvorlage erstellen</h3>
-                <p><i>Put html code here</i></p>
+                <p><i>HTML Code hier hinzufügen</i></p>
                 <textarea
                     id="saved-content-block-form--textarea"
                     name="content"

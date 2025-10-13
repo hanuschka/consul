@@ -49,7 +49,7 @@
 <% if @custom_page.landing? %>
   <%= render "pages/landing_page_content" %>
 <% else %>
-  <% landing_page = @custom_page.projekt.landing_pages.first %>
+  <% landing_page = @custom_page&.projekt&.landing_pages&.first %>
   <% if landing_page.present? %>
     <%= render "pages/brand_color_styles", page: landing_page %>
   <% end %>
@@ -144,7 +144,7 @@
       </div>
     <% end %>
 
-    <% if @custom_page.projekt.present? && @custom_page.projekt.projekt_phases.active.any? || show_projekt_studio_controls?(@custom_page.projekt) %>
+    <% if @custom_page.projekt.present? && (@custom_page.projekt.projekt_phases.active.any? || show_projekt_studio_controls?(@custom_page.projekt)) %>
       <div class="js-anchor-navigation-content" id="projekt-particapation">
         <div class="projekt-footer-anchor" id="projekt-footer"> </div>
         <div class="projekt-footer flex-layout">

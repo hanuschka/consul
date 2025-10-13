@@ -457,9 +457,9 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     const descInput = editModal.querySelector(".js-cb-img-edit-description");
     const altInput = editModal.querySelector(".js-cb-img-edit-alt");
 
-    titleInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-title')?.textContent || '').trim();
+    titleInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-title').textContent || '').trim();
     descInput.value = (this.state.selectedImage.dataset.description || '').trim();
-    altInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-alt')?.textContent || '').trim();
+    altInput.value = (this.state.selectedImage.querySelector('.cb-img-dialog__item-alt').textContent || '').trim();
   },
 
   closeEditModal(e) {

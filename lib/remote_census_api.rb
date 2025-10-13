@@ -2,13 +2,14 @@ class RemoteCensusApi
   require "uri"
   require "net/http"
 
-  def call(first_name:, last_name:, street_name:, street_number:, plz:, city_name:, date_of_birth:, gender:)
+  def call(first_name:, last_name:, street_name:, street_number:, street_number_extension:, plz:, city_name:, date_of_birth:, gender:)
     gender = gender == "male" ? "m" : "w"
 
     Response.new(get_response_body(first_name: first_name,
                                    last_name: last_name,
                                    street_name: street_name,
                                    street_number: street_number,
+                                   street_number_extension: street_number_extension,
                                    plz: plz,
                                    city_name: city_name,
                                    date_of_birth: date_of_birth,
@@ -25,6 +26,7 @@ class RemoteCensusApi
         first_name_matched? &&
         last_name_matched? &&
         house_number_matched? &&
+        house_number_extension_matched? &&
         postleitzahl_matched? &&
         city_matched?
     end
@@ -53,6 +55,15 @@ class RemoteCensusApi
       request_house_number.in?(registered_house_numbers)
     end
 
+    def house_number_extension_matched?
+      request_house_number_extension = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld2411").text
+      registered_house_number_extensions = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld2411").map(&:text)
+
+      return true if request_house_number_extension.blank? && registered_house_number_extensions.blank?
+
+      request_house_number_extension.in?(registered_house_number_extensions)
+    end
+
     def postleitzahl_matched?
       request_plz = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl", "ns2" => "http://www.osci.de/xmeld34").text
       registered_plzs = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl", "ns2" => "http://www.osci.de/xmeld34").map(&:text)
@@ -77,7 +88,7 @@ class RemoteCensusApi
 
   private
 
-    def get_response_body(first_name:, last_name:, street_name:, street_number:, plz:, city_name:, date_of_birth:, gender:)
+    def get_response_body(first_name:, last_name:, street_name:, street_number:, street_number_extension:, plz:, city_name:, date_of_birth:, gender:)
       url = URI(Rails.application.secrets.soap_endpoint)
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true
@@ -91,6 +102,7 @@ class RemoteCensusApi
                                       last_name: last_name,
                                       street_name: street_name,
                                       street_number: street_number,
+                                      street_number_extension: street_number_extension,
                                       plz: plz,
                                       city_name: city_name,
                                       date_of_birth: date_of_birth,
@@ -100,7 +112,7 @@ class RemoteCensusApi
       Nokogiri::XML(response.read_body)
     end
 
-    def form_request_xml(first_name:, last_name:, street_name:, street_number:, plz:, city_name:, date_of_birth:, gender:)
+    def form_request_xml(first_name:, last_name:, street_name:, street_number:, street_number_extension:, plz:, city_name:, date_of_birth:, gender:)
       b = Nokogiri::XML::Builder.new(encoding: "UTF-8")
 
       b.Envelope("xmlns:xmel": "XMeld34Auskunft", "xmlns:xmel1": "http://www.osci.de/xmeld34") {
@@ -186,6 +198,10 @@ class RemoteCensusApi
                       b.parent.content = street_number
                       b.parent.namespace = nil
                     }
+                    b.hausnummerBuchstabeZusatzziffer {
+                      b.parent.content = street_number_extension
+                      b.parent.namespace = nil
+                    }
                     b.postleitzahl {
                       b.parent.content = plz
                       b.parent.namespace = nil
@@ -214,14 +230,6 @@ class RemoteCensusApi
                         b.parent.content = gender
                         b.parent.namespace = nil
                       }
-                    }
-                  }
-                }
-                b.steuerungsinformationen {
-                  b.send("option.auskunft", listURI: "urn:de:xmeld:schluesseltabelle:melderegisterauskunft.optionen", listVersionID: 2) {
-                    b.code {
-                      b.parent.content = "01"
-                      b.parent.namespace = nil
                     }
                   }
                 }

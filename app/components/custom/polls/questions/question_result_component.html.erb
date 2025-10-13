@@ -8,6 +8,13 @@
       </small>
     <% end %>
   </h3>
+
+  <% if question.context.present? %>
+    <div class="callout primary">
+      <%= question.context&.title %>
+    </div>
+  <% end %>
+
   <div style="margin-bottom:0.5rem;margin-top:-0.5rem;"><%= AdminWYSIWYGSanitizer.new.sanitize(question.description) %></div>
   <div class="results-table-wrapper">
     <% if question.nested_questions.any? %>

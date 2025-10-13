@@ -170,6 +170,7 @@
     cursor: zoom-in;
     overflow: hidden;
     border-radius: 10px;
+    max-width: 620px;
 
     .image-maximize-button {
       visibility: hidden;
@@ -343,10 +344,6 @@
       @media(max-width: $big-tablet-viewport-start) {
         margin-top: 1rem;
       }
-    }
-
-    img {
-      border-radius: 5px;
     }
   }
 

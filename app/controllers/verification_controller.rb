@@ -5,7 +5,8 @@ class VerificationController < ApplicationController
   skip_authorization_check
 
   def show
-    redirect_to next_step_path[:path], notice: next_step_path[:notice]
+    # redirect_to next_step_path[:path], notice: next_step_path[:notice]
+    redirect_to new_residence_path
   end
 
   private

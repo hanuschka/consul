@@ -128,7 +128,7 @@
     updateDescription: function(description, scroll) {
       var scroll = scroll || true;
 
-      var editor = window.CKeditorInstancesGlobal["userResourceFromEditor"]
+      var editor = App.HTMLEditor.instances["userResourceFromEditor"]
       editor.setData(description)
 
       if (scroll) {
@@ -206,7 +206,7 @@
         if (currentMapInstance && App.Mapbox.maps.length <= 1) {
           // Move map to new coordinates (Mapbox uses [lng, lat] order)
           // currentMapInstance.map.easeTo({
-          currentMapInstance.map.flyTo({
+          currentMapInstance.map.jumpTo({
             center: [coordinates[1], coordinates[0]], // lng, lat
             duration: 1000 // smooth animation
           });

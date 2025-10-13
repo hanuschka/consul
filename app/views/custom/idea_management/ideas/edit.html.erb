@@ -2,7 +2,7 @@
 
 <div class="row expanded full-width">
   <div class="small-12 large-8 columns">
-    <%= translatable_form_for @idea, url: idea_management_idea_path(@idea), html: { class: "deficiency-report-form" } do |f| %>
+    <%= translatable_form_for @idea, url: idea_management_idea_path(@idea) do |f| %>
       <%= render "shared/errors", resource: @idea %>
 
       <fieldset class="required-fields">
@@ -43,28 +43,49 @@
           </div>
         <% end %>
 
-        <div>
+        <div class="margin-bottom">
           <%= f.label :video_url, t("custom.ideas.form.labels.video_url") %>
           <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note"), label: false %>
         </div>
 
-        <div>
-          <%= label_tag :registered_address_district_id, t("custom.ideas.form.labels.district_select") %>
-          <%= select_tag :registered_address_district_id, options_for_select(@districts.map { |district| [district.name, district.id] }),
-            { prompt: t("custom.ideas.form.map.placeholder"), label: t("custom.ideas.form.district.title"),
-              class: "js-dr-form-update-map",
+        <div class="custom-new-design">
+          <div class="margin-bottom">
+            <%= render partial: "custom/shared/user_resources_form/idea_category", locals: { f: f } %>
+          </div>
+
+          <div class="" style="display:flex;align-items:baseline;">
+            <h2 class="rich-form-label" style="flex-grow:1;">
+              <i class="fas fa-map"></i>
+              <%= t("custom.user_resources.form.map_location_label") %>
+              <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+              <span class="small"><%= t("custom.user_resources.form.map_location_instructions_optional") %></span>
+            </h2>
+
+            <%= select_tag :idea_district, options_for_select(RegisteredAddress::District.joins(:map_location).order(id: :asc).all.map { |district|
+              [
+                district.name, district.id,
+                {
+                  data: {
+                    latitude: district.map_location.latitude,
+                    longitude: district.map_location.longitude
+                  }
+                }
+              ]
+            }),
+            { prompt: t("custom.ideas.form.district.placeholder"), label: false,
+              class: "js-update-map-center hide-on-big-tablet",
+              style: "width:unset;",
               data: {
-                all_district_map_coordinates: @map_coordinates_for_districts,
-                default_map_coordinates: [Setting["map.latitude"], Setting["map.longitude"]]
+                default_latitude: MapLocation.default.latitude,
+                default_longitude: MapLocation.default.longitude
               }
             } %>
-        </div>
+          </div>
 
-        <div class="small-12 margin-bottom" id='map-for-new-idea'>
           <%= render "map_locations/form_fields",
-                     form:     f,
-                     mappable: @idea,
-                     nesting_prefix: "idea" %>
+            form:            f,
+            mappable:        @idea,
+            nesting_prefix: "idea" %>
         </div>
 
         <div>

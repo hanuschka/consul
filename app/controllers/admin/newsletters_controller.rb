@@ -60,6 +60,13 @@ class Admin::NewslettersController < Admin::BaseController
     redirect_to [:admin, @newsletter]
   end
 
+  def send_test
+    @newsletter = Newsletter.find(params[:id])
+    Mailer.newsletter(@newsletter, current_user.email).deliver_now
+
+    redirect_to admin_newsletter_path(@newsletter), notice: t("admin.newsletters.send_test_success")
+  end
+
   private
 
     def newsletter_params

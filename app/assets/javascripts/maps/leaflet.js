@@ -328,7 +328,7 @@
       if (this.features && Object.keys(this.features).length > 0) {
         const self = this;
 
-        this.featuresLayer = L.geoJSON(this.features, {
+        L.geoJSON(this.features, {
           pointToLayer: function(feature, latlng) {
             return L.marker(latlng, {
               icon: App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name),
@@ -337,7 +337,7 @@
           style: function (feature) {
             return {
               weight: 2,
-              color: self.adminEditor ? "#ff0000" : feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
+              color: feature.properties.feature_color || feature.properties.color || App.Utils.getBrandColor()
             };
           },
           onEachFeature: function (feature, layer) {
@@ -348,7 +348,6 @@
               layer.on('pm:edit', function(e) {
                 self.updateFeaturesInput(self.featuresInput, self.editableLayers);
               });
-
             } else {
               if (feature.geometry.type === 'Point') {
                 self.clusterGroup.addLayer(layer);
@@ -365,12 +364,10 @@
 
                 layer.on("click", self.openMarkerPopup);
               }
-
             }
           }
-        }).addTo(this.map);
+        });
       }
-
       if (this.editingProjektMap) {
         this.placeCenterMarker(this.mapCenterLatLng, this);
       }
@@ -444,30 +441,28 @@
         })
       }
 
-      if (this.enableShapes || this.adminEditor) {
-        this.map.pm.Toolbar.createCustomControl({
-          name: 'customDragMode',
-          className: 'control-icon leaflet-pm-icon-custom-drag',
-          block: 'edit',
-          title: 'Auswahl modus',
-          disableGlobalEditMode: true
-        });
+      this.map.pm.Toolbar.createCustomControl({
+        name: 'customDragMode',
+        className: 'control-icon leaflet-pm-icon-custom-drag',
+        block: 'edit',
+        title: 'Auswahl modus',
+        disableGlobalEditMode: true
+      });
 
-        this.map.pm.Toolbar.createCustomControl({
-          name: 'clearMap',
-          className: 'control-icon leaflet-pm-icon-delete',
-          title: 'Karte zurücksetzen',
-          block: 'edit',
-          onClick: () => {
-            self.editableLayers.forEach(function(layer) {
-              self.map.removeLayer(layer);
-            });
+      this.map.pm.Toolbar.createCustomControl({
+        name: 'clearMap',
+        className: 'control-icon leaflet-pm-icon-delete',
+        title: 'Karte zurücksetzen',
+        block: 'edit',
+        onClick: () => {
+          self.editableLayers.forEach(function(layer) {
+            self.map.removeLayer(layer);
+          });
 
-            self.editableLayers = [];
-            self.featuresInput.value = JSON.stringify({});
-          }
-        });
-      }
+          self.editableLayers = [];
+          self.featuresInput.value = JSON.stringify({});
+        }
+      });
 
       this.rearrangeEditingControls();
       App.Map.setupEventListenersForMarkerStyleChanges(this);

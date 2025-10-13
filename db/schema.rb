@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_15_153348) do
+ActiveRecord::Schema.define(version: 2025_10_03_123439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -814,6 +814,7 @@ ActiveRecord::Schema.define(version: 2025_09_15_153348) do
     t.integer "given_order"
     t.text "notice_text", default: ""
     t.boolean "archive_reports", default: false
+    t.integer "reminder_delay"
   end
 
   create_table "deficiency_report_translations", force: :cascade do |t|
@@ -1792,7 +1793,13 @@ ActiveRecord::Schema.define(version: 2025_09_15_153348) do
     t.boolean "bundle_question", default: false
     t.integer "next_question_id"
     t.boolean "answer_mandatory", default: false
+    t.bigint "contextualize_by_poll_question_id"
+    t.bigint "contexted_clone_of_poll_question_id"
+    t.bigint "context_id"
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
+    t.index ["context_id"], name: "index_poll_questions_on_context_id"
+    t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
+    t.index ["contextualize_by_poll_question_id"], name: "index_poll_questions_on_contextualize_by_poll_question_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
@@ -2441,6 +2448,12 @@ ActiveRecord::Schema.define(version: 2025_09_15_153348) do
     t.index ["sentimentable_type", "sentimentable_id"], name: "index_resource_sentiments_on_sentimentable"
   end
 
+  create_table "saved_content_blocks", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "sdg_goals", force: :cascade do |t|
     t.integer "code", null: false
     t.datetime "created_at", null: false
@@ -2633,6 +2646,7 @@ ActiveRecord::Schema.define(version: 2025_09_15_153348) do
     t.boolean "landing_show_projekts_overview", default: true
     t.boolean "landing_site_logo_follow_to_landing_page", default: false
     t.string "landing_navigation_link_color", default: "#000000"
+    t.string "brand_color"
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
@@ -3051,6 +3065,9 @@ ActiveRecord::Schema.define(version: 2025_09_15_153348) do
   add_foreign_key "poll_partial_results", "users", column: "author_id"
   add_foreign_key "poll_question_answer_videos", "poll_question_answers", column: "answer_id"
   add_foreign_key "poll_question_answers", "poll_questions", column: "question_id"
+  add_foreign_key "poll_questions", "poll_question_answers", column: "context_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contexted_clone_of_poll_question_id"
+  add_foreign_key "poll_questions", "poll_questions", column: "contextualize_by_poll_question_id"
   add_foreign_key "poll_questions", "polls"
   add_foreign_key "poll_questions", "proposals"
   add_foreign_key "poll_questions", "users", column: "author_id"

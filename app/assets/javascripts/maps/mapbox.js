@@ -73,7 +73,8 @@
           cooperativeGestures: true,
           locale: {
             "ScrollZoomBlocker.CtrlMessage": "Zum Zoomen der Karte Strg + Scrollen verwenden",
-            "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen"
+            "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen",
+            'TouchPanBlocker.Message': 'Zum Verschieben der Karte zwei Finger verwenden'
           },
         });
 
@@ -600,7 +601,7 @@
           point: true,
           line_string: instance.enableShapes,
           polygon: instance.enableShapes,
-          trash: instance.enableShapes
+          trash: true
         },
         defaultMode: 'draw_point',
         userProperties: true,
@@ -615,8 +616,11 @@
       this.addSwitchToSimpleSelectControl();
 
       App.Map.formattedFeatures(instance.features).features.forEach(function(feature) {
-        instance.editableLayers.push(feature.id);
-        instance.draw.add(feature);
+        const added = instance.draw.add(feature);
+
+        if (added && added.length > 0) {
+          instance.editableLayers.push(added[0]);
+        }
       });
 
       if (instance.editingProjektMap) {
@@ -665,7 +669,7 @@
             ['==', '$type', 'Polygon']
           ],
           'paint': {
-            'fill-color': [ 'case', ['has', 'user_feature_color'], ['get', 'user_feature_color'], this.defaultFeatureColor],
+            'fill-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'fill-opacity': [ 'case', ['==', ['get', 'active'], 'true'], 0.35, 0.15 ]
           }
         },
@@ -681,9 +685,21 @@
             'line-join': 'round',
           },
           'paint': {
-            'line-color': [ 'case', ['has', 'user_feature_color'], ['get', 'user_feature_color'], this.defaultFeatureColor],
+            'line-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
             'line-dasharray': [ 'case', ['==', ['get', 'active'], 'true'], [5, 5], [5, 0] ],
             'line-width': [ 'case', ['==', ['get', 'active'], 'true'], 2, 2 ]
+          },
+        },
+        {
+          'id': 'gl-draw-point-outer',
+          'type': 'circle',
+          'filter': [ 'all',
+            ['==', '$type', 'Point'],
+            ['==', 'meta', 'feature'],
+          ],
+          'paint': {
+            'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 15, 12],
+            'circle-color': [ 'case', ['==', ['get', 'active'], 'true'], '#fff', [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor] ]
           },
         },
         {
@@ -695,10 +711,9 @@
           ],
           'paint': {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 12, 12],
-            'circle-color': [ 'case', ['has', 'user_feature_color'], ['get', 'user_feature_color'], this.defaultFeatureColor]
+            'circle-color': [ 'coalesce', ['get', 'user_feature_color'], ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
           },
         },
-
         {
           'id': 'gl-draw-point-icon',
           'type': 'symbol',

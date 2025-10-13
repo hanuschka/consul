@@ -1,6 +1,8 @@
 # config valid only for current version of Capistrano
 lock "~> 3.17.3"
 
+require "base64"
+
 def deploysecret(key)
   @deploy_secrets_yml ||= YAML.load_file("config/deploy-secrets/deploy-secrets-cli_augs.yml")[fetch(:stage).to_s]
   @deploy_secrets_yml.fetch(key.to_s, "undefined")
@@ -11,7 +13,11 @@ set :rvm1_map_bins, -> { fetch(:rvm_map_bins).to_a.concat(%w[rake gem bundle rub
 
 set :application, "consul"
 set :deploy_to, deploysecret(:deploy_to)
-set :ssh_options, port: deploysecret(:ssh_port)
+set :ssh_options, {
+  port: deploysecret(:ssh_port),
+  # Use this for debug ssh connection
+  # verbose: :debug # or :info, :error
+}
 
 set :repo_url, "https://github.com/hanuschka/consul.git"
 

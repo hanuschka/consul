@@ -135,17 +135,23 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     if (this.isImageCropped(img)) {
       button.classList.remove("-active");
       img.style.objectFit = "contain";
-      img.dataset.previousMargin = img.style.margin
-      img.dataset.previousDisplay = img.style.display
+      // img.dataset.previousMargin = img.style.margin
+      // img.dataset.previousDisplay = img.style.display
+      // img.style.display = "block"
       img.style.width = "auto"
       img.style.margin = "auto"
-      // img.style.display = "block"
-      // img.style.height = img.dataset.previousHeight
+      img.style.height = img.dataset.previousHeight || "auto"
     } else {
       button.classList.add("-active");
+      img.dataset.previousHeight = img.style.height
       img.style.objectFit = "cover";
       img.style.width = "100%"
-      img.style.margin = img.dataset.previousMargin
+
+      if (img.dataset.cropHeight) {
+        console.log('set crop height', img.dataset.cropHeight)
+        img.style.height = img.dataset.cropHeight
+      }
+      // img.style.margin = img.dataset.previousMargin
       // img.style.display = img.dataset.previousDisplay
     }
   },

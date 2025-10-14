@@ -272,7 +272,7 @@ class Budget < ApplicationRecord
   def update_preselected_investments
     investments.update_all(preselected: false)
 
-    preselected_investments_ids = investments.sort_by_total_votes.limit(max_preselected).ids
+    preselected_investments_ids = investments.feasible.sort_by_total_votes.limit(max_preselected).ids
     preselected_investments = investments.where(id: preselected_investments_ids)
 
     preselected_investments.update_all(preselected: true)

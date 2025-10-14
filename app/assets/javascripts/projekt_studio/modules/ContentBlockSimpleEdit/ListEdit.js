@@ -82,6 +82,11 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
       clonedLi,
       ["id", "aria-labelledby", "aria-controls", "aria-expanded", "data-slide"]
     )
+
+    // clonedLi.querySelectorAll("img").forEach((img) => {
+    //   img.dataset.originalThumbHeight = ""
+    // })
+
     const copyId = Date.now();
 
     let elementToReinitialize = isSlider ? ul.closest(".orbit") : ul;
@@ -182,9 +187,13 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
 
     const lastLi = ul.querySelector("li:last-child")
 
+    if (copyStyles && lastLi.classList.value !== "") {
+      const gridPattern = /^(grid-[xy]|grid-(margin|padding)-[xy]|cell|column|columns|small-\d+|medium-\d+|large-\d+)$/;
+      const filtered = Array.from(lastLi.classList).filter(cls =>
+        gridPattern.test(cls)
+      );
 
-    if (copyStyles) {
-      buttonWrapper.className = `${lastLi.classList} ${buttonWrapper.classList}`
+      buttonWrapper.className = `${filtered.join(' ')} ${buttonWrapper.className}`;
     }
 
     buttonWrapper.innerHTML = `

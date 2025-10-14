@@ -1,0 +1,25 @@
+<% pagination_html = capture do %>
+  <div class="cb-img-dialog__pagination js-cb-img-pagination">
+    <% if @assets.respond_to?(:current_page) && @assets.total_pages > 1 %>
+      <%= render 'pagination', remote: false %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if params[:pagination_only] == "true" %>
+  <%= pagination_html %>
+<% else %>
+  <div class="cb-img-dialog__body js-cb-img-dialog__body">
+    <div class="cb-img-dialog__grid-wrapper">
+      <div class="cb-img-dialog__grid js-cb-img-grid">
+        <%= render 'items' %>
+      </div>
+      <div class="cb-img-dialog__loading-overlay js-cb-img-loading-overlay" style="display: none;">
+        <div class="loading-spinner-inline"></div>
+        <%# <span>Wird geladen...</span> %>
+      </div>
+    </div>
+    <%= pagination_html %>
+  </div>
+<% end %>
+

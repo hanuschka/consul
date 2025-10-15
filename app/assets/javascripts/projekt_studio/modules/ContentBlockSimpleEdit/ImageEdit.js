@@ -235,7 +235,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const heightInput = imageWrapper.querySelector(".js-content-block-image-height-input")
 
     if (heightInput) {
-      heightInput.max = img.clientHeight
+      // heightInput.max = img.clientHeight
+      heightInput.max = img.naturalHeight
       heightInput.value = img.clientHeight
     }
 
@@ -294,7 +295,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const input = wrapper.querySelector(".js-content-block-image-height-input");
 
     const currentHeight = parseInt(input.value);
-    const maxHeight = img.dataset.originalThumbHeight;
+    // const maxHeight = img.dataset.originalThumbHeight;
+    const maxHeight = input.getAttribute("max")
     const newHeight = Math.min(maxHeight, currentHeight + 10);
 
     input.value = newHeight;

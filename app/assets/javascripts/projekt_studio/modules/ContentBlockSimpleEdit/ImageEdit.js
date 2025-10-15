@@ -252,9 +252,12 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     img.dataset.originalThumbHeight = img.clientHeight;
 
     const range = document.querySelector(".js-content-block-image-height-range")
-    range.max = img.clientHeight
-    range.value = img.clientHeight
-    range.nextElementSibling.innerHTML = `${img.clientHeight}px`
+
+    if (range) {
+      range.max = img.clientHeight
+      range.value = img.clientHeight
+      range.nextElementSibling.innerHTML = `${img.clientHeight}px`
+    }
 
     // If all images in this content block are done loading, unlock the save/cancel buttons
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {

@@ -875,8 +875,9 @@
     this._updatePagination();
 
     fetch(`${this.apiGet}?${new URLSearchParams({ ...params, editor_id: this.state.editor_id })}`, {
-      method:  'GET',
+      method: 'GET',
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': this.csrf_token
       }

@@ -23,7 +23,7 @@
         }
 
         this.initialData["collapsible"] = true
-        this.initialData["collapsed"] = getCookie("voice_assistant_collapsed") === "true"
+        this.initialData["collapsed"] = App.Cookies.getCookie("voice_assistant_collapsed") === "true"
 
         this.tryToPushInitialDataToDtAssistant();
       }
@@ -94,12 +94,12 @@
     toggleAssistantCollapseState(collapsed) {
       this.voiceAssistantIframe.classList.toggle("-collapsed", collapsed)
 
-      setCookie("voice_assistant_collapsed", collapsed, 365)
+      App.Cookies.saveCookie("voice_assistant_collapsed", collapsed, 365)
     },
 
 
     initCollapseState() {
-      const collapsed = getCookie("voice_assistant_collapsed")
+      const collapsed = App.Cookies.getCookie("voice_assistant_collapsed")
 
       if (collapsed === "true") {
         this.voiceAssistantIframe.classList.add("-collapsed")
@@ -328,17 +328,5 @@
     } else if (typeof eventData === "object"){
       return eventData
     }
-  }
-
-  function setCookie(name, value, days) {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString()
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`
-  }
-
-  function getCookie(name) {
-    return document.cookie
-      .split("; ")
-      .find(row => row.startsWith(name + "="))
-      ?.split("=")[1]
   }
 }).call(this);

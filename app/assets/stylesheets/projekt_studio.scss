@@ -559,7 +559,7 @@ body.custom-new-design {
 
   .tabs-panel {
     padding: 2px;
-    padding-right: 30px;
+    padding-right: 20px;
     max-height: calc(100vh - (140px + 3vh));
     overflow: auto;
   }
@@ -1133,7 +1133,8 @@ body.-ai-functions-locked {
       }
 
       .content-block-image-change-button,
-      .content-block-image-crop-button {
+      .content-block-image-crop-button,
+      .content-block-image-dimension-controls {
         display: none;
       }
     }
@@ -1211,6 +1212,72 @@ body.-ai-functions-locked {
 
 .content-block-image-change-input {
   display: none;
+}
+
+.content-block-image-dimension-controls {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1px 12px;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  display: flex !important;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+
+    label {
+      min-width: 50px;
+      margin: 0;
+      margin-right: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 12px;
+      // background: #ddd;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+
+      &::-webkit-slider-thumb {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        // background: $dt-base;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      &::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        // background: $dt-base;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .dimension-value {
+      min-width: 50px;
+      text-align: right;
+      margin-left: 10px;
+    }
 }
 
 .projekt-content-block {

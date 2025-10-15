@@ -109,6 +109,11 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     }
 
     $(newElementToReinitialize).foundation()
+
+    if (isAccordion) {
+      const $accordionLinks = $(newElementToReinitialize).find('.accordion-title');
+      $accordionLinks.off("keydown")
+    }
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {

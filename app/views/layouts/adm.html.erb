@@ -2,19 +2,24 @@
 <html lang="<%= I18n.locale %>">
 
   <head>
-    <%= stylesheet_link_tag "application-kern" %>
+    <%= stylesheet_link_tag "application.adm" %>
     <%= javascript_include_tag "application-kern" %>
   </head>
 
-  <body class="adm">
-    <div class="kern-container">
+  <body class="">
+    <aside>
       <nav>
         <ul>
-          <li><%= link_to "Dashboard", adm_root_path %></li>
-          <li><%= link_to "Projekte", adm_projekts_path %></li>
+          <li class="nav-item <%= 'active' if current_page?(adm_root_path) %>"><%= link_to "Dashboard", adm_root_path %></li>
+          <li class="nav-item <%= 'active' if current_page?(adm_projekts_path) %>"><%= link_to "Projekte", adm_projekts_path %></li>
         </ul>
       </nav>
-      <%= yield %>
-    </div>
+    </aside>
+
+    <main>
+      <div class="kern-container-fluid">
+        <%= yield %>
+      </div>
+    </main>
   </body>
 </html>

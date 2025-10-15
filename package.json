@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
-    "build:css": "sass ./app/assets/stylesheets/application.kern.scss:./app/assets/builds/application-kern.css --load-path=node_modules"
+    "build:css": "npm run build:css:adm --",
+    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules"
   }
 }

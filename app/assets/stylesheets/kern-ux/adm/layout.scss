@@ -1,0 +1,11 @@
+aside {
+  position: fixed;
+  height: 100vh;
+  z-index: 1000;
+  width: 250px;
+  border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
+}
+
+main {
+  padding-left: 250px;
+}

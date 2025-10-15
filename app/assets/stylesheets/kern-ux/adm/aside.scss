@@ -1,0 +1,27 @@
+aside {
+  padding: 0 var(--kern-metric-space-x-small);
+
+  nav {
+    .nav-item {
+      color: var(--kern-color-action-default);
+
+      &.active {
+        color: var(--kern-color-action-on-default);
+        background-color: var(--kern-color-action-default);
+        border-radius: var(--kern-8);
+      }
+
+      &:focus {
+        background-color: var(--kern-color-action-focus-background);
+      }
+    }
+
+    a {
+      display: block;
+      padding: var(--kern-metric-space-small);
+      // padding: var(--kern-metric-space-default);
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+}

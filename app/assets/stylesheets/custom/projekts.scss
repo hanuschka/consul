@@ -60,6 +60,21 @@ table.edit-projekt {
   }
 }
 
+table.projekts {
+  th:nth-child(1),
+  th:nth-child(2) {
+    width: 110px;
+  }
+
+  th:nth-child(3) {
+    width: 230px;
+  }
+
+  th:nth-child(5) {
+    width: 120px;
+  }
+}
+
 #edit_projekt {
   tr.projekt_phase_settings {
     border-bottom: none;

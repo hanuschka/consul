@@ -19,11 +19,11 @@
 <h2><%= t('custom.admin.projekts.index.projekt_list') %>  </h2>
 <table class='projekts'>
   <thead>
-    <th scope="col" width="120" class=""><%= t("custom.admin.projekts.index.level") %></th>
-    <th scope="col" width="120" class=""><%= t("custom.admin.projekts.index.position") %></th>
-    <th scope="col" width="480" class=""><%= t("custom.admin.projekts.index.parent") %></th>
+    <th scope="col" class=""><%= t("custom.admin.projekts.index.level") %></th>
+    <th scope="col" class=""><%= t("custom.admin.projekts.index.position") %></th>
+    <th scope="col" class=""><%= t("custom.admin.projekts.index.parent") %></th>
     <th scope="col" class=""><%= t("custom.admin.projekts.index.name") %></th>
-    <th scope="col" width="200"><%= t("admin.actions.actions") %></th>
+    <th scope="col"><%= t("admin.actions.actions") %></th>
   </thead>
   <tbody>
     <% @projekts.order(order_number: :asc).each do |projekt| %>

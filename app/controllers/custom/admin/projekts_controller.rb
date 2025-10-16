@@ -24,7 +24,7 @@ class Admin::ProjektsController < Admin::BaseController
 
     @geozones = Geozone.all.order(Arel.sql("LOWER(name)"))
 
-    @projekts = @projekts.page(params[:page]).per(50)
+    @projekts = @projekts.page(params[:page]).per(10)
   end
 
   def show

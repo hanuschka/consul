@@ -1,5 +1,5 @@
 namespace :adm do
-  root to: "dashboard#show"
+  root to: "home#show"
 
   resources :projekts, only: [:index, :show]
 end

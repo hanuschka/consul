@@ -1,7 +1,3 @@
-// Redefining existing variables
-
-:root {
-  --kern-color-layout-border: oklch(var(--kern-dataport-grey-700-lightness) var(--kern-dataport-grey-700-chroma) var(--kern-dataport-grey-700-hue));
+body {
+  color: var(--kern-color-layout-text-default);
 }
-
-// Defining new variables

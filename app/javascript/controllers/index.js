@@ -6,3 +6,6 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import ModeSwitcherController from "./mode_switcher_controller"
+application.register("mode-switcher", ModeSwitcherController)

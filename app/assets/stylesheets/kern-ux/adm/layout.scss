@@ -3,9 +3,13 @@ aside {
   height: 100vh;
   z-index: 1000;
   width: 250px;
-  border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
+  border-right: var(--kern-metric-border-width-light) solid var(--color-grey-700);
 }
 
 main {
   padding-left: 250px;
+}
+
+.main-container {
+  border-top: 1px solid transparent;
 }

@@ -1,0 +1,12 @@
+<% if @breadcrumbs.present? %>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb-list">
+      <% @breadcrumbs.each_with_index do |breadcrumb, index| %>
+        <% is_last = index == @breadcrumbs.size - 1 %>
+        <%= breadcrumb_item(breadcrumb, is_last) %>
+      <% end %>
+    </ol>
+  </nav>
+<% end %>
+
+<h1><%= @title %></h1>

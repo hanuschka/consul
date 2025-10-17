@@ -3,23 +3,16 @@ aside {
 
   nav {
     .nav-item {
-      color: var(--kern-color-action-default);
+      color: var(--kern-color-layout-text-default);
 
       &.active {
-        color: var(--kern-color-action-on-default);
-        background-color: var(--kern-color-action-default);
+        background-color: var(--kern-color-feedback-info-background);
         border-radius: var(--kern-8);
-      }
-
-      &:focus {
-        background-color: var(--kern-color-action-focus-background);
       }
     }
 
     a {
-      display: block;
-      padding: var(--kern-metric-space-small);
-      // padding: var(--kern-metric-space-default);
+      padding: var(--kern-metric-space-default);
       text-decoration: none;
       color: inherit;
     }

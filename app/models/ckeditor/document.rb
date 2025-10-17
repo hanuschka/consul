@@ -13,6 +13,14 @@ class Ckeditor::Document < Ckeditor::Asset
     ""
   end
 
+  def custom_thumb_url(width: 890, height: 890)
+    ""
+  end
+
+  def gallery_thumb_url
+    ""
+  end
+
   def type
     "Ckeditor::Document"
   end

@@ -9,8 +9,7 @@ class DeficiencyReport::Status < ApplicationRecord
 
   default_scope { order(given_order: :asc) }
 
-  validates :reminder_delay, presence: true,
-                             numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :reminder_delay, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
 
   def self.create_default_objects
     return if DeficiencyReport::Status.count > 0

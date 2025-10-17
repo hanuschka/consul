@@ -82,15 +82,35 @@ module ApplicationHelper
 
   def count_db_queries
     count = 0
-  
+
     callback = ->(_name, _started, _finished, _unique_id, payload) do
       count += 1 unless payload[:name] == "SCHEMA" # skip schema queries
     end
-  
+
     ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
       yield
     end
-  
+
     count
+  end
+
+  def use_mapbox?(projekt = nil)
+    if projekt.present?
+      Setting["feature.mapbox"].present? || projekt_feature?(projekt, "general.mapbox")
+    else
+      Setting["feature.mapbox"].present?
+    end
+  end
+
+  def show_admin_controls_for_projekt?(projekt)
+    projekt.present? && (current_user&.email.in?(@partner_emails) || current_user&.has_pm_permission_to?(:manage, projekt))
+  end
+
+  def show_projekt_studio_controls?(projekt)
+    show_admin_controls_for_projekt?(projekt) || embedded_and_frame_access_code_valid?(projekt)
+  end
+
+  def native_projekt_studio?(projekt)
+    show_admin_controls_for_projekt?(projekt) && !embedded_and_frame_access_code_valid?(projekt)
   end
 end

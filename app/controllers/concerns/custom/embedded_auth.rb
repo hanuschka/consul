@@ -7,7 +7,7 @@ module EmbeddedAuth
 
     helper_method :embedded? #, :frame_temp_token_valid?
     helper_method :frame_access_code_valid? #, :frame_temp_token_valid?
-    helper_method :embedded_and_frame_access_code_valid?
+    # helper_method :embedded_and_frame_access_code_valid?
     helper_method :skip_forgery_protection_for_frame_session?, :frame_session_from_authorized_source?, :frame_session
 
     skip_forgery_protection if: :skip_forgery_protection_for_frame_session?
@@ -25,16 +25,16 @@ module EmbeddedAuth
         (params[:embedded] == "true" || request.headers["HTTP_X_EMBEDDED_FRAME"] == "true")
     end
 
-    def frame_access_code_valid?(projekt)
-      return false if params[:frame_code].blank?
+    # def frame_access_code_valid?(projekt)
+    #   return false if params[:frame_code].blank?
 
-      params[:frame_code] == projekt.frame_access_code
-    end
+    #   params[:frame_code] == projekt.frame_access_code
+    # end
 
     # TODO: remove this method
-    def embedded_and_frame_access_code_valid?(projekt)
-      embedded? && frame_access_code_valid?(projekt)
-    end
+    # def embedded_and_frame_access_code_valid?(projekt)
+    #   embedded? && frame_access_code_valid?(projekt)
+    # end
 
     def skip_forgery_protection_for_frame_session?
       @_frame_session_authentificated ||=

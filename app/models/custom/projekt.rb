@@ -665,9 +665,9 @@ class Projekt < ApplicationRecord
     save!
   end
 
-  def frame_url
-    gen_projekt_url(embedded: true, frame_code: frame_access_code)
-  end
+  # def frame_url
+  #   gen_projekt_url(embedded: true, frame_code: frame_access_code)
+  # end
 
   def gen_projekt_url(url_params = {})
     uri = URI.parse(page.url)

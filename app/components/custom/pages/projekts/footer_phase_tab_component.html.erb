@@ -63,7 +63,7 @@
       <%= render "custom/projekts/partials/phase_subscription", phase: phase %>
     </div>
   <% end %>
-  <% if helpers.show_projekt_studio_controls?(phase.projekt) %>
+  <% if helpers.show_admin_controls_for_projekt?(phase.projekt) %>
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">
         <%

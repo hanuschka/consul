@@ -1,6 +1,6 @@
 <h2 class="sidebar-title"><%= t("custom.projekts.page.sidebar.admin_controls.title") %></h2>
 
-<% if current_user.administrator? %>
+<% if current_user.present? && current_user.administrator? %>
   <% namespace = :admin %>
 <% elsif current_user.present? && current_user.projekt_manager? %>
   <% namespace = :projekt_management %>

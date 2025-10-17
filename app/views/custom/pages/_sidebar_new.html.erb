@@ -1,6 +1,8 @@
 <aside class="sidebar">
-  <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
-    <%= render partial: 'pages/sidebar/admin_controls' %>
+  <% if show_admin_controls_for_projekt?(@projekt) %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %>
+      <%= render partial: 'pages/sidebar/admin_controls' %>
+    <% end %>
   <% end %>
 
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>

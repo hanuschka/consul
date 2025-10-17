@@ -8,22 +8,7 @@
 
   <body class="">
     <aside>
-      <nav>
-        <ul>
-          <li class="nav-item <%= 'active' if current_page?(adm_root_path) %>">
-            <%= link_to adm_root_path do %>
-              <span class="kern-icon kern-icon--home kern-icon--small" aria-hidden="true"></span>
-              <span>Home</span>
-            <% end %>
-          </li>
-          <li class="nav-item <%= 'active' if current_page?(adm_projekts_path) %>">
-            <%= link_to adm_projekts_path do %>
-              <span class="kern-icon kern-icon--checklist kern-icon--small" aria-hidden="true"></span>
-              <span>Projekte</span>
-            <% end %>
-          </li>
-        </ul>
-      </nav>
+      <%= render Adm::MenuComponent.new %>
 
       <div class="kern-form-check" data-controller="mode-switcher" style="margin-top: 5rem;">
         <%= check_box_tag 'mode_switcher', '1', cookies[:mode_switcher] == '1', class: 'kern-form-check__checkbox', id: 'mode_switcher', data: { action: 'change->mode-switcher#toggle' } %>

@@ -15,6 +15,9 @@ aside {
       padding: var(--kern-metric-space-default);
       text-decoration: none;
       color: inherit;
+      display: flex;
+      align-items: center;
+      gap: var(--kern-metric-space-small);
     }
   }
 }

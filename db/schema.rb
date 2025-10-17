@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_10_03_123439) do
+ActiveRecord::Schema.define(version: 2025_10_17_134731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2242,7 +2242,6 @@ ActiveRecord::Schema.define(version: 2025_10_03_123439) do
     t.boolean "show_end_date_in_frontend", default: true
     t.integer "top_level_projekt_id"
     t.tsvector "tsv"
-    t.string "frame_access_code"
     t.boolean "new_content_block_mode"
     t.string "preview_code"
     t.boolean "for_global_overview", default: false

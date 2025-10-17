@@ -20,7 +20,6 @@ class Projekt < ApplicationRecord
   include Globalizable
 
   has_secure_token :preview_code
-  has_secure_token :frame_access_code
 
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
@@ -620,7 +619,6 @@ class Projekt < ApplicationRecord
       name: name,
       total_duration_start: total_duration_start,
       total_duration_end: total_duration_end,
-      frame_access_code: frame_access_code,
       preview_code: preview_code,
       show_map: feature?("show_map"),
       show_navigator_in_projekts_page_sidebar: feature?("show_navigator_in_projekts_page_sidebar"),
@@ -658,17 +656,6 @@ class Projekt < ApplicationRecord
     save!
   end
 
-  def generate_frame_access_code_if_nedded!
-    return if frame_access_code.present?
-
-    regenerate_frame_access_code
-    save!
-  end
-
-  # def frame_url
-  #   gen_projekt_url(embedded: true, frame_code: frame_access_code)
-  # end
-
   def gen_projekt_url(url_params = {})
     uri = URI.parse(page.url)
 
@@ -681,10 +668,6 @@ class Projekt < ApplicationRecord
 
   def preview_code_valid?(code)
     preview_code.present? && preview_code == code
-  end
-
-  def frame_access_code_valid?(code)
-    frame_access_code.present? && frame_access_code == code
   end
 
   def should_be_exported_for_overview?

@@ -76,20 +76,17 @@ ProjektStudio.Banner = {
 
       field.firstElementChild.innerHTML = value;
 
-      if (ProjektStudio.isEmbedded) {
-        ProjektStudio.utils.ProjektStudio.utils.sendMessageToDtParentFrame("updateProjektPage", {
+      $.ajax({
+        url: `/admin/projekts/${projektId}/update_page`,
+        type: "PATCH",
+        dataType: "json",
+        headers: {
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
+        },
+        data: {
           [container.dataset.fieldName]: value
-        })
-      } else {
-        $.ajax({
-          url: `/admin/projekts/${projektId}/update_page`,
-          type: "PATCH",
-          dataType: "json",
-          data: {
-            [container.dataset.fieldName]: value
-          }
-        })
-      }
+        }
+      })
     }
   },
 
@@ -126,26 +123,19 @@ ProjektStudio.Banner = {
       imagePreview.classList.add("-image-set")
 
       const projektId = ProjektStudio.getCurrentProjektId();
+      let formData = new FormData();
+      formData.append(imageUploaderContainer.dataset.fieldName, file);
 
-      if (ProjektStudio.isEmbedded) {
-        const title_image_searialized = await serializeFileToBase64(file);
-
-        ProjektStudio.utils.sendMessageToDtParentFrame("Dt.ProjektStudio.updateTitleImage", {
-          title_image_searialized,
-          original_image_name: file.name
-        })
-      } else {
-        let formData = new FormData();
-        formData.append(imageUploaderContainer.dataset.fieldName, file);
-
-        $.ajax({
-          url: `/admin/projekts/${projektId}/update_title_image`,
-          type: "PATCH",
-          processData: false,
-          contentType: false,
-          data: formData
-        })
-      }
+      $.ajax({
+        url: `/admin/projekts/${projektId}/update_title_image`,
+        type: "PATCH",
+        processData: false,
+        contentType: false,
+        headers: {
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
+        },
+        data: formData
+      })
     }
   }
 };

@@ -67,6 +67,15 @@ $small-tablet-viewport-start: 750px;
     }
   }
 
+  &.-red {
+    color: #dc3545;
+    background-color: #f8d7da;
+
+    &:hover {
+      background-color: #f5c6cb;
+    }
+  }
+
   &:disabled {
     color: #939393;
     cursor: not-allowed;
@@ -364,6 +373,26 @@ body.custom-new-design {
 
 .content-block-dnd-placeholder {
   opacity: 0.45;
+}
+
+.content-block--item-drag-handle {
+  position: absolute;
+  bottom: -5px;
+  right: 5px;
+  font-size: 17px;
+  color: #004a83;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 2;
+  margin-right: 0;
+  border: none;
+  background-color: #b9daf5;
+
+  &:hover {
+    background-color: $dt-base-transparent-background-hover;
+  }
 }
 
 .projekt-content-block-templates-selector--tabs {
@@ -1037,7 +1066,6 @@ body.-ai-functions-locked {
   align-content: center;
   width: 100%;
   height: 50px;
-  background-color: #def1ff;
   border-radius: 10px;
   // min-height: 80px;
   gap: 5px;
@@ -1053,6 +1081,7 @@ body.-ai-functions-locked {
   border-radius: 10px;
   color: $dt-base;
   padding: 10px 15px;
+  background-color: #cce2f6 !important;
 
   i {
     margin-right: 5px;
@@ -1162,39 +1191,30 @@ body.-ai-functions-locked {
   }
 }
 
-.content-block-image-change-button {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  width: 40px;
-  height: 40px;
-  font-size: 21px;
-
-  &.-small {
-    width: 30px;
-    height: 30px;
-    bottom: 5px;
-    right: 5px;
-    font-size: 20px;
-  }
-}
-
-.content-block-image-crop-button {
+.content-block-image-control-buttons {
   position: absolute;
   bottom: 10px;
   left: 10px;
-  width: 40px;
-  height: 40px;
-  font-size: 21px;
+  display: flex;
+  gap: 7px;
+  z-index: 3;
+}
+
+.content-block-image-control-button {
+  width: 35px;
+  height: 35px;
+  font-size: 19px;
 
   &.-small {
     width: 30px;
     height: 30px;
     bottom: 5px;
     left: 5px;
-    font-size: 20px;
+    font-size: 19px;
   }
+}
 
+.content-block-image-crop-button {
   &.-active {
     background-color: #45ac50;
     color: white;
@@ -1293,14 +1313,12 @@ body.-ai-functions-locked {
 
 .content-block--item-delete-button {
   position: absolute;
-  // top: -10px;
-  top: 10px;
-  // right: 0;
-  right: 10px;
+  top: 5px;
+  right: 5px;
   border-radius: 50%;
   color: #a41717;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   font-size: 19px;
   background-color: #ffdede;
   transition: 100ms ease background-color;
@@ -1357,7 +1375,7 @@ body.-ai-functions-locked {
   left: 0;
   right: 0;
   top: -1.5em;
-  display: none;
+  gap: 3px;
   width: 1.8em;
   height: 1.8em;
   justify-content: center;
@@ -1373,6 +1391,26 @@ body.-ai-functions-locked {
   &:hover {
     color: #000;
     background-color: #aacde0;
+  }
+}
+
+
+.content-block-delete-link-button {
+  width: 1.8em;
+  height: 1.8em;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  cursor: pointer;
+  color: #dc3545;
+  background-color: #f8d7da;
+  border-radius: 50%;
+  transition: color 0.2s;
+  z-index: 10;
+
+  &:hover {
+    color: #dc3545;
+    background-color: #f5c6cb;
   }
 }
 

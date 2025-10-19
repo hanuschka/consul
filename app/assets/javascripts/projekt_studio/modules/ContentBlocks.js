@@ -191,14 +191,16 @@
           dragClass: "content-block-dnd-move",
           scrollSensitivity: 2,
           scrollSpeed: 3,
+          draggable: ".js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)",
           onUpdate: (e) => { this.moveContentBlock(e) },
         });
-    }, 3000)
+    }, 200)
   },
 
   moveContentBlock(e) {
     const contentBlockId = e.item.dataset.contentBlockId
-    const newPosition = e.newIndex + 1;
+    // const newPosition = e.newIndex + 1;
+    const newPosition = e.newIndex
 
     $.ajax({
       url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`,

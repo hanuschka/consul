@@ -4,5 +4,5 @@ class ApplicationComponent < ViewComponent::Base
   delegate :default_form_builder, to: :controller
 
   delegate :projekt_phase_feature?, to: :helpers
-  delegate :show_projekt_studio_controls?, to: :helpers
+  delegate :show_admin_controls_for_projekt?, to: :helpers
 end

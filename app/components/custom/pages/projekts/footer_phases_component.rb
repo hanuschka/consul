@@ -21,7 +21,7 @@ class Pages::Projekts::FooterPhasesComponent < ApplicationComponent
     def projekt_phases
       phases = projekt.projekt_phases.includes(:translations, :age_restriction)
 
-      if helpers.show_projekt_studio_controls?(projekt)
+      if helpers.show_admin_controls_for_projekt?(projekt)
         phases
       else
         phases.active.frontend_visible

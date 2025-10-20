@@ -1,5 +1,6 @@
 ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
   listControlClass: "js-content-block--list-control",
+  sortableInstances: new Map(),
 
   initialize() {
     this.initEventListeners()
@@ -31,30 +32,44 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
         .forEach((li) => {
           this.addItemDeleteButton(li)
         })
+
+      this.initSortableForContentBlock(contentBlock)
     }
     else {
       contentBlock
         .querySelectorAll(`.${this.listControlClass}`)
         .forEach((e) => e.remove())
+
+      this.cleanupSortableForContentBlock(contentBlock)
     }
   },
 
   addItemDeleteButton(li) {
+    const elementStyle = getComputedStyle(li);
+    if (elementStyle.position === "static") {
+      li.style.position = "relative"
+    }
+
     const buttonHTML = `
-        <button class="content-block--item-delete-button js-projekt-content-block--delete-item ${this.listControlClass} -delete">
+        <button class="content-block--item-delete-button ${this.listControlClass} js-projekt-content-block--delete-item -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
 
     const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
 
-    const elementStyle = getComputedStyle(li);
-
-    if (elementStyle.position === "static") {
-      li.style.position = "relative"
-    }
     li.appendChild(buttonElement);
+
+    const dragHandleHTML = `
+        <button class="content-block--item-drag-handle ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">
+        <i class="fas fa-up-down-left-right"></i>
+       </button>
+     `
+
+    const dragHandleElement = ProjektStudio.utils.htmlToSingleDomElement(dragHandleHTML)
+    li.appendChild(dragHandleElement);
   },
+
 
   addItem(e) {
     const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
@@ -82,10 +97,6 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
       clonedLi,
       ["id", "aria-labelledby", "aria-controls", "aria-expanded", "data-slide"]
     )
-
-    // clonedLi.querySelectorAll("img").forEach((img) => {
-    //   img.dataset.originalThumbHeight = ""
-    // })
 
     const copyId = Date.now();
 
@@ -119,6 +130,8 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
       const $accordionLinks = $(newElementToReinitialize).find('.accordion-title');
       $accordionLinks.off("keydown")
     }
+
+    this.addItemDeleteButton(clonedLi)
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {
@@ -225,5 +238,40 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     }
 
     return buttonWrapper
+  },
+
+  initSortableForContentBlock(contentBlock) {
+    setTimeout(() => {
+      contentBlock
+        .querySelectorAll("ul")
+        .forEach((ul) => {
+          if (this.sortableInstances.has(ul)) return;
+          if (ul.classList.contains("orbit-container")) return;
+
+          const sortableInstance = new Sortable(ul, {
+            handle: ".js-list-item-dnd-handle",
+            animation: 150,
+            ghostClass: 'list-item-dnd-placeholder',
+            dragClass: "list-item-dnd-move",
+            scrollSensitivity: 2,
+            scrollSpeed: 3,
+            draggable: `li:not(.${this.listControlClass})`
+          })
+
+          this.sortableInstances.set(ul, sortableInstance)
+        })
+    }, 50)
+  },
+
+  cleanupSortableForContentBlock(contentBlock) {
+    const ulElements = contentBlock.querySelectorAll("ul")
+
+    ulElements.forEach((ul) => {
+      const sortableInstance = this.sortableInstances.get(ul)
+      if (sortableInstance) {
+        sortableInstance.destroy()
+        this.sortableInstances.delete(ul)
+      }
+    })
   }
 }

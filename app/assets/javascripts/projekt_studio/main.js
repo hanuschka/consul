@@ -27,7 +27,7 @@ window.ProjektStudio = {
   },
 
   get isEmbedded() {
-    return window.parent !== window.top
+    return window.self !== window.top;
   },
 
   getCurrentProjektId() {

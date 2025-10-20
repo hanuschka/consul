@@ -30,7 +30,6 @@ class PagesController < ApplicationController
 
     @custom_page_page_visible =
       @custom_page&.projekt&.preview_code_valid?(params[:preview_code]) ||
-      @custom_page&.projekt&.frame_access_code_valid?(params[:frame_code]) ||
       @custom_page&.projekt&.visible_for?(current_user)
 
     if @custom_page&.landing?

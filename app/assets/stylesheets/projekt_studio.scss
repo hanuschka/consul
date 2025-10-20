@@ -783,7 +783,7 @@ body.-preview-mode {
 }
 
 .dt-logo-small-icon {
-  background-image: url(dt-logo-small.png);
+  background-image: image-url("dt-logo-small.png");
   width: 1.3em;
   height: 1.3em;
   background-repeat: no-repeat;
@@ -799,7 +799,7 @@ body.-preview-mode {
 }
 
 .bars-scale-loader {
-  background-image: url(bars-scale-blue.svg);
+  background-image: image-url("bars-scale-blue.svg");
   width: 1.3em;
   height: 1.3em;
   background-repeat: no-repeat;
@@ -997,6 +997,12 @@ body.-preview-mode {
 .projekt-studio {
   .ai-button-wrapper {
     display: none;
+  }
+}
+
+.-embedded {
+  .ai-button-wrapper {
+    display: block;
   }
 }
 
@@ -1415,12 +1421,13 @@ body.-ai-functions-locked {
 }
 
 .content-block-link-wrapper {
-  // display: inline-block;
-  display: inline-flex;
+  display: inline-block;
+  // display: inline-flex;
   position: relative;
 
   a {
-    display: inline-flex;
+    // display: inline-flex;
+    // display: inline !important;
   }
 
   &:hover {

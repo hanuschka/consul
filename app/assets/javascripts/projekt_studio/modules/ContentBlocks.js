@@ -36,10 +36,10 @@
       const params = data.params
 
       switch(data.event_type) {
-        case "Consul.ProjektStudioConsul.setContentBlockTemplates":
-          this.setContentBlockTemplates(params);
-          break;
-        case "updateContentBlockOnUi":
+        // case "Consul.ProjektStudioConsul.setContentBlockTemplates":
+        //   this.setContentBlockTemplates(params);
+        //   break;
+        case "Consul.ProjektStudio.updateContentBlockOnUi":
           this.updateContentBlockOnUi(params);
           break;
         case "setDataForFreshContentBlockOnUI":
@@ -249,6 +249,7 @@
   },
 
   updateContentBlockOnUi(params) {
+    // console.log("updateContentBlockOnUi consul", params)
     const contentBlockWrapper = this.getContentBlockSectionForId(params.content_block_id)
     const contentBlock = contentBlockWrapper.querySelector('.projekt-content-block')
 

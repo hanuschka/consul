@@ -215,13 +215,26 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
     const urlInput = document.querySelector(".js-content-block-link-popup .js-content-block-url-input");
     const link = linkWrapper.querySelector("a")
+    console.log("linkWrapper", linkWrapper)
+    console.log("a", link)
     const $deleteButton = $(".js-content-block-delete-link")
 
-    if (link && ProjektStudio.utils.hasNoBlockChildren(link)) {
-      $(textInput.parentElement).show()
-      console.log("set new value")
-      textInput.value = link.innerHTML.trim()
-      $deleteButton.show()
+    if (link) {
+      const linkStyle = getComputedStyle(link)
+      const isInlineLink = linkStyle.display === "inline" || linkStyle.display === "inline-flex"
+
+      if (ProjektStudio.utils.hasNoBlockChildren(link)) {
+        $(textInput.parentElement).show()
+        textInput.value = link.innerHTML.trim()
+      }
+
+      // if (isInlineLink && ProjektStudio.utils.hasNoBlockChildren(link)) {
+      if (link.classList.contains("js-content-block-inline-link")) {
+        $deleteButton.show()
+      }
+      else {
+        $deleteButton.hide()
+      }
     } else {
       $deleteButton.hide()
     }
@@ -260,6 +273,8 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       }
 
       const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
+      // const linkStyle = getComputedStyle(link)
+      // const isInlineLink = linkStyle.display === "inline" || linkStyle.display === "inline-flex"
 
       if (link && ProjektStudio.utils.hasNoBlockChildren(link)) {
         link.innerHTML =
@@ -284,7 +299,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
   createNewLinkWithWrapper(linkWrapper, url, targetBlank = true) {
     const a = document.createElement("a");
     a.href = url;
-    a.classList.add("js-content-block-disable-link-click")
+    a.classList.add("js-content-block-disable-link-click", "js-content-block-inline-link")
 
     if (targetBlank) {
       a.target = "_blank";

@@ -93,6 +93,7 @@ class Projekt < ApplicationRecord
     association_foreign_key: 'site_customization_page_id'
 
   delegate :image, to: :page, allow_nil: true
+  delegate :url, to: :page, allow_nil: true
 
   # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,

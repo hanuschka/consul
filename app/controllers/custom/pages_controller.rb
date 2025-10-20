@@ -40,7 +40,7 @@ class PagesController < ApplicationController
       @namespace =
         if current_user.administrator?
           :admin
-        elsif current_user.projekt_manager?(@custom_page.projekt)
+        elsif @custom_page.present? && current_user.projekt_manager?(@custom_page.projekt)
           :projekt_management
         end
     end

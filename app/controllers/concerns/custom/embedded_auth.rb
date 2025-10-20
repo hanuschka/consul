@@ -81,7 +81,8 @@ module EmbeddedAuth
 
       Current.frame_current_user = user
       # binding.pry
-      request.env["warden"].set_user(user, store: false)
+      # request.env["warden"].set_user(user, store: false)
+      sign_in(user, store: false)
       # bypass_sign_in(user)
     end
 

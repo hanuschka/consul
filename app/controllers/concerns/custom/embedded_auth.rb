@@ -47,7 +47,7 @@ module EmbeddedAuth
     end
 
     def authentificate_frame_session_user!
-      puts "============== #{embedded?} ===================="
+      # puts "============== #{embedded?} ===================="
       return unless embedded?
 
       if frame_session_from_authorized_source?

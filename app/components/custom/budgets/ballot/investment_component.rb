@@ -9,16 +9,6 @@ class Budgets::Ballot::InvestmentComponent < ApplicationComponent
       budget_ballot_line_path(id: investment.id, budget_id: investment.budget.id)
     end
 
-    def user_votes
-      user = if params[:user_id].present?
-        User.find(params[:user_id])
-      else
-        current_user
-      end
-      count = @investment.budget_ballot_lines.joins(:ballot).find_by(budget_ballots: { user_id: user.id }).line_weight
-      tag.span t("custom.budgets.investments.index.sidebar.user_votes", count: count)
-    end
-
     def ballot
       Budget::Ballot.where(user: current_user, budget: budget).first_or_create!
     end

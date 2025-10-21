@@ -353,7 +353,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       method: 'GET',
       headers: {
         'Accept': 'text/html',
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
       }
     });
   },
@@ -383,7 +384,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     fetch('/ckeditor/pictures', {
       method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': csrfToken
+        'X-CSRF-TOKEN': csrfToken,
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
       },
       body: formData
     })
@@ -486,7 +488,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       const response = await fetch(`/ckeditor/pictures/${this.state.selectedImage.dataset.id}`, {
         method: 'PATCH',
         headers: {
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': csrfToken,
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
         },
         body: formData
       });
@@ -517,7 +520,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       const response = await fetch(`/ckeditor/pictures/${chosenId}`, {
         method: 'DELETE',
         headers: {
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': csrfToken,
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
         }
       });
 

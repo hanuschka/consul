@@ -42,8 +42,12 @@ module OfficingActions
         @offline_user = existing_user_with_unique_stamp if existing_user_with_unique_stamp.present?
 
         if (Setting["feature.melderegister"] && @offline_user.send(:residency_valid?)) || params["mark_as_verified"].present?
-          @offline_user.verified_at ||= Time.current
-          @offline_user.unique_stamp = unique_stamp
+          if @offline_user.new_record?
+            @offline_user.verified_at = Time.current
+            @offline_user.unique_stamp = unique_stamp
+          else
+            @offline_user.update_column(:verified_at, Time.current)
+          end
         end
 
         if @offline_user.new_record?

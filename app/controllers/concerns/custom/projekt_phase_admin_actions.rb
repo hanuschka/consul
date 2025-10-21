@@ -43,7 +43,7 @@ module ProjektPhaseAdminActions
         )
       elsif embedded?
         redirect_to(
-          @projekt_phase.projekt.frame_url,
+          @projekt_phase.projekt.url,
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
       end

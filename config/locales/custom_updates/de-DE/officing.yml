@@ -5,7 +5,7 @@ de:
         verify_users:
           title: Offline Stimme hinzufügen
           skip_verification: Benutzerüberprüfung überspringen
-          first_name: Vorname
-          last_name: Nachname
-          plz: Postleitzahl
-          date_of_birth: Geburtsdatum
+          mark_as_verified: Als verifiziert markieren
+        permission_problem:
+          title: Berechtigungsproblem
+          text: "Es gibt ein Problem mit den Berechtigungen für Offline-Stimmen: %{permission_problem_key}."

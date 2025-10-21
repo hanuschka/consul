@@ -10,7 +10,7 @@
       remote: true,
       "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
     } do %>
-    <h2>
+    <h2 class='js-projekt-phase-title'>
       <%= tab_title %>
       <%= "(#{phase.resource_count})" if phase.resource_count.present? %>
     </h2>
@@ -63,7 +63,7 @@
       <%= render "custom/projekts/partials/phase_subscription", phase: phase %>
     </div>
   <% end %>
-  <% if helpers.show_projekt_studio_controls?(phase.projekt) %>
+  <% if helpers.show_admin_controls_for_projekt?(phase.projekt) %>
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">
         <%
@@ -106,21 +106,9 @@
             </i>
           </button>
         <% end %>
-        <% if helpers.native_projekt_studio?(@projekt) %>
-          <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "_blank" do %>
-            <i class="fas fa-edit">
-            </i>
-          <% end %>
-        <% else %>
-          <button
-            type="button"
-            data-path="/projekt_phases/<%= phase.id %>/duration"
-            title="Bearbeiten"
-            class="js-frame-open-admin-page projekt-frame-icon-button"
-          >
-            <i class="fas fa-edit">
-            </i>
-          </button>
+        <%= link_to polymorphic_path([@namespace, phase], action: phase.admin_nav_bar_items.first), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
+          <i class="fas fa-edit">
+          </i>
         <% end %>
 
         <button

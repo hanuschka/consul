@@ -11,7 +11,7 @@
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-show-content-block-templates", this.openContentBlockTemplateSelector.bind(this));
-    $document.on("click", ".js-add-new-content-block", this.addNewContentBlock.bind(this));
+    $document.on("click", ".js-add-new-content-block", this.createContentBlock.bind(this));
     $document.on("click", ".js-copy-content-block-template", this.copyContentBlockTemplate.bind(this));
 
     $document.on("click", ".js-projekt-content-block--regenerate", this.handleRegenerateContentBlock.bind(this));
@@ -36,10 +36,10 @@
       const params = data.params
 
       switch(data.event_type) {
-        case "Consul.ProjektStudioConsul.setContentBlockTemplates":
-          this.setContentBlockTemplates(params);
-          break;
-        case "updateContentBlockOnUi":
+        // case "Consul.ProjektStudioConsul.setContentBlockTemplates":
+        //   this.setContentBlockTemplates(params);
+        //   break;
+        case "Consul.ProjektStudio.updateContentBlockOnUi":
           this.updateContentBlockOnUi(params);
           break;
         case "setDataForFreshContentBlockOnUI":
@@ -191,29 +191,28 @@
           dragClass: "content-block-dnd-move",
           scrollSensitivity: 2,
           scrollSpeed: 3,
+          draggable: ".js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)",
           onUpdate: (e) => { this.moveContentBlock(e) },
         });
-    }, 3000)
+    }, 200)
   },
 
   moveContentBlock(e) {
     const contentBlockId = e.item.dataset.contentBlockId
-    const newPosition = e.newIndex + 1;
+    // const newPosition = e.newIndex + 1;
+    const newPosition = e.newIndex
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("moveContentBlock", {
-        content_block_id: contentBlockId,
-        new_position: newPosition
-      })
-    } else {
-      $.ajax({
-        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`,
-        type: "PATCH",
-        dataType: "json",
-        data: {
-          position: newPosition
-        }
-      })
+    $.ajax({
+      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`,
+      type: "PATCH",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
+        position: newPosition
+      }
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -222,7 +221,6 @@
           alert("Fehler beim Speichern des Inhaltsblocks")
         }
       })
-    }
   },
 
   setDataForFreshContentBlockOnUI(params) {
@@ -251,6 +249,7 @@
   },
 
   updateContentBlockOnUi(params) {
+    // console.log("updateContentBlockOnUi consul", params)
     const contentBlockWrapper = this.getContentBlockSectionForId(params.content_block_id)
     const contentBlock = contentBlockWrapper.querySelector('.projekt-content-block')
 
@@ -299,16 +298,14 @@
       scrollTo.scrollIntoView({block: "center"});
     }
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("deleteContentBlock", {
-        content_block_id: contentBlockId
-      })
-    } else {
-      $.ajax({
-        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
-        type: "DELETE",
-        dataType: "json"
-      })
+    $.ajax({
+      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+      type: "DELETE",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      dataType: "json"
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Löschen des Inhaltsblocks: ${response.error.message}`)
@@ -317,7 +314,6 @@
           alert("Fehler beim Löschen des Inhaltsblocks")
         }
       })
-    }
   },
 
   openContentBlockTemplatesDialog() {
@@ -339,7 +335,7 @@
     this.openContentBlockTemplatesDialog()
   },
 
-  addNewContentBlock(e) {
+  createContentBlock(e) {
     const previousContentBlockWrapper = this.addContentBlockAfter
     const contentTemplate = e.currentTarget.querySelector(".js-content-block-template-content");
     const previousContentBlockId = previousContentBlockWrapper.dataset.contentBlockId;
@@ -373,33 +369,28 @@
       App.ImageGallery.initialize();
     }, 0)
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("createContentBlock",  {
+    const projektId = ProjektStudio.getCurrentProjektId()
+
+    $.ajax({
+      url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`,
+      type: "POST",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
         previous_content_block_id: previousContentBlockId,
         draft_content_block_index: draftContentBlockIndex,
-        enter_ai_mode: contentTemplate.dataset.enterAiMode,
         html: contentTemplate.innerHTML
-      });
-    } else {
-      const projektId = ProjektStudio.getCurrentProjektId()
-
-      $.ajax({
-        url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`,
-        type: "POST",
-        dataType: "json",
-        data: {
-          previous_content_block_id: previousContentBlockId,
-          draft_content_block_index: draftContentBlockIndex,
-          html: contentTemplate.innerHTML
-        }
-      }).then((response) => {
-        this.setDataForFreshContentBlockOnUI({
-          previous_content_block_id: previousContentBlockId,
-          enter_ai_mode: false,
-          draft_content_block_index: draftContentBlockIndex,
-          content_block_id: response.content_block.id
-        })
+      }
+    }).then((response) => {
+      this.setDataForFreshContentBlockOnUI({
+        previous_content_block_id: previousContentBlockId,
+        enter_ai_mode: false,
+        draft_content_block_index: draftContentBlockIndex,
+        content_block_id: response.content_block.id
       })
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -408,7 +399,6 @@
           alert("Fehler beim Speichern des Inhaltsblocks")
         }
       })
-    }
   },
 
   copyContentBlockTemplate(e) {
@@ -565,20 +555,17 @@
       ProjektStudio.utils.resetFoundationAccordionStateFor(updatedContentBlock)
     }
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
-        content_block_id: contentBlockId,
+    $.ajax({
+      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+      type: "PATCH",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
         html: updatedContentBlock.innerHTML
-      })
-    } else {
-      $.ajax({
-        url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
-        type: "PATCH",
-        dataType: "json",
-        data: {
-          html: updatedContentBlock.innerHTML
-        }
-      })
+      }
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -587,7 +574,6 @@
           alert("Fehler beim Speichern des Inhaltsblocks")
         }
       })
-    }
 
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
     // DO NOT DELETE
@@ -645,18 +631,11 @@
         contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
         this.resetPreviosVersionOfContentBlock(contentBlock, contentBlockWrapper)
 
-        if (ProjektStudio.isEmbedded) {
-          ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
-            content_block_id: contentBlockWrapper.dataset.contentBlockId,
-            html: contentBlock.innerHTML
-          })
-        } else {
-          this.updateContentBlock(
-            contentBlock,
-            contentBlockWrapper.dataset.contentBlockId,
-            contentBlock.innerHTML.trim()
-          )
-        }
+        this.updateContentBlock(
+          contentBlock,
+          contentBlockWrapper.dataset.contentBlockId,
+          contentBlock.innerHTML.trim()
+        )
 
         setTimeout(() => {
           App.ImageGallery.initialize();
@@ -672,7 +651,6 @@
       url: "iframe_sessions",
       data: {
         frame_sign_in_token: params.frame_sign_in_token,
-        redirect_to: params.redirect_to
       }}
     )
   },

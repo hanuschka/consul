@@ -2,6 +2,8 @@ module Dt
   def self.url
     domain = Rails.application.secrets.dt[:domain]
 
+    return if domain.blank?
+
     if Rails.env.development? && Rails.application.secrets.dt[:dont_use_https_on_dev]
       port = Rails.application.secrets.dt[:port]
 

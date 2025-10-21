@@ -365,6 +365,7 @@ class User < ApplicationRecord
 
     def attempt_verification
       return false if organization?
+      return false if erased?
       return false unless residency_valid?
 
       verify!

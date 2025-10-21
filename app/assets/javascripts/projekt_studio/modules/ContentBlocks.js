@@ -11,7 +11,8 @@
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-show-content-block-templates", this.openContentBlockTemplateSelector.bind(this));
-    $document.on("click", ".js-add-new-content-block", this.addNewContentBlock.bind(this));
+    $document.on("click", ".js-add-new-content-block", this.createContentBlock.bind(this));
+    $document.on("click", ".js-copy-content-block-template", this.copyContentBlockTemplate.bind(this));
 
     $document.on("click", ".js-projekt-content-block--regenerate", this.handleRegenerateContentBlock.bind(this));
     $document.on("click", ".js-projekt-content-block--ai-edit", this.enterAiEditMode.bind(this));
@@ -35,10 +36,10 @@
       const params = data.params
 
       switch(data.event_type) {
-        case "Consul.ProjektStudioConsul.setContentBlockTemplates":
-          this.setContentBlockTemplates(params);
-          break;
-        case "updateContentBlockOnUi":
+        // case "Consul.ProjektStudioConsul.setContentBlockTemplates":
+        //   this.setContentBlockTemplates(params);
+        //   break;
+        case "Consul.ProjektStudio.updateContentBlockOnUi":
           this.updateContentBlockOnUi(params);
           break;
         case "setDataForFreshContentBlockOnUI":
@@ -67,7 +68,7 @@
     let doc = parser.parseFromString(html, 'text/html');
 
     const contentBlocks = Array.from(doc.querySelectorAll('.projekt-content-block'));
-    let wrappedContentBlocksHtml;
+    let wrappedContentBlocksHtml = '';
 
     const projektId = ProjektStudio.getCurrentProjektId()
 
@@ -82,12 +83,12 @@
         );
       }).join("")
     }
-    else {
-      wrappedContentBlocksHtml =
-        ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(
-          projektId
-        );
-    }
+    // else {
+    //   wrappedContentBlocksHtml =
+    //     ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(
+    //       projektId
+    //     );
+    // }
 
     const newHtml =
       ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(
@@ -190,29 +191,28 @@
           dragClass: "content-block-dnd-move",
           scrollSensitivity: 2,
           scrollSpeed: 3,
+          draggable: ".js-projekt-content-block-wrapper:not(.js-add-first-content-block-wrapper)",
           onUpdate: (e) => { this.moveContentBlock(e) },
         });
-    }, 3000)
+    }, 200)
   },
 
   moveContentBlock(e) {
     const contentBlockId = e.item.dataset.contentBlockId
-    const newPosition = e.newIndex + 1;
+    // const newPosition = e.newIndex + 1;
+    const newPosition = e.newIndex
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("moveContentBlock", {
-        content_block_id: contentBlockId,
-        new_position: newPosition
-      })
-    } else {
-      $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}/update_position`,
-        type: "PATCH",
-        dataType: "json",
-        data: {
-          position: newPosition
-        }
-      })
+    $.ajax({
+      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`,
+      type: "PATCH",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
+        position: newPosition
+      }
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -221,7 +221,6 @@
           alert("Fehler beim Speichern des Inhaltsblocks")
         }
       })
-    }
   },
 
   setDataForFreshContentBlockOnUI(params) {
@@ -250,6 +249,7 @@
   },
 
   updateContentBlockOnUi(params) {
+    // console.log("updateContentBlockOnUi consul", params)
     const contentBlockWrapper = this.getContentBlockSectionForId(params.content_block_id)
     const contentBlock = contentBlockWrapper.querySelector('.projekt-content-block')
 
@@ -286,28 +286,26 @@
 
     contentBlockWrapper.remove()
 
-    if ($('.js-projekt-content-block-wrapper').length === 0) {
-      const projektId = ProjektStudio.getCurrentProjektId()
-      const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
-      const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
+    // if ($('.js-projekt-content-block-wrapper').length === 0) {
+    //   const projektId = ProjektStudio.getCurrentProjektId()
+    //   const wrappedContentBlocksHtml = ProjektStudio.templateFunctions.initialContentBlockWrapperHtml(projektId);
+    //   const newHtml = ProjektStudio.templateFunctions.wrapWithContentBlockListHtml(wrappedContentBlocksHtml, projektId)
 
-      this.morphElementHTML(".js-custom-page-content--inner", newHtml);
-    }
+    //   this.morphElementHTML(".js-custom-page-content--inner", newHtml);
+    // }
 
     if (scrollTo) {
       scrollTo.scrollIntoView({block: "center"});
     }
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("deleteContentBlock", {
-        content_block_id: contentBlockId
-      })
-    } else {
-      $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}`,
-        type: "DELETE",
-        dataType: "json"
-      })
+    $.ajax({
+      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+      type: "DELETE",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      dataType: "json"
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Löschen des Inhaltsblocks: ${response.error.message}`)
@@ -316,7 +314,6 @@
           alert("Fehler beim Löschen des Inhaltsblocks")
         }
       })
-    }
   },
 
   openContentBlockTemplatesDialog() {
@@ -338,7 +335,7 @@
     this.openContentBlockTemplatesDialog()
   },
 
-  addNewContentBlock(e) {
+  createContentBlock(e) {
     const previousContentBlockWrapper = this.addContentBlockAfter
     const contentTemplate = e.currentTarget.querySelector(".js-content-block-template-content");
     const previousContentBlockId = previousContentBlockWrapper.dataset.contentBlockId;
@@ -356,14 +353,14 @@
     newContentBlock.dataset.draft = true;
     newContentBlock.classList.add('-draft')
 
-    if (previousContentBlockWrapper && previousContentBlockWrapper.dataset.initialContentBlockButton === "true") {
-      previousContentBlockWrapper.remove()
-      // $('.custom-page-content').append(newContentBlock);
-      $(".js-content-blocks-container").append(newContentBlock);
-    }
-    else if (previousContentBlockWrapper) {
-      $(previousContentBlockWrapper).after(newContentBlock)
-      $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", true)
+    if (previousContentBlockWrapper) {
+      if ($(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0) {
+        previousContentBlockWrapper.after(newContentBlock)
+      }
+      else {
+        $(previousContentBlockWrapper).after(newContentBlock)
+        $(newContentBlock).find(".js-show-content-block-templates").prop("disabled", true)
+      }
     }
 
     setTimeout(() => {
@@ -372,33 +369,28 @@
       App.ImageGallery.initialize();
     }, 0)
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("createContentBlock",  {
+    const projektId = ProjektStudio.getCurrentProjektId()
+
+    $.ajax({
+      url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`,
+      type: "POST",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
         previous_content_block_id: previousContentBlockId,
         draft_content_block_index: draftContentBlockIndex,
-        enter_ai_mode: contentTemplate.dataset.enterAiMode,
         html: contentTemplate.innerHTML
-      });
-    } else {
-      const projektId = ProjektStudio.getCurrentProjektId()
-
-      $.ajax({
-        url: `/admin/projekts/${projektId}/projekt_content_blocks`,
-        type: "POST",
-        dataType: "json",
-        data: {
-          previous_content_block_id: previousContentBlockId,
-          draft_content_block_index: draftContentBlockIndex,
-          html: contentTemplate.innerHTML
-        }
-      }).then((response) => {
-        this.setDataForFreshContentBlockOnUI({
-          previous_content_block_id: previousContentBlockId,
-          enter_ai_mode: false,
-          draft_content_block_index: draftContentBlockIndex,
-          content_block_id: response.content_block.id
-        })
+      }
+    }).then((response) => {
+      this.setDataForFreshContentBlockOnUI({
+        previous_content_block_id: previousContentBlockId,
+        enter_ai_mode: false,
+        draft_content_block_index: draftContentBlockIndex,
+        content_block_id: response.content_block.id
       })
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -407,7 +399,65 @@
           alert("Fehler beim Speichern des Inhaltsblocks")
         }
       })
+  },
+
+  copyContentBlockTemplate(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const templateItem = e.currentTarget.closest('.custom-content-template--item');
+    const contentTemplate = templateItem.querySelector('.js-content-block-template-content');
+    const templateContent = contentTemplate.innerHTML.trim();
+
+    // Copy to clipboard
+    if (navigator.clipboard && window.isSecureContext) {
+      // Use modern clipboard API
+      navigator.clipboard.writeText(templateContent).then(() => {
+        this.showCopySuccessFeedback(e.currentTarget);
+      }).catch((err) => {
+        console.error('Failed to copy: ', err);
+        this.fallbackCopyToClipboard(templateContent, e.currentTarget);
+      });
+    } else {
+      // Fallback for older browsers
+      this.fallbackCopyToClipboard(templateContent, e.currentTarget);
     }
+  },
+
+  fallbackCopyToClipboard(text, button) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      this.showCopySuccessFeedback(button);
+    } catch (err) {
+      console.error('Fallback copy failed: ', err);
+      alert('Kopieren fehlgeschlagen. Bitte manuell kopieren.');
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  },
+
+  showCopySuccessFeedback(button) {
+    const originalIcon = button.querySelector('i');
+    const originalClass = originalIcon.className;
+
+    // Change icon to checkmark
+    originalIcon.className = 'fa fas fa-check';
+    button.classList.add("-copied")
+
+    // Reset after 2 seconds
+    setTimeout(() => {
+      originalIcon.className = originalClass;
+      button.classList.remove("-copied")
+    }, 300);
   },
 
   enterHtmlEditMode(e) {
@@ -505,20 +555,17 @@
       ProjektStudio.utils.resetFoundationAccordionStateFor(updatedContentBlock)
     }
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
-        content_block_id: contentBlockId,
+    $.ajax({
+      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+      type: "PATCH",
+      dataType: "json",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: {
         html: updatedContentBlock.innerHTML
-      })
-    } else {
-      $.ajax({
-        url: `/admin/projekt_content_blocks/${contentBlockId}`,
-        type: "PATCH",
-        dataType: "json",
-        data: {
-          html: updatedContentBlock.innerHTML
-        }
-      })
+      }
+    })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -527,7 +574,6 @@
           alert("Fehler beim Speichern des Inhaltsblocks")
         }
       })
-    }
 
     // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
     // DO NOT DELETE
@@ -585,18 +631,11 @@
         contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
         this.resetPreviosVersionOfContentBlock(contentBlock, contentBlockWrapper)
 
-        if (ProjektStudio.isEmbedded) {
-          ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
-            content_block_id: contentBlockWrapper.dataset.contentBlockId,
-            html: contentBlock.innerHTML
-          })
-        } else {
-          this.updateContentBlock(
-            contentBlock,
-            contentBlockWrapper.dataset.contentBlockId,
-            contentBlock.innerHTML.trim()
-          )
-        }
+        this.updateContentBlock(
+          contentBlock,
+          contentBlockWrapper.dataset.contentBlockId,
+          contentBlock.innerHTML.trim()
+        )
 
         setTimeout(() => {
           App.ImageGallery.initialize();
@@ -612,7 +651,6 @@
       url: "iframe_sessions",
       data: {
         frame_sign_in_token: params.frame_sign_in_token,
-        redirect_to: params.redirect_to
       }}
     )
   },

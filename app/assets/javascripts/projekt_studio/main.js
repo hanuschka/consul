@@ -16,6 +16,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlockSimpleEdit.initialize()
       ProjektStudio.ContentBlockSimpleEdit.LinkEdit.initialize()
       ProjektStudio.ContentBlockSimpleEdit.ListEdit.initialize()
+      ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog.initialize()
       ProjektStudio.ContentBlockSimpleEdit.ImageEdit.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
@@ -26,7 +27,7 @@ window.ProjektStudio = {
   },
 
   get isEmbedded() {
-    return window.parent !== window.top
+    return window.self !== window.top;
   },
 
   getCurrentProjektId() {

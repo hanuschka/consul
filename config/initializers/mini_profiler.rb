@@ -1,5 +1,3 @@
 if Rails.env.development?
-  Rack::MiniProfiler.config.enabled = lambda { |env, _|
-    ENV["DISABLE_MINI_PROFILER"] != "true"
-  }
+  Rack::MiniProfiler.config.enabled = ENV["DISABLE_MINI_PROFILER"] != "true"
 end

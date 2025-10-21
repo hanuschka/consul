@@ -23,8 +23,8 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-simple-edit-mode")
-    const $accordion = $(contentBlock).find('.accordion a');
-    $accordion.off("keydown")
+    const $accordionLinks = $(contentBlock).find('.accordion a.accordion-title');
+    $accordionLinks.off("keydown")
 
     ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(
       contentBlock, contentBlockWrapper
@@ -120,16 +120,21 @@ ProjektStudio.ContentBlockSimpleEdit = {
     $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
   },
 
+  // TODO: Make first element foused
   toggleContentEditableFor(contentBlock, contentEditable) {
     const elements = Array.from(
-      contentBlock.querySelectorAll("div, h2, h3, h4, h5, p,  ol, .js-text-editable, a.accordion-title")
+      contentBlock.querySelectorAll("div, h2, h3, h4, h5, p, figcaption, ol, .js-text-editable, a.accordion-title")
     );
+
+    let firstEditableElement = null;
 
     elements.forEach((element) => {
       if (ProjektStudio.utils.hasNoBlockChildren(element)) {
         if (contentEditable) {
           element.contentEditable = true;
-          ProjektStudio.utils.focusContentEditableElement(contentBlock);
+          if (!firstEditableElement) {
+            firstEditableElement = element;
+          }
         } else {
           element.removeAttribute("contenteditable");
         }
@@ -137,6 +142,11 @@ ProjektStudio.ContentBlockSimpleEdit = {
         element.removeAttribute("contenteditable");
       }
     });
+
+    // Focus the first editable element, if enabling edit mode
+    if (contentEditable && firstEditableElement) {
+      ProjektStudio.utils.focusContentEditableElement(firstEditableElement)
+    }
   },
 
   toggleLockSaveCancel(contentBlockWrapper, locked) {

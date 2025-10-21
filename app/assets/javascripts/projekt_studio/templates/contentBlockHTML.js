@@ -8,6 +8,21 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
       class="js-content-blocks-container content-blocks-container"
     >
+      <div class="js-add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
+        <div class="projekt-content-block--additional">
+          <div class="add-new-content-block-section js-show-content-block-templates-section">
+            <button
+              type="button"
+              class="js-show-content-block-templates add-new-content-block-button"
+              title="Neuen Inhaltsblock hinzufügen"
+            >
+              <i class="fas fa-plus"></i>
+              Neuen Inhaltsblock hinzufügen
+            </button>
+          </div>
+        </div>
+      </div>
+
       ${contentBlocksHtml}
     </div>
   `
@@ -172,25 +187,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
           <i class="fas fa-plus"></i>
           Neuen Inhaltsblock hinzufügen
         </button>
-      </div>
-    </div>
-  `.trim()
-}
-
-ProjektStudio.templateFunctions.initialContentBlockWrapperHtml = function() {
-  return `
-    <div data-initial-content-block-button="true" class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
-      <div class="projekt-content-block--additional">
-        <div class="add-new-content-block-section js-show-content-block-templates-section">
-          <button
-            type="button"
-            class="js-show-content-block-templates add-new-content-block-button add-intial-content-block-button"
-            title="Neuen Inhaltsblock hinzufügen"
-          >
-            <i class="fas fa-plus"></i>
-            Neuen Inhaltsblock hinzufügen
-          </button>
-        </div>
       </div>
     </div>
   `.trim()

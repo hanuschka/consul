@@ -1,7 +1,7 @@
 <h2><%= t("custom.officing.shared.verify_users.title") %></h2>
 
 <div class="verification account">
-  <div class="small-12 medium-8">
+  <div class="small-12">
     <%= form_with model: @offline_user, url: url_for(action: "find_or_create_user") do |f| %>
       <div class="small-12 medium-6">
         <div class="margin-bottom">
@@ -53,9 +53,10 @@
       <div class="small-12 medium-6">
         <%= check_box_tag :mark_as_verified, params[:mark_as_verified].presence == "1" ? "1" : "0", params[:mark_as_verified].presence == "1", id: "mark_as_verified" %>
         <%= label_tag :mark_as_verified, t("custom.officing.shared.verify_users.mark_as_verified") %>
+        <span class='help-text' style="display:block;"><%= t("custom.officing.shared.verify_users.mark_as_verified_hint") %></span>
       </div>
 
-      <div class="small-12 medium-6">
+      <div class="small-12 medium-6" style="margin-top: 30px;">
         <input type="submit" value="Offline Stimme hinzufügen" class="button expanded">
       </div>
     <% end %>

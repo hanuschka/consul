@@ -8,7 +8,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
       class="js-content-blocks-container content-blocks-container"
     >
-      <div class="js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
+      <div class="js-add-first-content-block-wrapper js-projekt-content-block-wrapper projekt-content-block-wrapper projekt-content-block-wrapper">
         <div class="projekt-content-block--additional">
           <div class="add-new-content-block-section js-show-content-block-templates-section">
             <button

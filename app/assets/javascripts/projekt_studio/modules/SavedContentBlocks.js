@@ -99,27 +99,23 @@ ProjektStudio.SavedContentBlocks = {
 
     // this.turnOffEditModeForItem(container)
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame("Dt.ProjektStudio.updateSavedContentBlock", {
-        id: savedContentBlockId,
-        content
-      })
-    } else {
-      $.ajax({
-        url: `/admin/saved_content_blocks/${savedContentBlockId}`,
-        type: "PATCH",
-        data: { saved_content_block: { content }}
-      }).then(() => {
-      })
-      .catch((response) => {
-        if (response.error && response.error.message) {
-          alert(`Fehler beim Speichern der Inhaltsblockvorlage: ${response.error.message}`)
-        }
-        else {
-          alert("Fehler beim Speichern der Inhaltsblockvorlage")
-        }
-      })
-    }
+    $.ajax({
+      url: `/admin/saved_content_blocks/${savedContentBlockId}`,
+      type: "PATCH",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: { saved_content_block: { content }}
+    })
+     .then(() => { })
+    .catch((response) => {
+      if (response.error && response.error.message) {
+        alert(`Fehler beim Speichern der Inhaltsblockvorlage: ${response.error.message}`)
+      }
+      else {
+        alert("Fehler beim Speichern der Inhaltsblockvorlage")
+      }
+    })
   },
 
   cancelUpdateSavedContentBlock(e) {
@@ -145,28 +141,21 @@ ProjektStudio.SavedContentBlocks = {
 
     editor.setValue("")
 
-    if (ProjektStudio.isEmbedded) {
-      ProjektStudio.utils.sendMessageToDtParentFrame(
-        "Dt.ProjektStudio.createSavedContentBlock",
-        { content }
-      )
-      setTimeout(() => {
-        container.classList.remove("-form-opened")
-      }, 10)
-    } else {
-      $.ajax({
-        url: `/admin/saved_content_blocks`,
-        type: "POST",
-        data: { saved_content_block: { content }}
-      }).then(({ saved_content_block_item_html }) => {
-        container.classList.remove("-form-opened")
+    $.ajax({
+      url: `/admin/saved_content_blocks`,
+      type: "POST",
+      headers: {
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
+      },
+      data: { saved_content_block: { content }}
+    }).then(({ saved_content_block_item_html }) => {
+      container.classList.remove("-form-opened")
 
-        this.addNewSavedContentBlockOnUI({
-          saved_content_block_item_html,
-          container
-        })
+      this.addNewSavedContentBlockOnUI({
+        saved_content_block_item_html,
+        container
       })
-    }
+    })
   },
 
   cancelCreatingNewSavedContentBlock(e) {
@@ -186,17 +175,13 @@ ProjektStudio.SavedContentBlocks = {
     if (deleteConfirmed) {
       const savedContentBlockId = container.dataset.savedContentBlockId
 
-      if (ProjektStudio.isEmbedded) {
-        ProjektStudio.utils.sendMessageToDtParentFrame(
-        "Dt.ProjektStudio.deleteSavedContentBlock",
-          { id: savedContentBlockId }
-        )
-      } else {
-        $.ajax({
-          url: `/admin/saved_content_blocks/${savedContentBlockId}`,
-          type: "DELETE"
-        })
-      }
+      $.ajax({
+        url: `/admin/saved_content_blocks/${savedContentBlockId}`,
+        type: "DELETE",
+        headers: {
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
+        }
+      })
 
       container.remove()
 

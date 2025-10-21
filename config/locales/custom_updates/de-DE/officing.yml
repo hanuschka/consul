@@ -6,6 +6,7 @@ de:
           title: Offline Stimme hinzufügen
           skip_verification: Benutzerüberprüfung überspringen
           mark_as_verified: Als verifiziert markieren
+          mark_as_verified_hint: Nutzer kann nicht über das Melderegister verifiziert werden (Wohnsitz außerhalb des Gebiets), soll jedoch als verifizierter Nutzer markiert werden.
         permission_problem:
           title: Berechtigungsproblem
           text: "Es gibt ein Problem mit den Berechtigungen für Offline-Stimmen: %{permission_problem_key}."

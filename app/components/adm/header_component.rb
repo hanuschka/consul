@@ -17,7 +17,7 @@ class Adm::HeaderComponent < ApplicationComponent
     if is_last || breadcrumb[:url].blank?
       tag.span(breadcrumb[:name])
     else
-      link_to breadcrumb[:name], breadcrumb[:path]
+      link_to breadcrumb[:name], breadcrumb[:url]
     end
   end
 end

@@ -3,13 +3,13 @@
   display: flex;
 
   .breadcrumb-item a {
-    color: var(--color-grey-700);
+    color: var(--kern-custom-grey-700);
     text-decoration: none;
   }
 
   .breadcrumb-item:not(:last-child)::after {
     content: "/";
     margin: 0 0.5em;
-    color: var(--color-grey-700);
+    color: var(--kern-custom-grey-700);
   }
 }

@@ -1,0 +1,18 @@
+de:
+  adm:
+    menu:
+      aria_label: Administrationsmenü
+      items:
+        home: Home
+        projekts: Projekte
+        application: Application
+        application_subitems:
+          homepage: Homepage
+          landing_pages: Landingpages
+          documents: Eigene Dokumente
+          navbar: Navigationsleiste
+        profiles: Profile
+        notifications: Notification
+        stats: Statistics
+        apps: Apps
+        

@@ -99,6 +99,7 @@ module Consul
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom_updates", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "cli", "**", "*.{rb,yml}")]
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "kern", "**", "*.{rb,yml}")]
 
     config.after_initialize do
       Globalize.set_fallbacks_to_all_available_locales

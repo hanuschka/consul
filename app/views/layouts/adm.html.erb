@@ -12,6 +12,8 @@
     </div>
 
     <aside id="adm-sidebar" class="d-none d-md-block" data-adm-sidebar-target="sidebar">
+      <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "logo", width: "200") %>
+
       <%= render Adm::MenuComponent.new %>
 
       <div class="kern-form-check" data-controller="mode-switcher" style="margin-top: 5rem;">

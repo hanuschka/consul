@@ -66,10 +66,16 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </button>
               </div>
 
-              <button type="button" disabled class="projekt-content-block-edit--button -transparent js-content-block-add-link">
-                <i class="fas fa-link"></i>
-                Link hinzufügen
-              </button>
+              <div class="d-flex u-gap-5">
+                <button type="button" disabled class="projekt-content-block-edit--button -transparent js-content-block-add-link">
+                  <i class="fas fa-link"></i>
+                  Link hinzufügen
+                </button>
+                <button type="button" class="projekt-content-block-edit--button -transparent js-ai-edit-content-block">
+                  <i class="fas fa-magic"></i>
+                  Edit with AI
+                </button>
+              </div>
             </div>
 
             <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">

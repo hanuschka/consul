@@ -18,6 +18,9 @@ de:
         platform_activity_description: Zeigt die Plattform-Aktivtät in einer Box an
         projekt_search: Projektsuche auf Startseite aktivieren
         projekt_search_description: Aktiviert eine Suchleiste auf der Startseite, um nach Projekten suchen zu können.
+        share_buttons: Teilen-Funktion
+        share_buttons_description: Aktivieren Sie die Teilen-Funktion in der rechten Seitenleiste.
+
       feature:
         map: Karten anzeigen
         map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht

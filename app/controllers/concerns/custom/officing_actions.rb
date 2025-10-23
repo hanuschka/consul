@@ -2,11 +2,14 @@ module OfficingActions
   extend ActiveSupport::Concern
 
   included do
+    include HasRegisteredAddress
+
     before_action :set_officing_manager
     before_action :set_offline_user, only: [:officing_desk]
   end
 
   def verify_user
+    @offline_user = User.new
     render "officing/shared/verify_user"
   end
 
@@ -24,46 +27,40 @@ module OfficingActions
       redirect_to action: :officing_desk, offline_user_id: offline_user.id
 
     else
-      unique_stamp = User.new(user_params).prepare_unique_stamp
+      @offline_user = User.new(user_params)
+      process_temp_attributes_for(@offline_user)
 
-      if (unique_stamp.blank? ||
-          params[:"date_of_birth(1i)"].blank? ||
-          params[:"date_of_birth(2i)"].blank? ||
-          params[:"date_of_birth(3i)"].blank?)
+      unique_stamp = @offline_user.prepare_unique_stamp
+
+      if unique_stamp.blank?
         flash.now[:error] = "Bitte stellen Sie sicher, dass alle Felder ausgefüllt sind"
-        render :verify_user
+        render "officing/shared/verify_user"
 
       else
-        offline_user = User.find_by(unique_stamp: unique_stamp)
-        offline_user ||= User.find_by(
-          first_name: user_params[:first_name],
-          last_name: user_params[:last_name],
-          plz: user_params[:plz],
-          date_of_birth: Date.new(
-            params[:"date_of_birth(1i)"].to_i,
-            params[:"date_of_birth(2i)"].to_i,
-            params[:"date_of_birth(3i)"].to_i
-          ).beginning_of_day
-        )
-        offline_user ||= User.new
+        existing_user_with_unique_stamp = User.find_by(unique_stamp: unique_stamp)
 
-        if offline_user.new_record?
-          offline_user.assign_attributes(user_params)
-          offline_user.email = nil
-          offline_user.verified_at = Time.current
-          offline_user.erased_at = Time.current
-          offline_user.password = "Aa1" + (0...17).map { ("a".."z").to_a[rand(26)] }.join
-          offline_user.terms_data_storage = "1"
-          offline_user.terms_data_protection = "1"
-          offline_user.terms_general = "1"
-          offline_user.unique_stamp = unique_stamp
-          offline_user.geozone = Geozone.find_with_plz(params[:plz])
-          offline_user.save!
+        @offline_user = existing_user_with_unique_stamp if existing_user_with_unique_stamp.present?
+
+        if (Setting["feature.melderegister"] && @offline_user.send(:residency_valid?)) || params["mark_as_verified"].present?
+          if @offline_user.new_record?
+            @offline_user.verified_at = Time.current
+            @offline_user.unique_stamp = unique_stamp
+          else
+            @offline_user.update_column(:verified_at, Time.current)
+          end
         end
 
-        offline_user.verify! if offline_user.verified_at.nil?
+        if @offline_user.new_record?
+          @offline_user.email = nil
+          @offline_user.erased_at = Time.current
+          @offline_user.password = "Aa1" + (0...17).map { ("a".."z").to_a[rand(26)] }.join
+          @offline_user.terms_data_storage = "1"
+          @offline_user.terms_data_protection = "1"
+          @offline_user.terms_general = "1"
+          @offline_user.save!
+        end
 
-        redirect_to action: :officing_desk, offline_user_id: offline_user.id
+        redirect_to action: :officing_desk, offline_user_id: @offline_user.id
       end
     end
   end
@@ -71,9 +68,12 @@ module OfficingActions
   private
 
     def user_params
-      params
-        .slice(:first_name, :last_name, :plz, :"date_of_birth(1i)", :"date_of_birth(2i)", :"date_of_birth(3i)")
-        .permit(:first_name, :last_name, :plz, :date_of_birth)
+      set_address_attributes
+
+      params.require(:user).permit(:first_name, :last_name,
+                                   :city_name, :plz, :street_name, :street_number, :street_number_extension,
+                                   :registered_address_id,
+                                   :gender, :date_of_birth)
     end
 
     def set_officing_manager

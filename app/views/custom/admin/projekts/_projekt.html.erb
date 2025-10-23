@@ -36,21 +36,21 @@
       </div>
     </td>
 
-    <td class='small-3 projekt-text-field '>
+    <td class='projekt-text-field '>
       <% projekts = Projekt.all.reject { |p| p.id.in?(projekt.all_children_ids) || p.id == projekt.id } %>
       <%= f.select :parent_id, options_for_projekt_select,
                    { include_blank: true, label: t('custom.admin.projekts.index.parent') },
                    { id: "projekt_parent_#{projekt.id}"} %>
     </td>
 
-    <td class='small-3 projekt-text-field'>
+    <td class='projekt-text-field'>
       <%= f.text_field :name,
                        id: "projekt_name_#{projekt.id}",
                        label: t('custom.admin.projekts.index.name_singular') %>
     </td>
 
 
-    <td class='small-3' id="projekt_<%= projekt.id %>">
+    <td class='' id="projekt_<%= projekt.id %>">
       <div class='projekt-action-buttons float-left'>
 
         <%= link_to edit_admin_projekt_path(projekt.id), class: 'configure-link', title: t("custom.admin.projekts.edit_projekt"), data: { turbolinks: "false" } do %>

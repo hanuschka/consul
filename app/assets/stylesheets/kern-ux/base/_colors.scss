@@ -2,10 +2,14 @@
 
 @mixin custom-light-colors {
   --kern-custom-grey-700: oklch(39.94% 0 none);
+  --kern-custom-white: oklch(100% 0 none);
+  --kern-custom-black: oklch(0% 0 none);
 }
 
 @mixin custom-dark-colors {
   --kern-custom-grey-700: oklch(60.06% 0 none);
+  --kern-custom-white: oklch(0% 0 none);
+  --kern-custom-black: oklch(100% 0 none);
 }
 
 

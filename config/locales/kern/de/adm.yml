@@ -1,5 +1,7 @@
 de:
   adm:
+    sidebar:
+      toggle: Seitenleiste umschalten
     menu:
       aria_label: Administrationsmenü
       items:

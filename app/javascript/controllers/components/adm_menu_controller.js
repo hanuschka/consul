@@ -7,6 +7,7 @@ export default class extends Controller {
     this.expandableTargets.forEach((element) => {
       element.addEventListener("click", this.toggleExpanded)
       element.addEventListener("keypress", (event) => {
+        event.preventDefault();
         if (event.key === "Enter" || event.key === " ") {
           this.toggleExpanded(event)
         }

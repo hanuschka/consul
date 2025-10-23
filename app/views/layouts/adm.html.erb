@@ -6,8 +6,12 @@
     <%= javascript_include_tag "application-kern" %>
   </head>
 
-  <body class="">
-    <aside>
+  <body class="" data-controller="adm-sidebar">
+    <div class="adm-sidebar-toggle d-md-none" data-adm-sidebar-target="toggler" role="button" tabindex="0" aria-label="<%= t('adm.sidebar.toggle') %>" aria-expanded="false" aria-controls="adm-sidebar">
+      <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+    </div>
+
+    <aside id="adm-sidebar" class="d-none d-md-block" data-adm-sidebar-target="sidebar">
       <%= render Adm::MenuComponent.new %>
 
       <div class="kern-form-check" data-controller="mode-switcher" style="margin-top: 5rem;">
@@ -18,9 +22,6 @@
 
     <main>
       <div class="kern-container-fluid main-container">
-        <div class="d-none">
-          <span class="material-symbols-outlined">menu</span>
-        </div>
         <%= yield %>
       </div>
     </main>

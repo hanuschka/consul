@@ -10,6 +10,9 @@ application.register("hello", HelloController)
 import AdmMenuController from "./components/adm_menu_controller"
 application.register("adm-menu", AdmMenuController)
 
+import AdmSidebarController from "./adm/sidebar_controller"
+application.register("adm-sidebar", AdmSidebarController)
+
 
 import ModeSwitcherController from "./mode_switcher_controller"
 application.register("mode-switcher", ModeSwitcherController)

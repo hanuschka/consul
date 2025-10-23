@@ -13,6 +13,10 @@
     }
   }
 
+  span.material-symbols-outlined {
+    font-size: var(--kern-font-size-24) !important;
+  }
+
   .nav-item-link {
     padding: var(--kern-metric-space-default);
     text-decoration: none;

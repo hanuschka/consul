@@ -9,7 +9,7 @@ aside {
 }
 
 main {
-  @media (min-width: breakpoints.$md-min-width) {
+  @media (min-width: breakpoints.$lg-min-width) {
     padding-left: 250px;
   }
 }

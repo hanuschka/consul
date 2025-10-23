@@ -2,16 +2,24 @@
 <html lang="<%= I18n.locale %>">
 
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><%= content_for?(:title) ? yield(:title) : "Adm" %></title>
+
+    <%= csrf_meta_tags %>
+    <%= favicon_link_tag "favicon.ico" %>
+
     <%= stylesheet_link_tag "application.adm" %>
     <%= javascript_include_tag "application-kern" %>
   </head>
 
   <body class="" data-controller="adm-sidebar">
-    <div class="adm-sidebar-toggle d-md-none" data-adm-sidebar-target="toggler" role="button" tabindex="0" aria-label="<%= t('adm.sidebar.toggle') %>" aria-expanded="false" aria-controls="adm-sidebar">
+    <div class="adm-sidebar-toggle d-lg-none" data-adm-sidebar-target="toggler" role="button" tabindex="0" aria-label="<%= t('adm.sidebar.toggle') %>" aria-expanded="false" aria-controls="adm-sidebar">
       <span class="material-symbols-outlined" aria-hidden="true">menu</span>
     </div>
 
-    <aside id="adm-sidebar" class="d-none d-md-block" data-adm-sidebar-target="sidebar">
+    <aside id="adm-sidebar" class="d-none d-lg-block" data-adm-sidebar-target="sidebar">
       <%= image_tag(image_path_for("logo_header.png"), alt: Setting["org_name"], class: "logo", width: "200") %>
 
       <%= render Adm::MenuComponent.new %>

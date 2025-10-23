@@ -5,7 +5,7 @@ module ProjektContentBlocksAdminActions
     before_action :set_namespace
     before_action :find_projekt, only: [:create]
     before_action :find_content_block, only: [
-      :destroy, :update, :update_position
+      :destroy, :update, :update_position, :change_with_ai
     ]
   end
 
@@ -60,6 +60,30 @@ module ProjektContentBlocksAdminActions
       render json: { status: { message: "Content block position updated" }}
     else
       render json: { message: "Error updating content block position" }
+    end
+  end
+
+  def change_with_ai
+    authorize!(:update, @content_block.projekt)
+
+    llm_response = RubyLLM.chat(model: 'gpt-5-nano').ask(
+      <<~TEXT
+        Update the content block html using provided instructions.
+        Instructions: '#{params[:instructions]}'.
+        Content block html with:
+        ---HTML---
+        '#{params[:content_block_html]}'
+        ---HTML---
+        Return just new html.
+      TEXT
+    )
+
+    new_content_block_body = llm_response.content
+
+    if new_content_block_body.present?
+      render json: { content_block_html: new_content_block_body, status: { message: "Content block updated" }}
+    else
+      render json: { status: { message: "Error generating content block with ai" }}
     end
   end
 

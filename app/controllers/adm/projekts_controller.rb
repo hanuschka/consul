@@ -3,15 +3,19 @@ module Adm
     def index
       authorize [:adm, Projekt]
       @projekts = policy_scope([:adm, Projekt])
-      @breadcrumbs = [{ name: "Projekts", url: adm_projekts_path }]
+      @breadcrumbs = [
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts") }
+      ]
     end
 
     def show
       @projekt = Projekt.find(params[:id])
       authorize [:adm, @projekt]
       @breadcrumbs = [
-        { name: "Projekts", url: adm_projekts_path },
-        { name: @projekt.name, url: adm_projekt_path(@projekt) }
+        { name: t("adm.menu.items.home"), url: adm_root_path },
+        { name: t("adm.menu.items.projekts"), url: adm_projekts_path },
+        { name: @projekt.name }
       ]
     end
   end

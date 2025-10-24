@@ -1,5 +1,6 @@
 de:
   adm:
+    title: Administrationsbereich
     sidebar:
       toggle: Seitenleiste umschalten
     menu:
@@ -17,4 +18,21 @@ de:
         notifications: Notification
         stats: Statistics
         apps: Apps
-        
+    home:
+      show:
+        title: Home
+    projekts:
+      index:
+        title: Projekte
+    homepage:
+      show:
+        title: Homepage
+    landing_pages:
+      index:
+        title: Landingpages
+    documents:
+      index:
+        title: Eigene Dokumente
+    navbar:
+      show:
+        title: Navigationsleiste

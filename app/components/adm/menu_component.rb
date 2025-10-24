@@ -26,13 +26,17 @@ class Adm::MenuComponent < ApplicationComponent
 
     def link_attributes(item)
       attributes = {}
-      attributes["class"] = ["nav-item-link", ("with-subitems" if item[:subitems])].compact.join(" ")
+      attributes["class"] = ["nav-item-link"]
       attributes["data-adm-menu-target"] = "expandable" if item[:subitems]
       if item[:subitems]
+        attributes["class"] << "with-subitems"
+        attributes["class"] << "expanded" if item[:subitems].any? { |subitem| current_page?(subitem[:path]) }
         attributes["aria-expanded"] = item[:subitems].any? { |subitem| current_page?(subitem[:path]) }
       end
       attributes["aria-current"] = "page" if current_page?(item[:path])
       attributes["role"] = "button" if item[:subitems]
+
+      attributes["class"] = attributes["class"].compact.join(" ")
 
       attributes
     end
@@ -52,10 +56,10 @@ class Adm::MenuComponent < ApplicationComponent
 
     def application_subitems
       [
-        { label: t("adm.menu.items.application_subitems.homepage"),      path: "#" },
-        { label: t("adm.menu.items.application_subitems.landing_pages"), path: "#" },
-        { label: t("adm.menu.items.application_subitems.documents"),     path: "#" },
-        { label: t("adm.menu.items.application_subitems.navbar"),        path: "#" }
+        { label: t("adm.menu.items.application_subitems.homepage"),      path: adm_homepage_path },
+        { label: t("adm.menu.items.application_subitems.landing_pages"), path: adm_landing_pages_path },
+        { label: t("adm.menu.items.application_subitems.documents"),     path: adm_documents_path },
+        { label: t("adm.menu.items.application_subitems.navbar"),        path: adm_navbar_path }
       ]
     end
     # rubocop:enable Layout/LineLength

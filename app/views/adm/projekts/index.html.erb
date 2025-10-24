@@ -1,4 +1,6 @@
-<%= render Adm::HeaderComponent.new(title: "Projekts", breadcrumbs: @breadcrumbs) %>
+<%= content_for :title, t("adm.projekts.index.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.index.title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-row">
   <%= render @projekts %>

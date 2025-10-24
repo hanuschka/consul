@@ -1,5 +1,6 @@
 class Adm::BaseController < ActionController::Base
   include Pundit::Authorization
+  include Pagy::Backend
 
   layout "adm"
 

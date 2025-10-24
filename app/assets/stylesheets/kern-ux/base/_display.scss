@@ -1,4 +1,4 @@
-@use "../breakpoints" as breakpoints;
+@use "../abstracts/breakpoints" as breakpoints;
 
 /* Display Utility Classes */
 .d-none { display: none !important; }
@@ -6,37 +6,11 @@
 .d-block { display: block !important; }
 .d-flex { display: flex !important; }
 
-@media (min-width: breakpoints.$sm-min-width) {
-  .d-sm-none { display: none !important; }
-  .d-sm-inline { display: inline !important; }
-  .d-sm-block { display: block !important; }
-  .d-sm-flex { display: flex !important; }
-}
-
-@media (min-width: breakpoints.$md-min-width) {
-  .d-md-none { display: none !important; }
-  .d-md-inline { display: inline !important; }
-  .d-md-block { display: block !important; }
-  .d-md-flex { display: flex !important; }
-}
-
-@media (min-width: breakpoints.$lg-min-width) {
-  .d-lg-none { display: none !important; }
-  .d-lg-inline { display: inline !important; }
-  .d-lg-block { display: block !important; }
-  .d-lg-flex { display: flex !important; }
-}
-
-@media (min-width: breakpoints.$xl-min-width) {
-  .d-xl-none { display: none !important; }
-  .d-xl-inline { display: inline !important; }
-  .d-xl-block { display: block !important; }
-  .d-xl-flex { display: flex !important; }
-}
-
-@media (min-width: breakpoints.$xxl-min-width) {
-  .d-xxl-none { display: none !important; }
-  .d-xxl-inline { display: inline !important; }
-  .d-xxl-block { display: block !important; }
-  .d-xxl-flex { display: flex !important; }
+@each $bp, $bp-width in breakpoints.$grid-breakpoints {
+  @media (min-width: $bp-width) {
+    .d-#{$bp}-none { display: none !important; }
+    .d-#{$bp}-inline { display: inline !important; }
+    .d-#{$bp}-block { display: block !important; }
+    .d-#{$bp}-flex { display: flex !important; }
+  }
 }

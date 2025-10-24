@@ -1,4 +1,4 @@
-@use "../breakpoints" as breakpoints;
+@use "../abstracts/breakpoints" as breakpoints;
 
 aside {
   position: fixed;
@@ -9,7 +9,7 @@ aside {
 }
 
 main {
-  @media (min-width: breakpoints.$lg-min-width) {
+  @media (min-width: map-get(breakpoints.$grid-breakpoints, "lg")) {
     padding-left: 250px;
   }
 }

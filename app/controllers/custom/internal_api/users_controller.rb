@@ -1,4 +1,4 @@
-class Api::UsersController < Api::BaseController
+class InternalApi::UsersController < InternalApi::BaseController
   include MapLocationAttributes
   include ImageAttributes
 

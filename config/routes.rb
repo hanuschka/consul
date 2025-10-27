@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   draw :projekt_management
   draw :deficiency_report_management
   draw :idea_management
+  draw :internal_api
+  draw :api
   draw :custom
 
   root "welcome#index"

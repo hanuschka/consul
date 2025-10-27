@@ -1,38 +1,30 @@
 class Api::BaseController < ActionController::API
-  class UnauthentificatedError < StandardError; end
+  include ActionController::HttpAuthentication::Token::ControllerMethods
 
-  include GlobalizeFallbacks
-  include AccessDeniedHandler
-
-  before_action :find_api_client
-  rescue_from UnauthentificatedError, with: :render_unauthentificated
+  before_action :authenticate_api_client!
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   private
 
-  def bearer_token
-    pattern = /^Bearer /
-    header  = request.headers["Authorization"]
+  def authenticate_api_client!
+    token = request.headers['Authorization']&.split(' ')&.last
+    client = ApiClient.find_by(auth_token: token)
 
-    if header&.match(pattern)
-      header.gsub(pattern, "")
+    if client.present?
+      @current_client = client
+    else
+      render json: {
+        error: {
+          type: "unauthorized",
+          messages: 'Invalid or missing API token.'
+        }
+      }, status: :unauthorized
     end
   end
 
-  def find_api_client
-    @api_client = ApiClient.find_by!(auth_token: bearer_token)
-
-    if @api_client.nil?
-      raise UnauthentificatedError
-    end
-  end
-
-  def current_api_client
-    @api_client
-  end
-
-   def render_unauthentificated
+  def render_not_found
     render json: {
-      error: 'You need to log in to access this resource'
-    }, status: :unauthorized
+      error: { type: "not_found", messages: ["Not found"]}
+    }, status: 404
   end
 end

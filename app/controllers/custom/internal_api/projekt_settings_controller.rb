@@ -1,4 +1,4 @@
-class Api::ProjektSettingsController < Api::BaseController
+class InternalApi::ProjektSettingsController < InternalApi::BaseController
   before_action :find_projekt
   before_action :find_projekt_setting
 

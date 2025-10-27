@@ -1,5 +1,4 @@
-
-class Api::ImagesController < Api::BaseController
+class InternalApi::ImagesController < InternalApi::BaseController
   def create
     pictures = params[:images].map do |image|
       picture = Ckeditor::Picture.new

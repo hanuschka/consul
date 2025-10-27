@@ -1,4 +1,4 @@
-class Api::AuthController < Api::BaseController
+class InternalApi::AuthController < InternalApi::BaseController
   def generate_frame_sign_in_token
     user = User.find(params[:user_id])
     user.generate_frame_sign_in_token!

@@ -1,4 +1,4 @@
-class Api::SettingsController < Api::BaseController
+class InternalApi::SettingsController < InternalApi::BaseController
   def enable
     Setting[params[:name]] = true
   end

@@ -1,4 +1,4 @@
-class Api::ProjektContentBlocksController < Api::BaseController
+class InternalApi::ProjektContentBlocksController < InternalApi::BaseController
   before_action :find_projekt, only: [:create]
   before_action :find_content_block, only: [
     :destroy, :update, :update_position

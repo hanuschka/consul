@@ -1,4 +1,4 @@
-class Api::AppsController < Api::BaseController
+class InternalApi::AppsController < InternalApi::BaseController
   skip_authorization_check
   before_action :find_app, only: [:update]
 

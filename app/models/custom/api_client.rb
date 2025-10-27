@@ -3,7 +3,9 @@ class ApiClient < ApplicationRecord
   has_secure_token :auth_token
 
   before_create do
-    self.registration_status = :registration_in_progress
+    if registration_status.nil?
+      self.registration_status = :registration_in_progress
+    end
   end
 
   def self.dt

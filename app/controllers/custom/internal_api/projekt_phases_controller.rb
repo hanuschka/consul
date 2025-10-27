@@ -1,4 +1,4 @@
-class Api::ProjektPhasesController < Api::BaseController
+class InternalApi::ProjektPhasesController < InternalApi::BaseController
   before_action :find_projekt, only: [:update]
   before_action :find_phase, only: [:update]
 

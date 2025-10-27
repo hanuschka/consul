@@ -132,6 +132,8 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     }
 
     this.addItemDeleteButton(clonedLi)
+    this.cleanupSortableForContentBlock(newUl.parentElement)
+    this.initSortableForContentBlock(newUl.parentElement)
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {

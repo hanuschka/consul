@@ -591,6 +591,10 @@
     return { contentBlockWrapper, contentBlock};
   },
 
+  getContentBlock(element) {
+    return element.closest(".js-projekt-content-block");
+  },
+
   cancelHtmlEditMode(e) {
     const { contentBlockWrapper, contentBlock} = this.getContentBlockAndWrapper(e.target);
 

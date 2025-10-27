@@ -90,6 +90,14 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
 
     if (link) {
       linkWrapper.parentNode.insertBefore(link, linkWrapper);
+    } else if (linkWrapper.classList.contains("-js-draft-link")) {
+      const linkContentElement = linkWrapper.querySelector(".js-link-wrapper-content");
+      if (linkContentElement) {
+        const childNodes = Array.from(linkContentElement.childNodes);
+        childNodes.forEach(child => {
+          linkWrapper.parentNode.insertBefore(child, linkWrapper);
+        });
+      }
     }
 
     linkWrapper.remove();

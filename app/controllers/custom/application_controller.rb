@@ -1,10 +1,7 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
-  include IframeEmbeddedBehavior
   include EmbeddedAuth
-  prepend_before_action :authentificate_frame_session_user!
-
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   after_action :set_back_path
@@ -62,7 +59,8 @@ class ApplicationController < ActionController::Base
       return if embedded?
 
       @projekts_for_overview_page_navigation = Projekt.for_overview_page_navigation(current_user)
-      @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user)
+                                                      .includes([page: :translations])
+      @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user).includes([page: :translations])
     end
 
     def set_default_social_media_images

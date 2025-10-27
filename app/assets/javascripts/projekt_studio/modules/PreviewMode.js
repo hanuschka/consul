@@ -72,24 +72,23 @@ ProjektStudio.PreviewMode = {
     $(".js-projekt-footer-phase-tab--add-new").toggle(!previewModeEnabled)
     $(".js-projekt-studio-hide-on-preview").toggle(!previewModeEnabled)
 
+    console.log("anyCheckedSDG", anyCheckedSDG)
+    console.log("anyCheckedCategory", anyCheckedCategory)
+
     if (previewModeEnabled) {
       if (!anyCheckedSDG) {
-        sdgSidebarCard.style = "display: none"
+        $(sdgSidebarCard).hide()
       }
       if (!anyCheckedCategory) {
-        categoriesSidebarCard.style = "display: none"
+        $(categoriesSidebarCard).hide()
       }
 
-      deactivatedPhases.forEach((element) => {
-        element.style.display = "none"
-      })
+      $(deactivatedPhases).hide()
     } else {
-      sdgSidebarCard.style = "display: block"
-      categoriesSidebarCard.style = "display: block"
+      $(sdgSidebarCard).show()
+      $(categoriesSidebarCard).show()
 
-      deactivatedPhases.forEach((element) => {
-        element.style.display = "block"
-      })
+      $(deactivatedPhases).show()
     }
   },
 

@@ -20,7 +20,8 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     $document.on("selectionchange", this.handleTextSelectionChange.bind(this))
     $document.on("click", ".js-content-block-accept-link-edit", this.acceptLinkEdit.bind(this));
     $document.on("click", ".js-content-block-cancel-link-edit", this.cancelLinkEdit.bind(this));
-    $document.on("click", ".js-content-block-edit-link", this.editLink.bind(this))
+    $document.on("click", ".js-content-block-edit-link", this.editLink.bind(this));
+    $document.on("click", ".js-content-block-delete-link", this.deleteLink.bind(this));
   },
 
   toggleLinkControls(contentBlock, enabled) {
@@ -47,8 +48,14 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
 
     const linkWrapper = this.buildLinkWrapper()
 
+    if (this.isOnlyChildAndNotInline(link)) {
+      linkWrapper.style.width = "100%";
+      linkWrapper.style.justifyContent = link.parentElement.style.justifyContent;
+    }
+
     link.parentNode.insertBefore(linkWrapper, link);
     linkWrapper.appendChild(link);
+
     linkWrapper.insertAdjacentHTML(
     "beforeend",
       `
@@ -69,11 +76,30 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     return linkWrapper
   },
 
-  removeLinkControls(linkWrapper) {
-    console.log("removeLinkControls")
-    const content = linkWrapper.querySelector("a") || linkWrapper.firstChild;
+  isOnlyChildAndNotInline(link) {
+    if (link.parentNode.children.length !== 1) {
+      return false;
+    }
 
-    linkWrapper.parentNode.insertBefore(content, linkWrapper);
+    const computedStyle = window.getComputedStyle(link);
+    return computedStyle.display !== 'inline';
+  },
+
+  removeLinkControls(linkWrapper) {
+    const link = linkWrapper.querySelector("a");
+
+    if (link) {
+      linkWrapper.parentNode.insertBefore(link, linkWrapper);
+    } else if (linkWrapper.classList.contains("-js-draft-link")) {
+      const linkContentElement = linkWrapper.querySelector(".js-link-wrapper-content");
+      if (linkContentElement) {
+        const childNodes = Array.from(linkContentElement.childNodes);
+        childNodes.forEach(child => {
+          linkWrapper.parentNode.insertBefore(child, linkWrapper);
+        });
+      }
+    }
+
     linkWrapper.remove();
   },
 
@@ -132,7 +158,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     this.resetLinkEditState()
 
     const button = e.currentTarget;
-    const link = button.parentElement.querySelector('a');
+    const link = button.closest(".js-content-block-link-wrapper").querySelector('a');
     const linkId = Date.now();
     link.dataset.contentBlockEditLinkId = linkId;
 
@@ -171,7 +197,11 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     const linkWrapper = this.buildLinkWrapper()
     linkWrapper.classList.add("-js-draft-link")
 
-    linkWrapper.appendChild(range.extractContents());
+    const linkContentElement = document.createElement("span")
+    linkContentElement.classList.add("js-link-wrapper-content")
+    linkContentElement.appendChild(range.extractContents())
+    linkWrapper.appendChild(linkContentElement)
+
     range.insertNode(linkWrapper);
 
     this.currentLinkWrapper = linkWrapper
@@ -193,17 +223,28 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
     const urlInput = document.querySelector(".js-content-block-link-popup .js-content-block-url-input");
     const link = linkWrapper.querySelector("a")
+    console.log("linkWrapper", linkWrapper)
+    console.log("a", link)
+    const $deleteButton = $(".js-content-block-delete-link")
 
-    console.log(link)
+    if (link) {
+      const linkStyle = getComputedStyle(link)
+      const isInlineLink = linkStyle.display === "inline" || linkStyle.display === "inline-flex"
 
-    // if (link && link.childNodes.length === 1 && link.childNodes[0].nodeType === Node.TEXT_NODE) {
-    //   $(textInput.parentElement).show()
-    //   textInput.value = link.childNodes[0].textContent
-    // }
-    if (link && ProjektStudio.utils.hasNoBlockChildren(link)) {
-      $(textInput.parentElement).show()
-      console.log("set new value")
-      textInput.value = link.innerHTML.trim()
+      if (ProjektStudio.utils.hasNoBlockChildren(link)) {
+        $(textInput.parentElement).show()
+        textInput.value = link.innerHTML.trim()
+      }
+
+      // if (isInlineLink && ProjektStudio.utils.hasNoBlockChildren(link)) {
+      if (link.classList.contains("js-content-block-inline-link")) {
+        $deleteButton.show()
+      }
+      else {
+        $deleteButton.hide()
+      }
+    } else {
+      $deleteButton.hide()
     }
 
     if (link) {
@@ -240,15 +281,19 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       }
 
       const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
+      // const linkStyle = getComputedStyle(link)
+      // const isInlineLink = linkStyle.display === "inline" || linkStyle.display === "inline-flex"
 
-      link.innerHTML =
-        ProjektStudio.utils.sanitizeHtml(
+      if (link && ProjektStudio.utils.hasNoBlockChildren(link)) {
+        link.innerHTML =
+          ProjektStudio.utils.sanitizeHtml(
           textInput.value,
           {
             allowedTags: ['b','strong','i','span', "u"],
             allowedAttributes: ["class", "style"]
           }
         )
+      }
     }
 
     // this.restoreSelection();
@@ -262,15 +307,13 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
   createNewLinkWithWrapper(linkWrapper, url, targetBlank = true) {
     const a = document.createElement("a");
     a.href = url;
-    a.classList.add("js-content-block-disable-link-click")
-    // a.contentEditable = true
+    a.classList.add("js-content-block-disable-link-click", "js-content-block-inline-link")
 
     if (targetBlank) {
       a.target = "_blank";
     }
 
-    const html = this.currentLinkWrapper.innerHTML;
-
+    const html = this.currentLinkWrapper.querySelector(".js-link-wrapper-content").innerHTML;
     a.insertAdjacentHTML("beforeend", html);
 
     linkWrapper.parentNode.insertBefore(a, linkWrapper);
@@ -285,6 +328,20 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
     if (this.currentLinkWrapper && this.currentLinkWrapper.classList.contains("-js-draft-link")) {
       this.removeLinkControls(this.currentLinkWrapper)
     }
+    this.hidePopup()
+    this.resetLinkEditState()
+  },
+
+  deleteLink() {
+    const link = this.currentLinkWrapper.querySelector('a')
+    const linkContent = link.innerHTML;
+
+    if (!confirm("Möchten Sie diesen Link wirklich entfernen?")) {
+      return;
+    }
+
+    this.currentLinkWrapper.insertAdjacentHTML('beforebegin', linkContent);
+    this.currentLinkWrapper.remove();
     this.hidePopup()
     this.resetLinkEditState()
   },
@@ -311,6 +368,8 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
 
     $(".js-content-block-link-popup .js-content-block-url-input").val("")
     $(".js-content-block-url-black-checkbox").prop("checked", true)
+
+    $(".js-content-block-delete-link").hide()
 
     this.savedSelection = null;
     this.currentContentBlockWrapper = null;

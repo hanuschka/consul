@@ -8,4 +8,8 @@ namespace :adm do
   resources :landing_pages, only: [:index]
   resources :documents, only: [:index]
   resource :navbar, controller: "navbar", only: [:show]
+
+  resources :settings, only: [:update] do
+    get :metadata, on: :collection
+  end
 end

@@ -1,0 +1,17 @@
+<%= form_with model: @setting, url: @path do |form| %>
+  <%= hidden_field_tag :kind, "string" %>
+
+  <div class="setting-controls">
+    <div class="kern-form-input">
+      <%= form.text_field :value,
+        id: dom_id(@setting, :value),
+        label: false,
+        class: "kern-form-input__input",
+        "data-adm-setting-target": "input",
+        "data-focus": @updated,
+        aria: { describedby: dom_id(@setting, :description) } %>
+    </div>
+
+    <%= helpers.kern_submit_button(icon: "save") %>
+  </div>
+<% end %>

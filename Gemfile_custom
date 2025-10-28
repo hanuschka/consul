@@ -37,6 +37,8 @@ gem "rqrcode", "~> 2.0"
 gem 'jsbundling-rails', '~> 1.3', '>= 1.3.1'
 gem 'cssbundling-rails', '~> 1.4', '>= 1.4.3'
 
+gem 'turbo-rails'
+
 gem 'pundit', '~> 2.5', '>= 2.5.1'
 gem 'pagy', '~> 9.4'
 # /Adm

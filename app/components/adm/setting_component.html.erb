@@ -1,0 +1,23 @@
+<%= turbo_frame_tag @setting do %>
+  <div class="setting-component mb-4" data-controller="adm-setting">
+    <h2 class="kern-title kern-title--small"><%= t("settings.#{@setting.key}") %></h2>
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-5">
+        <p id="<%= dom_id(@setting, :description) %>" class="kern-body">
+          <%= t("settings.#{@setting.key}_description", default: t("admin.settings.no_description")) %>
+        </p>
+      </div>
+      <div class="kern-col-12 kern-col-md-7">
+        <div class="setting-input <%= @kind %>">
+          <%= render component_for_type.new(setting: @setting, path: path, updated: @updated) %>
+
+          <% if @updated %>
+            <div class="success-message" data-adm-setting-target="successMessage">
+              <%= t("adm.components.setting_component.saved") %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,24 @@
+.setting-component {
+  .setting-input {
+    position: relative;
+  }
+
+  .setting-input.string {
+    .setting-controls {
+      display: flex;
+      gap: 8px;
+
+      .kern-form-input {
+        flex: 1;
+      }
+    }
+  }
+
+  .success-message {
+    position: absolute;
+    bottom: -25px;
+    color: var(--kern-color-feedback-success);
+    transition: opacity 0.5s ease;
+    opacity: 1;
+  }
+}

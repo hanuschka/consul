@@ -40,6 +40,30 @@ class Setting < ApplicationRecord
 
     def defaults
       {
+        # metadata
+        "org_name": "CONSUL", # !!!!!!!!!!!!!!!!
+        "url": "http://example.com", # Public-facing URL of the app.
+        "mailer_from_address": "noreply@consul.dev",
+        "mailer_from_name": "CONSUL",
+        "meta_title": nil,
+        "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
+        "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
+        "facebook_handle": nil,
+        "instagram_handle": nil,
+        "twitter_handle": nil,
+        "twitter_hashtag": nil,
+        "telegram_handle": nil,
+        "youtube_handle": nil,
+        # metadata
+
+        # gdpr
+        "extended_feature.gdpr.gdpr_conformity": true,
+        # gdpr
+
+
+
+        ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
+
         "feature.featured_proposals": nil,
         "feature.facebook_login": true,
         "feature.google_login": true,
@@ -125,23 +149,10 @@ class Setting < ApplicationRecord
         # Users with this email domain will automatically be marked as level 1 officials
         # Emails under the domain's subdomains will also be included
         "email_domain_for_officials": "",
-        "facebook_handle": nil,
-        "instagram_handle": nil,
-        "telegram_handle": nil,
-        "twitter_handle": nil,
-        "twitter_hashtag": nil,
-        "youtube_handle": nil,
-        "url": "http://example.com", # Public-facing URL of the app.
         # CONSUL installation's organization name
-        "org_name": "CONSUL",
         "newsletter_brand_color": "#004a83",
-        "meta_title": nil,
-        "meta_description": "Die offizielle Beteiligungsplattform der Stadt CONSUL. Die Plattform basiert auf CONSUL Open Source und wurde von demokratie.today modifiziert.",
-        "meta_keywords": "consul beteiligung, consul bürgerbeteiligung, consul Beteiligung, consul Bürgerbeteiligung, bürgerbeteiligung, digitale Bürgerbeteiligung, online Bürgerbeteiligung, smart city, smart cities, consul, consul open source, open source, consul project, consul project madrid",
         "proposal_notification_minimum_interval_in_days": 3,
         "direct_message_max_per_day": 3,
-        "mailer_from_name": "CONSUL",
-        "mailer_from_address": "noreply@consul.dev",
         "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
@@ -222,14 +233,12 @@ class Setting < ApplicationRecord
         "extended_feature.general.show_guest_login_links": false,
         # "extended_feature.general.homepage_projekt_search": false,
 
-        "extended_option.general.city_name": "CONSUL",
         "extended_option.general.title": "Öffentlichkeitsbeteiligung",
         "extended_option.general.subtitle": "in der Stadt CONSUL",
         "extended_option.general.launch_date": "",
         "extended_option.general.homepage_button_text": "",
         "extended_option.general.homepage_button_link": "",
 
-        "extended_feature.gdpr.gdpr_conformity": true,
         "extended_feature.gdpr.link_out_warning": true,
         "extended_feature.gdpr.two_click_iframe_solution": true,
         "extended_option.gdpr.devise_timeout_min": 30,

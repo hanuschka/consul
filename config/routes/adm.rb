@@ -11,5 +11,6 @@ namespace :adm do
 
   resources :settings, only: [:update] do
     get :metadata, on: :collection
+    get :gdpr, on: :collection
   end
 end

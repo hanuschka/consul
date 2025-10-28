@@ -20,7 +20,7 @@ class Adm::SettingComponent < ApplicationComponent
     case @kind
     when :string
       Adm::Settings::StringComponent
-    when "boolean"
+    when :boolean
       Adm::Settings::BooleanComponent
     else
       raise "Unknown setting type: #{@kind}"

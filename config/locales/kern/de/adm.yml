@@ -15,6 +15,7 @@ de:
           documents: Eigene Dokumente
           navbar: Navigationsleiste
           metadata_settings: Metadaten & Kommunikation
+          gdpr_settings: DSGVO
         profiles: Profile
         notifications: Notification
         stats: Statistics
@@ -40,3 +41,5 @@ de:
     settings:
       metadata:
         title: Metadaten & Kommunikation
+      gdpr:
+        title: DSGVO

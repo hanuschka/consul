@@ -1,0 +1,5 @@
+<%= content_for :title, t("adm.settings.gdpr.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.settings.gdpr.title"), breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::SettingComponent.new(setting_class: "Setting", key: "extended_feature.gdpr.gdpr_conformity", kind: :boolean) %>

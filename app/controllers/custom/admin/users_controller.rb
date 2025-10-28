@@ -90,6 +90,11 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
+  def destroy
+    @user.erase("Gelöscht von #{current_user.username} (id: #{current_user.id}, administrator_id: #{current_user.administrator.id})")
+    redirect_to admin_users_path, notice: t("custom.admin.users.erase_success_notice")
+  end
+
   private
 
     def user_params

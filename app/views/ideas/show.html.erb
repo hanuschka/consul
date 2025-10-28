@@ -1,0 +1,149 @@
+<%= content_for :body_class, "ideas-show" %>
+<% provide :title do %><%= @idea.title %><% end %>
+<% content_for :meta_description do %><%= @idea.description %><% end %>
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: idea_url(@idea),
+              social_title: @idea.title,
+              social_description: @idea.description,
+              twitter_image_url: (@idea.image.present? ? polymorphic_path(@idea.image) : nil),
+              og_image_url: (@idea.image.present? ? polymorphic_path(@idea.image) : nil) %>
+<% end %>
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: idea_url(@idea) %>
+<% end %>
+
+<main>
+  <div class="resource-page">
+    <div class="flex-layout">
+      <div class='main-column'>
+        <%= back_link_to(ideas_path) %>
+
+        <div class="common-page-description">
+          <%= render_custom_block("idea_show_welcome_text") %>
+        </div>
+      </div>
+      <div class="sidebar-placeholder"></div>
+    </div>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <%# if @idea.official_answer.present? %>
+          <!--
+          <div class="resource-page--description new-card main-content-card" style="background-color:#E3FCE7">
+            <h3><%#= t("custom.ideas.show.official_answer.title") %></h3>
+            <%#= AdminWYSIWYGSanitizer.new.sanitize(@idea.official_answer) %>
+          </div>
+          -->
+        <%# end %>
+
+        <%= render ResourcePage::BannerComponent.new(resource: @idea) %>
+
+        <div class="resource-page--description new-card main-content-card">
+          <%= auto_link_already_sanitized_html wysiwyg(@idea.description) %>
+        </div>
+
+        <% if @idea.map_location.present? %>
+          <div class="margin-bottom not-print">
+            <%= render Shared::MapComponent.new(
+              mappable: @idea,
+              features: @idea.map_location&.features_json_data
+            ) %>
+          </div>
+        <% end %>
+
+        <div id="comments" class="footer-anchor">
+        </div>
+
+        <% if ideas_feature?('enable_comments') %>
+          <%= render Shared::NewCommentsComponent.new(@idea, @comment_tree) %>
+        <% end %>
+
+        <%# if @idea.milestones.any? %>
+          <!--
+          <div class="proposal-resources-section">
+            <%#= render Shared::MilestonesComponent.new(milestones: @idea.milestones, milestoneable: @idea) %>
+          </div>
+          -->
+        <%# end %>
+
+      </div>
+
+      <aside class="sidebar">
+        <%= render Sidebar::ResourceAuthorComponent.new(resource: @idea) %>
+
+        <% if ideas_feature?("document_upload") && @idea.documents.exists? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("documents.title"), icon_name: "file")) do |c| %>
+            <%= render(Sidebar::DocumentListComponent.new(documents: @idea.documents)) %>
+          <% end %>
+        <% end %>
+
+        <% if ideas_feature?("external_video") && @idea.video_url.present? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("ideas.show.video_url_title"), icon_name: "video")) do %>
+            <div class="video-link">
+              <%= sanitize_and_auto_link @idea.video_url %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <%# if current_user&.administrator? %>
+          <%#= render(Shared::SidebarCardComponent.new(
+            title: "Benachrichtigung für Sachbearbeiter*in",
+            icon_name: "envelope")) do |c| %>
+            <%#= render Admin::LivesubmitCheckbox::Component.new(
+              url: notify_officer_about_new_comments_idea_path(@idea),
+              resource_name: "idea",
+              attribute_name: "notify_officer_about_new_comments",
+              record_id: @idea.id,
+              current_value: @idea.notify_officer_about_new_comments
+            ) %>
+          <%# end %>
+        <%# end %>
+
+        <% if current_user == @idea.author %>
+          <%= render(Shared::SidebarCardComponent.new(
+            title: t("ideas.show.author_actions.title"),
+            icon_name: "user-edit")) do |c| %>
+            <div class="show-actions-menu">
+              <%= link_to idea_path(@idea),
+                          class: "button hollow alert",
+                          style: "display: inline-flex;",
+                          method: :delete do %>
+                <%= t("ideas.show.author_actions.delete_button") %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <%# if can?(:edit, @idea) || can?(:audits, @idea) %>
+          <%#= render(Shared::SidebarCardComponent.new(
+            title: t("custom.ideas.show.admin_actions.title"),
+            icon_name: "user-edit")) do |c| %>
+              <%#= link_to "Administrieren", idea_management_idea_path(@idea), class: "button hollow alert" %>
+          <%# end %>
+        <%# end %>
+
+        <%= render(Mobile::FixedBottomActionComponent.new) do %>
+          <%= render(Shared::SidebarCardComponent.new(title: "Unterstützer*innen", icon_name: "vote-yea", opened_on_mobile: true)) do |c| %>
+            <% if @idea.remaining_days.present? %>
+              <div class='text-center margin-bottom'>
+                <i class="fas fa-clock"></i>
+                <%= t("ideas.remaining_days", count: @idea.remaining_days) %>
+              </div>
+            <% end %>
+            <%= render Ideas::VotesComponent.new(@idea) %>
+          <% end %>
+        <% end %>
+
+        <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
+          <%= render "shared/social_share",
+            share_title: t("proposals.show.share"),
+            title: @idea.title,
+            url: idea_url(@idea),
+            description: @idea.title,
+            mobile: @idea.title %>
+        <% end %>
+      </aside>
+    </div>
+  </div>
+</main>

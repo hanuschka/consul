@@ -1,10 +1,7 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
-  include IframeEmbeddedBehavior
   include EmbeddedAuth
-  prepend_before_action :authentificate_frame_session_user!
-
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   after_action :set_back_path
@@ -61,39 +58,9 @@ class ApplicationController < ActionController::Base
     def set_projekts_for_overview_page_navigation
       return if embedded?
 
-      @projekts_for_overview_page_navigation =
-        Projekt
-          .activated
-          .sort_by_order_number
-          .includes({page: [:translations]}, :projekt_settings, { children_projekts_show_in_navigation: :projekt_settings })
-          .joins(:projekt_settings)
-          .includes(:projekt_settings)
-          .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
-          .lazy
-          .select { |p| p.visible_for?(current_user) }
-
-      @projekts_for_navigation =
-        Projekt
-          .top_level
-          .activated
-          .includes(
-            :projekt_settings, :hard_individual_group_values,
-            page: [:translations]
-          )
-          .order(created_at: :asc)
-          .show_in_navigation
-          .sort_by_order_number
-          .select { |p| p.visible_for?(current_user) }
-
-      @draft_projekts_for_navigation =
-        Projekt
-          .regular
-          .not_activated
-          .includes(
-            page: [:translations]
-          )
-          .order(created_at: :asc)
-          .select { |p| p.visible_for?(current_user) }
+      @projekts_for_overview_page_navigation = Projekt.for_overview_page_navigation(current_user)
+                                                      .includes([page: :translations])
+      @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user).includes([page: :translations])
     end
 
     def set_default_social_media_images
@@ -143,7 +110,7 @@ class ApplicationController < ActionController::Base
       return if current_user.present?
       return if projekt_phase.blank?
       return unless projekt_phase.user_status == "guest"
-      return unless projekt_phase.current?
+      # return unless projekt_phase.current?
 
       guest_key = "guest_#{SecureRandom.uuid}"
       params[:user] = {}
@@ -170,5 +137,24 @@ class ApplicationController < ActionController::Base
         confirmed_at: Time.now.utc,
         skip_password_validation: true
       )
+    end
+
+    def set_landing_page_topbar_ui_variables(landing_page)
+      @ui_show_projekts_overview = landing_page.landing_show_projekts_overview
+      @ui_hide_topbar_links = landing_page.landing_hide_all_top_nav_links
+
+      if landing_page.landing_site_logo_for_transparent_background.attached?
+        @ui_site_logo_transparent_background = url_for(landing_page.landing_site_logo_for_transparent_background)
+      end
+
+      if landing_page.landing_site_logo_for_white_background.attached?
+        @ui_site_logo_white_background = url_for(landing_page.landing_site_logo_for_white_background)
+      end
+
+      if landing_page.landing_site_logo_follow_to_landing_page
+        @ui_site_homepage_path = landing_page.url
+      end
+
+      @ui_landing_page = landing_page
     end
 end

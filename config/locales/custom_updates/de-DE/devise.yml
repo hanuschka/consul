@@ -29,3 +29,5 @@ de:
             success: Sie haben sich erfolgreich als Gast angemeldet
           sign_out_guest:
             success: Sie haben sich erfolgreich als Gast abgemeldet
+          create:
+            existing_user_with_same_stamp: Bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.

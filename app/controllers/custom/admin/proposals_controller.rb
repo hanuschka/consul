@@ -23,11 +23,24 @@ class Admin::ProposalsController < Admin::BaseController
 
   def show
     @affiliated_geozones = (params[:affiliated_geozones] || '').split(',').map(&:to_i)
+    @projekt_phase = @proposal.projekt_phase
+  end
+
+  def edit
+    @projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
+    @proposal = Proposal.find(params[:id])
   end
 
   def update
+    @projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
+    @proposal = Proposal.find(params[:id])
+
     if @proposal.update(proposal_params)
-      redirect_to admin_proposal_path(@proposal), notice: t("admin.proposals.update.notice")
+      if @projekt_phase.present?
+        redirect_to proposals_admin_projekt_phase_path(@projekt_phase), notice: t("admin.proposals.update.notice")
+      else
+        redirect_to admin_proposal_path(@proposal), notice: t("admin.proposals.update.notice")
+      end
     else
       render :show
     end
@@ -38,9 +51,14 @@ class Admin::ProposalsController < Admin::BaseController
     @proposal.save!
   end
 
-  def toggle_image
+  def toggle_image_concealed
+    @projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
+    @proposal = Proposal.find(params[:id])
     @proposal.image.toggle!(:concealed)
-    redirect_to admin_proposal_path(@proposal)
+
+    respond_to do |format|
+      format.js { render "custom/admin/proposals/toggle_image_concealed" }
+    end
   end
 
   def comments
@@ -52,6 +70,16 @@ class Admin::ProposalsController < Admin::BaseController
         redirect_to admin_proposals_path, notice: "Export wird vorbereitet. Du erhältst eine E-Mail, sobald der Export fertig ist."
       end
     end
+  end
+
+  def toggle_admin_accepted
+    projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
+    proposal = projekt_phase.proposals.find(params[:id])
+
+    enabled = ["1", "true"].include?(params[:proposal][:admin_accepted])
+    proposal.update!(admin_accepted: enabled)
+
+    head :ok
   end
 
   private

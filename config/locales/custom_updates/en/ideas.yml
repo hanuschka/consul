@@ -1,0 +1,77 @@
+en:
+  idea_management:
+    header:
+      title: Ideas Management
+  ideas:
+    status:
+      active: Active
+      archived: Archived
+      pending: Pending
+    remaining_days:
+      one: "Remaining time: %{count} day"
+      other: "Remaining time: %{count} days"
+    support: Support
+    unsupport: Withdraw support
+    supports_count:
+      one: "%{count} support"
+      other: "%{count} supports"
+    index:
+      title: Ideas Platform
+      welcome_default_text_html: "The ideas platform gives you the opportunity to actively participate in shaping your living environment. Submit your idea and gather supporters. If a set quorum is reached within a certain period, the administration will officially take up the proposal and examine it further."
+      sidebar:
+        information_default_text: "You have an idea on how to improve life in your area? You can submit it by clicking the button."
+        count: Ideas
+        button_new: New Idea
+        category_filter:
+          title: Category
+        status_filter:
+          title: Status
+          active: Active
+          archived: Archived
+        quorum_filter:
+          title: Quorum
+          reached: Reached
+          not_reached: Not reached
+    show:
+      official_answer_title: "Official Answer"
+      video_url_title: "Video URL"
+      author_actions:
+        title: Author
+        delete_button: Delete Idea
+    new:
+      start_new: Start new idea
+    form:
+      category_label: Category
+      category_hint: Please select an option
+      district:
+        title: Quick selection map section
+        description: Navigate quickly to the desired map position
+        placeholder: Please select map section
+  custom:
+    ideas:
+      index:
+        empty_list_text: There are no ideas yet. Submit an idea now!
+        search_form:
+          placeholder: Search contributions...
+        orders:
+          most_supported: Most supported
+          most_commented: Most commented
+          newest: Newest
+      form:
+        title_placeholder: 'Give your idea a catchy title, for example "Safe bike path along Bahnhofstraße" or "Playground for all generations"'
+        description_placeholder: "
+          Describe your contribution here. The following approach has proven successful:\n\n
+          Start with a general description of your idea and then explain what would improve with the implementation of your proposal.\n\n
+          When writing, try to use short sentences.\n
+          Limit your content – if possible – to a maximum of three paragraphs.\n\n
+          Also use paragraphs to make your text more readable. (Many users read your text on mobile devices.)\n\n
+          Additionally, use bullet points and lists where appropriate for better clarity.
+        "
+        map:
+          placeholder: please select
+        labels:
+          title: Title
+          description: Description
+          on_behalf_of: Submitted on behalf of
+          video_url: Video URL
+          district_select: Quick selection map section

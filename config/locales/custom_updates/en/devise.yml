@@ -29,3 +29,4 @@ en:
             success: You have successfully signed in as Guest
           sign_out_guest:
             success: You have successfully signed out as Guest
+            existing_user_with_same_stamp: Please use the email address you originally registered with to log in to your account.

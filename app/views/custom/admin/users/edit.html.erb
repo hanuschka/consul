@@ -1,5 +1,7 @@
 <%= back_link_to admin_users_path %>
 
+<%= link_to "Benutzerdaten löschen", admin_user_path(@user), method: :delete, data: { confirm: "Sind Sie sicher?" }, class: "float-right" %>
+
 <%= form_with model: @user, url: admin_user_path do |f| %>
   <%= render "shared/errors", resource: @user %>
 

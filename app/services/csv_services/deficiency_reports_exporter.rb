@@ -7,7 +7,7 @@ module CsvServices
     end
 
     def call
-      CSV.generate(headers: true, encoding: "UTF-8") do |csv|
+      CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
         @deficiency_reports.each do |deficiency_report|
@@ -22,7 +22,7 @@ module CsvServices
         [
           "ID", "Sichtbarkeit", "Autor",
           "Titel", "Beschreibungstext",
-          "Status", "Standort", "Area",
+          "Status", "Standort",
           "Kategorie",
           "Sachbearbeiter*in", "Zugewiesen an",
           "Video URL", "Meldung im Namen von",
@@ -35,7 +35,7 @@ module CsvServices
         [
           dr.id, dr.admin_accepted, sanitize_for_csv(dr.author.username),
           sanitize_for_csv(dr.title), sanitize_for_csv(strip_tags(dr.description)),
-          dr.status&.title, dr.map_location&.approximated_address, dr.area&.name,
+          dr.status&.title, dr.map_location&.approximated_address,
           dr.category&.name,
           sanitize_for_csv(dr.responsible&.name), dr.assigned_at,
           sanitize_for_csv(dr.video_url), sanitize_for_csv(dr.on_behalf_of),

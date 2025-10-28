@@ -5,6 +5,6 @@ class Projekts::BannerComponent < ApplicationComponent
   end
 
   def show_embedded_controlls?
-    @show_embedded_controlls ||= embedded_and_frame_access_code_valid?(@projekt)
+    @show_embedded_controlls ||= show_admin_controls_for_projekt?(@projekt)
   end
 end

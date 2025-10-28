@@ -408,11 +408,11 @@
 .cb-img-dialog__btn-primary {
   padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 7px;
   background: $dt-base;
   color: white;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 
   i {
@@ -450,7 +450,7 @@
   background: #f14b59;
   color: white;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 
   &:hover {
@@ -496,7 +496,7 @@
   align-items: center;
   margin-bottom: 15px;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .cb-img-edit-modal__body {
@@ -511,7 +511,7 @@
   gap: 5px;
 
   label {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
     color: #333;
   }
@@ -520,8 +520,7 @@
   textarea {
     padding: 8px 12px;
     border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    font-size: 14px;
+    // border-radius: 4px;
     font-family: inherit;
 
     &:focus {

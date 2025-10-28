@@ -7,6 +7,7 @@ class ProposalsController
   include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
+  include CustomHelper
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
@@ -190,6 +191,7 @@ class ProposalsController
       render "custom/pages/forbidden", layout: false
 
     elsif Setting.new_design_enabled?
+      @proposal.description = process_oembeds(@proposal.description)
       render :show_new
 
     else

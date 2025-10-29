@@ -1,7 +1,7 @@
 class Api::ProjektPhasesController < Api::BaseController
   include Translatable
 
-  before_action :find_projekt
+  before_action :find_projekt, only: %i[index new create]
   before_action :find_projekt_phase, only: [:show, :update, :destroy]
 
   def index
@@ -51,7 +51,7 @@ class Api::ProjektPhasesController < Api::BaseController
   private
 
   def projekt_phase_params
-    processed_params = params.require(:projekt_phase).permit(
+    params.require(:projekt_phase).permit(
       :type,
       :start_date,
       :end_date,
@@ -62,15 +62,13 @@ class Api::ProjektPhasesController < Api::BaseController
       :age_range_id,
       :user_status,
       :lock_on,
+      *translation_params(ProjektPhase),
       :registered_address_grouping_restriction,
       registered_address_grouping_restrictions: {},
       individual_group_value_ids: [],
       geozone_restriction_ids: [],
       settings_attributes: [:id, :key, :value, :_destroy],
-      translation_params(ProjektPhase)
     )
-
-    processed_params
   end
 
   def find_projekt
@@ -78,7 +76,7 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def find_projekt_phase
-    @projekt_phase = @projekt.projekt_phases.find(params[:id])
+    @projekt_phase = ProjektPhase.find(params[:id])
   end
 end
 

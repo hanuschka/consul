@@ -1,5 +1,5 @@
 class Api::ContentBlocksController < Api::BaseController
-  before_action :find_projekt
+  before_action :find_projekt, only: %i[index new create]
   before_action :find_content_block, only: [:show, :update, :destroy]
 
   def index

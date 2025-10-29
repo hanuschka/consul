@@ -12,33 +12,43 @@ class Api::ProjektsController < Api::BaseController
         .with_published_custom_page
         .show_in_overview_page
         .regular
-        .includes(
-          :projekt_phases,
-          projekt_phases: [
-            :settings,
-            :individual_group_values,
-            :geozone_restrictions
-          ]
-        )
 
-    # Allow including phases via query parameter (default: true)
+    # Allow including phases and content_blocks via query parameters (default: true)
     include_phases = params[:include_phases] != 'false'
+    include_content_blocks = params[:include_content_blocks] != 'false'
 
+    # Build includes dynamically
+    includes_hash = {}
+    includes_hash[:content_blocks] = {} if include_content_blocks
+    
+    if include_phases
+      includes_hash[:projekt_phases] = [
+        :settings,
+        :individual_group_values,
+        :geozone_restrictions
+      ]
+    end
+
+    projekts = projekts.includes(includes_hash) if includes_hash.any?
+    
     serailized_projekts = ProjektSerializer.serialize_collection(
       projekts,
-      include_phases: include_phases
+      include_phases: include_phases,
+      include_content_blocks: include_content_blocks
     )
 
     render json: { data: { projekts: serailized_projekts } }
   end
 
   def show
-    # Include phases by default in show action (can be disabled with ?include_phases=false)
+    # Include phases and content_blocks by default in show action (can be disabled with query params)
     include_phases = params[:include_phases] != 'false'
+    include_content_blocks = params[:include_content_blocks] != 'false'
     
     serailized_projekt = ProjektSerializer.new(
       @projekt,
-      include_phases: include_phases
+      include_phases: include_phases,
+      include_content_blocks: include_content_blocks
     ).serialize
 
     render json: { data: { projekt: serailized_projekt } }
@@ -120,6 +130,7 @@ class Api::ProjektsController < Api::BaseController
     @projekt = Projekt
       .includes(
         :projekt_phases,
+        :content_blocks,
         projekt_phases: [
           :settings,
           :individual_group_values,

@@ -4,6 +4,7 @@ class ProjektSerializer < BaseSerializer
   def initialize(projekt, options = {})
     @projekt = projekt
     @include_phases = options.fetch(:include_phases, false)
+    @include_content_blocks = options.fetch(:include_content_blocks, false)
   end
 
   def serialize
@@ -43,7 +44,14 @@ class ProjektSerializer < BaseSerializer
     # Include projekt phases if requested
     if @include_phases
       projekt_data.merge!({
-        phases: projekt_phases
+        projekt_phases: projekt_phases
+      })
+    end
+
+    # Include content blocks if requested
+    if @include_content_blocks
+      projekt_data.merge!({
+        content_blocks: content_blocks
       })
     end
 
@@ -56,6 +64,10 @@ class ProjektSerializer < BaseSerializer
 
   def projekt_phases
     ProjektPhaseSerializer.serialize_collection(@projekt.projekt_phases)
+  end
+
+  def content_blocks
+    ContentBlockSerializer.serialize_collection(@projekt.content_blocks.order(:position))
   end
 
   def self.serialize_collection(projekts, options = {})

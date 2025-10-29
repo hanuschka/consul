@@ -1,35 +1,46 @@
 de:
   setting:
-    org_name: "Name der Applikation"
-    org_name_description: "Der Name wird u.a. im Browser-Tab angezeigt"
-    url: "Haupt-URL"
-    url_description: "Haupt-URL Ihrer Website"
-    mailer_from_address: "Absender E-Mail-Adresse"
-    mailer_from_address_description: "Diese E-Mail-Adresse wird in E-Mails angezeigt, die von dieser Anwendung versendet werden"
-    mailer_from_name: "Absender E-Mail-Name"
-    mailer_from_name_description: "Dieser Name wird in E-Mails angezeigt, die von dieser Anwendung versendet werden"
-    meta_title: "Seiten-Titel (SEO)"
-    meta_title_description: "Titel für die Seite <title>, zur Verbesserung der Auffindbarkeit in Suchmaschinen"
-    meta_description: "Seiten-Beschreibung (SEO)"
-    meta_description_description: 'Website-Beschreibung <meta name="description">, zur Verbesserung der Auffindbarkeit in Suchmaschinen'
-    meta_keywords: "Stichwörter (SEO)"
-    meta_keywords_description: 'Stichwörter <meta name="keywords">, zur Verbesserung der Auffindbarkeit in Suchmaschinen'
-    facebook_handle: "Facebook Benutzer*name"
-    facebook_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
-    instagram_handle: "Instagram handle"
-    instagram_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
-    twitter_handle: "Twitter Benutzer*name"
-    twitter_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
-    twitter_hashtag: "Twitter hashtag"
-    twitter_hashtag_description: "Hashtag, der erscheint, wenn Inhalt auf Twitter geteilt wird"
-    telegram_handle: "Benutzer*name für Telegram"
-    telegram_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
-    youtube_handle: "Benutzer*name für Youtube"
-    youtube_handle_description: "Falls ausgefüllt, wird es in der Fußzeile erscheinen"
+    org_name: "Name der Anwendung"
+    org_name_description: "Dieser Name wird z.B. im Browser-Tab, in E-Mails sowie an anderen Stellen der Plattform angezeigt. Er sollte eindeutig und wiedererkennbar sein."
+    url: "Haupt-URL der Applikation"
+    url_description: "Dies ist die Hauptadresse (Top-Level-Domain) der Consul-Instanz, z. B. https://beteiligung.meine-stadt.de. Sie wird verwendet, wenn relative Links auf der Plattform automatisch ergänzt oder in Systembenachrichtigungen eingesetzt werden. Hinweis: Bitte ohne abschließenden Schrägstrich angeben."
+    mailer_from_address: "Absender-E-Mail-Adresse"
+    mailer_from_address_description: "Diese E-Mail-Adresse erscheint als Absender bei allen automatisch versendeten E-Mails der Plattform (z. B. Benachrichtigungen, Bestätigungen).
+Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten Adresse identisch sein. Änderungen sind nicht selbstständig möglich – bitte wenden Sie sich in diesem Fall an den Support von demokratie.today."
+    mailer_from_name: "Anzeigename des E-Mail-Absenders"
+    mailer_from_name_description: "Dieser Name wird den Empfängern als Absender in E-Mails angezeigt, die von der Plattform versendet werden – zum Beispiel „Beteiligungsplattform Stadt Musterstadt“. Der Anzeigename kann unabhängig von der technischen Absenderadresse angepasst werden."
+    meta_title: "Seitentitel (Suchmaschinenoptimierung)"
+    meta_title_description: "Dieser Titel wird von Suchmaschinen als Hauptüberschrift in den Suchergebnissen verwendet. Ein klar formulierter, suchmaschinenfreundlicher Titel verbessert die Sichtbarkeit Ihrer Anwendung bei Google & Co."
+    meta_description: "Seitenbeschreibung (Suchmaschinenoptimierung)"
+    meta_description_description: "Diese Beschreibung erscheint in Suchmaschinen unter dem Titel Ihrer Seite. Sie sollte kurz, präzise und ansprechend sein, um Nutzer zum Klicken zu motivieren. Eine gute Meta-Description erhöht die Sichtbarkeit und Klickrate in den Suchergebnissen."
+    meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
+    meta_keywords_description: "Hier können Sie optionale Stichwörter eintragen, die den Inhalt der Seite thematisch beschreiben. Diese werden im HTML-Quelltext als Meta-Keywords eingebunden. Obwohl Suchmaschinen diesen Tag heute kaum noch auswerten, kann er für interne Zwecke oder spezifische SEO-Strategien weiterhin nützlich sein. Begriffe durch Kommas trennen."
+    facebook_handle: "Facebook-Benutzername"
+    facebook_handle_description: "Wenn ausgefüllt, wird ein Facebook-Logo mit Link in der Fußzeile angezeigt."
+    instagram_handle: "Instagram-Benutzername"
+    instagram_handle_description: "Wenn ausgefüllt, wird ein Instagram-Logo mit Link in der Fußzeile angezeigt."
+    twitter_handle: "X-Benutzername (ehemals Twitter)"
+    twitter_handle_description: "Wenn ausgefüllt, wird ein X-Logo mit Link in der Fußzeile angezeigt."
+    twitter_hashtag: "X-Hashtag"
+    twitter_hashtag_description: "Hier kann ein Hashtag eingetragen werden, der mit der Plattform X verlinkt wird – z. B. für Kampagnen oder zentrale Themen. Erscheint ebenfalls in der Fußzeile."
+    telegram_handle: "Telegram-Benutzername"
+    telegram_handle_description: "Wenn ausgefüllt, wird ein Telegram-Logo mit Link in der Fußzeile angezeigt."
+    youtube_handle: "YouTube-Benutzername oder Kanal-ID"
+    youtube_handle_description: "Wenn ausgefüllt, wird ein YouTube-Logo mit Link in der Fußzeile angezeigt."
     extended_feature:
       gdpr:
-        gdpr_conformity: DSGVO-konforme Voreinstellungen
+        gdpr_conformity: "DSGVO-konforme Voreinstellungen"
         gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"
+        link_out_warning: "Warnung bei externen Links"
+        link_out_warning_description: "Wenn diese Option aktiviert ist, erscheint beim Klick auf einen externen Link (außerhalb der Consul-Plattform) ein Hinweis-Popup. Dieses informiert die Nutzer darüber, dass sie die Plattform verlassen und auf eine externe Webseite weitergeleitet werden."
+        two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
+        two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
+    extended_option:
+      gdpr:
+        devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
+        devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."
+        devise_verification_token_validity_days: "Gültigkeit des Verifikationslinks in Tagen"
+        devise_verification_token_validity_days_description: "Legen Sie fest, wie viele Tage lang der Link gültig ist, den Nutzer per E-Mail zur Verifizierung ihres Accounts erhalten."
 
 
 
@@ -81,10 +92,6 @@ de:
     #   gdpr:
     #     show_cookie_banner: Cookies Banner anzeigen
     #     show_cookie_banner_description: Aktivieren Sie den Cookie-Banner, um Nutzer:innen auf Tracking hinzuweisen
-    #     link_out_warning: Warnung für Linkouts
-    #     link_out_warning_description: Aktivieren Sie ein Popup, in dem der Nutzer bevor eines Linkouts zu einer externen Webseite gewarnt wird
-    #     two_click_iframe_solution: Zwei-Klick-Lösung für IFrames
-    #     two_click_iframe_solution_description: Aktivieren Sie die Zwei-Klick-Lösung für IFrames, um einen Blur-Effekt hinzuzufügen
     #   modulewide:
     #     enable_categories: Tags
     #     enable_categories_description: Aktivieren Sie die Auswahl vordefinierter Tags
@@ -143,11 +150,6 @@ de:
     #     homepage_button_link: Homepage-Button-Link
     #     homepage_button_link_description: Link, der über den Button angesteuert werden soll
 
-    #   gdpr:
-    #     devise_timeout_min: Dauer von Nutzer-Sitzungen
-    #     devise_timeout_min_description: Legen Sie fest, wie lange ein Nutzer pro Sitzung eingeloggt bleiben soll in Minuten
-    #     devise_verification_token_validity_days: Gültigkeit des Verifikationslinks in Tagen
-    #     devise_verification_token_validity_days_description: Legen Sie fest, wie lange der Verifikationslink gültig ist
     #   proposals:
     #     max_active_proposals_per_user: Maximale Anzahl aktiver Vorschläge pro Benutzer
     #     max_active_proposals_per_user_description: Legen Sie die maximale Anzahl an aktiven Vorschlägen pro Nutzer fest

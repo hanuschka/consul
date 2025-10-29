@@ -58,6 +58,10 @@ class Setting < ApplicationRecord
 
         # gdpr
         "extended_feature.gdpr.gdpr_conformity": true,
+        "extended_feature.gdpr.link_out_warning": true,
+        "extended_feature.gdpr.two_click_iframe_solution": true,
+        "extended_option.gdpr.devise_timeout_min": 30,
+        "extended_option.gdpr.devise_verification_token_validity_days": 3,
         # gdpr
 
 
@@ -238,11 +242,6 @@ class Setting < ApplicationRecord
         "extended_option.general.launch_date": "",
         "extended_option.general.homepage_button_text": "",
         "extended_option.general.homepage_button_link": "",
-
-        "extended_feature.gdpr.link_out_warning": true,
-        "extended_feature.gdpr.two_click_iframe_solution": true,
-        "extended_option.gdpr.devise_timeout_min": 30,
-        "extended_option.gdpr.devise_verification_token_validity_days": 3,
 
         "extended_feature.modulewide.enable_categories": true,
         "extended_feature.modulewide.show_number_of_entries_in_modules": true,

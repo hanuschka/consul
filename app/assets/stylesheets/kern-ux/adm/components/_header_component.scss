@@ -1,15 +1,15 @@
 .breadcrumb-list {
-  margin: 20px 0;
+  margin: 20px 0 10px;
   display: flex;
 
   .breadcrumb-item a {
-    color: var(--kern-custom-grey-700);
+    color: var(--kern-grey-700);
     text-decoration: none;
   }
 
   .breadcrumb-item:not(:last-child)::after {
     content: "/";
     margin: 0 0.5em;
-    color: var(--kern-custom-grey-700);
+    color: var(--kern-grey-700);
   }
 }

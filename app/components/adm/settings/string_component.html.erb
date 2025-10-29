@@ -6,12 +6,12 @@
       <%= form.text_field :value,
         id: dom_id(@setting, :value),
         label: false,
+        placeholder: t("setting.#{@setting.key}"),
         class: "kern-form-input__input",
         "data-adm-setting-target": "input",
-        "data-focus": @updated,
         aria: { describedby: dom_id(@setting, :description) } %>
     </div>
 
-    <%= helpers.kern_submit_button(icon: "save") %>
+    <%= helpers.kern_submit_button(icon: "save", autofocus: @updated) %>
   </div>
 <% end %>

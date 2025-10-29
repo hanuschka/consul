@@ -2,13 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [ "input", "successMessage" ]
+  static values = { updated: Boolean }
 
   connect() {
-    if (this.inputTarget.dataset.focus === "true") {
-      this.inputTarget.focus();
-      this.placeCursorAtEnd();
-      this.fadeOutSuccessMessage();
-    }
+    if (!this.updatedValue) return;
+
+    if (this.hasInputTarget) { this.placeCursorAtEnd() }
+    this.fadeOutSuccessMessage();
   }
 
   placeCursorAtEnd() {

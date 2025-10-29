@@ -1,12 +1,16 @@
-<% if @breadcrumbs.present? %>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb-list">
-      <% @breadcrumbs.each_with_index do |breadcrumb, index| %>
-        <% is_last = index == @breadcrumbs.size - 1 %>
-        <%= breadcrumb_item(breadcrumb, is_last) %>
-      <% end %>
-    </ol>
-  </nav>
-<% end %>
+<div class="kern-container main-container">
+  <% if @breadcrumbs.present? %>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb-list">
+        <% @breadcrumbs.each_with_index do |breadcrumb, index| %>
+          <% is_last = index == @breadcrumbs.size - 1 %>
+          <%= breadcrumb_item(breadcrumb, is_last) %>
+        <% end %>
+      </ol>
+    </nav>
+  <% end %>
 
-<h1 class="kern-heading-large mb-5"><%= @title %></h1>
+  <h1 class="kern-heading-large mb-4"><%= @title %></h1>
+</div>
+
+<hr class="kern-divider" aria-hidden="true" />

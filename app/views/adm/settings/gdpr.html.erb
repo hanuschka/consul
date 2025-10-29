@@ -2,4 +2,11 @@
 
 <%= render Adm::HeaderComponent.new(title: t("adm.settings.gdpr.title"), breadcrumbs: @breadcrumbs) %>
 
-<%= render Adm::SettingComponent.new(setting_class: "Setting", key: "extended_feature.gdpr.gdpr_conformity", kind: :boolean) %>
+<div class="kern-container mt-5">
+  <%= render Adm::SettingComponent.new(setting_class: "Setting", key: "extended_feature.gdpr.gdpr_conformity", kind: :boolean) %>
+  <%= render Adm::SettingComponent.new(setting_class: "Setting", key: "extended_feature.gdpr.link_out_warning", kind: :boolean) %>
+  <%= render Adm::SettingComponent.new(setting_class: "Setting", key: "extended_feature.gdpr.two_click_iframe_solution", kind: :boolean) %>
+
+  <%= render Adm::SettingComponent.new(setting_class: "Setting", key: "extended_option.gdpr.devise_timeout_min", kind: :string) %>
+  <%= render Adm::SettingComponent.new(setting_class: "Setting", key: "extended_option.gdpr.devise_verification_token_validity_days", kind: :string) %>
+</div>

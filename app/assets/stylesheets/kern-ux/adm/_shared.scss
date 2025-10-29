@@ -11,3 +11,68 @@
 .strong {
   font-weight: bold;
 }
+
+.toggle-button {
+  color: transparent;
+  cursor: pointer;
+  background-color: var(--kern-color-action-default);
+  border-color: var(--kern-color-action-default);
+  border-style: none;
+  width: var(--kern-96);
+  height: var(--kern-48);
+  border-radius: var(--kern-48);
+  position: relative;
+
+  &[aria-pressed="false"] {
+    background-color: var(--kern-grey-700);
+    border-color: var(--kern-grey-700);
+  }
+
+  &[aria-pressed="true"] {
+    background-color: var(--kern-color-action-default);
+    border-color: var(--kern-color-action-default);
+  }
+
+  &::after {
+    content: "";
+    display: block;
+    height: var(--kern-32);
+    width: var(--kern-32);
+    background-color: var(--kern-custom-white);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &[aria-pressed="true"]::after {
+    right: var(--kern-8);
+  }
+
+  &[aria-pressed="false"]::after {
+    left: var(--kern-8);
+  }
+
+  &.small {
+    width: var(--kern-64);
+    height: var(--kern-32);
+    border-radius: var(--kern-32);
+
+    &::after {
+      height: var(--kern-24);
+      width: var(--kern-24);
+    }
+
+    &[aria-pressed="true"]::after {
+      right: var(--kern-4);
+    }
+
+    &[aria-pressed="false"]::after {
+      left: var(--kern-4);
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px var(--kern-color-action-on-default), 0 0 0 4px var(--kern-color-action-focus-border-inside), 0 0 0 6px var(--kern-color-action-focus-border-outside);
+  }
+}

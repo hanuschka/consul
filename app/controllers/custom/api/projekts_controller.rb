@@ -8,19 +8,22 @@ class Api::ProjektsController < Api::BaseController
   def index
     projekts =
       Projekt
-        .activated
-        .with_published_custom_page
-        .show_in_overview_page
         .regular
 
-    # Allow including phases and content_blocks via query parameters (default: true)
+    if params[:only_visible] == "true"
+      projekts =
+        projekt
+          .activated
+          .with_published_custom_page
+          .show_in_overview_page
+    end
+
     include_phases = params[:include_phases] != 'false'
     include_content_blocks = params[:include_content_blocks] != 'false'
 
-    # Build includes dynamically
     includes_hash = {}
     includes_hash[:content_blocks] = {} if include_content_blocks
-    
+
     if include_phases
       includes_hash[:projekt_phases] = [
         :settings,
@@ -30,7 +33,7 @@ class Api::ProjektsController < Api::BaseController
     end
 
     projekts = projekts.includes(includes_hash) if includes_hash.any?
-    
+
     serailized_projekts = ProjektSerializer.serialize_collection(
       projekts,
       include_phases: include_phases,
@@ -44,7 +47,7 @@ class Api::ProjektsController < Api::BaseController
     # Include phases and content_blocks by default in show action (can be disabled with query params)
     include_phases = params[:include_phases] != 'false'
     include_content_blocks = params[:include_content_blocks] != 'false'
-    
+
     serailized_projekt = ProjektSerializer.new(
       @projekt,
       include_phases: include_phases,

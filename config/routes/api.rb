@@ -7,4 +7,10 @@
         end
       end
     end
+
+    resources :projekt_phases, only: [] do
+      resources :proposals, controller: "proposals", only: [:index, :create]
+    end
+
+    resources :proposals, only: [:show, :update, :destroy]
   end

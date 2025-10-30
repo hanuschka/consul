@@ -4,6 +4,436 @@ info:
   title: API V1
   version: v1
 paths:
+  "/api/deficiency_reports":
+    get:
+      summary: List deficiency reports
+      tags:
+      - Deficiency Reports
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: deficiency reports found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      deficiency_reports:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - deficiency_reports
+                  pagination:
+                    type: object
+                required:
+                - data
+    post:
+      summary: Create a deficiency report
+      tags:
+      - Deficiency Reports
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: deficiency report created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      deficiency_report:
+                        type: object
+                    required:
+                    - deficiency_report
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deficiency_report:
+                  type: object
+                  properties:
+                    author_id:
+                      type: integer
+                    deficiency_report_category_id:
+                      type: integer
+                    deficiency_report_status_id:
+                      type: integer
+                    title:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    resource_terms:
+                      type: boolean
+                    admin_accepted:
+                      type: boolean
+                    map_location_attributes:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        zoom:
+                          type: integer
+                      required:
+                      - latitude
+                      - longitude
+                  required:
+                  - author_id
+                  - deficiency_report_category_id
+                  - title
+                  - resource_terms
+                  - map_location_attributes
+              required:
+              - deficiency_report
+  "/api/deficiency_reports/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Deficiency Report ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a deficiency report
+      tags:
+      - Deficiency Reports
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: deficiency report found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      deficiency_report:
+                        type: object
+                    required:
+                    - deficiency_report
+                required:
+                - data
+        '404':
+          description: deficiency report not found
+    patch:
+      summary: Update a deficiency report
+      tags:
+      - Deficiency Reports
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: deficiency report updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      deficiency_report:
+                        type: object
+                    required:
+                    - deficiency_report
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deficiency_report:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    deficiency_report_status_id:
+                      type: integer
+  "/api/projekts/{projekt_id}/projekt_phases":
+    parameters:
+    - name: projekt_id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List projekt phases for a projekt
+      tags:
+      - Projekt Phases
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt phases found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_phases:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/ProjektPhase"
+                    required:
+                    - projekt_phases
+                required:
+                - data
+    post:
+      summary: Create a projekt phase
+      tags:
+      - Projekt Phases
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt phase created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_phase:
+                        "$ref": "#/components/schemas/ProjektPhase"
+                    required:
+                    - projekt_phase
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_phase:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: ProjektPhase::CommentPhase
+                    active:
+                      type: boolean
+                    frontend_visibility:
+                      type: boolean
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    given_order:
+                      type: integer
+                      nullable: true
+                    phase_tab_name:
+                      type: string
+                      nullable: true
+                      description: Translated attribute
+                  required:
+                  - type
+              required:
+              - projekt_phase
+  "/api/projekt_phases/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Phase ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt phase
+      tags:
+      - Projekt Phases
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt phase found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_phase:
+                        "$ref": "#/components/schemas/ProjektPhase"
+                    required:
+                    - projekt_phase
+                required:
+                - data
+        '404':
+          description: projekt phase not found
+    patch:
+      summary: Update a projekt phase
+      tags:
+      - Projekt Phases
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt phase updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_phase:
+                        "$ref": "#/components/schemas/ProjektPhase"
+                    required:
+                    - projekt_phase
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_phase:
+                  type: object
+                  properties:
+                    active:
+                      type: boolean
+                    frontend_visibility:
+                      type: boolean
+                    phase_tab_name:
+                      type: string
+                      nullable: true
+    delete:
+      summary: Delete a projekt phase
+      tags:
+      - Projekt Phases
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt phase deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: projekt phase not found
+        '422':
+          description: unable to delete projekt phase
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
   "/api/projekts":
     get:
       summary: List all projekts

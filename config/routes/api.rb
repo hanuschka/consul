@@ -1,3 +1,5 @@
   namespace :api do
-    resources :projekts
+    resources :projekts do
+      resources :projekt_phases
+    end
   end

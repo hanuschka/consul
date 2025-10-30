@@ -1,8 +1,9 @@
 class ProjektSerializer < BaseSerializer
   attr_reader :projekt
 
-  def initialize(projekt)
+  def initialize(projekt, options = {})
     @projekt = projekt
+    @include_phases = options.fetch(:include_phases, false)
   end
 
   def serialize
@@ -39,10 +40,25 @@ class ProjektSerializer < BaseSerializer
       projekt_settings: projekt_settings
     })
 
+    # Include projekt phases if requested
+    if @include_phases
+      projekt_data.merge!({
+        phases: projekt_phases
+      })
+    end
+
     projekt_data
   end
 
   def projekt_settings
     @projekt.projekt_settings.as_json(only: [:key, :value])
+  end
+
+  def projekt_phases
+    ProjektPhaseSerializer.serialize_collection(@projekt.projekt_phases)
+  end
+
+  def self.serialize_collection(projekts, options = {})
+    projekts.map { |projekt| new(projekt, options).serialize }
   end
 end

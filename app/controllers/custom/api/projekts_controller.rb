@@ -12,14 +12,34 @@ class Api::ProjektsController < Api::BaseController
         .with_published_custom_page
         .show_in_overview_page
         .regular
+        .includes(
+          :projekt_phases,
+          projekt_phases: [
+            :settings,
+            :individual_group_values,
+            :geozone_restrictions
+          ]
+        )
 
-    serailized_projekts = ProjektSerializer.serialize_collection(projekts)
+    # Allow including phases via query parameter (default: true)
+    include_phases = params[:include_phases] != 'false'
+
+    serailized_projekts = ProjektSerializer.serialize_collection(
+      projekts,
+      include_phases: include_phases
+    )
 
     render json: { data: { projekts: serailized_projekts } }
   end
 
   def show
-    serailized_projekt = ProjektSerializer.new(@projekt).serialize
+    # Include phases by default in show action (can be disabled with ?include_phases=false)
+    include_phases = params[:include_phases] != 'false'
+    
+    serailized_projekt = ProjektSerializer.new(
+      @projekt,
+      include_phases: include_phases
+    ).serialize
 
     render json: { data: { projekt: serailized_projekt } }
   end
@@ -97,6 +117,15 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def find_projekt
-    @projekt = Projekt.find(params[:id])
+    @projekt = Projekt
+      .includes(
+        :projekt_phases,
+        projekt_phases: [
+          :settings,
+          :individual_group_values,
+          :geozone_restrictions
+        ]
+      )
+      .find(params[:id])
   end
 end

@@ -1,0 +1,683 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/projekts":
+    get:
+      summary: List all projekts
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: only_visible
+        in: query
+        required: false
+        description: If true, returns only activated projekts with published custom
+          pages that are shown in overview
+        schema:
+          type: boolean
+      - name: include_phases
+        in: query
+        required: false
+        description: If false, excludes projekt phases from response. Default is true.
+        schema:
+          type: boolean
+      - name: include_content_blocks
+        in: query
+        required: false
+        description: If false, excludes content blocks from response. Default is true.
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: projekts found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekts:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/Projekt"
+                    required:
+                    - projekts
+                required:
+                - data
+    post:
+      summary: Create a projekt
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt:
+                        "$ref": "#/components/schemas/Projekt"
+                    required:
+                    - projekt
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    parent_id:
+                      type: integer
+                      nullable: true
+                    total_duration_start:
+                      type: string
+                      format: datetime
+                      nullable: true
+                    total_duration_end:
+                      type: string
+                      format: datetime
+                      nullable: true
+                    show_start_date_in_frontend:
+                      type: boolean
+                    show_end_date_in_frontend:
+                      type: boolean
+                    geozone_affiliated:
+                      type: boolean
+                    order_number:
+                      type: integer
+                    tag_list:
+                      type: string
+                      nullable: true
+                    related_sdg_list:
+                      type: string
+                      nullable: true
+                    landing_page_ids:
+                      type: array
+                      items:
+                        type: integer
+                    geozone_affiliation_ids:
+                      type: array
+                      items:
+                        type: integer
+                    sdg_goal_ids:
+                      type: array
+                      items:
+                        type: integer
+                    individual_group_value_ids:
+                      type: array
+                      items:
+                        type: integer
+                    map_location_attributes:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        zoom:
+                          type: integer
+                    image_attributes:
+                      type: object
+                      properties:
+                        image:
+                          type: string
+                          nullable: true
+                        cached_attachment:
+                          type: string
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+                        user_id:
+                          type: integer
+                          nullable: true
+                    projekt_manager_assignments_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          projekt_manager_id:
+                            type: integer
+                          projekt_id:
+                            type: integer
+                          permissions:
+                            type: array
+                            items:
+                              type: string
+                  required:
+                  - name
+              required:
+              - projekt
+  "/api/projekts/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: include_phases
+        in: query
+        required: false
+        description: If false, excludes projekt phases from response. Default is true.
+        schema:
+          type: boolean
+      - name: include_content_blocks
+        in: query
+        required: false
+        description: If false, excludes content blocks from response. Default is true.
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: projekt found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt:
+                        "$ref": "#/components/schemas/Projekt"
+                    required:
+                    - projekt
+                required:
+                - data
+        '404':
+          description: projekt not found
+    patch:
+      summary: Update a projekt
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt:
+                        "$ref": "#/components/schemas/Projekt"
+                    required:
+                    - projekt
+                required:
+                - data
+        '404':
+          description: projekt not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    parent_id:
+                      type: integer
+                      nullable: true
+                    total_duration_start:
+                      type: string
+                      format: datetime
+                      nullable: true
+                    total_duration_end:
+                      type: string
+                      format: datetime
+                      nullable: true
+                    show_start_date_in_frontend:
+                      type: boolean
+                    show_end_date_in_frontend:
+                      type: boolean
+                    geozone_affiliated:
+                      type: boolean
+                    order_number:
+                      type: integer
+                    tag_list:
+                      type: string
+                      nullable: true
+                    related_sdg_list:
+                      type: string
+                      nullable: true
+                    landing_page_ids:
+                      type: array
+                      items:
+                        type: integer
+                    geozone_affiliation_ids:
+                      type: array
+                      items:
+                        type: integer
+                    sdg_goal_ids:
+                      type: array
+                      items:
+                        type: integer
+                    individual_group_value_ids:
+                      type: array
+                      items:
+                        type: integer
+                    map_location_attributes:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        zoom:
+                          type: integer
+                    image_attributes:
+                      type: object
+                      properties:
+                        image:
+                          type: string
+                          nullable: true
+                        cached_attachment:
+                          type: string
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: true
+                        user_id:
+                          type: integer
+                          nullable: true
+              required:
+              - projekt
+    delete:
+      summary: Delete a projekt
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: projekt not found
+        '422':
+          description: unable to delete projekt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+  "/api/projekts/{id}/update_setting":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Update a projekt setting
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: setting updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      setting:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          key:
+                            type: string
+                          value:
+                            type: string
+                          projekt_id:
+                            type: integer
+                        required:
+                        - id
+                        - key
+                        - value
+                        - projekt_id
+                    required:
+                    - setting
+                  message:
+                    type: string
+                required:
+                - data
+                - message
+        '404':
+          description: setting not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                setting:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      description: Setting key
+                    value:
+                      type: string
+                      description: Setting value
+                  required:
+                  - key
+                  - value
+              required:
+              - setting
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Projekt:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Sample Projekt
+        parent_id:
+          type: integer
+          nullable: true
+          example:
+        created_at:
+          type: string
+          format: datetime
+          example: '2024-01-01T00:00:00Z'
+        updated_at:
+          type: string
+          format: datetime
+          example: '2024-01-01T00:00:00Z'
+        order_number:
+          type: integer
+          nullable: true
+          example: 1
+        total_duration_start:
+          type: string
+          format: datetime
+          nullable: true
+          example: '2024-01-01T00:00:00Z'
+        total_duration_end:
+          type: string
+          format: datetime
+          nullable: true
+          example: '2024-12-31T23:59:59Z'
+        comments_count:
+          type: integer
+          nullable: true
+          example: 0
+        geozone_affiliated:
+          type:
+          - boolean
+          - string
+          nullable: true
+          example: false
+        level:
+          type: integer
+          nullable: true
+          example: 0
+        show_start_date_in_frontend:
+          type:
+          - boolean
+          - string
+          nullable: true
+          example: true
+        show_end_date_in_frontend:
+          type:
+          - boolean
+          - string
+          nullable: true
+          example: true
+        top_level_projekt_id:
+          type: integer
+          nullable: true
+          example:
+        tsv:
+          type: string
+          nullable: true
+          example:
+        preview_code:
+          type: string
+          nullable: true
+          example: abc123
+        site_customization_page:
+          type: object
+          nullable: true
+          properties:
+            title:
+              type: string
+              nullable: true
+              example: Sample Projekt Page
+            slug:
+              type: string
+              nullable: true
+              example: sample-projekt
+        projekt_settings:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: show_map
+              value:
+                type: string
+                nullable: true
+                example: 'true'
+          example:
+          - key: show_map
+            value: 'true'
+          - key: enable_comments
+            value: 'false'
+        projekt_phases:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ProjektPhase"
+        content_blocks:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ContentBlock"
+      required:
+      - id
+      - name
+      - created_at
+      - updated_at
+    ProjektPhase:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        phase_tab_name:
+          type: string
+          example: Planning Phase
+        type:
+          type: string
+          example: ProjektPhase::InformationPhase
+        projekt_id:
+          type: integer
+          example: 1
+        active:
+          type: boolean
+          example: true
+        visible:
+          type: boolean
+          example: true
+        position:
+          type: integer
+          example: 0
+        start_date:
+          type: string
+          format: datetime
+          nullable: true
+          example: '2024-01-01T00:00:00Z'
+        end_date:
+          type: string
+          format: datetime
+          nullable: true
+          example: '2024-03-31T23:59:59Z'
+        created_at:
+          type: string
+          format: datetime
+          example: '2024-01-01T00:00:00Z'
+        updated_at:
+          type: string
+          format: datetime
+          example: '2024-01-01T00:00:00Z'
+      required:
+      - id
+      - phase_tab_name
+      - type
+      - projekt_id
+    ContentBlock:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          nullable: true
+          example: Introduction
+        body:
+          type: string
+          nullable: true
+          example: This is the content of the block.
+        locale:
+          type: string
+          example: en
+        position:
+          type: integer
+          example: 0
+        blockable_type:
+          type: string
+          example: Projekt
+        blockable_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: datetime
+          example: '2024-01-01T00:00:00Z'
+        updated_at:
+          type: string
+          format: datetime
+          example: '2024-01-01T00:00:00Z'
+      required:
+      - id
+      - position
+      - blockable_type
+      - blockable_id

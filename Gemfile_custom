@@ -30,3 +30,10 @@ gem 'rack-cors'
 gem "prawn", "2.5.0"
 gem 'prawn-svg', '~> 0.37.0'
 gem "rqrcode", "~> 2.0"
+
+gem 'rswag-api'
+gem 'rswag-ui'
+
+group :development, :test do
+  gem 'rswag-specs'
+end

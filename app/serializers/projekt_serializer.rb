@@ -59,7 +59,7 @@ class ProjektSerializer < BaseSerializer
   end
 
   def projekt_settings
-    @projekt.projekt_settings.as_json(only: [:key, :value])
+    @projekt.projekt_settings.as_json(only: [:key, :value, :id])
   end
 
   def projekt_phases

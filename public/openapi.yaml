@@ -296,10 +296,6 @@ paths:
                     type:
                       type: string
                       example: ProjektPhase::CommentPhase
-                    active:
-                      type: boolean
-                    frontend_visibility:
-                      type: boolean
                     start_date:
                       type: string
                       format: date
@@ -308,18 +304,133 @@ paths:
                       type: string
                       format: date
                       nullable: true
+                    active:
+                      type: boolean
+                    frontend_visibility:
+                      type: boolean
                     given_order:
                       type: integer
+                      nullable: true
+                    geozone_restricted:
+                      type: boolean
+                    age_range_id:
+                      type: integer
+                      nullable: true
+                    user_status:
+                      type: string
+                      nullable: true
+                    lock_on:
+                      type: string
+                      format: date
                       nullable: true
                     phase_tab_name:
                       type: string
                       nullable: true
                       description: Translated attribute
+                    registered_address_grouping_restriction:
+                      type: boolean
+                      nullable: true
+                    registered_address_grouping_restrictions:
+                      type: object
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                    individual_group_value_ids:
+                      type: array
+                      items:
+                        type: integer
+                    geozone_restriction_ids:
+                      type: array
+                      items:
+                        type: integer
+                    settings_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          key:
+                            type: string
+                            nullable: true
+                          value:
+                            type: string
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
                   required:
                   - type
               required:
               - projekt_phase
         description: Projekt Phase creation payload
+  "/api/projekt_phases/{id}/update_setting":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Phase ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Update a projekt phase setting by key
+      tags:
+      - Projekt Phases
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt phase setting updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_phase_setting:
+                        "$ref": "#/components/schemas/ProjektPhaseSetting"
+                    required:
+                    - projekt_phase_setting
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_phase_setting:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                      nullable: true
+                  required:
+                  - key
+              required:
+              - projekt_phase_setting
+        description: Setting payload
   "/api/projekt_phases/{id}":
     parameters:
     - name: id
@@ -400,13 +511,73 @@ paths:
                 projekt_phase:
                   type: object
                   properties:
+                    type:
+                      type: string
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    end_date:
+                      type: string
+                      format: date
+                      nullable: true
                     active:
                       type: boolean
                     frontend_visibility:
                       type: boolean
+                    given_order:
+                      type: integer
+                      nullable: true
+                    geozone_restricted:
+                      type: boolean
+                    age_range_id:
+                      type: integer
+                      nullable: true
+                    user_status:
+                      type: string
+                      nullable: true
+                    lock_on:
+                      type: string
+                      format: date
+                      nullable: true
                     phase_tab_name:
                       type: string
                       nullable: true
+                      description: Translated attribute
+                    registered_address_grouping_restriction:
+                      type: boolean
+                      nullable: true
+                    registered_address_grouping_restrictions:
+                      type: object
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                    individual_group_value_ids:
+                      type: array
+                      items:
+                        type: integer
+                    geozone_restriction_ids:
+                      type: array
+                      items:
+                        type: integer
+                    settings_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          key:
+                            type: string
+                            nullable: true
+                          value:
+                            type: string
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
         description: Attributes to update on the projekt phase
     delete:
       summary: Delete a projekt phase
@@ -1355,3 +1526,19 @@ components:
       - position
       - blockable_type
       - blockable_id
+    ProjektPhaseSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        key:
+          type: string
+          example: feature.general.newest_first
+        value:
+          type: string
+          nullable: true
+          example: active
+      required:
+      - id
+      - key

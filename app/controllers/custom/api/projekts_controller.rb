@@ -128,7 +128,7 @@ class Api::ProjektsController < Api::BaseController
       :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, landing_page_ids: [], geozone_affiliation_ids: [], sdg_goal_ids: [],
       individual_group_value_ids: [],
       map_location_attributes: map_location_attributes,
-      image_attributes: image_attributes,
+      # image_attributes: image_attributes,
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
     ]
     params.require(:projekt).permit(attributes, translation_params(Projekt))

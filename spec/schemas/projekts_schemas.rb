@@ -75,6 +75,17 @@ module Schemas
       required: %w[id phase_tab_name type projekt_id]
     }.freeze
 
+    # ProjektPhaseSetting schema definition for OpenAPI/Swagger documentation
+    PROJEKT_PHASE_SETTING_SCHEMA = {
+      type: :object,
+      properties: {
+        id: { type: :integer, example: 1 },
+        key: { type: :string, example: 'feature.general.newest_first' },
+        value: { type: :string, nullable: true, example: 'active' }
+      },
+      required: %w[id key]
+    }.freeze
+
     # ContentBlock schema definition for OpenAPI/Swagger documentation
     CONTENT_BLOCK_SCHEMA = {
       type: :object,
@@ -97,7 +108,8 @@ module Schemas
       {
         Projekt: PROJEKT_SCHEMA,
         ProjektPhase: PROJEKT_PHASE_SCHEMA,
-        ContentBlock: CONTENT_BLOCK_SCHEMA
+        ContentBlock: CONTENT_BLOCK_SCHEMA,
+        ProjektPhaseSetting: PROJEKT_PHASE_SETTING_SCHEMA
       }
     end
   end

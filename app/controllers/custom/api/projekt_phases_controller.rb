@@ -2,7 +2,7 @@ class Api::ProjektPhasesController < Api::BaseController
   include Translatable
 
   before_action :find_projekt, only: %i[index new create]
-  before_action :find_projekt_phase, only: [:show, :update, :destroy]
+  before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting]
 
   def index
     projekt_phases = @projekt.projekt_phases
@@ -50,6 +50,22 @@ class Api::ProjektPhasesController < Api::BaseController
       render json: { message: "Projekt phase destroyed" }
     else
       render json: { error: { messages: @projekt_phase.errors.messages } }, status: 422
+    end
+  end
+
+  def update_setting
+    name = params.dig(:projekt_phase_setting, :key)
+    value = params.dig(:projekt_phase_setting, :value)
+
+    unless name.present?
+      return render json: { error: { messages: ["name is required"] } }, status: 422
+    end
+
+    setting = @projekt_phase.settings.find_or_initialize_by(key: name)
+    if setting.update(value: value)
+      render json: { data: { projekt_phase_setting: setting.as_json(only: [:id, :key, :value]).merge(key: setting.key) } }
+    else
+      render json: { error: { messages: setting.errors.full_messages } }, status: 422
     end
   end
 

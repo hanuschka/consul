@@ -4,7 +4,11 @@
         patch :update_setting
       end
 
-      resources :projekt_phases
+      resources :projekt_phases do
+        member do
+          patch :update_setting
+        end
+      end
       resources :content_blocks do
         collection do
           post :reorder
@@ -25,6 +29,7 @@
       resources :projekt_point_of_interest_pins, only: [:create, :show, :update, :destroy]
       resources :projekt_point_of_interest_categories, only: [:create, :show, :update, :destroy]
     end
+    # settings are updated via projekt_phases#update_setting
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
   end

@@ -3,6 +3,8 @@
 require 'rails_helper'
 require_relative 'schemas/projekts_schemas'
 
+Rswag::Specs::SwaggerRoot = Rails.root.join('public').to_s
+
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
   # NOTE: If you're using the rswag-api to serve API descriptions, you'll need

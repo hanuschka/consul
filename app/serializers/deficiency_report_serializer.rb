@@ -81,7 +81,7 @@ class DeficiencyReportSerializer < BaseSerializer
 
     report_data[:tags] = deficiency_report.tags.pluck(:name) if deficiency_report.tags.any?
 
-    if deficiency_report.respond_to?(:image) && deficiency_report.image.attached?
+    if deficiency_report.respond_to?(:image) && deficiency_report.image&.respond_to?(:attached?) && deficiency_report.image&.attached?
       report_data[:image_url] = deficiency_report.image.url
     end
 

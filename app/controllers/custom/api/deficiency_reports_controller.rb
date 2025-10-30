@@ -20,10 +20,7 @@ class Api::DeficiencyReportsController < Api::BaseController
       .page(params[:page])
       .per(params[:per_page] || 100)
 
-    # Apply filters
     deficiency_reports = apply_filters(deficiency_reports)
-
-    # Apply sorting
     deficiency_reports = apply_sorting(deficiency_reports)
 
     serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports)
@@ -93,10 +90,10 @@ class Api::DeficiencyReportsController < Api::BaseController
       :responsible_id,
       :responsible_type,
       :tag_list,
+      *translation_params(DeficiencyReport),
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
       documents_attributes: document_attributes,
-      *translation_params(DeficiencyReport)
     )
   end
 

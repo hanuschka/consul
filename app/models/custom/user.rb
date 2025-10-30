@@ -300,6 +300,16 @@ class User < ApplicationRecord
     end
   end
 
+  def public_name
+    return nil unless public_activity?
+
+    if first_name.present? || last_name.present?
+      full_name
+    else
+      username
+    end
+  end
+
   def first_letter_of_name
     (first_name || name)&.chars&.first&.upcase
   end

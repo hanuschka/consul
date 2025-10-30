@@ -48,7 +48,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :projekt_phase, in: :body, schema: {
+      parameter name: :projekt_phase, in: :body, description: 'Projekt Phase creation payload', schema: {
         type: :object,
         properties: {
           projekt_phase: {
@@ -171,7 +171,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :projekt_phase, in: :body, schema: {
+      parameter name: :projekt_phase, in: :body, description: 'Attributes to update on the projekt phase', schema: {
         type: :object,
         properties: {
           projekt_phase: {

@@ -45,7 +45,7 @@ RSpec.describe 'Projekts API', type: :request do
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :projekt, in: :body, schema: {
+      parameter name: :projekt, in: :body, description: 'Projekt creation payload', schema: {
         type: :object,
         properties: {
           projekt: {
@@ -200,7 +200,7 @@ RSpec.describe 'Projekts API', type: :request do
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :projekt, in: :body, schema: {
+      parameter name: :projekt, in: :body, description: 'Attributes to update on the projekt', schema: {
         type: :object,
         properties: {
           projekt: {
@@ -369,7 +369,7 @@ RSpec.describe 'Projekts API', type: :request do
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :setting, in: :body, schema: {
+      parameter name: :setting, in: :body, description: 'Key/value to update on projekt settings', schema: {
         type: :object,
         properties: {
           setting: {

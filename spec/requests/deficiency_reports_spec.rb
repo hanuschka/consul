@@ -27,8 +27,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       tags 'Deficiency Reports'
       produces 'application/json'
       security [bearer_auth: []]
-      parameter name: :page, in: :query, type: :integer, required: false
-      parameter name: :per_page, in: :query, type: :integer, required: false
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
 
       response '200', 'deficiency reports found' do
         before do
@@ -69,7 +69,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :deficiency_report, in: :body, schema: {
+      parameter name: :deficiency_report, in: :body, description: 'Deficiency Report payload', schema: {
         type: :object,
         properties: {
           deficiency_report: {
@@ -217,7 +217,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :deficiency_report, in: :body, schema: {
+      parameter name: :deficiency_report, in: :body, description: 'Attributes to update on the deficiency report', schema: {
         type: :object,
         properties: {
           deficiency_report: {

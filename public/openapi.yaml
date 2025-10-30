@@ -15,11 +15,13 @@ paths:
       - name: page
         in: query
         required: false
+        description: Pagination page number
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
+        description: Items per page (default 100)
         schema:
           type: integer
       responses:
@@ -125,6 +127,7 @@ paths:
                   - map_location_attributes
               required:
               - deficiency_report
+        description: Deficiency Report payload
   "/api/deficiency_reports/{id}":
     parameters:
     - name: id
@@ -209,6 +212,7 @@ paths:
                       type: string
                     deficiency_report_status_id:
                       type: integer
+        description: Attributes to update on the deficiency report
   "/api/projekts/{projekt_id}/projekt_phases":
     parameters:
     - name: projekt_id
@@ -315,6 +319,7 @@ paths:
                   - type
               required:
               - projekt_phase
+        description: Projekt Phase creation payload
   "/api/projekt_phases/{id}":
     parameters:
     - name: id
@@ -402,6 +407,7 @@ paths:
                     phase_tab_name:
                       type: string
                       nullable: true
+        description: Attributes to update on the projekt phase
     delete:
       summary: Delete a projekt phase
       tags:
@@ -612,6 +618,7 @@ paths:
                   - name
               required:
               - projekt
+        description: Projekt creation payload
   "/api/projekts/{id}":
     parameters:
     - name: id
@@ -774,6 +781,7 @@ paths:
                           nullable: true
               required:
               - projekt
+        description: Attributes to update on the projekt
     delete:
       summary: Delete a projekt
       tags:
@@ -903,6 +911,242 @@ paths:
                   - value
               required:
               - setting
+        description: Key/value to update on projekt settings
+  "/api/projekt_phases/{projekt_phase_id}/proposals":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List proposals for a projekt phase
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: Items per page (default 100)
+        schema:
+          type: integer
+      - name: for_public_render
+        in: query
+        required: false
+        description: If true, filters to proposals visible for public render
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: proposals found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      proposals:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - proposals
+                  pagination:
+                    type: object
+                required:
+                - data
+    post:
+      summary: Create a proposal
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: proposal created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      proposal:
+                        type: object
+                    required:
+                    - proposal
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                proposal:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    responsible_name:
+                      type: string
+                    geozone_id:
+                      type: integer
+                    resource_terms:
+                      type: boolean
+                  required:
+                  - title
+                  - description
+                  - responsible_name
+                  - geozone_id
+                  - resource_terms
+              required:
+              - proposal
+        description: Proposal creation payload
+  "/api/proposals/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Proposal ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a proposal
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: proposal found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      proposal:
+                        type: object
+                    required:
+                    - proposal
+                required:
+                - data
+        '404':
+          description: proposal not found
+    patch:
+      summary: Update a proposal
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: proposal updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      proposal:
+                        type: object
+                    required:
+                    - proposal
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                proposal:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+        description: Attributes to update on the proposal
+    delete:
+      summary: Delete a proposal
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: proposal deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: proposal not found
+        '422':
+          description: unable to delete proposal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
 components:
   securitySchemes:
     bearer_auth:

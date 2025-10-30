@@ -30,3 +30,4 @@
   end
 
   get "/api/docs", to: "docs#api"
+  get "/api/docs_alt", to: "docs#api_alt"

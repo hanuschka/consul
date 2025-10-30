@@ -4,4 +4,8 @@ class DocsController < ApplicationController
   def api
     render :api, layout: false
   end
+
+  def api_alt
+    render :api_alt, layout: false
+  end
 end

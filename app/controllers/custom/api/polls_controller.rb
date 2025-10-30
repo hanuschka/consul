@@ -44,8 +44,8 @@ class Api::PollsController < Api::BaseController
       :summary,
       :description,
       :budget_id,
+      *translation_params(Poll),
       geozone_ids: [],
-      *translation_params(Poll)
     )
   end
 

@@ -8,10 +8,11 @@ class Api::ProposalsController < Api::BaseController
   before_action :find_proposal, only: [:show, :update, :destroy]
 
   def index
-    proposals = @projekt_phase.resources
-      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
-      .page(params[:page])
-      .per(params[:per_page] || 100)
+    proposals =
+        @projekt_phase.resources
+            .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+            .page(params[:page])
+            .per(params[:per_page] || 100)
 
     if params["for_public_render"] == "true"
       proposals = proposals.for_public_render
@@ -33,12 +34,7 @@ class Api::ProposalsController < Api::BaseController
 
   def create
     proposal = @projekt_phase.resources.new(proposal_params)
-
-    # Set author from API client's associated user if available
-    # Otherwise, author_id should be provided in params
-    if @current_client.respond_to?(:user) && @current_client.user.present?
-      proposal.author = @current_client.user
-    end
+    proposal.author = GuestUser.new
 
     if proposal.save(context: :api)
       serialized_proposal = ProposalSerializer.new(proposal).serialize
@@ -71,7 +67,6 @@ class Api::ProposalsController < Api::BaseController
 
   def proposal_params
     params.require(:proposal).permit(
-      :author_id,
       :responsible_name,
       :video_url,
       :geozone_id,
@@ -83,11 +78,11 @@ class Api::ProposalsController < Api::BaseController
       :tag_list,
       :related_sdg_list,
       :resource_terms,
+      *translation_params(Proposal),
       projekt_label_ids: [],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
       documents_attributes: document_attributes,
-      *translation_params(Proposal)
     )
   end
 

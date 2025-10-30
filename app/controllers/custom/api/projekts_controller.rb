@@ -3,7 +3,7 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
   include Translatable
 
-  before_action :find_projekt, only: [:show, :update, :destroy]
+  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting]
 
   def index
     projekts =
@@ -95,6 +95,30 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
+  def update_setting
+    setting = @projekt.projekt_settings.find_by(key: setting_params[:key])
+
+    unless setting
+      return render json: { error: { messages: ["Setting not found"] } }, status: 404
+    end
+
+    if setting.update(value: setting_params[:value])
+      render json: {
+        data: {
+          setting: {
+            id: setting.id,
+            key: setting.key,
+            value: setting.value,
+            projekt_id: setting.projekt_id
+          }
+        },
+        message: "Setting updated successfully"
+      }
+    else
+      render json: { error: { messages: setting.errors.full_messages } }, status: 422
+    end
+  end
+
   private
 
   def projekt_params
@@ -141,5 +165,9 @@ class Api::ProjektsController < Api::BaseController
         ]
       )
       .find(params[:id])
+  end
+
+  def setting_params
+    params.require(:setting).permit(:key, :value)
   end
 end

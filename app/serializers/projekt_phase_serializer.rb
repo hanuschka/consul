@@ -75,8 +75,6 @@ class ProjektPhaseSerializer < BaseSerializer
     case projekt_phase
     when ProjektPhase::ProposalPhase
       { proposals: serialize_proposals }
-    when ProjektPhase::DebatePhase
-      { debates: serialize_debates }
     when ProjektPhase::BudgetPhase
       { budget: serialize_budget }
     when ProjektPhase::VotingPhase

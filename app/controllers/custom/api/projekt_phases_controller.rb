@@ -6,6 +6,11 @@ class Api::ProjektPhasesController < Api::BaseController
 
   def index
     projekt_phases = @projekt.projekt_phases
+      .includes(
+        :settings,
+        :individual_group_values,
+        :geozone_restrictions
+      )
 
     serialized_projekt_phases = ProjektPhaseSerializer.serialize_collection(projekt_phases)
 
@@ -76,7 +81,13 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def find_projekt_phase
-    @projekt_phase = ProjektPhase.find(params[:id])
+    @projekt_phase = ProjektPhase
+      .includes(
+        :settings,
+        :individual_group_values,
+        :geozone_restrictions
+      )
+      .find(params[:id])
   end
 end
 

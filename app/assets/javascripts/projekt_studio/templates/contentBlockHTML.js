@@ -44,13 +44,23 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
         </div>
 
         <div class="projekt-content-block--toolsets">
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-ai-edit-mode-controlls">
-              <div class="ai-edit-mode--loader bars-scale-loader">
+            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-ai-edit-mode-controlls d-flex-justify-space-between">
+              <div class="d-flex u-gap-10">
+                <button type="button" class="projekt-content-block-edit--button -green js-content-block-ai-edit-save">
+                  <i class="fas fa-save"></i>
+                  Speichern
+                </button>
+                <button type="button" class="projekt-content-block-edit--button js-content-block-ai-edit-cancel">
+                  <i class="fas fa-xmark"></i>
+                  Abbrechen
+                </button>
               </div>
-              <button type="button" class="projekt-content-block-edit--button js-projekt-content-block--ai-edit-cancel">
-                <i class="fas fa-xmark"></i>
-                Abbrechen
-              </button>
+              <div class="d-flex u-gap-10">
+                <button type="button" class="projekt-content-block-edit--button js-content-block-enter-simple-edit-mode-from-ai">
+                  <i class="fas fa-pencil-alt"></i>
+                  Direkt editieren
+                </button>
+              </div>
             </div>
 
             <div
@@ -71,9 +81,9 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-link"></i>
                   Link hinzufügen
                 </button>
-                <button type="button" class="projekt-content-block-edit--button -transparent js-ai-edit-content-block">
+                <button type="button" class="projekt-content-block-edit--button js-content-block-enter-ai-edit-mode-from-simple">
                   <i class="fas fa-magic"></i>
-                  Edit with AI
+                  Mit KI bearbeiten
                 </button>
               </div>
             </div>
@@ -111,6 +121,10 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </div>
               <button type="button" title="Direkt im Text editieren" class="js-edit-text-projekt-content-block projekt-frame-icon-button">
                 <i class="fas fa-pencil-alt">
+                </i>
+              </button>
+              <button type="button" title="Mit AI editieren" class="js-content-block-enter-ai-edit-mode projekt-frame-icon-button">
+                <i class="fas fa-magic">
                 </i>
               </button>
               <div class="ai-button-wrapper">

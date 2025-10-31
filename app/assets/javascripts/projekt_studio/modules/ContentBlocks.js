@@ -25,7 +25,6 @@
     $document.on("click", ".js-save-edit-html-projekt-content-block", this.saveConventBlockFromCkeditor.bind(this));
 
     $document.on("click", ".js-content-block-reset-to-prev-version", this.resetContentBlockToPreviousVersion.bind(this));
-    $document.on("click", ".js-frame-open-admin-page", this.handleOpenAdminPage.bind(this));
 
     window.addEventListener('message', this.handleGlobalMessage.bind(this));
   },
@@ -50,9 +49,6 @@
           break;
         case "toggleLockContentBlockEdit":
           this.toggleLockContentBlockEdit(params,contentBlockId, params.locked)
-          break;
-        case "Consul.signinWithToken":
-          this.signinWithToken(params)
           break;
       }
     }
@@ -591,8 +587,12 @@
     return { contentBlockWrapper, contentBlock};
   },
 
-  getContentBlock(element) {
+  getClosestContentBlock(element) {
     return element.closest(".js-projekt-content-block");
+  },
+
+  getContentBlock(element) {
+    return element.querySelector(".js-projekt-content-block");
   },
 
   cancelHtmlEditMode(e) {
@@ -605,7 +605,14 @@
   },
 
   cancelAiEditMode(e) {
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock } = this.getContentBlockAndWrapper(e.target);
+
+    // Revert content to previous version if it exists
+    if (contentBlock && contentBlock.dataset.previousContentBlockHtml) {
+      contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
+      $(contentBlock).foundation();
+      App.ImageGallery.initialize();
+    }
 
     contentBlockWrapper.classList.remove("-ai-edit-mode")
   },
@@ -648,23 +655,4 @@
       }
     }
   },
-
-  signinWithToken(params) {
-    $.ajax({
-      type: "post",
-      url: "iframe_sessions",
-      data: {
-        frame_sign_in_token: params.frame_sign_in_token,
-      }}
-    )
-  },
-
-  handleOpenAdminPage(event) {
-    event.preventDefault()
-    history.pushState({}, '', window.location.href);
-
-    const path = event.currentTarget.dataset.path;
-
-    ProjektStudio.utils.sendMessageToDtParentFrame("Dt.openAdminPage", { path })
-  }
 };

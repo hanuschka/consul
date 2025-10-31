@@ -1519,27 +1519,61 @@ ul.grid-x, ul.row {
   list-style: none !important;
 }
 
-// AI Edit Modal Styles
-.ai-edit-modal {
-  max-width: 650px;
-  top: initial;
+// AI Edit Popup Styles (similar to link popup)
+.content-block-ai-edit-popup {
+  position: absolute;
+  // bottom: -220px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 15px;
+  box-shadow: 3px 3px 12px 4px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 100;
+  border-radius: 10px;
+  width: 500px;
 
-  .ai-edit-modal-content {
+  .content-block-ai-edit-popup-content {
+    h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
 
     .ai-edit-form {
       margin-bottom: 20px;
 
-      label {
-        font-size: 15px;
+      .content-block-ai-edit-popup-label {
+        font-size: 16px;
         font-weight: bold;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .ai-instructions-textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 14px;
       }
     }
 
     .ai-edit-actions {
       display: flex;
-      gap: 5px;
+      gap: 10px;
       justify-content: flex-end;
     }
   }
+}
+
+// AI Edit Mode Controls
+.js-ai-edit-mode-controlls {
+  display: none;
+  align-items: center;
+  gap: 10px;
 }
 

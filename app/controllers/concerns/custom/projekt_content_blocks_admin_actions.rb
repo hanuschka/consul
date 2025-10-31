@@ -70,10 +70,10 @@ module ProjektContentBlocksAdminActions
       <<~TEXT
         Update the content block html using provided instructions.
         Instructions: '#{params[:instructions]}'.
-        Content block html with:
-        ---HTML---
-        '#{params[:content_block_html]}'
-        ---HTML---
+
+        Current content block html content:
+        #{params[:content_block_html]}
+
         Return just new html.
       TEXT
     )

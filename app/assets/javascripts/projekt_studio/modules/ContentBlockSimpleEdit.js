@@ -14,6 +14,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
     $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
     $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
+    $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.enterAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     // $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
   },
@@ -21,14 +22,21 @@ ProjektStudio.ContentBlockSimpleEdit = {
   enterSimpleEditMode(e) {
     const { contentBlockWrapper, contentBlock } = this.getContentBlockAndWrapper(e.target)
 
+    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(
+      contentBlock, contentBlockWrapper
+    )
+    
+    this.switchToSimpleEditMode(contentBlockWrapper);
+  },
+
+  switchToSimpleEditMode(contentBlockWrapper) {
+    const contentBlock = ProjektStudio.ContentBlocks.getContentBlock(contentBlockWrapper);
+
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-simple-edit-mode")
     const $accordionLinks = $(contentBlock).find('.accordion a.accordion-title');
     $accordionLinks.off("keydown")
 
-    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(
-      contentBlock, contentBlockWrapper
-    )
     this.toggleSimpleEditModeFor(contentBlock, true)
   },
 
@@ -67,6 +75,18 @@ ProjektStudio.ContentBlockSimpleEdit = {
     contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
 
     this.toggleSimpleEditModeFor(contentBlock, false);
+  },
+
+  enterAiEditModeFromSimple(e) {
+    const { contentBlockWrapper, contentBlock} = this.getContentBlockAndWrapper(e.target);
+
+    // if (!contentBlockWrapper.classList.contains("-simple-edit-mode")) {
+    //   return;
+    // }
+    contentBlockWrapper.classList.remove("-simple-edit-mode");
+    this.toggleSimpleEditModeFor(contentBlock, false);
+
+    ProjektStudio.ContentBlockAiEdit.switchToAiEditMode(contentBlockWrapper);
   },
 
   toggleSimpleEditModeFor(contentBlock, enabled, endCallback) {

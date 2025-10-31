@@ -41,6 +41,9 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
         devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."
         devise_verification_token_validity_days: "Gültigkeit des Verifikationslinks in Tagen"
         devise_verification_token_validity_days_description: "Legen Sie fest, wie viele Tage lang der Link gültig ist, den Nutzer per E-Mail zur Verifizierung ihres Accounts erhalten."
+  site_customization/image:
+    header_image: "Hintergrundbild für Desktop"
+    header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen. Empfohlenes Format: 1920 × 760 Pixel."
 
 
 

@@ -1,3 +1,3 @@
 <%= turbo_stream.replace @setting do %>
-  <%= render Adm::SettingComponent.new(setting_class: @setting.class.name, key: @setting.key, kind: @kind, updated: true) %>
+  <%= render Adm::SettingComponent.new(setting: @setting, kind: @kind, updated: @setting.errors.empty?) %>
 <% end %>

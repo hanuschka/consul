@@ -1,0 +1,3 @@
+<%= turbo_stream.replace @image do %>
+  <%= render Adm::SettingComponent.new(setting: @image, kind: @kind, updated: @image.errors.empty?) %>
+<% end %>

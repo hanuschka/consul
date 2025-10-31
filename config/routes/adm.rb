@@ -13,4 +13,9 @@ namespace :adm do
     get :metadata, on: :collection
     get :gdpr, on: :collection
   end
+  # application
+
+  namespace :site_customization do
+    resources :images, only: [:update]
+  end
 end

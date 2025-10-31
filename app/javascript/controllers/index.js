@@ -16,6 +16,9 @@ application.register("adm-sidebar", AdmSidebarController)
 import AdmSettingController from "./adm/setting_controller"
 application.register("adm-setting", AdmSettingController)
 
+import ImageDirectUploadController from "./components/image_direct_upload_controller"
+application.register("image-direct-upload", ImageDirectUploadController)
+
 
 import ModeSwitcherController from "./mode_switcher_controller"
 application.register("mode-switcher", ModeSwitcherController)

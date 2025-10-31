@@ -9,6 +9,6 @@
     <% end %>
   </div>
   <div>
-    <%= t("setting.#{@setting.key}") %>
+    <%= t("#{@setting.class.name.underscore}.#{@setting.key}") %>
   </div>
 </div>

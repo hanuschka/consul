@@ -3,3 +3,8 @@ de:
     components:
       setting_component:
         saved: Einstellung erfolgreich aktualisiert
+      settings:
+        image_component:
+          hint: "Erlaubte Formate: %{allowed_formats}."
+          reset_button: Bild zurücksetzen
+          update_button: Bild aktualisieren

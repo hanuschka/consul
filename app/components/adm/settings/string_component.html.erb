@@ -6,7 +6,7 @@
       <%= form.text_field :value,
         id: dom_id(@setting, :value),
         label: false,
-        placeholder: t("setting.#{@setting.key}"),
+        placeholder: t("#{@setting.class.name.underscore}.#{@setting.key}"),
         class: "kern-form-input__input",
         "data-adm-setting-target": "input",
         aria: { describedby: dom_id(@setting, :description) } %>

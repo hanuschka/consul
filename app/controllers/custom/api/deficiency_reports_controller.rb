@@ -7,6 +7,7 @@ class Api::DeficiencyReportsController < Api::BaseController
   before_action :find_deficiency_report, only: [:show, :update]
 
   def index
+    check_read_access!
     deficiency_reports = DeficiencyReport
       .includes(
         :author,
@@ -32,16 +33,18 @@ class Api::DeficiencyReportsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report).serialize
 
     render json: { data: { deficiency_report: serialized_deficiency_report } }
   end
 
   def create
+    check_admin_access!
     deficiency_report = DeficiencyReport.new(deficiency_report_params)
-    deficiency_report.api_client_created = @current_client
+    deficiency_report.author = @current_client.user
 
-    if deficiency_report.save(context: :api)
+    if deficiency_report.save
       serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }, status: 201
@@ -51,10 +54,10 @@ class Api::DeficiencyReportsController < Api::BaseController
   end
 
   def update
-    @deficiency_report.api_client_last_updated = @current_client
+    check_admin_access!
     @deficiency_report.assign_attributes(deficiency_report_params)
 
-    if @deficiency_report.save(context: :api)
+    if @deficiency_report.save
       serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }
@@ -90,7 +93,7 @@ class Api::DeficiencyReportsController < Api::BaseController
       :responsible_id,
       :responsible_type,
       :tag_list,
-      *translation_params(DeficiencyReport),
+      **translation_params(DeficiencyReport),
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
       documents_attributes: document_attributes,

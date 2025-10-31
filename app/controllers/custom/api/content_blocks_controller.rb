@@ -3,6 +3,7 @@ class Api::ContentBlocksController < Api::BaseController
   before_action :find_content_block, only: [:show, :update, :destroy]
 
   def index
+    check_read_access!
     content_blocks = @projekt.content_blocks.order(:position)
 
     serialized_content_blocks = ContentBlockSerializer.serialize_collection(content_blocks)
@@ -11,12 +12,14 @@ class Api::ContentBlocksController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_content_block = ContentBlockSerializer.new(@content_block).serialize
 
     render json: { data: { content_block: serialized_content_block } }
   end
 
   def create
+    check_admin_access!
     content_block = @projekt.content_blocks.new(content_block_params)
 
     if content_block.save
@@ -29,6 +32,7 @@ class Api::ContentBlocksController < Api::BaseController
   end
 
   def update
+    check_admin_access!
     if @content_block.update(content_block_params)
       serialized_content_block = ContentBlockSerializer.new(@content_block).serialize
 
@@ -39,6 +43,7 @@ class Api::ContentBlocksController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @content_block.destroy
       render json: { message: "Content block destroyed" }
     else
@@ -47,6 +52,7 @@ class Api::ContentBlocksController < Api::BaseController
   end
 
   def reorder
+    check_admin_access!
     if params[:ordered_ids].present?
       SiteCustomization::ContentBlock.sort(params[:ordered_ids])
       render json: { message: "Content blocks reordered successfully" }

@@ -1,14 +1,16 @@
 class Api::ProjektPointOfInterestPinsController < Api::BaseController
+  include Translatable
   include MapLocationAttributes
 
   before_action :find_projekt_phase, only: [:create]
   before_action :find_pin, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     pin = @projekt_phase.projekt_point_of_interest_pins.new(pin_params)
-    pin.api_client_created = @current_client
+    pin.author = @current_client.user
 
-    if pin.save(context: :api)
+    if pin.save
       serialized_pin = ProjektPointOfInterestPinSerializer.new(pin).serialize
 
       render json: { data: { pin: serialized_pin } }, status: 201
@@ -18,16 +20,17 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_pin = ProjektPointOfInterestPinSerializer.new(@pin).serialize
 
     render json: { data: { pin: serialized_pin } }
   end
 
   def update
-    @pin.api_client_last_updated = @current_client
+    check_admin_access!
     @pin.assign_attributes(pin_params)
 
-    if @pin.save(context: :api)
+    if @pin.save
       serialized_pin = ProjektPointOfInterestPinSerializer.new(@pin).serialize
 
       render json: { data: { pin: serialized_pin } }
@@ -37,6 +40,7 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @pin.destroy
       render json: { message: "Pin destroyed" }
     else
@@ -50,7 +54,7 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
     params.require(:projekt_point_of_interest_pin).permit(
       :author_id,
       :projekt_point_of_interest_category_id,
-      :description,
+      **translation_params(ProjektPointOfInterestPin),
       map_location_attributes: map_location_attributes
     )
   end

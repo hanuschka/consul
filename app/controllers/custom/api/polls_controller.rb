@@ -5,6 +5,7 @@ class Api::PollsController < Api::BaseController
   before_action :find_poll, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     poll = @projekt_phase.polls.new(poll_params)
 
     if poll.save
@@ -17,12 +18,14 @@ class Api::PollsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_poll = PollSerializer.new(@poll).serialize
 
     render json: { data: { poll: serialized_poll } }
   end
 
   def update
+    check_admin_access!
     if @poll.update(poll_params)
       serialized_poll = PollSerializer.new(@poll).serialize
 
@@ -33,6 +36,7 @@ class Api::PollsController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @poll.destroy
       render json: { message: "Poll destroyed" }
     else
@@ -50,7 +54,7 @@ class Api::PollsController < Api::BaseController
       :summary,
       :description,
       :budget_id,
-      *translation_params(Poll),
+      **translation_params(Poll),
       geozone_ids: [],
     )
   end

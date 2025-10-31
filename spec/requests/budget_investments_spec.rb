@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_minimal_prereqs
@@ -17,9 +17,9 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       terms_data_protection: '1',
       terms_general: '1'
     )
-    budget = Budget.create!(name: "Test Budget #{SecureRandom.hex(2)}")
-    group = budget.groups.create!(name: "Group #{SecureRandom.hex(2)}")
-    heading = group.headings.create!(
+    budget = Budget.create!(name: "Test Budget #{SecureRandom.hex(2)}", currency_symbol: '€')
+    group = budget.create_group!(name: "Group #{SecureRandom.hex(2)}")
+    heading = group.create_heading!(
       name: "Heading #{SecureRandom.hex(2)}",
       price: 1000000,
       allow_custom_content: true
@@ -46,7 +46,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           _user, budget, heading = create_minimal_prereqs
           2.times do |i|
             investment = Budget::Investment.new(
-              api_client_created: api_client,
+              author: api_client.user,
               heading: heading,
               budget: budget,
               resource_terms: true,
@@ -58,7 +58,67 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                 }
               ]
             )
-            investment.save!(context: :api)
+            investment.save!
+          end
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investments: { type: :array, items: { type: :object } }
+                   },
+                   required: ['budget_investments']
+                 },
+                 pagination: { type: :object }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        before do
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'budget investments found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+          _user, budget, heading = create_minimal_prereqs
+          2.times do |i|
+            investment = Budget::Investment.new(
+              author: api_client.user,
+              heading: heading,
+              budget: budget,
+              resource_terms: true,
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: "Investment #{i+1}",
+                  description: "Description #{i+1}"
+                }
+              ]
+            )
+            investment.save!
           end
         end
 
@@ -130,9 +190,9 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       }
 
       response '201', 'budget investment created' do
-        let(:budget) { Budget.create!(name: 'Test Budget') }
-        let(:group) { budget.groups.create!(name: 'Test Group') }
-        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
 
         let(:budget_investment) do
           {
@@ -196,6 +256,50 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              heading_id: heading.id,
+              title: 'New Budget Investment',
+              description: 'A meaningful description for the investment',
+              resource_terms: true,
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: 'New Budget Investment',
+                  description: 'A meaningful description for the investment'
+                }
+              ]
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
   end
 
@@ -208,12 +312,12 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       security [bearer_auth: []]
 
       response '200', 'budget investment found' do
-        let(:budget) { Budget.create!(name: 'Test Budget') }
-        let(:group) { budget.groups.create!(name: 'Test Group') }
-        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
           investment = Budget::Investment.new(
-            api_client_created: api_client,
+            author: api_client.user,
             heading: heading,
             budget: budget,
             resource_terms: true,
@@ -225,7 +329,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               }
             ]
           )
-          investment.save!(context: :api)
+          investment.save!
           investment
         end
         let(:id) { budget_investment.id }
@@ -247,6 +351,91 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '404', 'budget investment not found' do
         let(:id) { 999999 }
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Test Investment',
+                description: 'Test Description'
+              }
+            ]
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { budget_investment.id }
+        before do
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'budget investment found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Test Investment',
+                description: 'Test Description'
+              }
+            ]
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { budget_investment.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investment: { type: :object }
+                   },
+                   required: ['budget_investment']
+                 }
+               },
+               required: ['data']
+
         run_test!
       end
     end
@@ -292,12 +481,12 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       }
 
       response '200', 'budget investment updated' do
-        let(:budget) { Budget.create!(name: 'Test Budget') }
-        let(:group) { budget.groups.create!(name: 'Test Group') }
-        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do
           investment = Budget::Investment.new(
-            api_client_created: api_client,
+            author: api_client.user,
             heading: heading,
             budget: budget,
             resource_terms: true,
@@ -309,7 +498,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               }
             ]
           )
-          investment.save!(context: :api)
+          investment.save!
           investment
         end
         let(:id) { existing_investment.id }
@@ -337,12 +526,12 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '422', 'invalid request' do
-        let(:budget) { Budget.create!(name: 'Test Budget') }
-        let(:group) { budget.groups.create!(name: 'Test Group') }
-        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do
           investment = Budget::Investment.new(
-            api_client_created: api_client,
+            author: api_client.user,
             heading: heading,
             budget: budget,
             resource_terms: true,
@@ -354,7 +543,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               }
             ]
           )
-          investment.save!(context: :api)
+          investment.save!
           investment
         end
         let(:id) { existing_investment.id }
@@ -367,7 +556,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         end
 
         before do
-          allow_any_instance_of(Budget::Investment).to receive(:update).and_return(false)
+          allow_any_instance_of(Budget::Investment).to receive(:save).and_return(false)
           errors_mock = double('errors').as_null_object
           allow(errors_mock).to receive(:full_messages).and_return(['Title can\'t be blank'])
           allow_any_instance_of(Budget::Investment).to receive(:errors).and_return(errors_mock)
@@ -384,6 +573,57 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                }
 
         run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:existing_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Original Investment',
+                description: 'Original Description'
+              }
+            ]
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              description: 'Updated description'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
   end

@@ -5,6 +5,7 @@ class Api::ProjektEventsController < Api::BaseController
   before_action :find_projekt_event, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     projekt_event = @projekt_phase.projekt_events.new(projekt_event_params)
 
     if projekt_event.save
@@ -17,12 +18,14 @@ class Api::ProjektEventsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_projekt_event = ProjektEventSerializer.new(@projekt_event).serialize
 
     render json: { data: { projekt_event: serialized_projekt_event } }
   end
 
   def update
+    check_admin_access!
     if @projekt_event.update(projekt_event_params)
       serialized_projekt_event = ProjektEventSerializer.new(@projekt_event).serialize
 
@@ -33,6 +36,7 @@ class Api::ProjektEventsController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @projekt_event.destroy
       render json: { message: "Projekt event destroyed" }
     else

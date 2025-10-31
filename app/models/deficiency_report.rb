@@ -37,21 +37,14 @@ class DeficiencyReport < ApplicationRecord
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports, optional: true
   belongs_to :responsible, polymorphic: true
-  belongs_to :api_client_created, class_name: 'ApiClient', optional: true
-  belongs_to :api_client_last_updated, class_name: 'ApiClient', optional: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   has_one :feedback_form, class_name: "DeficiencyReport::FeedbackForm", dependent: :destroy
 
   delegate :approximated_address, to: :map_location, allow_nil: true
 
   validates :deficiency_report_category_id, presence: true
-  validates :author, presence: true, unless: :api_context?
-  validates :api_client_created, presence: true, on: :api
+  validates :author, presence: true
   validates :map_location, presence: true, on: :create
-
-  def api_context?
-    validation_context == :api
-  end
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom

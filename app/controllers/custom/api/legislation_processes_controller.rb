@@ -5,6 +5,7 @@ class Api::LegislationProcessesController < Api::BaseController
   before_action :find_legislation_process, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     legislation_process = Legislation::Process.new(legislation_process_params)
     legislation_process.projekt_phase = @projekt_phase
 
@@ -18,12 +19,14 @@ class Api::LegislationProcessesController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_legislation_process = LegislationProcessSerializer.new(@legislation_process).serialize
 
     render json: { data: { legislation_process: serialized_legislation_process } }
   end
 
   def update
+    check_admin_access!
     if @legislation_process.update(legislation_process_params)
       serialized_legislation_process = LegislationProcessSerializer.new(@legislation_process).serialize
 
@@ -34,6 +37,7 @@ class Api::LegislationProcessesController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @legislation_process.destroy
       render json: { message: "Legislation process destroyed" }
     else
@@ -58,7 +62,7 @@ class Api::LegislationProcessesController < Api::BaseController
       :draft_publication_enabled,
       :result_publication_enabled,
       :published,
-      *translation_params(Legislation::Process)
+      **translation_params(Legislation::Process)
     )
   end
 

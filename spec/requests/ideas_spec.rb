@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_minimal_prereqs
@@ -34,7 +34,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           _user, _category = create_minimal_prereqs
           2.times do |i|
             idea = Idea.new(
-              api_client_created: api_client,
+              author: api_client.user,
               resource_terms: true,
               admin_accepted_at: Time.current,
               translations_attributes: [
@@ -45,7 +45,67 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                 }
               ]
             )
-            idea.save!(context: :api)
+            idea.save!
+          end
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     ideas: { type: :array, items: { type: :object } }
+                   },
+                   required: ['ideas']
+                 },
+                 pagination: { type: :object }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        before do
+          # Create a client without proper access level by bypassing validation
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'ideas found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+          _user, _category = create_minimal_prereqs
+          2.times do |i|
+            idea = Idea.new(
+              author: api_client.user,
+              resource_terms: true,
+              admin_accepted_at: Time.current,
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: "Idea #{i+1}",
+                  description: "Description #{i+1}"
+                }
+              ]
+            )
+            idea.save!
           end
         end
 
@@ -187,7 +247,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       response '200', 'idea found' do
         let(:idea) do
           idea = Idea.new(
-            api_client_created: api_client,
+            author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
             translations_attributes: [
@@ -198,7 +258,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               }
             ]
           )
-          idea.save!(context: :api)
+          idea.save!
           idea
         end
         let(:id) { idea.id }
@@ -221,6 +281,46 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       response '404', 'idea not found' do
         let(:id) { 999999 }
         run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        let(:idea) do
+          idea = Idea.new(
+            author: api_client.user,
+            resource_terms: true,
+            admin_accepted_at: Time.current,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Test Idea',
+                description: 'Test Description'
+              }
+            ]
+          )
+          idea.save!
+          idea
+        end
+        let(:id) { idea.id }
+        before do
+          idea # Ensure idea is created before the request
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
 
@@ -260,7 +360,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       response '200', 'idea updated' do
         let(:existing_idea) do
           idea = Idea.new(
-            api_client_created: api_client,
+            author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
             translations_attributes: [
@@ -271,7 +371,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               }
             ]
           )
-          idea.save!(context: :api)
+          idea.save!
           idea
         end
         let(:id) { existing_idea.id }
@@ -298,10 +398,14 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '422', 'invalid request' do
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
         let(:existing_idea) do
           idea = Idea.new(
-            api_client_created: api_client,
+            author: api_client.user,
             resource_terms: true,
             admin_accepted_at: Time.current,
             translations_attributes: [
@@ -312,7 +416,50 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               }
             ]
           )
-          idea.save!(context: :api)
+          idea.save!
+          idea
+        end
+        let(:id) { existing_idea.id }
+        let(:idea) do
+          {
+            idea: {
+              description: 'Updated description'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '422', 'invalid request' do
+        let(:existing_idea) do
+          idea = Idea.new(
+            author: api_client.user,
+            resource_terms: true,
+            admin_accepted_at: Time.current,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Original Idea',
+                description: 'Original Description'
+              }
+            ]
+          )
+          idea.save!
           idea
         end
         let(:id) { existing_idea.id }
@@ -325,7 +472,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         end
 
         before do
-          allow_any_instance_of(Idea).to receive(:update).and_return(false)
+          allow_any_instance_of(Idea).to receive(:save).and_return(false)
           errors_mock = double('errors').as_null_object
           allow(errors_mock).to receive(:full_messages).and_return(['Title can\'t be blank'])
           allow_any_instance_of(Idea).to receive(:errors).and_return(errors_mock)

@@ -8,6 +8,7 @@ class Api::ProposalsController < Api::BaseController
   before_action :find_proposal, only: [:show, :update, :destroy]
 
   def index
+    check_read_access!
     proposals =
         @projekt_phase.resources
             .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
@@ -27,17 +28,18 @@ class Api::ProposalsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_proposal = ProposalSerializer.new(@proposal).serialize
 
     render json: { data: { proposal: serialized_proposal } }
   end
 
   def create
+    check_admin_access!
     proposal = @projekt_phase.resources.new(proposal_params)
-    proposal.author = GuestUser.new
-    proposal.api_client_created = @current_client
+    proposal.author = @current_client.user
 
-    if proposal.save(context: :api)
+    if proposal.save
       serialized_proposal = ProposalSerializer.new(proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }, status: 201
@@ -47,10 +49,10 @@ class Api::ProposalsController < Api::BaseController
   end
 
   def update
-    @proposal.api_client_last_updated = @current_client
+    check_admin_access!
     @proposal.assign_attributes(proposal_params)
 
-    if @proposal.save(context: :api)
+    if @proposal.save
       serialized_proposal = ProposalSerializer.new(@proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }
@@ -60,6 +62,7 @@ class Api::ProposalsController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @proposal.destroy
       render json: { message: "Proposal destroyed" }
     else
@@ -82,7 +85,7 @@ class Api::ProposalsController < Api::BaseController
       :tag_list,
       :related_sdg_list,
       :resource_terms,
-      *translation_params(Proposal),
+      **translation_params(Proposal),
       projekt_label_ids: [],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,

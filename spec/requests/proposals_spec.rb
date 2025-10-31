@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_phase_with_context
@@ -29,7 +29,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
           _projekt, geozone, phase = create_phase_with_context
           2.times do |i|
             proposal = Proposal.new(
-              api_client_created: api_client,
+              author: api_client.user,
               projekt_phase: phase,
               geozone: geozone,
               responsible_name: 'John Doe',
@@ -43,7 +43,76 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                 }
               ]
             )
-            proposal.save!(context: :api)
+            proposal.save!
+          end
+        end
+
+        let(:projekt_phase_id) { ProjektPhase.last.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposals: { type: :array, items: { type: :object } }
+                   },
+                   required: ['proposals']
+                 },
+                 pagination: { type: :object }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Proposals') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
+        let(:projekt_phase_id) { phase.id }
+
+        before do
+          phase # Ensure phase is created
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'proposals found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+          _projekt, geozone, phase = create_phase_with_context
+          2.times do |i|
+            proposal = Proposal.new(
+              author: api_client.user,
+              projekt_phase: phase,
+              geozone: geozone,
+              responsible_name: 'John Doe',
+              admin_accepted: true,
+              resource_terms: true,
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: "Proposal #{i + 1}",
+                  description: "Description #{i + 1}"
+                }
+              ]
+            )
+            proposal.save!
           end
         end
 
@@ -97,11 +166,16 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let(:proposal) do
           {
             proposal: {
-              title: 'New Proposal',
-              description: 'A meaningful description',
               responsible_name: 'Jane Smith',
               geozone_id: geozone_id,
-              resource_terms: true
+              resource_terms: true,
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: 'New Proposal',
+                  description: 'A meaningful description'
+                }
+              ]
             }
           }
         end
@@ -127,11 +201,16 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let(:proposal) do
           {
             proposal: {
-              title: '',
-              description: '',
               responsible_name: '',
               geozone_id: nil,
-              resource_terms: false
+              resource_terms: false,
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: '',
+                  description: ''
+                }
+              ]
             }
           }
         end
@@ -148,6 +227,43 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let(:projekt_phase_id) { context[2].id }
+        let(:geozone_id) { context[1].id }
+        let(:proposal) do
+          {
+            proposal: {
+              title: 'New Proposal',
+              description: 'A meaningful description',
+              responsible_name: 'Jane Smith',
+              geozone_id: geozone_id,
+              resource_terms: true
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
   end
 
@@ -163,7 +279,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let!(:context) { create_phase_with_context }
         let!(:record) do
           proposal = Proposal.new(
-            api_client_created: api_client,
+            author: api_client.user,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
@@ -177,7 +293,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               }
             ]
           )
-          proposal.save!(context: :api)
+          proposal.save!
           proposal
         end
         let(:id) { record.id }
@@ -199,6 +315,91 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
       response '404', 'proposal not found' do
         let(:id) { 999_999 }
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Show Proposal',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+        before do
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'proposal found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Show Proposal',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { type: :object }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
         run_test!
       end
     end
@@ -225,7 +426,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let!(:context) { create_phase_with_context }
         let!(:record) do
           proposal = Proposal.new(
-            api_client_created: api_client,
+            author: api_client.user,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
@@ -239,7 +440,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               }
             ]
           )
-          proposal.save!(context: :api)
+          proposal.save!
           proposal
         end
         let(:id) { record.id }
@@ -270,7 +471,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let!(:context) { create_phase_with_context }
         let!(:record) do
           proposal = Proposal.new(
-            api_client_created: api_client,
+            author: api_client.user,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
@@ -284,7 +485,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               }
             ]
           )
-          proposal.save!(context: :api)
+          proposal.save!
           proposal
         end
         let(:id) { record.id }
@@ -294,6 +495,13 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               title: ''
             }
           }
+        end
+
+        before do
+          allow_any_instance_of(Proposal).to receive(:save).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:full_messages).and_return(['Title can\'t be blank'])
+          allow_any_instance_of(Proposal).to receive(:errors).and_return(errors_mock)
         end
 
         schema type: :object,
@@ -308,6 +516,57 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Old Title',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+        let(:proposal) do
+          {
+            proposal: {
+              title: 'Updated Title'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
 
     delete 'Delete a proposal' do
@@ -319,7 +578,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let!(:context) { create_phase_with_context }
         let!(:record) do
           proposal = Proposal.new(
-            api_client_created: api_client,
+            author: api_client.user,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
@@ -333,7 +592,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               }
             ]
           )
-          proposal.save!(context: :api)
+          proposal.save!
           proposal
         end
         let(:id) { record.id }
@@ -356,7 +615,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         let!(:context) { create_phase_with_context }
         let!(:record) do
           proposal = Proposal.new(
-            api_client_created: api_client,
+            author: api_client.user,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
@@ -370,7 +629,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
               }
             ]
           )
-          proposal.save!(context: :api)
+          proposal.save!
           proposal
         end
         let(:id) { record.id }
@@ -393,6 +652,50 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         end
 
         run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'To Delete',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
   end

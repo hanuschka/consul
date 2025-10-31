@@ -9,6 +9,7 @@ class Api::BudgetInvestmentsController < Api::BaseController
   before_action :find_budget_investment, only: [:show, :update]
 
   def index
+    check_read_access!
     budget_investments = Budget::Investment.includes(:author, :heading, :budget, :map_location)
       .page(params[:page])
       .per(params[:per_page] || 100)
@@ -25,16 +26,18 @@ class Api::BudgetInvestmentsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment).serialize
 
     render json: { data: { budget_investment: serialized_budget_investment } }
   end
 
   def create
+    check_admin_access!
     budget_investment = Budget::Investment.new(budget_investment_params)
-    budget_investment.api_client_created = @current_client
+    budget_investment.author = @current_client.user
 
-    if budget_investment.save(context: :api)
+    if budget_investment.save
       serialized_budget_investment = BudgetInvestmentSerializer.new(budget_investment).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }, status: 201
@@ -44,10 +47,10 @@ class Api::BudgetInvestmentsController < Api::BaseController
   end
 
   def update
-    @budget_investment.api_client_last_updated = @current_client
+    check_admin_access!
     @budget_investment.assign_attributes(budget_investment_params)
 
-    if @budget_investment.save(context: :api)
+    if @budget_investment.save
       serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }
@@ -69,7 +72,7 @@ class Api::BudgetInvestmentsController < Api::BaseController
       :valuation_finished,
       :selected,
       :visible_to_valuators,
-      *translation_params(Budget::Investment),
+      **translation_params(Budget::Investment),
       map_location_attributes: map_location_attributes,
       documents_attributes: document_attributes,
       image_attributes: image_attributes,

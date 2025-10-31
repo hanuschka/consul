@@ -52,6 +52,8 @@ class User < ApplicationRecord
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
 
+  belongs_to :api_client, optional: true
+
   scope :projekt_managers, -> { joins(:projekt_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }

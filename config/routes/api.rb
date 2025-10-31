@@ -30,6 +30,7 @@
       resources :legislation_processes, only: [:create, :show, :update, :destroy]
       resources :projekt_point_of_interest_pins, only: [:create, :show, :update, :destroy]
       resources :projekt_point_of_interest_categories, only: [:create, :show, :update, :destroy]
+      resources :comments, only: [:index, :create, :show]
     end
     # settings are updated via projekt_phases#update_setting
 

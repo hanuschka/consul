@@ -7,8 +7,6 @@ class Idea < ApplicationRecord
   include Memoable
 
   belongs_to :author, class_name: "User", inverse_of: :ideas, optional: true
-  belongs_to :api_client_created, class_name: 'ApiClient', optional: true
-  belongs_to :api_client_last_updated, class_name: 'ApiClient', optional: true
 
   translates :title, :description, :official_answer, touch: true
   include Globalizable
@@ -35,12 +33,7 @@ class Idea < ApplicationRecord
   validates_translation :title, presence: true
   validates_translation :description, presence: true
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create
-  validates :author, presence: true, unless: :api_context?
-  validates :api_client_created, presence: true, on: :api
-
-  def api_context?
-    validation_context == :api
-  end
+  validates :author, presence: true
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }
 

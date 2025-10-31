@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   path '/api/projekt_phases/{projekt_phase_id}/polls' do
@@ -112,6 +112,51 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:projekt_phase_id) { voting_phase.id }
+        let(:poll) do
+          {
+            poll: {
+              starts_at: '2025-01-01T00:00:00Z',
+              ends_at: '2025-01-31T23:59:59Z',
+              name: 'Community Vote',
+              summary: 'Summary',
+              description: 'Description',
+              translations_attributes: [
+                { 
+                  locale: 'en', 
+                  name: 'Community Vote', 
+                  summary: 'Summary', 
+                  description: 'Description'
+                }
+              ]
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
   end
 
@@ -146,6 +191,57 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
       response '404', 'poll not found' do
         let(:id) { 999999 }
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:created_poll) { voting_phase.polls.create!(name: 'Poll name') }
+        let(:id) { created_poll.id }
+        before do
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'poll found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:created_poll) { voting_phase.polls.create!(name: 'Poll name') }
+        let(:id) { created_poll.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     poll: { '$ref' => '#/components/schemas/Poll' }
+                   },
+                   required: ['poll']
+                 }
+               },
+               required: ['data']
+
         run_test!
       end
     end
@@ -238,6 +334,36 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:existing_poll) { voting_phase.polls.create!(name: 'Poll name') }
+        let(:id) { existing_poll.id }
+        let(:poll) do
+          { poll: { summary: 'Updated summary' } }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
 
     delete 'Delete a poll' do
@@ -284,6 +410,33 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                }
 
         run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:existing_poll) { voting_phase.polls.create!(name: 'Poll name') }
+        let(:id) { existing_poll.id }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
   end

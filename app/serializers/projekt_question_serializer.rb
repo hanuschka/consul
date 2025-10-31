@@ -21,12 +21,21 @@ class ProjektQuestionSerializer < BaseSerializer
       title: projekt_question.title
     )
 
-    if projekt_question.author.present?
+    if projekt_question.respond_to?(:author) && projekt_question.author.present?
       question_data[:author] = {
         id: projekt_question.author.id,
         username: projekt_question.author.username,
         public_name: projekt_question.author.public_name
       }
+    elsif projekt_question.author_id.present? && projekt_question.author_id > 0
+      author = User.find_by(id: projekt_question.author_id)
+      if author.present?
+        question_data[:author] = {
+          id: author.id,
+          username: author.username,
+          public_name: author.public_name
+        }
+      end
     end
 
     if projekt_question.projekt_phase.present?

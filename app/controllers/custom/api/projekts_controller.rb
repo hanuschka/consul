@@ -6,6 +6,7 @@ class Api::ProjektsController < Api::BaseController
   before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_image, :update_page]
 
   def index
+    check_read_access!
     projekts =
       Projekt
         .regular
@@ -44,6 +45,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     # Include phases and content_blocks by default in show action (can be disabled with query params)
     include_phases = params[:include_phases] != 'false'
     include_content_blocks = params[:include_content_blocks] != 'false'
@@ -58,6 +60,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def create
+    check_admin_access!
     projekt = Projekt.new(projekt_params)
 
     if projekt.save
@@ -72,6 +75,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def update
+    check_admin_access!
     if @projekt.update(projekt_params)
       Projekt.ensure_order_integrity
 
@@ -84,6 +88,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def update_page
+    check_admin_access!
     if @projekt.page.update(projekt_page_params)
       serailized_projekt = ProjektSerializer.new(@projekt).serialize
 
@@ -94,63 +99,57 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def update_image
+    check_admin_access!
     page = @projekt.page
-    temp_file = nil
+    image_attrs = params.require(:image).permit(*image_attributes_api)
 
-    begin
-      image_attrs = params
-        .require(:image)
-        .permit(*image_attributes_api)
-
-      if ActiveModel::Type::Boolean.new.cast(image_attrs[:_destroy])
-        if page.image.present?
-          page.image.destroy
-        end
-        page.image = nil
-      else
-        attachment_data = image_attrs[:attachment]
-        if attachment_data.present?
-          temp_file = Base64ImageUtils.decode_to_tempfile(attachment_data)
-          content_type = Base64ImageUtils.content_type_from_string(attachment_data)
-          filename = "image.#{Base64ImageUtils.extension_from_content_type(content_type)}"
-          
-          image_params = image_attrs.except(:_destroy, :attachment).merge(
-            user: User.administrators.first || User.first
-          )
-          
-          if page.image.present?
-            image = page.image
-            image.assign_attributes(image_params)
-            image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
-          else
-            image = Image.new(image_params.merge(imageable: page))
-            image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
-            page.image = image
-          end
-        else
-          if page.image.present?
-            page.image.update(image_attrs.except(:_destroy, :attachment))
-          end
-        end
-      end
-
+    if ActiveModel::Type::Boolean.new.cast(image_attrs[:_destroy])
+      page.image&.destroy
+      page.image = nil
       page.save!
-
-      serailized_projekt = ProjektSerializer.new(@projekt).serialize
-      render json: { data: { projekt: serailized_projekt } }
-    rescue ActionController::ParameterMissing => e
-      render json: { error: { messages: [e.message] } }, status: 422
-    rescue StandardError => e
-      render json: { error: { messages: [e.message] } }, status: 422
-    ensure
-      if temp_file
-        temp_file.close rescue nil
-        temp_file.unlink rescue nil
-      end
+    elsif image_attrs[:attachment].present?
+      update_image_with_attachment(page, image_attrs)
+    elsif page.image.present?
+      page.image.update!(image_attrs.except(:_destroy, :attachment))
     end
+
+    serialized_projekt = ProjektSerializer.new(@projekt).serialize
+    render json: { data: { projekt: serialized_projekt } }
+  rescue Api::BaseController::ForbiddenError, Api::BaseController::UnauthorizedError
+    raise # Re-raise to let base controller handle it
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
+  end
+
+  def update_image_with_attachment(page, image_attrs)
+    attachment_data = image_attrs[:attachment]
+    temp_file = Base64ImageUtils.decode_to_tempfile(attachment_data)
+    content_type = Base64ImageUtils.content_type_from_string(attachment_data)
+    filename = "image.#{Base64ImageUtils.extension_from_content_type(content_type)}"
+
+    user = User.administrators.first
+    raise StandardError, "No user available to associate with the image. Please ensure at least one user exists." unless user
+
+    image_params = image_attrs.except(:_destroy, :attachment).merge(user: user)
+
+    if page.image.present?
+      image = page.image
+      image.assign_attributes(image_params)
+      image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
+      image.save!
+    else
+      image = Image.new(image_params.merge(imageable: page))
+      image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
+      image.save!
+      page.image = image
+    end
+  ensure
+    temp_file&.close
+    temp_file&.unlink
   end
 
   def destroy
+    check_admin_access!
     if @projekt.destroy
       @projekt.children.each do |child|
         child.update(parent: nil)
@@ -163,6 +162,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def update_setting
+    check_admin_access!
     setting = @projekt.projekt_settings.find_by(key: setting_params[:key])
 
     unless setting

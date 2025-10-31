@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   path '/api/projekts/{projekt_id}/projekt_phases' do

@@ -5,6 +5,7 @@ class Api::ProjektPhasesController < Api::BaseController
   before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting]
 
   def index
+    check_read_access!
     projekt_phases = @projekt.projekt_phases
       .includes(
         :settings,
@@ -18,12 +19,14 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_projekt_phase = ProjektPhaseSerializer.new(@projekt_phase).serialize
 
     render json: { data: { projekt_phase: serialized_projekt_phase } }
   end
 
   def create
+    check_admin_access!
     projekt_phase = @projekt.projekt_phases.new(projekt_phase_params)
 
     if projekt_phase.save
@@ -36,6 +39,7 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def update
+    check_admin_access!
     if @projekt_phase.update(projekt_phase_params)
       serialized_projekt_phase = ProjektPhaseSerializer.new(@projekt_phase).serialize
 
@@ -46,6 +50,7 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @projekt_phase.destroy
       render json: { message: "Projekt phase destroyed" }
     else
@@ -54,6 +59,7 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def update_setting
+    check_admin_access!
     name = params.dig(:projekt_phase_setting, :key)
     value = params.dig(:projekt_phase_setting, :value)
 
@@ -83,8 +89,8 @@ class Api::ProjektPhasesController < Api::BaseController
       :age_range_id,
       :user_status,
       :lock_on,
-      *translation_params(ProjektPhase),
       :registered_address_grouping_restriction,
+      *translation_params(ProjektPhase),
       registered_address_grouping_restrictions: {},
       individual_group_value_ids: [],
       geozone_restriction_ids: [],

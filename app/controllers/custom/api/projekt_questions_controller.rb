@@ -5,6 +5,7 @@ class Api::ProjektQuestionsController < Api::BaseController
   before_action :find_projekt_question, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     projekt_question = @projekt_phase.questions.new(projekt_question_params)
 
     if projekt_question.save
@@ -12,27 +13,51 @@ class Api::ProjektQuestionsController < Api::BaseController
 
       render json: { data: { projekt_question: serialized_projekt_question } }, status: 201
     else
-      render json: { error: { messages: projekt_question.errors.full_messages } }, status: 422
+      # Collect errors from both parent and nested translations
+      all_errors = projekt_question.errors.full_messages
+      projekt_question.translations.each do |translation|
+        all_errors.concat(translation.errors.full_messages) if translation.errors.any?
+      end
+      
+      render json: { error: { messages: all_errors } }, status: 422
     end
   end
 
   def show
+    check_read_access!
     serialized_projekt_question = ProjektQuestionSerializer.new(@projekt_question).serialize
 
     render json: { data: { projekt_question: serialized_projekt_question } }
   end
 
   def update
-    if @projekt_question.update(projekt_question_params)
+    check_admin_access!
+    @projekt_question.assign_attributes(projekt_question_params)
+    
+    # Validate translations before saving - Globalize may silently reject invalid translations
+    # We need to check this because Globalize will reject invalid translations without failing the save
+    translation_errors = []
+    @projekt_question.translations.each do |translation|
+      if translation.changed? && !translation.valid?
+        translation_errors.concat(translation.errors.full_messages)
+      end
+    end
+    
+    if translation_errors.any? || !@projekt_question.save
+      all_errors = translation_errors + @projekt_question.errors.full_messages
+      @projekt_question.translations.each do |translation|
+        all_errors.concat(translation.errors.full_messages) if translation.errors.any?
+      end
+      render json: { error: { messages: all_errors } }, status: 422
+    else
       serialized_projekt_question = ProjektQuestionSerializer.new(@projekt_question).serialize
 
       render json: { data: { projekt_question: serialized_projekt_question } }
-    else
-      render json: { error: { messages: @projekt_question.errors.full_messages } }, status: 422
     end
   end
 
   def destroy
+    check_admin_access!
     if @projekt_question.destroy
       render json: { message: "Projekt question destroyed" }
     else
@@ -45,7 +70,7 @@ class Api::ProjektQuestionsController < Api::BaseController
   def projekt_question_params
     params.require(:projekt_question).permit(
       :projekt_livestream_id,
-      *translation_params(ProjektQuestion),
+      **translation_params(ProjektQuestion),
       question_options_attributes: [:id, :_destroy, translations_attributes: [:id, :locale, :value, :_destroy]]
     )
   end

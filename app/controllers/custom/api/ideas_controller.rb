@@ -9,6 +9,7 @@ class Api::IdeasController < Api::BaseController
   before_action :find_idea, only: [:show, :update]
 
   def index
+    check_read_access!
     ideas = Idea.accepted
       .includes(:author, :category, :map_location)
       .page(params[:page])
@@ -26,18 +27,20 @@ class Api::IdeasController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_idea = IdeaSerializer.new(@idea).serialize
 
     render json: { data: { idea: serialized_idea } }
   end
 
   def create
+    check_admin_access!
     idea = Idea.new(idea_params)
-    idea.api_client_created = @current_client
+    idea.author = @current_client.user
 
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)
 
-    if idea.save(context: :api)
+    if idea.save
       serialized_idea = IdeaSerializer.new(idea).serialize
 
       render json: { data: { idea: serialized_idea } }, status: 201
@@ -47,10 +50,10 @@ class Api::IdeasController < Api::BaseController
   end
 
   def update
-    @idea.api_client_last_updated = @current_client
+    check_admin_access!
     @idea.assign_attributes(idea_params)
 
-    if @idea.save(context: :api)
+    if @idea.save
       serialized_idea = IdeaSerializer.new(@idea).serialize
 
       render json: { data: { idea: serialized_idea } }
@@ -67,7 +70,7 @@ class Api::IdeasController < Api::BaseController
       :idea_category_id,
       :video_url,
       :on_behalf_of,
-      *translation_params(Idea),
+      **translation_params(Idea),
       map_location_attributes: map_location_attributes,
       documents_attributes: document_attributes,
       image_attributes: image_attributes

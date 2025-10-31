@@ -3,6 +3,7 @@ class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
   before_action :find_category, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     category = @projekt_phase.projekt_point_of_interest_categories.new(category_params)
 
     if category.save
@@ -15,12 +16,14 @@ class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_category = ProjektPointOfInterestCategorySerializer.new(@category).serialize
 
     render json: { data: { category: serialized_category } }
   end
 
   def update
+    check_admin_access!
     if @category.update(category_params)
       serialized_category = ProjektPointOfInterestCategorySerializer.new(@category).serialize
 
@@ -31,6 +34,7 @@ class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @category.destroy
       render json: { message: "Category destroyed" }
     else

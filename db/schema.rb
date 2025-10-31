@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_10_31_171901) do
+ActiveRecord::Schema.define(version: 2025_10_31_204618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 2025_10_31_171901) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "service_api_token"
+    t.string "access_level"
     t.index ["service_api_token"], name: "index_api_clients_on_service_api_token"
   end
 
@@ -409,8 +410,6 @@ ActiveRecord::Schema.define(version: 2025_10_31_171901) do
     t.time "email_on_feasibility_sent_at"
     t.time "email_on_selected_sent_at"
     t.boolean "preselected", default: false
-    t.integer "api_client_created_id"
-    t.integer "api_client_last_updated_id"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -834,8 +833,6 @@ ActiveRecord::Schema.define(version: 2025_10_31_171901) do
     t.bigint "responsible_id"
     t.datetime "status_changed_at"
     t.datetime "archived_at"
-    t.integer "api_client_created_id"
-    t.integer "api_client_last_updated_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1127,8 +1124,6 @@ ActiveRecord::Schema.define(version: 2025_10_31_171901) do
     t.integer "timeframe", default: 50, null: false
     t.bigint "idea_officer_id"
     t.datetime "admin_accepted_at"
-    t.integer "api_client_created_id"
-    t.integer "api_client_last_updated_id"
     t.index ["author_id"], name: "index_ideas_on_author_id"
     t.index ["idea_category_id"], name: "index_ideas_on_idea_category_id"
     t.index ["idea_officer_id"], name: "index_ideas_on_idea_officer_id"
@@ -2095,14 +2090,22 @@ ActiveRecord::Schema.define(version: 2025_10_31_171901) do
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_categories_on_projekt_phase_id"
   end
 
+  create_table "projekt_point_of_interest_pin_translations", force: :cascade do |t|
+    t.bigint "projekt_point_of_interest_pin_id", null: false
+    t.string "locale", null: false
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_projekt_point_of_interest_pin_translations_on_locale"
+    t.index ["projekt_point_of_interest_pin_id"], name: "index_poi_pin_translations_on_poi_pin_id"
+  end
+
   create_table "projekt_point_of_interest_pins", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.integer "projekt_point_of_interest_category_id"
     t.bigint "author_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "api_client_created_id"
-    t.integer "api_client_last_updated_id"
     t.index ["author_id"], name: "index_projekt_point_of_interest_pins_on_author_id"
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_pins_on_projekt_phase_id"
     t.index ["projekt_point_of_interest_category_id"], name: "projekt_point_of_interest_category"
@@ -2288,8 +2291,6 @@ ActiveRecord::Schema.define(version: 2025_10_31_171901) do
     t.integer "cached_votes_down", default: 0
     t.integer "officing_bulk_votes", default: 0
     t.boolean "admin_accepted", default: true, null: false
-    t.integer "api_client_created_id"
-    t.integer "api_client_last_updated_id"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -2806,6 +2807,7 @@ ActiveRecord::Schema.define(version: 2025_10_31_171901) do
     t.boolean "reverify", default: true
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false
+    t.integer "api_client_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"

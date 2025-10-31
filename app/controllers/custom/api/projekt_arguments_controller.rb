@@ -5,6 +5,7 @@ class Api::ProjektArgumentsController < Api::BaseController
   before_action :find_projekt_argument, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     projekt_argument = @projekt_phase.projekt_arguments.new(projekt_argument_params)
 
     if projekt_argument.save
@@ -17,12 +18,14 @@ class Api::ProjektArgumentsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_projekt_argument = ProjektArgumentSerializer.new(@projekt_argument).serialize
 
     render json: { data: { projekt_argument: serialized_projekt_argument } }
   end
 
   def update
+    check_admin_access!
     if @projekt_argument.update(projekt_argument_params)
       serialized_projekt_argument = ProjektArgumentSerializer.new(@projekt_argument).serialize
 
@@ -33,6 +36,7 @@ class Api::ProjektArgumentsController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @projekt_argument.destroy
       render json: { message: "Projekt argument destroyed" }
     else

@@ -35,8 +35,6 @@ class Proposal < ApplicationRecord
 
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :proposals, optional: true
   belongs_to :geozone
-  belongs_to :api_client_created, class_name: 'ApiClient', optional: true
-  belongs_to :api_client_last_updated, class_name: 'ApiClient', optional: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   has_many :proposal_notifications, dependent: :destroy
   has_many :dashboard_executed_actions, dependent: :destroy, class_name: "Dashboard::ExecutedAction"
@@ -49,14 +47,9 @@ class Proposal < ApplicationRecord
   # validates_translation :summary, presence: true
   validates_translation :retired_explanation, presence: true, unless: -> { retired_at.blank? }
 
-  validates :author, presence: true, unless: :api_context?
-  validates :api_client_created, presence: true, on: :api
+  validates :author, presence: true
   validates :responsible_name, presence: true
   validates :responsible_name, length: { in: 6..Proposal.responsible_name_max_length }
-
-  def api_context?
-    validation_context == :api
-  end
   validates :retired_reason, presence: true, inclusion: { in: ->(*) { RETIRE_OPTIONS }}, unless: -> { retired_at.blank? }
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create

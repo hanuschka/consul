@@ -4,7 +4,7 @@ require 'swagger_helper'
 
 RSpec.describe 'Projekts API', type: :request do
   # Authentication setup - create an ApiClient with an auth_token
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   path '/api/projekts' do
@@ -20,6 +20,51 @@ RSpec.describe 'Projekts API', type: :request do
                 description: 'If false, excludes content blocks from response. Default is true.'
 
       response '200', 'projekts found' do
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        before do
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'projekts found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
         schema type: :object,
                properties: {
                  data: {
@@ -99,6 +144,37 @@ RSpec.describe 'Projekts API', type: :request do
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:projekt) do
+          {
+            projekt: {
+              name: 'Test Projekt',
+              geozone_affiliated: false
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
   end
 
@@ -135,6 +211,53 @@ RSpec.describe 'Projekts API', type: :request do
 
       response '404', 'projekt not found' do
         let(:id) { 999999 }
+
+        run_test!
+      end
+
+      response '403', 'forbidden - insufficient access' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:id) { test_projekt.id }
+        before do
+          api_client.update_column(:access_level, nil)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'projekt found with public_data access' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt: { '$ref' => '#/components/schemas/Projekt' }
+                   },
+                   required: ['projekt']
+                 }
+               },
+               required: ['data']
+
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:id) { test_projekt.id }
 
         run_test!
       end
@@ -210,6 +333,38 @@ RSpec.describe 'Projekts API', type: :request do
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              name: 'Updated Name'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
 
     delete 'Delete a projekt' do
@@ -261,6 +416,31 @@ RSpec.describe 'Projekts API', type: :request do
         end
 
         run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'To Delete') }
+        let(:id) { test_projekt.id }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
   end
@@ -318,7 +498,7 @@ RSpec.describe 'Projekts API', type: :request do
         let(:test_projekt) { Projekt.create!(name: 'Original Name') }
         let(:id) { test_projekt.id }
         let(:page) do
-          { page: {} }
+          { page: { title: '' } }
         end
 
         schema type: :object,
@@ -340,6 +520,39 @@ RSpec.describe 'Projekts API', type: :request do
 
         run_test!
       end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:page) do
+          {
+            page: {
+              title: 'New Title',
+              subtitle: 'New Subtitle'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
     end
   end
 
@@ -355,6 +568,19 @@ RSpec.describe 'Projekts API', type: :request do
       parameter name: :image, in: :body, description: 'Image attributes payload. Send attachment (base64-encoded)/title/credits to set/update the image, or _destroy=true to remove it.', schema: { '$ref' => '#/components/schemas/ImageAttributesApi' }
 
       response '200', 'projekt page image updated' do
+        let!(:test_user) do
+          user = User.create!(
+            username: "admin_user_#{SecureRandom.hex(4)}",
+            email: "admin_#{SecureRandom.hex(4)}@example.com",
+            password: 'Password1!',
+            terms_data_storage: '1',
+            terms_data_protection: '1',
+            terms_general: '1',
+            confirmed_at: Time.current
+          )
+          Administrator.create!(user: user)
+          user
+        end
         let(:test_projekt) { Projekt.create!(name: 'Original Name') }
         let(:id) { test_projekt.id }
         let(:image) do
@@ -400,6 +626,41 @@ RSpec.describe 'Projekts API', type: :request do
                }
 
         run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:image) do
+          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
+          base64_image = Base64.encode64(File.read(image_path))
+          {
+            image: {
+              attachment: base64_image,
+              title: 'Cover Image Title'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
   end
@@ -536,6 +797,40 @@ RSpec.describe 'Projekts API', type: :request do
                }
 
         run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+          test_projekt.projekt_settings.create!(key: 'test_setting', value: 'old_value')
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:id) { test_projekt.id }
+        let(:setting) do
+          {
+            setting: {
+              key: 'test_setting',
+              value: 'test_value'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
       end
     end
   end

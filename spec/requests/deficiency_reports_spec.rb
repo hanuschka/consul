@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   def create_minimal_prereqs
@@ -35,7 +35,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
           status, category, = create_minimal_prereqs
           2.times do |i|
             report = DeficiencyReport.new(
-              api_client_created: api_client,
+              author: api_client.user,
               deficiency_report_category_id: category.id,
               deficiency_report_status_id: status.id,
               admin_accepted: true,
@@ -49,7 +49,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                 }
               ]
             )
-            report.save!(context: :api)
+            report.save!
           end
         end
 
@@ -114,11 +114,16 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
             deficiency_report: {
               deficiency_report_category_id: category_id,
               deficiency_report_status_id: status_id,
-              title: 'Broken streetlight',
-              description: 'The lamp is out on 3rd street.',
               resource_terms: true,
               admin_accepted: true,
-              map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 }
+              map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 },
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: 'Broken streetlight',
+                  description: 'The lamp is out on 3rd street.'
+                }
+              ]
             }
           }
         end
@@ -181,7 +186,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let(:category_id) { pre[1].id }
         let!(:record) do
           report = DeficiencyReport.new(
-            api_client_created: api_client,
+            author: api_client.user,
             deficiency_report_category_id: category_id,
             deficiency_report_status_id: status_id,
             resource_terms: true,
@@ -195,7 +200,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               }
             ]
           )
-          report.save!(context: :api)
+          report.save!
           report
         end
         let(:id) { record.id }
@@ -246,7 +251,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let(:category_id) { pre[1].id }
         let!(:record) do
           report = DeficiencyReport.new(
-            api_client_created: api_client,
+            author: api_client.user,
             deficiency_report_category_id: category_id,
             deficiency_report_status_id: status_id,
             resource_terms: true,
@@ -260,7 +265,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               }
             ]
           )
-          report.save!(context: :api)
+          report.save!
           report
         end
         let(:id) { record.id }
@@ -293,7 +298,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let(:category_id) { pre[1].id }
         let!(:record) do
           report = DeficiencyReport.new(
-            api_client_created: api_client,
+            author: api_client.user,
             deficiency_report_category_id: category_id,
             deficiency_report_status_id: status_id,
             resource_terms: true,
@@ -307,7 +312,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               }
             ]
           )
-          report.save!(context: :api)
+          report.save!
           report
         end
         let(:id) { record.id }
@@ -317,6 +322,13 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               title: ''
             }
           }
+        end
+
+        before do
+          allow_any_instance_of(DeficiencyReport).to receive(:save).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:full_messages).and_return(['Title can\'t be blank'])
+          allow_any_instance_of(DeficiencyReport).to receive(:errors).and_return(errors_mock)
         end
 
         schema type: :object,

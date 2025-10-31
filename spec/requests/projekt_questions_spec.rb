@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagger.yaml' do
-  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
   path '/api/projekt_phases/{projekt_phase_id}/projekt_questions' do
@@ -286,18 +286,12 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
           {
             projekt_question: {
               translations_attributes: [
-                { locale: 'en', title: '' }
+                { id: test_projekt_question.translations.find_by(locale: 'en').id, locale: 'en', title: '' }
               ]
             }
           }
         end
 
-        before do
-          allow_any_instance_of(ProjektQuestion).to receive(:update).and_return(false)
-          errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:full_messages).and_return(['Title is required'])
-          allow_any_instance_of(ProjektQuestion).to receive(:errors).and_return(errors_mock)
-        end
 
         schema type: :object,
                properties: {

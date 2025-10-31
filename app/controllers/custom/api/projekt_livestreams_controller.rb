@@ -3,6 +3,7 @@ class Api::ProjektLivestreamsController < Api::BaseController
   before_action :find_projekt_livestream, only: [:show, :update, :destroy]
 
   def create
+    check_admin_access!
     projekt_livestream = @projekt_phase.projekt_livestreams.new(projekt_livestream_params)
 
     if projekt_livestream.save
@@ -15,12 +16,14 @@ class Api::ProjektLivestreamsController < Api::BaseController
   end
 
   def show
+    check_read_access!
     serialized_projekt_livestream = ProjektLivestreamSerializer.new(@projekt_livestream).serialize
 
     render json: { data: { projekt_livestream: serialized_projekt_livestream } }
   end
 
   def update
+    check_admin_access!
     if @projekt_livestream.update(projekt_livestream_params)
       serialized_projekt_livestream = ProjektLivestreamSerializer.new(@projekt_livestream).serialize
 
@@ -31,6 +34,7 @@ class Api::ProjektLivestreamsController < Api::BaseController
   end
 
   def destroy
+    check_admin_access!
     if @projekt_livestream.destroy
       render json: { message: "Projekt livestream destroyed" }
     else

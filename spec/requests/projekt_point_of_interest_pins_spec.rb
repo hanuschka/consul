@@ -41,7 +41,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       response '201', 'projekt point of interest pin created' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
-        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:projekt_phase_id) { poi_phase.id }
         let(:projekt_point_of_interest_pin) do
           {
@@ -120,7 +120,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       response '200', 'projekt point of interest pin found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
-        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:pin) do
           poi_phase.projekt_point_of_interest_pins.create!(
             projekt_point_of_interest_category: category,
@@ -188,7 +188,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       response '200', 'projekt point of interest pin updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
-        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:test_pin) do
           poi_phase.projekt_point_of_interest_pins.create!(
             projekt_point_of_interest_category: category,
@@ -245,7 +245,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       response '422', 'invalid request' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
-        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:test_pin) do
           poi_phase.projekt_point_of_interest_pins.create!(
             projekt_point_of_interest_category: category,
@@ -298,7 +298,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       response '200', 'projekt point of interest pin deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
-        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:pin) do
           poi_phase.projekt_point_of_interest_pins.create!(
             projekt_point_of_interest_category: category,
@@ -330,7 +330,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       response '422', 'unable to delete projekt point of interest pin' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
-        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:pin) do
           poi_phase.projekt_point_of_interest_pins.create!(
             projekt_point_of_interest_category: category,

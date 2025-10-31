@@ -14,6 +14,12 @@ class Api::ProjektLivestreamsController < Api::BaseController
     end
   end
 
+  def show
+    serialized_projekt_livestream = ProjektLivestreamSerializer.new(@projekt_livestream).serialize
+
+    render json: { data: { projekt_livestream: serialized_projekt_livestream } }
+  end
+
   def update
     if @projekt_livestream.update(projekt_livestream_params)
       serialized_projekt_livestream = ProjektLivestreamSerializer.new(@projekt_livestream).serialize

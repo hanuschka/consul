@@ -16,6 +16,12 @@ class Api::ProjektEventsController < Api::BaseController
     end
   end
 
+  def show
+    serialized_projekt_event = ProjektEventSerializer.new(@projekt_event).serialize
+
+    render json: { data: { projekt_event: serialized_projekt_event } }
+  end
+
   def update
     if @projekt_event.update(projekt_event_params)
       serialized_projekt_event = ProjektEventSerializer.new(@projekt_event).serialize

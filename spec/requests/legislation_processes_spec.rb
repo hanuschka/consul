@@ -64,6 +64,7 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
               debate_start_date: '2025-02-01',
               debate_end_date: '2025-02-28',
               published: true,
+              title: 'Legislation Process',
               translations_attributes: [
                 { locale: 'en', title: 'Legislation Process', summary: 'Summary', description: 'Description' }
               ]
@@ -136,7 +137,8 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             projekt_phase: legislation_phase,
             start_date: Date.today,
             end_date: Date.today + 1.year,
-            published: true
+            published: true,
+            title: 'Test Legislation Process'
           )
         end
         let(:id) { legislation_process.id }
@@ -214,7 +216,8 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             projekt_phase: legislation_phase,
             start_date: Date.today,
             end_date: Date.today + 1.year,
-            published: false
+            published: false,
+            title: 'Original Legislation Process'
           )
         end
         let(:id) { test_legislation_process.id }
@@ -262,7 +265,8 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             projekt_phase: legislation_phase,
             start_date: Date.today,
             end_date: Date.today + 1.year,
-            published: false
+            published: false,
+            title: 'Test Process'
           )
         end
         let(:id) { test_legislation_process.id }
@@ -308,7 +312,8 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             projekt_phase: legislation_phase,
             start_date: Date.today,
             end_date: Date.today + 1.year,
-            published: true
+            published: true,
+            title: 'Legislation Process To Delete'
           )
         end
         let(:id) { legislation_process.id }

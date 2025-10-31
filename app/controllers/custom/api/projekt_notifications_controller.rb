@@ -14,6 +14,12 @@ class Api::ProjektNotificationsController < Api::BaseController
     end
   end
 
+  def show
+    serialized_projekt_notification = ProjektNotificationSerializer.new(@projekt_notification).serialize
+
+    render json: { data: { projekt_notification: serialized_projekt_notification } }
+  end
+
   def update
     if @projekt_notification.update(projekt_notification_params)
       serialized_projekt_notification = ProjektNotificationSerializer.new(@projekt_notification).serialize

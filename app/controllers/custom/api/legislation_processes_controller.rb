@@ -17,6 +17,12 @@ class Api::LegislationProcessesController < Api::BaseController
     end
   end
 
+  def show
+    serialized_legislation_process = LegislationProcessSerializer.new(@legislation_process).serialize
+
+    render json: { data: { legislation_process: serialized_legislation_process } }
+  end
+
   def update
     if @legislation_process.update(legislation_process_params)
       serialized_legislation_process = LegislationProcessSerializer.new(@legislation_process).serialize

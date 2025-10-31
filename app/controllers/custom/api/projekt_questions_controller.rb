@@ -22,6 +22,12 @@ class Api::ProjektQuestionsController < Api::BaseController
     end
   end
 
+  def show
+    serialized_projekt_question = ProjektQuestionSerializer.new(@projekt_question).serialize
+
+    render json: { data: { projekt_question: serialized_projekt_question } }
+  end
+
   def update
     if @projekt_question.update(projekt_question_params)
       serialized_projekt_question = ProjektQuestionSerializer.new(@projekt_question).serialize

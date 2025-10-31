@@ -55,10 +55,16 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
             poll: {
               starts_at: '2025-01-01T00:00:00Z',
               ends_at: '2025-01-31T23:59:59Z',
+              name: 'Community Vote',
               summary: 'Summary',
               description: 'Description',
               translations_attributes: [
-                { locale: 'en', name: 'Community Vote', summary: 'Summary', description: 'Description' }
+                { 
+                  locale: 'en', 
+                  name: 'Community Vote', 
+                  summary: 'Summary', 
+                  description: 'Description'
+                }
               ]
             }
           }

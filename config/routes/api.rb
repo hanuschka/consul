@@ -34,6 +34,7 @@
     # settings are updated via projekt_phases#update_setting
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
+    resources :ideas, only: [:index, :show, :create, :update]
   end
 
   get "/api/docs", to: "docs#api"

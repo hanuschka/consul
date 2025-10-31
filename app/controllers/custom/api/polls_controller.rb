@@ -16,6 +16,12 @@ class Api::PollsController < Api::BaseController
     end
   end
 
+  def show
+    serialized_poll = PollSerializer.new(@poll).serialize
+
+    render json: { data: { poll: serialized_poll } }
+  end
+
   def update
     if @poll.update(poll_params)
       serialized_poll = PollSerializer.new(@poll).serialize

@@ -119,6 +119,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           argument_phase.projekt_arguments.create!(
             name: 'Test Argument',
             position: 1,
+            note: 'Test note',
             pro: true
           )
         end
@@ -184,6 +185,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           argument_phase.projekt_arguments.create!(
             name: 'Original Argument',
             position: 1,
+            note: 'Original note',
             pro: true
           )
         end
@@ -277,6 +279,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           argument_phase.projekt_arguments.create!(
             name: 'Argument To Delete',
             position: 1,
+            note: 'Note to delete',
             pro: true
           )
         end
@@ -304,6 +307,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           argument_phase.projekt_arguments.create!(
             name: 'Argument',
             position: 1,
+            note: 'Test note',
             pro: true
           )
         end

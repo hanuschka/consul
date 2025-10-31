@@ -22,6 +22,12 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
     end
   end
 
+  def show
+    serialized_pin = ProjektPointOfInterestPinSerializer.new(@pin).serialize
+
+    render json: { data: { pin: serialized_pin } }
+  end
+
   def update
     if @pin.update(pin_params)
       serialized_pin = ProjektPointOfInterestPinSerializer.new(@pin).serialize

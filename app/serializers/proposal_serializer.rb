@@ -103,7 +103,7 @@ class ProposalSerializer < BaseSerializer
     end
 
     # Add image URL if present
-    if proposal.respond_to?(:image) && proposal.image.attached?
+    if proposal.respond_to?(:image) && proposal.image.present? && proposal.image.attached?
       proposal_data[:image_url] = proposal.image.url
     end
 

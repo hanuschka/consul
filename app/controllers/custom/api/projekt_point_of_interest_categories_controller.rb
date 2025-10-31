@@ -14,6 +14,12 @@ class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
     end
   end
 
+  def show
+    serialized_category = ProjektPointOfInterestCategorySerializer.new(@category).serialize
+
+    render json: { data: { category: serialized_category } }
+  end
+
   def update
     if @category.update(category_params)
       serialized_category = ProjektPointOfInterestCategorySerializer.new(@category).serialize

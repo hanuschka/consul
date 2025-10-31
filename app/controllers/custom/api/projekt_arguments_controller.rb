@@ -16,6 +16,12 @@ class Api::ProjektArgumentsController < Api::BaseController
     end
   end
 
+  def show
+    serialized_projekt_argument = ProjektArgumentSerializer.new(@projekt_argument).serialize
+
+    render json: { data: { projekt_argument: serialized_projekt_argument } }
+  end
+
   def update
     if @projekt_argument.update(projekt_argument_params)
       serialized_projekt_argument = ProjektArgumentSerializer.new(@projekt_argument).serialize

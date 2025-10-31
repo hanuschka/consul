@@ -98,7 +98,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       response '200', 'projekt event found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
-        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall') }
+        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
         let(:id) { created_event.id }
 
         schema type: :object,
@@ -148,7 +148,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       response '200', 'projekt event updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
-        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall') }
+        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
         let(:id) { created_event.id }
         let(:projekt_event) do
           { projekt_event: { description: 'Updated description' } }
@@ -172,7 +172,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       response '422', 'invalid request' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
-        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall') }
+        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
         let(:id) { created_event.id }
         let(:projekt_event) do
           { projekt_event: { datetime: 'invalid' } }
@@ -207,7 +207,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       response '200', 'projekt event deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
-        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall') }
+        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
         let(:id) { created_event.id }
 
         schema type: :object,
@@ -220,7 +220,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       response '422', 'unable to delete projekt event' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
-        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall') }
+        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
         let(:id) { created_event.id }
 
         before do

@@ -122,7 +122,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
         let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:pin) do
-          poi_phase.projekt_point_of_interest_pins.create!(
+          pin = poi_phase.projekt_point_of_interest_pins.new(
+            api_client_created: api_client,
             projekt_point_of_interest_category: category,
             description: 'Test pin',
             map_location_attributes: {
@@ -131,6 +132,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               zoom: 15
             }
           )
+          pin.save!(context: :api)
+          pin
         end
         let(:id) { pin.id }
 
@@ -190,7 +193,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
         let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:test_pin) do
-          poi_phase.projekt_point_of_interest_pins.create!(
+          pin = poi_phase.projekt_point_of_interest_pins.new(
+            api_client_created: api_client,
             projekt_point_of_interest_category: category,
             description: 'Original description',
             map_location_attributes: {
@@ -199,6 +203,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               zoom: 15
             }
           )
+          pin.save!(context: :api)
+          pin
         end
         let(:id) { test_pin.id }
         let(:projekt_point_of_interest_pin) do
@@ -247,7 +253,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
         let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:test_pin) do
-          poi_phase.projekt_point_of_interest_pins.create!(
+          pin = poi_phase.projekt_point_of_interest_pins.new(
+            api_client_created: api_client,
             projekt_point_of_interest_category: category,
             description: 'Original description',
             map_location_attributes: {
@@ -256,6 +263,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               zoom: 15
             }
           )
+          pin.save!(context: :api)
+          pin
         end
         let(:id) { test_pin.id }
         let(:projekt_point_of_interest_pin) do
@@ -300,7 +309,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
         let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:pin) do
-          poi_phase.projekt_point_of_interest_pins.create!(
+          pin = poi_phase.projekt_point_of_interest_pins.new(
+            api_client_created: api_client,
             projekt_point_of_interest_category: category,
             description: 'Pin To Delete',
             map_location_attributes: {
@@ -309,6 +319,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               zoom: 15
             }
           )
+          pin.save!(context: :api)
+          pin
         end
         let(:id) { pin.id }
 
@@ -332,7 +344,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
         let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:pin) do
-          poi_phase.projekt_point_of_interest_pins.create!(
+          pin = poi_phase.projekt_point_of_interest_pins.new(
+            api_client_created: api_client,
             projekt_point_of_interest_category: category,
             description: 'Pin',
             map_location_attributes: {
@@ -341,6 +354,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
               zoom: 15
             }
           )
+          pin.save!(context: :api)
+          pin
         end
         let(:id) { pin.id }
 

@@ -58,8 +58,7 @@ class ProjektQuestionSerializer < BaseSerializer
       question_data[:question_options] = projekt_question.question_options.map do |option|
         {
           id: option.id,
-          title: option.title,
-          description: option.description
+          value: option.value
         }
       end
     end

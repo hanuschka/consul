@@ -21,7 +21,6 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
           projekt_question: {
             type: :object,
             properties: {
-              author_id: { type: :integer, nullable: true },
               projekt_livestream_id: { type: :integer, nullable: true },
               translations_attributes: {
                 type: :array,
@@ -29,8 +28,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
                   type: :object,
                   properties: {
                     locale: { type: :string },
-                    title: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true }
+                    title: { type: :string, nullable: true }
                   }
                 }
               },
@@ -40,9 +38,19 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
                   type: :object,
                   properties: {
                     id: { type: :integer, nullable: true },
-                    title: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true },
-                    _destroy: { type: :boolean, nullable: true }
+                    _destroy: { type: :boolean, nullable: true },
+                    translations_attributes: {
+                      type: :array,
+                      items: {
+                        type: :object,
+                        properties: {
+                          id: { type: :integer, nullable: true },
+                          locale: { type: :string },
+                          value: { type: :string, nullable: true },
+                          _destroy: { type: :boolean, nullable: true }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -60,11 +68,11 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
           {
             projekt_question: {
               translations_attributes: [
-                { locale: 'en', title: 'Test Question', description: 'Question description' }
+                { locale: 'en', title: 'Test Question' }
               ],
               question_options_attributes: [
-                { title: 'Option 1' },
-                { title: 'Option 2' }
+                { translations_attributes: [{ locale: 'en', value: 'Option 1' }] },
+                { translations_attributes: [{ locale: 'en', value: 'Option 2' }] }
               ]
             }
           }
@@ -133,7 +141,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           question_phase.questions.create!(
             translations_attributes: [
-              { locale: 'en', title: 'Test Question', description: 'Question description' }
+              { locale: 'en', title: 'Test Question' }
             ]
           )
         end
@@ -173,7 +181,6 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
           projekt_question: {
             type: :object,
             properties: {
-              author_id: { type: :integer, nullable: true },
               projekt_livestream_id: { type: :integer, nullable: true },
               translations_attributes: {
                 type: :array,
@@ -181,8 +188,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
                   type: :object,
                   properties: {
                     locale: { type: :string },
-                    title: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true }
+                    title: { type: :string, nullable: true }
                   }
                 }
               },
@@ -192,9 +198,19 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
                   type: :object,
                   properties: {
                     id: { type: :integer, nullable: true },
-                    title: { type: :string, nullable: true },
-                    description: { type: :string, nullable: true },
-                    _destroy: { type: :boolean, nullable: true }
+                    _destroy: { type: :boolean, nullable: true },
+                    translations_attributes: {
+                      type: :array,
+                      items: {
+                        type: :object,
+                        properties: {
+                          id: { type: :integer, nullable: true },
+                          locale: { type: :string },
+                          value: { type: :string, nullable: true },
+                          _destroy: { type: :boolean, nullable: true }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -210,7 +226,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:test_projekt_question) do
           question_phase.questions.create!(
             translations_attributes: [
-              { locale: 'en', title: 'Original Question', description: 'Original description' }
+              { locale: 'en', title: 'Original Question' }
             ]
           )
         end
@@ -261,7 +277,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:test_projekt_question) do
           question_phase.questions.create!(
             translations_attributes: [
-              { locale: 'en', title: 'Original Question', description: 'Original description' }
+              { locale: 'en', title: 'Original Question' }
             ]
           )
         end
@@ -308,7 +324,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           question_phase.questions.create!(
             translations_attributes: [
-              { locale: 'en', title: 'Question To Delete', description: 'Description' }
+              { locale: 'en', title: 'Question To Delete' }
             ]
           )
         end
@@ -335,7 +351,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_question) do
           question_phase.questions.create!(
             translations_attributes: [
-              { locale: 'en', title: 'Question', description: 'Description' }
+              { locale: 'en', title: 'Question' }
             ]
           )
         end

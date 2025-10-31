@@ -36,11 +36,13 @@ class Budget
               only: Budget::Investment.translated_attribute_names
     end
 
-    belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :budget_investments
+    belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :budget_investments, optional: true
     belongs_to :heading
     belongs_to :group
     belongs_to :budget
     belongs_to :administrator
+    belongs_to :api_client_created, class_name: 'ApiClient', optional: true
+    belongs_to :api_client_last_updated, class_name: 'ApiClient', optional: true
 
     has_many :valuator_assignments, dependent: :destroy
     has_many :valuators, through: :valuator_assignments
@@ -59,9 +61,14 @@ class Budget
     # validates_translation :description, presence: true, length: { maximum: Budget::Investment.description_max_length }
     validates_translation :description, presence: true
 
-    validates :author, presence: true
+    validates :author, presence: true, unless: :api_context?
+    validates :api_client_created, presence: true, on: :api
     validates :heading_id, presence: true
     validates :valuator_explanation, presence: { if: :valuator_explanation_required? }
+
+    def api_context?
+      validation_context == :api
+    end
     validates :price, presence: { if: :price_required? }
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
 
@@ -209,7 +216,7 @@ class Budget
     end
 
     def searchable_values
-      { author.username    => "B",
+      { author&.username   => "B",
         heading.name       => "B",
         tag_list.join(" ") => "B"
       }.merge(searchable_globalized_values)

@@ -33,14 +33,11 @@ class Api::IdeasController < Api::BaseController
 
   def create
     idea = Idea.new(idea_params)
-
-    if @current_client.respond_to?(:user) && @current_client.user.present?
-      idea.author = @current_client.user
-    end
+    idea.api_client_created = @current_client
 
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)
 
-    if idea.save
+    if idea.save(context: :api)
       serialized_idea = IdeaSerializer.new(idea).serialize
 
       render json: { data: { idea: serialized_idea } }, status: 201
@@ -50,7 +47,10 @@ class Api::IdeasController < Api::BaseController
   end
 
   def update
-    if @idea.update(idea_params)
+    @idea.api_client_last_updated = @current_client
+    @idea.assign_attributes(idea_params)
+
+    if @idea.save(context: :api)
       serialized_idea = IdeaSerializer.new(@idea).serialize
 
       render json: { data: { idea: serialized_idea } }

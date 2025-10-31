@@ -2,7 +2,7 @@
 
 require 'swagger_helper'
 
-RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
+RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
@@ -17,35 +17,48 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       terms_data_protection: '1',
       terms_general: '1'
     )
-    category = Idea::Category.create!(name: 'Test Category') if defined?(Idea::Category)
-    [user, category]
+    budget = Budget.create!(name: "Test Budget #{SecureRandom.hex(2)}")
+    group = budget.groups.create!(name: "Group #{SecureRandom.hex(2)}")
+    heading = group.headings.create!(
+      name: "Heading #{SecureRandom.hex(2)}",
+      price: 1000000,
+      allow_custom_content: true
+    )
+    [user, budget, heading]
   end
 
-  path '/api/ideas' do
-    get 'List ideas' do
-      tags 'Ideas'
+  path '/api/budget_investments' do
+    get 'List budget investments' do
+      tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
+      parameter name: :budget_id, in: :query, type: :integer, required: false, description: 'Filter by budget ID'
+      parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter by heading ID'
+      parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter by group ID'
+      parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility (feasible, unfeasible, undecided)'
+      parameter name: :selected, in: :query, type: :string, required: false, description: 'Filter by selection status (true, false)'
+      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort order (id, supports, confidence_score, price, ballots, newest)'
 
-      response '200', 'ideas found' do
+      response '200', 'budget investments found' do
         before do
-          _user, _category = create_minimal_prereqs
+          _user, budget, heading = create_minimal_prereqs
           2.times do |i|
-            idea = Idea.new(
+            investment = Budget::Investment.new(
               api_client_created: api_client,
+              heading: heading,
+              budget: budget,
               resource_terms: true,
-              admin_accepted_at: Time.current,
               translations_attributes: [
                 {
                   locale: 'en',
-                  title: "Idea #{i+1}",
+                  title: "Investment #{i+1}",
                   description: "Description #{i+1}"
                 }
               ]
             )
-            idea.save!(context: :api)
+            investment.save!(context: :api)
           end
         end
 
@@ -54,9 +67,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     ideas: { type: :array, items: { type: :object } }
+                     budget_investments: { type: :array, items: { type: :object } }
                    },
-                   required: ['ideas']
+                   required: ['budget_investments']
                  },
                  pagination: { type: :object }
                },
@@ -66,24 +79,25 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       end
     end
 
-    post 'Create an idea' do
-      tags 'Ideas'
+    post 'Create a budget investment' do
+      tags 'Budget Investments'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :idea, in: :body, description: 'Idea payload', schema: {
+      parameter name: :budget_investment, in: :body, description: 'Budget investment payload', schema: {
         type: :object,
         properties: {
-          idea: {
+          budget_investment: {
             type: :object,
             properties: {
+              heading_id: { type: :integer },
               title: { type: :string },
               description: { type: :string },
               video_url: { type: :string, nullable: true },
               on_behalf_of: { type: :string, nullable: true },
-              idea_category_id: { type: :integer, nullable: true },
               resource_terms: { type: :boolean },
+              price: { type: :number, nullable: true },
               map_location_attributes: {
                 type: :object,
                 properties: {
@@ -103,26 +117,35 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                     description: { type: :string }
                   }
                 }
+              },
+              tag_list: {
+                type: :array,
+                items: { type: :string }
               }
             },
-            required: %w[title description resource_terms]
+            required: %w[heading_id title description resource_terms]
           }
         },
-        required: ['idea']
+        required: ['budget_investment']
       }
 
-      response '201', 'idea created' do
-        let(:idea) do
+      response '201', 'budget investment created' do
+        let(:budget) { Budget.create!(name: 'Test Budget') }
+        let(:group) { budget.groups.create!(name: 'Test Group') }
+        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+
+        let(:budget_investment) do
           {
-            idea: {
-              title: 'New Idea',
-              description: 'A meaningful description',
+            budget_investment: {
+              heading_id: heading.id,
+              title: 'New Budget Investment',
+              description: 'A meaningful description for the investment',
               resource_terms: true,
               translations_attributes: [
                 {
                   locale: 'en',
-                  title: 'New Idea',
-                  description: 'A meaningful description'
+                  title: 'New Budget Investment',
+                  description: 'A meaningful description for the investment'
                 }
               ]
             }
@@ -134,9 +157,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     budget_investment: { type: :object }
                    },
-                   required: ['idea']
+                   required: ['budget_investment']
                  }
                },
                required: ['data']
@@ -145,9 +168,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       end
 
       response '422', 'invalid request' do
-        let(:idea) do
+        let(:budget_investment) do
           {
-            idea: {
+            budget_investment: {
               title: '',
               description: ''
             }
@@ -155,10 +178,10 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         end
 
         before do
-          allow_any_instance_of(Idea).to receive(:save).and_return(false)
+          allow_any_instance_of(Budget::Investment).to receive(:save).and_return(false)
           errors_mock = double('errors').as_null_object
           allow(errors_mock).to receive(:full_messages).and_return(['Title can\'t be blank'])
-          allow_any_instance_of(Idea).to receive(:errors).and_return(errors_mock)
+          allow_any_instance_of(Budget::Investment).to receive(:errors).and_return(errors_mock)
         end
 
         schema type: :object,
@@ -176,41 +199,45 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
     end
   end
 
-  path '/api/ideas/{id}' do
-    parameter name: :id, in: :path, type: :integer, description: 'Idea ID'
+  path '/api/budget_investments/{id}' do
+    parameter name: :id, in: :path, type: :integer, description: 'Budget Investment ID'
 
-    get 'Retrieve an idea' do
-      tags 'Ideas'
+    get 'Retrieve a budget investment' do
+      tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
 
-      response '200', 'idea found' do
-        let(:idea) do
-          idea = Idea.new(
+      response '200', 'budget investment found' do
+        let(:budget) { Budget.create!(name: 'Test Budget') }
+        let(:group) { budget.groups.create!(name: 'Test Group') }
+        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
             api_client_created: api_client,
+            heading: heading,
+            budget: budget,
             resource_terms: true,
-            admin_accepted_at: Time.current,
             translations_attributes: [
               {
                 locale: 'en',
-                title: 'Test Idea',
+                title: 'Test Investment',
                 description: 'Test Description'
               }
             ]
           )
-          idea.save!(context: :api)
-          idea
+          investment.save!(context: :api)
+          investment
         end
-        let(:id) { idea.id }
+        let(:id) { budget_investment.id }
 
         schema type: :object,
                properties: {
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     budget_investment: { type: :object }
                    },
-                   required: ['idea']
+                   required: ['budget_investment']
                  }
                },
                required: ['data']
@@ -218,29 +245,32 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '404', 'idea not found' do
+      response '404', 'budget investment not found' do
         let(:id) { 999999 }
         run_test!
       end
     end
 
-    patch 'Update an idea' do
-      tags 'Ideas'
+    patch 'Update a budget investment' do
+      tags 'Budget Investments'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :idea, in: :body, description: 'Attributes to update on the idea', schema: {
+      parameter name: :budget_investment, in: :body, description: 'Attributes to update on the budget investment', schema: {
         type: :object,
         properties: {
-          idea: {
+          budget_investment: {
             type: :object,
             properties: {
               title: { type: :string, nullable: true },
               description: { type: :string, nullable: true },
               video_url: { type: :string, nullable: true },
               on_behalf_of: { type: :string, nullable: true },
-              idea_category_id: { type: :integer, nullable: true },
+              price: { type: :number, nullable: true },
+              feasibility: { type: :string, nullable: true, enum: %w[feasible unfeasible undecided] },
+              valuation_finished: { type: :boolean, nullable: true },
+              selected: { type: :boolean, nullable: true },
               translations_attributes: {
                 type: :array,
                 items: {
@@ -251,33 +281,41 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                     description: { type: :string, nullable: true }
                   }
                 }
+              },
+              tag_list: {
+                type: :array,
+                items: { type: :string }
               }
             }
           }
         }
       }
 
-      response '200', 'idea updated' do
-        let(:existing_idea) do
-          idea = Idea.new(
+      response '200', 'budget investment updated' do
+        let(:budget) { Budget.create!(name: 'Test Budget') }
+        let(:group) { budget.groups.create!(name: 'Test Group') }
+        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:existing_investment) do
+          investment = Budget::Investment.new(
             api_client_created: api_client,
+            heading: heading,
+            budget: budget,
             resource_terms: true,
-            admin_accepted_at: Time.current,
             translations_attributes: [
               {
                 locale: 'en',
-                title: 'Original Idea',
+                title: 'Original Investment',
                 description: 'Original Description'
               }
             ]
           )
-          idea.save!(context: :api)
-          idea
+          investment.save!(context: :api)
+          investment
         end
-        let(:id) { existing_idea.id }
-        let(:idea) do
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
           {
-            idea: {
+            budget_investment: {
               description: 'Updated description'
             }
           }
@@ -288,9 +326,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     budget_investment: { type: :object }
                    },
-                   required: ['idea']
+                   required: ['budget_investment']
                  }
                },
                required: ['data']
@@ -299,36 +337,40 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       end
 
       response '422', 'invalid request' do
-        let(:existing_idea) do
-          idea = Idea.new(
+        let(:budget) { Budget.create!(name: 'Test Budget') }
+        let(:group) { budget.groups.create!(name: 'Test Group') }
+        let(:heading) { group.headings.create!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:existing_investment) do
+          investment = Budget::Investment.new(
             api_client_created: api_client,
+            heading: heading,
+            budget: budget,
             resource_terms: true,
-            admin_accepted_at: Time.current,
             translations_attributes: [
               {
                 locale: 'en',
-                title: 'Original Idea',
+                title: 'Original Investment',
                 description: 'Original Description'
               }
             ]
           )
-          idea.save!(context: :api)
-          idea
+          investment.save!(context: :api)
+          investment
         end
-        let(:id) { existing_idea.id }
-        let(:idea) do
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
           {
-            idea: {
+            budget_investment: {
               title: ''
             }
           }
         end
 
         before do
-          allow_any_instance_of(Idea).to receive(:update).and_return(false)
+          allow_any_instance_of(Budget::Investment).to receive(:update).and_return(false)
           errors_mock = double('errors').as_null_object
           allow(errors_mock).to receive(:full_messages).and_return(['Title can\'t be blank'])
-          allow_any_instance_of(Idea).to receive(:errors).and_return(errors_mock)
+          allow_any_instance_of(Budget::Investment).to receive(:errors).and_return(errors_mock)
         end
 
         schema type: :object,
@@ -346,4 +388,3 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
     end
   end
 end
-

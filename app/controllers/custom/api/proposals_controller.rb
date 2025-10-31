@@ -35,6 +35,7 @@ class Api::ProposalsController < Api::BaseController
   def create
     proposal = @projekt_phase.resources.new(proposal_params)
     proposal.author = GuestUser.new
+    proposal.api_client_created = @current_client
 
     if proposal.save(context: :api)
       serialized_proposal = ProposalSerializer.new(proposal).serialize
@@ -46,7 +47,10 @@ class Api::ProposalsController < Api::BaseController
   end
 
   def update
-    if @proposal.update(proposal_params)
+    @proposal.api_client_last_updated = @current_client
+    @proposal.assign_attributes(proposal_params)
+
+    if @proposal.save(context: :api)
       serialized_proposal = ProposalSerializer.new(@proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }

@@ -28,15 +28,22 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         before do
           _projekt, geozone, phase = create_phase_with_context
           2.times do |i|
-            Proposal.create!(
+            proposal = Proposal.new(
+              api_client_created: api_client,
               projekt_phase: phase,
               geozone: geozone,
               responsible_name: 'John Doe',
               admin_accepted: true,
               resource_terms: true,
-              title: "Proposal #{i + 1}",
-              description: "Description #{i + 1}"
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: "Proposal #{i + 1}",
+                  description: "Description #{i + 1}"
+                }
+              ]
             )
+            proposal.save!(context: :api)
           end
         end
 
@@ -155,15 +162,23 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       response '200', 'proposal found' do
         let!(:context) { create_phase_with_context }
         let!(:record) do
-          Proposal.create!(
+          proposal = Proposal.new(
+            api_client_created: api_client,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            title: 'Show Proposal',
-            description: 'Desc'
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Show Proposal',
+                description: 'Desc'
+              }
+            ]
           )
+          proposal.save!(context: :api)
+          proposal
         end
         let(:id) { record.id }
 
@@ -209,15 +224,23 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       response '200', 'proposal updated' do
         let!(:context) { create_phase_with_context }
         let!(:record) do
-          Proposal.create!(
+          proposal = Proposal.new(
+            api_client_created: api_client,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            title: 'Old Title',
-            description: 'Desc'
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Old Title',
+                description: 'Desc'
+              }
+            ]
           )
+          proposal.save!(context: :api)
+          proposal
         end
         let(:id) { record.id }
         let(:proposal) do
@@ -246,15 +269,23 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       response '422', 'invalid request' do
         let!(:context) { create_phase_with_context }
         let!(:record) do
-          Proposal.create!(
+          proposal = Proposal.new(
+            api_client_created: api_client,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            title: 'Old Title',
-            description: 'Desc'
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Old Title',
+                description: 'Desc'
+              }
+            ]
           )
+          proposal.save!(context: :api)
+          proposal
         end
         let(:id) { record.id }
         let(:proposal) do
@@ -287,15 +318,23 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       response '200', 'proposal deleted' do
         let!(:context) { create_phase_with_context }
         let!(:record) do
-          Proposal.create!(
+          proposal = Proposal.new(
+            api_client_created: api_client,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            title: 'To Delete',
-            description: 'Desc'
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'To Delete',
+                description: 'Desc'
+              }
+            ]
           )
+          proposal.save!(context: :api)
+          proposal
         end
         let(:id) { record.id }
 
@@ -316,15 +355,23 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       response '422', 'unable to delete proposal' do
         let!(:context) { create_phase_with_context }
         let!(:record) do
-          Proposal.create!(
+          proposal = Proposal.new(
+            api_client_created: api_client,
             projekt_phase: context[2],
             geozone: context[1],
             responsible_name: 'John Doe',
             admin_accepted: true,
             resource_terms: true,
-            title: 'Cannot Delete',
-            description: 'Desc'
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Cannot Delete',
+                description: 'Desc'
+              }
+            ]
           )
+          proposal.save!(context: :api)
+          proposal
         end
         let(:id) { record.id }
 

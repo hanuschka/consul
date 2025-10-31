@@ -7,12 +7,6 @@ class Api::ProjektQuestionsController < Api::BaseController
   def create
     projekt_question = @projekt_phase.questions.new(projekt_question_params)
 
-    # Set author from API client's associated user if available
-    # Otherwise, author_id should be provided in params
-    if @current_client.respond_to?(:user) && @current_client.user.present?
-      projekt_question.author = @current_client.user
-    end
-
     if projekt_question.save
       serialized_projekt_question = ProjektQuestionSerializer.new(projekt_question).serialize
 
@@ -50,10 +44,9 @@ class Api::ProjektQuestionsController < Api::BaseController
 
   def projekt_question_params
     params.require(:projekt_question).permit(
-      :author_id,
       :projekt_livestream_id,
       *translation_params(ProjektQuestion),
-      question_options_attributes: [:id, :title, :description, :_destroy]
+      question_options_attributes: [:id, :_destroy, translations_attributes: [:id, :locale, :value, :_destroy]]
     )
   end
 

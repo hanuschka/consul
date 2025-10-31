@@ -6,14 +6,9 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
 
   def create
     pin = @projekt_phase.projekt_point_of_interest_pins.new(pin_params)
+    pin.api_client_created = @current_client
 
-    # Set author from API client's associated user if available
-    # Otherwise, author_id should be provided in params
-    if @current_client.respond_to?(:user) && @current_client.user.present?
-      pin.author = @current_client.user
-    end
-
-    if pin.save
+    if pin.save(context: :api)
       serialized_pin = ProjektPointOfInterestPinSerializer.new(pin).serialize
 
       render json: { data: { pin: serialized_pin } }, status: 201
@@ -29,7 +24,10 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
   end
 
   def update
-    if @pin.update(pin_params)
+    @pin.api_client_last_updated = @current_client
+    @pin.assign_attributes(pin_params)
+
+    if @pin.save(context: :api)
       serialized_pin = ProjektPointOfInterestPinSerializer.new(@pin).serialize
 
       render json: { data: { pin: serialized_pin } }

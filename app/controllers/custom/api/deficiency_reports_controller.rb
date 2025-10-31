@@ -39,12 +39,9 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def create
     deficiency_report = DeficiencyReport.new(deficiency_report_params)
+    deficiency_report.api_client_created = @current_client
 
-    if @current_client.respond_to?(:user) && @current_client.user.present?
-      deficiency_report.author = @current_client.user
-    end
-
-    if deficiency_report.save
+    if deficiency_report.save(context: :api)
       serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }, status: 201
@@ -54,7 +51,10 @@ class Api::DeficiencyReportsController < Api::BaseController
   end
 
   def update
-    if @deficiency_report.update(deficiency_report_params)
+    @deficiency_report.api_client_last_updated = @current_client
+    @deficiency_report.assign_attributes(deficiency_report_params)
+
+    if @deficiency_report.save(context: :api)
       serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }

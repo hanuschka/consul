@@ -32,17 +32,24 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
 
       response '200', 'deficiency reports found' do
         before do
-          status, category, user = create_minimal_prereqs
+          status, category, = create_minimal_prereqs
           2.times do |i|
-            DeficiencyReport.create!(
-              author: user,
+            report = DeficiencyReport.new(
+              api_client_created: api_client,
               deficiency_report_category_id: category.id,
               deficiency_report_status_id: status.id,
               admin_accepted: true,
-              title: "Report #{i+1}",
               resource_terms: true,
-              map_location_attributes: { latitude: 40.0 + i, longitude: -3.0 - i, zoom: 12 }
+              map_location_attributes: { latitude: 40.0 + i, longitude: -3.0 - i, zoom: 12 },
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: "Report #{i+1}",
+                  description: "Description for report #{i+1}"
+                }
+              ]
             )
+            report.save!(context: :api)
           end
         end
 
@@ -75,7 +82,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
           deficiency_report: {
             type: :object,
             properties: {
-              author_id: { type: :integer },
+              author_id: { type: :integer, nullable: true },
               deficiency_report_category_id: { type: :integer },
               deficiency_report_status_id: { type: :integer },
               title: { type: :string },
@@ -92,7 +99,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                 required: %w[latitude longitude]
               }
             },
-            required: %w[author_id deficiency_report_category_id title resource_terms map_location_attributes]
+            required: %w[deficiency_report_category_id title resource_terms map_location_attributes]
           }
         },
         required: ['deficiency_report']
@@ -102,11 +109,9 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let!(:pre) { create_minimal_prereqs }
         let(:status_id) { pre[0].id }
         let(:category_id) { pre[1].id }
-        let(:author_id) { pre[2].id }
         let(:deficiency_report) do
           {
             deficiency_report: {
-              author_id: author_id,
               deficiency_report_category_id: category_id,
               deficiency_report_status_id: status_id,
               title: 'Broken streetlight',
@@ -136,11 +141,9 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       response '422', 'invalid request' do
         let!(:pre) { create_minimal_prereqs }
         let(:category_id) { pre[1].id }
-        let(:author_id) { pre[2].id }
         let(:deficiency_report) do
           {
             deficiency_report: {
-              author_id: author_id,
               deficiency_report_category_id: category_id,
               title: '',
               resource_terms: false,
@@ -176,17 +179,24 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let!(:pre) { create_minimal_prereqs }
         let(:status_id) { pre[0].id }
         let(:category_id) { pre[1].id }
-        let(:author_id) { pre[2].id }
         let!(:record) do
-          DeficiencyReport.create!(
-            author_id: author_id,
+          report = DeficiencyReport.new(
+            api_client_created: api_client,
             deficiency_report_category_id: category_id,
             deficiency_report_status_id: status_id,
-            title: 'Pothole',
             resource_terms: true,
             admin_accepted: true,
-            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 }
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Pothole',
+                description: 'A pothole in the road'
+              }
+            ]
           )
+          report.save!(context: :api)
+          report
         end
         let(:id) { record.id }
 
@@ -234,17 +244,24 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let!(:pre) { create_minimal_prereqs }
         let(:status_id) { pre[0].id }
         let(:category_id) { pre[1].id }
-        let(:author_id) { pre[2].id }
         let!(:record) do
-          DeficiencyReport.create!(
-            author_id: author_id,
+          report = DeficiencyReport.new(
+            api_client_created: api_client,
             deficiency_report_category_id: category_id,
             deficiency_report_status_id: status_id,
-            title: 'Graffiti',
             resource_terms: true,
             admin_accepted: true,
-            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 }
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Graffiti',
+                description: 'Graffiti on the wall'
+              }
+            ]
           )
+          report.save!(context: :api)
+          report
         end
         let(:id) { record.id }
         let(:deficiency_report) do
@@ -274,17 +291,24 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let!(:pre) { create_minimal_prereqs }
         let(:status_id) { pre[0].id }
         let(:category_id) { pre[1].id }
-        let(:author_id) { pre[2].id }
         let!(:record) do
-          DeficiencyReport.create!(
-            author_id: author_id,
+          report = DeficiencyReport.new(
+            api_client_created: api_client,
             deficiency_report_category_id: category_id,
             deficiency_report_status_id: status_id,
-            title: 'Trash overflow',
             resource_terms: true,
             admin_accepted: true,
-            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 }
+            map_location_attributes: { latitude: 41.0, longitude: -3.0, zoom: 10 },
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Trash overflow',
+                description: 'Trash bin is overflowing'
+              }
+            ]
           )
+          report.save!(context: :api)
+          report
         end
         let(:id) { record.id }
         let(:deficiency_report) do

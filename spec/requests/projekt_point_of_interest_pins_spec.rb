@@ -1,0 +1,368 @@
+# frozen_string_literal: true
+
+require 'swagger_helper'
+
+RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spec: 'v1/swagger.yaml' do
+  let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered) }
+  let(:Authorization) { "Bearer #{api_client.auth_token}" }
+
+  path '/api/projekt_phases/{projekt_phase_id}/projekt_point_of_interest_pins' do
+    parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
+
+    post 'Create a projekt point of interest pin' do
+      tags 'Projekt Point Of Interest Pins'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Projekt point of interest pin creation payload', schema: {
+        type: :object,
+        properties: {
+          projekt_point_of_interest_pin: {
+            type: :object,
+            properties: {
+              author_id: { type: :integer, nullable: true },
+              projekt_point_of_interest_category_id: { type: :integer, nullable: true },
+              description: { type: :string, nullable: true },
+              map_location_attributes: {
+                type: :object,
+                properties: {
+                  latitude: { type: :number, format: :float, nullable: true },
+                  longitude: { type: :number, format: :float, nullable: true },
+                  zoom: { type: :integer, nullable: true }
+                }
+              }
+            }
+          }
+        },
+        required: ['projekt_point_of_interest_pin']
+      }
+
+      response '201', 'projekt point of interest pin created' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:projekt_phase_id) { poi_phase.id }
+        let(:projekt_point_of_interest_pin) do
+          {
+            projekt_point_of_interest_pin: {
+              projekt_point_of_interest_category_id: category.id,
+              description: 'Test pin description',
+              map_location_attributes: {
+                latitude: 52.5200,
+                longitude: 13.4050,
+                zoom: 15
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     pin: { type: :object }
+                   },
+                   required: ['pin']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:projekt_phase_id) { poi_phase.id }
+        let(:projekt_point_of_interest_pin) do
+          {
+            projekt_point_of_interest_pin: {
+              map_location_attributes: {
+                latitude: 'invalid',
+                longitude: 'invalid'
+              }
+            }
+          }
+        end
+
+        before do
+          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:save).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:full_messages).and_return(['Map location is invalid'])
+          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:errors).and_return(errors_mock)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/api/projekt_point_of_interest_pins/{id}' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt Point Of Interest Pin ID'
+
+    get 'Retrieve a projekt point of interest pin' do
+      tags 'Projekt Point Of Interest Pins'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      response '200', 'projekt point of interest pin found' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:pin) do
+          poi_phase.projekt_point_of_interest_pins.create!(
+            projekt_point_of_interest_category: category,
+            description: 'Test pin',
+            map_location_attributes: {
+              latitude: 52.5200,
+              longitude: 13.4050,
+              zoom: 15
+            }
+          )
+        end
+        let(:id) { pin.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     pin: { type: :object }
+                   },
+                   required: ['pin']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '404', 'projekt point of interest pin not found' do
+        let(:id) { 999999 }
+
+        run_test!
+      end
+    end
+
+    patch 'Update a projekt point of interest pin' do
+      tags 'Projekt Point Of Interest Pins'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Attributes to update on the projekt point of interest pin', schema: {
+        type: :object,
+        properties: {
+          projekt_point_of_interest_pin: {
+            type: :object,
+            properties: {
+              author_id: { type: :integer, nullable: true },
+              projekt_point_of_interest_category_id: { type: :integer, nullable: true },
+              description: { type: :string, nullable: true },
+              map_location_attributes: {
+                type: :object,
+                properties: {
+                  latitude: { type: :number, format: :float, nullable: true },
+                  longitude: { type: :number, format: :float, nullable: true },
+                  zoom: { type: :integer, nullable: true }
+                }
+              }
+            }
+          }
+        },
+        required: ['projekt_point_of_interest_pin']
+      }
+
+      response '200', 'projekt point of interest pin updated' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:test_pin) do
+          poi_phase.projekt_point_of_interest_pins.create!(
+            projekt_point_of_interest_category: category,
+            description: 'Original description',
+            map_location_attributes: {
+              latitude: 52.5200,
+              longitude: 13.4050,
+              zoom: 15
+            }
+          )
+        end
+        let(:id) { test_pin.id }
+        let(:projekt_point_of_interest_pin) do
+          {
+            projekt_point_of_interest_pin: {
+              description: 'Updated description',
+              map_location_attributes: {
+                latitude: 51.5074,
+                longitude: -0.1278,
+                zoom: 16
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     pin: { type: :object }
+                   },
+                   required: ['pin']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '404', 'projekt point of interest pin not found' do
+        let(:id) { 999999 }
+        let(:projekt_point_of_interest_pin) do
+          {
+            projekt_point_of_interest_pin: {
+              description: 'Updated description'
+            }
+          }
+        end
+
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:test_pin) do
+          poi_phase.projekt_point_of_interest_pins.create!(
+            projekt_point_of_interest_category: category,
+            description: 'Original description',
+            map_location_attributes: {
+              latitude: 52.5200,
+              longitude: 13.4050,
+              zoom: 15
+            }
+          )
+        end
+        let(:id) { test_pin.id }
+        let(:projekt_point_of_interest_pin) do
+          {
+            projekt_point_of_interest_pin: {
+              map_location_attributes: {
+                latitude: 'invalid',
+                longitude: 'invalid'
+              }
+            }
+          }
+        end
+
+        before do
+          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:update).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:full_messages).and_return(['Map location is invalid'])
+          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:errors).and_return(errors_mock)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+    end
+
+    delete 'Delete a projekt point of interest pin' do
+      tags 'Projekt Point Of Interest Pins'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      response '200', 'projekt point of interest pin deleted' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:pin) do
+          poi_phase.projekt_point_of_interest_pins.create!(
+            projekt_point_of_interest_category: category,
+            description: 'Pin To Delete',
+            map_location_attributes: {
+              latitude: 52.5200,
+              longitude: 13.4050,
+              zoom: 15
+            }
+          )
+        end
+        let(:id) { pin.id }
+
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: ['message']
+
+        run_test!
+      end
+
+      response '404', 'projekt point of interest pin not found' do
+        let(:id) { 999999 }
+
+        run_test!
+      end
+
+      response '422', 'unable to delete projekt point of interest pin' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
+        let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000') }
+        let(:pin) do
+          poi_phase.projekt_point_of_interest_pins.create!(
+            projekt_point_of_interest_category: category,
+            description: 'Pin',
+            map_location_attributes: {
+              latitude: 52.5200,
+              longitude: 13.4050,
+              zoom: 15
+            }
+          )
+        end
+        let(:id) { pin.id }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :object }
+                   }
+                 }
+               }
+
+        before do
+          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:destroy).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:messages).and_return({ base: ['Cannot delete pin'] })
+          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:errors).and_return(errors_mock)
+        end
+
+        run_test!
+      end
+    end
+  end
+end

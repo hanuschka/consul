@@ -4,6 +4,234 @@ info:
   title: API V1
   version: v1
 paths:
+  "/api/projekts/{projekt_id}/content_blocks":
+    parameters:
+    - name: projekt_id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List content blocks for a projekt
+      tags:
+      - Content Blocks
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: content blocks found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      content_blocks:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/ContentBlock"
+                    required:
+                    - content_blocks
+                required:
+                - data
+    post:
+      summary: Reorder content blocks
+      tags:
+      - Content Blocks
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: content block created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      content_block:
+                        "$ref": "#/components/schemas/ContentBlock"
+                    required:
+                    - content_block
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '200':
+          description: content blocks reordered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ordered_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: Array of content block IDs in desired order
+              required:
+              - ordered_ids
+        description: Array of content block IDs in desired order
+  "/api/content_blocks/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Content Block ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a content block
+      tags:
+      - Content Blocks
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: content block found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      content_block:
+                        "$ref": "#/components/schemas/ContentBlock"
+                    required:
+                    - content_block
+                required:
+                - data
+        '404':
+          description: content block not found
+    patch:
+      summary: Update a content block
+      tags:
+      - Content Blocks
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: content block updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      content_block:
+                        "$ref": "#/components/schemas/ContentBlock"
+                    required:
+                    - content_block
+                required:
+                - data
+        '404':
+          description: content block not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content_block:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      nullable: true
+                    locale:
+                      type: string
+                      nullable: true
+                    body:
+                      type: string
+                      nullable: true
+                    key:
+                      type: string
+                      nullable: true
+                    position:
+                      type: integer
+                      nullable: true
+              required:
+              - content_block
+        description: Attributes to update on the content block
+    delete:
+      summary: Delete a content block
+      tags:
+      - Content Blocks
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: content block deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: content block not found
+        '422':
+          description: unable to delete content block
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
   "/api/deficiency_reports":
     get:
       summary: List deficiency reports
@@ -213,6 +441,307 @@ paths:
                     deficiency_report_status_id:
                       type: integer
         description: Attributes to update on the deficiency report
+  "/api/projekt_phases/{projekt_phase_id}/legislation_processes":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (LegislationPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a legislation process
+      tags:
+      - Legislation Processes
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: legislation process created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      legislation_process:
+                        type: object
+                    required:
+                    - legislation_process
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                legislation_process:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    draft_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    result_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    allegations_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    draft_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    result_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    published:
+                      type: boolean
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          summary:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+              required:
+              - legislation_process
+        description: Legislation process creation payload
+  "/api/legislation_processes/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Legislation Process ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a legislation process
+      tags:
+      - Legislation Processes
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: legislation process found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      legislation_process:
+                        type: object
+                    required:
+                    - legislation_process
+                required:
+                - data
+        '404':
+          description: legislation process not found
+    patch:
+      summary: Update a legislation process
+      tags:
+      - Legislation Processes
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: legislation process updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      legislation_process:
+                        type: object
+                    required:
+                    - legislation_process
+                required:
+                - data
+        '404':
+          description: legislation process not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                legislation_process:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    draft_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    result_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    allegations_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    draft_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    result_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    published:
+                      type: boolean
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          summary:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+              required:
+              - legislation_process
+        description: Attributes to update on the legislation process
+    delete:
+      summary: Delete a legislation process
+      tags:
+      - Legislation Processes
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: legislation process deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: legislation process not found
+        '422':
+          description: unable to delete legislation process
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
   "/api/projekt_phases/{projekt_phase_id}/polls":
     parameters:
     - name: projekt_phase_id
@@ -462,6 +991,237 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/projekt_phases/{projekt_phase_id}/projekt_arguments":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (ArgumentPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a projekt argument
+      tags:
+      - Projekt Arguments
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt argument created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_argument:
+                        type: object
+                    required:
+                    - projekt_argument
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_argument:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      nullable: true
+                    position:
+                      type: integer
+                      nullable: true
+                    note:
+                      type: string
+                      nullable: true
+                    pro:
+                      type: boolean
+                      nullable: true
+                    image_attributes:
+                      type: object
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: Base64-encoded image
+                        title:
+                          type: string
+                          nullable: true
+                        credits:
+                          type: string
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+              required:
+              - projekt_argument
+        description: Projekt argument creation payload
+  "/api/projekt_arguments/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Argument ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt argument
+      tags:
+      - Projekt Arguments
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt argument found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_argument:
+                        type: object
+                    required:
+                    - projekt_argument
+                required:
+                - data
+        '404':
+          description: projekt argument not found
+    patch:
+      summary: Update a projekt argument
+      tags:
+      - Projekt Arguments
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt argument updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_argument:
+                        type: object
+                    required:
+                    - projekt_argument
+                required:
+                - data
+        '404':
+          description: projekt argument not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_argument:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      nullable: true
+                    position:
+                      type: integer
+                      nullable: true
+                    note:
+                      type: string
+                      nullable: true
+                    pro:
+                      type: boolean
+                      nullable: true
+                    image_attributes:
+                      type: object
+                      properties:
+                        attachment:
+                          type: string
+                          nullable: true
+                          description: Base64-encoded image
+                        title:
+                          type: string
+                          nullable: true
+                        credits:
+                          type: string
+                          nullable: true
+                        _destroy:
+                          type: boolean
+                          nullable: true
+              required:
+              - projekt_argument
+        description: Attributes to update on the projekt argument
+    delete:
+      summary: Delete a projekt argument
+      tags:
+      - Projekt Arguments
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt argument deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: projekt argument not found
+        '422':
+          description: unable to delete projekt argument
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
   "/api/projekt_phases/{projekt_phase_id}/projekt_events":
     parameters:
     - name: projekt_phase_id
@@ -661,6 +1421,225 @@ paths:
                 - message
         '422':
           description: unable to delete projekt event
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+  "/api/projekt_phases/{projekt_phase_id}/projekt_livestreams":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (LivestreamPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a projekt livestream
+      tags:
+      - Projekt Livestreams
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt livestream created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_livestream:
+                        type: object
+                    required:
+                    - projekt_livestream
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_livestream:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      nullable: true
+                    title:
+                      type: string
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    starts_at:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    video_platform:
+                      type: string
+                      nullable: true
+                    external_id:
+                      type: string
+                      nullable: true
+                    preview_image_url:
+                      type: string
+                      nullable: true
+              required:
+              - projekt_livestream
+        description: Projekt livestream creation payload
+  "/api/projekt_livestreams/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Livestream ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt livestream
+      tags:
+      - Projekt Livestreams
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt livestream found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_livestream:
+                        type: object
+                    required:
+                    - projekt_livestream
+                required:
+                - data
+        '404':
+          description: projekt livestream not found
+    patch:
+      summary: Update a projekt livestream
+      tags:
+      - Projekt Livestreams
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt livestream updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_livestream:
+                        type: object
+                    required:
+                    - projekt_livestream
+                required:
+                - data
+        '404':
+          description: projekt livestream not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_livestream:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      nullable: true
+                    title:
+                      type: string
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    starts_at:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    video_platform:
+                      type: string
+                      nullable: true
+                    external_id:
+                      type: string
+                      nullable: true
+                    preview_image_url:
+                      type: string
+                      nullable: true
+              required:
+              - projekt_livestream
+        description: Attributes to update on the projekt livestream
+    delete:
+      summary: Delete a projekt livestream
+      tags:
+      - Projekt Livestreams
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt livestream deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: projekt livestream not found
+        '422':
+          description: unable to delete projekt livestream
           content:
             application/json:
               schema:
@@ -1258,6 +2237,667 @@ paths:
           description: projekt phase not found
         '422':
           description: unable to delete projekt phase
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+  "/api/projekt_phases/{projekt_phase_id}/projekt_point_of_interest_categories":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (PointOfInterestPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a projekt point of interest category
+      tags:
+      - Projekt Point Of Interest Categories
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt point of interest category created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        type: object
+                    required:
+                    - category
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_point_of_interest_category:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      nullable: true
+                    color:
+                      type: string
+                      nullable: true
+                    icon:
+                      type: string
+                      nullable: true
+              required:
+              - projekt_point_of_interest_category
+        description: Projekt point of interest category creation payload
+  "/api/projekt_point_of_interest_categories/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Point Of Interest Category ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt point of interest category
+      tags:
+      - Projekt Point Of Interest Categories
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt point of interest category found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        type: object
+                    required:
+                    - category
+                required:
+                - data
+        '404':
+          description: projekt point of interest category not found
+    patch:
+      summary: Update a projekt point of interest category
+      tags:
+      - Projekt Point Of Interest Categories
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt point of interest category updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        type: object
+                    required:
+                    - category
+                required:
+                - data
+        '404':
+          description: projekt point of interest category not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_point_of_interest_category:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      nullable: true
+                    color:
+                      type: string
+                      nullable: true
+                    icon:
+                      type: string
+                      nullable: true
+              required:
+              - projekt_point_of_interest_category
+        description: Attributes to update on the projekt point of interest category
+    delete:
+      summary: Delete a projekt point of interest category
+      tags:
+      - Projekt Point Of Interest Categories
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt point of interest category deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: projekt point of interest category not found
+        '422':
+          description: unable to delete projekt point of interest category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+  "/api/projekt_phases/{projekt_phase_id}/projekt_point_of_interest_pins":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (PointOfInterestPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a projekt point of interest pin
+      tags:
+      - Projekt Point Of Interest Pins
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt point of interest pin created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pin:
+                        type: object
+                    required:
+                    - pin
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_point_of_interest_pin:
+                  type: object
+                  properties:
+                    author_id:
+                      type: integer
+                      nullable: true
+                    projekt_point_of_interest_category_id:
+                      type: integer
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    map_location_attributes:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                          format: float
+                          nullable: true
+                        longitude:
+                          type: number
+                          format: float
+                          nullable: true
+                        zoom:
+                          type: integer
+                          nullable: true
+              required:
+              - projekt_point_of_interest_pin
+        description: Projekt point of interest pin creation payload
+  "/api/projekt_point_of_interest_pins/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Point Of Interest Pin ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt point of interest pin
+      tags:
+      - Projekt Point Of Interest Pins
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt point of interest pin found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pin:
+                        type: object
+                    required:
+                    - pin
+                required:
+                - data
+        '404':
+          description: projekt point of interest pin not found
+    patch:
+      summary: Update a projekt point of interest pin
+      tags:
+      - Projekt Point Of Interest Pins
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt point of interest pin updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pin:
+                        type: object
+                    required:
+                    - pin
+                required:
+                - data
+        '404':
+          description: projekt point of interest pin not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_point_of_interest_pin:
+                  type: object
+                  properties:
+                    author_id:
+                      type: integer
+                      nullable: true
+                    projekt_point_of_interest_category_id:
+                      type: integer
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    map_location_attributes:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                          format: float
+                          nullable: true
+                        longitude:
+                          type: number
+                          format: float
+                          nullable: true
+                        zoom:
+                          type: integer
+                          nullable: true
+              required:
+              - projekt_point_of_interest_pin
+        description: Attributes to update on the projekt point of interest pin
+    delete:
+      summary: Delete a projekt point of interest pin
+      tags:
+      - Projekt Point Of Interest Pins
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt point of interest pin deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: projekt point of interest pin not found
+        '422':
+          description: unable to delete projekt point of interest pin
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+  "/api/projekt_phases/{projekt_phase_id}/projekt_questions":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (QuestionPhase or LivestreamPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a projekt question
+      tags:
+      - Projekt Questions
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt question created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_question:
+                        type: object
+                    required:
+                    - projekt_question
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_question:
+                  type: object
+                  properties:
+                    author_id:
+                      type: integer
+                      nullable: true
+                    projekt_livestream_id:
+                      type: integer
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+                    question_options_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          title:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+              required:
+              - projekt_question
+        description: Projekt question creation payload
+  "/api/projekt_questions/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Question ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt question
+      tags:
+      - Projekt Questions
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt question found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_question:
+                        type: object
+                    required:
+                    - projekt_question
+                required:
+                - data
+        '404':
+          description: projekt question not found
+    patch:
+      summary: Update a projekt question
+      tags:
+      - Projekt Questions
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt question updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_question:
+                        type: object
+                    required:
+                    - projekt_question
+                required:
+                - data
+        '404':
+          description: projekt question not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_question:
+                  type: object
+                  properties:
+                    author_id:
+                      type: integer
+                      nullable: true
+                    projekt_livestream_id:
+                      type: integer
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+                    question_options_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                          title:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+              required:
+              - projekt_question
+        description: Attributes to update on the projekt question
+    delete:
+      summary: Delete a projekt question
+      tags:
+      - Projekt Questions
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt question deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: projekt question not found
+        '422':
+          description: unable to delete projekt question
           content:
             application/json:
               schema:

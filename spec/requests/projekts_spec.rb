@@ -45,61 +45,7 @@ RSpec.describe 'Projekts API', type: :request do
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :projekt, in: :body, description: 'Projekt creation payload', schema: {
-        type: :object,
-        properties: {
-          projekt: {
-            type: :object,
-            properties: {
-              name: { type: :string },
-              parent_id: { type: :integer, nullable: true },
-              total_duration_start: { type: :string, format: :datetime, nullable: true },
-              total_duration_end: { type: :string, format: :datetime, nullable: true },
-              show_start_date_in_frontend: { type: :boolean },
-              show_end_date_in_frontend: { type: :boolean },
-              geozone_affiliated: { type: :boolean },
-              order_number: { type: :integer },
-              tag_list: { type: :string, nullable: true },
-              related_sdg_list: { type: :string, nullable: true },
-              landing_page_ids: { type: :array, items: { type: :integer } },
-              geozone_affiliation_ids: { type: :array, items: { type: :integer } },
-              sdg_goal_ids: { type: :array, items: { type: :integer } },
-              individual_group_value_ids: { type: :array, items: { type: :integer } },
-              map_location_attributes: {
-                type: :object,
-                properties: {
-                  latitude: { type: :number },
-                  longitude: { type: :number },
-                  zoom: { type: :integer }
-                }
-              },
-              image_attributes: {
-                type: :object,
-                properties: {
-                  image: { type: :string, nullable: true },
-                  cached_attachment: { type: :string, nullable: true },
-                  title: { type: :string, nullable: true },
-                  user_id: { type: :integer, nullable: true }
-                }
-              },
-              projekt_manager_assignments_attributes: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, nullable: true },
-                    projekt_manager_id: { type: :integer },
-                    projekt_id: { type: :integer },
-                    permissions: { type: :array, items: { type: :string } }
-                  }
-                }
-              }
-            },
-            required: ['name']
-          }
-        },
-        required: ['projekt']
-      }
+      parameter name: :projekt, in: :body, description: 'Projekt creation payload', schema: { '$ref' => '#/components/schemas/ProjektCreateParams' }
 
       response '201', 'projekt created' do
         let(:projekt) do
@@ -200,48 +146,7 @@ RSpec.describe 'Projekts API', type: :request do
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :projekt, in: :body, description: 'Attributes to update on the projekt', schema: {
-        type: :object,
-        properties: {
-          projekt: {
-            type: :object,
-            properties: {
-              name: { type: :string },
-              parent_id: { type: :integer, nullable: true },
-              total_duration_start: { type: :string, format: :datetime, nullable: true },
-              total_duration_end: { type: :string, format: :datetime, nullable: true },
-              show_start_date_in_frontend: { type: :boolean },
-              show_end_date_in_frontend: { type: :boolean },
-              geozone_affiliated: { type: :boolean },
-              order_number: { type: :integer },
-              tag_list: { type: :string, nullable: true },
-              related_sdg_list: { type: :string, nullable: true },
-              landing_page_ids: { type: :array, items: { type: :integer } },
-              geozone_affiliation_ids: { type: :array, items: { type: :integer } },
-              sdg_goal_ids: { type: :array, items: { type: :integer } },
-              individual_group_value_ids: { type: :array, items: { type: :integer } },
-              map_location_attributes: {
-                type: :object,
-                properties: {
-                  latitude: { type: :number },
-                  longitude: { type: :number },
-                  zoom: { type: :integer }
-                }
-              },
-              image_attributes: {
-                type: :object,
-                properties: {
-                  image: { type: :string, nullable: true },
-                  cached_attachment: { type: :string, nullable: true },
-                  title: { type: :string, nullable: true },
-                  user_id: { type: :integer, nullable: true }
-                }
-              }
-            }
-          }
-        },
-        required: ['projekt']
-      }
+      parameter name: :projekt, in: :body, description: 'Attributes to update on the projekt', schema: { '$ref' => '#/components/schemas/ProjektUpdateParams' }
 
       response '200', 'projekt updated' do
         let(:test_projekt) { Projekt.create!(name: 'Original Name') }
@@ -360,6 +265,144 @@ RSpec.describe 'Projekts API', type: :request do
     end
   end
 
+  path '/api/projekts/{id}/update_page' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
+
+    patch 'Update projekt page attributes (title/subtitle)' do
+      tags 'Projekts'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      parameter name: :page, in: :body, description: 'Projekt page attributes', schema: {
+        type: :object,
+        properties: {
+          page: {
+            type: :object,
+            properties: {
+              title: { type: :string, nullable: true },
+              subtitle: { type: :string, nullable: true }
+            }
+          }
+        }
+      }
+
+      response '200', 'projekt page updated' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:page) do
+          {
+            page: {
+              title: 'New Title',
+              subtitle: 'New Subtitle'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt: { '$ref' => '#/components/schemas/Projekt' }
+                   },
+                   required: ['projekt']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:page) do
+          { page: {} }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        before do
+          allow_any_instance_of(SiteCustomization::Page).to receive(:update).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:full_messages).and_return(['Title is invalid'])
+          allow_any_instance_of(SiteCustomization::Page).to receive(:errors).and_return(errors_mock)
+        end
+
+        run_test!
+      end
+    end
+  end
+
+  path '/api/projekts/{id}/update_image' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
+
+    patch 'Update projekt page image' do
+      tags 'Projekts'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      parameter name: :image, in: :body, description: 'Image attributes payload. Send attachment (base64-encoded)/title/credits to set/update the image, or _destroy=true to remove it.', schema: { '$ref' => '#/components/schemas/ImageAttributesApi' }
+
+      response '200', 'projekt page image updated' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:image) do
+          # Read fixture image and encode as base64
+          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
+          base64_image = Base64.encode64(File.read(image_path))
+          {
+            image: {
+              attachment: base64_image,
+              title: 'Cover Image Title'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt: { '$ref' => '#/components/schemas/Projekt' }
+                   },
+                   required: ['projekt']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:image) { {} }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+    end
+  end
   path '/api/projekts/{id}/update_setting' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
 

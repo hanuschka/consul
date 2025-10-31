@@ -3,7 +3,7 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
   include Translatable
 
-  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting]
+  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_image, :update_page]
 
   def index
     projekts =
@@ -83,6 +83,73 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
+  def update_page
+    if @projekt.page.update(projekt_page_params)
+      serailized_projekt = ProjektSerializer.new(@projekt).serialize
+
+      render json: { data: { projekt: serailized_projekt } }
+    else
+      render json: { error: { messages: @projekt.page.errors.full_messages } }, status: 422
+    end
+  end
+
+  def update_image
+    page = @projekt.page
+    temp_file = nil
+
+    begin
+      image_attrs = params
+        .require(:image)
+        .permit(*image_attributes_api)
+
+      if ActiveModel::Type::Boolean.new.cast(image_attrs[:_destroy])
+        if page.image.present?
+          page.image.destroy
+        end
+        page.image = nil
+      else
+        attachment_data = image_attrs[:attachment]
+        if attachment_data.present?
+          temp_file = Base64ImageUtils.decode_to_tempfile(attachment_data)
+          content_type = Base64ImageUtils.content_type_from_string(attachment_data)
+          filename = "image.#{Base64ImageUtils.extension_from_content_type(content_type)}"
+          
+          image_params = image_attrs.except(:_destroy, :attachment).merge(
+            user: User.administrators.first || User.first
+          )
+          
+          if page.image.present?
+            image = page.image
+            image.assign_attributes(image_params)
+            image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
+          else
+            image = Image.new(image_params.merge(imageable: page))
+            image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
+            page.image = image
+          end
+        else
+          if page.image.present?
+            page.image.update(image_attrs.except(:_destroy, :attachment))
+          end
+        end
+      end
+
+      page.save!
+
+      serailized_projekt = ProjektSerializer.new(@projekt).serialize
+      render json: { data: { projekt: serailized_projekt } }
+    rescue ActionController::ParameterMissing => e
+      render json: { error: { messages: [e.message] } }, status: 422
+    rescue StandardError => e
+      render json: { error: { messages: [e.message] } }, status: 422
+    ensure
+      if temp_file
+        temp_file.close rescue nil
+        temp_file.unlink rescue nil
+      end
+    end
+  end
+
   def destroy
     if @projekt.destroy
       @projekt.children.each do |child|
@@ -128,15 +195,14 @@ class Api::ProjektsController < Api::BaseController
       :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, landing_page_ids: [], geozone_affiliation_ids: [], sdg_goal_ids: [],
       individual_group_value_ids: [],
       map_location_attributes: map_location_attributes,
-      # image_attributes: image_attributes,
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
     ]
     params.require(:projekt).permit(attributes, translation_params(Projekt))
   end
 
   def projekt_page_params
-    params.require(:site_customization_page).permit(
-      :title, :subtitle, :image
+    params.require(:page).permit(
+      :title, :subtitle
     )
   end
 

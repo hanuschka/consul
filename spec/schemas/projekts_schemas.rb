@@ -22,7 +22,7 @@ module Schemas
         top_level_projekt_id: { type: :integer, nullable: true, example: nil },
         tsv: { type: :string, nullable: true, example: nil },
         preview_code: { type: :string, nullable: true, example: 'abc123' },
-        site_customization_page: {
+        page: {
           type: :object,
           nullable: true,
           properties: {
@@ -56,6 +56,109 @@ module Schemas
       required: %w[id name created_at updated_at]
     }.freeze
 
+    # Shared image attributes schema for API (matches image_attributes_api)
+    IMAGE_ATTRIBUTES_API_SCHEMA = {
+      type: :object,
+      description: 'Attributes for updating the projekt page image. Provide attachment (base64-encoded)/title/credits to create/update, or _destroy=true to remove the image. Defaults: _destroy=false.',
+      properties: {
+        title: {
+          type: :string,
+          nullable: true,
+          description: 'Human-readable title/alt text for the image. Optional.',
+          example: 'Cover Image Title'
+        },
+        attachment: {
+          type: :string,
+          nullable: true,
+          description: 'Base64-encoded image file data. Supported formats: JPEG, PNG, GIF, WebP. Example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="'
+        },
+        credits: {
+          type: :string,
+          nullable: true,
+          description: 'Attribution/credits for the image. Optional.',
+          example: 'Photo by John Doe'
+        },
+        _destroy: {
+          type: :boolean,
+          nullable: true,
+          default: false,
+          description: 'If true, deletes the current projekt page image. Default: false.',
+          example: false
+        }
+      }
+    }.freeze
+
+    # Request body schema for updating projekt page image (flat body, no wrapper)
+    PROJEKT_IMAGE_UPDATE_PARAMS = {
+      type: :object,
+      description: 'Body for updating projekt page image. Provide attachment/title/credits to create/update, or _destroy=true to remove. Defaults: _destroy=false.',
+      properties: {
+        image: { '$ref' => '#/components/schemas/ImageAttributesApi' }
+      },
+      required: ['image']
+    }.freeze
+
+    # Request body schema: create projekt
+    PROJEKT_CREATE_PARAMS = {
+      type: :object,
+      properties: {
+        projekt: {
+          type: :object,
+          properties: {
+            name: { type: :string },
+            parent_id: { type: :integer, nullable: true },
+            total_duration_start: { type: :string, format: :date_time, nullable: true },
+            total_duration_end: { type: :string, format: :date_time, nullable: true },
+            show_start_date_in_frontend: { type: :boolean },
+            show_end_date_in_frontend: { type: :boolean },
+            geozone_affiliated: { type: :boolean },
+            order_number: { type: :integer, nullable: true },
+            tag_list: { type: :string, nullable: true },
+            related_sdg_list: { type: :string, nullable: true },
+            landing_page_ids: { type: :array, items: { type: :integer } },
+            geozone_affiliation_ids: { type: :array, items: { type: :integer } },
+            sdg_goal_ids: { type: :array, items: { type: :integer } },
+            individual_group_value_ids: { type: :array, items: { type: :integer } },
+            map_location_attributes: {
+              type: :object,
+              properties: {
+                latitude: { type: :number },
+                longitude: { type: :number },
+                zoom: { type: :integer }
+              }
+            },
+            # page updates are handled via dedicated endpoints
+            projekt_manager_assignments_attributes: {
+              type: :array,
+              items: {
+                type: :object,
+                properties: {
+                  id: { type: :integer, nullable: true },
+                  projekt_manager_id: { type: :integer },
+                  projekt_id: { type: :integer },
+                  permissions: { type: :array, items: { type: :string } }
+                }
+              }
+            }
+          },
+          required: ['name']
+        }
+      },
+      required: ['projekt']
+    }.freeze
+
+    # Request body schema: update projekt (same fields as create, all optional)
+    PROJEKT_UPDATE_PARAMS = {
+      type: :object,
+      properties: {
+        projekt: {
+          type: :object,
+          properties: PROJEKT_CREATE_PARAMS[:properties][:projekt][:properties]
+        }
+      },
+      required: ['projekt']
+    }.freeze
+
     # ProjektPhase schema definition for OpenAPI/Swagger documentation
     PROJEKT_PHASE_SCHEMA = {
       type: :object,
@@ -86,6 +189,87 @@ module Schemas
       required: %w[id key]
     }.freeze
 
+    # Poll schema definition for OpenAPI/Swagger documentation
+    POLL_SCHEMA = {
+      type: :object,
+      properties: {
+        id: { type: :integer, example: 1 },
+        name: { type: :string, example: 'Community Vote' },
+        summary: { type: :string, nullable: true, example: 'Summary' },
+        description: { type: :string, nullable: true, example: 'Description' },
+        starts_at: { type: :string, format: :date_time, nullable: true, example: '2025-01-01T00:00:00Z' },
+        ends_at: { type: :string, format: :date_time, nullable: true, example: '2025-01-31T23:59:59Z' },
+        geozone_restricted: { type: :boolean, nullable: true, example: false },
+        budget_id: { type: :integer, nullable: true, example: 1 },
+        created_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
+        geozones: {
+          type: :array,
+          items: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              name: { type: :string }
+            }
+          }
+        },
+        budget: {
+          type: :object,
+          nullable: true,
+          properties: {
+            id: { type: :integer },
+            name: { type: :string }
+          }
+        },
+        questions: {
+          type: :array,
+          items: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              title: { type: :string }
+            }
+          }
+        }
+      },
+      required: %w[id name created_at updated_at]
+    }.freeze
+
+    # ProjektEvent schema definition
+    PROJEKT_EVENT_SCHEMA = {
+      type: :object,
+      properties: {
+        id: { type: :integer, example: 1 },
+        title: { type: :string, example: 'Town Hall' },
+        description: { type: :string, nullable: true, example: 'Discussion on city planning' },
+        datetime: { type: :string, format: :date_time, nullable: true, example: '2025-02-01T18:00:00Z' },
+        end_datetime: { type: :string, format: :date_time, nullable: true, example: '2025-02-01T20:00:00Z' },
+        location: { type: :string, nullable: true, example: 'City Hall' },
+        registration_url: { type: :string, nullable: true, example: 'https://example.com/register' },
+        projekt_phase_id: { type: :integer, example: 10 },
+        created_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' }
+      },
+      required: %w[id title created_at updated_at]
+    }.freeze
+
+    # ProjektNotification schema definition
+    PROJEKT_NOTIFICATION_SCHEMA = {
+      type: :object,
+      properties: {
+        id: { type: :integer, example: 1 },
+        title: { type: :string, example: 'Update' },
+        body: { type: :string, nullable: true, example: 'We have news' },
+        link_text: { type: :string, nullable: true, example: 'Read more' },
+        link_url: { type: :string, nullable: true, example: 'https://example.com' },
+        segment_recipient: { type: :string, nullable: true, example: 'all' },
+        projekt_phase_id: { type: :integer, example: 10 },
+        created_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, example: '2025-01-01T00:00:00Z' }
+      },
+      required: %w[id title created_at updated_at]
+    }.freeze
+
     # ContentBlock schema definition for OpenAPI/Swagger documentation
     CONTENT_BLOCK_SCHEMA = {
       type: :object,
@@ -107,9 +291,16 @@ module Schemas
     def self.all
       {
         Projekt: PROJEKT_SCHEMA,
+        ImageAttributesApi: IMAGE_ATTRIBUTES_API_SCHEMA,
+        ProjektImageUpdateParams: PROJEKT_IMAGE_UPDATE_PARAMS,
+        ProjektCreateParams: PROJEKT_CREATE_PARAMS,
+        ProjektUpdateParams: PROJEKT_UPDATE_PARAMS,
         ProjektPhase: PROJEKT_PHASE_SCHEMA,
         ContentBlock: CONTENT_BLOCK_SCHEMA,
-        ProjektPhaseSetting: PROJEKT_PHASE_SETTING_SCHEMA
+        ProjektPhaseSetting: PROJEKT_PHASE_SETTING_SCHEMA,
+        Poll: POLL_SCHEMA,
+        ProjektEvent: PROJEKT_EVENT_SCHEMA,
+        ProjektNotification: PROJEKT_NOTIFICATION_SCHEMA
       }
     end
   end

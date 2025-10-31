@@ -213,6 +213,663 @@ paths:
                     deficiency_report_status_id:
                       type: integer
         description: Attributes to update on the deficiency report
+  "/api/projekt_phases/{projekt_phase_id}/polls":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (VotingPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a poll
+      tags:
+      - Polls
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: poll created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      poll:
+                        "$ref": "#/components/schemas/Poll"
+                    required:
+                    - poll
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                poll:
+                  type: object
+                  properties:
+                    starts_at:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    ends_at:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    geozone_restricted:
+                      type: boolean
+                      nullable: true
+                    summary:
+                      type: string
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    budget_id:
+                      type: integer
+                      nullable: true
+                    geozone_ids:
+                      type: array
+                      items:
+                        type: integer
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          name:
+                            type: string
+                            nullable: true
+                          summary:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+              required:
+              - poll
+        description: Poll creation payload
+  "/api/polls/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Poll ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a poll
+      tags:
+      - Polls
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: poll found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      poll:
+                        "$ref": "#/components/schemas/Poll"
+                    required:
+                    - poll
+                required:
+                - data
+        '404':
+          description: poll not found
+    patch:
+      summary: Update a poll
+      tags:
+      - Polls
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: poll updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      poll:
+                        "$ref": "#/components/schemas/Poll"
+                    required:
+                    - poll
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                poll:
+                  type: object
+                  properties:
+                    starts_at:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    ends_at:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    geozone_restricted:
+                      type: boolean
+                      nullable: true
+                    summary:
+                      type: string
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    budget_id:
+                      type: integer
+                      nullable: true
+                    geozone_ids:
+                      type: array
+                      items:
+                        type: integer
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          name:
+                            type: string
+                            nullable: true
+                          summary:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+        description: Attributes to update on the poll
+    delete:
+      summary: Delete a poll
+      tags:
+      - Polls
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: poll deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '422':
+          description: unable to delete poll
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+  "/api/projekt_phases/{projekt_phase_id}/projekt_events":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (EventPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a projekt event
+      tags:
+      - Projekt Events
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt event created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_event:
+                        "$ref": "#/components/schemas/ProjektEvent"
+                    required:
+                    - projekt_event
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_event:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    datetime:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    end_datetime:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    location:
+                      type: string
+                      nullable: true
+                    registration_url:
+                      type: string
+                      nullable: true
+                  required:
+                  - title
+              required:
+              - projekt_event
+        description: Projekt Event creation payload
+  "/api/projekt_events/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Event ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt event
+      tags:
+      - Projekt Events
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt event found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_event:
+                        "$ref": "#/components/schemas/ProjektEvent"
+                    required:
+                    - projekt_event
+                required:
+                - data
+        '404':
+          description: projekt event not found
+    patch:
+      summary: Update a projekt event
+      tags:
+      - Projekt Events
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt event updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_event:
+                        "$ref": "#/components/schemas/ProjektEvent"
+                    required:
+                    - projekt_event
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_event:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    datetime:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    end_datetime:
+                      type: string
+                      format: date_time
+                      nullable: true
+                    location:
+                      type: string
+                      nullable: true
+                    registration_url:
+                      type: string
+                      nullable: true
+        description: Attributes to update on the event
+    delete:
+      summary: Delete a projekt event
+      tags:
+      - Projekt Events
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt event deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '422':
+          description: unable to delete projekt event
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+  "/api/projekt_phases/{projekt_phase_id}/projekt_notifications":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (ProjektNotificationPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a projekt notification
+      tags:
+      - Projekt Notifications
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: projekt notification created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_notification:
+                        "$ref": "#/components/schemas/ProjektNotification"
+                    required:
+                    - projekt_notification
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_notification:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    body:
+                      type: string
+                      nullable: true
+                    link_text:
+                      type: string
+                      nullable: true
+                    link_url:
+                      type: string
+                      nullable: true
+                    segment_recipient:
+                      type: string
+                      nullable: true
+                  required:
+                  - title
+              required:
+              - projekt_notification
+        description: Projekt Notification creation payload
+  "/api/projekt_notifications/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Notification ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a projekt notification
+      tags:
+      - Projekt Notifications
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt notification found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_notification:
+                        "$ref": "#/components/schemas/ProjektNotification"
+                    required:
+                    - projekt_notification
+                required:
+                - data
+        '404':
+          description: projekt notification not found
+    patch:
+      summary: Update a projekt notification
+      tags:
+      - Projekt Notifications
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt notification updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_notification:
+                        "$ref": "#/components/schemas/ProjektNotification"
+                    required:
+                    - projekt_notification
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_notification:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    body:
+                      type: string
+                      nullable: true
+                    link_text:
+                      type: string
+                      nullable: true
+                    link_url:
+                      type: string
+                      nullable: true
+                    segment_recipient:
+                      type: string
+                      nullable: true
+        description: Attributes to update on the notification
+    delete:
+      summary: Delete a projekt notification
+      tags:
+      - Projekt Notifications
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: projekt notification deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '422':
+          description: unable to delete projekt notification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
   "/api/projekts/{projekt_id}/projekt_phases":
     parameters:
     - name: projekt_id
@@ -697,98 +1354,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                projekt:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    parent_id:
-                      type: integer
-                      nullable: true
-                    total_duration_start:
-                      type: string
-                      format: datetime
-                      nullable: true
-                    total_duration_end:
-                      type: string
-                      format: datetime
-                      nullable: true
-                    show_start_date_in_frontend:
-                      type: boolean
-                    show_end_date_in_frontend:
-                      type: boolean
-                    geozone_affiliated:
-                      type: boolean
-                    order_number:
-                      type: integer
-                    tag_list:
-                      type: string
-                      nullable: true
-                    related_sdg_list:
-                      type: string
-                      nullable: true
-                    landing_page_ids:
-                      type: array
-                      items:
-                        type: integer
-                    geozone_affiliation_ids:
-                      type: array
-                      items:
-                        type: integer
-                    sdg_goal_ids:
-                      type: array
-                      items:
-                        type: integer
-                    individual_group_value_ids:
-                      type: array
-                      items:
-                        type: integer
-                    map_location_attributes:
-                      type: object
-                      properties:
-                        latitude:
-                          type: number
-                        longitude:
-                          type: number
-                        zoom:
-                          type: integer
-                    image_attributes:
-                      type: object
-                      properties:
-                        image:
-                          type: string
-                          nullable: true
-                        cached_attachment:
-                          type: string
-                          nullable: true
-                        title:
-                          type: string
-                          nullable: true
-                        user_id:
-                          type: integer
-                          nullable: true
-                    projekt_manager_assignments_attributes:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                            nullable: true
-                          projekt_manager_id:
-                            type: integer
-                          projekt_id:
-                            type: integer
-                          permissions:
-                            type: array
-                            items:
-                              type: string
-                  required:
-                  - name
-              required:
-              - projekt
+              "$ref": "#/components/schemas/ProjektCreateParams"
         description: Projekt creation payload
   "/api/projekts/{id}":
     parameters:
@@ -878,80 +1444,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                projekt:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    parent_id:
-                      type: integer
-                      nullable: true
-                    total_duration_start:
-                      type: string
-                      format: datetime
-                      nullable: true
-                    total_duration_end:
-                      type: string
-                      format: datetime
-                      nullable: true
-                    show_start_date_in_frontend:
-                      type: boolean
-                    show_end_date_in_frontend:
-                      type: boolean
-                    geozone_affiliated:
-                      type: boolean
-                    order_number:
-                      type: integer
-                    tag_list:
-                      type: string
-                      nullable: true
-                    related_sdg_list:
-                      type: string
-                      nullable: true
-                    landing_page_ids:
-                      type: array
-                      items:
-                        type: integer
-                    geozone_affiliation_ids:
-                      type: array
-                      items:
-                        type: integer
-                    sdg_goal_ids:
-                      type: array
-                      items:
-                        type: integer
-                    individual_group_value_ids:
-                      type: array
-                      items:
-                        type: integer
-                    map_location_attributes:
-                      type: object
-                      properties:
-                        latitude:
-                          type: number
-                        longitude:
-                          type: number
-                        zoom:
-                          type: integer
-                    image_attributes:
-                      type: object
-                      properties:
-                        image:
-                          type: string
-                          nullable: true
-                        cached_attachment:
-                          type: string
-                          nullable: true
-                        title:
-                          type: string
-                          nullable: true
-                        user_id:
-                          type: integer
-                          nullable: true
-              required:
-              - projekt
+              "$ref": "#/components/schemas/ProjektUpdateParams"
         description: Attributes to update on the projekt
     delete:
       summary: Delete a projekt
@@ -985,6 +1478,121 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/projekts/{id}/update_page":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Update projekt page attributes (title/subtitle)
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt page updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt:
+                        "$ref": "#/components/schemas/Projekt"
+                    required:
+                    - projekt
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      nullable: true
+                    subtitle:
+                      type: string
+                      nullable: true
+        description: Projekt page attributes
+  "/api/projekts/{id}/update_image":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Update projekt page image
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: projekt page image updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt:
+                        "$ref": "#/components/schemas/Projekt"
+                    required:
+                    - projekt
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ImageAttributesApi"
+        description: Image attributes payload. Send attachment (base64-encoded)/title/credits
+          to set/update the image, or _destroy=true to remove it.
   "/api/projekts/{id}/update_setting":
     parameters:
     - name: id
@@ -1398,7 +2006,7 @@ components:
           type: string
           nullable: true
           example: abc123
-        site_customization_page:
+        page:
           type: object
           nullable: true
           properties:
@@ -1440,6 +2048,199 @@ components:
       - name
       - created_at
       - updated_at
+    ImageAttributesApi:
+      type: object
+      description: 'Attributes for updating the projekt page image. Provide attachment
+        (base64-encoded)/title/credits to create/update, or _destroy=true to remove
+        the image. Defaults: _destroy=false.'
+      properties:
+        title:
+          type: string
+          nullable: true
+          description: Human-readable title/alt text for the image. Optional.
+          example: Cover Image Title
+        attachment:
+          type: string
+          nullable: true
+          description: 'Base64-encoded image file data. Supported formats: JPEG, PNG,
+            GIF, WebP. Example: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="'
+        credits:
+          type: string
+          nullable: true
+          description: Attribution/credits for the image. Optional.
+          example: Photo by John Doe
+        _destroy:
+          type: boolean
+          nullable: true
+          default: false
+          description: 'If true, deletes the current projekt page image. Default:
+            false.'
+          example: false
+    ProjektImageUpdateParams:
+      type: object
+      description: 'Body for updating projekt page image. Provide attachment/title/credits
+        to create/update, or _destroy=true to remove. Defaults: _destroy=false.'
+      properties:
+        image:
+          "$ref": "#/components/schemas/ImageAttributesApi"
+      required:
+      - image
+    ProjektCreateParams:
+      type: object
+      properties:
+        projekt:
+          type: object
+          properties:
+            name:
+              type: string
+            parent_id:
+              type: integer
+              nullable: true
+            total_duration_start:
+              type: string
+              format: date_time
+              nullable: true
+            total_duration_end:
+              type: string
+              format: date_time
+              nullable: true
+            show_start_date_in_frontend:
+              type: boolean
+            show_end_date_in_frontend:
+              type: boolean
+            geozone_affiliated:
+              type: boolean
+            order_number:
+              type: integer
+              nullable: true
+            tag_list:
+              type: string
+              nullable: true
+            related_sdg_list:
+              type: string
+              nullable: true
+            landing_page_ids:
+              type: array
+              items:
+                type: integer
+            geozone_affiliation_ids:
+              type: array
+              items:
+                type: integer
+            sdg_goal_ids:
+              type: array
+              items:
+                type: integer
+            individual_group_value_ids:
+              type: array
+              items:
+                type: integer
+            map_location_attributes:
+              type: object
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                zoom:
+                  type: integer
+            projekt_manager_assignments_attributes:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    nullable: true
+                  projekt_manager_id:
+                    type: integer
+                  projekt_id:
+                    type: integer
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+          required:
+          - name
+      required:
+      - projekt
+    ProjektUpdateParams:
+      type: object
+      properties:
+        projekt:
+          type: object
+          properties:
+            name:
+              type: string
+            parent_id:
+              type: integer
+              nullable: true
+            total_duration_start:
+              type: string
+              format: date_time
+              nullable: true
+            total_duration_end:
+              type: string
+              format: date_time
+              nullable: true
+            show_start_date_in_frontend:
+              type: boolean
+            show_end_date_in_frontend:
+              type: boolean
+            geozone_affiliated:
+              type: boolean
+            order_number:
+              type: integer
+              nullable: true
+            tag_list:
+              type: string
+              nullable: true
+            related_sdg_list:
+              type: string
+              nullable: true
+            landing_page_ids:
+              type: array
+              items:
+                type: integer
+            geozone_affiliation_ids:
+              type: array
+              items:
+                type: integer
+            sdg_goal_ids:
+              type: array
+              items:
+                type: integer
+            individual_group_value_ids:
+              type: array
+              items:
+                type: integer
+            map_location_attributes:
+              type: object
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                zoom:
+                  type: integer
+            projekt_manager_assignments_attributes:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    nullable: true
+                  projekt_manager_id:
+                    type: integer
+                  projekt_id:
+                    type: integer
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+      required:
+      - projekt
     ProjektPhase:
       type: object
       properties:
@@ -1542,3 +2343,165 @@ components:
       required:
       - id
       - key
+    Poll:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Community Vote
+        summary:
+          type: string
+          nullable: true
+          example: Summary
+        description:
+          type: string
+          nullable: true
+          example: Description
+        starts_at:
+          type: string
+          format: date_time
+          nullable: true
+          example: '2025-01-01T00:00:00Z'
+        ends_at:
+          type: string
+          format: date_time
+          nullable: true
+          example: '2025-01-31T23:59:59Z'
+        geozone_restricted:
+          type: boolean
+          nullable: true
+          example: false
+        budget_id:
+          type: integer
+          nullable: true
+          example: 1
+        created_at:
+          type: string
+          format: date_time
+          example: '2025-01-01T00:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          example: '2025-01-01T00:00:00Z'
+        geozones:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+        budget:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        questions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              title:
+                type: string
+      required:
+      - id
+      - name
+      - created_at
+      - updated_at
+    ProjektEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Town Hall
+        description:
+          type: string
+          nullable: true
+          example: Discussion on city planning
+        datetime:
+          type: string
+          format: date_time
+          nullable: true
+          example: '2025-02-01T18:00:00Z'
+        end_datetime:
+          type: string
+          format: date_time
+          nullable: true
+          example: '2025-02-01T20:00:00Z'
+        location:
+          type: string
+          nullable: true
+          example: City Hall
+        registration_url:
+          type: string
+          nullable: true
+          example: https://example.com/register
+        projekt_phase_id:
+          type: integer
+          example: 10
+        created_at:
+          type: string
+          format: date_time
+          example: '2025-01-01T00:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          example: '2025-01-01T00:00:00Z'
+      required:
+      - id
+      - title
+      - created_at
+      - updated_at
+    ProjektNotification:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Update
+        body:
+          type: string
+          nullable: true
+          example: We have news
+        link_text:
+          type: string
+          nullable: true
+          example: Read more
+        link_url:
+          type: string
+          nullable: true
+          example: https://example.com
+        segment_recipient:
+          type: string
+          nullable: true
+          example: all
+        projekt_phase_id:
+          type: integer
+          example: 10
+        created_at:
+          type: string
+          format: date_time
+          example: '2025-01-01T00:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          example: '2025-01-01T00:00:00Z'
+      required:
+      - id
+      - title
+      - created_at
+      - updated_at

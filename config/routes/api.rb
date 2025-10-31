@@ -2,6 +2,8 @@
     resources :projekts, shallow: true do
       member do
         patch :update_setting
+        patch :update_page
+        patch :update_image
       end
 
       resources :projekt_phases do

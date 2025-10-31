@@ -31,7 +31,7 @@ class ProjektSerializer < BaseSerializer
       )
 
     projekt_data.merge!(
-      site_customization_page: {
+      page: {
         title: projekt&.page&.title,
         slug: projekt&.page&.slug
       }

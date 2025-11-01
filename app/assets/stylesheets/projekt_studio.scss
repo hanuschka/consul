@@ -121,6 +121,10 @@ $small-tablet-viewport-start: 750px;
   }
 }
 
+.projekt-frame-icon-button-wrapper {
+  border-radius: 50%;
+}
+
 .projekt-frame-icon-button {
   display: flex !important;
   justify-content: center;
@@ -446,7 +450,7 @@ body.custom-new-design {
     }
   }
 
-  &.-loading, &.-simple-edit-mode, &.-ai-edit-mode {
+  &.-loading, &.-simple-edit-mode, &.-ai-edit-mode, &.-code-edit-mode {
     .projekt-content-block-edit {
       border-bottom: none;
       padding-bottom: 9px;
@@ -526,6 +530,29 @@ body.custom-new-design {
 
     .js-ai-edit-mode-controlls {
       display: flex;
+    }
+  }
+
+  &.-code-edit-mode {
+    .projekt-content-block--overlay {
+      background-color: #24a1d114;
+      outline: 1px solid #d6ecff;
+    }
+
+    .projekt-content-block-edit-standard-controlls {
+      display: none;
+    }
+
+    .js-code-edit-mode-controlls {
+      display: flex;
+    }
+
+    .projekt-content-block {
+      display: none;
+    }
+
+    .projekt-content-block--move-button {
+      display: none;
     }
   }
 }
@@ -1043,6 +1070,16 @@ body.-ai-functions-locked {
   }
 }
 
+body:not(.-ai-enabled) {
+  .js-content-block-enter-ai-edit-mode,
+  .js-content-block-enter-ai-edit-mode-from-simple {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(1);
+  }
+}
+
 .projekt-studio--peview-button {
   position: fixed;
   bottom: 12px;
@@ -1543,10 +1580,17 @@ ul.grid-x, ul.row {
   border-radius: 10px;
   width: 500px;
 
+  .content-block-ai-edit-popup-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
   .content-block-ai-edit-popup-content {
     h3 {
       margin-top: 0;
-      margin-bottom: 15px;
+      margin-bottom: 0;
       font-size: 18px;
       font-weight: bold;
     }
@@ -1586,6 +1630,48 @@ ul.grid-x, ul.row {
   gap: 10px;
 }
 
+// Code Edit Mode Controls
+.js-code-edit-mode-controlls {
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+
+// Code Editor Container
+.code-editor-container {
+  width: 100%;
+  position: relative;
+  margin-top: 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #fff;
+
+  .ace_editor {
+    min-height: 300px;
+  }
+
+  .ace_info {
+    background-image: none;
+  }
+
+  .ace_tooltip {
+    padding: 0;
+    border: 0;
+    box-shadow: 0;
+
+    span:has(.ace_info) {
+      display: none !important;
+      visibility: hidden;
+    }
+  }
+
+  .ace_tooltip:has(.ace_error) {
+    padding: 3px 4px;
+    border: 1px solid gray;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
 
 .projekt-content-block--toolsets {
   margin-top: 15px;

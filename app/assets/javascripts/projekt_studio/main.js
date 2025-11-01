@@ -29,6 +29,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize()
       ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize()
       ProjektStudio.ContentBlock.AiEditMode.initialize()
+      ProjektStudio.ContentBlock.CodeEditMode.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()

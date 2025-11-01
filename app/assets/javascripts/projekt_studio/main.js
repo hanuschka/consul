@@ -2,6 +2,7 @@ window.ProjektStudio = {
   modules: {},
   templateFunctions: {},
   utils: {},
+  ContentBlock: {},
 
   initialized: false,
 
@@ -12,13 +13,22 @@ window.ProjektStudio = {
       ProjektStudio.Sidebar.initialize()
       ProjektStudio.PhasesTabs.initialize()
       ProjektStudio.Banner.initialize()
-      ProjektStudio.ContentBlocks.initialize()
-      ProjektStudio.ContentBlockSimpleEdit.initialize()
-      ProjektStudio.ContentBlockSimpleEdit.LinkEdit.initialize()
-      ProjektStudio.ContentBlockSimpleEdit.ListEdit.initialize()
-      ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog.initialize()
-      ProjektStudio.ContentBlockSimpleEdit.ImageEdit.initialize()
-      ProjektStudio.ContentBlockAiEdit.initialize()
+
+      // Initialize ContentBlock submodules
+      ProjektStudio.ContentBlockTemplateSelector.initialize()
+      ProjektStudio.ContentBlock.Main.initialize()
+      ProjektStudio.ContentBlock.DragDrop.initialize()
+      ProjektStudio.ContentBlock.Crud.initialize()
+      ProjektStudio.ContentBlock.VersionControl.initialize()
+      ProjektStudio.ContentBlock.CKEditorMode.initialize()
+      ProjektStudio.ContentBlock.DtAiEditMode.initialize()
+
+      ProjektStudio.ContentBlock.SimpleEditMode.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize()
+      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize()
+      ProjektStudio.ContentBlock.AiEditMode.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()

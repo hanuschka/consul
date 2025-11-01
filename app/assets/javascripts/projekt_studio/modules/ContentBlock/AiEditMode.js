@@ -1,7 +1,8 @@
-ProjektStudio.ContentBlockAiEdit = {
+ProjektStudio.ContentBlock.AiEditMode = {
   initialized: false,
   templateSelector: '.js-ai-edit-popup-template',
   activeAjaxRequests: {},
+  cancelButtonTimeouts: {},
 
   initialize() {
     this.initEventListeners()
@@ -15,7 +16,7 @@ ProjektStudio.ContentBlockAiEdit = {
     $document.on("click", ".js-content-block-ai-edit-cancel", this.cancelAiEditMode.bind(this));
     $document.on("click", ".js-content-block-enter-simple-edit-mode-from-ai", this.switchToSimpleEditMode.bind(this));
 
-    $document.on("click", ".js-content-block-ai-edit--submit-prompt", this.submitPrompt.bind(this));
+    $document.on("click", ".js-content-block-ai-edit--submit-prompt", this.handleSubmitButtonClick.bind(this));
   },
 
   getTemplate() {
@@ -28,9 +29,9 @@ ProjektStudio.ContentBlockAiEdit = {
   },
 
   enterAiEditMode(e) {
-    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlocks.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
-    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(contentBlock, contentBlockWrapper);
+    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(contentBlock, contentBlockWrapper);
 
     this.switchToAiEditMode(contentBlockWrapper);
   },
@@ -41,11 +42,11 @@ ProjektStudio.ContentBlockAiEdit = {
   },
 
   switchToSimpleEditMode(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlocks.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
     this.exitAiEditMode(contentBlockWrapper);
 
-    ProjektStudio.ContentBlockSimpleEdit.switchToSimpleEditMode(contentBlockWrapper);
+    ProjektStudio.ContentBlock.SimpleEditMode.switchToSimpleEditMode(contentBlockWrapper);
   },
 
   getPopup(contentBlockWrapper) {
@@ -93,13 +94,6 @@ ProjektStudio.ContentBlockAiEdit = {
 
   setupTextareaListeners(popup, textarea) {
     const submitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
-    if (!submitButton) return;
-
-    const throttledValidation = ProjektStudio.utils.throttle(() => {
-      this.validateTextareaInput(textarea, submitButton);
-    }, 100);
-
-    textarea.addEventListener('input', throttledValidation);
 
     textarea.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -111,17 +105,8 @@ ProjektStudio.ContentBlockAiEdit = {
     });
   },
 
-  validateTextareaInput(textarea, submitButton) {
-    const text = textarea.value.trim();
-    const isValid = text.length >= 2;
-
-    submitButton.disabled = !isValid;
-  },
-
   removePopup(contentBlockWrapper) {
-    console.log("removePopup", contentBlockWrapper)
     const popup = this.getPopup(contentBlockWrapper);
-    console.log({popup})
     if (popup) {
       popup.remove();
     }
@@ -129,10 +114,15 @@ ProjektStudio.ContentBlockAiEdit = {
 
   exitAiEditMode(contentBlockWrapper) {
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
-    
+
     if (this.activeAjaxRequests[contentBlockId]) {
       this.activeAjaxRequests[contentBlockId].abort();
       delete this.activeAjaxRequests[contentBlockId];
+    }
+
+    if (this.cancelButtonTimeouts[contentBlockId]) {
+      clearTimeout(this.cancelButtonTimeouts[contentBlockId]);
+      delete this.cancelButtonTimeouts[contentBlockId];
     }
 
     this.removePopup(contentBlockWrapper);
@@ -144,10 +134,10 @@ ProjektStudio.ContentBlockAiEdit = {
 
   cancelAiEditMode(e) {
     console.log("cancelAiEditMode")
-    const { contentBlockWrapper } = ProjektStudio.ContentBlocks.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
     if (contentBlockWrapper) {
-      const contentBlock = ProjektStudio.ContentBlocks.getContentBlock(contentBlockWrapper);
+      const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
       if (contentBlock && contentBlock.dataset.previousContentBlockHtml) {
         contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
         $(contentBlock).foundation();
@@ -159,12 +149,12 @@ ProjektStudio.ContentBlockAiEdit = {
   },
 
   saveContentBlockAndExit(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlocks.getContentBlockAndWrapper(e.target);
-    const contentBlock = ProjektStudio.ContentBlocks.getContentBlock(contentBlockWrapper);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
     const content = contentBlock.innerHTML.trim();
 
-    ProjektStudio.ContentBlocks.updateContentBlock(
+    ProjektStudio.ContentBlock.Crud.updateContentBlock(
       contentBlock,
       contentBlockId,
       content
@@ -173,20 +163,61 @@ ProjektStudio.ContentBlockAiEdit = {
     this.exitAiEditMode(contentBlockWrapper);
   },
 
-  submitPrompt(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlocks.getContentBlockAndWrapper(e.target);
-    const popup = this.getPopup(contentBlockWrapper);
-    if (!popup) return;
+  handleSubmitButtonClick(e) {
+    const button = e.target.closest('.js-content-block-ai-edit--submit-prompt');
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
+    if (button.classList.contains('-cancel-state')) {
+      this.cancelAjaxRequest(contentBlockWrapper, button);
+    } else {
+      this.submitPrompt(e);
+    }
+  },
+
+  cancelAjaxRequest(contentBlockWrapper, button) {
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+    const popup = this.getPopup(contentBlockWrapper);
+    const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
+
+    if (this.activeAjaxRequests[contentBlockId]) {
+      this.activeAjaxRequests[contentBlockId].abort();
+      delete this.activeAjaxRequests[contentBlockId];
+    }
+
+    if (this.cancelButtonTimeouts[contentBlockId]) {
+      clearTimeout(this.cancelButtonTimeouts[contentBlockId]);
+      delete this.cancelButtonTimeouts[contentBlockId];
+    }
+
+    button.classList.remove('-cancel-state');
+    button.disabled = false;
+    button.innerHTML = '<i class="fas fa-magic"></i> Absenden';
+
+    instructionsTextarea.disabled = false;
+
+    $('.ai-edit-mode--loader').hide();
+  },
+
+  submitPrompt(e) {
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const popup = this.getPopup(contentBlockWrapper);
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const instructions = instructionsTextarea.value.trim();
 
-    instructionsTextarea.disabled = true;
+    if (!instructionsTextarea.reportValidity()) return
 
-    const contentBlock = ProjektStudio.ContentBlocks.getContentBlock(contentBlockWrapper);
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     this.setLoadingState(contentBlockWrapper, popup, true);
+
+    // Schedule button change to cancel state after 700ms
+    const popupSubmitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
+    this.cancelButtonTimeouts[contentBlockId] = setTimeout(() => {
+      popupSubmitButton.disabled = false;
+      popupSubmitButton.classList.add('-cancel-state');
+      popupSubmitButton.innerHTML = '<i class="fas fa-times"></i> Abbrechen';
+    }, 550);
 
     const ajaxRequest = $.ajax({
       url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`,
@@ -216,6 +247,13 @@ ProjektStudio.ContentBlockAiEdit = {
     })
     .always(() => {
       delete this.activeAjaxRequests[contentBlockId];
+
+      // Clear the timeout if it hasn't fired yet
+      if (this.cancelButtonTimeouts[contentBlockId]) {
+        clearTimeout(this.cancelButtonTimeouts[contentBlockId]);
+        delete this.cancelButtonTimeouts[contentBlockId];
+      }
+
       this.setLoadingState(contentBlockWrapper, popup, false);
 
       instructionsTextarea.disabled = false
@@ -253,13 +291,13 @@ ProjektStudio.ContentBlockAiEdit = {
     const popupSubmitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
     const popupLoader = popup.querySelector('.ai-edit-mode--loader');
     const toolbarSaveButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-ai-edit-save');
-    const toolbarCancelButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-ai-edit-cancel');
     const toolbarSwitchToSimpleButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-enter-simple-edit-mode-from-ai');
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const toolbarLoader = contentBlockWrapper.querySelector('.ai-edit-mode--loader');
 
     popupSubmitButton.disabled = isLoading;
     if (!isLoading) {
+      popupSubmitButton.classList.remove('-cancel-state');
       popupSubmitButton.innerHTML = '<i class="fas fa-magic"></i> Absenden';
     }
     popupLoader.style.display = isLoading ? 'block' : 'none';

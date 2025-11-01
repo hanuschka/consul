@@ -70,6 +70,9 @@ module ProjektContentBlocksAdminActions
       <<~TEXT
         Update the content block html using provided instructions.
         Instructions: '#{params[:instructions]}'.
+        When requested to add images use "https://placehold.co" for src.
+        Dont replace existing images.
+        For instance: "https://placehold.co/275x275".
 
         Current content block html content:
         #{params[:content_block_html]}

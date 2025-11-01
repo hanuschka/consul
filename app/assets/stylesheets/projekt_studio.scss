@@ -76,6 +76,15 @@ $small-tablet-viewport-start: 750px;
     }
   }
 
+  &.-cancel-state {
+    color: #004a83;
+    background: #d6e7f6;
+
+    &:hover {
+      background-color: #c3daee;
+    }
+  }
+
   &:disabled {
     color: #939393;
     cursor: not-allowed;
@@ -1210,8 +1219,8 @@ body.-ai-functions-locked {
 
 .content-block-image-control-buttons {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 7px;
+  left: 8px;
   display: flex;
   gap: 7px;
   z-index: 3;
@@ -1260,8 +1269,8 @@ body.-ai-functions-locked {
 
 .content-block-image-height-control {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 5px;
+  left: 7px;
   background: #f5f5f5;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -1281,7 +1290,7 @@ body.-ai-functions-locked {
     padding: 4px 8px;
     border-radius: 4px;
     transition: background-color 0.2s ease;
-    height: 30px;
+    height: 100%;
     width: 35px;
 
     &:hover {
@@ -1294,8 +1303,8 @@ body.-ai-functions-locked {
   }
 
   input[type="number"] {
-    width: 55px;
-    height: 30px;
+    width: 50px;
+    height: 100%;
     padding: 4px 6px;
     border: none;
     border-radius: 4px;
@@ -1527,7 +1536,8 @@ ul.grid-x, ul.row {
   background: white;
   border: 1px solid #ccc;
   padding: 15px;
-  box-shadow: 3px 3px 12px 4px rgba(0,0,0,0.2);
+  // box-shadow: 3px 3px 12px 4px rgba(0,0,0,0.2);
+  box-shadow: 3px 3px 10px 6px rgba(0,0,0,0.07);
   display: none;
   z-index: 100;
   border-radius: 10px;
@@ -1542,23 +1552,22 @@ ul.grid-x, ul.row {
     }
 
     .ai-edit-form {
-      margin-bottom: 20px;
-
-      .content-block-ai-edit-popup-label {
-        font-size: 16px;
-        font-weight: bold;
-        display: block;
-        margin-bottom: 8px;
-      }
+      margin-bottom: 3px;
 
       .ai-instructions-textarea {
         width: 100%;
         min-height: 100px;
         padding: 8px;
         border: 1px solid #ccc;
-        border-radius: 4px;
+        border-radius: 8px;
         font-family: inherit;
         font-size: 14px;
+
+        &:disabled {
+          border-color: transparent;
+          background-color: #f1f8fc;
+          box-shadow: none;
+        }
       }
     }
 
@@ -1577,3 +1586,7 @@ ul.grid-x, ul.row {
   gap: 10px;
 }
 
+
+.projekt-content-block--toolsets {
+  margin-top: 15px;
+}

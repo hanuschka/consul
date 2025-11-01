@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
   savedSelection: null,
   currentContentBlockWrapper: null,
   savedLinkIdToEdit: null,
@@ -10,7 +10,6 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {
@@ -123,7 +122,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       ? range.commonAncestorContainer
       : range.commonAncestorContainer.parentNode;
 
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(container)
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(container)
     if (!contentBlockWrapper) return
 
     const button = contentBlockWrapper.querySelector(".js-content-block-add-link")
@@ -164,7 +163,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
 
     this.savedLinkIdToEdit = linkId
 
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(link);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(link);
     this.currentContentBlockWrapper = contentBlockWrapper;
 
     const linkWrapper = link.closest(".js-content-block-link-wrapper")
@@ -185,7 +184,7 @@ ProjektStudio.ContentBlockSimpleEdit.LinkEdit = {
       ? range.commonAncestorContainer
       : range.commonAncestorContainer.parentNode;
 
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(container);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(container);
     if (!contentBlockWrapper) return;
 
     const surroundingContentBlock = container.closest(".js-projekt-content-block");

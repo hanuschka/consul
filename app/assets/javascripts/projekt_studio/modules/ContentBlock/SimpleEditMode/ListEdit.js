@@ -1,10 +1,9 @@
-ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
   listControlClass: "js-content-block--list-control",
   sortableInstances: new Map(),
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {

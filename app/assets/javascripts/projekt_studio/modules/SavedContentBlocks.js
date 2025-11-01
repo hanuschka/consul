@@ -234,7 +234,7 @@ ProjektStudio.SavedContentBlocks = {
     const editorName = container.dataset.editorName
 
     const surroundingContentBlockId =
-        ProjektStudio.ContentBlocks.addContentBlockAfter
+        ProjektStudio.ContentBlock.Crud.addContentBlockAfter
         .dataset
         .contentBlockId
 

@@ -51,28 +51,32 @@
   <template class="js-ai-edit-popup-template">
     <div class="content-block-ai-edit-popup js-content-block-ai-edit-popup">
       <div class="content-block-ai-edit-popup-content">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <h3 style="margin: 0;">Mit KI bearbeiten</h3>
-          <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
-        </div>
-        <div class="ai-edit-form">
-          <label class="content-block-ai-edit-popup-label">Anweisungen:</label>
-          <textarea
-            name="instructions"
-            rows="4"
-            placeholder="Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblocks ein..."
-            class="ai-instructions-textarea js-ai-instructions-textarea"
-          ></textarea>
-          <div style="color: #999; font-size: 12px; margin-top: 5px;">
-            Enter zum Absenden, Umschalt+Enter für neue Zeile
+
+        <form action="">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h3>Mit KI bearbeiten</h3>
+            <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
           </div>
-        </div>
-        <div class="ai-edit-actions d-flex justify-between">
-          <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt" disabled>
-            <i class="fas fa-magic"></i>
-            Absenden
-          </button>
-        </div>
+          <div class="ai-edit-form">
+            <textarea
+              name="instructions"
+              rows="4"
+              required
+              placeholder="Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblocks ein..."
+              class="ai-instructions-textarea js-ai-instructions-textarea"
+              ></textarea>
+            <div style="color: #999; font-size: 12px; margin-top: 5px;">
+              Enter zum Absenden, Umschalt+Enter für neue Zeile
+            </div>
+          </div>
+          <div class="ai-edit-actions d-flex justify-between">
+            <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
+              <i class="fas fa-magic"></i>
+              Absenden
+            </button>
+          </div>
+
+        </form>
       </div>
     </div>
   </template>
@@ -193,8 +197,4 @@
       </div>
     <% end %>
   </main>
-
-  <script>
-    App.Projekts.toggleDefaultProjekts();
-  </script>
 <% end %>

@@ -76,6 +76,15 @@ $small-tablet-viewport-start: 750px;
     }
   }
 
+  &.-cancel-state {
+    color: #004a83;
+    background: #d6e7f6;
+
+    &:hover {
+      background-color: #c3daee;
+    }
+  }
+
   &:disabled {
     color: #939393;
     cursor: not-allowed;
@@ -110,6 +119,10 @@ $small-tablet-viewport-start: 750px;
   i {
     margin-right: 5px;
   }
+}
+
+.projekt-frame-icon-button-wrapper {
+  border-radius: 50%;
 }
 
 .projekt-frame-icon-button {
@@ -437,7 +450,7 @@ body.custom-new-design {
     }
   }
 
-  &.-loading, &.-simple-edit-mode, &.-ai-edit-mode {
+  &.-loading, &.-simple-edit-mode, &.-ai-edit-mode, &.-code-edit-mode {
     .projekt-content-block-edit {
       border-bottom: none;
       padding-bottom: 9px;
@@ -519,6 +532,29 @@ body.custom-new-design {
       display: flex;
     }
   }
+
+  &.-code-edit-mode {
+    .projekt-content-block--overlay {
+      background-color: #24a1d114;
+      outline: 1px solid #d6ecff;
+    }
+
+    .projekt-content-block-edit-standard-controlls {
+      display: none;
+    }
+
+    .js-code-edit-mode-controlls {
+      display: flex;
+    }
+
+    .projekt-content-block {
+      display: none;
+    }
+
+    .projekt-content-block--move-button {
+      display: none;
+    }
+  }
 }
 
 .projekt-content-block--overlay {
@@ -548,22 +584,33 @@ body.custom-new-design {
 
 .projekt-content-block-templates-selector-wrapper {
   max-width: 1030px;
+  top: 3vh !important;
+}
+
+.modern-modal {
   width: 100%;
   padding: 0;
   border-radius: 12px;
-  top: 3vh !important;
+  width: 100%;
+  padding: 0;
+  border-radius: 12px;
+  background-color: #f8f8f8;
 
   h3 {
     font-size: 25px;
   }
 }
 
+.modern-modal-content {
+  padding: 20px 25px;
+  padding-bottom: 1px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 .projekt-content-block-templates-selector {
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
   padding: 10px 15px;
   padding-bottom: 1px;
-  background-color: #f8f8f8;
   width: 100%;
   margin-bottom: 20px;
   padding-top: 20px;
@@ -1023,6 +1070,16 @@ body.-ai-functions-locked {
   }
 }
 
+body:not(.-ai-enabled) {
+  .js-content-block-enter-ai-edit-mode,
+  .js-content-block-enter-ai-edit-mode-from-simple {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(1);
+  }
+}
+
 .projekt-studio--peview-button {
   position: fixed;
   bottom: 12px;
@@ -1199,8 +1256,8 @@ body.-ai-functions-locked {
 
 .content-block-image-control-buttons {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 7px;
+  left: 8px;
   display: flex;
   gap: 7px;
   z-index: 3;
@@ -1249,8 +1306,8 @@ body.-ai-functions-locked {
 
 .content-block-image-height-control {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 5px;
+  left: 7px;
   background: #f5f5f5;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -1270,7 +1327,7 @@ body.-ai-functions-locked {
     padding: 4px 8px;
     border-radius: 4px;
     transition: background-color 0.2s ease;
-    height: 30px;
+    height: 100%;
     width: 35px;
 
     &:hover {
@@ -1283,8 +1340,8 @@ body.-ai-functions-locked {
   }
 
   input[type="number"] {
-    width: 55px;
-    height: 30px;
+    width: 50px;
+    height: 100%;
     padding: 4px 6px;
     border: none;
     border-radius: 4px;
@@ -1508,3 +1565,114 @@ ul.grid-x, ul.row {
   list-style: none !important;
 }
 
+// AI Edit Popup Styles (similar to link popup)
+.content-block-ai-edit-popup {
+  position: absolute;
+  // bottom: -220px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 15px;
+  // box-shadow: 3px 3px 12px 4px rgba(0,0,0,0.2);
+  box-shadow: 3px 3px 10px 6px rgba(0,0,0,0.07);
+  display: none;
+  z-index: 100;
+  border-radius: 10px;
+  width: 500px;
+
+  .content-block-ai-edit-popup-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .content-block-ai-edit-popup-content {
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .ai-edit-form {
+      margin-bottom: 3px;
+
+      .ai-instructions-textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+
+        &:disabled {
+          border-color: transparent;
+          background-color: #f1f8fc;
+          box-shadow: none;
+        }
+      }
+    }
+
+    .ai-edit-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// AI Edit Mode Controls
+.js-ai-edit-mode-controlls {
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+
+// Code Edit Mode Controls
+.js-code-edit-mode-controlls {
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+
+// Code Editor Container
+.code-editor-container {
+  width: 100%;
+  position: relative;
+  margin-top: 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #fff;
+
+  .ace_editor {
+    min-height: 300px;
+  }
+
+  .ace_info {
+    background-image: none;
+  }
+
+  .ace_tooltip {
+    padding: 0;
+    border: 0;
+    box-shadow: 0;
+
+    span:has(.ace_info) {
+      display: none !important;
+      visibility: hidden;
+    }
+  }
+
+  .ace_tooltip:has(.ace_error) {
+    padding: 3px 4px;
+    border: 1px solid gray;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.projekt-content-block--toolsets {
+  margin-top: 15px;
+}

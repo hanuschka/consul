@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
+ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   state: {
     type: 'picture',
     page: 1,
@@ -377,8 +377,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     this.incrementUploadingCount();
 
     if (this.contentBlockId && this.contentBlockWrapper) {
-      ProjektStudio.ContentBlockSimpleEdit.ImageEdit.incrementImageLoadingCount(this.contentBlockId);
-      ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(this.contentBlockWrapper, true);
+      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.incrementImageLoadingCount(this.contentBlockId);
+      ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, true);
     }
 
     fetch('/ckeditor/pictures', {
@@ -406,11 +406,11 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
         this.decrementUploadingCount();
 
         if (this.contentBlockId && this.contentBlockWrapper) {
-          ProjektStudio.ContentBlockSimpleEdit.ImageEdit.decrementImageLoadingCount(this.contentBlockId);
+          ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.decrementImageLoadingCount(this.contentBlockId);
 
-          const loadingState = ProjektStudio.ContentBlockSimpleEdit.ImageEdit.contentBlockImageLoadingState;
+          const loadingState = ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.contentBlockImageLoadingState;
           if (loadingState[this.contentBlockId] <= 0) {
-            ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(this.contentBlockWrapper, false);
+            ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, false);
           }
         }
       });

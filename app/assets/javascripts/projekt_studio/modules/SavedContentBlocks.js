@@ -218,7 +218,8 @@ ProjektStudio.SavedContentBlocks = {
       });
     }
 
-    editor.setValue(currentHTML, currentHTML.length)
+    const formattedHTML = ProjektStudio.utils.formatHTML(currentHTML);
+    editor.setValue(formattedHTML, -1); // -1 moves cursor to start
     editor.focus()
 
     return editor
@@ -234,7 +235,7 @@ ProjektStudio.SavedContentBlocks = {
     const editorName = container.dataset.editorName
 
     const surroundingContentBlockId =
-        ProjektStudio.ContentBlocks.addContentBlockAfter
+        ProjektStudio.ContentBlock.Crud.addContentBlockAfter
         .dataset
         .contentBlockId
 

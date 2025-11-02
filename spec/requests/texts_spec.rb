@@ -2,23 +2,23 @@
 
 require 'swagger_helper'
 
-RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
+RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/legislation_processes' do
+  path '/api/projekt_phases/{projekt_phase_id}/texts' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (LegislationPhase)'
 
-    post 'Create a legislation process' do
-      tags 'Legislation Processes'
+    post 'Create a text' do
+      tags 'Texts'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :legislation_process, in: :body, description: 'Legislation process creation payload', schema: {
+      parameter name: :text, in: :body, description: 'Text creation payload', schema: {
         type: :object,
         properties: {
-          legislation_process: {
+          text: {
             type: :object,
             properties: {
               start_date: { type: :string, format: :date, nullable: true },
@@ -49,24 +49,24 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             }
           }
         },
-        required: ['legislation_process']
+        required: ['text']
       }
 
-      response '201', 'legislation process created' do
+      response '201', 'text created' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
         let(:projekt_phase_id) { legislation_phase.id }
-        let(:legislation_process) do
+        let(:text) do
           {
-            legislation_process: {
+            text: {
               start_date: '2025-01-01',
               end_date: '2025-12-31',
               debate_start_date: '2025-02-01',
               debate_end_date: '2025-02-28',
               published: true,
-              title: 'Legislation Process',
+              title: 'Text',
               translations_attributes: [
-                { locale: 'en', title: 'Legislation Process', summary: 'Summary', description: 'Description' }
+                { locale: 'en', title: 'Text', summary: 'Summary', description: 'Description' }
               ]
             }
           }
@@ -77,9 +77,9 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
                  data: {
                    type: :object,
                    properties: {
-                     legislation_process: { type: :object }
+                     text: { type: :object }
                    },
-                   required: ['legislation_process']
+                   required: ['text']
                  }
                },
                required: ['data']
@@ -91,9 +91,9 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
         let(:projekt_phase_id) { legislation_phase.id }
-        let(:legislation_process) do
+        let(:text) do
           {
-            legislation_process: {
+            text: {
               start_date: 'invalid_date'
             }
           }
@@ -121,36 +121,36 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
     end
   end
 
-  path '/api/legislation_processes/{id}' do
-    parameter name: :id, in: :path, type: :integer, description: 'Legislation Process ID'
+  path '/api/texts/{id}' do
+    parameter name: :id, in: :path, type: :integer, description: 'Text ID'
 
-    get 'Retrieve a legislation process' do
-      tags 'Legislation Processes'
+    get 'Retrieve a text' do
+      tags 'Texts'
       produces 'application/json'
       security [bearer_auth: []]
 
-      response '200', 'legislation process found' do
+      response '200', 'text found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
-        let(:legislation_process) do
+        let(:text_record) do
           Legislation::Process.create!(
             projekt_phase: legislation_phase,
             start_date: Date.today,
             end_date: Date.today + 1.year,
             published: true,
-            title: 'Test Legislation Process'
+            title: 'Test Text'
           )
         end
-        let(:id) { legislation_process.id }
+        let(:id) { text_record.id }
 
         schema type: :object,
                properties: {
                  data: {
                    type: :object,
                    properties: {
-                     legislation_process: { type: :object }
+                     text: { type: :object }
                    },
-                   required: ['legislation_process']
+                   required: ['text']
                  }
                },
                required: ['data']
@@ -158,23 +158,23 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
         run_test!
       end
 
-      response '404', 'legislation process not found' do
+      response '404', 'text not found' do
         let(:id) { 999999 }
 
         run_test!
       end
     end
 
-    patch 'Update a legislation process' do
-      tags 'Legislation Processes'
+    patch 'Update a text' do
+      tags 'Texts'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :legislation_process, in: :body, description: 'Attributes to update on the legislation process', schema: {
+      parameter name: :text, in: :body, description: 'Attributes to update on the text', schema: {
         type: :object,
         properties: {
-          legislation_process: {
+          text: {
             type: :object,
             properties: {
               start_date: { type: :string, format: :date, nullable: true },
@@ -205,25 +205,25 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             }
           }
         },
-        required: ['legislation_process']
+        required: ['text']
       }
 
-      response '200', 'legislation process updated' do
+      response '200', 'text updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
-        let(:test_legislation_process) do
+        let(:test_text) do
           Legislation::Process.create!(
             projekt_phase: legislation_phase,
             start_date: Date.today,
             end_date: Date.today + 1.year,
             published: false,
-            title: 'Original Legislation Process'
+            title: 'Original Text'
           )
         end
-        let(:id) { test_legislation_process.id }
-        let(:legislation_process) do
+        let(:id) { test_text.id }
+        let(:text) do
           {
-            legislation_process: {
+            text: {
               published: true
             }
           }
@@ -234,9 +234,9 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
                  data: {
                    type: :object,
                    properties: {
-                     legislation_process: { type: :object }
+                     text: { type: :object }
                    },
-                   required: ['legislation_process']
+                   required: ['text']
                  }
                },
                required: ['data']
@@ -244,11 +244,11 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
         run_test!
       end
 
-      response '404', 'legislation process not found' do
+      response '404', 'text not found' do
         let(:id) { 999999 }
-        let(:legislation_process) do
+        let(:text) do
           {
-            legislation_process: {
+            text: {
               published: true
             }
           }
@@ -260,7 +260,7 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
       response '422', 'invalid request' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
-        let(:test_legislation_process) do
+        let(:test_text) do
           Legislation::Process.create!(
             projekt_phase: legislation_phase,
             start_date: Date.today,
@@ -269,10 +269,10 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             title: 'Test Process'
           )
         end
-        let(:id) { test_legislation_process.id }
-        let(:legislation_process) do
+        let(:id) { test_text.id }
+        let(:text) do
           {
-            legislation_process: {
+            text: {
               start_date: 'invalid_date'
             }
           }
@@ -299,24 +299,24 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
       end
     end
 
-    delete 'Delete a legislation process' do
-      tags 'Legislation Processes'
+    delete 'Delete a text' do
+      tags 'Texts'
       produces 'application/json'
       security [bearer_auth: []]
 
-      response '200', 'legislation process deleted' do
+      response '200', 'text deleted' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
-        let(:legislation_process) do
+        let(:text_record) do
           Legislation::Process.create!(
             projekt_phase: legislation_phase,
             start_date: Date.today,
             end_date: Date.today + 1.year,
             published: true,
-            title: 'Legislation Process To Delete'
+            title: 'Text To Delete'
           )
         end
-        let(:id) { legislation_process.id }
+        let(:id) { text_record.id }
 
         schema type: :object,
                properties: {
@@ -327,16 +327,16 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
         run_test!
       end
 
-      response '404', 'legislation process not found' do
+      response '404', 'text not found' do
         let(:id) { 999999 }
 
         run_test!
       end
 
-      response '422', 'unable to delete legislation process' do
+      response '422', 'unable to delete text' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
-        let(:legislation_process) do
+        let(:text_record) do
           Legislation::Process.create!(
             projekt_phase: legislation_phase,
             start_date: Date.today,
@@ -344,7 +344,7 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
             published: true
           )
         end
-        let(:id) { legislation_process.id }
+        let(:id) { text_record.id }
 
         schema type: :object,
                properties: {
@@ -359,7 +359,7 @@ RSpec.describe 'Legislation Processes API', type: :request, openapi_spec: 'v1/sw
         before do
           allow_any_instance_of(Legislation::Process).to receive(:destroy).and_return(false)
           errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:messages).and_return({ base: ['Cannot delete legislation process'] })
+          allow(errors_mock).to receive(:messages).and_return({ base: ['Cannot delete text'] })
           allow_any_instance_of(Legislation::Process).to receive(:errors).and_return(errors_mock)
         end
 

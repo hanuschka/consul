@@ -24,7 +24,7 @@
       resources :projekt_events, only: [:create, :show, :update, :destroy]
       resources :projekt_arguments, only: [:create, :show, :update, :destroy]
       resources :projekt_notifications, only: [:create, :show, :update, :destroy]
-      resources :legislation_processes, only: [:create, :show, :update, :destroy]
+      resources :texts, only: [:create, :show, :update, :destroy]
       resources :projekt_point_of_interest_pins, only: [:create, :show, :update, :destroy]
       resources :projekt_point_of_interest_categories, only: [:create, :show, :update, :destroy]
       resources :comments, only: [:index, :create, :show]

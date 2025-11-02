@@ -1,11 +1,10 @@
-ProjektStudio.ContentBlockSimpleEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode = {
   initialized: false,
   listControlClass: "js-content-block--list-control",
   contentBlocksState: {},
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {
@@ -14,21 +13,29 @@ ProjektStudio.ContentBlockSimpleEdit = {
 
     $document.on("click", ".js-save-edit-text-projekt-content-block", this.saveContentBlockFromSimpleMode.bind(this));
     $document.on("click", ".js-projekt-content-block--text-edit-cancel", this.cancelSimpleEditMode.bind(this));
+    $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.enterAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     // $document.on("keydown", ".projekt-content-block", this.handleSaveContentBlockEditedTextShortcut.bind(this));
   },
 
   enterSimpleEditMode(e) {
-    const { contentBlockWrapper, contentBlock } = this.getContentBlockAndWrapper(e.target)
+    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target)
+
+    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(
+      contentBlock, contentBlockWrapper
+    )
+
+    this.switchToSimpleEditMode(contentBlockWrapper);
+  },
+
+  switchToSimpleEditMode(contentBlockWrapper) {
+    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
 
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-simple-edit-mode")
     const $accordionLinks = $(contentBlock).find('.accordion a.accordion-title');
     $accordionLinks.off("keydown")
 
-    ProjektStudio.ContentBlocks.storePreviousVersionOfContentBlock(
-      contentBlock, contentBlockWrapper
-    )
     this.toggleSimpleEditModeFor(contentBlock, true)
   },
 
@@ -39,7 +46,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
   },
 
   saveContentBlockFromSimpleMode(e) {
-    const { contentBlockWrapper, contentBlock} = this.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
     if (contentBlockWrapper.classList.contains("-simple-edit-mode")) {
       contentBlockWrapper.classList.remove("-simple-edit-mode")
@@ -50,7 +57,7 @@ ProjektStudio.ContentBlockSimpleEdit = {
             .trim()
             .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
 
-          ProjektStudio.ContentBlocks.updateContentBlock(
+          ProjektStudio.ContentBlock.Crud.updateContentBlock(
             contentBlock,
             contentBlockWrapper.dataset.contentBlockId,
             content,
@@ -61,12 +68,24 @@ ProjektStudio.ContentBlockSimpleEdit = {
   },
 
   cancelSimpleEditMode(e) {
-    const { contentBlockWrapper, contentBlock} = this.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
     contentBlockWrapper.classList.remove("-simple-edit-mode")
     contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
 
     this.toggleSimpleEditModeFor(contentBlock, false);
+  },
+
+  enterAiEditModeFromSimple(e) {
+    const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+
+    // if (!contentBlockWrapper.classList.contains("-simple-edit-mode")) {
+    //   return;
+    // }
+    contentBlockWrapper.classList.remove("-simple-edit-mode");
+    this.toggleSimpleEditModeFor(contentBlock, false);
+
+    ProjektStudio.ContentBlock.AiEditMode.switchToAiEditMode(contentBlockWrapper);
   },
 
   toggleSimpleEditModeFor(contentBlock, enabled, endCallback) {
@@ -75,13 +94,13 @@ ProjektStudio.ContentBlockSimpleEdit = {
     setTimeout(() => {
       this.toggleLinksInteration(contentBlock, enabled)
 
-      ProjektStudio.ContentBlockSimpleEdit.ListEdit.toggleListControls(
+      ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.toggleListControls(
         contentBlock, enabled
       )
-      ProjektStudio.ContentBlockSimpleEdit.ImageEdit.toggleImageControls(
+      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.toggleImageControls(
         contentBlock, enabled
       )
-      ProjektStudio.ContentBlockSimpleEdit.LinkEdit.toggleLinkControls(
+      ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
         contentBlock, enabled
       )
       // Should be always last item

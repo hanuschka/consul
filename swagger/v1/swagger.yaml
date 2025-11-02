@@ -4,23 +4,65 @@ info:
   title: API V1
   version: v1
 paths:
-  "/api/projekts/{projekt_id}/content_blocks":
-    parameters:
-    - name: projekt_id
-      in: path
-      description: Projekt ID
-      required: true
-      schema:
-        type: integer
+  "/api/budget_investments":
     get:
-      summary: List content blocks for a projekt
+      summary: List budget investments
       tags:
-      - Content Blocks
+      - Budget Investments
       security:
       - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: Items per page (default 100)
+        schema:
+          type: integer
+      - name: budget_id
+        in: query
+        required: false
+        description: Filter by budget ID
+        schema:
+          type: integer
+      - name: heading_id
+        in: query
+        required: false
+        description: Filter by heading ID
+        schema:
+          type: integer
+      - name: group_id
+        in: query
+        required: false
+        description: Filter by group ID
+        schema:
+          type: integer
+      - name: feasibility
+        in: query
+        required: false
+        description: Filter by feasibility (feasible, unfeasible, undecided)
+        schema:
+          type: string
+      - name: selected
+        in: query
+        required: false
+        description: Filter by selection status (true, false)
+        schema:
+          type: string
+      - name: order
+        in: query
+        required: false
+        description: Sort order (id, supports, confidence_score, price, ballots, newest)
+        schema:
+          type: string
       responses:
         '200':
-          description: content blocks found
+          description: budget investments found with public_data access
           content:
             application/json:
               schema:
@@ -29,24 +71,40 @@ paths:
                   data:
                     type: object
                     properties:
-                      content_blocks:
+                      budget_investments:
                         type: array
                         items:
-                          "$ref": "#/components/schemas/ContentBlock"
+                          type: object
                     required:
-                    - content_blocks
+                    - budget_investments
+                  pagination:
+                    type: object
                 required:
                 - data
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
     post:
-      summary: Reorder content blocks
+      summary: Create a budget investment
       tags:
-      - Content Blocks
+      - Budget Investments
       security:
       - bearer_auth: []
       parameters: []
       responses:
         '201':
-          description: content block created
+          description: budget investment created
           content:
             application/json:
               schema:
@@ -55,10 +113,10 @@ paths:
                   data:
                     type: object
                     properties:
-                      content_block:
-                        "$ref": "#/components/schemas/ContentBlock"
+                      budget_investment:
+                        type: object
                     required:
-                    - content_block
+                    - budget_investment
                 required:
                 - data
         '422':
@@ -75,48 +133,98 @@ paths:
                         type: array
                         items:
                           type: string
-        '200':
-          description: content blocks reordered successfully
+        '403':
+          description: forbidden - admin access required
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
-                required:
-                - message
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                ordered_ids:
-                  type: array
-                  items:
-                    type: integer
-                  description: Array of content block IDs in desired order
+                budget_investment:
+                  type: object
+                  properties:
+                    heading_id:
+                      type: integer
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    video_url:
+                      type: string
+                      nullable: true
+                    on_behalf_of:
+                      type: string
+                      nullable: true
+                    resource_terms:
+                      type: boolean
+                    price:
+                      type: number
+                      nullable: true
+                    map_location_attributes:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        zoom:
+                          type: integer
+                      required:
+                      - latitude
+                      - longitude
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                          description:
+                            type: string
+                    tag_list:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - heading_id
+                  - title
+                  - description
+                  - resource_terms
               required:
-              - ordered_ids
-        description: Array of content block IDs in desired order
-  "/api/content_blocks/{id}":
+              - budget_investment
+        description: Budget investment payload
+  "/api/budget_investments/{id}":
     parameters:
     - name: id
       in: path
-      description: Content Block ID
+      description: Budget Investment ID
       required: true
       schema:
         type: integer
     get:
-      summary: Retrieve a content block
+      summary: Retrieve a budget investment
       tags:
-      - Content Blocks
+      - Budget Investments
       security:
       - bearer_auth: []
       responses:
         '200':
-          description: content block found
+          description: budget investment found with public_data access
           content:
             application/json:
               schema:
@@ -125,24 +233,38 @@ paths:
                   data:
                     type: object
                     properties:
-                      content_block:
-                        "$ref": "#/components/schemas/ContentBlock"
+                      budget_investment:
+                        type: object
                     required:
-                    - content_block
+                    - budget_investment
                 required:
                 - data
         '404':
-          description: content block not found
+          description: budget investment not found
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
     patch:
-      summary: Update a content block
+      summary: Update a budget investment
       tags:
-      - Content Blocks
+      - Budget Investments
       security:
       - bearer_auth: []
       parameters: []
       responses:
         '200':
-          description: content block updated
+          description: budget investment updated
           content:
             application/json:
               schema:
@@ -151,14 +273,12 @@ paths:
                   data:
                     type: object
                     properties:
-                      content_block:
-                        "$ref": "#/components/schemas/ContentBlock"
+                      budget_investment:
+                        type: object
                     required:
-                    - content_block
+                    - budget_investment
                 required:
                 - data
-        '404':
-          description: content block not found
         '422':
           description: invalid request
           content:
@@ -173,55 +293,163 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                content_block:
+                budget_investment:
                   type: object
                   properties:
-                    name:
+                    title:
                       type: string
                       nullable: true
-                    locale:
+                    description:
                       type: string
                       nullable: true
-                    body:
+                    video_url:
                       type: string
                       nullable: true
-                    key:
+                    on_behalf_of:
                       type: string
                       nullable: true
-                    position:
-                      type: integer
+                    price:
+                      type: number
                       nullable: true
-              required:
-              - content_block
-        description: Attributes to update on the content block
-    delete:
-      summary: Delete a content block
+                    feasibility:
+                      type: string
+                      nullable: true
+                      enum:
+                      - feasible
+                      - unfeasible
+                      - undecided
+                    valuation_finished:
+                      type: boolean
+                      nullable: true
+                    selected:
+                      type: boolean
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+                    tag_list:
+                      type: array
+                      items:
+                        type: string
+        description: Attributes to update on the budget investment
+  "/api/projekt_phases/{projekt_phase_id}/comments":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (CommentPhase)
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List comments for a projekt phase
       tags:
-      - Content Blocks
+      - Comments
       security:
       - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: Items per page (default 100)
+        schema:
+          type: integer
       responses:
         '200':
-          description: content block deleted
+          description: comments found
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
+                  data:
+                    type: object
+                    properties:
+                      comments:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - comments
+                  pagination:
+                    type: object
                 required:
-                - message
-        '404':
-          description: content block not found
+                - data
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
+    post:
+      summary: Create a comment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: comment created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      comment:
+                        type: object
+                    required:
+                    - comment
+                required:
+                - data
         '422':
-          description: unable to delete content block
+          description: invalid request
           content:
             application/json:
               schema:
@@ -231,7 +459,92 @@ paths:
                     type: object
                     properties:
                       messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                    parent_id:
+                      type: integer
+                      nullable: true
+                    ancestry:
+                      type: string
+                      nullable: true
+                  required:
+                  - body
+              required:
+              - comment
+        description: Comment creation payload
+  "/api/comments/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Comment ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a comment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: comment found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      comment:
                         type: object
+                    required:
+                    - comment
+                required:
+                - data
+        '404':
+          description: comment not found
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
   "/api/deficiency_reports":
     get:
       summary: List deficiency reports
@@ -322,6 +635,7 @@ paths:
                   properties:
                     author_id:
                       type: integer
+                      nullable: true
                     deficiency_report_category_id:
                       type: integer
                     deficiency_report_status_id:
@@ -348,7 +662,6 @@ paths:
                       - latitude
                       - longitude
                   required:
-                  - author_id
                   - deficiency_report_category_id
                   - title
                   - resource_terms
@@ -441,6 +754,290 @@ paths:
                     deficiency_report_status_id:
                       type: integer
         description: Attributes to update on the deficiency report
+  "/api/ideas":
+    get:
+      summary: List ideas
+      tags:
+      - Ideas
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: Items per page (default 100)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ideas found with public_data access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      ideas:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - ideas
+                  pagination:
+                    type: object
+                required:
+                - data
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
+    post:
+      summary: Create an idea
+      tags:
+      - Ideas
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: idea created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      idea:
+                        type: object
+                    required:
+                    - idea
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idea:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    video_url:
+                      type: string
+                      nullable: true
+                    on_behalf_of:
+                      type: string
+                      nullable: true
+                    idea_category_id:
+                      type: integer
+                      nullable: true
+                    resource_terms:
+                      type: boolean
+                    map_location_attributes:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        zoom:
+                          type: integer
+                      required:
+                      - latitude
+                      - longitude
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                          description:
+                            type: string
+                  required:
+                  - title
+                  - description
+                  - resource_terms
+              required:
+              - idea
+        description: Idea payload
+  "/api/ideas/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Idea ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve an idea
+      tags:
+      - Ideas
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: idea found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      idea:
+                        type: object
+                    required:
+                    - idea
+                required:
+                - data
+        '404':
+          description: idea not found
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
+    patch:
+      summary: Update an idea
+      tags:
+      - Ideas
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: idea updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      idea:
+                        type: object
+                    required:
+                    - idea
+                required:
+                - data
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idea:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      nullable: true
+                    description:
+                      type: string
+                      nullable: true
+                    video_url:
+                      type: string
+                      nullable: true
+                    on_behalf_of:
+                      type: string
+                      nullable: true
+                    idea_category_id:
+                      type: integer
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+        description: Attributes to update on the idea
   "/api/projekt_phases/{projekt_phase_id}/legislation_processes":
     parameters:
     - name: projekt_phase_id
@@ -788,6 +1385,20 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -856,7 +1467,7 @@ paths:
       - bearer_auth: []
       responses:
         '200':
-          description: poll found
+          description: poll found with public_data access
           content:
             application/json:
               schema:
@@ -873,6 +1484,20 @@ paths:
                 - data
         '404':
           description: poll not found
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
     patch:
       summary: Update a poll
       tags:
@@ -911,6 +1536,20 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -991,6 +1630,20 @@ paths:
                     properties:
                       messages:
                         type: object
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
   "/api/projekt_phases/{projekt_phase_id}/projekt_arguments":
     parameters:
     - name: projekt_phase_id
@@ -2716,9 +3369,6 @@ paths:
                 projekt_question:
                   type: object
                   properties:
-                    author_id:
-                      type: integer
-                      nullable: true
                     projekt_livestream_id:
                       type: integer
                       nullable: true
@@ -2732,9 +3382,6 @@ paths:
                           title:
                             type: string
                             nullable: true
-                          description:
-                            type: string
-                            nullable: true
                     question_options_attributes:
                       type: array
                       items:
@@ -2743,15 +3390,25 @@ paths:
                           id:
                             type: integer
                             nullable: true
-                          title:
-                            type: string
-                            nullable: true
-                          description:
-                            type: string
-                            nullable: true
                           _destroy:
                             type: boolean
                             nullable: true
+                          translations_attributes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  nullable: true
+                                locale:
+                                  type: string
+                                value:
+                                  type: string
+                                  nullable: true
+                                _destroy:
+                                  type: boolean
+                                  nullable: true
               required:
               - projekt_question
         description: Projekt question creation payload
@@ -2837,9 +3494,6 @@ paths:
                 projekt_question:
                   type: object
                   properties:
-                    author_id:
-                      type: integer
-                      nullable: true
                     projekt_livestream_id:
                       type: integer
                       nullable: true
@@ -2853,9 +3507,6 @@ paths:
                           title:
                             type: string
                             nullable: true
-                          description:
-                            type: string
-                            nullable: true
                     question_options_attributes:
                       type: array
                       items:
@@ -2864,15 +3515,25 @@ paths:
                           id:
                             type: integer
                             nullable: true
-                          title:
-                            type: string
-                            nullable: true
-                          description:
-                            type: string
-                            nullable: true
                           _destroy:
                             type: boolean
                             nullable: true
+                          translations_attributes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  nullable: true
+                                locale:
+                                  type: string
+                                value:
+                                  type: string
+                                  nullable: true
+                                _destroy:
+                                  type: boolean
+                                  nullable: true
               required:
               - projekt_question
         description: Attributes to update on the projekt question
@@ -2937,7 +3598,7 @@ paths:
           type: boolean
       responses:
         '200':
-          description: projekts found
+          description: projekts found with public_data access
           content:
             application/json:
               schema:
@@ -2954,6 +3615,20 @@ paths:
                     - projekts
                 required:
                 - data
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
     post:
       summary: Create a projekt
       tags:
@@ -2990,6 +3665,20 @@ paths:
                     properties:
                       messages:
                         type: object
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -3025,7 +3714,7 @@ paths:
           type: boolean
       responses:
         '200':
-          description: projekt found
+          description: projekt found with public_data access
           content:
             application/json:
               schema:
@@ -3042,6 +3731,20 @@ paths:
                 - data
         '404':
           description: projekt not found
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
     patch:
       summary: Update a projekt
       tags:
@@ -3080,6 +3783,20 @@ paths:
                     properties:
                       messages:
                         type: object
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -3118,6 +3835,20 @@ paths:
                     properties:
                       messages:
                         type: object
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
   "/api/projekts/{id}/update_page":
     parameters:
     - name: id
@@ -3164,6 +3895,20 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -3226,6 +3971,20 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -3310,6 +4069,20 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -3366,7 +4139,7 @@ paths:
           type: boolean
       responses:
         '200':
-          description: proposals found
+          description: proposals found with public_data access
           content:
             application/json:
               schema:
@@ -3385,6 +4158,20 @@ paths:
                     type: object
                 required:
                 - data
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
     post:
       summary: Create a proposal
       tags:
@@ -3423,6 +4210,20 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -3467,7 +4268,7 @@ paths:
       - bearer_auth: []
       responses:
         '200':
-          description: proposal found
+          description: proposal found with public_data access
           content:
             application/json:
               schema:
@@ -3484,6 +4285,20 @@ paths:
                 - data
         '404':
           description: proposal not found
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
     patch:
       summary: Update a proposal
       tags:
@@ -3522,6 +4337,20 @@ paths:
                         type: array
                         items:
                           type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
       requestBody:
         content:
           application/json:
@@ -3566,6 +4395,20 @@ paths:
                     properties:
                       messages:
                         type: object
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: string
 components:
   securitySchemes:
     bearer_auth:

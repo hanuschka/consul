@@ -4,6 +4,7 @@
         patch :update_setting
         patch :update_page
         patch :update_image
+        patch :update_body
       end
 
       resources :projekt_phases do
@@ -11,11 +12,7 @@
           patch :update_setting
         end
       end
-      resources :content_blocks do
-        collection do
-          post :reorder
-        end
-      end
+      resources :content_blocks, only: [:index, :show]
     end
 
     resources :projekt_phases, only: [], shallow: true do

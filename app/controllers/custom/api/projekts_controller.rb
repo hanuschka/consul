@@ -3,7 +3,7 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
   include Translatable
 
-  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_image, :update_page]
+  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_image, :update_page, :update_body]
 
   def index
     check_read_access!
@@ -46,7 +46,7 @@ class Api::ProjektsController < Api::BaseController
 
   def show
     check_read_access!
-    # Include phases and content_blocks by default in show action (can be disabled with query params)
+
     include_phases = params[:include_phases] != 'false'
     include_content_blocks = params[:include_content_blocks] != 'false'
 
@@ -65,6 +65,8 @@ class Api::ProjektsController < Api::BaseController
 
     if projekt.save
       Projekt.ensure_order_integrity
+
+      create_default_content_block(projekt)
 
       serailized_projekt = ProjektSerializer.new(projekt).serialize
 
@@ -186,6 +188,28 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
+  def update_body
+    check_admin_access!
+
+    # Get the first content block
+    first_content_block = @projekt.content_blocks.order(:position).first
+
+    unless first_content_block
+      return render json: { error: { messages: ["No content block found for this project"] } }, status: 404
+    end
+
+    if first_content_block.update(content_block_body_params)
+      serialized_content_block = ContentBlockSerializer.new(first_content_block).serialize
+
+      render json: {
+        data: { content_block: serialized_content_block },
+        message: "Content block body updated successfully"
+      }
+    else
+      render json: { error: { messages: first_content_block.errors.full_messages } }, status: 422
+    end
+  end
+
   private
 
   def projekt_params
@@ -235,5 +259,20 @@ class Api::ProjektsController < Api::BaseController
 
   def setting_params
     params.require(:setting).permit(:key, :value)
+  end
+
+  def content_block_body_params
+    params.require(:content_block).permit(:body)
+  end
+
+  def create_default_content_block(projekt)
+    # Create a blank content block for projects created through the API
+    projekt.content_blocks.create!(
+      name: "custom",
+      locale: "de",
+      body: "",
+      key: "projekt_content_block_#{projekt.id}_1_#{Time.now.to_i}",
+      position: 1
+    )
   end
 end

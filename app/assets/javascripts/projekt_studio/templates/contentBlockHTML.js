@@ -81,7 +81,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-link"></i>
                   Link hinzufügen
                 </button>
-                <button type="button" class="projekt-content-block-edit--button js-content-block-enter-ai-edit-mode-from-simple" disabled>
+                <button type="button" class="projekt-content-block-edit--button js-content-block-enter-ai-edit-mode-from-simple">
                   <i class="fas fa-magic"></i>
                   Mit KI bearbeiten
                 </button>
@@ -126,7 +126,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
               <div class="projekt-frame-icon-button-wrapper" title="Mit AI editieren">
-                <button type="button" title="Mit AI editieren" class="js-content-block-enter-ai-edit-mode projekt-frame-icon-button" disabled>
+                <button type="button" title="Mit AI editieren" class="js-content-block-enter-ai-edit-mode projekt-frame-icon-button">
                   <i class="fas fa-magic">
                   </i>
                 </button>

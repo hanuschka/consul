@@ -3,7 +3,7 @@ class Ai::GenerateContentBlock < ApplicationService
     llm_response = RubyLLM.chat(model: 'gpt-5-nano').ask(
       <<~TEXT
         Update the content block html using provided instructions.
-        Use Zurb foundation elements and styles when needed.
+        Use Zurb Foundation 6 elements and styles when needed.
         Instructions: '#{instructions}'.
         When requested to add images use "https://placehold.co" for src.
         Dont replace existing images. Don't wrap image blocks with figure element.

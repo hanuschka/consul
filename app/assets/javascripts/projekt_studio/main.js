@@ -30,6 +30,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize()
       ProjektStudio.ContentBlock.AiEditMode.initialize()
       ProjektStudio.ContentBlock.CodeEditMode.initialize()
+      ProjektStudio.ContentBlock.Copy.initialize()
       ProjektStudio.PreviewMode.initialize()
       ProjektStudio.SavedContentBlocks.initialize()
       // ExplainWithAi.initialize()

@@ -58,7 +58,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <div class="d-flex u-gap-10">
                 <button type="button" class="projekt-content-block-edit--button js-content-block-enter-simple-edit-mode-from-ai">
                   <i class="fas fa-pencil-alt"></i>
-                  Direkt editieren
+                  Im Editor weiterbearbeiten
                 </button>
               </div>
             </div>
@@ -133,6 +133,10 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </div>
               <button type="button" title="Code editieren" class="js-content-block-enter-code-edit-mode projekt-frame-icon-button">
                 <i class="fas fa-code">
+                </i>
+              </button>
+              <button type="button" title="Inhaltsblock kopieren" class="js-copy-current-content-block projekt-frame-icon-button">
+                <i class="fas fa-copy">
                 </i>
               </button>
               <div class="ai-button-wrapper">

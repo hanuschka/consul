@@ -16,7 +16,7 @@
 //= require ./projekt_studio/modules/ContentBlock/Main
 //= require ./projekt_studio/modules/ContentBlock/DomHelpers
 //= require ./projekt_studio/modules/ContentBlock/DragDrop
-//= require ./projekt_studio/modules/ContentBlock/VersionControl
+//= require ./projekt_studio/modules/ContentBlock/DraftStore
 //= require ./projekt_studio/modules/ContentBlockTemplateSelector
 //= require ./projekt_studio/modules/ContentBlock/Crud
 //= require ./projekt_studio/modules/ContentBlock/AiEditMode

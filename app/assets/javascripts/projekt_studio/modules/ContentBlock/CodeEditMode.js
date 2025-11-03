@@ -18,7 +18,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   enterCodeEditMode(e) {
     const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(contentBlock, contentBlockWrapper);
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
 
     this.switchToCodeEditMode(contentBlockWrapper);
   },
@@ -140,11 +140,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
     if (contentBlockWrapper) {
       const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-      if (contentBlock && contentBlock.dataset.previousContentBlockHtml) {
-        contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
-        $(contentBlock).foundation();
-        App.ImageGallery.initialize();
-      }
+      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
     }
 
     this.exitCodeEditMode(contentBlockWrapper);

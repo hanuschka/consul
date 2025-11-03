@@ -1,10 +1,9 @@
-ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   contentBlockImageLoadingState: {},
   currentImg: null,
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {
@@ -61,13 +60,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
 
     const showCropButton = true;
 
-    const cropButton = showCropButton ? `
+    const cropButton = `
       <button
         type="button"
-        class="content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
+        class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
           <i class="fa fas fa-crop-alt"></i>
       </button>
-    ` : '';
+    `;
 
     // const dimensionControls = img.dataset.studioResize === 'true' ? `
     const dimensionControls = `
@@ -77,7 +76,7 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
           type="number"
           class="js-content-block-image-height-input"
           min="200"
-          max="${img.dataset.originalThumbHeight || img.clientHeight}"
+          max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
           value="${img.clientHeight}"
         >
         <button type="button" class="js-content-block-image-height-increase">+</button>
@@ -95,13 +94,16 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
           <div class="content-block-image-loading-overlay-blur"></div>
           <div class="loading-spinner-inline"></div>
         </div>
-        <button
-          type="button"
-          class="content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}">
-            <i class="fa fas fa-pencil-alt"></i>
-        </button>
-        ${cropButton}
         ${dimensionControls}
+        <div class="content-block-image-control-buttons">
+          <button
+            type="button"
+            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}"
+          >
+            <i class="fa fas fa-pencil-alt"></i>
+          </button>
+          ${cropButton}
+        </div>
       `
     );
   },
@@ -114,13 +116,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   openaImageGallery(e) {
-    const wrapper = e.currentTarget.parentElement;
+    const wrapper = this.getImageWrapper(e.currentTarget);
     this.currentImg = wrapper.querySelector("img")
 
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(this.currentImg);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(this.currentImg);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog.openDialog(
+    ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.openDialog(
       (selectedPicture) => {
         this.replaceImage(selectedPicture);
       },
@@ -130,8 +132,11 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   toggleCropImage(e) {
+    e.preventDefault()
+    e.stopPropagation()
+
     const button = e.currentTarget;
-    const wrapper = button.parentElement;
+    const wrapper = this.getImageWrapper(button);
     const img = wrapper.querySelector("img")
 
     if (this.isImageCropped(img)) {
@@ -161,12 +166,12 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   async replaceImage(selectedPicture) {
     const img = this.currentImg;
     const imageWrapper = this.getImageWrapper(img)
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(img);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     // Lock the content block and track loading state
     this.incrementImageLoadingCount(contentBlockId);
-    ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(contentBlockWrapper, true)
+    ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(contentBlockWrapper, true)
 
     // img.style.height = "auto"
     imageWrapper.classList.add("-loading")
@@ -223,26 +228,26 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     imageWrapper.classList.remove("-loading")
     this.decrementImageLoadingCount(contentBlockId)
 
-    const currentObjectFit = getComputedStyle(img).objectFit;
-
+    // const currentObjectFit = getComputedStyle(img).objectFit;
     // if (currentObjectFit === "fill" || currentObjectFit === "contain") {
       img.style.objectFit = "cover"
       this.toggleCropImageButton(img, imageWrapper.querySelector(".js-content-block-image-crop-button"))
     // }
-    img.style.height = ""
+    // img.style.height = ""
+    img.height = img.clientHeight
     img.dataset.originalThumbHeight = img.clientHeight;
+    img.style.height = `${img.clientHeight}px`
 
     const heightInput = imageWrapper.querySelector(".js-content-block-image-height-input")
 
     if (heightInput) {
-      // heightInput.max = img.clientHeight
       heightInput.max = img.naturalHeight
       heightInput.value = img.clientHeight
     }
 
     // If all images in this content block are done loading, unlock the save/cancel buttons
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
-      ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(
+      ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(
         contentBlockWrapper,
         false
       )
@@ -273,6 +278,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const newHeight = parseInt(input.value);
 
     img.style.height = `${newHeight}px`;
+    img.dataset.originalThumbHeight = newHeight
+    img.height = newHeight
   },
 
   decreaseHeight(e) {
@@ -285,7 +292,10 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const newHeight = currentHeight - 10;
 
     input.value = newHeight;
+
     img.style.height = `${newHeight}px`;
+    img.dataset.originalThumbHeight = newHeight
+    img.height = newHeight
   },
 
   increaseHeight(e) {
@@ -295,11 +305,17 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const input = wrapper.querySelector(".js-content-block-image-height-input");
 
     const currentHeight = parseInt(input.value);
-    // const maxHeight = img.dataset.originalThumbHeight;
-    const maxHeight = input.getAttribute("max")
+    // const maxHeight = input.getAttribute("max")
+    const maxHeight = img.naturalHeight;
     const newHeight = Math.min(maxHeight, currentHeight + 10);
 
     input.value = newHeight;
     img.style.height = `${newHeight}px`;
+    img.dataset.originalThumbHeight = newHeight
+    img.height = newHeight
+  },
+
+  getImageWrapper(element) {
+    return element.closest(".js-content-block-image-wrapper");
   }
 }

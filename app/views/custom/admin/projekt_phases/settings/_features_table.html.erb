@@ -37,7 +37,7 @@
 
             <td>
               <div class="admin-projekt-phase-switch">
-                <% if embedded_and_frame_access_code_valid?(@projekt) %>
+                <% if embedded? %>
                   <%= link_to "konfigurieren", '#' %>
                 <% end %>
                 <% if app.present? && app.inactive? %>

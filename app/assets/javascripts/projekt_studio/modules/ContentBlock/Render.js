@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.Main = {
+ProjektStudio.ContentBlock.Render = {
   initialize() {
     this.renderContentBlocks()
     window.addEventListener('message', this.handleGlobalMessage.bind(this));

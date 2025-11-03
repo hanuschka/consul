@@ -145,7 +145,6 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
       contentBlock,
-      contentBlockId,
       content
     );
 

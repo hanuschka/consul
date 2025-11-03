@@ -101,7 +101,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
       ProjektStudio.ContentBlock.Crud.updateContentBlock(
         contentBlock,
-        contentBlockWrapper.dataset.contentBlockId,
         newContent
       )
     }

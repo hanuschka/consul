@@ -90,27 +90,6 @@ ProjektStudio.Banner = {
     }
   },
 
-  handleShortcutSaveContentBlock(e) {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-      this.saveContentBlockEditedText(e);
-    }
-  },
-
-  saveContentBlockWithNewContent(contentBlock, contentBlockId, newContent) {
-    const newContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
-
-    resetFoundationAccordionStateFor(newContentBlock)
-
-    ProjektStudio.utils.sendMessageToDtParentFrame("updateContentBlock", {
-      content_block_id: contentBlockId,
-      html: newContentBlock.innerHTML
-    })
-
-    // HACK to make Foundation re-initialization work for accorions and other foundation ui elements
-    contentBlock.innerHTML = newContentBlock.innerHTML;
-    $(contentBlock).foundation();
-  },
-
   async updateTitleImage(e) {
     const fileInput = e.currentTarget;
     const file = fileInput.files[0];
@@ -139,14 +118,3 @@ ProjektStudio.Banner = {
     }
   }
 };
-
-function serializeFileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => resolve(reader.result); // `reader.result` contains the Base64 string
-    reader.onerror = (error) => reject(error);
-
-    reader.readAsDataURL(file); // Reads the file as a Base64-encoded string
-  });
-}

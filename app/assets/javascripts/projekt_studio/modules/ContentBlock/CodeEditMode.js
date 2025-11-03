@@ -172,7 +172,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
       contentBlock,
-      contentBlockId,
       content
     );
 

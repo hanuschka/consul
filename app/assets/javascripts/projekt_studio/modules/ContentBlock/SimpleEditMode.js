@@ -59,9 +59,8 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
           ProjektStudio.ContentBlock.Crud.updateContentBlock(
             contentBlock,
-            contentBlockWrapper.dataset.contentBlockId,
             content,
-            true
+            { resetFoundationState: true }
           )
       });
     }

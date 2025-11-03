@@ -163,7 +163,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
       delete this.activeAjaxRequests[contentBlockId];
 
       submitButton.disabled = false;
-      submitButton.innerHTML = '<i class="fas fa-magic"></i> Absenden';
+      this.setButtonState(submitButton, 'submit');
       instructionsTextarea.disabled = false;
       return;
     }
@@ -195,7 +195,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     setTimeout(() => {
       if (this.activeAjaxRequests[contentBlockId] === ajaxRequest) {
         submitButton.disabled = false;
-        submitButton.innerHTML = '<i class="fas fa-times"></i> Abbrechen';
+        this.setButtonState(submitButton, 'cancel');
         instructionsTextarea.disabled = true;
       }
     }, 550);
@@ -257,7 +257,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     popupSubmitButton.classList.toggle("-green", !isLoading)
 
     if (!isLoading) {
-      popupSubmitButton.innerHTML = '<i class="fas fa-magic"></i> Absenden';
+      this.setButtonState(popupSubmitButton, 'submit');
     }
     popupLoader.style.display = isLoading ? 'block' : 'none';
     toolbarSaveButton.disabled = isLoading;
@@ -272,6 +272,12 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
   showErrorMessage(message) {
     alert(message);
+  },
+
+  setButtonState(button, state) {
+    const isRunning = state === 'cancel';
+    button.classList.toggle('-running', isRunning);
+    button.classList.toggle('-green', !isRunning);
   }
 };
 

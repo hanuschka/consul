@@ -1565,7 +1565,6 @@ ul.grid-x, ul.row {
   list-style: none !important;
 }
 
-// AI Edit Popup Styles (similar to link popup)
 .content-block-ai-edit-popup {
   position: absolute;
   // bottom: -220px;
@@ -1623,21 +1622,34 @@ ul.grid-x, ul.row {
   }
 }
 
-// AI Edit Mode Controls
 .js-ai-edit-mode-controlls {
   display: none;
   align-items: center;
   gap: 10px;
 }
 
-// Code Edit Mode Controls
+.js-content-block-ai-edit--submit-prompt {
+  .js-cancel-state {
+    display: none;
+  }
+
+  &.-running {
+    .js-submit-state {
+      display: none;
+    }
+
+    .js-cancel-state {
+      display: block;
+    }
+  }
+}
+
 .js-code-edit-mode-controlls {
   display: none;
   align-items: center;
   gap: 10px;
 }
 
-// Code Editor Container
 .code-editor-container {
   width: 100%;
   position: relative;

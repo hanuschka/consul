@@ -158,17 +158,14 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    if (submitButton.textContent.trim().includes('Cancel') || submitButton.textContent.trim().includes('Abbrechen')) {
-      if (this.activeAjaxRequests[contentBlockId]) {
-        this.activeAjaxRequests[contentBlockId].abort();
-        delete this.activeAjaxRequests[contentBlockId];
+    if (this.activeAjaxRequests[contentBlockId]) {
+      this.activeAjaxRequests[contentBlockId].abort();
+      delete this.activeAjaxRequests[contentBlockId];
 
-        submitButton.disabled = false;
-        submitButton.innerHTML = '<i class="fas fa-magic"></i> Absenden';
-        instructionsTextarea.disabled = false;
-        return;
-      }
-
+      submitButton.disabled = false;
+      submitButton.innerHTML = '<i class="fas fa-magic"></i> Absenden';
+      instructionsTextarea.disabled = false;
+      return;
     }
 
     const instructions = instructionsTextarea.value.trim();
@@ -198,10 +195,10 @@ ProjektStudio.ContentBlock.AiEditMode = {
     setTimeout(() => {
       if (this.activeAjaxRequests[contentBlockId] === ajaxRequest) {
         submitButton.disabled = false;
-        submitButton.innerHTML = 'Cancel';
+        submitButton.innerHTML = '<i class="fas fa-times"></i> Abbrechen';
         instructionsTextarea.disabled = true;
       }
-    }, 700);
+    }, 550);
 
     ajaxRequest
     .then((response) => {
@@ -252,12 +249,13 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const popupSubmitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
     const popupLoader = popup.querySelector('.ai-edit-mode--loader');
     const toolbarSaveButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-ai-edit-save');
-    const toolbarCancelButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-ai-edit-cancel');
     const toolbarSwitchToSimpleButton = contentBlockWrapper.querySelector('.js-ai-edit-mode-controlls .js-content-block-enter-simple-edit-mode-from-ai');
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
     const toolbarLoader = contentBlockWrapper.querySelector('.ai-edit-mode--loader');
 
     popupSubmitButton.disabled = isLoading;
+    popupSubmitButton.classList.toggle("-green", !isLoading)
+
     if (!isLoading) {
       popupSubmitButton.innerHTML = '<i class="fas fa-magic"></i> Absenden';
     }

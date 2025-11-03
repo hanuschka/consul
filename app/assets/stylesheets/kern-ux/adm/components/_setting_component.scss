@@ -5,7 +5,6 @@
     .success-message {
       position: absolute;
       bottom: -25px;
-      color: var(--kern-color-feedback-success);
       transition: opacity 0.5s ease;
       opacity: 1;
     }
@@ -23,5 +22,11 @@
   }
 
   .setting-input.boolean {
+  }
+
+  .setting-input.image {
+    .kern-form-input .form-error {
+      display: none;
+    }
   }
 }

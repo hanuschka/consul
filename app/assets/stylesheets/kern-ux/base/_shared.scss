@@ -1,0 +1,8 @@
+.success-message {
+  color: var(--kern-color-feedback-success);
+}
+
+.error-message,
+.form-error {
+  color: var(--kern-color-feedback-danger);
+}

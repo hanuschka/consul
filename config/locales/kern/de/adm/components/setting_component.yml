@@ -6,5 +6,4 @@ de:
       settings:
         image_component:
           hint: "Erlaubte Formate: %{allowed_formats}."
-          reset_button: Bild zurücksetzen
-          update_button: Bild aktualisieren
+          reset_button: Anderes Bild wählen

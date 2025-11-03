@@ -5,9 +5,7 @@ class Adm::Settings::ImageComponent < ApplicationComponent
     @updated = updated
   end
 
-  def signed_blob_id(form)
-    return nil if @setting.errors[:image].any?
-
-    @setting.image.blob.signed_id if @setting.image.attached?
+  def show_preview?
+    @setting.image.attached? && !@setting.image.changed?
   end
 end

@@ -4,7 +4,7 @@
     <div class="kern-row">
       <div class="kern-col-12 kern-col-md-4">
         <p id="<%= dom_id(@setting, :description) %>" class="kern-body mb-3 mb-md-0">
-          <%= t("#{@setting.class.name.underscore}.#{@setting.key}_description", default: t("admin.settings.no_description")) %>
+          <%= sanitize(t("#{@setting.class.name.underscore}.#{@setting.key}_description", default: t("admin.settings.no_description"))) %>
         </p>
       </div>
       <div class="kern-col-12 kern-col-md-6">

@@ -1,51 +1,34 @@
-<%= form_with model: @setting, url: @path do |form| %>
-  <%= hidden_field_tag :kind, "image" %>
+<div data-controller="components-adm-settings-image">
+  <%= form_with model: @setting, url: @path, data: { 'components-adm-settings-image-target': 'form' } do |form| %>
+    <%= hidden_field_tag :kind, "image" %>
 
-  <div class="" data-controller="image-direct-upload">
-		<%= form.hidden_field :image, value: signed_blob_id(form), data: { image_direct_upload_target: 'hiddenInput' } %>
-
-    <div class="kern-form-input <%= 'd-none' if @setting.image.attached? %>" data-image-direct-upload-target="dropzone">
-      <label class="kern-label" for="input-file"><%= t("#{@setting.class.name.underscore}.#{@setting.key}") %></label>
-      <div class="kern-hint" id="input-file-hint">
-        <%= t("adm.components.settings.image_component.hint",
-               allowed_formats: SiteCustomization::Image::VALID_FORMATS.map { |type| type.split("/").last.upcase }.join(", ")) %>
+      <div class="kern-form-input <%= 'd-none' if show_preview? %>" data-components-adm-settings-image-target="dropzone">
+        <%= form.file_field :image,
+                            label: false,
+                            accept: SiteCustomization::Image::VALID_FORMATS.join(','),
+                            class: 'kern-form-input__input',
+                            data: {
+                              "components-adm-settings-image-target": "fileInput",
+                              "action": "change->components-adm-settings-image#submitForm"
+                            } %>
       </div>
-      <input id="file-upload"
-             type='file'
-             accept='<%= SiteCustomization::Image::VALID_FORMATS.join(',') %>'
-             class='kern-form-input__input'
-             data-direct-upload-url='<%= rails_direct_uploads_url %>'
-             data-image-direct-upload-target='fileInput'
-             data-action='change->image-direct-upload#upload'>
-      </label>
-    </div>
 
-    <div class='<%= 'd-none' unless @setting.image.attached? %>' data-image-direct-upload-target='previewContainer'>
-      <%= image_tag(@setting.image, style: "width:100%;") if @setting.image.attached? %>
-    </div>
+      <div class='<%= 'd-none' unless show_preview? %>' data-components-adm-settings-image-target="preview">
+        <%= image_tag(@setting.image, style: "width:100%;") if @setting.image.attached? %>
+      </div>
 
-    <div class='<%= 'd-none' if @setting.errors.blank? %>' data-image-direct-upload-target='imageErrors'>
-      <%= helpers.content_tag(:span, class: '') { sanitize @setting.errors[:image].join(', ') } %>
-    </div>
+      <div class='error-message mt-3 <%= 'd-none' if @setting.errors.blank? %>'>
+        <%= helpers.content_tag(:span, class: '') { sanitize @setting.errors[:image].join('; ') } %>
+      </div>
 
-    <div class="d-flex justify-content-between mt-3">
-      <div class='<%= 'd-none' unless @setting.image.attached? %>'
-           data-image-direct-upload-target='resetButton'>
+      <div class="d-flex justify-content-end mt-3 <%= 'd-none' unless show_preview? %>" data-components-adm-settings-image-target="resetButton">
         <button type='button'
                 class="kern-btn kern-btn--secondary"
-                data-action='click->image-direct-upload#resetForm'>
-          <%= t('adm.components.settings.image_component.reset_button') %>
+                data-action='click->components-adm-settings-image#resetForm'>
+          <span class="kern-label">
+            <%= t('adm.components.settings.image_component.reset_button') %>
+          </span>
         </button>
       </div>
-
-      <%= button_tag(
-        type: 'submit',
-        class: "kern-btn kern-btn--primary",
-        data: { 'image-direct-upload-target': 'formSubmit' }
-      ) do %>
-        <span class="kern-label"><%= t('adm.components.settings.image_component.update_button') %></span>
-      <% end %>
-    </div>
-
-  </div>
-<% end %>
+  <% end %>
+</div>

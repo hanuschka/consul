@@ -202,7 +202,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     ajaxRequest
     .then((response) => {
-      this.handleSuccessResponse(response, contentBlockWrapper, contentBlock);
+      this.handleSuccessResponse(response, contentBlock);
       instructionsTextarea.value = ""
     })
     .catch((response) => {
@@ -218,7 +218,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     });
   },
 
-  handleSuccessResponse(response, contentBlockWrapper, contentBlock) {
+  handleSuccessResponse(response, contentBlock) {
     if (response.content_block_html) {
       if (contentBlock) {
         contentBlock.innerHTML = response.content_block_html;

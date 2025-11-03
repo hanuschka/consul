@@ -1038,307 +1038,6 @@ paths:
                             type: string
                             nullable: true
         description: Attributes to update on the idea
-  "/api/projekt_phases/{projekt_phase_id}/legislation_processes":
-    parameters:
-    - name: projekt_phase_id
-      in: path
-      description: Projekt Phase ID (LegislationPhase)
-      required: true
-      schema:
-        type: integer
-    post:
-      summary: Create a legislation process
-      tags:
-      - Legislation Processes
-      security:
-      - bearer_auth: []
-      parameters: []
-      responses:
-        '201':
-          description: legislation process created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      legislation_process:
-                        type: object
-                    required:
-                    - legislation_process
-                required:
-                - data
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-                        items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                legislation_process:
-                  type: object
-                  properties:
-                    start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    draft_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    result_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    allegations_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    draft_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    result_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    published:
-                      type: boolean
-                      nullable: true
-                    translations_attributes:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          locale:
-                            type: string
-                          title:
-                            type: string
-                            nullable: true
-                          summary:
-                            type: string
-                            nullable: true
-                          description:
-                            type: string
-                            nullable: true
-              required:
-              - legislation_process
-        description: Legislation process creation payload
-  "/api/legislation_processes/{id}":
-    parameters:
-    - name: id
-      in: path
-      description: Legislation Process ID
-      required: true
-      schema:
-        type: integer
-    get:
-      summary: Retrieve a legislation process
-      tags:
-      - Legislation Processes
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: legislation process found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      legislation_process:
-                        type: object
-                    required:
-                    - legislation_process
-                required:
-                - data
-        '404':
-          description: legislation process not found
-    patch:
-      summary: Update a legislation process
-      tags:
-      - Legislation Processes
-      security:
-      - bearer_auth: []
-      parameters: []
-      responses:
-        '200':
-          description: legislation process updated
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      legislation_process:
-                        type: object
-                    required:
-                    - legislation_process
-                required:
-                - data
-        '404':
-          description: legislation process not found
-        '422':
-          description: invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: array
-                        items:
-                          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                legislation_process:
-                  type: object
-                  properties:
-                    start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    draft_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_start_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    allegations_end_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    result_publication_date:
-                      type: string
-                      format: date
-                      nullable: true
-                    debate_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    allegations_phase_enabled:
-                      type: boolean
-                      nullable: true
-                    draft_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    result_publication_enabled:
-                      type: boolean
-                      nullable: true
-                    published:
-                      type: boolean
-                      nullable: true
-                    translations_attributes:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          locale:
-                            type: string
-                          title:
-                            type: string
-                            nullable: true
-                          summary:
-                            type: string
-                            nullable: true
-                          description:
-                            type: string
-                            nullable: true
-              required:
-              - legislation_process
-        description: Attributes to update on the legislation process
-    delete:
-      summary: Delete a legislation process
-      tags:
-      - Legislation Processes
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: legislation process deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                - message
-        '404':
-          description: legislation process not found
-        '422':
-          description: unable to delete legislation process
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      messages:
-                        type: object
   "/api/projekt_phases/{projekt_phase_id}/polls":
     parameters:
     - name: projekt_phase_id
@@ -4409,6 +4108,307 @@ paths:
                         type: string
                       messages:
                         type: string
+  "/api/projekt_phases/{projekt_phase_id}/texts":
+    parameters:
+    - name: projekt_phase_id
+      in: path
+      description: Projekt Phase ID (LegislationPhase)
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a text
+      tags:
+      - Texts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: text created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      text:
+                        type: object
+                    required:
+                    - text
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    draft_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    result_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    allegations_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    draft_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    result_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    published:
+                      type: boolean
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          summary:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+              required:
+              - text
+        description: Text creation payload
+  "/api/texts/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Text ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a text
+      tags:
+      - Texts
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: text found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      text:
+                        type: object
+                    required:
+                    - text
+                required:
+                - data
+        '404':
+          description: text not found
+    patch:
+      summary: Update a text
+      tags:
+      - Texts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: text updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      text:
+                        type: object
+                    required:
+                    - text
+                required:
+                - data
+        '404':
+          description: text not found
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    draft_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    allegations_end_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    result_publication_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    debate_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    allegations_phase_enabled:
+                      type: boolean
+                      nullable: true
+                    draft_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    result_publication_enabled:
+                      type: boolean
+                      nullable: true
+                    published:
+                      type: boolean
+                      nullable: true
+                    translations_attributes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          locale:
+                            type: string
+                          title:
+                            type: string
+                            nullable: true
+                          summary:
+                            type: string
+                            nullable: true
+                          description:
+                            type: string
+                            nullable: true
+              required:
+              - text
+        description: Attributes to update on the text
+    delete:
+      summary: Delete a text
+      tags:
+      - Texts
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: text deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '404':
+          description: text not found
+        '422':
+          description: unable to delete text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
 components:
   securitySchemes:
     bearer_auth:

@@ -32,7 +32,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   enterHtmlEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-html-edit-mode")
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(contentBlock, contentBlockWrapper)
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
     contentBlock.innerHTML = `
       <textarea
@@ -52,14 +52,17 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   enterCodeEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-code-edit-mode")
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(contentBlock, contentBlockWrapper)
+
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
+
+    const currentHTML = contentBlock.innerHTML;
 
     contentBlock.innerHTML = `
       <textarea
         name="body"
         rows="8"
         style="visibility: hidden; display: none;">
-         ${contentBlock.innerHTML}
+         ${currentHTML}
       </textarea>
     `
 
@@ -74,8 +77,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
       editor.setFontSize(14)
       editor.session.setMode("ace/mode/html");
     }
-
-    const currentHTML = contentBlock.dataset.previousContentBlockHtml
 
     editor.setValue(currentHTML, currentHTML.length)
     editor.focus()
@@ -100,7 +101,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
       ProjektStudio.ContentBlock.Crud.updateContentBlock(
         contentBlock,
-        contentBlockWrapper.dataset.contentBlockId,
         newContent
       )
     }
@@ -108,8 +108,6 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
   cancelHtmlEditMode(contentBlockWrapper, contentBlock) {
     contentBlockWrapper.classList.remove("-html-edit-mode")
-    contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
-
-    $(contentBlock).foundation();
+    ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
   }
 };

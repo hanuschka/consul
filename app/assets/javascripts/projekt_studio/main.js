@@ -19,7 +19,7 @@ window.ProjektStudio = {
       ProjektStudio.ContentBlock.Main.initialize()
       ProjektStudio.ContentBlock.DragDrop.initialize()
       ProjektStudio.ContentBlock.Crud.initialize()
-      ProjektStudio.ContentBlock.VersionControl.initialize()
+      ProjektStudio.ContentBlock.ChangeHistory.initialize()
       ProjektStudio.ContentBlock.CKEditorMode.initialize()
       ProjektStudio.ContentBlock.DtAiEditMode.initialize()
 

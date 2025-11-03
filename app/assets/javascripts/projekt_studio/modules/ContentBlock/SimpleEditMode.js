@@ -21,7 +21,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   enterSimpleEditMode(e) {
     const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target)
 
-    ProjektStudio.ContentBlock.VersionControl.storePreviousVersion(
+    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(
       contentBlock, contentBlockWrapper
     )
 
@@ -59,9 +59,8 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
           ProjektStudio.ContentBlock.Crud.updateContentBlock(
             contentBlock,
-            contentBlockWrapper.dataset.contentBlockId,
             content,
-            true
+            { resetFoundationState: true }
           )
       });
     }
@@ -71,7 +70,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
 
     contentBlockWrapper.classList.remove("-simple-edit-mode")
-    contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
+    ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
 
     this.toggleSimpleEditModeFor(contentBlock, false);
   },

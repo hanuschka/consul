@@ -185,7 +185,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-edit">
                 </i>
               </button>
-              <button title="Auf vorherige Version zurücksetzen" disabled class="projekt-frame-icon-button js-content-block-reset-to-prev-version">
+              <button title="Auf vorherige Version zurücksetzen" disabled class="projekt-frame-icon-button js-content-block-version-managment">
                 <i class="fa fa-arrow-rotate-left fa-undo">
                 </i>
               </button>

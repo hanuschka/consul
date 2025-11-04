@@ -13,7 +13,7 @@
 //= require ./projekt_studio/modules/Sidebar
 //= require ./projekt_studio/modules/Banner
 //= require ./projekt_studio/modules/PhasesTabs
-//= require ./projekt_studio/modules/ContentBlock/Main
+//= require ./projekt_studio/modules/ContentBlock/Render
 //= require ./projekt_studio/modules/ContentBlock/DomHelpers
 //= require ./projekt_studio/modules/ContentBlock/DragDrop
 //= require ./projekt_studio/modules/ContentBlock/DraftStore

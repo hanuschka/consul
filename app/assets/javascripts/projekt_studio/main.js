@@ -16,7 +16,7 @@ window.ProjektStudio = {
 
       // Initialize ContentBlock submodules
       ProjektStudio.ContentBlockTemplateSelector.initialize()
-      ProjektStudio.ContentBlock.Main.initialize()
+      ProjektStudio.ContentBlock.Render.initialize()
       ProjektStudio.ContentBlock.DragDrop.initialize()
       ProjektStudio.ContentBlock.Crud.initialize()
       ProjektStudio.ContentBlock.ChangeHistory.initialize()

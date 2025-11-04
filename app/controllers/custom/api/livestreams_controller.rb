@@ -1,4 +1,4 @@
-class Api::ProjektLivestreamsController < Api::BaseController
+class Api::LivestreamsController < Api::BaseController
   before_action :find_projekt_phase, only: [:create]
   before_action :find_projekt_livestream, only: [:show, :update, :destroy]
 
@@ -7,7 +7,7 @@ class Api::ProjektLivestreamsController < Api::BaseController
     projekt_livestream = @projekt_phase.projekt_livestreams.new(projekt_livestream_params)
 
     if projekt_livestream.save
-      serialized_projekt_livestream = ProjektLivestreamSerializer.new(projekt_livestream).serialize
+      serialized_projekt_livestream = LivestreamSerializer.new(projekt_livestream).serialize
 
       render json: { data: { projekt_livestream: serialized_projekt_livestream } }, status: 201
     else
@@ -17,7 +17,7 @@ class Api::ProjektLivestreamsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_livestream = ProjektLivestreamSerializer.new(@projekt_livestream).serialize
+    serialized_projekt_livestream = LivestreamSerializer.new(@projekt_livestream).serialize
 
     render json: { data: { projekt_livestream: serialized_projekt_livestream } }
   end
@@ -25,7 +25,7 @@ class Api::ProjektLivestreamsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_livestream.update(projekt_livestream_params)
-      serialized_projekt_livestream = ProjektLivestreamSerializer.new(@projekt_livestream).serialize
+      serialized_projekt_livestream = LivestreamSerializer.new(@projekt_livestream).serialize
 
       render json: { data: { projekt_livestream: serialized_projekt_livestream } }
     else

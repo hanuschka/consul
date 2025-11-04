@@ -3,7 +3,6 @@
 require 'swagger_helper'
 
 RSpec.describe 'Projekts API', type: :request do
-  # Authentication setup - create an ApiClient with an auth_token
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
@@ -812,6 +811,186 @@ RSpec.describe 'Projekts API', type: :request do
             setting: {
               key: 'test_setting',
               value: 'test_value'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+    end
+  end
+
+  path '/api/projekts/{id}/update_body' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
+
+    patch 'Update projekt content block body' do
+      tags 'Projekts'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      parameter name: :projekt, in: :body, description: 'Content block body update payload', schema: {
+        type: :object,
+        properties: {
+          projekt: {
+            type: :object,
+            properties: {
+              body: { type: :string, description: 'HTML content for the content block body' }
+            },
+            required: ['body']
+          }
+        },
+        required: ['projekt']
+      }
+
+      response '200', 'content block body updated' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              body: '<p>Updated content block body</p>'
+            }
+          }
+        end
+
+        before do
+          test_projekt.content_blocks.create!(
+            name: 'custom',
+            locale: 'de',
+            body: '<p>Original body</p>',
+            key: "projekt_content_block_#{test_projekt.id}_1",
+            position: 1
+          )
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     content_block: {
+                       type: :object,
+                       properties: {
+                         id: { type: :integer },
+                         body: { type: :string },
+                         name: { type: :string },
+                         locale: { type: :string },
+                         position: { type: :integer }
+                       }
+                     }
+                   },
+                   required: ['content_block']
+                 },
+                 message: { type: :string }
+               },
+               required: %w[data message]
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['content_block']['body']).to eq('<p>Updated content block body</p>')
+          expect(data['message']).to eq('Content block body updated successfully')
+        end
+      end
+
+      response '404', 'content block not found' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt Without Content Block') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              body: '<p>New body</p>'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: {
+                       type: :array,
+                       items: { type: :string }
+                     }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['messages']).to include('No content block found for this project')
+        end
+      end
+
+      response '422', 'invalid request' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              body: 'invalid body'
+            }
+          }
+        end
+
+        before do
+          content_block = test_projekt.content_blocks.create!(
+            name: 'custom',
+            locale: 'de',
+            body: '<p>Original body</p>',
+            key: "projekt_content_block_#{test_projekt.id}_1",
+            position: 1
+          )
+
+          allow_any_instance_of(SiteCustomization::ContentBlock).to receive(:update).and_return(false)
+
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:full_messages).and_return(['Body is invalid'])
+          allow_any_instance_of(SiteCustomization::ContentBlock).to receive(:errors).and_return(errors_mock)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: {
+                       type: :array,
+                       items: { type: :string }
+                     }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              body: '<p>New body content</p>'
             }
           }
         end

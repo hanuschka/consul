@@ -1,4 +1,4 @@
-class Api::ProjektQuestionsController < Api::BaseController
+class Api::QuestionsController < Api::BaseController
   include Translatable
 
   before_action :find_projekt_phase, only: [:create]
@@ -9,7 +9,7 @@ class Api::ProjektQuestionsController < Api::BaseController
     projekt_question = @projekt_phase.questions.new(projekt_question_params)
 
     if projekt_question.save
-      serialized_projekt_question = ProjektQuestionSerializer.new(projekt_question).serialize
+      serialized_projekt_question = QuestionSerializer.new(projekt_question).serialize
 
       render json: { data: { projekt_question: serialized_projekt_question } }, status: 201
     else
@@ -25,7 +25,7 @@ class Api::ProjektQuestionsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_question = ProjektQuestionSerializer.new(@projekt_question).serialize
+    serialized_projekt_question = QuestionSerializer.new(@projekt_question).serialize
 
     render json: { data: { projekt_question: serialized_projekt_question } }
   end
@@ -50,7 +50,7 @@ class Api::ProjektQuestionsController < Api::BaseController
       end
       render json: { error: { messages: all_errors } }, status: 422
     else
-      serialized_projekt_question = ProjektQuestionSerializer.new(@projekt_question).serialize
+      serialized_projekt_question = QuestionSerializer.new(@projekt_question).serialize
 
       render json: { data: { projekt_question: serialized_projekt_question } }
     end

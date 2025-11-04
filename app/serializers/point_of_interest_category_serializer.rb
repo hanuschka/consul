@@ -1,4 +1,4 @@
-class ProjektPointOfInterestCategorySerializer < BaseSerializer
+class PointOfInterestCategorySerializer < BaseSerializer
   attr_reader :category
 
   def initialize(category)

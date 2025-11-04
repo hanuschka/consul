@@ -2,28 +2,28 @@
 
 require 'swagger_helper'
 
-RSpec.describe 'ProjektIframes API', type: :request do
+RSpec.describe 'Iframes API', type: :request do
   # Authentication setup - create an ApiClient with an auth_token
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_iframes/{id}' do
+  path '/api/iframes/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Phase (IframePhase) ID'
 
-    get 'Retrieve a projekt iframe' do
-      tags 'ProjektIframes'
+    get 'Retrieve an iframe' do
+      tags 'Iframes'
       produces 'application/json'
       security [bearer_auth: []]
 
-      response '200', 'projekt iframe found' do
+      response '200', 'iframe found' do
         schema type: :object,
                properties: {
                  data: {
                    type: :object,
                    properties: {
-                     projekt_iframe: { type: :object }
+                     iframe: { type: :object }
                    },
-                   required: ['projekt_iframe']
+                   required: ['iframe']
                  }
                },
                required: ['data']
@@ -35,7 +35,7 @@ RSpec.describe 'ProjektIframes API', type: :request do
         run_test!
       end
 
-      response '404', 'projekt iframe not found' do
+      response '404', 'iframe not found' do
         let(:id) { 999999 }
 
         run_test!
@@ -68,16 +68,16 @@ RSpec.describe 'ProjektIframes API', type: :request do
       end
     end
 
-    patch 'Update a projekt iframe' do
-      tags 'ProjektIframes'
+    patch 'Update an iframe' do
+      tags 'Iframes'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
 
-      parameter name: :projekt_iframe, in: :body, description: 'Attributes to update on the projekt iframe', schema: {
+      parameter name: :iframe, in: :body, description: 'Attributes to update on the iframe', schema: {
         type: :object,
         properties: {
-          projekt_iframe: {
+          iframe: {
             type: :object,
             properties: {
               iframe_url: { type: :string },
@@ -87,13 +87,13 @@ RSpec.describe 'ProjektIframes API', type: :request do
         }
       }
 
-      response '200', 'projekt iframe updated' do
+      response '200', 'iframe updated' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:test_iframe_phase) { ProjektPhase::IframePhase.create!(projekt: test_projekt) }
         let(:id) { test_iframe_phase.id }
-        let(:projekt_iframe) do
+        let(:iframe) do
           {
-            projekt_iframe: {
+            iframe: {
               iframe_url: 'https://example.com/iframe',
               iframe_height: '600px'
             }
@@ -105,9 +105,9 @@ RSpec.describe 'ProjektIframes API', type: :request do
                  data: {
                    type: :object,
                    properties: {
-                     projekt_iframe: { type: :object }
+                     iframe: { type: :object }
                    },
-                   required: ['projekt_iframe']
+                   required: ['iframe']
                  }
                },
                required: ['data']
@@ -115,11 +115,11 @@ RSpec.describe 'ProjektIframes API', type: :request do
         run_test!
       end
 
-      response '404', 'projekt iframe not found' do
+      response '404', 'iframe not found' do
         let(:id) { 999999 }
-        let(:projekt_iframe) do
+        let(:iframe) do
           {
-            projekt_iframe: {
+            iframe: {
               iframe_url: 'https://example.com/iframe'
             }
           }
@@ -128,13 +128,13 @@ RSpec.describe 'ProjektIframes API', type: :request do
         run_test!
       end
 
-      response '200', 'projekt iframe updated with partial data' do
+      response '200', 'iframe updated with partial data' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:test_iframe_phase) { ProjektPhase::IframePhase.create!(projekt: test_projekt) }
         let(:id) { test_iframe_phase.id }
-        let(:projekt_iframe) do
+        let(:iframe) do
           {
-            projekt_iframe: {
+            iframe: {
               iframe_url: 'https://example.com/iframe'
             }
           }
@@ -145,9 +145,9 @@ RSpec.describe 'ProjektIframes API', type: :request do
                  data: {
                    type: :object,
                    properties: {
-                     projekt_iframe: { type: :object }
+                     iframe: { type: :object }
                    },
-                   required: ['projekt_iframe']
+                   required: ['iframe']
                  }
                },
                required: ['data']
@@ -163,9 +163,9 @@ RSpec.describe 'ProjektIframes API', type: :request do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:test_iframe_phase) { ProjektPhase::IframePhase.create!(projekt: test_projekt) }
         let(:id) { test_iframe_phase.id }
-        let(:projekt_iframe) do
+        let(:iframe) do
           {
-            projekt_iframe: {
+            iframe: {
               iframe_url: 'https://example.com/iframe',
               iframe_height: '600px'
             }

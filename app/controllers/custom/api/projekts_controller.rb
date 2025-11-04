@@ -191,7 +191,6 @@ class Api::ProjektsController < Api::BaseController
   def update_body
     check_admin_access!
 
-    # Get the first content block
     first_content_block = @projekt.content_blocks.order(:position).first
 
     unless first_content_block
@@ -262,7 +261,7 @@ class Api::ProjektsController < Api::BaseController
   end
 
   def content_block_body_params
-    params.require(:content_block).permit(:body)
+    params.require(:projekt).permit(:body)
   end
 
   def create_default_content_block(projekt)

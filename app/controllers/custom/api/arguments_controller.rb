@@ -1,4 +1,4 @@
-class Api::ProjektArgumentsController < Api::BaseController
+class Api::ArgumentsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt_phase, only: [:create]
@@ -9,7 +9,7 @@ class Api::ProjektArgumentsController < Api::BaseController
     projekt_argument = @projekt_phase.projekt_arguments.new(projekt_argument_params)
 
     if projekt_argument.save
-      serialized_projekt_argument = ProjektArgumentSerializer.new(projekt_argument).serialize
+      serialized_projekt_argument = ArgumentSerializer.new(projekt_argument).serialize
 
       render json: { data: { projekt_argument: serialized_projekt_argument } }, status: 201
     else
@@ -19,7 +19,7 @@ class Api::ProjektArgumentsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_argument = ProjektArgumentSerializer.new(@projekt_argument).serialize
+    serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument).serialize
 
     render json: { data: { projekt_argument: serialized_projekt_argument } }
   end
@@ -27,7 +27,7 @@ class Api::ProjektArgumentsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_argument.update(projekt_argument_params)
-      serialized_projekt_argument = ProjektArgumentSerializer.new(@projekt_argument).serialize
+      serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument).serialize
 
       render json: { data: { projekt_argument: serialized_projekt_argument } }
     else

@@ -1,4 +1,4 @@
-class ProjektQuestionSerializer < BaseSerializer
+class QuestionSerializer < BaseSerializer
   attr_reader :projekt_question
 
   def initialize(projekt_question)

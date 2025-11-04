@@ -6,7 +6,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/projekt_questions' do
+  path '/api/projekt_phases/{projekt_phase_id}/questions' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (QuestionPhase or LivestreamPhase)'
 
     post 'Create a projekt question' do
@@ -127,7 +127,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
     end
   end
 
-  path '/api/projekt_questions/{id}' do
+  path '/api/questions/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Question ID'
 
     get 'Retrieve a projekt question' do

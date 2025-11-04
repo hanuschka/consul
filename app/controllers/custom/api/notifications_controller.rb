@@ -1,4 +1,4 @@
-class Api::ProjektNotificationsController < Api::BaseController
+class Api::NotificationsController < Api::BaseController
   before_action :find_projekt_phase, only: [:create]
   before_action :find_projekt_notification, only: [:show, :update, :destroy]
 
@@ -7,7 +7,7 @@ class Api::ProjektNotificationsController < Api::BaseController
     projekt_notification = @projekt_phase.projekt_notifications.new(projekt_notification_params)
 
     if projekt_notification.save
-      serialized_projekt_notification = ProjektNotificationSerializer.new(projekt_notification).serialize
+      serialized_projekt_notification = NotificationSerializer.new(projekt_notification).serialize
 
       render json: { data: { projekt_notification: serialized_projekt_notification } }, status: 201
     else
@@ -17,7 +17,7 @@ class Api::ProjektNotificationsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_notification = ProjektNotificationSerializer.new(@projekt_notification).serialize
+    serialized_projekt_notification = NotificationSerializer.new(@projekt_notification).serialize
 
     render json: { data: { projekt_notification: serialized_projekt_notification } }
   end
@@ -25,7 +25,7 @@ class Api::ProjektNotificationsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_notification.update(projekt_notification_params)
-      serialized_projekt_notification = ProjektNotificationSerializer.new(@projekt_notification).serialize
+      serialized_projekt_notification = NotificationSerializer.new(@projekt_notification).serialize
 
       render json: { data: { projekt_notification: serialized_projekt_notification } }
     else

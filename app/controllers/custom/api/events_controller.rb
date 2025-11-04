@@ -1,4 +1,4 @@
-class Api::ProjektEventsController < Api::BaseController
+class Api::EventsController < Api::BaseController
   include ImageAttributes
 
   before_action :find_projekt_phase, only: [:create]
@@ -9,7 +9,7 @@ class Api::ProjektEventsController < Api::BaseController
     projekt_event = @projekt_phase.projekt_events.new(projekt_event_params)
 
     if projekt_event.save
-      serialized_projekt_event = ProjektEventSerializer.new(projekt_event).serialize
+      serialized_projekt_event = EventSerializer.new(projekt_event).serialize
 
       render json: { data: { projekt_event: serialized_projekt_event } }, status: 201
     else
@@ -19,7 +19,7 @@ class Api::ProjektEventsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_event = ProjektEventSerializer.new(@projekt_event).serialize
+    serialized_projekt_event = EventSerializer.new(@projekt_event).serialize
 
     render json: { data: { projekt_event: serialized_projekt_event } }
   end
@@ -27,7 +27,7 @@ class Api::ProjektEventsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_event.update(projekt_event_params)
-      serialized_projekt_event = ProjektEventSerializer.new(@projekt_event).serialize
+      serialized_projekt_event = EventSerializer.new(@projekt_event).serialize
 
       render json: { data: { projekt_event: serialized_projekt_event } }
     else

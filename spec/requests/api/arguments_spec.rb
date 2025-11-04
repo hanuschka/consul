@@ -6,7 +6,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/projekt_arguments' do
+  path '/api/projekt_phases/{projekt_phase_id}/arguments' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (ArgumentPhase)'
 
     post 'Create a projekt argument' do
@@ -104,7 +104,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
     end
   end
 
-  path '/api/projekt_arguments/{id}' do
+  path '/api/arguments/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Argument ID'
 
     get 'Retrieve a projekt argument' do

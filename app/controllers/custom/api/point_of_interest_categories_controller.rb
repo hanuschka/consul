@@ -1,4 +1,4 @@
-class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
+class Api::PointOfInterestCategoriesController < Api::BaseController
   before_action :find_projekt_phase, only: [:create]
   before_action :find_category, only: [:show, :update, :destroy]
 
@@ -7,7 +7,7 @@ class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
     category = @projekt_phase.projekt_point_of_interest_categories.new(category_params)
 
     if category.save
-      serialized_category = ProjektPointOfInterestCategorySerializer.new(category).serialize
+      serialized_category = PointOfInterestCategorySerializer.new(category).serialize
 
       render json: { data: { category: serialized_category } }, status: 201
     else
@@ -17,7 +17,7 @@ class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_category = ProjektPointOfInterestCategorySerializer.new(@category).serialize
+    serialized_category = PointOfInterestCategorySerializer.new(@category).serialize
 
     render json: { data: { category: serialized_category } }
   end
@@ -25,7 +25,7 @@ class Api::ProjektPointOfInterestCategoriesController < Api::BaseController
   def update
     check_admin_access!
     if @category.update(category_params)
-      serialized_category = ProjektPointOfInterestCategorySerializer.new(@category).serialize
+      serialized_category = PointOfInterestCategorySerializer.new(@category).serialize
 
       render json: { data: { category: serialized_category } }
     else

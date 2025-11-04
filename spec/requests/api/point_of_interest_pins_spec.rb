@@ -6,7 +6,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin).tap(&:reload) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/projekt_point_of_interest_pins' do
+  path '/api/projekt_phases/{projekt_phase_id}/point_of_interest_pins' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
 
     post 'Create a projekt point of interest pin' do
@@ -114,7 +114,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
     end
   end
 
-  path '/api/projekt_point_of_interest_pins/{id}' do
+  path '/api/point_of_interest_pins/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Point Of Interest Pin ID'
 
     get 'Retrieve a projekt point of interest pin' do

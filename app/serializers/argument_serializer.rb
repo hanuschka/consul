@@ -1,4 +1,4 @@
-class ProjektArgumentSerializer < BaseSerializer
+class ArgumentSerializer < BaseSerializer
   attr_reader :projekt_argument
 
   def initialize(projekt_argument)

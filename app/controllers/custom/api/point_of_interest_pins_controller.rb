@@ -1,4 +1,4 @@
-class Api::ProjektPointOfInterestPinsController < Api::BaseController
+class Api::PointOfInterestPinsController < Api::BaseController
   include Translatable
   include MapLocationAttributes
 
@@ -11,7 +11,7 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
     pin.author = @current_client.user
 
     if pin.save
-      serialized_pin = ProjektPointOfInterestPinSerializer.new(pin).serialize
+      serialized_pin = PointOfInterestPinSerializer.new(pin).serialize
 
       render json: { data: { pin: serialized_pin } }, status: 201
     else
@@ -21,7 +21,7 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_pin = ProjektPointOfInterestPinSerializer.new(@pin).serialize
+    serialized_pin = PointOfInterestPinSerializer.new(@pin).serialize
 
     render json: { data: { pin: serialized_pin } }
   end
@@ -31,7 +31,7 @@ class Api::ProjektPointOfInterestPinsController < Api::BaseController
     @pin.assign_attributes(pin_params)
 
     if @pin.save
-      serialized_pin = ProjektPointOfInterestPinSerializer.new(@pin).serialize
+      serialized_pin = PointOfInterestPinSerializer.new(@pin).serialize
 
       render json: { data: { pin: serialized_pin } }
     else

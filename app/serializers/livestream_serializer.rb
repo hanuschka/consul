@@ -1,4 +1,4 @@
-class ProjektLivestreamSerializer < BaseSerializer
+class LivestreamSerializer < BaseSerializer
   attr_reader :projekt_livestream
 
   def initialize(projekt_livestream)

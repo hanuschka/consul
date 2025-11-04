@@ -6,7 +6,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/projekt_livestreams' do
+  path '/api/projekt_phases/{projekt_phase_id}/livestreams' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (LivestreamPhase)'
 
     post 'Create a projekt livestream' do
@@ -101,7 +101,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
     end
   end
 
-  path '/api/projekt_livestreams/{id}' do
+  path '/api/livestreams/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Livestream ID'
 
     get 'Retrieve a projekt livestream' do

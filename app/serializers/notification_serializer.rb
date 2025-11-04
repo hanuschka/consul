@@ -1,4 +1,4 @@
-class ProjektNotificationSerializer < BaseSerializer
+class NotificationSerializer < BaseSerializer
   attr_reader :projekt_notification
 
   def initialize(projekt_notification)

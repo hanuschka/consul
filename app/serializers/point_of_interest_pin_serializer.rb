@@ -1,4 +1,4 @@
-class ProjektPointOfInterestPinSerializer < BaseSerializer
+class PointOfInterestPinSerializer < BaseSerializer
   attr_reader :pin
 
   def initialize(pin)

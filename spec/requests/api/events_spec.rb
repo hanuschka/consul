@@ -6,7 +6,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/projekt_events' do
+  path '/api/projekt_phases/{projekt_phase_id}/events' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (EventPhase)'
 
     post 'Create a projekt event' do
@@ -87,7 +87,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
     end
   end
 
-  path '/api/projekt_events/{id}' do
+  path '/api/events/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Event ID'
 
     get 'Retrieve a projekt event' do

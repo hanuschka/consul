@@ -6,7 +6,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/projekt_notifications' do
+  path '/api/projekt_phases/{projekt_phase_id}/notifications' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (ProjektNotificationPhase)'
 
     post 'Create a projekt notification' do
@@ -86,7 +86,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
     end
   end
 
-  path '/api/projekt_notifications/{id}' do
+  path '/api/notifications/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Notification ID'
 
     get 'Retrieve a projekt notification' do

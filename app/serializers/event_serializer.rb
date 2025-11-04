@@ -1,4 +1,4 @@
-class ProjektEventSerializer < BaseSerializer
+class EventSerializer < BaseSerializer
   attr_reader :projekt_event
 
   def initialize(projekt_event)

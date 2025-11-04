@@ -30,6 +30,61 @@ RSpec.configure do |config|
       #     url: Rails.application.secrets.swagger_host_url,
       #   }
       # ],
+      tags: [
+        { name: 'Projekts', description: 'Projekt management and core operations' },
+        { name: 'Projekt Phases', description: 'Phases within projekts' },
+        { name: 'Arguments', description: 'Arguments for projekt phases' },
+        { name: 'Events', description: 'Events associated with projekts' },
+        { name: 'Livestreams', description: 'Livestream functionality for projekts' },
+        { name: 'Notifications', description: 'Notifications for projekt updates' },
+        { name: 'Point Of Interest Categories', description: 'Categories for points of interest in projekts' },
+        { name: 'Point Of Interest Pins', description: 'Location pins for projekts' },
+        { name: 'Questions', description: 'Questions related to projekt phases' },
+        { name: 'Budgets', description: 'Budget management for projekt phases' },
+        { name: 'Comments', description: 'Comments on projekt phases' },
+        { name: 'Formulars', description: 'Forms associated with projekt phases' },
+        { name: 'Milestones', description: 'Milestones for projekt phases' },
+        { name: 'Polls', description: 'Polls within projekt phases' },
+        { name: 'Proposals', description: 'Proposals for projekt phases' },
+        { name: 'Texts', description: 'Text content for projekt phases' },
+        { name: 'Ideas', description: 'Citizen ideas and proposals' },
+        { name: 'Deficiency Reports', description: 'Reports of deficiencies or issues' },
+        { name: 'Budget Investments', description: 'Budget investment management' },
+        { name: 'Iframes', description: 'Embedded iframe content' }
+      ],
+      'x-tagGroups': [
+        {
+          name: 'Projekts',
+          tags: [
+            'Projekts',
+            'Projekt Phases',
+            'Proposals',
+            'Polls',
+            'Budgets',
+            'Comments',
+            'Arguments',
+            'Events',
+            'Livestreams',
+            'Notifications',
+            'Point Of Interest Categories',
+            'Point Of Interest Pins',
+            'Questions',
+            'Formulars',
+            'Milestones',
+            'Texts',
+            'Budget Investments',
+            'Iframes'
+          ]
+        },
+        {
+          name: 'Ideas',
+          tags: ['Ideas']
+        },
+        {
+          name: 'Deficiency Reports',
+          tags: ['Deficiency Reports']
+        }
+      ],
       components: {
         securitySchemes: {
           bearer_auth: {

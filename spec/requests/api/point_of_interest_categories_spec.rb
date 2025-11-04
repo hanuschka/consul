@@ -6,7 +6,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
   let!(:api_client) { ApiClient.create!(name: 'Test Client', registration_status: :registered, access_level: :admin) }
   let(:Authorization) { "Bearer #{api_client.auth_token}" }
 
-  path '/api/projekt_phases/{projekt_phase_id}/projekt_point_of_interest_categories' do
+  path '/api/projekt_phases/{projekt_phase_id}/point_of_interest_categories' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
 
     post 'Create a projekt point of interest category' do
@@ -93,7 +93,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
     end
   end
 
-  path '/api/projekt_point_of_interest_categories/{id}' do
+  path '/api/point_of_interest_categories/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Point Of Interest Category ID'
 
     get 'Retrieve a projekt point of interest category' do

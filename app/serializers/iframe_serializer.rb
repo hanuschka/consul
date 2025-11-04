@@ -1,4 +1,4 @@
-class ProjektIframeSerializer < BaseSerializer
+class IframeSerializer < BaseSerializer
   attr_reader :projekt_phase
 
   def initialize(projekt_phase)

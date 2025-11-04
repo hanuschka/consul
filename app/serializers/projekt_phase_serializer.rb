@@ -167,7 +167,7 @@ class ProjektPhaseSerializer < BaseSerializer
           zoom: pin.map_location.zoom
         }
       end
-      
+
       pin_data
     end
   end

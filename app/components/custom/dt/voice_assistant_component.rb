@@ -10,7 +10,7 @@ class Dt::VoiceAssistantComponent < ApplicationComponent
   end
 
   def assistant_iframe_path
-    base_url = "#{Rails.application.secrets.dt[:url]}/voice_assistant/#{assistant_codename}"
+    base_url = "#{Dt.url}/voice_assistant/#{assistant_codename}"
 
     uri = URI(base_url)
     params_hash = {

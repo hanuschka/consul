@@ -19,6 +19,10 @@ module CustomNewHelper
   def custom_new_design_body_class
     css_class = Setting.new_design_enabled? ? "custom-new-design" : ""
 
+    if CustomFeatures.enabled?(:ai)
+      css_class += ' -ai-enabled'
+    end
+
     if embedded?
       css_class += " -embedded"
     end

@@ -5,6 +5,12 @@ class Officing::BudgetsController < Officing::BaseController
     @budget = Budget.find(params[:id])
     @heading = @budget.heading
 
+    @permission_problem = @budget.projekt_phase.permission_problem(@offline_user)
+
+    if @permission_problem.present?
+      render "officing/shared/permission_problem" and return
+    end
+
     if @budget.in?(@officing_manager.balloting_budgets)
       @ballot = Budget::Ballot.where(user: @offline_user, budget: @budget)
                               .first_or_create!(conditional: false, physical: true)

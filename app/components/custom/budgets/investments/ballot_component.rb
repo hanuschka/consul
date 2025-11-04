@@ -18,8 +18,8 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
     def user
       if current_user&.administrator? &&
           controller_name == "offline_ballots" &&
-          params[:user_id]
-        User.find(params[:user_id])
+          params[:offline_user_id]
+        User.find(params[:offline_user_id])
       else
         current_user
       end

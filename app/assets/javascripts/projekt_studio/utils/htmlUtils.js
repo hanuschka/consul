@@ -46,8 +46,8 @@ ProjektStudio.utils.htmlToSingleDomElement = function(html) {
 }
 
 const voidElements = [
-  "base", "br", "col", "embed", "hr",
-  "img", "link", "param",
+  "area", "base", "br", "col", "embed", "hr",
+  "img", "input", "link", "meta", "param",
   "source", "track", "wbr"
 ];
 
@@ -65,15 +65,12 @@ ProjektStudio.utils.validateHTML = function(htmlContent) {
   }
 
   const originalTags = htmlContent.match(/<\s*([a-zA-Z0-9]+)\b[^>]*>/g) || [];
-  const originalTagNames = originalTags.map(tag => tag.match(/<\s*([a-zA-Z0-9]+)/)[1]);
+  const allTagNames = originalTags.map(tag => tag.match(/<\s*([a-zA-Z0-9]+)/)[1]);
   const closedTags = htmlContent.match(/<\/\s*([a-zA-Z0-9]+)\s*>/g) || [];
   const closedTagNames = closedTags.map(tag => tag.match(/<\/\s*([a-zA-Z0-9]+)/)[1]);
 
-  voidElements.forEach((tagNameToRemove) => {
-    if (originalTagNames.includes(tagNameToRemove)) {
-      originalTagNames.splice(originalTagNames.indexOf(tagNameToRemove), 1);
-    }
-  })
+  // Filter out all void elements (they don't require closing tags)
+  const originalTagNames = allTagNames.filter(tag => !voidElements.includes(tag))
 
   const tagStack = [];
   const issues = [];
@@ -161,4 +158,39 @@ ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes
   }
 
   return container.innerHTML;
+}
+
+ProjektStudio.utils.formatHTML = function(html) {
+  let formatted = '';
+  let indent = 0;
+  const indentString = '  '; // 2 spaces
+
+  // Split by tags
+  const tags = html.split(/(<\/?[^>]+>)/g).filter(part => part.trim());
+
+  tags.forEach(tag => {
+    const isClosingTag = tag.match(/^<\/\w+>/);
+    const isSelfClosing = tag.match(/\/>$/) || tag.match(/^<(br|hr|img|input|link|meta|area|base|col|embed|param|source|track|wbr)/i);
+    const isOpeningTag = tag.match(/^<\w+/) && !isSelfClosing;
+
+    // Decrease indent for closing tags before adding line
+    if (isClosingTag) {
+      indent = Math.max(0, indent - 1);
+    }
+
+    // Add indentation
+    if (tag.startsWith('<')) {
+      formatted += indentString.repeat(indent) + tag.trim() + '\n';
+    } else if (tag.trim()) {
+      // Text content
+      formatted += indentString.repeat(indent) + tag.trim() + '\n';
+    }
+
+    // Increase indent after opening tags
+    if (isOpeningTag) {
+      indent++;
+    }
+  });
+
+  return formatted.trim();
 }

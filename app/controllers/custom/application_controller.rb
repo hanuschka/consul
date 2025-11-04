@@ -1,10 +1,7 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
-  include IframeEmbeddedBehavior
   include EmbeddedAuth
-  prepend_before_action :authentificate_frame_session_user!
-
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   after_action :set_back_path
@@ -157,5 +154,7 @@ class ApplicationController < ActionController::Base
       if landing_page.landing_site_logo_follow_to_landing_page
         @ui_site_homepage_path = landing_page.url
       end
+
+      @ui_landing_page = landing_page
     end
 end

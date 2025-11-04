@@ -8,6 +8,7 @@ module Budgets
     include DocumentAttributes
     include MapLocationAttributes
     include Translatable
+    include CustomHelper
 
     PER_PAGE = 10
 
@@ -89,6 +90,7 @@ module Budgets
         render "custom/pages/forbidden", layout: false
 
       elsif Setting.new_design_enabled?
+        @investment.description = process_oembeds(@investment.description)
         render :show_new
 
       else

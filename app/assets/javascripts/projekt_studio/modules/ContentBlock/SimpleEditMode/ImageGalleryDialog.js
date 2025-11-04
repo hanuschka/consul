@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
+ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog = {
   state: {
     type: 'picture',
     page: 1,
@@ -353,7 +353,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       method: 'GET',
       headers: {
         'Accept': 'text/html',
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
       }
     });
   },
@@ -376,14 +377,15 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
     this.incrementUploadingCount();
 
     if (this.contentBlockId && this.contentBlockWrapper) {
-      ProjektStudio.ContentBlockSimpleEdit.ImageEdit.incrementImageLoadingCount(this.contentBlockId);
-      ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(this.contentBlockWrapper, true);
+      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.incrementImageLoadingCount(this.contentBlockId);
+      ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, true);
     }
 
     fetch('/ckeditor/pictures', {
       method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': csrfToken
+        'X-CSRF-TOKEN': csrfToken,
+        'X-Embedded-Frame': ProjektStudio.isEmbedded
       },
       body: formData
     })
@@ -404,11 +406,11 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
         this.decrementUploadingCount();
 
         if (this.contentBlockId && this.contentBlockWrapper) {
-          ProjektStudio.ContentBlockSimpleEdit.ImageEdit.decrementImageLoadingCount(this.contentBlockId);
+          ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.decrementImageLoadingCount(this.contentBlockId);
 
-          const loadingState = ProjektStudio.ContentBlockSimpleEdit.ImageEdit.contentBlockImageLoadingState;
+          const loadingState = ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.contentBlockImageLoadingState;
           if (loadingState[this.contentBlockId] <= 0) {
-            ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(this.contentBlockWrapper, false);
+            ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, false);
           }
         }
       });
@@ -486,7 +488,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       const response = await fetch(`/ckeditor/pictures/${this.state.selectedImage.dataset.id}`, {
         method: 'PATCH',
         headers: {
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': csrfToken,
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
         },
         body: formData
       });
@@ -517,7 +520,8 @@ ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog = {
       const response = await fetch(`/ckeditor/pictures/${chosenId}`, {
         method: 'DELETE',
         headers: {
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': csrfToken,
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
         }
       });
 

@@ -2,7 +2,12 @@
   <% 2.times do |i| %>
     <li>
       <%= link_to("https://placehold.co/1200x700", class: "glightbox", target: "_blank") do %>
-        <%= image_tag("https://placehold.co/426x212", referrerpolicy: "no-referer", style: "aspect-ratio: 1 / 0.5") %>
+        <%= image_tag(
+          "https://placehold.co/425x215",
+          referrerpolicy: "no-referer",
+          data: { studio_resize: "true"},
+          style: "min-height: 215px"
+        ) %>
       <% end %>
     </li>
   <% end %>

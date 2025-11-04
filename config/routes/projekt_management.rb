@@ -4,7 +4,7 @@ namespace :projekt_management do
   resources :projekt_phases, only: [:update, :destroy] do
     member do
       get :duration
-      get :frame_new_phase_selector
+      # get :frame_new_phase_selector
       get :naming
       get :restrictions
       get :settings
@@ -117,6 +117,7 @@ namespace :projekt_management do
   resources :projekt_content_blocks, only: [:destroy, :update] do
     member do
       patch :update_position
+      patch :change_with_ai
     end
   end
 

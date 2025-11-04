@@ -1,17 +1,18 @@
-ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   contentBlockImageLoadingState: {},
   currentImg: null,
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-content-block-image-change-button", this.openaImageGallery.bind(this));
     $document.on("click", ".js-content-block-image-crop-button", this.toggleCropImage.bind(this));
-    $document.on("input", ".js-content-block-image-height-range", this.handleHeightRangeChange.bind(this));
+    $document.on("input", ".js-content-block-image-height-input", this.handleHeightInputChange.bind(this));
+    $document.on("click", ".js-content-block-image-height-decrease", this.decreaseHeight.bind(this));
+    $document.on("click", ".js-content-block-image-height-increase", this.increaseHeight.bind(this));
   },
 
   toggleImageControls(contentBlock, enabled) {
@@ -53,34 +54,34 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     const smallButton = img.height < 120;
     const computedStyle = getComputedStyle(img);
     const borderRadius = computedStyle.borderRadius;
-    const hasObjectFitContain = computedStyle.objectFit === "contain";
 
     img.parentNode.insertBefore(imageWrapper, img);
     imageWrapper.appendChild(img);
 
     const showCropButton = true;
 
-    const cropButton = showCropButton ? `
+    const cropButton = `
       <button
         type="button"
-        class="content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
+        class="content-block-image-control-button content-block-image-crop-button image-change-button js-content-block-image-crop-button ${smallButton ? '-small' : ''} ${this.isImageCropped(img) ? '-active' : ''}">
           <i class="fa fas fa-crop-alt"></i>
       </button>
-    ` : '';
+    `;
 
-    const dimensionControls = img.dataset.studioCrop === 'true' ? `
-      <div class="content-block-image-dimension-controls">
-        <label>Height:</label>
+    // const dimensionControls = img.dataset.studioResize === 'true' ? `
+    const dimensionControls = `
+      <div class="content-block-image-height-control">
+        <button type="button" class="js-content-block-image-height-decrease">−</button>
         <input
-          type="range"
-          class="js-content-block-image-height-range"
+          type="number"
+          class="js-content-block-image-height-input"
           min="200"
-          max="${img.dataset.originalThumbHeight || img.clientHeight}"
+          max="${img.naturalHeight || img.clientHeight || img.dataset.originalThumbHeight}"
           value="${img.clientHeight}"
         >
-        <span class="dimension-value">${img.clientHeight}px</span>
+        <button type="button" class="js-content-block-image-height-increase">+</button>
       </div>
-    ` : '';
+    `
 
     imageWrapper.insertAdjacentHTML(
       "beforeend",
@@ -93,13 +94,16 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
           <div class="content-block-image-loading-overlay-blur"></div>
           <div class="loading-spinner-inline"></div>
         </div>
-        <button
-          type="button"
-          class="content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}">
-            <i class="fa fas fa-pencil-alt"></i>
-        </button>
-        ${cropButton}
         ${dimensionControls}
+        <div class="content-block-image-control-buttons">
+          <button
+            type="button"
+            class="content-block-image-control-button content-block-image-change-button image-change-button js-content-block-image-change-button  ${smallButton ? '-small' : ''}"
+          >
+            <i class="fa fas fa-pencil-alt"></i>
+          </button>
+          ${cropButton}
+        </div>
       `
     );
   },
@@ -112,13 +116,13 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   openaImageGallery(e) {
-    const wrapper = e.currentTarget.parentElement;
+    const wrapper = this.getImageWrapper(e.currentTarget);
     this.currentImg = wrapper.querySelector("img")
 
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(this.currentImg);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(this.currentImg);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    ProjektStudio.ContentBlockSimpleEdit.ImageGalleryDialog.openDialog(
+    ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.openDialog(
       (selectedPicture) => {
         this.replaceImage(selectedPicture);
       },
@@ -128,72 +132,48 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
   },
 
   toggleCropImage(e) {
+    e.preventDefault()
+    e.stopPropagation()
+
     const button = e.currentTarget;
-    const wrapper = button.parentElement;
+    const wrapper = this.getImageWrapper(button);
     const img = wrapper.querySelector("img")
 
     if (this.isImageCropped(img)) {
-      button.classList.remove("-active");
       img.style.objectFit = "contain";
-      img.dataset.previousMargin = img.style.margin
-      img.dataset.previousDisplay = img.style.display
-      img.style.width = "auto"
       img.style.margin = "auto"
-      // img.style.display = "block"
-      // img.style.height = img.dataset.previousHeight
     } else {
-      button.classList.add("-active");
+      img.dataset.previousHeight = img.style.height
       img.style.objectFit = "cover";
-      img.style.width = "100%"
-      img.style.margin = img.dataset.previousMargin
-      // img.style.display = img.dataset.previousDisplay
+    }
+
+    this.toggleCropImageButton(img, button)
+  },
+
+  toggleCropImageButton(img, button) {
+    if (this.isImageCropped(img)) {
+      button.classList.add("-active");
+    } else {
+      button.classList.remove("-active");
     }
   },
-  // toggleCropImage(e) {
-  //   const button = e.currentTarget;
-  //   const wrapper = button.parentElement;
-  //   const img = wrapper.querySelector("img")
-  //   const elementStyles = getComputedStyle(img)
-
-  //   const defaultAspectRatio = img.dataset.defaultAspectRatio
-  //   const defaultHeight = img.dataset.defaultHeight
-
-  //   if (this.isImageCropped(img)) {
-  //     button.classList.remove("-active");
-  //     // img.dataset.defaultAspectRatio = img.style.aspectRatio
-  //     img.dataset.defaultHeight = img.style.height
-  //     img.style.aspectRatio = ""
-  //     img.style.height = "auto"
-  //     img.style.width = "auto"
-
-  //   } else if (defaultAspectRatio && defaultAspectRatio.length > 0) {
-  //     button.classList.add("-active");
-  //     img.style.aspectRatio = defaultAspectRatio
-  //   } else if (defaultHeight && defaultHeight.length > 0) {
-  //     button.classList.add("-active");
-  //     img.style.height = defaultHeight
-  //   }
-
-  //   img.scrollIntoView({
-  //     block: "center", inline: "nearest"
-  //   })
-  // },
 
   isImageCropped(img) {
-    return img.style.objectFit === "cover"
+    console.log("isImageCropped", getComputedStyle(img).objectFit)
+    return getComputedStyle(img).objectFit === "cover"
   },
 
   async replaceImage(selectedPicture) {
     const img = this.currentImg;
     const imageWrapper = this.getImageWrapper(img)
-    const { contentBlockWrapper } = this.getContentBlockAndWrapper(img);
+    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     // Lock the content block and track loading state
     this.incrementImageLoadingCount(contentBlockId);
-    ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(contentBlockWrapper, true)
+    ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(contentBlockWrapper, true)
 
-    img.style.height = "auto"
+    // img.style.height = "auto"
     imageWrapper.classList.add("-loading")
 
     const blurOverlay = imageWrapper.querySelector('.content-block-image-loading-overlay-blur');
@@ -248,20 +228,26 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     imageWrapper.classList.remove("-loading")
     this.decrementImageLoadingCount(contentBlockId)
 
-    img.height = "auto"
+    // const currentObjectFit = getComputedStyle(img).objectFit;
+    // if (currentObjectFit === "fill" || currentObjectFit === "contain") {
+      img.style.objectFit = "cover"
+      this.toggleCropImageButton(img, imageWrapper.querySelector(".js-content-block-image-crop-button"))
+    // }
+    // img.style.height = ""
+    img.height = img.clientHeight
     img.dataset.originalThumbHeight = img.clientHeight;
+    img.style.height = `${img.clientHeight}px`
 
-    const range = document.querySelector(".js-content-block-image-height-range")
+    const heightInput = imageWrapper.querySelector(".js-content-block-image-height-input")
 
-    if (range) {
-      range.max = img.clientHeight
-      range.value = img.clientHeight
-      range.nextElementSibling.innerHTML = `${img.clientHeight}px`
+    if (heightInput) {
+      heightInput.max = img.naturalHeight
+      heightInput.value = img.clientHeight
     }
 
     // If all images in this content block are done loading, unlock the save/cancel buttons
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
-      ProjektStudio.ContentBlockSimpleEdit.toggleLockSaveCancel(
+      ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(
         contentBlockWrapper,
         false
       )
@@ -284,15 +270,52 @@ ProjektStudio.ContentBlockSimpleEdit.ImageEdit = {
     return img.parentElement;
   },
 
-  handleHeightRangeChange(e) {
-    const range = e.currentTarget;
-    const wrapper = range.closest(".js-content-block-image-wrapper");
+  handleHeightInputChange(e) {
+    const input = e.currentTarget;
+    const wrapper = input.closest(".js-content-block-image-wrapper");
     const img = wrapper.querySelector("img");
-    const valueSpan = range.parentElement.querySelector(".dimension-value");
 
-    const newHeight = parseInt(range.value);
-    valueSpan.textContent = `${newHeight}px`;
+    const newHeight = parseInt(input.value);
 
     img.style.height = `${newHeight}px`;
+    img.dataset.originalThumbHeight = newHeight
+    img.height = newHeight
+  },
+
+  decreaseHeight(e) {
+    const button = e.currentTarget;
+    const wrapper = button.closest(".js-content-block-image-wrapper");
+    const img = wrapper.querySelector("img");
+    const input = wrapper.querySelector(".js-content-block-image-height-input");
+
+    const currentHeight = parseInt(input.value);
+    const newHeight = currentHeight - 10;
+
+    input.value = newHeight;
+
+    img.style.height = `${newHeight}px`;
+    img.dataset.originalThumbHeight = newHeight
+    img.height = newHeight
+  },
+
+  increaseHeight(e) {
+    const button = e.currentTarget;
+    const wrapper = button.closest(".js-content-block-image-wrapper");
+    const img = wrapper.querySelector("img");
+    const input = wrapper.querySelector(".js-content-block-image-height-input");
+
+    const currentHeight = parseInt(input.value);
+    // const maxHeight = input.getAttribute("max")
+    const maxHeight = img.naturalHeight;
+    const newHeight = Math.min(maxHeight, currentHeight + 10);
+
+    input.value = newHeight;
+    img.style.height = `${newHeight}px`;
+    img.dataset.originalThumbHeight = newHeight
+    img.height = newHeight
+  },
+
+  getImageWrapper(element) {
+    return element.closest(".js-content-block-image-wrapper");
   }
 }

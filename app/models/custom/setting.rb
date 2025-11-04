@@ -40,6 +40,16 @@ class Setting < ApplicationRecord
 
     def defaults
       {
+        # homepage
+        "extended_option.general.title": "Öffentlichkeitsbeteiligung",
+        "extended_option.general.subtitle": "in der Stadt CONSUL",
+
+        "welcomepage.usage_stats": true,
+        "welcomepage.platform_activity": true,
+        "welcomepage.newsletter_subscription": false,
+        "welcomepage.projekt_search": false,
+        # homepage
+
         # metadata
         "org_name": "CONSUL", # !!!!!!!!!!!!!!!!
         "url": "http://example.com", # Public-facing URL of the app.
@@ -63,7 +73,6 @@ class Setting < ApplicationRecord
         "extended_option.gdpr.devise_timeout_min": 30,
         "extended_option.gdpr.devise_verification_token_validity_days": 3,
         # gdpr
-
 
 
         ### "extended_option.general.city_name": "CONSUL", #!!!!!!!!!!!!!!!!
@@ -188,11 +197,6 @@ class Setting < ApplicationRecord
         "sdg.process.legislation": false,
         "sdg.process.projekts": true,
 
-        "welcomepage.usage_stats": true,
-        "welcomepage.platform_activity": true,
-        "welcomepage.newsletter_subscription": false,
-        "welcomepage.projekt_search": false,
-
         "projekts.show_archived.sidebar": true,
         "projekts.second_level_projekts_in_active_filter": false,
         "projekts.second_level_projekts_in_archived_filter": false,
@@ -237,8 +241,6 @@ class Setting < ApplicationRecord
         "extended_feature.general.show_guest_login_links": false,
         # "extended_feature.general.homepage_projekt_search": false,
 
-        "extended_option.general.title": "Öffentlichkeitsbeteiligung",
-        "extended_option.general.subtitle": "in der Stadt CONSUL",
         "extended_option.general.launch_date": "",
         "extended_option.general.homepage_button_text": "",
         "extended_option.general.homepage_button_link": "",

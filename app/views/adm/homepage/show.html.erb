@@ -2,6 +2,15 @@
 
 <%= render Adm::HeaderComponent.new(title: t("adm.homepage.show.title"), breadcrumbs: @breadcrumbs) %>
 
-<div class="kern-container mt-5">
-  <%= render Adm::SettingComponent.new(setting: SiteCustomization::Image.find_by!(name: "header_image"), kind: :image) %>
+<div class="kern-container">
+  <%= render Adm::SettingComponent.new(setting: SiteCustomization::Image.find_or_create_by!(name: "header_image"), kind: :image) %>
+  <%= render Adm::SettingComponent.new(setting: SiteCustomization::Image.find_or_create_by!(name: "mobile_header_image"), kind: :image) %>
+
+  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "extended_option.general.title"), kind: :string) %>
+  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "extended_option.general.subtitle"), kind: :string) %>
+
+  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "welcomepage.usage_stats"), kind: :boolean) %>
+  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "welcomepage.newsletter_subscription"), kind: :boolean) %>
+  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "welcomepage.platform_activity"), kind: :boolean) %>
+  <%= render Adm::SettingComponent.new(setting: Setting.find_by!(key: "welcomepage.projekt_search"), kind: :boolean) %>
 </div>

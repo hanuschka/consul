@@ -27,6 +27,15 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     telegram_handle_description: "Wenn ausgefüllt, wird ein Telegram-Logo mit Link in der Fußzeile angezeigt."
     youtube_handle: "YouTube-Benutzername oder Kanal-ID"
     youtube_handle_description: "Wenn ausgefüllt, wird ein YouTube-Logo mit Link in der Fußzeile angezeigt."
+    welcomepage:
+      usage_stats: Nutzerübersicht anzeigen
+      usage_stats_description: Zeigt auf der Startseite die Gesamtanzahl registrierter Nutzer an und verlinkt auf eine detaillierte Nutzerübersicht.
+      newsletter_subscription: Plattformstatistik anzeigen
+      newsletter_subscription_description: Zeigt zentrale Kennzahlen zur Plattform an – darunter Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare.
+      platform_activity: Newsletter-Funktion aktivieren
+      platform_activity_description: Bietet eingeloggten Nutzern eine gut sichtbare Möglichkeit zur Newsletter-Anmeldung. Auch nicht angemeldete Nutzer können sich über ein separates Formular anmelden.
+      projekt_search: Projektsuche aktivieren
+      projekt_search_description: Ermöglicht eine Suchleiste auf der Startseite, mit der Nutzer gezielt nach Projekten suchen können. Wenn diese Option aktiviert ist, wird der hervorgehobene Startseiten-Button durch die Suchleiste ersetzt. Beides gleichzeitig ist nicht möglich.
     extended_feature:
       gdpr:
         gdpr_conformity: "DSGVO-konforme Voreinstellungen"
@@ -36,6 +45,11 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
         two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
     extended_option:
+      general:
+        title: Titel der Anwendung
+        title_description: Dieser Titel wird innerhalb des Hintergrundbildes auf der Startseite angezeigt. Wenn das Feld leer bleibt, wird kein Titel dargestellt.
+        subtitle: Untertitel der Anwendung
+        subtitle_description: Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt.
       gdpr:
         devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
         devise_timeout_min_description: "Legen Sie fest, wie lange ein Nutzer nach dem Einloggen aktiv bleibt, bevor er automatisch abgemeldet wird. Die Dauer wird in Minuten angegeben. Dies betrifft sowohl angemeldete Nutzerkonten als auch administrative Zugänge."
@@ -44,7 +58,8 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
   site_customization/image:
     header_image: "Hintergrundbild für Desktop"
     header_image_description: "Dieses Bild wird im oberen Bereich der Startseite auf Desktop-Geräten angezeigt. Bitte verwenden Sie ein hochauflösendes Querformat-Bild. Es sollte thematisch zum Beteiligungsprojekt passen.<br>Benötigtes Format: 1920 × 760 Pixel."
-
+    mobile_header_image: "Hintergrundbild für Mobile"
+    mobile_header_image_description: "Dieses Bild wird auf Mobilgeräten im oberen Bereich der Startseite angezeigt. Für eine optimale Darstellung bitte ein zentriert gestaltetes Bild verwenden. Empfohlenes Format: ??? Pixel."
 
 
 
@@ -62,15 +77,6 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     # map_zoom_description: Zoomen, um die Kartenposition anzuzeigen
     # map_color: Farbe der Kartenmarkierung ändern
     # map_color_description: Bitte den Farbwert als HEX-code eingeben
-    # welcomepage:
-    #   usage_stats: Nutzerstatistiken auf Homepage anzeigen
-    #   usage_stats_description: Zeigt erweiterte Nutzerstatistiken auf der Homepage an
-    #   newsletter_subscription: Newsletter-Funktion
-    #   newsletter_subscription_description: Fügt eine Box hinzu, die zur Newsletter-Anmeldung auffordert.
-    #   platform_activity: Plattform-Aktivität
-    #   platform_activity_description: Zeigt die Plattform-Aktivtät in einer Box an
-    #   projekt_search: Projektsuche auf Startseite aktivieren
-    #   projekt_search_description: Aktiviert eine Suchleiste auf der Startseite, um nach Projekten suchen zu können.
     # feature:
     #   map: Karten anzeigen
     #   map_description: Zeigt die Standardkarte oder die individuellen Karten in der Projektfußzeile und der Vorschlagsübersicht
@@ -142,10 +148,6 @@ Hinweis: Die hier eingetragene Adresse muss mit der im Mailserver hinterlegten A
     #   general:
     #     city_name: Name der Applikation
     #     city_name_description: Wird unter anderem bei der BundID-Verifizierung verwendet
-    #     title: Titel der Applikation
-    #     title_description: Fügt einen Titel zur Applikation hinzu.
-    #     subtitle: Untertitel der Applikation
-    #     subtitle_description: Fügt einen Untertitel zur Applikation hinzu.
     #     launch_date: Erscheinungsdatum
     #     launch_date_description: "Bitte geben Sie das Erscheinungsdatum im folgenden Format an: \"dd.mm.yyyy\". So sollte beispielsweise der 3. Oktober 1990 als 03.10.1990 geschrieben werden."
     #     homepage_button_text: Homepage-Button-Text

@@ -77,12 +77,12 @@
         <% if show_admin_controls_for_projekt?(@projekt) %>
           <% c.with_edit_link do %>
             <% if embedded? %>
-              <button type="button" data-path="/projekts/<%= @projekt.id %>/edit#tab-projekt-map" class="button hollow expanded margin-top-0-force left-aligned js-frame-open-admin-page">
+              <button type="button" data-path="/projekts/<%= @projekt.id %>/edit#tab-projekt-map" class="button hollow expanded margin-top-0-force left-aligned js-frame-open-admin-page js-projekt-studio-hide-on-preview">
                 <i class="fas fa-cog"></i>
                 <%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>
               </button>
             <% else %>
-              <%= link_to(edit_admin_projekt_path(@projekt, anchor: "tab-projekt-map"), target: "_blank", class: "button hollow expanded margin-top-0-force left-aligned") do %>
+              <%= link_to(edit_admin_projekt_path(@projekt, anchor: "tab-projekt-map"), target: "_blank", class: "button hollow expanded margin-top-0-force left-aligned js-projekt-studio-hide-on-preview") do %>
                 <i class="fas fa-cog"></i>
                 <%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>
               <% end %>

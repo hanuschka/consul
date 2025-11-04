@@ -282,6 +282,8 @@
     },
 
     initialize: function() {
+      this.toggleDefaultProjekts()
+
       $("body").on("click", ".js-filter-projekt", function() {
         var $checkbox = $(this);
         var $parentProjekt = $(this).closest('li');

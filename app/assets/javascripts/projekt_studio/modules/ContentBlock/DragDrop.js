@@ -1,6 +1,5 @@
 ProjektStudio.ContentBlock.DragDrop = {
   initialize() {
-    // DragDrop doesn't need event listeners as it's initialized on demand
   },
 
   initSortable() {

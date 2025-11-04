@@ -90,12 +90,12 @@ de:
       subject: Verifizierungsversuch über eine andere E-Mail-Adresse
       hi: "Hallo %{username},"
       p1: soeben wurde ein Verifizierungsversuch mit Ihren Daten über eine andere E-Mail-Adresse unternommen. Bitte verwenden Sie weiterhin diese E-Mail-Adresse für Ihren Zugang zu Consul.
-      p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit dieser Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.
+      p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit dieser E-Mail Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.
     existing_stamp_notify_new_user:
       subject: Verwendung der bestehenden E-Mail-Adresse
       hi: "Hallo,"
       p1: bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
-      p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit der bestehenden Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.
+      p2: Wenn Sie Ihre ursprünglich hinterlegte E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit der bestehenden Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor. Sollten Sie den Verifizierungsversuch nicht initiiert haben, dann wenden Sie sich bitte an die Administratoren der Beteiligungssoftware.
     user_verification_failed:
       subject: Verifizierungsversuch fehlgeschlagen
       hi: "Hallo %{username},"
@@ -107,8 +107,10 @@ de:
       b1_item4: Geburtsdatum oder -ort weicht ab.
       b1_item5: Auskunfts- oder Übermittlungssperre beim Einwohnermeldeamt.
       b1_item6: Tippfehler (z. B. „ß/ss“, Leerzeichen, führende Nullen).
+      b1_item7: Es besteht bereits ein verifiziertes Nutzerkonto mit einer anderen E-Mail-Adresse von Ihnen.
       b2_title: So lösen Sie das Problem
       b2_item1: "Öffnen Sie Ihre Verifizierung erneut: %{link}"
       b2_item2: "Übernehmen Sie Namen und Adresse exakt wie im Ausweis/Meldebescheinigung. – Mehrteilig? Bitte vollständig angeben (z. B. „Müller-Schmidt“)."
       b2_item3: "Wenn Sie sich kürzlich umgemeldet haben: Warten Sie 1–2 Werktage und versuchen Sie es erneut."
       b2_item4: "Bei Auskunfts-/Übermittlungssperre: Kontaktieren Sie uns direkt"
+      b2_item5: "Bereits verifiziertes Nutzerkonto: Melden Sie sich mit Ihrem alten Nutzerkonto (Ihrer anderen E-Mail-Adresse) an. Nutzen Sie ggf. die „Passwort vergessen“ Funktion. Anschließend können Sie Ihr Nutzerkonto verwalten (z.B. Konto löschen). Wenn Sie Hilfe benötigen, kontaktieren Sie uns direkt."

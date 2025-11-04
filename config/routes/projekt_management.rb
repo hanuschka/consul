@@ -117,6 +117,7 @@ namespace :projekt_management do
   resources :projekt_content_blocks, only: [:destroy, :update] do
     member do
       patch :update_position
+      patch :change_with_ai
     end
   end
 

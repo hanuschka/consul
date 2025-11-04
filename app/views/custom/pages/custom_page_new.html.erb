@@ -48,6 +48,45 @@
     </div>
   </div>
 
+  <template class="js-ai-edit-popup-template">
+    <div class="content-block-ai-edit-popup js-content-block-ai-edit-popup">
+      <div class="content-block-ai-edit-popup-content">
+
+        <form class="width-100" action="">
+          <div class="content-block-ai-edit-popup-header">
+            <h3>Mit KI bearbeiten</h3>
+            <div class="ai-edit-mode--loader bars-scale-loader" style="display: none;"></div>
+          </div>
+          <div class="ai-edit-form">
+            <textarea
+              name="instructions"
+              rows="4"
+              required
+              placeholder="Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblocks ein..."
+              class="ai-instructions-textarea js-ai-instructions-textarea"
+              ></textarea>
+            <div style="color: #999; font-size: 12px; margin-top: 5px;">
+              Enter zum Absenden, Umschalt+Enter für neue Zeile
+            </div>
+          </div>
+          <div class="ai-edit-actions d-flex justify-between">
+            <button type="button" class="projekt-content-block-edit--button -green -with-background js-content-block-ai-edit--submit-prompt">
+              <span class="js-submit-state">
+                <i class="fas fa-magic"></i>
+                Absenden
+              </span>
+              <span class="js-cancel-state">
+                <i class="fas fa-times"></i>
+                Abbrechen
+              </span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </template>
+
 <% end %>
 
 <% if @custom_page.landing? %>
@@ -164,8 +203,4 @@
       </div>
     <% end %>
   </main>
-
-  <script>
-    App.Projekts.toggleDefaultProjekts();
-  </script>
 <% end %>

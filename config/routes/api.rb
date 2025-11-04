@@ -28,6 +28,10 @@
       resources :projekt_point_of_interest_pins, only: [:create, :show, :update, :destroy]
       resources :projekt_point_of_interest_categories, only: [:create, :show, :update, :destroy]
       resources :comments, only: [:index, :create, :show]
+      resources :budgets, only: [:create, :show, :update, :destroy]
+      resources :formulars, only: [:create, :show, :update, :destroy]
+      resources :milestones, only: [:index, :create, :show, :update, :destroy]
+      resources :projekt_iframes, only: [:show, :update]
     end
     # settings are updated via projekt_phases#update_setting
 

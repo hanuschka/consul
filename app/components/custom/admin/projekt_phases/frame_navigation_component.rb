@@ -36,7 +36,7 @@ class Admin::ProjektPhases::FrameNavigationComponent < ApplicationComponent
   end
 
   def projekt_url
-    projekt.frame_url
+    projekt.url
   end
 
   def projekt

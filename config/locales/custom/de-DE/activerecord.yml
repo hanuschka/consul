@@ -372,6 +372,7 @@ de:
       site_customization/page/translation:
         title: Titel
         subtitle: Untertitel
+        header_title: Kopfzeilentitel
         content: Inhalt
       site_customization/image:
         name: Name

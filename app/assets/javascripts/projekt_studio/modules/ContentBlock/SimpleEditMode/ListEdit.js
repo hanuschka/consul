@@ -1,10 +1,9 @@
-ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
   listControlClass: "js-content-block--list-control",
   sortableInstances: new Map(),
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {
@@ -132,6 +131,8 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     }
 
     this.addItemDeleteButton(clonedLi)
+    this.cleanupSortableForContentBlock(newUl.parentElement)
+    this.initSortableForContentBlock(newUl.parentElement)
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {

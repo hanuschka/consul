@@ -44,6 +44,7 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_title_placeholder, touch: true
   translates :resource_form_description_placeholder, touch: true
   translates :support_button_text, touch: true
+  translates :projekt_selector_hint # needed for globalize fallback, not used otherwise
   include Globalizable
 
   belongs_to :projekt, touch: true

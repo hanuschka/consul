@@ -40,7 +40,9 @@
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
     resources :ideas, only: [:index, :show, :create, :update]
-    resources :budget_investments, only: [:index, :show, :create, :update]
+    resources :budgets, only: [:show] do
+      resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update]
+    end
   end
 
   get "/api/docs", to: "docs#api"

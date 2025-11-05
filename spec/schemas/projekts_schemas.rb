@@ -165,7 +165,27 @@ module Schemas
       properties: {
         id: { type: :integer, example: 1 },
         phase_tab_name: { type: :string, example: 'Planning Phase' },
-        type: { type: :string, example: 'ProjektPhase::InformationPhase' },
+        type: {
+          type: :string,
+          example: 'ProjektPhase::CommentPhase',
+          enum: [
+            'ProjektPhase::CommentPhase',
+            'ProjektPhase::ProposalPhase',
+            'ProjektPhase::QuestionPhase',
+            'ProjektPhase::VotingPhase',
+            'ProjektPhase::BudgetPhase',
+            'ProjektPhase::LegislationPhase',
+            'ProjektPhase::FormularPhase',
+            'ProjektPhase::LivestreamPhase',
+            'ProjektPhase::MilestonePhase',
+            'ProjektPhase::ProjektNotificationPhase',
+            'ProjektPhase::EventPhase',
+            'ProjektPhase::ArgumentPhase',
+            'ProjektPhase::NewsfeedPhase',
+            'ProjektPhase::IframePhase',
+            'ProjektPhase::PointOfInterestPhase'
+          ]
+        },
         projekt_id: { type: :integer, example: 1 },
         active: { type: :boolean, example: true },
         visible: { type: :boolean, example: true },
@@ -176,6 +196,45 @@ module Schemas
         updated_at: { type: :string, format: :datetime, example: '2024-01-01T00:00:00Z' }
       },
       required: %w[id phase_tab_name type projekt_id]
+    }.freeze
+
+    # ProjektPhase request schema for create/update operations
+    PROJEKT_PHASE_REQUEST_SCHEMA = {
+      type: :object,
+      properties: {
+        type: {
+          type: :string,
+          example: 'ProjektPhase::CommentPhase',
+          enum: ProjektPhase::PROJEKT_PHASES_TYPES,
+          description: 'Projekt phase type. Regular phases: CommentPhase, ProposalPhase, QuestionPhase, VotingPhase, BudgetPhase, LegislationPhase, FormularPhase. Special phases: LivestreamPhase, MilestonePhase, ProjektNotificationPhase, EventPhase, ArgumentPhase, NewsfeedPhase, IframePhase, PointOfInterestPhase'
+        },
+        start_date: { type: :string, format: :date, nullable: true },
+        end_date: { type: :string, format: :date, nullable: true },
+        active: { type: :boolean },
+        frontend_visibility: { type: :boolean },
+        given_order: { type: :integer, nullable: true },
+        geozone_restricted: { type: :boolean },
+        age_range_id: { type: :integer, nullable: true },
+        user_status: { type: :string, nullable: true },
+        lock_on: { type: :string, format: :date, nullable: true },
+        phase_tab_name: { type: :string, nullable: true, description: 'Translated attribute' },
+        registered_address_grouping_restriction: { type: :boolean, nullable: true },
+        registered_address_grouping_restrictions: { type: :object, additionalProperties: { type: :array, items: { type: :string } } },
+        individual_group_value_ids: { type: :array, items: { type: :integer } },
+        geozone_restriction_ids: { type: :array, items: { type: :integer } },
+        settings_attributes: {
+          type: :array,
+          items: {
+            type: :object,
+            properties: {
+              id: { type: :integer, nullable: true },
+              key: { type: :string, nullable: true },
+              value: { type: :string, nullable: true },
+              _destroy: { type: :boolean, nullable: true }
+            }
+          }
+        }
+      }
     }.freeze
 
     # ProjektPhaseSetting schema definition for OpenAPI/Swagger documentation
@@ -296,6 +355,7 @@ module Schemas
         ProjektCreateParams: PROJEKT_CREATE_PARAMS,
         ProjektUpdateParams: PROJEKT_UPDATE_PARAMS,
         ProjektPhase: PROJEKT_PHASE_SCHEMA,
+        ProjektPhaseRequestParams: PROJEKT_PHASE_REQUEST_SCHEMA,
         ContentBlock: CONTENT_BLOCK_SCHEMA,
         ProjektPhaseSetting: PROJEKT_PHASE_SETTING_SCHEMA,
         Poll: POLL_SCHEMA,

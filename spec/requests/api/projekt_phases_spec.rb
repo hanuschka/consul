@@ -54,7 +54,12 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
           projekt_phase: {
             type: :object,
             properties: {
-              type: { type: :string, example: 'ProjektPhase::CommentPhase' },
+              type: {
+                type: :string,
+                example: 'ProjektPhase::CommentPhase',
+                enum: ProjektPhase::PROJEKT_PHASES_TYPES,
+                description: 'Projekt phase type.'
+              },
               start_date: { type: :string, format: :date, nullable: true },
               end_date: { type: :string, format: :date, nullable: true },
               active: { type: :boolean },
@@ -266,7 +271,11 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
           projekt_phase: {
             type: :object,
             properties: {
-              type: { type: :string },
+              type: {
+                type: :string,
+                enum: ProjektPhase::PROJEKT_PHASES_TYPES,
+                description: 'Projekt phase type.'
+              },
               start_date: { type: :string, format: :date, nullable: true },
               end_date: { type: :string, format: :date, nullable: true },
               active: { type: :boolean },

@@ -112,7 +112,7 @@ RSpec.describe 'Budgets API', type: :request do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -176,7 +176,7 @@ RSpec.describe 'Budgets API', type: :request do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -300,7 +300,7 @@ RSpec.describe 'Budgets API', type: :request do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -381,7 +381,7 @@ RSpec.describe 'Budgets API', type: :request do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }

@@ -7,7 +7,7 @@ class Api::ProposalsController < Api::BaseController
   include MapLocationAttributes
 
   before_action :find_projekt_phase, only: [:index, :create]
-  before_action :find_proposal, only: [:show, :update, :destroy, :update_image]
+  before_action :find_proposal, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
@@ -44,7 +44,7 @@ class Api::ProposalsController < Api::BaseController
 
     if proposal.save
       if params[:proposal]&.key?(:image_attributes)
-        process_image_with_base64(proposal, proposal_params[:images_attributes])
+        process_image_with_base64(proposal, proposal_params[:image_attributes])
       end
 
       serialized_proposal = ProposalSerializer.new(proposal).serialize
@@ -53,6 +53,8 @@ class Api::ProposalsController < Api::BaseController
     else
       render json: { error: { messages: proposal.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
   end
@@ -70,6 +72,8 @@ class Api::ProposalsController < Api::BaseController
     else
       render json: { error: { messages: @proposal.errors.full_messages } }, status: 422
     end
+  rescue ForbiddenError, UnauthorizedError
+    raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
   end
@@ -81,20 +85,6 @@ class Api::ProposalsController < Api::BaseController
     else
       render json: { error: { messages: @proposal.errors.messages } }, status: 422
     end
-  end
-
-  def update_image
-    check_admin_access!
-    image_attrs = params.require(:image).permit(image_attributes)
-
-    process_image_with_base64(@proposal, image_attrs)
-
-    serialized_proposal = ProposalSerializer.new(@proposal).serialize
-    render json: { data: { proposal: serialized_proposal } }
-  rescue Api::BaseController::ForbiddenError, Api::BaseController::UnauthorizedError
-    raise # Re-raise to let base controller handle it
-  rescue StandardError => e
-    render json: { error: { messages: [e.message] } }, status: 422
   end
 
   private
@@ -118,6 +108,7 @@ class Api::ProposalsController < Api::BaseController
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,
       documents_attributes: document_attributes,
+      translations_attributes: [:id, :locale, :_destroy, :title, :description, :summary, :retired_explanation]
     )
   end
 

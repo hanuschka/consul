@@ -27,14 +27,15 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
     [user, budget, heading]
   end
 
-  path '/api/budget_investments' do
+  path '/api/budgets/{budget_id}/investments' do
+    parameter name: :budget_id, in: :path, type: :integer, description: 'Budget ID'
+
     get 'List budget investments' do
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
-      parameter name: :budget_id, in: :query, type: :integer, required: false, description: 'Filter by budget ID'
       parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter by heading ID'
       parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter by group ID'
       parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility (feasible, unfeasible, undecided)'
@@ -42,7 +43,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       parameter name: :order, in: :query, type: :string, required: false, description: 'Sort order (id, supports, confidence_score, price, ballots, newest)'
 
       response '200', 'budget investments found' do
-        before do
+        let(:budget_id) do
           _user, budget, heading = create_minimal_prereqs
           2.times do |i|
             investment = Budget::Investment.new(
@@ -60,6 +61,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             )
             investment.save!
           end
+          budget.id
         end
 
         schema type: :object,
@@ -79,6 +81,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '403', 'forbidden - insufficient access' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
         before do
           api_client.update_column(:access_level, nil)
         end
@@ -89,7 +92,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -101,7 +104,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '200', 'budget investments found with public_data access' do
-        before do
+        let(:budget_id) do
           api_client.update!(access_level: :public_data)
           _user, budget, heading = create_minimal_prereqs
           2.times do |i|
@@ -120,6 +123,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
             )
             investment.save!
           end
+          budget.id
         end
 
         schema type: :object,
@@ -190,7 +194,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       }
 
       response '201', 'budget investment created' do
-        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
+        let(:budget) { Budget.find(budget_id) }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
 
@@ -228,6 +233,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '422', 'invalid request' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
         let(:budget_investment) do
           {
             budget_investment: {
@@ -258,11 +264,11 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '403', 'forbidden - admin access required' do
-        before do
+        let(:budget_id) do
           api_client.update!(access_level: :public_data)
+          Budget.create!(name: 'Test Budget', currency_symbol: '€').id
         end
-
-        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget) { Budget.find(budget_id) }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
 
@@ -290,7 +296,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -303,7 +309,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
     end
   end
 
-  path '/api/budget_investments/{id}' do
+  path '/api/budgets/{budget_id}/investments/{id}' do
+    parameter name: :budget_id, in: :path, type: :integer, description: 'Budget ID'
     parameter name: :id, in: :path, type: :integer, description: 'Budget Investment ID'
 
     get 'Retrieve a budget investment' do
@@ -313,6 +320,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '200', 'budget investment found' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -350,12 +358,14 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '404', 'budget investment not found' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
         let(:id) { 999999 }
         run_test!
       end
 
       response '403', 'forbidden - insufficient access' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -386,7 +396,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -398,11 +408,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '200', 'budget investment found with public_data access' do
-        before do
-          api_client.update!(access_level: :public_data)
-        end
-
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -423,6 +430,9 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           investment
         end
         let(:id) { budget_investment.id }
+        before do
+          api_client.update!(access_level: :public_data)
+        end
 
         schema type: :object,
                properties: {
@@ -482,6 +492,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '200', 'budget investment updated' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do
@@ -527,6 +538,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
       response '422', 'invalid request' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do
@@ -576,11 +588,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '403', 'forbidden - admin access required' do
-        before do
-          api_client.update!(access_level: :public_data)
-        end
-
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget_id) { budget.id }
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:existing_investment) do
@@ -601,6 +610,9 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           investment
         end
         let(:id) { existing_investment.id }
+        before do
+          api_client.update!(access_level: :public_data)
+        end
         let(:budget_investment) do
           {
             budget_investment: {
@@ -615,7 +627,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }

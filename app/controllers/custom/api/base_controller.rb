@@ -42,7 +42,7 @@ class Api::BaseController < ActionController::API
     render json: {
       error: {
         type: "forbidden",
-        messages: exception.message
+        messages: [exception.message]
       }
     }, status: :forbidden
   end
@@ -51,7 +51,7 @@ class Api::BaseController < ActionController::API
     render json: {
       error: {
         type: "unauthorized",
-        messages: exception.message
+        messages: [exception.message]
       }
     }, status: :unauthorized
   end

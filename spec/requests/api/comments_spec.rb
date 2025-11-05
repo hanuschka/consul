@@ -74,7 +74,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -193,7 +193,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -281,7 +281,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }

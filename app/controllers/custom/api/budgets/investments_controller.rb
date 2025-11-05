@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-class Api::BudgetInvestmentsController < Api::BaseController
+class Api::Budgets::InvestmentsController < Api::BaseController
   include Translatable
   include ImageAttributes
   include DocumentAttributes
   include MapLocationAttributes
 
+  before_action :find_budget, only: [:index, :create]
   before_action :find_budget_investment, only: [:show, :update]
 
   def index
     check_read_access!
-    budget_investments = Budget::Investment.includes(:author, :heading, :budget, :map_location)
+    budget_investments = @budget.investments.includes(:author, :heading, :map_location)
       .page(params[:page])
       .per(params[:per_page] || 100)
 
@@ -34,8 +35,9 @@ class Api::BudgetInvestmentsController < Api::BaseController
 
   def create
     check_admin_access!
-    budget_investment = Budget::Investment.new(budget_investment_params)
+    budget_investment = @budget.investments.new(budget_investment_params)
     budget_investment.author = @current_client.user
+    budget_investment.resource_terms = true
 
     if budget_investment.save
       serialized_budget_investment = BudgetInvestmentSerializer.new(budget_investment).serialize
@@ -63,6 +65,8 @@ class Api::BudgetInvestmentsController < Api::BaseController
 
   def budget_investment_params
     params.require(:budget_investment).permit(
+      :title,
+      :description,
       :heading_id,
       :video_url,
       :on_behalf_of,
@@ -72,7 +76,6 @@ class Api::BudgetInvestmentsController < Api::BaseController
       :valuation_finished,
       :selected,
       :visible_to_valuators,
-      **translation_params(Budget::Investment),
       map_location_attributes: map_location_attributes,
       documents_attributes: document_attributes,
       image_attributes: image_attributes,
@@ -80,15 +83,15 @@ class Api::BudgetInvestmentsController < Api::BaseController
     )
   end
 
+  def find_budget
+    @budget = Budget.find(params[:budget_id])
+  end
+
   def find_budget_investment
     @budget_investment = Budget::Investment.find(params[:id])
   end
 
   def apply_filters(budget_investments)
-    if params[:budget_id].present?
-      budget_investments = budget_investments.by_budget(Budget.find(params[:budget_id]))
-    end
-
     if params[:heading_id].present?
       budget_investments = budget_investments.by_heading(params[:heading_id])
     end

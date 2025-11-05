@@ -147,7 +147,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -209,7 +209,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -354,7 +354,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }
@@ -428,7 +428,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                    type: :object,
                    properties: {
                      type: { type: :string },
-                     messages: { type: :string }
+                     messages: { type: :array, items: { type: :string } }
                    }
                  }
                }

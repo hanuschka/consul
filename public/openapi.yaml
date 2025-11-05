@@ -235,7 +235,14 @@ paths:
                     properties:
                       messages:
                         type: object
-  "/api/budget_investments":
+  "/api/budgets/{budget_id}/investments":
+    parameters:
+    - name: budget_id
+      in: path
+      description: Budget ID
+      required: true
+      schema:
+        type: integer
     get:
       summary: List budget investments
       tags:
@@ -253,12 +260,6 @@ paths:
         in: query
         required: false
         description: Items per page (default 100)
-        schema:
-          type: integer
-      - name: budget_id
-        in: query
-        required: false
-        description: Filter by budget ID
         schema:
           type: integer
       - name: heading_id
@@ -325,7 +326,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a budget investment
       tags:
@@ -377,7 +380,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -439,8 +444,14 @@ paths:
               required:
               - budget_investment
         description: Budget investment payload
-  "/api/budget_investments/{id}":
+  "/api/budgets/{budget_id}/investments/{id}":
     parameters:
+    - name: budget_id
+      in: path
+      description: Budget ID
+      required: true
+      schema:
+        type: integer
     - name: id
       in: path
       description: Budget Investment ID
@@ -485,7 +496,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a budget investment
       tags:
@@ -537,7 +550,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -650,7 +665,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -723,7 +740,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a budget
       tags:
@@ -775,7 +794,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -841,7 +862,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/comments":
     parameters:
     - name: projekt_phase_id
@@ -903,7 +926,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a comment
       tags:
@@ -955,7 +980,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -1024,7 +1051,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
   "/api/deficiency_reports":
     get:
       summary: List deficiency reports
@@ -1500,7 +1529,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -1559,7 +1590,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a formular
       tags:
@@ -1611,7 +1644,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -1669,7 +1704,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
   "/api/ideas":
     get:
       summary: List ideas
@@ -1724,7 +1761,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create an idea
       tags:
@@ -1863,7 +1902,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update an idea
       tags:
@@ -1901,7 +1942,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
         '422':
           description: invalid request
           content:
@@ -2000,7 +2043,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update an iframe
       tags:
@@ -2040,7 +2085,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -2345,7 +2392,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a milestone
       tags:
@@ -2395,7 +2444,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -2459,7 +2510,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a milestone
       tags:
@@ -2511,7 +2564,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -2574,7 +2629,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/notifications":
     parameters:
     - name: projekt_phase_id
@@ -3247,7 +3304,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -3346,7 +3405,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a poll
       tags:
@@ -3398,7 +3459,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -3492,7 +3555,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
   "/api/projekts/{projekt_id}/projekt_phases":
     parameters:
     - name: projekt_id
@@ -3576,6 +3641,23 @@ paths:
                     type:
                       type: string
                       example: ProjektPhase::CommentPhase
+                      enum:
+                      - ProjektPhase::CommentPhase
+                      - ProjektPhase::ProposalPhase
+                      - ProjektPhase::QuestionPhase
+                      - ProjektPhase::VotingPhase
+                      - ProjektPhase::BudgetPhase
+                      - ProjektPhase::LegislationPhase
+                      - ProjektPhase::FormularPhase
+                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::MilestonePhase
+                      - ProjektPhase::ProjektNotificationPhase
+                      - ProjektPhase::EventPhase
+                      - ProjektPhase::ArgumentPhase
+                      - ProjektPhase::NewsfeedPhase
+                      - ProjektPhase::IframePhase
+                      - ProjektPhase::PointOfInterestPhase
+                      description: Projekt phase type.
                     start_date:
                       type: string
                       format: date
@@ -3793,6 +3875,23 @@ paths:
                   properties:
                     type:
                       type: string
+                      enum:
+                      - ProjektPhase::CommentPhase
+                      - ProjektPhase::ProposalPhase
+                      - ProjektPhase::QuestionPhase
+                      - ProjektPhase::VotingPhase
+                      - ProjektPhase::BudgetPhase
+                      - ProjektPhase::LegislationPhase
+                      - ProjektPhase::FormularPhase
+                      - ProjektPhase::LivestreamPhase
+                      - ProjektPhase::MilestonePhase
+                      - ProjektPhase::ProjektNotificationPhase
+                      - ProjektPhase::EventPhase
+                      - ProjektPhase::ArgumentPhase
+                      - ProjektPhase::NewsfeedPhase
+                      - ProjektPhase::IframePhase
+                      - ProjektPhase::PointOfInterestPhase
+                      description: Projekt phase type.
                     start_date:
                       type: string
                       format: date
@@ -3950,7 +4049,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt
       tags:
@@ -4000,7 +4101,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4066,7 +4169,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt
       tags:
@@ -4118,7 +4223,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4170,7 +4277,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
   "/api/projekts/{id}/update_page":
     parameters:
     - name: id
@@ -4230,7 +4339,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4306,7 +4417,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4404,7 +4517,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4513,7 +4628,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4598,7 +4715,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a proposal
       tags:
@@ -4608,7 +4727,7 @@ paths:
       parameters: []
       responses:
         '201':
-          description: proposal created
+          description: proposal created with base64 image
           content:
             application/json:
               schema:
@@ -4650,7 +4769,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4725,7 +4846,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a proposal
       tags:
@@ -4735,7 +4858,7 @@ paths:
       parameters: []
       responses:
         '200':
-          description: proposal updated
+          description: proposal updated with base64 image
           content:
             application/json:
               schema:
@@ -4777,7 +4900,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -4835,7 +4960,9 @@ paths:
                       type:
                         type: string
                       messages:
-                        type: string
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/questions":
     parameters:
     - name: projekt_phase_id
@@ -5786,7 +5913,23 @@ components:
           example: Planning Phase
         type:
           type: string
-          example: ProjektPhase::InformationPhase
+          example: ProjektPhase::CommentPhase
+          enum:
+          - ProjektPhase::CommentPhase
+          - ProjektPhase::ProposalPhase
+          - ProjektPhase::QuestionPhase
+          - ProjektPhase::VotingPhase
+          - ProjektPhase::BudgetPhase
+          - ProjektPhase::LegislationPhase
+          - ProjektPhase::FormularPhase
+          - ProjektPhase::LivestreamPhase
+          - ProjektPhase::MilestonePhase
+          - ProjektPhase::ProjektNotificationPhase
+          - ProjektPhase::EventPhase
+          - ProjektPhase::ArgumentPhase
+          - ProjektPhase::NewsfeedPhase
+          - ProjektPhase::IframePhase
+          - ProjektPhase::PointOfInterestPhase
         projekt_id:
           type: integer
           example: 1
@@ -5822,6 +5965,97 @@ components:
       - phase_tab_name
       - type
       - projekt_id
+    ProjektPhaseRequestParams:
+      type: object
+      properties:
+        type:
+          type: string
+          example: ProjektPhase::CommentPhase
+          enum:
+          - ProjektPhase::CommentPhase
+          - ProjektPhase::ProposalPhase
+          - ProjektPhase::QuestionPhase
+          - ProjektPhase::VotingPhase
+          - ProjektPhase::BudgetPhase
+          - ProjektPhase::LegislationPhase
+          - ProjektPhase::FormularPhase
+          - ProjektPhase::LivestreamPhase
+          - ProjektPhase::MilestonePhase
+          - ProjektPhase::ProjektNotificationPhase
+          - ProjektPhase::EventPhase
+          - ProjektPhase::ArgumentPhase
+          - ProjektPhase::NewsfeedPhase
+          - ProjektPhase::IframePhase
+          - ProjektPhase::PointOfInterestPhase
+          description: 'Projekt phase type. Regular phases: CommentPhase, ProposalPhase,
+            QuestionPhase, VotingPhase, BudgetPhase, LegislationPhase, FormularPhase.
+            Special phases: LivestreamPhase, MilestonePhase, ProjektNotificationPhase,
+            EventPhase, ArgumentPhase, NewsfeedPhase, IframePhase, PointOfInterestPhase'
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        active:
+          type: boolean
+        frontend_visibility:
+          type: boolean
+        given_order:
+          type: integer
+          nullable: true
+        geozone_restricted:
+          type: boolean
+        age_range_id:
+          type: integer
+          nullable: true
+        user_status:
+          type: string
+          nullable: true
+        lock_on:
+          type: string
+          format: date
+          nullable: true
+        phase_tab_name:
+          type: string
+          nullable: true
+          description: Translated attribute
+        registered_address_grouping_restriction:
+          type: boolean
+          nullable: true
+        registered_address_grouping_restrictions:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        individual_group_value_ids:
+          type: array
+          items:
+            type: integer
+        geozone_restriction_ids:
+          type: array
+          items:
+            type: integer
+        settings_attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                nullable: true
+              key:
+                type: string
+                nullable: true
+              value:
+                type: string
+                nullable: true
+              _destroy:
+                type: boolean
+                nullable: true
     ContentBlock:
       type: object
       properties:

@@ -43,7 +43,35 @@ class BudgetSerializer < BaseSerializer
       budget_data[:image] = serialized_image if serialized_image.present?
     end
 
+    if group_data.present?
+      budget_data[:group] = group_data
+    end
+
     budget_data
+  end
+
+  def group_data
+    group = Budget::Group.find_by(budget_id: budget.id)
+
+    return nil if group.nil?
+
+    group_data = {
+      id: group.id,
+      name: group.name,
+      slug: group.slug
+    }
+
+    if group.heading.present?
+      heading = group.heading
+      group_data[:heading] = {
+        id: heading.id,
+        name: heading.name,
+        slug: heading.slug,
+        price: heading.price
+      }
+    end
+
+    group_data
   end
 
   def self.serialize_collection(budgets)

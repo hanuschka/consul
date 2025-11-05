@@ -13,7 +13,7 @@ class Api::ProjektsController < Api::BaseController
 
     if params[:only_visible] == "true"
       projekts =
-        projekt
+        Projekt
           .activated
           .with_published_custom_page
           .show_in_overview_page

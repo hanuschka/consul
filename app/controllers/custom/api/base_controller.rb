@@ -78,12 +78,7 @@ class Api::BaseController < ActionController::API
     end
 
     if image_data[:attachment].present?
-      return create_or_update_image_from_base64(resource, image_data)
-    end
-
-    if resource.image.present?
-      resource.image.update!(image_data.except(:_destroy, :attachment))
-      return resource.image
+      return update_image_with_attachment(resource, image_data)
     end
 
     nil
@@ -91,38 +86,49 @@ class Api::BaseController < ActionController::API
 
   private
 
-  def create_or_update_image_from_base64(resource, image_data)
-    base64_string = image_data[:attachment]
-    temp_file = Base64ImageUtils.decode_to_tempfile(base64_string)
+  def update_image_with_attachment(resource, image_attrs)
+    attachment_data = image_attrs[:attachment]
+    content_type = Base64ImageUtils.content_type_from_string(attachment_data)
+    extension = Base64ImageUtils.extension_from_content_type(content_type)
+    filename = "image.#{extension}"
 
-    begin
-      content_type = Base64ImageUtils.content_type_from_string(base64_string)
-      extension = Base64ImageUtils.extension_from_content_type(content_type)
-      filename = "image.#{extension}"
+    new_temp_file = Base64ImageUtils.decode_to_tempfile(attachment_data)
 
-      user = User.administrators.first
-      raise "No user available to associate with the image. Please ensure at least one administrator exists." unless user
+    uploaded_file = ActionDispatch::Http::UploadedFile.new(
+      tempfile: new_temp_file,
+      filename: filename,
+      type: content_type
+    )
 
-      image_attrs = image_data.except(:_destroy, :attachment).merge(user: user)
+    @direct_upload = DirectUpload.new(
+      {
+        resource_relation: "image",
+        resource_type: resource.class.name,
+        attachment: uploaded_file,
+        user: current_client.user
+      }
+    )
+
+    if @direct_upload.valid?
+      @direct_upload.save_attachment
+      @direct_upload.relation.set_cached_attachment_from_attachment
 
       if resource.image.present?
-        image = resource.image
-        image.assign_attributes(image_attrs)
-        temp_file.rewind
-        image.attachment.attach(io: temp_file, filename: filename, content_type: content_type)
-        image.save!
-      else
-        image = Image.new(image_attrs.merge(imageable: resource))
-        temp_file.rewind
-        image.attachment.attach(io: temp_file, filename: filename, content_type: content_type)
-        image.save!
-        resource.image = image
+        resource.image.destroy
       end
 
-      image
-    ensure
-      temp_file&.close
-      temp_file&.unlink
+      @direct_upload.relation.imageable = resource
+      @direct_upload.relation.save!
+
+      resource.reload
+    else
+      raise StandardError, @direct_upload.errors.full_messages.join(", ")
+    end
+  ensure
+    if new_temp_file
+      new_temp_file.close
+      new_temp_file.unlink
     end
   end
+
 end

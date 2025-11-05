@@ -24,6 +24,7 @@ class Api::ProjektsController < Api::BaseController
 
     includes_hash = {}
     includes_hash[:content_blocks] = {} if include_content_blocks
+    includes_hash[:page] = { image: { attachment_attachment: :blob } }
 
     if include_phases
       includes_hash[:projekt_phases] = [
@@ -105,49 +106,15 @@ class Api::ProjektsController < Api::BaseController
     page = @projekt.page
     image_attrs = params.require(:image).permit(*image_attributes_api)
 
-    if ActiveModel::Type::Boolean.new.cast(image_attrs[:_destroy])
-      page.image&.destroy
-      page.image = nil
-      page.save!
-    elsif image_attrs[:attachment].present?
-      update_image_with_attachment(page, image_attrs)
-    elsif page.image.present?
-      page.image.update!(image_attrs.except(:_destroy, :attachment))
-    end
+    process_image_with_base64(page, image_attrs)
+    @projekt.reload
 
     serialized_projekt = ProjektSerializer.new(@projekt).serialize
     render json: { data: { projekt: serialized_projekt } }
   rescue Api::BaseController::ForbiddenError, Api::BaseController::UnauthorizedError
-    raise # Re-raise to let base controller handle it
+    raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
-  end
-
-  def update_image_with_attachment(page, image_attrs)
-    attachment_data = image_attrs[:attachment]
-    temp_file = Base64ImageUtils.decode_to_tempfile(attachment_data)
-    content_type = Base64ImageUtils.content_type_from_string(attachment_data)
-    filename = "image.#{Base64ImageUtils.extension_from_content_type(content_type)}"
-
-    user = User.administrators.first
-    raise StandardError, "No user available to associate with the image. Please ensure at least one user exists." unless user
-
-    image_params = image_attrs.except(:_destroy, :attachment).merge(user: user)
-
-    if page.image.present?
-      image = page.image
-      image.assign_attributes(image_params)
-      image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
-      image.save!
-    else
-      image = Image.new(image_params.merge(imageable: page))
-      image.attachment.attach(io: File.open(temp_file.path, 'rb'), filename: filename, content_type: content_type)
-      image.save!
-      page.image = image
-    end
-  ensure
-    temp_file&.close
-    temp_file&.unlink
   end
 
   def destroy
@@ -247,6 +214,7 @@ class Api::ProjektsController < Api::BaseController
       .includes(
         :projekt_phases,
         :content_blocks,
+        page: { image: { attachment_attachment: :blob } },
         projekt_phases: [
           :settings,
           :individual_group_values,

@@ -6,16 +6,16 @@ class Base64ImageUtils
   def self.decode_to_tempfile(base64_string)
     raise ArgumentError, 'base64_string cannot be nil or empty' if base64_string.blank?
 
-    base64_data = 
-        if base64_string.include?(',')
+    base64_data =
+      if base64_string.include?(',')
         base64_string.split(',').last
-        else
+      else
         base64_string
-        end
+      end
 
     decoded_data = Base64.decode64(base64_data)
 
-    content_type = 
+    content_type =
         if base64_string.start_with?('data:')
             base64_string.split(';').first.split(':').last
         else
@@ -24,7 +24,6 @@ class Base64ImageUtils
 
     extension = extension_from_content_type(content_type)
 
-    # Create a temporary file with the decoded image data
     temp_file = Tempfile.new(['image', ".#{extension}"])
     temp_file.binmode
     temp_file.write(decoded_data)

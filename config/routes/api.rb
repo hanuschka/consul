@@ -15,7 +15,11 @@
     end
 
     resources :projekt_phases, only: [], shallow: true do
-      resources :proposals, controller: "proposals", only: [:index, :create, :show, :update, :destroy]
+      resources :proposals, controller: "proposals", only: [:index, :create, :show, :update, :destroy] do
+        member do
+          patch :update_image
+        end
+      end
       resources :debates, only: [:create, :show, :update, :destroy]
       resources :polls, only: [:create, :show, :update, :destroy]
       resources :livestreams, only: [:create, :show, :update, :destroy]

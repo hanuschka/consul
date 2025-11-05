@@ -800,6 +800,217 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       end
     end
   end
+
+  path '/api/proposals/{id}/update_image' do
+    parameter name: :id, in: :path, type: :integer, description: 'Proposal ID'
+
+    patch 'Update proposal image' do
+      tags 'Proposals'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      parameter name: :image, in: :body, description: 'Image update payload', schema: {
+        type: :object,
+        properties: {
+          image: {
+            type: :object,
+            properties: {
+              attachment: { type: :string, description: 'Base64-encoded image data' },
+              title: { type: :string },
+              credits: { type: :string },
+              _destroy: { type: :boolean }
+            }
+          }
+        },
+        required: ['image']
+      }
+
+      response '200', 'image uploaded successfully' do
+        before do
+          # Create an admin user for image association
+          admin_user = User.create!(
+            username: 'admin_user',
+            email: 'admin@example.com',
+            password: 'Password123!',
+            password_confirmation: 'Password123!',
+            terms_data_protection: true,
+            terms_data_storage: true,
+            terms_general: true
+          )
+          Administrator.create!(user: admin_user)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Proposal for Image Upload',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+        let(:image) do
+          # Use a fixture image that meets minimum size requirements (620x390)
+          image_path = Rails.root.join('spec', 'fixtures', 'files', 'clippy.jpg')
+          base64_image = Base64.encode64(File.read(image_path))
+          {
+            image: {
+              attachment: base64_image,
+              title: 'Proposal Cover Image',
+              credits: 'Photo by John Doe'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { type: :object }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(response.status).to eq(200)
+        end
+      end
+
+      response '200', 'image deleted successfully' do
+        before do
+          # Create an admin user for image association
+          admin_user = User.create!(
+            username: 'admin_user_2',
+            email: 'admin2@example.com',
+            password: 'Password123!',
+            password_confirmation: 'Password123!',
+            terms_data_protection: true,
+            terms_data_storage: true,
+            terms_general: true
+          )
+          Administrator.create!(user: admin_user)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Proposal with Image to Delete',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+        let(:image) do
+          {
+            image: {
+              _destroy: true
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { type: :object }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(response.status).to eq(200)
+        end
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Proposal',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+        let(:image) do
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            image: {
+              attachment: base64_png,
+              title: 'Proposal Cover Image'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :string }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+    end
+  end
 end
 
 

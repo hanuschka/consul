@@ -30,12 +30,16 @@ class ProjektSerializer < BaseSerializer
         ]
       )
 
-    projekt_data.merge!(
-      page: {
-        title: projekt&.page&.title,
-        slug: projekt&.page&.slug
-      }
-    )
+    page_data = {
+      title: projekt&.page&.title,
+      slug: projekt&.page&.slug
+    }
+
+    if projekt&.page&.image.present?
+      page_data[:image] = ImageSerializer.new(projekt.page.image, include_variants: true).serialize
+    end
+
+    projekt_data.merge!(page: page_data)
 
     projekt_data.merge!({
       projekt_settings: projekt_settings

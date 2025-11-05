@@ -1,4 +1,6 @@
 class ImageSerializer
+  include Rails.application.routes.url_helpers
+
   attr_reader :image, :include_variants
 
   def initialize(image, include_variants: true)
@@ -13,10 +15,9 @@ class ImageSerializer
       id: image.id,
       title: image.title,
       credits: image.credits,
-      url: image.url
+      url: rails_blob_url(image.attachment, host: host)
     }
 
-    # Include all image variants if requested
     if include_variants
       image_data[:variants] = serialize_variants
     end
@@ -28,16 +29,21 @@ class ImageSerializer
 
   def serialize_variants
     {
-      large: image.variant(:large)&.url,
-      projekt_image: image.variant(:projekt_image)&.url,
-      medium: image.variant(:medium)&.url,
-      thumb: image.variant(:thumb)&.url,
-      thumb_wider: image.variant(:thumb_wider)&.url,
-      banner: image.variant(:banner)&.url,
-      popup: image.variant(:popup)&.url,
-      thumb2: image.variant(:thumb2)&.url,
-      projekt_event_thumb: image.variant(:projekt_event_thumb)&.url,
-      card_thumb: image.variant(:card_thumb)&.url
+      large: variant_url(:large),
+      projekt_image: variant_url(:projekt_image),
+      thumb: variant_url(:thumb),
+      thumb_wider: variant_url(:thumb_wider),
     }
+  end
+
+  def variant_url(style)
+    variant = image.variant(style)
+    return nil unless variant
+
+    rails_representation_url(variant, host: host)
+  end
+
+  def host
+    "#{Rails.application.secrets.server_name}:3000"
   end
 end

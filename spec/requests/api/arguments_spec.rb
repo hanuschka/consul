@@ -10,7 +10,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (ArgumentPhase)'
 
     post 'Create a projekt argument' do
-      tags 'Projekt Arguments'
+      tags 'Arguments'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -108,7 +108,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Argument ID'
 
     get 'Retrieve a projekt argument' do
-      tags 'Projekt Arguments'
+      tags 'Arguments'
       produces 'application/json'
       security [bearer_auth: []]
 
@@ -148,7 +148,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
     end
 
     patch 'Update a projekt argument' do
-      tags 'Projekt Arguments'
+      tags 'Arguments'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -268,7 +268,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
     end
 
     delete 'Delete a projekt argument' do
-      tags 'Projekt Arguments'
+      tags 'Arguments'
       produces 'application/json'
       security [bearer_auth: []]
 

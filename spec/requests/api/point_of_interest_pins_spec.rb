@@ -10,7 +10,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
 
     post 'Create a projekt point of interest pin' do
-      tags 'Projekt Point Of Interest Pins'
+      tags 'Point Of Interest Pins'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -118,7 +118,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Point Of Interest Pin ID'
 
     get 'Retrieve a projekt point of interest pin' do
-      tags 'Projekt Point Of Interest Pins'
+      tags 'Point Of Interest Pins'
       produces 'application/json'
       security [bearer_auth: []]
 
@@ -170,7 +170,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
     end
 
     patch 'Update a projekt point of interest pin' do
-      tags 'Projekt Point Of Interest Pins'
+      tags 'Point Of Interest Pins'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -330,7 +330,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
     end
 
     delete 'Delete a projekt point of interest pin' do
-      tags 'Projekt Point Of Interest Pins'
+      tags 'Point Of Interest Pins'
       produces 'application/json'
       security [bearer_auth: []]
 

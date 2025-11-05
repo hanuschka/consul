@@ -26,6 +26,8 @@ module Measurable
   private
 
     def description_sanitized
+      return "" if description.nil?
+
       stripped = ActionController::Base.helpers.strip_tags(description)
 
       sanitized_description = stripped

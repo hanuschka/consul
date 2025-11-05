@@ -38,6 +38,7 @@ class Api::ProposalsController < Api::BaseController
     check_admin_access!
     proposal = @projekt_phase.resources.new(proposal_params)
     proposal.author = @current_client.user
+    proposal.resource_terms = true
 
     if proposal.save
       serialized_proposal = ProposalSerializer.new(proposal).serialize
@@ -85,7 +86,8 @@ class Api::ProposalsController < Api::BaseController
       :tag_list,
       :related_sdg_list,
       :resource_terms,
-      **translation_params(Proposal),
+      :title,
+      :description,
       projekt_label_ids: [],
       map_location_attributes: map_location_attributes,
       image_attributes: image_attributes,

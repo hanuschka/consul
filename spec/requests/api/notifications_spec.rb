@@ -10,7 +10,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (ProjektNotificationPhase)'
 
     post 'Create a projekt notification' do
-      tags 'Projekt Notifications'
+      tags 'Notifications'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -90,7 +90,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Notification ID'
 
     get 'Retrieve a projekt notification' do
-      tags 'Projekt Notifications'
+      tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
 
@@ -122,7 +122,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
     end
 
     patch 'Update a projekt notification' do
-      tags 'Projekt Notifications'
+      tags 'Notifications'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -198,7 +198,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
     end
 
     delete 'Delete a projekt notification' do
-      tags 'Projekt Notifications'
+      tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
 

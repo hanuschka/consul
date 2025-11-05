@@ -10,7 +10,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (EventPhase)'
 
     post 'Create a projekt event' do
-      tags 'Projekt Events'
+      tags 'Events'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -91,7 +91,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Event ID'
 
     get 'Retrieve a projekt event' do
-      tags 'Projekt Events'
+      tags 'Events'
       produces 'application/json'
       security [bearer_auth: []]
 
@@ -123,7 +123,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
     end
 
     patch 'Update a projekt event' do
-      tags 'Projekt Events'
+      tags 'Events'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -200,7 +200,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
     end
 
     delete 'Delete a projekt event' do
-      tags 'Projekt Events'
+      tags 'Events'
       produces 'application/json'
       security [bearer_auth: []]
 

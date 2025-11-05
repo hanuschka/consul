@@ -50,8 +50,9 @@ class MilestoneSerializer < BaseSerializer
       end
     end
 
-    if milestone.respond_to?(:image) && milestone.image.present? && milestone.image.attached?
-      milestone_data[:image_url] = milestone.image.url
+    if milestone.respond_to?(:image) && milestone.image.present?
+      serialized_image = ImageSerializer.new(milestone.image, include_variants: false).serialize
+      milestone_data[:image] = serialized_image if serialized_image.present?
     end
 
     milestone_data

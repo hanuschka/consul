@@ -264,6 +264,52 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      response '201', 'proposal created with base64 image' do
+        let!(:context) { create_phase_with_context }
+        let(:projekt_phase_id) { context[2].id }
+        let(:geozone_id) { context[1].id }
+        let(:proposal) do
+          # Small valid PNG image in base64 (1x1 transparent pixel)
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            proposal: {
+              responsible_name: 'Jane Smith',
+              geozone_id: geozone_id,
+              resource_terms: true,
+              image: {
+                title: 'Proposal Cover Image',
+                base64data: base64_png
+              },
+              translations_attributes: [
+                {
+                  locale: 'en',
+                  title: 'Proposal with Image',
+                  description: 'A proposal created with an image'
+                }
+              ]
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { type: :object }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(response.status).to eq(201)
+        end
+      end
     end
   end
 
@@ -565,6 +611,61 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      response '200', 'proposal updated with base64 image' do
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            translations_attributes: [
+              {
+                locale: 'en',
+                title: 'Old Title',
+                description: 'Desc'
+              }
+            ]
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+        let(:proposal) do
+          # Small valid PNG image in base64 (1x1 transparent pixel)
+          base64_png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+          {
+            proposal: {
+              title: 'Updated with Image',
+              image: {
+                title: 'postman title',
+                attachment: base64_png
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { type: :object }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(response.status).to eq(200)
         end
       end
     end

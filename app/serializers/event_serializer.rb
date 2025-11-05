@@ -38,8 +38,9 @@ class EventSerializer < BaseSerializer
       end
     end
 
-    if projekt_event.respond_to?(:image) && projekt_event.image.present? && projekt_event.image.attached?
-      event_data[:image_url] = projekt_event.image.url
+    if projekt_event.respond_to?(:image) && projekt_event.image.present?
+      serialized_image = ImageSerializer.new(projekt_event.image, include_variants: false).serialize
+      event_data[:image] = serialized_image if serialized_image.present?
     end
 
     event_data

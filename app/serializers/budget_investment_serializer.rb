@@ -99,9 +99,10 @@ class BudgetInvestmentSerializer < BaseSerializer
       }
     end
 
-    # Add image URL if present
-    if budget_investment.respond_to?(:image) && budget_investment.image.present? && budget_investment.image.attached?
-      investment_data[:image_url] = budget_investment.image.url
+    # Add image if present
+    if budget_investment.respond_to?(:image) && budget_investment.image.present?
+      serialized_image = ImageSerializer.new(budget_investment.image, include_variants: false).serialize
+      investment_data[:image] = serialized_image if serialized_image.present?
     end
 
     # Add documents

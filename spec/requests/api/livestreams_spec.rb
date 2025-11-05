@@ -10,7 +10,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (LivestreamPhase)'
 
     post 'Create a projekt livestream' do
-      tags 'Projekt Livestreams'
+      tags 'Livestreams'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -105,7 +105,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Livestream ID'
 
     get 'Retrieve a projekt livestream' do
-      tags 'Projekt Livestreams'
+      tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
 
@@ -144,7 +144,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
     end
 
     patch 'Update a projekt livestream' do
-      tags 'Projekt Livestreams'
+      tags 'Livestreams'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -257,7 +257,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
     end
 
     delete 'Delete a projekt livestream' do
-      tags 'Projekt Livestreams'
+      tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
 

@@ -10,7 +10,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (QuestionPhase or LivestreamPhase)'
 
     post 'Create a projekt question' do
-      tags 'Projekt Questions'
+      tags 'Questions'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -131,7 +131,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Question ID'
 
     get 'Retrieve a projekt question' do
-      tags 'Projekt Questions'
+      tags 'Questions'
       produces 'application/json'
       security [bearer_auth: []]
 
@@ -170,7 +170,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
     end
 
     patch 'Update a projekt question' do
-      tags 'Projekt Questions'
+      tags 'Questions'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -308,7 +308,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
     end
 
     delete 'Delete a projekt question' do
-      tags 'Projekt Questions'
+      tags 'Questions'
       produces 'application/json'
       security [bearer_auth: []]
 

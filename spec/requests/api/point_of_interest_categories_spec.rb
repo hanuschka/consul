@@ -10,7 +10,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
 
     post 'Create a projekt point of interest category' do
-      tags 'Projekt Point Of Interest Categories'
+      tags 'Point Of Interest Categories'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -97,7 +97,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Point Of Interest Category ID'
 
     get 'Retrieve a projekt point of interest category' do
-      tags 'Projekt Point Of Interest Categories'
+      tags 'Point Of Interest Categories'
       produces 'application/json'
       security [bearer_auth: []]
 
@@ -136,7 +136,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
     end
 
     patch 'Update a projekt point of interest category' do
-      tags 'Projekt Point Of Interest Categories'
+      tags 'Point Of Interest Categories'
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
@@ -245,7 +245,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
     end
 
     delete 'Delete a projekt point of interest category' do
-      tags 'Projekt Point Of Interest Categories'
+      tags 'Point Of Interest Categories'
       produces 'application/json'
       security [bearer_auth: []]
 

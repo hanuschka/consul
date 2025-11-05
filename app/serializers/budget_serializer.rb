@@ -38,8 +38,9 @@ class BudgetSerializer < BaseSerializer
       end
     end
 
-    if budget.respond_to?(:image) && budget.image.present? && budget.image.attached?
-      budget_data[:image_url] = budget.image.url
+    if budget.respond_to?(:image) && budget.image.present?
+      serialized_image = ImageSerializer.new(budget.image, include_variants: false).serialize
+      budget_data[:image] = serialized_image if serialized_image.present?
     end
 
     budget_data

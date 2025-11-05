@@ -12,7 +12,6 @@
           patch :update_setting
         end
       end
-      resources :content_blocks, only: [:index, :show]
     end
 
     resources :projekt_phases, only: [], shallow: true do

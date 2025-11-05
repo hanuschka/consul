@@ -15,7 +15,7 @@ paths:
     post:
       summary: Create a projekt argument
       tags:
-      - Projekt Arguments
+      - Arguments
       security:
       - bearer_auth: []
       parameters: []
@@ -101,7 +101,7 @@ paths:
     get:
       summary: Retrieve a projekt argument
       tags:
-      - Projekt Arguments
+      - Arguments
       security:
       - bearer_auth: []
       responses:
@@ -126,7 +126,7 @@ paths:
     patch:
       summary: Update a projekt argument
       tags:
-      - Projekt Arguments
+      - Arguments
       security:
       - bearer_auth: []
       parameters: []
@@ -206,7 +206,7 @@ paths:
     delete:
       summary: Delete a projekt argument
       tags:
-      - Projekt Arguments
+      - Arguments
       security:
       - bearer_auth: []
       responses:
@@ -1245,7 +1245,7 @@ paths:
     post:
       summary: Create a projekt event
       tags:
-      - Projekt Events
+      - Events
       security:
       - bearer_auth: []
       parameters: []
@@ -1324,7 +1324,7 @@ paths:
     get:
       summary: Retrieve a projekt event
       tags:
-      - Projekt Events
+      - Events
       security:
       - bearer_auth: []
       responses:
@@ -1349,7 +1349,7 @@ paths:
     patch:
       summary: Update a projekt event
       tags:
-      - Projekt Events
+      - Events
       security:
       - bearer_auth: []
       parameters: []
@@ -1416,7 +1416,7 @@ paths:
     delete:
       summary: Delete a projekt event
       tags:
-      - Projekt Events
+      - Events
       security:
       - bearer_auth: []
       responses:
@@ -2066,7 +2066,7 @@ paths:
     post:
       summary: Create a projekt livestream
       tags:
-      - Projekt Livestreams
+      - Livestreams
       security:
       - bearer_auth: []
       parameters: []
@@ -2146,7 +2146,7 @@ paths:
     get:
       summary: Retrieve a projekt livestream
       tags:
-      - Projekt Livestreams
+      - Livestreams
       security:
       - bearer_auth: []
       responses:
@@ -2171,7 +2171,7 @@ paths:
     patch:
       summary: Update a projekt livestream
       tags:
-      - Projekt Livestreams
+      - Livestreams
       security:
       - bearer_auth: []
       parameters: []
@@ -2245,7 +2245,7 @@ paths:
     delete:
       summary: Delete a projekt livestream
       tags:
-      - Projekt Livestreams
+      - Livestreams
       security:
       - bearer_auth: []
       responses:
@@ -2586,7 +2586,7 @@ paths:
     post:
       summary: Create a projekt notification
       tags:
-      - Projekt Notifications
+      - Notifications
       security:
       - bearer_auth: []
       parameters: []
@@ -2660,7 +2660,7 @@ paths:
     get:
       summary: Retrieve a projekt notification
       tags:
-      - Projekt Notifications
+      - Notifications
       security:
       - bearer_auth: []
       responses:
@@ -2685,7 +2685,7 @@ paths:
     patch:
       summary: Update a projekt notification
       tags:
-      - Projekt Notifications
+      - Notifications
       security:
       - bearer_auth: []
       parameters: []
@@ -2747,7 +2747,7 @@ paths:
     delete:
       summary: Delete a projekt notification
       tags:
-      - Projekt Notifications
+      - Notifications
       security:
       - bearer_auth: []
       responses:
@@ -2785,7 +2785,7 @@ paths:
     post:
       summary: Create a projekt point of interest category
       tags:
-      - Projekt Point Of Interest Categories
+      - Point Of Interest Categories
       security:
       - bearer_auth: []
       parameters: []
@@ -2852,7 +2852,7 @@ paths:
     get:
       summary: Retrieve a projekt point of interest category
       tags:
-      - Projekt Point Of Interest Categories
+      - Point Of Interest Categories
       security:
       - bearer_auth: []
       responses:
@@ -2877,7 +2877,7 @@ paths:
     patch:
       summary: Update a projekt point of interest category
       tags:
-      - Projekt Point Of Interest Categories
+      - Point Of Interest Categories
       security:
       - bearer_auth: []
       parameters: []
@@ -2938,7 +2938,7 @@ paths:
     delete:
       summary: Delete a projekt point of interest category
       tags:
-      - Projekt Point Of Interest Categories
+      - Point Of Interest Categories
       security:
       - bearer_auth: []
       responses:
@@ -2978,7 +2978,7 @@ paths:
     post:
       summary: Create a projekt point of interest pin
       tags:
-      - Projekt Point Of Interest Pins
+      - Point Of Interest Pins
       security:
       - bearer_auth: []
       parameters: []
@@ -3059,7 +3059,7 @@ paths:
     get:
       summary: Retrieve a projekt point of interest pin
       tags:
-      - Projekt Point Of Interest Pins
+      - Point Of Interest Pins
       security:
       - bearer_auth: []
       responses:
@@ -3084,7 +3084,7 @@ paths:
     patch:
       summary: Update a projekt point of interest pin
       tags:
-      - Projekt Point Of Interest Pins
+      - Point Of Interest Pins
       security:
       - bearer_auth: []
       parameters: []
@@ -3159,7 +3159,7 @@ paths:
     delete:
       summary: Delete a projekt point of interest pin
       tags:
-      - Projekt Point Of Interest Pins
+      - Point Of Interest Pins
       security:
       - bearer_auth: []
       responses:
@@ -4847,7 +4847,7 @@ paths:
     post:
       summary: Create a projekt question
       tags:
-      - Projekt Questions
+      - Questions
       security:
       - bearer_auth: []
       parameters: []
@@ -4945,7 +4945,7 @@ paths:
     get:
       summary: Retrieve a projekt question
       tags:
-      - Projekt Questions
+      - Questions
       security:
       - bearer_auth: []
       responses:
@@ -4970,7 +4970,7 @@ paths:
     patch:
       summary: Update a projekt question
       tags:
-      - Projekt Questions
+      - Questions
       security:
       - bearer_auth: []
       parameters: []
@@ -5062,7 +5062,7 @@ paths:
     delete:
       summary: Delete a projekt question
       tags:
-      - Projekt Questions
+      - Questions
       security:
       - bearer_auth: []
       responses:
@@ -5397,6 +5397,18 @@ tags:
   description: Projekt management and core operations
 - name: Projekt Phases
   description: Phases within projekts
+- name: Proposals
+  description: Proposals for projekt phases
+- name: Comments
+  description: Comments on projekt phases
+- name: Polls
+  description: Polls within projekt phases
+- name: Milestones
+  description: Milestones for projekt phases
+- name: Budgets
+  description: Budget management for projekt phases
+- name: Budget Investments
+  description: Budget investment management
 - name: Arguments
   description: Arguments for projekt phases
 - name: Events
@@ -5411,26 +5423,14 @@ tags:
   description: Location pins for projekts
 - name: Questions
   description: Questions related to projekt phases
-- name: Budgets
-  description: Budget management for projekt phases
-- name: Comments
-  description: Comments on projekt phases
 - name: Formulars
   description: Forms associated with projekt phases
-- name: Milestones
-  description: Milestones for projekt phases
-- name: Polls
-  description: Polls within projekt phases
-- name: Proposals
-  description: Proposals for projekt phases
 - name: Texts
   description: Text content for projekt phases
 - name: Ideas
   description: Citizen ideas and proposals
 - name: Deficiency Reports
   description: Reports of deficiencies or issues
-- name: Budget Investments
-  description: Budget investment management
 - name: Iframes
   description: Embedded iframe content
 x-tagGroups:
@@ -5440,20 +5440,20 @@ x-tagGroups:
   - Projekt Phases
   - Proposals
   - Polls
+  - Milestones
   - Budgets
+  - Budget Investments
   - Comments
-  - Arguments
   - Events
+  - Arguments
   - Livestreams
   - Notifications
-  - Point Of Interest Categories
-  - Point Of Interest Pins
   - Questions
   - Formulars
-  - Milestones
   - Texts
-  - Budget Investments
   - Iframes
+  - Point Of Interest Categories
+  - Point Of Interest Pins
 - name: Ideas
   tags:
   - Ideas

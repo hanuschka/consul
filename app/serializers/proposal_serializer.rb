@@ -30,7 +30,6 @@ class ProposalSerializer < BaseSerializer
       ]
     )
 
-    # Add translated attributes
     proposal_data.merge!(
       title: proposal.title,
       description: proposal.description,
@@ -38,7 +37,6 @@ class ProposalSerializer < BaseSerializer
       retired_explanation: proposal.retired_explanation
     )
 
-    # Add author information
     if proposal.author.present?
       proposal_data[:author] = {
         id: proposal.author.id,
@@ -93,7 +91,6 @@ class ProposalSerializer < BaseSerializer
       }
     end
 
-    # Add map location
     if proposal.map_location.present?
       proposal_data[:map_location] = {
         latitude: proposal.map_location.latitude,
@@ -102,12 +99,11 @@ class ProposalSerializer < BaseSerializer
       }
     end
 
-    # Add image URL if present
-    if proposal.respond_to?(:image) && proposal.image.present? && proposal.image.attached?
-      proposal_data[:image_url] = proposal.image.url
+    if proposal.respond_to?(:image) && proposal.image.present?
+      serialized_image = ImageSerializer.new(proposal.image, include_variants: true).serialize
+      proposal_data[:image] = serialized_image if serialized_image.present?
     end
 
-    # Add documents
     if proposal.respond_to?(:documents) && proposal.documents.any?
       proposal_data[:documents] = proposal.documents.map do |doc|
         {

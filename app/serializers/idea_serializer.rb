@@ -58,8 +58,9 @@ class IdeaSerializer < BaseSerializer
       }
     end
 
-    if idea.respond_to?(:image) && idea.image.present? && idea.image.attached?
-      idea_data[:image_url] = idea.image.url
+    if idea.respond_to?(:image) && idea.image.present?
+      serialized_image = ImageSerializer.new(idea.image, include_variants: false).serialize
+      idea_data[:image] = serialized_image if serialized_image.present?
     end
 
     if idea.respond_to?(:documents) && idea.documents.any?

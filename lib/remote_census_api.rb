@@ -61,7 +61,7 @@ class RemoteCensusApi
 
       return true if request_house_number_extension.blank? && registered_house_number_extensions.blank?
 
-      request_house_number_extension.in?(registered_house_number_extensions)
+      request_house_number_extension.downcase.in?(registered_house_number_extensions.map(&:downcase))
     end
 
     def postleitzahl_matched?

@@ -5,7 +5,7 @@ module ProjektContentBlocksAdminActions
     before_action :set_namespace
     before_action :find_projekt, only: [:create]
     before_action :find_content_block, only: [
-      :destroy, :update, :update_position
+      :destroy, :update, :update_position, :change_with_ai
     ]
   end
 
@@ -60,6 +60,22 @@ module ProjektContentBlocksAdminActions
       render json: { status: { message: "Content block position updated" }}
     else
       render json: { message: "Error updating content block position" }
+    end
+  end
+
+  def change_with_ai
+    authorize!(:update, @content_block.projekt)
+
+    new_content_block_body =
+      Ai::GenerateContentBlock.call(
+        params[:instructions],
+        params[:content_block_html]
+      )
+
+    if new_content_block_body.present?
+      render json: { content_block_html: new_content_block_body, status: { message: "Content block updated" }}
+    else
+      render json: { status: { message: "Error generating content block with ai" }}
     end
   end
 

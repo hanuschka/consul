@@ -21,6 +21,10 @@
             this.tryToPushInitialDataToDtAssistant();
           })
         }
+
+        this.initialData["collapsible"] = true
+        this.initialData["collapsed"] = App.Cookies.getCookie("voice_assistant_collapsed") === "true"
+
         this.tryToPushInitialDataToDtAssistant();
       }
     },
@@ -80,7 +84,27 @@
           case "Consul.ResourceForm.updateImplementaionContribution":
             this.updateImplementaionContribution(params.implementaion_contribution, params.shouldScroll)
             break;
+          case "Consul.VoiceAssistant.toggleCollapseState":
+            this.toggleAssistantCollapseState(params.collapsed)
+            break
         }
+      }
+    },
+
+    toggleAssistantCollapseState(collapsed) {
+      this.voiceAssistantIframe.classList.toggle("-collapsed", collapsed)
+
+      App.Cookies.saveCookie("voice_assistant_collapsed", collapsed, 365)
+    },
+
+
+    initCollapseState() {
+      const collapsed = App.Cookies.getCookie("voice_assistant_collapsed")
+
+      if (collapsed === "true") {
+        this.voiceAssistantIframe.classList.add("-collapsed")
+      } else {
+        this.voiceAssistantIframe.classList.remove("-collapsed")
       }
     },
 
@@ -110,11 +134,9 @@
     updateTitle: function(title, scroll) {
       var scroll = scroll || true;
 
-      var titleElement = document.querySelector(
-        ".js-user-resource-form-title"
-      )
+      var titleElement = $(".js-user-resource-form-title:visible").get(0)
 
-      titleElement.value = title
+      $(".js-user-resource-form-title").val(title)
 
       if (scroll) {
         titleElement.scrollIntoView({block: "center", inline: "nearest"})

@@ -172,6 +172,10 @@
     border-radius: 10px;
     max-width: 620px;
 
+    a {
+      height: 100%;
+    }
+
     .image-maximize-button {
       visibility: hidden;
       opacity: 0;

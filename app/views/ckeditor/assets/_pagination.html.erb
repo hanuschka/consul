@@ -1,0 +1,8 @@
+<% if @assets.respond_to?(:current_page) && @assets.total_pages > 1 %>
+  <div class="cb-img-dialog__pagination">
+    <%= paginate @assets,
+        params: { type: params[:type], search: params[:search] },
+        remote: false,
+        class: 'js-cb-img-pagination' %>
+  </div>
+<% end %>

@@ -46,3 +46,4 @@ tmp/
 # Test results
 /spec/examples.txt
 /coverage/
+tags

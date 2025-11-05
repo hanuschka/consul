@@ -7,6 +7,10 @@ class Projekts::ToggleSectionWithSettingComponent < ViewComponent::Base
     @other_conditions_are_met = other_conditions_are_met
   end
 
+  def render?
+    content.present?
+  end
+
   def get_setting_id
     @projekt.projekt_settings.find_by(key: @setting_key).id
   end

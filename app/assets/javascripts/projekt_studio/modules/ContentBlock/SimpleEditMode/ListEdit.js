@@ -1,9 +1,9 @@
-ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
+ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
   listControlClass: "js-content-block--list-control",
+  sortableInstances: new Map(),
 
   initialize() {
     this.initEventListeners()
-    this.getContentBlockAndWrapper = ProjektStudio.ContentBlocks.getContentBlockAndWrapper.bind(ProjektStudio.ContentBlocks)
   },
 
   initEventListeners() {
@@ -31,30 +31,44 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
         .forEach((li) => {
           this.addItemDeleteButton(li)
         })
+
+      this.initSortableForContentBlock(contentBlock)
     }
     else {
       contentBlock
         .querySelectorAll(`.${this.listControlClass}`)
         .forEach((e) => e.remove())
+
+      this.cleanupSortableForContentBlock(contentBlock)
     }
   },
 
   addItemDeleteButton(li) {
+    const elementStyle = getComputedStyle(li);
+    if (elementStyle.position === "static") {
+      li.style.position = "relative"
+    }
+
     const buttonHTML = `
-        <button class="content-block--item-delete-button js-projekt-content-block--delete-item ${this.listControlClass} -delete">
+        <button class="content-block--item-delete-button ${this.listControlClass} js-projekt-content-block--delete-item -delete">
         <i class="fa fas fa-trash"></i>
        </button>
      `
 
     const buttonElement = ProjektStudio.utils.htmlToSingleDomElement(buttonHTML)
 
-    const elementStyle = getComputedStyle(li);
-
-    if (elementStyle.position === "static") {
-      li.style.position = "relative"
-    }
     li.appendChild(buttonElement);
+
+    const dragHandleHTML = `
+        <button class="content-block--item-drag-handle ${this.listControlClass} js-list-item-dnd-handle -drag" title="Element verschieben">
+        <i class="fas fa-up-down-left-right"></i>
+       </button>
+     `
+
+    const dragHandleElement = ProjektStudio.utils.htmlToSingleDomElement(dragHandleHTML)
+    li.appendChild(dragHandleElement);
   },
+
 
   addItem(e) {
     const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
@@ -82,6 +96,7 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
       clonedLi,
       ["id", "aria-labelledby", "aria-controls", "aria-expanded", "data-slide"]
     )
+
     const copyId = Date.now();
 
     let elementToReinitialize = isSlider ? ul.closest(".orbit") : ul;
@@ -109,6 +124,15 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     }
 
     $(newElementToReinitialize).foundation()
+
+    if (isAccordion) {
+      const $accordionLinks = $(newElementToReinitialize).find('.accordion-title');
+      $accordionLinks.off("keydown")
+    }
+
+    this.addItemDeleteButton(clonedLi)
+    this.cleanupSortableForContentBlock(newUl.parentElement)
+    this.initSortableForContentBlock(newUl.parentElement)
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {
@@ -182,9 +206,13 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
 
     const lastLi = ul.querySelector("li:last-child")
 
+    if (copyStyles && lastLi.classList.value !== "") {
+      const gridPattern = /^(grid-[xy]|grid-(margin|padding)-[xy]|cell|column|columns|small-\d+|medium-\d+|large-\d+)$/;
+      const filtered = Array.from(lastLi.classList).filter(cls =>
+        gridPattern.test(cls)
+      );
 
-    if (copyStyles) {
-      buttonWrapper.className = `${lastLi.classList} ${buttonWrapper.classList}`
+      buttonWrapper.className = `${filtered.join(' ')} ${buttonWrapper.className}`;
     }
 
     buttonWrapper.innerHTML = `
@@ -211,5 +239,40 @@ ProjektStudio.ContentBlockSimpleEdit.ListEdit = {
     }
 
     return buttonWrapper
+  },
+
+  initSortableForContentBlock(contentBlock) {
+    setTimeout(() => {
+      contentBlock
+        .querySelectorAll("ul")
+        .forEach((ul) => {
+          if (this.sortableInstances.has(ul)) return;
+          if (ul.classList.contains("orbit-container")) return;
+
+          const sortableInstance = new Sortable(ul, {
+            handle: ".js-list-item-dnd-handle",
+            animation: 150,
+            ghostClass: 'list-item-dnd-placeholder',
+            dragClass: "list-item-dnd-move",
+            scrollSensitivity: 2,
+            scrollSpeed: 3,
+            draggable: `li:not(.${this.listControlClass})`
+          })
+
+          this.sortableInstances.set(ul, sortableInstance)
+        })
+    }, 50)
+  },
+
+  cleanupSortableForContentBlock(contentBlock) {
+    const ulElements = contentBlock.querySelectorAll("ul")
+
+    ulElements.forEach((ul) => {
+      const sortableInstance = this.sortableInstances.get(ul)
+      if (sortableInstance) {
+        sortableInstance.destroy()
+        this.sortableInstances.delete(ul)
+      }
+    })
   }
 }
